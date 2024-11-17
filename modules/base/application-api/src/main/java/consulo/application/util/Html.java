@@ -16,8 +16,8 @@ import java.util.stream.Collector;
  *
  * @see HtmlBuilder
  */
-public abstract class HtmlChunk {
-    private static class Empty extends HtmlChunk {
+public abstract class Html {
+    private static class Empty extends Html {
         private static final Empty INSTANCE = new Empty();
 
         @Override
@@ -30,7 +30,7 @@ public abstract class HtmlChunk {
         }
     }
 
-    private static class Text extends HtmlChunk {
+    private static class Text extends Html {
         private final String myContent;
 
         private Text(String content) {
@@ -43,7 +43,7 @@ public abstract class HtmlChunk {
         }
     }
 
-    private static class Raw extends HtmlChunk {
+    private static class Raw extends Html {
         private final String myContent;
 
         private Raw(String content) {
@@ -56,23 +56,23 @@ public abstract class HtmlChunk {
         }
     }
 
-    static class Fragment extends HtmlChunk {
-        private final List<HtmlChunk> myContent;
+    static class Fragment extends Html {
+        private final List<Html> myContent;
 
-        Fragment(List<HtmlChunk> content) {
+        Fragment(List<Html> content) {
             myContent = content;
         }
 
         @Override
         public void appendTo(@Nonnull StringBuilder builder) {
-            for (HtmlChunk chunk : myContent) {
+            for (Html chunk : myContent) {
                 chunk.appendTo(builder);
             }
         }
     }
 
-    private static class Nbsp extends HtmlChunk {
-        private static final HtmlChunk ONE = new Nbsp(1);
+    private static class Nbsp extends Html {
+        private static final Html ONE = new Nbsp(1);
         private final int myCount;
 
         private Nbsp(int count) {
@@ -85,7 +85,7 @@ public abstract class HtmlChunk {
         }
     }
 
-    public static class Element extends HtmlChunk {
+    public static class Element extends Html {
         private static final Element HEAD = tag("head");
         private static final Element BODY = tag("body");
         private static final Element HTML = tag("html");
@@ -99,9 +99,9 @@ public abstract class HtmlChunk {
 
         private final String myTagName;
         private final UnmodifiableHashMap<String, String> myAttributes;
-        private final List<HtmlChunk> myChildren;
+        private final List<Html> myChildren;
 
-        private Element(String name, UnmodifiableHashMap<String, String> attributes, List<HtmlChunk> children) {
+        private Element(String name, UnmodifiableHashMap<String, String> attributes, List<Html> children) {
             myTagName = name;
             myAttributes = attributes;
             myChildren = children;
@@ -121,7 +121,7 @@ public abstract class HtmlChunk {
             }
             else {
                 builder.append(">");
-                for (HtmlChunk child : myChildren) {
+                for (Html child : myChildren) {
                     child.appendTo(builder);
                 }
                 builder.append("</").append(myTagName).append(">");
@@ -203,11 +203,11 @@ public abstract class HtmlChunk {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element children(@Nonnull HtmlChunk... chunks) {
+        public Element children(@Nonnull Html... chunks) {
             if (myChildren.isEmpty()) {
                 return new Element(myTagName, myAttributes, Arrays.asList(chunks));
             }
-            List<HtmlChunk> newChildren = new ArrayList<>(myChildren.size() + chunks.length);
+            List<Html> newChildren = new ArrayList<>(myChildren.size() + chunks.length);
             newChildren.addAll(myChildren);
             Collections.addAll(newChildren, chunks);
             return new Element(myTagName, myAttributes, newChildren);
@@ -219,11 +219,11 @@ public abstract class HtmlChunk {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element children(@Nonnull List<HtmlChunk> chunks) {
+        public Element children(@Nonnull List<Html> chunks) {
             if (myChildren.isEmpty()) {
                 return new Element(myTagName, myAttributes, new ArrayList<>(chunks));
             }
-            List<HtmlChunk> newChildren = new ArrayList<>(myChildren.size() + chunks.size());
+            List<Html> newChildren = new ArrayList<>(myChildren.size() + chunks.size());
             newChildren.addAll(myChildren);
             newChildren.addAll(chunks);
             return new Element(myTagName, myAttributes, newChildren);
@@ -235,11 +235,11 @@ public abstract class HtmlChunk {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element child(@Nonnull HtmlChunk chunk) {
+        public Element child(@Nonnull Html chunk) {
             if (myChildren.isEmpty()) {
                 return new Element(myTagName, myAttributes, Collections.singletonList(chunk));
             }
-            List<HtmlChunk> newChildren = new ArrayList<>(myChildren.size() + 1);
+            List<Html> newChildren = new ArrayList<>(myChildren.size() + 1);
             newChildren.addAll(myChildren);
             newChildren.add(chunk);
             return new Element(myTagName, myAttributes, newChildren);
@@ -437,7 +437,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static HtmlChunk nbsp() {
+    public static Html nbsp() {
         return Nbsp.ONE;
     }
 
@@ -449,7 +449,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static HtmlChunk nbsp(int count) {
+    public static Html nbsp(int count) {
         if (count <= 0) {
             throw new IllegalArgumentException();
         }
@@ -465,7 +465,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static HtmlChunk text(@Nonnull LocalizeValue text) {
+    public static Html text(@Nonnull LocalizeValue text) {
         return text == LocalizeValue.empty() ? empty() : new Text(text.get());
     }
 
@@ -478,7 +478,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static HtmlChunk text(@Nonnull String text) {
+    public static Html text(@Nonnull String text) {
         return text.isEmpty() ? empty() : new Text(text);
     }
 
@@ -487,7 +487,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static HtmlChunk empty() {
+    public static Html empty() {
         return Empty.INSTANCE;
     }
 
@@ -501,7 +501,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static HtmlChunk raw(@Nonnull LocalizeValue rawHtml) {
+    public static Html raw(@Nonnull LocalizeValue rawHtml) {
         return rawHtml == LocalizeValue.empty() ? empty() : new Raw(rawHtml.get());
     }
 
@@ -515,7 +515,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static HtmlChunk raw(@Nonnull String rawHtml) {
+    public static Html raw(@Nonnull String rawHtml) {
         return rawHtml.isEmpty() ? empty() : new Raw(rawHtml);
     }
 
@@ -555,7 +555,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static HtmlChunk htmlEntity(@Nonnull String htmlEntity) {
+    public static Html htmlEntity(@Nonnull String htmlEntity) {
         return raw(htmlEntity);
     }
 
@@ -592,7 +592,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static Collector<HtmlChunk, ?, HtmlChunk> toFragment() {
+    public static Collector<Html, ?, Html> toFragment() {
         return Collector.of(HtmlBuilder::new, HtmlBuilder::append, HtmlBuilder::append, HtmlBuilder::toFragment);
     }
 
@@ -602,7 +602,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static Collector<HtmlChunk, ?, HtmlChunk> toFragment(HtmlChunk separator) {
+    public static Collector<Html, ?, Html> toFragment(Html separator) {
         return Collector.of(
             HtmlBuilder::new,
             (hb, c) -> {
