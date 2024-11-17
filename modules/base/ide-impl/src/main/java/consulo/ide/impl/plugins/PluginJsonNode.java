@@ -19,7 +19,7 @@ import consulo.util.collection.ArrayUtil;
 
 /**
  * @author VISTALL
- * @since 30-Aug-16
+ * @since 2016-08-30
  */
 public class PluginJsonNode {
     public class ExtensionPreview {

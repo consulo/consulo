@@ -273,8 +273,6 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
     }
 
     /**
-     * In complex environment use PluginManagerColumnInfo.getRealNodeState () method instead.
-     *
      * @return Status of plugin
      */
     public int getInstallStatus() {
@@ -354,7 +352,7 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
 
     public void addDependency(PluginId... depends) {
         if (myDependencies.isEmpty()) {
-            myDependencies = new ArrayList<PluginId>();
+            myDependencies = new ArrayList<>();
         }
 
         Collections.addAll(myDependencies, depends);
@@ -362,7 +360,7 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
 
     public void addOptionalDependency(PluginId... depends) {
         if (myOptionalDependencies.isEmpty()) {
-            myOptionalDependencies = new ArrayList<PluginId>();
+            myOptionalDependencies = new ArrayList<>();
         }
 
         Collections.addAll(myOptionalDependencies, depends);
@@ -412,20 +410,6 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
 
     public void setExperimental(boolean experimental) {
         myExperimental = experimental;
-    }
-
-    @Nullable
-    public String getStatusText() {
-        switch (myInstallStatus) {
-            case STATUS_UNKNOWN:
-                return "Available";
-            case STATUS_INSTALLED:
-                return "Installed";
-            case STATUS_NEWEST:
-                return "Ready to update";
-            default:
-                return null;
-        }
     }
 
     public void setInstalledVersion(String installedVersion) {

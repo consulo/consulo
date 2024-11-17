@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 15/11/2021
+ * @since 2021-11-15
  */
 @ExtensionImpl
 public class WhatsNewVirtualFileEditorProvider implements FileEditorProvider, DumbAware {

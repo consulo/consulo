@@ -30,6 +30,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -91,6 +92,7 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
         pluginTable.updateUI();
     }
 
+    @RequiredUIAccess
     public static void uninstall(PluginManagerMain host, PluginDescriptor... selection) {
         LocalizeValue message;
 
@@ -104,7 +106,7 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
             host.getMainPanel(),
             message.get(),
             IdeLocalize.titlePluginUninstall().get(),
-            Messages.getQuestionIcon()
+            UIUtil.getQuestionIcon()
         ) != Messages.YES) {
             return;
         }
@@ -123,7 +125,7 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
                     host.getMainPanel(),
                     message.get(),
                     IdeLocalize.titlePluginUninstall().get(),
-                    Messages.getQuestionIcon()
+                    UIUtil.getQuestionIcon()
                 ) == Messages.YES);
             }
 

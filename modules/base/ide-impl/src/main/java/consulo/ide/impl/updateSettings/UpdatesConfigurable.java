@@ -23,7 +23,7 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.externalService.update.UpdateChannel;
 import consulo.externalService.update.UpdateSettings;
-import consulo.localize.LocalizeValue;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
@@ -37,7 +37,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 19-Nov-16.
+ * @since 2016-11-19
  */
 @ExtensionImpl
 public class UpdatesConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
@@ -50,7 +50,7 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Update Settings";
+        return PluginLocalize.updateSettingsTitle().get();
     }
 
     @Nullable
@@ -68,9 +68,9 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
         VerticalLayout layout = VerticalLayout.create();
 
         VerticalLayout repoLayout = VerticalLayout.create();
-        layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Repository settings"), repoLayout));
+        layout.add(LabeledLayout.create(PluginLocalize.updateSettingsRepositorySettingsSection(), repoLayout));
 
-        CheckBox enableUpdates = CheckBox.create(LocalizeValue.localizeTODO("Enabled updates?"));
+        CheckBox enableUpdates = CheckBox.create(PluginLocalize.updateSettingsUpdatesEnabled());
         propertyBuilder.add(enableUpdates, updateSettings::isEnable, updateSettings::setEnable);
 
         ComboBox<UpdateChannel> channelComboBox =
@@ -80,7 +80,7 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
         enableUpdates.addValueListener(event -> channelComboBox.setEnabled(event.getValue()));
 
         repoLayout.add(HorizontalLayout.create().add(enableUpdates));
-        repoLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Channel"), channelComboBox));
+        repoLayout.add(LabeledBuilder.sided(PluginLocalize.updateSettingsChannelLabel(), channelComboBox));
         return layout;
     }
 }

@@ -815,7 +815,6 @@ log.monitor.edit.aliases.show.all.checkbox.title:
   text: '&Show all files coverable by pattern'
 title.submitting.error.report:
   text: Submitting Error Report
-
 service.view.open.in.new.tab.ad.text:
   text: Drag node onto tool window header to open a new tab
 service.view.empty.tree.text:
@@ -862,7 +861,6 @@ service.view.configure.run.configuration.types:
   text: Run/Debug Configuration Types
 service.view.configure.run.tool.windows:
   text: Run/Debug
-
 run.combo.box.add.configuration:
   text: Add Configuration...
 show.irrelevant.configurations.action.name:

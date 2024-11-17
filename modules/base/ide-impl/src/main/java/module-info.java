@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 13/01/2022
+ * @since 2022-01-13
  */
 open module consulo.ide.impl {
     requires java.desktop;
@@ -395,7 +395,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.ide.navigationToolbar;
     exports consulo.ide.impl.idea.ide.plugins;
     exports consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
-    exports consulo.ide.impl.idea.ide.plugins.sorters;
     exports consulo.ide.impl.idea.ide.projectView;
     exports consulo.ide.impl.idea.ide.projectView.actions;
     exports consulo.ide.impl.idea.ide.projectView.impl;
@@ -872,15 +871,16 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.wm.impl.status;
     exports consulo.ide.impl.wm.impl.welcomeScreen;
 
+    exports consulo.ide.impl.configurable to
+        consulo.sand.language.plugin,
+        consulo.desktop.awt.ide.impl;
+    exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;
     exports consulo.ide.impl.internal.localize to
         consulo.desktop.ide.impl,
         consulo.desktop.awt.ide.impl;
-
-    exports consulo.ide.impl.project.ui.impl to consulo.desktop.awt.ide.impl;
-    exports consulo.ide.impl.configurable to consulo.sand.language.plugin, consulo.desktop.awt.ide.impl;
-    exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;
-    exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl;
     exports consulo.ide.impl.idea.diff.actions.impl to consulo.desktop.awt.ide.impl;
     exports consulo.ide.impl.idea.diff.requests to consulo.desktop.awt.ide.impl;
     exports consulo.ide.impl.idea.openapi.diagnostic to consulo.desktop.awt.ide.impl;
+    exports consulo.ide.impl.project.ui.impl to consulo.desktop.awt.ide.impl;
+    exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl;
 }

@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.ide.plugins.InstallPluginAction;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.plugins.PluginTable;
 import consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement.PluginAdvertiserRequester;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;
 import consulo.project.Project;
 import consulo.ui.Size;
@@ -40,7 +41,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 22-Jun-17
+ * @since 2017-06-22
  */
 public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     @Nullable
@@ -66,7 +67,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
 
         myProject = project;
         myToInstallPlugins = toInstallPlugins;
-        setTitle("Choose Plugins to Install");
+        setTitle(PluginLocalize.messagePluginAdvertizerChoosePluginsToInstall());
         init();
     }
 
@@ -105,17 +106,22 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
         Application application = Application.get();
         List<PluginDescriptor> loadedPluginDescriptors =
             application.getInstance(PluginAdvertiserRequester.class).getLoadedPluginDescriptors();
         List<PluginDescriptor> toDownload = myToInstallPlugins.stream().filter(it -> myDownloadState.get(it.getPluginId())).toList();
-        myUserAccepted = InstallPluginAction
-            .downloadAndInstallPlugins(myProject, toDownload, loadedPluginDescriptors, ideaPluginDescriptors -> {
+        myUserAccepted = InstallPluginAction.downloadAndInstallPlugins(
+            myProject,
+            toDownload,
+            loadedPluginDescriptors,
+            ideaPluginDescriptors -> {
                 if (!ideaPluginDescriptors.isEmpty()) {
                     PluginManagerMain.notifyPluginsWereInstalled(ideaPluginDescriptors, null);
                 }
-            });
+            }
+        );
         super.doOKAction();
     }
 

@@ -28,16 +28,13 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 15/11/2021
+ * @since 2021-11-15
  */
 @ExtensionImpl
 public class WhatsNewEditorTabColorProvider implements EditorTabColorProvider, DumbAware {
     @Nullable
     @Override
     public Color getEditorTabColor(Project project, VirtualFile file) {
-        if (file instanceof WhatsNewVirtualFile) {
-            return LightColors.SLIGHTLY_GREEN;
-        }
-        return null;
+        return file instanceof WhatsNewVirtualFile ? LightColors.SLIGHTLY_GREEN : null;
     }
 }

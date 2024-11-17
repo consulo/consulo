@@ -21,6 +21,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginDialog;
 import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
@@ -104,8 +105,8 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         final List<PluginDescriptor> list = new ArrayList<>();
         for (PluginDescriptor descr : selection) {
             PluginNode pluginNode = null;
-            if (descr instanceof PluginNode) {
-                pluginNode = (PluginNode)descr;
+            if (descr instanceof PluginNode node) {
+                pluginNode = node;
             }
             else if (descr.isLoaded()) {
                 final PluginId pluginId = descr.getPluginId();
@@ -120,9 +121,9 @@ public class InstallPluginAction extends AnAction implements DumbAware {
             if (pluginNode != null) {
                 if (pluginNode.isExperimental()) {
                     if (Messages.showOkCancelDialog(
-                        "Are you sure install experimental plugin? Plugin can make IDE unstable, and may not implement expected features",
+                        PluginLocalize.messageExperimentalPluginInstallationConfirm().get(),
                         Application.get().getName().get(),
-                        Messages.getWarningIcon()
+                        UIUtil.getWarningIcon()
                     ) != Messages.OK) {
                         return;
                     }
@@ -186,6 +187,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         downloadAndInstallPlugins(project, list, available.getPluginsModel().getAllPlugins(), afterCallback);
     }
 
+    @RequiredUIAccess
     public static boolean downloadAndInstallPlugins(
         @Nullable Project project,
         @Nonnull final List<PluginDescriptor> toInstall,
@@ -217,6 +219,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         }
     }
 
+    @RequiredUIAccess
     private static boolean suggestToEnableInstalledPlugins(
         final InstalledPluginsTableModel pluginsModel,
         final Set<PluginDescriptor> disabled,
@@ -224,51 +227,47 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         final List<PluginDescriptor> list
     ) {
         if (!disabled.isEmpty() || !disabledDependants.isEmpty()) {
-            String message = "";
-            if (disabled.size() == 1) {
-                message += "Updated plugin '" + disabled.iterator().next().getName() + "' is disabled.";
-            }
-            else if (!disabled.isEmpty()) {
-                message += "Updated plugins " + StringUtil.join(disabled, PluginDescriptor::getName, ", ") + " are disabled.";
+            StringBuilder message = new StringBuilder();
+            if (!disabled.isEmpty()) {
+                message.append(PluginLocalize.messageUpdatedPluginsDisabled(
+                    StringUtil.join(disabled, PluginDescriptor::getName, ", "),
+                    disabled.size()
+                )).append("<br/>");
             }
 
             if (!disabledDependants.isEmpty()) {
-                message += "<br>";
-                message += "Updated plugin" + (list.size() > 1 ? "s depend " : " depends ") + "on disabled";
-                if (disabledDependants.size() == 1) {
-                    message += " plugin '" + disabledDependants.iterator().next().getName() + "'.";
-                }
-                else {
-                    message += " plugins " + StringUtil.join(disabledDependants, PluginDescriptor::getName, ", ") + ".";
-                }
+                message.append(PluginLocalize.messageUpdatedPluginsDependOnDisabled(
+                    StringUtil.join(list, PluginDescriptor::getName, ", "),
+                    list.size(),
+                    StringUtil.join(disabledDependants, PluginDescriptor::getName, ", "),
+                    disabledDependants.size()
+                )).append("<br/>");
             }
-            message += " Disabled plugins and plugins which depends on disabled plugins won't be activated after restart.";
+            message.append(PluginLocalize.messageDisabledPluginsWontBeActivatedAfterRestart());
 
             int result;
             if (!disabled.isEmpty() && !disabledDependants.isEmpty()) {
                 result = Messages.showYesNoCancelDialog(
                     XmlStringUtil.wrapInHtml(message),
                     CommonLocalize.titleWarning().get(),
-                    "Enable all",
-                    "Enable updated plugin" + (disabled.size() > 1 ? "s" : ""),
+                    PluginLocalize.actionEnableAllText().get(),
+                    PluginLocalize.actionEnableUpdatedPluginsText(disabled.size()).get(),
                     CommonLocalize.buttonCancel().get(),
-                    Messages.getQuestionIcon()
+                    UIUtil.getQuestionIcon()
                 );
                 if (result == Messages.CANCEL) {
                     return false;
                 }
             }
             else {
-                message += "<br>Would you like to enable ";
                 if (!disabled.isEmpty()) {
-                    message += "updated plugin" + (disabled.size() > 1 ? "s" : "");
+                    message.append("<br/>").append(PluginLocalize.messageAskEnableUpdatedPlugins(disabled.size()));
                 }
                 else {
-                    //noinspection SpellCheckingInspection
-                    message += "plugin dependenc" + (disabledDependants.size() > 1 ? "ies" : "y");
+                    message.append("<br/>").append(PluginLocalize.messageAskEnablePluginDependencies(disabledDependants.size()));
                 }
-                message += "?</body></html>";
-                result = Messages.showYesNoDialog(message, CommonLocalize.titleWarning().get(), Messages.getQuestionIcon());
+                message.append("</body></html>");
+                result = Messages.showYesNoDialog(message.toString(), CommonLocalize.titleWarning().get(), UIUtil.getQuestionIcon());
                 if (result == Messages.NO) {
                     return false;
                 }

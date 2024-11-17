@@ -15,25 +15,26 @@
  */
 package consulo.ide.impl.plugins;
 
+import consulo.application.Application;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.configurable.ConfigurationException;
+import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginManager;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.plugins.AvailablePluginsManagerMain;
 import consulo.ide.impl.idea.ide.plugins.InstalledPluginsManagerMain;
 import consulo.ide.impl.idea.ide.plugins.PluginInstallUtil;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
+import consulo.ide.impl.localize.PluginLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
-import consulo.application.Application;
-import consulo.configurable.ConfigurationException;
 import consulo.ui.ex.awt.Messages;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.tab.TabInfo;
-import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
-import consulo.container.plugin.PluginId;
-import consulo.container.plugin.PluginManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -59,12 +60,12 @@ public class PluginsPanel implements Disposable {
 
         Wrapper fromRepository = new Wrapper();
         TabInfo repositoryTab = new TabInfo(fromRepository);
-        repositoryTab.setText("From Repository");
+        repositoryTab.setText(PluginLocalize.tabFromRepository());
         myTabs.addTab(repositoryTab);
 
         Wrapper installedWrapper = new Wrapper();
         TabInfo installedTab = new TabInfo(installedWrapper);
-        installedTab.setText("Installed");
+        installedTab.setText(PluginLocalize.tabInstalled());
         myTabs.addTab(installedTab);
 
         myInstalledPluginsPanel = new InstalledPluginsManagerMain();
@@ -88,13 +89,7 @@ public class PluginsPanel implements Disposable {
         // set default Repository tab if no plugins installed
         select(pluginsCount == 0 ? myAvailablePluginsManagerMain : myInstalledPluginsPanel);
 
-        DataManager.registerDataProvider(myTabs.getComponent(), dataId -> {
-            if (dataId == KEY) {
-                return this;
-            }
-
-            return null;
-        });
+        DataManager.registerDataProvider(myTabs.getComponent(), dataId -> dataId == KEY ? this : null);
     }
 
     public void filter(String option) {
@@ -164,6 +159,7 @@ public class PluginsPanel implements Disposable {
         return myInstalledPluginsPanel.isModified() || myAvailablePluginsManagerMain.isModified();
     }
 
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         String applyMessage = myInstalledPluginsPanel.apply();
         myAvailablePluginsManagerMain.apply();

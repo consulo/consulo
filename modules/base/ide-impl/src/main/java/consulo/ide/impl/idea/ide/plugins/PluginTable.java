@@ -33,7 +33,7 @@ import java.awt.datatransfer.Transferable;
 
 /**
  * @author stathik
- * @since 4:19:20 PM Dec 11, 2003
+ * @since 2003-12-11
  */
 public class PluginTable extends JBTable {
     public PluginTable(final PluginTableModel model) {

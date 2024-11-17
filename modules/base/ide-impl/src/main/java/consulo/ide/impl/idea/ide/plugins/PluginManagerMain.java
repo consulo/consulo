@@ -25,15 +25,15 @@ import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.externalService.update.UpdateSettings;
 import consulo.webBrowser.BrowserUtil;
-import consulo.ide.impl.idea.ide.plugins.sorters.SortByStatusAction;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;
+import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.localize.RepositoryTagLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationDisplayType;
@@ -52,7 +52,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -69,11 +68,12 @@ import java.util.stream.Collectors;
 
 /**
  * @author stathik
- * @since Dec 25, 2003
+ * @since 2003-12-25
  */
 public abstract class PluginManagerMain implements Disposable {
     public static final NotificationGroup ourPluginsLifecycleGroup = new NotificationGroup(
-        "Plugins Lifecycle Group",
+        "pluginsLifecycleGroup",
+        PluginLocalize.messagePluginsLifecycleGroup(),
         NotificationDisplayType.STICKY_BALLOON,
         true
     );
@@ -129,7 +129,7 @@ public abstract class PluginManagerMain implements Disposable {
         };
         header.setBorder(new CustomLineBorder(0, 0, JBUI.scale(1), 0));
 
-        LabelPopup sortLabel = new LabelPopup(LocalizeValue.localizeTODO("Sort by:"), labelPopup -> createSortersGroup());
+        LabelPopup sortLabel = new LabelPopup(PluginLocalize.actionSortByLabel(), labelPopup -> createSortersGroup());
 
         header.add(myFilter, BorderLayout.CENTER);
         JPanel rightHelpPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
@@ -142,28 +142,12 @@ public abstract class PluginManagerMain implements Disposable {
 
         myTablePanel.add(header, BorderLayout.NORTH);
 
-        final TableModelListener modelListener = e -> {
-            String text = "name";
-            if (myPluginsModel.isSortByStatus()) {
-                text = "status";
-            }
-            else if (myPluginsModel.isSortByRating()) {
-                text = "rating";
-            }
-            else if (myPluginsModel.isSortByDownloads()) {
-                text = "downloads";
-            }
-            else if (myPluginsModel.isSortByUpdated()) {
-                text = "updated";
-            }
-            sortLabel.setPrefixedText(LocalizeValue.of(text));
-        };
+        final TableModelListener modelListener = e -> sortLabel.setPrefixedText(myPluginsModel.getSortBy().getTitle());
         myPluginTable.getModel().addTableModelListener(modelListener);
         modelListener.tableChanged(null);
     }
 
     protected void addCustomFilters(Consumer<JComponent> adder) {
-
     }
 
     @Nonnull
@@ -183,10 +167,13 @@ public abstract class PluginManagerMain implements Disposable {
     }
 
     public void reset() {
-        UiNotifyConnector.doWhenFirstShown(getPluginTable(), () -> {
-            requireShutdown = false;
-            TableUtil.ensureSelectionExists(getPluginTable());
-        });
+        UiNotifyConnector.doWhenFirstShown(
+            getPluginTable(),
+            () -> {
+                requireShutdown = false;
+                TableUtil.ensureSelectionExists(getPluginTable());
+            }
+        );
     }
 
     public PluginTable getPluginTable() {
@@ -297,7 +284,7 @@ public abstract class PluginManagerMain implements Disposable {
                         IdeLocalize.titlePlugins().get(),
                         CommonLocalize.buttonRetry().get(),
                         CommonLocalize.buttonCancel().get(),
-                        Messages.getErrorIcon()
+                        UIUtil.getErrorIcon()
                     ) == Messages.OK) {
                         loadPluginsFromHostInBackground(earlyAccessProgramManager);
                     }
@@ -348,8 +335,8 @@ public abstract class PluginManagerMain implements Disposable {
     }
 
     protected DefaultActionGroup createSortersGroup() {
-        final DefaultActionGroup group = new DefaultActionGroup("Sort by", true);
-        group.addAction(new SortByStatusAction(myPluginTable, myPluginsModel));
+        final DefaultActionGroup group = new DefaultActionGroup(PluginLocalize.actionSortByText(), true);
+        group.addAction(new SortByAction(SortBy.STATUS, myPluginTable, myPluginsModel));
         return group;
     }
 
@@ -358,8 +345,7 @@ public abstract class PluginManagerMain implements Disposable {
         public void hyperlinkUpdate(HyperlinkEvent e) {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                 JEditorPane pane = (JEditorPane)e.getSource();
-                if (e instanceof HTMLFrameHyperlinkEvent) {
-                    HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent)e;
+                if (e instanceof HTMLFrameHyperlinkEvent evt) {
                     HTMLDocument doc = (HTMLDocument)pane.getDocument();
                     doc.processHTMLFrameHyperlinkEvent(evt);
                 }
@@ -388,6 +374,7 @@ public abstract class PluginManagerMain implements Disposable {
             return myComponent.getSelectedRow();
         }
 
+        @Nonnull
         @Override
         public Object[] getAllElements() {
             return myComponent.getElements();
@@ -464,14 +451,15 @@ public abstract class PluginManagerMain implements Disposable {
         return descriptionSet.isEmpty();
     }
 
-    @NonNls
     public static void notifyPluginsWereInstalled(
         @Nonnull Collection<? extends PluginDescriptor> installed,
         Project project
     ) {
-        String pluginName = installed.size() == 1 ? installed.iterator().next().getName() : null;
         notifyPluginsWereUpdated(
-            pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed",
+            PluginLocalize.messagePluginsWereInstalled(
+                StringUtil.join(installed, PluginDescriptor::getName, ", "),
+                installed.size()
+            ).get(),
             project
         );
     }
@@ -483,7 +471,11 @@ public abstract class PluginManagerMain implements Disposable {
         String message = restartCapable
             ? IdeLocalize.messageIdeaRestartRequired(appName).get()
             : IdeLocalize.messageIdeaShutdownRequired(appName).get();
-        message += "<br><a href=" + (restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown") + "</a>";
+        message += "<br><a href=" + (
+            restartCapable
+                ? "\"restart\">" + IdeLocalize.ideRestartAction()
+                : "\"shutdown\">" + IdeLocalize.ideShutdownAction()
+        ) + "</a>";
         ourPluginsLifecycleGroup.createNotification(
             title,
             XmlStringUtil.wrapInHtml(message),
@@ -501,7 +493,6 @@ public abstract class PluginManagerMain implements Disposable {
     }
 
     public class MyPluginsFilter extends FilterComponent {
-
         public MyPluginsFilter() {
             super("PLUGIN_FILTER", 5);
             getTextEditor().setBorder(JBUI.Borders.empty(2));
@@ -516,16 +507,22 @@ public abstract class PluginManagerMain implements Disposable {
 
     protected class RefreshAction extends DumbAwareAction {
         public RefreshAction() {
-            super("Reload List of Plugins", "Reload list of plugins", AllIcons.Actions.Refresh);
+            super(
+                PluginLocalize.actionReloadListOfPluginsText(),
+                PluginLocalize.actionReloadListOfPluginsDescription(),
+                AllIcons.Actions.Refresh
+            );
         }
 
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             loadAvailablePlugins();
             myFilter.setFilter("");
         }
 
         @Override
+        @RequiredUIAccess
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(!myBusy);
         }

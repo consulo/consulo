@@ -45,11 +45,11 @@ public class PluginManager extends PluginManagerCore {
     @Deprecated
     public static File getPluginPath(@Nonnull Class<?> pluginClass) {
         ClassLoader temp = pluginClass.getClassLoader();
-        assert temp instanceof PluginClassLoader : "classloader is not plugin";
+        assert temp instanceof PluginClassLoader : "ClassLoader is not a PluginClassLoader";
         PluginClassLoader classLoader = (PluginClassLoader)temp;
         PluginId pluginId = classLoader.getPluginId();
         PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(pluginId);
-        assert plugin != null : "plugin is not found";
+        assert plugin != null : "Plugin is not found";
         return plugin.getPath();
     }
 

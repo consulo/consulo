@@ -16,7 +16,8 @@
 package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.JBColor;
@@ -55,13 +56,7 @@ public class PluginHeaderPanel {
     private JLabel myExperimentalLabel;
     private JLabel myIconLabel;
 
-    enum ACTION_ID {
-        INSTALL,
-        UNINSTALL,
-        RESTART
-    }
-
-    private ACTION_ID myActionId = ACTION_ID.INSTALL;
+    private InstallationAction myInstallationAction = InstallationAction.INSTALL;
 
     private ActionListener myActionListener;
 
@@ -78,71 +73,38 @@ public class PluginHeaderPanel {
         myName.setText(plugin.getName());
         myName.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
 
-        if (plugin instanceof PluginNode) {
-            final PluginNode node = (PluginNode)plugin;
-
+        if (plugin instanceof PluginNode node) {
             myRating.setRate(node.getRating());
-            myDownloads.setText(node.getDownloads() + " downloads");
-            myUpdated.setText("Updated " + DateFormatUtil.formatDate(node.getDate()));
-            switch (node.getInstallStatus()) {
-                case PluginNode.STATUS_INSTALLED:
-                    myActionId = ACTION_ID.UNINSTALL;
-                    break;
-                case PluginNode.STATUS_DOWNLOADED:
-                    myActionId = ACTION_ID.RESTART;
-                    break;
-                default:
-                    myActionId = ACTION_ID.INSTALL;
-            }
+            myDownloads.setText(PluginLocalize.pluginHeaderNDownloads(node.getDownloads()).get());
+            myUpdated.setText(PluginLocalize.pluginHeaderDateUpdated(DateFormatUtil.formatDate(node.getDate())).get());
+            myInstallationAction = switch (node.getInstallStatus()) {
+                case PluginNode.STATUS_INSTALLED -> InstallationAction.UNINSTALL;
+                case PluginNode.STATUS_DOWNLOADED -> InstallationAction.RESTART;
+                default -> InstallationAction.INSTALL;
+            };
         }
         else {
-            myActionId = null;
+            myInstallationAction = null;
             myDownloadsPanel.setVisible(false);
             myUpdated.setVisible(false);
             if (!PluginIds.isPlatformPlugin(plugin.getPluginId())) {
-                if (plugin.isDeleted()) {
-                    myActionId = ACTION_ID.RESTART;
-                }
-                else {
-                    myActionId = ACTION_ID.UNINSTALL;
-                }
+                myInstallationAction = plugin.isDeleted() ? InstallationAction.RESTART : InstallationAction.UNINSTALL;
             }
-            if (myActionId == ACTION_ID.RESTART && manager != null && !manager.isRequireShutdown()) {
-                myActionId = null;
+            if (myInstallationAction == InstallationAction.RESTART && manager != null && !manager.isRequireShutdown()) {
+                myInstallationAction = null;
             }
         }
 
-        if (manager == null || myActionId == null) {
-            myActionId = ACTION_ID.INSTALL;
+        if (manager == null || myInstallationAction == null) {
+            myInstallationAction = InstallationAction.INSTALL;
             myInstallButton.setVisible(false);
         }
 
         myIconLabel.setOpaque(false);
         myIconLabel.setIcon(TargetAWT.to(PluginIconHolder.get(plugin)));
 
-        switch (myActionId) {
-            case INSTALL:
-                myInstallButton.setIcon(TargetAWT.to(AllIcons.Actions.Install));
-                break;
-            case UNINSTALL:
-                myInstallButton.setIcon(TargetAWT.to(AllIcons.Actions.Cancel));
-                break;
-            case RESTART:
-                myInstallButton.setIcon(TargetAWT.to(AllIcons.Actions.Restart));
-                break;
-        }
-
-        switch (myActionId) {
-            case INSTALL:
-                myInstallButton.setText("Install");
-                break;
-            case UNINSTALL:
-                myInstallButton.setText("Uninstall");
-                break;
-            case RESTART:
-                myInstallButton.setText("Restart");
-                break;
-        }
+        myInstallButton.setText(myInstallationAction.getTitle().get());
+        myInstallButton.setIcon(TargetAWT.to(myInstallationAction.getIcon()));
 
         myRoot.revalidate();
         myInstallButton.getParent().revalidate();
@@ -153,7 +115,7 @@ public class PluginHeaderPanel {
         }
 
         myActionListener = e -> {
-            switch (myActionId) {
+            switch (myInstallationAction) {
                 case INSTALL:
                     new InstallPluginAction(manager).install(null, () -> UIUtil.invokeLaterIfNeeded(() -> update(plugin, manager)));
                     break;
@@ -164,12 +126,12 @@ public class PluginHeaderPanel {
                     if (manager != null) {
                         manager.apply();
                     }
-                    final DialogWrapper dialog =
+                    DialogWrapper dialog =
                         DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
                     if (dialog != null) {
                         dialog.doOKActionPublic();
 
-                        ApplicationManager.getApplication().restart(true);
+                        Application.get().restart(true);
                     }
                     break;
             }
@@ -177,7 +139,7 @@ public class PluginHeaderPanel {
         };
         myInstallButton.addActionListener(myActionListener);
 
-        myExperimentalLabel.setText("Experimental");
+        myExperimentalLabel.setText(PluginLocalize.messageExperimental().get());
         myExperimentalLabel.setVisible(plugin.isExperimental());
         if (plugin.isExperimental()) {
             myExperimentalLabel.setIcon(TargetAWT.to(AllIcons.General.BalloonWarning));

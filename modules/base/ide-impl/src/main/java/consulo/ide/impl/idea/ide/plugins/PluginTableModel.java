@@ -20,6 +20,7 @@ import consulo.container.plugin.PluginId;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.SortableColumnModel;
 import consulo.container.plugin.PluginDescriptor;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -33,15 +34,11 @@ import java.util.Set;
  * @author Konstantin Bulenkov
  */
 public abstract class PluginTableModel extends AbstractTableModel implements SortableColumnModel {
-    protected static final String NAME = "Name";
     protected ColumnInfo[] columns;
     protected List<PluginDescriptor> view;
     private RowSorter.SortKey myDefaultSortKey;
     protected final List<PluginDescriptor> filtered = new ArrayList<>();
-    private boolean mySortByStatus;
-    private boolean mySortByRating;
-    private boolean mySortByDownloads;
-    private boolean mySortByUpdated;
+    private SortBy mySortBy = SortBy.NAME;
 
     protected PluginTableModel() {
     }
@@ -174,36 +171,12 @@ public abstract class PluginTableModel extends AbstractTableModel implements Sor
         fireTableDataChanged();
     }
 
-    public boolean isSortByStatus() {
-        return mySortByStatus;
+    public SortBy getSortBy() {
+        return mySortBy;
     }
 
-    public void setSortByStatus(boolean sortByStatus) {
-        mySortByStatus = sortByStatus;
-    }
-
-    public boolean isSortByRating() {
-        return mySortByRating;
-    }
-
-    public void setSortByRating(boolean sortByRating) {
-        mySortByRating = sortByRating;
-    }
-
-    public boolean isSortByDownloads() {
-        return mySortByDownloads;
-    }
-
-    public void setSortByDownloads(boolean sortByDownloads) {
-        mySortByDownloads = sortByDownloads;
-    }
-
-    public boolean isSortByUpdated() {
-        return mySortByUpdated;
-    }
-
-    public void setSortByUpdated(boolean sortByUpdated) {
-        mySortByUpdated = sortByUpdated;
+    public void setSortBy(@Nonnull SortBy sortBy) {
+        mySortBy = sortBy;
     }
 
     public List<PluginDescriptor> getAllPlugins() {

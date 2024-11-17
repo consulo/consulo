@@ -24,7 +24,9 @@ import consulo.ide.impl.idea.util.containers.ArrayListSet;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.localize.LocalizeValue;
 import consulo.ide.localize.IdeLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,42 +37,51 @@ import java.util.Set;
 
 /**
  * @author stathik
- * @since Nov 29, 2003
+ * @since 2003-11-29
  */
 public class PluginInstallUtil {
-    private static final String POSTPONE = "&Postpone";
-
     private PluginInstallUtil() {
     }
 
     @Messages.YesNoResult
+    @RequiredUIAccess
     public static int showShutDownIDEADialog() {
         return showShutDownIDEADialog(IdeLocalize.titlePluginsChanged().get());
     }
 
     @Messages.YesNoResult
+    @RequiredUIAccess
     private static int showShutDownIDEADialog(final String title) {
-        String message = IdeLocalize.messageIdeaShutdownRequired(Application.get().getName()).get();
+        LocalizeValue message = IdeLocalize.messageIdeaShutdownRequired(Application.get().getName());
         return Messages.showYesNoDialog(
-            message,
+            message.get(),
             title,
-            "Shut Down",
-            POSTPONE,
-            Messages.getQuestionIcon()
+            IdeLocalize.ideShutdownAction().get(),
+            IdeLocalize.idePostponeAction().get(),
+            UIUtil.getQuestionIcon()
         );
     }
 
     @Messages.YesNoResult
+    @RequiredUIAccess
     public static int showRestartIDEADialog() {
         return showRestartIDEADialog(IdeLocalize.titlePluginsChanged().get());
     }
 
     @Messages.YesNoResult
+    @RequiredUIAccess
     private static int showRestartIDEADialog(final String title) {
         LocalizeValue message = IdeLocalize.messageIdeaRestartRequired(Application.get().getName());
-        return Messages.showYesNoDialog(message.get(), title, "Restart", POSTPONE, Messages.getQuestionIcon());
+        return Messages.showYesNoDialog(
+            message.get(),
+            title,
+            IdeLocalize.ideRestartAction().get(),
+            IdeLocalize.idePostponeAction().get(),
+            UIUtil.getQuestionIcon()
+        );
     }
 
+    @RequiredUIAccess
     public static void shutdownOrRestartApp(String title) {
         final ApplicationEx app = (ApplicationEx)Application.get();
         int response = app.isRestartCapable() ? showRestartIDEADialog(title) : showShutDownIDEADialog(title);

@@ -95,8 +95,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     }
 
     private static void updateStatus(final PluginDescriptor descr) {
-        if (descr instanceof PluginNode) {
-            final PluginNode node = (PluginNode)descr;
+        if (descr instanceof PluginNode node) {
             PluginDescriptor existing = PluginManager.findPlugin(descr.getPluginId());
             if (existing != null) {
                 node.setInstallStatus(PluginNode.STATUS_INSTALLED);

@@ -20,12 +20,9 @@ import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorStatus;
 import consulo.container.plugin.PluginId;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.plugins.PluginsPanel;
-import consulo.localize.LocalizeValue;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -41,8 +38,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -58,15 +53,12 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         init();
 
         final StatusText emptyText = myPluginTable.getEmptyText();
-        emptyText.setText("Nothing to show.");
-        emptyText.appendText(" Click ");
-        emptyText.appendText("View available plugins...", SimpleTextAttributes.LINK_ATTRIBUTES, new BrowseRepoListener());
-        emptyText.appendText(" to view available plugins.");
+        emptyText.setText(PluginLocalize.messageNothingToShowClickButton().get());
     }
 
     @Override
     protected void addCustomFilters(Consumer<JComponent> adder) {
-        LabelPopup showPopupLabel = new LabelPopup(LocalizeValue.localizeTODO("Show:"), this::createShowGroupPopup);
+        LabelPopup showPopupLabel = new LabelPopup(PluginLocalize.enabledFilterLabel(), this::createShowGroupPopup);
 
         adder.accept(showPopupLabel);
 
@@ -74,13 +66,13 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     }
 
     private void updateShowPopupText(LabelPopup labelPopup) {
-        labelPopup.setPrefixedText(LocalizeValue.of(((InstalledPluginsTableModel)myPluginsModel).getEnabledFilter()));
+        labelPopup.setPrefixedText(((InstalledPluginsTableModel)myPluginsModel).getEnabledFilter().getTitle());
     }
 
     private DefaultActionGroup createShowGroupPopup(LabelPopup labelPopup) {
         final DefaultActionGroup gr = new DefaultActionGroup();
-        for (final String enabledValue : InstalledPluginsTableModel.ENABLED_VALUES) {
-            gr.addAction(new DumbAwareAction(enabledValue) {
+        for (EnabledFilter enabledValue : EnabledFilter.values()) {
+            gr.addAction(new DumbAwareAction(enabledValue.getTitle()) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -136,11 +128,11 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         }
         if (!notInstalled.isEmpty()) {
             Messages.showWarningDialog(
-                "Plugin " + pluginDescriptor.getName() + " depends on unknown plugin" + (notInstalled.size() > 1 ? "s " : " ") + StringUtil.join(
-                    notInstalled,
-                    PluginId::toString,
-                    ", "
-                ),
+                PluginLocalize.messagePluginDependsOnUnknownPlugins(
+                    pluginDescriptor.getName(),
+                    StringUtil.join(notInstalled, PluginId::toString, ", "),
+                    notInstalled.size()
+                ).get(),
                 CommonLocalize.titleWarning().get()
             );
         }
@@ -151,19 +143,14 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
                     dependencies.add(ideaPluginDescriptor);
                 }
             }
-            final String disabledPluginsMessage = "disabled plugin" + (dependencies.size() > 1 ? "s " : " ");
-            String message = "Plugin " +
-                pluginDescriptor.getName() +
-                " depends on " +
-                disabledPluginsMessage +
-                StringUtil.join(dependencies, PluginDescriptor::getName, ", ") +
-                ". Enable " +
-                disabledPluginsMessage.trim() +
-                "?";
 
             if (Messages.showOkCancelDialog(
                 getMainPanel(),
-                message,
+                PluginLocalize.messagePluginDependsOnDisabledPlugins(
+                    pluginDescriptor.getName(),
+                    StringUtil.join(dependencies, PluginDescriptor::getName, ", "),
+                    dependencies.size()
+                ).get(),
                 CommonLocalize.titleWarning().get(),
                 UIUtil.getWarningIcon()
             ) == Messages.OK) {
@@ -201,7 +188,8 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
             for (int i = 0, selectedLength = selected.length; i < selectedLength; i++) {
                 selected[i] = myPluginsModel.getObjectAt(table.convertRowIndexToModel(selectedRows[i]));
             }
-            ((InstalledPluginsTableModel)myPluginsModel).enableRows(selected, currentlyMarked ? Boolean.FALSE : Boolean.TRUE);
+            ((InstalledPluginsTableModel)myPluginsModel)
+                .enableRows(selected, currentlyMarked ? Boolean.FALSE : Boolean.TRUE);
             table.repaint();
         }, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), JComponent.WHEN_FOCUSED);
         table.setExpandableItemsEnabled(false);
@@ -281,7 +269,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
             pluginDescriptor.setStatus(enabled ? PluginDescriptorStatus.OK : PluginDescriptorStatus.DISABLED_BY_USER);
         }
         else {
-            throw new IllegalArgumentException("Unknown plugin class" + descriptor.getPluginId());
+            throw new IllegalArgumentException("Unknown plugin class " + descriptor.getPluginId());
         }
     }
 
@@ -290,30 +278,24 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         final Map<PluginId, Set<PluginId>> dependentToRequiredListMap =
             new HashMap<>(((InstalledPluginsTableModel)myPluginsModel).getDependentToRequiredListMap());
         for (Iterator<PluginId> iterator = dependentToRequiredListMap.keySet().iterator(); iterator.hasNext(); ) {
-            PluginId item = iterator.next();
-            // ignore
+            iterator.next(); // ignore
             iterator.remove();
         }
         if (!dependentToRequiredListMap.isEmpty()) {
-            return "<html><body style=\"padding: 5px;\">Unable to apply changes: plugin" +
-                (dependentToRequiredListMap.size() == 1 ? " " : "s ") +
-                StringUtil.join(dependentToRequiredListMap.keySet(), pluginId -> {
-                    final PluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(pluginId);
-                    return "\"" + (ideaPluginDescriptor != null ? ideaPluginDescriptor.getName() : pluginId.getIdString()) + "\"";
-                }, ", ") +
-                " won't be able to load.</body></html>";
+            return "<html><body style=\"padding: 5px;\">" +
+                PluginLocalize.messagePluginWontLoad(
+                    dependentToRequiredListMap.size(),
+                    StringUtil.join(
+                        dependentToRequiredListMap.keySet(),
+                        pluginId -> {
+                            PluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(pluginId);
+                            return "\"" + (ideaPluginDescriptor != null ? ideaPluginDescriptor.getName() : pluginId.getIdString()) + "\"";
+                        },
+                        ", "
+                    )
+                ) +
+                "</body></html>";
         }
         return super.canApply();
-    }
-
-    private class BrowseRepoListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            PluginsPanel pluginsPanel = DataManager.getInstance().getDataContext(getMainPanel()).getData(PluginsPanel.KEY);
-
-            if (pluginsPanel != null) {
-                pluginsPanel.select(getAvailable());
-            }
-        }
     }
 }

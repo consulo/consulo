@@ -15,36 +15,42 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.ide.impl.idea.ide.plugins.PluginTable;
-import consulo.ide.impl.idea.ide.plugins.PluginTableModel;
+import consulo.application.dumb.DumbAware;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.container.plugin.PluginDescriptor;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class SortByAction extends ToggleAction {
+public class SortByAction extends ToggleAction implements DumbAware {
     protected final PluginTable myTable;
     protected final PluginTableModel myModel;
+    protected final SortBy mySortBy;
 
-    public SortByAction(String name, PluginTable table, PluginTableModel model) {
-        super(name, name, null);
+    public SortByAction(SortBy sortBy, PluginTable table, PluginTableModel model) {
+        super(sortBy.getTitle(), sortBy.getTitle(), null);
+        mySortBy = sortBy;
         myTable = table;
         myModel = model;
     }
 
-    public abstract boolean isSelected();
+    public boolean isSelected() {
+        return myModel.getSortBy() == mySortBy;
+    }
 
-    protected abstract void setSelected(boolean state);
+    protected void setSelected(boolean state) {
+        myModel.setSortBy(state ? mySortBy : SortBy.NAME);
+    }
 
     @Override
-    public final boolean isSelected(AnActionEvent e) {
+    public final boolean isSelected(@Nonnull AnActionEvent e) {
         return isSelected();
     }
 
     @Override
-    public final void setSelected(AnActionEvent e, boolean state) {
+    public final void setSelected(@Nonnull AnActionEvent e, boolean state) {
         PluginDescriptor selected = myTable.getSelectedObject();
         setSelected(state);
         myModel.sort();

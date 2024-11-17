@@ -15,9 +15,11 @@
  */
 package consulo.ui.ex.awt.tab;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.application.util.Queryable;
 import consulo.colorScheme.TextAttributes;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.IconDeferrer;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.SimpleColoredText;
@@ -107,15 +109,21 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
         return myChangeSupport;
     }
 
-    public TabInfo setText(String text) {
+    public TabInfo setText(@Nonnull LocalizeValue text) {
         List<SimpleTextAttributes> attributes = myText.getAttributes();
         TextAttributes textAttributes = attributes.size() == 1 ? TextAttributesUtil.toTextAttributes(attributes.get(0)) : null;
         TextAttributes defaultAttributes = TextAttributesUtil.toTextAttributes(getDefaultAttributes());
-        if (!myText.toString().equals(text) || !Comparing.equal(textAttributes, defaultAttributes)) {
+        if (!myText.toString().equals(text.get()) || !Comparing.equal(textAttributes, defaultAttributes)) {
             clearText(false);
-            append(text, getDefaultAttributes());
+            append(text.get(), getDefaultAttributes());
         }
         return this;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public TabInfo setText(String text) {
+        return setText(LocalizeValue.ofNullable(text));
     }
 
     @Nonnull

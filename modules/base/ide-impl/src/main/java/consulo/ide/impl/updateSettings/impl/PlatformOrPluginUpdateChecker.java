@@ -30,14 +30,15 @@ import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
 import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
 import consulo.externalService.update.UpdateChannel;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement.PluginAdvertiserRequester;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginIconHolder;
+import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.CpuArchitecture;
@@ -62,13 +63,17 @@ import java.util.*;
 
 /**
  * @author VISTALL
- * @since 10-Oct-16
+ * @since 2016-10-10
  */
 public class PlatformOrPluginUpdateChecker {
     private static final Logger LOG = Logger.getInstance(PlatformOrPluginUpdateChecker.class);
 
-    public static final NotificationGroup ourGroup =
-        new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
+    public static final NotificationGroup ourGroup = new NotificationGroup(
+        "platformOrPluginsUpdate",
+        PluginLocalize.messagePlatformOrPluginsUpdate(),
+        NotificationDisplayType.STICKY_BALLOON,
+        false
+    );
 
     // windows ids
     private static final PluginId ourWinNoJre = PluginId.getId("consulo.dist.windows.no.jre");
@@ -271,8 +276,8 @@ public class PlatformOrPluginUpdateChecker {
             case NO_UPDATE:
                 if (showResults) {
                     ourGroup.createNotification(
-                        IdeBundle.message("update.available.group"),
-                        IdeBundle.message("update.there.are.no.updates"),
+                        IdeLocalize.updateAvailableGroup().get(),
+                        IdeLocalize.updateThereAreNoUpdates().get(),
                         NotificationType.INFORMATION,
                         null
                     ).notify(project);
@@ -288,12 +293,12 @@ public class PlatformOrPluginUpdateChecker {
                 }
                 else {
                     Notification notification = ourGroup.createNotification(
-                        IdeBundle.message("update.available.group"),
-                        IdeBundle.message("update.available"),
+                        IdeLocalize.updateAvailableGroup().get(),
+                        IdeLocalize.updateAvailable().get(),
                         NotificationType.INFORMATION,
                         null
                     );
-                    notification.addAction(new NotificationAction(IdeBundle.message("update.view.updates")) {
+                    notification.addAction(new NotificationAction(IdeLocalize.updateViewUpdates().get()) {
                         @RequiredUIAccess
                         @Override
                         public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
@@ -352,7 +357,7 @@ public class PlatformOrPluginUpdateChecker {
         ApplicationInfo appInfo = ApplicationInfo.getInstance();
         String currentBuildNumber = appInfo.getBuild().asString();
 
-        List<PluginDescriptor> remotePlugins = Collections.emptyList();
+        List<PluginDescriptor> remotePlugins;
         UpdateChannel channel = UpdateSettingsImpl.getInstance().getChannel();
         try {
             remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel);
@@ -378,13 +383,12 @@ public class PlatformOrPluginUpdateChecker {
                 alreadyVisited = true;
                 break;
             }
-            if (platformPluginId.equals(pluginId)) {
-                if (StringUtil.compareVersionNumbers(pluginDescriptor.getVersion(), currentBuildNumber) > 0) {
-                    // change current build
-                    currentBuildNumber = pluginDescriptor.getVersion();
-                    newPlatformPlugin = pluginDescriptor;
-                    break;
-                }
+            if (platformPluginId.equals(pluginId)
+                && StringUtil.compareVersionNumbers(pluginDescriptor.getVersion(), currentBuildNumber) > 0) {
+                // change current build
+                currentBuildNumber = pluginDescriptor.getVersion();
+                newPlatformPlugin = pluginDescriptor;
+                break;
             }
         }
 
@@ -469,10 +473,9 @@ public class PlatformOrPluginUpdateChecker {
         if (alreadyVisited && targets.isEmpty()) {
             return PlatformOrPluginUpdateResult.RESTART_REQUIRED;
         }
-        return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(
-            PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE,
-            targets
-        );
+        return targets.isEmpty()
+            ? PlatformOrPluginUpdateResult.NO_UPDATE
+            : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
     }
 
     private static void processDependencies(

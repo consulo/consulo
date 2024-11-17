@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 07/12/2020
+ * @since 2020-12-07
  */
 public class PluginIconHolder {
     private static final String PLUGIN_ICON_KEY = "PLUGIN_ICON_KEY";

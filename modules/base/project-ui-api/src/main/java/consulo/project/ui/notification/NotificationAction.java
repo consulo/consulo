@@ -15,6 +15,8 @@
  */
 package consulo.project.ui.notification;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,7 +32,7 @@ import java.util.function.BiConsumer;
 public abstract class NotificationAction extends DumbAwareAction {
     @Nonnull
     public static NotificationAction create(
-        @Nullable String text,
+        @Nonnull LocalizeValue text,
         @RequiredUIAccess @Nonnull BiConsumer<? super AnActionEvent, ? super Notification> actionPerformed
     ) {
         return new NotificationAction(text) {
@@ -42,6 +44,22 @@ public abstract class NotificationAction extends DumbAwareAction {
         };
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @Nonnull
+    public static NotificationAction create(
+        @Nullable String text,
+        @RequiredUIAccess @Nonnull BiConsumer<? super AnActionEvent, ? super Notification> actionPerformed
+    ) {
+        return create(LocalizeValue.ofNullable(text), actionPerformed);
+    }
+
+    public NotificationAction(@Nonnull LocalizeValue text) {
+        super(text);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public NotificationAction(@Nullable String text) {
         super(text);
     }

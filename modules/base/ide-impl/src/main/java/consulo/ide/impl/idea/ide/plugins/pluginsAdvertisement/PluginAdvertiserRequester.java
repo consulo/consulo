@@ -106,9 +106,9 @@ public class PluginAdvertiserRequester {
                 if (installed != null) {
                     int state = StringUtil.compareVersionNumbers(newPluginDescriptor.getVersion(), installed.getVersion());
 
-                    if (state > 0 &&
-                        !PluginValidator.isIncompatible(newPluginDescriptor) &&
-                        !pluginsState.getUpdatedPlugins().contains(newPluginDescriptor.getPluginId())) {
+                    if (state > 0
+                        && !PluginValidator.isIncompatible(newPluginDescriptor)
+                        && !pluginsState.getUpdatedPlugins().contains(newPluginDescriptor.getPluginId())) {
                         pluginsState.getOutdatedPlugins().add(newPluginDescriptor.getPluginId());
                     }
                 }

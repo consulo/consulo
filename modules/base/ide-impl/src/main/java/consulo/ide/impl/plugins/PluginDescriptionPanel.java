@@ -15,26 +15,22 @@
  */
 package consulo.ide.impl.plugins;
 
-import consulo.webBrowser.BrowserUtil;
+import consulo.container.plugin.*;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.plugins.PluginHeaderPanel;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerColumnInfo;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.dataContext.DataContext;
-import consulo.ide.setting.Settings;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.JBHtmlEditorKit;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.container.plugin.*;
-import consulo.ui.ex.awt.MorphColor;
+import consulo.ide.impl.localize.PluginLocalize;
+import consulo.ide.setting.Settings;
+import consulo.ui.ex.awt.*;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -52,10 +48,10 @@ import static consulo.util.lang.StringUtil.isEmptyOrSpaces;
 
 /**
  * @author VISTALL
- * @since 08/11/2021
+ * @since 2021-11-08
  */
 public class PluginDescriptionPanel {
-    // repository not support rating. disable stars for now
+    // Repository does not support rating. Disable stars for now.
     public static final boolean ENABLED_STARS = false;
 
     private static class MyHyperlinkListener implements HyperlinkListener {
@@ -63,8 +59,7 @@ public class PluginDescriptionPanel {
         public void hyperlinkUpdate(HyperlinkEvent e) {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                 JEditorPane pane = (JEditorPane)e.getSource();
-                if (e instanceof HTMLFrameHyperlinkEvent) {
-                    HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent)e;
+                if (e instanceof HTMLFrameHyperlinkEvent evt) {
                     HTMLDocument doc = (HTMLDocument)pane.getDocument();
                     doc.processHTMLFrameHyperlinkEvent(evt);
                 }
@@ -140,14 +135,19 @@ public class PluginDescriptionPanel {
         StringBuilder sb = new StringBuilder();
         myPluginHeaderPanel.update(plugin, manager);
 
-        sb.append("<h3>Version:</h3>").append("&nbsp;&nbsp;").append(StringUtil.notNullize(plugin.getVersion(), "N/A"));
+        sb.append("<h3>")
+            .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionVersionLabel().get()))
+            .append("</h3>")
+            .append("&nbsp;&nbsp;").append(StringUtil.notNullize(plugin.getVersion(), "N/A"));
 
         if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
             setTextValue(sb, filter, myDescriptionTextArea);
             return;
         }
 
-        sb.append("<h3>Permissions:</h3>");
+        sb.append("<h3>")
+            .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionPermissionsLabel().get()))
+            .append("</h3>");
         boolean noPermissions = true;
         for (PluginPermissionType type : PluginPermissionType.values()) {
             PluginPermissionDescriptor pluginPermissionDescriptor = plugin.getPermissionDescriptor(type);
@@ -160,7 +160,7 @@ public class PluginDescriptionPanel {
 
         if (noPermissions) {
             sb.append("&nbsp;&nbsp;<span style=\"color: gray\">")
-                .append(XmlStringUtil.escapeString("<no special permissions>"))
+                .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionPermissionsNotSet().get()))
                 .append("</span><br>");
         }
 
@@ -171,20 +171,26 @@ public class PluginDescriptionPanel {
             sb.append(description);
         }
         else {
-            sb.append("<span style=\"color: gray\">").append(XmlStringUtil.escapeString("<description not provided>")).append("</span>");
+            sb.append("<span style=\"color: gray\">")
+                .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionDescriptionNotSet().get()))
+                .append("</span>");
         }
 
         String changeNotes = plugin.getChangeNotes();
         if (!isEmptyOrSpaces(changeNotes)) {
-            sb.append("<h3>Change Notes</h3>");
-            sb.append(changeNotes);
+            sb.append("<h3>")
+                .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionChangeNotesLabel().get()))
+                .append("</h3>")
+                .append(changeNotes);
         }
 
         String vendor = plugin.getVendor();
         String vendorEmail = plugin.getVendorEmail();
         String vendorUrl = plugin.getVendorUrl();
         if (!isEmptyOrSpaces(vendor) || !isEmptyOrSpaces(vendorEmail) || !isEmptyOrSpaces(vendorUrl)) {
-            sb.append("<h3>Vendor</h3>");
+            sb.append("<h3>")
+                .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionVendorLabel().get()))
+                .append("</h3>");
 
             if (!isEmptyOrSpaces(vendor)) {
                 sb.append("&nbsp;&nbsp;").append(vendor);
@@ -205,12 +211,18 @@ public class PluginDescriptionPanel {
 
         String pluginDescriptorUrl = plugin.getUrl();
         if (!isEmptyOrSpaces(pluginDescriptorUrl)) {
-            sb.append("<h3>Plugin homepage</h3>").append(composeHref(pluginDescriptorUrl));
+            sb.append("<h3>")
+                .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionHomepageLabel().get()))
+                .append("</h3>")
+                .append(composeHref(pluginDescriptorUrl));
         }
 
-        String size = plugin instanceof PluginNode ? ((PluginNode)plugin).getSize() : null;
+        String size = plugin instanceof PluginNode pluginNode ? pluginNode.getSize() : null;
         if (!isEmptyOrSpaces(size)) {
-            sb.append("<h3>Size</h3>").append(PluginManagerColumnInfo.getFormattedSize(size));
+            sb.append("<h3>")
+                .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionSizeLabel().get()))
+                .append("</h3>")
+                .append(PluginManagerColumnInfo.getFormattedSize(size));
         }
 
         Map<PluginDescriptor, Boolean> depends = new LinkedHashMap<>();
@@ -236,7 +248,9 @@ public class PluginDescriptionPanel {
         }
 
         if (!depends.isEmpty()) {
-            sb.append("<h3>Depends on plugins:</h3>");
+            sb.append("<h3>")
+                .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionDependsOnLabel().get()))
+                .append("</h3>");
 
             for (Map.Entry<PluginDescriptor, Boolean> entry : depends.entrySet()) {
                 PluginDescriptor key = entry.getKey();
@@ -245,7 +259,7 @@ public class PluginDescriptionPanel {
                 sb.append("&nbsp;&nbsp;");
                 sb.append("<a href=\"").append(PLUGIN_PREFIX).append(key.getPluginId()).append("\">").append(key.getName());
                 if (optional) {
-                    sb.append("&nbsp;(optional)");
+                    sb.append("&nbsp;").append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionDependsOnOptional().get()));
                 }
                 sb.append("</a>");
 
@@ -265,7 +279,9 @@ public class PluginDescriptionPanel {
         }
 
         if (!dependentPlugins.isEmpty()) {
-            sb.append("<h3>Dependent plugins:</h3>");
+            sb.append("<h3>")
+                .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionDependentLabel().get()))
+                .append("</h3>");
 
             for (PluginDescriptor pluginDescriptor : dependentPlugins.values()) {
                 sb.append("&nbsp;&nbsp;");
@@ -273,7 +289,7 @@ public class PluginDescriptionPanel {
                     .append("plugin://")
                     .append(pluginDescriptor.getPluginId())
                     .append("\">")
-                    .append(pluginDescriptor.getName());
+                    .append(XmlStringUtil.escapeString(pluginDescriptor.getName()));
                 sb.append("</a>");
                 sb.append("<br>");
             }
@@ -281,7 +297,9 @@ public class PluginDescriptionPanel {
 
         Set<String> tags = plugin.getTags();
         if (!tags.isEmpty()) {
-            sb.append("<h3>Tags:</h3>");
+            sb.append("<h3>")
+                .append(XmlStringUtil.escapeString(PluginLocalize.pluginDescriptionTagsLabel().get()))
+                .append("</h3>");
             for (String tag : tags) {
                 sb.append("&nbsp;&nbsp;").append(PluginManagerMain.getTagLocalizeValue(tag).get()).append("<br>");
             }

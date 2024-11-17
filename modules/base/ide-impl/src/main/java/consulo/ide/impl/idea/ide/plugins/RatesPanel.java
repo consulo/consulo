@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.application.AllIcons;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -53,7 +54,7 @@ public class RatesPanel extends JPanel {
                 0,
                 GridBagConstraints.NORTHWEST,
                 GridBagConstraints.NONE,
-                new Insets(0, 0, 0, 0),
+                JBUI.emptyInsets(),
                 0,
                 0
             );

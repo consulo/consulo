@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
- * @since 21/11/2021
+ * @since 2021-11-21
  */
 @ExtensionImpl(id = "WhatsNew", order = "after OpenFilesActivity")
 public class WhatsNewStartupActivity implements PostStartupActivity, DumbAware {

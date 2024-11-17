@@ -32,7 +32,7 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 03/12/2020
+ * @since 2020-12-03
  */
 public class LabelPopup extends JLabel {
     private final LocalizeValue myPrefix;

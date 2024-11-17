@@ -32,9 +32,11 @@ import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryReq
 import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryResponse;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.PluginIconHolder;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.impl.updateSettings.impl.UpdateHistory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
@@ -47,10 +49,9 @@ import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import kava.beans.PropertyChangeListener;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -104,11 +105,14 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
 
         myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myEditorPanel, true), BorderLayout.CENTER);
 
-        UiNotifyConnector.doWhenFirstShown(myLoadingPanel, () -> {
-            myLoadingPanel.setLoadingText("Fetching change list...");
-            myLoadingPanel.startLoading();
-            fetchData();
-        });
+        UiNotifyConnector.doWhenFirstShown(
+            myLoadingPanel,
+            () -> {
+                myLoadingPanel.setLoadingText(PluginLocalize.whatsNewFetchingChangeList().get());
+                myLoadingPanel.startLoading();
+                fetchData();
+            }
+        );
 
         return myLoadingPanel;
     }
@@ -140,7 +144,6 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
 
                 addPlugin(infos, plugin.getPluginId(), version);
             }
-
 
             PluginHistoryResponse response = PluginHistoryManager.fetchBatchHistory(new PluginHistoryRequest(infos));
 
@@ -178,7 +181,7 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
 
         Html.Element body = Html.body();
         body = body.style("padding: 0px 15px");
-        body = body.child(Html.tag("h1").addText(myFile.getName()));
+        body = body.child(Html.tag("h1").addText(LocalizeValue.of(myFile.getName())));
 
         if (map != null && !map.isEmpty()) {
             for (Map.Entry<PluginId, Collection<PluginHistoryEntry>> entry : map.entrySet()) {
@@ -187,45 +190,41 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
                 Set<PluginHistoryEntry> entries = new TreeSet<>((o1, o2) -> Long.compareUnsigned(o1.commitTimestamp, o2.commitTimestamp));
                 entries.addAll(entry.getValue());
 
-                String pluginName;
+                LocalizeValue pluginName;
                 String pluginVersion;
                 if (PlatformOrPluginUpdateChecker.isPlatform(key)) {
-                    pluginName = "Platform";
+                    pluginName = PluginLocalize.whatsNewPlatform();
                     pluginVersion = ApplicationInfo.getInstance().getBuild().asString();
                 }
                 else {
                     PluginDescriptor plugin = PluginManager.findPlugin(key);
                     assert plugin != null;
-                    pluginName = plugin.getName();
+                    pluginName = LocalizeValue.of(plugin.getName());
                     pluginVersion = plugin.getVersion();
                 }
 
                 Html.Element imgTd = Html.tag("td");
 
-                Html.Element pluginImg = Html.tag("img")
-                    .attr("src", key.getIdString())
-                    .attr("width", PluginIconHolder.ICON_SIZE)
-                    .attr("height", PluginIconHolder.ICON_SIZE);
+                Html.Element pluginImg = Html.img()
+                    .src(key.getIdString())
+                    .width(PluginIconHolder.ICON_SIZE)
+                    .height(PluginIconHolder.ICON_SIZE);
                 imgTd = imgTd.child(pluginImg);
 
                 Html.Element nameTd = Html.tag("td").style("padding-left: 10px");
 
                 Font font = UIUtil.getLabelFont(UIUtil.FontSize.BIGGER);
 
-                nameTd = nameTd.child(Html.span("font-weight: bold; font-size: " + font.getSize()).addText(pluginName));
+                nameTd = nameTd.child(Html.span().style("font-weight: bold; font-size: " + font.getSize()).addText(pluginName));
 
                 StringBuilder versionHistorySpan = new StringBuilder();
                 String historyVersion = myUpdateHistory.getHistoryVersion(key, pluginVersion);
                 if (!historyVersion.equals(pluginVersion)) {
-                    versionHistorySpan.append("#");
-                    versionHistorySpan.append(historyVersion);
-                    versionHistorySpan.append(" ");
-                    versionHistorySpan.append(UIUtil.rightArrow());
-                    versionHistorySpan.append(" ");
+                    versionHistorySpan.append("#").append(historyVersion)
+                        .append(" ").append(UIUtil.rightArrow()).append(" ");
                 }
 
-                versionHistorySpan.append("#");
-                versionHistorySpan.append(pluginVersion);
+                versionHistorySpan.append("#").append(pluginVersion);
 
                 nameTd = nameTd.child(Html.br()).child(Html.tag("code").addText(versionHistorySpan.toString()));
 
@@ -239,13 +238,13 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
                 for (PluginHistoryEntry pluginHistoryEntry : entries) {
                     List<Html.Chunk> children = new ArrayList<>();
 
-                    children.add(Html.tag("code").addText("#").addText(pluginHistoryEntry.pluginVersion));
+                    children.add(Html.tag("code").addFormattedText(LocalizeValue.of("#" + pluginHistoryEntry.pluginVersion)));
                     children.add(Html.nbsp());
 
                     if (pluginHistoryEntry.commitTimestamp != 0) {
                         String date = JBDateFormat.getFormatter().formatPrettyDateTime(pluginHistoryEntry.commitTimestamp);
 
-                        children.add(Html.tag("code").addText("[" + date + "]"));
+                        children.add(Html.tag("code").addFormattedText(PluginLocalize.whatsNewCommitDate(date)));
                         children.add(Html.nbsp());
                     }
 
@@ -253,17 +252,18 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
 
                     if (!StringUtil.isEmptyOrSpaces(pluginHistoryEntry.commitHash)) {
                         children.add(Html.nbsp());
-                        String commitShort = StringUtil.first(pluginHistoryEntry.commitHash, 7, false);
+                        LocalizeValue commitShort =
+                            LocalizeValue.of(StringUtil.first(pluginHistoryEntry.commitHash, 7, false));
                         Html.Element commitSpan = Html.span();
-                        commitSpan = commitSpan.addText("(commit: ");
+                        commitSpan = commitSpan.addText(PluginLocalize.whatsNewCommitPrefix());
                         String commitUrl = buildCommitUrl(pluginHistoryEntry.repoUrl, pluginHistoryEntry.commitHash);
                         if (commitUrl != null) {
-                            commitSpan = commitSpan.child(Html.tag("a").attr("href", commitUrl).addText(commitShort));
+                            commitSpan = commitSpan.child(Html.a().href(commitUrl).addText(commitShort));
                         }
                         else {
                             commitSpan = commitSpan.addText(commitShort);
                         }
-                        commitSpan = commitSpan.addText(")");
+                        commitSpan = commitSpan.addText(PluginLocalize.whatsNewCommitSuffix());
 
                         children.add(commitSpan);
                     }
@@ -281,7 +281,7 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
             }
         }
         else {
-            body = body.child(Html.span().addText("No changes"));
+            body = body.child(Html.span().addText(PluginLocalize.whatsNewNoChanges()));
         }
 
         html.append(body);
@@ -296,13 +296,11 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
         }
 
         if (url.startsWith("https://github.com")) {
-            StringBuilder builder = new StringBuilder();
-            builder.append(url);
+            StringBuilder builder = new StringBuilder(url);
             if (!url.endsWith("/")) {
                 builder.append("/");
             }
-            builder.append("commit/");
-            builder.append(commitHash);
+            builder.append("commit/").append(commitHash);
             return builder.toString();
         }
 

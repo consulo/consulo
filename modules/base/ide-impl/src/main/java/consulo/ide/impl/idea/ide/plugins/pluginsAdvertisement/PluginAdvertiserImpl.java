@@ -26,6 +26,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.fileEditor.EditorNotifications;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.logging.Logger;
 import consulo.project.PluginAdvertiser;
@@ -54,8 +55,12 @@ import java.util.concurrent.Future;
 public class PluginAdvertiserImpl implements PluginAdvertiser {
     private static final Logger LOG = Logger.getInstance(PluginAdvertiserImpl.class);
 
-    public static final NotificationGroup ourGroup =
-        new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
+    public static final NotificationGroup ourGroup = new NotificationGroup(
+        "pluginsSuggestion",
+        PluginLocalize.messagePluginsSuggestion(),
+        NotificationDisplayType.STICKY_BALLOON,
+        true
+    );
 
     private final ApplicationConcurrency myApplicationConcurrency;
     private final Project myProject;
@@ -82,9 +87,10 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
         myTaskFuture.cancel(false);
         myTaskUUID = UUID.randomUUID();
 
-        myTaskFuture = myPluginAdvertiserRequester.doRequest().whenCompleteAsync((pluginDescriptors, throwable) -> {
-            checkAndNotify(pluginDescriptors);
-        }, myApplicationConcurrency.getExecutorService());
+        myTaskFuture = myPluginAdvertiserRequester.doRequest().whenCompleteAsync(
+            (pluginDescriptors, throwable) -> checkAndNotify(pluginDescriptors),
+            myApplicationConcurrency.getExecutorService()
+        );
     }
 
     private void checkAndNotify(List<PluginDescriptor> allDescriptors) {
@@ -109,28 +115,28 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
         List<ExtensionPreview> previews = new ArrayList<>();
 
         final Set<PluginDescriptor> ids = new HashSet<>();
-        myProject.getExtensionPoint(PluginAdvertiserExtension.class).forEach(extender -> {
-            extender.extend(feature -> {
-                previews.add(feature);
+        myProject.getExtensionPoint(PluginAdvertiserExtension.class).forEach(extender -> extender.extend(feature -> {
+            previews.add(feature);
 
-                final Set<PluginDescriptor> descriptors = findImpl(allDescriptors, feature);
-                //do not suggest to download disabled plugins
-                final Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
-                for (PluginDescriptor id : descriptors) {
-                    if (!disabledPlugins.contains(id.getPluginId())) {
-                        ids.add(id);
-                    }
+            final Set<PluginDescriptor> descriptors = findImpl(allDescriptors, feature);
+            //do not suggest to download disabled plugins
+            final Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
+            for (PluginDescriptor id : descriptors) {
+                if (!disabledPlugins.contains(id.getPluginId())) {
+                    ids.add(id);
                 }
-            });
-        });
+            }
+        }));
 
         if (ids.isEmpty()) {
             return;
         }
 
-        Notification notification =
-            ourGroup.createNotification("Features covered by non-installed plugins are detected.", NotificationType.INFORMATION);
-        notification.addAction(new NotificationAction("Install plugins...") {
+        Notification notification = ourGroup.createNotification(
+            PluginLocalize.messagePluginsSuggestionNotification().get(),
+            NotificationType.INFORMATION
+        );
+        notification.addAction(new NotificationAction(PluginLocalize.actionPluginsSuggestionInstallText()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
@@ -139,7 +145,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
                 new PluginsAdvertiserDialog(myProject, allDescriptors, new ArrayList<>(ids)).showAsync();
             }
         });
-        notification.addAction(new NotificationAction("Ignore") {
+        notification.addAction(new NotificationAction(PluginLocalize.actionPluginsSuggestionIgnoreText()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
@@ -152,7 +158,6 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
         });
         notification.notify(myProject);
     }
-
 
     @Nonnull
     public static Set<PluginDescriptor> findImpl(List<PluginDescriptor> descriptors, ExtensionPreview feature) {
@@ -187,9 +192,9 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
     private static ExtensionPreviewAcceptor<?> findAcceptor(ExtensionPreview feature) {
         ExtensionPoint<ExtensionPreviewAcceptor> extensionPoint = Application.get().getExtensionPoint(ExtensionPreviewAcceptor.class);
 
-        ExtensionPreviewAcceptor acceptor = extensionPoint.findFirstSafe(extensionPreviewAcceptor -> {
-            return Objects.equals(extensionPreviewAcceptor.getApiClass().getName(), feature.apiClassName());
-        });
+        ExtensionPreviewAcceptor acceptor = extensionPoint.findFirstSafe(
+            extensionPreviewAcceptor -> Objects.equals(extensionPreviewAcceptor.getApiClass().getName(), feature.apiClassName())
+        );
         return ObjectUtil.notNull(acceptor, ExtensionPreviewAcceptor.DEFAULT);
     }
 }

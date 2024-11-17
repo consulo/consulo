@@ -19,13 +19,17 @@ import consulo.container.impl.PluginValidator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
-import consulo.util.lang.StringUtil;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.InstalledPluginsState;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.BooleanTableCellRenderer;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.table.BooleanTableCellEditor;
-
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -35,23 +39,22 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
+import static consulo.container.plugin.PluginManager.*;
+
 /**
  * @author stathik
- * @since 3:51:58 PM Dec 26, 2003
+ * @since 2003-12-26
  */
 public class InstalledPluginsTableModel extends PluginTableModel {
     private final Map<PluginId, Boolean> myEnabled = new HashMap<>();
     private final Map<PluginId, Set<PluginId>> myDependentToRequiredListMap = new HashMap<>();
 
-    private static final String ENABLED_DISABLED = "All plugins";
-    private static final String ENABLED = "Enabled plugins";
-    private static final String DISABLED = "Disabled plugins";
-    public static final String[] ENABLED_VALUES = new String[]{ENABLED_DISABLED, ENABLED, DISABLED};
-    private String myEnabledFilter = ENABLED_DISABLED;
+    @Nonnull
+    private EnabledFilter myEnabledFilter = EnabledFilter.ALL_PLUGINS;
 
     public InstalledPluginsTableModel() {
         super.columns = new ColumnInfo[]{new MyPluginManagerColumnInfo(), new EnabledPluginInfo()};
-        view = new ArrayList<>(consulo.container.plugin.PluginManager.getPlugins());
+        view = new ArrayList<>(getPlugins());
         view.addAll(InstalledPluginsState.getInstance().getAllPlugins());
         reset(view);
 
@@ -101,13 +104,12 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         updatePluginDependencies();
     }
 
-
     private void setEnabled(PluginDescriptor ideaPluginDescriptor) {
         setEnabled(ideaPluginDescriptor, ideaPluginDescriptor.isEnabled());
     }
 
     private void setEnabled(PluginDescriptor ideaPluginDescriptor, final boolean enabled) {
-        final Collection<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
+        final Collection<PluginId> disabledPlugins = getDisabledPlugins();
         final PluginId pluginId = ideaPluginDescriptor.getPluginId();
         if (!enabled && !disabledPlugins.contains(pluginId)) {
             myEnabled.put(pluginId, null);
@@ -152,21 +154,25 @@ public class InstalledPluginsTableModel extends PluginTableModel {
             }
             final Boolean enabled = myEnabled.get(pluginId);
             if (enabled == null || enabled) {
-                PluginValidator.checkDependants(descriptor, PluginManager::getPlugin, dependantPluginId -> {
-                    final Boolean enabled1 = myEnabled.get(dependantPluginId);
-                    if ((enabled1 == null && !updatedPlugins.contains(dependantPluginId)) || (enabled1 != null && !enabled1)) {
-                        Set<PluginId> required = myDependentToRequiredListMap.get(pluginId);
-                        if (required == null) {
-                            required = new HashSet<>();
-                            myDependentToRequiredListMap.put(pluginId, required);
+                PluginValidator.checkDependants(
+                    descriptor,
+                    PluginManager::getPlugin,
+                    dependantPluginId -> {
+                        final Boolean enabled1 = myEnabled.get(dependantPluginId);
+                        if ((enabled1 == null && !updatedPlugins.contains(dependantPluginId)) || (enabled1 != null && !enabled1)) {
+                            Set<PluginId> required = myDependentToRequiredListMap.get(pluginId);
+                            if (required == null) {
+                                required = new HashSet<>();
+                                myDependentToRequiredListMap.put(pluginId, required);
+                            }
+
+                            required.add(dependantPluginId);
+                            //return false;
                         }
 
-                        required.add(dependantPluginId);
-                        //return false;
+                        return true;
                     }
-
-                    return true;
-                });
+                );
                 if (enabled == null && !myDependentToRequiredListMap.containsKey(pluginId) && !PluginManager.isIncompatible(descriptor)) {
                     myEnabled.put(pluginId, true);
                 }
@@ -221,6 +227,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         super.filter(filtered);
     }
 
+    @RequiredUIAccess
     public void enableRows(PluginDescriptor[] ideaPluginDescriptors, Boolean value) {
         for (PluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {
             final PluginId currentPluginId = ideaPluginDescriptor.getPluginId();
@@ -232,8 +239,8 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         hideNotApplicablePlugins(value, ideaPluginDescriptors);
     }
 
-    private void hideNotApplicablePlugins(Boolean value, final PluginDescriptor... ideaPluginDescriptors) {
-        if (!value && ENABLED.equals(myEnabledFilter) || (value && DISABLED.equals(myEnabledFilter))) {
+    private void hideNotApplicablePlugins(Boolean enabled, final PluginDescriptor... ideaPluginDescriptors) {
+        if (!myEnabledFilter.accepts(enabled)) {
             SwingUtilities.invokeLater(() -> {
                 for (PluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {
                     view.remove(ideaPluginDescriptor);
@@ -243,7 +250,6 @@ public class InstalledPluginsTableModel extends PluginTableModel {
             });
         }
     }
-
 
     public static boolean hasNewerVersion(PluginId descr) {
         return InstalledPluginsState.getInstance().hasNewerVersion(descr);
@@ -267,31 +273,22 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         return myEnabled;
     }
 
-    public String getEnabledFilter() {
+    @Nonnull
+    public EnabledFilter getEnabledFilter() {
         return myEnabledFilter;
     }
 
-    public void setEnabledFilter(String enabledFilter, String filter) {
+    public void setEnabledFilter(@Nonnull EnabledFilter enabledFilter, String filter) {
         myEnabledFilter = enabledFilter;
         filter(filter);
     }
 
     @Override
     public boolean isPluginDescriptorAccepted(PluginDescriptor descriptor) {
-        if (!myEnabledFilter.equals(ENABLED_DISABLED)) {
-            final boolean enabled = isEnabled(descriptor.getPluginId());
-            if (enabled && myEnabledFilter.equals(DISABLED)) {
-                return false;
-            }
-            if (!enabled && myEnabledFilter.equals(ENABLED)) {
-                return false;
-            }
-        }
-        return true;
+        return myEnabledFilter.accepts(myEnabled.get(descriptor.getPluginId()));
     }
 
     private class EnabledPluginInfo extends ColumnInfo<PluginDescriptor, Boolean> {
-
         public EnabledPluginInfo() {
             super("");
         }
@@ -341,6 +338,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         }
 
         @Override
+        @RequiredUIAccess
         public void setValue(final PluginDescriptor ideaPluginDescriptor, Boolean value) {
             final PluginId currentPluginId = ideaPluginDescriptor.getPluginId();
             final Boolean enabled = myEnabled.get(currentPluginId) == null ? Boolean.FALSE : value;
@@ -377,6 +375,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         }
     }
 
+    @RequiredUIAccess
     private void warnAboutMissedDependencies(final Boolean newVal, final PluginDescriptor... ideaPluginDescriptors) {
         final Set<PluginId> deps = new HashSet<>();
         final List<PluginDescriptor> descriptorsToCheckDependencies = new ArrayList<>();
@@ -424,31 +423,33 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         if (!deps.isEmpty()) {
             final String listOfSelectedPlugins = StringUtil.join(ideaPluginDescriptors, PluginDescriptor::getName, ", ");
             final Set<PluginDescriptor> pluginDependencies = new HashSet<>();
-            final String listOfDependencies = StringUtil.join(deps, pluginId -> {
-                final PluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);
-                assert pluginDescriptor != null;
-                pluginDependencies.add(pluginDescriptor);
-                return pluginDescriptor.getName();
-            }, "<br>");
-            final String message = !newVal
-                ? "<html>The following plugins <br>" +
-                listOfDependencies +
-                "<br>are enabled and depend" +
-                (deps.size() == 1 ? "s" : "") +
-                " on selected plugins. " +
-                "<br>Would you like to disable them too?</html>"
-                : "<html>The following plugins on which " +
-                listOfSelectedPlugins +
-                " depend" +
-                (ideaPluginDescriptors.length == 1 ? "s" : "") +
-                " are disabled:<br>" +
-                listOfDependencies +
-                "<br>Would you like to enable them?</html>";
-            if (Messages.showOkCancelDialog(
-                message,
-                newVal ? "Enable Dependant Plugins" : "Disable Plugins with Dependency on this",
-                Messages.getQuestionIcon()
-            ) == Messages.OK) {
+            final String listOfDependencies = StringUtil.join(
+                deps,
+                pluginId -> {
+                    final PluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);
+                    assert pluginDescriptor != null;
+                    pluginDependencies.add(pluginDescriptor);
+                    return pluginDescriptor.getName();
+                },
+                "<br/>"
+            );
+            LocalizeValue title = newVal
+                ? PluginLocalize.actionEnableDependentPluginsText()
+                : PluginLocalize.actionDisableDependentPluginsText();
+            LocalizeValue message = newVal
+                ? PluginLocalize.messageDependentPluginsToEnable(
+                    listOfSelectedPlugins,
+                    ideaPluginDescriptors.length,
+                    listOfDependencies,
+                    deps.size()
+                )
+                : PluginLocalize.messageDependentPluginsToDisable(
+                    listOfSelectedPlugins,
+                    ideaPluginDescriptors.length,
+                    listOfDependencies,
+                    deps.size()
+                );
+            if (Messages.showOkCancelDialog(message.get(), title.get(), UIUtil.getQuestionIcon()) == Messages.OK) {
                 for (PluginId pluginId : deps) {
                     myEnabled.put(pluginId, newVal);
                 }
@@ -470,73 +471,50 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         }
 
         @Override
-        protected boolean isSortByName() {
-            return true;
-        }
-
-        @Override
         public Comparator<PluginDescriptor> getComparator() {
             final Comparator<PluginDescriptor> comparator = super.getColumnComparator();
             return (o1, o2) -> {
-                if (isSortByStatus()) {
+                if (getSortBy() == SortBy.STATUS) {
                     final boolean incompatible1 = PluginManager.isIncompatible(o1);
                     final boolean incompatible2 = PluginManager.isIncompatible(o2);
                     if (incompatible1) {
-                        if (incompatible2) {
-                            return comparator.compare(o1, o2);
-                        }
-                        return -1;
+                        return incompatible2 ? comparator.compare(o1, o2) : -1;
                     }
-                    if (incompatible2) {
+                    else if (incompatible2) {
                         return 1;
                     }
 
                     final boolean hasNewerVersion1 = hasNewerVersion(o1.getPluginId());
                     final boolean hasNewerVersion2 = hasNewerVersion(o2.getPluginId());
                     if (hasNewerVersion1) {
-                        if (hasNewerVersion2) {
-                            return comparator.compare(o1, o2);
-                        }
-                        return -1;
+                        return hasNewerVersion2 ? comparator.compare(o1, o2) : -1;
                     }
-                    if (hasNewerVersion2) {
+                    else if (hasNewerVersion2) {
                         return 1;
                     }
-
 
                     final boolean wasUpdated1 = wasUpdated(o1.getPluginId());
                     final boolean wasUpdated2 = wasUpdated(o2.getPluginId());
                     if (wasUpdated1) {
-                        if (wasUpdated2) {
-                            return comparator.compare(o1, o2);
-                        }
-                        return -1;
+                        return wasUpdated2 ? comparator.compare(o1, o2) : -1;
                     }
-                    if (wasUpdated2) {
+                    else if (wasUpdated2) {
                         return 1;
                     }
-
 
                     if (o1 instanceof PluginNode) {
-                        if (o2 instanceof PluginNode) {
-                            return comparator.compare(o1, o2);
-                        }
-                        return -1;
+                        return o2 instanceof PluginNode ? comparator.compare(o1, o2) : -1;
                     }
-                    if (o2 instanceof PluginNode) {
+                    else if (o2 instanceof PluginNode) {
                         return 1;
                     }
-
 
                     final boolean deleted1 = o1.isDeleted();
                     final boolean deleted2 = o2.isDeleted();
                     if (deleted1) {
-                        if (deleted2) {
-                            return comparator.compare(o1, o2);
-                        }
-                        return -1;
+                        return deleted2 ? comparator.compare(o1, o2) : -1;
                     }
-                    if (deleted2) {
+                    else if (deleted2) {
                         return 1;
                     }
 
@@ -545,7 +523,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
                     if (enabled1 && !enabled2) {
                         return -1;
                     }
-                    if (enabled2 && !enabled1) {
+                    else if (enabled2 && !enabled1) {
                         return 1;
                     }
                 }

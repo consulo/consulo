@@ -15,9 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.ide.impl.idea.ide.plugins.sorters.SortByDownloadsAction;
-import consulo.ide.impl.idea.ide.plugins.sorters.SortByRatingAction;
-import consulo.ide.impl.idea.ide.plugins.sorters.SortByUpdatedAction;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -95,7 +93,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
     @Override
     protected void addCustomFilters(Consumer<JComponent> adder) {
-        LabelPopup categoryPopup = new LabelPopup(LocalizeValue.localizeTODO("Tag:"), this::createCategoryFilters);
+        LabelPopup categoryPopup = new LabelPopup(PluginLocalize.actionTagLabel(), this::createCategoryFilters);
 
         adder.accept(categoryPopup);
 
@@ -135,11 +133,11 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     @Override
     protected DefaultActionGroup createSortersGroup() {
         final DefaultActionGroup group = super.createSortersGroup();
-        group.addAction(new SortByDownloadsAction(myPluginTable, myPluginsModel));
+        group.addAction(new SortByAction(SortBy.DOWNLOADS, myPluginTable, myPluginsModel));
         if (PluginDescriptionPanel.ENABLED_STARS) {
-            group.addAction(new SortByRatingAction(myPluginTable, myPluginsModel));
+            group.addAction(new SortByAction(SortBy.RATING, myPluginTable, myPluginsModel));
         }
-        group.addAction(new SortByUpdatedAction(myPluginTable, myPluginsModel));
+        group.addAction(new SortByAction(SortBy.LAST_UPDATED, myPluginTable, myPluginsModel));
         return group;
     }
 

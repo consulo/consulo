@@ -20,8 +20,8 @@ import consulo.application.util.DateFormatUtil;
 import consulo.container.impl.PluginValidator;
 import consulo.container.plugin.*;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.IdeBundle;
 import consulo.ui.ex.awt.VerticalLayout;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;
 import consulo.ide.impl.plugins.PluginIconHolder;
 import consulo.localize.LocalizeValue;
@@ -137,7 +137,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
         myDownloads.setForeground(grayedFg);
         myDownloads.setText("");
 
-        final PluginNode pluginNode = myPluginDescriptor instanceof PluginNode ? (PluginNode)myPluginDescriptor : null;
+        final PluginNode pluginNode = myPluginDescriptor instanceof PluginNode pn ? pn : null;
         if (pluginNode != null) {
             String downloads = pluginNode.getDownloads();
             if (downloads == null) {
@@ -164,7 +164,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
                 myName.setForeground(TargetAWT.to(FileStatus.ADDED.getColor()));
             }
         }
-        else if (pluginNode instanceof PluginNode && ((PluginNode)pluginNode).getInstallStatus() == PluginNode.STATUS_INSTALLED || installed != null) {
+        else if (pluginNode instanceof PluginNode pn && pn.getInstallStatus() == PluginNode.STATUS_INSTALLED || installed != null) {
             PluginId pluginId = pluginNode.getPluginId();
             final boolean hasNewerVersion = InstalledPluginsTableModel.hasNewerVersion(pluginId);
             if (hasNewerVersion) {
@@ -185,16 +185,14 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
 
     private static boolean isIncompatible(PluginDescriptor descriptor, TableModel model) {
         PluginDescriptorStatus status = descriptor.getStatus();
-        if (status != PluginDescriptorStatus.OK && status != PluginDescriptorStatus.DISABLED_BY_USER) {
-            return true;
-        }
-        return PluginValidator.isIncompatible(descriptor)
-            || model instanceof InstalledPluginsTableModel && ((InstalledPluginsTableModel)model).hasProblematicDependencies(descriptor.getPluginId());
+        return status != PluginDescriptorStatus.OK && status != PluginDescriptorStatus.DISABLED_BY_USER
+            || PluginValidator.isIncompatible(descriptor)
+            || model instanceof InstalledPluginsTableModel iptm && iptm.hasProblematicDependencies(descriptor.getPluginId());
     }
 
     private static String whyIncompatible(PluginDescriptor descriptor, TableModel model) {
         if (descriptor.getStatus() == PluginDescriptorStatus.WRONG_PLATFORM) {
-            return IdeBundle.message("plugin.manager.wrong.platform.not.loaded.tooltip", descriptor.getName());
+            return PluginLocalize.pluginManagerWrongPlatformNotLoadedTooltip(descriptor.getName()).get();
         }
 
         if (model instanceof InstalledPluginsTableModel) {
@@ -205,19 +203,19 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
                 StringBuilder sb = new StringBuilder();
 
                 if (!installedModel.isLoaded(descriptor.getPluginId())) {
-                    sb.append(IdeBundle.message("plugin.manager.incompatible.not.loaded.tooltip")).append('\n');
+                    sb.append(PluginLocalize.pluginManagerIncompatibleNotLoadedTooltip()).append('\n');
                 }
 
                 String deps = StringUtil.join(required, id -> {
                     PluginDescriptor plugin = PluginManager.findPlugin(id);
                     return plugin != null ? plugin.getName() : id.getIdString();
                 }, ", ");
-                sb.append(IdeBundle.message("plugin.manager.incompatible.deps.tooltip", required.size(), deps));
+                sb.append(PluginLocalize.pluginManagerIncompatibleDepsTooltip(required.size(), deps));
 
                 return sb.toString();
             }
         }
 
-        return IdeBundle.message("plugin.manager.incompatible.tooltip", Application.get().getName());
+        return PluginLocalize.pluginManagerIncompatibleTooltip(Application.get().getName()).get();
     }
 }

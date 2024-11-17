@@ -36,7 +36,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 22-Jun-17
+ * @since 2017-06-22
  */
 public class PluginAdvertiserPluginModel extends PluginTableModel {
     private static class MyPluginManagerColumnInfo extends PluginManagerColumnInfo {
@@ -47,11 +47,6 @@ public class PluginAdvertiserPluginModel extends PluginTableModel {
         @Override
         public TableCellRenderer getRenderer(final PluginDescriptor pluginDescriptor) {
             return new PluginsTableRenderer(pluginDescriptor, false);
-        }
-
-        @Override
-        protected boolean isSortByName() {
-            return true;
         }
     }
 

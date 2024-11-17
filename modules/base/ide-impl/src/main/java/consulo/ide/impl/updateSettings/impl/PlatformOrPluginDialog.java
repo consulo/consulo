@@ -24,23 +24,23 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
+import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.ide.impl.idea.ide.plugins.*;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.CompositePluginInstallIndicator;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginActionListener;
-import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
-import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
@@ -60,11 +60,9 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 07-Nov-16
+ * @since 2016-11-07
  */
 public class PlatformOrPluginDialog extends DialogWrapper {
-    private static final Logger LOG = Logger.getInstance(PlatformOrPluginDialog.class);
-
     private class OurPluginColumnInfo extends PluginManagerColumnInfo {
         public OurPluginColumnInfo(PluginTableModel model) {
             super(PluginManagerColumnInfo.COLUMN_NAME, model);
@@ -205,17 +203,20 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
         Lists.quickSort(toShowPluginList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
-        Lists.weightSort(toShowPluginList, pluginDescriptor -> {
-            if (PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId())) {
-                return 100;
-            }
+        Lists.weightSort(
+            toShowPluginList,
+            pluginDescriptor -> {
+                if (PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId())) {
+                    return 100;
+                }
 
-            if (brokenPlugins.contains(pluginDescriptor.getPluginId())) {
-                return 200;
-            }
+                if (brokenPlugins.contains(pluginDescriptor.getPluginId())) {
+                    return 200;
+                }
 
-            return 0;
-        });
+                return 0;
+            }
+        );
 
         OurPluginModel model = new OurPluginModel();
         model.updatePluginsList(toShowPluginList);
@@ -239,9 +240,9 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         if (brokenPlugin != null) {
             if (Messages.showOkCancelDialog(
                 myProject,
-                "Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?",
+                PluginLocalize.messageSomePluginsWontBeUpdated().get(),
                 Application.get().getName().get(),
-                Messages.getErrorIcon()
+                UIUtil.getErrorIcon()
             ) != Messages.OK) {
                 return;
             }
@@ -251,7 +252,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
         Task.Backgroundable.queue(
             myProject,
-            IdeLocalize.progressDownloadPlugins().get(),
+            IdeLocalize.progressDownloadPlugins(),
             true,
             PluginManagerUISettings.getInstance(),
             indicator -> {
@@ -307,8 +308,8 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
                         PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
 
-                        if (pluginDescriptor instanceof PluginNode) {
-                            ((PluginNode)pluginDescriptor).setInstallStatus(PluginNode.STATUS_DOWNLOADED);
+                        if (pluginDescriptor instanceof PluginNode pluginNode) {
+                            pluginNode.setInstallStatus(PluginNode.STATUS_DOWNLOADED);
 
                             if (myType == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
                                 updateHistory.setShowExperimentalWarning(true);
@@ -384,7 +385,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     protected JComponent createSouthPanel() {
         JComponent southPanel = super.createSouthPanel();
         if (southPanel != null) {
-            southPanel.add(new JBLabel("Following nodes will be downloaded & installed"), BorderLayout.WEST);
+            southPanel.add(new JBLabel(PluginLocalize.messageFollowingNodesWillBeDownloadedAndInstalled().get()), BorderLayout.WEST);
             southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
 
             BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
