@@ -258,7 +258,6 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     Project project = guessProject(virtualFile);
     if (project == null) return null;
     EncodingProjectManager encodingManager = EncodingProjectManager.getInstance(project);
-    if (encodingManager == null) return null; //tests
     return encodingManager.getEncoding(virtualFile, useParentDefaults);
   }
 
