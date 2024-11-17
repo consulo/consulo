@@ -16,29 +16,28 @@
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.component.extension.Extensions;
-import consulo.language.file.FileTypeManager;
+import consulo.application.AccessRule;
+import consulo.application.progress.ProgressIndicator;
 import consulo.content.ContentIterator;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
+import consulo.language.file.FileTypeManager;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IndexableSetContributor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.collection.JBIterable;
-import consulo.application.AccessRule;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.content.base.SourcesOrderRootType;
+import consulo.project.Project;
+import consulo.util.collection.JBIterable;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -84,7 +83,7 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
       tasks.add(() -> projectFileIndex.iterateContent(processor, file -> !file.isDirectory() || visitedRoots.add(file)));
 
       JBIterable<VirtualFile> contributedRoots = JBIterable.empty();
-      for (IndexableSetContributor contributor : Extensions.getExtensions(IndexableSetContributor.EP_NAME)) {
+      for (IndexableSetContributor contributor : IndexableSetContributor.EP_NAME.getExtensionList()) {
         //important not to depend on project here, to support per-project background reindex
         // each client gives a project to FileBasedIndex
         if (myProject.isDisposed()) {

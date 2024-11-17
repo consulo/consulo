@@ -40,6 +40,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.event.ModuleListener;
+import consulo.module.internal.ModuleManagerInternal;
 import consulo.module.macro.ModulePathMacroManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -69,7 +70,7 @@ import java.util.*;
 /**
  * @author max
  */
-public abstract class ModuleManagerImpl extends ModuleManager implements PersistentStateComponentWithModificationTracker<Element>, ModificationTracker, Disposable {
+public abstract class ModuleManagerImpl extends ModuleManagerInternal implements PersistentStateComponentWithModificationTracker<Element>, ModificationTracker, Disposable {
   private static final Logger LOG = Logger.getInstance(ModuleManagerImpl.class);
 
   public static class ModuleLoadItem {
@@ -184,6 +185,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
     myReady = ready;
   }
 
+  @Override
   public boolean isReady() {
     return myReady;
   }

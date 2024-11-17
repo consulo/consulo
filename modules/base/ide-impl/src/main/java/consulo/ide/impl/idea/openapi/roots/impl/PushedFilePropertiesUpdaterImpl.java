@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.openapi.roots.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
@@ -292,11 +293,11 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
             tasks.add(iteration);
         }
 
-        invokeConcurrentlyIfPossible(tasks);
+        invokeConcurrentlyIfPossible(myProject.getApplication(), tasks);
     }
 
-    public static void invokeConcurrentlyIfPossible(final List<? extends Runnable> tasks) {
-        if (tasks.size() == 1 || ApplicationManager.getApplication().isWriteAccessAllowed()) {
+    public static void invokeConcurrentlyIfPossible(Application application, List<? extends Runnable> tasks) {
+        if (tasks.size() == 1 || application.isWriteAccessAllowed()) {
             for (Runnable r : tasks) r.run();
             return;
         }
@@ -309,7 +310,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
             int numThreads = Math.max(Math.min(CacheUpdateRunner.indexingThreadCount() - 1, tasks.size() - 1), 1);
 
             for (int i = 0; i < numThreads; ++i) {
-                results.add(ApplicationManager.getApplication().executeOnPooledThread(() -> ProgressManager.getInstance().runProcess(() -> {
+                results.add(application.executeOnPooledThread(() -> ProgressManager.getInstance().runProcess(() -> {
                     Runnable runnable;
                     while ((runnable = tasksQueue.poll()) != null) runnable.run();
                 }, ProgressWrapper.wrap(progress))));
