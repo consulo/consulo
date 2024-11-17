@@ -17,8 +17,8 @@ package consulo.ide.impl.plugins.whatsNew;
 
 import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
+import consulo.application.util.Html;
 import consulo.application.util.HtmlBuilder;
-import consulo.application.util.HtmlChunk;
 import consulo.application.util.JBDateFormat;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.container.plugin.PluginDescriptor;
@@ -176,9 +176,9 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
     private void setHtmlFromEntries(MultiMap<PluginId, PluginHistoryEntry> map) {
         HtmlBuilder html = new HtmlBuilder();
 
-        HtmlChunk.Element body = HtmlChunk.body();
+        Html.Element body = Html.body();
         body = body.style("padding: 0px 15px");
-        body = body.child(HtmlChunk.tag("h1").addText(myFile.getName()));
+        body = body.child(Html.tag("h1").addText(myFile.getName()));
 
         if (map != null && !map.isEmpty()) {
             for (Map.Entry<PluginId, Collection<PluginHistoryEntry>> entry : map.entrySet()) {
@@ -200,19 +200,19 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
                     pluginVersion = plugin.getVersion();
                 }
 
-                HtmlChunk.Element imgTd = HtmlChunk.tag("td");
+                Html.Element imgTd = Html.tag("td");
 
-                HtmlChunk.Element pluginImg = HtmlChunk.tag("img")
+                Html.Element pluginImg = Html.tag("img")
                     .attr("src", key.getIdString())
                     .attr("width", PluginIconHolder.ICON_SIZE)
                     .attr("height", PluginIconHolder.ICON_SIZE);
                 imgTd = imgTd.child(pluginImg);
 
-                HtmlChunk.Element nameTd = HtmlChunk.tag("td").style("padding-left: 10px");
+                Html.Element nameTd = Html.tag("td").style("padding-left: 10px");
 
                 Font font = UIUtil.getLabelFont(UIUtil.FontSize.BIGGER);
 
-                nameTd = nameTd.child(HtmlChunk.span("font-weight: bold; font-size: " + font.getSize()).addText(pluginName));
+                nameTd = nameTd.child(Html.span("font-weight: bold; font-size: " + font.getSize()).addText(pluginName));
 
                 StringBuilder versionHistorySpan = new StringBuilder();
                 String historyVersion = myUpdateHistory.getHistoryVersion(key, pluginVersion);
@@ -227,38 +227,38 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
                 versionHistorySpan.append("#");
                 versionHistorySpan.append(pluginVersion);
 
-                nameTd = nameTd.child(HtmlChunk.br()).child(HtmlChunk.tag("code").addText(versionHistorySpan.toString()));
+                nameTd = nameTd.child(Html.br()).child(Html.tag("code").addText(versionHistorySpan.toString()));
 
-                HtmlChunk.Element tr = HtmlChunk.tag("tr");
+                Html.Element tr = Html.tag("tr");
                 tr = tr.children(imgTd, nameTd);
 
-                body = body.child(HtmlChunk.tag("table").child(tr));
+                body = body.child(Html.tag("table").child(tr));
 
-                HtmlChunk.Element ul = HtmlChunk.ul();
+                Html.Element ul = Html.ul();
 
                 for (PluginHistoryEntry pluginHistoryEntry : entries) {
-                    List<HtmlChunk> children = new ArrayList<>();
+                    List<Html.Chunk> children = new ArrayList<>();
 
-                    children.add(HtmlChunk.tag("code").addText("#").addText(pluginHistoryEntry.pluginVersion));
-                    children.add(HtmlChunk.nbsp());
+                    children.add(Html.tag("code").addText("#").addText(pluginHistoryEntry.pluginVersion));
+                    children.add(Html.nbsp());
 
                     if (pluginHistoryEntry.commitTimestamp != 0) {
                         String date = JBDateFormat.getFormatter().formatPrettyDateTime(pluginHistoryEntry.commitTimestamp);
 
-                        children.add(HtmlChunk.tag("code").addText("[" + date + "]"));
-                        children.add(HtmlChunk.nbsp());
+                        children.add(Html.tag("code").addText("[" + date + "]"));
+                        children.add(Html.nbsp());
                     }
 
                     children.add(WhatsNewCommitParser.parse(pluginHistoryEntry.commitMessage));
 
                     if (!StringUtil.isEmptyOrSpaces(pluginHistoryEntry.commitHash)) {
-                        children.add(HtmlChunk.nbsp());
+                        children.add(Html.nbsp());
                         String commitShort = StringUtil.first(pluginHistoryEntry.commitHash, 7, false);
-                        HtmlChunk.Element commitSpan = HtmlChunk.span();
+                        Html.Element commitSpan = Html.span();
                         commitSpan = commitSpan.addText("(commit: ");
                         String commitUrl = buildCommitUrl(pluginHistoryEntry.repoUrl, pluginHistoryEntry.commitHash);
                         if (commitUrl != null) {
-                            commitSpan = commitSpan.child(HtmlChunk.tag("a").attr("href", commitUrl).addText(commitShort));
+                            commitSpan = commitSpan.child(Html.tag("a").attr("href", commitUrl).addText(commitShort));
                         }
                         else {
                             commitSpan = commitSpan.addText(commitShort);
@@ -267,21 +267,21 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
 
                         children.add(commitSpan);
                     }
-                    ul = ul.child(HtmlChunk.li().children(children));
+                    ul = ul.child(Html.li().children(children));
                 }
 
                 body = body.child(ul);
 
-                body = body.child(HtmlChunk.hr()
+                body = body.child(Html.hr()
                     .attr("size", 1)
                     .attr("noshade", "")
                     .attr("color", "#" + ColorValueUtil.toHex(StandardColors.LIGHT_GRAY)));
 
-                body = body.child(HtmlChunk.br());
+                body = body.child(Html.br());
             }
         }
         else {
-            body = body.child(HtmlChunk.span().addText("No changes"));
+            body = body.child(Html.span().addText("No changes"));
         }
 
         html.append(body);

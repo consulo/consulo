@@ -9,7 +9,6 @@ import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
 import java.util.*;
-import java.util.stream.Collector;
 
 /**
  * An immutable representation of HTML node. Could be used as a DSL to quickly generate HTML strings.
@@ -17,7 +16,46 @@ import java.util.stream.Collector;
  * @see HtmlBuilder
  */
 public abstract class Html {
-    private static class Empty extends Html {
+    public abstract static class Chunk {
+        /**
+         * @return true if this chunk is empty (doesn't produce any text)
+         */
+        @Contract(pure = true)
+        public boolean isEmpty() {
+            return false;
+        }
+
+        /**
+         * Appends the rendered HTML representation of this chunk to the supplied builder
+         *
+         * @param builder builder to append to.
+         */
+        public abstract void appendTo(@Nonnull StringBuilder builder);
+
+        /**
+         * @param tagName name of the tag to wrap with
+         * @return an element that wraps this element
+         */
+        @Contract(pure = true)
+        @Nonnull
+        public Element wrapWith(@Nonnull String tagName) {
+            return new Element(tagName, UnmodifiableHashMap.empty(), Collections.singletonList(this));
+        }
+
+        /**
+         * @return the rendered HTML representation of this chunk.
+         */
+        @Override
+        @Contract(pure = true)
+        @Nonnull
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            appendTo(builder);
+            return builder.toString();
+        }
+    }
+
+    private static class Empty extends Chunk {
         private static final Empty INSTANCE = new Empty();
 
         @Override
@@ -30,20 +68,47 @@ public abstract class Html {
         }
     }
 
-    private static class Text extends Html {
+    private static class FormattedText extends Chunk {
         private final String myContent;
 
-        private Text(String content) {
+        private FormattedText(String content) {
             myContent = content;
         }
 
         @Override
         public void appendTo(@Nonnull StringBuilder builder) {
-            builder.append(StringUtil.escapeXmlEntities(myContent).replaceAll("\n", "<br/>"));
+            appendEscape(builder, myContent);
+        }
+
+        private static final List<String> FORMATTED_TEXT_FROM = List.of("<", ">", "&");
+        private static final List<String> FORMATTED_TEXT_TO = List.of("&lt;", "&gt;", "&amp;");
+
+        protected static void appendEscape(@Nonnull StringBuilder builder, String text) {
+            StringUtil.appendReplacement(builder, text, FORMATTED_TEXT_FROM, FORMATTED_TEXT_TO);
         }
     }
 
-    private static class Raw extends Html {
+    private static class PlainText extends Chunk {
+        private final String myContent;
+
+        private PlainText(String content) {
+            myContent = content;
+        }
+
+        @Override
+        public void appendTo(@Nonnull StringBuilder builder) {
+            appendEscape(builder, myContent);
+        }
+
+        private static final List<String> PLAIN_TEXT_FROM = List.of("<", ">", "&", "\n");
+        private static final List<String> PLAIN_TEXT_TO = List.of("&lt;", "&gt;", "&amp;", "<br/>");
+
+        protected static void appendEscape(@Nonnull StringBuilder builder, String text) {
+            StringUtil.appendReplacement(builder, text, PLAIN_TEXT_FROM, PLAIN_TEXT_TO);
+        }
+    }
+
+    private static class Raw extends Chunk {
         private final String myContent;
 
         private Raw(String content) {
@@ -56,23 +121,23 @@ public abstract class Html {
         }
     }
 
-    static class Fragment extends Html {
-        private final List<Html> myContent;
+    static class Fragment extends Chunk {
+        private final List<Chunk> myContent;
 
-        Fragment(List<Html> content) {
+        Fragment(List<Chunk> content) {
             myContent = content;
         }
 
         @Override
         public void appendTo(@Nonnull StringBuilder builder) {
-            for (Html chunk : myContent) {
+            for (Chunk chunk : myContent) {
                 chunk.appendTo(builder);
             }
         }
     }
 
-    private static class Nbsp extends Html {
-        private static final Html ONE = new Nbsp(1);
+    private static class Nbsp extends Chunk {
+        private static final Chunk ONE = new Nbsp(1);
         private final int myCount;
 
         private Nbsp(int count) {
@@ -85,26 +150,29 @@ public abstract class Html {
         }
     }
 
-    public static class Element extends Html {
-        private static final Element HEAD = tag("head");
-        private static final Element BODY = tag("body");
-        private static final Element HTML = tag("html");
-        private static final Element BR = tag("br");
-        private static final Element UL = tag("ul");
-        private static final Element LI = tag("li");
-        private static final Element HR = tag("hr");
-        private static final Element P = tag("p");
-        private static final Element DIV = tag("div");
-        private static final Element SPAN = tag("span");
+    public static class Element<THIS extends Element> extends Chunk {
+        protected final String myTagName;
+        protected final UnmodifiableHashMap<String, String> myAttributes;
+        protected final List<Chunk> myChildren;
 
-        private final String myTagName;
-        private final UnmodifiableHashMap<String, String> myAttributes;
-        private final List<Html> myChildren;
-
-        private Element(String name, UnmodifiableHashMap<String, String> attributes, List<Html> children) {
+        private Element(String name, UnmodifiableHashMap<String, String> attributes, List<Chunk> children) {
             myTagName = name;
             myAttributes = attributes;
             myChildren = children;
+        }
+
+        @Contract(pure = true)
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        protected THIS withAttributes(UnmodifiableHashMap<String, String> newAttributes) {
+            return (THIS)new Element(myTagName, newAttributes, myChildren);
+        }
+
+        @Contract(pure = true)
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        protected THIS withChildren(List<Chunk> newChildren) {
+            return (THIS)new Element(myTagName, myAttributes, newChildren);
         }
 
         @Override
@@ -113,15 +181,18 @@ public abstract class Html {
             myAttributes.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .forEach(
-                    entry -> builder.append(' ').append(entry.getKey()).append("=\"")
-                        .append(StringUtil.escapeXmlEntities(entry.getValue())).append('"')
+                    entry -> {
+                        builder.append(' ').append(entry.getKey()).append("=\"");
+                        appendEscapeDoubleQuotedAttribute(builder, entry.getValue());
+                        builder.append('"');
+                    }
                 );
             if (myChildren.isEmpty()) {
                 builder.append("/>");
             }
             else {
                 builder.append(">");
-                for (Html child : myChildren) {
+                for (Chunk child : myChildren) {
                     child.appendTo(builder);
                 }
                 builder.append("</").append(myTagName).append(">");
@@ -135,14 +206,14 @@ public abstract class Html {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element attr(String name, String value) {
-            return new Element(myTagName, myAttributes.with(name, value), myChildren);
+        public THIS attr(String name, String value) {
+            return withAttributes(myAttributes.with(name, value));
         }
 
         @Contract(pure = true)
         @Nonnull
-        public Element attr(String name, int value) {
-            return new Element(myTagName, myAttributes.with(name, Integer.toString(value)), myChildren);
+        public THIS attr(String name, int value) {
+            return withAttributes(myAttributes.with(name, Integer.toString(value)));
         }
 
         /**
@@ -151,7 +222,7 @@ public abstract class Html {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element style(String style) {
+        public THIS style(String style) {
             return attr("style", style);
         }
 
@@ -161,7 +232,17 @@ public abstract class Html {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element addText(@Nonnull LocalizeValue text) {
+        public THIS addFormattedText(@Nonnull LocalizeValue text) {
+            return child(formattedText(text));
+        }
+
+        /**
+         * @param text localized text to add to the list of children (should not be escaped)
+         * @return a new element that is like this element but has an extra text child
+         */
+        @Contract(pure = true)
+        @Nonnull
+        public THIS addText(@Nonnull LocalizeValue text) {
             return child(text(text));
         }
 
@@ -173,7 +254,7 @@ public abstract class Html {
         @DeprecationInfo("Use variant with LocalizeValue")
         @Contract(pure = true)
         @Nonnull
-        public Element addText(@Nonnull String text) {
+        public THIS addText(@Nonnull String text) {
             return child(text(text));
         }
 
@@ -183,7 +264,7 @@ public abstract class Html {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element addRaw(@Nonnull LocalizeValue text) {
+        public THIS addRaw(@Nonnull LocalizeValue text) {
             return child(raw(text));
         }
 
@@ -193,7 +274,7 @@ public abstract class Html {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element addRaw(@Nonnull String text) {
+        public THIS addRaw(@Nonnull String text) {
             return child(raw(text));
         }
 
@@ -203,14 +284,14 @@ public abstract class Html {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element children(@Nonnull Html... chunks) {
+        public THIS children(@Nonnull Chunk... chunks) {
             if (myChildren.isEmpty()) {
-                return new Element(myTagName, myAttributes, Arrays.asList(chunks));
+                return withChildren(Arrays.asList(chunks));
             }
-            List<Html> newChildren = new ArrayList<>(myChildren.size() + chunks.length);
+            List<Chunk> newChildren = new ArrayList<>(myChildren.size() + chunks.length);
             newChildren.addAll(myChildren);
             Collections.addAll(newChildren, chunks);
-            return new Element(myTagName, myAttributes, newChildren);
+            return withChildren(newChildren);
         }
 
         /**
@@ -219,14 +300,14 @@ public abstract class Html {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element children(@Nonnull List<Html> chunks) {
+        public THIS children(@Nonnull List<Chunk> chunks) {
             if (myChildren.isEmpty()) {
-                return new Element(myTagName, myAttributes, new ArrayList<>(chunks));
+                return withChildren(new ArrayList<>(chunks));
             }
-            List<Html> newChildren = new ArrayList<>(myChildren.size() + chunks.size());
+            List<Chunk> newChildren = new ArrayList<>(myChildren.size() + chunks.size());
             newChildren.addAll(myChildren);
             newChildren.addAll(chunks);
-            return new Element(myTagName, myAttributes, newChildren);
+            return withChildren(newChildren);
         }
 
         /**
@@ -235,71 +316,82 @@ public abstract class Html {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element child(@Nonnull Html chunk) {
+        public THIS child(@Nonnull Chunk chunk) {
             if (myChildren.isEmpty()) {
-                return new Element(myTagName, myAttributes, Collections.singletonList(chunk));
+                return withChildren(Collections.singletonList(chunk));
             }
-            List<Html> newChildren = new ArrayList<>(myChildren.size() + 1);
+            List<Chunk> newChildren = new ArrayList<>(myChildren.size() + 1);
             newChildren.addAll(myChildren);
             newChildren.add(chunk);
-            return new Element(myTagName, myAttributes, newChildren);
+            return withChildren(newChildren);
+        }
+
+        private static final List<String> DOUBLE_QUOTED_ATTR_FROM = List.of("<", ">", "&", "\"");
+        private static final List<String> DOUBLE_QUOTED_ATTR_TO = List.of("&lt;", "&gt;", "&amp;", "&quot;");
+
+        protected static void appendEscapeDoubleQuotedAttribute(@Nonnull StringBuilder builder, String text) {
+            StringUtil.appendReplacement(builder, text, DOUBLE_QUOTED_ATTR_FROM, DOUBLE_QUOTED_ATTR_TO);
         }
     }
 
-    /**
-     * @param tagName name of the tag to wrap with
-     * @return an element that wraps this element
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public Element wrapWith(@Nonnull String tagName) {
-        return new Element(tagName, UnmodifiableHashMap.empty(), Collections.singletonList(this));
+    public static class Anchor extends Element<Anchor> {
+        public Anchor(String name, UnmodifiableHashMap<String, String> attributes, List<Chunk> children) {
+            super(name, attributes, children);
+        }
+
+        @Nonnull
+        @Override
+        protected Anchor withAttributes(UnmodifiableHashMap<String, String> newAttributes) {
+            return new Anchor(myTagName, newAttributes, myChildren);
+        }
+
+        @Nonnull
+        @Override
+        protected Anchor withChildren(List<Chunk> newChildren) {
+            return new Anchor(myTagName, myAttributes, newChildren);
+        }
+
+        @Contract(pure = true)
+        @Nonnull
+        public Anchor href(String url) {
+            return attr("href", url);
+        }
     }
 
-    /**
-     * @param element element to wrap with
-     * @return an element that wraps this element
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public Element wrapWith(@Nonnull Element element) {
-        return element.child(this);
-    }
+    public static class Img extends Element<Img> {
+        public Img(String name, UnmodifiableHashMap<String, String> attributes, List<Chunk> children) {
+            super(name, attributes, children);
+        }
 
-    /**
-     * @return a CODE element that wraps this element
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public Element code() {
-        return wrapWith("code");
-    }
+        @Nonnull
+        @Override
+        protected Img withAttributes(UnmodifiableHashMap<String, String> newAttributes) {
+            return new Img(myTagName, newAttributes, myChildren);
+        }
 
-    /**
-     * @return a B element that wraps this element
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public Element bold() {
-        return wrapWith("b");
-    }
+        @Nonnull
+        @Override
+        protected Img withChildren(List<Chunk> newChildren) {
+            return new Img(myTagName, myAttributes, newChildren);
+        }
 
-    /**
-     * @return an I element that wraps this element
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public Element italic() {
-        return wrapWith("i");
-    }
+        @Contract(pure = true)
+        @Nonnull
+        public Img height(int height) {
+            return attr("height", height);
+        }
 
-    /**
-     * @return an S element that wraps this element
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public Element strikethrough() {
-        return wrapWith("s");
+        @Contract(pure = true)
+        @Nonnull
+        public Img width(int width) {
+            return attr("width", width);
+        }
+
+        @Contract(pure = true)
+        @Nonnull
+        public Img src(String url) {
+            return attr("src", url);
+        }
     }
 
     /**
@@ -313,103 +405,12 @@ public abstract class Html {
     }
 
     /**
-     * @return a &lt;div&gt; element
+     * @return an &lt;a&gt; element.
      */
     @Contract(pure = true)
     @Nonnull
-    public static Element div() {
-        return Element.DIV;
-    }
-
-    /**
-     * @return a &lt;div&gt; element with a specified style.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Element div(@Nonnull String style) {
-        return Element.DIV.style(style);
-    }
-
-    /**
-     * @return a &lt;span&gt; element.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Element span() {
-        return Element.SPAN;
-    }
-
-    /**
-     * @return a &lt;span&gt; element with a specified style.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Element span(@Nonnull String style) {
-        return Element.SPAN.style(style);
-    }
-
-    /**
-     * @return a &lt;br&gt; element.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Element br() {
-        return Element.BR;
-    }
-
-    /**
-     * @return a &lt;li&gt; element.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Element li() {
-        return Element.LI;
-    }
-
-    /**
-     * @return a &lt;ul&gt; element.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Element ul() {
-        return Element.UL;
-    }
-
-    /**
-     * @return a &lt;hr&gt; element.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Element hr() {
-        return Element.HR;
-    }
-
-    /**
-     * @return a &lt;p&gt; element.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Element p() {
-        return Element.P;
-    }
-
-    /**
-     * @return a &lt;body&gt; element.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Element head() {
-        return Element.HEAD;
-    }
-
-    @Nonnull
-    public static Element styleTag(@Nonnull String style) {
-        return tag("style").addRaw(style); //NON-NLS
-    }
-
-    @Nonnull
-    public static Element font(@Nonnull String color) {
-        return tag("font").attr("color", color);
+    public static Anchor a() {
+        return A;
     }
 
     /**
@@ -418,7 +419,43 @@ public abstract class Html {
     @Contract(pure = true)
     @Nonnull
     public static Element body() {
-        return Element.BODY;
+        return BODY;
+    }
+
+    /**
+     * @return a &lt;br&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element br() {
+        return BR;
+    }
+
+    /**
+     * @return a &lt;div&gt; element
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element div() {
+        return DIV;
+    }
+
+    /**
+     * @return a &lt;body&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element head() {
+        return HEAD;
+    }
+
+    /**
+     * @return a &lt;hr&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element hr() {
+        return HR;
     }
 
     /**
@@ -427,17 +464,104 @@ public abstract class Html {
     @Contract(pure = true)
     @Nonnull
     public static Element html() {
-        return Element.HTML;
+        return HTML;
+    }
+
+    /**
+     * @return an &lt;img&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Img img() {
+        return IMG;
+    }
+
+    /**
+     * @return a &lt;li&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element li() {
+        return LI;
+    }
+
+
+    /**
+     * @return a &lt;p&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element p() {
+        return P;
+    }
+
+    /**
+     * @return a &lt;span&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element span() {
+        return SPAN;
+    }
+
+    @Nonnull
+    public static Element style(@Nonnull String style) {
+        return STYLE.addRaw(style);
+    }
+
+    /**
+     * @return a &lt;table&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element table() {
+        return TABLE;
+    }
+
+    /**
+     * @return a &lt;td&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element td() {
+        return TD;
+    }
+
+    /**
+     * @return a &lt;th&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element th() {
+        return TH;
+    }
+
+    /**
+     * @return a &lt;tr&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element tr() {
+        return TR;
+    }
+
+    /**
+     * @return a &lt;ul&gt; element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element ul() {
+        return UL;
     }
 
     /**
      * Creates a HTML text node that represents a non-breaking space ({@code &nbsp;}).
      *
-     * @return HtmlChunk that represents a sequence of non-breaking spaces
+     * @return Chunk that represents a sequence of non-breaking spaces
      */
     @Contract(pure = true)
     @Nonnull
-    public static Html nbsp() {
+    public static Chunk nbsp() {
         return Nbsp.ONE;
     }
 
@@ -445,11 +569,11 @@ public abstract class Html {
      * Creates a HTML text node that represents a given number of non-breaking spaces
      *
      * @param count number of non-breaking spaces
-     * @return HtmlChunk that represents a sequence of non-breaking spaces
+     * @return Chunk that represents a sequence of non-breaking spaces
      */
     @Contract(pure = true)
     @Nonnull
-    public static Html nbsp(int count) {
+    public static Chunk nbsp(int count) {
         if (count <= 0) {
             throw new IllegalArgumentException();
         }
@@ -457,16 +581,28 @@ public abstract class Html {
     }
 
     /**
+     * Creates a HTML pre-formatted text node
+     *
+     * @param text localized text to display (no escaping should be done by caller).
+     * @return Chunk that represents a HTML text node.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Chunk formattedText(@Nonnull LocalizeValue text) {
+        return text == LocalizeValue.empty() ? empty() : new FormattedText(text.get());
+    }
+
+    /**
      * Creates a HTML text node
      *
      * @param text localized text to display (no escaping should be done by caller).
      *             All {@code '\n'} characters will be converted to {@code <br/>}
-     * @return HtmlChunk that represents a HTML text node.
+     * @return Chunk that represents a HTML text node.
      */
     @Contract(pure = true)
     @Nonnull
-    public static Html text(@Nonnull LocalizeValue text) {
-        return text == LocalizeValue.empty() ? empty() : new Text(text.get());
+    public static Chunk text(@Nonnull LocalizeValue text) {
+        return text == LocalizeValue.empty() ? empty() : new PlainText(text.get());
     }
 
     /**
@@ -474,20 +610,20 @@ public abstract class Html {
      *
      * @param text text to display (no escaping should be done by caller).
      *             All {@code '\n'} characters will be converted to {@code <br/>}
-     * @return HtmlChunk that represents a HTML text node.
+     * @return Chunk that represents a HTML text node.
      */
     @Contract(pure = true)
     @Nonnull
-    public static Html text(@Nonnull String text) {
-        return text.isEmpty() ? empty() : new Text(text);
+    public static Chunk text(@Nonnull String text) {
+        return text.isEmpty() ? empty() : new PlainText(text);
     }
 
     /**
-     * @return an empty HtmlChunk
+     * @return an empty Chunk
      */
     @Contract(pure = true)
     @Nonnull
-    public static Html empty() {
+    public static Chunk empty() {
         return Empty.INSTANCE;
     }
 
@@ -497,11 +633,11 @@ public abstract class Html {
      * {@code "Click <a href=\"...\">here</a> for details"}.
      *
      * @param rawHtml raw HTML content. It's the responsibility of the caller to balance tags and escape HTML entities.
-     * @return the HtmlChunk that represents the supplied content.
+     * @return the Chunk that represents the supplied content.
      */
     @Contract(pure = true)
     @Nonnull
-    public static Html raw(@Nonnull LocalizeValue rawHtml) {
+    public static Chunk raw(@Nonnull LocalizeValue rawHtml) {
         return rawHtml == LocalizeValue.empty() ? empty() : new Raw(rawHtml.get());
     }
 
@@ -511,113 +647,29 @@ public abstract class Html {
      * {@code "Click <a href=\"...\">here</a> for details"}.
      *
      * @param rawHtml raw HTML content. It's the responsibility of the caller to balance tags and escape HTML entities.
-     * @return the HtmlChunk that represents the supplied content.
+     * @return the Chunk that represents the supplied content.
      */
     @Contract(pure = true)
     @Nonnull
-    public static Html raw(@Nonnull String rawHtml) {
+    public static Chunk raw(@Nonnull String rawHtml) {
         return rawHtml.isEmpty() ? empty() : new Raw(rawHtml);
     }
 
-    /**
-     * Creates an element that represents a simple HTML link.
-     *
-     * @param target link target (HREF)
-     * @param text   localized link text
-     * @return the Element that represents a link
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Element link(@Nonnull String target, @Nonnull LocalizeValue text) {
-        return new Element("a", UnmodifiableHashMap.<String, String>empty().with("href", target), Collections.singletonList(text(text)));
-    }
-
-    /**
-     * Creates an element that represents a simple HTML link.
-     *
-     * @param target link target (HREF)
-     * @param text   link text
-     * @return the Element that represents a link
-     */
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    @Contract(pure = true)
-    @Nonnull
-    public static Element link(@Nonnull String target, @Nonnull String text) {
-        return link(target, LocalizeValue.of(text));
-    }
-
-    /**
-     * Creates an html entity (e.g. `&ndash;`)
-     *
-     * @param htmlEntity entity
-     * @return the HtmlChunk that represents the html entity
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Html htmlEntity(@Nonnull String htmlEntity) {
-        return raw(htmlEntity);
-    }
-
-    /**
-     * @return true if this chunk is empty (doesn't produce any text)
-     */
-    @Contract(pure = true)
-    public boolean isEmpty() {
-        return false;
-    }
-
-
-    /**
-     * Appends the rendered HTML representation of this chunk to the supplied builder
-     *
-     * @param builder builder to append to.
-     */
-    public abstract void appendTo(@Nonnull StringBuilder builder);
-
-    /**
-     * @return the rendered HTML representation of this chunk.
-     */
-    @Override
-    @Contract(pure = true)
-    @Nonnull
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        appendTo(builder);
-        return builder.toString();
-    }
-
-    /**
-     * @return the collector that collects a stream of HtmlChunks to the fragment chunk.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Collector<Html, ?, Html> toFragment() {
-        return Collector.of(HtmlBuilder::new, HtmlBuilder::append, HtmlBuilder::append, HtmlBuilder::toFragment);
-    }
-
-    /**
-     * @param separator a chunk that should be used as a delimiter
-     * @return the collector that collects a stream of HtmlChunks to the fragment chunk.
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public static Collector<Html, ?, Html> toFragment(Html separator) {
-        return Collector.of(
-            HtmlBuilder::new,
-            (hb, c) -> {
-                if (!hb.isEmpty()) {
-                    hb.append(separator);
-                }
-                hb.append(c);
-            },
-            (hb1, hb2) -> {
-                if (!hb1.isEmpty()) {
-                    hb1.append(separator);
-                }
-                return hb1.append(hb2);
-            },
-            HtmlBuilder::toFragment
-        );
-    }
+    private static final Anchor A = new Anchor("a", UnmodifiableHashMap.empty(), Collections.emptyList());
+    private static final Element BODY = tag("body");
+    private static final Element BR = tag("br");
+    private static final Element DIV = tag("div");
+    private static final Element HEAD = tag("head");
+    private static final Element HR = tag("hr");
+    private static final Element HTML = tag("html");
+    private static final Img IMG = new Img("img", UnmodifiableHashMap.empty(), Collections.emptyList());
+    private static final Element LI = tag("li");
+    private static final Element P = tag("p");
+    private static final Element SPAN = tag("span");
+    private static final Element STYLE = tag("style");
+    private static final Element TABLE = tag("table");
+    private static final Element TD = tag("td");
+    private static final Element TH = tag("th");
+    private static final Element TR = tag("tr");
+    private static final Element UL = tag("ul");
 }

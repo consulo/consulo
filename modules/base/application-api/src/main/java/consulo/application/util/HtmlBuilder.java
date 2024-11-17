@@ -1,8 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.application.util.HtmlChunk.Element;
+import consulo.application.util.Html.Element;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
@@ -11,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple builder to create HTML fragments. It encapsulates a series of {@link HtmlChunk} objects.
+ * A simple builder to create HTML fragments. It encapsulates a series of {@link Html} objects.
  */
 public final class HtmlBuilder {
-    private final List<HtmlChunk> myChunks = new ArrayList<>();
+    private final List<Html.Chunk> myChunks = new ArrayList<>();
 
     /**
      * Appends a new chunk to this builder
@@ -23,7 +22,7 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
-    public HtmlBuilder append(@Nonnull HtmlChunk chunk) {
+    public HtmlBuilder append(@Nonnull Html.Chunk chunk) {
         if (!chunk.isEmpty()) {
             myChunks.add(chunk);
         }
@@ -45,7 +44,7 @@ public final class HtmlBuilder {
      */
     @Contract("_ -> this")
     public HtmlBuilder append(@Nonnull String text) {
-        return append(HtmlChunk.text(text));
+        return append(Html.text(text));
     }
 
     /**
@@ -57,7 +56,7 @@ public final class HtmlBuilder {
      */
     @Contract("_ -> this")
     public HtmlBuilder append(@Nonnull LocalizeValue text) {
-        return append(HtmlChunk.text(text.get()));
+        return append(Html.text(text.get()));
     }
 
     /**
@@ -70,7 +69,7 @@ public final class HtmlBuilder {
      */
     @Contract("_ -> this")
     public HtmlBuilder appendRaw(@Nonnull LocalizeValue rawHtml) {
-        return append(HtmlChunk.raw(rawHtml.get()));
+        return append(Html.raw(rawHtml.get()));
     }
 
     /**
@@ -83,53 +82,7 @@ public final class HtmlBuilder {
      */
     @Contract("_ -> this")
     public HtmlBuilder appendRaw(@Nonnull String rawHtml) {
-        return append(HtmlChunk.raw(rawHtml));
-    }
-
-    /**
-     * Appends a link element to this builder
-     *
-     * @param target link target (href)
-     * @param text   localized link text
-     * @return this builder
-     */
-    @Contract("_, _ -> this")
-    public HtmlBuilder appendLink(@Nonnull String target, @Nonnull LocalizeValue text) {
-        return append(HtmlChunk.link(target, text));
-    }
-
-    /**
-     * Appends a link element to this builder
-     *
-     * @param target link target (href)
-     * @param text   link text
-     * @return this builder
-     */
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    @Contract("_, _ -> this")
-    public HtmlBuilder appendLink(@Nonnull String target, @Nonnull String text) {
-        return append(HtmlChunk.link(target, text));
-    }
-
-    /**
-     * Appends a collection of chunks interleaving them with a supplied separator chunk
-     *
-     * @param separator a separator chunk
-     * @param children  chunks to append
-     * @return this builder
-     */
-    @Contract("_, _ -> this")
-    public HtmlBuilder appendWithSeparators(@Nonnull HtmlChunk separator, @Nonnull Iterable<HtmlChunk> children) {
-        boolean first = true;
-        for (HtmlChunk child : children) {
-            if (!first) {
-                append(separator);
-            }
-            first = false;
-            append(child);
-        }
-        return this;
+        return append(Html.raw(rawHtml));
     }
 
     /**
@@ -139,7 +92,7 @@ public final class HtmlBuilder {
      */
     @Contract(" -> this")
     public HtmlBuilder nbsp() {
-        return append(HtmlChunk.nbsp());
+        return append(Html.nbsp());
     }
 
     /**
@@ -150,7 +103,7 @@ public final class HtmlBuilder {
      */
     @Contract("_ -> this")
     public HtmlBuilder nbsp(int count) {
-        return append(HtmlChunk.nbsp(count));
+        return append(Html.nbsp(count));
     }
 
     /**
@@ -160,7 +113,7 @@ public final class HtmlBuilder {
      */
     @Contract(" -> this")
     public HtmlBuilder br() {
-        return append(HtmlChunk.br());
+        return append(Html.br());
     }
 
     /**
@@ -170,7 +123,7 @@ public final class HtmlBuilder {
      */
     @Contract(" -> this")
     public HtmlBuilder hr() {
-        return append(HtmlChunk.hr());
+        return append(Html.hr());
     }
 
     /**
@@ -182,31 +135,7 @@ public final class HtmlBuilder {
     @Contract(pure = true)
     @Nonnull
     public Element wrapWith(@Nonnull String tag) {
-        return HtmlChunk.tag(tag).children(myChunks.toArray(new HtmlChunk[0]));
-    }
-
-    /**
-     * Wraps this builder content with a specified element
-     *
-     * @param element name of the tag to wrap with
-     * @return a new Element object that contains chunks from this builder
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public Element wrapWith(@Nonnull HtmlChunk.Element element) {
-        return element.children(myChunks.toArray(new HtmlChunk[0]));
-    }
-
-    /**
-     * Wraps this builder content with a {@code <html><body></body></html>}.
-     *
-     * @return a new HTML Element object that wraps BODY Element that contains
-     * chunks from this builder
-     */
-    @Contract(pure = true)
-    @Nonnull
-    public Element wrapWithHtmlBody() {
-        return wrapWith("body").wrapWith("html");
+        return Html.tag(tag).children(myChunks.toArray(new Html.Chunk[0]));
     }
 
     /**
@@ -220,8 +149,8 @@ public final class HtmlBuilder {
     /**
      * @return a fragment chunk that contains all the chunks of this builder.
      */
-    public HtmlChunk toFragment() {
-        return new HtmlChunk.Fragment(new ArrayList<>(myChunks));
+    public Html.Chunk toFragment() {
+        return new Html.Fragment(new ArrayList<>(myChunks));
     }
 
     /**
@@ -231,7 +160,7 @@ public final class HtmlBuilder {
     @Contract(pure = true)
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (HtmlChunk chunk : myChunks) {
+        for (Html.Chunk chunk : myChunks) {
             chunk.appendTo(sb);
         }
         return sb.toString();

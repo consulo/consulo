@@ -95,13 +95,13 @@ public final class StringUtil {
     private static final String[] MN_QUOTED = {"&&", "__"};
     private static final String[] MN_CHARS = {"&", "_"};
 
-    private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
-    private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
+    private static final List<String> REPLACES_REFS = List.of("&lt;", "&gt;", "&amp;", "&#39;", "&quot;");
+    private static final List<String> REPLACES_DISP = List.of("<", ">", "&", "'", "\"");
 
     private static final Pattern EOL_SPLIT_KEEP_SEPARATORS = Pattern.compile("(?<=(\r\n|\n))|(?<=\r)(?=[^\n])");
-    private static final Pattern EOL_SPLIT_PATTERN = Pattern.compile(" *(\r|\n|\r\n)+ *");
-    private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
-    private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
+    private static final Pattern EOL_SPLIT_PATTERN = Pattern.compile(" *(\r\n?|\n)+ *");
+    private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r\n?|\n) *");
+    private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r\n?|\n)+");
 
     private static final String VOWELS = "aeiouy";
 
@@ -199,7 +199,7 @@ public final class StringUtil {
     public static String firstLast(@Nonnull String text, int length) {
         return text.length() > length
             ? text.subSequence(0, length / 2) + "\u2026" +
-                text.subSequence(text.length() - length / 2 - 1, text.length())
+            text.subSequence(text.length() - length / 2 - 1, text.length())
             : text;
     }
 
@@ -1984,6 +1984,33 @@ public final class StringUtil {
             result.append(text.charAt(i));
         }
         return result.toString();
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static void appendReplacement(
+        @Nonnull StringBuilder sb,
+        @Nonnull String text,
+        @Nonnull List<String> from,
+        @Nonnull List<String> to
+    ) {
+        assert from.size() == to.size();
+        sb.ensureCapacity(text.length());
+        replace:
+        for (int i = 0; i < text.length(); i++) {
+            for (int j = 0; j < from.size(); j += 1) {
+                String toReplace = from.get(j);
+                String replaceWith = to.get(j);
+
+                final int len = toReplace.length();
+                if (text.regionMatches(i, toReplace, 0, len)) {
+                    sb.append(replaceWith);
+                    i += len - 1;
+                    continue replace;
+                }
+            }
+            sb.append(text.charAt(i));
+        }
     }
 
     @Contract(value = "null -> null; !null->!null", pure = true)
