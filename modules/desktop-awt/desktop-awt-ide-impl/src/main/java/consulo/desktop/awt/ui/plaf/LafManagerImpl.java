@@ -143,10 +143,6 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     lafList.add(new IntelliJLookAndFeelInfo());
     lafList.add(new DarculaLookAndFeelInfo());
 
-    if (Platform.current().os().isLinux() && EarlyAccessProgramManager.is(GTKPlusEAPDescriptor.class)) {
-      lafList.add(new UIManager.LookAndFeelInfo("GTK+", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"));
-    }
-
     for (LookAndFeelProvider provider : LookAndFeelProvider.EP_NAME.getExtensionList()) {
       provider.register(lafList::add);
     }
