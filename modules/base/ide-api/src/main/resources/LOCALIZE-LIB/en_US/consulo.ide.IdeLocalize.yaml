@@ -2220,7 +2220,7 @@ file.encodings.not.configured:
 encodings.dialog.caption:
   text: "<html>To change encoding {0} uses for a file or directory, click an item and then select encoding from the Default Encoding list.<br><br>\n Built-in file encoding (e.g. JSP, HTML or XML) overrides encoding you specify here.<br>\n If not specified, files and directories inherit encoding settings from the parent directory or from the Project Encoding.</html>"
 encoding.name.system.default:
-  text: <System Default>
+  text: '<System Default: {0}>'
 quick.lists.presentable.name:
   text: Quick lists
 error.saving.statistics:

@@ -12,6 +12,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -65,7 +66,7 @@ public class FoldLinesLikeThis extends DumbAwareAction {
     assert selection != null;
     ShowSettingsUtil.getInstance().editConfigurable(
       editor.getProject(),
-      new ConsoleFoldingConfigurable(ConsoleFoldingSettings::getSettings) {
+      new ConsoleConfigurable(ConsoleFoldingSettings::getSettings, ApplicationEncodingManager.getInstance()) {
         @Override
         @RequiredUIAccess
         public void reset() {

@@ -33,45 +33,54 @@ import java.util.function.BiFunction;
  * @since 2020-08-23
  */
 public class LabeledBuilder {
-  private static final BiFunction<LocalizeManager, String, String> SEMICOLON_APPENDER =
-    (localizeManager, text) -> !StringUtil.endsWithChar(text, ':') ? text + ":" : text;
+    private static final BiFunction<LocalizeManager, String, String> SEMICOLON_APPENDER =
+        (localizeManager, text) -> !StringUtil.endsWithChar(text, ':') ? text + ":" : text;
 
-  @RequiredUIAccess
-  public static Component simple(@Nonnull LocalizeValue localizeValue, @Nonnull Component component) {
-    return simple(localizeValue, () -> component);
-  }
+    @RequiredUIAccess
+    public static Component simple(@Nonnull LocalizeValue localizeValue, @Nonnull Component component) {
+        return simple(localizeValue, () -> component);
+    }
 
-  @RequiredUIAccess
-  public static Component simple(@Nonnull LocalizeValue localizeValue, @Nonnull PseudoComponent component) {
-    HorizontalLayout horizontal = HorizontalLayout.create(5);
-    horizontal.add(Label.create(localizeValue.map(SEMICOLON_APPENDER)));
-    horizontal.add(component);
-    return horizontal;
-  }
+    @RequiredUIAccess
+    public static Component simple(@Nonnull LocalizeValue localizeValue, @Nonnull PseudoComponent component) {
+        HorizontalLayout horizontal = HorizontalLayout.create(5);
+        Label label = Label.create(localizeValue.map(SEMICOLON_APPENDER));
+        horizontal.add(label);
+        horizontal.add(component);
 
-  @RequiredUIAccess
-  public static Component filled(@Nonnull LocalizeValue localizeValue, @Nonnull Component component) {
-    return filled(localizeValue, () -> component);
-  }
+        label.setTarget(component.getComponent());
+        return horizontal;
+    }
 
-  @RequiredUIAccess
-  public static Component filled(@Nonnull LocalizeValue localizeValue, @Nonnull PseudoComponent component) {
-    DockLayout dock = DockLayout.create();
-    dock.left(Label.create(localizeValue.map(SEMICOLON_APPENDER)));
-    dock.center(component);
-    return dock;
-  }
+    @RequiredUIAccess
+    public static Component filled(@Nonnull LocalizeValue localizeValue, @Nonnull Component component) {
+        return filled(localizeValue, () -> component);
+    }
 
-  @RequiredUIAccess
-  public static Component sided(@Nonnull LocalizeValue localizeValue, @Nonnull Component component) {
-    return sided(localizeValue, () -> component);
-  }
+    @RequiredUIAccess
+    public static Component filled(@Nonnull LocalizeValue localizeValue, @Nonnull PseudoComponent component) {
+        DockLayout dock = DockLayout.create();
+        Label label = Label.create(localizeValue.map(SEMICOLON_APPENDER));
+        label.setTarget(component.getComponent());
 
-  @RequiredUIAccess
-  public static Component sided(@Nonnull LocalizeValue localizeValue, @Nonnull PseudoComponent component) {
-    DockLayout dock = DockLayout.create();
-    dock.left(Label.create(localizeValue));
-    dock.right(component);
-    return dock;
-  }
+        dock.left(label);
+        dock.center(component);
+        return dock;
+    }
+
+    @RequiredUIAccess
+    public static Component sided(@Nonnull LocalizeValue localizeValue, @Nonnull Component component) {
+        return sided(localizeValue, () -> component);
+    }
+
+    @RequiredUIAccess
+    public static Component sided(@Nonnull LocalizeValue localizeValue, @Nonnull PseudoComponent component) {
+        DockLayout dock = DockLayout.create();
+        Label label = Label.create(localizeValue);
+        label.setTarget(component.getComponent());
+
+        dock.left(label);
+        dock.right(component);
+        return dock;
+    }
 }

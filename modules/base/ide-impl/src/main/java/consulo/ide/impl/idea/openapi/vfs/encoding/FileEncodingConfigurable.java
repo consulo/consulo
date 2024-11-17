@@ -28,7 +28,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
 import jakarta.annotation.Nonnull;
@@ -45,7 +45,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @ExtensionImpl
-class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implements ProjectConfigurable {
+public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implements ProjectConfigurable {
     private JPanel myPanel;
     private JCheckBox myTransparentNativeToAsciiCheckBox;
     private JPanel myPropertiesFilesEncodingCombo;
@@ -58,19 +58,21 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
     private final Trinity<String, Supplier<Charset>, Consumer<Charset>> myGlobalMapping;
 
     @Inject
-    FileEncodingConfigurable(@Nonnull Project project) {
+    public FileEncodingConfigurable(@Nonnull Project project,
+                                    @Nonnull ApplicationEncodingManager applicationEncodingManager,
+                                    @Nonnull EncodingProjectManager encodingProjectManager) {
         super(project, createMappings(project));
         myBOMForUTF8Combo.setModel(new EnumComboBoxModel<>(EncodingProjectManagerImpl.BOMForNewUTF8Files.class));
         myBOMForUTF8Combo.addItemListener(e -> updateExplanationLabelText());
         myExplanationLabel.setHyperlinkTarget("https://en.wikipedia.org/wiki/Byte_order_mark#UTF-8");
-        EncodingManager app = EncodingManager.getInstance();
-        EncodingProjectManagerImpl prj = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(myProject);
-        myProjectMapping = Trinity.create(
-            IdeLocalize.fileEncodingOptionGlobalEncoding().get(),
-            () -> app.getDefaultCharsetName().isEmpty() ? null : app.getDefaultCharset(),
-            o -> app.setDefaultCharsetName(getCharsetName(o))
-        );
+
+        EncodingProjectManagerImpl prj = (EncodingProjectManagerImpl) encodingProjectManager;
         myGlobalMapping = Trinity.create(
+            IdeLocalize.fileEncodingOptionGlobalEncoding().get(),
+            () -> applicationEncodingManager.getDefaultCharsetName().isEmpty() ? null : applicationEncodingManager.getDefaultCharset(),
+            o -> applicationEncodingManager.setDefaultCharsetName(getCharsetName(o))
+        );
+        myProjectMapping = Trinity.create(
             IdeLocalize.fileEncodingOptionProjectEncoding().get(),
             prj::getConfiguredDefaultCharset,
             o -> prj.setDefaultCharsetName(getCharsetName(o))

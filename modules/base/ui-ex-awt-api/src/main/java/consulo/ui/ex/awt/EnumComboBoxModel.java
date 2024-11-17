@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * @author Dmitry Avdeev
  */
-public class EnumComboBoxModel<E extends Enum<E>> extends AbstractListModel implements ComboBoxModel {
+public class EnumComboBoxModel<E extends Enum<E>> extends AbstractListModel<E> implements ComboBoxModel<E> {
   private E mySelected = null;
   private final List<E> myList;
 

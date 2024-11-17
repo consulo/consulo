@@ -347,9 +347,8 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
   }
 
   @Override
-  public
   @Nonnull
-  Charset getDefaultConsoleEncoding() {
+  public Charset getDefaultConsoleEncoding() {
     return myState.myDefaultConsoleEncoding.dereference();
   }
 

@@ -18,6 +18,7 @@ package consulo.ui.ex.awt;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,21 +26,26 @@ import java.util.List;
  * @author yole
  */
 public class CollectionComboBoxModel<T> extends AbstractCollectionComboBoxModel<T> {
-  private final List<T> myItems;
+    private final List<T> myItems;
 
-  public CollectionComboBoxModel(final List<? extends T> items, @Nullable final T selection) {
-    super(selection);
-    myItems = Collections.unmodifiableList(items);
-  }
+    public CollectionComboBoxModel() {
+        super(null);
+        myItems = new ArrayList<>();
+    }
 
-  public CollectionComboBoxModel(List<T> items) {
-    super(items.isEmpty() ? null : items.get(0));
-    myItems = items;
-  }
+    public CollectionComboBoxModel(final List<? extends T> items, @Nullable final T selection) {
+        super(selection);
+        myItems = Collections.unmodifiableList(items);
+    }
 
-  @Override
-  @Nonnull
-  final protected List<T> getItems() {
-    return myItems;
-  }
+    public CollectionComboBoxModel(List<T> items) {
+        super(items.isEmpty() ? null : items.get(0));
+        myItems = items;
+    }
+
+    @Override
+    @Nonnull
+    final protected List<T> getItems() {
+        return myItems;
+    }
 }

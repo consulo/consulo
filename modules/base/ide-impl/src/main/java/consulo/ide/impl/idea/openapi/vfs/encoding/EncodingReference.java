@@ -20,6 +20,7 @@ import consulo.util.io.CharsetToolkit;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.nio.charset.Charset;
+import java.util.Objects;
 
 /**
  * from kotlin
@@ -47,4 +48,21 @@ public class EncodingReference {
   public Charset getCharset() {
     return charset;
   }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        EncodingReference that = (EncodingReference) o;
+        return Objects.equals(charset, that.charset);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(charset);
+    }
 }
