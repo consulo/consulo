@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.plugins.sorters;
+package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.ide.impl.idea.ide.plugins.PluginTable;
 import consulo.ide.impl.idea.ide.plugins.PluginTableModel;
@@ -24,11 +24,11 @@ import consulo.container.plugin.PluginDescriptor;
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class AbstractSortByAction extends ToggleAction {
+public abstract class SortByAction extends ToggleAction {
     protected final PluginTable myTable;
     protected final PluginTableModel myModel;
 
-    public AbstractSortByAction(String name, PluginTable table, PluginTableModel model) {
+    public SortByAction(String name, PluginTable table, PluginTableModel model) {
         super(name, name, null);
         myTable = table;
         myModel = model;
