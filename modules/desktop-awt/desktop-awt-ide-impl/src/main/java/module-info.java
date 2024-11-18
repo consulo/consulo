@@ -20,6 +20,7 @@ open module consulo.desktop.awt.ide.impl {
   requires io.netty.transport;
 
   requires cobra.core;
+  requires net.sf.cssbox.jstyleparser;
 
   requires org.apache.commons.imaging;
 
@@ -58,4 +59,7 @@ open module consulo.desktop.awt.ide.impl {
 
   // FIXME it's will not work due different classloaders?
   provides javax.imageio.spi.ImageReaderSpi with consulo.desktop.awt.spi.CommonsImagingImageReaderSpi;
+
+  provides org.cobraparser.css.DefaultCssFactory with consulo.desktop.awt.ui.impl.htmlView.ConsuloDefaultCssFactory;
+  provides org.cobraparser.css.StandardColorProvider with consulo.desktop.awt.ui.impl.htmlView.ConsuloStandardColorProvider;
 }
