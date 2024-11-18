@@ -20,6 +20,9 @@ import java.util.function.Consumer;
  * same table when a new element is added. Thanks to this rehashing occurs only once in four additions.
  */
 public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
+    private static final UnmodifiableHashMap<Object, Object> EMPTY =
+        new UnmodifiableHashMap<>(HashingStrategy.canonical(), ArrayUtil.EMPTY_OBJECT_ARRAY, null, null, null, null, null, null);
+
     @Nonnull
     private final HashingStrategy<K> strategy;
     @Nonnull
@@ -39,8 +42,9 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
      * @see HashingStrategy#canonical()
      */
     @Nonnull
+    @SuppressWarnings("unchecked")
     public static <K, V> UnmodifiableHashMap<K, V> empty() {
-        return empty(HashingStrategy.canonical());
+        return (UnmodifiableHashMap<K, V>)EMPTY;
     }
 
     /**
@@ -53,7 +57,9 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
      */
     @Nonnull
     public static <K, V> UnmodifiableHashMap<K, V> empty(HashingStrategy<K> strategy) {
-        return new UnmodifiableHashMap<>(strategy, ArrayUtil.EMPTY_OBJECT_ARRAY, null, null, null, null, null, null);
+        return strategy == HashingStrategy.canonical()
+            ? empty()
+            : new UnmodifiableHashMap<>(strategy, ArrayUtil.EMPTY_OBJECT_ARRAY, null, null, null, null, null, null);
     }
 
     /**
@@ -88,9 +94,12 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         @Nonnull Map<? extends K, ? extends V> map
     ) {
         if (map instanceof UnmodifiableHashMap uhm && uhm.strategy == strategy) {
-            return (UnmodifiableHashMap<K, V>)map;
+            return (UnmodifiableHashMap<K, V>)uhm;
         }
-        if (map.size() <= 3) {
+        else if (map.isEmpty()) {
+            return empty(strategy);
+        }
+        else if (map.size() <= 3) {
             K k1 = null;
             K k2 = null;
             K k3 = null;
@@ -201,7 +210,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
      * @param key   a key to add/replace
      * @param value a value to associate with the key
      * @return an {@code UnmodifiableHashMap} which contains all the entries as this map plus the supplied mapping.
-     * May return the same map if given key is already associated with the same value. Note however that if value is
+     * May return the same map if given key is already associated with the same value. Note, however, that if value is
      * not the same but equal object, the new map will be created as sometimes it's desired to replace the object with
      * another one which is equal to the old object.
      */
@@ -263,10 +272,15 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
      */
     @Nonnull
     public UnmodifiableHashMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map) {
-        if (map.isEmpty()) {
+        if (isEmpty()) {
+            return fromMap(strategy, map);
+        }
+
+        int mapSize = map.size();
+        if (mapSize == 0) {
             return this;
         }
-        if (map.size() == 1) {
+        else if (mapSize == 1) {
             Entry<? extends K, ? extends V> entry = map.entrySet().iterator().next();
             return with(entry.getKey(), entry.getValue());
         }
