@@ -20,17 +20,12 @@ import java.util.function.Consumer;
  * same table when a new element is added. Thanks to this rehashing occurs only once in four additions.
  */
 public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
-    private final
     @Nonnull
-    HashingStrategy<K> strategy;
+    private final HashingStrategy<K> strategy;
     @Nonnull
     private final Object[] data;
-    private final K k1;
-    private final K k2;
-    private final K k3;
-    private final V v1;
-    private final V v2;
-    private final V v3;
+    private final K k1, k2, k3;
+    private final V v1, v2, v3;
     private final int size;
     private Set<K> keySet;
     private Collection<V> values;
@@ -45,7 +40,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
      */
     @Nonnull
     public static <K, V> UnmodifiableHashMap<K, V> empty() {
-        return empty(ContainerUtil.canonicalStrategy());
+        return empty(HashingStrategy.canonical());
     }
 
     /**
@@ -72,7 +67,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
      */
     @Nonnull
     public static <K, V> UnmodifiableHashMap<K, V> fromMap(@Nonnull Map<? extends K, ? extends V> map) {
-        return fromMap(ContainerUtil.canonicalStrategy(), map);
+        return fromMap(HashingStrategy.canonical(), map);
     }
 
     /**
@@ -87,13 +82,12 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
      * it's already an {@code UnmodifiableHashMap} which uses the same equals/hashCode strategy.
      */
     @Nonnull
+    @SuppressWarnings("unchecked")
     public static <K, V> UnmodifiableHashMap<K, V> fromMap(
         @Nonnull HashingStrategy<K> strategy,
         @Nonnull Map<? extends K, ? extends V> map
     ) {
-        //noinspection unchecked
         if (map instanceof UnmodifiableHashMap uhm && uhm.strategy == strategy) {
-            //noinspection unchecked
             return (UnmodifiableHashMap<K, V>)map;
         }
         if (map.size() <= 3) {
@@ -267,9 +261,8 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
      * mappings already exist in this map (assuming values are compared by reference). The equals/hashCode strategy
      * of the resulting map is the same as the strategy of this map.
      */
-    public
     @Nonnull
-    UnmodifiableHashMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map) {
+    public UnmodifiableHashMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map) {
         if (map.isEmpty()) {
             return this;
         }
@@ -489,8 +482,8 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         throw new UnsupportedOperationException();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public void forEach(BiConsumer<? super K, ? super V> action) {
         if (k1 != null) {
             if (k2 != null) {
@@ -551,6 +544,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
             else {
                 pos += 2;
             }
+
             if (pos >= 0) {
                 while (pos < data.length && data[pos] == null) {
                     pos++;
@@ -578,24 +572,22 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         abstract E tableElement(int offset);
     }
 
-    @Override
-    public
     @Nonnull
-    Set<K> keySet() {
+    @Override
+    public Set<K> keySet() {
         if (keySet == null) {
-            keySet = new AbstractSet<K>() {
-                @Override
-                public
+            keySet = new AbstractSet<>() {
                 @Nonnull
-                Iterator<K> iterator() {
+                @Override
+                public Iterator<K> iterator() {
                     return new MyIterator<K>() {
                         @Override
                         K fieldElement(int offset) {
                             return offset == 0 ? k1 : offset == 1 ? k2 : k3;
                         }
 
-                        @SuppressWarnings("unchecked")
                         @Override
+                        @SuppressWarnings("unchecked")
                         K tableElement(int offset) {
                             return (K)data[offset];
                         }
@@ -636,24 +628,22 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         return keySet;
     }
 
-    @Override
-    public
     @Nonnull
-    Collection<V> values() {
+    @Override
+    public Collection<V> values() {
         if (values == null) {
-            values = new AbstractCollection<V>() {
-                @Override
-                public
+            values = new AbstractCollection<>() {
                 @Nonnull
-                Iterator<V> iterator() {
+                @Override
+                public Iterator<V> iterator() {
                     return new MyIterator<V>() {
                         @Override
                         V fieldElement(int offset) {
                             return offset == 0 ? v1 : offset == 1 ? v2 : v3;
                         }
 
-                        @SuppressWarnings("unchecked")
                         @Override
+                        @SuppressWarnings("unchecked")
                         V tableElement(int offset) {
                             return (V)data[offset + 1];
                         }
@@ -694,15 +684,13 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         return values;
     }
 
-    @Override
-    public
     @Nonnull
-    Set<Entry<K, V>> entrySet() {
-        return new AbstractSet<Entry<K, V>>() {
-            @Override
-            public
+    @Override
+    public Set<Entry<K, V>> entrySet() {
+        return new AbstractSet<>() {
             @Nonnull
-            Iterator<Entry<K, V>> iterator() {
+            @Override
+            public Iterator<Entry<K, V>> iterator() {
                 return new MyIterator<Entry<K, V>>() {
                     @Override
                     Entry<K, V> fieldElement(int offset) {
@@ -713,8 +701,8 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
                             : new AbstractMap.SimpleImmutableEntry<>(k3, v3);
                     }
 
-                    @SuppressWarnings("unchecked")
                     @Override
+                    @SuppressWarnings("unchecked")
                     Entry<K, V> tableElement(int offset) {
                         return new AbstractMap.SimpleImmutableEntry<>((K)data[offset], (V)data[offset + 1]);
                     }
