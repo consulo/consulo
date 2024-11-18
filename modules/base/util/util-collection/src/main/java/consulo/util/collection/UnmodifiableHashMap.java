@@ -109,15 +109,15 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
             Iterator<? extends Entry<? extends K, ? extends V>> iterator = map.entrySet().iterator();
             if (iterator.hasNext()) {
                 Entry<? extends K, ? extends V> e = iterator.next();
-                k1 = e.getKey();
+                k1 = ensureKeyIsNotNull(e.getKey());
                 v1 = e.getValue();
                 if (iterator.hasNext()) {
                     e = iterator.next();
-                    k2 = e.getKey();
+                    k2 = ensureKeyIsNotNull(e.getKey());
                     v2 = e.getValue();
                     if (iterator.hasNext()) {
                         e = iterator.next();
-                        k3 = e.getKey();
+                        k3 = ensureKeyIsNotNull(e.getKey());
                         v3 = e.getValue();
                         assert !iterator.hasNext();
                     }
@@ -125,7 +125,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
             }
             return new UnmodifiableHashMap<>(strategy, ArrayUtil.EMPTY_OBJECT_ARRAY, k1, v1, k2, v2, k3, v3);
         }
-        Object[] newData = new Object[map.size() * 4];
+        Object[] newData = new Object[map.size() << 2];
         map.forEach((k, v) -> insert(strategy, newData, Objects.requireNonNull(k), v));
         return new UnmodifiableHashMap<>(strategy, newData, null, null, null, null, null, null);
     }
@@ -140,6 +140,20 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         @Nullable K k3,
         @Nullable V v3
     ) {
+        this(strategy, data, k1, v1, k2, v2, k3, v3, (data.length >>> 2) + (k1 == null ? 0 : k2 == null ? 1 : k3 == null ? 2 : 3));
+    }
+
+    private UnmodifiableHashMap(
+        @Nonnull HashingStrategy<K> strategy,
+        @Nonnull Object[] data,
+        @Nullable K k1,
+        @Nullable V v1,
+        @Nullable K k2,
+        @Nullable V v2,
+        @Nullable K k3,
+        @Nullable V v3,
+        int size
+    ) {
         this.strategy = strategy;
         this.data = data;
         this.k1 = k1;
@@ -148,7 +162,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         this.v1 = v1;
         this.v2 = v2;
         this.v3 = v3;
-        this.size = (data.length / 4) + (k1 == null ? 0 : k2 == null ? 1 : k3 == null ? 2 : 3);
+        this.size = size;
     }
 
     /**
@@ -162,7 +176,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     public UnmodifiableHashMap<K, V> without(@Nonnull K key) {
         int pos = data.length == 0 ? -1 : tablePos(strategy, data, key);
         if (pos >= 0) {
-            Object[] newData = new Object[(size - 1) * 4];
+            Object[] newData = new Object[(size - 1) << 2];
             for (int i = 0; i < data.length; i += 2) {
                 if (i == pos) {
                     continue;
@@ -194,10 +208,8 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
                 if (strategy.equals(k2, key)) {
                     return new UnmodifiableHashMap<>(strategy, data, k1, v1, k3, v3, null, null);
                 }
-                if (k3 != null) {
-                    if (strategy.equals(k3, key)) {
-                        return new UnmodifiableHashMap<>(strategy, data, k1, v1, k2, v2, null, null);
-                    }
+                if (k3 != null && strategy.equals(k3, key)) {
+                    return new UnmodifiableHashMap<>(strategy, data, k1, v1, k2, v2, null, null);
                 }
             }
         }
@@ -244,9 +256,10 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         if (strategy.equals(k3, key)) {
             return value == v3 ? this : new UnmodifiableHashMap<>(strategy, data, k1, v1, k2, v2, k3, value);
         }
-        Object[] newData = new Object[(size + 1) * 4];
+        Object[] newData = new Object[(size + 1) << 2];
         for (int i = 0; i < data.length; i += 2) {
-            @SuppressWarnings("unchecked") K k = (K)data[i];
+            @SuppressWarnings("unchecked")
+            K k = (K)data[i];
             if (k == null) {
                 continue;
             }
@@ -284,10 +297,34 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
             Entry<? extends K, ? extends V> entry = map.entrySet().iterator().next();
             return with(entry.getKey(), entry.getValue());
         }
-        // Could be optimized further for map.size() == 2 or 3.
-        Map<K, V> newMap = Maps.newHashMap(this, strategy);
-        newMap.putAll(map);
-        return fromMap(strategy, newMap);
+
+        // Map size may be excessive if parameter map keys partially overlap with our map. Ignoring this
+        int newSize = size + mapSize;
+        Object[] newData = new Object[newSize << 2];
+        for (int i = 0; i < data.length; i += 2) {
+            @SuppressWarnings("unchecked")
+            K k = (K)data[i];
+            if (k == null) {
+                continue;
+            }
+            Object v = data[i + 1];
+            insert(strategy, newData, k, v);
+        }
+        if (k1 != null) {
+            insert(strategy, newData, k1, v1);
+            if (k2 != null) {
+                insert(strategy, newData, k2, v2);
+                if (k3 != null) {
+                    insert(strategy, newData, k3, v3);
+                }
+            }
+        }
+        for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
+            if (replace(strategy, newData, ensureKeyIsNotNull(entry.getKey()), entry.getValue())) {
+                newSize--;
+            }
+        }
+        return new UnmodifiableHashMap<>(strategy, newData, null, null, null, null, null, null, newSize);
     }
 
     private static <K> void insert(HashingStrategy<K> strategy, Object[] data, K k, Object v) {
@@ -296,6 +333,15 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         assert insertPos >= 0;
         data[insertPos] = k;
         data[insertPos + 1] = v;
+    }
+
+    private static <K> boolean replace(HashingStrategy<K> strategy, Object[] data, K k, Object v) {
+        int insertPos = tablePos(strategy, data, k);
+        boolean replacing = insertPos >= 0;
+        insertPos = replacing ? insertPos : ~insertPos;
+        data[insertPos] = k;
+        data[insertPos + 1] = v;
+        return replacing;
     }
 
     @Override
@@ -389,9 +435,10 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     }
 
     private static <K> int tablePos(HashingStrategy<K> strategy, Object[] data, K key) {
-        int pos = Math.floorMod(strategy.hashCode(key), data.length / 2) * 2;
+        int pos = Math.floorMod(strategy.hashCode(key), data.length >>> 1) << 1;
         while (true) {
-            @SuppressWarnings("unchecked") K candidate = (K)data[pos];
+            @SuppressWarnings("unchecked")
+            K candidate = (K)data[pos];
             if (candidate == null) {
                 return ~pos;
             }
@@ -403,6 +450,13 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
                 pos = 0;
             }
         }
+    }
+
+    private static <K> K ensureKeyIsNotNull(K key) {
+        if (key == null) {
+            throw new IllegalArgumentException("Null keys are not supported");
+        }
+        return key;
     }
 
     @Override
@@ -458,7 +512,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     }
 
     /**
-     * @deprecated Unsupported operation: this map is immutable. Use {@link #with(Object, Object)} to create a new
+     * Unsupported operation: this map is immutable. Use {@link #with(Object, Object)} to create a new
      * {@code UnmodifiableHashMap} with an additional element.
      */
     @Deprecated
@@ -468,7 +522,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     }
 
     /**
-     * @deprecated Unsupported operation: this map is immutable. Use {@link #without(Object)} to create a new
+     * Unsupported operation: this map is immutable. Use {@link #without(Object)} to create a new
      * {@code UnmodifiableHashMap} without some element.
      */
     @Deprecated
@@ -478,7 +532,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     }
 
     /**
-     * @deprecated Unsupported operation: this map is immutable. Use {@link #withAll(Map)} to create a new
+     * Unsupported operation: this map is immutable. Use {@link #withAll(Map)} to create a new
      * {@code UnmodifiableHashMap} with additional elements from the specified Map.
      */
     @Deprecated
@@ -488,7 +542,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     }
 
     /**
-     * @deprecated Unsupported operation: this map is immutable. Use {@link #empty()} to get an empty {@code UnmodifiableHashMap}.
+     * Unsupported operation: this map is immutable. Use {@link #empty()} to get an empty {@code UnmodifiableHashMap}.
      */
     @Deprecated
     @Override
@@ -518,8 +572,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append('{');
+        StringBuilder sb = new StringBuilder().append('{');
         forEach((k, v) -> {
             if (sb.length() > 1) {
                 sb.append(", ");
@@ -678,7 +731,8 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
                     for (int i = 0; i < data.length; i += 2) {
                         Object key = data[i];
                         if (key != null) {
-                            @SuppressWarnings("unchecked") V v = (V)data[i + 1];
+                            @SuppressWarnings("unchecked")
+                            V v = (V)data[i + 1];
                             action.accept(v);
                         }
                     }
