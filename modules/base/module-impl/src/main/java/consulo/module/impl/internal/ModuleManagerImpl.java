@@ -496,7 +496,8 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
   @Nonnull
   public Module[] getSortedModules() {
     if (!myReady) {
-      throw new IllegalArgumentException("Modules not initialized at current moment");
+        LOG.error("Modules not initialized at current moment");
+        return Module.EMPTY_ARRAY;
     }
 
     ApplicationManager.getApplication().assertReadAccessAllowed();
