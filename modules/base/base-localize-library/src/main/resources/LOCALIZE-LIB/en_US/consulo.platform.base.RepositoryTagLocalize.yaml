@@ -48,6 +48,8 @@ cloud:
   text: Cloud
 ide.theme:
   text: IDE Theme
+icon.theme:
+  text: Icon Theme
 ide.extension:
   text: IDE Extension
 script.language:
