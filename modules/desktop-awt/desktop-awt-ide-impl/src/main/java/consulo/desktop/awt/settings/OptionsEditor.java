@@ -968,7 +968,9 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     assert current != null;
 
     final ConfigurableContext content = myConfigurable2Content.get(current);
-    content.set(myContentWrapper);
+    if (content != null) {
+        content.set(myContentWrapper);
+    }
   }
 
   private boolean isShowing(Configurable configurable) {
