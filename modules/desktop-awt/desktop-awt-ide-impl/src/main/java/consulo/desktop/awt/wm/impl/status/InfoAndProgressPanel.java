@@ -19,12 +19,10 @@ import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspenderListener;
-import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.wm.impl.status.InlineProgressIndicator;
 import consulo.ide.impl.idea.openapi.wm.impl.status.PresentationModeProgressPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.ProgressButton;
-import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.localize.LocalizeValue;
@@ -32,6 +30,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.BalloonLayoutEx;
+import consulo.project.ui.util.ProjectUIUtil;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
@@ -56,6 +55,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SoftReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -108,17 +108,12 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     public InfoAndProgressPanel(@Nonnull Supplier<Project> getProjectSupplier) {
         setOpaque(false);
         setBorder(JBUI.Borders.empty());
+        setEnabled(false);
 
         myInfoPanel = new StatusPanel(getProjectSupplier);
 
         myUpdateQueue = new MergingUpdateQueue("Progress indicator", 50, true, MergingUpdateQueue.ANY_COMPONENT);
         myPopup = new ProcessPopup(this);
-
-        setRefreshVisible(false);
-
-        restoreEmptyStatus();
-
-        runOnProgressRelatedChange(this::updateProgressIcon, this);
     }
 
     private void runOnProgressRelatedChange(@Nonnull Runnable runnable, Disposable parentDisposable) {
@@ -161,9 +156,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
     @Override
     public void dispose() {
-        setRefreshVisible(false);
         synchronized (myOriginals) {
-            restoreEmptyStatus();
             for (InlineProgressIndicator indicator : myInline2Original.keySet()) {
                 Disposer.dispose(indicator);
             }
@@ -174,6 +167,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
+    @Nonnull
     @Override
     public JComponent getComponent() {
         return this;
@@ -206,7 +200,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             MyInlineProgressIndicator compact = createInlineDelegate(info, (ProgressIndicatorEx)original, true);
 
             myPopup.addIndicator(expanded);
-            updateProgressIcon();
 
             if (veryFirst && !myPopup.isShowing()) {
                 buildInInlineIndicator(compact);
@@ -219,6 +212,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             }
 
             runQuery();
+
+            setEnabled(true);
         }
     }
 
@@ -246,7 +241,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             }
 
             if (last) {
-                restoreEmptyStatus();
                 if (myShouldClosePopupAndOnProcessFinish) {
                     hideProcessPopup();
                 }
@@ -257,14 +251,12 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             else if (beforeLast) {
                 buildInInlineIndicator(createInlineDelegate(myInfos.get(0), myOriginals.get(0), true));
             }
-            else {
-                restoreEmptyStatus();
-            }
 
             runQuery();
+
+            setEnabled(!myInfos.isEmpty());
         }
         Disposer.dispose(progress);
-
     }
 
     private ProgressIndicatorEx removeFromMaps(@Nonnull MyInlineProgressIndicator progress) {
@@ -297,7 +289,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             }
             else {
                 myShouldClosePopupAndOnProcessFinish = false;
-                restoreEmptyStatus();
             }
         }
     }
@@ -313,7 +304,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
                 buildInInlineIndicator(createInlineDelegate(myInfos.get(0), myOriginals.get(0), true));
             }
             else if (!hasProgressIndicators()) {
-                restoreEmptyStatus();
+                // nothing?
             }
             else {
                 buildInProcessCount();
@@ -485,7 +476,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         if (splitters != null) {
             return splitters.isShowing() ? splitters.getComponent() : pane;
         }
-        FileEditorManagerEx ex = FileEditorManagerEx.getInstanceEx(ProjectUtil.guessCurrentProject(pane));
+        FileEditorManagerEx ex = FileEditorManagerEx.getInstanceEx(ProjectUIUtil.guessCurrentProject(pane));
         if (ex == null) {
             return pane;
         }
@@ -506,14 +497,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         boolean logMode = myInfoPanel.updateText(EventLog.LOG_REQUESTOR.equals(requestor) ? "" : text);
         myCurrentRequestor = logMode ? EventLog.LOG_REQUESTOR : requestor;
         return Couple.of(text, requestor);
-    }
-
-    @Deprecated
-    public void setRefreshVisible(final boolean visible) {
-    }
-
-    @Deprecated
-    public void setRefreshToolTipText(final String tooltip) {
     }
 
     public BalloonHandler notifyByBalloon(MessageType type, String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
@@ -596,16 +579,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         else {
             openProcessPopup(true);
         }
-    }
-
-    @Deprecated
-    private void updateProgressIcon() {
-
-    }
-
-    @Deprecated
-    private void restoreEmptyStatus() {
-
     }
 
     public boolean isProcessWindowOpen() {
@@ -691,12 +664,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
                 ProgressSuspender suspender = getSuspender();
                 suspendButton.setVisible(suspender != null);
                 if (suspender != null) {
-                    String toolTipText = suspender.isSuspended() ? "Resume" : "Pause";
-                    if (!toolTipText.equals(suspendButton.getToolTipText())) {
-                        updateProgressIcon();
-                    }
                     suspendButton.setIcon(suspender.isSuspended() ? AllIcons.Actions.Resume : AllIcons.Actions.Pause);
-                    suspendButton.setToolTipText(toolTipText);
+                    suspendButton.setToolTipText(suspender.isSuspended() ? "Resume" : "Pause");
                 }
             });
         }
