@@ -101,7 +101,7 @@ public final class DesktopStripeButtonUI extends BasicToggleButtonUI {
       g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
       ButtonModel model = button.getModel();
-      int off = JBUIScale.scale(1);
+      int off = anchor == ToolWindowAnchor.BOTTOM ? 0 : JBUIScale.scale(1);
 
       myIconRect.x -= JBUIScale.scale(2);
       myTextRect.x -= JBUIScale.scale(2);

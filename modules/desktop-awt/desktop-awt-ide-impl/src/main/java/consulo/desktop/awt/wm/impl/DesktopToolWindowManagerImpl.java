@@ -478,6 +478,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         Disposer.register(myProject, getToolWindowPanel());
         JFrame jFrame = (JFrame) TargetAWT.to(myFrame.getWindow());
         ((IdeRootPane) jFrame.getRootPane()).setToolWindowsPane(myToolWindowPanel);
+        IdeStatusBarImpl statusBar = (IdeStatusBarImpl) myFrame.getStatusBar();
+        statusBar.addToLeft(((DesktopToolWindowPanelImpl) myToolWindowPanel).getBottomStripe());
+        
         jFrame.setTitle(FrameTitleBuilder.getInstance().getProjectTitle(myProject));
         ((IdeRootPane) jFrame.getRootPane()).updateToolbar();
 

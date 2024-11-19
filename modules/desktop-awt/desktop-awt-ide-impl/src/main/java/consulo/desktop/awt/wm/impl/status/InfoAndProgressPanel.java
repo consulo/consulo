@@ -9,7 +9,6 @@ import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBas
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
-import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.desktop.awt.internal.notification.EventLog;
@@ -27,15 +26,15 @@ import consulo.ide.impl.idea.openapi.wm.impl.status.PresentationModeProgressPane
 import consulo.ide.impl.idea.openapi.wm.impl.status.ProgressButton;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.InplaceButton;
-import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.BalloonLayoutEx;
+import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
@@ -43,7 +42,6 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -71,37 +69,11 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class InfoAndProgressPanel extends JPanel implements Disposable {
+public class InfoAndProgressPanel extends JPanel implements Disposable, CustomStatusBarWidget {
     private static final Logger LOG = Logger.getInstance(InfoAndProgressPanel.class);
     private final ProcessPopup myPopup;
 
     private final StatusPanel myInfoPanel;
-    private final JPanel myRefreshAndInfoPanel = new JPanel();
-    private final NotNullLazyValue<AsyncProcessIcon> myProgressIcon = new NotNullLazyValue<>() {
-        @Nonnull
-        @Override
-        protected AsyncProcessIcon compute() {
-            AsyncProcessIcon icon = new AsyncProcessIcon("Background process");
-            icon.setOpaque(false);
-
-            icon.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    handle(e);
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    handle(e);
-                }
-            });
-
-            icon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            icon.setBorder(StatusWidgetBorders.INSTANCE);
-            icon.setToolTipText(ActionLocalize.actionShowprocesswindowDoubleClick().get());
-            return icon;
-        }
-    };
 
     private final List<ProgressIndicatorEx> myOriginals = new ArrayList<>();
     private final List<TaskInfo> myInfos = new ArrayList<>();
@@ -109,11 +81,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
     private final MultiValuesMap<ProgressIndicatorEx, MyInlineProgressIndicator> myOriginal2Inlines = new MultiValuesMap<>();
 
     private final MergingUpdateQueue myUpdateQueue;
-    private final Alarm myQueryAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
     private boolean myShouldClosePopupAndOnProcessFinish;
-
-    private final JLabel myRefreshIcon = new JLabel(new AnimatedIcon.Default());
 
     private String myCurrentRequestor;
     private boolean myDisposed;
@@ -140,13 +109,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
         setOpaque(false);
         setBorder(JBUI.Borders.empty());
 
-        myRefreshIcon.setVisible(false);
-
         myInfoPanel = new StatusPanel(getProjectSupplier);
-        myRefreshAndInfoPanel.setLayout(new BorderLayout());
-        myRefreshAndInfoPanel.setOpaque(false);
-        myRefreshAndInfoPanel.add(myRefreshIcon, BorderLayout.WEST);
-        myRefreshAndInfoPanel.add(myInfoPanel, BorderLayout.CENTER);
 
         myUpdateQueue = new MergingUpdateQueue("Progress indicator", 50, true, MergingUpdateQueue.ANY_COMPONENT);
         myPopup = new ProcessPopup(this);
@@ -211,6 +174,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
         }
     }
 
+    @Override
     public JComponent getComponent() {
         return this;
     }
@@ -359,7 +323,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
 
     private void buildInProcessCount() {
         removeAll();
-        setLayout(new InlineLayout());
 
         myMultiProcessLink = new LinkLabel<>(getMultiProgressLinkText(), null, (aSource, aLinkData) -> triggerPopupShowing());
 
@@ -372,12 +335,9 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
         JPanel iconAndProgress = new JPanel(new HorizontalLayout(5));
         iconAndProgress.setOpaque(false);
 
-        iconAndProgress.add(myProgressIcon.get());
         iconAndProgress.add(myMultiProcessLink);
 
-        add(myRefreshAndInfoPanel);
-
-        add(iconAndProgress);
+        add(iconAndProgress, BorderLayout.CENTER);
 
         revalidate();
         repaint();
@@ -411,12 +371,10 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
 
     private void buildInInlineIndicator(@Nonnull MyInlineProgressIndicator inline) {
         removeAll();
-        setLayout(new InlineLayout());
         final JRootPane pane = getRootPane();
         if (pane == null) {
             return; // e.g. project frame is closed
         }
-        add(myRefreshAndInfoPanel);
 
         final JPanel inlinePanel = new JPanel(new BorderLayout());
         inline.getComponent().setBorder(JBUI.Borders.empty(1, 0, 0, 2));
@@ -426,7 +384,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
 
         JPanel iconAndProgress = new JPanel(new HorizontalLayout(5));
         iconAndProgress.setOpaque(false);
-        iconAndProgress.add(myProgressIcon.get());
         iconAndProgress.add(inlineComponent);
 
         inlinePanel.add(iconAndProgress, BorderLayout.CENTER);
@@ -434,10 +391,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
         inline.updateProgressNow();
         inlinePanel.setOpaque(false);
 
-        add(inlinePanel);
-
-        myRefreshAndInfoPanel.revalidate();
-        myRefreshAndInfoPanel.repaint();
+        add(inlinePanel, BorderLayout.CENTER);
 
         if (inline.myPresentationModeProgressPanel != null) {
             return;
@@ -554,12 +508,12 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
         return Couple.of(text, requestor);
     }
 
+    @Deprecated
     public void setRefreshVisible(final boolean visible) {
-        UIUtil.invokeLaterIfNeeded(() -> myRefreshIcon.setVisible(visible));
     }
 
+    @Deprecated
     public void setRefreshToolTipText(final String tooltip) {
-        myRefreshIcon.setToolTipText(tooltip);
     }
 
     public BalloonHandler notifyByBalloon(MessageType type, String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
@@ -600,45 +554,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
         });
 
         return () -> SwingUtilities.invokeLater(balloon::hide);
-    }
-
-    private static class InlineLayout extends AbstractLayoutManager {
-        private int myProgressWidth;
-
-        @Override
-        public Dimension preferredLayoutSize(final Container parent) {
-            Dimension result = new Dimension();
-            for (int i = 0; i < parent.getComponentCount(); i++) {
-                final Dimension prefSize = parent.getComponent(i).getPreferredSize();
-                result.width += prefSize.width;
-                result.height = Math.max(prefSize.height, result.height);
-            }
-            return result;
-        }
-
-        @Override
-        public void layoutContainer(final Container parent) {
-            assert parent.getComponentCount() == 2; // 1. info; 2. progress
-
-            Component infoPanel = parent.getComponent(0);
-            Component progressPanel = parent.getComponent(1);
-            int progressPrefWidth = progressPanel.getPreferredSize().width;
-
-            final Dimension size = parent.getSize();
-            int maxProgressWidth = (int)(size.width * 0.8);
-            int minProgressWidth = (int)(size.width * 0.5);
-            if (progressPrefWidth > myProgressWidth) {
-                myProgressWidth = progressPrefWidth;
-            }
-            if (myProgressWidth > maxProgressWidth) {
-                myProgressWidth = maxProgressWidth;
-            }
-            if (myProgressWidth < minProgressWidth) {
-                myProgressWidth = minProgressWidth;
-            }
-            infoPanel.setBounds(0, 0, size.width - myProgressWidth, size.height);
-            progressPanel.setBounds(size.width - myProgressWidth, 0, myProgressWidth, size.height);
-        }
     }
 
     @Nonnull
@@ -683,46 +598,15 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
         }
     }
 
-    private void restoreEmptyStatusInner() {
-        removeAll();
-        updateProgressIcon();
-        AsyncProcessIcon progressIcon = myProgressIcon.isComputed() ? myProgressIcon.getValue() : null;
-        Container iconParent = progressIcon == null ? null : progressIcon.getParent();
-        if (iconParent != null) {
-            // to prevent leaks to this removed parent via progress icon
-            iconParent.remove(progressIcon);
-        }
-    }
-
+    @Deprecated
     private void updateProgressIcon() {
-        AsyncProcessIcon progressIcon = myProgressIcon.isComputed() ? myProgressIcon.getValue() : null;
-        if (progressIcon == null) {
-            return;
-        }
 
-        if (myOriginals.isEmpty() || PowerSaveMode.isEnabled()
-            || myOriginals.stream().map(ProgressSuspender::getSuspender).allMatch(s -> s != null && s.isSuspended())) {
-            progressIcon.suspend();
-        }
-        else {
-            progressIcon.resume();
-        }
     }
 
+    @Deprecated
     private void restoreEmptyStatus() {
-        restoreEmptyStatusInner();
-        setLayout(new BorderLayout());
-        add(myRefreshAndInfoPanel, BorderLayout.CENTER);
 
-        myRefreshAndInfoPanel.revalidate();
-        myRefreshAndInfoPanel.repaint();
     }
-
-    //private String formatTime(long t) {
-    //  if (t < 1000) return "< 1 sec";
-    //  if (t < 60 * 1000) return (t / 1000) + " sec";
-    //  return "~" + (int)Math.ceil(t / (60 * 1000f)) + " min";
-    //}
 
     public boolean isProcessWindowOpen() {
         return myPopup.isShowing();
@@ -735,6 +619,23 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
         else {
             hideProcessPopup();
         }
+    }
+
+    @Nonnull
+    @Override
+    public String getId() {
+        return "progress";
+    }
+
+    @Nullable
+    @Override
+    public WidgetPresentation getPresentation() {
+        return null;
+    }
+
+    @Override
+    public void install(@Nonnull StatusBar statusBar) {
+
     }
 
     private class MyInlineProgressIndicator extends InlineProgressIndicator {
@@ -879,8 +780,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
         for (InlineProgressIndicator each : indicators) {
             each.updateProgress();
         }
-        myQueryAlarm.cancelAllRequests();
-        myQueryAlarm.addRequest(this::runQuery, 2000);
     }
 
     @Nonnull

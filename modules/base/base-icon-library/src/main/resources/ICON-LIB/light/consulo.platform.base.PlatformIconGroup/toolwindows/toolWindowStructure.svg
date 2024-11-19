@@ -1,7 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13">
-  <g fill="none" fill-rule="evenodd">
-    <rect width="4" height="4" x="7" y="2" fill="#c89862"/>
-    <rect width="4" height="4" x="7" y="7" fill="#d67773"/>
-    <rect width="4" height="4" x="2" y="7" fill="#6cacd5"/>
-  </g>
+<!-- Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file. -->
+<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="16px" height="16px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<g>
+	<rect x="8.6" y="2.9" fill-rule="evenodd" clip-rule="evenodd" fill="#C89862" width="4.5" height="4.5"/>
+	<rect x="8.6" y="8.6" fill-rule="evenodd" clip-rule="evenodd" fill="#D67773" width="4.5" height="4.5"/>
+	<rect x="2.9" y="8.6" fill-rule="evenodd" clip-rule="evenodd" fill="#6CACD5" width="4.5" height="4.5"/>
+</g>
 </svg>

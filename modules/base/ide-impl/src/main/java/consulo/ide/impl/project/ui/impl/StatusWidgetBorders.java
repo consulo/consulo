@@ -20,7 +20,9 @@ import consulo.ui.ex.awt.JBUI;
 import javax.swing.border.Border;
 
 public class StatusWidgetBorders {
-  public static final Border ICON = JBUI.Borders.empty(0, 4);
-  public static final Border INSTANCE = JBUI.Borders.empty(0, 2);
-  public static final Border WIDE = JBUI.Borders.empty(0, 4);
+    public static final Border DEFAULT_BORDER = JBUI.Borders.empty(0, 6);
+
+    public static final Border ICON = DEFAULT_BORDER;
+    public static final Border INSTANCE = DEFAULT_BORDER;
+    public static final Border WIDE = DEFAULT_BORDER;
 }
