@@ -63,7 +63,6 @@ public class XFramesView extends XDebugView {
   private Rectangle myVisibleRect;
   private boolean myListenersEnabled;
   private final Map<XExecutionStack, StackFramesListBuilder> myBuilders = new HashMap<>();
-  private final ActionToolbar myToolbar;
   private final Wrapper myThreadsPanel;
   private boolean myThreadsCalculated = false;
   private boolean myRefresh = false;
@@ -163,10 +162,8 @@ public class XFramesView extends XDebugView {
       }
     };
 
-    myToolbar = createToolbar();
     myThreadsPanel = new Wrapper();
     myThreadsPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), 0, 0, 1, 0));
-    myThreadsPanel.add(myToolbar.getComponent(), BorderLayout.EAST);
     myMainPanel.add(myThreadsPanel, BorderLayout.NORTH);
   }
 
@@ -174,21 +171,6 @@ public class XFramesView extends XDebugView {
     myThreadComboBox.setSelectedItem(stack);
 
     Application.get().invokeLater(() -> myFramesList.setSelectedValue(frame, true));
-  }
-
-  private ActionToolbar createToolbar() {
-    final DefaultActionGroup framesGroup = new DefaultActionGroup();
-
-    CommonActionsManager actionsManager = CommonActionsManager.getInstance();
-    framesGroup.add(actionsManager.createPrevOccurenceAction(myFramesList));
-    framesGroup.add(actionsManager.createNextOccurenceAction(myFramesList));
-
-    framesGroup.addAll(ActionManager.getInstance().getAction(XDebuggerActions.FRAMES_TOP_TOOLBAR_GROUP));
-
-    final ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.DEBUGGER_TOOLBAR, framesGroup, true);
-    toolbar.setReservePlaceAutoPopupIcon(false);
-    toolbar.setTargetComponent(myFramesList);
-    return toolbar;
   }
 
   private StackFramesListBuilder getOrCreateBuilder(XExecutionStack executionStack, XDebugSession session) {
@@ -250,7 +232,6 @@ public class XFramesView extends XDebugView {
 
       myThreadComboBox.setSelectedItem(activeExecutionStack);
       myThreadsPanel.removeAll();
-      myThreadsPanel.add(myToolbar.getComponent(), BorderLayout.EAST);
       final boolean invisible = executionStacks.length == 1 && StringUtil.isEmpty(executionStacks[0].getDisplayName());
       if (!invisible) {
         myThreadsPanel.add(myThreadComboBox, BorderLayout.CENTER);
