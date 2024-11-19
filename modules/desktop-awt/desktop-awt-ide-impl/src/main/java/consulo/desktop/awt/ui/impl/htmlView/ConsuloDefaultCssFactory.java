@@ -19,6 +19,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.style.StyleManager;
+import consulo.util.lang.StringUtil;
 import cz.vutbr.web.css.StyleSheet;
 import org.cobraparser.css.DefaultCssFactory;
 
@@ -102,8 +103,9 @@ public class ConsuloDefaultCssFactory extends DefaultCssFactory {
 
 
             html, body {
-            background: var(--consulo-background);
-            color: var(--consulo-color);
+                background: var(--consulo-background);
+                color: var(--consulo-color);
+                font-family: var(--consulo-font-family), Arial, sans-serif;
             }
     """;
 
@@ -155,6 +157,7 @@ public class ConsuloDefaultCssFactory extends DefaultCssFactory {
             body = body.replace("var(--consulo-background)", ColorUtil.toHtmlColor(UIUtil.getLabelBackground()));
             body = body.replace("var(--consulo-color)", ColorUtil.toHtmlColor(UIUtil.getLabelForeground()));
             body = body.replace("var(--consulo-color-blue)", ColorUtil.toHtmlColor(JBColor.BLUE));
+            body = body.replace("var(--consulo-font-family)", StringUtil.QUOTER.apply(UIUtil.getLabelFont().getFamily()));
             return parseStyle(body);
         }
         catch (Exception e) {
