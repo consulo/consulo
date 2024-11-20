@@ -49,7 +49,7 @@ public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
 
         myAlarm = new Alarm(this);
 
-        myLabel.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 7);
+        myLabel.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 8);
 
         JComponent awtLabel = (JComponent) TargetAWT.to(myLabel);
 
