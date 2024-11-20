@@ -44,220 +44,223 @@ import java.awt.event.MouseEvent;
  * @author pegov
  */
 public abstract class DesktopToolWindowHeader extends JPanel implements Disposable {
-  private class GearAction extends DumbAwareAction {
-    private NotNullProducer<ActionGroup> myGearProducer;
+    private class GearAction extends DumbAwareAction {
+        private NotNullProducer<ActionGroup> myGearProducer;
 
-    public GearAction(NotNullProducer<ActionGroup> gearProducer) {
-      super("Show options", null, PlatformIconGroup.generalGearplain());
-      myGearProducer = gearProducer;
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      final InputEvent inputEvent = e.getInputEvent();
-      final ActionPopupMenu popupMenu =
-        ((ActionManagerImpl)ActionManager.getInstance()).createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE,
-                                                                               myGearProducer.produce(),
-                                                                               new MenuItemPresentationFactory(true));
-
-      int x = 0;
-      int y = 0;
-      if (inputEvent instanceof MouseEvent) {
-        x = ((MouseEvent)inputEvent).getX();
-        y = ((MouseEvent)inputEvent).getY();
-      }
-
-      popupMenu.getComponent().show(inputEvent.getComponent(), x, y);
-    }
-  }
-
-  private class HideAction extends DumbAwareAction {
-
-    @RequiredUIAccess
-    @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      hideToolWindow();
-    }
-
-    @RequiredUIAccess
-    @Override
-    public final void update(@Nonnull final AnActionEvent event) {
-      Presentation presentation = event.getPresentation();
-
-      presentation.setTextValue(UILocalize.toolWindowHideActionName());
-      boolean visible = myToolWindow.isVisible();
-      presentation.setEnabled(visible);
-      if (visible) {
-        presentation.setIcon(getHideIcon(myToolWindow));
-      }
-    }
-
-    private Image getHideIcon(ToolWindow toolWindow) {
-      return AllIcons.General.HideToolWindow;
-    }
-  }
-
-  private final ToolWindow myToolWindow;
-
-  private final DefaultActionGroup myActionGroup = new DefaultActionGroup();
-  private final DefaultActionGroup myActionGroupWest = new DefaultActionGroup();
-
-  private final ActionToolbar myToolbar;
-  private ActionToolbar myToolbarWest;
-  private final JPanel myWestPanel;
-
-  public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull final NotNullProducer<ActionGroup> gearProducer) {
-    super(new BorderLayout());
-
-    myToolWindow = toolWindow;
-
-    myWestPanel = new NonOpaquePanel(new HorizontalLayout(0, SwingConstants.CENTER));
-
-    add(myWestPanel, BorderLayout.CENTER);
-
-    myWestPanel.add(wrapAndFillVertical(toolWindow.getContentUI().getTabComponent()));
-
-    DesktopToolWindowContentUi.initMouseListeners(myWestPanel, toolWindow.getContentUI(), true);
-
-    myToolbar = ActionManager.getInstance()
-                             .createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE,
-                                                  ActionGroup.newImmutableBuilder()
-                                                             .addAll(myActionGroup, new GearAction(gearProducer), new HideAction())
-                                                             .build(),
-                                                  true);
-    myToolbar.setTargetComponent(this);
-    myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
-    myToolbar.setReservePlaceAutoPopupIcon(false);
-
-    JComponent component = myToolbar.getComponent();
-    component.setBorder(JBUI.Borders.empty());
-    component.setOpaque(false);
-
-    add(wrapAndFillVertical(component), BorderLayout.EAST);
-
-    myWestPanel.addMouseListener(new PopupHandler() {
-      @Override
-      public void invokePopup(final Component comp, final int x, final int y) {
-        toolWindow.getContentUI()
-                  .showContextMenu(comp, x, y, toolWindow.getPopupGroup(), toolWindow.getContentManager().getSelectedContent());
-      }
-    });
-
-    myWestPanel.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        toolWindow.fireActivated();
-      }
-    });
-
-    addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseReleased(final MouseEvent e) {
-        if (!e.isPopupTrigger()) {
-          if (UIUtil.isCloseClick(e, MouseEvent.MOUSE_RELEASED)) {
-            if (e.isAltDown()) {
-              toolWindow.fireHidden();
-            }
-            else {
-              toolWindow.fireHiddenSide();
-            }
-          }
-          else {
-            toolWindow.fireActivated();
-          }
+        public GearAction(NotNullProducer<ActionGroup> gearProducer) {
+            super("Show options", null, PlatformIconGroup.generalGearplain());
+            myGearProducer = gearProducer;
         }
-      }
-    });
 
-    setBackground(MorphColor.ofWithoutCache(() -> myToolWindow.isActive() ? SwingUIDecorator.get(SwingUIDecorator::getSidebarColor) : UIUtil
-      .getPanelBackground()));
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            final InputEvent inputEvent = e.getInputEvent();
+            final ActionPopupMenu popupMenu =
+                ((ActionManagerImpl) ActionManager.getInstance()).createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE,
+                    myGearProducer.produce(),
+                    new MenuItemPresentationFactory(true));
 
-    setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 1, 0));
+            int x = 0;
+            int y = 0;
+            if (inputEvent instanceof MouseEvent) {
+                x = ((MouseEvent) inputEvent).getX();
+                y = ((MouseEvent) inputEvent).getY();
+            }
 
-    new DoubleClickListener() {
-      @Override
-      protected boolean onDoubleClick(MouseEvent event) {
-        ToolWindowManagerBase mgr = toolWindow.getToolWindowManager();
-        mgr.setMaximized(myToolWindow, !mgr.isMaximized(myToolWindow));
-        return true;
-      }
-    }.installOn(myWestPanel);
-  }
-
-  @Nonnull
-  public static JPanel wrapAndFillVertical(JComponent owner) {
-    JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, 0, JBUI.scale(5), false, true));
-    panel.add(owner);
-    panel.setOpaque(false);
-    return panel;
-  }
-
-  @Override
-  public void dispose() {
-    removeAll();
-  }
-
-  private void initWestToolBar(JPanel westPanel) {
-    myToolbarWest =
-      ActionManager.getInstance().createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE, new DefaultActionGroup(myActionGroupWest), true);
-
-    myToolbarWest.setTargetComponent(this);
-    myToolbarWest.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
-    myToolbarWest.setReservePlaceAutoPopupIcon(false);
-
-    JComponent component = myToolbarWest.getComponent();
-    component.setBorder(JBUI.Borders.empty());
-    component.setOpaque(false);
-
-    westPanel.add(wrapAndFillVertical(component));
-  }
-
-  public void setTabActions(@Nonnull AnAction[] actions) {
-    if (myToolbarWest == null) {
-      initWestToolBar(myWestPanel);
+            popupMenu.getComponent().show(inputEvent.getComponent(), x, y);
+        }
     }
 
-    myActionGroupWest.removeAll();
-    myActionGroupWest.addSeparator();
-    myActionGroupWest.addAll(actions);
+    private class HideAction extends DumbAwareAction {
 
-    if (myToolbarWest != null) {
-      myToolbarWest.updateActionsImmediately();
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            hideToolWindow();
+        }
+
+        @RequiredUIAccess
+        @Override
+        public final void update(@Nonnull final AnActionEvent event) {
+            Presentation presentation = event.getPresentation();
+
+            presentation.setTextValue(UILocalize.toolWindowHideActionName());
+            boolean visible = myToolWindow.isVisible();
+            presentation.setEnabled(visible);
+            if (visible) {
+                presentation.setIcon(getHideIcon(myToolWindow));
+            }
+        }
+
+        private Image getHideIcon(ToolWindow toolWindow) {
+            return AllIcons.General.HideToolWindow;
+        }
     }
-  }
 
-  public void setAdditionalTitleActions(@Nonnull AnAction[] actions) {
-    myActionGroup.removeAll();
-    myActionGroup.addAll(actions);
+    private final ToolWindow myToolWindow;
 
-    if (myToolbar != null) {
-      myToolbar.updateActionsImmediately();
+    private final DefaultActionGroup myActionGroup = new DefaultActionGroup();
+    private final DefaultActionGroup myActionGroupWest = new DefaultActionGroup();
+
+    private final ActionToolbar myToolbar;
+    private ActionToolbar myToolbarWest;
+    private final JPanel myWestPanel;
+
+    public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull final NotNullProducer<ActionGroup> gearProducer) {
+        super(new BorderLayout());
+
+        myToolWindow = toolWindow;
+
+        myWestPanel = new NonOpaquePanel(new HorizontalLayout(0, SwingConstants.CENTER));
+
+        add(myWestPanel, BorderLayout.CENTER);
+
+        myWestPanel.add(wrapAndFillVertical(toolWindow.getContentUI().getTabComponent()));
+
+        DesktopToolWindowContentUi.initMouseListeners(myWestPanel, toolWindow.getContentUI(), true);
+
+        myToolbar = ActionManager.getInstance()
+            .createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE,
+                ActionGroup.newImmutableBuilder()
+                    .addAll(myActionGroup, new GearAction(gearProducer), new HideAction())
+                    .build(),
+                true);
+        myToolbar.setTargetComponent(this);
+        myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
+        myToolbar.setReservePlaceAutoPopupIcon(false);
+
+        JComponent component = myToolbar.getComponent();
+        component.setBorder(JBUI.Borders.empty());
+        component.setOpaque(false);
+
+        JPanel rightPanel = wrapAndFillVertical(component);
+        rightPanel.setBorder(JBUI.Borders.empty(0, 0, 0, 6));
+        
+        add(rightPanel, BorderLayout.EAST);
+
+        myWestPanel.addMouseListener(new PopupHandler() {
+            @Override
+            public void invokePopup(final Component comp, final int x, final int y) {
+                toolWindow.getContentUI()
+                    .showContextMenu(comp, x, y, toolWindow.getPopupGroup(), toolWindow.getContentManager().getSelectedContent());
+            }
+        });
+
+        myWestPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                toolWindow.fireActivated();
+            }
+        });
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(final MouseEvent e) {
+                if (!e.isPopupTrigger()) {
+                    if (UIUtil.isCloseClick(e, MouseEvent.MOUSE_RELEASED)) {
+                        if (e.isAltDown()) {
+                            toolWindow.fireHidden();
+                        }
+                        else {
+                            toolWindow.fireHiddenSide();
+                        }
+                    }
+                    else {
+                        toolWindow.fireActivated();
+                    }
+                }
+            }
+        });
+
+        setBackground(MorphColor.ofWithoutCache(() -> myToolWindow.isActive() ? SwingUIDecorator.get(SwingUIDecorator::getSidebarColor) : UIUtil
+            .getPanelBackground()));
+
+        setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 1, 0));
+
+        new DoubleClickListener() {
+            @Override
+            protected boolean onDoubleClick(MouseEvent event) {
+                ToolWindowManagerBase mgr = toolWindow.getToolWindowManager();
+                mgr.setMaximized(myToolWindow, !mgr.isMaximized(myToolWindow));
+                return true;
+            }
+        }.installOn(myWestPanel);
     }
-  }
 
-  protected boolean isActive() {
-    return myToolWindow.isActive();
-  }
+    @Nonnull
+    public static JPanel wrapAndFillVertical(JComponent owner) {
+        JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, 0, JBUI.scale(5), false, true));
+        panel.add(owner);
+        panel.setOpaque(false);
+        return panel;
+    }
 
-  public ActionToolbar getToolbar() {
-    return myToolbar;
-  }
+    @Override
+    public void dispose() {
+        removeAll();
+    }
 
-  public ActionToolbar getToolbarWest() {
-    return myToolbarWest;
-  }
+    private void initWestToolBar(JPanel westPanel) {
+        myToolbarWest =
+            ActionManager.getInstance().createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE, new DefaultActionGroup(myActionGroupWest), true);
 
-  public boolean isPopupShowing() {
-    // TODO ?
-    return false;
-  }
+        myToolbarWest.setTargetComponent(this);
+        myToolbarWest.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
+        myToolbarWest.setReservePlaceAutoPopupIcon(false);
 
-  protected abstract void hideToolWindow();
+        JComponent component = myToolbarWest.getComponent();
+        component.setBorder(JBUI.Borders.empty());
+        component.setOpaque(false);
 
-  @Override
-  public Dimension getPreferredSize() {
-    Dimension size = super.getPreferredSize();
-    return new Dimension(size.width, TabsUtil.getRealTabsHeight());
-  }
+        westPanel.add(wrapAndFillVertical(component));
+    }
+
+    public void setTabActions(@Nonnull AnAction[] actions) {
+        if (myToolbarWest == null) {
+            initWestToolBar(myWestPanel);
+        }
+
+        myActionGroupWest.removeAll();
+        myActionGroupWest.addSeparator();
+        myActionGroupWest.addAll(actions);
+
+        if (myToolbarWest != null) {
+            myToolbarWest.updateActionsImmediately();
+        }
+    }
+
+    public void setAdditionalTitleActions(@Nonnull AnAction[] actions) {
+        myActionGroup.removeAll();
+        myActionGroup.addAll(actions);
+
+        if (myToolbar != null) {
+            myToolbar.updateActionsImmediately();
+        }
+    }
+
+    protected boolean isActive() {
+        return myToolWindow.isActive();
+    }
+
+    public ActionToolbar getToolbar() {
+        return myToolbar;
+    }
+
+    public ActionToolbar getToolbarWest() {
+        return myToolbarWest;
+    }
+
+    public boolean isPopupShowing() {
+        // TODO ?
+        return false;
+    }
+
+    protected abstract void hideToolWindow();
+
+    @Override
+    public Dimension getPreferredSize() {
+        Dimension size = super.getPreferredSize();
+        return new Dimension(size.width, TabsUtil.getRealTabsHeight());
+    }
 }
