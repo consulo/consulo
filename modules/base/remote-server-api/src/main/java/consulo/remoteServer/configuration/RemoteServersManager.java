@@ -1,34 +1,38 @@
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.remoteServer.configuration;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.remoteServer.ServerType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.List;
 
-/**
- * @author nik
- */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class RemoteServersManager {
-  @Deprecated
-  public static RemoteServersManager getInstance() {
-    return Application.get().getInstance(RemoteServersManager.class);
-  }
+    public static RemoteServersManager getInstance() {
+        return ApplicationManager.getApplication().getInstance(RemoteServersManager.class);
+    }
 
-  public abstract List<RemoteServer<?>> getServers();
+    public abstract List<RemoteServer<?>> getServers();
 
-  public abstract <C extends ServerConfiguration> List<RemoteServer<C>> getServers(@Nonnull ServerType<C> type);
+    public abstract <C extends ServerConfiguration> List<RemoteServer<C>> getServers(@NotNull ServerType<C> type);
 
-  @Nullable
-  public abstract <C extends ServerConfiguration> RemoteServer<C> findByName(@Nonnull String name, @Nonnull ServerType<C> type);
+    @Nullable
+    public abstract <C extends ServerConfiguration> RemoteServer<C> findByName(@NotNull String name, @NotNull ServerType<C> type);
 
-  public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(@Nonnull ServerType<C> type, @Nonnull String name);
+    @NotNull
+    public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(@NotNull ServerType<C> type, @NotNull String name);
 
-  public abstract void addServer(RemoteServer<?> server);
+    /**
+     * Creates new server with unique name derived from {@link ServerType#getPresentableName()}
+     */
+    @NotNull
+    public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(@NotNull ServerType<C> type);
 
-  public abstract void removeServer(RemoteServer<?> server);
+    public abstract void addServer(RemoteServer<?> server);
+
+    public abstract void removeServer(RemoteServer<?> server);
 }

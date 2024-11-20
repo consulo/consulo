@@ -16,21 +16,37 @@
 package consulo.remoteServer.configuration.deployment;
 
 import consulo.execution.configuration.ui.SettingsEditor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.remoteServer.configuration.RemoteServer;
+import consulo.remoteServer.configuration.ServerConfiguration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-/**
- * @author nik
- */
-public abstract class DeploymentConfigurator<D extends DeploymentConfiguration> {
-  @Nonnull
-  public abstract List<DeploymentSource> getAvailableDeploymentSources();
+public abstract class DeploymentConfigurator<D extends DeploymentConfiguration, S extends ServerConfiguration> {
+    @NotNull
+    public abstract List<DeploymentSource> getAvailableDeploymentSources();
 
-  @Nonnull
-  public abstract D createDefaultConfiguration(@Nonnull DeploymentSource source);
+    @NotNull
+    public abstract D createDefaultConfiguration(@NotNull DeploymentSource source);
 
-  @Nullable
-  public abstract SettingsEditor<D> createEditor(@Nonnull DeploymentSource source);
+    @Nullable
+    public abstract SettingsEditor<D> createEditor(@NotNull DeploymentSource source, @Nullable RemoteServer<S> server);
+
+    /**
+     * @see LocatableConfiguration#isGeneratedName()
+     */
+    public boolean isGeneratedConfigurationName(@NotNull String name,
+                                                @NotNull DeploymentSource deploymentSource,
+                                                @NotNull D deploymentConfiguration) {
+        return false;
+    }
+
+    /**
+     * @see LocatableConfiguration#suggestedName()
+     */
+    @Nullable
+    public String suggestConfigurationName(@NotNull DeploymentSource deploymentSource, @NotNull D deploymentConfiguration) {
+        return null;
+    }
 }

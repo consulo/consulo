@@ -1,196 +1,289 @@
-/*
- * Copyright 2000-2013 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.configuration.deployment;
 
-import consulo.process.ExecutionException;
-import consulo.execution.executor.Executor;
-import consulo.execution.configuration.ConfigurationFactory;
-import consulo.execution.configuration.RunConfigurationBase;
-import consulo.execution.configuration.RunProfileState;
-import consulo.execution.RuntimeConfigurationException;
-import consulo.execution.runner.ExecutionEnvironment;
 import consulo.component.persist.ComponentSerializationUtil;
+import consulo.execution.RuntimeConfigurationException;
+import consulo.execution.configuration.*;
 import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditorGroup;
+import consulo.execution.executor.Executor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
 import consulo.project.Project;
-import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
-import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
-import consulo.remoteServer.configuration.deployment.DeploymentSource;
-import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.configuration.ServerConfiguration;
-import consulo.remoteServer.impl.internal.runtime.DeployToServerState;
+import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
+import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
+import consulo.remoteServer.configuration.deployment.DeploymentSource;
+import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
+import consulo.remoteServer.runtime.deployment.SingletonDeploymentSourceType;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
+import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
-import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * @author nik
- */
-public class DeployToServerRunConfiguration<S extends ServerConfiguration, D extends DeploymentConfiguration> extends RunConfigurationBase {
-  private static final Logger LOG = Logger.getInstance(DeployToServerRunConfiguration.class);
-  private static final String DEPLOYMENT_SOURCE_TYPE_ATTRIBUTE = "type";
-  @NonNls public static final String SETTINGS_ELEMENT = "settings";
-  public static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
-  private final ServerType<S> myServerType;
-  private final DeploymentConfigurator<D> myDeploymentConfigurator;
-  private String myServerName;
-  private DeploymentSource myDeploymentSource;
-  private D myDeploymentConfiguration;
+import java.util.List;
 
-  public DeployToServerRunConfiguration(Project project, ConfigurationFactory factory, String name, ServerType<S> serverType, DeploymentConfigurator<D> deploymentConfigurator) {
-    super(project, factory, name);
-    myServerType = serverType;
-    myDeploymentConfigurator = deploymentConfigurator;
-  }
+public class DeployToServerRunConfiguration<S extends ServerConfiguration, D extends DeploymentConfiguration> extends RunConfigurationBase
+    implements LocatableConfiguration {
+    private static final Logger LOG = Logger.getInstance(DeployToServerRunConfiguration.class);
+    private static final String DEPLOYMENT_SOURCE_TYPE_ATTRIBUTE = "type";
+    public static final @NonNls String SETTINGS_ELEMENT = "settings";
+    private static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
+    private final String myServerTypeId;
+    private final DeploymentConfigurator<D, S> myDeploymentConfigurator;
+    private String myServerName;
+    private boolean myDeploymentSourceIsLocked;
+    private DeploymentSource myDeploymentSource;
+    private D myDeploymentConfiguration;
 
-  @Nonnull
-  public ServerType<S> getServerType() {
-    return myServerType;
-  }
-
-  public String getServerName() {
-    return myServerName;
-  }
-
-  @Nonnull
-  public DeploymentConfigurator<D> getDeploymentConfigurator() {
-    return myDeploymentConfigurator;
-  }
-
-  @Nonnull
-  @Override
-  public SettingsEditor<DeployToServerRunConfiguration> getConfigurationEditor() {
-    return new DeployToServerSettingsEditor(myServerType, myDeploymentConfigurator, getProject());
-  }
-
-  @Nullable
-  @Override
-  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
-    String serverName = getServerName();
-    if (serverName == null) {
-      throw new ExecutionException("Server is not specified");
+    public DeployToServerRunConfiguration(Project project,
+                                          ConfigurationFactory factory,
+                                          String name,
+                                          ServerType<S> serverType,
+                                          DeploymentConfigurator<D, S> deploymentConfigurator) {
+        super(project, factory, name);
+        myServerTypeId = serverType.getId();
+        myDeploymentConfigurator = deploymentConfigurator;
     }
 
-    RemoteServer<S> server = RemoteServersManager.getInstance().findByName(serverName, myServerType);
-    if (server == null) {
-      throw new ExecutionException("Server '" + serverName + " not found");
+    void lockDeploymentSource(@NotNull SingletonDeploymentSourceType theOnlySourceType) {
+        myDeploymentSourceIsLocked = true;
+        myDeploymentSource = theOnlySourceType.getSingletonSource();
     }
 
-    if (myDeploymentSource == null) {
-      throw new ExecutionException("Deployment is not selected");
+    public @NotNull ServerType<S> getServerType() {
+        //noinspection unchecked
+        ServerType<S> result = (ServerType<S>) ServerType.EP_NAME.findFirstSafe(next -> next.getId().equals(myServerTypeId));
+        assert result != null : "Server type `" + myServerTypeId + "` had been unloaded already";
+        return result;
     }
 
-    return new DeployToServerState(server, myDeploymentSource, myDeploymentConfiguration, env);
-  }
+    public String getServerName() {
+        return myServerName;
+    }
 
-  @Override
-  public void checkConfiguration() throws RuntimeConfigurationException {
-  }
+    private @NotNull DeploymentConfigurator<D, S> getDeploymentConfigurator() {
+        return myDeploymentConfigurator;
+    }
 
-  public void setServerName(String serverName) {
-    myServerName = serverName;
-  }
+    @Override
+    public @NotNull SettingsEditor<DeployToServerRunConfiguration> getConfigurationEditor() {
+        ServerType<S> serverType = getServerType();
+        //noinspection unchecked
+        SettingsEditor<DeployToServerRunConfiguration> commonEditor =
+            myDeploymentSourceIsLocked ? new LockedSource(serverType, myDeploymentConfigurator, getProject(), myDeploymentSource)
+                : new AnySource(serverType, myDeploymentConfigurator, getProject());
 
-  public DeploymentSource getDeploymentSource() {
-    return myDeploymentSource;
-  }
 
-  public void setDeploymentSource(DeploymentSource deploymentSource) {
-    myDeploymentSource = deploymentSource;
-  }
+        SettingsEditorGroup<DeployToServerRunConfiguration> group = new SettingsEditorGroup<>();
+        group.addEditor(CloudBundle.message("DeployToServerRunConfiguration.tab.title.deployment"), commonEditor);
+        DeployToServerRunConfigurationExtensionsManager.getInstance().appendEditors(this, group);
+        commonEditor.addSettingsEditorListener(e -> group.bulkUpdate(() -> {
+        }));
+        return group;
+    }
 
-  public D getDeploymentConfiguration() {
-    return myDeploymentConfiguration;
-  }
-
-  public void setDeploymentConfiguration(D deploymentConfiguration) {
-    myDeploymentConfiguration = deploymentConfiguration;
-  }
-
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    super.readExternal(element);
-    ConfigurationState state = XmlSerializer.deserialize(element, ConfigurationState.class);
-    myServerName =  null;
-    myDeploymentSource = null;
-    if (state != null) {
-      myServerName = state.myServerName;
-      Element deploymentTag = state.myDeploymentTag;
-      if (deploymentTag != null) {
-        String typeId = deploymentTag.getAttributeValue(DEPLOYMENT_SOURCE_TYPE_ATTRIBUTE);
-        DeploymentSourceType<?> type = findDeploymentSourceType(typeId);
-        if (type != null) {
-          myDeploymentSource = type.load(deploymentTag, getProject());
-          myDeploymentConfiguration = myDeploymentConfigurator.createDefaultConfiguration(myDeploymentSource);
-          ComponentSerializationUtil.loadComponentState(myDeploymentConfiguration.getSerializer(), deploymentTag.getChild(SETTINGS_ELEMENT));
+    @Override
+    public @Nullable RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
+        String serverName = getServerName();
+        if (serverName == null) {
+            throw new ExecutionException(CloudBundle.message("DeployToServerRunConfiguration.error.server.required"));
         }
-        else {
-          LOG.warn("Cannot load deployment source for '" + getName() + "' run configuration: unknown deployment type '" + typeId + "'");
+
+        RemoteServer<S> server = findServer();
+        if (server == null) {
+            throw new ExecutionException(CloudBundle.message("DeployToServerRunConfiguration.error.server.not.found", serverName));
         }
-      }
-    }
-  }
 
-  @Nullable
-  private static DeploymentSourceType<?> findDeploymentSourceType(@Nullable String id) {
-    for (DeploymentSourceType<?> type : DeploymentSourceType.EP_NAME.getExtensionList()) {
-      if (type.getId().equals(id)) {
-        return type;
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    ConfigurationState state = new ConfigurationState();
-    state.myServerName = myServerName;
-    if (myDeploymentSource != null) {
-      DeploymentSourceType type = myDeploymentSource.getType();
-      Element deploymentTag = new Element("deployment").setAttribute(DEPLOYMENT_SOURCE_TYPE_ATTRIBUTE, type.getId());
-      type.save(myDeploymentSource, deploymentTag);
-      if (myDeploymentConfiguration != null) {
-        Object configurationState = myDeploymentConfiguration.getSerializer().getState();
-        if (configurationState != null) {
-          Element settingsTag = new Element(SETTINGS_ELEMENT);
-          XmlSerializer.serializeInto(configurationState, settingsTag, SERIALIZATION_FILTERS);
-          deploymentTag.addContent(settingsTag);
+        if (myDeploymentSource == null) {
+            throw new ExecutionException(CloudBundle.message("DeployToServerRunConfiguration.error.deployment.not.selected"));
         }
-      }
-      state.myDeploymentTag = deploymentTag;
+
+        return DeployToServerStateProvider.getFirstNotNullState(server, executor, env, myDeploymentSource, myDeploymentConfiguration);
     }
-    XmlSerializer.serializeInto(state, element, SERIALIZATION_FILTERS);
-    super.writeExternal(element);
-  }
 
-  public static class ConfigurationState {
-    @Attribute("server-name")
-    public String myServerName;
+    @Override
+    public void checkConfiguration() throws RuntimeConfigurationException {
+        RemoteServer<S> server = findServer();
+        if (server == null) {
+            return;
+        }
 
-    @Tag("deployment")
-    public Element myDeploymentTag;
-  }
+        if (myDeploymentSource == null) {
+            return;
+        }
+
+        myDeploymentConfiguration.checkConfiguration(server, myDeploymentSource, getProject());
+    }
+
+    private RemoteServer<S> findServer() {
+        String serverName = getServerName();
+        if (serverName == null) {
+            return null;
+        }
+
+        return RemoteServersManager.getInstance().findByName(serverName, getServerType());
+    }
+
+    public void setServerName(String serverName) {
+        myServerName = serverName;
+    }
+
+    public DeploymentSource getDeploymentSource() {
+        return myDeploymentSource;
+    }
+
+    public void setDeploymentSource(DeploymentSource deploymentSource) {
+        if (myDeploymentSourceIsLocked) {
+            assert deploymentSource != null && deploymentSource == myDeploymentSource
+                : "Can't replace locked " + myDeploymentSource + " with " + deploymentSource;
+        }
+        myDeploymentSource = deploymentSource;
+    }
+
+    public D getDeploymentConfiguration() {
+        return myDeploymentConfiguration;
+    }
+
+    public void setDeploymentConfiguration(D deploymentConfiguration) {
+        myDeploymentConfiguration = deploymentConfiguration;
+    }
+
+    @Override
+    public boolean isGeneratedName() {
+        return getDeploymentSource() != null && getDeploymentConfiguration() != null &&
+            getDeploymentConfigurator().isGeneratedConfigurationName(getName(), getDeploymentSource(), getDeploymentConfiguration());
+    }
+
+    @Override
+    public @Nullable String suggestedName() {
+        if (getDeploymentSource() == null || getDeploymentConfiguration() == null) {
+            return null;
+        }
+        return getDeploymentConfigurator().suggestConfigurationName(getDeploymentSource(), getDeploymentConfiguration());
+    }
+
+    @Override
+    public void readExternal(@NotNull Element element) throws InvalidDataException {
+        super.readExternal(element);
+        ConfigurationState state = XmlSerializer.deserialize(element, ConfigurationState.class);
+        myServerName = null;
+        myDeploymentSource = null;
+        myServerName = state.myServerName;
+        final Element deploymentTag = state.myDeploymentTag;
+        if (deploymentTag != null) {
+            String typeId = deploymentTag.getAttributeValue(DEPLOYMENT_SOURCE_TYPE_ATTRIBUTE);
+            final DeploymentSourceType<?> type = findDeploymentSourceType(typeId);
+            if (type != null) {
+                myDeploymentSource = type.load(deploymentTag, getProject());
+                myDeploymentConfiguration = myDeploymentConfigurator.createDefaultConfiguration(myDeploymentSource);
+                ComponentSerializationUtil.loadComponentState(myDeploymentConfiguration.getSerializer(), deploymentTag.getChild(SETTINGS_ELEMENT));
+            }
+            else {
+                LOG.warn("Cannot load deployment source for '" + getName() + "' run configuration: unknown deployment type '" + typeId + "'");
+            }
+        }
+
+        DeployToServerRunConfigurationExtensionsManager.getInstance().readExternal(this, element);
+    }
+
+    private static @Nullable DeploymentSourceType<?> findDeploymentSourceType(@Nullable String id) {
+        for (DeploymentSourceType<?> type : DeploymentSourceType.EP_NAME.getExtensionList()) {
+            if (type.getId().equals(id)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void writeExternal(@NotNull Element element) throws WriteExternalException {
+        ConfigurationState state = new ConfigurationState();
+        state.myServerName = myServerName;
+        if (myDeploymentSource != null) {
+            DeploymentSourceType type = myDeploymentSource.getType();
+            Element deploymentTag = new Element("deployment").setAttribute(DEPLOYMENT_SOURCE_TYPE_ATTRIBUTE, type.getId());
+            type.save(myDeploymentSource, deploymentTag);
+            if (myDeploymentConfiguration != null) {
+                Object configurationState = myDeploymentConfiguration.getSerializer().getState();
+                if (configurationState != null) {
+                    Element settingsTag = new Element(SETTINGS_ELEMENT);
+                    XmlSerializer.serializeInto(configurationState, settingsTag, SERIALIZATION_FILTERS);
+                    deploymentTag.addContent(settingsTag);
+                }
+            }
+            state.myDeploymentTag = deploymentTag;
+        }
+        XmlSerializer.serializeInto(state, element, SERIALIZATION_FILTERS);
+        super.writeExternal(element);
+
+        DeployToServerRunConfigurationExtensionsManager.getInstance().writeExternal(this, element);
+    }
+
+    @Override
+    public RunConfiguration clone() {
+        Element element = new Element("tag");
+        try {
+            writeExternal(element);
+        }
+        catch (WriteExternalException e) {
+            LOG.error(e);
+        }
+
+        DeployToServerRunConfiguration result = (DeployToServerRunConfiguration) super.clone();
+        if (myDeploymentSourceIsLocked) {
+            result.lockDeploymentSource((SingletonDeploymentSourceType) myDeploymentSource.getType());
+        }
+
+        try {
+            result.readExternal(element);
+        }
+        catch (InvalidDataException e) {
+            LOG.error(e);
+        }
+        return result;
+    }
+
+    @Override
+    public void onNewConfigurationCreated() {
+        if (getServerName() == null) {
+            RemoteServer<?> server = ContainerUtil.getFirstItem(RemoteServersManager.getInstance().getServers(getServerType()));
+            if (server != null) {
+                setServerName(server.getName());
+            }
+        }
+
+        if (getDeploymentSource() == null) {
+            DeploymentConfigurator<D, S> deploymentConfigurator = getDeploymentConfigurator();
+            List<DeploymentSource> sources = deploymentConfigurator.getAvailableDeploymentSources();
+            DeploymentSource source = ContainerUtil.getFirstItem(sources);
+            if (source != null) {
+                setDeploymentSource(source);
+                setDeploymentConfiguration(deploymentConfigurator.createDefaultConfiguration(source));
+                DeploymentSourceType type = source.getType();
+                //noinspection unchecked
+                type.setBuildBeforeRunTask(this, source);
+            }
+        }
+    }
+
+    public static class ConfigurationState {
+        @Attribute("server-name")
+        public String myServerName;
+
+        @Tag("deployment")
+        public Element myDeploymentTag;
+    }
 }

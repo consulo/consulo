@@ -1,19 +1,22 @@
 package consulo.remoteServer.runtime.deployment;
 
 import consulo.remoteServer.runtime.RemoteOperationCallback;
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * @author nik
- */
 public abstract class DeploymentRuntime {
-  public boolean isUndeploySupported() {
-    return true;
-  }
+    public boolean isUndeploySupported() {
+        return true;
+    }
 
-  public abstract void undeploy(@Nonnull UndeploymentTaskCallback callback);
+    public abstract void undeploy(@NotNull UndeploymentTaskCallback callback);
 
-  public interface UndeploymentTaskCallback extends RemoteOperationCallback {
-    void succeeded();
-  }
+    @Nullable
+    public DeploymentRuntime getParent() {
+        return null;
+    }
+
+    public interface UndeploymentTaskCallback extends RemoteOperationCallback {
+        void succeeded();
+    }
 }

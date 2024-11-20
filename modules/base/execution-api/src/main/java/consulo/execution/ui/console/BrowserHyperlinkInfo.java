@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.ui.console;
 
-import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -30,12 +29,13 @@ public class BrowserHyperlinkInfo implements HyperlinkInfo {
     myUrl = url;
   }
 
+  @Override
   @RequiredUIAccess
   public void navigate(Project project) {
     openUrl(myUrl);
   }
 
   public static void openUrl(String url) {
-    BrowserUtil.launchBrowser(url);
+    Platform.current().openInBrowser(url);
   }
 }

@@ -16,20 +16,17 @@
 package consulo.sandboxPlugin.ide.remoteServer;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.configurable.ConfigurationException;
-import consulo.configurable.UnnamedConfigurable;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.remoteServer.RemoteServerConfigurable;
 import consulo.remoteServer.ServerType;
-import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
-import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
-import consulo.remoteServer.configuration.deployment.DeploymentSource;
-import consulo.remoteServer.configuration.deployment.DeploymentSourceFactory;
+import consulo.remoteServer.configuration.RemoteServer;
+import consulo.remoteServer.configuration.deployment.*;
 import consulo.remoteServer.runtime.ServerConnector;
 import consulo.remoteServer.runtime.ServerTaskExecutor;
 import consulo.ui.Component;
@@ -37,7 +34,7 @@ import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,98 +46,82 @@ import java.util.stream.Collectors;
  */
 @ExtensionImpl
 public class SandServerType extends ServerType<SandServerConfiguration> {
-  public SandServerType() {
-    super("sand", LocalizeValue.localizeTODO("Sand"), PlatformIconGroup.actionsHelp());
-  }
-  @Nonnull
-  @Override
-  public SandServerConfiguration createDefaultConfiguration() {
-    return new SandServerConfiguration();
-  }
+    public SandServerType() {
+        super("sand", "SandDeployment", LocalizeValue.localizeTODO("Sand"), PlatformIconGroup.actionsHelp());
+    }
 
-  @Nonnull
-  @Override
-  public UnnamedConfigurable createConfigurable(@Nonnull SandServerConfiguration configuration) {
-    return new UnnamedConfigurable() {
-      @RequiredUIAccess
-      @Override
-      public boolean isModified() {
-        return false;
-      }
+    @Nonnull
+    @Override
+    public SandServerConfiguration createDefaultConfiguration() {
+        return new SandServerConfiguration();
+    }
 
-      @RequiredUIAccess
-      @Nullable
-      @Override
-      public Component createUIComponent() {
-        return Label.create("Sand stub UI");
-      }
+    @Override
+    @NotNull
+    public RemoteServerConfigurable createServerConfigurable(SandServerConfiguration configuration) {
+        return new RemoteServerConfigurable() {
+            @RequiredUIAccess
+            @Override
+            public boolean isModified() {
+                return false;
+            }
 
-      @RequiredUIAccess
-      @Override
-      public void apply() throws ConfigurationException {
+            @RequiredUIAccess
+            @Nullable
+            @Override
+            public Component createUIComponent() {
+                return Label.create("Sand stub UI");
+            }
 
-      }
+            @RequiredUIAccess
+            @Override
+            public void apply() throws ConfigurationException {
 
-      @RequiredUIAccess
-      @Override
-      public void reset() {
+            }
 
-      }
-    };
-  }
+            @RequiredUIAccess
+            @Override
+            public void reset() {
 
-  @Nonnull
-  @Override
-  public DeploymentConfigurator<?> createDeploymentConfigurator(Project project) {
-    return new DeploymentConfigurator<>() {
-      @Nonnull
-      @Override
-      public List<DeploymentSource> getAvailableDeploymentSources() {
-        Module[] modules = ModuleManager.getInstance(project).getModules();
-        DeploymentSourceFactory deploymentSourceFactory = project.getInstance(DeploymentSourceFactory.class);
-        return Arrays.stream(modules)
-          .map(module -> deploymentSourceFactory.createModuleDeploymentSource(module))
-          .collect(Collectors.toList());
-      }
-
-      @Nonnull
-      @Override
-      public DeploymentConfiguration createDefaultConfiguration(@Nonnull DeploymentSource source) {
-        return new DeploymentConfiguration() {
-          @Override
-          public PersistentStateComponent<?> getSerializer() {
-            return new PersistentStateComponent<>() {
-              @Nullable
-              @Override
-              public Object getState() {
-                return new Element("state");
-              }
-
-              @Override
-              public void loadState(Object state) {
-
-              }
-            };
-          }
+            }
         };
-      }
+    }
 
-      @Nullable
-      @Override
-      public SettingsEditor<DeploymentConfiguration> createEditor(@Nonnull DeploymentSource source) {
-        return null;
-      }
-    };
-  }
+    @Override
+    public @NotNull DeploymentConfigurator<?, SandServerConfiguration> createDeploymentConfigurator(Project project) {
+        return new DeploymentConfigurator<>() {
+            @Nonnull
+            @Override
+            public List<DeploymentSource> getAvailableDeploymentSources() {
+                Module[] modules = ModuleManager.getInstance(project).getModules();
+                DeploymentSourceFactory deploymentSourceFactory = project.getInstance(DeploymentSourceFactory.class);
+                return Arrays.stream(modules)
+                    .map(module -> deploymentSourceFactory.createModuleDeploymentSource(module))
+                    .collect(Collectors.toList());
+            }
 
-  @Nonnull
-  @Override
-  public ServerConnector<?> createConnector(@Nonnull SandServerConfiguration configuration, @Nonnull ServerTaskExecutor asyncTasksExecutor) {
-    return new ServerConnector<>() {
-      @Override
-      public void connect(@Nonnull ConnectionCallback<DeploymentConfiguration> callback) {
-        callback.errorOccurred("error");
-      }
-    };
-  }
+            @NotNull
+            @Override
+            public DeploymentConfiguration createDefaultConfiguration(DeploymentSource source) {
+                return new DummyDeploymentConfiguration();
+            }
+
+            @Nullable
+            @Override
+            public SettingsEditor<DeploymentConfiguration> createEditor(DeploymentSource source, @Nullable RemoteServer<SandServerConfiguration> server) {
+                return null;
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public ServerConnector<?> createConnector(@Nonnull SandServerConfiguration configuration, @Nonnull ServerTaskExecutor asyncTasksExecutor) {
+        return new ServerConnector<>() {
+            @Override
+            public void connect(@Nonnull ConnectionCallback<DeploymentConfiguration> callback) {
+                callback.errorOccurred("error");
+            }
+        };
+    }
 }

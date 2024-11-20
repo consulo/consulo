@@ -1,28 +1,43 @@
 package consulo.remoteServer.runtime;
 
+import consulo.project.Project;
+import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentStatus;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
+import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
-/**
- * @author nik
- */
 public interface Deployment {
-  @Nonnull
-  String getName();
+    @NotNull
+    String getName();
 
-  @Nonnull
-  DeploymentStatus getStatus();
+    @NotNull
+    @Nls
+    String getPresentableName();
 
-  @Nonnull
-  String getStatusText();
+    @NotNull
+    DeploymentStatus getStatus();
 
-  @Nullable
-  DeploymentRuntime getRuntime();
+    @NotNull
+    @Nls
+    String getStatusText();
 
-  @Nullable
-  DeploymentTask<?> getDeploymentTask();
+    @Nullable
+    DeploymentRuntime getRuntime();
+
+    @Nullable
+    DeploymentRuntime getParentRuntime();
+
+    @Nullable
+    DeploymentTask<?> getDeploymentTask();
+
+    @NotNull
+    DeploymentLogManager getOrCreateLogManager(@NotNull Project project);
+
+    void setStatus(@NotNull DeploymentStatus status, @Nullable String statusText);
+
+    @NotNull
+    ServerConnection<?> getConnection();
 }

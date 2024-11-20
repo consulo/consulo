@@ -1,22 +1,23 @@
 package consulo.remoteServer.runtime.deployment;
 
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * @author nik
- */
 public interface DeploymentTask<D extends DeploymentConfiguration> {
-  @Nonnull
-  DeploymentSource getSource();
+    @NotNull
+    DeploymentSource getSource();
 
-  @Nonnull
-  D getConfiguration();
+    @NotNull
+    D getConfiguration();
 
-  @Nonnull
-  Project getProject();
+    @NotNull
+    Project getProject();
 
-  boolean isDebugMode();
+    boolean isDebugMode();
+
+    @NotNull
+    ExecutionEnvironment getExecutionEnvironment();
 }

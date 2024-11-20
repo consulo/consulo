@@ -1,46 +1,59 @@
+/*
+ * Copyright 2000-2016 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package consulo.remoteServer.runtime;
 
+import consulo.project.Project;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
-
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.Consumer;
 
-/**
- * @author nik
- */
 public interface ServerConnection<D extends DeploymentConfiguration> {
-  @Nonnull
-  RemoteServer<?> getServer();
+    @NotNull
+    RemoteServer<?> getServer();
 
-  @Nonnull
-  ConnectionStatus getStatus();
+    @NotNull
+    ConnectionStatus getStatus();
 
-  @Nonnull
-  String getStatusText();
+    @NotNull
+    @Nls
+    String getStatusText();
 
-  void connect(@Nonnull Runnable onFinished);
+    void connect(@NotNull Runnable onFinished);
 
-  void disconnect();
+    void disconnect();
 
-  void deploy(@Nonnull DeploymentTask<D> task, @Nonnull Consumer<String> onDeploymentStarted);
+    void deploy(@NotNull DeploymentTask<D> task, @NotNull Consumer<? super String> onDeploymentStarted);
 
-  void computeDeployments(@Nonnull Runnable onFinished);
+    void computeDeployments(@NotNull Runnable onFinished);
 
-  void undeploy(@Nonnull Deployment deployment, @Nonnull DeploymentRuntime runtime);
+    void undeploy(@NotNull Deployment deployment, @Nullable DeploymentRuntime runtime);
 
-  @Nonnull
-  Collection<Deployment> getDeployments();
+    @NotNull
+    Collection<Deployment> getDeployments();
 
-  @jakarta.annotation.Nullable
-  DeploymentLogManager getLogManager(@Nonnull String deployment);
+    @Nullable
+    DeploymentLogManager getLogManager(@NotNull Project project, @NotNull Deployment deployment);
 
-  DeploymentLogManager getLogManager(@Nonnull Deployment deployment);
-
-  void connectIfNeeded(ServerConnector.ConnectionCallback<D> callback);
+    void connectIfNeeded(ServerConnector.ConnectionCallback<D> callback);
 }

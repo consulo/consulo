@@ -27,16 +27,19 @@ public class DeploymentTaskImpl<D extends DeploymentConfiguration> implements De
     myExecutionEnvironment = environment;
   }
 
+  @Override
   @Nonnull
   public DeploymentSource getSource() {
     return mySource;
   }
 
+  @Override
   @Nonnull
   public D getConfiguration() {
     return myConfiguration;
   }
 
+  @Override
   @Nonnull
   public Project getProject() {
     return myProject;

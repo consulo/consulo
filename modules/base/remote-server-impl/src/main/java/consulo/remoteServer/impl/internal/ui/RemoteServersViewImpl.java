@@ -1,65 +1,50 @@
 package consulo.remoteServer.impl.internal.ui;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.remoteServer.runtime.ServerConnection;
 import consulo.remoteServer.runtime.ui.RemoteServersView;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
-import jakarta.inject.Inject;
+import consulo.remoteServer.runtime.ui.ServersTreeNodeSelector;
+import consulo.util.lang.Pair;
+import consulo.util.lang.function.Condition;
 import jakarta.inject.Singleton;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * @author nik
- */
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 @Singleton
 @ServiceImpl
 public class RemoteServersViewImpl extends RemoteServersView {
-  @Nonnull
-  private final Project myProject;
+    private final List<Pair<ServersTreeNodeSelector, Condition<ServerConnection<?>>>> mySelectors = new CopyOnWriteArrayList<>();
 
-  @Inject
-  public RemoteServersViewImpl(@Nonnull Project project) {
-    myProject = project;
-  }
-
-  @Override
-  public void showServerConnection(@Nonnull final ServerConnection<?> connection) {
-    final ToolWindow toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(ServersToolWindowManager.ID);
-    if (toolWindow != null) {
-      toolWindow.activate(new Runnable() {
-        @Override
-        public void run() {
-          ServersToolWindowContent content = getServersViewComponent(toolWindow);
-          if (content != null) {
-            content.select(connection);
-          }
+    @Override
+    public void showServerConnection(@NotNull ServerConnection<?> connection) {
+        ServersTreeNodeSelector selector = findSelector(connection);
+        if (selector != null) {
+            selector.select(connection);
         }
-      });
     }
-  }
 
-  private static ServersToolWindowContent getServersViewComponent(ToolWindow toolWindow) {
-    //todo[nik] register ServersToolWindowContent as project service?
-    return UIUtil.findComponentOfType(toolWindow.getComponent(), ServersToolWindowContent.class);
-  }
-
-  @Override
-  public void showDeployment(@Nonnull final ServerConnection<?> connection, @Nonnull final String deploymentName) {
-    ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
-    final ToolWindow toolWindow = toolWindowManager.getToolWindow(ServersToolWindowManager.ID);
-    if (toolWindow != null) {
-      toolWindowManager.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          ServersToolWindowContent component = getServersViewComponent(toolWindow);
-          if (component != null) {
-            component.select(connection, deploymentName);
-          }
+    private ServersTreeNodeSelector findSelector(ServerConnection<?> connection) {
+        for (Pair<ServersTreeNodeSelector, Condition<ServerConnection<?>>> pair : mySelectors) {
+            if (pair.second.value(connection)) {
+                return pair.first;
+            }
         }
-      });
+        return null;
     }
-  }
+
+    @Override
+    public void showDeployment(@NotNull ServerConnection<?> connection, @NotNull String deploymentName) {
+        ServersTreeNodeSelector selector = findSelector(connection);
+        if (selector != null) {
+            selector.select(connection, deploymentName);
+        }
+    }
+
+    @Override
+    public void registerTreeNodeSelector(@NotNull ServersTreeNodeSelector selector,
+                                         @NotNull Condition<ServerConnection<?>> condition) {
+        mySelectors.add(Pair.create(selector, condition));
+    }
 }

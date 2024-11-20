@@ -15,41 +15,51 @@
  */
 package consulo.remoteServer.configuration.deployment;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
 
-import jakarta.annotation.Nonnull;
+import javax.swing.*;
 
 /**
- * @author nik
+ * Implement this class to provide a custom type of deployment source which can be used in 'Deploy to Server' run configurations.
+ * <p>
+ * The implementation should be registered in {@code plugin.xml} file:
+ * <pre>
+ * &lt;extensions defaultExtensionNs="com.intellij"&gt;
+ * &nbsp;&nbsp;&lt;remoteServer.deploymentSource.type implementation="qualified-class-name"/&gt;
+ * &lt;/extensions&gt;
+ * </pre>
+ * </p>
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DeploymentSourceType<S extends DeploymentSource> {
-  public static final ExtensionPointName<DeploymentSourceType> EP_NAME = ExtensionPointName.create(DeploymentSourceType.class);
-  private final String myId;
+    public static final ExtensionPointName<DeploymentSourceType> EP_NAME = ExtensionPointName.create(DeploymentSourceType.class);
+    
+    private final String myId;
 
-  protected DeploymentSourceType(@Nonnull String id) {
-    myId = id;
-  }
+    protected DeploymentSourceType(@NotNull String id) {
+        myId = id;
+    }
 
-  public final String getId() {
-    return myId;
-  }
+    public final String getId() {
+        return myId;
+    }
 
-  @Nonnull
-  public abstract S load(@Nonnull Element tag, @Nonnull Project project);
+    @NotNull
+    public abstract S load(@NotNull Element tag, @NotNull Project project);
 
-  public abstract void save(@Nonnull S s, @Nonnull Element tag);
+    public abstract void save(@NotNull S s, @NotNull Element tag);
 
 
-  public void setBuildBeforeRunTask(@Nonnull RunConfiguration configuration, @Nonnull S source) {
-  }
+    public void setBuildBeforeRunTask(@NotNull RunConfiguration configuration, @NotNull S source) {
+    }
 
-  public void updateBuildBeforeRunOption(@Nonnull DataContext dataContext, @Nonnull Project project, @Nonnull S source, boolean select) {
-  }
+    public void updateBuildBeforeRunOption(@NotNull JComponent runConfigurationEditorComponent, @NotNull Project project, @NotNull S source, boolean select) {
+    }
+
+    public boolean isEditableInDumbMode() {
+        return false;
+    }
 }

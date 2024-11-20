@@ -1,17 +1,27 @@
 package consulo.remoteServer.impl.internal.ui.tree;
 
-import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * @author nik
- */
-public interface DeploymentNode {
-  @Nonnull
-  ServerNode getServerNode();
+public interface DeploymentNode extends ServersTreeNode {
 
-  boolean isUndeployActionEnabled();
-  void undeploy();
+    @NotNull
+    ServerNode getServerNode();
 
-  boolean isEditConfigurationActionEnabled();
-  void editConfiguration();
+    boolean isDeployActionVisible();
+
+    boolean isDeployActionEnabled();
+
+    void deploy();
+
+    boolean isUndeployActionEnabled();
+
+    void undeploy();
+
+    boolean isDebugActionVisible();
+
+    void deployWithDebug();
+
+    boolean isDeployed();
+
+    String getDeploymentName();
 }

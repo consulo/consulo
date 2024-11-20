@@ -1,87 +1,130 @@
+// Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.runtime.deployment;
 
+import consulo.project.Project;
+import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
+import consulo.remoteServer.impl.internal.runtime.ServerConnectionImpl;
 import consulo.remoteServer.runtime.Deployment;
+import consulo.remoteServer.runtime.ServerConnection;
+import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentStatus;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * @author nik
- */
-public class DeploymentImpl implements Deployment {
-  private final String myName;
-  private final DeploymentTask<?> myDeploymentTask;
-  private volatile DeploymentState myState;
+public class DeploymentImpl<D extends DeploymentConfiguration> implements Deployment {
+    private final ServerConnectionImpl<D> myConnection;
+    private final String myName;
+    private final DeploymentTask<D> myDeploymentTask;
+    private volatile DeploymentState myState;
+    private @Nls String myPresentableName;
 
-  public DeploymentImpl(@Nonnull String name, @Nonnull DeploymentStatus status, @Nullable String statusText,
-                        @Nullable DeploymentRuntime runtime, @Nullable DeploymentTask<?> deploymentTask) {
-    myName = name;
-    myDeploymentTask = deploymentTask;
-    myState = new DeploymentState(status, statusText, runtime);
-  }
-
-  @Nonnull
-  public String getName() {
-    return myName;
-  }
-
-  @Override
-  @Nonnull
-  public DeploymentStatus getStatus() {
-    return myState.getStatus();
-  }
-
-  @Nonnull
-  public String getStatusText() {
-    String statusText = myState.getStatusText();
-    return statusText != null ? statusText : getStatus().getPresentableText();
-  }
-
-  public DeploymentRuntime getRuntime() {
-    return myState.getRuntime();
-  }
-
-  @Nullable
-  @Override
-  public DeploymentTask<?> getDeploymentTask() {
-    return myDeploymentTask;
-  }
-
-  public boolean changeState(@Nonnull DeploymentStatus oldStatus, @Nonnull DeploymentStatus newStatus, @Nullable String statusText,
-                             @Nullable DeploymentRuntime runtime) {
-    if (myState.getStatus() == oldStatus) {
-      myState = new DeploymentState(newStatus, statusText, runtime);
-      return true;
-    }
-    return false;
-  }
-
-  private static class DeploymentState {
-    private final DeploymentStatus myStatus;
-    private final String myStatusText;
-    private final DeploymentRuntime myRuntime;
-
-    private DeploymentState(@Nonnull DeploymentStatus status, @Nullable String statusText, @Nullable DeploymentRuntime runtime) {
-      myStatus = status;
-      myStatusText = statusText;
-      myRuntime = runtime;
+    public DeploymentImpl(@NotNull ServerConnectionImpl<D> connection,
+                          @NotNull String name,
+                          @NotNull DeploymentStatus status,
+                          @Nullable @Nls String statusText,
+                          @Nullable DeploymentRuntime runtime,
+                          @Nullable DeploymentTask<D> deploymentTask) {
+        myConnection = connection;
+        myName = name;
+        myDeploymentTask = deploymentTask;
+        myState = new DeploymentState(status, statusText, runtime);
     }
 
-    @Nonnull
-    public DeploymentStatus getStatus() {
-      return myStatus;
+    @Override
+    public @NotNull String getName() {
+        return myName;
     }
 
-    @Nullable
-    public String getStatusText() {
-      return myStatusText;
+    @Override
+    public @NotNull DeploymentStatus getStatus() {
+        return myState.getStatus();
     }
 
-    @Nullable
+    @Override
+    public @NotNull @Nls String getStatusText() {
+        String statusText = myState.getStatusText();
+        return statusText != null ? statusText : myState.getStatus().getPresentableText().get();
+    }
+
+    @Override
     public DeploymentRuntime getRuntime() {
-      return myRuntime;
+        return myState.getRuntime();
     }
-  }
+
+    @Override
+    public @Nullable DeploymentTask<D> getDeploymentTask() {
+        return myDeploymentTask;
+    }
+
+    @Override
+    public @NotNull DeploymentLogManager getOrCreateLogManager(@NotNull Project project) {
+        return myConnection.getOrCreateLogManager(project, this);
+    }
+
+    public void disposeAllLogs() {
+        myConnection.disposeAllLogs(this);
+    }
+
+    @Override
+    public void setStatus(final @NotNull DeploymentStatus status, final @Nullable @Nls String statusText) {
+        myConnection.changeDeploymentState(this, getRuntime(), myState.getStatus(), status, statusText);
+    }
+
+    @Override
+    public @NotNull ServerConnection<?> getConnection() {
+        return myConnection;
+    }
+
+    @Override
+    public @Nullable DeploymentRuntime getParentRuntime() {
+        DeploymentRuntime runtime = getRuntime();
+        return runtime == null ? null : runtime.getParent();
+    }
+
+    public boolean changeState(@NotNull DeploymentStatus oldStatus,
+                               @NotNull DeploymentStatus newStatus,
+                               @Nullable @Nls String statusText,
+                               @Nullable DeploymentRuntime runtime) {
+        if (myState.getStatus() == oldStatus) {
+            myState = new DeploymentState(newStatus, statusText, runtime);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public @NotNull String getPresentableName() {
+        return myPresentableName == null ? getName() : myPresentableName;
+    }
+
+    public void setPresentableName(@Nls String presentableName) {
+        myPresentableName = presentableName;
+    }
+
+    protected static final class DeploymentState {
+        private final DeploymentStatus myStatus;
+        private final @Nls String myStatusText;
+        private final DeploymentRuntime myRuntime;
+
+        private DeploymentState(@NotNull DeploymentStatus status, @Nullable @Nls String statusText, @Nullable DeploymentRuntime runtime) {
+            myStatus = status;
+            myStatusText = statusText;
+            myRuntime = runtime;
+        }
+
+        public @NotNull DeploymentStatus getStatus() {
+            return myStatus;
+        }
+
+        public @Nullable @Nls String getStatusText() {
+            return myStatusText;
+        }
+
+        public @Nullable DeploymentRuntime getRuntime() {
+            return myRuntime;
+        }
+    }
 }

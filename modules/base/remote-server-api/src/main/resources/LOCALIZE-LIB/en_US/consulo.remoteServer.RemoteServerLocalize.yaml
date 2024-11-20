@@ -6,3 +6,103 @@ deploy.to.server.factory.local:
   text: Local
 deploy.to.server.factory.remote:
   text: Remote
+run.configuration.name:
+  text: '{0} - {1}'
+clouds.configure.empty.selection.string:
+  text: To configure integration with {0}, click ''+''
+remote.server.combo.create.new.server:
+  text: Create new…
+remote.server.combo.auto.detected.server:
+  text: '<{0}: Auto detected server>'
+remote.server.combo.no.servers:
+  text: <No servers>
+remote.server.combo.message.test.connection.in.progress:
+  text: Validating auto-detected connection…
+remote.server.combo.message.test.connection.failed:
+  text: Unable to auto-detect settings, manual configuration required
+new.cloud.connection.configurable.title:
+  text: New {0} Connection
+create.new.deployment.configuration.generic:
+  text: Create…
+create.new.deployment.configuration.for.singleton.type:
+  text: Create {0} Deployment…
+action.presentation.DeployAction.text:
+  text: Redeploy
+action.presentation.DeployAction.description:
+  text: Redeploy the selected item
+presentable.name.clouds:
+  text: Clouds
+module.builder.description.java.module.of.paas.cloud.application:
+  text: Java module of PAAS cloud application
+button.cloud.new:
+  text: New…
+popup.title.new.account:
+  text: New Account
+server.type.deployment.configuration.typ.presentable.name.0.deployment:
+  text: '{0} Deployment'
+label.text.deployment:
+  text: 'Deployment:'
+label.text.server:
+  text: 'Server:'
+group.action.AddRemoteServerGroup.text:
+  text: Add
+configurable.display.name.clouds:
+  text: Clouds
+editor.pane.text.empty.text:
+  text: '<html><head>{0}<style>body ''{''text-align: center; white-space: normal;background: #{1};color: #{2};''}''</style></head><body>{3}</body></html>'
+task.title.connecting:
+  text: Connecting…
+cloud.status.connecting:
+  text: Connecting…
+cloud.status.connection.successful:
+  text: Connection successful
+cloud.status.cannot.connect:
+  text: 'Cannot connect: {0}'
+cloud.status.double.click.to.connect:
+  text: Double-click on the server node to connect
+deploy.to.server.configuration.type.description:
+  text: Deploy to {0} run configuration
+dialog.title.create.deployment.configuration:
+  text: Create Deployment Configuration
+dialog.title.edit.deployment.configuration:
+  text: Edit Deployment Configuration
+dialog.message.account.required:
+  text: Account required
+dialog.message.email.required:
+  text: Email required
+dialog.message.password.required:
+  text: Password required
+DeployToServerRunConfiguration.tab.title.deployment:
+  text: Deployment
+DeployToServerRunConfiguration.error.server.required:
+  text: Server is not specified
+DeployToServerRunConfiguration.error.server.not.found:
+  text: Server {0} not found
+DeployToServerRunConfiguration.error.deployment.not.selected:
+  text: Deployment is not selected
+ServersTreeStructure.RemoteServerNode.popup.title.deploy.configuration:
+  text: Deploy Configuration
+ServersTreeStructure.RemoteServerNode.popup.title.deploy.debug.configuration:
+  text: Deploy and Debug Configuration
+ServerConnectionImpl.error.cannot.obtain.deployments:
+  text: 'Cannot obtain deployments: {0}'
+AddCloudConnectionAction.description:
+  text: Add {0} connection
+ConnectionStatus.disconnected:
+  text: Disconnected
+ConnectionStatus.connected:
+  text: Connected
+ConnectionStatus.connecting:
+  text: Connecting
+DeploymentStatus.deployed:
+  text: Deployed
+DeploymentStatus.not.deployed:
+  text: Not deployed
+DeploymentStatus.deploying:
+  text: Deploying
+DeploymentStatus.undeploying:
+  text: Undeploying
+CloudModuleWizardStep.title.account:
+  text: Account
+CloudModuleWizardStep.title.application:
+  text: Application
