@@ -82,7 +82,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
 
     setFocusable(false);
     setBackground(ourBackgroundColor);
-    setBorder(JBUI.Borders.empty(4));
+    setBorder(JBUI.Borders.empty(6));
     updatePresentation();
     apply(myDecorator.getWindowInfo());
     addActionListener(this);
