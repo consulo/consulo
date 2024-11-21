@@ -4,12 +4,13 @@ package consulo.desktop.awt.uiOld.components.fields;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.roots.ScalableIconComponent;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextField;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -64,19 +65,47 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
     }
 
     private void setExtensions(List<? extends Extension> extensions) {
+        List<Extension> left = List.of();
+        List<Extension> right = List.of();
+
+        for (Extension extension : extensions.reversed()) {
+            if (extension.isIconBeforeText()) {
+                if (left.isEmpty()) {
+                    left = new ArrayList<>();
+                }
+
+                left.add(extension);
+            } else {
+                if (right.isEmpty()) {
+                    right = new ArrayList<>();
+                }
+
+                right.add(extension);
+            }
+        }
+
+        setUIExtensions(left, "JTextField.leadingComponent");
+        setUIExtensions(right, "JTextField.trailingComponent");
+
+        this.extensions = Collections.unmodifiableList(extensions);
+    }
+
+    private void setUIExtensions(List<? extends Extension> extensions, String clientPropertyName) {
         if (extensions.isEmpty()) {
-            putClientProperty("JTextField.trailingComponent", null);
+            putClientProperty(clientPropertyName, null);
         }
         else {
             JToolBar toolBar = new JToolBar();
 
-            for (Extension extension : extensions.reversed()) {
+            for (Extension extension : extensions) {
                 Consumer<AWTEvent> actionOnClick = extension.getActionOnClick();
 
                 JComponent component;
                 if (actionOnClick == null) {
-                    component = new ScalableIconComponent(extension.getIcon(false));
-                } else {
+                    component = new JBLabel(extension.getIcon(false));
+                    component.setBorder(JBUI.Borders.empty(3));
+                }
+                else {
                     JButton button = new JButton(TargetAWT.to(extension.getIcon(false)));
                     button.setRolloverIcon(TargetAWT.to(extension.getIcon(true)));
                     button.addActionListener(actionOnClick::accept);
@@ -85,11 +114,8 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
                 }
                 toolBar.add(component);
             }
-
-            putClientProperty("JTextField.trailingComponent", toolBar);
+            putClientProperty(clientPropertyName, toolBar);
         }
-
-        this.extensions = Collections.unmodifiableList(extensions);
     }
 
     @Override
