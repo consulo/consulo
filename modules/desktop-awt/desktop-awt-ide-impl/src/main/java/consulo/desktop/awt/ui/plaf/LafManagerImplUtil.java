@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.plaf;
 
 import consulo.desktop.awt.ui.plaf.darcula.DarculaActionButtonUI;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaCaptionPanelUI;
+import consulo.desktop.awt.ui.plaf.darcula.DarculaEditorTextFieldUI;
 import consulo.desktop.awt.ui.plaf.intellij.ActionButtonUI;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
@@ -87,7 +88,7 @@ public class LafManagerImplUtil {
     }
 
     if (uiDefaults.get("EditorTextFieldUI") == null) {
-      uiDefaults.put("EditorTextFieldUI", BasicEditorTextFieldUI.class.getName());
+      uiDefaults.put("EditorTextFieldUI", DarculaEditorTextFieldUI.class.getName());
     }
 
     if(uiDefaults.get("CaptionPanelUI") == null) {

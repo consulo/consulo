@@ -35,11 +35,6 @@ public class DarculaEditorTextFieldUI extends BasicEditorTextFieldUI {
   }
 
   @Override
-  protected void setBorder(JComponent c) {
-    c.setBorder(new DarculaEditorTextFieldBorder());
-  }
-
-  @Override
   protected void paintBackground(Graphics g, EditorTextField field) {
   }
 
