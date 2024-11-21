@@ -1535,6 +1535,7 @@ public class UIUtil {
         return lookAndFeel instanceof BuildInLookAndFeel;
     }
 
+    @Deprecated
     public static boolean isUnderGTKLookAndFeel() {
         return UIManager.getLookAndFeel().getName().contains("GTK");
     }

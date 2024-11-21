@@ -87,8 +87,4 @@ public interface UIDecorator {
   }
 
   boolean isAvailable();
-
-  default boolean isDark() {
-    return false;
-  }
 }

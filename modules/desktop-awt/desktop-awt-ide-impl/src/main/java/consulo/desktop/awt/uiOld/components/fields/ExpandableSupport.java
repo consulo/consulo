@@ -187,7 +187,7 @@ public abstract class ExpandableSupport<Source extends JComponent> implements Ex
 
         @Override
         public void mousePressed(MouseEvent event) {
-          Consumer<InputEvent> action = extension.getActionOnClick();
+          Consumer<AWTEvent> action = extension.getActionOnClick();
           if (action != null) action.accept(event);
         }
       });

@@ -48,6 +48,8 @@ open module consulo.desktop.awt.ide.impl {
   requires pty4j;
   requires jediterm;
 
+  requires com.formdev.flatlaf;
+
   requires consulo.desktop.awt.bootstrap;
   requires consulo.desktop.awt.hacking;
   requires consulo.desktop.awt.eawt.wrapper;

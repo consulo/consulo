@@ -90,10 +90,8 @@ public class ActionMenuItem extends JBCheckBoxMenuItem {
         myInsideCheckedGroup = insideCheckedGroup;
 
         myEvent = new AnActionEvent(null, context, place, myPresentation, ActionManager.getInstance(), 0, true, false);
-        addActionListener(new ActionTransmitter());
-        setBorderPainted(false);
 
-        updateUI();
+        addActionListener(new ActionTransmitter());
 
         if (prepareNow) {
             init();

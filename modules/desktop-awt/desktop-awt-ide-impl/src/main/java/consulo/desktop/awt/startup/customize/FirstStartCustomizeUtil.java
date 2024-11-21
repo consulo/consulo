@@ -19,12 +19,11 @@ import consulo.application.Application;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.desktop.awt.ui.plaf.darcula.DarculaLaf;
-import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
+import consulo.desktop.awt.ui.plaf2.ConsuloFlatDarkLaf;
+import consulo.desktop.awt.ui.plaf2.ConsuloFlatLightLaf;
 import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.io.FileUtil;
 import consulo.ide.util.DownloadUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,6 +32,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.MultiMap;
+import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
 import jakarta.annotation.Nullable;
@@ -211,7 +211,7 @@ public class FirstStartCustomizeUtil {
 
     private static void initLaf(boolean isDark) {
         try {
-            UIManager.setLookAndFeel(isDark ? new DarculaLaf() : new IntelliJLaf());
+            UIManager.setLookAndFeel(isDark ? new ConsuloFlatDarkLaf() : new ConsuloFlatLightLaf());
         }
         catch (Exception ignored) {
         }

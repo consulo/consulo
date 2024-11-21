@@ -15,6 +15,8 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
+import consulo.desktop.awt.ui.plaf.darcula.DarculaActionButtonUI;
+import consulo.desktop.awt.ui.plaf.darcula.DarculaCaptionPanelUI;
 import consulo.desktop.awt.ui.plaf.intellij.ActionButtonUI;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
@@ -69,7 +71,7 @@ public class LafManagerImplUtil {
 
   public static void insertCustomComponentUI(UIDefaults uiDefaults) {
     if (uiDefaults.get("ActionButtonUI") == null) {
-      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
+      uiDefaults.put("ActionButtonUI", DarculaActionButtonUI.class.getName());
     }
 
     if (uiDefaults.get("JBEditorTabsUI") == null) {
@@ -89,7 +91,7 @@ public class LafManagerImplUtil {
     }
 
     if(uiDefaults.get("CaptionPanelUI") == null) {
-      uiDefaults.put("CaptionPanelUI", BasicCaptionPanelUI.class.getName());
+      uiDefaults.put("CaptionPanelUI", DarculaCaptionPanelUI.class.getName());
     }
 
     if (uiDefaults.get("OnOffButtonUI") == null) {

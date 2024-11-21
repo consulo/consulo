@@ -471,7 +471,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
     JTextComponent component = getComponent();
     if (component != null) {
       IconHolder result = getIconHolder(component, event.getX(), event.getY());
-      Consumer<InputEvent> action = result == null ? null : result.extension.getActionOnClick();
+      Consumer<AWTEvent> action = result == null ? null : result.extension.getActionOnClick();
       if (action == null) {
         setCursor(Cursor.TEXT_CURSOR);
       }
@@ -609,7 +609,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
     }
 
     @Override
-    public Consumer<InputEvent> getActionOnClick() {
+    public Consumer<AWTEvent> getActionOnClick() {
       JTextComponent component = getComponent();
       Object property = component == null ? null : component.getClientProperty(POPUP);
       JPopupMenu popup = property instanceof JPopupMenu ? (JPopupMenu)property : null;
@@ -645,7 +645,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
     }
 
     @Override
-    public Consumer<InputEvent> getActionOnClick() {
+    public Consumer<AWTEvent> getActionOnClick() {
       JTextComponent component = getComponent();
       return component == null ? null : (e) -> {
         component.setText(null);

@@ -49,12 +49,6 @@ public class DefaultUIDecorator implements SwingUIDecorator {
     return MorphColor.of(this::calcSidebarColor);
   }
 
-  @Override
-  public boolean isDark() {
-    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-    return lookAndFeel instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)lookAndFeel).isDark();
-  }
-
   @Nonnull
   private Color calcSidebarColor() {
     Color color = UIManager.getColor("Hyperlink.linkColor");

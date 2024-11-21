@@ -135,7 +135,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         component.setOpaque(false);
 
         JPanel rightPanel = wrapAndFillVertical(component);
-        rightPanel.setBorder(JBUI.Borders.empty(0, 0, 0, 6));
+        rightPanel.setBorder(JBUI.Borders.empty(0, 3, 0, 3));
         
         add(rightPanel, BorderLayout.EAST);
 

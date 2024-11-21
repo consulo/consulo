@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui.plaf;
+package consulo.desktop.awt.ui.plaf2;
 
-import javax.swing.plaf.basic.BasicPanelUI;
+import com.formdev.flatlaf.FlatDarkLaf;
+import consulo.ui.ex.awt.BuildInLookAndFeel;
 
 /**
  * @author VISTALL
- * @since 2019-11-05
+ * @since 2024-11-20
  */
-public abstract class BasicCaptionPanelUI extends BasicPanelUI {
+public class ConsuloFlatDarkLaf extends FlatDarkLaf implements BuildInLookAndFeel {
 }

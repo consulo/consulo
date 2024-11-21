@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ui;
 
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.IdeBorderFactory;
@@ -71,7 +70,6 @@ public abstract class SearchFieldAction extends AnAction implements CustomCompon
       myField.setBorder(emptyBorder);
     }
 
-    myField.setSearchIcon(PlatformIconGroup.generalFilter());
     myComponent = new JPanel();
     final BoxLayout layout = new BoxLayout(myComponent, BoxLayout.X_AXIS);
     myComponent.setLayout(layout);

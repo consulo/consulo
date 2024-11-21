@@ -3,126 +3,126 @@ package consulo.desktop.awt.uiOld.components.fields;
 
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.ui.roots.ScalableIconComponent;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.JBTextField;
-
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
 
 /**
  * @author Sergey Malenkov
  */
 public class ExtendableTextField extends JBTextField implements ExtendableTextComponent {
-  private List<Extension> extensions = emptyList();
+    private List<Extension> extensions = List.of();
 
-  public ExtendableTextField() {
-    this(null);
-  }
-
-  public ExtendableTextField(int columns) {
-    this(null, columns);
-  }
-
-  public ExtendableTextField(String text) {
-    this(text, 20);
-  }
-
-  public ExtendableTextField(String text, int columns) {
-    super(text, columns);
-  }
-
-  @Override
-  public List<Extension> getExtensions() {
-    return extensions;
-  }
-
-  @Override
-  public void setExtensions(Extension... extensions) {
-    setExtensions(asList(extensions));
-  }
-
-  @Override
-  public void setExtensions(Collection<? extends Extension> extensions) {
-    setExtensions(new ArrayList<>(extensions));
-  }
-
-  private void setExtensions(List<? extends Extension> extensions) {
-    putClientProperty("JTextField.variant", null);
-    this.extensions = unmodifiableList(extensions);
-    putClientProperty("JTextField.variant", ExtendableTextComponent.VARIANT);
-  }
-
-  @Override
-  public void addExtension(@Nonnull Extension extension) {
-    if (!getExtensions().contains(extension)) {
-      List<Extension> extensions = new ArrayList<>(getExtensions());
-      extensions.add(extension);
-      setExtensions(extensions);
+    public ExtendableTextField() {
+        this(null);
     }
-  }
 
-  @Override
-  public void removeExtension(@Nonnull Extension extension) {
-    ArrayList<Extension> extensions = new ArrayList<>(getExtensions());
-    if (extensions.remove(extension)) setExtensions(extensions);
-  }
+    public ExtendableTextField(int columns) {
+        this(null, columns);
+    }
 
-  /**
-   * Temporary solution to support icons in the text component for different L&F.
-   * This method replaces non-supported UI with Darcula UI.
-   *
-   * @param ui an object to paint this text component
-   */
-  //@Override
-  //@Deprecated
-  //public void setUI(TextUI ui) {
-  //  TextUI suggested = ui;
-  //  try {
-  //    if (ui == null || !Class.forName("consulo.ide.impl.idea.ide.ui.laf.darcula.ui.TextFieldWithPopupHandlerUI_New").isAssignableFrom(ui.getClass())) {
-  //      ui = (TextUI)Class.forName("consulo.ide.impl.idea.ide.ui.laf.darcula.ui.DarculaTextFieldUI_New").getDeclaredMethod("createUI", JComponent.class).invoke(null, this);
-  //    }
-  //  }
-  //  catch (Exception ignore) {
-  //  }
-  //
-  //  super.setUI(ui);
-  //  if (ui != suggested) {
-  //    try {
-  //      setBorder((Border)Class.forName("consulo.ide.impl.idea.ide.ui.laf.darcula.ui.DarculaTextBorder_New").newInstance());
-  //    }
-  //    catch (Exception ignore) {
-  //    }
-  //  }
-  //}
+    public ExtendableTextField(String text) {
+        this(text, 20);
+    }
 
-  public ExtendableTextField addBrowseExtension(@Nonnull Runnable action, @Nullable Disposable parentDisposable) {
-    KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK);
-    String tooltip = UIBundle.message("component.with.browse.button.browse.button.tooltip.text") + " (" + KeymapUtil.getKeystrokeText(keyStroke) + ")";
+    public ExtendableTextField(String text, int columns) {
+        super(text, columns);
+    }
 
-    ExtendableTextComponent.Extension browseExtension = ExtendableTextComponent.Extension.create(AllIcons.Nodes.TreeOpen, AllIcons.Nodes.TreeOpen, tooltip, action);
+    @Override
+    public List<Extension> getExtensions() {
+        return extensions;
+    }
 
-    new DumbAwareAction() {
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        action.run();
-      }
-    }.registerCustomShortcutSet(new CustomShortcutSet(keyStroke), this, parentDisposable);
-    addExtension(browseExtension);
+    @Override
+    public void setExtensions(Extension... extensions) {
+        setExtensions(asList(extensions));
+    }
 
-    return this;
-  }
+    @Override
+    public void setExtensions(Collection<? extends Extension> extensions) {
+        setExtensions(new ArrayList<>(extensions));
+    }
+
+    private void setExtensions(List<? extends Extension> extensions) {
+        if (extensions.isEmpty()) {
+            putClientProperty("JTextField.trailingComponent", null);
+        }
+        else {
+            JToolBar toolBar = new JToolBar();
+
+            for (Extension extension : extensions.reversed()) {
+                Consumer<AWTEvent> actionOnClick = extension.getActionOnClick();
+
+                JComponent component;
+                if (actionOnClick == null) {
+                    component = new ScalableIconComponent(extension.getIcon(false));
+                } else {
+                    JButton button = new JButton(TargetAWT.to(extension.getIcon(false)));
+                    button.setRolloverIcon(TargetAWT.to(extension.getIcon(true)));
+                    button.addActionListener(actionOnClick::accept);
+
+                    component = button;
+                }
+                toolBar.add(component);
+            }
+
+            putClientProperty("JTextField.trailingComponent", toolBar);
+        }
+
+        this.extensions = Collections.unmodifiableList(extensions);
+    }
+
+    @Override
+    public void addExtension(@Nonnull Extension extension) {
+        if (!getExtensions().contains(extension)) {
+            List<Extension> extensions = new ArrayList<>(getExtensions());
+            extensions.add(extension);
+            setExtensions(extensions);
+        }
+    }
+
+    @Override
+    public void removeExtension(@Nonnull Extension extension) {
+        ArrayList<Extension> extensions = new ArrayList<>(getExtensions());
+        if (extensions.remove(extension)) {
+            setExtensions(extensions);
+        }
+    }
+
+    public ExtendableTextField addBrowseExtension(@Nonnull Runnable action, @Nullable Disposable parentDisposable) {
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK);
+        String tooltip = UIBundle.message("component.with.browse.button.browse.button.tooltip.text") + " (" + KeymapUtil.getKeystrokeText(keyStroke) + ")";
+
+        ExtendableTextComponent.Extension browseExtension = ExtendableTextComponent.Extension.create(AllIcons.Nodes.TreeOpen, AllIcons.Nodes.TreeOpen, tooltip, action);
+
+        new DumbAwareAction() {
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                action.run();
+            }
+        }.registerCustomShortcutSet(new CustomShortcutSet(keyStroke), this, parentDisposable);
+        addExtension(browseExtension);
+
+        return this;
+    }
 }
