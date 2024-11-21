@@ -84,36 +84,6 @@ public class JBScrollBar extends JScrollBar implements TopComponent, Interpolabl
     super.addImpl(component, name, index);
   }
 
-  @Override
-  public void updateUI() {
-    ScrollBarUI ui = getUI();
-    if (ui instanceof DefaultScrollBarUI) return;
-    setUI(createUI(this));
-  }
-
-  /**
-   * Returns a new instance of {@link ScrollBarUI}.
-   * Do not share it between different scroll bars.
-   *
-   * @param c a target component for this UI
-   * @return a new instance of {@link ScrollBarUI}
-   */
-  @SuppressWarnings("UnusedParameters")
-  @Nonnull
-  public static ScrollBarUI createUI(JComponent c) {
-    // do not try create swing specific ui, until we fully migrate to unified ui
-    if (!Application.get().isSwingApplication()) {
-      return new BasicScrollBarUI();
-    }
-    PlatformOperatingSystem os = Platform.current().os();
-    if (os.isMac()) {
-      return new MacScrollBarUI();
-    }
-    if (os.isWindows() && os.asWindows().isWindows10OrNewer()) {
-      return new WindowsScrollBarUI();
-    }
-    return new DefaultScrollBarUI();
-  }
 
   /**
    * Computes the unit increment for scrolling if the viewport's view.

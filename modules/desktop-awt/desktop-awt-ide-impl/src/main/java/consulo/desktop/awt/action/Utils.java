@@ -9,7 +9,6 @@ import consulo.ide.impl.idea.ui.popup.NothingHereAction;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
@@ -77,10 +76,6 @@ public class Utils {
 
             @Override
             protected void paintComponent(Graphics g) {
-              if (UIUtil.isUnderBuildInLaF()) {
-                g.setColor(component.getBackground());
-                g.fillRect(0, 0, getWidth(), getHeight());
-              }
               if (myMenu != null) {
                 myMenu.paint(g);
               }

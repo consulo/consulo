@@ -19,37 +19,42 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.desktop.awt.ui.plaf.LafWithColorScheme;
 import consulo.desktop.awt.ui.plaf.LafWithIconLibrary;
 import consulo.desktop.awt.ui.plaf.LookAndFeelInfoWithClassLoader;
-import consulo.ide.IdeBundle;
 import consulo.ui.image.IconLibraryManager;
 import jakarta.annotation.Nonnull;
 
+import javax.swing.*;
+
 /**
  * @author VISTALL
- * @since 2024-11-20
+ * @since 2024-11-21
  */
-public class DarkLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme, LafWithIconLibrary {
-    public DarkLookAndFeelInfo() {
-        super(IdeBundle.message("idea.dark.look.and.feel"), ConsuloFlatDarkLaf.class.getName());
+public class IdeLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme, LafWithIconLibrary {
+    private final boolean myDark;
+
+    public IdeLookAndFeelInfo(String name, String className, boolean dark) {
+        super(name, className);
+        myDark = dark;
     }
+
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof DarkLookAndFeelInfo);
+        return getClassName().equals(((UIManager.LookAndFeelInfo) obj).getClassName());
     }
 
     @Override
     public int hashCode() {
-        return getName().hashCode();
+        return getClassName().hashCode();
     }
 
     @Nonnull
     @Override
     public String getColorSchemeName() {
-        return EditorColorsScheme.DARCULA_SCHEME_NAME;
+        return myDark ? EditorColorsScheme.DARCULA_SCHEME_NAME : EditorColorsScheme.DEFAULT_SCHEME_NAME;
     }
 
     @Nonnull
     @Override
     public String getIconLibraryId() {
-        return IconLibraryManager.DARK_LIBRARY_ID;
+        return myDark ? IconLibraryManager.DARK_LIBRARY_ID : IconLibraryManager.LIGHT_LIBRARY_ID;
     }
 }

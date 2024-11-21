@@ -16,11 +16,10 @@
 package consulo.desktop.awt.ui.plaf2;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-import consulo.ui.ex.awt.BuildInLookAndFeel;
 
 /**
  * @author VISTALL
  * @since 2024-11-20
  */
-public class ConsuloFlatDarkLaf extends FlatDarkLaf implements BuildInLookAndFeel {
+public class ConsuloFlatDarkLaf extends FlatDarkLaf {
 }

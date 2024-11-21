@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.platform.Platform;
-import consulo.ui.ex.awt.BuildInLookAndFeel;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.MorphColor;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
@@ -53,7 +53,7 @@ public class DefaultUIDecorator implements SwingUIDecorator {
   private Color calcSidebarColor() {
     Color color = UIManager.getColor("Hyperlink.linkColor");
     if (color == null) {
-      color = MacAquaUIDecorator.MAC_REGULAR_COLOR;
+      color = JBCurrentTheme.Link.linkColor();
     }
     return StyleManager.get().getCurrentStyle().isDark() ? ColorUtil.darker(color, 10) : ColorUtil.desaturate(color, 18);
   }

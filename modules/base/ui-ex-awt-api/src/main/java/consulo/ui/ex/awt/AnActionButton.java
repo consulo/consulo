@@ -224,7 +224,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
       for (Component comp : ((JComponent)toolbar).getComponents()) {
         if (comp instanceof ActionButtonComponent) {
           if (comp instanceof AnActionHolder) {
-            if (((AnActionHolder)comp).getAction() == this) {
+            if (((AnActionHolder)comp).getIdeAction() == this) {
               return new RelativePoint(comp.getParent(), new Point(comp.getX(), comp.getY() + comp.getHeight()));
             }
           }

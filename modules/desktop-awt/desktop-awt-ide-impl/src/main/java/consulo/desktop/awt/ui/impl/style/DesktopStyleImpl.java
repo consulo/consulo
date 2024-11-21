@@ -15,13 +15,13 @@
  */
 package consulo.desktop.awt.ui.impl.style;
 
+import com.formdev.flatlaf.FlatLaf;
 import consulo.desktop.awt.ui.impl.image.DesktopAWTImage;
 import consulo.desktop.awt.ui.plaf.LafWithIconLibrary;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.MorphValue;
-import consulo.ui.ex.awt.BuildInLookAndFeel;
 import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -43,10 +43,7 @@ import java.util.Objects;
 public class DesktopStyleImpl extends StyleImpl {
     private static final Logger LOG = Logger.getInstance(DesktopStyleImpl.class);
 
-    private final MorphValue<Boolean> myDarkValue = MorphValue.of(() -> {
-        LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-        return lookAndFeel instanceof BuildInLookAndFeel && ((BuildInLookAndFeel) lookAndFeel).isDark();
-    });
+    private final MorphValue<Boolean> myDarkValue = MorphValue.of(FlatLaf::isLafDark);
 
     private final UIManager.LookAndFeelInfo myLookAndFeelInfo;
 

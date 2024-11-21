@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.action;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ui.Size;
 import consulo.ui.ex.action.AnAction;
@@ -31,12 +30,6 @@ import java.awt.*;
 
 public class ActionButtonWithText extends ActionButtonImpl {
   private static final int ICON_TEXT_SPACE = 2;
-
-  @Deprecated
-  @DeprecationInfo("Use constructor with Size parameter")
-  public ActionButtonWithText(final AnAction action, final Presentation presentation, final String place, final Dimension minimumSize) {
-    this(action, presentation, place, new Size(minimumSize.width, minimumSize.height));
-  }
 
   public ActionButtonWithText(final AnAction action, final Presentation presentation, final String place, final Size minimumSize) {
     super(action, presentation, place, minimumSize);

@@ -15,13 +15,12 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import consulo.desktop.awt.ui.plaf.darcula.DarculaActionButtonUI;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaCaptionPanelUI;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaEditorTextFieldUI;
-import consulo.desktop.awt.ui.plaf.intellij.ActionButtonUI;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
 import consulo.platform.Platform;
+import consulo.ui.ex.awt.internal.laf.DefaultTreeUI;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
@@ -33,102 +32,96 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 public class LafManagerImplUtil {
-  @NonNls
-  public static final String[] ourPatchableFontResources =
-          {"Button.font", "ToggleButton.font", "RadioButton.font", "CheckBox.font", "ColorChooser.font", "ComboBox.font", "Label.font", "List.font", "MenuBar.font", "MenuItem.font",
-                  "MenuItem.acceleratorFont", "RadioButtonMenuItem.font", "CheckBoxMenuItem.font", "Menu.font", "PopupMenu.font", "OptionPane.font", "Panel.font", "ProgressBar.font",
-                  "ScrollPane.font", "Viewport.font", "TabbedPane.font", "Table.font", "TableHeader.font", "TextField.font", "PasswordField.font", "TextArea.font", "TextPane.font", "EditorPane.font",
-                  "TitledBorder.font", "ToolBar.font", "ToolTip.font", "Tree.font", "FormattedTextField.font", "Spinner.font"};
+    @NonNls
+    public static final String[] ourPatchableFontResources =
+        {"Button.font", "ToggleButton.font", "RadioButton.font", "CheckBox.font", "ColorChooser.font", "ComboBox.font", "Label.font", "List.font", "MenuBar.font", "MenuItem.font",
+            "MenuItem.acceleratorFont", "RadioButtonMenuItem.font", "CheckBoxMenuItem.font", "Menu.font", "PopupMenu.font", "OptionPane.font", "Panel.font", "ProgressBar.font",
+            "ScrollPane.font", "Viewport.font", "TabbedPane.font", "Table.font", "TableHeader.font", "TextField.font", "PasswordField.font", "TextArea.font", "TextPane.font", "EditorPane.font",
+            "TitledBorder.font", "ToolBar.font", "ToolTip.font", "Tree.font", "FormattedTextField.font", "Spinner.font"};
 
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  public static void initInputMapDefaults(UIDefaults defaults) {
-    // Make ENTER work in JTrees
-    InputMap treeInputMap = (InputMap)defaults.get("Tree.focusInputMap");
-    if (treeInputMap != null) { // it's really possible. For example,  GTK+ doesn't have such map
-      treeInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "toggle");
-    }
-    // Cut/Copy/Paste in JTextAreas
-    InputMap textAreaInputMap = (InputMap)defaults.get("TextArea.focusInputMap");
-    if (textAreaInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
-      installCutCopyPasteShortcuts(textAreaInputMap, false);
-    }
-    // Cut/Copy/Paste in JTextFields
-    InputMap textFieldInputMap = (InputMap)defaults.get("TextField.focusInputMap");
-    if (textFieldInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
-      installCutCopyPasteShortcuts(textFieldInputMap, false);
-    }
-    // Cut/Copy/Paste in JPasswordField
-    InputMap passwordFieldInputMap = (InputMap)defaults.get("PasswordField.focusInputMap");
-    if (passwordFieldInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
-      installCutCopyPasteShortcuts(passwordFieldInputMap, false);
-    }
-    // Cut/Copy/Paste in JTables
-    InputMap tableInputMap = (InputMap)defaults.get("Table.ancestorInputMap");
-    if (tableInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
-      installCutCopyPasteShortcuts(tableInputMap, true);
-    }
-  }
-
-  public static void insertCustomComponentUI(UIDefaults uiDefaults) {
-    if (uiDefaults.get("ActionButtonUI") == null) {
-      uiDefaults.put("ActionButtonUI", DarculaActionButtonUI.class.getName());
+    @SuppressWarnings({"HardCodedStringLiteral"})
+    public static void initInputMapDefaults(UIDefaults defaults) {
+        // Make ENTER work in JTrees
+        InputMap treeInputMap = (InputMap) defaults.get("Tree.focusInputMap");
+        if (treeInputMap != null) { // it's really possible. For example,  GTK+ doesn't have such map
+            treeInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "toggle");
+        }
+        // Cut/Copy/Paste in JTextAreas
+        InputMap textAreaInputMap = (InputMap) defaults.get("TextArea.focusInputMap");
+        if (textAreaInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
+            installCutCopyPasteShortcuts(textAreaInputMap, false);
+        }
+        // Cut/Copy/Paste in JTextFields
+        InputMap textFieldInputMap = (InputMap) defaults.get("TextField.focusInputMap");
+        if (textFieldInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
+            installCutCopyPasteShortcuts(textFieldInputMap, false);
+        }
+        // Cut/Copy/Paste in JPasswordField
+        InputMap passwordFieldInputMap = (InputMap) defaults.get("PasswordField.focusInputMap");
+        if (passwordFieldInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
+            installCutCopyPasteShortcuts(passwordFieldInputMap, false);
+        }
+        // Cut/Copy/Paste in JTables
+        InputMap tableInputMap = (InputMap) defaults.get("Table.ancestorInputMap");
+        if (tableInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
+            installCutCopyPasteShortcuts(tableInputMap, true);
+        }
     }
 
-    if (uiDefaults.get("JBEditorTabsUI") == null) {
-      uiDefaults.put("JBEditorTabsUI", IntelliJEditorTabsUI.class.getName());
+    public static void insertCustomComponentUI(UIDefaults uiDefaults) {
+        if (uiDefaults.get("JBEditorTabsUI") == null) {
+            uiDefaults.put("JBEditorTabsUI", IntelliJEditorTabsUI.class.getName());
+        }
+
+        if (uiDefaults.get("IdeStatusBarUI") == null) {
+            uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
+        }
+
+        if (uiDefaults.get("EditorTextFieldUI") == null) {
+            uiDefaults.put("EditorTextFieldUI", DarculaEditorTextFieldUI.class.getName());
+        }
+
+        if (uiDefaults.get("CaptionPanelUI") == null) {
+            uiDefaults.put("CaptionPanelUI", DarculaCaptionPanelUI.class.getName());
+        }
+
+        if (uiDefaults.get("OnOffButtonUI") == null) {
+            uiDefaults.put("OnOffButtonUI", OnOffButton.OnOffButtonUI.class.getName());
+        }
+
+        uiDefaults.put("TreeUI", DefaultTreeUI.class.getName());
     }
 
-    if (uiDefaults.get("IdeStatusBarUI") == null) {
-      uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
+    @SuppressWarnings({"HardCodedStringLiteral"})
+    public static void initFontDefaults(@Nonnull UIDefaults defaults, @Nonnull FontUIResource uiFont) {
+        defaults.put("Tree.ancestorInputMap", null);
+        FontUIResource textFont = new FontUIResource(uiFont);
+        FontUIResource monoFont = new FontUIResource("Monospaced", Font.PLAIN, uiFont.getSize());
+
+        for (String fontResource : ourPatchableFontResources) {
+            defaults.put(fontResource, uiFont);
+        }
+
+        if (!Platform.current().os().isMac()) {
+            defaults.put("PasswordField.font", monoFont);
+        }
+        defaults.put("TextArea.font", monoFont);
+        defaults.put("TextPane.font", textFont);
+        defaults.put("EditorPane.font", textFont);
     }
 
-    if (uiDefaults.get("ActionButtonUI") == null) {
-      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
+    private static void installCutCopyPasteShortcuts(InputMap inputMap, boolean useSimpleActionKeys) {
+        String copyActionKey = useSimpleActionKeys ? "copy" : DefaultEditorKit.copyAction;
+        String pasteActionKey = useSimpleActionKeys ? "paste" : DefaultEditorKit.pasteAction;
+        String cutActionKey = useSimpleActionKeys ? "cut" : DefaultEditorKit.cutAction;
+        // Ctrl+Ins, Shift+Ins, Shift+Del
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), copyActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.SHIFT_MASK | InputEvent.SHIFT_DOWN_MASK), pasteActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_MASK | InputEvent.SHIFT_DOWN_MASK), cutActionKey);
+        // Ctrl+C, Ctrl+V, Ctrl+X
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), copyActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), pasteActionKey);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), DefaultEditorKit.cutAction);
     }
-
-    if (uiDefaults.get("EditorTextFieldUI") == null) {
-      uiDefaults.put("EditorTextFieldUI", DarculaEditorTextFieldUI.class.getName());
-    }
-
-    if(uiDefaults.get("CaptionPanelUI") == null) {
-      uiDefaults.put("CaptionPanelUI", DarculaCaptionPanelUI.class.getName());
-    }
-
-    if (uiDefaults.get("OnOffButtonUI") == null) {
-      uiDefaults.put("OnOffButtonUI", OnOffButton.OnOffButtonUI.class.getName());
-    }
-  }
-
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  public static void initFontDefaults(@Nonnull UIDefaults defaults, @Nonnull FontUIResource uiFont) {
-    defaults.put("Tree.ancestorInputMap", null);
-    FontUIResource textFont = new FontUIResource(uiFont);
-    FontUIResource monoFont = new FontUIResource("Monospaced", Font.PLAIN, uiFont.getSize());
-
-    for (String fontResource : ourPatchableFontResources) {
-      defaults.put(fontResource, uiFont);
-    }
-
-    if (!Platform.current().os().isMac()) {
-      defaults.put("PasswordField.font", monoFont);
-    }
-    defaults.put("TextArea.font", monoFont);
-    defaults.put("TextPane.font", textFont);
-    defaults.put("EditorPane.font", textFont);
-  }
-
-  private static void installCutCopyPasteShortcuts(InputMap inputMap, boolean useSimpleActionKeys) {
-    String copyActionKey = useSimpleActionKeys ? "copy" : DefaultEditorKit.copyAction;
-    String pasteActionKey = useSimpleActionKeys ? "paste" : DefaultEditorKit.pasteAction;
-    String cutActionKey = useSimpleActionKeys ? "cut" : DefaultEditorKit.cutAction;
-    // Ctrl+Ins, Shift+Ins, Shift+Del
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), copyActionKey);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.SHIFT_MASK | InputEvent.SHIFT_DOWN_MASK), pasteActionKey);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_MASK | InputEvent.SHIFT_DOWN_MASK), cutActionKey);
-    // Ctrl+C, Ctrl+V, Ctrl+X
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), copyActionKey);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), pasteActionKey);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), DefaultEditorKit.cutAction);
-  }
 }

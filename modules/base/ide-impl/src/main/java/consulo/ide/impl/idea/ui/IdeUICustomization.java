@@ -9,6 +9,7 @@ import jakarta.annotation.Nullable;
 /**
  * Allows to apply IDE-specific customizations to the terms used in platform UI features.
  */
+@Deprecated
 public class IdeUICustomization {
   private static final IdeUICustomization ourInstance = new IdeUICustomization();
 

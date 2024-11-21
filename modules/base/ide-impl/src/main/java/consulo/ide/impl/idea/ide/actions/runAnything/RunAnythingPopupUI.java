@@ -944,7 +944,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     @Nonnull
     @Override
-    protected JPanel createSettingsPanel() {
+    protected JComponent createSettingsPanel() {
         JPanel res = new JPanel(new FlowLayout(RIGHT, 0, 0));
         res.setOpaque(false);
 

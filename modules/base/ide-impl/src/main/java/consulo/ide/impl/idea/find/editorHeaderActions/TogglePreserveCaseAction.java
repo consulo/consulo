@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.find.SearchSession;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
-public class TogglePreserveCaseAction extends EditorHeaderToggleAction implements Embeddable {
+public class TogglePreserveCaseAction extends EditorSearchToggleAction implements Embeddable {
     public TogglePreserveCaseAction() {
         super(
             FindLocalize.findOptionsReplacePreserveCase(),
@@ -31,6 +31,11 @@ public class TogglePreserveCaseAction extends EditorHeaderToggleAction implement
             AllIcons.Actions.PreserveCaseHover,
             AllIcons.Actions.PreserveCaseSelected
         );
+    }
+
+    @Override
+    public boolean displayTextInToolbar() {
+        return false;
     }
 
     @Override

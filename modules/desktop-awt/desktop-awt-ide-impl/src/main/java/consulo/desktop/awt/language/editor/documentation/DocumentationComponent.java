@@ -421,7 +421,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     Presentation presentation = new Presentation();
     presentation.setIcon(AllIcons.Actions.More);
     presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
-    myCorner = new ActionButtonImpl(gearActions, presentation, ActionPlaces.UNKNOWN, new Dimension(20, 20)) {
+    myCorner = new ActionButtonImpl(gearActions, presentation, ActionPlaces.UNKNOWN, ActionToolbar.NAVBAR_MINIMUM_BUTTON_SIZE) {
       @Override
       protected DataContext getDataContext() {
         return DataManager.getInstance().getDataContext(myCorner);

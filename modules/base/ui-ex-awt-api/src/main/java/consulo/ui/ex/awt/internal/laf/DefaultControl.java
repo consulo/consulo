@@ -32,6 +32,6 @@ public final class DefaultControl implements Control {
   @Override
   public void paint(@Nonnull Component c, @Nonnull Graphics g, int x, int y, int width, int height, boolean expanded, boolean selected) {
     Icon icon = getIcon(expanded, selected);
-    icon.paintIcon(null, g, x + (width - icon.getIconWidth()) / 2, y + (height - icon.getIconHeight()) / 2);
+    icon.paintIcon(c, g, x + (width - icon.getIconWidth()) / 2, y + (height - icon.getIconHeight()) / 2);
   }
 }

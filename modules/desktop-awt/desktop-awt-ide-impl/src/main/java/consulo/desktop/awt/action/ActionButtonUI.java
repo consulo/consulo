@@ -21,6 +21,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2020-06-20
  */
+@Deprecated
 public interface ActionButtonUI {
   void paintBackground(ActionButtonImpl button, Graphics g, Dimension size, int state);
 }

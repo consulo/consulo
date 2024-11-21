@@ -49,6 +49,7 @@ open module consulo.desktop.awt.ide.impl {
   requires jediterm;
 
   requires com.formdev.flatlaf;
+  requires com.formdev.flatlaf.intellijthemes;
 
   requires consulo.desktop.awt.bootstrap;
   requires consulo.desktop.awt.hacking;

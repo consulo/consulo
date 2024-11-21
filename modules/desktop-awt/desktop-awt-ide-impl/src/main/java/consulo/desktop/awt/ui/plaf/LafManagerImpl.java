@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
+import com.formdev.flatlaf.intellijthemes.FlatAllIJThemes;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.application.ui.UIFontManager;
@@ -26,11 +27,10 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.desktop.awt.ui.LookAndFeelProvider;
 import consulo.desktop.awt.ui.impl.style.DesktopStyleImpl;
+import consulo.desktop.awt.ui.plaf2.ConsuloFlatDarkLaf;
 import consulo.desktop.awt.ui.plaf2.ConsuloFlatLightLaf;
-import consulo.desktop.awt.ui.plaf2.DarkLookAndFeelInfo;
-import consulo.desktop.awt.ui.plaf2.LightLookAndFeelInfo;
+import consulo.desktop.awt.ui.plaf2.IdeLookAndFeelInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.ui.LafManager;
@@ -105,11 +105,11 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
         List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
 
-        lafList.add(new LightLookAndFeelInfo());
-        lafList.add(new DarkLookAndFeelInfo());
+        lafList.add(new IdeLookAndFeelInfo(IdeBundle.message("idea.intellij.look.and.feel"), ConsuloFlatLightLaf.class.getName(), false));
+        lafList.add(new IdeLookAndFeelInfo(IdeBundle.message("idea.dark.look.and.feel"), ConsuloFlatDarkLaf.class.getName(), true));
 
-        for (LookAndFeelProvider provider : LookAndFeelProvider.EP_NAME.getExtensionList()) {
-            provider.register(lafList::add);
+        for (FlatAllIJThemes.FlatIJLookAndFeelInfo info : FlatAllIJThemes.INFOS) {
+            lafList.add(new IdeLookAndFeelInfo(info.getName(), info.getClassName(), info.isDark()));
         }
 
         myStyles = new ArrayList<>(lafList.size());

@@ -1486,6 +1486,7 @@ public class UIUtil {
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
+    @Deprecated
     public static boolean isUnderAquaLookAndFeel() {
         return Platform.current().os().isMac() && UIManager.getLookAndFeel().getName().contains("Mac OS X");
     }
@@ -1530,9 +1531,9 @@ public class UIUtil {
         return isUnderDarkTheme();
     }
 
+    @Deprecated
     public static boolean isUnderBuildInLaF() {
-        LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-        return lookAndFeel instanceof BuildInLookAndFeel;
+        return true;
     }
 
     @Deprecated
@@ -3879,7 +3880,7 @@ public class UIUtil {
 
     @Nonnull
     public static Dimension updateListRowHeight(@Nonnull Dimension size) {
-        size.height = Math.max(size.height, UIManager.getInt("List.rowHeight"));
+        //size.height = Math.max(size.height, UIManager.getInt("List.rowHeight"));
         return size;
     }
 

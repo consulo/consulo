@@ -677,7 +677,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         myReplaceTextArea = new SearchTextArea(myReplaceComponent, false);
         mySearchTextArea.setMultilineEnabled(Registry.is("ide.find.as.popup.allow.multiline"));
         myReplaceTextArea.setMultilineEnabled(Registry.is("ide.find.as.popup.allow.multiline"));
-        AnAction caseSensitiveAction = createAction(
+        ToggleAction caseSensitiveAction = createAction(
             FindLocalize.findPopupCaseSensitive(),
             "CaseSensitive",
             AllIcons.Actions.MatchCase,
@@ -686,7 +686,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             myCaseSensitiveState,
             () -> !myHelper.getModel().isReplaceState() || !myPreserveCaseState.get()
         );
-        AnAction wholeWordsAction = createAction(
+        ToggleAction wholeWordsAction = createAction(
             FindLocalize.findWholeWords(),
             "WholeWords",
             AllIcons.Actions.Words,
@@ -695,7 +695,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             myWholeWordsState,
             () -> !myRegexState.get()
         );
-        AnAction regexAction = createAction(
+        ToggleAction regexAction = createAction(
             FindLocalize.findRegex(),
             "Regex",
             AllIcons.Actions.Regex,
@@ -704,8 +704,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             myRegexState,
             () -> !myHelper.getModel().isReplaceState() || !myPreserveCaseState.get()
         );
-        List<Component> searchExtraButtons = mySearchTextArea.setExtraActions(caseSensitiveAction, wholeWordsAction, regexAction);
-        AnAction preserveCaseAction = createAction(
+        mySearchTextArea.setSuffixActions(List.of(caseSensitiveAction, wholeWordsAction, regexAction));
+        ToggleAction preserveCaseAction = createAction(
             FindLocalize.findOptionsReplacePreserveCase(),
             "PreserveCase",
             AllIcons.Actions.PreserveCase,
@@ -714,7 +714,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             myPreserveCaseState,
             () -> !myRegexState.get() && !myCaseSensitiveState.get()
         );
-        List<Component> replaceExtraButtons = myReplaceTextArea.setExtraActions(preserveCaseAction);
+         myReplaceTextArea.setSuffixActions(List.of(preserveCaseAction));
         myExtraActions.addAll(Arrays.asList(caseSensitiveAction, wholeWordsAction, regexAction, preserveCaseAction));
         Pair<FindPopupScopeUI.ScopeType, JComponent>[] scopeComponents = myScopeUI.getComponents();
 
@@ -955,8 +955,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         List<Component> focusOrder = new ArrayList<>();
         focusOrder.add(mySearchComponent);
         focusOrder.add(myReplaceComponent);
-        focusOrder.addAll(searchExtraButtons);
-        focusOrder.addAll(replaceExtraButtons);
         focusOrder.add(TargetAWT.to(myCbFileFilter.getComponent()));
         ContainerUtil.addAll(focusOrder, focusableComponents(myScopeDetailsPanel));
         focusOrder.add(editorComponent);
@@ -1106,7 +1104,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         myDialog.doCancelAction();
     }
 
-    private AnAction createAction(
+    private ToggleAction createAction(
         @Nonnull LocalizeValue message,
         String optionName,
         Image icon,

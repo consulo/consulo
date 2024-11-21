@@ -19,5 +19,5 @@ package consulo.ui.ex.action;
  * @author Konstantin Bulenkov
  */
 public interface AnActionHolder {
-  AnAction getAction();
+  AnAction getIdeAction();
 }
