@@ -36,7 +36,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2024-08-08
  */
-@ExtensionImpl(id = "FileBasedIndexProjectHandlerActivity", order = "first")
+@ExtensionImpl(id = "FileBasedIndexProjectHandlerActivity", order = "after StatusBarWidgetsManager")
 public class FileBasedIndexProjectHandlerActivity implements PostStartupActivity, DumbAware {
     private static final Logger LOG = Logger.getInstance(FileBasedIndexProjectHandlerActivity.class);
 

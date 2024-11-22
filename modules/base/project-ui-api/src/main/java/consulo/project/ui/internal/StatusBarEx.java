@@ -23,7 +23,6 @@ import consulo.project.ui.wm.StatusBarWidget;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -51,9 +50,6 @@ public interface StatusBarEx extends StatusBar, Disposable {
   Dimension getSize();
 
   boolean isVisible();
-
-  @Nullable
-  String getInfoRequestor();
 
   void addWidget(@Nonnull StatusBarWidget widget, @Nonnull List<String> order, @Nonnull Disposable parentDisposable);
 
