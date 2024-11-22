@@ -1,30 +1,27 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide;
 
-import consulo.ui.ex.action.Shortcut;
+import consulo.application.Application;
+import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.internal.HelpTooltip;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.application.util.registry.Registry;
 import consulo.util.lang.StringUtil;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ex.awt.JBEmptyBorder;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.JBValue;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.accessibility.ScreenReader;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicHTML;
@@ -35,6 +32,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -125,7 +125,7 @@ public class HelpTooltipImpl implements HelpTooltip {
   protected ComponentPopupBuilder myPopupBuilder;
   private Dimension myPopupSize;
   private JBPopup myPopup;
-  private final Alarm popupAlarm = new Alarm();
+  private Future<?> myScheduleFuture = CompletableFuture.completedFuture(null);
   private boolean isOverPopup;
   private boolean isMultiline;
   private String myToolTipText;
@@ -447,12 +447,13 @@ public class HelpTooltipImpl implements HelpTooltip {
     }
   }
 
+  @RequiredUIAccess
   private void scheduleShow(MouseEvent e, int delay) {
-    popupAlarm.cancelAllRequests();
+    myScheduleFuture.cancel(false);
 
     if (ScreenReader.isActive()) return; // Disable HelpTooltip in screen reader mode.
 
-    popupAlarm.addRequest(() -> {
+    schedule(UIAccess.current(), () -> {
       initialShowScheduled = false;
       if (masterPopupOpenCondition == null || masterPopupOpenCondition.getAsBoolean()) {
         Component owner = e.getComponent();
@@ -473,14 +474,21 @@ public class HelpTooltipImpl implements HelpTooltip {
     }, delay);
   }
 
+  @RequiredUIAccess
   private void scheduleHide(boolean force, int delay) {
-    popupAlarm.cancelAllRequests();
-    popupAlarm.addRequest(() -> hidePopup(force), delay);
+    schedule(UIAccess.current(), () -> hidePopup(force), delay);
+  }
+
+  private void schedule(UIAccess uiAccess, Runnable runnable, int delay) {
+    myScheduleFuture.cancel(false);
+
+    Application application = Application.get();
+    myScheduleFuture = uiAccess.getScheduler().schedule(runnable, application.getDefaultModalityState(), delay, TimeUnit.MILLISECONDS);
   }
 
   protected void hidePopup(boolean force) {
     initialShowScheduled = false;
-    popupAlarm.cancelAllRequests();
+    myScheduleFuture.cancel(false);
     if (myPopup != null && myPopup.isVisible() && (!isOverPopup || force)) {
       myPopup.cancel();
       myPopup = null;
@@ -489,7 +497,10 @@ public class HelpTooltipImpl implements HelpTooltip {
 
   private static Border textBorder(boolean multiline) {
     Insets i = UIManager.getInsets(multiline ? "HelpTooltip.defaultTextBorderInsets" : "HelpTooltip.smallTextBorderInsets");
-    return i != null ? new JBEmptyBorder(i) : JBUI.Borders.empty();
+    if (i == null) {
+        i = multiline ? JBUI.insets(8, 10, 10, 13) : JBUI.insets(6, 10, 7, 12);
+    }
+    return new JBEmptyBorder(i);
   }
 
   private static Font deriveHeaderFont(Font font) {
