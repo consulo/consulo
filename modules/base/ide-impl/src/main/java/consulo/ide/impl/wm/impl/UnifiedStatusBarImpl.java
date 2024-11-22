@@ -412,10 +412,4 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   public boolean isVisible() {
     return true;
   }
-
-  @Nullable
-  @Override
-  public String getInfoRequestor() {
-    return null;
-  }
 }
