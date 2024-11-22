@@ -28,9 +28,9 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -60,9 +60,10 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   @Nonnull
   @Override
   public JComponent createCustomComponent(Presentation presentation, String place) {
-    JPanel panel = new JPanel(new GridBagLayout());
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setBorder(JBUI.Borders.empty(0, 4));
     ComboBoxButton button = createComboBoxButton(presentation);
-    panel.add(button.getComponent(), new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.insets(0, 3, 0, 3), 0, 0));
+    panel.add(button.getComponent(), BorderLayout.CENTER);
     return panel;
   }
 

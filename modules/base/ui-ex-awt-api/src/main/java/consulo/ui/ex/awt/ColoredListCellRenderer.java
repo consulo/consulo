@@ -41,8 +41,9 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
 
   public ColoredListCellRenderer(@Nullable JComboBox comboBox) {
     myComboBox = comboBox;
+    
     setFocusBorderAroundIcon(true);
-    getIpad().left = getIpad().right = JBUIScale.scale(UIUtil.getListCellHPadding());
+    setIpad(JBUI.insets(0, UIUtil.getListCellHPadding()));
   }
 
   public void setSeparator(@Nullable String text) {
@@ -82,13 +83,10 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
     if (mySeparator) {
       final TitledSeparator separator = new TitledSeparator(mySeparatorText);
       separator.setBorder(JBUI.Borders.empty(0, 2, 0, 0));
-
-      if (!UIUtil.isUnderGTKLookAndFeel()) {
-        separator.setOpaque(false);
-        separator.setBackground(UIUtil.TRANSPARENT_COLOR);
-        separator.getLabel().setOpaque(false);
-        separator.getLabel().setBackground(UIUtil.TRANSPARENT_COLOR);
-      }
+      separator.setOpaque(false);
+      separator.setBackground(UIUtil.TRANSPARENT_COLOR);
+      separator.getLabel().setOpaque(false);
+      separator.getLabel().setBackground(UIUtil.TRANSPARENT_COLOR);
       return separator;
     }
 
@@ -110,24 +108,6 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
     else {
       super.append(fragment, attributes, isMainText);
     }
-  }
-
-  @Override
-  @Nonnull
-  public Dimension getPreferredSize() {
-    // There is a bug in BasicComboPopup. It does not add renderer into CellRendererPane,
-    // so font can be null here.
-
-    Font oldFont = getFont();
-    if (oldFont == null) {
-      setFont(UIUtil.getListFont());
-    }
-    Dimension result = super.getPreferredSize();
-    if (oldFont == null) {
-      setFont(null);
-    }
-
-    return UIUtil.updateListRowHeight(result);
   }
 
   protected abstract void customizeCellRenderer(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus);

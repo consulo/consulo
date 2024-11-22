@@ -15,8 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.ColoredTextContainer;
@@ -84,22 +82,11 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    * Gap between icon and text. It is used only if icon is defined.
    */
   protected int myIconTextGap;
-  /**
-   * Defines whether the focus border around the text is painted or not.
-   * For example, text can have a border if the component represents a selected item
-   * in focused JList.
-   */
-  private boolean myPaintFocusBorder;
+
   /**
    * Defines whether the focus border around the text extends to icon or not
    */
   private boolean myFocusBorderAroundIcon;
-  /**
-   * This is the border around the text. For example, text can have a border
-   * if the component represents a selected item in a focused JList.
-   * Border can be <code>null</code>.
-   */
-  private Border myBorder;
 
   private int myMainTextLastIndex = -1;
 
@@ -122,7 +109,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     myAttributes = new ArrayList<SimpleTextAttributes>(3);
     myIpad = new JBInsets(1, 2, 1, 2);
     myIconTextGap = JBUI.scale(2);
-    myBorder = new MyBorder();
     myFragmentPadding = IntMaps.newIntIntHashMap(10);
     myFragmentAlignment = IntMaps.newIntIntHashMap(10);
     setOpaque(true);
@@ -260,7 +246,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
   private synchronized void _clear() {
     myIcon = null;
-    myPaintFocusBorder = false;
     myFragments.clear();
     myAttributes.clear();
     myFragmentTags = null;
@@ -329,12 +314,13 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     revalidateAndRepaint();
   }
 
+  @Deprecated
   public Border getMyBorder() {
-    return myBorder;
+    return null;
   }
 
+  @Deprecated
   public void setMyBorder(@Nullable Border border) {
-    myBorder = border;
   }
 
   /**
@@ -342,10 +328,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    *
    * @param paintFocusBorder <code>true</code> or <code>false</code>
    */
+  @Deprecated
   protected final void setPaintFocusBorder(final boolean paintFocusBorder) {
-    myPaintFocusBorder = paintFocusBorder;
-
-    repaint();
   }
 
   /**
@@ -399,7 +383,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       width += myIcon.getWidth() + myIconTextGap;
     }
 
-    final Insets borderInsets = myBorder != null ? myBorder.getBorderInsets(this) : new Insets(0, 0, 0, 0);
+    final Insets borderInsets = JBUI.emptyInsets();
     width += borderInsets.left;
 
     Font font = getFont();
@@ -713,9 +697,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     }
 
     int textStart = offset;
-    if (myBorder != null) {
-      offset += myBorder.getBorderInsets(this).left;
-    }
 
     final List<Object[]> searchMatches = new ArrayList<Object[]>();
 
@@ -813,16 +794,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       offset = endOffset;
     }
 
-    // Paint focus border around the text and icon (if necessary)
-    if (myPaintFocusBorder && myBorder != null) {
-      if (focusAroundIcon) {
-        myBorder.paintBorder(this, g, 0, 0, getWidth(), getHeight());
-      }
-      else {
-        myBorder.paintBorder(this, g, textStart, 0, getWidth() - textStart, getHeight());
-      }
-    }
-
     // draw search matches after all
     for (final Object[] info : searchMatches) {
       UIUtil.drawSearchMatch(g, (Integer)info[0], (Integer)info[1], getHeight());
@@ -889,23 +860,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     return (height - metrics.getHeight()) / 2 + metrics.getAscent();
   }
 
-  private static void checkCanPaint(Graphics g) {
-    if (UIUtil.isPrinting(g)) return;
-
-    /* wtf??
-    if (!isDisplayable()) {
-      LOG.assertTrue(false, logSwingPath());
-    }
-    */
-    final Application application = ApplicationManager.getApplication();
-    if (application != null) {
-      application.assertIsDispatchThread();
-    }
-    else if (!SwingUtilities.isEventDispatchThread()) {
-      throw new RuntimeException(Thread.currentThread().toString());
-    }
-  }
-
   @Nonnull
   private String logSwingPath() {
     //noinspection HardCodedStringLiteral
@@ -915,42 +869,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       buffer.append(c);
     }
     return buffer.toString();
-  }
-
-  protected void setBorderInsets(Insets insets) {
-    if (myBorder instanceof MyBorder) {
-      ((MyBorder)myBorder).setInsets(insets);
-    }
-
-    revalidateAndRepaint();
-  }
-
-  private static final class MyBorder implements Border {
-    private Insets myInsets;
-
-    public MyBorder() {
-      myInsets = new JBInsets(1, 1, 1, 1);
-    }
-
-    public void setInsets(final Insets insets) {
-      myInsets = insets;
-    }
-
-    @Override
-    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width, final int height) {
-      g.setColor(Color.BLACK);
-      UIUtil.drawDottedRectangle(g, x, y, x + width - 1, y + height - 1);
-    }
-
-    @Override
-    public Insets getBorderInsets(final Component c) {
-      return (Insets)myInsets.clone();
-    }
-
-    @Override
-    public boolean isBorderOpaque() {
-      return true;
-    }
   }
 
   @Override

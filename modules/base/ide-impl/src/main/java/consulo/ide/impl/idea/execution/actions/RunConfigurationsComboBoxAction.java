@@ -31,8 +31,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.action.ComboBoxButton;
 import consulo.ui.image.Image;
@@ -41,7 +39,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -130,16 +127,6 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
   @Override
   public boolean shouldShowDisabledActions() {
     return true;
-  }
-
-  @Nonnull
-  @Override
-  public JComponent createCustomComponent(final Presentation presentation, String place) {
-    ComboBoxButton button = createComboBoxButton(presentation);
-    NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
-    panel.setBorder(IdeBorderFactory.createEmptyBorder(0, 0, 0, 2));
-    panel.add(button.getComponent());
-    return panel;
   }
 
   @Override

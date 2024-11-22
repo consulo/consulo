@@ -21,6 +21,7 @@ import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.SimpleListCellRenderer;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
@@ -319,7 +320,6 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
   protected void updateSize() {
     revalidateValue();
-    setSize(getPreferredSize());
 
     invalidate();
     repaint();
