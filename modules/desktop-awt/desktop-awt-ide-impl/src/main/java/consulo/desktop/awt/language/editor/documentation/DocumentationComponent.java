@@ -275,9 +275,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
     else {
       myEditorPane.putClientProperty("caretWidth", 0); // do not reserve space for caret (making content one pixel narrower than component)
-      if (newLayout) {
         UIUtil.doNotScrollToCaret(myEditorPane);
-      }
     }
     myEditorPane.setBackground(TargetAWT.to(EditorColorsUtil.getGlobalOrDefaultColor(COLOR_KEY)));
     HTMLEditorKit editorKit = JBHtmlEditorKit.create(true);
@@ -391,7 +389,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
           }
           else {
             Dimension d = component.getPreferredSize();
-            component.setBounds(r.width - d.width - 2, r.height - d.height - (newLayout ? 7 : 3), d.width, d.height);
+            component.setBounds(r.width - d.width - 2, r.height - d.height - (7), d.width, d.height);
           }
         }
       }
@@ -434,7 +432,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     add(layeredPane, BorderLayout.CENTER);
 
     myControlPanel = myToolBar.getComponent();
-    myControlPanel.setBorder(IdeBorderFactory.createBorder(newLayout ? UIUtil.getTooltipSeparatorColor() : JBColor.border(), SideBorder.BOTTOM));
+    myControlPanel.setBorder(IdeBorderFactory.createBorder(UIUtil.getTooltipSeparatorColor(), SideBorder.BOTTOM));
     myControlPanelVisible = false;
 
     HyperlinkListener hyperlinkListener = e -> {
@@ -514,11 +512,10 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   private static void prepareCSS(HTMLEditorKit editorKit) {
-    boolean newLayout = true;
-    Color borderColor = newLayout ? UIUtil.getTooltipSeparatorColor() : ColorUtil.mix(DOCUMENTATION_COLOR, BORDER_COLOR, 0.5);
-    int leftPadding = newLayout ? 8 : 7;
-    int definitionTopPadding = newLayout ? 4 : 3;
-    int htmlBottomPadding = newLayout ? 8 : 5;
+    Color borderColor = UIUtil.getTooltipSeparatorColor();
+    int leftPadding = 8;
+    int definitionTopPadding = 4;
+    int htmlBottomPadding = 8;
     String editorFontName = StringUtil.escapeQuotes(EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName());
     editorKit.getStyleSheet().addRule("code {font-family:\"" + editorFontName + "\"}");
     editorKit.getStyleSheet().addRule("pre {font-family:\"" + editorFontName + "\"}");
@@ -528,9 +525,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     editorKit.getStyleSheet().addRule("a { color: #" + ColorUtil.toHex(getLinkColor()) + "; text-decoration: none;}");
     editorKit.getStyleSheet().addRule(".definition { padding: " + definitionTopPadding + "px 17px 1px " + leftPadding + "px; border-bottom: thin solid #" + ColorUtil.toHex(borderColor) + "; }");
     editorKit.getStyleSheet().addRule(".definition-only { padding: " + definitionTopPadding + "px 17px 0 " + leftPadding + "px; }");
-    if (newLayout) {
-      editorKit.getStyleSheet().addRule(".definition-only pre { margin-bottom: 0 }");
-    }
+    editorKit.getStyleSheet().addRule(".definition-only pre { margin-bottom: 0 }");
     editorKit.getStyleSheet().addRule(".content { padding: 5px 16px 0 " + leftPadding + "px; max-width: 100% }");
     editorKit.getStyleSheet().addRule(".content-only { padding: 8px 16px 0 " + leftPadding + "px; max-width: 100% }");
     editorKit.getStyleSheet().addRule(".bottom { padding: 3px 16px 0 " + leftPadding + "px; }");
@@ -545,13 +540,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     // sections table
     editorKit.getStyleSheet().addRule(".sections { padding: 0 16px 0 " + leftPadding + "; border-spacing: 0; }");
     editorKit.getStyleSheet().addRule("tr { margin: 0 0 0 0; padding: 0 0 0 0; }");
-    if (newLayout) {
-      editorKit.getStyleSheet().addRule("table p { padding-bottom: 0}");
-      editorKit.getStyleSheet().addRule("td { margin: 4px 0 0 0; padding: 0 0 0 0; }");
-    }
-    else {
-      editorKit.getStyleSheet().addRule("td { margin: 2px 0 3.5px 0; padding: 0 0 0 0; }");
-    }
+    editorKit.getStyleSheet().addRule("table p { padding-bottom: 0}");
+    editorKit.getStyleSheet().addRule("td { margin: 4px 0 0 0; padding: 0 0 0 0; }");
     editorKit.getStyleSheet().addRule("th { text-align: left; }");
     editorKit.getStyleSheet().addRule(".section { color: " + ColorUtil.toHtmlColor(SECTION_COLOR) + "; padding-right: 4px}");
   }

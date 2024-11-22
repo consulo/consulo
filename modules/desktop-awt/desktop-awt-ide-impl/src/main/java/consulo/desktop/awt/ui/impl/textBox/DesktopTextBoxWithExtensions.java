@@ -120,6 +120,12 @@ public class DesktopTextBoxWithExtensions {
             toAWTComponent().setForegroundColor(foreground);
         }
 
+        @Override
+        public void setPlaceholder(@Nonnull LocalizeValue text) {
+            JTextField field = toAWTComponent();
+            field.putClientProperty("JTextField.placeholderText", text == LocalizeValue.empty() ? null : text.getValue());
+        }
+
         @Nullable
         @Override
         public ColorValue getForegroundColor() {
@@ -181,11 +187,6 @@ public class DesktopTextBoxWithExtensions {
             toAWTComponent().setExtensions(awtExtensions);
             toAWTComponent().repaint();
             return this;
-        }
-
-        @Override
-        public void setPlaceholder(@Nonnull LocalizeValue text) {
-            toAWTComponent().getEmptyText().setText(text.getValue());
         }
 
         @Override

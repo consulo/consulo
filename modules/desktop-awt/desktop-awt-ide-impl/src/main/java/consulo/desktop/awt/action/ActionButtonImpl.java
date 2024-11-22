@@ -51,6 +51,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Deprecated
 public class ActionButtonImpl extends JButton implements ActionButtonEx {
     // Contains actions IDs which descriptions are permitted for displaying in the ActionButtonImpl tooltip
     private static final Set<String> WHITE_LIST = Set.of();

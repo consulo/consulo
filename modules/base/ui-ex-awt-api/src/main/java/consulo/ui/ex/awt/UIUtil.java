@@ -1612,7 +1612,7 @@ public class UIUtil {
     }
 
     public static Insets getListViewportPadding() {
-        return JBUI.emptyInsets();
+        return JBUI.insets(8, 0);
     }
 
     public static boolean isToUseDottedCellBorder() {

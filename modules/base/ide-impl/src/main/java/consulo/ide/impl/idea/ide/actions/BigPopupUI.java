@@ -59,55 +59,6 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         ScrollingUtil.installActions(myResultsList, (JComponent) TargetAWT.to(getSearchField()));
     }
 
-    //protected static class SearchField extends ExtendableTextField {
-    //  public SearchField() {
-    //    ExtendableTextField.Extension leftExtension = getLeftExtension();
-    //    ExtendableTextField.Extension rightExtension = getRightExtension();
-    //    if (leftExtension != null) {
-    //      addExtension(leftExtension);
-    //    }
-    //    if (rightExtension != null) {
-    //      addExtension(rightExtension);
-    //    }
-    //
-    //    Insets insets = JBUI.CurrentTheme.BigPopup.searchFieldInsets();
-    //    Border empty = JBUI.Borders.empty(insets.top, insets.left, insets.bottom, insets.right);
-    //    Border topLine = JBUI.Borders.customLine(JBUI.CurrentTheme.BigPopup.searchFieldBorderColor(), 1, 0, 0, 0);
-    //    setBorder(JBUI.Borders.merge(empty, topLine, true));
-    //    setBackground(JBUI.CurrentTheme.BigPopup.searchFieldBackground());
-    //    setFocusTraversalKeysEnabled(false);
-    //
-    //    if (Registry.is("new.search.everywhere.use.editor.font")) {
-    //      Font editorFont = EditorUtil.getEditorFont();
-    //      setFont(editorFont);
-    //    }
-    //
-    //    int fontDelta = Registry.intValue("new.search.everywhere.font.size.delta");
-    //    if (fontDelta != 0) {
-    //      Font font = getFont();
-    //      font = font.deriveFont((float)fontDelta + font.getSize());
-    //      setFont(font);
-    //    }
-    //  }
-    //
-    //  @Override
-    //  public Dimension getPreferredSize() {
-    //    Dimension size = super.getPreferredSize();
-    //    size.height = Integer.max(JBUIScale.scale(29), size.height);
-    //    return size;
-    //  }
-    //
-    //  @Nullable
-    //  protected ExtendableTextField.Extension getRightExtension() {
-    //    return null;
-    //  }
-    //
-    //  @Nullable
-    //  protected ExtendableTextField.Extension getLeftExtension() {
-    //    return null;
-    //  }
-    //}
-
     @Nonnull
     protected TextBoxWithExtensions createSearchField() {
         return TextBoxWithExtensions.create();

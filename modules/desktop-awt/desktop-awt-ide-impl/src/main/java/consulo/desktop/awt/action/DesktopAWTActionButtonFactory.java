@@ -36,10 +36,4 @@ public class DesktopAWTActionButtonFactory implements ActionButtonFactory {
   public ActionButton create(@Nonnull AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
     return new ActionButtonImpl(action, presentation, place, minimumSize);
   }
-
-  @Nonnull
-  @Override
-  public ActionButton createWithText(AnAction action, Presentation presentation, String place, Size minimumSize) {
-    return new ActionButtonWithText(action, presentation, place, minimumSize);
-  }
 }
