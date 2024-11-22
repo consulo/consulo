@@ -303,6 +303,7 @@ public class UIUtil {
         MINI
     }
 
+    @Deprecated
     public enum ComponentStyle {
         LARGE,
         REGULAR,

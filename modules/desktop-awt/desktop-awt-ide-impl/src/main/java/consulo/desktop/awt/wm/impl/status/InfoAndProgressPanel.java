@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspenderListener;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.wm.impl.status.InlineProgressIndicator;
-import consulo.ide.impl.idea.openapi.wm.impl.status.PresentationModeProgressPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.ProgressButton;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
@@ -638,7 +637,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
 
         @Override
-        protected JBIterable<ProgressButton> createEastButtons() {
+        public JBIterable<ProgressButton> createEastButtons() {
             return JBIterable.of(createSuspendButton()).append(super.createEastButtons());
         }
 

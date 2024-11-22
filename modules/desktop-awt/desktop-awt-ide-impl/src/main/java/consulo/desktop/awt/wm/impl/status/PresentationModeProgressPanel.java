@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.wm.impl.status;
+package consulo.desktop.awt.wm.impl.status;
 
 import consulo.application.ui.UISettings;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.application.util.registry.Registry;
+import consulo.ide.impl.idea.openapi.wm.impl.status.InlineProgressIndicator;
+import consulo.ide.impl.idea.openapi.wm.impl.status.ProgressButton;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.TransparentPanel;
 import consulo.util.collection.JBIterable;

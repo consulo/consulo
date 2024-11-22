@@ -507,7 +507,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
         // color scheme settings:
         setupEditorFont(editor);
-        updateBorder(editor);
         editor.setBackgroundColor(TargetAWT.from(getBackgroundColor(isEnabled())));
     }
 
@@ -590,10 +589,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         }
 
         return editor;
-    }
-
-    @Deprecated
-    protected void updateBorder(@Nonnull final EditorEx editor) {
     }
 
     public static boolean managesEditor(@Nonnull Editor editor) {

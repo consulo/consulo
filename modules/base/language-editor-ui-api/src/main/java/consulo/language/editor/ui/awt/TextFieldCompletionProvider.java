@@ -88,17 +88,6 @@ public abstract class TextFieldCompletionProvider {
         return shouldHaveBorder;
       }
 
-      @Override
-      protected void updateBorder(@Nonnull EditorEx editor) {
-        if (shouldHaveBorder) {
-          super.updateBorder(editor);
-        }
-        else {
-          editor.setBorder(null);
-        }
-      }
-
-      @Override
       protected EditorEx createEditor() {
         EditorEx result = super.createEditor();
         if (editorConstructionCallback != null) {
