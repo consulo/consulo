@@ -20,6 +20,7 @@ import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.util.TextWithMnemonic;
 import jakarta.annotation.Nonnull;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -77,5 +78,24 @@ public class ExecutionActionValue implements LocalizeValueWithMnemonic {
     @Override
     public int compareTo(@Nonnull LocalizeValue o) {
         return myOriginal.compareTo(o);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ExecutionActionValue that = (ExecutionActionValue) o;
+        return Objects.equals(myOriginal, that.myOriginal) &&
+            Objects.equals(myParamValue, that.myParamValue) &&
+            Objects.equals(myConfigurationName, that.myConfigurationName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(myOriginal, myParamValue, myConfigurationName);
     }
 }
