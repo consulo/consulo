@@ -117,7 +117,7 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
 
         ReusableLinkedHashtable<K, V> newTable = ReusableLinkedHashtable.blankOfSize(strategy, map.size());
         for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
-            newTable.insert(ensureKeyIsNotNull(entry.getKey()), entry.getValue());
+            newTable.insertNullable(entry.getKey(), entry.getValue());
         }
         return of(newTable);
     }
@@ -136,10 +136,10 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
             return this;
         }
 
-        int keyPos;
+        int hashCode = myTable.hashCode(key), keyPos;
         boolean checkPossibleMatchFromSatellite = false;
         synchronized (myTable) {
-            keyPos = myTable.getPos(key);
+            keyPos = myTable.getPos(hashCode, key);
             if (keyPos >= 0 && !isMaster()) {
                 checkPossibleMatchFromSatellite = true;
             }
@@ -189,10 +189,10 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
             return fromMap(Collections.singletonMap(key, value));
         }
 
-        int keyPos;
+        int hashCode = myTable.hashCode(key), keyPos;
         boolean checkPossibleMatchFromSatellite = false;
         synchronized (myTable) {
-            keyPos = myTable.getPos(key);
+            keyPos = myTable.getPos(hashCode, key);
             if (keyPos >= 0 && !isMaster()) {
                 checkPossibleMatchFromSatellite = true;
             }
@@ -207,7 +207,7 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
                 }
                 return of(myTable.copyRange(this).setValueAtPos(keyPos, value));
             }
-            return of(myTable.copyRange(this).insertAtPos(keyPos, key, value));
+            return of(myTable.copyRange(this).insertAtPos(keyPos, hashCode, key, value));
         }
 
         if (keyPos >= 0) {
@@ -223,13 +223,13 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
             synchronized (myTable) {
                 if (isMaster()) {
                     // Hash-table is less than 50% full. Reusing it.
-                    return of(myTable.insertAtPos(~keyPos, key, value));
+                    return of(myTable.insertAtPos(~keyPos, hashCode, key, value));
                 }
             }
         }
 
         // Recreating hash-table.
-        return of(myTable.copyOfSize(mySize + 1).insert(key, value));
+        return of(myTable.copyOfSize(mySize + 1).insert(hashCode, key, value));
     }
 
     /**
@@ -485,9 +485,9 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
                         if (key == null) {
                             // Null key is encountered during appending values to hash-table. Cleaning up and throwing exception.
                             myTable.removeRange(myEndPos, myTable.getEndPos());
-                            throwKeyIsNull();
+                            throw new IllegalArgumentException("Null keys are not supported");
                         }
-                        int pos = myTable.getPos(key);
+                        int hashCode = myTable.hashCode(key), pos = myTable.getPos(hashCode, key);
                         if (pos >= 0) {
                             if (myTable.getValue(pos) == entry.getValue()) {
                                 // Value is the same. Nothing to add.
@@ -500,7 +500,7 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
                                 break;
                             }
                         }
-                        myTable.insertAtPos(~pos, key, entry.getValue());
+                        myTable.insertAtPos(~pos, hashCode, key, entry.getValue());
                     }
 
                     if (!keyDuplication) {
@@ -520,32 +520,11 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
     }
 
     private ImmutableLinkedHashMap<K, V> withAllRecreate(@Nonnull Map<? extends K, ? extends V> map) {
-        ReusableLinkedHashtable<K, V> newTable = myTable.blankOfSize(mySize + map.size());
-        myTable.forEach(
-            this,
-            (key, value) -> {
-                if (!map.containsKey(key)) {
-                    newTable.insert(key, value);
-                }
-            }
-        );
+        ReusableLinkedHashtable<K, V> newTable = myTable.copyRangeWithout((mySize + map.size()) << 1, this, map.keySet());
         for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
-            K key = ensureKeyIsNotNull(entry.getKey());
-            V value = entry.getValue();
-            newTable.insert(key, value);
+            newTable.insertNullable(entry.getKey(), entry.getValue());
         }
         return of(newTable);
-    }
-
-    private static <K> K ensureKeyIsNotNull(K key) {
-        if (key == null) {
-            throwKeyIsNull();
-        }
-        return key;
-    }
-
-    private static void throwKeyIsNull() {
-        throw new IllegalArgumentException("Null keys are not supported");
     }
 
     @Override

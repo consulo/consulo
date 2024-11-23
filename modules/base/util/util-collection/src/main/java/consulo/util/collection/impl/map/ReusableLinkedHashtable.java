@@ -19,12 +19,14 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.ImmutableLinkedHashMap;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -35,8 +37,10 @@ import java.util.function.Consumer;
  *
  * <p>Hash-table is created 25% full and grows up to 50% full, then it needs to be recreated. Filling open-addressed hash-table
  * above 50% limit may create long hash collisions and is undesirable. Linked list of entries is wrapped, the last entry
- * references the first entry in the list, so only end list position is stored. Position is an index of key in data array
- * (to obtain index in next position array, position must be divided by 2).</p>
+ * references the first entry in the list, so only end list position is stored. Position is an index of a key in the data array
+ * (and in position/hash array as well). Each entry stores its hashCode and it is used during hash-table resize. Also during resize
+ * we don't compare keys by .equals() but only by == to prevent. This prevents calling any methods which could produce exceptions
+ * during resize (which is undesirable since resize may occur asynchronously after GC).</p>
  *
  * <p>This class is intended to work in pair with {@link ImmutableLinkedHashMap}. There may be several {@code ImmutableLinkedHashMap}s
  * pointing to the same {@code ReusableLinkedHashtable}. Only one of {@code ImmutableLinkedHashMap}s would have all the key/value
@@ -70,15 +74,15 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     @Nonnull
     protected final Object[] myData;
     @Nonnull
-    protected final int[] myNextPos;
+    protected final int[] myNextPosAndHash;
     private int mySize, myEndPos = -1;
 
     private MapLink myMapLink = null;
 
-    public ReusableLinkedHashtable(@Nonnull HashingStrategy<K> strategy, @Nonnull Object[] data, @Nonnull int[] nextPos, int size) {
+    private ReusableLinkedHashtable(@Nonnull HashingStrategy<K> strategy, @Nonnull Object[] data, @Nonnull int[] nextPosAndHash, int size) {
         myStrategy = strategy;
         myData = data;
-        myNextPos = nextPos;
+        myNextPosAndHash = nextPosAndHash;
         mySize = size;
     }
 
@@ -96,8 +100,8 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     }
 
     public static <K, V> ReusableLinkedHashtable<K, V> blankOfSize(HashingStrategy<K> strategy, int size) {
-        return size == 0 ? empty(strategy) : new ReusableLinkedHashtable<>(strategy, new Object[size << 3], new int[size << 2], 0);
-        }
+        return size == 0 ? empty(strategy) : new ReusableLinkedHashtable<>(strategy, new Object[size << 3], new int[size << 3], 0);
+    }
 
     public ReusableLinkedHashtable<K, V> blankOfSize(int size) {
         return blankOfSize(myStrategy, size);
@@ -107,8 +111,8 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     public ReusableLinkedHashtable<K, V> copyOfSize(int size) {
         ReusableLinkedHashtable<K, V> newTable = blankOfSize(size);
         if (mySize > 0) {
-            for (int pos = getStartPos(), endPos = myEndPos; ; pos = myNextPos[pos >>> 1]) {
-                newTable.insert((K)myData[pos], (V)myData[pos + 1]);
+            for (int pos = getStartPos(), endPos = myEndPos; ; pos = myNextPosAndHash[pos]) {
+                newTable.insertByIdentity(myNextPosAndHash[pos + 1], (K)myData[pos], (V)myData[pos + 1]);
                 if (pos == endPos) {
                     break;
                 }
@@ -122,15 +126,16 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     }
 
     public ReusableLinkedHashtable<K, V> copyRangeWithoutPos(ReusableLinkedHashtableRange range, int excludePos) {
-        int startPos = range.getStartPos(), endPos = range.getEndPos();
         ReusableLinkedHashtable<K, V>
-            newTable = new ReusableLinkedHashtable<>(myStrategy, new Object[myData.length], new int[myNextPos.length], 0);
+            newTable = new ReusableLinkedHashtable<>(myStrategy, new Object[myData.length], new int[myNextPosAndHash.length], 0);
+        int startPos = range.getStartPos(), endPos = range.getEndPos();
         int newSize = 0, newEndPos = endPos;
-        for (int pos = startPos; ; pos = myNextPos[pos >>> 1]) {
+        for (int pos = startPos; ; pos = myNextPosAndHash[pos]) {
             if (pos != excludePos) {
                 newTable.myData[pos] = myData[pos];
                 newTable.myData[pos + 1] = myData[pos + 1];
-                newTable.myNextPos[newEndPos >>> 1] = pos;
+                newTable.myNextPosAndHash[newEndPos] = pos;
+                newTable.myNextPosAndHash[newEndPos + 1] = myNextPosAndHash[pos + 1];
                 newEndPos = pos;
                 newSize++;
             }
@@ -143,14 +148,25 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         return newTable;
     }
 
-    @SuppressWarnings("unchecked")
     public ReusableLinkedHashtable<K, V> copyRangeOptimized(ReusableLinkedHashtableRange range) {
-        ReusableLinkedHashtable<K, V> newTable =
-            new ReusableLinkedHashtable<>(myStrategy, new Object[mySize << 2], new int[mySize << 1], 0);
+        return copyRangeWithout(mySize, range, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public ReusableLinkedHashtable<K, V> copyRangeWithout(
+        int arraysSize,
+        ReusableLinkedHashtableRange range,
+        Set<? extends K> keysToExclude
+    ) {
+        ReusableLinkedHashtable<K, V>
+            newTable = new ReusableLinkedHashtable<>(myStrategy, new Object[arraysSize << 1], new int[arraysSize << 1], 0);
         int startPos = range.getStartPos();
-        if (startPos > 0) {
-            for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
-                newTable.insert((K)myData[pos], (V)myData[pos + 1]);
+        if (startPos >= 0) {
+            for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
+                K key = (K)myData[pos];
+                if (keysToExclude == null || !keysToExclude.contains(key)) {
+                    newTable.insertByIdentity(myNextPosAndHash[pos + 1], key, (V)myData[pos + 1]);
+                }
                 if (pos == endPos) {
                     break;
                 }
@@ -164,6 +180,10 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         return myStrategy;
     }
 
+    public int hashCode(K key) {
+        return myStrategy.hashCode(key);
+    }
+
     public int getSize() {
         return mySize;
     }
@@ -171,7 +191,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     @Override
     public int getStartPos() {
         int endPos = myEndPos;
-        return endPos >= 0 ? myNextPos[endPos >>> 1] : -1;
+        return endPos >= 0 ? myNextPosAndHash[endPos] : -1;
     }
 
     @Override
@@ -186,7 +206,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
      * @return Current hash-table filling limit before forcing hash-table recreation.
      */
     public int getMaxSafeSize() {
-        return myNextPos.length >> 1;
+        return myData.length >> 2;
     }
 
     /**
@@ -200,6 +220,11 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
      */
     @SuppressWarnings("unchecked")
     public int getPos(K key) {
+        return getPos(myStrategy.hashCode(key), key);
+    }
+
+    @SuppressWarnings("unchecked")
+    public int getPos(int hashCode, K key) {
         Object[] data = myData;
         int length = data.length;
         if (length == 0) {
@@ -207,7 +232,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         }
 
         HashingStrategy<K> strategy = myStrategy;
-        int pos = Math.floorMod(strategy.hashCode(key), length >>> 1) << 1;
+        int pos = Math.floorMod(hashCode, length >>> 1) << 1;
         while (true) {
             K candidate = (K)data[pos];
             if (candidate == null) {
@@ -219,32 +244,73 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
             pos += 2;
             if (pos == length) {
                 pos = 0;
+            }
         }
     }
+
+    @SuppressWarnings("unchecked")
+    public int getPosByIdentity(int hashCode, K key) {
+        Object[] data = this.myData;
+        int length = data.length;
+        if (length == 0) {
+            return -1;
         }
+
+        int pos = Math.floorMod(hashCode, length >>> 1) << 1;
+        while (true) {
+            K candidate = (K)data[pos];
+            if (candidate == null) {
+                return ~pos;
+            }
+            else if (candidate == key) {
+                return pos;
+            }
+            pos += 2;
+            if (pos == length) {
+                pos = 0;
+            }
+        }
+    }
 
     /**
      * Must be called only from hash-table recreation!
      */
-    public ReusableLinkedHashtable<K, V> insert(K key, V value) {
-        return insertAtPos(~getPos(key), key, value);
+    public ReusableLinkedHashtable<K, V> insertNullable(@Nullable K key, @Nullable V value) {
+        if (key == null) {
+            throw new IllegalArgumentException("Null keys are not supported");
         }
+        return insert(this.myStrategy.hashCode(key), key, value);
+    }
 
     /**
      * Must be called only from hash-table recreation!
      */
-    public ReusableLinkedHashtable<K, V> insertAtPos(int insertPos, K key, V value) {
+    public ReusableLinkedHashtable<K, V> insert(int hashCode, @Nonnull K key, @Nullable V value) {
+        return insertAtPos(~getPos(hashCode, key), hashCode, key, value);
+    }
+
+    /**
+     * Must be called only from hash-table recreation!
+     */
+    public ReusableLinkedHashtable<K, V> insertByIdentity(int hashCode, @Nonnull K key, @Nullable V value) {
+        return insertAtPos(~getPosByIdentity(hashCode, key), hashCode, key, value);
+    }
+
+    /**
+     * Must be called only from hash-table recreation!
+     */
+    public ReusableLinkedHashtable<K, V> insertAtPos(int insertPos, int hashCode, @Nonnull K key, @Nullable V value) {
         myData[insertPos] = key;
         myData[insertPos + 1] = value;
-        int endPosShifted = myEndPos >> 1;
-        if (endPosShifted >= 0) {
-            int startPos = myNextPos[endPosShifted];
-            myNextPos[endPosShifted] = insertPos;
-            myNextPos[insertPos >>> 1] = startPos;
+        if (myEndPos >= 0) {
+            int startPos = myNextPosAndHash[myEndPos];
+            myNextPosAndHash[myEndPos] = insertPos;
+            myNextPosAndHash[insertPos] = startPos;
         }
         else {
-            myNextPos[insertPos >>> 1] = insertPos;
+            myNextPosAndHash[insertPos] = insertPos;
         }
+        myNextPosAndHash[insertPos + 1] = hashCode;
         myEndPos = insertPos;
         mySize++;
         return this;
@@ -268,15 +334,15 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
             // Find previous entry in the list to remove link to the duplicated key. Move this entry to the end of the list.
             int prevPos = startPos;
             while (true) {
-                int pos = myNextPos[prevPos >>> 1];
+                int pos = myNextPosAndHash[prevPos];
                 if (pos == keyPos) {
-                    myNextPos[prevPos >>> 1] = myNextPos[pos >>> 1];
+                    myNextPosAndHash[prevPos] = myNextPosAndHash[pos];
                     break;
                 }
                 prevPos = pos;
             }
-            myNextPos[myEndPos >>> 1] = keyPos;
-            myNextPos[keyPos >>> 1] = startPos;
+            myNextPosAndHash[myEndPos] = keyPos;
+            myNextPosAndHash[keyPos] = startPos;
         }
         myEndPos = keyPos;
 
@@ -293,12 +359,12 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
      */
     public void removeRange(int startPosExcluding, int endPosIncluding) {
         for (int cleaningPos = startPosExcluding, nextCleaningPos; cleaningPos != endPosIncluding; cleaningPos = nextCleaningPos) {
-            nextCleaningPos = myNextPos[cleaningPos >>> 1];
+            nextCleaningPos = myNextPosAndHash[cleaningPos];
             myData[nextCleaningPos] = null;
             myData[nextCleaningPos + 1] = null;
             mySize--;
         }
-        myNextPos[startPosExcluding >>> 1] = myNextPos[endPosIncluding >>> 1];
+        myNextPosAndHash[startPosExcluding] = myNextPosAndHash[endPosIncluding];
     }
 
     /**
@@ -311,7 +377,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     public boolean isInList(ReusableLinkedHashtableRange range, int searchPos) {
         int startPos = range.getStartPos();
         if (startPos >= 0) {
-            for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+            for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
                 if (searchPos == pos) {
                     return true;
                 }
@@ -333,7 +399,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     public boolean isValueInList(ReusableLinkedHashtableRange range, Object value) {
         int startPos = range.getStartPos();
         if (startPos >= 0) {
-            for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+            for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
                 if (myData[pos] != null && Objects.equals(myData[pos + 1], value)) {
                     return true;
                 }
@@ -357,7 +423,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     public int getPosBefore(ReusableLinkedHashtableRange range, int targetPos) {
         int newEndPos = range.getStartPos();
         while (true) {
-            int nextPos = myNextPos[newEndPos >>> 1];
+            int nextPos = myNextPosAndHash[newEndPos];
             if (nextPos == targetPos) {
                 return newEndPos;
             }
@@ -366,13 +432,13 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     }
 
     public int getPosAfter(int targetPos) {
-        return myNextPos[targetPos >>> 1];
+        return myNextPosAndHash[targetPos];
     }
 
     @SuppressWarnings("unchecked")
     public void forEach(ReusableLinkedHashtableRange range, BiConsumer<? super K, ? super V> action) {
         if (mySize > 0) {
-            for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+            for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
                 action.accept((K)myData[pos], (V)myData[pos + 1]);
                 if (pos == endPos) {
                     break;
@@ -384,7 +450,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     @SuppressWarnings("unchecked")
     public void forEachKey(ReusableLinkedHashtableRange range, Consumer<? super K> action) {
         if (mySize > 0) {
-            for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+            for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
                 action.accept((K)myData[pos]);
                 if (pos == endPos) {
                     break;
@@ -396,7 +462,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     @SuppressWarnings("unchecked")
     public <V> void forEachValue(ReusableLinkedHashtableRange range, Consumer<? super V> action) {
         if (mySize > 0) {
-            for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+            for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
                 action.accept((V)myData[pos + 1]);
                 if (pos == endPos) {
                     break;
