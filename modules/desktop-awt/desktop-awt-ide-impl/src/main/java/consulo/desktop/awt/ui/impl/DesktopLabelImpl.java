@@ -104,6 +104,8 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
 
         public void setTextValue(@Nonnull LocalizeValue textValue) {
             myTextValue = textValue;
+
+            updateText();
         }
 
         private void updateForegroundColor() {

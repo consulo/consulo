@@ -17,6 +17,7 @@ package consulo.web.internal.ui;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
@@ -31,57 +32,63 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-18
  */
 public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin> implements Button {
-  public class Vaadin extends com.vaadin.flow.component.button.Button implements FromVaadinComponentWrapper {
+
+    public class Vaadin extends com.vaadin.flow.component.button.Button implements FromVaadinComponentWrapper {
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebButtonImpl.this;
+        }
+    }
+
+    private LocalizeValue myTextValue = LocalizeValue.empty();
+
+    public WebButtonImpl(LocalizeValue text) {
+        Vaadin component = toVaadinComponent();
+
+        component.addClickListener(event -> {
+            getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this));
+        });
+
+        myTextValue = text;
+        component.setText(text.get());
+    }
+
+    @Override
+    public void addStyle(ButtonStyle style) {
+
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getText() {
+        return myTextValue;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setText(@Nonnull LocalizeValue text) {
+        myTextValue = text;
+        toVaadinComponent().setText(text.get());
+    }
+
+    @Nonnull
+    @Override
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setIcon(@Nullable Image image) {
+        // TODO  toVaadinComponent().setIcon(image);
+    }
+
     @Nullable
     @Override
-    public Component toUIComponent() {
-      return WebButtonImpl.this;
+    public Image getIcon() {
+        // TODO
+        return null;
+        //return toVaadinComponent().myImage;
     }
-  }
-
-  private LocalizeValue myTextValue = LocalizeValue.empty();
-
-  public WebButtonImpl(LocalizeValue text) {
-    Vaadin component = toVaadinComponent();
-
-    component.addClickListener(event -> {
-      getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this));
-    });
-
-    myTextValue = text;
-    component.setText(text.get());
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getText() {
-    return myTextValue;
-  }
-                                                                                                     
-  @RequiredUIAccess
-  @Override
-  public void setText(@Nonnull LocalizeValue text) {
-    myTextValue = text;
-    toVaadinComponent().setText(text.get());
-  }
-
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setIcon(@Nullable Image image) {
-   // TODO  toVaadinComponent().setIcon(image);
-  }
-
-  @Nullable
-  @Override
-  public Image getIcon() {
-    // TODO
-    return null;
-    //return toVaadinComponent().myImage;
-  }
 }

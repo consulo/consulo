@@ -17,6 +17,7 @@ package consulo.desktop.swt.ui.impl;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.image.Image;
@@ -34,50 +35,55 @@ import java.util.Objects;
  * @since 29/04/2021
  */
 public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.widgets.Button> implements Button {
-  private LocalizeValue myText = LocalizeValue.of();
+    private LocalizeValue myText = LocalizeValue.of();
 
-  public DesktopSwtButtonImpl(LocalizeValue text) {
-    myText = Objects.requireNonNull(text);
-  }
+    public DesktopSwtButtonImpl(LocalizeValue text) {
+        myText = Objects.requireNonNull(text);
+    }
 
-  @Override
-  protected org.eclipse.swt.widgets.Button createSWT(Composite parent) {
-    return new org.eclipse.swt.widgets.Button(parent, SWT.NONE);
-  }
+    @Override
+    protected org.eclipse.swt.widgets.Button createSWT(Composite parent) {
+        return new org.eclipse.swt.widgets.Button(parent, SWT.NONE);
+    }
 
-  @Override
-  protected void initialize(org.eclipse.swt.widgets.Button component) {
-    component.addSelectionListener(new SelectionAdapter() {
-      @Override
-      @RequiredUIAccess
-      public void widgetSelected(SelectionEvent e) {
-        getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(DesktopSwtButtonImpl.this));
-      }
-    });
-    component.setText(myText.get());
-  }
+    @Override
+    protected void initialize(org.eclipse.swt.widgets.Button component) {
+        component.addSelectionListener(new SelectionAdapter() {
+            @Override
+            @RequiredUIAccess
+            public void widgetSelected(SelectionEvent e) {
+                getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(DesktopSwtButtonImpl.this));
+            }
+        });
+        component.setText(myText.get());
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getText() {
-    return myText;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getText() {
+        return myText;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setText(@Nonnull LocalizeValue text) {
-    myText = text;
-  }
+    @RequiredUIAccess
+    @Override
+    public void setText(@Nonnull LocalizeValue text) {
+        myText = text;
+    }
 
-  @Nullable
-  @Override
-  public Image getIcon() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return null;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setIcon(@Nullable Image image) {
+    @RequiredUIAccess
+    @Override
+    public void setIcon(@Nullable Image image) {
 
-  }
+    }
+
+    @Override
+    public void addStyle(ButtonStyle style) {
+
+    }
 }
