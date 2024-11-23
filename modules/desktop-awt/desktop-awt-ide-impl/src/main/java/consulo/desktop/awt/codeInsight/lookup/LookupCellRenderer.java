@@ -48,7 +48,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -111,7 +110,6 @@ public class LookupCellRenderer implements ListCellRenderer {
     myNameComponent.setOpaque(false);
     myNameComponent.setIconTextGap(JBUIScale.scale(4));
     myNameComponent.setIpad(JBUI.insetsLeft(1));
-    myNameComponent.setMyBorder(null);
 
     myTailComponent = new MySimpleColoredComponent();
     myTailComponent.setOpaque(false);
@@ -239,11 +237,6 @@ public class LookupCellRenderer implements ListCellRenderer {
   private static int calcSpacing(@Nonnull SimpleColoredComponent component, @Nullable Image icon) {
     Insets iPad = component.getIpad();
     int width = iPad.left + iPad.right;
-    Border myBorder = component.getMyBorder();
-    if (myBorder != null) {
-      Insets insets = myBorder.getBorderInsets(component);
-      width += insets.left + insets.right;
-    }
     Insets insets = component.getInsets();
     if (insets != null) {
       width += insets.left + insets.right;
@@ -597,15 +590,11 @@ public class LookupCellRenderer implements ListCellRenderer {
 
     public LookupPanel() {
       super(new BorderLayout());
+      setBorder(JBUI.Borders.empty(4));
     }
 
     public void setUpdateExtender(boolean updateExtender) {
       myUpdateExtender = updateExtender;
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-      return UIUtil.updateListRowHeight(super.getPreferredSize());
     }
 
     @Override
