@@ -4,30 +4,53 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
-import consulo.ui.ex.popup.IconButton;
-import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
-import consulo.util.collection.JBIterable;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
+import net.miginfocom.layout.AC;
+import net.miginfocom.layout.CC;
+import net.miginfocom.layout.LC;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 public class InlineProgressIndicator extends ProgressIndicatorBase implements Disposable {
 
-    protected final TextPanel myText = new TextPanel();
-    private final TextPanel myText2 = new TextPanel();
-    private final JBIterable<ProgressButton> myEastButtons;
+    private final ActionToolbar myToolbar;
+
+    private class CancelAction extends DumbAwareAction {
+        public CancelAction(LocalizeValue text, LocalizeValue description) {
+            super(text, description, PlatformIconGroup.actionsCancel());
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            cancelRequest();
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+            e.getPresentation().setEnabledAndVisible(myInfo != null && myInfo.isCancellable());
+        }
+    }
+
+    protected final JLabel myText = new JLabel();
+    private final JLabel myText2 = new JLabel();
 
     protected JProgressBar myProgress;
 
@@ -36,9 +59,10 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     private final boolean myCompact;
     private TaskInfo myInfo;
 
-    private final TextPanel myProcessName = new TextPanel();
+    private final JLabel myProcessName = new JLabel();
     private boolean myDisposed;
 
+    @RequiredUIAccess
     public InlineProgressIndicator(boolean compact, @Nonnull TaskInfo processInfo) {
         myCompact = compact;
         myInfo = processInfo;
@@ -46,18 +70,29 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         myProgress = new JProgressBar(SwingConstants.HORIZONTAL);
         myProgress.setStringPainted(false);
 
-        myComponent = new MyComponent(compact, myProcessName);
-        myEastButtons = createEastButtons();
+        List<AnAction> actions = createEastButtons();
+
+        ActionGroup group = ActionGroup.newImmutableBuilder().addAll(actions).build();
+        myToolbar = ActionManager.getInstance().createActionToolbar("InlineProgressBar", group, true);
+        myToolbar.setTargetComponent(myComponent);
+        myToolbar.updateActionsImmediately();
+        myToolbar.setMiniMode(true);
+
+        JComponent toolbar = myToolbar.getComponent();
+
         if (myCompact) {
-            myComponent.setLayout(new BorderLayout(2, 0));
-            createCompactTextAndProgress();
-            myComponent.add(createButtonPanel(myEastButtons.map(b -> b.button)), BorderLayout.EAST);
-            myComponent.setToolTipText(
-                processInfo.getTitle() + ". " + IdeLocalize.progressTextClicktoviewprogresswindow()
-            );
+            myComponent = new JPanel(new HorizontalLayout(JBUI.scale(5), SwingConstants.CENTER));
+
+            myComponent.add(myText);
+            myComponent.add(myProgress);
+            myComponent.add(toolbar);
+
+            myComponent.setToolTipText(processInfo.getTitle() + ". " + IdeLocalize.progressTextClicktoviewprogresswindow());
         }
         else {
+            myComponent = new MyComponent(myProcessName);
             myComponent.setLayout(new BorderLayout());
+
             myProcessName.setText(processInfo.getTitle());
             myComponent.add(myProcessName, BorderLayout.NORTH);
             myProcessName.setForeground(UIUtil.getPanelBackground().brighter().brighter());
@@ -67,63 +102,28 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
             content.setBorder(JBUI.Borders.empty(2, 2, 2, myInfo.isCancellable() ? 2 : 4));
             myComponent.add(content, BorderLayout.CENTER);
 
-            content.add(createButtonPanel(myEastButtons.map(b -> withBorder(b.button))), BorderLayout.EAST);
+            content.add(toolbar, BorderLayout.EAST);
             content.add(myText, BorderLayout.NORTH);
-            content.add(myProgress, BorderLayout.CENTER);
+
+            // remove expanding
+            NonOpaquePanel progressWrapper = new NonOpaquePanel(new MigLayout(new LC()
+                .fillX()
+                .alignY("center")
+                .insets("")
+                .noVisualPadding(),
+                new AC().gap("0")));
+            progressWrapper.add(myProgress, new CC().growX().alignY("center"));
+
+            content.add(progressWrapper, BorderLayout.CENTER);
             content.add(myText2, BorderLayout.SOUTH);
 
             myComponent.setBorder(JBUI.Borders.empty(2));
         }
         UIUtil.uiTraverser(myComponent).forEach(o -> ((JComponent) o).setOpaque(false));
-
-        if (!myCompact) {
-            myProcessName.recomputeSize();
-            myText.recomputeSize();
-            myText2.recomputeSize();
-        }
     }
 
-    protected void createCompactTextAndProgress() {
-        JPanel textAndProgress = new NonOpaquePanel(new BorderLayout());
-        textAndProgress.add(myText, BorderLayout.CENTER);
-
-        final NonOpaquePanel progressWrapper = new NonOpaquePanel(new BorderLayout());
-        progressWrapper.setBorder(JBUI.Borders.empty(0, 4));
-        progressWrapper.add(myProgress, BorderLayout.CENTER);
-
-        textAndProgress.add(progressWrapper, BorderLayout.EAST);
-        myComponent.add(textAndProgress, BorderLayout.CENTER);
-    }
-
-    public static JPanel createButtonPanel(Iterable<? extends JComponent> components) {
-        JPanel iconsPanel = new NonOpaquePanel(new GridBagLayout());
-        GridBag gb = new GridBag().setDefaultFill(GridBagConstraints.BOTH);
-        for (JComponent component : components) {
-            iconsPanel.add(component, gb.next());
-        }
-        return iconsPanel;
-    }
-
-    private static Wrapper withBorder(InplaceButton button) {
-        Wrapper wrapper = new Wrapper(button);
-        wrapper.setBorder(JBUI.Borders.empty(0, 3, 0, 2));
-        return wrapper;
-    }
-
-    public JBIterable<ProgressButton> createEastButtons() {
-        return JBIterable.of(createCancelButton());
-    }
-
-    private ProgressButton createCancelButton() {
-        Image icon = myCompact ? PlatformIconGroup.processStopsmall() : PlatformIconGroup.processStop();
-        Image hoveredIcon = myCompact ? PlatformIconGroup.processStopsmallhovered() : PlatformIconGroup.processStopsmallhovered();
-
-        InplaceButton cancelButton =
-            new InplaceButton(new IconButton(myInfo.getCancelTooltipText(), icon, hoveredIcon), e -> cancelRequest()).setFillBg(false);
-
-        cancelButton.setVisible(myInfo.isCancellable());
-
-        return new ProgressButton(cancelButton, () -> cancelButton.setPainting(!isStopping()));
+    public List<AnAction> createEastButtons() {
+        return List.of(new CancelAction(myInfo.getCancelTextValue(), myInfo.getCancelTooltipTextValue()));
     }
 
     protected void cancelRequest() {
@@ -181,7 +181,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
             myProgress.setEnabled(true);
         }
 
-        myEastButtons.forEach(b -> b.updateAction.run());
+        myToolbar.updateActionsImmediately();
     }
 
     protected boolean isPaintingIndeterminate() {
@@ -222,11 +222,9 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     }
 
     private class MyComponent extends JPanel {
-        private final boolean myCompact;
         private final JComponent myProcessName;
 
-        private MyComponent(final boolean compact, final JComponent processName) {
-            myCompact = compact;
+        private MyComponent(final JComponent processName) {
             myProcessName = processName;
             addMouseListener(new MouseAdapter() {
                 @Override
@@ -240,11 +238,6 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
 
         @Override
         protected void paintComponent(final Graphics g) {
-            if (myCompact) {
-                super.paintComponent(g);
-                return;
-            }
-
             final GraphicsConfig c = GraphicsUtil.setupAAPainting(g);
             UISettingsUtil.setupAntialiasing(g);
 
@@ -290,10 +283,6 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         myComponent.removeAll();
 
         myComponent = null;
-
-        if (myProgress != null) {
-            UIUtil.disposeProgress(myProgress);
-        }
         myProgress = null;
         myInfo = null;
     }

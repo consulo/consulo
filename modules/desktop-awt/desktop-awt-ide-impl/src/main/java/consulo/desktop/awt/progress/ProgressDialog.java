@@ -146,7 +146,6 @@ public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDi
 
   @Override
   public void dispose() {
-    UIUtil.disposeProgress(myProgressBar);
     UIUtil.dispose(myTitlePanel);
     UIUtil.dispose(myBackgroundButton);
     UIUtil.dispose(myCancelButton);

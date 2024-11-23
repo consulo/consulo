@@ -181,6 +181,18 @@ public abstract class Task implements TaskInfo, Progressive {
     }
 
     @Nonnull
+    @Override
+    public LocalizeValue getCancelTextValue() {
+        return myCancelText;
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getCancelTooltipTextValue() {
+        return myCancelTooltipText;
+    }
+
+    @Nonnull
     public final Task setCancelText(LocalizeValue cancelText) {
         myCancelText = cancelText;
         return this;

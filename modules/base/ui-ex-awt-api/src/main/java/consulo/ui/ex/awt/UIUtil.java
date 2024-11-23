@@ -2573,14 +2573,6 @@ public class UIUtil {
         }
     }
 
-    public static void disposeProgress(final JProgressBar progress) {
-        if (!isUnderNativeMacLookAndFeel()) {
-            return;
-        }
-
-        SwingUtilities.invokeLater(() -> progress.setUI(null));
-    }
-
     @Nullable
     public static Component findUltimateParent(Component c) {
         if (c == null) {
