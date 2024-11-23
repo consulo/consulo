@@ -352,6 +352,11 @@ class LookupUi {
         protected Image getTemplateIcon() {
             return PlatformIconGroup.actionsMorevertical();
         }
+
+        @Override
+        public boolean showBelowArrow() {
+            return false;
+        }
     }
 
     private class ChangeSortingAction extends DumbAwareAction implements HintManagerImpl.ActionToIgnore {

@@ -910,22 +910,19 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         ) {
             if (value == SearchListModel.MORE_ELEMENT) {
                 Component component = myMoreRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                component.setPreferredSize(UIUtil.updateListRowHeight(component.getPreferredSize()));
+                ((JComponent) component).setBorder(JBCurrentTheme.BigPopup.listCellBorder());
                 return component;
             }
 
             SearchEverywhereContributor<Object> contributor = myListModel.getContributorForIndex(index);
-            Component component = SearchEverywhereClassifier.EP_Manager
+            JComponent component = (JComponent) SearchEverywhereClassifier.EP_Manager
                 .getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (component == null) {
-                component = contributor.getElementsRenderer().getListCellRendererComponent(list, value, index, isSelected, true);
+                component = (JComponent) contributor.getElementsRenderer().getListCellRendererComponent(list, value, index, isSelected, true);
             }
 
-            if (component instanceof JComponent jComponent) {
-                jComponent.setBorder(JBUI.Borders.empty(1, 2));
-            }
             GuiUtils.targetToDevice(component, list);
-            component.setPreferredSize(UIUtil.updateListRowHeight(component.getPreferredSize()));
+            component.setBorder(JBCurrentTheme.BigPopup.listCellBorder());
             if (isAllTabSelected() && myListModel.isGroupFirstItem(index)) {
                 component = myGroupTitleRenderer.withDisplayedData(contributor.getFullGroupName(), component);
             }

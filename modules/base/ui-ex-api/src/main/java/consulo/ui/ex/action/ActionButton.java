@@ -31,6 +31,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 22-Jul-22
  */
+@Deprecated
 public interface ActionButton extends AnActionHolder, ActionButtonComponent {
     /**
      * By default button representing popup action group displays 'dropdown' icon.

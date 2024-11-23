@@ -3872,8 +3872,10 @@ public class UIUtil {
     }
 
     @Nonnull
+    @Deprecated
+    @DeprecationInfo("See consulo.ui.ex.awt.JBCurrentTheme.BigPopup#listCellBorder()")
     public static Dimension updateListRowHeight(@Nonnull Dimension size) {
-        //size.height = Math.max(size.height, UIManager.getInt("List.rowHeight"));
+        size.height = Math.max(size.height, UIManager.getInt("List.rowHeight"));
         return size;
     }
 

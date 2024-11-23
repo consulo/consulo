@@ -615,6 +615,11 @@ public class JBCurrentTheme {
     public static Color advertiserBackground() {
       return JBColor.namedColor("SearchEverywhere.Advertiser.background", 0xf2f2f2);
     }
+
+    @Nonnull
+    public static Border listCellBorder() {
+        return JBUI.Borders.empty(4);
+    }
   }
 
   public static class Popup {

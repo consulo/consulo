@@ -90,12 +90,7 @@ public abstract class GroupedElementsRenderer {
     protected void layout() {
       myRendererComponent.add(mySeparatorComponent, BorderLayout.NORTH);
 
-      JComponent centerComponent = new NonOpaquePanel(myComponent) {
-        @Override
-        public Dimension getPreferredSize() {
-          return UIUtil.updateListRowHeight(super.getPreferredSize());
-        }
-      };
+      JComponent centerComponent = new NonOpaquePanel(myComponent);
 
       myRendererComponent.add(centerComponent, BorderLayout.CENTER);
     }

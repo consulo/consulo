@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.TooltipDescriptionProvider;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.action.CustomComponentAction;
@@ -136,24 +137,42 @@ public class ToolbarButtonEngine {
 
     public void updateIcon() {
         Image icon = myPresentation.getIcon();
-        myButton.setIcon(TargetAWT.to(icon));
+        myButton.setIcon(TargetAWT.to(wrapWithArrow(icon)));
 
         Image disabledIcon;
         if (myPresentation.getDisabledIcon() != null) { // set disabled icon if it is specified
-            disabledIcon = myPresentation.getDisabledIcon();
+            disabledIcon = wrapWithArrow(myPresentation.getDisabledIcon());
         }
         else {
-            disabledIcon = icon == null ? null : ImageEffects.grayed(icon);
+            Image original = wrapWithArrow(icon);
+            disabledIcon = original == null ? null : ImageEffects.grayed(original);
         }
 
         myButton.setDisabledIcon(TargetAWT.to(disabledIcon));
 
-        Image selectedIcon = myPresentation.getSelectedIcon();
+        Image selectedIcon = wrapWithArrow(myPresentation.getSelectedIcon());
         myButton.setSelectedIcon(TargetAWT.to(selectedIcon));
 
-        Image hoveredIcon = myPresentation.getHoveredIcon();
+        Image hoveredIcon = wrapWithArrow(myPresentation.getHoveredIcon());
         myButton.setRolloverEnabled(hoveredIcon != null);
         myButton.setRolloverIcon(TargetAWT.to(hoveredIcon));
+    }
+
+    @Nullable
+    private Image wrapWithArrow(@Nullable Image icon) {
+        if (!(myIdeAction instanceof ActionGroup group)) {
+            return icon;
+        }
+
+        if (!group.showBelowArrow()) {
+            return icon;
+        }
+
+        if (icon == null) {
+            return null;
+        }
+
+        return ImageEffects.layered(icon, PlatformIconGroup.generalDropdown());
     }
 
     protected void updateTextAndMnemonic(@Nonnull LocalizeValue localizeValue) {
