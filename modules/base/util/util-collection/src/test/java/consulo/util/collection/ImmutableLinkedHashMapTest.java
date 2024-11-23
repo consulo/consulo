@@ -15,6 +15,7 @@
  */
 package consulo.util.collection;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -205,7 +206,6 @@ public class ImmutableLinkedHashMapTest {
                 .extractingByKey(k0).isEqualTo(v0);
             assertThat(map2)
                 .extractingByKey(k1).isEqualTo(v1);
-
         }
     }
 
@@ -449,13 +449,42 @@ public class ImmutableLinkedHashMapTest {
     }
 
     @Test
-    public void fromMap() {
+    public void testFromMap() {
         ImmutableLinkedHashMap<Integer, String> map = create(10);
         assertThat(map)
             .isSameAs(ImmutableLinkedHashMap.fromMap(map));
 
         assertThat(ImmutableLinkedHashMap.fromMap(Map.of()))
             .isSameAs(ImmutableLinkedHashMap.empty());
+    }
+
+    @Test
+    public void testDetach() {
+        ImmutableLinkedHashMap<Integer, String> masterMap = create(10);
+        ImmutableLinkedHashMap<Integer, String> satelliteMap = masterMap.without(0);
+
+        String masterMapString = masterMap.toString();
+        String satelliteMapString = satelliteMap.toString();
+
+        masterMap.detachFromTable();
+        satelliteMap.detachFromTable();
+
+        assertThat(masterMap)
+            .hasToString(masterMapString);
+
+        assertThat(satelliteMap)
+            .hasToString(satelliteMapString);
+    }
+
+    @Test
+    @Disabled
+    @SuppressWarnings({"InfiniteLoopStatement", "unused"})
+    public void testGC() {
+        ImmutableLinkedHashMap<Integer, String> map = create(10000).without(0);
+
+        while (true) {
+            int[] filler = new int[10000];
+        }
     }
 
     private static ImmutableLinkedHashMap<Integer, String> create(int size) {

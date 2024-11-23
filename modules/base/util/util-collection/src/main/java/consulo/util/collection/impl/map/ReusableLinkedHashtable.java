@@ -1,0 +1,521 @@
+/*
+ * Copyright 2013-2024 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.util.collection.impl.map;
+
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.ImmutableLinkedHashMap;
+import jakarta.annotation.Nonnull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+/**
+ * <p>Utility class which stores key/value pairs in open-addressed hash-table with linear probing and links them in a singly linked list
+ * in the insertion order. So during iteration these key/value entries may be returned in the same order they were inserted.
+ * Custom equals/hashCode strategy is supported.</p>
+ *
+ * <p>Hash-table is created 25% full and grows up to 50% full, then it needs to be recreated. Filling open-addressed hash-table
+ * above 50% limit may create long hash collisions and is undesirable. Linked list of entries is wrapped, the last entry
+ * references the first entry in the list, so only end list position is stored. Position is an index of key in data array
+ * (to obtain index in next position array, position must be divided by 2).</p>
+ *
+ * <p>This class is intended to work in pair with {@link ImmutableLinkedHashMap}. There may be several {@code ImmutableLinkedHashMap}s
+ * pointing to the same {@code ReusableLinkedHashtable}. Only one of {@code ImmutableLinkedHashMap}s would have all the key/value
+ * entries of the whole hash-table. This map is called master-map. Other maps are sattelites.</p>
+ *
+ * <p>If master-map is garbage-collected but some of sattelite maps remain in memory, some of the key/value entries become unreachable
+ * but still referenced from hash-table. This creates memory leak and one of this hash-table purposes is to resolve such leaks.
+ * Each map referencing this hash-table must call {@link #link(ReusableLinkedHashtableUser)} method providing an instance implementing
+ * {@link ReusableLinkedHashtableUser} interface. This instance must answer if it is a master map and be able to detach
+ * from the hash-table via creating new one containing only the key/value enries owned by the map.</p>
+ *
+ * <p>Links to maps using this hash-table are stored in {@code WeakReference}s, so maps are free to be garbage-collected.
+ * But when GC collects such a map it notifies hash-table via thread which reads {@link ReferenceQueue} connected to
+ * {@link WeakReference}. So hash-table can check if master-map referencing it is still present or the master-map was garbage-collected.
+ * If there's no master-map present, hash-table detaches all the remaining sattelite maps preventing memory leaks.</p>
+ *
+ * @see ImmutableLinkedHashMap
+ * @see HashingStrategy
+ * @author UNV
+ * @since 2024-11-20
+ */
+public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRange {
+    @Nonnull
+    protected static final ReferenceQueue<ReusableLinkedHashtableUser> QUEUE = new ReferenceQueue<>();
+
+    protected static final ReusableLinkedHashtable<Object, Object> EMPTY =
+        new ReusableLinkedHashtable<>(HashingStrategy.canonical(), ArrayUtil.EMPTY_OBJECT_ARRAY, ArrayUtil.EMPTY_INT_ARRAY, 0);
+
+    @Nonnull
+    protected final HashingStrategy<K> myStrategy;
+    @Nonnull
+    protected final Object[] myData;
+    @Nonnull
+    protected final int[] myNextPos;
+    private int mySize, myEndPos = -1;
+
+    private MapLink myMapLink = null;
+
+    public ReusableLinkedHashtable(@Nonnull HashingStrategy<K> strategy, @Nonnull Object[] data, @Nonnull int[] nextPos, int size) {
+        myStrategy = strategy;
+        myData = data;
+        myNextPos = nextPos;
+        mySize = size;
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public static <K, V> ReusableLinkedHashtable<K, V> empty() {
+        return (ReusableLinkedHashtable<K, V>)EMPTY;
+    }
+
+    @Nonnull
+    public static <K, V> ReusableLinkedHashtable<K, V> empty(HashingStrategy<K> strategy) {
+        return strategy == HashingStrategy.canonical()
+            ? empty()
+            : new ReusableLinkedHashtable<>(strategy, ArrayUtil.EMPTY_OBJECT_ARRAY, ArrayUtil.EMPTY_INT_ARRAY, 0);
+    }
+
+    public static <K, V> ReusableLinkedHashtable<K, V> blankOfSize(HashingStrategy<K> strategy, int size) {
+        return size == 0 ? empty(strategy) : new ReusableLinkedHashtable<>(strategy, new Object[size << 3], new int[size << 2], 0);
+        }
+
+    public ReusableLinkedHashtable<K, V> blankOfSize(int size) {
+        return blankOfSize(myStrategy, size);
+    }
+
+    @SuppressWarnings("unchecked")
+    public ReusableLinkedHashtable<K, V> copyOfSize(int size) {
+        ReusableLinkedHashtable<K, V> newTable = blankOfSize(size);
+        if (mySize > 0) {
+            for (int pos = getStartPos(), endPos = myEndPos; ; pos = myNextPos[pos >>> 1]) {
+                newTable.insert((K)myData[pos], (V)myData[pos + 1]);
+                if (pos == endPos) {
+                    break;
+                }
+            }
+        }
+        return newTable;
+    }
+
+    public ReusableLinkedHashtable<K, V> copyRange(ReusableLinkedHashtableRange range) {
+        return copyRangeWithoutPos(range, -1);
+    }
+
+    public ReusableLinkedHashtable<K, V> copyRangeWithoutPos(ReusableLinkedHashtableRange range, int excludePos) {
+        int startPos = range.getStartPos(), endPos = range.getEndPos();
+        ReusableLinkedHashtable<K, V>
+            newTable = new ReusableLinkedHashtable<>(myStrategy, new Object[myData.length], new int[myNextPos.length], 0);
+        int newSize = 0, newEndPos = endPos;
+        for (int pos = startPos; ; pos = myNextPos[pos >>> 1]) {
+            if (pos != excludePos) {
+                newTable.myData[pos] = myData[pos];
+                newTable.myData[pos + 1] = myData[pos + 1];
+                newTable.myNextPos[newEndPos >>> 1] = pos;
+                newEndPos = pos;
+                newSize++;
+            }
+            if (pos == endPos) {
+                break;
+            }
+        }
+        newTable.mySize = newSize;
+        newTable.myEndPos = newEndPos;
+        return newTable;
+    }
+
+    @SuppressWarnings("unchecked")
+    public ReusableLinkedHashtable<K, V> copyRangeOptimized(ReusableLinkedHashtableRange range) {
+        ReusableLinkedHashtable<K, V> newTable =
+            new ReusableLinkedHashtable<>(myStrategy, new Object[mySize << 2], new int[mySize << 1], 0);
+        int startPos = range.getStartPos();
+        if (startPos > 0) {
+            for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+                newTable.insert((K)myData[pos], (V)myData[pos + 1]);
+                if (pos == endPos) {
+                    break;
+                }
+            }
+        }
+        return newTable;
+    }
+
+    @Nonnull
+    public HashingStrategy<K> getStrategy() {
+        return myStrategy;
+    }
+
+    public int getSize() {
+        return mySize;
+    }
+
+    @Override
+    public int getStartPos() {
+        int endPos = myEndPos;
+        return endPos >= 0 ? myNextPos[endPos >>> 1] : -1;
+    }
+
+    @Override
+    public int getEndPos() {
+        return myEndPos;
+    }
+
+    /**
+     * <p>Upper size limit for current hash-table. Set to 50% to prevent long hash collisions.
+     * Hash-table must be recreated after reaching this limit.</p>
+     *
+     * @return Current hash-table filling limit before forcing hash-table recreation.
+     */
+    public int getMaxSafeSize() {
+        return myNextPos.length >> 1;
+    }
+
+    /**
+     * <p>Getting position of specified key in the hash-table either for getting existing key/value entry or inserting new one.</p>
+     *
+     * <p>Must be called only from synchronized block or during hash-table recreation!</p>
+     *
+     * @param key key to be found.
+     * @return Position of existing key or negation of position where this key may be inserted. Negated position is less than 0, so
+     * {@code getPos(key) < 0} means that there's no such element in the hash-table yet.
+     */
+    @SuppressWarnings("unchecked")
+    public int getPos(K key) {
+        Object[] data = myData;
+        int length = data.length;
+        if (length == 0) {
+            return -1;
+        }
+
+        HashingStrategy<K> strategy = myStrategy;
+        int pos = Math.floorMod(strategy.hashCode(key), length >>> 1) << 1;
+        while (true) {
+            K candidate = (K)data[pos];
+            if (candidate == null) {
+                return ~pos;
+            }
+            else if (strategy.equals(candidate, key)) {
+                return pos;
+            }
+            pos += 2;
+            if (pos == length) {
+                pos = 0;
+        }
+    }
+        }
+
+    /**
+     * Must be called only from hash-table recreation!
+     */
+    public ReusableLinkedHashtable<K, V> insert(K key, V value) {
+        return insertAtPos(~getPos(key), key, value);
+        }
+
+    /**
+     * Must be called only from hash-table recreation!
+     */
+    public ReusableLinkedHashtable<K, V> insertAtPos(int insertPos, K key, V value) {
+        myData[insertPos] = key;
+        myData[insertPos + 1] = value;
+        int endPosShifted = myEndPos >> 1;
+        if (endPosShifted >= 0) {
+            int startPos = myNextPos[endPosShifted];
+            myNextPos[endPosShifted] = insertPos;
+            myNextPos[insertPos >>> 1] = startPos;
+        }
+        else {
+            myNextPos[insertPos >>> 1] = insertPos;
+        }
+        myEndPos = insertPos;
+        mySize++;
+        return this;
+    }
+
+    /**
+     * <p>Sets entry value and moves the entry to the end of the list.</p>
+     *
+     * <p>Must be called only from hash-table recreation!</p>
+     */
+    public ReusableLinkedHashtable<K, V> setValueAtPos(int keyPos, V value) {
+        myData[keyPos + 1] = value;
+
+        if (mySize == 1 || myEndPos == keyPos) {
+            // Single-entry map or key hit was at the end of the list. No need to change linked list.
+            return this;
+        }
+
+        int startPos = getStartPos();
+        if (keyPos != startPos) {
+            // Find previous entry in the list to remove link to the duplicated key. Move this entry to the end of the list.
+            int prevPos = startPos;
+            while (true) {
+                int pos = myNextPos[prevPos >>> 1];
+                if (pos == keyPos) {
+                    myNextPos[prevPos >>> 1] = myNextPos[pos >>> 1];
+                    break;
+                }
+                prevPos = pos;
+            }
+            myNextPos[myEndPos >>> 1] = keyPos;
+            myNextPos[keyPos >>> 1] = startPos;
+        }
+        myEndPos = keyPos;
+
+        return this;
+    }
+
+    /**
+     * <p>Cleaning-up unsuccessful addition of new entries to the map.</p>
+     *
+     * <p>Must be called only from synchronized block!</p>
+     *
+     * @param startPosExcluding position of the last entry which must be left in the list.
+     * @param endPosIncluding   position until which entries must be removed, including this one.
+     */
+    public void removeRange(int startPosExcluding, int endPosIncluding) {
+        for (int cleaningPos = startPosExcluding, nextCleaningPos; cleaningPos != endPosIncluding; cleaningPos = nextCleaningPos) {
+            nextCleaningPos = myNextPos[cleaningPos >>> 1];
+            myData[nextCleaningPos] = null;
+            myData[nextCleaningPos + 1] = null;
+            mySize--;
+        }
+        myNextPos[startPosExcluding >>> 1] = myNextPos[endPosIncluding >>> 1];
+    }
+
+    /**
+     * <p>Checks if specified position is within specified entry list range.</p>
+     *
+     * @param range     key/value entry list range (start and end position) to be checked.
+     * @param searchPos position to be be searched within key/value entry list.
+     * @return {@code true} if position is present in the list, {@code false} otherwise.
+     */
+    public boolean isInList(ReusableLinkedHashtableRange range, int searchPos) {
+        int startPos = range.getStartPos();
+        if (startPos >= 0) {
+            for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+                if (searchPos == pos) {
+                    return true;
+                }
+                if (pos == endPos) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * <p>Checks if specified position is within specified entry list range.</p>
+     *
+     * @param range key/value entry list range (start and end position) to be checked.
+     * @param value value to be searched within this range.
+     * @return {@code true} if the value was found in the range, {@code false} otherwise.
+     */
+    public boolean isValueInList(ReusableLinkedHashtableRange range, Object value) {
+        int startPos = range.getStartPos();
+        if (startPos >= 0) {
+            for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+                if (myData[pos] != null && Objects.equals(myData[pos + 1], value)) {
+                    return true;
+                }
+                if (pos == endPos) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    public K getKey(int keyPos) {
+        return (K)myData[keyPos];
+    }
+
+    public Object getValue(int keyPos) {
+        return myData[keyPos + 1];
+    }
+
+    public int getPosBefore(ReusableLinkedHashtableRange range, int targetPos) {
+        int newEndPos = range.getStartPos();
+        while (true) {
+            int nextPos = myNextPos[newEndPos >>> 1];
+            if (nextPos == targetPos) {
+                return newEndPos;
+            }
+            newEndPos = nextPos;
+        }
+    }
+
+    public int getPosAfter(int targetPos) {
+        return myNextPos[targetPos >>> 1];
+    }
+
+    @SuppressWarnings("unchecked")
+    public void forEach(ReusableLinkedHashtableRange range, BiConsumer<? super K, ? super V> action) {
+        if (mySize > 0) {
+            for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+                action.accept((K)myData[pos], (V)myData[pos + 1]);
+                if (pos == endPos) {
+                    break;
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void forEachKey(ReusableLinkedHashtableRange range, Consumer<? super K> action) {
+        if (mySize > 0) {
+            for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+                action.accept((K)myData[pos]);
+                if (pos == endPos) {
+                    break;
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <V> void forEachValue(ReusableLinkedHashtableRange range, Consumer<? super V> action) {
+        if (mySize > 0) {
+            for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPos[pos >>> 1]) {
+                action.accept((V)myData[pos + 1]);
+                if (pos == endPos) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Links specified user of this hash-table via {@code WeakReference} to prevent memory-leaks.
+     *
+     * @param map user of this hash-table to be monitored to prevent memory-leaks.
+     */
+    public synchronized void link(ReusableLinkedHashtableUser map) {
+        myMapLink = new MapLink(map, myMapLink);
+    }
+
+    /**
+     * <p>Checks whether master-map referencing current hash-table is still active or was garbage-collected.</p>
+     *
+     * <p>Performs optimizations removing dead references from the list and moving reference to the master-map to the start of the list
+     * so further calls to this method would be more effective.</p>
+     *
+     * @return {@code true} if master-map still exists (and there's no memory leak), {@code false} otherwise.
+     */
+    protected synchronized boolean isLinkedToMasterMap() {
+        // Traverse list forward from marked point
+        if (myMapLink != null) {
+            for (MapLink link = myMapLink; ; link = link.myNext) {
+                ReusableLinkedHashtableUser map = link.get();
+                if (map != null && map.isMaster()) {
+                    // Move list start to the current map link to optimize further checks.
+                    myMapLink = link;
+                    return true;
+                }
+                if (link == myMapLink) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected void preventMemoryLeaks() {
+        if (isLinkedToMasterMap()) {
+            return;
+        }
+
+        for (MapLink link = myMapLink; link != null; link = link.myNext) {
+            ReusableLinkedHashtableUser map = link.get();
+            if (map != null) {
+                map.detachFromTable();
+            }
+        }
+
+        myMapLink = null;
+    }
+
+    private class MapLink extends WeakReference<ReusableLinkedHashtableUser> {
+        protected MapLink myPrevious, myNext;
+
+        protected MapLink(ReusableLinkedHashtableUser referent, MapLink next) {
+            super(referent, QUEUE);
+
+            synchronized (ReusableLinkedHashtable.this) {
+                if (next != null) {
+                    MapLink previous = next.myPrevious;
+                    myPrevious = previous;
+                    myNext = next;
+                    next.myPrevious = this;
+                    previous.myNext = this;
+                }
+                else {
+                    myPrevious = this;
+                    myNext = this;
+                }
+            }
+        }
+
+        private void removeFromList() {
+            synchronized (ReusableLinkedHashtable.this) {
+                if (myPrevious != this) {
+                    myPrevious.myNext = myNext;
+                }
+
+                if (myNext != this) {
+                    myNext.myPrevious = myPrevious;
+                }
+
+                if (myMapLink == this) {
+                    myMapLink = myNext != this ? myNext : null;
+                }
+            }
+        }
+
+        protected void preventMemoryLeaks() {
+            removeFromList();
+            ReusableLinkedHashtable.this.preventMemoryLeaks();
+        }
+    }
+
+    private static final Logger LOG = LoggerFactory.getLogger(ReusableLinkedHashtable.class);
+
+    static {
+        Thread.ofVirtual()
+            .name("ReusableLinkehHashtable memory leaks resolver")
+            .start(() -> {
+                //noinspection InfiniteLoopStatement
+                while (true) {
+                    try {
+                        ReusableLinkedHashtable.MapLink mapLink = (ReusableLinkedHashtable.MapLink)QUEUE.remove();
+                        mapLink.preventMemoryLeaks();
+                    }
+                    catch (InterruptedException ignore) {
+                    }
+                    catch (Exception e) {
+                        LOG.error("Exception while trying to prevent memory leaks", e);
+                    }
+                }
+            });
+    }
+}
