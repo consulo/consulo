@@ -16,19 +16,20 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.notification;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.errorTreeView.*;
-import consulo.util.lang.StringUtil;
-import consulo.navigation.Navigatable;
+import consulo.ide.impl.idea.ide.errorTreeView.CustomizeColoredTreeCellRendererReplacement;
+import consulo.ide.impl.idea.ide.errorTreeView.GroupingElement;
+import consulo.ide.impl.idea.ide.errorTreeView.NavigatableMessageElement;
+import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeRenderer;
 import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;
+import consulo.navigation.Navigatable;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.tree.LoadingNode;
-import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
+import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -142,14 +143,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
       }
     }
 
-    if (UIUtil.isUnderGTKLookAndFeel() ||
-        UIUtil.isUnderNimbusLookAndFeel() && selected && hasFocus ||
-        tree != null && WideSelectionTreeUI.isWideSelection(tree)) {
-      editorPane.setOpaque(false);
-    }
-    else {
-      editorPane.setOpaque(selected && hasFocus);
-    }
+    editorPane.setOpaque(false);
 
     htmlDocument.setCharacterAttributes(0, htmlDocument.getLength(), style, false);
   }

@@ -1568,10 +1568,6 @@ public class UIUtil {
         );
     }
 
-    public static boolean isFullRowSelectionLAF() {
-        return true;
-    }
-
     public static boolean isUnderNativeMacLookAndFeel() {
         return Platform.current().os().isMac();
     }
@@ -1590,10 +1586,6 @@ public class UIUtil {
 
     public static Insets getListViewportPadding() {
         return JBUI.insets(8, 0);
-    }
-
-    public static boolean isToUseDottedCellBorder() {
-        return !isUnderNativeMacLookAndFeel();
     }
 
     public static boolean isControlKeyDown(MouseEvent mouseEvent) {
