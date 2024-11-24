@@ -19,8 +19,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * @see consulo.ui.Hyperlink
+ *
  * @author kir
  */
+@Deprecated
 public class LinkLabel<T> extends JLabel {
   protected boolean myUnderline;
 
