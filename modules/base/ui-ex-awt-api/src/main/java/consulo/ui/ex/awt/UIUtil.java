@@ -72,7 +72,6 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.basic.BasicRadioButtonUI;
 import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
@@ -3850,8 +3849,6 @@ public class UIUtil {
     }
 
     @Nonnull
-    @Deprecated
-    @DeprecationInfo("See consulo.ui.ex.awt.JBCurrentTheme.BigPopup#listCellBorder()")
     public static Dimension updateListRowHeight(@Nonnull Dimension size) {
         size.height = Math.max(size.height, UIManager.getInt("List.rowHeight"));
         return size;

@@ -22,6 +22,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopup;
@@ -60,7 +61,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   @Nonnull
   @Override
   public JComponent createCustomComponent(Presentation presentation, String place) {
-    JPanel panel = new JPanel(new BorderLayout());
+    NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
     panel.setBorder(JBUI.Borders.empty(0, 4));
     ComboBoxButton button = createComboBoxButton(presentation);
     panel.add(button.getComponent(), BorderLayout.CENTER);

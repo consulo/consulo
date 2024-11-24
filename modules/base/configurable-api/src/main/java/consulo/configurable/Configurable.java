@@ -44,7 +44,7 @@ import jakarta.annotation.Nullable;
  * </ul>
  *
  * @see SearchableConfigurable
- * @see consulo.ide.impl.options.SimpleConfigurable
+ * @see SimpleConfigurable
  */
 public interface Configurable extends UnnamedConfigurable {
   Configurable[] EMPTY_ARRAY = new Configurable[0];
