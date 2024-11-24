@@ -123,8 +123,6 @@ public class FrameWrapper implements Disposable, DataProvider {
       ((JDialog)frame).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
-    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, ((RootPaneContainer)frame).getRootPane());
-
     final WindowAdapter focusListener = new WindowAdapter() {
       @Override
       public void windowOpened(WindowEvent e) {

@@ -679,8 +679,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
   @Override
   public void uiSettingsChanged(UISettings source) {
-    mySearch.setBackground(MorphColor.of(UIUtil::getTreeBackground));
-    myLeftSide.setBackground(MorphColor.of(UIUtil::getTreeBackground));
+    mySearch.setBackground(MorphColor.of(UIUtil::getPanelBackground));
+    myLeftSide.setBackground(MorphColor.of(UIUtil::getPanelBackground));
   }
 
   public JPanel getLeftSide() {

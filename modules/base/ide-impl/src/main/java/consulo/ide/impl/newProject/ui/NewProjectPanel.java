@@ -115,7 +115,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     myTree = new Tree(new AsyncTreeModel(new StructureTreeModel<>(new NewProjectTreeStructure(context), parentDisposable), parentDisposable));
     myTree.setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, null));
     myTree.setOpaque(false);
-    myTree.setBackground(MorphColor.of(UIUtil::getTreeBackground));
+    myTree.setBackground(MorphColor.of(UIUtil::getPanelBackground));
     myTree.setRootVisible(false);
     myTree.setRowHeight(JBUI.scale(24));
 

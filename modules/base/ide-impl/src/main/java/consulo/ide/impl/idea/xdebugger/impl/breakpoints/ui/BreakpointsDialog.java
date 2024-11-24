@@ -286,6 +286,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
               return enabled;
             }).
             setToolbarPosition(ActionToolbarPosition.TOP).
+            setToolbarBackgroundColor(UIUtil.getPanelBackground()).
             setToolbarBorder(IdeBorderFactory.createEmptyBorder());
 
     tree.setBorder(JBUI.Borders.empty());

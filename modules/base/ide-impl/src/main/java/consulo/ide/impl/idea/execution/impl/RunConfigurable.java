@@ -40,7 +40,6 @@ import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.config.StorageAccessors;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -52,7 +51,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.RowsDnDSupport;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
@@ -584,7 +582,7 @@ public class RunConfigurable extends BaseConfigurable {
       .setRemoveActionUpdater(removeAction)
       .setRemoveActionName(ExecutionLocalize.removeRunConfigurationActionName().get())
       .setPanelBorder(JBUI.Borders.empty())
-      .setToolbarBackgroundColor((MorphColor.of(UIUtil::getTreeBackground)))
+      .setToolbarBackgroundColor((MorphColor.of(UIUtil::getPanelBackground)))
       .setMoveUpAction(moveUpAction)
       .setMoveUpActionName(ExecutionLocalize.moveUpActionName().get())
       .setMoveUpActionUpdater(moveUpAction)

@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.util.NotNullProducer;
+import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -174,15 +175,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         });
 
         setBackground(MorphColor.ofWithoutCache(() -> {
-            if (!isActive()) {
-                return UIUtil.getPanelBackground();
-            }
-            
-            Color color = UIManager.getColor("TabbedPane.focusColor");
-            if (color == null) {
-                color = UIUtil.getPanelBackground();
-            }
-            return color;
+            return !isActive() ? UIUtil.getPanelBackground() : ToolwindowPaintUtil.getActiveToolWindowHeaderColor();
         }));
 
         setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 1, 0));
