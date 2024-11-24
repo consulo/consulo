@@ -50,10 +50,6 @@ public interface SwingUIDecorator extends UIDecorator {
     return null;
   }
 
-  default boolean decorateToolbarComboBox(@Nonnull JComboBox<?> comboBox) {
-    return false;
-  }
-
   default boolean decorateWindowTitle(@Nonnull JRootPane rootPane) {
     return false;
   }

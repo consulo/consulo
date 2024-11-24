@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui.plaf2;
+package consulo.desktop.awt.ui.plaf2.flat;
 
 import com.formdev.flatlaf.FlatDefaultsAddon;
 import consulo.desktop.awt.ui.plaf.BasicStatusBarUI;
@@ -42,5 +42,7 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         uiDefaults.put("EditorTextFieldUI", DarculaEditorTextFieldUI.class.getName());
         uiDefaults.put("CaptionPanelUI", DarculaCaptionPanelUI.class.getName());
         uiDefaults.put("OnOffButtonUI", OnOffButton.OnOffButtonUI.class.getName());
+
+        uiDefaults.put("ComboBoxButtonUI", FlatComboBoxButtonUI.class.getName());
     }
 }

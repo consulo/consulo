@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui.plaf2;
-
-import com.formdev.flatlaf.FlatDarkLaf;
+package consulo.ui.ex.awt.action;
 
 /**
  * @author VISTALL
- * @since 2024-11-20
+ * @since 2024-11-24
  */
-public class ConsuloFlatDarkLaf extends FlatDarkLaf {
+public interface ComboBoxButtonUI {
+    void updateArrowState(boolean visible);
 }

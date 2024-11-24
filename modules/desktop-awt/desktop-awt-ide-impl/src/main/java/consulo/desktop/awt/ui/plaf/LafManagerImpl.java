@@ -15,7 +15,10 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
+import com.formdev.flatlaf.*;
 import com.formdev.flatlaf.intellijthemes.FlatAllIJThemes;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.application.ui.UIFontManager;
@@ -28,8 +31,6 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.desktop.awt.ui.impl.style.DesktopStyleImpl;
-import consulo.desktop.awt.ui.plaf2.ConsuloFlatDarkLaf;
-import consulo.desktop.awt.ui.plaf2.ConsuloFlatLightLaf;
 import consulo.desktop.awt.ui.plaf2.IdeLookAndFeelInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.IdeBundle;
@@ -40,6 +41,7 @@ import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -58,6 +60,7 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.style.Style;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -105,8 +108,13 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
         List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
 
-        lafList.add(new IdeLookAndFeelInfo(IdeBundle.message("idea.intellij.look.and.feel"), ConsuloFlatLightLaf.class.getName(), false));
-        lafList.add(new IdeLookAndFeelInfo(IdeBundle.message("idea.dark.look.and.feel"), ConsuloFlatDarkLaf.class.getName(), true));
+        Couple<Class<? extends FlatLaf>> defaultLafs = getDefaultLafs();
+
+        lafList.add(new IdeLookAndFeelInfo("Default Light", defaultLafs.getFirst().getName(), false));
+        lafList.add(new IdeLookAndFeelInfo("Default Dark", defaultLafs.getSecond().getName(), true));
+
+        lafList.add(new IdeLookAndFeelInfo("IntelliJ", FlatIntelliJLaf.class.getName(), false));
+        lafList.add(new IdeLookAndFeelInfo("Darcula", FlatDarculaLaf.class.getName(), true));
 
         for (FlatAllIJThemes.FlatIJLookAndFeelInfo info : FlatAllIJThemes.INFOS) {
             lafList.add(new IdeLookAndFeelInfo(info.getName(), info.getClassName(), info.isDark()));
@@ -119,6 +127,19 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         }
 
         myCurrentStyle = getDefaultStyle();
+    }
+
+    public static Couple<Class<? extends FlatLaf>> getDefaultLafs() {
+        Platform platform = Platform.current();
+
+        Class<? extends FlatLaf> light = FlatLightLaf.class;
+        Class<? extends FlatLaf> dark = FlatDarkLaf.class;
+        if (platform.os().isMac()) {
+            light = FlatMacLightLaf.class;
+            dark = FlatMacDarkLaf.class;
+        }
+
+        return Couple.of(light, dark);
     }
 
     @Override
@@ -259,8 +280,11 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     @Nonnull
     private DesktopStyleImpl getDefaultStyle() {
-        // Default
-        DesktopStyleImpl ideaLaf = findStyleByClassName(ConsuloFlatLightLaf.class.getName());
+        Couple<Class<? extends FlatLaf>> defaultLafs = getDefaultLafs();
+        boolean darked = Platform.current().user().darkTheme();
+        Class<? extends FlatLaf> themeClass = darked ? defaultLafs.getSecond() : defaultLafs.getFirst();
+
+        DesktopStyleImpl ideaLaf = findStyleByClassName(themeClass.getName());
         if (ideaLaf != null) {
             return ideaLaf;
         }

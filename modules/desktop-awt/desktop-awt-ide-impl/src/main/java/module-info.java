@@ -66,5 +66,5 @@ open module consulo.desktop.awt.ide.impl {
   provides org.cobraparser.css.DefaultCssFactory with consulo.desktop.awt.ui.impl.htmlView.ConsuloDefaultCssFactory;
   provides org.cobraparser.css.StandardColorProvider with consulo.desktop.awt.ui.impl.htmlView.ConsuloStandardColorProvider;
 
-  provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.plaf2.ConsuloFlatDefaultsAddon;
+  provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.plaf2.flat.ConsuloFlatDefaultsAddon;
 }

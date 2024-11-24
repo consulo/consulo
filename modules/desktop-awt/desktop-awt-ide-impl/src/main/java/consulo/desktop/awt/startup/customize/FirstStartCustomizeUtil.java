@@ -15,12 +15,12 @@
  */
 package consulo.desktop.awt.startup.customize;
 
+import com.formdev.flatlaf.FlatLaf;
 import consulo.application.Application;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.desktop.awt.ui.plaf2.ConsuloFlatDarkLaf;
-import consulo.desktop.awt.ui.plaf2.ConsuloFlatLightLaf;
+import consulo.desktop.awt.ui.plaf.LafManagerImpl;
 import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
@@ -35,6 +35,7 @@ import consulo.util.collection.MultiMap;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
+import consulo.util.lang.Couple;
 import jakarta.annotation.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -211,7 +212,9 @@ public class FirstStartCustomizeUtil {
 
     private static void initLaf(boolean isDark) {
         try {
-            UIManager.setLookAndFeel(isDark ? new ConsuloFlatDarkLaf() : new ConsuloFlatLightLaf());
+            Couple<Class<? extends FlatLaf>> defaultLafs = LafManagerImpl.getDefaultLafs();
+            Class<? extends FlatLaf> themeClass = isDark ? defaultLafs.getSecond() : defaultLafs.getFirst();
+            UIManager.setLookAndFeel(themeClass.getName());
         }
         catch (Exception ignored) {
         }
