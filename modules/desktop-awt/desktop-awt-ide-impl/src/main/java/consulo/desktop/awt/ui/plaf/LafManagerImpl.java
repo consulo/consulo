@@ -307,13 +307,25 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         try {
             UIModificationTracker.getInstance().incModificationCount();
 
-            ClassLoader targetClassLoader = null;
-            if (lookAndFeelInfo instanceof LookAndFeelInfoWithClassLoader) {
-                targetClassLoader = ((LookAndFeelInfoWithClassLoader) lookAndFeelInfo).getClassLoader();
-                UIManager.setLookAndFeel(newInstance((LookAndFeelInfoWithClassLoader) lookAndFeelInfo));
+            Thread thread = Thread.currentThread();
+            ClassLoader old = thread.getContextClassLoader();
+
+            ClassLoader targetClassLoader;
+            try {
+                targetClassLoader = null;
+                if (lookAndFeelInfo instanceof LookAndFeelInfoWithClassLoader) {
+                    targetClassLoader = ((LookAndFeelInfoWithClassLoader) lookAndFeelInfo).getClassLoader();
+
+                    thread.setContextClassLoader(targetClassLoader);
+
+                    UIManager.setLookAndFeel(newInstance((LookAndFeelInfoWithClassLoader) lookAndFeelInfo));
+                }
+                else {
+                    UIManager.setLookAndFeel(lookAndFeelInfo.getClassName());
+                }
             }
-            else {
-                UIManager.setLookAndFeel(lookAndFeelInfo.getClassName());
+            finally {
+                thread.setContextClassLoader(old);
             }
 
             myCurrentStyle = style;
@@ -392,8 +404,6 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         patchLafFonts(uiDefaults);
 
         patchHiDPI(uiDefaults);
-
-        LafManagerImplUtil.insertCustomComponentUI(uiDefaults);
 
         updateToolWindows();
         for (Frame frame : Frame.getFrames()) {

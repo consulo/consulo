@@ -159,11 +159,6 @@ public class SearchTextField extends JPanel {
         return true;
     }
 
-    @Deprecated
-    protected boolean hasIconsOutsideOfTextField() {
-        return false;
-    }
-
     public void addDocumentListener(DocumentListener listener) {
         getTextEditor().getDocument().addDocumentListener(listener);
     }

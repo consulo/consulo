@@ -1592,7 +1592,7 @@ public class UIUtil {
     }
 
     public static boolean isFullRowSelectionLAF() {
-        return false;
+        return true;
     }
 
     public static boolean isUnderNativeMacLookAndFeel() {

@@ -5,6 +5,7 @@ package consulo.ide.impl.idea.openapi.options.ex;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBTabbedPane;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.util.ColorUtil;
 
 import jakarta.annotation.Nullable;
@@ -20,7 +21,7 @@ import java.util.Set;
 public class GlassPanel extends JComponent {
   private final Set<JComponent> myLightComponents = new HashSet<>();
   private final JComponent myPanel;
-  private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
+  private static final Insets EMPTY_INSETS = JBUI.emptyInsets();
   private static final JBColor SPOTLIGHT_BORDER_COLOR = JBColor.namedColor("Settings.Spotlight.borderColor", ColorUtil.toAlpha(JBColor.ORANGE, 100));
 
   public GlassPanel(JComponent containingPanel) {
