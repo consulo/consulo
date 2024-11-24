@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.welcomeScreen;
+package consulo.ide.impl.newProject.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.disposer.Disposable;
-
-import jakarta.annotation.Nonnull;
-import javax.swing.*;
+import consulo.ide.impl.idea.ide.actions.OpenFileAction;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 14-Sep-16
+ * @since 2024-11-24
  */
-public abstract class WelcomeScreenSlideAction extends AnAction {
-  @Nonnull
-  public abstract JComponent createSlide(@Nonnull Disposable parentDisposable, @Nonnull WelcomeScreenSlider owner);
+public class WelcomeOpenFileAction extends OpenFileAction {
+    @Override
+    public boolean displayTextInToolbar() {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.welcomeOpenproject();
+    }
 }

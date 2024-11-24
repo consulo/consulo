@@ -927,6 +927,16 @@
                 <artifactId>flatlaf-intellij-themes</artifactId>
                 <version>3.5.2</version>
             </dependency>
+            <dependency>
+                <groupId>com.formdev</groupId>
+                <artifactId>flatlaf-swingx</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.swinglabs.swingx</groupId>
+                <artifactId>swingx-all</artifactId>
+                <version>1.6.5</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <profiles>

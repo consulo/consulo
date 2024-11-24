@@ -23,10 +23,9 @@ import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.util.concurrent.ActionCallback;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 
@@ -62,7 +61,7 @@ public abstract class ActionManager {
   public abstract ActionPopupMenu createActionPopupMenu(String place, @Nonnull ActionGroup group);
 
   /**
-   * @see consulo.ide.impl.actionSystem.ActionToolbarFactory
+   * @see ActionToolbarFactory
    */
   public abstract ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal);
 

@@ -16,34 +16,32 @@
 package consulo.ide.impl.newProject.actions;
 
 import consulo.application.CommonBundle;
-import consulo.project.internal.RecentProjectsManager;
-import consulo.ide.localize.IdeLocalize;
-import consulo.ide.newModule.NewOrImportModuleUtil;
-import consulo.platform.base.localize.CommonLocalize;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.WriteAction;
-import consulo.application.dumb.DumbAware;
+import consulo.application.util.SystemInfo;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.newProject.ui.NewProjectDialog;
+import consulo.ide.impl.newProject.ui.NewProjectPanel;
+import consulo.ide.impl.welcomeScreen.WelcomeScreenSlider;
+import consulo.ide.newModule.NewModuleBuilderProcessor;
+import consulo.ide.newModule.NewModuleWizardContext;
+import consulo.ide.newModule.NewOrImportModuleUtil;
+import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.internal.RecentProjectsManager;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
-import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.JBUI;
-import consulo.disposer.Disposable;
-import consulo.ide.newModule.NewModuleBuilderProcessor;
-import consulo.ide.impl.newProject.ui.NewProjectDialog;
-import consulo.ide.impl.newProject.ui.NewProjectPanel;
-import consulo.ide.impl.welcomeScreen.WelcomeScreenSlideAction;
-import consulo.ide.impl.welcomeScreen.WelcomeScreenSlider;
-import consulo.ide.newModule.NewModuleWizardContext;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.UIAccess;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -51,7 +49,7 @@ import java.io.File;
 /**
  * @author VISTALL
  */
-public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAware {
+public class NewProjectAction extends DumbAwareAction {
   private static final Logger LOG = Logger.getInstance(NewProjectAction.class);
 
   static class SlideNewProjectPanel extends NewProjectPanel {
@@ -147,15 +145,6 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     if (dialog.showAndGet()) {
       generateProject(project, dialog.getProjectPanel());
     }
-  }
-
-  @Nonnull
-  @Override
-  @RequiredUIAccess
-  public JComponent createSlide(@Nonnull Disposable parentDisposable, @Nonnull WelcomeScreenSlider owner) {
-    owner.setTitle(IdeLocalize.titleNewProject().get());
-
-    return new SlideNewProjectPanel(parentDisposable, owner, null, null);
   }
 
   @RequiredUIAccess

@@ -6,12 +6,12 @@ import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -239,7 +239,6 @@ public class LinkLabel<T> extends JLabel {
     if (myHoveringIcon != null) {
       super.setIcon(myHoveringIcon);
     }
-    setStatusBarText(getStatusBarText());
     repaint();
   }
 
@@ -251,16 +250,7 @@ public class LinkLabel<T> extends JLabel {
     UIUtil.setCursor(this, Cursor.getDefaultCursor());
     myUnderline = false;
     super.setIcon(myInactiveIcon);
-    setStatusBarText(null);
     setActive(false);
-  }
-
-  private static void setStatusBarText(String statusBarText) {
-    //if (ApplicationManager.getApplication() == null) return; // makes this component work in UIDesigner preview.
-    //final Project[] projects = ProjectManager.getInstance().getOpenProjects();
-    //for (Project project : projects) {
-    //  StatusBar.Info.set(statusBarText, project);
-    //}
   }
 
   protected Color getVisited() {
