@@ -91,6 +91,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         private CheckBox mySmoothScrollingBox;
 
         private Style myInitialStyle;
+        private boolean myStyledChaged;
 
         @RequiredUIAccess
         private LayoutImpl() {
@@ -106,6 +107,8 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
             myStyleComboBox = ComboBox.create(StyleManager.get().getStyles());
             myStyleComboBox.addValueListener(event -> {
+                myStyledChaged = true;
+
                 StyleManager.get().setCurrentStyle(event.getValue());
             });
             myStyleComboBox.setTextRender(style -> style == null ? LocalizeValue.empty() : LocalizeValue.of(style.getName()));
@@ -265,7 +268,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
         StyleManager styleManager = StyleManager.get();
 
-        if (component.myInitialStyle != null && component.myInitialStyle != styleManager.getCurrentStyle()) {
+        if (component.myStyledChaged && component.myInitialStyle != null && component.myInitialStyle != styleManager.getCurrentStyle()) {
             styleManager.setCurrentStyle(component.myInitialStyle);
         }
     }
