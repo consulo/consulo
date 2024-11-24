@@ -1021,6 +1021,9 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static Image createColorIcon(Color color1, @Nullable Color color2) {
+    if (color1 == null) {
+      return ImageEffects.colorFilled(11, 11, TargetAWT.from(color2));
+    }
     if (color2 == null) {
       return ImageEffects.colorFilled(11, 11, TargetAWT.from(color1));
     }
