@@ -36,7 +36,6 @@ import consulo.disposer.Disposable;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
-import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.localize.LocalizeManager;
@@ -48,11 +47,10 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.ex.awt.IJSwingUtilities;
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.internal.ActionToolbarsHolder;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -69,11 +67,12 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.UIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.*;
 
 /**
  * @author Eugene Belyaev
@@ -95,11 +94,10 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     private final List<DesktopStyleImpl> myStyles;
     private DesktopStyleImpl myCurrentStyle;
 
-    private final Map<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
     private final LocalizeManager myLocalizeManager;
     private final IconLibraryManager myIconLibraryManager;
 
-    private boolean initialLoadState = true;
+    private boolean myInitialLoadState = true;
 
     @Inject
     LafManagerImpl() {
@@ -163,7 +161,9 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     @Override
     public void afterLoadState() {
-        initialLoadState = false;
+        boolean initial = myInitialLoadState;
+
+        myInitialLoadState = false;
 
         if (myCurrentStyle != null) {
             final DesktopStyleImpl laf = findStyleByClassName(myCurrentStyle.getLookAndFeelInfo().getClassName());
@@ -175,7 +175,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
             }
         }
 
-        updateUI();
+        updateUI(initial);
 
         // refresh UI on localize change
         LocalizeManager.get().addListener((oldLocale, newLocale) -> updateUI(), this);
@@ -216,7 +216,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         }
 
         if (myCurrentStyle != null && !styleFromXml.equals(myCurrentStyle)) {
-            boolean fire = !initialLoadState;
+            boolean fire = !myInitialLoadState;
             setCurrentStyle(styleFromXml, false, fire, iconId);
 
             if (fire) {
@@ -423,16 +423,20 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
      */
     @Override
     public void updateUI() {
+        updateUI(false);
+    }
+
+    private void updateUI(boolean initial) {
         final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
 
-        patchLafFonts(uiDefaults);
-
-        patchHiDPI(uiDefaults);
+        patchLafFonts(uiDefaults, initial);
 
         updateToolWindows();
+
         for (Frame frame : Frame.getFrames()) {
             updateUI(frame);
         }
+
         fireLookAndFeelChanged();
     }
 
@@ -455,74 +459,23 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         }
     }
 
-    private static void patchHiDPI(UIDefaults defaults) {
-        Object prevScaleVal = defaults.get("hidpi.scaleFactor");
-        // used to normalize previously patched values
-        float prevScale = prevScaleVal != null ? (Float) prevScaleVal : 1f;
-
-        if (prevScale == JBUI.scale(1f) && prevScaleVal != null) {
+    // TODO not works
+    private void patchLafFonts(UIDefaults uiDefaults, boolean initial) {
+        if (Boolean.TRUE) {
             return;
         }
-
-        List<String> myIntKeys = Arrays.asList("Tree.leftChildIndent", "Tree.rightChildIndent", "Tree.rowHeight");
-
-        List<String> myDimensionKeys = Arrays.asList("Slider.horizontalSize", "Slider.verticalSize", "Slider.minimumHorizontalSize", "Slider.minimumVerticalSize");
-
-        for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
-            Object value = entry.getValue();
-            String key = entry.getKey().toString();
-            if (value instanceof Dimension) {
-                if (value instanceof UIResource || myDimensionKeys.contains(key)) {
-                    entry.setValue(JBUI.size((Dimension) value).asUIResource());
-                }
-            }
-            else if (value instanceof Insets) {
-                if (value instanceof UIResource) {
-                    entry.setValue(JBUI.insets(((Insets) value)).asUIResource());
-                }
-            }
-            else if (value instanceof Integer) {
-                // FIXME [VISTALL] we already fix maxGutterIconWidth with UI classes
-                if (/*key.endsWith(".maxGutterIconWidth") || */myIntKeys.contains(key)) {
-                    int normValue = (int) ((Integer) value / prevScale);
-                    entry.setValue(Integer.valueOf(JBUI.scale(normValue)));
-                }
-            }
-        }
-        defaults.put("hidpi.scaleFactor", JBUI.scale(1f));
-    }
-
-    private void patchLafFonts(UIDefaults uiDefaults) {
+        
         UIFontManager uiSettings = UIFontManager.getInstance();
         if (uiSettings.isOverrideFont()) {
-            storeOriginalFontDefaults(uiDefaults);
-            JBUI.setUserScaleFactor(uiSettings.getFontSize() / UIUtil.DEF_SYSTEM_FONT_SIZE);
-            initFontDefaults(uiDefaults, UIUtil.getFontWithFallback(uiSettings.getFontName(), Font.PLAIN, uiSettings.getFontSize()));
-        }
-        else {
-            restoreOriginalFontDefaults(uiDefaults);
-        }
-    }
-
-    private void restoreOriginalFontDefaults(UIDefaults defaults) {
-        UIManager.LookAndFeelInfo lf = getCurrentLookAndFeel();
-        HashMap<String, Object> lfDefaults = myStoredDefaults.get(lf);
-        if (lfDefaults != null) {
-            for (String resource : LafManagerImplUtil.ourPatchableFontResources) {
-                defaults.put(resource, lfDefaults.get(resource));
+            Font font = StyleContext.getDefaultStyleContext().getFont(uiSettings.getFontName(), Font.PLAIN, uiSettings.getFontSize());
+            if (font instanceof UIResource) {
+                font = font.deriveFont(Font.PLAIN);
             }
-        }
-    }
 
-    private void storeOriginalFontDefaults(UIDefaults defaults) {
-        UIManager.LookAndFeelInfo lf = getCurrentLookAndFeel();
-        HashMap<String, Object> lfDefaults = myStoredDefaults.get(lf);
-        if (lfDefaults == null) {
-            lfDefaults = new HashMap<>();
-            for (String resource : LafManagerImplUtil.ourPatchableFontResources) {
-                lfDefaults.put(resource, defaults.get(resource));
-            }
-            myStoredDefaults.put(lf, lfDefaults);
+            uiDefaults.put("defaultFont", font);
+        }
+        else if (!initial) {
+            uiDefaults.put("defaultFont", null);
         }
     }
 
@@ -552,14 +505,12 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         if (!window.isDisplayable()) {
             return;
         }
+
         window.repaint();
+
         Window[] children = window.getOwnedWindows();
         for (Window aChildren : children) {
             repaintUI(aChildren);
         }
-    }
-
-    public static void initFontDefaults(@Nonnull UIDefaults defaults, @Nonnull FontUIResource uiFont) {
-        LafManagerImplUtil.initFontDefaults(defaults, uiFont);
     }
 }

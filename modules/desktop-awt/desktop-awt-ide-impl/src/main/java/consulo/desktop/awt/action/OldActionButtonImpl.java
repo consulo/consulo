@@ -52,7 +52,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Deprecated
-public class ActionButtonImpl extends JButton implements ActionButtonEx {
+public class OldActionButtonImpl extends JButton implements ActionButtonEx {
     // Contains actions IDs which descriptions are permitted for displaying in the ActionButtonImpl tooltip
     private static final Set<String> WHITE_LIST = Set.of();
 
@@ -79,7 +79,7 @@ public class ActionButtonImpl extends JButton implements ActionButtonEx {
 
     private Supplier<String> myShortcutBuilder;
 
-    public ActionButtonImpl(AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
+    public OldActionButtonImpl(AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
         myRollover = false;
         myMouseDown = false;
         myAction = action;

@@ -18,7 +18,7 @@ import consulo.colorScheme.FontSize;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.desktop.awt.action.ActionButtonImpl;
+import consulo.desktop.awt.action.OldActionButtonImpl;
 import consulo.desktop.awt.action.ActionToolbarImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -154,7 +154,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   };
 
   private Runnable myToolwindowCallback;
-  private final ActionButtonImpl myCorner;
+  private final OldActionButtonImpl myCorner;
 
   private final MyScrollPane myScrollPane;
   private final JEditorPane myEditorPane;
@@ -418,8 +418,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     gearActions.addAll(actions);
     Presentation presentation = new Presentation();
     presentation.setIcon(AllIcons.Actions.More);
-    presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
-    myCorner = new ActionButtonImpl(gearActions, presentation, ActionPlaces.UNKNOWN, ActionToolbar.NAVBAR_MINIMUM_BUTTON_SIZE) {
+    presentation.putClientProperty(OldActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
+    myCorner = new OldActionButtonImpl(gearActions, presentation, ActionPlaces.UNKNOWN, ActionToolbar.NAVBAR_MINIMUM_BUTTON_SIZE) {
       @Override
       protected DataContext getDataContext() {
         return DataManager.getInstance().getDataContext(myCorner);

@@ -51,7 +51,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2024-11-21
  */
-public class ToolbarButtonEngine {
+public class ActionToolbarButtonEngine {
     // Contains actions IDs which descriptions are permitted for displaying in the ActionButtonImpl tooltip
     private static final Set<String> WHITE_LIST = Set.of();
 
@@ -71,7 +71,7 @@ public class ToolbarButtonEngine {
 
     private boolean myNoIconsInPopup = false;
 
-    public ToolbarButtonEngine(AbstractButton button, AnAction ideAction, Presentation presentation, String place, Supplier<DataContext> getDataContext) {
+    public ActionToolbarButtonEngine(AbstractButton button, AnAction ideAction, Presentation presentation, String place, Supplier<DataContext> getDataContext) {
         myButton = button;
         myIdeAction = ideAction;
         myPresentation = presentation;

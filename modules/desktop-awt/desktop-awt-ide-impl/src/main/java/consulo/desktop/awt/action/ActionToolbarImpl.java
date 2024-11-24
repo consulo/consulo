@@ -111,11 +111,11 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
 
     @Override
-    public ActionButtonImpl getSecondaryActionsButton() {
+    public OldActionButtonImpl getSecondaryActionsButton() {
         return mySecondaryActionsButton;
     }
 
-    private ActionButtonImpl mySecondaryActionsButton;
+    private OldActionButtonImpl mySecondaryActionsButton;
 
     private int myFirstOutsideIndex = -1;
     private JBPopup myPopup;
@@ -327,7 +327,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         }
 
         if (mySecondaryActions.getChildrenCount() > 0) {
-            mySecondaryActionsButton = new ActionButtonImpl(mySecondaryActions,
+            mySecondaryActionsButton = new OldActionButtonImpl(mySecondaryActions,
                 myPresentationFactory.getPresentation(mySecondaryActions),
                 myPlace,
                 getMinimumButtonSize()) {
@@ -1022,7 +1022,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         myMinimumButtonSize = size;
         for (int i = getComponentCount() - 1; i >= 0; i--) {
             final Component component = getComponent(i);
-            if (component instanceof ActionButtonImpl button) {
+            if (component instanceof OldActionButtonImpl button) {
                 button.setMinimumSize(TargetAWT.to(size));
             }
         }
@@ -1349,7 +1349,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     public void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
         Presentation presentation = mySecondaryActions.getTemplatePresentation();
         presentation.setIcon(icon);
-        presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, hideDropdownIcon ? Boolean.TRUE : null);
+        presentation.putClientProperty(OldActionButtonImpl.HIDE_DROPDOWN_ICON, hideDropdownIcon ? Boolean.TRUE : null);
     }
 
     @Override

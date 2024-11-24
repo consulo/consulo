@@ -210,11 +210,12 @@ public class FirstStartCustomizeUtil {
         map.put(setName, template);
     }
 
+    @SuppressWarnings("deprecation")
     private static void initLaf(boolean isDark) {
         try {
             Couple<Class<? extends FlatLaf>> defaultLafs = LafManagerImpl.getDefaultLafs();
             Class<? extends FlatLaf> themeClass = isDark ? defaultLafs.getSecond() : defaultLafs.getFirst();
-            UIManager.setLookAndFeel(themeClass.getName());
+            UIManager.setLookAndFeel(themeClass.newInstance());
         }
         catch (Exception ignored) {
         }

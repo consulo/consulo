@@ -17,9 +17,7 @@ package consulo.desktop.awt.container.impl;
 
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.util.lang.SystemProperties;
 
@@ -32,8 +30,6 @@ import javax.swing.*;
 public class DesktopStartUIUtil {
   public static void hackAWT() {
     blockATKWrapper();
-
-    UIUtil.configureHtmlKitStylesheet(() -> JBHtmlEditorKit.createStyleSheet(false));
   }
 
   public static void initSystemFontData() {

@@ -392,29 +392,7 @@ public class UIUtil {
 
     private static final Ref<Boolean> ourRetina = Ref.create(Platform.current().os().isMac() ? null : false);
 
-    private static volatile StyleSheet ourDefaultHtmlKitCss;
-
     private UIUtil() {
-    }
-
-    public static void configureHtmlKitStylesheet(@Nonnull Supplier<? extends StyleSheet> styleSheetFactory) {
-        if (ourDefaultHtmlKitCss != null) {
-            return;
-        }
-
-
-        // save the default JRE CSS and ..
-        HTMLEditorKit kit = new HTMLEditorKit();
-        ourDefaultHtmlKitCss = kit.getStyleSheet();
-        // .. erase global ref to this CSS so no one can alter it
-        kit.setStyleSheet(null);
-
-        // Applied to all JLabel instances, including subclasses. Supported in JBR only.
-        UIManager.getDefaults().put("javax.swing.JLabel.userStyleSheet", styleSheetFactory.get());
-    }
-
-    public static StyleSheet getDefaultHtmlKitCss() {
-        return ourDefaultHtmlKitCss;
     }
 
     /**
@@ -2659,7 +2637,7 @@ public class UIUtil {
     }
 
     public static FontUIResource getFontWithFallback(@Nonnull String familyName, @JdkConstants.FontStyle int style, int size) {
-        Font fontWithFallback = new StyleContext().getFont(familyName, style, size);
+        Font fontWithFallback = StyleContext.getDefaultStyleContext().getFont(familyName, style, size);
         return fontWithFallback instanceof FontUIResource ? (FontUIResource)fontWithFallback : new FontUIResource(fontWithFallback);
     }
 

@@ -41,10 +41,10 @@ import java.util.function.Supplier;
  * @since 2024-11-21
  */
 public class ActionToggleToolbarButtonImpl extends JToggleButton implements ActionButtonEx {
-    private final ToolbarButtonEngine myEngine;
+    private final ActionToolbarButtonEngine myEngine;
 
     public ActionToggleToolbarButtonImpl(AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
-        myEngine = new ToolbarButtonEngine(this, action, presentation, place, this::getDataContext);
+        myEngine = new ActionToolbarButtonEngine(this, action, presentation, place, this::getDataContext);
 
         setMinimumSize(TargetAWT.to(minimumSize));
 

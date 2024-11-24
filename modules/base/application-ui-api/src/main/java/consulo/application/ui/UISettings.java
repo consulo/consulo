@@ -96,7 +96,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean REUSE_NOT_MODIFIED_TABS = false;
   public boolean ANIMATE_WINDOWS = true;
   public boolean SHOW_TOOL_WINDOW_NUMBERS = true;
-  public boolean HIDE_TOOL_STRIPES = true;
+  public boolean HIDE_TOOL_STRIPES = false;
   public boolean WIDESCREEN_SUPPORT = false;
   public boolean LEFT_HORIZONTAL_SPLIT = false;
   public boolean RIGHT_HORIZONTAL_SPLIT = false;

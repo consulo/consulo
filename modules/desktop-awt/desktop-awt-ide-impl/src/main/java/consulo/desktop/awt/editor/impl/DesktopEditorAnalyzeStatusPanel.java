@@ -28,7 +28,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.action.ActionButtonImpl;
+import consulo.desktop.awt.action.OldActionButtonImpl;
 import consulo.desktop.awt.action.ActionToolbarImpl;
 import consulo.desktop.awt.language.editor.DesktopEditorFloatPanel;
 import consulo.disposer.Disposable;
@@ -95,7 +95,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       if (ActionToolbar.CUSTOM_COMPONENT_CONSTRAINT.equals(s) && jc instanceof StatusButton) {
         statusComponent = jc;
       }
-      else if (ActionToolbar.ACTION_BUTTON_CONSTRAINT.equals(s) && jc instanceof ActionButtonImpl) {
+      else if (ActionToolbar.ACTION_BUTTON_CONSTRAINT.equals(s) && jc instanceof OldActionButtonImpl) {
         actionButtons.add(jc);
       }
     }
@@ -106,7 +106,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       if (jc instanceof StatusButton) {
         statusComponent = null;
       }
-      else if (jc instanceof ActionButtonImpl) {
+      else if (jc instanceof OldActionButtonImpl) {
         actionButtons.remove(jc);
       }
     }
@@ -474,11 +474,11 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
       Presentation presentation = new Presentation();
       presentation.setIcon(AllIcons.Actions.More);
-      presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
+      presentation.putClientProperty(OldActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
 
       java.util.List<AnAction> actions = controller.getActions();
       if (!actions.isEmpty()) {
-        ActionButtonImpl menuButton = new ActionButtonImpl(new MenuAction(actions), presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+        OldActionButtonImpl menuButton = new OldActionButtonImpl(new MenuAction(actions), presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
 
         myContent.add(menuButton, gc.next().anchor(GridBagConstraints.LINE_END).weightx(0).insets(10, 6, 10, 6));
       }

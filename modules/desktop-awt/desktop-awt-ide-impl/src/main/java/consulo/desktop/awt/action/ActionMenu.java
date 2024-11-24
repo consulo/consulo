@@ -20,12 +20,14 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.desktop.awt.action.menu.ActionMenuItem;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.Presentation;
@@ -309,6 +311,7 @@ public final class ActionMenu extends JMenu {
         validate();
     }
 
+    @RequiredUIAccess
     private void fillMenu(JMenu menu) {
         DataContext context;
         boolean mayContextBeInvalid;
