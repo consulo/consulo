@@ -53,7 +53,6 @@ import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.internal.AbstractPainter;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
@@ -680,8 +679,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
   @Override
   public void uiSettingsChanged(UISettings source) {
-    mySearch.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
-    myLeftSide.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
+    mySearch.setBackground(MorphColor.of(UIUtil::getTreeBackground));
+    myLeftSide.setBackground(MorphColor.of(UIUtil::getTreeBackground));
   }
 
   public JPanel getLeftSide() {

@@ -28,7 +28,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
@@ -107,6 +106,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     private ActionToolbar myToolbarWest;
     private final JPanel myWestPanel;
 
+    @RequiredUIAccess
     public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull final NotNullProducer<ActionGroup> gearProducer) {
         super(new BorderLayout());
 
@@ -136,7 +136,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
         JPanel rightPanel = wrapAndFillVertical(component);
         rightPanel.setBorder(JBUI.Borders.empty(0, 3, 0, 3));
-        
+
         add(rightPanel, BorderLayout.EAST);
 
         myWestPanel.addMouseListener(new PopupHandler() {
@@ -173,8 +173,17 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
             }
         });
 
-        setBackground(MorphColor.ofWithoutCache(() -> myToolWindow.isActive() ? SwingUIDecorator.get(SwingUIDecorator::getSidebarColor) : UIUtil
-            .getPanelBackground()));
+        setBackground(MorphColor.ofWithoutCache(() -> {
+            if (!isActive()) {
+                return UIUtil.getPanelBackground();
+            }
+            
+            Color color = UIManager.getColor("TabbedPane.focusColor");
+            if (color == null) {
+                color = UIUtil.getPanelBackground();
+            }
+            return color;
+        }));
 
         setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 1, 0));
 

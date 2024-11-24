@@ -53,12 +53,4 @@ public interface SwingUIDecorator extends UIDecorator {
   default boolean decorateWindowTitle(@Nonnull JRootPane rootPane) {
     return false;
   }
-
-  default boolean decorateSidebarTree(@Nonnull JTree tree) {
-    return false;
-  }
-
-  default boolean decorateHelpButton() {
-    return true;
-  }
 }

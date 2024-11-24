@@ -66,7 +66,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
 
     myRootPanel.setBorder(JBUI.Borders.empty());
     if(welcomeScreen) {
-      myRootPanel.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
+      myRootPanel.setBackground(UIUtil.getTreeBackground());
 
       myScrollPane.setOpaque(false);
       myScrollPane.getViewport().setOpaque(false);

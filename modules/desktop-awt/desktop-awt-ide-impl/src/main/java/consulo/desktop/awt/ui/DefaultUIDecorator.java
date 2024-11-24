@@ -58,11 +58,6 @@ public class DefaultUIDecorator implements SwingUIDecorator {
     return StyleManager.get().getCurrentStyle().isDark() ? ColorUtil.darker(color, 10) : ColorUtil.desaturate(color, 18);
   }
 
-  @Override
-  public boolean decorateSidebarTree(@Nonnull JTree tree) {
-    decorateTree0(tree, getSidebarColor());
-    return true;
-  }
 
   /**
    * Enable & disable macOS dark title decoration. Works only on JetBrains JRE

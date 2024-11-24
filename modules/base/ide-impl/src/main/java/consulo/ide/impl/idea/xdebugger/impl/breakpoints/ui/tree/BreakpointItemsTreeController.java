@@ -55,7 +55,6 @@ public class BreakpointItemsTreeController implements BreakpointsCheckboxTree.De
 
   public void setTreeView(JTree treeView) {
     myTreeView = treeView;
-    SwingUIDecorator.apply(SwingUIDecorator::decorateSidebarTree, treeView);
     myTreeView.getSelectionModel().addTreeSelectionListener(event -> selectionChanged());
     if (treeView instanceof BreakpointsCheckboxTree) {
       ((BreakpointsCheckboxTree)treeView).setDelegate(this);
