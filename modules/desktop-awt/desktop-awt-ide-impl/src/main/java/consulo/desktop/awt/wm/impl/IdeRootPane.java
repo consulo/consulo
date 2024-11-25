@@ -41,7 +41,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.toolWindow.ToolWindowPanel;
 
@@ -105,7 +104,6 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(this, true);
     setGlassPane(glassPane);
     myGlassPaneInitialized = true;
-    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, this);
     glassPane.setVisible(false);
   }
 
@@ -271,7 +269,6 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
 
   @Override
   public void uiSettingsChanged(UISettings uiSettings) {
-    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, this);
     updateToolbarVisibility();
     updateStatusBarVisibility();
     for (IdeRootPaneNorthExtension component : myNorthComponents) {

@@ -41,11 +41,6 @@ import javax.swing.*;
  */
 public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
   @Nonnull
-  public JComponent createCustomComponent(final Presentation presentation, String place) {
-    return new ComboBoxButtonImpl(this, presentation);
-  }
-
-  @Nonnull
   @Override
   public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
     return SwitchTaskAction.createPopup(context, onDispose, false);
@@ -56,8 +51,7 @@ public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     Project project = e.getData(Project.KEY);
-    ComboBoxButtonImpl button = (ComboBoxButtonImpl)presentation.getClientProperty(CustomComponentAction.COMPONENT_KEY);
-    if (project == null || project.isDefault() || project.isDisposed() || button == null) {
+    if (project == null || project.isDefault() || project.isDisposed()) {
       presentation.setEnabled(false);
       presentation.setText("");
       presentation.setIcon(null);

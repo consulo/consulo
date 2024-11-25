@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointItem;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -55,7 +54,6 @@ public class BreakpointItemsTreeController implements BreakpointsCheckboxTree.De
 
   public void setTreeView(JTree treeView) {
     myTreeView = treeView;
-    SwingUIDecorator.apply(SwingUIDecorator::decorateSidebarTree, treeView);
     myTreeView.getSelectionModel().addTreeSelectionListener(event -> selectionChanged());
     if (treeView instanceof BreakpointsCheckboxTree) {
       ((BreakpointsCheckboxTree)treeView).setDelegate(this);

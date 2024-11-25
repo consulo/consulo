@@ -1,3 +1,4 @@
+-Dapple.awt.application.appearance=system
 --add-opens=java.desktop/sun.awt=consulo.container.impl
 --add-opens=java.desktop/sun.swing=consulo.container.impl
 --add-opens=java.desktop/sun.awt.image=consulo.container.impl

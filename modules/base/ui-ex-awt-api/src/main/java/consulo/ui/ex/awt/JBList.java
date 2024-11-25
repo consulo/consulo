@@ -1,27 +1,23 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.ComponentWithExpandableItems;
 import consulo.ui.ex.ExpandableItemsHandler;
-import consulo.ui.ex.awt.internal.laf.WideSelectionListUI;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.plaf.ListUI;
 import javax.swing.plaf.UIResource;
-import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -108,30 +104,6 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     if (myBusyIcon != null) {
       myBusyIcon.updateLocation(this);
     }
-  }
-
-  @Override
-  public void repaint(long tm, int x, int y, int width, int height) {
-    if (width > 0 && height > 0) {
-      ListUI ui = getUI();
-      // do not paint a line background if layout orientation is not vertical
-      if (ui instanceof WideSelectionListUI && JList.VERTICAL == getLayoutOrientation()) {
-        x = 0;
-        width = getWidth();
-      }
-      super.repaint(tm, x, y, width, height);
-    }
-  }
-
-  @Override
-  public void setUI(ListUI ui) {
-    if (ui != null && Registry.is("ide.wide.selection.list.ui")) {
-      Class<? extends ListUI> type = ui.getClass();
-      if (type == BasicListUI.class) {
-        ui = new WideSelectionListUI();
-      }
-    }
-    super.setUI(ui);
   }
 
   public void setPaintBusy(boolean paintBusy) {

@@ -58,14 +58,6 @@ public interface NavBarUI {
   Insets getWrapperPanelInsets(Insets insets);
 
   /**
-   * NavBarItem uses standard selection color from LaF. However, sometimes it looks very aggressive.
-   * To handle this problem transparency is used. The selection color will be LaF list selection color with alpha
-   *
-   * @return alpha number from 0 to 255
-   */
-  short getSelectionAlpha();
-
-  /**
    * NavBarItem offsets
    * @param item NavBar element
    * @return offsets
@@ -89,13 +81,9 @@ public interface NavBarUI {
   @Nullable
   Color getForeground(boolean selected, boolean focused, boolean inactive);
 
-
-  void doPaintWrapperPanel(Graphics2D g, Rectangle bounds, boolean mainToolbarVisible);
-
   void doPaintNavBarItem(Graphics2D g, NavBarItem item, NavBarPanel navbar);
 
   void doPaintNavBarPanel(Graphics2D g, Rectangle bounds, boolean mainToolbarVisible, boolean undocked);
-
 
   void clearItems();
 }

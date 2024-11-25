@@ -28,10 +28,10 @@ public class FindProgressIndicator extends BackgroundableProcessIndicator {
     public FindProgressIndicator(@Nonnull Project project, String scopeString) {
         super(
             project,
-            FindLocalize.findProgressSearchingMessage(scopeString).get(),
+            FindLocalize.findProgressSearchingMessage(scopeString),
             new SearchInBackgroundOption(),
-            FindLocalize.findProgressStopTitle().get(),
-            FindLocalize.findProgressStopBackgroundButton().get(),
+            FindLocalize.findProgressStopTitle(),
+            FindLocalize.findProgressStopBackgroundButton(),
             true
         );
     }

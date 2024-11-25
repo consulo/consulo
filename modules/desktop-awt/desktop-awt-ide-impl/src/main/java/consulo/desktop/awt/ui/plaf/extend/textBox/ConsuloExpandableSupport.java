@@ -15,15 +15,14 @@
  */
 package consulo.desktop.awt.ui.plaf.extend.textBox;
 
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.desktop.awt.uiOld.Expandable;
 import consulo.desktop.awt.uiOld.components.fields.ExpandableSupport;
-import consulo.desktop.awt.uiOld.components.fields.IntelliJExpandableSupport;
-
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -32,70 +31,73 @@ import java.util.function.Function;
 /**
  * @author VISTALL
  * @since 2019-04-26
- *
- * This is another implementation of {@link ExpandableSupport}
- *
- * Inspiried by {@link IntelliJExpandableSupport} but there differents
- * - collapse button is not part scrollbar - it have old right panel
  */
 public class ConsuloExpandableSupport<T extends JTextComponent> extends ExpandableSupport<T> {
-  public ConsuloExpandableSupport(@Nonnull T jTextComponent, Function<? super String, String> onShow, Function<? super String, String> onHide) {
-    super(jTextComponent, onShow, onHide);
-  }
+    public ConsuloExpandableSupport(@Nonnull T jTextComponent, Function<? super String, String> onShow, Function<? super String, String> onHide) {
+        super(jTextComponent, onShow, onHide);
+    }
 
-  @Nonnull
-  @Override
-  protected Content prepare(@Nonnull T field, @Nonnull Function<? super String, String> onShow) {
-    Font font = field.getFont();
-    FontMetrics metrics = font == null ? null : field.getFontMetrics(font);
-    int height = metrics == null ? 16 : metrics.getHeight();
-    Dimension size = new Dimension(field.getWidth(), height * 16);
+    @Nonnull
+    @Override
+    protected Content prepare(@Nonnull T field, @Nonnull Function<? super String, String> onShow) {
+        Font font = field.getFont();
+        FontMetrics metrics = font == null ? null : field.getFontMetrics(font);
+        int height = metrics == null ? 16 : metrics.getHeight();
+        Dimension size = new Dimension(field.getWidth(), height * 16);
 
-    JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
-    JTextArea area = new JTextArea(onShow.apply(field.getText()));
-    area.putClientProperty(Expandable.class, this);
-    area.setEditable(field.isEditable());
-    //area.setBackground(field.getBackground());
-    //area.setForeground(field.getForeground());
-    area.setFont(font);
-    area.setWrapStyleWord(true);
-    area.setLineWrap(true);
-    IntelliJExpandableSupport.copyCaretPosition(field, area);
-    UIUtil.addUndoRedoActions(area);
+        JTextArea area = new JTextArea(onShow.apply(field.getText()));
+        area.putClientProperty(Expandable.class, this);
+        area.setEditable(field.isEditable());
+        //area.setBackground(field.getBackground());
+        //area.setForeground(field.getForeground());
+        area.setFont(font);
+        area.setWrapStyleWord(true);
+        area.setLineWrap(true);
+        copyCaretPosition(field, area);
+        UIUtil.addUndoRedoActions(area);
 
-    JLabel label = ExpandableSupport.createLabel(createCollapseExtension());
-    label.setBorder(JBUI.Borders.empty(5));
+        JLabel label = ExpandableSupport.createLabel(createCollapseExtension());
+        label.setBorder(JBUI.Borders.empty(5));
 
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(area, true);
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(area, true);
 
-    mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-    JPanel eastPanel = new JPanel(new VerticalFlowLayout(0, 0));
-    eastPanel.add(label);
-    mainPanel.add(eastPanel, BorderLayout.EAST);
+        JPanel eastPanel = new JPanel(new VerticalFlowLayout(0, 0));
+        eastPanel.add(label);
+        mainPanel.add(eastPanel, BorderLayout.EAST);
 
-    scrollPane.setPreferredSize(size);
+        scrollPane.setPreferredSize(size);
 
-    return new Content() {
-      @Nonnull
-      @Override
-      public JComponent getContentComponent() {
-        return mainPanel;
-      }
+        return new Content() {
+            @Nonnull
+            @Override
+            public JComponent getContentComponent() {
+                return mainPanel;
+            }
 
-      @Override
-      public JComponent getFocusableComponent() {
-        return area;
-      }
+            @Override
+            public JComponent getFocusableComponent() {
+                return area;
+            }
 
-      @Override
-      public void cancel(@Nonnull Function<? super String, String> onHide) {
-        if (field.isEditable()) {
-          field.setText(onHide.apply(area.getText()));
-          IntelliJExpandableSupport.copyCaretPosition(area, field);
+            @Override
+            public void cancel(@Nonnull Function<? super String, String> onHide) {
+                if (field.isEditable()) {
+                    field.setText(onHide.apply(area.getText()));
+                    copyCaretPosition(area, field);
+                }
+            }
+        };
+    }
+
+    public static void copyCaretPosition(JTextComponent source, JTextComponent destination) {
+        try {
+            destination.setCaretPosition(source.getCaretPosition());
         }
-      }
-    };
-  }
+        catch (Exception ignored) {
+        }
+    }
 }

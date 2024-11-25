@@ -31,37 +31,38 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 22-Jul-22
  */
+@Deprecated
 public interface ActionButton extends AnActionHolder, ActionButtonComponent {
-  /**
-   * By default button representing popup action group displays 'dropdown' icon.
-   * This key allows to avoid 'dropdown' icon painting, just put it in ActionButtonImpl's presentation or template presentation of ActionGroup like this:
-   * <code>presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE)</code>
-   */
+    /**
+     * By default button representing popup action group displays 'dropdown' icon.
+     * This key allows to avoid 'dropdown' icon painting, just put it in ActionButtonImpl's presentation or template presentation of ActionGroup like this:
+     * <code>presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE)</code>
+     */
 
-  public static final Key<Boolean> HIDE_DROPDOWN_ICON = Key.create("HIDE_DROPDOWN_ICON");
+    public static final Key<Boolean> HIDE_DROPDOWN_ICON = Key.create("HIDE_DROPDOWN_ICON");
 
-  void setVisible(boolean visible);
+    void setVisible(boolean visible);
 
-  boolean isVisible();
+    boolean isVisible();
 
-  @Nonnull
-  Presentation getPresentation();
+    @Nonnull
+    Presentation getPresentation();
 
-  Rectangle getBounds();
+    Rectangle getBounds();
 
-  void setIconOverrider(@Nullable Function<ActionButton, Image> imageCalculator);
+    void setIconOverrider(@Nullable Function<ActionButton, Image> imageCalculator);
 
-  void updateToolTipText();
+    void updateToolTipText();
 
-  void click();
+    void click();
 
-  void setNoIconsInPopup(boolean value);
+    void setNoIconsInPopup(boolean value);
 
-  void setBorder(Border border);
+    void setBorder(Border border);
 
-  void setOpaque(boolean value);
+    void setOpaque(boolean value);
 
-  void setCustomTooltipBuilder(BiConsumer<HelpTooltip, Presentation> builder);
+    void setCustomTooltipBuilder(BiConsumer<HelpTooltip, Presentation> builder);
 
-  void setCustomShortcutBuilder(Supplier<String> shortcutBuilder);
+    void setCustomShortcutBuilder(Supplier<String> shortcutBuilder);
 }

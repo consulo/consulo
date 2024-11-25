@@ -84,8 +84,11 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
     AnimatedLogoLabel animatedLogoLabel = new AnimatedLogoLabel(8, foreground, false, true);
     logoPanel.add(animatedLogoLabel, BorderLayout.CENTER);
 
-    panel.add(logoPanel, BorderLayout.NORTH);
-    panel.add(createActionPanel(), BorderLayout.CENTER);
+    JPanel topPanel = new JPanel(new VerticalFlowLayout(true, false));
+    topPanel.add(logoPanel);
+    topPanel.add(createActionPanel());
+
+    panel.add(topPanel, BorderLayout.NORTH);
     panel.add(createSettingsAndDocs(), BorderLayout.SOUTH);
     return panel;
   }

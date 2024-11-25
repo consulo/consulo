@@ -72,7 +72,6 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.basic.BasicRadioButtonUI;
 import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
@@ -108,7 +107,7 @@ public class UIUtil {
     @Deprecated
     @DeprecationInfo("StyleManager.get().getCurrentStyle().isDark(), and don't call this method inside swing paint code")
     public static boolean isUnderDarkTheme() {
-        return DarkThemeCalculator.isDark();
+        return DarkThemeCalculator.isDark() ;
     }
 
     public static final Key<Iterable<? extends Component>> NOT_IN_HIERARCHY_COMPONENTS = Key.create("NOT_IN_HIERARCHY_COMPONENTS");
@@ -303,6 +302,7 @@ public class UIUtil {
         MINI
     }
 
+    @Deprecated
     public enum ComponentStyle {
         LARGE,
         REGULAR,
@@ -391,29 +391,7 @@ public class UIUtil {
 
     private static final Ref<Boolean> ourRetina = Ref.create(Platform.current().os().isMac() ? null : false);
 
-    private static volatile StyleSheet ourDefaultHtmlKitCss;
-
     private UIUtil() {
-    }
-
-    public static void configureHtmlKitStylesheet(@Nonnull Supplier<? extends StyleSheet> styleSheetFactory) {
-        if (ourDefaultHtmlKitCss != null) {
-            return;
-        }
-
-
-        // save the default JRE CSS and ..
-        HTMLEditorKit kit = new HTMLEditorKit();
-        ourDefaultHtmlKitCss = kit.getStyleSheet();
-        // .. erase global ref to this CSS so no one can alter it
-        kit.setStyleSheet(null);
-
-        // Applied to all JLabel instances, including subclasses. Supported in JBR only.
-        UIManager.getDefaults().put("javax.swing.JLabel.userStyleSheet", styleSheetFactory.get());
-    }
-
-    public static StyleSheet getDefaultHtmlKitCss() {
-        return ourDefaultHtmlKitCss;
     }
 
     /**
@@ -1486,6 +1464,7 @@ public class UIUtil {
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
+    @Deprecated
     public static boolean isUnderAquaLookAndFeel() {
         return Platform.current().os().isMac() && UIManager.getLookAndFeel().getName().contains("Mac OS X");
     }
@@ -1530,11 +1509,12 @@ public class UIUtil {
         return isUnderDarkTheme();
     }
 
+    @Deprecated
     public static boolean isUnderBuildInLaF() {
-        LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-        return lookAndFeel instanceof BuildInLookAndFeel;
+        return true;
     }
 
+    @Deprecated
     public static boolean isUnderGTKLookAndFeel() {
         return UIManager.getLookAndFeel().getName().contains("GTK");
     }
@@ -1588,10 +1568,6 @@ public class UIUtil {
         );
     }
 
-    public static boolean isFullRowSelectionLAF() {
-        return false;
-    }
-
     public static boolean isUnderNativeMacLookAndFeel() {
         return Platform.current().os().isMac();
     }
@@ -1609,11 +1585,7 @@ public class UIUtil {
     }
 
     public static Insets getListViewportPadding() {
-        return JBUI.emptyInsets();
-    }
-
-    public static boolean isToUseDottedCellBorder() {
-        return !isUnderNativeMacLookAndFeel();
+        return JBUI.insets(8, 0);
     }
 
     public static boolean isControlKeyDown(MouseEvent mouseEvent) {
@@ -2570,14 +2542,6 @@ public class UIUtil {
         }
     }
 
-    public static void disposeProgress(final JProgressBar progress) {
-        if (!isUnderNativeMacLookAndFeel()) {
-            return;
-        }
-
-        SwingUtilities.invokeLater(() -> progress.setUI(null));
-    }
-
     @Nullable
     public static Component findUltimateParent(Component c) {
         if (c == null) {
@@ -2664,7 +2628,7 @@ public class UIUtil {
     }
 
     public static FontUIResource getFontWithFallback(@Nonnull String familyName, @JdkConstants.FontStyle int style, int size) {
-        Font fontWithFallback = new StyleContext().getFont(familyName, style, size);
+        Font fontWithFallback = StyleContext.getDefaultStyleContext().getFont(familyName, style, size);
         return fontWithFallback instanceof FontUIResource ? (FontUIResource)fontWithFallback : new FontUIResource(fontWithFallback);
     }
 

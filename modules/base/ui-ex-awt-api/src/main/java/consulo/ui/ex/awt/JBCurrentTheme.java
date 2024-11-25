@@ -577,13 +577,9 @@ public class JBCurrentTheme {
     }
 
     @Nonnull
+    @Deprecated
     public static Color searchFieldBorderColor() {
-      return JBColor.namedColor("SearchEverywhere.SearchField.borderColor", 0xbdbdbd);
-    }
-
-    @Nonnull
-    public static Insets searchFieldInsets() {
-      return JBUI.insets(0, 6, 0, 5);
+      return JBColor.border();
     }
 
     public static int maxListHeight() {
@@ -618,6 +614,11 @@ public class JBCurrentTheme {
     @Nonnull
     public static Color advertiserBackground() {
       return JBColor.namedColor("SearchEverywhere.Advertiser.background", 0xf2f2f2);
+    }
+
+    @Nonnull
+    public static Border listCellBorder() {
+        return JBUI.Borders.empty(4);
     }
   }
 

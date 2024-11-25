@@ -17,8 +17,8 @@ package consulo.ide.impl.ui;
 
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -26,21 +26,33 @@ import java.awt.*;
  * @since 22-Jun-17
  */
 public class ToolwindowPaintUtil {
-  public static void drawHeader(Graphics g, int x, int width, int height, boolean active, boolean drawTopLine) {
-    drawHeader(g, x, width, height, active, false, drawTopLine, true);
-  }
-
-  public static void drawHeader(Graphics g, int x, int width, int height, boolean active, boolean toolWindow, boolean drawTopLine, boolean drawBottomLine) {
-    g.setColor(UIUtil.getPanelBackground());
-    g.fillRect(x, 0, width, height);
-
-    if (active) {
-      g.setColor(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
-      g.fillRect(x, 0, width, height);
+    public static void drawHeader(Graphics g, int x, int width, int height, boolean active, boolean drawTopLine) {
+        drawHeader(g, x, width, height, active, false, drawTopLine, true);
     }
 
-    g.setColor(UIUtil.getBorderColor());
-    if (drawTopLine) g.drawLine(x, 0, width, 0);
-    if (drawBottomLine) g.drawLine(x, height - JBUI.scale(1), width, height - JBUI.scale(1));
-  }
+    public static void drawHeader(Graphics g, int x, int width, int height, boolean active, boolean toolWindow, boolean drawTopLine, boolean drawBottomLine) {
+        g.setColor(UIUtil.getPanelBackground());
+        g.fillRect(x, 0, width, height);
+
+        if (active) {
+            g.setColor(getActiveToolWindowHeaderColor());
+            g.fillRect(x, 0, width, height);
+        }
+
+        g.setColor(UIUtil.getBorderColor());
+        if (drawTopLine) {
+            g.drawLine(x, 0, width, 0);
+        }
+        if (drawBottomLine) {
+            g.drawLine(x, height - JBUI.scale(1), width, height - JBUI.scale(1));
+        }
+    }
+
+    public static Color getActiveToolWindowHeaderColor() {
+        Color color = UIManager.getColor("TabbedPane.focusColor");
+        if (color == null) {
+            color = UIUtil.getPanelBackground();
+        }
+        return color;
+    }
 }

@@ -120,8 +120,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         }
     }
 
-    private void initSearchField() {
-        updateContextCombobox();
+    public void addInputListeners() {
         mySearchField.addValueListener(event -> {
             myIsUsedTrigger = true;
 
@@ -167,21 +166,15 @@ public class RunAnythingPopupUI extends BigPopupUI {
         });
 
         mySearchField.addBlurListener(event -> {
-            final ActionCallback result = new ActionCallback();
             UIUtil.invokeLaterIfNeeded(() -> {
-                try {
-                    if (myCalcThread != null) {
-                        myCalcThread.cancel();
-                    }
-                    myAlarm.cancelAllRequests();
-
-                    Application.get().invokeLater(() -> ActionToolbarsHolder.updateAllToolbarsImmediately());
-
-                    searchFinishedHandler.run();
+                if (myCalcThread != null) {
+                    myCalcThread.cancel();
                 }
-                finally {
-                    result.setDone();
-                }
+                myAlarm.cancelAllRequests();
+
+                Application.get().invokeLater(() -> ActionToolbarsHolder.updateAllToolbarsImmediately());
+
+                searchFinishedHandler.run();
             });
         });
     }
@@ -435,8 +428,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
         mySearchField.addKeyPressedListener(this::updateByModifierKeysEvent);
 
         mySearchField.addKeyReleasedListener(this::updateByModifierKeysEvent);
-
-        initSearchField();
 
         mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
     }
@@ -856,7 +847,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
         initResultsList();
 
-        initSearchField();
+        updateContextCombobox();
 
         initMySearchField();
     }
@@ -944,7 +935,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     @Nonnull
     @Override
-    protected JPanel createSettingsPanel() {
+    protected JComponent createSettingsPanel() {
         JPanel res = new JPanel(new FlowLayout(RIGHT, 0, 0));
         res.setOpaque(false);
 

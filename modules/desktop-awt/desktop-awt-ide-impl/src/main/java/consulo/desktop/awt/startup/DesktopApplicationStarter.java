@@ -15,7 +15,9 @@
  */
 package consulo.desktop.awt.startup;
 
+import com.formdev.flatlaf.ui.FlatNativeMacLibrary;
 import com.formdev.flatlaf.ui.FlatNativeWindowsLibrary;
+import com.formdev.flatlaf.util.HiDPIUtils;
 import com.google.gson.Gson;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
@@ -155,12 +157,22 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         // execute it in parallel
         pool.execute(DesktopAWTFontRegistry::registerBundledFonts);
 
+        // region FlatLaf
+        // disable safe triangle hacks, due we use own event queue
+        System.setProperty("flatlaf.useSubMenuSafeTriangle", "false");
+        // replace hidpi repaint manager for fixing windows issues
+        HiDPIUtils.installHiDPIRepaintManager();
         // preload all flat native libraries
         pool.execute(() -> {
-            FlatNativeWindowsLibrary.isLoaded();
-//            FlatNativeMacLibrary.isLoaded();
-//            FlatNativeLinuxLibrary.isLoaded();
+            if (myPlatform.os().isWindows()) {
+                FlatNativeWindowsLibrary.isLoaded();
+            }
+
+            if (myPlatform.os().isMac()) {
+                FlatNativeMacLibrary.isLoaded();
+            }
         });
+        // endregion
 
         SwingUtilities.invokeLater(() -> {
             if (myPlatform.os().isXWindow()) {

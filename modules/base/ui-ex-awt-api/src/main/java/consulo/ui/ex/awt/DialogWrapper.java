@@ -488,8 +488,7 @@ public abstract class DialogWrapper {
         Map<Action, JButton> buttonMap = new LinkedHashMap<>();
 
         boolean hasHelpToMoveToLeftSide = false;
-        if (SwingUIDecorator.get(SwingUIDecorator::decorateHelpButton) == Boolean.TRUE
-            && Arrays.asList(actions).contains(getHelpAction())) {
+        if (Arrays.asList(actions).contains(getHelpAction())) {
             hasHelpToMoveToLeftSide = true;
             actions = ArrayUtil.remove(actions, getHelpAction());
         }

@@ -15,22 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.navigationToolbar.ui;
 
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.style.StyleManager;
-
 /**
  * @author Konstantin Bulenkov
  */
 public class NavBarUIManager {
-  public static final NavBarUI AQUA = new AquaNavBarUI();
   public static final NavBarUI COMMON = new CommonNavBarUI();
-  public static final NavBarUI DARCULA = new DarculaNavBarUI();
-  public static final NavBarUI GTK = new GtkNavBarUI();
 
   public static NavBarUI getUI() {
-    if (UIUtil.isUnderAquaLookAndFeel()) return AQUA;
-    if (UIUtil.isUnderGTKLookAndFeel()) return GTK;
-    if (StyleManager.get().getCurrentStyle().isDark()) return DARCULA;
     return COMMON;
   }
 }

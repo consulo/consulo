@@ -15,35 +15,32 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import consulo.application.ui.UISettings;
-import consulo.application.ui.event.UISettingsListener;
-import consulo.ui.Coordinate2D;
-import consulo.desktop.awt.ui.util.AppIconUtil;
-import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ui.wm.IdeRootPaneNorthExtension;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.project.ui.wm.BalloonLayout;
+import consulo.application.ui.ApplicationWindowStateService;
+import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
+import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
-import consulo.ide.impl.application.FrameTitleUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.application.FrameTitleUtil;
+import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.ui.wm.BalloonLayout;
+import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
-import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
+import consulo.ui.Coordinate2D;
 import consulo.ui.Rectangle2D;
-import consulo.application.ui.ApplicationWindowStateService;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.MnemonicHelper;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import jakarta.annotation.Nullable;
 
 import javax.accessibility.AccessibleContext;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -52,7 +49,7 @@ import java.awt.event.WindowEvent;
 /**
  * @author Konstantin Bulenkov
  */
-public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, AccessibleContextAccessor, UISettingsListener {
+public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, AccessibleContextAccessor {
   private final Runnable myClearInstance;
   private BalloonLayout myBalloonLayout;
   private boolean myDisposed;
@@ -71,7 +68,6 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
     setContentPane(screen);
     setDefaultTitle();
     AppIconUtil.updateWindowIcon(this);
-    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
     setSize(TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize()));
     setResizable(false);
     Point location = TargetAWT.to(ApplicationWindowStateService.getInstance().getLocation(WelcomeFrameManager.DIMENSION_KEY));
@@ -168,10 +164,5 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
 
   public JComponent getComponent() {
     return getRootPane();
-  }
-
-  @Override
-  public void uiSettingsChanged(UISettings source) {
-    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, getRootPane());
   }
 }

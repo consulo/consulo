@@ -33,7 +33,7 @@ import static consulo.ui.ex.awt.RelativeFont.SMALL;
  */
 public abstract class AbstractNavBarUI implements NavBarUI {
 
-  private final static Map<NavBarItem, Map<ImageType, JBUI.ScaleContext.Cache<BufferedImage>>> myCache = new HashMap<>();
+  private final static Map<NavBarItem, Map<ImageType, JBUI.ScaleContext.Cache<BufferedImage>>> ourCache = new HashMap<>();
 
   private enum ImageType {
     INACTIVE,
@@ -75,11 +75,6 @@ public abstract class AbstractNavBarUI implements NavBarUI {
   }
 
   @Override
-  public short getSelectionAlpha() {
-    return 150;
-  }
-
-  @Override
   public void doPaintNavBarItem(Graphics2D g, NavBarItem item, NavBarPanel navbar) {
     final boolean floating = navbar.isInFloatingMode();
     boolean toolbarVisible = UISettings.getInstance().getShowMainToolbar();
@@ -101,7 +96,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
     }
 
     // see: https://github.com/JetBrains/intellij-community/pull/1111
-    Map<ImageType, JBUI.ScaleContext.Cache<BufferedImage>> cache = myCache.computeIfAbsent(item, k -> new HashMap<>());
+    Map<ImageType, JBUI.ScaleContext.Cache<BufferedImage>> cache = ourCache.computeIfAbsent(item, k -> new HashMap<>());
     JBUI.ScaleContext.Cache<BufferedImage> imageCache = cache.computeIfAbsent(type, k -> new JBUI.ScaleContext.Cache<>((ctx) -> drawToBuffer(item, ctx, floating, toolbarVisible, selected, navbar)));
     BufferedImage image = imageCache.getOrProvide(JBUI.ScaleContext.create(g));
     if (image == null) return;
@@ -244,7 +239,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   @Override
   public void clearItems() {
-    myCache.clear();
+    ourCache.clear();
   }
 
   @Override

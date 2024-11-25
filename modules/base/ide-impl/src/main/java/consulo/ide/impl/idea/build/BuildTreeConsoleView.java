@@ -1090,7 +1090,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     private void updateProgressBar(long total, long progress) {
-      myPanelWithProgress.updateProgress(total, progress);
+      myProject.getUIAccess().give(() -> myPanelWithProgress.updateProgress(total, progress));
     }
 
     private

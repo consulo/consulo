@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.project.util.ProjectUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.Tree;
@@ -116,7 +115,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     myTree = new Tree(new AsyncTreeModel(new StructureTreeModel<>(new NewProjectTreeStructure(context), parentDisposable), parentDisposable));
     myTree.setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, null));
     myTree.setOpaque(false);
-    myTree.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
+    myTree.setBackground(MorphColor.of(UIUtil::getPanelBackground));
     myTree.setRootVisible(false);
     myTree.setRowHeight(JBUI.scale(24));
 

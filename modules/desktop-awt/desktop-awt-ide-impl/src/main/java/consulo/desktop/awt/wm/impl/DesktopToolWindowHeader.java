@@ -22,13 +22,13 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.util.NotNullProducer;
+import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
@@ -107,6 +107,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     private ActionToolbar myToolbarWest;
     private final JPanel myWestPanel;
 
+    @RequiredUIAccess
     public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull final NotNullProducer<ActionGroup> gearProducer) {
         super(new BorderLayout());
 
@@ -135,8 +136,8 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         component.setOpaque(false);
 
         JPanel rightPanel = wrapAndFillVertical(component);
-        rightPanel.setBorder(JBUI.Borders.empty(0, 0, 0, 6));
-        
+        rightPanel.setBorder(JBUI.Borders.empty(0, 3, 0, 3));
+
         add(rightPanel, BorderLayout.EAST);
 
         myWestPanel.addMouseListener(new PopupHandler() {
@@ -173,8 +174,9 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
             }
         });
 
-        setBackground(MorphColor.ofWithoutCache(() -> myToolWindow.isActive() ? SwingUIDecorator.get(SwingUIDecorator::getSidebarColor) : UIUtil
-            .getPanelBackground()));
+        setBackground(MorphColor.ofWithoutCache(() -> {
+            return !isActive() ? UIUtil.getPanelBackground() : ToolwindowPaintUtil.getActiveToolWindowHeaderColor();
+        }));
 
         setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 1, 0));
 

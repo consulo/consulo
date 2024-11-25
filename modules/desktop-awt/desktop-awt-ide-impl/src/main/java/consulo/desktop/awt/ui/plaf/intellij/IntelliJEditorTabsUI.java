@@ -22,7 +22,6 @@ import consulo.ide.impl.ui.laf.JBEditorTabsUI;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.paint.LinePainter2D;
@@ -362,7 +361,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
             return;
         }
 
-        Color color = tabs.holdsFocus() ? JBCurrentTheme.Focus.focusColor() : JBColor.border();
+        Color color = tabs.holdsFocus() ? getFocusColor() : getInactiveFocusColor();
 
         g2d.setColor(color);
 
@@ -376,6 +375,26 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
                 RectanglePainter2D.FILL.paint(g2d, rect.x + rect.width - underlineSize, rect.y, underlineSize, rect.height);
                 break;
         }
+    }
+
+    private Color getInactiveFocusColor() {
+        Color color = UIManager.getColor("TabbedPane.inactiveUnderlineColor");
+        if (color == null) {
+            return JBColor.border();
+        }
+        return color;
+    }
+
+    private Color getFocusColor() {
+        Color color = UIManager.getColor("TabbedPane.underlineColor");
+        if (color == null) {
+            color = UIManager.getColor("Component.focusColor");
+        }
+
+        if (color == null) {
+            color = JBColor.BLUE;
+        }
+        return color;
     }
 
     protected void doPaintInactive(JBTabsImpl tabs, Graphics2D g2d, TabLabel label) {

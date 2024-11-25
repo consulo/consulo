@@ -17,36 +17,24 @@ package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
-import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsBlurListener;
-import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsFocusListener;
-import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyPressedListener;
-import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyReleasedListener;
 import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
-import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExtensionsExtender;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextField;
-import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ui.roots.ScalableIconComponent;
 import consulo.localize.LocalizeValue;
-import consulo.ui.FocusableComponent;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.event.*;
-import consulo.ui.ex.awt.JBTextField;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
-import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -56,7 +44,7 @@ import java.util.function.Consumer;
  * @since 2019-10-31
  */
 public class DesktopTextBoxWithExtensions {
-    private static class Supported extends DocumentSwingValidator<String, Supported.MyExtendableTextField> implements TextBoxWithExtensions, TextBoxWithTextField {
+    public static class Supported extends DocumentSwingValidator<String, Supported.MyExtendableTextField> implements TextBoxWithExtensions, TextBoxWithTextField {
         public class MyExtendableTextField extends ExtendableTextField implements FromSwingComponentWrapper {
             private ColorValue myForegroundColor;
 
@@ -132,6 +120,12 @@ public class DesktopTextBoxWithExtensions {
             toAWTComponent().setForegroundColor(foreground);
         }
 
+        @Override
+        public void setPlaceholder(@Nonnull LocalizeValue text) {
+            JTextField field = toAWTComponent();
+            field.putClientProperty("JTextField.placeholderText", text == LocalizeValue.empty() ? null : text.getValue());
+        }
+
         @Nullable
         @Override
         public ColorValue getForegroundColor() {
@@ -151,9 +145,9 @@ public class DesktopTextBoxWithExtensions {
                 }
 
                 @Override
-                public Consumer<InputEvent> getActionOnClick() {
+                public Consumer<AWTEvent> getActionOnClick() {
                     var clickListener = extension.getClickListener();
-                    return clickListener == null ? null : (e) -> clickListener.onEvent(new ClickEvent(Supported.this, DesktopAWTInputDetails.convert(e)));
+                    return clickListener == null ? null : (e) -> clickListener.onEvent(new ClickEvent(Supported.this, DesktopAWTInputDetails.convert(myComponent, e)));
                 }
             };
         }
@@ -196,11 +190,6 @@ public class DesktopTextBoxWithExtensions {
         }
 
         @Override
-        public void setPlaceholder(@Nonnull LocalizeValue text) {
-            toAWTComponent().getEmptyText().setText(text.getValue());
-        }
-
-        @Override
         public void setVisibleLength(int columns) {
             toAWTComponent().setColumns(columns);
         }
@@ -219,240 +208,5 @@ public class DesktopTextBoxWithExtensions {
         public boolean isEditable() {
             return toAWTComponent().isEditable();
         }
-    }
-
-    private static class UnsupportedTextField extends JBTextField {
-        private ColorValue myForegroundColor;
-
-        public UnsupportedTextField(String text) {
-            super(text);
-        }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-
-            updateForegroudColor();
-        }
-
-        public void setForegroundColor(@Nullable ColorValue color) {
-            myForegroundColor = color;
-
-            updateForegroudColor();
-        }
-
-        private void updateForegroudColor() {
-            if (myForegroundColor == null) {
-                setForeground(null);
-            }
-            else {
-                setForeground(TargetAWT.to(myForegroundColor));
-            }
-        }
-    }
-
-    private static class Unsupported extends DocumentSwingValidator<String, JPanel> implements TextBoxWithExtensions, TextBoxWithTextField {
-        private UnsupportedTextField myTextField;
-
-        private Extension[] myExtensions = new Extension[0];
-
-        private Unsupported(String text) {
-            initialize(new JPanel(new BorderLayout()) {
-                @Override
-                public void requestFocus() {
-                    myTextField.requestFocus();
-                }
-
-                @Override
-                public boolean requestFocusInWindow() {
-                    return myTextField.requestFocusInWindow();
-                }
-            });
-
-            myTextField = new UnsupportedTextField(text);
-            TextFieldPlaceholderFunction.install(myTextField);
-
-            myTextField.getDocument().addDocumentListener(new DocumentAdapter() {
-                @Override
-                @SuppressWarnings("unchecked")
-                @RequiredUIAccess
-                protected void textChanged(DocumentEvent e) {
-                    getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(Unsupported.this, getValue()));
-                }
-            });
-
-            addDocumentListenerForValidator(myTextField.getDocument());
-
-            JPanel panel = toAWTComponent();
-
-            panel.setBackground(myTextField.getBackground());
-            panel.add(myTextField, BorderLayout.CENTER);
-
-            myTextField.setBorder(JBUI.Borders.empty(0, 4));
-            panel.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1));
-        }
-
-        @Nonnull
-        @Override
-        public JBTextField getTextField() {
-            return myTextField;
-        }
-
-        @Override
-        public void setForegroundColor(@Nullable ColorValue foreground) {
-            myTextField.setForegroundColor(foreground);
-        }
-
-        @Nullable
-        @Override
-        public ColorValue getForegroundColor() {
-            return myTextField.myForegroundColor;
-        }
-
-        @Nonnull
-        @Override
-        public TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions) {
-            myExtensions = extensions;
-
-            JPanel panel = toAWTComponent();
-
-            List<Component> toRemove = new ArrayList<>();
-            for (int i = 0; i < panel.getComponentCount(); i++) {
-                Component component = panel.getComponent(i);
-                if (component != myTextField) {
-                    toRemove.add(component);
-                }
-            }
-
-            for (Component component : toRemove) {
-                panel.remove(component);
-            }
-
-            for (Extension extension : extensions) {
-                ScalableIconComponent icon = new ScalableIconComponent(extension.getIcon());
-
-                if (extension.isLeft()) {
-                    panel.add(icon, BorderLayout.WEST);
-                }
-                else {
-                    panel.add(icon, BorderLayout.EAST);
-                }
-
-                icon.revalidate();
-            }
-
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        public TextBoxWithExtensions addFirstExtension(@Nonnull Extension extension) {
-            setExtensions(ArrayUtil.prepend(extension, myExtensions));
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        public TextBoxWithExtensions addLastExtension(@Nonnull Extension extension) {
-            setExtensions(ArrayUtil.append(myExtensions, extension));
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        public Disposable addFocusListener(@Nonnull ComponentEventListener<FocusableComponent, FocusEvent> listener) {
-            AWTFocusAdapterAsFocusListener adapter = new AWTFocusAdapterAsFocusListener(this, listener);
-            myTextField.addFocusListener(adapter);
-            return () -> myTextField.removeFocusListener(adapter);
-        }
-
-        @Nonnull
-        @Override
-        public Disposable addBlurListener(@Nonnull ComponentEventListener<FocusableComponent, BlurEvent> listener) {
-            AWTFocusAdapterAsBlurListener adapter = new AWTFocusAdapterAsBlurListener(this, listener);
-            myTextField.addFocusListener(adapter);
-            return () -> myTextField.removeFocusListener(adapter);
-        }
-
-        @Nonnull
-        @Override
-        public Disposable addKeyPressedListener(@Nonnull ComponentEventListener<consulo.ui.Component, KeyPressedEvent> listener) {
-            AWTKeyAdapterAsKeyPressedListener adapter = new AWTKeyAdapterAsKeyPressedListener(this, listener);
-            myTextField.addKeyListener(adapter);
-            return () -> myTextField.removeKeyListener(adapter);
-        }
-
-        @Nonnull
-        @Override
-        public Disposable addKeyReleasedListener(@Nonnull ComponentEventListener<consulo.ui.Component, KeyReleasedEvent> listener) {
-            AWTKeyAdapterAsKeyReleasedListener adapter = new AWTKeyAdapterAsKeyReleasedListener(this, listener);
-            myTextField.addKeyListener(adapter);
-            return () -> myTextField.removeKeyListener(adapter);
-        }
-
-        @Override
-        public boolean hasFocus() {
-            return myTextField.hasFocus();
-        }
-
-        @Override
-        public void setFocusable(boolean focusable) {
-            myTextField.setFocusable(focusable);
-        }
-
-        @Override
-        public void focus() {
-            myTextField.requestFocus();
-        }
-
-        @Override
-        public boolean isFocusable() {
-            return myTextField.isFocusable();
-        }
-
-        @Override
-        public void setPlaceholder(@Nonnull LocalizeValue text) {
-            myTextField.getEmptyText().setText(text.toString());
-        }
-
-        @Override
-        public void setVisibleLength(int columns) {
-            myTextField.setColumns(columns);
-        }
-
-        @Override
-        public void selectAll() {
-            myTextField.selectAll();
-        }
-
-        @Override
-        public void setEditable(boolean editable) {
-            myTextField.setEditable(editable);
-        }
-
-        @Override
-        public boolean isEditable() {
-            return myTextField.isEditable();
-        }
-
-        @Nullable
-        @Override
-        public String getValue() {
-            return myTextField.getText();
-        }
-
-        @RequiredUIAccess
-        @Override
-        public void setValue(String value, boolean fireListeners) {
-            myTextField.setText(value);
-        }
-    }
-
-    public static TextBoxWithExtensions create(String text) {
-        Object o = UIManager.get(SupportTextBoxWithExtensionsExtender.class);
-        if (o instanceof SupportTextBoxWithExtensionsExtender) {
-            return new Supported(text);
-        }
-        return new Unsupported(text);
     }
 }

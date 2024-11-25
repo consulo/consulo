@@ -24,23 +24,26 @@ import jakarta.annotation.Nonnull;
  * @since 12.05.2024
  */
 public class MoreActionGroup extends DefaultActionGroup {
-  private final boolean myHorizontal;
+    private final boolean myHorizontal;
 
-  public MoreActionGroup() {
-    this(true);
-  }
+    public MoreActionGroup() {
+        this(true);
+    }
 
-  public MoreActionGroup(boolean horizontal) {
-    myHorizontal = horizontal;
-  }
+    public MoreActionGroup(boolean horizontal) {
+        myHorizontal = horizontal;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
 
-    presentation.setIcon(myHorizontal ? PlatformIconGroup.actionsMorehorizontal() : PlatformIconGroup.actionsMorevertical());
-    presentation.putClientProperty(ActionButton.HIDE_DROPDOWN_ICON, true);
-    // TODO not supported presentation.setHideGroupIfEmpty(true);
-  }
+        presentation.setIcon(myHorizontal ? PlatformIconGroup.actionsMorehorizontal() : PlatformIconGroup.actionsMorevertical());
+    }
+
+    @Override
+    public boolean showBelowArrow() {
+        return false;
+    }
 }

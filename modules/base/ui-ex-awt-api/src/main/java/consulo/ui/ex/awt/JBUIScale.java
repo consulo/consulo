@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.awt.internal.DetectRetinaKit;
@@ -44,60 +43,8 @@ public class JBUIScale {
 
   @Nonnull
   private static Pair<String, Integer> calcSystemFontData() {
-    // with JB Linux JDK the label font comes properly scaled based on Xft.dpi settings.
     Font font = UIManager.getFont("Label.font");
-    if (SystemInfo.isMacOSElCapitan) {
-      // text family should be used for relatively small sizes (<20pt), don't change to Display
-      // see more about SF https://medium.com/@mach/the-secret-of-san-francisco-fonts-4b5295d9a745#.2ndr50z2v
-      font = new Font(".SF NS Text", font.getStyle(), font.getSize());
-    }
-
-    Logger log = getLogger();
-    boolean isScaleVerbose = Boolean.getBoolean("ide.ui.scale.verbose");
-    if (isScaleVerbose) {
-      log.info(String.format("Label font: %s, %d", font.getFontName(), font.getSize()));
-    }
-
-    if (Platform.current().os().isLinux()) {
-      Object value = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/DPI");
-      if (isScaleVerbose) {
-        log.info(String.format("gnome.Xft/DPI: %s", value));
-      }
-      if (value instanceof Integer) { // defined by JB JDK when the resource is available in the system
-        // If the property is defined, then:
-        // 1) it provides correct system scale
-        // 2) the label font size is scaled
-        int dpi = ((Integer)value).intValue() / 1024;
-        if (dpi < 50) dpi = 50;
-        float scale = JreHiDpiUtil.isJreHiDPIEnabled() ? 1f : discreteScale(dpi / 96f); // no scaling in JRE-HiDPI mode
-        UIUtil.DEF_SYSTEM_FONT_SIZE = font.getSize() / scale; // derive actual system base font size
-        if (isScaleVerbose) {
-          log.info(String.format("DEF_SYSTEM_FONT_SIZE: %.2f", UIUtil.DEF_SYSTEM_FONT_SIZE));
-        }
-      }
-      else if (!SystemInfo.isJetBrainsJvm) {
-        // With Oracle JDK: derive scale from X server DPI, do not change DEF_SYSTEM_FONT_SIZE
-        float size = UIUtil.DEF_SYSTEM_FONT_SIZE * getScreenScale();
-        font = font.deriveFont(size);
-        if (isScaleVerbose) {
-          log.info(String.format("(Not-JB JRE) reset font size: %.2f", size));
-        }
-      }
-    }
-    else if (Platform.current().os().isWindows()) {
-      //noinspection HardCodedStringLiteral
-      @SuppressWarnings("SpellCheckingInspection") Font winFont = (Font)Toolkit.getDefaultToolkit().getDesktopProperty("win.messagebox.font");
-      if (winFont != null) {
-        font = winFont; // comes scaled
-        if (isScaleVerbose) {
-          log.info(String.format("Windows sys font: %s, %d", winFont.getFontName(), winFont.getSize()));
-        }
-      }
-    }
     Pair<String, Integer> result = Pair.create(font.getName(), font.getSize());
-    if (isScaleVerbose) {
-      log.info(String.format("ourSystemFontData: %s, %d", result.first, result.second));
-    }
     return result;
   }
 

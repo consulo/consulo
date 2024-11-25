@@ -20,6 +20,7 @@ import consulo.ui.event.details.*;
 import consulo.util.lang.BitUtil;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -32,46 +33,68 @@ import java.util.Set;
  * @since 06/11/2022
  */
 public class DesktopAWTInputDetails {
-    public static InputDetails convert(InputEvent event) {
+    public static InputDetails convert(Component awtComponent, AWTEvent event) {
         Set<ModifiedInputDetails.Modifier> modifiers = new HashSet<>();
-        if (BitUtil.isSet(event.getModifiersEx(), MouseEvent.CTRL_DOWN_MASK)) {
-            modifiers.add(ModifiedInputDetails.Modifier.CTRL);
-        }
 
-        if (BitUtil.isSet(event.getModifiersEx(), MouseEvent.ALT_DOWN_MASK)) {
-            modifiers.add(ModifiedInputDetails.Modifier.ALT);
-        }
+        if (event instanceof ActionEvent actionEvent) {
+            Point point = awtComponent.getLocationOnScreen();
 
-        if (BitUtil.isSet(event.getModifiersEx(), MouseEvent.SHIFT_DOWN_MASK)) {
-            modifiers.add(ModifiedInputDetails.Modifier.SHIFT);
-        }
+            Position2D relative = new Position2D(awtComponent.getX(), awtComponent.getY());
+            Position2D absolete = new Position2D(point.x, point.y);
 
-        EnumSet<MouseInputDetails.Modifier> enumModifiers = modifiers.isEmpty() ? EnumSet.noneOf(ModifiedInputDetails.Modifier.class) : EnumSet.copyOf(modifiers);
-
-        if (event instanceof MouseEvent) {
-            int x = ((MouseEvent) event).getX();
-
-            MouseInputDetails.MouseButton button = MouseInputDetails.MouseButton.LEFT;
-            if (((MouseEvent) event).getButton() == MouseEvent.BUTTON2) {
-                button = MouseInputDetails.MouseButton.MIDDLE;
-            }
-            else if (((MouseEvent) event).getButton() == MouseEvent.BUTTON3) {
-                button = MouseInputDetails.MouseButton.RIGHT;
+            if (BitUtil.isSet(actionEvent.getModifiers(), ActionEvent.CTRL_MASK)) {
+                modifiers.add(ModifiedInputDetails.Modifier.CTRL);
             }
 
-            Position2D relative = new Position2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
-            Position2D absolute = new Position2D(((MouseEvent) event).getXOnScreen(), ((MouseEvent) event).getYOnScreen());
+            if (BitUtil.isSet(actionEvent.getModifiers(), ActionEvent.ALT_MASK)) {
+                modifiers.add(ModifiedInputDetails.Modifier.ALT);
+            }
 
-            return new MouseInputDetails(relative, absolute, enumModifiers, button);
-        }
-        else if (event instanceof KeyEvent keyEvent) {
-            java.awt.Component component = keyEvent.getComponent();
+            if (BitUtil.isSet(actionEvent.getModifiers(), ActionEvent.SHIFT_MASK)) {
+                modifiers.add(ModifiedInputDetails.Modifier.SHIFT);
+            }
 
-            Position2D pos = new Position2D(component.getX(), component.getY());
+            EnumSet<MouseInputDetails.Modifier> enumModifiers = modifiers.isEmpty() ? EnumSet.noneOf(ModifiedInputDetails.Modifier.class) : EnumSet.copyOf(modifiers);
+            return new MouseInputDetails(relative, absolete, enumModifiers, MouseInputDetails.MouseButton.LEFT);
+        } else {
+            if (event instanceof InputEvent inputEvent) {
+                if (BitUtil.isSet(inputEvent.getModifiersEx(), MouseEvent.CTRL_DOWN_MASK)) {
+                    modifiers.add(ModifiedInputDetails.Modifier.CTRL);
+                }
 
-            Point locationOnScreen = component.getLocationOnScreen();
-            Position2D posOnScreen = new Position2D(locationOnScreen.x, locationOnScreen.y);
-            return new KeyboardInputDetails(pos, posOnScreen, enumModifiers, KeyCode.of(keyEvent.getKeyCode()));
+                if (BitUtil.isSet(inputEvent.getModifiersEx(), MouseEvent.ALT_DOWN_MASK)) {
+                    modifiers.add(ModifiedInputDetails.Modifier.ALT);
+                }
+
+                if (BitUtil.isSet(inputEvent.getModifiersEx(), MouseEvent.SHIFT_DOWN_MASK)) {
+                    modifiers.add(ModifiedInputDetails.Modifier.SHIFT);
+                }
+            }
+
+            EnumSet<MouseInputDetails.Modifier> enumModifiers = modifiers.isEmpty() ? EnumSet.noneOf(ModifiedInputDetails.Modifier.class) : EnumSet.copyOf(modifiers);
+
+            if (event instanceof MouseEvent mouseEvent) {
+                int x = mouseEvent.getX();
+
+                MouseInputDetails.MouseButton button = MouseInputDetails.MouseButton.LEFT;
+                if (mouseEvent.getButton() == MouseEvent.BUTTON2) {
+                    button = MouseInputDetails.MouseButton.MIDDLE;
+                }
+                else if (mouseEvent.getButton() == MouseEvent.BUTTON3) {
+                    button = MouseInputDetails.MouseButton.RIGHT;
+                }
+
+                Position2D relative = new Position2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
+                Position2D absolute = new Position2D(((MouseEvent) event).getXOnScreen(), ((MouseEvent) event).getYOnScreen());
+
+                return new MouseInputDetails(relative, absolute, enumModifiers, button);
+            }
+            else if (event instanceof KeyEvent keyEvent) {
+                Position2D pos = new Position2D(awtComponent.getX(), awtComponent.getY());
+                Point locationOnScreen = awtComponent.getLocationOnScreen();
+                Position2D posOnScreen = new Position2D(locationOnScreen.x, locationOnScreen.y);
+                return new KeyboardInputDetails(pos, posOnScreen, enumModifiers, KeyCode.of(keyEvent.getKeyCode()));
+            }
         }
 
         throw new UnsupportedOperationException("unknown event " + event);

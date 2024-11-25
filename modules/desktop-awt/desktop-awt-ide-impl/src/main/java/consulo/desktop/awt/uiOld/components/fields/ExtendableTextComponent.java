@@ -2,10 +2,9 @@
 package consulo.desktop.awt.uiOld.components.fields;
 
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
-import java.awt.event.InputEvent;
+import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -53,7 +52,7 @@ public interface ExtendableTextComponent {
       return false;
     }
 
-    default Consumer<InputEvent> getActionOnClick() {
+    default Consumer<AWTEvent> getActionOnClick() {
       return null;
     }
 
@@ -78,7 +77,7 @@ public interface ExtendableTextComponent {
         }
 
         @Override
-        public Consumer<InputEvent> getActionOnClick() {
+        public Consumer<AWTEvent> getActionOnClick() {
           return event -> action.run();
         }
       };

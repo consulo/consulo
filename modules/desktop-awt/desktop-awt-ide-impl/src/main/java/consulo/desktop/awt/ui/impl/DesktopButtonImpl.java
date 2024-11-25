@@ -20,6 +20,7 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
@@ -77,6 +78,15 @@ class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Butto
     @Override
     public Disposable addClickListener(@Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
         return addListener(ClickEvent.class, clickListener);
+    }
+
+    @Override
+    public void addStyle(ButtonStyle style) {
+        switch (style) {
+            case BORDERLESS:
+                toAWTComponent().putClientProperty("JButton.buttonType", "borderless");
+                break;
+        }
     }
 
     @Nonnull

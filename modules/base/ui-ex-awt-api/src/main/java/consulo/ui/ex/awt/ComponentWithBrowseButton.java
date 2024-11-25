@@ -52,6 +52,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
+@Deprecated
+@DeprecationInfo("Prefer prefix & suffix components")
 public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel implements Disposable {
     private static final Logger LOG = Logger.getInstance(ComponentWithBrowseButton.class);
 

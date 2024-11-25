@@ -16,7 +16,6 @@
 package consulo.desktop.awt.ui.plaf;
 
 import consulo.codeEditor.Editor;
-import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.JBInsets;
 
@@ -27,55 +26,56 @@ import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 
 public class BasicEditorTextFieldUI extends BasicPanelUI {
-  public static BasicEditorTextFieldUI createUI(JComponent c) {
-    return new BasicEditorTextFieldUI();
-  }
-
-  @Override
-  public void installUI(JComponent c) {
-    setBorder(c);
-  }
-
-  protected void setBorder(JComponent c) {
-    Border border = c.getBorder();
-    if (border == null || border instanceof UIResource) {
-      c.setBorder(UIManager.getBorder("TextField.border"));
-    }
-  }
-
-  public static boolean isComboBoxEditor(Component c) {
-    return ComponentUtil.getParentOfType((Class<? extends JComboBox>)JComboBox.class, c) != null;
-  }
-
-  @Override
-  public void uninstallUI(JComponent c) {
-    LookAndFeel.uninstallBorder(c);
-  }
-
-  @Override
-  public void paint(Graphics g, JComponent c) {
-    EditorTextField field = (EditorTextField)c;
-
-    paintBackground(g, field);
-  }
-
-  protected void paintBackground(Graphics g, EditorTextField field) {
-    g.setColor(field.getBackground());
-    g.fillRect(0, 0, field.getWidth(), field.getHeight());
-  }
-
-  @Override
-  public Dimension getMinimumSize(JComponent c) {
-    EditorTextField editorTextField = (EditorTextField)c;
-    Editor editor = editorTextField.getEditor();
-    Dimension size = new Dimension(1, 20);
-    if (editor != null) {
-      size.height = editor.getLineHeight();
-
-      JBInsets.addTo(size, editorTextField.getInsets());
-      JBInsets.addTo(size, editor.getInsets());
+    public static BasicEditorTextFieldUI createUI(JComponent c) {
+        return new BasicEditorTextFieldUI();
     }
 
-    return size;
-  }
+    @Override
+    public void installUI(JComponent c) {
+        setBorder(c);
+
+        Insets margin = UIManager.getInsets("TextField.margin");
+        if (margin != null) {
+
+        }
+    }
+
+    protected void setBorder(JComponent c) {
+        Border border = c.getBorder();
+        if (border == null || border instanceof UIResource) {
+            c.setBorder(UIManager.getBorder("TextField.border"));
+        }
+    }
+
+    @Override
+    public void uninstallUI(JComponent c) {
+        LookAndFeel.uninstallBorder(c);
+    }
+
+    @Override
+    public void paint(Graphics g, JComponent c) {
+        EditorTextField field = (EditorTextField) c;
+
+        paintBackground(g, field);
+    }
+
+    protected void paintBackground(Graphics g, EditorTextField field) {
+        g.setColor(field.getBackground());
+        g.fillRect(0, 0, field.getWidth(), field.getHeight());
+    }
+
+    @Override
+    public Dimension getMinimumSize(JComponent c) {
+        EditorTextField editorTextField = (EditorTextField) c;
+        Editor editor = editorTextField.getEditor();
+        Dimension size = new Dimension(1, 20);
+        if (editor != null) {
+            size.height = editor.getLineHeight();
+
+            JBInsets.addTo(size, editorTextField.getInsets());
+            JBInsets.addTo(size, editor.getInsets());
+        }
+
+        return size;
+    }
 }

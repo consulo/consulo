@@ -1553,18 +1553,9 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     @Nullable
     private DataProvider myDataProvider;
 
-    /**
-     * @deprecated use {@link MyContentPanel#MyContentPanel(PopupBorder)}
-     */
-    @Deprecated
-    public MyContentPanel(final boolean resizable, final PopupBorder border, boolean drawMacCorner) {
-      this(border);
-    }
-
     public MyContentPanel(PopupBorder border) {
       super(new BorderLayout());
       putClientProperty(UIUtil.TEXT_COPY_ROOT, Boolean.TRUE);
-      setBorder(border);
     }
 
     public Dimension computePreferredSize() {

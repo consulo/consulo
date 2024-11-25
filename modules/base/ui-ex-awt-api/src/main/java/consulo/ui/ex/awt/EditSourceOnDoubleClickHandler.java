@@ -7,11 +7,10 @@ import consulo.dataContext.DataManager;
 import consulo.project.Project;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.tree.table.TreeTable;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -119,7 +118,7 @@ public final class EditSourceOnDoubleClickHandler {
 
     @Override
     public boolean onDoubleClick(@Nonnull MouseEvent e) {
-      TreePath clickPath = WideSelectionTreeUI.isWideSelection(myTree) ? myTree.getClosestPathForLocation(e.getX(), e.getY()) : myTree.getPathForLocation(e.getX(), e.getY());
+      TreePath clickPath = myTree.getClosestPathForLocation(e.getX(), e.getY());
       if (clickPath == null) return false;
 
       final DataContext dataContext = DataManager.getInstance().getDataContext(myTree);

@@ -8,13 +8,12 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.SpeedSearchUtilBase;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.util.RenderingUtil;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
 
 import javax.accessibility.AccessibleContext;
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
@@ -40,8 +39,6 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
   protected boolean myUsedCustomSpeedSearchHighlighting = false;
 
   protected JTree myTree;
-
-  private boolean myOpaque = true;
 
   @Override
   public final Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
@@ -71,30 +68,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
 
     // We paint background if and only if tree path is selected and tree has focus.
     // If path is selected and tree is not focused then we just paint focused border.
-    if (UIUtil.isFullRowSelectionLAF()) {
-      setBackground(selected ? UIUtil.getTreeSelectionBackground() : null);
-    }
-    else if (WideSelectionTreeUI.isWideSelection(tree)) {
-      setPaintFocusBorder(false);
-      if (selected) {
-        setBackground(UIUtil.getTreeSelectionBackground(hasFocus));
-      }
-      else {
-        setBackground(null);
-      }
-    }
-    else if (selected) {
-      setPaintFocusBorder(true);
-      if (isFocused()) {
-        setBackground(UIUtil.getTreeSelectionBackground());
-      }
-      else {
-        setBackground(null);
-      }
-    }
-    else {
-      setBackground(null);
-    }
+    setBackground(selected ? UIUtil.getTreeSelectionBackground(hasFocus) : null);
 
     if (value instanceof LoadingNode) {
       setForeground(JBColor.GRAY);
@@ -105,13 +79,9 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
       setIcon(null);
     }
 
-    if (WideSelectionTreeUI.isWideSelection(tree)) {
-      super.setOpaque(false);  // avoid erasing Nimbus focus frame
-      super.setIconOpaque(false);
-    }
-    else {
-      super.setOpaque(myOpaque || selected && hasFocus || selected && isFocused()); // draw selection background even for non-opaque tree
-    }
+    super.setOpaque(false);  // avoid erasing Nimbus focus frame
+    super.setIconOpaque(false);
+
     customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
 
     if (!myUsedCustomSpeedSearchHighlighting && !AbstractTreeUi.isLoadingNode(value)) {
@@ -137,7 +107,6 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
 
   @Override
   public void setOpaque(boolean isOpaque) {
-    myOpaque = isOpaque;
     super.setOpaque(isOpaque);
   }
 

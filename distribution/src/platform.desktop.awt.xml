@@ -27,6 +27,10 @@
                 <include>consulo.internal.org.cobraparser:cobra-core</include>
                 <include>net.sf.cssbox:jstyleparser</include>
                 <include>xml-apis:xml-apis-ext</include>
+                <include>com.formdev:flatlaf</include>
+                <include>com.formdev:flatlaf-intellij-themes</include>
+                <include>com.formdev:flatlaf-swingx</include>
+                <include>org.swinglabs.swingx:swingx-all</include>
             </includes>
         </dependencySet>
 

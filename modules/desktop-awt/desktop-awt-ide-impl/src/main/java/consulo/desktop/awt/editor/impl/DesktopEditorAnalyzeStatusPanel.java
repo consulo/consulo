@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.PowerSaveMode;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
@@ -29,8 +28,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.action.ActionButtonImpl;
-import consulo.desktop.awt.action.ActionButtonUI;
+import consulo.desktop.awt.action.OldActionButtonImpl;
 import consulo.desktop.awt.action.ActionToolbarImpl;
 import consulo.desktop.awt.language.editor.DesktopEditorFloatPanel;
 import consulo.disposer.Disposable;
@@ -39,12 +37,12 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
-import consulo.platform.Platform;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.impl.internal.markup.*;
+import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
@@ -71,7 +69,6 @@ import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.plaf.FontUIResource;
@@ -98,7 +95,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       if (ActionToolbar.CUSTOM_COMPONENT_CONSTRAINT.equals(s) && jc instanceof StatusButton) {
         statusComponent = jc;
       }
-      else if (ActionToolbar.ACTION_BUTTON_CONSTRAINT.equals(s) && jc instanceof ActionButtonImpl) {
+      else if (ActionToolbar.ACTION_BUTTON_CONSTRAINT.equals(s) && jc instanceof OldActionButtonImpl) {
         actionButtons.add(jc);
       }
     }
@@ -109,7 +106,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       if (jc instanceof StatusButton) {
         statusComponent = null;
       }
-      else if (jc instanceof ActionButtonImpl) {
+      else if (jc instanceof OldActionButtonImpl) {
         actionButtons.remove(jc);
       }
     }
@@ -183,22 +180,15 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     private static final int LEFT_RIGHT_INDENT = 5;
     private static final int INTER_GROUP_OFFSET = 6;
 
-    private boolean mousePressed;
-    private boolean mouseHover;
     private final MouseListener mouseListener;
     private final PropertyChangeListener presentationPropertyListener;
     private final Presentation presentation;
     private final EditorColorsScheme colorsScheme;
     private boolean translucent;
 
-    private final ActionButtonImpl myActionEmulator;
-    private ActionButtonUI myActionButtonUI;
-
     private StatusButton(@Nonnull AnAction action, @Nonnull Presentation presentation, @Nonnull String place, @Nonnull EditorColorsScheme colorsScheme, @Nonnull BooleanSupplier hasNavButtons) {
       setLayout(new GridBagLayout());
       setOpaque(false);
-
-      myActionEmulator = new ActionButtonImpl(action, presentation, place, new Size(16, 16));
 
       this.presentation = presentation;
       this.colorsScheme = colorsScheme;
@@ -243,76 +233,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             }
           }
         }
-
-        @Override
-        public void mousePressed(MouseEvent me) {
-          mousePressed = true;
-          repaint();
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent me) {
-          mousePressed = false;
-          repaint();
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent me) {
-          mouseHover = true;
-          repaint();
-        }
-
-        @Override
-        public void mouseExited(MouseEvent me) {
-          mouseHover = false;
-          repaint();
-        }
       };
-
-      java.util.List<StatusItem> newStatus = presentation.getClientProperty(EXPANDED_STATUS);
-      if (newStatus != null) {
-        updateContents(newStatus);
-      }
-
-      Border border = new Border() {
-        @Override
-        public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
-        }
-
-        @Override
-        public boolean isBorderOpaque() {
-          return false;
-        }
-
-        @Override
-        public Insets getBorderInsets(Component c) {
-          return hasNavButtons.getAsBoolean() ? JBUI.insets(2, 2, 2, 0) : JBUI.insets(2);
-        }
-      };
-
-      setBorder(border);
-
-      myActionEmulator.setBorder(border);
-
       updateUI();
-    }
-
-    @Override
-    public void updateUI() {
-      super.updateUI();
-      // first call from parent constructor
-      if (myActionEmulator != null) {
-        myActionButtonUI = (ActionButtonUI)UIManager.getUI(myActionEmulator);
-      }
-    }
-
-    @Override
-    public void paint(Graphics g) {
-      int state = mousePressed ? ActionButtonComponent.PUSHED : mouseHover ? ActionButtonComponent.POPPED : ActionButtonComponent.NORMAL;
-      myActionEmulator.setBounds(getBounds());
-      myActionButtonUI.paintBackground(myActionEmulator, g, getBounds().getSize(), state);
-
-      super.paint(g);
     }
 
     @Override
@@ -487,10 +409,6 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       };
     }
 
-    private void updateUI() {
-      IJSwingUtilities.updateComponentTreeUI(myContent);
-    }
-
     private void showPopup(@Nonnull InputEvent event) {
       showPopup(event, (size) -> {
         JComponent owner = (JComponent)event.getComponent();
@@ -556,11 +474,11 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
       Presentation presentation = new Presentation();
       presentation.setIcon(AllIcons.Actions.More);
-      presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
+      presentation.putClientProperty(OldActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
 
       java.util.List<AnAction> actions = controller.getActions();
       if (!actions.isEmpty()) {
-        ActionButtonImpl menuButton = new ActionButtonImpl(new MenuAction(actions), presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+        OldActionButtonImpl menuButton = new OldActionButtonImpl(new MenuAction(actions), presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
 
         myContent.add(menuButton, gc.next().anchor(GridBagConstraints.LINE_END).weightx(0).insets(10, 6, 10, 6));
       }
@@ -793,82 +711,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
     AnAction statusAction = new StatusAction();
     ActionGroup actions = new DefaultActionGroup(statusAction, navigateGroup);
-    //ActionButtonLook editorButtonLook = new EditorToolbarButtonLook();
-    statusToolbar = new ActionToolbarImpl(ActionPlaces.EDITOR_INSPECTIONS_TOOLBAR, actions, true) {
-      //@Override
-      //protected void paintComponent(Graphics g) {
-      //  // todo editorButtonLook.paintBackground(g, this, myEditor.getBackgroundColor());
-      //}
-
-      //@Override
-      //@Nonnull
-      //protected Color getSeparatorColor() {
-      //  Color separatorColor = myEditor.getColorsScheme().getColor(EditorColors.SEPARATOR_BELOW_COLOR);
-      //  return separatorColor != null ? separatorColor : super.getSeparatorColor();
-      //}
-
-
-      @Nonnull
-      @Override
-      protected ActionButtonImpl createToolbarButton(@Nonnull AnAction action,
-                                                     boolean minimalMode,
-                                                     boolean decorateButtons,
-                                                     @Nonnull String place,
-                                                     @Nonnull Presentation presentation,
-                                                     @Nonnull Size minimumSize) {
-        ActionButtonImpl actionButton = new ActionButtonImpl(action, presentation, place, minimumSize) {
-
-          @Override
-          public void updateIcon() {
-            super.updateIcon();
-            revalidate();
-            repaint();
-          }
-
-          @Override
-          public Insets getInsets() {
-            return myAction == nextErrorAction ? JBUI.insets(2, 1) : myAction == prevErrorAction ? JBUI.insets(2, 1, 2, 2) : JBUI.insets(2);
-          }
-
-          @Override
-          public Dimension getPreferredSize() {
-            Image icon = getIcon();
-            Dimension size = new Dimension(icon.getWidth(), icon.getHeight());
-
-            int minSize = getStatusIconSize();
-            size.width = Math.max(size.width, minSize);
-            size.height = Math.max(size.height, minSize);
-
-            JBInsets.addTo(size, getInsets());
-            return size;
-          }
-        };
-
-        actionButton.setWithoutBorder(true);
-        return actionButton;
-      }
-
-      @Override
-      public void doLayout() {
-        LayoutManager layoutManager = getLayout();
-        if (layoutManager != null) {
-          layoutManager.layoutContainer(this);
-        }
-        else {
-          super.doLayout();
-        }
-      }
-
-      //@Override
-      //protected Dimension updatePreferredSize(Dimension preferredSize) {
-      //  return preferredSize;
-      //}
-      //
-      //@Override
-      //protected Dimension updateMinimumSize(Dimension minimumSize) {
-      //  return minimumSize;
-      //}
-    };
+    statusToolbar = new ActionToolbarImpl(ActionPlaces.EDITOR_INSPECTIONS_TOOLBAR, actions, true);
 
     MessageBusConnection connection = Application.get().getMessageBus().connect(this);
     connection.subscribe(AnActionListener.class, new AnActionListener() {
@@ -920,7 +763,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
   private AnAction createAction(@Nonnull String id, @Nonnull Image icon) {
     AnAction delegate = ActionManager.getInstance().getAction(id);
-    AnAction result = new DumbAwareAction(delegate.getTemplatePresentation().getText(), null, icon) {
+    AnAction result = new DumbAwareAction(delegate.getTemplatePresentation().getTextValue(), LocalizeValue.of(), icon) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {

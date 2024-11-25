@@ -21,7 +21,7 @@ import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.SearchSession;
 import jakarta.annotation.Nonnull;
 
-public class ToggleMatchCase extends EditorHeaderToggleAction implements Embeddable {
+public class ToggleMatchCase extends EditorSearchToggleAction implements Embeddable {
     public ToggleMatchCase() {
         super(
             FindLocalize.findCaseSensitive(),
@@ -29,6 +29,11 @@ public class ToggleMatchCase extends EditorHeaderToggleAction implements Embedda
             AllIcons.Actions.MatchCaseHovered,
             AllIcons.Actions.MatchCaseSelected
         );
+    }
+
+    @Override
+    public boolean displayTextInToolbar() {
+        return false;
     }
 
     @Override

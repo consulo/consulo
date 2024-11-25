@@ -27,8 +27,8 @@ import consulo.configurable.SimpleConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.localize.LocalizeValue;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
@@ -58,429 +58,460 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigurable.LayoutImpl> implements ApplicationConfigurable {
-  public static class LayoutImpl implements Supplier<Layout> {
-    private VerticalLayout myPanel;
+    public static class LayoutImpl implements Supplier<Layout> {
+        private VerticalLayout myPanel;
 
-    private ComboBox<String> myFontCombo;
-    private TextBoxWithHistory myFontSizeCombo;
-    private CheckBox myAnimateWindowsCheckBox;
-    private CheckBox myWindowShortcutsCheckBox;
-    private CheckBox myShowToolStripesCheckBox;
-    private ComboBox<Style> myLafComboBox;
-    private ComboBox<Object> myIconThemeComboBox;
-    private CheckBox myCycleScrollingCheckBox;
+        private ComboBox<String> myFontCombo;
+        private TextBoxWithHistory myFontSizeCombo;
+        private CheckBox myAnimateWindowsCheckBox;
+        private CheckBox myWindowShortcutsCheckBox;
+        private CheckBox myShowToolStripesCheckBox;
+        private ComboBox<Style> myStyleComboBox;
+        private ComboBox<Object> myIconThemeComboBox;
+        private CheckBox myCycleScrollingCheckBox;
 
-    private CheckBox myMoveMouseOnDefaultButtonCheckBox;
-    private CheckBox myOverrideLAFFonts;
+        private CheckBox myMoveMouseOnDefaultButtonCheckBox;
+        private CheckBox myOverrideLAFFonts;
 
-    private CheckBox myHideIconsInQuickNavigation;
-    private CheckBox myCbDisplayIconsInMenu;
-    private CheckBox myDisableMnemonics;
-    private CheckBox myDisableMnemonicInControlsCheckBox;
-    private CheckBox myHideNavigationPopupsCheckBox;
-    private CheckBox myAltDNDCheckBox;
-    private CheckBox myAllowMergeButtons;
-    private CheckBox myUseSmallLabelsOnTabs;
-    private CheckBox myWidescreenLayoutCheckBox;
-    private CheckBox myLeftLayoutCheckBox;
-    private CheckBox myRightLayoutCheckBox;
-    private TextBoxWithHistory myPresentationModeFontSize;
-    private CheckBox myEditorTooltipCheckBox;
-    private ComboBox<AntialiasingType> myAntialiasingInIDE;
-    private ComboBox<AntialiasingType> myAntialiasingInEditor;
-    private CheckBox mySmoothScrollingBox;
+        private CheckBox myHideIconsInQuickNavigation;
+        private CheckBox myCbDisplayIconsInMenu;
+        private CheckBox myDisableMnemonics;
+        private CheckBox myDisableMnemonicInControlsCheckBox;
+        private CheckBox myHideNavigationPopupsCheckBox;
+        private CheckBox myAltDNDCheckBox;
+        private CheckBox myAllowMergeButtons;
+        private CheckBox myUseSmallLabelsOnTabs;
+        private CheckBox myWidescreenLayoutCheckBox;
+        private CheckBox myLeftLayoutCheckBox;
+        private CheckBox myRightLayoutCheckBox;
+        private TextBoxWithHistory myPresentationModeFontSize;
+        private CheckBox myEditorTooltipCheckBox;
+        private ComboBox<AntialiasingType> myAntialiasingInIDE;
+        private ComboBox<AntialiasingType> myAntialiasingInEditor;
+        private CheckBox mySmoothScrollingBox;
 
-    @RequiredUIAccess
-    private LayoutImpl() {
-      myPanel = VerticalLayout.create();
+        private Style myInitialStyle;
+        private boolean myStyledChaged;
 
-      VerticalLayout uiOptions = VerticalLayout.create();
-      uiOptions.add(myCycleScrollingCheckBox = CheckBox.create(IdeLocalize.checkbooxCyclicScrollingInLists()));
-      uiOptions.add(myHideIconsInQuickNavigation = CheckBox.create(IdeLocalize.checkboxShowIconsInQuickNavigation()));
-      uiOptions.add(myMoveMouseOnDefaultButtonCheckBox =
-        CheckBox.create(IdeLocalize.checkboxPositionCursorOnDefaultButton()));
-      uiOptions.add(myHideNavigationPopupsCheckBox = CheckBox.create(IdeLocalize.ideHideNavigationOnFocusLossDescription()));
-      uiOptions.add(myAltDNDCheckBox = CheckBox.create(IdeLocalize.dndWithAltPressedOnly()));
+        @RequiredUIAccess
+        private LayoutImpl() {
+            myPanel = VerticalLayout.create();
 
-      myLafComboBox = ComboBox.create(StyleManager.get().getStyles());
-      myLafComboBox.setTextRender(style -> style == null ? LocalizeValue.empty() : LocalizeValue.of(style.getName()));
-      uiOptions.add(LabeledBuilder.simple(IdeLocalize.comboboxLookAndFeel(), myLafComboBox));
+            VerticalLayout uiOptions = VerticalLayout.create();
+            uiOptions.add(myCycleScrollingCheckBox = CheckBox.create(IdeLocalize.checkbooxCyclicScrollingInLists()));
+            uiOptions.add(myHideIconsInQuickNavigation = CheckBox.create(IdeLocalize.checkboxShowIconsInQuickNavigation()));
+            uiOptions.add(myMoveMouseOnDefaultButtonCheckBox =
+                CheckBox.create(IdeLocalize.checkboxPositionCursorOnDefaultButton()));
+            uiOptions.add(myHideNavigationPopupsCheckBox = CheckBox.create(IdeLocalize.ideHideNavigationOnFocusLossDescription()));
+            uiOptions.add(myAltDNDCheckBox = CheckBox.create(IdeLocalize.dndWithAltPressedOnly()));
 
-      List<Object> iconThemes = new ArrayList<>();
-      iconThemes.add(ObjectUtil.NULL);
-      Map<String, IconLibrary> libraries = IconLibraryManager.get().getLibraries();
-      iconThemes.addAll(libraries.values());
-      myIconThemeComboBox = ComboBox.create(iconThemes);
-      myIconThemeComboBox.setRender((render, index, item) -> {
-        if (item == ObjectUtil.NULL) {
-          render.append(IdeLocalize.comboboxIconThemeUiDefault());
-        }
-        else {
-          render.append(((IconLibrary)item).getName());
-        }
-      });
-      uiOptions.add(LabeledBuilder.simple(IdeLocalize.comboboxIconTheme(), myIconThemeComboBox));
+            myStyleComboBox = ComboBox.create(StyleManager.get().getStyles());
+            myStyleComboBox.addValueListener(event -> {
+                myStyledChaged = true;
 
-      HorizontalLayout useCustomFontLine = HorizontalLayout.create();
-      useCustomFontLine.add(myOverrideLAFFonts = CheckBox.create(IdeLocalize.checkboxOverrideDefaultLafFonts()));
-      Set<String> avaliableFontNames = FontManager.get().getAvailableFontNames();
-      useCustomFontLine.add(myFontCombo = ComboBox.create(avaliableFontNames));
-      useCustomFontLine.add(LabeledBuilder.simple(
-        IdeLocalize.labelFontSize(),
-        myFontSizeCombo = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())
-      ));
-      uiOptions.add(useCustomFontLine);
+                StyleManager.get().setCurrentStyle(event.getValue());
+            });
+            myStyleComboBox.setTextRender(style -> style == null ? LocalizeValue.empty() : LocalizeValue.of(style.getName()));
+            uiOptions.add(LabeledBuilder.simple(IdeLocalize.comboboxLookAndFeel(), myStyleComboBox));
 
-      myOverrideLAFFonts.addValueListener(event -> {
-        myFontCombo.setEnabled(event.getValue());
-        myFontSizeCombo.setEnabled(event.getValue());
-      });
+            List<Object> iconThemes = new ArrayList<>();
+            iconThemes.add(ObjectUtil.NULL);
+            Map<String, IconLibrary> libraries = IconLibraryManager.get().getLibraries();
+            iconThemes.addAll(libraries.values());
+            myIconThemeComboBox = ComboBox.create(iconThemes);
+            myIconThemeComboBox.setRender((render, index, item) -> {
+                if (item == ObjectUtil.NULL) {
+                    render.append(IdeLocalize.comboboxIconThemeUiDefault());
+                }
+                else {
+                    render.append(((IconLibrary) item).getName());
+                }
+            });
+            uiOptions.add(LabeledBuilder.simple(IdeLocalize.comboboxIconTheme(), myIconThemeComboBox));
 
-      myFontCombo.setEnabled(false);
-      myFontSizeCombo.setEnabled(false);
+            HorizontalLayout useCustomFontLine = HorizontalLayout.create();
+            useCustomFontLine.add(myOverrideLAFFonts = CheckBox.create(IdeLocalize.checkboxOverrideDefaultLafFonts()));
+            Set<String> avaliableFontNames = FontManager.get().getAvailableFontNames();
+            useCustomFontLine.add(myFontCombo = ComboBox.create(avaliableFontNames));
+            useCustomFontLine.add(LabeledBuilder.simple(
+                IdeLocalize.labelFontSize(),
+                myFontSizeCombo = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())
+            ));
+            uiOptions.add(useCustomFontLine);
 
-      myPanel.add(LabeledLayout.create(IdeLocalize.groupUiOptions(), uiOptions));
+            myOverrideLAFFonts.addValueListener(event -> {
+                myFontCombo.setEnabled(event.getValue());
+                myFontSizeCombo.setEnabled(event.getValue());
+            });
 
-      TableLayout aaPanel = TableLayout.create(StaticPosition.CENTER);
+            myFontCombo.setEnabled(false);
+            myFontSizeCombo.setEnabled(false);
 
-      myAntialiasingInIDE = ComboBox.create(AntialiasingType.values());
-      myAntialiasingInIDE.setRender(buildItemRender(false));
+            myPanel.add(LabeledLayout.create(IdeLocalize.groupUiOptions(), uiOptions));
 
-      aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeIde(), myAntialiasingInIDE), TableLayout.cell(0, 0).fill());
+            TableLayout aaPanel = TableLayout.create(StaticPosition.CENTER);
 
-      myAntialiasingInEditor = ComboBox.create(AntialiasingType.values());
-      myAntialiasingInEditor.setRender(buildItemRender(true));
-      aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeEditor(), myAntialiasingInEditor), TableLayout.cell(0, 1).fill());
+            myAntialiasingInIDE = ComboBox.create(AntialiasingType.values());
+            myAntialiasingInIDE.setRender(buildItemRender(false));
 
-      myPanel.add(LabeledLayout.create(IdeLocalize.groupAntialiasingMode(), aaPanel));
+            aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeIde(), myAntialiasingInIDE), TableLayout.cell(0, 0).fill());
 
-      TableLayout windowOptions = TableLayout.create(StaticPosition.CENTER);
+            myAntialiasingInEditor = ComboBox.create(AntialiasingType.values());
+            myAntialiasingInEditor.setRender(buildItemRender(true));
+            aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeEditor(), myAntialiasingInEditor), TableLayout.cell(0, 1).fill());
 
-      VerticalLayout leftWindowOption = VerticalLayout.create();
-      VerticalLayout rightWindowOption = VerticalLayout.create();
+            myPanel.add(LabeledLayout.create(IdeLocalize.groupAntialiasingMode(), aaPanel));
 
-      windowOptions.add(leftWindowOption, TableLayout.cell(0, 0).fill());
-      windowOptions.add(rightWindowOption, TableLayout.cell(0, 1).fill());
+            TableLayout windowOptions = TableLayout.create(StaticPosition.CENTER);
 
-      leftWindowOption.add(myAnimateWindowsCheckBox = CheckBox.create(IdeLocalize.checkboxAnimateWindows()));
-      leftWindowOption.add(myDisableMnemonics = CheckBox.create(KeyMapLocalize.disableMnemonicInMenuCheckBox()));
-      leftWindowOption.add(myDisableMnemonicInControlsCheckBox = CheckBox.create(KeyMapLocalize.disableMnemonicInControlsCheckBox()));
-      leftWindowOption.add(myCbDisplayIconsInMenu = CheckBox.create(IdeLocalize.checkboxShowIconsInMenuItems()));
-      leftWindowOption.add(myLeftLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxLeftToolwindowLayout()));
-      leftWindowOption.add(myEditorTooltipCheckBox = CheckBox.create(IdeLocalize.checkboxShowEditorPreviewPopup()));
+            VerticalLayout leftWindowOption = VerticalLayout.create();
+            VerticalLayout rightWindowOption = VerticalLayout.create();
 
-      rightWindowOption.add(myShowToolStripesCheckBox = CheckBox.create(IdeLocalize.checkboxShowToolWindowBars()));
-      rightWindowOption.add(myWindowShortcutsCheckBox = CheckBox.create(IdeLocalize.checkboxShowToolWindowNumbers()));
-      rightWindowOption.add(myAllowMergeButtons = CheckBox.create(IdeLocalize.allowMergingDialogButtons()));
-      rightWindowOption.add(myUseSmallLabelsOnTabs = CheckBox.create(IdeLocalize.smallLabelsInEditorTabs()));
-      rightWindowOption.add(myWidescreenLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxWidescreenToolWindowLayout()));
-      rightWindowOption.add(myRightLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxRightToolwindowLayout()));
-      rightWindowOption.add(mySmoothScrollingBox = CheckBox.create(ApplicationLocalize.checkboxSmoothScrolling()));
+            windowOptions.add(leftWindowOption, TableLayout.cell(0, 0).fill());
+            windowOptions.add(rightWindowOption, TableLayout.cell(0, 1).fill());
 
-      myPanel.add(LabeledLayout.create(IdeLocalize.groupWindowOptions(), windowOptions));
+            leftWindowOption.add(myAnimateWindowsCheckBox = CheckBox.create(IdeLocalize.checkboxAnimateWindows()));
+            leftWindowOption.add(myDisableMnemonics = CheckBox.create(KeyMapLocalize.disableMnemonicInMenuCheckBox()));
+            leftWindowOption.add(myDisableMnemonicInControlsCheckBox = CheckBox.create(KeyMapLocalize.disableMnemonicInControlsCheckBox()));
+            leftWindowOption.add(myCbDisplayIconsInMenu = CheckBox.create(IdeLocalize.checkboxShowIconsInMenuItems()));
+            leftWindowOption.add(myLeftLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxLeftToolwindowLayout()));
+            leftWindowOption.add(myEditorTooltipCheckBox = CheckBox.create(IdeLocalize.checkboxShowEditorPreviewPopup()));
 
-      VerticalLayout presentationOptions = VerticalLayout.create();
-      presentationOptions.add(LabeledBuilder.simple(
-        IdeLocalize.labelFontSize(),
-        myPresentationModeFontSize = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())
-      ));
-      myPanel.add(LabeledLayout.create(IdeLocalize.groupPresentationMode(), presentationOptions));
-    }
+            rightWindowOption.add(myShowToolStripesCheckBox = CheckBox.create(IdeLocalize.checkboxShowToolWindowBars()));
+            rightWindowOption.add(myWindowShortcutsCheckBox = CheckBox.create(IdeLocalize.checkboxShowToolWindowNumbers()));
+            rightWindowOption.add(myAllowMergeButtons = CheckBox.create(IdeLocalize.allowMergingDialogButtons()));
+            rightWindowOption.add(myUseSmallLabelsOnTabs = CheckBox.create(IdeLocalize.smallLabelsInEditorTabs()));
+            rightWindowOption.add(myWidescreenLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxWidescreenToolWindowLayout()));
+            rightWindowOption.add(myRightLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxRightToolwindowLayout()));
+            rightWindowOption.add(mySmoothScrollingBox = CheckBox.create(ApplicationLocalize.checkboxSmoothScrolling()));
 
-    private TextItemRender<AntialiasingType> buildItemRender(boolean editor) {
-      return (render, index, item) -> {
-        if (item == null) {
-          return;
-        }
+            myPanel.add(LabeledLayout.create(IdeLocalize.groupWindowOptions(), windowOptions));
 
-        render.withAntialiasingType(item);
-
-        if (editor) {
-          EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-          render.withFont(FontManager.get().createFont(
-            scheme.getEditorFontName(),
-            scheme.getEditorFontSize(),
-            Font.STYLE_PLAIN
-          ));
+            VerticalLayout presentationOptions = VerticalLayout.create();
+            presentationOptions.add(LabeledBuilder.simple(
+                IdeLocalize.labelFontSize(),
+                myPresentationModeFontSize = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())
+            ));
+            myPanel.add(LabeledLayout.create(IdeLocalize.groupPresentationMode(), presentationOptions));
         }
 
-        render.append(textForAntialiasingType(item));
-      };
-    }
+        private TextItemRender<AntialiasingType> buildItemRender(boolean editor) {
+            return (render, index, item) -> {
+                if (item == null) {
+                    return;
+                }
 
-    private LocalizeValue textForAntialiasingType(@Nonnull AntialiasingType type) {
-      switch (type) {
-        case SUBPIXEL:
-          return LocalizeValue.localizeTODO("Subpixel");
-        case GREYSCALE:
-          return LocalizeValue.localizeTODO("Greyscale");
-        case OFF:
-          return LocalizeValue.localizeTODO("No antialiasing");
-        default:
-          throw new IllegalArgumentException(type.toString());
-      }
+                render.withAntialiasingType(item);
+
+                if (editor) {
+                    EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+                    render.withFont(FontManager.get().createFont(
+                        scheme.getEditorFontName(),
+                        scheme.getEditorFontSize(),
+                        Font.STYLE_PLAIN
+                    ));
+                }
+
+                render.append(textForAntialiasingType(item));
+            };
+        }
+
+        private LocalizeValue textForAntialiasingType(@Nonnull AntialiasingType type) {
+            switch (type) {
+                case SUBPIXEL:
+                    return LocalizeValue.localizeTODO("Subpixel");
+                case GREYSCALE:
+                    return LocalizeValue.localizeTODO("Greyscale");
+                case OFF:
+                    return LocalizeValue.localizeTODO("No antialiasing");
+                default:
+                    throw new IllegalArgumentException(type.toString());
+            }
+        }
+
+        @Nonnull
+        @Override
+        public Layout get() {
+            return myPanel;
+        }
     }
 
     @Nonnull
     @Override
-    public Layout get() {
-      return myPanel;
-    }
-  }
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return "appearance";
-  }
-
-  @Nullable
-  @Override
-  public String getParentId() {
-    return StandardConfigurableIds.GENERAL_GROUP;
-  }
-
-  @Nonnull
-  @Override
-  public String getDisplayName() {
-    return "Appearance";
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  protected LayoutImpl createPanel(@Nonnull Disposable uiDisposable) {
-    return new LayoutImpl();
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected boolean isModified(@Nonnull LayoutImpl component) {
-    UISettings settings = UISettings.getInstance();
-    UIFontManager uiFontManager = UIFontManager.getInstance();
-
-    boolean isModified = false;
-    isModified |= !Comparing.equal(component.myFontCombo.getValue(), uiFontManager.getFontName());
-    isModified |= !Comparing.equal(component.myFontSizeCombo.getValue(), Integer.toString(uiFontManager.getFontSize()));
-    isModified |= component.myAntialiasingInIDE.getValue() != settings.IDE_AA_TYPE;
-    isModified |= component.myAntialiasingInEditor.getValue() != settings.EDITOR_AA_TYPE;
-    isModified |= component.myAnimateWindowsCheckBox.getValue() != settings.ANIMATE_WINDOWS;
-    isModified |= component.myWindowShortcutsCheckBox.getValue() != settings.SHOW_TOOL_WINDOW_NUMBERS;
-    isModified |= component.myShowToolStripesCheckBox.getValue() == settings.HIDE_TOOL_STRIPES;
-    isModified |= component.myCbDisplayIconsInMenu.getValue() != settings.SHOW_ICONS_IN_MENUS;
-    isModified |= component.myAllowMergeButtons.getValue() != settings.ALLOW_MERGE_BUTTONS;
-    isModified |= component.myCycleScrollingCheckBox.getValue() != settings.CYCLE_SCROLLING;
-
-    isModified |= component.myOverrideLAFFonts.getValue() != uiFontManager.isOverrideFont();
-
-    isModified |= component.myDisableMnemonics.getValue() != settings.DISABLE_MNEMONICS;
-    isModified |= component.myDisableMnemonicInControlsCheckBox.getValue() != settings.DISABLE_MNEMONICS_IN_CONTROLS;
-
-    isModified |= component.myUseSmallLabelsOnTabs.getValue() != settings.USE_SMALL_LABELS_ON_TABS;
-    isModified |= component.myWidescreenLayoutCheckBox.getValue() != settings.WIDESCREEN_SUPPORT;
-    isModified |= component.myLeftLayoutCheckBox.getValue() != settings.LEFT_HORIZONTAL_SPLIT;
-    isModified |= component.myRightLayoutCheckBox.getValue() != settings.RIGHT_HORIZONTAL_SPLIT;
-    isModified |= component.myEditorTooltipCheckBox.getValue() != settings.SHOW_EDITOR_TOOLTIP;
-
-    isModified |= component.myHideIconsInQuickNavigation.getValue() != settings.SHOW_ICONS_IN_QUICK_NAVIGATION;
-
-    isModified |= !Comparing.equal(
-      component.myPresentationModeFontSize.getValue(),
-      Integer.toString(settings.PRESENTATION_MODE_FONT_SIZE)
-    );
-
-    isModified |= component.myMoveMouseOnDefaultButtonCheckBox.getValue() != settings.MOVE_MOUSE_ON_DEFAULT_BUTTON;
-    isModified |= component.myHideNavigationPopupsCheckBox.getValue() != settings.HIDE_NAVIGATION_ON_FOCUS_LOSS;
-    isModified |= component.myAltDNDCheckBox.getValue() != settings.DND_WITH_PRESSED_ALT_ONLY;
-    isModified |= component.mySmoothScrollingBox.getValue() != settings.SMOOTH_SCROLLING;
-    isModified |= !Comparing.equal(component.myLafComboBox.getValue(), StyleManager.get().getCurrentStyle());
-    isModified |= !Comparing.equal(component.myIconThemeComboBox.getValue(), getActiveIconLibraryOrNull());
-
-    return isModified;
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected void reset(@Nonnull LayoutImpl component) {
-    UISettings settings = UISettings.getInstance();
-    UIFontManager uiFontManager = UIFontManager.getInstance();
-
-    component.myFontCombo.setValue(uiFontManager.getFontName());
-    component.myAntialiasingInIDE.setValue(settings.IDE_AA_TYPE);
-    component.myAntialiasingInEditor.setValue(settings.EDITOR_AA_TYPE);
-    component.myFontSizeCombo.setValue(Integer.toString(uiFontManager.getFontSize()));
-    component.myPresentationModeFontSize.setValue(Integer.toString(settings.PRESENTATION_MODE_FONT_SIZE));
-    component.myAnimateWindowsCheckBox.setValue(settings.ANIMATE_WINDOWS);
-    component.myWindowShortcutsCheckBox.setValue(settings.SHOW_TOOL_WINDOW_NUMBERS);
-    component.myShowToolStripesCheckBox.setValue(!settings.HIDE_TOOL_STRIPES);
-    component.myCbDisplayIconsInMenu.setValue(settings.SHOW_ICONS_IN_MENUS);
-    component.myAllowMergeButtons.setValue(settings.ALLOW_MERGE_BUTTONS);
-    component.myCycleScrollingCheckBox.setValue(settings.CYCLE_SCROLLING);
-
-    component.myHideIconsInQuickNavigation.setValue(settings.SHOW_ICONS_IN_QUICK_NAVIGATION);
-    component.myMoveMouseOnDefaultButtonCheckBox.setValue(settings.MOVE_MOUSE_ON_DEFAULT_BUTTON);
-    component.myHideNavigationPopupsCheckBox.setValue(settings.HIDE_NAVIGATION_ON_FOCUS_LOSS);
-    component.myAltDNDCheckBox.setValue(settings.DND_WITH_PRESSED_ALT_ONLY);
-    component.myLafComboBox.setValue(StyleManager.get().getCurrentStyle());
-    component.myOverrideLAFFonts.setValue(uiFontManager.isOverrideFont());
-    component.myDisableMnemonics.setValue(settings.DISABLE_MNEMONICS);
-    component.myUseSmallLabelsOnTabs.setValue(settings.USE_SMALL_LABELS_ON_TABS);
-    component.myWidescreenLayoutCheckBox.setValue(settings.WIDESCREEN_SUPPORT);
-    component.myLeftLayoutCheckBox.setValue(settings.LEFT_HORIZONTAL_SPLIT);
-    component.myRightLayoutCheckBox.setValue(settings.RIGHT_HORIZONTAL_SPLIT);
-    component.myEditorTooltipCheckBox.setValue(settings.SHOW_EDITOR_TOOLTIP);
-    component.myDisableMnemonicInControlsCheckBox.setValue(settings.DISABLE_MNEMONICS_IN_CONTROLS);
-    component.mySmoothScrollingBox.setValue(settings.SMOOTH_SCROLLING);
-    component.myIconThemeComboBox.setValue(getActiveIconLibraryOrNull());
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected void apply(@Nonnull LayoutImpl component) throws ConfigurationException {
-    UISettings settings = UISettings.getInstance();
-    UIFontManager uiFontManager = UIFontManager.getInstance();
-
-    int _fontSize = getIntValue(component.myFontSizeCombo, uiFontManager.getFontSize());
-    int _presentationFontSize = getIntValue(component.myPresentationModeFontSize, settings.PRESENTATION_MODE_FONT_SIZE);
-    boolean shouldUpdateUI = false;
-    String _fontFace = component.myFontCombo.getValue();
-
-    StyleManager styleManager = StyleManager.get();
-
-    if (_fontSize != uiFontManager.getFontSize() || !uiFontManager.getFontName().equals(_fontFace)) {
-      uiFontManager.setFontSize(_fontSize);
-      uiFontManager.setFontName(_fontFace);
-      shouldUpdateUI = true;
+    public String getId() {
+        return "appearance";
     }
 
-    if (_presentationFontSize != settings.PRESENTATION_MODE_FONT_SIZE) {
-      settings.PRESENTATION_MODE_FONT_SIZE = _presentationFontSize;
-      shouldUpdateUI = true;
+    @Nullable
+    @Override
+    public String getParentId() {
+        return StandardConfigurableIds.GENERAL_GROUP;
     }
 
-    if (component.myAntialiasingInIDE.getValue() != settings.IDE_AA_TYPE) {
-      settings.IDE_AA_TYPE = component.myAntialiasingInIDE.getValue();
-      styleManager.refreshAntialiasingType(settings.IDE_AA_TYPE);
-      shouldUpdateUI = true;
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return "Appearance";
     }
 
-    if (component.myAntialiasingInEditor.getValue() != settings.EDITOR_AA_TYPE) {
-      settings.EDITOR_AA_TYPE = component.myAntialiasingInEditor.getValue();
-      shouldUpdateUI = true;
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    protected LayoutImpl createPanel(@Nonnull Disposable uiDisposable) {
+        return new LayoutImpl();
     }
 
-    settings.ANIMATE_WINDOWS = component.myAnimateWindowsCheckBox.getValue();
-    boolean update = settings.SHOW_TOOL_WINDOW_NUMBERS != component.myWindowShortcutsCheckBox.getValue();
-    settings.SHOW_TOOL_WINDOW_NUMBERS = component.myWindowShortcutsCheckBox.getValue();
-    update |= settings.HIDE_TOOL_STRIPES != !component.myShowToolStripesCheckBox.getValue();
-    settings.HIDE_TOOL_STRIPES = !component.myShowToolStripesCheckBox.getValue();
-    update |= settings.SHOW_ICONS_IN_MENUS != component.myCbDisplayIconsInMenu.getValue();
-    settings.SHOW_ICONS_IN_MENUS = component.myCbDisplayIconsInMenu.getValue();
-    update |= settings.ALLOW_MERGE_BUTTONS != component.myAllowMergeButtons.getValue();
-    settings.ALLOW_MERGE_BUTTONS = component.myAllowMergeButtons.getValue();
-    update |= settings.CYCLE_SCROLLING != component.myCycleScrollingCheckBox.getValue();
-    settings.CYCLE_SCROLLING = component.myCycleScrollingCheckBox.getValue();
-    if (uiFontManager.isOverrideFont() != component.myOverrideLAFFonts.getValue()) {
-      shouldUpdateUI = true;
+    @RequiredUIAccess
+    @Override
+    protected void disposeUIResources(@Nonnull LayoutImpl component) {
+        super.disposeUIResources(component);
+
+        StyleManager styleManager = StyleManager.get();
+
+        if (component.myStyledChaged && component.myInitialStyle != null && component.myInitialStyle != styleManager.getCurrentStyle()) {
+            styleManager.setCurrentStyle(component.myInitialStyle);
+        }
     }
-    uiFontManager.setOverrideFont(component.myOverrideLAFFonts.getValue());
-    settings.MOVE_MOUSE_ON_DEFAULT_BUTTON = component.myMoveMouseOnDefaultButtonCheckBox.getValue();
-    settings.HIDE_NAVIGATION_ON_FOCUS_LOSS = component.myHideNavigationPopupsCheckBox.getValue();
-    settings.DND_WITH_PRESSED_ALT_ONLY = component.myAltDNDCheckBox.getValue();
 
-    update |= settings.DISABLE_MNEMONICS != component.myDisableMnemonics.getValue();
-    settings.DISABLE_MNEMONICS = component.myDisableMnemonics.getValue();
+    @RequiredUIAccess
+    @Override
+    protected boolean isModified(@Nonnull LayoutImpl component) {
+        UISettings settings = UISettings.getInstance();
+        UIFontManager uiFontManager = UIFontManager.getInstance();
 
-    update |= settings.USE_SMALL_LABELS_ON_TABS != component.myUseSmallLabelsOnTabs.getValue();
-    settings.USE_SMALL_LABELS_ON_TABS = component.myUseSmallLabelsOnTabs.getValue();
+        boolean isModified = false;
+        isModified |= !Comparing.equal(component.myFontCombo.getValue(), uiFontManager.getFontName());
+        isModified |= !Comparing.equal(component.myFontSizeCombo.getValue(), Integer.toString(uiFontManager.getFontSize()));
+        isModified |= component.myAntialiasingInIDE.getValue() != settings.IDE_AA_TYPE;
+        isModified |= component.myAntialiasingInEditor.getValue() != settings.EDITOR_AA_TYPE;
+        isModified |= component.myAnimateWindowsCheckBox.getValue() != settings.ANIMATE_WINDOWS;
+        isModified |= component.myWindowShortcutsCheckBox.getValue() != settings.SHOW_TOOL_WINDOW_NUMBERS;
+        isModified |= component.myShowToolStripesCheckBox.getValue() == settings.HIDE_TOOL_STRIPES;
+        isModified |= component.myCbDisplayIconsInMenu.getValue() != settings.SHOW_ICONS_IN_MENUS;
+        isModified |= component.myAllowMergeButtons.getValue() != settings.ALLOW_MERGE_BUTTONS;
+        isModified |= component.myCycleScrollingCheckBox.getValue() != settings.CYCLE_SCROLLING;
 
-    update |= settings.WIDESCREEN_SUPPORT != component.myWidescreenLayoutCheckBox.getValue();
-    settings.WIDESCREEN_SUPPORT = component.myWidescreenLayoutCheckBox.getValue();
+        isModified |= component.myOverrideLAFFonts.getValue() != uiFontManager.isOverrideFont();
 
-    update |= settings.LEFT_HORIZONTAL_SPLIT != component.myLeftLayoutCheckBox.getValue();
-    settings.LEFT_HORIZONTAL_SPLIT = component.myLeftLayoutCheckBox.getValue();
+        isModified |= component.myDisableMnemonics.getValue() != settings.DISABLE_MNEMONICS;
+        isModified |= component.myDisableMnemonicInControlsCheckBox.getValue() != settings.DISABLE_MNEMONICS_IN_CONTROLS;
 
-    update |= settings.RIGHT_HORIZONTAL_SPLIT != component.myRightLayoutCheckBox.getValue();
-    settings.RIGHT_HORIZONTAL_SPLIT = component.myRightLayoutCheckBox.getValue();
+        isModified |= component.myUseSmallLabelsOnTabs.getValue() != settings.USE_SMALL_LABELS_ON_TABS;
+        isModified |= component.myWidescreenLayoutCheckBox.getValue() != settings.WIDESCREEN_SUPPORT;
+        isModified |= component.myLeftLayoutCheckBox.getValue() != settings.LEFT_HORIZONTAL_SPLIT;
+        isModified |= component.myRightLayoutCheckBox.getValue() != settings.RIGHT_HORIZONTAL_SPLIT;
+        isModified |= component.myEditorTooltipCheckBox.getValue() != settings.SHOW_EDITOR_TOOLTIP;
 
-    update |= settings.SHOW_EDITOR_TOOLTIP != component.myEditorTooltipCheckBox.getValue();
-    settings.SHOW_EDITOR_TOOLTIP = component.myEditorTooltipCheckBox.getValue();
+        isModified |= component.myHideIconsInQuickNavigation.getValue() != settings.SHOW_ICONS_IN_QUICK_NAVIGATION;
 
-    update |= settings.DISABLE_MNEMONICS_IN_CONTROLS != component.myDisableMnemonicInControlsCheckBox.getValue();
-    settings.DISABLE_MNEMONICS_IN_CONTROLS = component.myDisableMnemonicInControlsCheckBox.getValue();
+        isModified |= !Comparing.equal(
+            component.myPresentationModeFontSize.getValue(),
+            Integer.toString(settings.PRESENTATION_MODE_FONT_SIZE)
+        );
 
-    update |= settings.SHOW_ICONS_IN_QUICK_NAVIGATION != component.myHideIconsInQuickNavigation.getValue();
-    settings.SHOW_ICONS_IN_QUICK_NAVIGATION = component.myHideIconsInQuickNavigation.getValue();
+        isModified |= component.myMoveMouseOnDefaultButtonCheckBox.getValue() != settings.MOVE_MOUSE_ON_DEFAULT_BUTTON;
+        isModified |= component.myHideNavigationPopupsCheckBox.getValue() != settings.HIDE_NAVIGATION_ON_FOCUS_LOSS;
+        isModified |= component.myAltDNDCheckBox.getValue() != settings.DND_WITH_PRESSED_ALT_ONLY;
+        isModified |= component.mySmoothScrollingBox.getValue() != settings.SMOOTH_SCROLLING;
+        isModified |= !Comparing.equal(component.myStyleComboBox.getValue(), StyleManager.get().getCurrentStyle());
+        isModified |= !Comparing.equal(component.myIconThemeComboBox.getValue(), getActiveIconLibraryOrNull());
 
-    update |= settings.SMOOTH_SCROLLING != component.mySmoothScrollingBox.getValue();
-    settings.SMOOTH_SCROLLING = component.mySmoothScrollingBox.getValue();
+        return isModified;
+    }
 
-    UIAccess uiAccess = UIAccess.current();
+    @RequiredUIAccess
+    @Override
+    protected void reset(@Nonnull LayoutImpl component) {
+        UISettings settings = UISettings.getInstance();
+        UIFontManager uiFontManager = UIFontManager.getInstance();
 
-    final boolean finalUpdate = update;
-    final boolean finalShouldUpdateUI = shouldUpdateUI;
+        if (component.myInitialStyle == null) {
+            component.myInitialStyle = StyleManager.get().getCurrentStyle();
+        } else {
+            StyleManager styleManager = StyleManager.get();
 
-    uiAccess.give(() -> {
-      boolean refreshUI = finalShouldUpdateUI;
-      if (!Comparing.equal(component.myLafComboBox.getValue(), styleManager.getCurrentStyle())) {
-        final Style newStyle = component.myLafComboBox.getValue();
-        assert newStyle != null;
-        styleManager.setCurrentStyle(newStyle);
-        refreshUI = true;
-      }
+            Style currentStyle = styleManager.getCurrentStyle();
+            if (currentStyle != component.myInitialStyle) {
+                styleManager.setCurrentStyle(currentStyle);
+            }
+        }
 
-      if (!Comparing.equal(component.myIconThemeComboBox.getValue(), getActiveIconLibraryOrNull())) {
-        Object iconLib = component.myIconThemeComboBox.getValue();
+        component.myFontCombo.setValue(uiFontManager.getFontName());
+        component.myAntialiasingInIDE.setValue(settings.IDE_AA_TYPE);
+        component.myAntialiasingInEditor.setValue(settings.EDITOR_AA_TYPE);
+        component.myFontSizeCombo.setValue(Integer.toString(uiFontManager.getFontSize()));
+        component.myPresentationModeFontSize.setValue(Integer.toString(settings.PRESENTATION_MODE_FONT_SIZE));
+        component.myAnimateWindowsCheckBox.setValue(settings.ANIMATE_WINDOWS);
+        component.myWindowShortcutsCheckBox.setValue(settings.SHOW_TOOL_WINDOW_NUMBERS);
+        component.myShowToolStripesCheckBox.setValue(!settings.HIDE_TOOL_STRIPES);
+        component.myCbDisplayIconsInMenu.setValue(settings.SHOW_ICONS_IN_MENUS);
+        component.myAllowMergeButtons.setValue(settings.ALLOW_MERGE_BUTTONS);
+        component.myCycleScrollingCheckBox.setValue(settings.CYCLE_SCROLLING);
 
-        if (iconLib == ObjectUtil.NULL) {
-          IconLibraryManager.get().setActiveLibrary(null);
+        component.myHideIconsInQuickNavigation.setValue(settings.SHOW_ICONS_IN_QUICK_NAVIGATION);
+        component.myMoveMouseOnDefaultButtonCheckBox.setValue(settings.MOVE_MOUSE_ON_DEFAULT_BUTTON);
+        component.myHideNavigationPopupsCheckBox.setValue(settings.HIDE_NAVIGATION_ON_FOCUS_LOSS);
+        component.myAltDNDCheckBox.setValue(settings.DND_WITH_PRESSED_ALT_ONLY);
+        component.myStyleComboBox.setValue(StyleManager.get().getCurrentStyle());
+        component.myOverrideLAFFonts.setValue(uiFontManager.isOverrideFont());
+        component.myDisableMnemonics.setValue(settings.DISABLE_MNEMONICS);
+        component.myUseSmallLabelsOnTabs.setValue(settings.USE_SMALL_LABELS_ON_TABS);
+        component.myWidescreenLayoutCheckBox.setValue(settings.WIDESCREEN_SUPPORT);
+        component.myLeftLayoutCheckBox.setValue(settings.LEFT_HORIZONTAL_SPLIT);
+        component.myRightLayoutCheckBox.setValue(settings.RIGHT_HORIZONTAL_SPLIT);
+        component.myEditorTooltipCheckBox.setValue(settings.SHOW_EDITOR_TOOLTIP);
+        component.myDisableMnemonicInControlsCheckBox.setValue(settings.DISABLE_MNEMONICS_IN_CONTROLS);
+        component.mySmoothScrollingBox.setValue(settings.SMOOTH_SCROLLING);
+        component.myIconThemeComboBox.setValue(getActiveIconLibraryOrNull());
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected void apply(@Nonnull LayoutImpl component) throws ConfigurationException {
+        UISettings settings = UISettings.getInstance();
+        UIFontManager uiFontManager = UIFontManager.getInstance();
+
+        int _fontSize = getIntValue(component.myFontSizeCombo, uiFontManager.getFontSize());
+        int _presentationFontSize = getIntValue(component.myPresentationModeFontSize, settings.PRESENTATION_MODE_FONT_SIZE);
+        boolean shouldUpdateUI = false;
+        String _fontFace = component.myFontCombo.getValue();
+
+        StyleManager styleManager = StyleManager.get();
+
+        if (_fontSize != uiFontManager.getFontSize() || !uiFontManager.getFontName().equals(_fontFace)) {
+            uiFontManager.setFontSize(_fontSize);
+            uiFontManager.setFontName(_fontFace);
+            shouldUpdateUI = true;
+        }
+
+        if (_presentationFontSize != settings.PRESENTATION_MODE_FONT_SIZE) {
+            settings.PRESENTATION_MODE_FONT_SIZE = _presentationFontSize;
+            shouldUpdateUI = true;
+        }
+
+        if (component.myAntialiasingInIDE.getValue() != settings.IDE_AA_TYPE) {
+            settings.IDE_AA_TYPE = component.myAntialiasingInIDE.getValue();
+            styleManager.refreshAntialiasingType(settings.IDE_AA_TYPE);
+            shouldUpdateUI = true;
+        }
+
+        if (component.myAntialiasingInEditor.getValue() != settings.EDITOR_AA_TYPE) {
+            settings.EDITOR_AA_TYPE = component.myAntialiasingInEditor.getValue();
+            shouldUpdateUI = true;
+        }
+
+        settings.ANIMATE_WINDOWS = component.myAnimateWindowsCheckBox.getValue();
+        boolean update = settings.SHOW_TOOL_WINDOW_NUMBERS != component.myWindowShortcutsCheckBox.getValue();
+        settings.SHOW_TOOL_WINDOW_NUMBERS = component.myWindowShortcutsCheckBox.getValue();
+        update |= settings.HIDE_TOOL_STRIPES != !component.myShowToolStripesCheckBox.getValue();
+        settings.HIDE_TOOL_STRIPES = !component.myShowToolStripesCheckBox.getValue();
+        update |= settings.SHOW_ICONS_IN_MENUS != component.myCbDisplayIconsInMenu.getValue();
+        settings.SHOW_ICONS_IN_MENUS = component.myCbDisplayIconsInMenu.getValue();
+        update |= settings.ALLOW_MERGE_BUTTONS != component.myAllowMergeButtons.getValue();
+        settings.ALLOW_MERGE_BUTTONS = component.myAllowMergeButtons.getValue();
+        update |= settings.CYCLE_SCROLLING != component.myCycleScrollingCheckBox.getValue();
+        settings.CYCLE_SCROLLING = component.myCycleScrollingCheckBox.getValue();
+        if (uiFontManager.isOverrideFont() != component.myOverrideLAFFonts.getValue()) {
+            shouldUpdateUI = true;
+        }
+        uiFontManager.setOverrideFont(component.myOverrideLAFFonts.getValue());
+        settings.MOVE_MOUSE_ON_DEFAULT_BUTTON = component.myMoveMouseOnDefaultButtonCheckBox.getValue();
+        settings.HIDE_NAVIGATION_ON_FOCUS_LOSS = component.myHideNavigationPopupsCheckBox.getValue();
+        settings.DND_WITH_PRESSED_ALT_ONLY = component.myAltDNDCheckBox.getValue();
+
+        update |= settings.DISABLE_MNEMONICS != component.myDisableMnemonics.getValue();
+        settings.DISABLE_MNEMONICS = component.myDisableMnemonics.getValue();
+
+        update |= settings.USE_SMALL_LABELS_ON_TABS != component.myUseSmallLabelsOnTabs.getValue();
+        settings.USE_SMALL_LABELS_ON_TABS = component.myUseSmallLabelsOnTabs.getValue();
+
+        update |= settings.WIDESCREEN_SUPPORT != component.myWidescreenLayoutCheckBox.getValue();
+        settings.WIDESCREEN_SUPPORT = component.myWidescreenLayoutCheckBox.getValue();
+
+        update |= settings.LEFT_HORIZONTAL_SPLIT != component.myLeftLayoutCheckBox.getValue();
+        settings.LEFT_HORIZONTAL_SPLIT = component.myLeftLayoutCheckBox.getValue();
+
+        update |= settings.RIGHT_HORIZONTAL_SPLIT != component.myRightLayoutCheckBox.getValue();
+        settings.RIGHT_HORIZONTAL_SPLIT = component.myRightLayoutCheckBox.getValue();
+
+        update |= settings.SHOW_EDITOR_TOOLTIP != component.myEditorTooltipCheckBox.getValue();
+        settings.SHOW_EDITOR_TOOLTIP = component.myEditorTooltipCheckBox.getValue();
+
+        update |= settings.DISABLE_MNEMONICS_IN_CONTROLS != component.myDisableMnemonicInControlsCheckBox.getValue();
+        settings.DISABLE_MNEMONICS_IN_CONTROLS = component.myDisableMnemonicInControlsCheckBox.getValue();
+
+        update |= settings.SHOW_ICONS_IN_QUICK_NAVIGATION != component.myHideIconsInQuickNavigation.getValue();
+        settings.SHOW_ICONS_IN_QUICK_NAVIGATION = component.myHideIconsInQuickNavigation.getValue();
+
+        update |= settings.SMOOTH_SCROLLING != component.mySmoothScrollingBox.getValue();
+        settings.SMOOTH_SCROLLING = component.mySmoothScrollingBox.getValue();
+
+        UIAccess uiAccess = UIAccess.current();
+
+        final boolean finalUpdate = update;
+        final boolean finalShouldUpdateUI = shouldUpdateUI;
+
+        uiAccess.give(() -> {
+            boolean refreshUI = finalShouldUpdateUI;
+            if (!Comparing.equal(component.myStyleComboBox.getValue(), styleManager.getCurrentStyle())) {
+                final Style newStyle = component.myStyleComboBox.getValue();
+                assert newStyle != null;
+                styleManager.setCurrentStyle(newStyle);
+                refreshUI = true;
+            }
+
+            if (!Comparing.equal(component.myIconThemeComboBox.getValue(), getActiveIconLibraryOrNull())) {
+                Object iconLib = component.myIconThemeComboBox.getValue();
+
+                if (iconLib == ObjectUtil.NULL) {
+                    IconLibraryManager.get().setActiveLibrary(null);
+                }
+                else {
+                    IconLibraryManager.get().setActiveLibrary(((IconLibrary) iconLib).getId());
+                }
+
+                refreshUI = true;
+            }
+
+            if (refreshUI) {
+                styleManager.refreshUI();
+            }
+
+            if (finalUpdate) {
+                settings.fireUISettingsChanged();
+            }
+
+            EditorUtil.reinitSettings();
+        });
+    }
+
+    @Nonnull
+    private static Object getActiveIconLibraryOrNull() {
+        IconLibraryManager iconLibraryManager = IconLibraryManager.get();
+
+        if (iconLibraryManager.isFromStyle()) {
+            return ObjectUtil.NULL;
+        }
+
+        return iconLibraryManager.getActiveLibrary();
+    }
+
+    private static int getIntValue(TextBox combo, int defaultValue) {
+        String temp = combo.getValue();
+        int value = -1;
+        if (temp != null && temp.trim().length() > 0) {
+            try {
+                value = Integer.parseInt(temp);
+            }
+            catch (NumberFormatException ignore) {
+            }
+            if (value <= 0) {
+                value = defaultValue;
+            }
         }
         else {
-          IconLibraryManager.get().setActiveLibrary(((IconLibrary)iconLib).getId());
+            value = defaultValue;
         }
-
-        refreshUI = true;
-      }
-
-      if (refreshUI) {
-        styleManager.refreshUI();
-      }
-
-      if (finalUpdate) {
-        settings.fireUISettingsChanged();
-      }
-
-      EditorUtil.reinitSettings();
-    });
-  }
-
-  @Nonnull
-  private static Object getActiveIconLibraryOrNull() {
-    IconLibraryManager iconLibraryManager = IconLibraryManager.get();
-
-    if (iconLibraryManager.isFromStyle()) {
-      return ObjectUtil.NULL;
+        return value;
     }
-
-    return iconLibraryManager.getActiveLibrary();
-  }
-
-  private static int getIntValue(TextBox combo, int defaultValue) {
-    String temp = combo.getValue();
-    int value = -1;
-    if (temp != null && temp.trim().length() > 0) {
-      try {
-        value = Integer.parseInt(temp);
-      }
-      catch (NumberFormatException ignore) {
-      }
-      if (value <= 0) {
-        value = defaultValue;
-      }
-    }
-    else {
-      value = defaultValue;
-    }
-    return value;
-  }
 }

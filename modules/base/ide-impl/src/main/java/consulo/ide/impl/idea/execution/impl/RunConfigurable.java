@@ -40,7 +40,6 @@ import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.config.StorageAccessors;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -52,7 +51,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.RowsDnDSupport;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
@@ -159,31 +157,26 @@ public class RunConfigurable extends BaseConfigurable {
   private void initTree() {
     myTree.setRootVisible(false);
     myTree.setShowsRootHandles(true);
-    if (!myEditorMode) {
-      SwingUIDecorator.apply(SwingUIDecorator::decorateSidebarTree, myTree);
-    }
     UIUtil.setLineStyleAngled(myTree);
     TreeUtil.installActions(myTree);
-    new TreeSpeedSearch(myTree, new Convertor<TreePath, String>() {
-      @Override
-      public String convert(TreePath o) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)o.getLastPathComponent();
-        final Object userObject = node.getUserObject();
-        if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigurationSettings) {
-          return runnerAndConfigurationSettings.getName();
-        }
-        else if (userObject instanceof SingleConfigurationConfigurable singleConfigurationConfigurable) {
-          return singleConfigurationConfigurable.getNameText();
-        }
-        else if (userObject instanceof ConfigurationType configurationType) {
-          return configurationType.getDisplayName().get();
-        }
-        else if (userObject instanceof String s) {
-          return s;
-        }
-        return o.toString();
+    new TreeSpeedSearch(myTree, o -> {
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)o.getLastPathComponent();
+      final Object userObject = node.getUserObject();
+      if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigurationSettings) {
+        return runnerAndConfigurationSettings.getName();
       }
+      else if (userObject instanceof SingleConfigurationConfigurable singleConfigurationConfigurable) {
+        return singleConfigurationConfigurable.getNameText();
+      }
+      else if (userObject instanceof ConfigurationType configurationType) {
+        return configurationType.getDisplayName().get();
+      }
+      else if (userObject instanceof String s) {
+        return s;
+      }
+      return o.toString();
     });
+
     myTree.setCellRenderer(new ColoredTreeCellRenderer() {
       @RequiredUIAccess
       @Override
@@ -589,9 +582,7 @@ public class RunConfigurable extends BaseConfigurable {
       .setRemoveActionUpdater(removeAction)
       .setRemoveActionName(ExecutionLocalize.removeRunConfigurationActionName().get())
       .setPanelBorder(JBUI.Borders.empty())
-      .setToolbarBackgroundColor(
-        myEditorMode ? UIUtil.getPanelBackground() : SwingUIDecorator.get(SwingUIDecorator::getSidebarColor)
-      )
+      .setToolbarBackgroundColor((MorphColor.of(UIUtil::getPanelBackground)))
       .setMoveUpAction(moveUpAction)
       .setMoveUpActionName(ExecutionLocalize.moveUpActionName().get())
       .setMoveUpActionUpdater(moveUpAction)

@@ -53,7 +53,6 @@ import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.internal.AbstractPainter;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
@@ -475,7 +474,6 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         mySearch.getTextEditor().setBackground(UIUtil.getTextFieldBackground());
       }
 
-
       final Configurable current = getContext().getCurrentConfigurable();
 
       boolean shouldMoveSelection = true;
@@ -563,7 +561,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
   private final LoadingDecorator myLoadingDecorator;
   private final Filter myFilter;
 
-  private final JPanel mySearchWrapper = new JPanel(new BorderLayout());
+  private final Wrapper mySearchWrapper = new Wrapper();
   private final JPanel myLeftSide;
 
   private boolean myFilterDocumentWasChanged;
@@ -612,7 +610,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         }
         finally {
           if (myFilterDocumentWasChanged && !isFilterFieldVisible()) {
-            setFilterFieldVisible(true, false, false);
+            setFilterFieldVisible(false, false);
           }
         }
       }
@@ -631,6 +629,10 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     myLeftSide = new JPanel(new BorderLayout());
 
+    mySearchWrapper.setContent(mySearch);
+    mySearchWrapper.setBackground(MorphColor.of(UIUtil::getTreeBackground));
+    mySearchWrapper.setBorder(JBUI.Borders.empty(8));
+    mySearchWrapper.setOpaque(true);
     myLeftSide.add(mySearchWrapper, BorderLayout.NORTH);
     myLeftSide.add(component, BorderLayout.CENTER);
 
@@ -667,7 +669,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     IdeGlassPaneUtil.installPainter(myOwnDetails.getContentGutter(), mySpotlightPainter, this);
 
-    setFilterFieldVisible(true, false, false);
+    setFilterFieldVisible(false, false);
 
     uiSettingsChanged(UISettings.getInstance());
 
@@ -681,11 +683,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
   @Override
   public void uiSettingsChanged(UISettings source) {
-    mySearchWrapper.setBorder(JBUI.Borders.empty(10, 5));
-
-    mySearch.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
-    mySearchWrapper.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
-    myLeftSide.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
+    mySearch.setBackground(MorphColor.of(UIUtil::getPanelBackground));
+    myLeftSide.setBackground(MorphColor.of(UIUtil::getPanelBackground));
   }
 
   public JPanel getLeftSide() {
@@ -1064,19 +1063,16 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     return mySearch.getParent() == mySearchWrapper;
   }
 
-  public void setFilterFieldVisible(final boolean visible, boolean requestFocus, boolean checkFocus) {
+  public void setFilterFieldVisible(boolean requestFocus, boolean checkFocus) {
     if (isFilterFieldVisible() && checkFocus && requestFocus && !isSearchFieldFocused()) {
       IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(mySearch, true));
       return;
     }
 
-    mySearchWrapper.removeAll();
-    mySearchWrapper.add(visible ? mySearch : null, BorderLayout.CENTER);
-
     myLeftSide.revalidate();
     myLeftSide.repaint();
 
-    if (visible && requestFocus) {
+    if (requestFocus) {
       IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(mySearch, true));
     }
   }

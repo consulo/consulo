@@ -4,10 +4,11 @@ import consulo.application.AllIcons;
 import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.SearchSession;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
-public class ToggleWholeWordsOnlyAction extends EditorHeaderToggleAction implements Embeddable {
+public class ToggleWholeWordsOnlyAction extends EditorSearchToggleAction implements Embeddable {
     public ToggleWholeWordsOnlyAction() {
         super(
             FindLocalize.findWholeWords(),
@@ -17,6 +18,12 @@ public class ToggleWholeWordsOnlyAction extends EditorHeaderToggleAction impleme
         );
     }
 
+    @Override
+    public boolean displayTextInToolbar() {
+        return false;
+    }
+    
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         SearchSession session = e.getData(SearchSession.KEY);

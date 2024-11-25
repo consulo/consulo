@@ -15,13 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.navigationToolbar.ui;
 
-import java.awt.*;
-
 /**
  * @author Konstantin Bulenkov
  */
 public class CommonNavBarUI extends AbstractNavBarUI {
-  @Override
-  public void doPaintWrapperPanel(Graphics2D g, Rectangle bounds, boolean mainToolbarVisible) {
-  }
 }

@@ -23,7 +23,6 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
-import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.idea.ui.ToggleActionButton;
 import consulo.ide.impl.idea.ui.popup.util.DetailController;
 import consulo.ide.impl.idea.ui.popup.util.DetailViewImpl;
@@ -42,12 +41,12 @@ import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.Couple;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.*;
@@ -287,7 +286,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
               return enabled;
             }).
             setToolbarPosition(ActionToolbarPosition.TOP).
-            setToolbarBackgroundColor(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor)).
+            setToolbarBackgroundColor(UIUtil.getPanelBackground()).
             setToolbarBorder(IdeBorderFactory.createEmptyBorder());
 
     tree.setBorder(JBUI.Borders.empty());

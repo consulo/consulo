@@ -37,6 +37,7 @@ import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.popup.GroupedItemsListRenderer;
 import consulo.ui.ex.awt.popup.ListItemDescriptorAdapter;
 import consulo.ui.image.Image;
@@ -207,6 +208,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
     public XDebuggerFrameListRenderer(@Nonnull Project project) {
       myColorsManager = FileColorManager.getInstance(project);
+      setBorder(JBCurrentTheme.BigPopup.listCellBorder());
     }
 
     @Override

@@ -10,7 +10,6 @@ import consulo.find.FindInProjectSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.SearchReplaceComponent;
 import consulo.ide.impl.idea.find.editorHeaderActions.*;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHeaderComponent;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
@@ -60,15 +59,12 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     private final DefaultActionGroup mySearchFieldActions;
     private final ActionToolbar mySearchActionsToolbar;
-    private final List<AnAction> myEmbeddedSearchActions = new ArrayList<>();
-    private final List<Component> myExtraSearchButtons = new ArrayList<>();
+
     @Nonnull
     private final ActionToolbarEx.PopupStateModifier mySearchToolbar1PopupStateModifier;
 
     private final DefaultActionGroup myReplaceFieldActions;
     private final ActionToolbar myReplaceActionsToolbar;
-    private final List<AnAction> myEmbeddedReplaceActions = new ArrayList<>();
-    private final List<Component> myExtraReplaceButtons = new ArrayList<>();
 
     private final JPanel myReplaceToolbarWrapper;
 
@@ -86,6 +82,9 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     @Nonnull
     private Color myStatusColor = UIUtil.getLabelForeground();
     private DefaultActionGroup myTouchbarActions;
+
+    private final List<AnAction> mySearchSuffixActions = new ArrayList<>();
+    private final List<AnAction> myReplaceSuffixActions = new ArrayList<>();
 
     SearchReplaceComponentImpl(
         @Nullable Project project,
@@ -108,29 +107,20 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         myReplaceAction = replaceAction;
         myCloseAction = closeAction;
 
-        for (AnAction child : searchToolbar2Actions.getChildren(null)) {
-            if (child instanceof Embeddable) {
-                myEmbeddedSearchActions.add(child);
-                ShortcutSet shortcutSet = ActionUtil.getMnemonicAsShortcut(child);
-                if (shortcutSet != null) {
-                    child.registerCustomShortcutSet(shortcutSet, this);
-                }
+        for (AnAction action : searchToolbar2Actions.getChildren(null)) {
+            if (action instanceof Embeddable) {
+                mySearchSuffixActions.add(action);
+                
+                searchToolbar2Actions.remove(action);
             }
         }
-        for (AnAction action : myEmbeddedSearchActions) {
-            searchToolbar2Actions.remove(action);
-        }
-        for (AnAction child : replaceToolbar2Actions.getChildren(null)) {
-            if (child instanceof Embeddable) {
-                myEmbeddedReplaceActions.add(child);
-                ShortcutSet shortcutSet = ActionUtil.getMnemonicAsShortcut(child);
-                if (shortcutSet != null) {
-                    child.registerCustomShortcutSet(shortcutSet, this);
-                }
+
+        for (AnAction action : replaceToolbar2Actions.getChildren(null)) {
+            if (action instanceof Embeddable) {
+                myReplaceSuffixActions.add(action);
+
+                replaceToolbar2Actions.remove(action);
             }
-        }
-        for (AnAction action : myEmbeddedReplaceActions) {
-            replaceToolbar2Actions.remove(action);
         }
 
         mySearchToolbar1PopupStateModifier = new ActionToolbarEx.PopupStateModifier() {
@@ -482,8 +472,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         List<Component> focusOrder = new ArrayList<>();
         focusOrder.add(mySearchTextComponent);
         focusOrder.add(myReplaceTextComponent);
-        focusOrder.addAll(myExtraSearchButtons);
-        focusOrder.addAll(myExtraReplaceButtons);
         setFocusCycleRoot(true);
         setFocusTraversalPolicy(new ListFocusTraversalPolicy(focusOrder));
         revalidate();
@@ -540,6 +528,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         return UIUtil.isClientPropertyTrue(getSearchTextComponent(), SearchTextArea.JUST_CLEARED_KEY);
     }
 
+    @RequiredUIAccess
     private boolean updateTextComponent(boolean search) {
         JTextComponent oldComponent = search ? mySearchTextComponent : myReplaceTextComponent;
         if (oldComponent != null) {
@@ -558,12 +547,10 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         }
         SearchTextArea textArea = new SearchTextArea(textComponent, search);
         if (search) {
-            myExtraSearchButtons.clear();
-            myExtraSearchButtons.addAll(textArea.setExtraActions(myEmbeddedSearchActions.toArray(AnAction.EMPTY_ARRAY)));
+            textArea.setSuffixActions(mySearchSuffixActions);
         }
         else {
-            myExtraReplaceButtons.clear();
-            myExtraReplaceButtons.addAll(textArea.setExtraActions(myEmbeddedReplaceActions.toArray(AnAction.EMPTY_ARRAY)));
+            textArea.setSuffixActions(myReplaceSuffixActions);
         }
         // Display empty text only when focused
         textComponent.putClientProperty(
