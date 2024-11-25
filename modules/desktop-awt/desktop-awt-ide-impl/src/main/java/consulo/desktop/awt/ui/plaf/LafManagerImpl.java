@@ -427,9 +427,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     private void updateUI(boolean initial) {
-        final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
-
-        patchLafFonts(uiDefaults, initial);
+        patchLafFonts();
 
         updateToolWindows();
 
@@ -459,12 +457,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         }
     }
 
-    // TODO not works
-    private void patchLafFonts(UIDefaults uiDefaults, boolean initial) {
-        if (Boolean.TRUE) {
-            return;
-        }
-        
+    private void patchLafFonts() {
         UIFontManager uiSettings = UIFontManager.getInstance();
         if (uiSettings.isOverrideFont()) {
             Font font = StyleContext.getDefaultStyleContext().getFont(uiSettings.getFontName(), Font.PLAIN, uiSettings.getFontSize());
@@ -472,10 +465,10 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
                 font = font.deriveFont(Font.PLAIN);
             }
 
-            uiDefaults.put("defaultFont", font);
+            UIManager.put("defaultFont", font);
         }
-        else if (!initial) {
-            uiDefaults.put("defaultFont", null);
+        else {
+            UIManager.put("defaultFont", null);
         }
     }
 
