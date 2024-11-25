@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 /**
@@ -58,6 +59,9 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigurable.LayoutImpl> implements ApplicationConfigurable {
+    private record InitialStyleState(Style style, String iconLibraryId) {
+    }
+
     public static class LayoutImpl implements Supplier<Layout> {
         private VerticalLayout myPanel;
 
@@ -90,8 +94,9 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         private ComboBox<AntialiasingType> myAntialiasingInEditor;
         private CheckBox mySmoothScrollingBox;
 
-        private Style myInitialStyle;
+        private InitialStyleState myInitialStyle;
         private boolean myStyledChaged;
+        private AtomicInteger myEventBlocker = new AtomicInteger();
 
         @RequiredUIAccess
         private LayoutImpl() {
@@ -109,7 +114,9 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             myStyleComboBox.addValueListener(event -> {
                 myStyledChaged = true;
 
-                StyleManager.get().setCurrentStyle(event.getValue());
+                if (myEventBlocker.get() == 0) {
+                    StyleManager.get().setCurrentStyle(event.getValue());
+                }
             });
             myStyleComboBox.setTextRender(style -> style == null ? LocalizeValue.empty() : LocalizeValue.of(style.getName()));
             uiOptions.add(LabeledBuilder.simple(IdeLocalize.comboboxLookAndFeel(), myStyleComboBox));
@@ -268,8 +275,10 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
         StyleManager styleManager = StyleManager.get();
 
-        if (component.myStyledChaged && component.myInitialStyle != null && component.myInitialStyle != styleManager.getCurrentStyle()) {
-            styleManager.setCurrentStyle(component.myInitialStyle);
+        if (component.myStyledChaged && component.myInitialStyle != null && component.myInitialStyle.style() != styleManager.getCurrentStyle()) {
+            styleManager.setCurrentStyle(component.myInitialStyle.style());
+            
+            IconLibraryManager.get().setActiveLibrary(component.myInitialStyle.iconLibraryId());
         }
     }
 
@@ -325,14 +334,15 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         UISettings settings = UISettings.getInstance();
         UIFontManager uiFontManager = UIFontManager.getInstance();
 
+        StyleManager styleManager = StyleManager.get();
         if (component.myInitialStyle == null) {
-            component.myInitialStyle = StyleManager.get().getCurrentStyle();
+            component.myInitialStyle = new InitialStyleState(styleManager.getCurrentStyle(), IconLibraryManager.get().getActiveLibraryId());
         } else {
-            StyleManager styleManager = StyleManager.get();
-
             Style currentStyle = styleManager.getCurrentStyle();
-            if (currentStyle != component.myInitialStyle) {
-                styleManager.setCurrentStyle(currentStyle);
+            if (currentStyle != component.myInitialStyle.style()) {
+                styleManager.setCurrentStyle(component.myInitialStyle.style());
+                
+                IconLibraryManager.get().setActiveLibrary(component.myInitialStyle.iconLibraryId());
             }
         }
 
@@ -352,7 +362,14 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         component.myMoveMouseOnDefaultButtonCheckBox.setValue(settings.MOVE_MOUSE_ON_DEFAULT_BUTTON);
         component.myHideNavigationPopupsCheckBox.setValue(settings.HIDE_NAVIGATION_ON_FOCUS_LOSS);
         component.myAltDNDCheckBox.setValue(settings.DND_WITH_PRESSED_ALT_ONLY);
-        component.myStyleComboBox.setValue(StyleManager.get().getCurrentStyle());
+        try {
+            component.myEventBlocker.incrementAndGet();
+            component.myStyleComboBox.setValue(styleManager.getCurrentStyle());
+        }
+        finally {
+            component.myEventBlocker.decrementAndGet();
+        }
+        
         component.myOverrideLAFFonts.setValue(uiFontManager.isOverrideFont());
         component.myDisableMnemonics.setValue(settings.DISABLE_MNEMONICS);
         component.myUseSmallLabelsOnTabs.setValue(settings.USE_SMALL_LABELS_ON_TABS);

@@ -15,10 +15,12 @@
  */
 package consulo.desktop.awt.startup;
 
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.ui.FlatNativeMacLibrary;
 import com.formdev.flatlaf.ui.FlatNativeWindowsLibrary;
 import com.formdev.flatlaf.util.HiDPIUtils;
 import com.google.gson.Gson;
+import com.jidesoft.swing.JideSplitButton;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.plugin.CompositeMessage;
@@ -70,6 +72,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;

@@ -933,6 +933,11 @@
                 <version>3.5.2</version>
             </dependency>
             <dependency>
+                <groupId>com.formdev</groupId>
+                <artifactId>flatlaf-jide-oss</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+            <dependency>
                 <groupId>org.swinglabs.swingx</groupId>
                 <artifactId>swingx-all</artifactId>
                 <version>1.6.5</version>

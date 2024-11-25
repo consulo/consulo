@@ -152,9 +152,7 @@ open module consulo.ide.impl {
 
   provides consulo.ui.image.IconLibraryDescriptor with
     consulo.ide.impl.ui.impl.LightIconLibraryDescriptor,
-    consulo.ide.impl.ui.impl.LightMonoIconLibraryDescriptor,
-    consulo.ide.impl.ui.impl.DarkIconLibraryDescriptor,
-    consulo.ide.impl.ui.impl.DarkMonoIconLibraryDescriptor;
+    consulo.ide.impl.ui.impl.DarkIconLibraryDescriptor;
 
   exports consulo.ide.impl.dataContext to consulo.desktop.awt.ide.impl;
 
