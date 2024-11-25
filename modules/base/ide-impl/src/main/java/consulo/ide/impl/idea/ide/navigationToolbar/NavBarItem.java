@@ -71,7 +71,6 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     setIpad(myUI.getElementIpad(isPopupElement));
 
     if (!isPopupElement) {
-      setMyBorder(null);
       setBorder(null);
       setPaintFocusBorder(false);
       setIconOpaque(false);

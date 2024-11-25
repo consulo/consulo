@@ -108,7 +108,6 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         gbConstraints.anchor = GridBagConstraints.WEST;
         final SimpleColoredComponent coloredComponent = new SimpleColoredComponent();
         coloredComponent.setIpad(JBUI.emptyInsets());
-        coloredComponent.setMyBorder(null);
         configureLabelComponent(coloredComponent);
         panel.add(coloredComponent, gbConstraints);
 
