@@ -16,6 +16,8 @@
 package consulo.desktop.awt.ui.plaf2.flat;
 
 import com.formdev.flatlaf.ui.FlatComboBoxUI;
+import com.formdev.flatlaf.ui.FlatUIUtils;
+import com.formdev.flatlaf.util.UIScale;
 import consulo.ui.ex.awt.action.ComboBoxButtonImpl;
 import consulo.ui.ex.awt.action.ComboBoxButtonUI;
 
@@ -24,7 +26,9 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.plaf.basic.ComboPopup;
+import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Rectangle2D;
 
 /**
  * @author VISTALL
@@ -95,6 +99,98 @@ public class FlatComboBoxButtonUI extends FlatComboBoxUI implements ComboBoxButt
     @Override
     public Accessible getAccessibleChild(JComponent c, int i) {
         return null;
+    }
+
+    @Override
+    public void update(Graphics g, JComponent c) {
+        float focusWidth = FlatUIUtils.getBorderFocusWidth(c);
+        float arc = FlatUIUtils.getBorderArc(c);
+        boolean paintBackground = true;
+
+        // check whether used as cell renderer
+        boolean isCellRenderer = c.getParent() instanceof CellRendererPane;
+        if (isCellRenderer) {
+            focusWidth = 0;
+            arc = 0;
+            paintBackground = isCellRendererBackgroundChanged();
+        }
+
+        // fill background if opaque to avoid garbage if user sets opaque to true
+        if (c.isOpaque() && (focusWidth > 0 || arc > 0))
+            FlatUIUtils.paintParentBackground(g, c);
+
+        Graphics2D g2 = (Graphics2D) g;
+        Object[] oldRenderingHints = FlatUIUtils.setRenderingHints(g2);
+
+        int width = c.getWidth();
+        int height = c.getHeight();
+        int arrowX = arrowButton.getX();
+        int arrowWidth = arrowButton.getWidth();
+        boolean paintButton = (comboBox.isEditable() || "button".equals(buttonStyle)) &&
+            !"none".equals(buttonStyle) &&
+            !isMacStyle();
+        boolean enabled = comboBox.isEnabled();
+        boolean isLeftToRight = comboBox.getComponentOrientation().isLeftToRight();
+
+        // paint background
+        if (paintBackground || c.isOpaque()) {
+            g2.setColor(getBackground(enabled));
+            FlatUIUtils.paintComponentBackground(g2, 0, 0, width, height, focusWidth, arc);
+
+            // paint arrow button background
+            if (enabled && !isCellRenderer && arrowButton != null && arrowButton.isVisible()) { // FIXME do not render arrow button if not visible
+                Color buttonColor = paintButton
+                    ? buttonEditableBackground
+                    : (buttonFocusedBackground != null || focusedBackground != null) && isPermanentFocusOwner(comboBox)
+                    ? (buttonFocusedBackground != null ? buttonFocusedBackground : focusedBackground)
+                    : buttonBackground;
+                if (buttonColor != null) {
+                    g2.setColor(buttonColor);
+                    if (isMacStyle()) {
+                        Insets insets = comboBox.getInsets();
+                        int gap = UIScale.scale(2);
+                        FlatUIUtils.paintComponentBackground(g2, arrowX + gap, insets.top + gap,
+                            arrowWidth - (gap * 2), height - insets.top - insets.bottom - (gap * 2),
+                            0, arc - focusWidth);
+                    }
+                    else {
+                        Shape oldClip = g2.getClip();
+                        if (isLeftToRight)
+                            g2.clipRect(arrowX, 0, width - arrowX, height);
+                        else
+                            g2.clipRect(0, 0, arrowX + arrowWidth, height);
+                        FlatUIUtils.paintComponentBackground(g2, 0, 0, width, height, focusWidth, arc);
+                        g2.setClip(oldClip);
+                    }
+                }
+            }
+
+            // paint vertical line between value and arrow button
+            if (paintButton) {
+                Color separatorColor = enabled ? buttonSeparatorColor : buttonDisabledSeparatorColor;
+                if (separatorColor != null && buttonSeparatorWidth > 0) {
+                    g2.setColor(separatorColor);
+                    float lw = UIScale.scale(buttonSeparatorWidth);
+                    float lx = isLeftToRight ? arrowX : arrowX + arrowWidth - lw;
+                    g2.fill(new Rectangle2D.Float(lx, focusWidth, lw, height - 1 - (focusWidth * 2)));
+                }
+            }
+        }
+
+        // avoid that the "current value" renderer is invoked with enabled antialiasing
+        FlatUIUtils.resetRenderingHints(g2, oldRenderingHints);
+
+        paint(g, c);
+    }
+
+    private boolean isCellRendererBackgroundChanged() {
+        // parent is a CellRendererPane, parentParent is e.g. a JTable
+        Container parentParent = comboBox.getParent().getParent();
+        return parentParent != null && !comboBox.getBackground().equals(parentParent.getBackground());
+    }
+
+    private boolean isMacStyle() {
+        return "mac".equals(buttonStyle);
     }
 
     @Override
