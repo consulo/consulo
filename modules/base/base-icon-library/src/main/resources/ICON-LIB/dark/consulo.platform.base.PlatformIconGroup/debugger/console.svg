@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <path fill="#AFB1B3"
-        d="M7.06393077,7.93322956 L4.76000023,10.0664986 L6.03195752,11.2442368 L9.59577548,7.94440533 L9.58370576,7.93322956 L9.59577548,7.92205378 L6.03195752,4.62222227 L4.76000023,5.79996049 L7.06393077,7.93322956 Z M2,3 L14,3 L14,13 L2,13 L2,3 Z"/>
+<!-- Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license. -->
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1.5" y="2.5" width="13" height="11" rx="1.5" fill="#43454A" stroke="#CED0D6"/>
+<path d="M4 6L6 8L4 10" stroke="#CED0D6" stroke-width="1.2"/>
+<path d="M7.5 10.5H11.5" stroke="#CED0D6" stroke-width="1.2"/>
 </svg>

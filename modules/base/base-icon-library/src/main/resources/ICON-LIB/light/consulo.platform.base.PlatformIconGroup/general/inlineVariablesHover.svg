@@ -1,3 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <path fill="#7F8B91" fill-opacity=".9" fill-rule="evenodd" d="M3,1 L14,1 L14,15 L3,15 L3,1 Z M5,3 L5,13 L12,13 L12,3 L5,3 Z M6,5 L11,5 L11,6 L6,6 L6,5 Z M6,7 L11,7 L11,8 L6,8 L6,7 Z M6,9 L11,9 L11,10 L6,10 L6,9 Z"/>
+<!-- Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license. -->
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="2.5" y="1.5" width="11" height="13" rx="1.5" stroke="#A8ADBD"/>
+<rect x="5" y="5" width="6" height="1" rx="0.5" fill="#A8ADBD"/>
+<rect x="5" y="7.5" width="6" height="1" rx="0.5" fill="#A8ADBD"/>
+<rect x="5" y="10" width="6" height="1" rx="0.5" fill="#A8ADBD"/>
 </svg>
