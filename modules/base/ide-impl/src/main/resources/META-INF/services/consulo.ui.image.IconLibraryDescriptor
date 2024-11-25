@@ -1,4 +1,2 @@
 consulo.ide.impl.ui.impl.LightIconLibraryDescriptor
-consulo.ide.impl.ui.impl.LightMonoIconLibraryDescriptor
 consulo.ide.impl.ui.impl.DarkIconLibraryDescriptor
-consulo.ide.impl.ui.impl.DarkMonoIconLibraryDescriptor
