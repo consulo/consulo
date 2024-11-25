@@ -629,6 +629,10 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     myLeftSide = new JPanel(new BorderLayout());
 
+    mySearchWrapper.setContent(mySearch);
+    mySearchWrapper.setBackground(MorphColor.of(UIUtil::getTreeBackground));
+    mySearchWrapper.setBorder(JBUI.Borders.empty(8));
+    mySearchWrapper.setOpaque(true);
     myLeftSide.add(mySearchWrapper, BorderLayout.NORTH);
     myLeftSide.add(component, BorderLayout.CENTER);
 
@@ -1064,9 +1068,6 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
       IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(mySearch, true));
       return;
     }
-
-    mySearchWrapper.removeAll();
-    mySearchWrapper.add(mySearch);
 
     myLeftSide.revalidate();
     myLeftSide.repaint();
