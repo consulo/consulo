@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ShortcutSet;
@@ -47,7 +46,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
     @Override
     @RequiredUIAccess
     protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
-        setBorder(value == RECENT_LOCATIONS ? JBUI.Borders.customLine(selected ? getBackground() : new JBColor(Gray._220, Gray._80), 1, 0, 0, 0) : JBUI.Borders.empty());
+        setBorder(value == RECENT_LOCATIONS ? JBUI.Borders.customLine(selected ? getBackground() : JBColor.border(), 1, 0, 0, 0) : JBUI.Borders.empty());
 
         String nameToMatch = "";
         if (value instanceof ToolWindow) {

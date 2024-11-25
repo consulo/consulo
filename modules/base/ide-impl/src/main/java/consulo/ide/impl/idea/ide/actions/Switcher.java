@@ -29,8 +29,6 @@ import consulo.ide.impl.idea.ui.CaptionPanel;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
-import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.PlatformDataKeys;
@@ -45,7 +43,6 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -62,6 +59,8 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.style.StandardColors;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
@@ -94,7 +93,6 @@ import static javax.swing.KeyStroke.getKeyStroke;
 public class Switcher extends AnAction implements DumbAware {
     private static final Logger LOG = Logger.getInstance(Switcher.class);
     private static final Key<SwitcherPanel> SWITCHER_KEY = Key.create("SWITCHER_KEY");
-    private static final Color SEPARATOR_COLOR = JBColor.namedColor("Popup.separatorColor", new JBColor(Gray.xC0, Gray.x4B));
     private static final String TOGGLE_CHECK_BOX_ACTION_ID = "SwitcherRecentEditedChangedToggleCheckBox";
 
     private static final int MINIMUM_HEIGHT = JBUIScale.scale(400);
@@ -367,7 +365,7 @@ public class Switcher extends AnAction implements DumbAware {
             pathLabel.setBackground(JBCurrentTheme.Advertiser.background());
             pathLabel.setOpaque(true);
 
-            descriptions.setBorder(new CustomLineBorder(JBCurrentTheme.Advertiser.borderColor(), JBUI.insetsTop(1)));
+            descriptions.setBorder(new CustomLineBorder(JBColor.border(), JBUI.insetsTop(1)));
             descriptions.add(pathLabel, BorderLayout.CENTER);
             twManager = ToolWindowManager.getInstance(project);
             CollectionListModel<Object> twModel = new CollectionListModel<>();
@@ -477,7 +475,6 @@ public class Switcher extends AnAction implements DumbAware {
                     boolean selected,
                     boolean hasFocus
                 ) {
-                    setPaintFocusBorder(false);
                     super.customizeCellRenderer(list, value, index, selected, hasFocus);
                 }
             };

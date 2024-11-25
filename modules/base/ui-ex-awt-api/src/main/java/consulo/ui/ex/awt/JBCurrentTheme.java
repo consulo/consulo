@@ -45,11 +45,6 @@ public class JBCurrentTheme {
     public static Border border() {
       return new JBEmptyBorder(JBUI.insets("Popup.Advertiser.borderInsets", DEFAULT_AD_INSETS));
     }
-
-    @Nonnull
-    public static Color borderColor() {
-      return JBColor.namedColor("Popup.Advertiser.borderColor", Gray._135);
-    }
   }
 
   public static class ActionsList {
