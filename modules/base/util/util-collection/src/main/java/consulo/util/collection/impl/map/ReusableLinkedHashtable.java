@@ -35,12 +35,12 @@ import java.util.function.Consumer;
  * in the insertion order. So during iteration these key/value entries may be returned in the same order they were inserted.
  * Custom equals/hashCode strategy is supported.</p>
  *
- * <p>Hash-table is created 25% full and grows up to 50% full, then it needs to be recreated. Filling open-addressed hash-table
- * above 50% limit may create long hash collisions and is undesirable. Linked list of entries is wrapped, the last entry
- * references the first entry in the list, so only end list position is stored. Position is an index of a key in the data array
- * (and in position/hash array as well). Each entry stores its hashCode and it is used during hash-table resize. Also during resize
- * we don't compare keys by .equals() but only by == to prevent. This prevents calling any methods which could produce exceptions
- * during resize (which is undesirable since resize may occur asynchronously after GC).</p>
+ * <p>Hash-table is created 25%-50% full (hash-table size is power of 2 for efficiency) and grows up to 50% full, then it needs
+ * to be recreated. Filling open-addressed hash-table above 50% limit may create long hash collisions and is undesirable. Linked list
+ * of entries is wrapped, the last entry references the first entry in the list, so only the end list position is stored. Position
+ * is an index of a key in the data array (and in position/hash array as well). Each entry stores its hashCode and it is used during
+ * hash-table resize. Also during resize we don't compare keys by .equals() but only by ==. This prevents calling any methods
+ * on key objects which could produce exceptions during resize (which is undesirable since resize may occur asynchronously after GC).</p>
  *
  * <p>This class is intended to work in pair with {@link ImmutableLinkedHashMap}. There may be several {@code ImmutableLinkedHashMap}s
  * pointing to the same {@code ReusableLinkedHashtable}. Only one of {@code ImmutableLinkedHashMap}s would have all the key/value
@@ -100,7 +100,12 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     }
 
     public static <K, V> ReusableLinkedHashtable<K, V> blankOfSize(HashingStrategy<K> strategy, int size) {
-        return size == 0 ? empty(strategy) : new ReusableLinkedHashtable<>(strategy, new Object[size << 3], new int[size << 3], 0);
+        if (size == 0) {
+            return empty(strategy);
+        }
+
+        int arraySize = ceilToPowerOf2(size) << 2;
+        return new ReusableLinkedHashtable<>(strategy, new Object[arraySize], new int[arraySize], 0);
     }
 
     public ReusableLinkedHashtable<K, V> blankOfSize(int size) {
@@ -108,8 +113,8 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     }
 
     @SuppressWarnings("unchecked")
-    public ReusableLinkedHashtable<K, V> copyOfSize(int size) {
-        ReusableLinkedHashtable<K, V> newTable = blankOfSize(size);
+    public ReusableLinkedHashtable<K, V> copyOfSize(int maxSize) {
+        ReusableLinkedHashtable<K, V> newTable = blankOfSize(maxSize);
         if (mySize > 0) {
             for (int pos = getStartPos(), endPos = myEndPos; ; pos = myNextPosAndHash[pos]) {
                 newTable.insertByIdentity(myNextPosAndHash[pos + 1], (K)myData[pos], (V)myData[pos + 1]);
@@ -122,49 +127,22 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     }
 
     public ReusableLinkedHashtable<K, V> copyRange(ReusableLinkedHashtableRange range) {
-        return copyRangeWithoutPos(range, -1);
-    }
-
-    public ReusableLinkedHashtable<K, V> copyRangeWithoutPos(ReusableLinkedHashtableRange range, int excludePos) {
-        ReusableLinkedHashtable<K, V>
-            newTable = new ReusableLinkedHashtable<>(myStrategy, new Object[myData.length], new int[myNextPosAndHash.length], 0);
-        int startPos = range.getStartPos(), endPos = range.getEndPos();
-        int newSize = 0, newEndPos = endPos;
-        for (int pos = startPos; ; pos = myNextPosAndHash[pos]) {
-            if (pos != excludePos) {
-                newTable.myData[pos] = myData[pos];
-                newTable.myData[pos + 1] = myData[pos + 1];
-                newTable.myNextPosAndHash[newEndPos] = pos;
-                newTable.myNextPosAndHash[newEndPos + 1] = myNextPosAndHash[pos + 1];
-                newEndPos = pos;
-                newSize++;
-            }
-            if (pos == endPos) {
-                break;
-            }
-        }
-        newTable.mySize = newSize;
-        newTable.myEndPos = newEndPos;
-        return newTable;
-    }
-
-    public ReusableLinkedHashtable<K, V> copyRangeOptimized(ReusableLinkedHashtableRange range) {
-        return copyRangeWithout(mySize, range, null);
+        return copyRangeWithout(mySize, range, null, -1);
     }
 
     @SuppressWarnings("unchecked")
     public ReusableLinkedHashtable<K, V> copyRangeWithout(
-        int arraysSize,
+        int maxSize,
         ReusableLinkedHashtableRange range,
-        Set<? extends K> keysToExclude
+        Set<? extends K> excludeKeys,
+        int excludePos
     ) {
-        ReusableLinkedHashtable<K, V>
-            newTable = new ReusableLinkedHashtable<>(myStrategy, new Object[arraysSize << 1], new int[arraysSize << 1], 0);
+        ReusableLinkedHashtable<K, V> newTable = blankOfSize(maxSize);
         int startPos = range.getStartPos();
         if (startPos >= 0) {
             for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
                 K key = (K)myData[pos];
-                if (keysToExclude == null || !keysToExclude.contains(key)) {
+                if ((excludeKeys == null || !excludeKeys.contains(key)) && pos != excludePos) {
                     newTable.insertByIdentity(myNextPosAndHash[pos + 1], key, (V)myData[pos + 1]);
                 }
                 if (pos == endPos) {
@@ -232,18 +210,13 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         }
 
         HashingStrategy<K> strategy = myStrategy;
-        int pos = Math.floorMod(hashCode, length >>> 1) << 1;
-        while (true) {
+        for (int lengthMask = length - 1, pos = (hashCode << 1) & lengthMask; ; pos = (pos + 2) & lengthMask) {
             K candidate = (K)data[pos];
             if (candidate == null) {
                 return ~pos;
             }
             else if (strategy.equals(candidate, key)) {
                 return pos;
-            }
-            pos += 2;
-            if (pos == length) {
-                pos = 0;
             }
         }
     }
@@ -256,18 +229,13 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
             return -1;
         }
 
-        int pos = Math.floorMod(hashCode, length >>> 1) << 1;
-        while (true) {
+        for (int lengthMask = length - 1, pos = (hashCode << 1) & lengthMask; ; pos = (pos + 2) & lengthMask) {
             K candidate = (K)data[pos];
             if (candidate == null) {
                 return ~pos;
             }
             else if (candidate == key) {
                 return pos;
-            }
-            pos += 2;
-            if (pos == length) {
-                pos = 0;
             }
         }
     }
@@ -583,5 +551,15 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
                     }
                 }
             });
+    }
+
+    private static int ceilToPowerOf2(int number) {
+        int r = number - 1;
+        r = r | (r >> 1);
+        r = r | (r >> 2);
+        r = r | (r >> 4);
+        r = r | (r >> 8);
+        r = r | (r >> 16);
+        return r + 1;
     }
 }

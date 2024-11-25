@@ -147,7 +147,7 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
 
         if (checkPossibleMatchFromSatellite) {
             // We're not in the largest map sharing current hash-table. So we need to check if found key is actually in our list.
-            return myTable.isInList(this, keyPos) ? of(myTable.copyRangeWithoutPos(this, keyPos)) : this;
+            return myTable.isInList(this, keyPos) ? of(myTable.copyRangeWithout(mySize - 1, this, null, keyPos)) : this;
         }
 
         if (keyPos < 0) {
@@ -167,7 +167,7 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
             return reuse(mySize - 1, myStartPos, myTable.getPosBefore(this, myEndPos));
         }
 
-        return of(myTable.copyRangeWithoutPos(this, keyPos));
+        return of(myTable.copyRangeWithout(mySize - 1, this, null, keyPos));
     }
 
     /**
@@ -520,7 +520,8 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
     }
 
     private ImmutableLinkedHashMap<K, V> withAllRecreate(@Nonnull Map<? extends K, ? extends V> map) {
-        ReusableLinkedHashtable<K, V> newTable = myTable.copyRangeWithout((mySize + map.size()) << 1, this, map.keySet());
+        ReusableLinkedHashtable<K, V> newTable =
+            myTable.copyRangeWithout((mySize + map.size()) << 1, this, map.keySet(), -1);
         for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
             newTable.insertNullable(entry.getKey(), entry.getValue());
         }
