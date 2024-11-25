@@ -44,5 +44,6 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         uiDefaults.put("OnOffButtonUI", OnOffButton.OnOffButtonUI.class.getName());
 
         uiDefaults.put("ComboBoxButtonUI", FlatComboBoxButtonUI.class.getName());
+        uiDefaults.put("CaptionPanelUI", FlatCaptionPanelUI.class.getName());
     }
 }
