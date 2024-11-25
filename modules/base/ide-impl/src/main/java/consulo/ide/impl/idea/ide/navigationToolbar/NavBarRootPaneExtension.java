@@ -21,28 +21,26 @@
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUIManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUIManager;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.ide.ui.customization.CustomisedActionGroup;
-import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.project.Project;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.util.JBSwingUtilities;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.ui.ex.awt.util.JBSwingUtilities;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -99,12 +97,6 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
   public JComponent getComponent() {
     if (myWrapperPanel == null) {
       myWrapperPanel = new NavBarWrapperPanel(new BorderLayout()) {
-        @Override
-        protected void paintComponent(Graphics g) {
-          super.paintComponent(g);
-          NavBarUIManager.getUI().doPaintWrapperPanel((Graphics2D)g, getBounds(), isMainToolbarVisible());
-        }
-
         @Override
         public Insets getInsets() {
           return NavBarUIManager.getUI().getWrapperPanelInsets(super.getInsets());
@@ -223,11 +215,6 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
 
         Rectangle rectangle = new Rectangle(0, 0, r.width + insets.left + insets.right, r.height + insets.top + insets.bottom);
         NavBarUIManager.getUI().doPaintNavBarPanel(g2d, rectangle, isMainToolbarVisible(), isUndocked());
-        if (UIUtil.isUnderAquaLookAndFeel() && isUndocked()) {
-          Rectangle bounds = getParent().getBounds();
-          NavBarUIManager.getUI().doPaintWrapperPanel(g2d, bounds, false);
-        }
-
         g2d.dispose();
       }
 
