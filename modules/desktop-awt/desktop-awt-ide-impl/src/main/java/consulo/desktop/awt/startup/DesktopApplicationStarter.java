@@ -17,6 +17,7 @@ package consulo.desktop.awt.startup;
 
 import com.formdev.flatlaf.ui.FlatNativeMacLibrary;
 import com.formdev.flatlaf.ui.FlatNativeWindowsLibrary;
+import com.formdev.flatlaf.util.HiDPIUtils;
 import com.google.gson.Gson;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
@@ -144,8 +145,6 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         System.setProperty("sun.awt.noerasebackground", "true");
 
-        //
-
         // replace system event queue and set exception handler
         invokeAtUIAndWait(() -> {
             Thread thread = Thread.currentThread();
@@ -161,6 +160,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         // region FlatLaf
         // disable safe triangle hacks, due we use own event queue
         System.setProperty("flatlaf.useSubMenuSafeTriangle", "false");
+        // replace hidpi repaint manager for fixing windows issues
+        HiDPIUtils.installHiDPIRepaintManager();
         // preload all flat native libraries
         pool.execute(() -> {
             if (myPlatform.os().isWindows()) {
