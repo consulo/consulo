@@ -152,12 +152,20 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
       public void keyPressed(KeyEvent e) {
         if (KeyEvent.VK_ENTER == e.getKeyCode()) {
           TreePath path = getSelectedPath();
-          if (path != null && !myTree.getModel().isLeaf(path.getLastPathComponent())) {
-            return;
+          if (path == null) {
+              return;
           }
 
-          DataContext dataContext = DataManager.getInstance().getDataContext(myTree);
-          OpenSourceUtil.openSourcesFrom(dataContext, ScreenReader.isActive());
+          if (!myTree.getModel().isLeaf(path.getLastPathComponent())) {
+              if (myTree.isExpanded(path)) {
+                  myTree.collapsePath(path);
+              } else {
+                  myTree.expandPath(path);
+              }
+          } else {
+              DataContext dataContext = DataManager.getInstance().getDataContext(myTree);
+              OpenSourceUtil.openSourcesFrom(dataContext, ScreenReader.isActive());
+          }
         }
         else if (KeyEvent.VK_ESCAPE == e.getKeyCode()) {
           if (e.isConsumed()) return;
