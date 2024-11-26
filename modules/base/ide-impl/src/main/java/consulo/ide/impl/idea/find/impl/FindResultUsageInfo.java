@@ -39,8 +39,7 @@ public class FindResultUsageInfo extends UsageInfo {
     private Boolean myCachedResult;
     private long myTimestamp = 0;
 
-    private static final Key<Long> ourDocumentTimestampKey =
-        Key.create("consulo.ide.impl.idea.find.impl.FindResultUsageInfo.documentTimestamp");
+    private static final Key<Long> DOCUMENT_TIMESTAMP_KEY = Key.create("FindResultUsageInfo.DOCUMENT_TIMESTAMP_KEY");
 
     @Override
     public boolean isValid() {
@@ -48,7 +47,8 @@ public class FindResultUsageInfo extends UsageInfo {
             return false;
         }
 
-        Document document = PsiDocumentManager.getInstance(getProject()).getDocument(getPsiFile());
+        PsiFile psiFile = getPsiFile();
+        Document document = PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
         if (document == null) {
             myCachedResult = null;
             return false;
@@ -61,12 +61,17 @@ public class FindResultUsageInfo extends UsageInfo {
         myTimestamp = document.getModificationStamp();
 
         Segment segment = getSegment();
-        if (segment == null) {
+        boolean isFileOrBinary = isFileOrBinary();
+        if (segment == null && !isFileOrBinary) {
             myCachedResult = false;
             return false;
         }
 
-        VirtualFile file = getPsiFile().getVirtualFile();
+        VirtualFile file = psiFile.getVirtualFile();
+        if (isFileOrBinary) {
+            myCachedResult = file.isValid();
+            return myCachedResult;
+        }
 
         Segment searchOffset;
         if (myAnchor != null) {
@@ -81,12 +86,12 @@ public class FindResultUsageInfo extends UsageInfo {
         }
 
         int offset = searchOffset.getStartOffset();
-        Long data = myFindModel.getUserData(ourDocumentTimestampKey);
+        Long data = myFindModel.getUserData(DOCUMENT_TIMESTAMP_KEY);
         if (data == null || data != myTimestamp) {
             data = myTimestamp;
             FindManagerImpl.clearPreviousFindData(myFindModel);
         }
-        myFindModel.putUserData(ourDocumentTimestampKey, data);
+        myFindModel.putUserData(DOCUMENT_TIMESTAMP_KEY, data);
         FindResult result;
         do {
             result = myFindManager.findString(document.getCharsSequence(), offset, myFindModel, file);
