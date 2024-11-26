@@ -635,7 +635,6 @@ public class AllIcons {
     public static final Image MethodReference = PlatformIconGroup.nodesMethodreference(); // 16x16
     public static final Image Module = PlatformIconGroup.nodesModule(); // 16x16
     public static final Image ModuleGroup = PlatformIconGroup.nodesModulegroup(); // 16x16
-    public static final Image NewFolder = PlatformIconGroup.nodesNewfolder(); // 16x16
     public static final Image NodePlaceholder = PlatformIconGroup.nodesNodeplaceholder(); // 16x16
     public static final Image Package = PlatformIconGroup.nodesPackage(); // 16x16
     public static final Image TestPackage = Package; // 16x16
@@ -643,7 +642,7 @@ public class AllIcons {
     public static final Image Parameter = PlatformIconGroup.nodesParameter(); // 16x16
     public static final Image Plugin = PlatformIconGroup.nodesPlugin(); // 16x16
     public static final Image Pointcut = PlatformIconGroup.nodesPointcut(); // 16x16
-    public static final Image PpFile = PlatformIconGroup.nodesPpfile(); // 16x16
+    public static final Image PpFile = PlatformIconGroup.nodesFolder(); // 16x16
     public static final Image PpInvalid = PlatformIconGroup.nodesPpinvalid(); // 16x16
     @Deprecated
     public static final Image PpJar = PlatformIconGroup.filetypesArchive();

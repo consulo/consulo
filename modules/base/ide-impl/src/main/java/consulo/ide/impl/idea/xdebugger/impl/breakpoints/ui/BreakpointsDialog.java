@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui;
 
-import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -36,6 +35,7 @@ import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointsDialogState;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointItemNode;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeController;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -440,7 +440,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     public void actionPerformed(@Nonnull AnActionEvent e) {
       String groupName = myGroup;
       if (myNewGroup) {
-        groupName = Messages.showInputDialog("New group name", "New Group", AllIcons.Nodes.NewFolder);
+        groupName = Messages.showInputDialog("New group name", "New Group", PlatformIconGroup.actionsNewfolder());
         if (groupName == null) {
           return;
         }

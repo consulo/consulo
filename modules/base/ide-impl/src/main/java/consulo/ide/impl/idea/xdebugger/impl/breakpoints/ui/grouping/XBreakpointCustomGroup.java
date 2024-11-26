@@ -15,10 +15,9 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.grouping;
 
-import consulo.application.AllIcons;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,7 +34,7 @@ public class XBreakpointCustomGroup extends XBreakpointGroup {
   @Override
   @Nullable
   public Image getIcon(final boolean isOpen) {
-    return AllIcons.Nodes.NewFolder;
+    return PlatformIconGroup.actionsNewfolder();
   }
 
   @Override
