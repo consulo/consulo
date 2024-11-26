@@ -17,9 +17,10 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.ActiveComponent;
-
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -29,63 +30,65 @@ import java.awt.event.MouseEvent;
  * @author max
  */
 public class CaptionPanel extends JPanel {
-  private static final String uiClassUD = "CaptionPanelUI";
+    public static final Key<CaptionPanel> KEY = Key.create(CaptionPanel.class);
 
-  private boolean myActive = false;
-  private ActiveComponent myButtonComponent;
-  private JComponent mySettingComponent;
+    private static final String uiClassUD = "CaptionPanelUI";
 
-  public CaptionPanel() {
-    setLayout(new BorderLayout());
-  }
+    private boolean myActive = false;
+    private ActiveComponent myButtonComponent;
+    private JComponent mySettingComponent;
 
-  @Override
-  public String getUIClassID() {
-    return uiClassUD;
-  }
-
-  public boolean isActive() {
-    return myActive;
-  }
-
-  public void setActive(final boolean active) {
-    myActive = active;
-    if (myButtonComponent != null) {
-      myButtonComponent.setActive(active);
+    public CaptionPanel() {
+        setLayout(new BorderLayout());
     }
-    repaint();
-  }
 
-  public void setButtonComponent(@Nonnull ActiveComponent component, @Nullable Border border) {
-    if (myButtonComponent != null) {
-      remove(myButtonComponent.getComponent());
+    @Override
+    public String getUIClassID() {
+        return uiClassUD;
     }
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.setBorder(border);
-    panel.add(new JLabel(" "), BorderLayout.WEST);
-    panel.add(component.getComponent(), BorderLayout.CENTER);
-    panel.setOpaque(false);
-    add(panel, BorderLayout.EAST);
-    myButtonComponent = component;
-  }
 
-  public void addSettingsComponent(Component component) {
-    if (mySettingComponent == null) {
-      mySettingComponent = new JPanel();
-      mySettingComponent.setOpaque(false);
-      mySettingComponent.setLayout(new BoxLayout(mySettingComponent, BoxLayout.X_AXIS));
-      add(mySettingComponent, BorderLayout.WEST);
+    public boolean isActive() {
+        return myActive;
     }
-    mySettingComponent.add(component);
-  }
 
-  public boolean isWithinPanel(MouseEvent e) {
-    final Point p = SwingUtilities.convertPoint(e.getComponent(), e.getX(), e.getY(), this);
-    final Component c = findComponentAt(p);
-    return c != null && c != myButtonComponent;
-  }
+    public void setActive(final boolean active) {
+        myActive = active;
+        if (myButtonComponent != null) {
+            myButtonComponent.setActive(active);
+        }
+        repaint();
+    }
 
-  protected boolean containsSettingsControls() {
-    return mySettingComponent != null || myButtonComponent != null;
-  }
+    public void setButtonComponent(@Nonnull ActiveComponent component, @Nullable Border border) {
+        if (myButtonComponent != null) {
+            remove(myButtonComponent.getComponent());
+        }
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(border);
+        panel.add(new JLabel(" "), BorderLayout.WEST);
+        panel.add(component.getComponent(), BorderLayout.CENTER);
+        panel.setOpaque(false);
+        add(panel, BorderLayout.EAST);
+        myButtonComponent = component;
+    }
+
+    public void addSettingsComponent(Component component) {
+        if (mySettingComponent == null) {
+            mySettingComponent = new JPanel();
+            mySettingComponent.setOpaque(false);
+            mySettingComponent.setLayout(new BoxLayout(mySettingComponent, BoxLayout.X_AXIS));
+            add(mySettingComponent, BorderLayout.WEST);
+        }
+        mySettingComponent.add(component);
+    }
+
+    public boolean isWithinPanel(MouseEvent e) {
+        final Point p = SwingUtilities.convertPoint(e.getComponent(), e.getX(), e.getY(), this);
+        final Component c = findComponentAt(p);
+        return c != null && c != myButtonComponent;
+    }
+
+    protected boolean containsSettingsControls() {
+        return mySettingComponent != null || myButtonComponent != null;
+    }
 }

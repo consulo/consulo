@@ -235,7 +235,7 @@ public class Switcher extends AnAction implements DumbAware {
         final ToolWindowManager twManager;
         JBCheckBox myShowOnlyEditedFilesCheckBox;
         final JLabel pathLabel = new JLabel(" ");
-        final JPanel myTopPanel;
+        final CaptionPanel myTopPanel;
         final JPanel descriptions;
         final Project project;
         final boolean myPinned;
@@ -345,14 +345,14 @@ public class Switcher extends AnAction implements DumbAware {
         @SuppressWarnings({"ConstantConditions"})
         @RequiredUIAccess
         SwitcherPanel(@Nonnull final Project project, @Nonnull String title, @Nonnull String actionId, boolean onlyEdited, boolean pinned) {
-            setLayout(new BorderLayout());
+            super(new BorderLayout());
+
             this.project = project;
             myTitle = title;
             myPinned = pinned;
             mySpeedSearch = pinned ? new SwitcherSpeedSearch(this) : null;
 
             setBorder(JBUI.Borders.empty());
-            setBackground(JBColor.background());
             pathLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
             final Font font = pathLabel.getFont();
@@ -362,7 +362,6 @@ public class Switcher extends AnAction implements DumbAware {
 
             pathLabel.setBorder(JBCurrentTheme.Advertiser.border());
             pathLabel.setForeground(JBCurrentTheme.Advertiser.foreground());
-            pathLabel.setBackground(JBCurrentTheme.Advertiser.background());
             pathLabel.setOpaque(true);
 
             descriptions.setBorder(new CustomLineBorder(JBColor.border(), JBUI.insetsTop(1)));
@@ -545,6 +544,9 @@ public class Switcher extends AnAction implements DumbAware {
                 isCheckboxMode() ? IdeLocalize.titlePopupRecentFiles().get() : title,
                 pinned
             );
+
+            UIUtil.putClientProperty(this, CaptionPanel.KEY, myTopPanel);
+
             if (isCheckboxMode()) {
                 myShowOnlyEditedFilesCheckBox.addActionListener(e -> setShowOnlyEditedFiles(myShowOnlyEditedFilesCheckBox.isSelected()));
                 myShowOnlyEditedFilesCheckBox.addActionListener(e -> toolWindows.repaint());
@@ -817,8 +819,8 @@ public class Switcher extends AnAction implements DumbAware {
         }
 
         @Nonnull
-        private static JPanel createTopPanel(@Nonnull JBCheckBox showOnlyEditedFilesCheckBox, @Nonnull String title, boolean isMovable) {
-            JPanel topPanel = new CaptionPanel();
+        private static CaptionPanel createTopPanel(@Nonnull JBCheckBox showOnlyEditedFilesCheckBox, @Nonnull String title, boolean isMovable) {
+            CaptionPanel topPanel = new CaptionPanel();
             JBLabel titleLabel = new JBLabel(title);
             titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
             topPanel.add(titleLabel, BorderLayout.WEST);
@@ -1429,6 +1431,8 @@ public class Switcher extends AnAction implements DumbAware {
             boolean selected,
             boolean hasFocus
         ) {
+            setBorder(JBCurrentTheme.listCellBorder());
+
             Project project = mySwitcherPanel.project;
             VirtualFile virtualFile = value.getFirst();
             String renderedName = value.getNameForRendering();

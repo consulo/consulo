@@ -1,19 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
@@ -46,7 +44,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
     @Override
     @RequiredUIAccess
     protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
-        setBorder(value == RECENT_LOCATIONS ? JBUI.Borders.customLine(selected ? getBackground() : JBColor.border(), 1, 0, 0, 0) : JBUI.Borders.empty());
+        setBorder(JBCurrentTheme.listCellBorder());
 
         String nameToMatch = "";
         if (value instanceof ToolWindow) {
@@ -98,10 +96,6 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
     @RequiredUIAccess
     private static Image getIcon(ToolWindow toolWindow) {
         Image icon = toolWindow.getIcon();
-        if (icon == null) {
-            return AllIcons.FileTypes.UiForm;
-        }
-
-        return ImageEffects.resize(icon, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+        return icon == null ? PlatformIconGroup.actionsHelp() : icon;
     }
 }
