@@ -1516,60 +1516,7 @@ public class UIUtil {
 
     @Deprecated
     public static boolean isUnderGTKLookAndFeel() {
-        return UIManager.getLookAndFeel().getName().contains("GTK");
-    }
-
-    public static final Color GTK_AMBIANCE_TEXT_COLOR = new Color(223, 219, 210);
-    public static final Color GTK_AMBIANCE_BACKGROUND_COLOR = new Color(67, 66, 63);
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    @Nullable
-    public static String getGtkThemeName() {
-        final LookAndFeel laf = UIManager.getLookAndFeel();
-        if (laf != null && "GTKLookAndFeel".equals(laf.getClass().getSimpleName())) {
-            try {
-                final Method method = laf.getClass().getDeclaredMethod("getGtkThemeName");
-                method.setAccessible(true);
-                final Object theme = method.invoke(laf);
-                if (theme != null) {
-                    return theme.toString();
-                }
-            }
-            catch (Exception ignored) {
-            }
-        }
-        return null;
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    public static boolean isMurrineBasedTheme() {
-        final String gtkTheme = getGtkThemeName();
-        return "Ambiance".equalsIgnoreCase(gtkTheme) || "Radiance".equalsIgnoreCase(gtkTheme) || "Dust".equalsIgnoreCase(gtkTheme) || "Dust Sand"
-            .equalsIgnoreCase(gtkTheme);
-    }
-
-    public static Color shade(final Color c, final double factor, final double alphaFactor) {
-        assert factor >= 0 : factor;
-        return new Color(
-            Math.min((int)Math.round(c.getRed() * factor), 255),
-            Math.min((int)Math.round(c.getGreen() * factor), 255),
-            Math.min((int)Math.round(c.getBlue() * factor), 255),
-            Math.min((int)Math.round(c.getAlpha() * alphaFactor), 255)
-        );
-    }
-
-    public static Color mix(final Color c1, final Color c2, final double factor) {
-        assert 0 <= factor && factor <= 1.0 : factor;
-        final double backFactor = 1.0 - factor;
-        return new Color(
-            Math.min((int)Math.round(c1.getRed() * backFactor + c2.getRed() * factor), 255),
-            Math.min((int)Math.round(c1.getGreen() * backFactor + c2.getGreen() * factor), 255),
-            Math.min((int)Math.round(c1.getBlue() * backFactor + c2.getBlue() * factor), 255)
-        );
-    }
-
-    public static boolean isUnderNativeMacLookAndFeel() {
-        return Platform.current().os().isMac();
+        return false;
     }
 
     public static int getListCellHPadding() {

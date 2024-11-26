@@ -25,16 +25,12 @@ import consulo.ide.impl.configurable.ConfigurablePreselectStrategy;
 import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
-import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.BorderLayoutPanel;
-import consulo.ui.ex.awt.CustomLineBorder;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.WholeWestDialogWrapper;
+import consulo.ui.ex.awt.*;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
@@ -58,6 +54,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
     private ApplyAction myApplyAction;
     public static final String DIMENSION_KEY = "OptionsEditor";
+    private TitlelessDecorator myDecorator;
 
     /**
      * This constructor should be eliminated after the new modality approach
@@ -85,14 +82,13 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
         myConfigurables = configurables;
         myPreselectStrategy = strategy;
 
+        myDecorator = TitlelessDecorator.of(getRootPane());
+
         setTitle(Platform.current().os().isMac() ? CommonLocalize.titleSettingsMac() : CommonLocalize.titleSettings());
 
         init();
-    }
 
-    @Override
-    public boolean isTypeAheadEnabled() {
-        return true;
+        myDecorator.install(getWindow());
     }
 
     @Nonnull
@@ -130,7 +126,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     @Override
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
         Configurable configurable = myPreselectStrategy.get(myConfigurables);
-        myEditor = new OptionsEditor(myProject, myConfigurables, configurable, rootPanel);
+        myEditor = new OptionsEditor(myProject, myConfigurables, configurable, rootPanel, myDecorator);
         myEditor.getContext().addColleague(new OptionsEditorColleague() {
             @Override
             public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {

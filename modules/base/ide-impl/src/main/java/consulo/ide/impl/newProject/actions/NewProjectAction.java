@@ -36,6 +36,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -61,8 +62,12 @@ public class NewProjectAction extends DumbAwareAction {
     private Runnable myCancelAction;
 
     @RequiredUIAccess
-    public SlideNewProjectPanel(@Nonnull Disposable parentDisposable, WelcomeScreenSlider owner, @Nullable Project project, @Nullable VirtualFile virtualFile) {
-      super(parentDisposable, project, virtualFile);
+    public SlideNewProjectPanel(@Nonnull Disposable parentDisposable,
+                                WelcomeScreenSlider owner,
+                                @Nullable Project project,
+                                @Nullable VirtualFile virtualFile,
+                                @Nonnull TitlelessDecorator titlelessDecorator) {
+      super(parentDisposable, project, virtualFile, titlelessDecorator);
       this.owner = owner;
     }
 

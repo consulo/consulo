@@ -56,8 +56,8 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   public Supplier<Point> myEventLocation;
 
   @RequiredUIAccess
-  public FlatWelcomePanel(FlatWelcomeFrame flatWelcomeFrame) {
-    super(flatWelcomeFrame);
+  public FlatWelcomePanel(FlatWelcomeFrame flatWelcomeFrame, TitlelessDecorator titlelessDecorator) {
+    super(flatWelcomeFrame, titlelessDecorator);
     myFlatWelcomeFrame = flatWelcomeFrame;
   }
 

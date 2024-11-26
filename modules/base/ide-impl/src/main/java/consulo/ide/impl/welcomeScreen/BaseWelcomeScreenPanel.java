@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.welcomeScreen;
 
-import consulo.ui.ex.awt.CustomLineBorder;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.CustomLineBorder;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -30,38 +31,39 @@ import java.awt.*;
  * @since 14-Sep-16
  */
 public abstract class BaseWelcomeScreenPanel extends JPanel {
-  protected final JComponent myLeftComponent;
+    protected final JComponent myLeftComponent;
 
-  @RequiredUIAccess
-  public BaseWelcomeScreenPanel(@Nonnull Disposable parentDisposable) {
-    super(new BorderLayout());
-    myLeftComponent = createLeftComponent(parentDisposable);
+    @RequiredUIAccess
+    public BaseWelcomeScreenPanel(@Nonnull Disposable parentDisposable, @Nonnull TitlelessDecorator titlelessDecorator) {
+        super(new BorderLayout());
+        myLeftComponent = createLeftComponent(parentDisposable);
+        titlelessDecorator.makeLeftComponentLower(myLeftComponent);
 
-    JPanel leftPanel = new JPanel(new BorderLayout());
-    leftPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), JBUI.insetsRight(1)));
-    leftPanel.setPreferredSize(JBUI.size(getLeftComponentWidth(), -1));
-    leftPanel.add(myLeftComponent, BorderLayout.CENTER);
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), JBUI.insetsRight(1)));
+        leftPanel.setPreferredSize(JBUI.size(getLeftComponentWidth(), -1));
+        leftPanel.add(myLeftComponent, BorderLayout.CENTER);
 
-    add(leftPanel, BorderLayout.WEST);
+        add(leftPanel, BorderLayout.WEST);
 
-    JComponent rightComponent = createRightComponent();
+        JComponent rightComponent = createRightComponent();
 
-    add(rightComponent, BorderLayout.CENTER);
-  }
+        add(rightComponent, BorderLayout.CENTER);
+    }
 
-  protected int getLeftComponentWidth() {
-    return 400;
-  }
+    protected int getLeftComponentWidth() {
+        return 400;
+    }
 
-  @Nonnull
-  public JComponent getLeftComponent() {
-    return myLeftComponent;
-  }
+    @Nonnull
+    public JComponent getLeftComponent() {
+        return myLeftComponent;
+    }
 
-  @Nonnull
-  protected abstract JComponent createLeftComponent(@Nonnull Disposable parentDisposable);
+    @Nonnull
+    protected abstract JComponent createLeftComponent(@Nonnull Disposable parentDisposable);
 
-  @Nonnull
-  @RequiredUIAccess
-  protected abstract JComponent createRightComponent();
+    @Nonnull
+    @RequiredUIAccess
+    protected abstract JComponent createRightComponent();
 }

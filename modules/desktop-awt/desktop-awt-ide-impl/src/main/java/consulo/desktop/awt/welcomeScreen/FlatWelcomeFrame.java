@@ -35,6 +35,7 @@ import consulo.ui.Rectangle2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.MnemonicHelper;
+import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nullable;
@@ -49,118 +50,125 @@ import java.awt.event.WindowEvent;
  * @author Konstantin Bulenkov
  */
 public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, AccessibleContextAccessor {
-  private final Runnable myClearInstance;
-  private BalloonLayout myBalloonLayout;
-  private boolean myDisposed;
+    private final Runnable myClearInstance;
+    private BalloonLayout myBalloonLayout;
+    private boolean myDisposed;
 
-  @RequiredUIAccess
-  public FlatWelcomeFrame(Application application, Runnable clearInstance) {
-    myClearInstance = clearInstance;
-    final JRootPane rootPane = getRootPane();
-    FlatWelcomeScreen screen = new FlatWelcomeScreen(this);
+    private final TitlelessDecorator myTitlelessDecorator;
 
-    final IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
+    @RequiredUIAccess
+    public FlatWelcomeFrame(Application application, Runnable clearInstance) {
+        myClearInstance = clearInstance;
+        final JRootPane rootPane = getRootPane();
 
-    setGlassPane(glassPane);
-    glassPane.setVisible(false);
-    setContentPane(screen);
-    setDefaultTitle();
-    AppIconUtil.updateWindowIcon(this);
-    setSize(TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize()));
-    setResizable(false);
-    Point location = TargetAWT.to(ApplicationWindowStateService.getInstance().getLocation(WelcomeFrameManager.DIMENSION_KEY));
-    Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
-    setLocation(new Point(screenBounds.x + (screenBounds.width - getWidth()) / 2, screenBounds.y + (screenBounds.height - getHeight()) / 3));
+        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
 
-    myBalloonLayout = new WelcomeDesktopBalloonLayoutImpl(rootPane, JBUI.insets(8), screen.getMainWelcomePanel().myEventListener, screen.getMainWelcomePanel().myEventLocation);
+        FlatWelcomeScreen screen = new FlatWelcomeScreen(this, myTitlelessDecorator);
 
-    setupCloseAction(this);
-    MnemonicHelper.init(this);
-    Disposer.register(application, this);
-  }
+        final IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
 
-  static void setupCloseAction(final JFrame frame) {
-    frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    frame.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(final WindowEvent e) {
-        saveLocation(frame.getBounds());
+        setGlassPane(glassPane);
+        glassPane.setVisible(false);
+        setContentPane(screen);
+        setDefaultTitle();
+        AppIconUtil.updateWindowIcon(this);
+        setSize(TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize()));
+        setResizable(false);
+        Point location = TargetAWT.to(ApplicationWindowStateService.getInstance().getLocation(WelcomeFrameManager.DIMENSION_KEY));
+        Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
+        setLocation(new Point(screenBounds.x + (screenBounds.width - getWidth()) / 2, screenBounds.y + (screenBounds.height - getHeight()) / 3));
 
-        frame.dispose();
+        myBalloonLayout = new WelcomeDesktopBalloonLayoutImpl(rootPane, JBUI.insets(8), screen.getMainWelcomePanel().myEventListener, screen.getMainWelcomePanel().myEventLocation);
 
-        if (ProjectManager.getInstance().getOpenProjects().length == 0) {
-          Application.get().exit();
+        setupCloseAction(this);
+        MnemonicHelper.init(this);
+        Disposer.register(application, this);
+
+        myTitlelessDecorator.install(this);
+    }
+
+    static void setupCloseAction(final JFrame frame) {
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(final WindowEvent e) {
+                saveLocation(frame.getBounds());
+
+                frame.dispose();
+
+                if (ProjectManager.getInstance().getOpenProjects().length == 0) {
+                    Application.get().exit();
+                }
+            }
+        });
+    }
+
+    public static void saveLocation(Rectangle location) {
+        Coordinate2D middle = new Coordinate2D(location.x + location.width / 2, location.y = location.height / 2);
+        ApplicationWindowStateService.getInstance().putLocation(WelcomeFrameManager.DIMENSION_KEY, middle);
+    }
+
+    public void setDefaultTitle() {
+        setTitle(FrameTitleUtil.buildTitle());
+    }
+
+    @Override
+    public void setVisible(boolean value) {
+        if (myDisposed) {
+            throw new IllegalArgumentException("Already disposed");
         }
-      }
-    });
-  }
 
-  public static void saveLocation(Rectangle location) {
-    Coordinate2D middle = new Coordinate2D(location.x + location.width / 2, location.y = location.height / 2);
-    ApplicationWindowStateService.getInstance().putLocation(WelcomeFrameManager.DIMENSION_KEY, middle);
-  }
+        super.setVisible(value);
 
-  public void setDefaultTitle() {
-    setTitle(FrameTitleUtil.buildTitle());
-  }
-
-  @Override
-  public void setVisible(boolean value) {
-    if (myDisposed) {
-      throw new IllegalArgumentException("Already disposed");
+        if (!value) {
+            Disposer.dispose(this);
+        }
     }
 
-    super.setVisible(value);
+    @Override
+    public void dispose() {
+        if (myDisposed) {
+            return;
+        }
 
-    if (!value) {
-      Disposer.dispose(this);
-    }
-  }
+        myDisposed = true;
+        super.dispose();
 
-  @Override
-  public void dispose() {
-    if (myDisposed) {
-      return;
-    }
+        if (myBalloonLayout != null) {
+            ((DesktopBalloonLayoutImpl) myBalloonLayout).dispose();
+            myBalloonLayout = null;
+        }
 
-    myDisposed = true;
-    super.dispose();
-
-    if (myBalloonLayout != null) {
-      ((DesktopBalloonLayoutImpl)myBalloonLayout).dispose();
-      myBalloonLayout = null;
+        myClearInstance.run();
     }
 
-    myClearInstance.run();
-  }
+    @Override
+    public AccessibleContext getCurrentAccessibleContext() {
+        return accessibleContext;
+    }
 
-  @Override
-  public AccessibleContext getCurrentAccessibleContext() {
-    return accessibleContext;
-  }
+    public BalloonLayout getBalloonLayout() {
+        return myBalloonLayout;
+    }
 
-  public BalloonLayout getBalloonLayout() {
-    return myBalloonLayout;
-  }
+    public Rectangle2D suggestChildFrameBounds() {
+        return TargetAWT.from(getBounds());
+    }
 
-  public Rectangle2D suggestChildFrameBounds() {
-    return TargetAWT.from(getBounds());
-  }
+    @Nullable
+    public Project getProject() {
+        return ProjectManager.getInstance().getDefaultProject();
+    }
 
-  @Nullable
-  public Project getProject() {
-    return ProjectManager.getInstance().getDefaultProject();
-  }
+    public void setFrameTitle(String title) {
+        setTitle(title);
+    }
 
-  public void setFrameTitle(String title) {
-    setTitle(title);
-  }
+    public IdeRootPaneNorthExtension getNorthExtension(String key) {
+        return null;
+    }
 
-  public IdeRootPaneNorthExtension getNorthExtension(String key) {
-    return null;
-  }
-
-  public JComponent getComponent() {
-    return getRootPane();
-  }
+    public JComponent getComponent() {
+        return getRootPane();
+    }
 }

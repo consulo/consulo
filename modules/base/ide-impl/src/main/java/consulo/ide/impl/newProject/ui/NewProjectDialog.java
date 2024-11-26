@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.newProject.ui;
 
-import consulo.ide.IdeBundle;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
+import consulo.ide.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
@@ -35,127 +36,131 @@ import java.awt.event.WindowEvent;
  * @since 04.06.14
  */
 public class NewProjectDialog extends DialogWrapper {
-  private NewProjectPanel myProjectPanel;
+    private NewProjectPanel myProjectPanel;
 
-  private Runnable myOkAction;
-  private Runnable myCancelAction;
+    private Runnable myOkAction;
+    private Runnable myCancelAction;
 
-  @RequiredUIAccess
-  public NewProjectDialog(@Nullable Project project, @Nullable VirtualFile moduleHome) {
-    super(project, true);
-    setResizable(false);
+    @RequiredUIAccess
+    public NewProjectDialog(@Nullable Project project, @Nullable VirtualFile moduleHome) {
+        super(project, true);
+        setResizable(false);
 
-    myProjectPanel = new NewProjectPanel(getDisposable(), project, moduleHome) {
-      @RequiredUIAccess
-      @Nonnull
-      @Override
-      protected JComponent createSouthPanel() {
-        return NewProjectDialog.this.createSouthPanel();
-      }
+        TitlelessDecorator titlelessDecorator = TitlelessDecorator.of(getRootPane());
 
-      @Override
-      public void setOKActionEnabled(boolean enabled) {
-        NewProjectDialog.this.setOKActionEnabled(enabled);
-      }
+        myProjectPanel = new NewProjectPanel(getDisposable(), project, moduleHome, titlelessDecorator) {
+            @RequiredUIAccess
+            @Nonnull
+            @Override
+            protected JComponent createSouthPanel() {
+                return NewProjectDialog.this.createSouthPanel();
+            }
 
-      @Override
-      public void setOKActionText(@Nonnull String text) {
-        NewProjectDialog.this.setOKButtonText(text);
-      }
+            @Override
+            public void setOKActionEnabled(boolean enabled) {
+                NewProjectDialog.this.setOKActionEnabled(enabled);
+            }
 
-      @Override
-      public void setCancelText(@Nonnull String text) {
-        NewProjectDialog.this.setCancelButtonText(text);
-      }
+            @Override
+            public void setOKActionText(@Nonnull String text) {
+                NewProjectDialog.this.setOKButtonText(text);
+            }
 
-      @Override
-      public void setOKAction(@Nullable Runnable action) {
-        myOkAction = action;
-      }
+            @Override
+            public void setCancelText(@Nonnull String text) {
+                NewProjectDialog.this.setCancelButtonText(text);
+            }
 
-      @Override
-      public void setCancelAction(@Nullable Runnable action) {
-        myCancelAction = action;
-      }
-    };
+            @Override
+            public void setOKAction(@Nullable Runnable action) {
+                myOkAction = action;
+            }
 
-    setTitle(moduleHome != null ? IdeBundle.message("title.add.module") : IdeBundle.message("title.new.project"));
+            @Override
+            public void setCancelAction(@Nullable Runnable action) {
+                myCancelAction = action;
+            }
+        };
 
-    setOKActionEnabled(false);
-    init();
-  }
+        setTitle(moduleHome != null ? IdeLocalize.titleAddModule() : IdeLocalize.titleNewProject());
 
-  public NewProjectPanel getProjectPanel() {
-    return myProjectPanel;
-  }
+        setOKActionEnabled(false);
+        init();
 
-  @Nonnull
-  @Override
-  protected Action[] createActions() {
-    return new Action[]{getCancelAction(), getOKAction()};
-  }
-
-  @Override
-  public void doCancelAction(AWTEvent source) {
-    if (source instanceof WindowEvent) {
-      // if it's window event - close it via X
-      super.doCancelAction();
-      return;
+        titlelessDecorator.install(getWindow());
     }
-    super.doCancelAction(source);
-  }
 
-  @Override
-  public void doCancelAction() {
-    if(myCancelAction != null) {
-      myCancelAction.run();
+    public NewProjectPanel getProjectPanel() {
+        return myProjectPanel;
     }
-    else {
-      super.doCancelAction();
+
+    @Nonnull
+    @Override
+    protected Action[] createActions() {
+        return new Action[]{getCancelAction(), getOKAction()};
     }
-  }
 
-  @Override
-  protected void doOKAction() {
-    if (myOkAction != null) {
-      myOkAction.run();
+    @Override
+    public void doCancelAction(AWTEvent source) {
+        if (source instanceof WindowEvent) {
+            // if it's window event - close it via X
+            super.doCancelAction();
+            return;
+        }
+        super.doCancelAction(source);
     }
-    else {
-      super.doOKAction();
+
+    @Override
+    public void doCancelAction() {
+        if (myCancelAction != null) {
+            myCancelAction.run();
+        }
+        else {
+            super.doCancelAction();
+        }
     }
-  }
 
-  @Override
-  protected void dispose() {
-    myProjectPanel.finish();
-    Disposer.dispose(myProjectPanel);
+    @Override
+    protected void doOKAction() {
+        if (myOkAction != null) {
+            myOkAction.run();
+        }
+        else {
+            super.doOKAction();
+        }
+    }
 
-    super.dispose();
-  }
+    @Override
+    protected void dispose() {
+        myProjectPanel.finish();
+        Disposer.dispose(myProjectPanel);
 
-  @Override
-  protected void initRootPanel(@Nonnull JPanel root) {
-    root.add(myProjectPanel, BorderLayout.CENTER);
-  }
+        super.dispose();
+    }
 
-  @Nullable
-  @Override
-  protected String getDimensionServiceKey() {
-    Dimension defaultWindowSize = TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize());
-    setSize(defaultWindowSize.width, defaultWindowSize.height);
-    return "NewProjectDialog";
-  }
+    @Override
+    protected void initRootPanel(@Nonnull JPanel root) {
+        root.add(myProjectPanel, BorderLayout.CENTER);
+    }
 
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myProjectPanel.getLeftComponent();
-  }
+    @Nullable
+    @Override
+    protected String getDimensionServiceKey() {
+        Dimension defaultWindowSize = TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize());
+        setSize(defaultWindowSize.width, defaultWindowSize.height);
+        return "NewProjectDialog";
+    }
 
-  @Nullable
-  @Override
-  protected JComponent createCenterPanel() {
-    throw new IllegalArgumentException();
-  }
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return myProjectPanel.getLeftComponent();
+    }
+
+    @Nullable
+    @Override
+    protected JComponent createCenterPanel() {
+        throw new IllegalArgumentException();
+    }
 }

@@ -23,6 +23,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.TitlelessDecorator;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -42,7 +43,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
     private final FlatWelcomeFrame myWelcomeFrame;
 
     @RequiredUIAccess
-    public FlatWelcomeScreen(FlatWelcomeFrame welcomeFrame) {
+    public FlatWelcomeScreen(FlatWelcomeFrame welcomeFrame, TitlelessDecorator titlelessDecorator) {
         super(new JBCardLayout());
         DataManager.registerDataProvider(this, dataId -> {
             if (KEY == dataId) {
@@ -52,7 +53,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
         });
         
         myWelcomeFrame = welcomeFrame;
-        myMainWelcomePanel = new FlatWelcomePanel(welcomeFrame) {
+        myMainWelcomePanel = new FlatWelcomePanel(welcomeFrame, titlelessDecorator) {
             @Override
             @RequiredUIAccess
             public JComponent createActionPanel() {

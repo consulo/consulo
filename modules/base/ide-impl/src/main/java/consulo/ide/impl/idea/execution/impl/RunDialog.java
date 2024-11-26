@@ -17,142 +17,148 @@
 package consulo.ide.impl.idea.execution.impl;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.execution.executor.Executor;
-import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.localize.ExecutionLocalize;
-import consulo.execution.runner.ExecutionEnvironment;
 import consulo.application.HelpManager;
 import consulo.configurable.ConfigurationException;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 @Deprecated
 @DeprecationInfo("Use RunConfigurationEditor")
 public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialogBase {
-  private final Project myProject;
-  private final RunConfigurable myConfigurable;
-  private JComponent myCenterPanel;
-  @NonNls public static final String HELP_ID = "reference.dialogs.rundebug";
-  private final Executor myExecutor;
+    public static final String HELP_ID = "reference.dialogs.rundebug";
 
-  public RunDialog(final Project project, final Executor executor) {
-    super(project, true);
-    myProject = project;
-    myExecutor = executor;
+    private final Project myProject;
+    private final RunConfigurable myConfigurable;
+    private JComponent myCenterPanel;
+    private final Executor myExecutor;
 
-    final String title = executor.getId();
-    setTitle(title);
+    public RunDialog(final Project project, final Executor executor) {
+        super(project, true);
+        myProject = project;
+        myExecutor = executor;
 
-    setOKButtonText(executor.getStartActionText());
-    setOKButtonIcon(TargetAWT.to(executor.getIcon()));
+        TitlelessDecorator titlelessDecorator = TitlelessDecorator.of(getRootPane());
 
-    myConfigurable = new RunConfigurable(project, this);
-    init();
-    myConfigurable.reset();
-  }
+        setTitle(executor.getActionName());
 
-  @Override
-  @Nonnull
-  protected Action[] createActions(){
-    return new Action[]{getOKAction(),getCancelAction(),new ApplyAction(),getHelpAction()};
-  }
+        setOKButtonText(executor.getStartActionText());
+        setOKButtonIcon(TargetAWT.to(executor.getIcon()));
 
-  @Override
-  protected void doHelpAction() {
-    HelpManager.getInstance().invokeHelp(HELP_ID);
-  }
+        myConfigurable = new RunConfigurable(project, this, titlelessDecorator);
 
-  @Override
-  protected String getDimensionServiceKey(){
-    return "#consulo.ide.impl.idea.execution.impl.RunDialog";
-  }
+        init();
 
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myCenterPanel);
-  }
+        titlelessDecorator.install(getWindow());
 
-  @Override
-  protected void doOKAction(){
-    try {
-      myConfigurable.apply();
-    }
-    catch (ConfigurationException e){
-      Messages.showMessageDialog(myProject, e.getMessage(), ExecutionLocalize.invalidDataDialogTitle().get(), UIUtil.getErrorIcon());
-      return;
-    }
-    super.doOKAction();
-  }
-
-  @Override
-  protected JComponent createCenterPanel() {
-    myCenterPanel = myConfigurable.createComponent();
-    return myCenterPanel;
-  }
-
-  @Override
-  public void setOKActionEnabled(final boolean isEnabled){
-    super.setOKActionEnabled(isEnabled);
-  }
-
-  @Override
-  protected void dispose() {
-    myConfigurable.disposeUIResources();
-    super.dispose();
-  }
-
-  public static boolean editConfiguration(final Project project, final RunnerAndConfigurationSettings configuration, final String title) {
-    return editConfiguration(project, configuration, title, null);
-  }
-
-  public static boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull String title) {
-    return editConfiguration(environment.getProject(), environment.getRunnerAndConfigurationSettings(), title, environment.getExecutor());
-  }
-
-  public static boolean editConfiguration(final Project project, final RunnerAndConfigurationSettings configuration, final String title, @Nullable final Executor executor) {
-    final SingleConfigurationConfigurable<RunConfiguration> configurable = SingleConfigurationConfigurable.editSettings(configuration, executor);
-    final SingleConfigurableEditor dialog = new SingleConfigurableEditor(project, configurable, IdeModalityType.PROJECT) {
-      {
-        if (executor != null) setOKButtonText(executor.getActionName());
-        if (executor != null) setOKButtonIcon(TargetAWT.to(executor.getIcon()));
-      }
-    };
-
-    dialog.setTitle(title);
-    dialog.show();
-    return dialog.isOK();
-  }
-
-  private class ApplyAction extends AbstractAction {
-    public ApplyAction() {
-      super(ExecutionLocalize.applyActionName().get());
+        myConfigurable.reset();
     }
 
     @Override
-    public void actionPerformed(final ActionEvent event) {
-      try{
-        myConfigurable.apply();
-      }
-      catch (ConfigurationException e){
-        Messages.showMessageDialog(myProject, e.getMessage(), ExecutionLocalize.invalidDataDialogTitle().get(), UIUtil.getErrorIcon());
-      }
+    @Nonnull
+    protected Action[] createActions() {
+        return new Action[]{getOKAction(), getCancelAction(), new ApplyAction(), getHelpAction()};
     }
-  }
 
-  @Override
-  public Executor getExecutor() {
-    return myExecutor;
-  }
+    @Override
+    protected void doHelpAction() {
+        HelpManager.getInstance().invokeHelp(HELP_ID);
+    }
+
+    @Override
+    protected String getDimensionServiceKey() {
+        return "#consulo.ide.impl.idea.execution.impl.RunDialog";
+    }
+
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myCenterPanel);
+    }
+
+    @Override
+    protected void doOKAction() {
+        try {
+            myConfigurable.apply();
+        }
+        catch (ConfigurationException e) {
+            Messages.showMessageDialog(myProject, e.getMessage(), ExecutionLocalize.invalidDataDialogTitle().get(), UIUtil.getErrorIcon());
+            return;
+        }
+        super.doOKAction();
+    }
+
+    @Override
+    protected JComponent createCenterPanel() {
+        myCenterPanel = myConfigurable.createComponent();
+        return myCenterPanel;
+    }
+
+    @Override
+    public void setOKActionEnabled(final boolean isEnabled) {
+        super.setOKActionEnabled(isEnabled);
+    }
+
+    @Override
+    protected void dispose() {
+        myConfigurable.disposeUIResources();
+        super.dispose();
+    }
+
+    public static boolean editConfiguration(final Project project, final RunnerAndConfigurationSettings configuration, final String title) {
+        return editConfiguration(project, configuration, title, null);
+    }
+
+    public static boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull String title) {
+        return editConfiguration(environment.getProject(), environment.getRunnerAndConfigurationSettings(), title, environment.getExecutor());
+    }
+
+    public static boolean editConfiguration(final Project project, final RunnerAndConfigurationSettings configuration, final String title, @Nullable final Executor executor) {
+        final SingleConfigurationConfigurable<RunConfiguration> configurable = SingleConfigurationConfigurable.editSettings(configuration, executor);
+        final SingleConfigurableEditor dialog = new SingleConfigurableEditor(project, configurable, IdeModalityType.PROJECT) {
+            {
+                if (executor != null) {
+                    setOKButtonText(executor.getActionName());
+                }
+                if (executor != null) {
+                    setOKButtonIcon(TargetAWT.to(executor.getIcon()));
+                }
+            }
+        };
+
+        dialog.setTitle(title);
+        dialog.show();
+        return dialog.isOK();
+    }
+
+    private class ApplyAction extends AbstractAction {
+        public ApplyAction() {
+            super(ExecutionLocalize.applyActionName().get());
+        }
+
+        @Override
+        public void actionPerformed(final ActionEvent event) {
+            try {
+                myConfigurable.apply();
+            }
+            catch (ConfigurationException e) {
+                Messages.showMessageDialog(myProject, e.getMessage(), ExecutionLocalize.invalidDataDialogTitle().get(), UIUtil.getErrorIcon());
+            }
+        }
+    }
+
+    @Override
+    public Executor getExecutor() {
+        return myExecutor;
+    }
 }

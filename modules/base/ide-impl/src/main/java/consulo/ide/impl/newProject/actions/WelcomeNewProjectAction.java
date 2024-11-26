@@ -22,6 +22,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.JBCardLayout;
+import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -40,20 +41,23 @@ public class WelcomeNewProjectAction extends NewProjectAction {
 
     @Nonnull
     @RequiredUIAccess
-    public JComponent createSlide(@Nonnull Disposable parentDisposable, @Nonnull WelcomeScreenSlider owner) {
+    public JComponent createSlide(@Nonnull Disposable parentDisposable,
+                                  @Nonnull WelcomeScreenSlider owner,
+                                  @Nonnull TitlelessDecorator titlelessDecorator) {
         owner.setTitle(IdeLocalize.titleNewProject().get());
 
-        return new SlideNewProjectPanel(parentDisposable, owner, null, null);
+        return new SlideNewProjectPanel(parentDisposable, owner, null, null, titlelessDecorator);
     }
 
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
         WelcomeScreenSlider slider = e.getRequiredData(WelcomeScreenSlider.KEY);
+        TitlelessDecorator titlelessDecorator = e.getRequiredData(TitlelessDecorator.KEY);
 
         JPanel sliderPanel = (JPanel) slider;
 
-        JComponent panel = createSlide(slider.getDisposable(), slider);
+        JComponent panel = createSlide(slider.getDisposable(), slider, titlelessDecorator);
 
         JBCardLayout layout = (JBCardLayout) sliderPanel.getLayout();
         
