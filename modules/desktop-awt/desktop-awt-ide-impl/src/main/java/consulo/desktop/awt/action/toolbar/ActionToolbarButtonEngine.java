@@ -267,6 +267,11 @@ public class ActionToolbarButtonEngine {
         }
     }
 
+    public void updateEnabled() {
+        myButton.setEnabled(myPresentation.isEnabled());
+        updateIcon();
+    }
+
     protected void presentationPropertyChanded(PropertyChangeEvent e) {
         String propertyName = e.getPropertyName();
         switch (propertyName) {
@@ -275,8 +280,7 @@ public class ActionToolbarButtonEngine {
                 updateToolTipText();
                 break;
             case Presentation.PROP_ENABLED:
-                myButton.setEnabled(myPresentation.isEnabled());
-                updateIcon();
+                updateEnabled();
                 break;
             case Presentation.PROP_ICON:
                 updateIcon();

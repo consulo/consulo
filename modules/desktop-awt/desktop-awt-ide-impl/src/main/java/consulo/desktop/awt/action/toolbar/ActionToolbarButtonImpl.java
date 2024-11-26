@@ -53,6 +53,8 @@ public class ActionToolbarButtonImpl extends JButton implements ActionButtonEx {
         myEngine.updateTextAndMnemonic(presentation.getTextValue());
 
         addActionListener(e -> myEngine.click());
+        
+        myEngine.updateEnabled();
     }
 
     @Override
