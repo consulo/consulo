@@ -712,30 +712,6 @@ public class AllIcons {
 
     }
 
-    public static class FS {
-      public static final Image Step_1 = PlatformIconGroup.processFsStep_1(); // 16x16
-      public static final Image Step_10 = PlatformIconGroup.processFsStep_10(); // 16x16
-      public static final Image Step_11 = PlatformIconGroup.processFsStep_11(); // 16x16
-      public static final Image Step_12 = PlatformIconGroup.processFsStep_12(); // 16x16
-      public static final Image Step_13 = PlatformIconGroup.processFsStep_13(); // 16x16
-      public static final Image Step_14 = PlatformIconGroup.processFsStep_14(); // 16x16
-      public static final Image Step_15 = PlatformIconGroup.processFsStep_15(); // 16x16
-      public static final Image Step_16 = PlatformIconGroup.processFsStep_16(); // 16x16
-      public static final Image Step_17 = PlatformIconGroup.processFsStep_17(); // 16x16
-      public static final Image Step_18 = PlatformIconGroup.processFsStep_18(); // 16x16
-      public static final Image Step_2 = PlatformIconGroup.processFsStep_2(); // 16x16
-      public static final Image Step_3 = PlatformIconGroup.processFsStep_3(); // 16x16
-      public static final Image Step_4 = PlatformIconGroup.processFsStep_4(); // 16x16
-      public static final Image Step_5 = PlatformIconGroup.processFsStep_5(); // 16x16
-      public static final Image Step_6 = PlatformIconGroup.processFsStep_6(); // 16x16
-      public static final Image Step_7 = PlatformIconGroup.processFsStep_7(); // 16x16
-      public static final Image Step_8 = PlatformIconGroup.processFsStep_8(); // 16x16
-      public static final Image Step_9 = PlatformIconGroup.processFsStep_9(); // 16x16
-      public static final Image Step_mask = PlatformIconGroup.processFsStep_mask(); // 16x16
-      public static final Image Step_passive = PlatformIconGroup.processFsStep_passive(); // 16x16
-
-    }
-
     public static final Image Step_1 = PlatformIconGroup.processStep_1(); // 16x16
     public static final Image Step_2 = PlatformIconGroup.processStep_2(); // 16x16
     public static final Image Step_3 = PlatformIconGroup.processStep_3(); // 16x16
