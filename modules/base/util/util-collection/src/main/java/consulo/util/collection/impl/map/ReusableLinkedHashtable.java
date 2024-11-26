@@ -461,7 +461,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         if (myMapLink != null) {
             for (MapLink link = myMapLink; ; link = link.myNext) {
                 ReusableLinkedHashtableUser map = link.get();
-                if (map != null && map.isMaster()) {
+                if (map != null && map.size() == mySize) {
                     // Move list start to the current map link to optimize further checks.
                     myMapLink = link;
                     return true;

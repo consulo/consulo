@@ -130,24 +130,25 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
      */
     @Contract(pure = true)
     @Nonnull
-    @SuppressWarnings("SynchronizeOnNonFinalField")
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     public ImmutableLinkedHashMap<K, V> without(@Nonnull K key) {
         if (mySize == 0) {
             return this;
         }
 
-        int hashCode = myTable.hashCode(key), keyPos;
+        ReusableLinkedHashtable<K, V> table = myTable;
+        int hashCode = table.hashCode(key), keyPos;
         boolean checkPossibleMatchFromSatellite = false;
-        synchronized (myTable) {
-            keyPos = myTable.getPos(hashCode, key);
-            if (keyPos >= 0 && !isMaster()) {
+        synchronized (table) {
+            keyPos = table.getPos(hashCode, key);
+            if (keyPos >= 0 && mySize != table.getSize()) {
                 checkPossibleMatchFromSatellite = true;
             }
         }
 
         if (checkPossibleMatchFromSatellite) {
             // We're not in the largest map sharing current hash-table. So we need to check if found key is actually in our list.
-            return myTable.isInList(this, keyPos) ? of(myTable.copyRangeWithout(mySize - 1, this, null, keyPos)) : this;
+            return table.isInList(this, keyPos) ? of(table.copyRangeWithout(mySize - 1, this, null, keyPos)) : this;
         }
 
         if (keyPos < 0) {
@@ -156,18 +157,18 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
         }
         else if (mySize == 1) {
             // Removing the last element in the map — return empty map.
-            return empty(myTable.getStrategy());
+            return empty(table.getStrategy());
         }
         else if (keyPos == myStartPos) {
             // Removing the first element in the list. Reuse hash-table, just mark second element in the list as first.
-            return reuse(mySize - 1, myTable.getPosAfter(myStartPos), myEndPos);
+            return reuse(mySize - 1, table.getPosAfter(myStartPos), myEndPos);
         }
         else if (keyPos == myEndPos) {
             // Removing the last element in the list. Reuse hash-table, just mark as last an element in the list before last.
-            return reuse(mySize - 1, myStartPos, myTable.getPosBefore(this, myEndPos));
+            return reuse(mySize - 1, myStartPos, table.getPosBefore(this, myEndPos));
         }
 
-        return of(myTable.copyRangeWithout(mySize - 1, this, null, keyPos));
+        return of(table.copyRangeWithout(mySize - 1, this, null, keyPos));
     }
 
     /**
@@ -183,53 +184,54 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
      */
     @Contract(pure = true)
     @Nonnull
-    @SuppressWarnings("SynchronizeOnNonFinalField")
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     public ImmutableLinkedHashMap<K, V> with(@Nonnull K key, @Nullable V value) {
         if (mySize == 0) {
             return fromMap(Collections.singletonMap(key, value));
         }
 
-        int hashCode = myTable.hashCode(key), keyPos;
+        ReusableLinkedHashtable<K, V> table = myTable;
+        int hashCode = table.hashCode(key), keyPos;
         boolean checkPossibleMatchFromSatellite = false;
-        synchronized (myTable) {
-            keyPos = myTable.getPos(hashCode, key);
-            if (keyPos >= 0 && !isMaster()) {
+        synchronized (table) {
+            keyPos = table.getPos(hashCode, key);
+            if (keyPos >= 0 && mySize != table.getSize()) {
                 checkPossibleMatchFromSatellite = true;
             }
         }
 
         if (checkPossibleMatchFromSatellite) {
             // We're not in the largest map sharing current hash-table. So we need to check if found key is actually in our list.
-            if (myTable.isInList(this, keyPos)) {
-                if (myTable.getValue(keyPos) == value) {
+            if (table.isInList(this, keyPos)) {
+                if (table.getValue(keyPos) == value) {
                     // Value is the same. Reusing current map.
                     return this;
                 }
-                return of(myTable.copyRange(this).setValueAtPos(keyPos, value));
+                return of(table.copyRange(this).setValueAtPos(keyPos, value));
             }
-            return of(myTable.copyRange(this).insertAtPos(keyPos, hashCode, key, value));
+            return of(table.copyRange(this).insertAtPos(keyPos, hashCode, key, value));
         }
 
         if (keyPos >= 0) {
-            if (myTable.getValue(keyPos) == value) {
+            if (table.getValue(keyPos) == value) {
                 // Value is the same. Reusing current map.
                 return this;
             }
             // Different value of the same key. Copy hash-table and replace value.
-            return of(myTable.copyRange(this).setValueAtPos(keyPos, value));
+            return of(table.copyRange(this).setValueAtPos(keyPos, value));
         }
 
-        if (mySize + 1 < myTable.getMaxSafeSize()) {
-            synchronized (myTable) {
-                if (isMaster()) {
+        if (mySize + 1 < table.getMaxSafeSize()) {
+            synchronized (table) {
+                if (mySize == table.getSize()) {
                     // Hash-table is less than 50% full. Reusing it.
-                    return of(myTable.insertAtPos(~keyPos, hashCode, key, value));
+                    return of(table.insertAtPos(~keyPos, hashCode, key, value));
                 }
             }
         }
 
         // Recreating hash-table.
-        return of(myTable.copyOfSize(mySize + 1).insert(hashCode, key, value));
+        return of(table.copyOfSize(mySize + 1).insert(hashCode, key, value));
     }
 
     /**
@@ -276,23 +278,24 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "SynchronizeOnNonFinalField"})
+    @SuppressWarnings({"unchecked", "SynchronizationOnLocalVariableOrMethodParameter"})
     public boolean containsKey(Object key) {
         if (key == null) {
             return false;
         }
         int keyPos;
-        synchronized (myTable) {
-            keyPos = myTable.getPos((K)key);
+        ReusableLinkedHashtable<K, V> table = myTable;
+        synchronized (table) {
+            keyPos = table.getPos((K)key);
             if (keyPos < 0) {
                 return false;
             }
-            if (isMaster()) {
+            if (mySize == table.getSize()) {
                 return true;
             }
         }
         // We're not in the largest map sharing current hash-table. So we need to check if found key is actually in our list.
-        return myTable.isInList(this, keyPos);
+        return table.isInList(this, keyPos);
     }
 
     @Override
@@ -306,24 +309,26 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "SynchronizeOnNonFinalField"})
+    @SuppressWarnings({"unchecked", "SynchronizationOnLocalVariableOrMethodParameter"})
     public V getOrDefault(Object key, V defaultValue) {
         if (key == null || mySize == 0) {
             return defaultValue;
         }
         int keyPos;
-        synchronized (myTable) {
-            keyPos = myTable.getPos((K)key);
+
+        ReusableLinkedHashtable<K, V> table = myTable;
+        synchronized (table) {
+            keyPos = table.getPos((K)key);
             if (keyPos < 0) {
                 return defaultValue;
             }
-            if (isMaster()) {
-                return (V)myTable.getValue(keyPos);
+            if (mySize == table.getSize()) {
+                return (V)table.getValue(keyPos);
             }
         }
 
         // We're not in the largest map sharing current hash-table. So we need to check if found key is actually in our list.
-        return myTable.isInList(this, keyPos) ? (V)myTable.getValue(keyPos) : defaultValue;
+        return table.isInList(this, keyPos) ? (V)table.getValue(keyPos) : defaultValue;
     }
 
     /**
@@ -458,70 +463,52 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
         return new ImmutableLinkedHashMap<>(table);
     }
 
-    /**
-     * <p>Checks if we can safely reuse current hash-table for appending new entries without hash-table recreation.
-     * This is only possible if no elements were added after the last element or before the first element of the list
-     * (the last element points to the first element).</p>
-     *
-     * <p>Must be called from synchronized context!</p>
-     *
-     * @return {@code true} if we can safely reuse this hash-table for adding new elements.
-     * {@code false} if hash-table need to be recreated.
-     */
-    @Override
-    public boolean isMaster() {
-        return mySize == myTable.getSize();
-    }
-
-    @SuppressWarnings("SynchronizeOnNonFinalField")
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     private ImmutableLinkedHashMap<K, V> withAllTryReusing(@Nonnull Map<? extends K, ? extends V> map) {
-        if (mySize + map.size() < myTable.getMaxSafeSize()) {
-            synchronized (myTable) {
-                if (isMaster()) {
+        ReusableLinkedHashtable<K, V> table = myTable;
+        if (mySize + map.size() < table.getMaxSafeSize()) {
+            synchronized (table) {
+                if (mySize == table.getSize()) {
                     // Hash-table is less than 50% full and we're in the largest map using current hash-table. Reusing it.
                     boolean keyDuplication = false;
                     for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
                         K key = entry.getKey();
                         if (key == null) {
                             // Null key is encountered during appending values to hash-table. Cleaning up and throwing exception.
-                            myTable.removeRange(myEndPos, myTable.getEndPos());
+                            table.removeRange(myEndPos, table.getEndPos());
                             throw new IllegalArgumentException("Null keys are not supported");
                         }
-                        int hashCode = myTable.hashCode(key), pos = myTable.getPos(hashCode, key);
+                        int hashCode = table.hashCode(key), pos = table.getPos(hashCode, key);
                         if (pos >= 0) {
-                            if (myTable.getValue(pos) == entry.getValue()) {
+                            if (table.getValue(pos) == entry.getValue()) {
                                 // Value is the same. Nothing to add.
                                 continue;
                             }
                             else {
                                 // Duplicate key with different value found: cleaning up filled values from hash-table. Then recreating.
                                 keyDuplication = true;
-                                myTable.removeRange(myEndPos, myTable.getEndPos());
+                                table.removeRange(myEndPos, table.getEndPos());
                                 break;
                             }
                         }
-                        myTable.insertAtPos(~pos, hashCode, key, entry.getValue());
+                        table.insertAtPos(~pos, hashCode, key, entry.getValue());
                     }
 
                     if (!keyDuplication) {
-                        if (myTable.getSize() == mySize) {
+                        if (table.getSize() == mySize) {
                             // All key/value pairs from the supplied map were the same as in current map
                             return this;
                         }
                         else {
-                            return reuse(myTable.getSize(), myTable.getStartPos(), myTable.getEndPos());
+                            return reuse(table.getSize(), table.getStartPos(), table.getEndPos());
                         }
                     }
                 }
             }
         }
 
-        return withAllRecreate(map);
-    }
-
-    private ImmutableLinkedHashMap<K, V> withAllRecreate(@Nonnull Map<? extends K, ? extends V> map) {
         ReusableLinkedHashtable<K, V> newTable =
-            myTable.copyRangeWithout((mySize + map.size()) << 1, this, map.keySet(), -1);
+            table.copyRangeWithout((mySize + map.size()) << 1, this, map.keySet(), -1);
         for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
             newTable.insertNullable(entry.getKey(), entry.getValue());
         }
@@ -529,14 +516,15 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
     }
 
     @Override
-    @SuppressWarnings("SynchronizeOnNonFinalField")
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     public void detachFromTable() {
-        if (isMaster()) {
+        ReusableLinkedHashtable<K, V> table = myTable;
+        if (mySize == table.getSize()) {
             return;
         }
 
-        ReusableLinkedHashtable<K, V> newTable = myTable.copyRange(this);
-        synchronized (myTable) {
+        ReusableLinkedHashtable<K, V> newTable = table.copyRange(this);
+        synchronized (table) {
             myTable = newTable;
             myStartPos = newTable.getStartPos();
             myEndPos = newTable.getEndPos();
