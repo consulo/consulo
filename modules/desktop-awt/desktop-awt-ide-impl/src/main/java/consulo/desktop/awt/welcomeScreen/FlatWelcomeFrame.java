@@ -16,7 +16,6 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ui.ApplicationWindowStateService;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
@@ -55,7 +54,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
   private boolean myDisposed;
 
   @RequiredUIAccess
-  public FlatWelcomeFrame(Runnable clearInstance) {
+  public FlatWelcomeFrame(Application application, Runnable clearInstance) {
     myClearInstance = clearInstance;
     final JRootPane rootPane = getRootPane();
     FlatWelcomeScreen screen = new FlatWelcomeScreen(this);
@@ -64,7 +63,6 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
 
     setGlassPane(glassPane);
     glassPane.setVisible(false);
-    //setUndecorated(true);
     setContentPane(screen);
     setDefaultTitle();
     AppIconUtil.updateWindowIcon(this);
@@ -78,7 +76,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
 
     setupCloseAction(this);
     MnemonicHelper.init(this);
-    Disposer.register(ApplicationManager.getApplication(), this);
+    Disposer.register(application, this);
   }
 
   static void setupCloseAction(final JFrame frame) {

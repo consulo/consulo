@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
+import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
@@ -38,8 +39,8 @@ class DesktopWelcomeIdeFrame implements IdeFrameEx {
   private FlatWelcomeFrame myFrame;
 
   @RequiredUIAccess
-  public DesktopWelcomeIdeFrame(Runnable clearInstance) {
-    myFrame = new FlatWelcomeFrame(clearInstance);
+  public DesktopWelcomeIdeFrame(Application application, Runnable clearInstance) {
+    myFrame = new FlatWelcomeFrame(application, clearInstance);
     myFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
   }
 
