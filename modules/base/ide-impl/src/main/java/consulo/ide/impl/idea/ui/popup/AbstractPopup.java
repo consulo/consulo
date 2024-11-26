@@ -49,10 +49,7 @@ import consulo.ui.Position2D;
 import consulo.ui.Size;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
-import consulo.ui.ex.ActiveComponent;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.UiActivity;
-import consulo.ui.ex.UiActivityMonitor;
+import consulo.ui.ex.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
@@ -1281,8 +1278,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
         if (mySpeedSearchAlwaysShown) {
             setHeaderComponent(mySpeedSearchPatternField);
-            mySpeedSearchPatternField.setBorder(JBUI.Borders.customLine(JBCurrentTheme.BigPopup.searchFieldBorderColor(), 1, 0, 1, 0));
-            mySpeedSearchPatternField.getTextEditor().setBorder(JBUI.Borders.empty());
+            mySpeedSearchPatternField.setBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 1, 0));
+            mySpeedSearchPatternField.getTextEditor().setBorder(JBUI.Borders.empty(4, 6));
         }
 
         if (Platform.current().os().isMac()) {
