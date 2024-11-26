@@ -175,6 +175,7 @@ public class JBCurrentTheme {
         }
     }
 
+    @Deprecated
     public static class ActionButton {
         @Nonnull
         public static Color pressedBackground() {
@@ -199,13 +200,6 @@ public class JBCurrentTheme {
         @Nonnull
         public static Color hoverSeparatorColor() {
             return JBColor.namedColor("ActionButton.hoverSeparatorColor", new JBColor(Gray.xB3, Gray.x6B));
-        }
-    }
-
-    public static class StatusBar {
-        @Nonnull
-        public static Color hoverBackground() {
-            return JBColor.namedColor("StatusBar.hoverBackground", ActionButton.hoverBackground());
         }
     }
 
@@ -549,28 +543,8 @@ public class JBCurrentTheme {
 
     public static class BigPopup {
         @Nonnull
-        public static Color headerBackground() {
-            return JBColor.namedColor("SearchEverywhere.Header.background", 0xf2f2f2);
-        }
-
-        @Nonnull
         public static Insets tabInsets() {
             return JBInsets.create(0, 12);
-        }
-
-        @Nonnull
-        public static Color selectedTabColor() {
-            return JBColor.namedColor("SearchEverywhere.Tab.selectedBackground", 0xdedede);
-        }
-
-        @Nonnull
-        public static Color selectedTabTextColor() {
-            return JBColor.namedColor("SearchEverywhere.Tab.selectedForeground", 0x000000);
-        }
-
-        @Nonnull
-        public static Color searchFieldBackground() {
-            return JBColor.namedColor("SearchEverywhere.SearchField.background", 0xffffff);
         }
 
         @Nonnull
@@ -584,19 +558,10 @@ public class JBCurrentTheme {
         }
 
         @Nonnull
-        public static Color listSeparatorColor() {
-            return JBColor.namedColor("SearchEverywhere.List.separatorColor", Gray.xDC);
-        }
-
-        @Nonnull
         public static Color listTitleLabelForeground() {
             return JBColor.namedColor("SearchEverywhere.List.separatorForeground", UIUtil.getLabelDisabledForeground());
         }
 
-        @Nonnull
-        public static Color searchFieldGrayForeground() {
-            return JBColor.namedColor("SearchEverywhere.SearchField.infoForeground", JBColor.GRAY);
-        }
 
         @Nonnull
         public static Color advertiserForeground() {
@@ -623,12 +588,9 @@ public class JBCurrentTheme {
             return hasControls ? JBUIScale.scale(28) : JBUIScale.scale(24);
         }
 
-        public static Color headerBackground(boolean active) {
-            return active ? JBColor.namedColor("Popup.Header.activeBackground", 0xe6e6e6) : JBColor.namedColor("Popup.Header.inactiveBackground", 0xededed);
-        }
-
+        @Deprecated
         public static Color separatorColor() {
-            return JBColor.namedColor("Popup.separatorColor", new JBColor(Color.gray.brighter(), Gray.x51));
+            return JBColor.border();
         }
 
         public static Color separatorTextColor() {

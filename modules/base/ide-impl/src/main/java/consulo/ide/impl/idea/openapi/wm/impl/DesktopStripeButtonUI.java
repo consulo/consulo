@@ -19,11 +19,11 @@ import java.awt.*;
  * @author Vladimir Kondratyev
  */
 public final class DesktopStripeButtonUI extends BasicToggleButtonUI {
-  private static final Color BACKGROUND_COLOR = JBColor.namedColor("ToolWindow.Button.hoverBackground", new JBColor(Gray.x55.withAlpha(40), Gray.x0F.withAlpha(40)));
+  public static final Color BACKGROUND_COLOR = JBColor.namedColor("ToolWindow.Button.hoverBackground", new JBColor(Gray.x55.withAlpha(40), Gray.x0F.withAlpha(40)));
 
-  private static final Color SELECTED_BACKGROUND_COLOR = JBColor.namedColor("ToolWindow.Button.selectedBackground", new JBColor(Gray.x55.withAlpha(85), Gray.x0F.withAlpha(85)));
+  public static final Color SELECTED_BACKGROUND_COLOR = JBColor.namedColor("ToolWindow.Button.selectedBackground", new JBColor(Gray.x55.withAlpha(85), Gray.x0F.withAlpha(85)));
 
-  private static final Color SELECTED_FOREGROUND_COLOR = JBColor.namedColor("ToolWindow.Button.selectedForeground", new JBColor(Gray.x00, Gray.xFF));
+  public static final Color SELECTED_FOREGROUND_COLOR = JBColor.namedColor("ToolWindow.Button.selectedForeground", new JBColor(Gray.x00, Gray.xFF));
 
   private final Rectangle myIconRect = new Rectangle();
   private final Rectangle myTextRect = new Rectangle();

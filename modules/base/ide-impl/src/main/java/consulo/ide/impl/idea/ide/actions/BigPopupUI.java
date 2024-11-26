@@ -5,11 +5,13 @@ import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.language.editor.ui.awt.EditorAWTUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.project.Project;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
@@ -65,7 +67,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     }
 
     public void init() {
-        withBackground(JBCurrentTheme.BigPopup.headerBackground());
+        withBackground(ToolwindowPaintUtil.getActiveToolWindowHeaderColor());
 
         myResultsList = createList();
 
@@ -143,7 +145,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     private JPanel createSuggestionsPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
         pnl.setOpaque(false);
-        pnl.setBorder(JBUI.Borders.customLine(JBCurrentTheme.BigPopup.searchFieldBorderColor(), 1, 0, 0, 0));
+        pnl.setBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0));
 
         JScrollPane resultsScroll = new JBScrollPane(myResultsList);
         resultsScroll.setBorder(null);
@@ -163,8 +165,8 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     private JLabel createHint() {
         String hint = getInitialHint();
         JLabel hintLabel = HintUtil.createAdComponent(hint, JBCurrentTheme.BigPopup.advertiserBorder(), SwingConstants.LEFT);
-        hintLabel.setForeground(JBCurrentTheme.BigPopup.advertiserForeground());
-        hintLabel.setBackground(JBCurrentTheme.BigPopup.advertiserBackground());
+        hintLabel.setForeground(JBCurrentTheme.Advertiser.foreground());
+        hintLabel.setBackground(UIUtil.getPanelBackground());
         hintLabel.setOpaque(true);
         Dimension size = hintLabel.getPreferredSize();
         size.height = JBUIScale.scale(17);

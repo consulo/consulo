@@ -387,6 +387,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     @Nonnull
     protected JPanel createTopLeftPanel() {
         JPanel contributorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        contributorsPanel.setBorder(JBUI.Borders.empty(0, 12, 0, 0));
         contributorsPanel.setOpaque(false);
 
         SETab allTab = new SETab(null);
@@ -473,12 +474,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
         @Override
         public Color getBackground() {
-            return mySelectedTab == this ? JBCurrentTheme.BigPopup.selectedTabColor() : super.getBackground();
-        }
-
-        @Override
-        public Color getForeground() {
-            return mySelectedTab == this ? JBCurrentTheme.BigPopup.selectedTabTextColor() : super.getForeground();
+            return mySelectedTab == this ? UIUtil.getPanelBackground() : super.getBackground();
         }
     }
 
@@ -987,7 +983,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             setLayout(new BorderLayout());
             SeparatorComponent separatorComponent = new SeparatorComponent(
                 titleLabel.getPreferredSize().height / 2,
-                JBCurrentTheme.BigPopup.listSeparatorColor(),
+                JBColor.border(),
                 null
             );
 
