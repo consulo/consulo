@@ -8,7 +8,7 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ +-*/= .,;:!? #&$%@|^
 
 <todo>//TODO: Visit Consulo Web resources:</todo>
 Consulo Home Page: <hyperlink_f>https://consulo.io</hyperlink_f>
-Consulo Developer Community: <hyperlink>https://discuss.consulo.io/</hyperlink>
+Consulo Developer Community: <hyperlink>https://github.com/orgs/consulo/discussions/</hyperlink>
 
 Search:
   <search_result_wr>result</search_result_wr> = "<search_text>text</search_text>, <search_text>text</search_text>, <search_text>text</search_text>";

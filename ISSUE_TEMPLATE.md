@@ -5,4 +5,4 @@
 Issue description. In most cases need provide reproduce example.
 
 ## Please read contributing guide first. Please read and remove this part before issue submit
-## If you can't determine with issue - use our forum (https://discuss.consulo.io/)
+## If you can't determine with issue - use our forum (https://github.com/orgs/consulo/discussions/)
