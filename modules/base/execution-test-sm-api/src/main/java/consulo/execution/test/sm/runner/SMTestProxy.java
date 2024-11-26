@@ -115,18 +115,22 @@ public class SMTestProxy extends AbstractTestProxy {
     myPreferredPrinter = preferredPrinter;
   }
 
+  @Override
   public boolean isInProgress() {
     return myState.isInProgress();
   }
 
+  @Override
   public boolean isDefect() {
     return myState.isDefect();
   }
 
+  @Override
   public boolean shouldRun() {
     return true;
   }
 
+  @Override
   public int getMagnitude() {
     // Is used by some of Tests Filters
     //WARN: It is Hack, see PoolOfTestStates, API is necessary
@@ -152,6 +156,7 @@ public class SMTestProxy extends AbstractTestProxy {
     if (myStacktrace == null) myStacktrace = stacktrace;
   }
 
+  @Override
   public boolean isLeaf() {
     return myChildren == null || myChildren.isEmpty();
   }
@@ -162,7 +167,7 @@ public class SMTestProxy extends AbstractTestProxy {
       return myHasPassedTests;
     }
     boolean hasPassedTests = calcPassedTests();
-    boolean canCache = !myState.isInProgress();
+    boolean canCache = !myState.isInProgress() && myState.wasLaunched();
     if (canCache) {
       myHasPassedTests = hasPassedTests;
       myHasPassedTestsCached = true;
@@ -192,6 +197,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return myState.getMagnitude() == TestStateInfo.Magnitude.IGNORED_INDEX;
   }
 
+  @Override
   public boolean isPassed() {
     return myState.getMagnitude() == TestStateInfo.Magnitude.SKIPPED_INDEX ||
            myState.getMagnitude() == TestStateInfo.Magnitude.COMPLETE_INDEX ||
@@ -235,10 +241,12 @@ public class SMTestProxy extends AbstractTestProxy {
     return printer;
   }
 
+  @Override
   public void setPrinter(Printer printer) {
     super.setPrinter(getRightPrinter(printer));
   }
 
+  @Override
   public String getName() {
     return myName;
   }
@@ -248,6 +256,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return myConfig;
   }
 
+  @Override
   @Nullable
   public Location getLocation(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {
     //determines location of test proxy
@@ -271,6 +280,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return null;
   }
 
+  @Override
   @Nullable
   public Navigatable getDescriptor(@Nullable Location location, @Nonnull TestConsoleProperties properties) {
     // by location gets navigatable element.
@@ -294,14 +304,17 @@ public class SMTestProxy extends AbstractTestProxy {
     return myIsSuite;
   }
 
+  @Override
   public SMTestProxy getParent() {
     return myParent;
   }
 
+  @Override
   public List<? extends SMTestProxy> getChildren() {
     return myChildren != null ? myChildren : Collections.emptyList();
   }
 
+  @Override
   public List<SMTestProxy> getAllTests() {
     final List<SMTestProxy> allTests = new ArrayList<>();
 
@@ -581,6 +594,7 @@ public class SMTestProxy extends AbstractTestProxy {
    *
    * @param printer Printer
    */
+  @Override
   public void printOn(final Printer printer) {
     final Printer rightPrinter = getRightPrinter(printer);
     super.printOn(rightPrinter);
@@ -615,6 +629,7 @@ public class SMTestProxy extends AbstractTestProxy {
 
   public void addOutput(@Nonnull String output, @Nonnull Key outputType) {
     addAfterLastPassed(new Printable() {
+      @Override
       public void printOn(@Nonnull Printer printer) {
         printer.print(output, ConsoleViewContentType.getConsoleViewType(outputType));
       }
@@ -629,6 +644,7 @@ public class SMTestProxy extends AbstractTestProxy {
     setStacktraceIfNotSet(stackTrace);
 
     addAfterLastPassed(new Printable() {
+      @Override
       public void printOn(final Printer printer) {
         String errorText = TestFailedState.buildErrorPresentationText(output, stackTrace);
         if (errorText != null) {
@@ -719,11 +735,13 @@ public class SMTestProxy extends AbstractTestProxy {
     return myState.wasTerminated();
   }
 
+  @Override
   @Nullable
   public String getLocationUrl() {
     return myLocationUrl;
   }
 
+  @Override
   @Nullable
   public String getMetainfo() {
     return myMetainfo;
@@ -969,6 +987,7 @@ public class SMTestProxy extends AbstractTestProxy {
       myShouldPrintOwnContentOnly = shouldPrintOwnContentOnly;
     }
 
+    @Override
     public void printOn(@Nonnull Printer printer) {
       if (myShouldPrintOwnContentOnly) {
         printOwnPrintablesOn(printer, false);
