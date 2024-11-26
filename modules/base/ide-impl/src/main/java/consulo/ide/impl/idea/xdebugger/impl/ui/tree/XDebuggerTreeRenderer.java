@@ -26,6 +26,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.lang.StringUtil;
@@ -65,6 +66,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
     final int row,
     final boolean hasFocus
   ) {
+      setBorder(JBCurrentTheme.listCellBorder());
     myHaveLink = false;
     myLink.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
     XDebuggerTreeNode node = (XDebuggerTreeNode)value;

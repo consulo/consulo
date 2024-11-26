@@ -910,7 +910,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         ) {
             if (value == SearchListModel.MORE_ELEMENT) {
                 Component component = myMoreRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                ((JComponent) component).setBorder(JBCurrentTheme.BigPopup.listCellBorder());
+                ((JComponent) component).setBorder(JBCurrentTheme.listCellBorder());
                 return component;
             }
 
@@ -922,7 +922,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             }
 
             GuiUtils.targetToDevice(component, list);
-            component.setBorder(JBCurrentTheme.BigPopup.listCellBorder());
+            component.setBorder(JBCurrentTheme.listCellBorder());
             if (isAllTabSelected() && myListModel.isGroupFirstItem(index)) {
                 component = myGroupTitleRenderer.withDisplayedData(contributor.getFullGroupName(), component);
             }
@@ -940,7 +940,6 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             boolean selected,
             boolean hasFocus
         ) {
-            setPaintFocusBorder(false);
             setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
             setFont(list.getFont());
 

@@ -208,7 +208,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
     public XDebuggerFrameListRenderer(@Nonnull Project project) {
       myColorsManager = FileColorManager.getInstance(project);
-      setBorder(JBCurrentTheme.BigPopup.listCellBorder());
+        setBorder(JBCurrentTheme.listCellBorder());
     }
 
     @Override
