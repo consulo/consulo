@@ -24,8 +24,6 @@ public class NewItemWithTemplatesPopupPanel<T> extends NewItemSimplePopupPanel {
   private final Collection<TemplatesListVisibilityListener> myVisibilityListeners = new ArrayList<>();
 
   public NewItemWithTemplatesPopupPanel(List<T> templatesList, ListCellRenderer<T> renderer) {
-    setBackground(JBCurrentTheme.NewClassDialog.panelBackground());
-
     myTemplatesListModel = new MyListModel(templatesList);
     myTemplatesList = createTemplatesList(myTemplatesListModel, renderer);
 

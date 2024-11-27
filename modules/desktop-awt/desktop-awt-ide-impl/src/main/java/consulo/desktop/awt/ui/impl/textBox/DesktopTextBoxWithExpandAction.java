@@ -116,6 +116,18 @@ public class DesktopTextBoxWithExpandAction {
         }
 
         @Override
+        public void select(int from, int to) {
+            toAWTComponent().setCaretPosition(from);
+            toAWTComponent().moveCaretPosition(to);
+        }
+
+        @Override
+        public void moveCaretTo(int index) {
+            toAWTComponent().setCaretPosition(index);
+            toAWTComponent().moveCaretPosition(index);
+        }
+
+        @Override
         public void setEditable(boolean editable) {
             toAWTComponent().setEditable(editable);
         }

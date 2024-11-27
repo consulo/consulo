@@ -94,18 +94,9 @@ public class JBCurrentTheme {
 
     public static class NewClassDialog {
         @Nonnull
-        public static Color searchFieldBackground() {
-            return JBColor.namedColor("NewClass.SearchField.background", 0xffffff);
-        }
-
-        @Nonnull
-        public static Color panelBackground() {
-            return JBColor.namedColor("NewClass.Panel.background", 0xf2f2f2);
-        }
-
-        @Nonnull
+        @Deprecated
         public static Color bordersColor() {
-            return JBColor.namedColor("TextField.borderColor", JBColor.namedColor("Component.borderColor", new JBColor(0xbdbdbd, 0x646464)));
+            return JBColor.border();
         }
 
         public static int fieldsSeparatorWidth() {

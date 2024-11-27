@@ -30,61 +30,61 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-18
  */
 public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadin> implements TextBox {
-  public class Vaadin extends TextField implements FromVaadinComponentWrapper {
+    public class Vaadin extends TextField implements FromVaadinComponentWrapper {
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebTextBoxImpl.this;
+        }
+    }
+
+    public WebTextBoxImpl(String text) {
+        setValue(text, false);
+    }
+
+    @Override
+    @Nonnull
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
+
     @Nullable
     @Override
-    public Component toUIComponent() {
-      return WebTextBoxImpl.this;
+    public String getValue() {
+        return getVaadinComponent().getValue();
     }
-  }
 
-  public WebTextBoxImpl(String text) {
-    setValue(text, false);
-  }
+    @RequiredUIAccess
+    @Override
+    public void setValue(String value, boolean fireListeners) {
+        getVaadinComponent().setValue(value);
+    }
 
-  @Override
-  @Nonnull
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Override
+    public void selectAll() {
 
-  @Nullable
-  @Override
-  public String getValue() {
-    return getVaadinComponent().getValue();
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setValue(String value, boolean fireListeners) {
-    getVaadinComponent().setValue(value);
-  }
+    @Override
+    public void setEditable(boolean editable) {
 
-  @Override
-  public void selectAll() {
+    }
 
-  }
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
 
-  @Override
-  public void setEditable(boolean editable) {
+    @Nonnull
+    @Override
+    public Disposable addValidator(@Nonnull Validator<String> validator) {
+        return () -> {
+        };
+    }
 
-  }
-
-  @Override
-  public boolean isEditable() {
-    return true;
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addValidator(@Nonnull Validator<String> validator) {
-    return () -> {
-    };
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean validate() {
-    return true;
-  }
+    @RequiredUIAccess
+    @Override
+    public boolean validate() {
+        return true;
+    }
 }

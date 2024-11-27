@@ -19,12 +19,12 @@ import consulo.disposer.Disposable;
 import consulo.ui.TextBoxWithHistory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -32,66 +32,66 @@ import java.util.List;
  * @since 10/07/2021
  */
 public class DesktopSwtTextBoxWithHistoryImpl extends SWTComponentDelegate<Text> implements TextBoxWithHistory {
-  private final String myText;
+    private final String myText;
 
-  public DesktopSwtTextBoxWithHistoryImpl(String text) {
-    myText = StringUtil.notNullize(text);
-  }
+    public DesktopSwtTextBoxWithHistoryImpl(String text) {
+        myText = StringUtil.notNullize(text);
+    }
 
-  @Override
-  protected Text createSWT(Composite parent) {
-    return new Text(parent, SWT.BORDER);
-  }
+    @Override
+    protected Text createSWT(Composite parent) {
+        return new Text(parent, SWT.BORDER);
+    }
 
-  @Override
-  protected void initialize(Text component) {
-    super.initialize(component);
+    @Override
+    protected void initialize(Text component) {
+        super.initialize(component);
 
-    component.setText(myText);
-  }
+        component.setText(myText);
+    }
 
-  @Nonnull
-  @Override
-  public TextBoxWithHistory setHistory(@Nonnull List<String> history) {
-    return this;
-  }
+    @Nonnull
+    @Override
+    public TextBoxWithHistory setHistory(@Nonnull List<String> history) {
+        return this;
+    }
 
-  @Override
-  public void selectAll() {
+    @Override
+    public void selectAll() {
 
-  }
+    }
 
-  @Override
-  public void setEditable(boolean editable) {
+    @Override
+    public void setEditable(boolean editable) {
 
-  }
+    }
 
-  @Override
-  public boolean isEditable() {
-    return false;
-  }
+    @Override
+    public boolean isEditable() {
+        return false;
+    }
 
-  @Nonnull
-  @Override
-  public Disposable addValidator(@Nonnull Validator<String> validator) {
-    return null;
-  }
+    @Nonnull
+    @Override
+    public Disposable addValidator(@Nonnull Validator<String> validator) {
+        return null;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public boolean validate() {
-    return false;
-  }
+    @RequiredUIAccess
+    @Override
+    public boolean validate() {
+        return false;
+    }
 
-  @Nullable
-  @Override
-  public String getValue() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public String getValue() {
+        return null;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setValue(String value, boolean fireListeners) {
+    @RequiredUIAccess
+    @Override
+    public void setValue(String value, boolean fireListeners) {
 
-  }
+    }
 }

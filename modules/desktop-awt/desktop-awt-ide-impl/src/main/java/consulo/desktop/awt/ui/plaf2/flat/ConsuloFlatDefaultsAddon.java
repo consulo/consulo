@@ -43,5 +43,8 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
 
         uiDefaults.put("ComboBoxButtonUI", FlatComboBoxButtonUI.class.getName());
         uiDefaults.put("CaptionPanelUI", FlatCaptionPanelUI.class.getName());
+
+        // disable selecting on focus
+        uiDefaults.put("TextComponent.selectAllOnFocusPolicy", "never");
     }
 }
