@@ -1,5 +1,5 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ui.ex.awt.internal.laf;
+package consulo.desktop.awt.ui.plaf2;
 
 import consulo.application.Application;
 import consulo.application.ui.UISettings;
@@ -12,6 +12,7 @@ import consulo.ui.ex.awt.EditSourceOnDoubleClickHandlerBase;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.event.TreeHoverListener;
+import consulo.ui.ex.awt.internal.TreeOptions;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.awt.tree.TreePathBackgroundSupplier;
@@ -43,12 +44,8 @@ import static consulo.application.ApplicationManager.getApplication;
 import static consulo.application.util.registry.Registry.is;
 import static consulo.ui.ex.awt.paint.RectanglePainter.DRAW;
 
-//@DirtyUI
 public final class DefaultTreeUI extends BasicTreeUI {
- // @ApiStatus.Internal
   public static final Key<Boolean> LARGE_MODEL_ALLOWED = Key.create("allows to use large model (only for synchronous tree models)");
-  //@ApiStatus.Internal
-  public static final Key<Boolean> AUTO_EXPAND_ALLOWED = Key.create("allows to expand a single child node automatically in tests");
   private static final Logger LOG = Logger.getInstance(DefaultTreeUI.class);
   private static final Collection<Class<?>> SUSPICIOUS = Sets.newWeakHashSet();
 
@@ -134,7 +131,7 @@ public final class DefaultTreeUI extends BasicTreeUI {
   }
 
   private static boolean isAutoExpandAllowed(@Nonnull JTree tree) {
-    Boolean allowed = UIUtil.getClientProperty(tree, AUTO_EXPAND_ALLOWED);
+    Boolean allowed = UIUtil.getClientProperty(tree, TreeOptions.AUTO_EXPAND_ALLOWED);
     return allowed != null ? allowed : tree.isShowing();
   }
 

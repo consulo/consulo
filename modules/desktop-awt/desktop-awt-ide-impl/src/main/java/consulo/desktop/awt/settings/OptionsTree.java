@@ -90,6 +90,8 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
                     myProjectIcon.setIcon(TargetAWT.to(PlatformIconGroup.generalProjectconfigurable()));
                 }
             }
+
+            setBackground(Color.RED);
             return this;
         }
     }

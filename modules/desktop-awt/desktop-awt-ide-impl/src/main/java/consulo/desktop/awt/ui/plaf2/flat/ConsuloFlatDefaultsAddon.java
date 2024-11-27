@@ -22,6 +22,7 @@ import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
+import consulo.desktop.awt.ui.plaf2.DefaultTreeUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,6 +50,8 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
 
         // disable selecting on focus
         uiDefaults.put("TextComponent.selectAllOnFocusPolicy", "never");
+
+        uiDefaults.put("TreeUI", DefaultTreeUI.class.getName());
 
         PlatformOperatingSystem os = Platform.current().os();
         if (os.isWindows() & os.asWindows().isWindows11OrNewer()) {
