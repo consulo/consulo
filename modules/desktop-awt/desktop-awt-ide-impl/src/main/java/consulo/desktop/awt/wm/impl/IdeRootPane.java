@@ -20,6 +20,7 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
+import consulo.desktop.awt.wm.navigationToolbar.IdeRootPaneNorthExtensionWithDecorator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
@@ -29,7 +30,6 @@ import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.IdePanePanel;
 import consulo.project.Project;
-import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.IdeFrame;
@@ -37,16 +37,14 @@ import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.JBLayeredPane;
-import consulo.ui.ex.awt.JBPanel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.toolWindow.ToolWindowPanel;
 import consulo.util.collection.impl.map.LinkedHashMap;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Map;
@@ -72,13 +70,15 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     private ToolWindowPanel myToolWindowsPane;
     private JBPanel myContentPane;
     private final ActionManager myActionManager;
+    private final DesktopIdeFrameImpl myFrame;
 
     private final boolean myGlassPaneInitialized;
 
     private boolean myFullScreen;
 
-    public IdeRootPane(ActionManager actionManager, DataManager dataManager, Application application, final IdeFrame frame) {
+    public IdeRootPane(ActionManager actionManager, DataManager dataManager, Application application, final DesktopIdeFrameImpl frame) {
         myActionManager = actionManager;
+        myFrame = frame;
 
         myContentPane.add(myNorthPanel, BorderLayout.NORTH);
 
@@ -93,10 +93,10 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
 
         if (WindowManagerEx.getInstanceEx().isFloatingMenuBarSupported()) {
             menuBar = new IdeMenuBar(actionManager, dataManager);
+            
             getLayeredPane().add(menuBar, Integer.valueOf(JLayeredPane.DEFAULT_LAYER - 1));
-            if (frame instanceof IdeFrameEx) {
-                addPropertyChangeListener(WindowManagerEx.FULL_SCREEN, __ -> myFullScreen = frame.isInFullScreen());
-            }
+
+            addPropertyChangeListener(WindowManagerEx.FULL_SCREEN, __ -> myFullScreen = frame.isInFullScreen());
         }
         else {
             setJMenuBar(new IdeMenuBar(actionManager, dataManager));
@@ -180,6 +180,21 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     public void updateToolbar() {
         removeToolbar();
         myToolbar = createToolbar();
+        myToolbar.setBorder(new Border() {
+            @Override
+            public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            }
+
+            @Override
+            public Insets getBorderInsets(Component c) {
+                return JBUI.insets(0, myFrame.getTitlelessDecorator().getExtraTopLeftPadding(), 0, 0);
+            }
+
+            @Override
+            public boolean isBorderOpaque() {
+                return false;
+            }
+        });
         myNorthPanel.add(myToolbar, 0);
         updateToolbarVisibility();
         myContentPane.revalidate();
@@ -247,8 +262,12 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
         myStatusBar.setVisible(UISettings.getInstance().getShowStatusBar() && !UISettings.getInstance().getPresentationMode());
     }
 
-    public void installNorthComponents(final Project project) {
+    public void installNorthComponents(final Project project, TitlelessDecorator titlelessDecorator) {
         project.getExtensionPoint(IdeRootPaneNorthExtension.class).forEachExtensionSafe(northComponent -> {
+            if (northComponent instanceof IdeRootPaneNorthExtensionWithDecorator decorator) {
+                decorator.setTitlelessDecorator(titlelessDecorator);
+            }
+            
             myNorthComponents.put(northComponent.getApiClass(), northComponent);
 
             myNorthPanel.add(northComponent.getComponent());

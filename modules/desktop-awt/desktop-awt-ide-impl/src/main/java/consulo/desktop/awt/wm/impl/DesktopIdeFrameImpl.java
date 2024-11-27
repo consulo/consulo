@@ -361,6 +361,10 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return new IdeRootPane(actionManager, dataManager, application, this);
     }
 
+    public TitlelessDecorator getTitlelessDecorator() {
+        return myTitlelessDecorator;
+    }
+
     @Override
     public JComponent getComponent() {
         return myJFrame.getRootPane();
@@ -528,7 +532,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     @Override
     public void initialize() {
         if (myRootPane != null) {
-            myRootPane.installNorthComponents(myProject);
+            myRootPane.installNorthComponents(myProject, myTitlelessDecorator);
             myProject.getMessageBus().connect().subscribe(StatusBarInfo.class, myRootPane.getStatusBar());
         }
 

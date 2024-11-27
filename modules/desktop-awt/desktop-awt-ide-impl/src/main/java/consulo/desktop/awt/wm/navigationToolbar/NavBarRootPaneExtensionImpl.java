@@ -36,6 +36,7 @@ import consulo.project.ui.wm.NavBarRootPaneExtension;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -49,13 +50,15 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 @ExtensionImpl
-public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension {
+public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, IdeRootPaneNorthExtensionWithDecorator {
     private JComponent myWrapperPanel;
     private Project myProject;
     private NavBarPanel myNavigationBar;
     private JPanel myRunPanel;
     private final boolean myNavToolbarGroupExist;
     private JScrollPane myScrollPane;
+
+    private TitlelessDecorator myTitlelessDecorator = TitlelessDecorator.NOTHING;
 
     @Inject
     public NavBarRootPaneExtensionImpl(Project project) {
@@ -66,6 +69,11 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension {
         myNavToolbarGroupExist = runToolbarExists();
 
         Disposer.register(myProject, this);
+    }
+
+    @Override
+    public void setTitlelessDecorator(TitlelessDecorator titlelessDecorator) {
+        myTitlelessDecorator = titlelessDecorator;
     }
 
     @Override
@@ -245,7 +253,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension {
 
                 myScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
                 myScrollPane.setHorizontalScrollBar(null);
-                myScrollPane.setBorder(new NavBarBorder());
+                myScrollPane.setBorder(new NavBarBorder(myTitlelessDecorator));
                 myScrollPane.setOpaque(false);
                 myScrollPane.getViewport().setOpaque(false);
                 myScrollPane.setViewportBorder(null);
