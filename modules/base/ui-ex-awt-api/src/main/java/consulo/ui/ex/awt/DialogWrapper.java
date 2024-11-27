@@ -770,10 +770,6 @@ public abstract class DialogWrapper {
 
         String text = button.getText();
 
-        if (Platform.current().os().isMac()) {
-            button.putClientProperty("JButton.buttonType", "text");
-        }
-
         updateMnemonic(button, text, action);
 
         if (action.getValue(DEFAULT_ACTION) != null && myPeer != null && !myPeer.isHeadless()) {
