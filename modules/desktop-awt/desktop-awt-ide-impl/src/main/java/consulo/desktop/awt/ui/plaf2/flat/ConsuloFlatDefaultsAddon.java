@@ -20,8 +20,11 @@ import consulo.desktop.awt.ui.plaf.BasicStatusBarUI;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaEditorTextFieldUI;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
+import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.InputStream;
 
 /**
@@ -46,5 +49,11 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
 
         // disable selecting on focus
         uiDefaults.put("TextComponent.selectAllOnFocusPolicy", "never");
+
+        PlatformOperatingSystem os = Platform.current().os();
+        if (os.isWindows() & os.asWindows().isWindows11OrNewer()) {
+            uiDefaults.put("ScrollBar.thumbArc", 999);
+            uiDefaults.put("ScrollBar.thumbInsets", new Insets(1, 1, 1, 1));
+        }
     }
 }
