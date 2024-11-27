@@ -85,6 +85,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
   private final Disposable myListenerDisposable = Disposable.newDisposable();
   private final List<ToggleActionButton> myToggleRuleActions = new ArrayList<>();
 
+  private final TitlelessDecorator myTitlelessDecorator;
+
   private XBreakpointManagerImpl getBreakpointManager() {
     return (XBreakpointManagerImpl)XDebuggerManager.getInstance(myProject).getBreakpointManager();
   }
@@ -94,6 +96,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     myProject = project;
     myBreakpointsPanelProviders = providers;
     myInitialBreakpoint = breakpoint;
+    myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
 
     collectGroupingRules();
 
@@ -103,6 +106,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     setModal(false);
     init();
     setOKButtonText("Done");
+
+    myTitlelessDecorator.install(getWindow());
   }
 
   @Nonnull
@@ -295,8 +300,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
       decorator.addExtraAction(action);
     }
 
-    JPanel decoratedTree = decorator.createPanel();
-    decoratedTree.setBorder(IdeBorderFactory.createEmptyBorder());
+    JPanel panel = decorator.createPanel();
+    panel.setBorder(IdeBorderFactory.createEmptyBorder());
 
     myTreeController.setTreeView(tree);
 
@@ -314,7 +319,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
       provider.addListener(listener, myProject, myListenerDisposable);
     }
 
-    return decoratedTree;
+    myTitlelessDecorator.makeLeftComponentLower(panel);
+    return panel;
   }
 
   private void navigate(final boolean requestFocus) {

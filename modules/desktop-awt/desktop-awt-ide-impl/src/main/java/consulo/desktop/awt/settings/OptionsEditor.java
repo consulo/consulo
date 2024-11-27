@@ -573,8 +573,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
   public OptionsEditor(Project project,
                        Configurable[] configurables,
                        Configurable preselectedConfigurable,
-                       JPanel rootPanel,
-                       TitlelessDecorator titlelessDecorator) {
+                       JPanel rootPanel) {
     myProject = project;
     myConfigurables = configurables;
     myRootPanel = rootPanel;
@@ -632,8 +631,6 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     JComponent component = myTree.getComponent();
 
     myLeftSide = new JPanel(new BorderLayout());
-
-    titlelessDecorator.makeLeftComponentLower(myLeftSide);
 
     mySearchWrapper.setContent(mySearch);
     mySearchWrapper.setBackground(MorphColor.of(UIUtil::getTreeBackground));

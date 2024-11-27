@@ -247,6 +247,8 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
     private MyFrame myJFrame;
 
+    private final TitlelessDecorator myTitlelessDecorator;
+
     public DesktopIdeFrameImpl(ActionManager actionManager, DataManager dataManager, Application application) {
         myJFrame = new MyFrame();
         myJFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
@@ -255,6 +257,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myJFrame.setTitle(FrameTitleUtil.buildTitle());
         myRootPane = createRootPane(actionManager, dataManager, application);
         myJFrame.setRootPane(myRootPane);
+        myTitlelessDecorator = TitlelessDecorator.of(myRootPane);
         myJFrame.setBackground(UIUtil.getPanelBackground());
         AppIconUtil.updateWindowIcon(myJFrame);
         final Dimension size = ScreenUtil.getMainScreenBounds().getSize();
@@ -270,7 +273,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         setupCloseAction();
         MnemonicHelper.init(myJFrame);
 
-        myBalloonLayout = new DesktopBalloonLayoutImpl(myRootPane, new Insets(8, 8, 8, 8));
+        myBalloonLayout = new DesktopBalloonLayoutImpl(myRootPane, JBUI.insets(8));
 
         // to show window thumbnail under Macs
         // http://lists.apple.com/archives/java-dev/2009/Dec/msg00240.html

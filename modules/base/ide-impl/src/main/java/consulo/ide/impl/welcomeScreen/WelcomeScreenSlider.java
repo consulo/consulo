@@ -1,6 +1,7 @@
 package consulo.ide.impl.welcomeScreen;
 
 import consulo.disposer.Disposable;
+import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
@@ -16,6 +17,8 @@ public interface WelcomeScreenSlider {
     void setTitle(@Nonnull String title);
 
     void removeSlide(@Nonnull JComponent target);
+
+    TitlelessDecorator getTitlelessDecorator();
 
     Disposable getDisposable();
 }

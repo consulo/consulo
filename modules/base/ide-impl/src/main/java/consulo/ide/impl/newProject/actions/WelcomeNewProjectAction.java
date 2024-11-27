@@ -53,7 +53,7 @@ public class WelcomeNewProjectAction extends NewProjectAction {
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
         WelcomeScreenSlider slider = e.getRequiredData(WelcomeScreenSlider.KEY);
-        TitlelessDecorator titlelessDecorator = e.getRequiredData(TitlelessDecorator.KEY);
+        TitlelessDecorator titlelessDecorator = slider.getTitlelessDecorator();
 
         JPanel sliderPanel = (JPanel) slider;
 

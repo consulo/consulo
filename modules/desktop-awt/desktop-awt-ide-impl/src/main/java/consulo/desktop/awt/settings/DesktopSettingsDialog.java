@@ -54,7 +54,6 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
     private ApplyAction myApplyAction;
     public static final String DIMENSION_KEY = "OptionsEditor";
-    private TitlelessDecorator myDecorator;
 
     /**
      * This constructor should be eliminated after the new modality approach
@@ -82,13 +81,9 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
         myConfigurables = configurables;
         myPreselectStrategy = strategy;
 
-        myDecorator = TitlelessDecorator.of(getRootPane());
-
         setTitle(Platform.current().os().isMac() ? CommonLocalize.titleSettingsMac() : CommonLocalize.titleSettings());
 
         init();
-
-        myDecorator.install(getWindow());
     }
 
     @Nonnull
@@ -126,7 +121,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     @Override
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
         Configurable configurable = myPreselectStrategy.get(myConfigurables);
-        myEditor = new OptionsEditor(myProject, myConfigurables, configurable, rootPanel, myDecorator);
+        myEditor = new OptionsEditor(myProject, myConfigurables, configurable, rootPanel);
         myEditor.getContext().addColleague(new OptionsEditorColleague() {
             @Override
             public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {

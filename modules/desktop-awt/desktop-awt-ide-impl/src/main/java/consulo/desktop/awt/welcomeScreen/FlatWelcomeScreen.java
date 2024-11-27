@@ -41,10 +41,12 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
 
     private final FlatWelcomePanel myMainWelcomePanel;
     private final FlatWelcomeFrame myWelcomeFrame;
+    private final TitlelessDecorator myTitlelessDecorator;
 
     @RequiredUIAccess
     public FlatWelcomeScreen(FlatWelcomeFrame welcomeFrame, TitlelessDecorator titlelessDecorator) {
         super(new JBCardLayout());
+        myTitlelessDecorator = titlelessDecorator;
         DataManager.registerDataProvider(this, dataId -> {
             if (KEY == dataId) {
                 return this;
@@ -124,5 +126,10 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
     @Override
     public Disposable getDisposable() {
         return myWelcomeFrame;
+    }
+
+    @Override
+    public TitlelessDecorator getTitlelessDecorator() {
+        return myTitlelessDecorator;
     }
 }

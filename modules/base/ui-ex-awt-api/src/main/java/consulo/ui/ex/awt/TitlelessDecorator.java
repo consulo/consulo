@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt;
 
 import consulo.platform.Platform;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -29,8 +28,6 @@ import java.awt.*;
  * @since 2024-11-26
  */
 public interface TitlelessDecorator {
-    Key<TitlelessDecorator> KEY = Key.create(TitlelessDecorator.class);
-
     static TitlelessDecorator of(@Nonnull JRootPane pane) {
         if (Platform.current().os().isMac()) {
             return new MacFrameDecorator(pane);
@@ -44,8 +41,6 @@ public interface TitlelessDecorator {
 
         public MacFrameDecorator(JRootPane rootPane) {
             myRootPane = rootPane;
-
-            UIUtil.putClientProperty(rootPane, KEY, this);
         }
 
         @Override
@@ -59,6 +54,11 @@ public interface TitlelessDecorator {
         public void makeLeftComponentLower(JComponent component) {
             component.setBorder(JBUI.Borders.empty(26, 0, 0, 0));
         }
+
+        @Override
+        public int getExtraTopLeftPadding() {
+            return 60;
+        }
     }
 
     TitlelessDecorator NOTHING = new TitlelessDecorator() {
@@ -69,9 +69,16 @@ public interface TitlelessDecorator {
         @Override
         public void makeLeftComponentLower(JComponent component) {
         }
+
+        @Override
+        public int getExtraTopLeftPadding() {
+            return 0;
+        }
     };
 
     void install(Window window);
 
     void makeLeftComponentLower(JComponent component);
+
+    int getExtraTopLeftPadding();
 }
