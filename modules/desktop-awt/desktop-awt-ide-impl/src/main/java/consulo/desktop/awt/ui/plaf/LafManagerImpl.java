@@ -32,6 +32,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.desktop.awt.ui.impl.style.DesktopStyleImpl;
 import consulo.desktop.awt.ui.plaf2.IdeLookAndFeelInfo;
+import consulo.desktop.awt.ui.plaf2.SmoothScrollingListener;
 import consulo.disposer.Disposable;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.ui.LafManager;
@@ -161,8 +162,6 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     @Override
     public void afterLoadState() {
-        boolean initial = myInitialLoadState;
-
         myInitialLoadState = false;
 
         if (myCurrentStyle != null) {
@@ -175,7 +174,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
             }
         }
 
-        updateUI(initial);
+        updateUI();
 
         // refresh UI on localize change
         LocalizeManager.get().addListener((oldLocale, newLocale) -> updateUI(), this);
@@ -402,6 +401,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     private static void fireUpdate() {
         UISettings.getInstance().fireUISettingsChanged();
+
         EditorFactory.getInstance().refreshAllEditors();
 
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
@@ -414,6 +414,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
                 ((IdeFrameEx) frame).updateView();
             }
         }
+
         ActionToolbarsHolder.updateAllToolbarsImmediately();
     }
 
@@ -423,10 +424,6 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
      */
     @Override
     public void updateUI() {
-        updateUI(false);
-    }
-
-    private void updateUI(boolean initial) {
         patchLafFonts();
 
         updateToolWindows();
@@ -434,6 +431,8 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         for (Frame frame : Frame.getFrames()) {
             updateUI(frame);
         }
+
+        SmoothScrollingListener.set(UISettings.getInstance());
 
         fireLookAndFeelChanged();
     }
