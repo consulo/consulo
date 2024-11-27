@@ -2,36 +2,36 @@
 
 package consulo.ide.impl.idea.ide.projectView;
 
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.ui.ex.UiActivity;
-import consulo.ui.ex.UiActivityMonitor;
-import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
-import consulo.ide.impl.idea.openapi.progress.util.StatusBarProgress;
-import consulo.project.Project;
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
-import consulo.util.lang.ref.Ref;
-import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.FocusRequestor;
+import consulo.application.util.registry.Registry;
+import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import consulo.application.progress.ProgressIndicator;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.ui.ex.UiActivity;
+import consulo.ui.ex.UiActivityMonitor;
+import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
+import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
-
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -371,11 +371,5 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
       return projectViewNode.validate();
     }
     return true;
-  }
-
-  @Override
-  @Nonnull
-  protected ProgressIndicator createProgressIndicator() {
-    return new StatusBarProgress();
   }
 }

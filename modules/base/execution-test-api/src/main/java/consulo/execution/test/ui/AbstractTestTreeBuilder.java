@@ -15,23 +15,21 @@
  */
 package consulo.execution.test.ui;
 
-import consulo.application.Application;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.TestConsoleProperties;
-import consulo.execution.test.internal.TestStatusBarProgressFactory;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.AlphaComparator;
 import consulo.ui.ex.tree.IndexComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import java.util.Comparator;
 
 /**
  * @author: Roman Chernyatchik
@@ -66,12 +64,6 @@ public abstract class AbstractTestTreeBuilder extends AbstractTreeBuilder {
   @Override
   protected boolean isAlwaysShowPlus(final NodeDescriptor descriptor) {
     return false;
-  }
-
-  @Override
-  @Nonnull
-  protected ProgressIndicator createProgressIndicator() {
-    return Application.get().getInstance(TestStatusBarProgressFactory.class).createStatusBarProgress();
   }
 
   @Override

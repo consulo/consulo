@@ -19,9 +19,6 @@ import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.IndexComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.progress.util.StatusBarProgress;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -47,11 +44,5 @@ class LibraryTableTreeBuilder extends AbstractTreeBuilder {
   @Override
   protected boolean isSmartExpand() {
     return false;
-  }
-
-  @Override
-  @Nonnull
-  protected ProgressIndicator createProgressIndicator() {
-    return new StatusBarProgress();
   }
 }
