@@ -30,15 +30,9 @@ public class JBCurrentTheme {
         private static final JBInsets DEFAULT_AD_INSETS = JBInsets.create(1, 5);
 
         @Nonnull
+        @Deprecated
         public static Color foreground() {
-            Color foreground = BigPopup.advertiserForeground();
-            return JBColor.namedColor("Popup.Advertiser.foreground", foreground);
-        }
-
-        @Nonnull
-        public static Color background() {
-            Color background = BigPopup.advertiserBackground();
-            return JBColor.namedColor("Popup.Advertiser.background", background);
+            return UIUtil.getLabelForeground();
         }
 
         @Nonnull

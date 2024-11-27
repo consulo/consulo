@@ -203,8 +203,6 @@ public class HintUtil {
     JLabel label = new JLabel();
     label.setText(bottomText);
     label.setHorizontalAlignment(alignment);
-    label.setForeground(JBCurrentTheme.Advertiser.foreground());
-    label.setBackground(JBCurrentTheme.Advertiser.background());
     label.setOpaque(true);
     label.setFont(label.getFont().deriveFont((float)(label.getFont().getSize() - 2)));
     if (bottomText != null) {
