@@ -17,17 +17,17 @@ package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.Application;
 import consulo.project.Project;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.wm.BalloonLayout;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.Window;
 import consulo.ui.Rectangle2D;
-
+import consulo.ui.Window;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 
@@ -36,60 +36,61 @@ import java.io.File;
  * @since 2018-12-29
  */
 class DesktopWelcomeIdeFrame implements IdeFrameEx {
-  private FlatWelcomeFrame myFrame;
+    private FlatWelcomeFrame myFrame;
 
-  @RequiredUIAccess
-  public DesktopWelcomeIdeFrame(Application application, Runnable clearInstance) {
-    myFrame = new FlatWelcomeFrame(application, clearInstance);
-    myFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
-  }
+    @RequiredUIAccess
+    public DesktopWelcomeIdeFrame(Application application, Runnable clearInstance) {
+        myFrame = new FlatWelcomeFrame(application, clearInstance);
+        myFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
+    }
 
-  @Override
-  public JComponent getComponent() {
-    return myFrame.getRootPane();
-  }
+    @Override
+    public JComponent getComponent() {
+        return myFrame.getRootPane();
+    }
 
-  @Nonnull
-  @Override
-  public Window getWindow() {
-    return myFrame.toUIWindow();
-  }
+    @Nonnull
+    @Override
+    public Window getWindow() {
+        return myFrame.toUIWindow();
+    }
 
-  @Override
-  public StatusBar getStatusBar() {
-    return null;
-  }
+    @Override
+    public StatusBar getStatusBar() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public Rectangle2D suggestChildFrameBounds() {
-    return myFrame.suggestChildFrameBounds();
-  }
+    @Nullable
+    @Override
+    public Rectangle2D suggestChildFrameBounds() {
+        return myFrame.suggestChildFrameBounds();
+    }
 
-  @Nullable
-  @Override
-  public Project getProject() {
-    return myFrame.getProject();
-  }
+    @Nullable
+    @Override
+    public Project getProject() {
+        return myFrame.getProject();
+    }
 
-  @Override
-  public void setFrameTitle(String title) {
-    myFrame.setTitle(title);
-  }
+    @Override
+    public void setFrameTitle(String title) {
+        myFrame.setTitle(title);
+    }
 
-  @Override
-  public void setFileTitle(String fileTitle, File ioFile) {
-    myFrame.setTitle(fileTitle);
-  }
+    @Override
+    public void setFileTitle(String fileTitle, File ioFile) {
+        myFrame.setTitle(fileTitle);
+    }
 
-  @Override
-  public IdeRootPaneNorthExtension getNorthExtension(String key) {
-    return myFrame.getNorthExtension(key);
-  }
+    @Nullable
+    @Override
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public BalloonLayout getBalloonLayout() {
-    return myFrame.getBalloonLayout();
-  }
+    @Nullable
+    @Override
+    public BalloonLayout getBalloonLayout() {
+        return myFrame.getBalloonLayout();
+    }
 }

@@ -1,26 +1,26 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.navigationToolbar;
+package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUI;
-import consulo.ui.ex.tree.TreeAnchorizer;
-import consulo.disposer.Disposable;
-import consulo.dataContext.DataProvider;
 import consulo.application.util.registry.Registry;
-import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.util.collection.JBIterable;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUI;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.language.psi.PsiElement;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.ui.image.Image;
+import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;

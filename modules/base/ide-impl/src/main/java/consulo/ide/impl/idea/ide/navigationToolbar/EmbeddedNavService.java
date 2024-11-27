@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 12-Nov-2007
- */
-package consulo.project.ui.wm;
+package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.application.ui.UISettings;
-import consulo.disposer.Disposable;
+import consulo.annotation.component.ServiceAPI;
+import consulo.dataContext.DataContext;
 
-import javax.swing.*;
-
-@ExtensionAPI(ComponentScope.PROJECT)
-public interface IdeRootPaneNorthExtension extends Disposable {
-    Class<? extends IdeRootPaneNorthExtension> getApiClass();
-
-    JComponent getComponent();
-
-    void uiSettingsChanged(UISettings settings);
-
-    IdeRootPaneNorthExtension copy();
-
-    default void revalidate() {
-    }
+/**
+ * @author VISTALL
+ * @since 2024-11-27
+ */
+@ServiceAPI(ComponentScope.PROJECT)
+public interface EmbeddedNavService {
+    void show(DataContext context);
 }

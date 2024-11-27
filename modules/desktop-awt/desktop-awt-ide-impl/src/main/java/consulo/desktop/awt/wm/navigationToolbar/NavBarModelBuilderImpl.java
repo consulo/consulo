@@ -1,15 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.navigationToolbar;
+package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.ide.navigationToolbar.NavBarModelExtension;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.navigationToolbar.NavBarModelExtensions;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public class NavBarModelBuilderImpl extends NavBarModelBuilder {
   }
 
   protected static PsiElement normalize(@Nullable PsiElement e) {
-    return NavBarModel.normalize(getOriginalElement(e));
+    return NavBarModelExtensions.normalize(getOriginalElement(e));
   }
 
   @Nullable
@@ -50,7 +51,7 @@ public class NavBarModelBuilderImpl extends NavBarModelBuilder {
     if (ownerExtension != null) {
       return originalElement != null ? ownerExtension.adjustElement(originalElement) : null;
     }
-    return NavBarModel.normalize(originalElement);
+    return NavBarModelExtensions.normalize(originalElement);
   }
 
   @Nullable

@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.navigationToolbar.ui;
+package consulo.desktop.awt.wm.navigationToolbar.ui;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class CommonNavBarUI extends AbstractNavBarUI {
+public class NavBarUIManager {
+  public static final NavBarUI COMMON = new CommonNavBarUI();
+
+  public static NavBarUI getUI() {
+    return COMMON;
+  }
 }

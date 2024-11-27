@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.navigationToolbar.ui;
+package consulo.desktop.awt.wm.navigationToolbar.ui;
 
 import consulo.application.AllIcons;
 import consulo.application.ui.UISettings;
-import consulo.ide.impl.idea.ide.navigationToolbar.NavBarItem;
-import consulo.ide.impl.idea.ide.navigationToolbar.NavBarPanel;
+import consulo.desktop.awt.wm.navigationToolbar.NavBarItem;
+import consulo.desktop.awt.wm.navigationToolbar.NavBarPanel;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBInsets;

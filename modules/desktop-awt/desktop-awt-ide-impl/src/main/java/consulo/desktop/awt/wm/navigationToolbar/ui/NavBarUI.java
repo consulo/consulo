@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.navigationToolbar.ui;
+package consulo.desktop.awt.wm.navigationToolbar.ui;
 
-import consulo.ide.impl.idea.ide.navigationToolbar.NavBarItem;
-import consulo.ide.impl.idea.ide.navigationToolbar.NavBarPanel;
+import consulo.desktop.awt.wm.navigationToolbar.NavBarItem;
+import consulo.desktop.awt.wm.navigationToolbar.NavBarPanel;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

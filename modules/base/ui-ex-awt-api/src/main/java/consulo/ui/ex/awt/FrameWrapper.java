@@ -262,7 +262,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     return getPeerFactory().createJDialog(this, parent);
   }
 
-  public IdeRootPaneNorthExtension getNorthExtension(String key) {
+  public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
     return null;
   }
 

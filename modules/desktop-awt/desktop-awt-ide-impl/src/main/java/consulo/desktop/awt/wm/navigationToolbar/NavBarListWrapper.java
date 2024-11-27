@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.navigationToolbar;
+package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.PlatformDataKeys;

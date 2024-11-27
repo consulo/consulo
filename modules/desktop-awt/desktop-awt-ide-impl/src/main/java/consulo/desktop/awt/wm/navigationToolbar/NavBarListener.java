@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.navigationToolbar;
+package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.application.ApplicationManager;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
@@ -26,6 +25,7 @@ import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.ide.actions.CopyAction;
 import consulo.ide.impl.idea.ide.actions.CutAction;
+import consulo.ide.impl.idea.ide.navigationToolbar.NavBarModelListener;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.psi.PsiManager;
@@ -35,14 +35,12 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;

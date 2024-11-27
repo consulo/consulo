@@ -1,5 +1,5 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.navigationToolbar;
+package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
@@ -8,13 +8,12 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.wm.navigationToolbar.ui.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
-import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUI;
-import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUIManager;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
@@ -314,8 +313,8 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
       item.update();
     }
     if (UISettings.getInstance().getShowNavigationBar()) {
-      NavBarRootPaneExtension.NavBarWrapperPanel wrapperPanel =
-        ComponentUtil.getParentOfType(NavBarRootPaneExtension.NavBarWrapperPanel.class, this);
+      NavBarRootPaneExtensionImpl.NavBarWrapperPanel wrapperPanel =
+        ComponentUtil.getParentOfType(NavBarRootPaneExtensionImpl.NavBarWrapperPanel.class, this);
 
       if (wrapperPanel != null) {
         wrapperPanel.revalidate();

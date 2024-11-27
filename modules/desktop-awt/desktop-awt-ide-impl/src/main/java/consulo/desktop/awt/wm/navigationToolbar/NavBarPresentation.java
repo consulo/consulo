@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.navigationToolbar;
+package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
@@ -25,6 +25,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiDirectory;
@@ -37,7 +38,6 @@ import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.project.Project;
-import consulo.language.content.ProjectRootsUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBUI;
@@ -46,7 +46,6 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

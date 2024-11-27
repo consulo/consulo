@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.navigationToolbar;
+package consulo.desktop.awt.wm.navigationToolbar.ui;
 
 import consulo.application.ui.UISettings;
+import consulo.desktop.awt.wm.navigationToolbar.NavBarRootPaneExtensionImpl;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.JBInsets;
 
@@ -37,7 +38,7 @@ public class NavBarBorder implements Border {
   @Override
   public Insets getBorderInsets(final Component c) {
     if (!UISettings.getInstance().SHOW_MAIN_TOOLBAR) {
-      if (NavBarRootPaneExtension.runToolbarExists()) {
+      if (NavBarRootPaneExtensionImpl.runToolbarExists()) {
         return new JBInsets(1, 0, 1, 4);
       }
 

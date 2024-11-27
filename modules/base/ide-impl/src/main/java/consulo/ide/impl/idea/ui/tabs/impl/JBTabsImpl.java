@@ -84,8 +84,6 @@ public abstract class JBTabsImpl extends JComponent
 
   public static final Key<Integer> SIDE_TABS_SIZE_LIMIT_KEY = Key.create("SIDE_TABS_SIZE_LIMIT_KEY");
 
-  public static final Color MAC_AQUA_BG_COLOR = Gray._200;
-
   final ActionManager myActionManager;
   private final List<TabInfo> myVisibleInfos = new ArrayList<>();
   private final Map<TabInfo, Integer> myHiddenInfos = new HashMap<>();

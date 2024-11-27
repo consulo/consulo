@@ -164,10 +164,6 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         setTitle(title);
     }
 
-    public IdeRootPaneNorthExtension getNorthExtension(String key) {
-        return null;
-    }
-
     public JComponent getComponent() {
         return getRootPane();
     }

@@ -31,7 +31,6 @@ import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
-import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -428,8 +427,9 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     }
 
     @Override
-    public IdeRootPaneNorthExtension getNorthExtension(String key) {
-        return myRootPane.findByName(key);
+    @SuppressWarnings("unchecked")
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+        return (E) myRootPane.findExtension(extensioClass);
     }
 
     private void updateTitle() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.navigationToolbar.ui;
+package consulo.project.ui.wm;
 
 /**
- * @author Konstantin Bulenkov
+ * @author VISTALL
+ * @since 2024-11-27
  */
-public class NavBarUIManager {
-  public static final NavBarUI COMMON = new CommonNavBarUI();
-
-  public static NavBarUI getUI() {
-    return COMMON;
-  }
+public interface NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
+    void rebuildAndSelectTail();
 }

@@ -400,7 +400,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.impl.dataRules;
   exports consulo.ide.impl.idea.ide.macro;
   exports consulo.ide.impl.idea.ide.navigationToolbar;
-  exports consulo.ide.impl.idea.ide.navigationToolbar.ui;
   exports consulo.ide.impl.idea.ide.plugins;
   exports consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
   exports consulo.ide.impl.idea.ide.plugins.sorters;
