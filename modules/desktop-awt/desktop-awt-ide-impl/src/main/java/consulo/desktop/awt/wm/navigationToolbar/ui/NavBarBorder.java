@@ -46,10 +46,10 @@ public class NavBarBorder implements Border {
     public Insets getBorderInsets(final Component c) {
         if (!UISettings.getInstance().SHOW_MAIN_TOOLBAR) {
             if (NavBarRootPaneExtensionImpl.runToolbarExists()) {
-                return new JBInsets(1, myTitlelessDecorator.getExtraTopLeftPadding(), 1, 4);
+                return new JBInsets(1 + myTitlelessDecorator.getExtraTopTopPadding(), myTitlelessDecorator.getExtraTopLeftPadding(), 1, 4);
             }
 
-            return new JBInsets(0, myTitlelessDecorator.getExtraTopLeftPadding(), 0, 4);
+            return new JBInsets(myTitlelessDecorator.getExtraTopTopPadding(), myTitlelessDecorator.getExtraTopLeftPadding(), 0, 4);
         }
 
         return new JBInsets(1, 0, 0, 4);

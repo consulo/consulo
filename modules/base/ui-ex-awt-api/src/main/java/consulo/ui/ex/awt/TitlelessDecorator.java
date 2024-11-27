@@ -57,7 +57,12 @@ public interface TitlelessDecorator {
 
         @Override
         public int getExtraTopLeftPadding() {
-            return 60;
+            return 64;
+        }
+
+        @Override
+        public int getExtraTopTopPadding() {
+            return 1;
         }
     }
 
@@ -74,6 +79,11 @@ public interface TitlelessDecorator {
         public int getExtraTopLeftPadding() {
             return 0;
         }
+
+        @Override
+        public int getExtraTopTopPadding() {
+            return 0;
+        }
     };
 
     void install(Window window);
@@ -81,4 +91,6 @@ public interface TitlelessDecorator {
     void makeLeftComponentLower(JComponent component);
 
     int getExtraTopLeftPadding();
+
+    int getExtraTopTopPadding();
 }

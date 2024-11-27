@@ -269,6 +269,8 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
         myJFrame.setFocusTraversalPolicy(new IdeFocusTraversalPolicy());
 
+        myTitlelessDecorator.install(myJFrame);
+
         setupCloseAction();
         MnemonicHelper.init(myJFrame);
 

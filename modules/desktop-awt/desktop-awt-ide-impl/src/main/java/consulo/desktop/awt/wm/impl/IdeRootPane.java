@@ -187,7 +187,8 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
 
             @Override
             public Insets getBorderInsets(Component c) {
-                return JBUI.insets(0, myFrame.getTitlelessDecorator().getExtraTopLeftPadding(), 0, 0);
+                TitlelessDecorator decorator = myFrame.getTitlelessDecorator();
+                return JBUI.insets(decorator.getExtraTopTopPadding(), decorator.getExtraTopLeftPadding(), 0, 0);
             }
 
             @Override
