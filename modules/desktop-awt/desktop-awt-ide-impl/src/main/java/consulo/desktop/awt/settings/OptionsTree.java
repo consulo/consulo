@@ -91,7 +91,6 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
                 }
             }
 
-            setBackground(Color.RED);
             return this;
         }
     }

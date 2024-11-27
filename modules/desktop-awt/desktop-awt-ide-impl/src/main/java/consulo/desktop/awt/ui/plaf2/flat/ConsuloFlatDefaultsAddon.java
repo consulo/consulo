@@ -19,10 +19,10 @@ import com.formdev.flatlaf.FlatDefaultsAddon;
 import consulo.desktop.awt.ui.plaf.BasicStatusBarUI;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaEditorTextFieldUI;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
+import consulo.desktop.awt.ui.plaf2.DefaultTreeUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
-import consulo.desktop.awt.ui.plaf2.DefaultTreeUI;
 
 import javax.swing.*;
 import java.awt.*;
