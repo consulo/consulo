@@ -10,13 +10,24 @@ import javax.swing.*;
 
 public class NewItemPopupUtil {
 
-  private NewItemPopupUtil() {
-  } //just don't do it
+    private NewItemPopupUtil() {
+    }
 
-  public static JBPopup createNewItemPopup(@Nonnull String title, @Nonnull JComponent content, @Nullable JComponent preferableFocusComponent) {
-    return JBPopupFactory.getInstance().createComponentPopupBuilder(content, preferableFocusComponent).setTitle(title).setResizable(false).setModalContext(true).setFocusable(true)
-            .setRequestFocus(true).setMovable(true).setBelongsToGlobalPopupStack(true).setCancelKeyEnabled(true).setCancelOnWindowDeactivation(false).setCancelOnClickOutside(true)
-            .addUserData("SIMPLE_WINDOW").createPopup();
-
-  }
+    public static JBPopup createNewItemPopup(@Nonnull String title,
+                                             @Nonnull JComponent content,
+                                             @Nullable JComponent preferableFocusComponent) {
+        return JBPopupFactory.getInstance().createComponentPopupBuilder(content, preferableFocusComponent)
+            .setTitle(title)
+            .setResizable(false)
+            .setModalContext(true)
+            .setFocusable(true)
+            .setRequestFocus(true)
+            .setMovable(true)
+            .setBelongsToGlobalPopupStack(true)
+            .setCancelKeyEnabled(true)
+            .setCancelOnWindowDeactivation(false)
+            .setCancelOnClickOutside(true)
+            .addUserData("SIMPLE_WINDOW")
+            .createPopup();
+    }
 }
