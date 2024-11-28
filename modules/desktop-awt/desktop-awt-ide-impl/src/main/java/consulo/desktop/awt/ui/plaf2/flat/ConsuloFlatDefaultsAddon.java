@@ -59,6 +59,8 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
             uiDefaults.put("ScrollBar.thumbInsets", new Insets(1, 1, 1, 1));
         }
 
+        uiDefaults.put("Menu.selectedArrowIcon", new FlatSelectedMenuArrowIcon());
+
         if ("FlatGrayIJTheme".equals(laf.getClass().getSimpleName())) {
             uiDefaults.put("Component.arrowType", "chevron");
         }

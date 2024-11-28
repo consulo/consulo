@@ -140,7 +140,7 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
 
         if (step.hasSubstep(value) && isSelectable) {
             myNextStepLabel.setVisible(true);
-            myNextStepLabel.setIcon(UIUtil.getTreeCollapsedIcon());
+            myNextStepLabel.setIcon(UIUtil.getMenuArrowIcon(isSelected));
         }
         else {
             myNextStepLabel.setVisible(false);

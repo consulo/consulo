@@ -1394,6 +1394,16 @@ public class UIUtil {
         return UIManager.getIcon("Tree.expandedIcon");
     }
 
+    public static Icon getMenuArrowIcon(boolean selected) {
+        if (selected) {
+            Icon icon = UIManager.getIcon("Menu.selectedArrowIcon");
+            if (icon != null) {
+                return icon;
+            }
+        }
+        return UIManager.getIcon("Menu.arrowIcon");
+    }
+
     public static Icon getTreeIcon(boolean expanded) {
         return expanded ? getTreeExpandedIcon() : getTreeCollapsedIcon();
     }

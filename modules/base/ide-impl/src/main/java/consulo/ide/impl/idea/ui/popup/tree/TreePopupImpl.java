@@ -427,7 +427,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
         final boolean hasNextStep = getTreeStep().hasSubstep(extractUserObject(lastPathComponent));
         if (!hasNextStep) continue;
 
-        Icon icon = UIUtil.getTreeCollapsedIcon();
+        Icon icon = UIUtil.getMenuArrowIcon(isPathSelected(eachPath));
         final Rectangle rec = getPathBounds(eachPath);
         int x = getSize().width - icon.getIconWidth() - 1;
         int y = rec.y + (rec.height - icon.getIconWidth()) / 2;

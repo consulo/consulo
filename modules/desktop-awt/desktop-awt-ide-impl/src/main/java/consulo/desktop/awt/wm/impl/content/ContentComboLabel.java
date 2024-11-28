@@ -15,13 +15,12 @@
  */
 package consulo.desktop.awt.wm.impl.content;
 
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.content.Content;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.popup.JBPopup;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
@@ -136,7 +135,6 @@ public class ContentComboLabel extends BaseLabel {
     super.paintChildren(g);
     if (isToDrawCombo()) {
       myComboIcon.paintIcon(this, g);
-      g.setColor(Gray._255.withAlpha(100));
     }
   }
 
