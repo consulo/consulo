@@ -64,5 +64,8 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         if ("FlatGrayIJTheme".equals(laf.getClass().getSimpleName())) {
             uiDefaults.put("Component.arrowType", "chevron");
         }
+
+        uiDefaults.put("TitlePane.titleMargins", new Insets(3, 0, 3, 6));
+        uiDefaults.put("TitlePane.centerTitle", true);
     }
 }

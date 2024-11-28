@@ -28,12 +28,55 @@ import java.awt.*;
  * @since 2024-11-26
  */
 public interface TitlelessDecorator {
+    String MAIN_WINDOW = "MainWindow";
+
     static TitlelessDecorator of(@Nonnull JRootPane pane) {
+        return of(pane, "");
+    }
+
+    static TitlelessDecorator of(@Nonnull JRootPane pane, @Nonnull String windowId) {
         if (Platform.current().os().isMac()) {
             return new MacFrameDecorator(pane);
         }
 
+        if (!MAIN_WINDOW.equals(windowId) && Platform.current().os().isWindows()) {
+            return new WindowsFameDecorator(pane);
+        }
+
         return NOTHING;
+    }
+
+    class WindowsFameDecorator implements TitlelessDecorator {
+        private final JRootPane myRootPane;
+
+        public WindowsFameDecorator(JRootPane rootPane) {
+            myRootPane = rootPane;
+        }
+
+        @Override
+        public void install(Window window) {
+            myRootPane.putClientProperty("FlatLaf.fullWindowContent", true);
+        }
+
+        @Override
+        public void makeLeftComponentLower(JComponent component) {
+
+        }
+
+        @Override
+        public void makeRightComponentLower(JComponent component) {
+            component.setBorder(JBUI.Borders.empty(28, 0, 0, 0));
+        }
+
+        @Override
+        public int getExtraTopLeftPadding() {
+            return 0;
+        }
+
+        @Override
+        public int getExtraTopTopPadding() {
+            return 0;
+        }
     }
 
     class MacFrameDecorator implements TitlelessDecorator {
@@ -53,6 +96,10 @@ public interface TitlelessDecorator {
         @Override
         public void makeLeftComponentLower(JComponent component) {
             component.setBorder(JBUI.Borders.empty(26, 0, 0, 0));
+        }
+
+        @Override
+        public void makeRightComponentLower(JComponent component) {
         }
 
         @Override
@@ -76,6 +123,11 @@ public interface TitlelessDecorator {
         }
 
         @Override
+        public void makeRightComponentLower(JComponent component) {
+
+        }
+
+        @Override
         public int getExtraTopLeftPadding() {
             return 0;
         }
@@ -89,6 +141,8 @@ public interface TitlelessDecorator {
     void install(Window window);
 
     void makeLeftComponentLower(JComponent component);
+
+    void makeRightComponentLower(JComponent component);
 
     int getExtraTopLeftPadding();
 

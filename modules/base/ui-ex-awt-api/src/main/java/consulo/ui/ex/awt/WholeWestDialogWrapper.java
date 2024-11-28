@@ -126,6 +126,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
 
     final JComponent second = splitterComponents.getSecond();
     assert second != null;
+    myTitlelessDecorator.makeRightComponentLower(second);
     rightComponent.add(second, BorderLayout.CENTER);
     myErrorPane = second;
 

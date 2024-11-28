@@ -85,8 +85,6 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
   private final Disposable myListenerDisposable = Disposable.newDisposable();
   private final List<ToggleActionButton> myToggleRuleActions = new ArrayList<>();
 
-  private final TitlelessDecorator myTitlelessDecorator;
-
   private XBreakpointManagerImpl getBreakpointManager() {
     return (XBreakpointManagerImpl)XDebuggerManager.getInstance(myProject).getBreakpointManager();
   }
@@ -96,7 +94,6 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     myProject = project;
     myBreakpointsPanelProviders = providers;
     myInitialBreakpoint = breakpoint;
-    myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
 
     collectGroupingRules();
 
@@ -319,7 +316,6 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
       provider.addListener(listener, myProject, myListenerDisposable);
     }
 
-    myTitlelessDecorator.makeLeftComponentLower(panel);
     return panel;
   }
 

@@ -665,6 +665,8 @@ public class RunConfigurable extends BaseConfigurable {
 
         JPanel leftPanel = createLeftPanel();
         myTitlelessDecorator.makeLeftComponentLower(leftPanel);
+        myTitlelessDecorator.makeRightComponentLower(myRightPanel);
+
         mySplitter.setFirstComponent(leftPanel);
         mySplitter.setSecondComponent(myRightPanel);
         myWholePanel.add(mySplitter, BorderLayout.CENTER);

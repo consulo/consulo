@@ -256,7 +256,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myJFrame.setTitle(FrameTitleUtil.buildTitle());
         myRootPane = createRootPane(actionManager, dataManager, application);
         myJFrame.setRootPane(myRootPane);
-        myTitlelessDecorator = TitlelessDecorator.of(myRootPane);
+        myTitlelessDecorator = TitlelessDecorator.of(myRootPane, TitlelessDecorator.MAIN_WINDOW);
         myJFrame.setBackground(UIUtil.getPanelBackground());
         AppIconUtil.updateWindowIcon(myJFrame);
         final Dimension size = ScreenUtil.getMainScreenBounds().getSize();
