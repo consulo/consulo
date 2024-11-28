@@ -277,22 +277,22 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         }
       }
 
-      realPoint = new Point(-(AllIcons.Actions.RealIntentionBulb.getWidth() / 2) - 4, -(AllIcons.Actions.RealIntentionBulb.getHeight() / 2));
+      realPoint = new Point(-(Image.DEFAULT_ICON_SIZE / 2) - 4, -(Image.DEFAULT_ICON_SIZE / 2));
     }
     else {
       Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
       if (position.y < visibleArea.y || position.y >= visibleArea.y + visibleArea.height) return null;
 
       // try to place bulb on the same line
-      int yShift = -(NORMAL_BORDER_SIZE + AllIcons.Actions.RealIntentionBulb.getHeight());
+      int yShift = -(NORMAL_BORDER_SIZE + Image.DEFAULT_ICON_SIZE);
       if (canPlaceBulbOnTheSameLine(editor)) {
-        yShift = -(NORMAL_BORDER_SIZE + (AllIcons.Actions.RealIntentionBulb.getHeight() - editor.getLineHeight()) / 2 + 3);
+        yShift = -(NORMAL_BORDER_SIZE + (Image.DEFAULT_ICON_SIZE - editor.getLineHeight()) / 2 + 3);
       }
       else if (position.y < visibleArea.y + editor.getLineHeight()) {
         yShift = editor.getLineHeight() - NORMAL_BORDER_SIZE;
       }
 
-      final int xShift = AllIcons.Actions.RealIntentionBulb.getWidth();
+      final int xShift = Image.DEFAULT_ICON_SIZE;
 
       realPoint = new Point(Math.max(0, visibleArea.x - xShift), position.y + yShift);
     }
@@ -311,7 +311,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     final int firstNonSpaceColumnOnTheLine = EditorActionUtil.findFirstNonSpaceColumnOnTheLine(editor, line);
     if (firstNonSpaceColumnOnTheLine == -1) return false;
     final Point point = editor.visualPositionToXY(new VisualPosition(line, firstNonSpaceColumnOnTheLine));
-    return point.x > AllIcons.Actions.RealIntentionBulb.getWidth() + (editor.isOneLineMode() ? SMALL_BORDER_SIZE : NORMAL_BORDER_SIZE) * 2;
+    return point.x > Image.DEFAULT_ICON_SIZE + (editor.isOneLineMode() ? SMALL_BORDER_SIZE : NORMAL_BORDER_SIZE) * 2;
   }
 
   private IntentionHintComponent(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull final Editor editor, @Nonnull CachedIntentions cachedIntentions) {

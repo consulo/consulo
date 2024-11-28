@@ -567,10 +567,8 @@
         </group>
         <separator/>
         <group id="FindMenuGroup" popup="true">
-          <action id="Find" class="consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction"
-                  icon="consulo.platform.base.PlatformIconGroup@actions.search"/>
-          <action id="Replace" class="consulo.ide.impl.idea.openapi.editor.actions.ReplaceAction"
-                  icon="consulo.platform.base.PlatformIconGroup@actions.menu_replace"/>
+          <action id="Find" class="consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction"/>
+          <action id="Replace" class="consulo.ide.impl.idea.openapi.editor.actions.ReplaceAction"/>
           <action id="FindNext" class="consulo.ide.impl.idea.ide.actions.SearchAgainAction"/>
           <action id="FindPrevious" class="consulo.ide.impl.idea.ide.actions.SearchBackAction"/>
           <action id="FindWordAtCaret" class="consulo.ide.impl.idea.openapi.editor.actions.FindWordAtCaretAction"/>

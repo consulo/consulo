@@ -81,7 +81,6 @@ public class AllIcons {
     public static final Image Menu_help = PlatformIconGroup.actionsMenu_help(); // 16x16
     public static final Image Menu_open = PlatformIconGroup.actionsMenu_open(); // 16x16
     public static final Image Menu_paste = PlatformIconGroup.actionsMenu_paste(); // 16x16
-    public static final Image Menu_replace = PlatformIconGroup.actionsMenu_replace(); // 16x16
     public static final Image Menu_saveall = PlatformIconGroup.actionsMenu_saveall(); // 16x16
     public static final Image Module = PlatformIconGroup.actionsModule(); // 16x16
     public static final Image More = PlatformIconGroup.actionsMorevertical();
@@ -103,7 +102,6 @@ public class AllIcons {
     public static final Image QuickfixBulb = PlatformIconGroup.actionsQuickfixbulb(); // 16x16
     public static final Image QuickfixOffBulb = PlatformIconGroup.actionsQuickfixoffbulb(); // 16x16
     public static final Image QuickList = PlatformIconGroup.actionsQuicklist(); // 16x16
-    public static final Image RealIntentionBulb = PlatformIconGroup.actionsRealintentionbulb(); // 16x16
     public static final Image Redo = PlatformIconGroup.actionsRedo(); // 16x16
     public static final Image RefactoringBulb = PlatformIconGroup.actionsRefactoringbulb(); // 16x16
     public static final Image Refresh = PlatformIconGroup.actionsRefresh(); // 16x16

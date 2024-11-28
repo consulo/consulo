@@ -1,39 +1,38 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.application.AllIcons;
+import consulo.codeEditor.Editor;
+import consulo.component.util.Iconable;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
+import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
+import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.impl.internal.intention.IntentionManagerSettings;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.inspection.PriorityAction;
+import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.language.editor.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionDelegate;
-import consulo.language.editor.inspection.PriorityAction;
-import consulo.language.editor.impl.internal.intention.IntentionManagerSettings;
-import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
-import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
-import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;
-import consulo.application.AllIcons;
-import consulo.codeEditor.Editor;
 import consulo.language.file.FileViewProvider;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.component.util.Iconable;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.logging.Logger;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -385,11 +384,11 @@ public class CachedIntentions {
     }
 
     if (IntentionManagerSettings.getInstance().isShowLightBulb(action)) {
-      return myErrorFixes.contains(value) ? AllIcons.Actions.QuickfixBulb : myInspectionFixes.contains(value) ? AllIcons.Actions.IntentionBulb : AllIcons.Actions.RealIntentionBulb;
+      return myErrorFixes.contains(value) ? AllIcons.Actions.QuickfixBulb : myInspectionFixes.contains(value) ? AllIcons.Actions.IntentionBulb : Image.empty(Image.DEFAULT_ICON_SIZE);
     }
     else {
       if (myErrorFixes.contains(value)) return AllIcons.Actions.QuickfixOffBulb;
-      return ImageEffects.grayed(AllIcons.Actions.RealIntentionBulb);
+      return Image.empty(Image.DEFAULT_ICON_SIZE);
     }
   }
 
