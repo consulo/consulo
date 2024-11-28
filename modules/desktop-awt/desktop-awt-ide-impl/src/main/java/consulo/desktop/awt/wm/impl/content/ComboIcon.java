@@ -15,10 +15,8 @@
  */
 package consulo.desktop.awt.wm.impl.content;
 
-import consulo.desktop.awt.ui.IconLookup;
+import com.formdev.flatlaf.icons.FlatTreeExpandedIcon;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,14 +25,14 @@ public abstract class ComboIcon {
   private final Icon myImage;
 
   public ComboIcon() {
-    myImage = TargetAWT.to(ImageEffects.resize(TargetAWT.from(IconLookup.get().getIcon("treeExpanded", false, false, true)), 11, 9));
+    myImage = new FlatTreeExpandedIcon();
   }
 
   public void paintIcon(final Component c, final Graphics g) {
     Rectangle bounds = c.getBounds();
 
     // we need it move to center of label text, not label
-    int borderTop = JBUI.scale(5);
+    int borderTop = JBUI.scale(3);
     myImage.paintIcon(c, g, bounds.x + bounds.width - myImage.getIconWidth(), bounds.y + myImage.getIconHeight() / 2 + borderTop);
   }
 

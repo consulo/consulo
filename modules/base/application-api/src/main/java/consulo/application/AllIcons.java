@@ -74,7 +74,6 @@ public class AllIcons {
     public static final Image Help = PlatformIconGroup.actionsHelp(); // 16x16
     public static final Image Install = PlatformIconGroup.actionsInstall(); // 16x16
     public static final Image IntentionBulb = PlatformIconGroup.actionsIntentionbulb(); // 16x16
-    public static final Image Left = PlatformIconGroup.actionsLeft(); // 16x16
     public static final Image LoginAvator = PlatformIconGroup.actionsLoginavatar(); // 16x16
     public static final Image Lightning = PlatformIconGroup.actionsLightning(); // 16x16
     public static final Image Menu_cut = PlatformIconGroup.actionsMenu_cut(); // 16x16
@@ -110,7 +109,6 @@ public class AllIcons {
     public static final Image Rerun = PlatformIconGroup.actionsRerun(); // 16x16
     public static final Image Restart = PlatformIconGroup.actionsRestart(); // 16x16
     public static final Image Resume = PlatformIconGroup.actionsResume(); // 16x16
-    public static final Image Right = PlatformIconGroup.actionsRight(); // 16x16
     public static final Image Rollback = PlatformIconGroup.actionsRollback(); // 16x16
     public static final Image RunToCursor = PlatformIconGroup.actionsRuntocursor(); // 16x16
     public static final Image Run_anything = PlatformIconGroup.actionsRun_anything();
