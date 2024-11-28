@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.util.lang.Pair;
 
 import javax.swing.*;
@@ -134,12 +133,12 @@ public class TreeExpandableItemsHandler extends AbstractExpandableItemsHandler<I
 
   @Override
   protected Dimension getImageSize(int width, int height) {
-    return new Dimension(width, WideSelectionTreeUI.isWideSelection(myComponent) ? height - 1 : height);
+      return new Dimension(width, height - 1);
   }
 
   @Override
   protected void doFillBackground(final int height, final int width, final Graphics2D g) {
-    super.doFillBackground(WideSelectionTreeUI.isWideSelection(myComponent) ? height - 1 : height, width, g);
+      super.doFillBackground(height - 1, width, g);
   }
 
   @Override

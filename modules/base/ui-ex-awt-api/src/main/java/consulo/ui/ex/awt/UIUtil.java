@@ -36,7 +36,6 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awt.util.StringHtmlUtil;
 import consulo.ui.ex.util.LafProperty;
-import consulo.ui.image.ImageKey;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
@@ -262,10 +261,6 @@ public class UIUtil {
 
     private static final GrayFilter DEFAULT_GRAY_FILTER = new GrayFilter(true, 65);
     private static final GrayFilter DARCULA_GRAY_FILTER = new GrayFilter(true, 30);
-
-    public static GrayFilter getGrayFilter() {
-        return getGrayFilter(isUnderDarkTheme());
-    }
 
     public static GrayFilter getGrayFilter(boolean dark) {
         return dark ? DARCULA_GRAY_FILTER : DEFAULT_GRAY_FILTER;
@@ -1403,27 +1398,12 @@ public class UIUtil {
         return expanded ? getTreeExpandedIcon() : getTreeCollapsedIcon();
     }
 
-    private static final ImageKey selectedCollapsedIcon =
-        ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeCollapsedSelected", 9, 11);
-
     public static Icon getTreeSelectedCollapsedIcon() {
-        Icon icon = UIManager.getIcon("Tree.collapsedSelectedIcon");
-        if (icon != null) {
-            return icon;
-        }
-        return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedCollapsedIcon : getTreeCollapsedIcon();
+        return getTreeCollapsedIcon();
     }
 
-    private static final ImageKey selectedExpandedIcon =
-        ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeExpandedSelected", 11, 9);
-
     public static Icon getTreeSelectedExpandedIcon() {
-        Icon icon = UIManager.getIcon("Tree.expandedSelectedIcon");
-        if (icon != null) {
-            return icon;
-        }
-
-        return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedExpandedIcon : getTreeExpandedIcon();
+        return getTreeExpandedIcon();
     }
 
     public static Border getTableHeaderCellBorder() {
@@ -1445,20 +1425,6 @@ public class UIUtil {
     @SuppressWarnings({"HardCodedStringLiteral"})
     @Deprecated
     @DeprecationInfo(value = "Look & Feel is not supported")
-    public static boolean isUnderWindowsLookAndFeel() {
-        return UIManager.getLookAndFeel().getName().equals("Windows");
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    @Deprecated
-    @DeprecationInfo(value = "Look & Feel is not supported")
-    public static boolean isUnderWindowsClassicLookAndFeel() {
-        return UIManager.getLookAndFeel().getName().equals("Windows Classic");
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    @Deprecated
-    @DeprecationInfo(value = "Look & Feel is not supported")
     public static boolean isUnderNimbusLookAndFeel() {
         return false;
     }
@@ -1466,11 +1432,11 @@ public class UIUtil {
     @SuppressWarnings({"HardCodedStringLiteral"})
     @Deprecated
     public static boolean isUnderAquaLookAndFeel() {
-        return Platform.current().os().isMac() && UIManager.getLookAndFeel().getName().contains("Mac OS X");
+        return false;
     }
 
     public static boolean isUnderAquaBasedLookAndFeel() {
-        return Platform.current().os().isMac() && (isUnderAquaLookAndFeel() || isUnderDarkBuildInLaf());
+        return false;
     }
 
     @Deprecated
@@ -2424,10 +2390,6 @@ public class UIUtil {
         }
         @NonNls String link = linkColor != null ? "a {" + fontFamilyAndSize + " color:" + ColorUtil.toHex(linkColor) + "}" : "";
         return "<style> " + body + " " + link + "</style>";
-    }
-
-    public static boolean isWinLafOnVista() {
-        return SystemInfo.isWinVistaOrNewer && "Windows".equals(UIManager.getLookAndFeel().getName());
     }
 
     public static Color getFocusedFillColor() {

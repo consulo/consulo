@@ -20,7 +20,6 @@ import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.*;
 import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.desktop.awt.ui.IconLookup;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

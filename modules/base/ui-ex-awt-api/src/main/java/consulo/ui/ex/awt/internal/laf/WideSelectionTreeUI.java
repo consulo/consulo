@@ -306,11 +306,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     return myWideSelection;
   }
 
-  public static boolean isWideSelection(@Nonnull JTree tree) {
-     return true;
-  }
-
-  @Override
+    @Override
   protected void paintRow(final Graphics g,
                           final Rectangle clipBounds,
                           final Insets insets,

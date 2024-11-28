@@ -162,8 +162,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
     new DoubleClickListener() {
       @Override
       protected boolean onDoubleClick(MouseEvent e) {
-        TreePath clickPath =
-          getUI() instanceof WideSelectionTreeUI ? getClosestPathForLocation(e.getX(), e.getY()) : getPathForLocation(e.getX(), e.getY());
+        TreePath clickPath = getClosestPathForLocation(e.getX(), e.getY());
         if (clickPath == null) return false;
 
         final int row = getRowForLocation(e.getPoint().x, e.getPoint().y);

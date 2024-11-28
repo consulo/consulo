@@ -16,10 +16,9 @@
 package consulo.ui.ex.awt.tree.table;
 
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.tree.Tree;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
@@ -32,116 +31,113 @@ import java.awt.event.KeyEvent;
  * author: lesya
  */
 public class TreeTableTree extends Tree {
-  private Border myBorder;
-  private final TreeTable myTreeTable;
-  private int myVisibleRow;
-  private boolean myCellFocused;
+    public static final String TREE_TABLE_TREE_KEY = "TreeTableTree";
+
+    private Border myBorder;
+    private final TreeTable myTreeTable;
+    private int myVisibleRow;
+    private boolean myCellFocused;
 
 
-  public TreeTableTree(TreeModel model, TreeTable treeTable) {
-    super(model);
-    myTreeTable = treeTable;
-    setCellRenderer(getCellRenderer());
-    putClientProperty(WideSelectionTreeUI.TREE_TABLE_TREE_KEY, treeTable);
-  }
-
-  public TreeTable getTreeTable() {
-    return myTreeTable;
-  }
-
-  @Override
-  public void updateUI() {
-    super.updateUI();
-    TreeCellRenderer tcr = super.getCellRenderer();
-    if (tcr instanceof DefaultTreeCellRenderer) {
-      DefaultTreeCellRenderer dtcr = (DefaultTreeCellRenderer)tcr;
-      dtcr.setTextSelectionColor(UIUtil.getTableSelectionForeground());
-      dtcr.setBackgroundSelectionColor(UIUtil.getTableSelectionBackground());
+    public TreeTableTree(TreeModel model, TreeTable treeTable) {
+        super(model);
+        myTreeTable = treeTable;
+        setCellRenderer(getCellRenderer());
+        putClientProperty(TREE_TABLE_TREE_KEY, treeTable);
     }
-  }
 
-  @Override
-  protected final boolean isWideSelection() {
-    return UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF();
-  }
-
-  @Override
-  public void setRowHeight(int rowHeight) {
-    if (rowHeight > 0) {
-      super.setRowHeight(rowHeight);
-      if (myTreeTable != null && myTreeTable.getRowHeight() != rowHeight) {
-        myTreeTable.setRowHeight(getRowHeight());
-      }
+    public TreeTable getTreeTable() {
+        return myTreeTable;
     }
-  }
 
-  @Override
-  public void setBounds(int x, int y, int w, int h) {
-    super.setBounds(x, 0, w, myTreeTable.getHeight());
-  }
-
-  @Override
-  public void paint(Graphics g) {
-    putClientProperty("JTree.lineStyle", "None");
-    Graphics g1 = g.create();
-    g1.translate(0, -myVisibleRow * getRowHeight());
-    super.paint(g1);
-    g1.dispose();
-    if (myBorder != null) {
-      myBorder.paintBorder(this, g, 0, 0, myTreeTable.getWidth(), getRowHeight());
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        TreeCellRenderer tcr = super.getCellRenderer();
+        if (tcr instanceof DefaultTreeCellRenderer) {
+            DefaultTreeCellRenderer dtcr = (DefaultTreeCellRenderer) tcr;
+            dtcr.setTextSelectionColor(UIUtil.getTableSelectionForeground());
+            dtcr.setBackgroundSelectionColor(UIUtil.getTableSelectionBackground());
+        }
     }
-  }
 
-  @Override
-  public void setBorder(Border border) {
-    super.setBorder(border);
-    myBorder = border;
-  }
+    @Override
+    public void setRowHeight(int rowHeight) {
+        if (rowHeight > 0) {
+            super.setRowHeight(rowHeight);
+            if (myTreeTable != null && myTreeTable.getRowHeight() != rowHeight) {
+                myTreeTable.setRowHeight(getRowHeight());
+            }
+        }
+    }
 
-  public void setTreeTableTreeBorder(Border border) {
-    myBorder = border;
-  }
+    @Override
+    public void setBounds(int x, int y, int w, int h) {
+        super.setBounds(x, 0, w, myTreeTable.getHeight());
+    }
 
-  public void setVisibleRow(int row) {
-    myVisibleRow = row;
-    final Rectangle rowBounds = getRowBounds(myVisibleRow);
-    final int indent = rowBounds.x - getVisibleRect().x - getTreeColumnOffsetX();
-    setPreferredSize(new Dimension(getRowBounds(myVisibleRow).width + indent, getPreferredSize().height));
-  }
+    @Override
+    public void paint(Graphics g) {
+        putClientProperty("JTree.lineStyle", "None");
+        Graphics g1 = g.create();
+        g1.translate(0, -myVisibleRow * getRowHeight());
+        super.paint(g1);
+        g1.dispose();
+        if (myBorder != null) {
+            myBorder.paintBorder(this, g, 0, 0, myTreeTable.getWidth(), getRowHeight());
+        }
+    }
 
-  public void _processKeyEvent(KeyEvent e) {
-    super.processKeyEvent(e);
-  }
+    @Override
+    public void setBorder(Border border) {
+        super.setBorder(border);
+        myBorder = border;
+    }
 
-  public void setCellFocused(boolean focused) {
-    myCellFocused = focused;
-  }
+    public void setTreeTableTreeBorder(Border border) {
+        myBorder = border;
+    }
 
-  @Override
-  public void setCellRenderer(final TreeCellRenderer x) {
-    super.setCellRenderer((tree, value, selected, expanded, leaf, row, hasFocus) -> x
+    public void setVisibleRow(int row) {
+        myVisibleRow = row;
+        final Rectangle rowBounds = getRowBounds(myVisibleRow);
+        final int indent = rowBounds.x - getVisibleRect().x - getTreeColumnOffsetX();
+        setPreferredSize(new Dimension(getRowBounds(myVisibleRow).width + indent, getPreferredSize().height));
+    }
+
+    public void _processKeyEvent(KeyEvent e) {
+        super.processKeyEvent(e);
+    }
+
+    public void setCellFocused(boolean focused) {
+        myCellFocused = focused;
+    }
+
+    @Override
+    public void setCellRenderer(final TreeCellRenderer x) {
+        super.setCellRenderer((tree, value, selected, expanded, leaf, row, hasFocus) -> x
             .getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, myCellFocused));
-  }
-
-  @Nullable
-  @Override
-  public Rectangle getPathBounds(TreePath path) {
-    Rectangle bounds = super.getPathBounds(path);
-    if (bounds == null) {
-      return null;
     }
-    bounds.x += getTreeColumnOffsetX();
-    return bounds;
-  }
 
-  protected int getTreeColumnOffsetX() {
-    int offsetX = 0;
-    for (int i = 0; i < myTreeTable.getColumnCount(); i++) {
-      if (myTreeTable.isTreeColumn(i)) {
-        break;
-      }
-      offsetX += myTreeTable.getColumnModel().getColumn(i).getWidth();
+    @Nullable
+    @Override
+    public Rectangle getPathBounds(TreePath path) {
+        Rectangle bounds = super.getPathBounds(path);
+        if (bounds == null) {
+            return null;
+        }
+        bounds.x += getTreeColumnOffsetX();
+        return bounds;
     }
-    return offsetX;
-  }
+
+    protected int getTreeColumnOffsetX() {
+        int offsetX = 0;
+        for (int i = 0; i < myTreeTable.getColumnCount(); i++) {
+            if (myTreeTable.isTreeColumn(i)) {
+                break;
+            }
+            offsetX += myTreeTable.getColumnModel().getColumn(i).getWidth();
+        }
+        return offsetX;
+    }
 }
