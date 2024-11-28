@@ -25,3 +25,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 add_executable(${FILE_NAME} WIN32 resource.h stdafx.cpp stdafx.h targetver.h WinLauncher.cpp WinLauncher.h WinLauncher.rc)
 
 set_property(TARGET ${FILE_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+ADD_CUSTOM_COMMAND(
+    TARGET ${TARGET_TARGETNAME}
+    POST_BUILD
+    COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\ConsuloManifest.xml\" -inputresource:\"$<TARGET_FILE:${TARGET_TARGETNAME}>\"\;\#1 -outputresource:\"$<TARGET_FILE:${TARGET_TARGETNAME}>\"\;\#1
+)
