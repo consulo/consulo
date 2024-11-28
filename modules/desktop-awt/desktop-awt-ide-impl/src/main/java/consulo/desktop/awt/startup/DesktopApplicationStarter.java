@@ -161,17 +161,17 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         pool.execute(DesktopAWTFontRegistry::registerBundledFonts);
 
         // region FlatLaf
-        PluginClassLoader loader = (PluginClassLoader) getClass().getClassLoader();
         // disable safe triangle hacks, due we use own event queue
         System.setProperty("flatlaf.useSubMenuSafeTriangle", "false");
         // remap native file path
         System.setProperty("flatlaf.nativeLibraryPath", "system");
-        // replace hidpi repaint manager for fixing windows issues
-        HiDPIUtils.installHiDPIRepaintManager();
         // preload all flat native libraries
         pool.execute(() -> {
             if (myPlatform.os().isWindows()) {
                 FlatNativeWindowsLibrary.isLoaded();
+
+                // replace hidpi repaint manager for fixing windows issues
+                SwingUtilities.invokeLater(HiDPIUtils::installHiDPIRepaintManager);
             }
 
             if (myPlatform.os().isMac()) {
