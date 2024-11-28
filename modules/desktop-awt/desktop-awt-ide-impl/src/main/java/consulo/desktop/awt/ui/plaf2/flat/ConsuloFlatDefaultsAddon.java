@@ -58,5 +58,9 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
             uiDefaults.put("ScrollBar.thumbArc", 999);
             uiDefaults.put("ScrollBar.thumbInsets", new Insets(1, 1, 1, 1));
         }
+
+        if ("FlatGrayIJTheme".equals(laf.getClass().getSimpleName())) {
+            uiDefaults.put("Component.arrowType", "chevron");
+        }
     }
 }

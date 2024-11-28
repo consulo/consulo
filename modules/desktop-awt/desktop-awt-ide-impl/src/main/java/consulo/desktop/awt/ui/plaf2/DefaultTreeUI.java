@@ -62,8 +62,6 @@ public final class DefaultTreeUI extends BasicTreeUI {
     }
     UISettings settings = UISettings.getInstanceOrNull();
     if (settings != null && settings.getCompactTreeIndents()) return Control.Painter.COMPACT;
-    if (is("ide.tree.painter.classic.compact")) return Control.Painter.COMPACT;
-    if (is("ide.tree.painter.compact.default")) return CompactPainter.DEFAULT;
     return Control.Painter.DEFAULT;
   }
 

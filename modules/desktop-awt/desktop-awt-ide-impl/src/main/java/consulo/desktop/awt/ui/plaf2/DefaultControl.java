@@ -10,23 +10,21 @@ import java.awt.*;
 public final class DefaultControl implements Control {
   private final Icon expandedDefault = UIUtil.getTreeExpandedIcon();
   private final Icon collapsedDefault = UIUtil.getTreeCollapsedIcon();
-  private final Icon expandedSelected = UIUtil.getTreeSelectedExpandedIcon();
-  private final Icon collapsedSelected = UIUtil.getTreeSelectedCollapsedIcon();
 
   @Nonnull
   @Override
   public Icon getIcon(boolean expanded, boolean selected) {
-    return !selected ? expanded ? expandedDefault : collapsedDefault : expanded ? expandedSelected : collapsedSelected;
+    return !selected ? expanded ? expandedDefault : collapsedDefault : expanded ? expandedDefault : collapsedDefault;
   }
 
   @Override
   public int getWidth() {
-    return Math.max(Math.max(expandedDefault.getIconWidth(), collapsedDefault.getIconWidth()), Math.max(expandedSelected.getIconWidth(), collapsedSelected.getIconWidth()));
+    return Math.max(Math.max(expandedDefault.getIconWidth(), collapsedDefault.getIconWidth()), Math.max(expandedDefault.getIconWidth(), collapsedDefault.getIconWidth()));
   }
 
   @Override
   public int getHeight() {
-    return Math.max(Math.max(expandedDefault.getIconHeight(), collapsedDefault.getIconHeight()), Math.max(expandedSelected.getIconHeight(), collapsedSelected.getIconHeight()));
+    return Math.max(Math.max(expandedDefault.getIconHeight(), collapsedDefault.getIconHeight()), Math.max(expandedDefault.getIconHeight(), collapsedDefault.getIconHeight()));
   }
 
   @Override
