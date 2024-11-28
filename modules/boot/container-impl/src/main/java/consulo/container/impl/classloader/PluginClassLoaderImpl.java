@@ -34,6 +34,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
     private final ClassLoader[] myParents;
     private final PluginDescriptor myPluginDescriptor;
     private final File myLibDirectory;
+    private final File myNativeDirectory;
 
     private ConcurrentMap<ProxyDescription, ProxyFactory> myProxyFactories = new ConcurrentHashMap<>();
 
@@ -49,6 +50,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         myParents = parents;
         myPluginDescriptor = pluginDescriptor;
         myLibDirectory = new File(myPluginDescriptor.getPath(), "lib");
+        myNativeDirectory = new File(myPluginDescriptor.getPath(), "native");
     }
 
     @Override
@@ -310,6 +312,15 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
             String libFileName = System.mapLibraryName(libName);
 
             File libFile = new File(myLibDirectory, libFileName);
+            if (libFile.exists()) {
+                return libFile.getAbsolutePath();
+            }
+        }
+
+        if (myNativeDirectory.exists()) {
+            String libFileName = System.mapLibraryName(libName);
+
+            File libFile = new File(myNativeDirectory, libFileName);
             if (libFile.exists()) {
                 return libFile.getAbsolutePath();
             }

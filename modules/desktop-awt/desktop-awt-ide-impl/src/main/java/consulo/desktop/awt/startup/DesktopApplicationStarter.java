@@ -15,12 +15,10 @@
  */
 package consulo.desktop.awt.startup;
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.ui.FlatNativeMacLibrary;
 import com.formdev.flatlaf.ui.FlatNativeWindowsLibrary;
 import com.formdev.flatlaf.util.HiDPIUtils;
 import com.google.gson.Gson;
-import com.jidesoft.swing.JideSplitButton;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.plugin.CompositeMessage;
@@ -35,6 +33,7 @@ import consulo.builtinWebServer.json.JsonBaseRequestHandler;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.builtinWebServer.json.JsonPostRequestHandler;
 import consulo.component.impl.internal.ComponentBinding;
+import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
@@ -72,8 +71,8 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -81,6 +80,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
+import java.io.File;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -161,8 +161,11 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         pool.execute(DesktopAWTFontRegistry::registerBundledFonts);
 
         // region FlatLaf
+        PluginClassLoader loader = (PluginClassLoader) getClass().getClassLoader();
         // disable safe triangle hacks, due we use own event queue
         System.setProperty("flatlaf.useSubMenuSafeTriangle", "false");
+        // remap native file path
+        System.setProperty("flatlaf.nativeLibraryPath", "system");
         // replace hidpi repaint manager for fixing windows issues
         HiDPIUtils.installHiDPIRepaintManager();
         // preload all flat native libraries

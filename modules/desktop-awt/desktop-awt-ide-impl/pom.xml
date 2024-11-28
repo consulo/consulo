@@ -108,6 +108,7 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
+            <classifier>no-natives</classifier>
         </dependency>
         <dependency>
             <groupId>com.formdev</groupId>
