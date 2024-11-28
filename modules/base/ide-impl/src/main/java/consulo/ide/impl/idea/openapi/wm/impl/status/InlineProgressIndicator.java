@@ -4,16 +4,14 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.ui.CaptionPanel;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.awt.util.GraphicsUtil;
-import consulo.ui.ex.awt.util.UISettingsUtil;
-import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import net.miginfocom.layout.AC;
@@ -92,14 +90,19 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         else {
             myComponent = new MyComponent(myProcessName);
             myComponent.setLayout(new BorderLayout());
+            myComponent.setBorder(new RoundedLineBorder(JBColor.border(), UIManager.getInt("Component.arc")));
 
+            CaptionPanel captionPanel = new CaptionPanel();
+            captionPanel.setActive(true);
+            captionPanel.setBorder(JBUI.Borders.empty(2));
+
+            captionPanel.add(myProcessName, BorderLayout.CENTER);
             myProcessName.setText(processInfo.getTitle());
-            myComponent.add(myProcessName, BorderLayout.NORTH);
-            myProcessName.setForeground(UIUtil.getPanelBackground().brighter().brighter());
-            myProcessName.setBorder(JBUI.Borders.empty(2));
+            myComponent.add(captionPanel, BorderLayout.NORTH);
 
             final NonOpaquePanel content = new NonOpaquePanel(new BorderLayout());
-            content.setBorder(JBUI.Borders.empty(2, 2, 2, myInfo.isCancellable() ? 2 : 4));
+            content.setBorder(JBUI.Borders.empty(2));
+            
             myComponent.add(content, BorderLayout.CENTER);
 
             content.add(toolbar, BorderLayout.EAST);
@@ -116,8 +119,6 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
 
             content.add(progressWrapper, BorderLayout.CENTER);
             content.add(myText2, BorderLayout.SOUTH);
-
-            myComponent.setBorder(JBUI.Borders.empty(2));
         }
         UIUtil.uiTraverser(myComponent).forEach(o -> ((JComponent) o).setOpaque(false));
     }
@@ -222,10 +223,8 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     }
 
     private class MyComponent extends JPanel {
-        private final JComponent myProcessName;
 
         private MyComponent(final JComponent processName) {
-            myProcessName = processName;
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(final MouseEvent e) {
@@ -234,41 +233,6 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
                     }
                 }
             });
-        }
-
-        @Override
-        protected void paintComponent(final Graphics g) {
-            final GraphicsConfig c = GraphicsUtil.setupAAPainting(g);
-            UISettingsUtil.setupAntialiasing(g);
-
-            int arc = 8;
-            Color bg = getBackground();
-            final Rectangle bounds = myProcessName.getBounds();
-            final Rectangle label = SwingUtilities.convertRectangle(myProcessName.getParent(), bounds, this);
-
-            g.setColor(UIUtil.getPanelBackground());
-            g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
-
-            if (!StyleManager.get().getCurrentStyle().isDark()) {
-                bg = ColorUtil.toAlpha(bg.darker().darker(), 230);
-                g.setColor(bg);
-
-                g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
-
-                g.setColor(UIUtil.getPanelBackground());
-                g.fillRoundRect(0, getHeight() / 2, getWidth() - 1, getHeight() / 2, arc, arc);
-                g.fillRect(0, (int) label.getMaxY() + 1, getWidth() - 1, getHeight() / 2);
-            }
-            else {
-                bg = bg.brighter();
-                g.setColor(bg);
-                g.drawLine(0, (int) label.getMaxY() + 1, getWidth() - 1, (int) label.getMaxY() + 1);
-            }
-
-            g.setColor(bg);
-            g.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
-
-            c.restore();
         }
     }
 

@@ -220,6 +220,10 @@ public class ProcessPopup  {
     return myPopup != null;
   }
 
+  public boolean isFocused() {
+    return myPopup != null && myPopup.isFocused();
+  }
+
 
   private class ActiveContent extends JPanel implements Scrollable {
 

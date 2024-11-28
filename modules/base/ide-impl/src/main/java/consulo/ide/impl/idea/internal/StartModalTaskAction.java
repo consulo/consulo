@@ -38,6 +38,9 @@ public class StartModalTaskAction extends DumbAwareAction {
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Task.Modal.queue(project, LocalizeValue.of("Running Modal Task"), true, progressIndicator -> {
+            progressIndicator.setTextValue(LocalizeValue.of("Text Value 1..."));
+            progressIndicator.setText2Value(LocalizeValue.of("Text Value 2..."));
+            
             while (true) {
                 if (progressIndicator.isCanceled()) {
                     break;
