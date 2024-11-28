@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.4)
-project(WinLoaderLibrary)
+cmake_minimum_required(VERSION 3.5)
+project(WinLoader)
 include(CheckSymbolExists)
 
 if(NOT WIN32)
@@ -24,10 +24,6 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
 add_executable(${FILE_NAME} WIN32 resource.h stdafx.cpp stdafx.h targetver.h WinLauncher.cpp WinLauncher.h WinLauncher.rc)
 
-set_property(TARGET ${FILE_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+target_sources(${FILE_NAME} PRIVATE consulo.manifest)
 
-ADD_CUSTOM_COMMAND(
-    TARGET ${TARGET_TARGETNAME}
-    POST_BUILD
-    COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\ConsuloManifest.xml\" -inputresource:\"$<TARGET_FILE:${TARGET_TARGETNAME}>\"\;\#1 -outputresource:\"$<TARGET_FILE:${TARGET_TARGETNAME}>\"\;\#1
-)
+set_property(TARGET ${FILE_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
