@@ -98,6 +98,8 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         private boolean myStyledChaged;
         private AtomicInteger myEventBlocker = new AtomicInteger();
 
+        private boolean myApplied;
+
         @RequiredUIAccess
         private LayoutImpl() {
             myPanel = VerticalLayout.create();
@@ -275,7 +277,10 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
         StyleManager styleManager = StyleManager.get();
 
-        if (component.myStyledChaged && component.myInitialStyle != null && component.myInitialStyle.style() != styleManager.getCurrentStyle()) {
+        if (!component.myApplied
+            && component.myStyledChaged
+            && component.myInitialStyle != null
+            && component.myInitialStyle.style() != styleManager.getCurrentStyle()) {
             styleManager.setCurrentStyle(component.myInitialStyle.style());
             
             IconLibraryManager.get().setActiveLibrary(component.myInitialStyle.iconLibraryId());
@@ -331,6 +336,8 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     @RequiredUIAccess
     @Override
     protected void reset(@Nonnull LayoutImpl component) {
+        component.myApplied = true;
+
         UISettings settings = UISettings.getInstance();
         UIFontManager uiFontManager = UIFontManager.getInstance();
 
