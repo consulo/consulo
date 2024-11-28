@@ -28,22 +28,24 @@ jobs:
         generator: Visual Studio 17 2022
         source-dir: ./native/WinRestarter
         build-dir: ./native/WinRestarter/build
-        options: CMAKE_BUILD_TYPE=Release TARGET_X64=1
+        options: CMAKE_BUILD_TYPE=Release
         build-args:  --config Release
+        args: -A x64
     - uses: actions/upload-artifact@v4
       with:
         name: restarter64.exe
         path: ./native/WinRestarter/build/Release/restarter64.exe
         if-no-files-found: error
-# WindowsRestarter X86
+# WindowsRestarter ARM64
     - run: git reset --hard
     - uses: threeal/cmake-action@main
       with:
         generator: Visual Studio 17 2022
         source-dir: ./native/WinRestarter
         build-dir: ./native/WinRestarter/build
-        options: CMAKE_BUILD_TYPE=Release TARGET_X64=0 TARGET_ARM64=1
+        options: CMAKE_BUILD_TYPE=Release
         build-args:  --config Release
+        args: -A ARM64
     - uses: actions/upload-artifact@v4
       with:
         name: restarter-aarch64.exe
@@ -56,8 +58,9 @@ jobs:
         generator: Visual Studio 17 2022
         source-dir: ./native/WinRestarter
         build-dir: ./native/WinRestarter/build
-        options: CMAKE_BUILD_TYPE=Release TARGET_X64=0 TARGET_ARM64=0
+        options: CMAKE_BUILD_TYPE=Release
         build-args:  --config Release
+        args: -A Win32
     - uses: actions/upload-artifact@v4
       with:
         name: restarter.exe
@@ -71,8 +74,9 @@ jobs:
         generator: Visual Studio 17 2022
         source-dir: ./native/WinRunner
         build-dir: ./native/WinRunner/build
-        options: CMAKE_BUILD_TYPE=Release TARGET_X64=1
+        options: CMAKE_BUILD_TYPE=Release
         build-args:  --config Release
+        args: -A x64
     - uses: actions/upload-artifact@v4
       with:
         name: runnerw64.exe
@@ -85,8 +89,9 @@ jobs:
         generator: Visual Studio 17 2022
         source-dir: ./native/WinRunner
         build-dir: ./native/WinRunner/build
-        options: CMAKE_BUILD_TYPE=Release TARGET_X64=0 TARGET_ARM64=1
+        options: CMAKE_BUILD_TYPE=Release
         build-args:  --config Release
+        args: -A ARM64
     - uses: actions/upload-artifact@v4
       with:
         name: runnerw-aarch64.exe
@@ -99,8 +104,9 @@ jobs:
         generator: Visual Studio 17 2022
         source-dir: ./native/WinRunner
         build-dir: ./native/WinRunner/build
-        options: CMAKE_BUILD_TYPE=Release TARGET_X64=0 TARGET_ARM64=0
+        options: CMAKE_BUILD_TYPE=Release
         build-args:  --config Release
+        args: -A Win32
     - uses: actions/upload-artifact@v4
       with:
         name: runnerw.exe
@@ -114,8 +120,9 @@ jobs:
         generator: Visual Studio 17 2022
         source-dir: ./native/WinLoader
         build-dir: ./native/WinLoader/build
-        options: CMAKE_BUILD_TYPE=Release TARGET_X64=1
+        options: CMAKE_BUILD_TYPE=Release
         build-args:  --config Release
+        args: -A x64
     - uses: actions/upload-artifact@v4
       with:
         name: consulo64.exe
@@ -128,8 +135,9 @@ jobs:
         generator: Visual Studio 17 2022
         source-dir: ./native/WinLoader
         build-dir: ./native/WinLoader/build
-        options: CMAKE_BUILD_TYPE=Release TARGET_X64=0 TARGET_ARM64=1
+        options: CMAKE_BUILD_TYPE=Release
         build-args:  --config Release
+        args: -A ARM64
     - uses: actions/upload-artifact@v4
       with:
         name: consulo-aarch64.exe
@@ -142,8 +150,9 @@ jobs:
         generator: Visual Studio 17 2022
         source-dir: ./native/WinLoader
         build-dir: ./native/WinLoader/build
-        options: CMAKE_BUILD_TYPE=Release TARGET_X64=0 TARGET_ARM64=0
+        options: CMAKE_BUILD_TYPE=Release
         build-args:  --config Release
+        args: -A Win32
     - uses: actions/upload-artifact@v4
       with:
         name: consulo.exe
