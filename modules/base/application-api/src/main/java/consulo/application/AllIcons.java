@@ -483,14 +483,6 @@ public class AllIcons {
   public static final Image Icon16_Sandbox = PlatformIconGroup.icon16_sandbox(); // 16x16
   public static final Image Icon32 = PlatformIconGroup.icon32(); // 32x32
 
-  public static class Icons {
-
-    public static class Ide {
-      public static final Image NextStep = PlatformIconGroup.iconsIdeNextstep(); // 12x12
-      public static final Image NextStepInverted = PlatformIconGroup.iconsIdeNextstepinverted(); // 12x12
-    }
-  }
-
   public static class Ide {
 
     public static class Dnd {

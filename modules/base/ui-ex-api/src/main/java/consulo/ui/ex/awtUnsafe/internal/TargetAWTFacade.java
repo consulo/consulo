@@ -35,59 +35,59 @@ import javax.swing.*;
  * @since 2019-02-16
  */
 public interface TargetAWTFacade {
-  @Nonnull
-  java.awt.Dimension to(@Nonnull Size size);
+    @Nonnull
+    java.awt.Dimension to(@Nonnull Size size);
 
-  @Nonnull
-  java.awt.Color to(@Nonnull RGBColor color);
+    @Nonnull
+    java.awt.Color to(@Nonnull RGBColor color);
 
-  @Contract("null -> null")
-  java.awt.Color to(@Nullable ColorValue colorValue);
+    @Contract("null -> null")
+    java.awt.Color to(@Nullable ColorValue colorValue);
 
-  @Contract("null -> null")
-  java.awt.Rectangle to(@Nullable Rectangle2D rectangle2D);
+    @Contract("null -> null")
+    java.awt.Rectangle to(@Nullable Rectangle2D rectangle2D);
 
-  @Contract("null -> null")
-  java.awt.Component to(@Nullable Component component);
+    @Contract("null -> null")
+    java.awt.Component to(@Nullable Component component);
 
-  @Contract("null -> null")
-  Component from(@Nullable java.awt.Component component);
+    @Contract("null -> null")
+    Component from(@Nullable java.awt.Component component);
 
-  @Nonnull
-  default Component wrap(@Nonnull java.awt.Component component) {
-    throw new UnsupportedOperationException();
-  }
+    @Nonnull
+    default Component wrap(@Nonnull java.awt.Component component) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Contract("null -> null")
-  java.awt.Window to(@Nullable Window component);
+    @Contract("null -> null")
+    java.awt.Window to(@Nullable Window component);
 
-  @Contract("null -> null")
-  Window from(@Nullable java.awt.Window component);
+    @Contract("null -> null")
+    Window from(@Nullable java.awt.Window component);
 
-  @Contract("null -> null")
-  Rectangle2D from(@Nullable java.awt.Rectangle rectangle);
+    @Contract("null -> null")
+    Rectangle2D from(@Nullable java.awt.Rectangle rectangle);
 
-  @Contract("null -> null")
-  ColorValue from(@Nullable java.awt.Color color);
+    @Contract("null -> null")
+    ColorValue from(@Nullable java.awt.Color color);
 
-  @Contract("null -> null")
-  javax.swing.Icon to(@Nullable Image image);
+    @Contract("null -> null")
+    javax.swing.Icon to(@Nullable Image image);
 
-  @Contract("null -> null")
-  Image from(@Nullable Icon icon);
+    @Contract("null -> null")
+    Image from(@Nullable Icon icon);
 
-  @Nonnull
-  java.awt.Font to(@Nonnull Font font);
+    @Nonnull
+    java.awt.Font to(@Nonnull Font font);
 
-  default java.awt.Image toAWTImage(@Nonnull Image image) {
-    throw new AbstractMethodError();
-  }
+    default java.awt.Image toAWTImage(@Nonnull Image image) {
+        throw new AbstractMethodError();
+    }
 
-  default java.awt.Cursor to(Cursor cursor) {
-    throw new AbstractMethodError();
-  }
+    default java.awt.Cursor to(Cursor cursor) {
+        throw new AbstractMethodError();
+    }
 
-  default Cursor from(java.awt.Cursor cursor) {
-    throw new AbstractMethodError();
-  }
+    default Cursor from(java.awt.Cursor cursor) {
+        throw new AbstractMethodError();
+    }
 }

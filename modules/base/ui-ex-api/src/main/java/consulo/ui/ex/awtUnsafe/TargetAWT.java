@@ -42,107 +42,107 @@ import java.util.ServiceLoader;
  */
 @SuppressWarnings("deprecation")
 public final class TargetAWT {
-  private static final TargetAWTFacade ourFacade = PlatformServiceLoader.findImplementation(TargetAWTFacade.class, ServiceLoader::load);
+    private static final TargetAWTFacade ourFacade = PlatformServiceLoader.findImplementation(TargetAWTFacade.class, ServiceLoader::load);
 
-  @Contract("null -> null")
-  public static java.awt.Dimension to(@Nullable Size size) {
-    return size == null ? null : new Dimension(size.getWidth(), size.getHeight());
-  }
+    @Contract("null -> null")
+    public static java.awt.Dimension to(@Nullable Size size) {
+        return size == null ? null : new Dimension(size.getWidth(), size.getHeight());
+    }
 
-  @Contract("null -> null")
-  public static java.awt.Point to(@Nullable Coordinate2D coordinate2D) {
-    return coordinate2D == null ? null : new Point(coordinate2D.getX(), coordinate2D.getY());
-  }
+    @Contract("null -> null")
+    public static java.awt.Point to(@Nullable Coordinate2D coordinate2D) {
+        return coordinate2D == null ? null : new Point(coordinate2D.getX(), coordinate2D.getY());
+    }
 
-  @Nonnull
-  public static java.awt.Color to(@Nonnull RGBColor color) {
-    return ourFacade.to(color);
-  }
+    @Nonnull
+    public static java.awt.Color to(@Nonnull RGBColor color) {
+        return ourFacade.to(color);
+    }
 
-  @Contract("null -> null")
-  public static java.awt.Color to(@Nullable ColorValue colorValue) {
-    return ourFacade.to(colorValue);
-  }
+    @Contract("null -> null")
+    public static java.awt.Color to(@Nullable ColorValue colorValue) {
+        return ourFacade.to(colorValue);
+    }
 
-  @Contract("null -> null")
-  public static java.awt.Rectangle to(@Nullable Rectangle2D rectangle2D) {
-    return ourFacade.to(rectangle2D);
-  }
+    @Contract("null -> null")
+    public static java.awt.Rectangle to(@Nullable Rectangle2D rectangle2D) {
+        return ourFacade.to(rectangle2D);
+    }
 
-  @Contract("null -> null")
-  public static java.awt.Component to(@Nullable Component component) {
-    return ourFacade.to(component);
-  }
+    @Contract("null -> null")
+    public static java.awt.Component to(@Nullable Component component) {
+        return ourFacade.to(component);
+    }
 
-  @Contract("null -> null")
-  public static java.awt.Window to(@Nullable Window component) {
-    return ourFacade.to(component);
-  }
+    @Contract("null -> null")
+    public static java.awt.Window to(@Nullable Window component) {
+        return ourFacade.to(component);
+    }
 
-  /**
-   * Wrap AWT component to untyped UI component. Calling any methods from it except #from() not supported
-   */
-  @Nonnull
-  public static Component wrap(@Nonnull java.awt.Component component) {
-    return ourFacade.wrap(component);
-  }
+    /**
+     * Wrap AWT component to untyped UI component. Calling any methods from it except #from() not supported
+     */
+    @Nonnull
+    public static Component wrap(@Nonnull java.awt.Component component) {
+        return ourFacade.wrap(component);
+    }
 
-  @Contract("null -> null")
-  public static Component from(@Nullable java.awt.Component component) {
-    return ourFacade.from(component);
-  }
+    @Contract("null -> null")
+    public static Component from(@Nullable java.awt.Component component) {
+        return ourFacade.from(component);
+    }
 
-  @Contract("null -> null")
-  public static Window from(@Nullable java.awt.Window component) {
-    return ourFacade.from(component);
-  }
+    @Contract("null -> null")
+    public static Window from(@Nullable java.awt.Window component) {
+        return ourFacade.from(component);
+    }
 
-  @Contract("null -> null")
-  public static Rectangle2D from(@Nullable java.awt.Rectangle rectangle) {
-    return ourFacade.from(rectangle);
-  }
+    @Contract("null -> null")
+    public static Rectangle2D from(@Nullable java.awt.Rectangle rectangle) {
+        return ourFacade.from(rectangle);
+    }
 
-  @Contract("null -> null")
-  public static Size from(@Nullable Dimension dimension) {
-    return dimension == null ? null : new Size(dimension.width, dimension.height);
-  }
+    @Contract("null -> null")
+    public static Size from(@Nullable Dimension dimension) {
+        return dimension == null ? null : new Size(dimension.width, dimension.height);
+    }
 
-  @Contract("null -> null")
-  public static Coordinate2D from(@Nullable Point point) {
-    return point == null ? null : new Coordinate2D(point.x, point.y);
-  }
+    @Contract("null -> null")
+    public static Coordinate2D from(@Nullable Point point) {
+        return point == null ? null : new Coordinate2D(point.x, point.y);
+    }
 
-  @Contract("null -> null")
-  public static ColorValue from(@Nullable java.awt.Color color) {
-    return ourFacade.from(color);
-  }
+    @Contract("null -> null")
+    public static ColorValue from(@Nullable java.awt.Color color) {
+        return ourFacade.from(color);
+    }
 
-  @Contract("null -> null")
-  public static java.awt.Cursor to(Cursor cursor) {
-    return ourFacade.to(cursor);
-  }
+    @Contract("null -> null")
+    public static java.awt.Cursor to(Cursor cursor) {
+        return ourFacade.to(cursor);
+    }
 
-  @Contract("null -> null")
-  public static Cursor from(java.awt.Cursor cursor) {
-    return ourFacade.from(cursor);
-  }
+    @Contract("null -> null")
+    public static Cursor from(java.awt.Cursor cursor) {
+        return ourFacade.from(cursor);
+    }
 
-  @Contract("null -> null")
-  public static Icon to(@Nullable Image image) {
-    return ourFacade.to(image);
-  }
+    @Contract("null -> null")
+    public static Icon to(@Nullable Image image) {
+        return ourFacade.to(image);
+    }
 
-  @Contract("null -> null")
-  public static Image from(@Nullable Icon icon) {
-    return ourFacade.from(icon);
-  }
+    @Contract("null -> null")
+    public static Image from(@Nullable Icon icon) {
+        return ourFacade.from(icon);
+    }
 
-  @Nonnull
-  public static java.awt.Font to(@Nonnull Font font) {
-    return ourFacade.to(font);
-  }
+    @Nonnull
+    public static java.awt.Font to(@Nonnull Font font) {
+        return ourFacade.to(font);
+    }
 
-  public static java.awt.Image toAWTImage(@Nonnull Image image) {
-    return ourFacade.toAWTImage(image);
-  }
+    public static java.awt.Image toAWTImage(@Nonnull Image image) {
+        return ourFacade.toAWTImage(image);
+    }
 }
