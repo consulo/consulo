@@ -63,9 +63,20 @@ public interface TitlelessDecorator {
 
         }
 
+        @Nonnull
         @Override
-        public void makeRightComponentLower(JComponent component) {
-            component.setBorder(JBUI.Borders.empty(28, 0, 0, 0));
+        public JComponent modifyRightComponent(JComponent rootPanel, JComponent rightComponent) {
+            JPanel panel = new JPanel(new BorderLayout());
+
+            JPanel placeholder = new JPanel();
+
+            placeholder.putClientProperty("FlatLaf.fullWindowContent.buttonsPlaceholder", "win");
+
+            rootPanel.putClientProperty("JComponent.titleBarCaption", true);
+
+            panel.add(placeholder, BorderLayout.NORTH);
+            panel.add(rightComponent, BorderLayout.CENTER);
+            return panel;
         }
 
         @Override
@@ -99,10 +110,6 @@ public interface TitlelessDecorator {
         }
 
         @Override
-        public void makeRightComponentLower(JComponent component) {
-        }
-
-        @Override
         public int getExtraTopLeftPadding() {
             return 64;
         }
@@ -123,11 +130,6 @@ public interface TitlelessDecorator {
         }
 
         @Override
-        public void makeRightComponentLower(JComponent component) {
-
-        }
-
-        @Override
         public int getExtraTopLeftPadding() {
             return 0;
         }
@@ -142,7 +144,10 @@ public interface TitlelessDecorator {
 
     void makeLeftComponentLower(JComponent component);
 
-    void makeRightComponentLower(JComponent component);
+    @Nonnull
+    default JComponent modifyRightComponent(JComponent parent, JComponent rightComponent) {
+        return rightComponent;
+    }
 
     int getExtraTopLeftPadding();
 

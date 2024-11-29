@@ -47,8 +47,7 @@ public abstract class BaseWelcomeScreenPanel extends JPanel {
         add(leftPanel, BorderLayout.WEST);
 
         JComponent rightComponent = createRightComponent();
-        titlelessDecorator.makeRightComponentLower(rightComponent);
-        add(rightComponent, BorderLayout.CENTER);
+        add(titlelessDecorator.modifyRightComponent(this, rightComponent), BorderLayout.CENTER);
     }
 
     protected int getLeftComponentWidth() {
