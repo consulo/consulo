@@ -589,7 +589,6 @@ public class AllIcons {
     public static final Image Class = PlatformIconGroup.nodesClass(); // 16x16
     public static final Image ClassInitializer = PlatformIconGroup.nodesClassinitializer(); // 16x16
     public static final Image ConfigFolder = PlatformIconGroup.nodesConfigfolder(); // 16x16
-    public static final Image CompiledClassesFolder = PlatformIconGroup.nodesCompiledclassesfolder(); // 16x16
     public static final Image CopyOfFolder = PlatformIconGroup.nodesCopyoffolder(); // 16x16
     public static final Image Deploy = PlatformIconGroup.nodesDeploy(); // 16x16
     public static final Image Desktop = PlatformIconGroup.nodesDesktop(); // 16x16
@@ -629,7 +628,6 @@ public class AllIcons {
     public static final Image Padlock = PlatformIconGroup.nodesPadlock(); // 16x16
     public static final Image Parameter = PlatformIconGroup.nodesParameter(); // 16x16
     public static final Image Plugin = PlatformIconGroup.nodesPlugin(); // 16x16
-    public static final Image Pointcut = PlatformIconGroup.nodesPointcut(); // 16x16
     public static final Image PpFile = PlatformIconGroup.nodesFolder(); // 16x16
     public static final Image PpInvalid = PlatformIconGroup.nodesPpinvalid(); // 16x16
     @Deprecated
