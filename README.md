@@ -35,7 +35,7 @@ If you want run Consulo from repository
    ```sh
     mvn install
 
-    mvn consulo:run-desktop -pl consulo:consulo-sandbox-desktop
+    mvn consulo:run-desktop-awt-fork -pl consulo:consulo-sandbox-desktop-awt
    ```
 
  * as a web application

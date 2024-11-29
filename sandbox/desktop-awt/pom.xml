@@ -81,6 +81,11 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <execution>
+                        <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-awt-${project.version}-main/</buildDirectory>
+                    </execution>
+                </configuration>
             </plugin>
         </plugins>
     </build>
