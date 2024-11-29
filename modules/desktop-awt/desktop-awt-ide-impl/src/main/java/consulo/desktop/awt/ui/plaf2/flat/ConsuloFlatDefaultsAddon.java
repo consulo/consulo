@@ -23,6 +23,7 @@ import consulo.desktop.awt.ui.plaf2.DefaultTreeUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
+import consulo.platform.os.WindowsOperatingSystem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +55,7 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         uiDefaults.put("TreeUI", DefaultTreeUI.class.getName());
 
         PlatformOperatingSystem os = Platform.current().os();
-        if (os.isWindows() & os.asWindows().isWindows11OrNewer()) {
+        if (os instanceof WindowsOperatingSystem win && win.isWindows11OrNewer()) {
             uiDefaults.put("ScrollBar.thumbArc", 999);
             uiDefaults.put("ScrollBar.thumbInsets", new Insets(1, 1, 1, 1));
         }

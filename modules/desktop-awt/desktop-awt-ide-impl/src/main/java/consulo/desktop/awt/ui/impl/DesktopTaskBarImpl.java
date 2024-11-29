@@ -20,6 +20,7 @@ import consulo.desktop.awt.ui.impl.taskBar.MacTaskBarImpl;
 import consulo.desktop.awt.ui.impl.taskBar.Windows7TaskBarImpl;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
+import consulo.platform.os.WindowsOperatingSystem;
 import consulo.ui.TaskBar;
 import consulo.ui.Window;
 import consulo.ui.impl.DummyTaskBarImpl;
@@ -37,13 +38,13 @@ public class DesktopTaskBarImpl implements TaskBar {
   private final TaskBar myDelegate;
 
   private DesktopTaskBarImpl() {
-    PlatformOperatingSystem operatingSystem = Platform.current().os();
+    PlatformOperatingSystem os = Platform.current().os();
 
     if(Taskbar.isTaskbarSupported()) {
-      if (operatingSystem.isWindows() && operatingSystem.asWindows().isWindows7OrNewer()) {
+      if (os instanceof WindowsOperatingSystem win && win.isWindows7OrNewer()) {
         myDelegate = new Windows7TaskBarImpl();
       }
-      else if (operatingSystem.isMac()) {
+      else if (os.isMac()) {
         myDelegate = new MacTaskBarImpl();
       }
       else {
