@@ -174,16 +174,21 @@ public class ContentEntryTreeEditor {
                     protected void customize(SimpleColoredComponent renderer, Object value, boolean selected, boolean focused) {
                         super.customize(renderer, value, selected, focused);
 
+                        ContentEntryEditor contentEntryEditor = getContentEntryEditor();
+                        if (contentEntryEditor == null) {
+                            return;
+                        }
+                        
                         if (value instanceof FileNode fileNode) {
                             VirtualFile treeFile = fileNode.getFile();
                             if (treeFile != null && treeFile.isDirectory()) {
-                                final ContentEntry contentEntry = getContentEntryEditor().getContentEntry();
+                                final ContentEntry contentEntry = contentEntryEditor.getContentEntry();
                                 renderer.setIcon(updateIcon(contentEntry, treeFile, renderer.getIcon()));
                             }
                         }
                         else if (value instanceof VirtualFile virtualFile) {
                             if (virtualFile.isDirectory()) {
-                                final ContentEntry contentEntry = getContentEntryEditor().getContentEntry();
+                                final ContentEntry contentEntry = contentEntryEditor.getContentEntry();
                                 renderer.setIcon(updateIcon(contentEntry, virtualFile, renderer.getIcon()));
                             }
                         }
