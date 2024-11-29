@@ -68,7 +68,6 @@ public interface PlatformIcons {
   Icon PROJECT_ICON = (Icon)AllIcons.Icon16;
   Icon UI_FORM_ICON = (Icon)AllIcons.FileTypes.UiForm;
 
-  Icon SMALL_VCS_CONFIGURABLE = (Icon)AllIcons.General.SmallConfigurableVcs;
   Icon GROUP_BY_PACKAGES = (Icon)AllIcons.Actions.GroupByPackage;
   Icon ADD_ICON = (Icon)IconUtil.getAddIcon();
   Icon DELETE_ICON = (Icon)IconUtil.getRemoveIcon();

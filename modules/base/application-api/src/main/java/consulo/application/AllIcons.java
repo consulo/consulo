@@ -127,8 +127,6 @@ public class AllIcons {
     public static final Image ShowReadAccess = PlatformIconGroup.actionsShowreadaccess(); // 16x16
     public static final Image ShowViewer = PlatformIconGroup.actionsShowviewer(); // 16x16
     public static final Image ShowWriteAccess = PlatformIconGroup.actionsShowwriteaccess(); // 16x16
-    public static final Image SortAsc = PlatformIconGroup.actionsSortasc(); // 9x8
-    public static final Image SortDesc = PlatformIconGroup.actionsSortdesc(); // 9x8
     public static final Image SplitHorizontally = PlatformIconGroup.actionsSplithorizontally(); // 16x16
     public static final Image SplitVertically = PlatformIconGroup.actionsSplitvertically(); // 16x16
     public static final Image StartDebugger = PlatformIconGroup.actionsStartdebugger(); // 16x16
@@ -144,7 +142,6 @@ public class AllIcons {
     public static final Image Uninstall = PlatformIconGroup.actionsUninstall(); // 16x16
     public static final Image Unselectall = PlatformIconGroup.actionsUnselectall(); // 16x16
     public static final Image Unshare = PlatformIconGroup.actionsUnshare(); // 14x14
-    public static final Image UP = PlatformIconGroup.actionsUp(); // 16x16
 
     /**
      * 16x16
@@ -353,7 +350,6 @@ public class AllIcons {
     public static final Image LayoutPreviewOnly = PlatformIconGroup.generalLayoutpreviewonly(); // 16x16
     public static final Image Add = PlatformIconGroup.generalAdd(); // 16x16
     public static final Image AddFavoritesList = PlatformIconGroup.generalAddfavoriteslist(); // 16x16
-    public static final Image AddJdk = PlatformIconGroup.generalAddjdk(); // 16x16
     public static final Image ArrowDown = PlatformIconGroup.generalArrowdown(); // 7x6
     public static final Image AutoscrollFromSource = PlatformIconGroup.generalAutoscrollfromsource(); // 16x16
     public static final Image AutoscrollToSource = PlatformIconGroup.generalAutoscrolltosource(); // 16x16
@@ -418,7 +414,6 @@ public class AllIcons {
     public static final Image Settings = PlatformIconGroup.generalSettings(); // 16x16
     public static final Image Show_to_implement = PlatformIconGroup.generalShow_to_implement(); // 16x16
     public static final Image Show_to_override = PlatformIconGroup.generalShow_to_override(); // 16x16
-    public static final Image SmallConfigurableVcs = PlatformIconGroup.generalSmallconfigurablevcs(); // 16x16
     public static final Image SplitCenterH = PlatformIconGroup.generalSplitcenterh(); // 7x7
     public static final Image SplitCenterV = PlatformIconGroup.generalSplitcenterv(); // 6x7
     public static final Image SplitDown = PlatformIconGroup.generalSplitdown(); // 7x7

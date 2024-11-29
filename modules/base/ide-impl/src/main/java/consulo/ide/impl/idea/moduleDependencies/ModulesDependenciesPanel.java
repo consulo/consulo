@@ -35,6 +35,7 @@ import consulo.module.ModuleManager;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
@@ -151,7 +152,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     group.add(new ToggleAction(
       AnalysisScopeLocalize.actionModuleDependenciesDirection(),
       LocalizeValue.empty(),
-      isForwardDirection() ? AllIcons.Actions.SortAsc : AllIcons.Actions.SortDesc
+      isForwardDirection() ? PlatformIconGroup.actionsMoveup() : PlatformIconGroup.actionsMovedown()
     ){
       @Override
       public boolean isSelected(AnActionEvent e) {
@@ -166,7 +167,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
 
       @Override
       public void update(final AnActionEvent e) {
-        e.getPresentation().setIcon(isForwardDirection() ? AllIcons.Actions.SortAsc : AllIcons.Actions.SortDesc);
+        e.getPresentation().setIcon(isForwardDirection() ? PlatformIconGroup.actionsMoveup() : PlatformIconGroup.actionsMovedown());
       }
     });
 

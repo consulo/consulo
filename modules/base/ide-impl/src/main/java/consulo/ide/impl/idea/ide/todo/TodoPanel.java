@@ -29,6 +29,7 @@ import consulo.language.psi.PsiNavigationSupport;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -124,7 +125,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   public static class GroupByActionGroup extends DefaultActionGroup {
     {
-      getTemplatePresentation().setIcon(AllIcons.Actions.GroupByModuleGroup);
+      getTemplatePresentation().setIcon(PlatformIconGroup.actionsGroupby());
       getTemplatePresentation().setTextValue(IdeLocalize.groupGroupBy());
       setPopup(true);
     }
