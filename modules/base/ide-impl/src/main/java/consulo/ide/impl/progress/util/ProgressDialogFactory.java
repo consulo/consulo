@@ -19,9 +19,10 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -30,10 +31,14 @@ import javax.swing.*;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ProgressDialogFactory {
-  static ProgressDialogFactory getInstance() {
-    return ServiceManager.getService(ProgressDialogFactory.class);
-  }
+    static ProgressDialogFactory getInstance() {
+        return ServiceManager.getService(ProgressDialogFactory.class);
+    }
 
-  @Nonnull
-  ProgressDialog create(ProgressWindow progressWindow, boolean shouldShowBackground, JComponent parent, Project project, String cancelText);
+    @Nonnull
+    ProgressDialog create(ProgressWindow progressWindow,
+                          boolean shouldShowBackground,
+                          JComponent parent,
+                          Project project,
+                          @Nonnull LocalizeValue cancelText);
 }

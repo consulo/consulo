@@ -16,7 +16,6 @@
 package consulo.application.progress;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.Application;
 import consulo.application.EdtReplacementThread;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.component.ComponentManager;
@@ -175,11 +174,6 @@ public abstract class Task implements TaskInfo, Progressive {
         return this;
     }
 
-    @Override
-    public final String getCancelText() {
-        return myCancelText.get();
-    }
-
     @Nonnull
     @Override
     public LocalizeValue getCancelTextValue() {
@@ -198,13 +192,6 @@ public abstract class Task implements TaskInfo, Progressive {
         return this;
     }
 
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    @Nonnull
-    public final Task setCancelText(String cancelText) {
-        return setCancelText(LocalizeValue.of(cancelText));
-    }
-
     @Nullable
     public NotificationInfo getNotificationInfo() {
         return null;
@@ -215,27 +202,15 @@ public abstract class Task implements TaskInfo, Progressive {
         return getNotificationInfo();
     }
 
+    @Deprecated
     public boolean isHeadless() {
-        Application application = Application.get();
-        return application.isUnitTestMode() || application.isHeadlessEnvironment();
+        return false;
     }
 
     @Nonnull
     public final Task setCancelTooltipText(@Nonnull LocalizeValue cancelTooltipText) {
         myCancelTooltipText = cancelTooltipText;
         return this;
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    @Nonnull
-    public final Task setCancelTooltipText(String cancelTooltipText) {
-        return setCancelTooltipText(LocalizeValue.of(cancelTooltipText));
-    }
-
-    @Override
-    public final String getCancelTooltipText() {
-        return myCancelTooltipText.get();
     }
 
     @Override

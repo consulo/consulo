@@ -626,14 +626,12 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     final boolean killable =
       !modal && processHandler instanceof KillableProcessHandler killableProcessHandler && killableProcessHandler.canKillProcess();
 
-    String title = ExecutionLocalize.terminatingProcessProgressTitle(descriptor.getDisplayName()).get();
-    ProgressManager.getInstance().run(new Task.Backgroundable(myProject, title, true) {
+    ProgressManager.getInstance().run(new Task.Backgroundable(myProject, ExecutionLocalize.terminatingProcessProgressTitle(descriptor.getDisplayName()), true) {
 
       {
         if (killable) {
-          String cancelText = ExecutionLocalize.terminatingProcessProgressKill().get();
-          setCancelText(cancelText);
-          setCancelTooltipText(cancelText);
+          setCancelText(ExecutionLocalize.terminatingProcessProgressKill());
+          setCancelTooltipText(ExecutionLocalize.terminatingProcessProgressKill());
         }
       }
 
@@ -689,6 +687,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         semaphore.waitFor();
       }
 
+      @RequiredUIAccess
       @Override
       public void onCancel() {
         if (killable && !processHandler.isProcessTerminated()) {

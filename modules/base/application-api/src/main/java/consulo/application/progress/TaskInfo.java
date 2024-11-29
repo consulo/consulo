@@ -22,12 +22,6 @@ public interface TaskInfo {
   @Nonnull
   String getTitle();
 
-  @Deprecated
-  String getCancelText();
-
-  @Deprecated
-  String getCancelTooltipText();
-
   @Nonnull
   LocalizeValue getCancelTextValue();
 

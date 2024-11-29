@@ -3,7 +3,6 @@ package consulo.desktop.awt.progress;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.util.SystemInfo;
 import consulo.component.ComponentManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
@@ -12,6 +11,8 @@ import consulo.ide.impl.idea.openapi.ui.impl.GlassPaneDialogWrapperPeer;
 import consulo.ide.impl.idea.ui.PopupBorder;
 import consulo.ide.impl.idea.ui.TitlePanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
+import consulo.ide.impl.progress.util.ProgressDialog;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -36,7 +37,7 @@ import java.io.File;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
-public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDialog {
+public class DesktopAWTProgressDialogImpl implements ProgressDialog {
   private final ProgressWindow myProgressWindow;
   private long myLastTimeDrawn = -1;
   private volatile boolean myShouldShowBackground;
@@ -62,7 +63,7 @@ public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDi
       myTitlePanel.setText(myProgressWindow.getTitle() != null && !myProgressWindow.getTitle().isEmpty() ? myProgressWindow.getTitle() : " ");
 
       myLastTimeDrawn = System.currentTimeMillis();
-      synchronized (ProgressDialog.this) {
+      synchronized (DesktopAWTProgressDialogImpl.this) {
         myRepaintedFlag = true;
       }
     }
@@ -95,7 +96,7 @@ public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDi
   DialogWrapper myPopup;
   private final consulo.ui.Window myParentWindow;
 
-  public ProgressDialog(ProgressWindow progressWindow, boolean shouldShowBackground, Project project, String cancelText) {
+  public DesktopAWTProgressDialogImpl(ProgressWindow progressWindow, boolean shouldShowBackground, Project project, LocalizeValue cancelText) {
     myProgressWindow = progressWindow;
     consulo.ui.Window parentWindow = WindowManager.getInstance().suggestParentWindow(project);
     if (parentWindow == null) {
@@ -106,16 +107,13 @@ public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDi
     initDialog(shouldShowBackground, cancelText);
   }
 
-  public ProgressDialog(ProgressWindow progressWindow, boolean shouldShowBackground, Component parent, String cancelText) {
+  public DesktopAWTProgressDialogImpl(ProgressWindow progressWindow, boolean shouldShowBackground, Component parent, LocalizeValue cancelText) {
     myProgressWindow = progressWindow;
     myParentWindow = TargetAWT.from(UIUtil.getWindow(parent));
     initDialog(shouldShowBackground, cancelText);
   }
 
-  private void initDialog(boolean shouldShowBackground, String cancelText) {
-    if (Platform.current().os().isMac()) {
-      UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myText2Label);
-    }
+  private void initDialog(boolean shouldShowBackground, LocalizeValue cancelText) {
     myInnerPanel.setPreferredSize(new Dimension(Platform.current().os().isMac() ? 350 : JBUI.scale(450), -1));
 
     myCancelButton.addActionListener(__ -> doCancelAction());
@@ -127,7 +125,7 @@ public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDi
     }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
     myShouldShowBackground = shouldShowBackground;
-    if (cancelText != null) {
+    if (cancelText != LocalizeValue.of()) {
       myProgressWindow.setCancelButtonText(cancelText);
     }
     myProgressBar.setMaximum(100);
@@ -172,8 +170,8 @@ public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDi
   }
 
   @Override
-  public void changeCancelButtonText(String text) {
-    myCancelButton.setText(text);
+  public void changeCancelButtonText(LocalizeValue text) {
+    myCancelButton.setText(text.get());
   }
 
   private void doCancelAction() {
@@ -213,8 +211,8 @@ public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDi
   private void createCenterPanel() {
     // Cancel button (if any)
 
-    if (myProgressWindow.myCancelText != null) {
-      myCancelButton.setText(myProgressWindow.myCancelText);
+    if (myProgressWindow.myCancelText != LocalizeValue.of()) {
+      myCancelButton.setText(myProgressWindow.myCancelText.get());
     }
     myCancelButton.setVisible(myProgressWindow.myShouldShowCancel);
 
@@ -262,6 +260,7 @@ public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDi
     ApplicationManager.getApplication().invokeLater(this::hideImmediately, IdeaModalityState.any());
   }
 
+  @Override
   public void hideImmediately() {
     if (myPopup != null) {
       myPopup.close(DialogWrapper.CANCEL_EXIT_CODE);
@@ -269,9 +268,9 @@ public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDi
     }
   }
 
+  @Override
   public void show() {
     myWasShown = true;
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
     if (myParentWindow == null) return;
     if (myPopup != null) {
       myPopup.close(DialogWrapper.CANCEL_EXIT_CODE);

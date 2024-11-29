@@ -18,6 +18,7 @@ package consulo.ide.impl.progress.util.impl;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ide.impl.progress.util.ProgressDialog;
 import consulo.ide.impl.progress.util.ProgressDialogFactory;
@@ -35,7 +36,7 @@ import javax.swing.*;
 public class UnifiedProgressDialogFactory implements ProgressDialogFactory {
   @Nonnull
   @Override
-  public ProgressDialog create(ProgressWindow progressWindow, boolean shouldShowBackground, JComponent parent, Project project, String cancelText) {
+  public ProgressDialog create(ProgressWindow progressWindow, boolean shouldShowBackground, JComponent parent, Project project, LocalizeValue cancelText) {
     return new UnifiedProgressDialog(project, progressWindow);
   }
 }

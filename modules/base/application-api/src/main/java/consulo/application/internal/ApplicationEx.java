@@ -22,9 +22,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.ApplicationUtil;
 import consulo.component.ComponentManager;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -97,6 +96,7 @@ public interface ApplicationEx extends Application {
      * @param exitConfirmed if true, suppresses any shutdown confirmation. However, if there are any background processes or tasks running,
      *                      a corresponding confirmation will be shown with the possibility to cancel the operation
      */
+    @Override
     void restart(boolean exitConfirmed);
 
     /**
@@ -109,7 +109,7 @@ public interface ApplicationEx extends Application {
         @Nullable ComponentManager project,
         JComponent parentComponent
     ) {
-        return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, null);
+        return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, LocalizeValue.of());
     }
 
     default void executeSuspendingWriteAction(@Nullable ComponentManager project, @Nonnull String title, @Nonnull Runnable runnable) {
@@ -125,7 +125,7 @@ public interface ApplicationEx extends Application {
         boolean canBeCanceled,
         ComponentManager project
     ) {
-        return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, null);
+        return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, LocalizeValue.of());
     }
 
     /**
@@ -139,7 +139,7 @@ public interface ApplicationEx extends Application {
         boolean shouldShowModalWindow,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText
+        @Nonnull LocalizeValue cancelText
     );
 
     @RequiredUIAccess
@@ -155,6 +155,7 @@ public interface ApplicationEx extends Application {
      *
      * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
      */
+    @Override
     boolean tryRunReadAction(@Nonnull Runnable action);
 
     boolean isInImpatientReader();

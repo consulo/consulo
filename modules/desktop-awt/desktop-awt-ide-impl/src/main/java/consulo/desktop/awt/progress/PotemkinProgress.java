@@ -11,6 +11,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.progress.util.PingProgress;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -38,8 +39,8 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   private final LinkedBlockingQueue<InputEvent> myInputEvents = new LinkedBlockingQueue<>();
   private final LinkedBlockingQueue<InvocationEvent> myInvocationEvents = new LinkedBlockingQueue<>();
 
-  public PotemkinProgress(@Nonnull String title, @Nullable Project project, @Nullable JComponent parentComponent, @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText) {
-    super(cancelText != null, false, project, parentComponent, cancelText);
+  public PotemkinProgress(@Nonnull String title, @Nullable Project project, @Nullable JComponent parentComponent, @Nonnull LocalizeValue cancelText) {
+    super(cancelText != LocalizeValue.of(), false, project, parentComponent, cancelText);
     setTitle(title);
     myApp.assertIsDispatchThread();
     startStealingInputEvents();
@@ -61,8 +62,8 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
 
   @Nonnull
   @Override
-  protected ProgressDialog getDialog() {
-    return (ProgressDialog)Objects.requireNonNull(super.getDialog());
+  protected DesktopAWTProgressDialogImpl getDialog() {
+    return (DesktopAWTProgressDialogImpl)Objects.requireNonNull(super.getDialog());
   }
 
   private long myLastInteraction;
@@ -139,7 +140,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   }
 
   private boolean timeToPaint(long now) {
-    if (now - myLastUiUpdate <= ProgressDialog.UPDATE_INTERVAL) {
+    if (now - myLastUiUpdate <= DesktopAWTProgressDialogImpl.UPDATE_INTERVAL) {
       return false;
     }
     myLastUiUpdate = now;

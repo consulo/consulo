@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.idea.formatting;
 
-import consulo.undoRedo.ProjectUndoManager;
-import consulo.language.codeStyle.internal.LeafBlockWrapper;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.IdeBundle;
-import consulo.undoRedo.UndoManager;
+import consulo.application.progress.ProgressIndicator;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.SequentialModalProgressTask;
 import consulo.ide.impl.idea.util.SequentialTask;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.codeStyle.internal.LeafBlockWrapper;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.UIUtil;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.UndoManager;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
@@ -165,7 +165,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
   public void beforeApplyingFormatChanges(@Nonnull Collection<LeafBlockWrapper> modifiedBlocks) {
     myBlocksToModifyNumber = modifiedBlocks.size();
     updateTextIfNecessary(FormattingStateId.APPLYING_CHANGES);
-    setCancelText(IdeBundle.message("action.stop"));
+    setCancelText(IdeLocalize.actionStop());
   }
 
   @Override

@@ -57,7 +57,7 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
     }
 
     public BackgroundableProcessIndicator(@Nullable final Project project, @Nonnull TaskInfo info, @Nonnull PerformInBackgroundOption option) {
-        super(info.isCancellable(), true, project, info.getCancelText());
+        super(info.isCancellable(), true, project, info.getCancelTextValue());
         setOwnerTask(info);
         myOption = option;
         myInfo = info;
@@ -87,16 +87,6 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
             @Nonnull
             public String getTitle() {
                 return progressTitle.get();
-            }
-
-            @Override
-            public String getCancelText() {
-                return cancelButtonText.get();
-            }
-
-            @Override
-            public String getCancelTooltipText() {
-                return backgroundStopTooltip.get();
             }
 
             @Nonnull
