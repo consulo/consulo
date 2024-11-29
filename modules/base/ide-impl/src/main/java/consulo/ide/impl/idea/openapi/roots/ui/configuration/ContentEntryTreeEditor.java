@@ -72,187 +72,187 @@ import java.util.Set;
  * Time: 1:19:47 PM
  */
 public class ContentEntryTreeEditor {
-  private final Project myProject;
-  private final ModuleConfigurationState myState;
-  protected final Tree myTree;
-  private FileSystemTreeImpl myFileSystemTree;
-  private final JPanel myTreePanel;
-  private final DefaultMutableTreeNode EMPTY_TREE_ROOT = new DefaultMutableTreeNode(ProjectLocalize.modulePathsEmptyNode().get());
-  protected final DefaultActionGroup myEditingActionsGroup;
-  private ContentEntryEditor myContentEntryEditor;
-  private final MyContentEntryEditorListener myContentEntryEditorListener = new MyContentEntryEditorListener();
-  private final FileChooserDescriptor myDescriptor;
+    private final Project myProject;
+    private final ModuleConfigurationState myState;
+    protected final Tree myTree;
+    private FileSystemTreeImpl myFileSystemTree;
+    private final JPanel myTreePanel;
+    private final DefaultMutableTreeNode EMPTY_TREE_ROOT = new DefaultMutableTreeNode(ProjectLocalize.modulePathsEmptyNode().get());
+    protected final DefaultActionGroup myEditingActionsGroup;
+    private ContentEntryEditor myContentEntryEditor;
+    private final MyContentEntryEditorListener myContentEntryEditorListener = new MyContentEntryEditorListener();
+    private final FileChooserDescriptor myDescriptor;
 
-  public ContentEntryTreeEditor(Project project, ModuleConfigurationState state) {
-    myProject = project;
-    myState = state;
-    myTree = new Tree();
-    myTree.setRootVisible(true);
-    myTree.setShowsRootHandles(true);
+    public ContentEntryTreeEditor(Project project, ModuleConfigurationState state) {
+        myProject = project;
+        myState = state;
+        myTree = new Tree();
+        myTree.setRootVisible(true);
+        myTree.setShowsRootHandles(true);
 
-    myEditingActionsGroup = new DefaultActionGroup();
+        myEditingActionsGroup = new DefaultActionGroup();
 
-    TreeUtil.installActions(myTree);
-    new TreeSpeedSearch(myTree);
+        TreeUtil.installActions(myTree);
+        new TreeSpeedSearch(myTree);
 
-    myTreePanel = new MyPanel(new BorderLayout());
-    final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree);
-    myTreePanel.add(scrollPane, BorderLayout.CENTER);
+        myTreePanel = new MyPanel(new BorderLayout());
+        final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree);
+        myTreePanel.add(scrollPane, BorderLayout.CENTER);
 
-    myTreePanel.setVisible(false);
-    myDescriptor = FileChooserDescriptorFactory.createMultipleFoldersDescriptor();
-    myDescriptor.setShowFileSystemRoots(false);
-  }
+        myTreePanel.setVisible(false);
+        myDescriptor = FileChooserDescriptorFactory.createMultipleFoldersDescriptor();
+        myDescriptor.setShowFileSystemRoots(false);
+    }
 
-  protected void updateMarkActions() {
-    myEditingActionsGroup.removeAll();
+    protected void updateMarkActions() {
+        myEditingActionsGroup.removeAll();
 
-    myEditingActionsGroup.add(new ToolbarLabelAction() {
-      @RequiredUIAccess
-      @Override
-      public void update(@Nonnull AnActionEvent e) {
-        super.update(e);
-        e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Mark as:"));
-      }
-    });
-    Set<ContentFolderTypeProvider> folders = ContentFoldersSupportUtil.getSupportedFolders(myState.getRootModel());
-    ContentFolderTypeProvider[] supportedFolders = folders.toArray(new ContentFolderTypeProvider[folders.size()]);
-    Arrays.sort(supportedFolders, (o1, o2) -> ComparatorUtil.compareInt(o1.getWeight(), o2.getWeight()));
-    for (ContentFolderTypeProvider contentFolderTypeProvider : supportedFolders) {
-      ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, contentFolderTypeProvider);
+        myEditingActionsGroup.add(new ToolbarLabelAction() {
+            @RequiredUIAccess
+            @Override
+            public void update(@Nonnull AnActionEvent e) {
+                super.update(e);
+                e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Mark as:"));
+            }
+        });
+        Set<ContentFolderTypeProvider> folders = ContentFoldersSupportUtil.getSupportedFolders(myState.getRootModel());
+        ContentFolderTypeProvider[] supportedFolders = folders.toArray(new ContentFolderTypeProvider[folders.size()]);
+        Arrays.sort(supportedFolders, (o1, o2) -> ComparatorUtil.compareInt(o1.getWeight(), o2.getWeight()));
+        for (ContentFolderTypeProvider contentFolderTypeProvider : supportedFolders) {
+            ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, contentFolderTypeProvider);
      /* CustomShortcutSet shortcutSet = editor.getMarkRootShortcutSet();
       if (shortcutSet != null) {
         action.registerCustomShortcutSet(shortcutSet, myTree);
       }     */
-      myEditingActionsGroup.add(action);
-    }
-  }
-
-  /**
-   * @param contentEntryEditor : null means to clear the editor
-   */
-  public void setContentEntryEditor(@Nullable final ContentEntryEditor contentEntryEditor) {
-    if (myContentEntryEditor != null && myContentEntryEditor.equals(contentEntryEditor)) {
-      return;
-    }
-    if (myFileSystemTree != null) {
-      Disposer.dispose(myFileSystemTree);
-      myFileSystemTree = null;
-    }
-    if (myContentEntryEditor != null) {
-      myContentEntryEditor.removeContentEntryEditorListener(myContentEntryEditorListener);
-      myContentEntryEditor = null;
-    }
-    if (contentEntryEditor == null) {
-      myTreePanel.setVisible(false);
-      return;
-    }
-    myTreePanel.setVisible(true);
-    myContentEntryEditor = contentEntryEditor;
-    myContentEntryEditor.addContentEntryEditorListener(myContentEntryEditorListener);
-
-    final ContentEntry entry = contentEntryEditor.getContentEntry();
-    assert entry != null : contentEntryEditor;
-    final VirtualFile file = entry.getFile();
-    myDescriptor.setRoots(file);
-    if (file == null) {
-      final String path = VfsUtilCore.urlToPath(entry.getUrl());
-      myDescriptor.setTitle(FileUtil.toSystemDependentName(path));
+            myEditingActionsGroup.add(action);
+        }
     }
 
-    final Runnable init = () -> {
-      myFileSystemTree.updateTree();
-      myFileSystemTree.select(file, null);
-    };
+    /**
+     * @param contentEntryEditor : null means to clear the editor
+     */
+    public void setContentEntryEditor(@Nullable final ContentEntryEditor contentEntryEditor) {
+        if (myContentEntryEditor != null && myContentEntryEditor.equals(contentEntryEditor)) {
+            return;
+        }
+        if (myFileSystemTree != null) {
+            Disposer.dispose(myFileSystemTree);
+            myFileSystemTree = null;
+        }
+        if (myContentEntryEditor != null) {
+            myContentEntryEditor.removeContentEntryEditorListener(myContentEntryEditorListener);
+            myContentEntryEditor = null;
+        }
+        if (contentEntryEditor == null) {
+            myTreePanel.setVisible(false);
+            return;
+        }
+        myTreePanel.setVisible(true);
+        myContentEntryEditor = contentEntryEditor;
+        myContentEntryEditor.addContentEntryEditorListener(myContentEntryEditorListener);
 
-    myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, null, init, null) {
-      @Override
-      protected TreeCellRenderer createFileRender() {
-        return new FileRenderer() {
-          @Override
-          @RequiredUIAccess
-          protected void customize(SimpleColoredComponent renderer, Object value, boolean selected, boolean focused) {
-            super.customize(renderer, value, selected, focused);
-
-            if (value instanceof FileNode fileNode) {
-              VirtualFile treeFile = fileNode.getFile();
-              if (treeFile != null && treeFile.isDirectory()) {
-                final ContentEntry contentEntry = getContentEntryEditor().getContentEntry();
-                renderer.setIcon(updateIcon(contentEntry, treeFile, renderer.getIcon()));
-              }
-            }
-            else if (value instanceof VirtualFile virtualFile) {
-              if (virtualFile.isDirectory()) {
-                final ContentEntry contentEntry = getContentEntryEditor().getContentEntry();
-                renderer.setIcon(updateIcon(contentEntry, virtualFile, renderer.getIcon()));
-              }
-            }
-          }
-        }.forTree();
-      }
-    };
-    myFileSystemTree.showHiddens(true);
-    Disposer.register(myProject, myFileSystemTree);
-
-    final NewFolderAction newFolderAction = new MyNewFolderAction();
-    final DefaultActionGroup mousePopupGroup = new DefaultActionGroup();
-    mousePopupGroup.add(myEditingActionsGroup);
-    mousePopupGroup.addSeparator();
-    mousePopupGroup.add(newFolderAction);
-    myFileSystemTree.registerMouseListener(mousePopupGroup);
-  }
-
-  @RequiredReadAction
-  private Image updateIcon(final ContentEntry entry, final VirtualFile file, Image originalIcon) {
-    Image icon = originalIcon;
-    VirtualFile currentRoot = null;
-    for (ContentFolder contentFolder : entry.getFolders(LanguageContentFolderScopes.all())) {
-      final VirtualFile contentPath = contentFolder.getFile();
-      if (file.equals(contentPath)) {
-        icon = ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
-      }
-      else if (contentPath != null && VfsUtilCore.isAncestor(contentPath, file, true)) {
-        if (currentRoot != null && VfsUtilCore.isAncestor(contentPath, currentRoot, false)) {
-          continue;
+        final ContentEntry entry = contentEntryEditor.getContentEntry();
+        assert entry != null : contentEntryEditor;
+        final VirtualFile file = entry.getFile();
+        myDescriptor.setRoots(file);
+        if (file == null) {
+            final String path = VfsUtilCore.urlToPath(entry.getUrl());
+            myDescriptor.setTitle(FileUtil.toSystemDependentName(path));
         }
 
-        boolean hasSupport = false;
-        for (ModuleExtension moduleExtension : getContentEntryEditor().getModel().getExtensions()) {
-          for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
-            if (supportProvider.isSupported(moduleExtension)) {
-              hasSupport = true;
-              break;
+        final Runnable init = () -> {
+            myFileSystemTree.updateTree();
+            myFileSystemTree.select(file, null);
+        };
+
+        myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, null, init, null) {
+            @Override
+            protected TreeCellRenderer createFileRender() {
+                return new FileRenderer() {
+                    @Override
+                    @RequiredUIAccess
+                    protected void customize(SimpleColoredComponent renderer, Object value, boolean selected, boolean focused) {
+                        super.customize(renderer, value, selected, focused);
+
+                        if (value instanceof FileNode fileNode) {
+                            VirtualFile treeFile = fileNode.getFile();
+                            if (treeFile != null && treeFile.isDirectory()) {
+                                final ContentEntry contentEntry = getContentEntryEditor().getContentEntry();
+                                renderer.setIcon(updateIcon(contentEntry, treeFile, renderer.getIcon()));
+                            }
+                        }
+                        else if (value instanceof VirtualFile virtualFile) {
+                            if (virtualFile.isDirectory()) {
+                                final ContentEntry contentEntry = getContentEntryEditor().getContentEntry();
+                                renderer.setIcon(updateIcon(contentEntry, virtualFile, renderer.getIcon()));
+                            }
+                        }
+                    }
+                }.forTree();
             }
-          }
+        };
+        myFileSystemTree.showHiddens(true);
+        Disposer.register(myProject, myFileSystemTree);
+
+        final NewFolderAction newFolderAction = new MyNewFolderAction();
+        final DefaultActionGroup mousePopupGroup = new DefaultActionGroup();
+        mousePopupGroup.add(myEditingActionsGroup);
+        mousePopupGroup.addSeparator();
+        mousePopupGroup.add(newFolderAction);
+        myFileSystemTree.registerMouseListener(mousePopupGroup);
+    }
+
+    @RequiredReadAction
+    private Image updateIcon(final ContentEntry entry, final VirtualFile file, Image originalIcon) {
+        Image icon = originalIcon;
+        VirtualFile currentRoot = null;
+        for (ContentFolder contentFolder : entry.getFolders(LanguageContentFolderScopes.all())) {
+            final VirtualFile contentPath = contentFolder.getFile();
+            if (file.equals(contentPath)) {
+                icon = ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
+            }
+            else if (contentPath != null && VfsUtilCore.isAncestor(contentPath, file, true)) {
+                if (currentRoot != null && VfsUtilCore.isAncestor(contentPath, currentRoot, false)) {
+                    continue;
+                }
+
+                boolean hasSupport = false;
+                for (ModuleExtension moduleExtension : getContentEntryEditor().getModel().getExtensions()) {
+                    for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
+                        if (supportProvider.isSupported(moduleExtension)) {
+                            hasSupport = true;
+                            break;
+                        }
+                    }
+                }
+                icon = hasSupport ? contentFolder.getType().getChildDirectoryIcon(null, null) : AllIcons.Nodes.TreeOpen;
+                currentRoot = contentPath;
+            }
         }
-        icon = hasSupport ? contentFolder.getType().getChildDirectoryIcon(null, null) : AllIcons.Nodes.TreeOpen;
-        currentRoot = contentPath;
-      }
+        return icon;
     }
-    return icon;
-  }
 
-  public ContentEntryEditor getContentEntryEditor() {
-    return myContentEntryEditor;
-  }
-
-  public JComponent createComponent() {
-    updateMarkActions();
-    return myTreePanel;
-  }
-
-  public void select(VirtualFile file) {
-    if (myFileSystemTree != null) {
-      myFileSystemTree.select(file, null);
+    public ContentEntryEditor getContentEntryEditor() {
+        return myContentEntryEditor;
     }
-  }
 
-  public void requestFocus() {
-    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
-  }
+    public JComponent createComponent() {
+        updateMarkActions();
+        return myTreePanel;
+    }
 
-  public void update() {
-    updateMarkActions();
+    public void select(VirtualFile file) {
+        if (myFileSystemTree != null) {
+            myFileSystemTree.select(file, null);
+        }
+    }
+
+    public void requestFocus() {
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
+    }
+
+    public void update() {
+        updateMarkActions();
 //    if (myFileSystemTree != null) {
 //      myFileSystemTree.updateTree();
 //      final AsyncTreeModel model = (AsyncTreeModel)myTree.getModel();
@@ -267,46 +267,46 @@ public class ContentEntryTreeEditor {
 //        }
 //      }
 //    }
-  }
-
-  private class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
-    @Override
-    public void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder folder) {
-      update();
     }
 
-    @Override
-    public void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder file) {
-      update();
-    }
-  }
+    private class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
+        @Override
+        public void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder folder) {
+            update();
+        }
 
-  private static class MyNewFolderAction extends NewFolderAction {
-    private MyNewFolderAction() {
-      super(
-        ActionLocalize.actionFilechooserNewfolderText(),
-        ActionLocalize.actionFilechooserNewfolderDescription(),
-        AllIcons.Actions.NewFolder
-      );
-    }
-  }
-
-  private class MyPanel extends JPanel implements DataProvider {
-    private MyPanel(final LayoutManager layout) {
-      super(layout);
+        @Override
+        public void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder file) {
+            update();
+        }
     }
 
-    @Override
-    @Nullable
-    public Object getData(@Nonnull final Key<?> dataId) {
-      if (FileSystemTree.DATA_KEY == dataId) {
-        return myFileSystemTree;
-      }
-      return null;
+    private static class MyNewFolderAction extends NewFolderAction {
+        private MyNewFolderAction() {
+            super(
+                ActionLocalize.actionFilechooserNewfolderText(),
+                ActionLocalize.actionFilechooserNewfolderDescription(),
+                AllIcons.Actions.NewFolder
+            );
+        }
     }
-  }
 
-  public DefaultActionGroup getEditingActionsGroup() {
-    return myEditingActionsGroup;
-  }
+    private class MyPanel extends JPanel implements DataProvider {
+        private MyPanel(final LayoutManager layout) {
+            super(layout);
+        }
+
+        @Override
+        @Nullable
+        public Object getData(@Nonnull final Key<?> dataId) {
+            if (FileSystemTree.DATA_KEY == dataId) {
+                return myFileSystemTree;
+            }
+            return null;
+        }
+    }
+
+    public DefaultActionGroup getEditingActionsGroup() {
+        return myEditingActionsGroup;
+    }
 }
