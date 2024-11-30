@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui.plaf2.flat;
 
 import com.formdev.flatlaf.FlatDefaultsAddon;
 import consulo.desktop.awt.ui.plaf.BasicStatusBarUI;
-import consulo.desktop.awt.ui.plaf.darcula.DarculaEditorTextFieldUI;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import consulo.desktop.awt.ui.plaf2.DefaultTreeUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
@@ -43,7 +42,7 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
     public void afterDefaultsLoading(LookAndFeel laf, UIDefaults uiDefaults) {
         uiDefaults.put("JBEditorTabsUI", IntelliJEditorTabsUI.class.getName());
         uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
-        uiDefaults.put("EditorTextFieldUI", DarculaEditorTextFieldUI.class.getName());
+        uiDefaults.put("EditorTextFieldUI", FlatEditorTextFieldUI.class.getName());
         uiDefaults.put("OnOffButtonUI", OnOffButton.OnOffButtonUI.class.getName());
 
         uiDefaults.put("ComboBoxButtonUI", FlatComboBoxButtonUI.class.getName());

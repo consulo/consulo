@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui.plaf;
+package consulo.language.editor.ui.internal;
 
 import consulo.codeEditor.Editor;
 import consulo.language.editor.ui.awt.EditorTextField;
@@ -30,14 +30,12 @@ public class BasicEditorTextFieldUI extends BasicPanelUI {
         return new BasicEditorTextFieldUI();
     }
 
+    public void editorChanged(EditorTextField field) {
+    }
+
     @Override
     public void installUI(JComponent c) {
         setBorder(c);
-
-        Insets margin = UIManager.getInsets("TextField.margin");
-        if (margin != null) {
-
-        }
     }
 
     protected void setBorder(JComponent c) {

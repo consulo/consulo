@@ -18,5 +18,5 @@ module consulo.language.editor.ui.api {
   exports consulo.language.editor.ui.scope;
   exports consulo.language.editor.ui.awt.scope;
 
-  exports consulo.language.editor.ui.internal to consulo.ide.impl;
+  exports consulo.language.editor.ui.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl;
 }

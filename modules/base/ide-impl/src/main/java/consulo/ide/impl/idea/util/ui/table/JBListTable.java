@@ -19,16 +19,13 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorFontType;
 import consulo.language.editor.ui.EditorSettingsProvider;
 import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.awt.Animated;
-import consulo.ui.ex.awt.DottedBorder;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ui.ex.awt.AbstractTableCellEditor;
-import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -272,12 +269,8 @@ public abstract class JBListTable extends JPanel {
 
   public static JComponent createEditorTextFieldPresentation(final Project project, final FileType type, final String text, boolean selected, boolean focused) {
     final JPanel panel = new JPanel(new BorderLayout());
-    final EditorTextField field = new EditorTextField(text, project, type) {
-      @Override
-      protected boolean shouldHaveBorder() {
-        return false;
-      }
-    };
+    final EditorTextField field = new EditorTextField(text, project, type);
+    field.setBorder(JBUI.Borders.empty());
 
     Font font = EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN);
     font = new Font(font.getFontName(), font.getStyle(), 12);
