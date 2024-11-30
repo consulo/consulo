@@ -30,7 +30,10 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.BorderLayoutPanel;
+import consulo.ui.ex.awt.CustomLineBorder;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
@@ -44,11 +47,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Function;
 
 public class DesktopSettingsDialog extends WholeWestDialogWrapper implements DataProvider {
 
     private Project myProject;
-    private Configurable[] myConfigurables;
+    private final Function<Project, Configurable[]> myConfigurablesBuilder;
     private ConfigurablePreselectStrategy myPreselectStrategy;
     private OptionsEditor myEditor;
 
@@ -61,28 +65,27 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
      *
      * @deprecated
      */
-    public DesktopSettingsDialog(
-        Project project,
-        Configurable[] configurables,
-        @Nonnull ConfigurablePreselectStrategy strategy,
-        boolean applicationModalIfPossible
+    public DesktopSettingsDialog(Project project,
+                                 Function<Project, Configurable[]> configurablesBuilder,
+                                 @Nonnull ConfigurablePreselectStrategy strategy,
+                                 boolean applicationModalIfPossible
     ) {
         super(true, applicationModalIfPossible);
-        init(project, configurables, strategy);
-    }
-
-    public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nonnull ConfigurablePreselectStrategy strategy) {
-        super(project, true);
-        init(project, configurables, strategy);
-    }
-
-    private void init(final Project project, final Configurable[] configurables, @Nonnull ConfigurablePreselectStrategy strategy) {
         myProject = project;
-        myConfigurables = configurables;
+        myConfigurablesBuilder = configurablesBuilder;
         myPreselectStrategy = strategy;
-
         setTitle(Platform.current().os().isMac() ? CommonLocalize.titleSettingsMac() : CommonLocalize.titleSettings());
+        init();
+    }
 
+    public DesktopSettingsDialog(Project project,
+                                 Function<Project, Configurable[]> configurablesBuilder,
+                                 @Nonnull ConfigurablePreselectStrategy strategy) {
+        super(project, true);
+        myProject = project;
+        myConfigurablesBuilder = configurablesBuilder;
+        myPreselectStrategy = strategy;
+        setTitle(Platform.current().os().isMac() ? CommonLocalize.titleSettingsMac() : CommonLocalize.titleSettings());
         init();
     }
 
@@ -120,8 +123,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     @Nonnull
     @Override
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
-        Configurable configurable = myPreselectStrategy.get(myConfigurables);
-        myEditor = new OptionsEditor(myProject, myConfigurables, configurable, rootPanel);
+        myEditor = new OptionsEditor(myProject, myConfigurablesBuilder, myPreselectStrategy, rootPanel);
         myEditor.getContext().addColleague(new OptionsEditorColleague() {
             @Override
             public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {

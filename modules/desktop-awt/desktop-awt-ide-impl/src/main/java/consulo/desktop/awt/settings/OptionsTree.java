@@ -23,7 +23,6 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeBuilder;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.app.impl.settings.UnifiedConfigurableComparator;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TextItemPresentation;
@@ -61,6 +60,7 @@ import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class OptionsTree implements Disposable, OptionsEditorColleague {
     private class MyRenderer extends CellRendererPanel implements TreeCellRenderer {
@@ -95,7 +95,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         }
     }
 
-    private final Configurable[] myConfigurables;
+    private final Supplier<Configurable[]> myConfigurables;
     FilteringTreeBuilder myBuilder;
     private Root myRoot;
     private final OptionsEditorContext myContext;
@@ -107,7 +107,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
     private final JComponent myPanel;
     private final SimpleTree myTree;
 
-    public OptionsTree(Configurable[] configurables, OptionsEditorContext context) {
+    public OptionsTree(Supplier<Configurable[]> configurables, OptionsEditorContext context) {
         myConfigurables = configurables;
         myContext = context;
 
@@ -118,6 +118,11 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
             @Override
             protected void configureUiHelper(TreeUIHelper helper) {
                 // disable speed search
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false; // tree always not empty - loading decorator
             }
 
             @Override
@@ -213,8 +218,10 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
     }
 
     public void selectFirst() {
-        if (myConfigurables.length > 0) {
-            queueSelection(myConfigurables[0]);
+        Configurable[] configurables = myConfigurables.get();
+
+        if (configurables.length > 0) {
+            queueSelection(configurables[0]);
         }
     }
 
@@ -386,7 +393,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
 
         @Override
         protected SimpleNode[] buildChildren() {
-            return ContainerUtil.toArray(map(myConfigurables), EMPTY_EN_ARRAY);
+            return map(myConfigurables.get()).toArray(EMPTY_EN_ARRAY);
         }
 
         @Nonnull
@@ -517,6 +524,15 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
     @Override
     public void dispose() {
         myQueuedConfigurable = null;
+    }
+
+    public void rebuild(Runnable after) {
+        myRoot.cleanUpCache();
+
+        FilteringTreeStructure treeStructure = (FilteringTreeStructure) myBuilder.getTreeStructure();
+        treeStructure.rebuild();
+
+        myBuilder.queueUpdate().doWhenDone(after);
     }
 
     @Override
