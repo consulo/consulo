@@ -57,7 +57,7 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         PlatformOperatingSystem os = Platform.current().os();
         if (os instanceof WindowsOperatingSystem win && win.isWindows11OrNewer()) {
             uiDefaults.put("ScrollBar.thumbArc", 999);
-            uiDefaults.put("ScrollBar.thumbInsets", new Insets(1, 1, 1, 1));
+            uiDefaults.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2));
         }
 
         uiDefaults.put("Menu.selectedArrowIcon", new FlatSelectedMenuArrowIcon());
