@@ -20,9 +20,10 @@ import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Function;
 
 /**
- * TODO - check xawt.mwm_decor_title for minux
+ * TODO - check xawt.mwm_decor_title for linux
  *
  * @author VISTALL
  * @since 2024-11-26
@@ -39,9 +40,9 @@ public interface TitlelessDecorator {
             return new MacFrameDecorator(pane);
         }
 
-        if (!MAIN_WINDOW.equals(windowId) && Platform.current().os().isWindows()) {
-            return new WindowsFameDecorator(pane);
-        }
+        //if (!MAIN_WINDOW.equals(windowId) && Platform.current().os().isWindows()) {
+        //    return new WindowsFameDecorator(pane);
+        //}
 
         return NOTHING;
     }
@@ -72,11 +73,17 @@ public interface TitlelessDecorator {
 
             placeholder.putClientProperty("FlatLaf.fullWindowContent.buttonsPlaceholder", "win");
 
-            rootPanel.putClientProperty("JComponent.titleBarCaption", true);
+            rootPanel.putClientProperty("JComponent.titleBarCaption", (Function<Point, Boolean>)  pt -> {
+                return contains(placeholder, pt.x, pt.y);
+            });
 
             panel.add(placeholder, BorderLayout.NORTH);
             panel.add(rightComponent, BorderLayout.CENTER);
             return panel;
+        }
+
+        private boolean contains(Component c, int x, int y) {
+            return x >= 0 && y >= 0 && x < c.getWidth() && y < c.getHeight();
         }
 
         @Override
