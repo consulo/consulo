@@ -721,10 +721,10 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                             myTree.selectFirst();
                         }
                     }
-
-                    mySearchWrapper.setVisible(true);
-                    myTree.getComponent().setVisible(true);
                 });
+
+                mySearchWrapper.setVisible(true);
+                myTree.getComponent().setVisible(true);
             });
         }
         catch (Exception e) {
