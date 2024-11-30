@@ -454,6 +454,10 @@ public class HelpTooltipImpl implements HelpTooltip {
     if (ScreenReader.isActive()) return; // Disable HelpTooltip in screen reader mode.
 
     schedule(UIAccess.current(), () -> {
+      ComponentPopupBuilder popupBuilder = myPopupBuilder;
+      if (popupBuilder == null) {
+        return;
+      }
       initialShowScheduled = false;
       if (masterPopupOpenCondition == null || masterPopupOpenCondition.getAsBoolean()) {
         Component owner = e.getComponent();
