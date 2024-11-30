@@ -30,6 +30,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.util.lang.StringUtil;
@@ -252,7 +253,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
 
     if (myInfos.length > 1) {
       group.addSeparator();
-      final AnAction shareAction = new AnAction("Make Global", null, AllIcons.ToolbarDecorator.Import) {
+      final AnAction shareAction = new AnAction("Make Global", null, PlatformIconGroup.actionsImport()) {
         @RequiredUIAccess
         @Override
         public void actionPerformed(final AnActionEvent e) {

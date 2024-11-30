@@ -27,7 +27,8 @@ import java.awt.*;
  * @author max
  * @author Konstantin Bulenkov
  */
-@SuppressWarnings("deprecation")
+@Deprecated
+@DeprecationInfo("See methods")
 public class IconUtil {
 
   public static int getDefaultNodeIconSize() {
@@ -53,43 +54,6 @@ public class IconUtil {
   public static consulo.ui.image.Image getEditIcon() {
     return AllIcons.Actions.Edit;
   }
-
-  public static consulo.ui.image.Image getAddClassIcon() {
-    return AllIcons.ToolbarDecorator.AddClass;
-  }
-
-  public static consulo.ui.image.Image getAddPatternIcon() {
-    return AllIcons.ToolbarDecorator.AddPattern;
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use task icons")
-  public static consulo.ui.image.Image getAddJiraPatternIcon() {
-    return AllIcons.ToolbarDecorator.AddJira;
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use task icons")
-  public static consulo.ui.image.Image getAddYouTrackPatternIcon() {
-    return AllIcons.ToolbarDecorator.AddYouTrack;
-  }
-
-  public static consulo.ui.image.Image getAddBlankLineIcon() {
-    return AllIcons.ToolbarDecorator.AddBlankLine;
-  }
-
-  public static consulo.ui.image.Image getAddPackageIcon() {
-    return AllIcons.ToolbarDecorator.AddPackage;
-  }
-
-  public static consulo.ui.image.Image getAddLinkIcon() {
-    return AllIcons.ToolbarDecorator.AddLink;
-  }
-
-  public static consulo.ui.image.Image getAddFolderIcon() {
-    return AllIcons.ToolbarDecorator.AddFolder;
-  }
-
   @Nonnull
   public static JBImageIcon createImageIcon(@Nonnull final Image img) {
     return new JBImageIcon(img) {

@@ -749,23 +749,6 @@ public class AllIcons {
 
   }
 
-  public static class ToolbarDecorator {
-    public static final Image AddBlankLine = PlatformIconGroup.toolbardecoratorAddblankline(); // 16x16
-    public static final Image AddClass = PlatformIconGroup.toolbardecoratorAddclass(); // 16x16
-    public static final Image AddFolder = PlatformIconGroup.toolbardecoratorAddfolder(); // 16x16
-    public static final Image AddIcon = PlatformIconGroup.toolbardecoratorAddicon(); // 16x16
-    public static final Image AddJira = PlatformIconGroup.toolbardecoratorAddjira(); // 16x16
-    public static final Image AddLink = PlatformIconGroup.toolbardecoratorAddlink(); // 16x16
-    public static final Image AddPackage = PlatformIconGroup.toolbardecoratorAddpackage(); // 16x16
-    public static final Image AddPattern = PlatformIconGroup.toolbardecoratorAddpattern(); // 16x16
-    public static final Image AddRemoteDatasource = PlatformIconGroup.toolbardecoratorAddremotedatasource(); // 16x16
-    public static final Image AddYouTrack = PlatformIconGroup.toolbardecoratorAddyoutrack(); // 16x16
-    @Deprecated
-    public static final Image Export = PlatformIconGroup.actionsExport(); // 16x16
-    @Deprecated
-    public static final Image Import = PlatformIconGroup.actionsImport(); // 16x16
-  }
-
   public static class Toolwindows {
     public static final Image Documentation = PlatformIconGroup.toolwindowsDocumentation(); // 13x13
     public static final Image ToolWindowChanges = PlatformIconGroup.toolwindowsToolwindowchanges(); // 13x13
@@ -784,7 +767,6 @@ public class AllIcons {
     public static final Image ToolWindowStructure = PlatformIconGroup.toolwindowsToolwindowstructure(); // 13x13
     public static final Image ToolWindowTodo = PlatformIconGroup.toolwindowsToolwindowtodo(); // 13x13
     public static final Image WebToolWindow = PlatformIconGroup.toolwindowsWebtoolwindow(); // 13x13
-
   }
 
   public static class Vcs {

@@ -25,7 +25,7 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  */
 @Deprecated
-@DeprecationInfo(value = "Use AllIcons or PlatformIconGroup")
+@DeprecationInfo(value = "Use PlatformIconGroup")
 public interface PlatformIcons {
   Icon PUBLIC_ICON = (Icon)AllIcons.Nodes.C_public;
   Icon LOCKED_ICON = (Icon)(Icon)AllIcons.Nodes.Locked;
@@ -104,7 +104,4 @@ public interface PlatformIcons {
   @Deprecated Icon CONTENT_ROOT_ICON_OPEN = (Icon)CONTENT_ROOT_ICON_CLOSED;
 
   Icon UP_DOWN_ARROWS = (Icon)AllIcons.Ide.UpDown;
-
-  Icon EXPORT_ICON = (Icon)AllIcons.ToolbarDecorator.Export;
-  Icon IMPORT_ICON = (Icon)AllIcons.ToolbarDecorator.Import;
 }

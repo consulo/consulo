@@ -16,38 +16,37 @@
 
 package consulo.ide.impl.copyright.impl.ui;
 
-import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.actions.OpenProjectFileChooserDescriptor;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.project.Project;
-import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.awt.MasterDetailsComponent;
-import consulo.ui.ex.awt.MasterDetailsStateService;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.util.lang.function.Conditions;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.ide.impl.copyright.impl.options.ExternalOptionHelper;
+import consulo.ide.impl.idea.ide.actions.OpenProjectFileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
-import consulo.ide.impl.copyright.impl.options.ExternalOptionHelper;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.Nls;
-
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.awt.MasterDetailsComponent;
+import consulo.ui.ex.awt.MasterDetailsStateService;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.util.lang.function.Conditions;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.event.KeyEvent;
@@ -184,7 +183,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         event.getPresentation().setEnabled(getSelectedObject() != null);
       }
     });
-    result.add(new AnAction("Import", "Import", AllIcons.ToolbarDecorator.Import) {
+    result.add(new AnAction("Import", "Import", PlatformIconGroup.actionsImport()) {
       public void actionPerformed(AnActionEvent event) {
         final OpenProjectFileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
           @Override
