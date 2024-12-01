@@ -1,22 +1,22 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup;
 
-import consulo.application.AllIcons;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
-import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.util.lang.StringUtil;
 import consulo.localize.LocalizeValue;
-import consulo.application.localize.ApplicationLocalize;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -166,13 +166,8 @@ class ActionStepBuilder {
       Image disabledIcon = hideIcon ? null : presentation.getDisabledIcon();
 
       if (icon == null && selectedIcon == null) {
-        final String actionId = ActionManager.getInstance().getId(action);
-        if (actionId != null && actionId.startsWith("QuickList.")) {
-          //icon =  null; // AllIcons.Actions.QuickList;
-        }
-        else if (action instanceof Toggleable && Toggleable.isSelected(presentation)) {
-          icon = Image.empty(Image.DEFAULT_ICON_SIZE);
-          selectedIcon = AllIcons.Actions.Checked;
+        if (action instanceof Toggleable && Toggleable.isSelected(presentation)) {
+          selectedIcon = TargetAWT.wrap(UIManager.getIcon("Menu.selectedCheckboxIcon"));
           disabledIcon = null;
         }
       }

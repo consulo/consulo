@@ -29,6 +29,7 @@ import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -36,16 +37,16 @@ import javax.swing.*;
  */
 public interface TargetAWTFacade {
     @Nonnull
-    java.awt.Dimension to(@Nonnull Size size);
+    Dimension to(@Nonnull Size size);
 
     @Nonnull
-    java.awt.Color to(@Nonnull RGBColor color);
+    Color to(@Nonnull RGBColor color);
 
     @Contract("null -> null")
-    java.awt.Color to(@Nullable ColorValue colorValue);
+    Color to(@Nullable ColorValue colorValue);
 
     @Contract("null -> null")
-    java.awt.Rectangle to(@Nullable Rectangle2D rectangle2D);
+    Rectangle to(@Nullable Rectangle2D rectangle2D);
 
     @Contract("null -> null")
     java.awt.Component to(@Nullable Component component);
@@ -65,13 +66,13 @@ public interface TargetAWTFacade {
     Window from(@Nullable java.awt.Window component);
 
     @Contract("null -> null")
-    Rectangle2D from(@Nullable java.awt.Rectangle rectangle);
+    Rectangle2D from(@Nullable Rectangle rectangle);
 
     @Contract("null -> null")
-    ColorValue from(@Nullable java.awt.Color color);
+    ColorValue from(@Nullable Color color);
 
     @Contract("null -> null")
-    javax.swing.Icon to(@Nullable Image image);
+    Icon to(@Nullable Image image);
 
     @Contract("null -> null")
     Image from(@Nullable Icon icon);
@@ -88,6 +89,10 @@ public interface TargetAWTFacade {
     }
 
     default Cursor from(java.awt.Cursor cursor) {
+        throw new AbstractMethodError();
+    }
+
+    default Image wrap(@Nonnull Icon icon) {
         throw new AbstractMethodError();
     }
 }

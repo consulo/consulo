@@ -87,6 +87,11 @@ public final class TargetAWT {
         return ourFacade.wrap(component);
     }
 
+    @Nonnull
+    public static Image wrap(@Nonnull Icon icon) {
+        return ourFacade.wrap(icon);
+    }
+
     @Contract("null -> null")
     public static Component from(@Nullable java.awt.Component component) {
         return ourFacade.from(component);

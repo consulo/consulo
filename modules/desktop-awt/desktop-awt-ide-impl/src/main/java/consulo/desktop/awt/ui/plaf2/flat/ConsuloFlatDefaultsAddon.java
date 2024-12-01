@@ -67,5 +67,7 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
 
         uiDefaults.put("TitlePane.titleMargins", new Insets(3, 0, 3, 6));
         //uiDefaults.put("FlatLaf.debug.panel.showPlaceholders", true);
+
+        uiDefaults.put("Menu.selectedCheckboxIcon", new FlatSelectedCheckboxIcon());
     }
 }

@@ -18,6 +18,7 @@ package consulo.desktop.awt.facade;
 import consulo.container.StartupError;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
 import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
+import consulo.desktop.awt.ui.impl.image.DesktopImageOverIconImpl;
 import consulo.desktop.awt.ui.impl.window.DummyWindow;
 import consulo.desktop.awt.ui.impl.window.WindowOverAWTWindow;
 import consulo.logging.Logger;
@@ -87,6 +88,11 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
     @Override
     public Component wrap(@Nonnull java.awt.Component component) {
         return new TempComponentWrapper(component);
+    }
+
+    @Override
+    public Image wrap(@Nonnull Icon icon) {
+        return new DesktopImageOverIconImpl(icon);
     }
 
     @Override
