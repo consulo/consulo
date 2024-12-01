@@ -5,11 +5,9 @@ import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionToolbarEx;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
 public class ShowMoreOptions extends AnAction implements DumbAware {
   private final ActionToolbarEx myToolbarComponent;
@@ -19,8 +17,8 @@ public class ShowMoreOptions extends AnAction implements DumbAware {
     myToolbarComponent = null;
   }
 
-  public ShowMoreOptions(ActionToolbarEx toolbarComponent, JComponent shortcutHolder) {
-    this.myToolbarComponent = toolbarComponent;
+  public ShowMoreOptions(ActionToolbar toolbarComponent, JComponent shortcutHolder) {
+    myToolbarComponent = (ActionToolbarEx) toolbarComponent;
     KeyboardShortcut keyboardShortcut = ActionManager.getInstance().getKeyboardShortcut("ShowFilterPopup");
     if (keyboardShortcut != null) {
       registerCustomShortcutSet(new CustomShortcutSet(keyboardShortcut), shortcutHolder);

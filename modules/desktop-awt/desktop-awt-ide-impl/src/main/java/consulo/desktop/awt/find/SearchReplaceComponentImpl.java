@@ -614,10 +614,9 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     @Nonnull
     private ActionToolbar createSearchToolbar1(@Nonnull DefaultActionGroup group) {
-        ActionToolbarEx toolbar = createToolbar(group);
+        ActionToolbar toolbar = createToolbar(group);
         toolbar.setSecondaryActionsTooltip(FindLocalize.findPopupShowFilterPopup());
         toolbar.setSecondaryActionsIcon(PlatformIconGroup.generalFilter());
-        toolbar.setNoGapMode();
 
         KeyboardShortcut keyboardShortcut = ActionManager.getInstance().getKeyboardShortcut("ShowFilterPopup");
         if (keyboardShortcut != null) {
@@ -631,18 +630,15 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     @Nonnull
     private ActionToolbar createReplaceToolbar1(@Nonnull DefaultActionGroup group) {
         ActionToolbar toolbar = createToolbar(group);
-        toolbar.setForceMinimumSize(true);
         toolbar.setReservePlaceAutoPopupIcon(false);
         return toolbar;
     }
 
     @Nonnull
-    private ActionToolbarEx createToolbar(@Nonnull ActionGroup group) {
-        ActionToolbarEx toolbar =
-            (ActionToolbarEx)ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, group, true);
+    private ActionToolbar createToolbar(@Nonnull ActionGroup group) {
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, group, true);
         toolbar.setTargetComponent(this);
-        toolbar.setLayoutPolicy(ActionToolbar.AUTO_LAYOUT_POLICY);
-        Utils.setSmallerFontForChildren(toolbar.getComponent());
+        toolbar.setMiniMode(true);
         return toolbar;
     }
 
