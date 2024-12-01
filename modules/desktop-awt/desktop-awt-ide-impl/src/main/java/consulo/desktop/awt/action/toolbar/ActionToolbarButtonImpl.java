@@ -19,12 +19,12 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.Component;
 import consulo.ui.Size;
+import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.internal.ActionButtonEx;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -33,7 +33,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2024-11-21
  */
-public class ActionToolbarButtonImpl extends JButton implements ActionButtonEx {
+public class ActionToolbarButtonImpl extends JButton implements ActionButton {
     private final ActionToolbarButtonEngine myEngine;
 
     public ActionToolbarButtonImpl(AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {

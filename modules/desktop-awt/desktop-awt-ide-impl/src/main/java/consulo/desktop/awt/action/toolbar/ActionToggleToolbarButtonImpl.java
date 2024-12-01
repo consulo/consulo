@@ -25,19 +25,15 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.internal.ActionButtonEx;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2024-11-21
  */
-public class ActionToggleToolbarButtonImpl extends JToggleButton implements ActionButtonEx {
+public class ActionToggleToolbarButtonImpl extends JToggleButton implements ActionButton {
     private final ActionToolbarButtonEngine myEngine;
 
     public ActionToggleToolbarButtonImpl(AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {

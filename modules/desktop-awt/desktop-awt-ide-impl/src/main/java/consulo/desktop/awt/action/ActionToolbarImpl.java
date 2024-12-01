@@ -23,6 +23,7 @@ import consulo.logging.Logger;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Size;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
@@ -35,7 +36,9 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.internal.*;
+import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.ActionToolbarEx;
+import consulo.ui.ex.internal.ActionToolbarsHolder;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -51,7 +54,9 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -100,22 +105,20 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
 
     private Rectangle myAutoPopupRec;
 
-    private final DefaultActionGroup mySecondaryActions = new DefaultActionGroup();
-    private PopupStateModifier mySecondaryButtonPopupStateModifier;
+    private final SecondaryActionGroup mySecondaryActions = new SecondaryActionGroup();
     private boolean myForceMinimumSize;
     private boolean myForceShowFirstComponent;
     private boolean mySkipWindowAdjustments;
     private boolean myMinimalMode;
-    private boolean myForceUseMacEnhancements;
 
     private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
 
     @Override
-    public OldActionButtonImpl getSecondaryActionsButton() {
+    public ActionToolbarButtonImpl getSecondaryActionsButton() {
         return mySecondaryActionsButton;
     }
 
-    private OldActionButtonImpl mySecondaryActionsButton;
+    private ActionToolbarButtonImpl mySecondaryActionsButton;
 
     private int myFirstOutsideIndex = -1;
     private JBPopup myPopup;
@@ -158,9 +161,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
 
         setOrientation(horizontal ? ActionToolbar.HORIZONTAL_ORIENTATION : ActionToolbar.VERTICAL_ORIENTATION);
 
-        mySecondaryActions.getTemplatePresentation().setIcon(AllIcons.General.GearPlain);
-        mySecondaryActions.setPopup(true);
-
         myUpdater.updateActions(updateActionsNow, false);
 
         // If the panel doesn't handle mouse event then it will be passed to its parent.
@@ -191,10 +191,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         // should update action right on the showing, otherwise toolbar may not be displayed at all,
         // since by default all updates are postponed until frame gets focused.
         updateActionsImmediately();
-    }
-
-    public void setForceUseMacEnhancements(boolean useMacEnhancements) {
-        myForceUseMacEnhancements = useMacEnhancements;
     }
 
     private boolean isInsideNavBar() {
@@ -282,11 +278,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         }
     }
 
-    @Override
-    public void setSecondaryButtonPopupStateModifier(@Nonnull PopupStateModifier popupStateModifier) {
-        mySecondaryButtonPopupStateModifier = popupStateModifier;
-    }
-
     private void fillToolBar(@Nonnull final List<? extends AnAction> actions, boolean layoutSecondaries) {
         boolean isLastElementSeparator = false;
         final List<AnAction> rightAligned = new ArrayList<>();
@@ -327,17 +318,10 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         }
 
         if (mySecondaryActions.getChildrenCount() > 0) {
-            mySecondaryActionsButton = new OldActionButtonImpl(mySecondaryActions,
+            mySecondaryActionsButton = new ActionToolbarButtonImpl(mySecondaryActions,
                 myPresentationFactory.getPresentation(mySecondaryActions),
                 myPlace,
-                getMinimumButtonSize()) {
-                @Override
-                @ButtonState
-                public int getPopState() {
-                    return mySecondaryButtonPopupStateModifier != null && mySecondaryButtonPopupStateModifier.willModify() ? mySecondaryButtonPopupStateModifier
-                        .getModifiedPopupState() : super.getPopState();
-                }
-            };
+                getMinimumButtonSize());
             mySecondaryActionsButton.setNoIconsInPopup(true);
             add(mySecondaryActionsButton);
         }
@@ -1022,8 +1006,8 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         myMinimumButtonSize = size;
         for (int i = getComponentCount() - 1; i >= 0; i--) {
             final Component component = getComponent(i);
-            if (component instanceof OldActionButtonImpl button) {
-                button.setMinimumSize(TargetAWT.to(size));
+            if (component instanceof ActionButton button) {
+                button.getComponent().setMinimumSize(TargetAWT.to(size));
             }
         }
         revalidate();
@@ -1045,7 +1029,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     @RequiredUIAccess
     @Override
     public void updateActionsImmediately() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myUpdater.updateActions(true, false);
     }
 
@@ -1336,8 +1320,8 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     }
 
     @Override
-    public void setSecondaryActionsTooltip(@Nonnull String secondaryActionsTooltip) {
-        mySecondaryActions.getTemplatePresentation().setDescription(secondaryActionsTooltip);
+    public void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip) {
+        mySecondaryActions.getTemplatePresentation().setDescriptionValue(secondaryActionsTooltip);
     }
 
     @Override
@@ -1349,7 +1333,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     public void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
         Presentation presentation = mySecondaryActions.getTemplatePresentation();
         presentation.setIcon(icon);
-        presentation.putClientProperty(OldActionButtonImpl.HIDE_DROPDOWN_ICON, hideDropdownIcon ? Boolean.TRUE : null);
+        mySecondaryActions.setShowArrowBelow(!hideDropdownIcon);
     }
 
     @Override
@@ -1442,8 +1426,8 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     @Override
     public void forEachButton(Consumer<ActionButton> buttonConsumer) {
         for (Component component : getComponents()) {
-            if (component instanceof ActionButtonEx actionButtonEx) {
-                buttonConsumer.accept(actionButtonEx);
+            if (component instanceof ActionButton actionButton) {
+                buttonConsumer.accept(actionButton);
             }
         }
     }

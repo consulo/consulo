@@ -19,6 +19,7 @@ import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -59,9 +60,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     private final DefaultActionGroup mySearchFieldActions;
     private final ActionToolbar mySearchActionsToolbar;
-
-    @Nonnull
-    private final ActionToolbarEx.PopupStateModifier mySearchToolbar1PopupStateModifier;
 
     private final DefaultActionGroup myReplaceFieldActions;
     private final ActionToolbar myReplaceActionsToolbar;
@@ -122,18 +120,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
                 replaceToolbar2Actions.remove(action);
             }
         }
-
-        mySearchToolbar1PopupStateModifier = new ActionToolbarEx.PopupStateModifier() {
-            @Override
-            public int getModifiedPopupState() {
-                return ActionButtonComponent.PUSHED;
-            }
-
-            @Override
-            public boolean willModify() {
-                return searchToolbar1ModifiedFlagGetter.get();
-            }
-        };
 
         mySearchFieldWrapper = new MyTextComponentWrapper() {
             @Override
@@ -629,9 +615,8 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     @Nonnull
     private ActionToolbar createSearchToolbar1(@Nonnull DefaultActionGroup group) {
         ActionToolbarEx toolbar = createToolbar(group);
-        toolbar.setSecondaryButtonPopupStateModifier(mySearchToolbar1PopupStateModifier);
-        toolbar.setSecondaryActionsTooltip(FindLocalize.findPopupShowFilterPopup().get());
-        toolbar.setSecondaryActionsIcon(AllIcons.General.Filter);
+        toolbar.setSecondaryActionsTooltip(FindLocalize.findPopupShowFilterPopup());
+        toolbar.setSecondaryActionsIcon(PlatformIconGroup.generalFilter());
         toolbar.setNoGapMode();
 
         KeyboardShortcut keyboardShortcut = ActionManager.getInstance().getKeyboardShortcut("ShowFilterPopup");
