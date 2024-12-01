@@ -44,7 +44,7 @@ import java.util.function.Consumer;
  * @author UNV
  * @since 2024-11-18
  */
-public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHashtableUser {
+public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, ReusableLinkedHashtableUser {
     private static final ImmutableLinkedHashMap<Object, Object> EMPTY = of(ReusableLinkedHashtable.empty());
 
     protected ReusableLinkedHashtable<K, V>.Range myRange;
@@ -126,6 +126,7 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
      */
     @Contract(pure = true)
     @Nonnull
+    @Override
     public ImmutableLinkedHashMap<K, V> without(@Nonnull K key) {
         ReusableLinkedHashtable<K, V>.Range range = myRange;
         if (range.mySize == 0) {
@@ -167,6 +168,7 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
      */
     @Contract(pure = true)
     @Nonnull
+    @Override
     public ImmutableLinkedHashMap<K, V> with(@Nonnull K key, @Nullable V value) {
         ReusableLinkedHashtable<K, V>.Range range = myRange;
         if (range.mySize == 0) {
@@ -219,6 +221,7 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
      * plus all the mappings of the supplied map.
      */
     @Nonnull
+    @Override
     public ImmutableLinkedHashMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map) {
         if (isEmpty()) {
             // Optimization for empty current map.
@@ -297,45 +300,6 @@ public class ImmutableLinkedHashMap<K, V> implements Map<K, V>, ReusableLinkedHa
 
         // We're not in the largest map sharing current hash-table. So we need to check if found key is actually in our list.
         return range.isInList(keyPos) ? (V)table.getValue(keyPos) : defaultValue;
-    }
-
-    /**
-     * Unsupported operation: this map is immutable. Use {@link #with(Object, Object)} to create a new
-     * {@code ImmutableLinkedHashMap} with an additional element.
-     */
-    @Deprecated
-    @Override
-    public V put(K key, V value) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Unsupported operation: this map is immutable. Use {@link #without(Object)} to create a new
-     * {@code ImmutableLinkedHashMap} without some element.
-     */
-    @Deprecated
-    @Override
-    public V remove(Object key) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Unsupported operation: this map is immutable. Use {@link #withAll(Map)} to create a new
-     * {@code ImmutableLinkedHashMap} with additional elements from the specified Map.
-     */
-    @Deprecated
-    @Override
-    public void putAll(@Nonnull Map<? extends K, ? extends V> m) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Unsupported operation: this map is immutable. Use {@link #empty()} to get an empty {@code ImmutableLinkedHashMap}.
-     */
-    @Deprecated
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
     }
 
     @Override
