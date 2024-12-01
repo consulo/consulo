@@ -21,7 +21,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 
-import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -48,7 +47,6 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
     private static final ImmutableLinkedHashMap<Object, Object> EMPTY = of(ReusableLinkedHashtable.empty());
 
     protected ReusableLinkedHashtable<K, V>.Range myRange;
-    private WeakReference<SubCollectionsCache> mySubCollectionCache = null;
 
     /**
      * Returns an empty {@code ImmutableLinkedHashMap} with canonical equals/hashCode strategy (using equals/hashCode of the key as is).
@@ -311,13 +309,13 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
     @Nonnull
     @Override
     public Set<K> keySet() {
-        return getSubCollectionCache().getKeySet();
+        return new MyKeySet();
     }
 
     @Nonnull
     @Override
     public Collection<V> values() {
-        return getSubCollectionCache().getValues();
+        return new MyValues();
     }
 
     /**
@@ -333,7 +331,7 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
     @Nonnull
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return getSubCollectionCache().getEntrySet();
+        return new MyEntrySet();
     }
 
     @Override
@@ -441,15 +439,6 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
         }
     }
 
-    private SubCollectionsCache getSubCollectionCache() {
-        SubCollectionsCache cache = mySubCollectionCache == null ? null : mySubCollectionCache.get();
-        if (cache == null) {
-            cache = new SubCollectionsCache();
-            mySubCollectionCache = new WeakReference<>(cache);
-        }
-        return cache;
-    }
-
     private class MyKeySet extends AbstractSet<K> {
         @Nonnull
         @Override
@@ -506,33 +495,6 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
         @Override
         public int size() {
             return ImmutableLinkedHashMap.this.size();
-        }
-    }
-
-    private class SubCollectionsCache {
-        private Set<K> myKeySet = null;
-        private Collection<V> myValues = null;
-        private Set<Entry<K, V>> myEntrySet = null;
-
-        public Set<K> getKeySet() {
-            if (myKeySet == null) {
-                myKeySet = new MyKeySet();
-            }
-            return myKeySet;
-        }
-
-        public Collection<V> getValues() {
-            if (myValues == null) {
-                myValues = new MyValues();
-            }
-            return myValues;
-        }
-
-        public Set<Entry<K, V>> getEntrySet() {
-            if (myEntrySet == null) {
-                myEntrySet = new MyEntrySet();
-            }
-            return myEntrySet;
         }
     }
 }
