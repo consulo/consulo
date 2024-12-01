@@ -29,7 +29,7 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.internal.HelpTooltip;
+import consulo.ui.ex.internal.CustomTooltipBuilder;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
@@ -44,7 +44,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -64,8 +63,6 @@ public class ActionToolbarButtonEngine {
     private final Supplier<DataContext> myGetDataContext;
 
     private Supplier<String> myShortcutBuilder;
-    @Nullable
-    private BiConsumer<HelpTooltip, Presentation> myTooltipPresentationBuilder;
 
     private boolean myDisplayText;
 
@@ -100,10 +97,6 @@ public class ActionToolbarButtonEngine {
         myShortcutBuilder = shortcutBuilder;
     }
 
-    public void setCustomTooltipBuilder(BiConsumer<HelpTooltip, Presentation> builder) {
-        myTooltipPresentationBuilder = builder;
-    }
-
     public void updateToolTipText() {
         LocalizeValue textValue = myPresentation.getTextValue();
         LocalizeValue descriptionValue = myPresentation.getDescriptionValue();
@@ -111,8 +104,10 @@ public class ActionToolbarButtonEngine {
 
         if (textValue != LocalizeValue.of() || descriptionValue != LocalizeValue.of()) {
             HelpTooltipImpl ht = new HelpTooltipImpl();
-            if (myTooltipPresentationBuilder != null) {
-                myTooltipPresentationBuilder.accept(ht, myPresentation);
+
+            CustomTooltipBuilder customTooltipBuilder = myPresentation.getClientProperty(CustomTooltipBuilder.KEY);
+            if (customTooltipBuilder != null) {
+                customTooltipBuilder.build(ht, myPresentation);
             }
             else {
                 ht.setTitle(textValue.map(Presentation.NO_MNEMONIC).getValue());

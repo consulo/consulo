@@ -62,7 +62,8 @@ public interface ActionButton extends AnActionHolder, ActionButtonComponent {
 
     void setOpaque(boolean value);
 
-    void setCustomTooltipBuilder(BiConsumer<HelpTooltip, Presentation> builder);
+    default void setCustomTooltipBuilder(BiConsumer<HelpTooltip, Presentation> builder) {
+    }
 
     void setCustomShortcutBuilder(Supplier<String> shortcutBuilder);
 }

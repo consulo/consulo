@@ -107,11 +107,6 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
     }
 
     @Override
-    public void setCustomTooltipBuilder(BiConsumer<HelpTooltip, Presentation> builder) {
-        myEngine.setCustomTooltipBuilder(builder);
-    }
-
-    @Override
     public void setCustomShortcutBuilder(Supplier<String> shortcutBuilder) {
         myEngine.setCustomShortcutBuilder(shortcutBuilder);
     }

@@ -6,6 +6,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.HelpManager;
+import consulo.application.dumb.DumbAware;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.DimensionService;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -19,7 +20,6 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.action.ActionToolbarImpl;
-import consulo.desktop.awt.action.OldActionButtonImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
@@ -116,8 +116,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     private static final Logger LOG = Logger.getInstance(DocumentationComponent.class);
     private static final String DOCUMENTATION_TOPIC_ID = "reference.toolWindows.Documentation";
 
-    private static final Color DOCUMENTATION_COLOR = new JBColor(new Color(0xf7f7f7), new Color(0x46484a));
-    private static final JBColor BORDER_COLOR = new JBColor(new Color(0xadadad), new Color(0x616366));
     public static final EditorColorKey COLOR_KEY = EditorColorKey.createColorKey("DOCUMENTATION_COLOR", new LightDarkColorValue(new RGBColor(247, 247, 247), new RGBColor(70, 72, 74)));
     public static final Color SECTION_COLOR = Gray.get(0x90);
 
@@ -154,7 +152,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     };
 
     private Runnable myToolwindowCallback;
-    private final OldActionButtonImpl myCorner;
+    private final ActionToolbar myCornerToolbar;
 
     private final MyScrollPane myScrollPane;
     private final JEditorPane myEditorPane;
@@ -418,19 +416,16 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         gearActions.add(new RestoreDefaultSizeAction());
         gearActions.addSeparator();
         gearActions.addAll(actions);
-        Presentation presentation = new Presentation();
-        presentation.setIcon(AllIcons.Actions.More);
-        presentation.putClientProperty(OldActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
-        myCorner = new OldActionButtonImpl(gearActions, presentation, ActionPlaces.UNKNOWN, ActionToolbar.NAVBAR_MINIMUM_BUTTON_SIZE) {
-            @Override
-            protected DataContext getDataContext() {
-                return DataManager.getInstance().getDataContext(myCorner);
-            }
-        };
-        myCorner.setNoIconsInPopup(true);
-        showAsToolwindowAction.registerCustomShortcutSet(KeymapUtil.getActiveKeymapShortcuts("QuickJavaDoc"), myCorner);
-        layeredPane.add(myCorner);
-        layeredPane.setLayer(myCorner, JLayeredPane.POPUP_LAYER);
+
+        myCornerToolbar = ActionManager.getInstance().createActionToolbar("DocumentationPopup", new WrapperActionGroup(gearActions), true);
+        myCornerToolbar.setTargetComponent(this);
+        myCornerToolbar.setMiniMode(true);
+
+        JComponent toolbarComponent = myCornerToolbar.getComponent();
+
+        showAsToolwindowAction.registerCustomShortcutSet(KeymapUtil.getActiveKeymapShortcuts("QuickJavaDoc"), toolbarComponent);
+        layeredPane.add(toolbarComponent);
+        layeredPane.setLayer(toolbarComponent, JLayeredPane.POPUP_LAYER);
         add(layeredPane, BorderLayout.CENTER);
 
         myControlPanel = myToolBar.getComponent();
@@ -478,7 +473,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     public void removeCornerMenu() {
-        myCorner.setVisible(false);
+        myCornerToolbar.getComponent().setVisible(false);
     }
 
     public void setToolwindowCallback(Runnable callback) {
@@ -1285,7 +1280,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             if (myManager.getToolWindow() != null) {
                 return;
             }
-            myCorner.setVisible(true);
+            myCornerToolbar.getComponent().setVisible(true);
         }
     }
 
@@ -1293,10 +1288,35 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         return myManager.getToolWindow() == null && Registry.is("documentation.show.toolbar");
     }
 
+    private static class WrapperActionGroup extends ActionGroup implements DumbAware, HintManagerImpl.ActionToIgnore {
+        private final AnAction[] myActions;
+
+        public WrapperActionGroup(@Nonnull AnAction... actions) {
+            myActions = actions;
+        }
+        
+        @Nonnull
+        @Override
+        public AnAction[] getChildren(@Nullable AnActionEvent e) {
+            return myActions;
+        }
+    }
+
     private static class MyGearActionGroup extends DefaultActionGroup implements HintManagerImpl.ActionToIgnore {
         MyGearActionGroup(@Nonnull AnAction... actions) {
             super(actions);
             setPopup(true);
+        }
+
+        @Override
+        public boolean showBelowArrow() {
+            return false;
+        }
+
+        @Nullable
+        @Override
+        protected consulo.ui.image.Image getTemplateIcon() {
+            return PlatformIconGroup.actionsMorevertical();
         }
     }
 
@@ -1741,17 +1761,17 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
                 @Override
                 public void layoutContainer(Container parent) {
                     super.layoutContainer(parent);
-                    if (!myCorner.isVisible()) {
+                    if (!myCornerToolbar.getComponent().isVisible()) {
                         return;
                     }
                     if (vsb != null) {
                         Rectangle bounds = vsb.getBounds();
-                        vsb.setBounds(bounds.x, bounds.y, bounds.width, bounds.height - myCorner.getPreferredSize().height - 3);
+                        vsb.setBounds(bounds.x, bounds.y, bounds.width, bounds.height - myCornerToolbar.getComponent().getPreferredSize().height - 3);
                     }
                     if (hsb != null) {
                         Rectangle bounds = hsb.getBounds();
                         int vsbOffset = vsb != null ? vsb.getBounds().width : 0;
-                        hsb.setBounds(bounds.x, bounds.y, bounds.width - myCorner.getPreferredSize().width - 3 + vsbOffset, bounds.height);
+                        hsb.setBounds(bounds.x, bounds.y, bounds.width - myCornerToolbar.getComponent().getPreferredSize().width - 3 + vsbOffset, bounds.height);
                     }
                 }
             });

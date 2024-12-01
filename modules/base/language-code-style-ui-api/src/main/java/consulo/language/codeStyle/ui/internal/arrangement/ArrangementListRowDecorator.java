@@ -15,14 +15,13 @@
  */
 package consulo.language.codeStyle.ui.internal.arrangement;
 
-import consulo.application.AllIcons;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
-import consulo.ui.Size;
-import consulo.ui.ex.action.*;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.*;
-import consulo.ui.image.Image;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -39,7 +38,7 @@ import java.util.Set;
 public class ArrangementListRowDecorator extends JPanel implements ArrangementUiComponent {
 
     @Nonnull
-    private final JLabel mySortLabel = new JBLabel(AllIcons.ObjectBrowser.Sorted);
+    private final JLabel mySortLabel = new JBLabel(PlatformIconGroup.objectbrowserSorted());
 
     @Nonnull
     private final ArrangementRuleIndexControl myRowIndexControl;
@@ -48,7 +47,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     @Nonnull
     private final ArrangementMatchingRulesControl myControl;
     @Nonnull
-    private final ActionButton myEditButton;
+    private final JToggleButton myEditButton;
 
     @Nullable
     private Rectangle myScreenBounds;
@@ -63,11 +62,9 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
 
         mySortLabel.setVisible(false);
 
-        AnAction action = ActionManager.getInstance().getAction("Arrangement.Rule.Edit");
-        Presentation presentation = action.getTemplatePresentation().clone();
-        Image editIcon = presentation.getIcon();
-        Size buttonSize = new Size(editIcon.getWidth(), editIcon.getHeight());
-        myEditButton = ActionButtonFactory.getInstance().create(action, presentation, ArrangementConstants.MATCHING_RULES_CONTROL_PLACE, buttonSize);
+        myEditButton = new JToggleButton(TargetAWT.to(PlatformIconGroup.actionsEdit()));
+        myEditButton.putClientProperty("JButton.buttonType", "borderless");
+        myEditButton.setToolTipText(ApplicationLocalize.arrangementActionRuleEditDescription().get());
         myEditButton.setVisible(false);
 
         FontMetrics metrics = getFontMetrics(getFont());
@@ -95,7 +92,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
         add(myRowIndexControl, constraints);
         add(new InsetsPanel(mySortLabel), new GridBag().anchor(GridBagConstraints.CENTER).insets(0, 0, 0, ArrangementConstants.HORIZONTAL_GAP));
         add(myDelegate.getUiComponent(), new GridBag().weightx(1).anchor(GridBagConstraints.WEST));
-        add(myEditButton.getComponent(), new GridBag().anchor(GridBagConstraints.EAST));
+        add(myEditButton, new GridBag().anchor(GridBagConstraints.EAST));
         setBorder(IdeBorderFactory.createEmptyBorder(ArrangementConstants.VERTICAL_GAP));
     }
 
@@ -131,14 +128,14 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
 
     public void setBeingEdited(boolean beingEdited) {
         if (myBeingEdited && !beingEdited) {
-            myEditButton.getPresentation().putClientProperty(Toggleable.SELECTED_PROPERTY, false);
+            myEditButton.setSelected(false);
         }
         if (!beingEdited && !myUnderMouse) {
             myEditButton.setVisible(false);
         }
         if (beingEdited && !myBeingEdited) {
             myEditButton.setVisible(true);
-            myEditButton.getPresentation().putClientProperty(Toggleable.SELECTED_PROPERTY, true);
+            myEditButton.setSelected(true);
         }
         myBeingEdited = beingEdited;
     }
@@ -189,8 +186,8 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
         Rectangle bounds = getButtonScreenBounds();
         if (!myBeingEdited && bounds != null) {
             boolean selected = bounds.contains(event.getLocationOnScreen());
-            boolean wasSelected = myEditButton.getPresentation().getClientProperty(Toggleable.SELECTED_PROPERTY) == Boolean.TRUE;
-            myEditButton.getPresentation().putClientProperty(Toggleable.SELECTED_PROPERTY, selected);
+            boolean wasSelected = myEditButton.isSelected();
+            myEditButton.setSelected(selected);
             if (selected ^ wasSelected) {
                 return myScreenBounds;
             }

@@ -19,14 +19,12 @@ import consulo.colorScheme.TextAttributes;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.std.*;
-import consulo.ui.Size;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.action.ActionButton;
-import consulo.ui.ex.action.ActionButtonFactory;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.util.TextAttributesUtil;
-import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -95,7 +93,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     private final ArrangementAnimationPanel myAnimationPanel;
 
     @Nullable
-    private final ActionButton myCloseButton;
+    private final JButton myCloseButton;
     @Nullable
     private final Rectangle myCloseButtonBounds;
     @Nullable
@@ -157,19 +155,19 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
             myTextControlSize = myTextControl.getPreferredSize();
         }
 
-        final ArrangementRemoveConditionAction action = new ArrangementRemoveConditionAction();
-        Image buttonIcon = action.getTemplatePresentation().getIcon();
-        Size buttonSize = new Size(buttonIcon.getWidth(), buttonIcon.getHeight());
         if (closeCallback == null) {
             myCloseButton = null;
             myCloseButtonBounds = null;
         }
         else {
-            myCloseButton = ActionButtonFactory.getInstance().create(action, action.getTemplatePresentation().clone(), ArrangementConstants.MATCHING_RULES_CONTROL_PLACE, buttonSize);
-            myCloseButton.setIconOverrider(actionButton -> {
-                return myCloseButtonHovered ? action.getTemplatePresentation().getHoveredIcon() : action.getTemplatePresentation().getIcon();
-            });
-            myCloseButtonBounds = new Rectangle(0, 0, buttonIcon.getWidth(), buttonIcon.getHeight());
+            ImageKey closeIcon = PlatformIconGroup.actionsClose();
+            myCloseButton = new JButton(TargetAWT.to(closeIcon));
+            myCloseButton.setRolloverEnabled(true);
+            myCloseButton.setRolloverIcon(TargetAWT.to(PlatformIconGroup.actionsClosehovered()));
+            myCloseButton.putClientProperty("JButton.buttonType", "borderless");
+
+            Dimension preferredSize = myCloseButton.getPreferredSize();
+            myCloseButtonBounds = new Rectangle(0, 0, preferredSize.width, preferredSize.height);
         }
 
         JPanel insetsPanel = new JPanel(new GridBagLayout()) {
@@ -212,7 +210,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         };
         roundBorderPanel.add(insetsPanel, new GridBag().anchor(GridBagConstraints.WEST));
         if (myCloseButton != null) {
-            roundBorderPanel.add(new InsetsPanel(myCloseButton.getComponent()), new GridBag().anchor(GridBagConstraints.EAST));
+            roundBorderPanel.add(new InsetsPanel(myCloseButton), new GridBag().anchor(GridBagConstraints.EAST));
         }
         myBorder = myBorderStrategy.create();
         roundBorderPanel.setBorder(myBorder);
@@ -376,7 +374,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
             return null;
         }
 
-        JComponent component = myCloseButton.getComponent();
+        JComponent component = myCloseButton;
 
         Rectangle buttonBounds = SwingUtilities.convertRectangle(component.getParent(), myCloseButtonBounds, myAnimationPanel);
         buttonBounds.x += myScreenBounds.x;

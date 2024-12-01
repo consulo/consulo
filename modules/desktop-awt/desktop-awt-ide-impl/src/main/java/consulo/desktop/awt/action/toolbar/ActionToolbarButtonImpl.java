@@ -26,13 +26,11 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionButtonEx;
-import consulo.ui.ex.internal.HelpTooltip;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -98,11 +96,6 @@ public class ActionToolbarButtonImpl extends JButton implements ActionButtonEx {
     @Override
     public void setNoIconsInPopup(boolean value) {
         myEngine.setNoIconsInPopup(value);
-    }
-
-    @Override
-    public void setCustomTooltipBuilder(BiConsumer<HelpTooltip, Presentation> builder) {
-        myEngine.setCustomTooltipBuilder(builder);
     }
 
     @Override

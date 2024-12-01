@@ -17,8 +17,10 @@ package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesControl;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementSectionRulesControl;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -26,13 +28,27 @@ import jakarta.annotation.Nullable;
  * @author Svetlana.Zemlyanskaya
  */
 public abstract class AbstractArrangementRuleAction extends AnAction {
+    protected AbstractArrangementRuleAction() {
+    }
 
-  @Nullable
-  protected ArrangementMatchingRulesControl getRulesControl(AnActionEvent e) {
-    return e.getData(ArrangementSectionRulesControl.KEY);
-  }
+    protected AbstractArrangementRuleAction(@Nonnull LocalizeValue text) {
+        super(text);
+    }
 
-  protected void scrollRowToVisible(@Nonnull ArrangementMatchingRulesControl control, int row) {
-    control.scrollRowToVisible(row);
-  }
+    protected AbstractArrangementRuleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
+    protected AbstractArrangementRuleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
+    @Nullable
+    protected ArrangementMatchingRulesControl getRulesControl(AnActionEvent e) {
+        return e.getData(ArrangementSectionRulesControl.KEY);
+    }
+
+    protected void scrollRowToVisible(@Nonnull ArrangementMatchingRulesControl control, int row) {
+        control.scrollRowToVisible(row);
+    }
 }
