@@ -29,6 +29,7 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.CustomShortcutBuilder;
 import consulo.ui.ex.internal.CustomTooltipBuilder;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.ex.keymap.util.KeymapUtil;
@@ -62,8 +63,6 @@ public class ActionToolbarButtonEngine {
     private final String myPlace;
     private final Supplier<DataContext> myGetDataContext;
 
-    private Supplier<String> myShortcutBuilder;
-
     private boolean myDisplayText;
 
     private boolean myNoIconsInPopup = false;
@@ -93,10 +92,6 @@ public class ActionToolbarButtonEngine {
         myButton.repaint();
     }
 
-    public void setCustomShortcutBuilder(Supplier<String> shortcutBuilder) {
-        myShortcutBuilder = shortcutBuilder;
-    }
-
     public void updateToolTipText() {
         LocalizeValue textValue = myPresentation.getTextValue();
         LocalizeValue descriptionValue = myPresentation.getDescriptionValue();
@@ -124,9 +119,14 @@ public class ActionToolbarButtonEngine {
 
     @Nullable
     protected String getShortcutText() {
-        if (myShortcutBuilder != null) {
-            return myShortcutBuilder.get();
+        CustomShortcutBuilder shortcutBuilder = myPresentation.getClientProperty(CustomShortcutBuilder.KEY);
+        if (shortcutBuilder != null) {
+            LocalizeValue shortcutText = shortcutBuilder.build();
+            if (shortcutBuilder != LocalizeValue.empty()) {
+                return shortcutText.get();
+            }
         }
+
         return KeymapUtil.getFirstKeyboardShortcutText(myIdeAction);
     }
 

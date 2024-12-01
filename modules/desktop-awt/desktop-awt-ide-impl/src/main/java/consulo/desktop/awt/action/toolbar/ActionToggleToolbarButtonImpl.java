@@ -26,15 +26,12 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionButtonEx;
-import consulo.ui.ex.internal.HelpTooltip;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -87,11 +84,6 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
     }
 
     @Override
-    public void setIconOverrider(@Nullable Function<ActionButton, Image> imageCalculator) {
-
-    }
-
-    @Override
     public void updateToolTipText() {
         myEngine.updateToolTipText();
     }
@@ -104,11 +96,6 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
     @Override
     public void setNoIconsInPopup(boolean value) {
         myEngine.setNoIconsInPopup(value);
-    }
-
-    @Override
-    public void setCustomShortcutBuilder(Supplier<String> shortcutBuilder) {
-        myEngine.setCustomShortcutBuilder(shortcutBuilder);
     }
 
     @Override

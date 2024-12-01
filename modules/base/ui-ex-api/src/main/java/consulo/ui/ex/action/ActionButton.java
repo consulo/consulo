@@ -16,15 +16,12 @@
 package consulo.ui.ex.action;
 
 import consulo.ui.ex.internal.HelpTooltip;
-import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.border.Border;
 import java.awt.*;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -50,8 +47,6 @@ public interface ActionButton extends AnActionHolder, ActionButtonComponent {
 
     Rectangle getBounds();
 
-    void setIconOverrider(@Nullable Function<ActionButton, Image> imageCalculator);
-
     void updateToolTipText();
 
     void click();
@@ -61,9 +56,4 @@ public interface ActionButton extends AnActionHolder, ActionButtonComponent {
     void setBorder(Border border);
 
     void setOpaque(boolean value);
-
-    default void setCustomTooltipBuilder(BiConsumer<HelpTooltip, Presentation> builder) {
-    }
-
-    void setCustomShortcutBuilder(Supplier<String> shortcutBuilder);
 }

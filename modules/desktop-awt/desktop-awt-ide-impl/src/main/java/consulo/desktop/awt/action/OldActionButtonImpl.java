@@ -48,7 +48,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Deprecated
@@ -70,9 +69,6 @@ public class OldActionButtonImpl extends JButton implements ActionButtonEx {
     private boolean myDecorateButtons;
 
     protected String myLastComputedText = "";
-
-    @Nullable
-    private Function<ActionButton, Image> myImageCalculator;
 
     @Nullable
     private BiConsumer<HelpTooltip, Presentation> myTooltipPresentationBuilder;
@@ -105,11 +101,6 @@ public class OldActionButtonImpl extends JButton implements ActionButtonEx {
         throw new UnsupportedOperationException("unsupported platform");
     }
 
-    @Override
-    public void setCustomShortcutBuilder(Supplier<String> shortcutBuilder) {
-        myShortcutBuilder = shortcutBuilder;
-    }
-
     public boolean shallPaintDownArrow() {
         if (!(myAction instanceof ActionGroup && ((ActionGroup) myAction).isPopup())) {
             return false;
@@ -140,11 +131,6 @@ public class OldActionButtonImpl extends JButton implements ActionButtonEx {
     }
 
     @Override
-    public void setCustomTooltipBuilder(BiConsumer<HelpTooltip, Presentation> builder) {
-        myTooltipPresentationBuilder = builder;
-    }
-
-    @Override
     public void setNoIconsInPopup(boolean noIconsInPopup) {
         myNoIconsInPopup = noIconsInPopup;
     }
@@ -163,11 +149,6 @@ public class OldActionButtonImpl extends JButton implements ActionButtonEx {
     @Override
     public Presentation getPresentation() {
         return myPresentation;
-    }
-
-    @Override
-    public void setIconOverrider(@Nullable Function<ActionButton, Image> imageCalculator) {
-        myImageCalculator = imageCalculator;
     }
 
     @Override

@@ -19,20 +19,15 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.Component;
 import consulo.ui.Size;
-import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionButtonEx;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -79,11 +74,6 @@ public class ActionToolbarButtonImpl extends JButton implements ActionButtonEx {
     }
 
     @Override
-    public void setIconOverrider(@Nullable Function<ActionButton, Image> imageCalculator) {
-
-    }
-
-    @Override
     public void updateToolTipText() {
         myEngine.updateToolTipText();
     }
@@ -96,11 +86,6 @@ public class ActionToolbarButtonImpl extends JButton implements ActionButtonEx {
     @Override
     public void setNoIconsInPopup(boolean value) {
         myEngine.setNoIconsInPopup(value);
-    }
-
-    @Override
-    public void setCustomShortcutBuilder(Supplier<String> shortcutBuilder) {
-        myEngine.setCustomShortcutBuilder(shortcutBuilder);
     }
 
     @Override
