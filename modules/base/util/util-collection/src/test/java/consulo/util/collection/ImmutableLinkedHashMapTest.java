@@ -15,10 +15,15 @@
  */
 package consulo.util.collection;
 
+import consulo.util.collection.impl.map.ReusableLinkedHashtable;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -479,12 +484,21 @@ public class ImmutableLinkedHashMapTest {
     @Test
     @Disabled
     @SuppressWarnings({"InfiniteLoopStatement", "unused"})
-    public void testGC() {
-        ImmutableLinkedHashMap<Integer, String> map = create(10000).without(0);
+    public void testGC() throws InterruptedException {
+        ImmutableLinkedHashMap<Integer, String> map3 = create(10000).without(0).without(9999);
 
-        while (true) {
+        assertThat(map3.myRange.getTable())
+            .extracting(ReusableLinkedHashtable::getSize)
+            .isNotEqualTo(map3.size())
+            .isEqualTo(10000);
+
+        while (map3.myRange.getTable().getSize() == 10000) {
             int[] filler = new int[10000];
         }
+
+        assertThat(map3.myRange.getTable())
+            .extracting(ReusableLinkedHashtable::getSize)
+            .isEqualTo(9998);
     }
 
     private static ImmutableLinkedHashMap<Integer, String> create(int size) {
