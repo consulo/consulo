@@ -386,7 +386,6 @@ public class AllIcons {
     public static final Image InspectionsTrafficOff = PlatformIconGroup.generalInspectionstrafficoff(); // 14x14
     public static final Image InspectionsPowerSaveMode = PlatformIconGroup.generalInspectionspowersavemode(); // 14x14
     public static final Image InspectionsTypos = PlatformIconGroup.generalInspectionstypos(); // 14x14
-    public static final Image LinkDropTriangle = PlatformIconGroup.generalLinkdroptriangle();
     public static final Image Jdk = PlatformIconGroup.generalJdk(); // 16x16
     public static final Image Youtube = PlatformIconGroup.generalYoutube(); // 32x32
     public static final Image Locate = PlatformIconGroup.generalLocate(); // 14x16
