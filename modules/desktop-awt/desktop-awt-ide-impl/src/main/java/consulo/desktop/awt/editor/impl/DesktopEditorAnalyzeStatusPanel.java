@@ -18,18 +18,18 @@ package consulo.desktop.awt.editor.impl;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.PowerSaveMode;
+import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.action.ActionToolbarImpl;
-import consulo.desktop.awt.action.OldActionButtonImpl;
 import consulo.desktop.awt.language.editor.DesktopEditorFloatPanel;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
@@ -37,11 +37,11 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.impl.internal.markup.*;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -61,6 +61,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -85,97 +86,6 @@ import java.util.function.Function;
  * @since 2020-06-19
  */
 public class DesktopEditorAnalyzeStatusPanel implements Disposable {
-    private static class StatusComponentLayout implements LayoutManager {
-        private JComponent statusComponent;
-        private final java.util.List<JComponent> actionButtons = new ArrayList<>();
-
-        @Override
-        public void addLayoutComponent(String s, Component component) {
-            JComponent jc = (JComponent) component;
-            if (ActionToolbar.CUSTOM_COMPONENT_CONSTRAINT.equals(s) && jc instanceof StatusButton) {
-                statusComponent = jc;
-            }
-            else if (ActionToolbar.ACTION_BUTTON_CONSTRAINT.equals(s) && jc instanceof OldActionButtonImpl) {
-                actionButtons.add(jc);
-            }
-        }
-
-        @Override
-        public void removeLayoutComponent(Component component) {
-            JComponent jc = (JComponent) component;
-            if (jc instanceof StatusButton) {
-                statusComponent = null;
-            }
-            else if (jc instanceof OldActionButtonImpl) {
-                actionButtons.remove(jc);
-            }
-        }
-
-        @Override
-        public Dimension preferredLayoutSize(Container container) {
-            Dimension size = statusComponent != null && statusComponent.isVisible() ? statusComponent.getPreferredSize() : JBUI.emptySize();
-
-            for (JComponent jc : actionButtons) {
-                if (jc.isVisible()) {
-                    Dimension prefSize = jc.getPreferredSize();
-                    size.height = Math.max(size.height, prefSize.height);
-                }
-            }
-
-            for (JComponent jc : actionButtons) {
-                if (jc.isVisible()) {
-                    Dimension prefSize = jc.getPreferredSize();
-                    Insets i = jc.getInsets();
-                    JBInsets.removeFrom(prefSize, i);
-
-                    int maxBareHeight = size.height - i.top - i.bottom;
-                    size.width += Math.max(prefSize.width, maxBareHeight) + i.left + i.right;
-                }
-            }
-
-            if (size.width > 0 && size.height > 0) {
-                JBInsets.addTo(size, container.getInsets());
-            }
-            return size;
-        }
-
-        @Override
-        public Dimension minimumLayoutSize(Container container) {
-            return preferredLayoutSize(container);
-        }
-
-        @Override
-        public void layoutContainer(Container container) {
-            Dimension prefSize = preferredLayoutSize(container);
-
-            if (prefSize.width > 0 && prefSize.height > 0) {
-                Insets i = container.getInsets();
-                JBInsets.removeFrom(prefSize, i);
-                int offset = i.left;
-
-                if (statusComponent != null && statusComponent.isVisible()) {
-                    Dimension size = statusComponent.getPreferredSize();
-                    statusComponent.setBounds(offset, i.top, size.width, prefSize.height);
-                    offset += size.width;
-                }
-
-                for (JComponent jc : actionButtons) {
-                    if (jc.isVisible()) {
-                        Dimension jcPrefSize = jc.getPreferredSize();
-                        Insets jcInsets = jc.getInsets();
-                        JBInsets.removeFrom(jcPrefSize, jcInsets);
-
-                        int maxBareHeight = prefSize.height - jcInsets.top - jcInsets.bottom;
-                        int width = Math.max(jcPrefSize.width, maxBareHeight) + jcInsets.left + jcInsets.right;
-
-                        jc.setBounds(offset, i.top, width, prefSize.height);
-                        offset += width;
-                    }
-                }
-            }
-        }
-    }
-
     private static class StatusButton extends JPanel {
         private static final int LEFT_RIGHT_INDENT = 5;
         private static final int INTER_GROUP_OFFSET = 6;
@@ -197,7 +107,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 String propName = l.getPropertyName();
                 if (propName.equals(EXPANDED_STATUS.toString()) && l.getNewValue() != null) {
                     //noinspection unchecked
-                    java.util.List<StatusItem> newStatus = (java.util.List<StatusItem>) l.getNewValue();
+                    List<StatusItem> newStatus = (List<StatusItem>) l.getNewValue();
                     updateContents(newStatus);
                     translucent = false;
                     revalidate();
@@ -259,7 +169,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             return ComponentUtil.getParentOfType((Class<? extends ActionToolbar>) ActionToolbar.class, this);
         }
 
-        private void updateContents(@Nonnull java.util.List<StatusItem> status) {
+        private void updateContents(@Nonnull List<StatusItem> status) {
             removeAll();
 
             setEnabled(!status.isEmpty());
@@ -444,9 +354,10 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             myPopup = null;
         }
 
+        @RequiredUIAccess
         private void updateContentPanel(@Nonnull UIController controller) {
-            java.util.List<PassWrapper> passes = analyzerStatus.getPasses();
-            Set<String> presentableNames = ContainerUtil.map2Set(passes, p -> p.getPresentableName());
+            List<PassWrapper> passes = analyzerStatus.getPasses();
+            Set<String> presentableNames = ContainerUtil.map2Set(passes, PassWrapper::getPresentableName);
 
             if (!presentableNames.isEmpty() && myProgressBarMap.keySet().equals(presentableNames)) {
                 for (PassWrapper pass : passes) {
@@ -474,15 +385,16 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 myContent.add(createDetailsPanel(), gc);
             }
 
-            Presentation presentation = new Presentation();
-            presentation.setIcon(AllIcons.Actions.More);
-            presentation.putClientProperty(OldActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
-
-            java.util.List<AnAction> actions = controller.getActions();
+            List<AnAction> actions = controller.getActions();
             if (!actions.isEmpty()) {
-                OldActionButtonImpl menuButton = new OldActionButtonImpl(new MenuAction(actions), presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+                ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("AnalyzeStatusPanel", new WrapperGroup(actions), true);
+                toolbar.setTargetComponent(myContent);
+                toolbar.setMiniMode(true);
+                toolbar.updateActionsImmediately();
 
-                myContent.add(menuButton, gc.next().anchor(GridBagConstraints.LINE_END).weightx(0).insets(10, 6, 10, 6));
+                JComponent component = toolbar.getComponent();
+
+                myContent.add(component, gc.next().anchor(GridBagConstraints.LINE_END).weightx(0).insets(10, 6, 10, 6));
             }
 
             myProgressBarMap.clear();
@@ -562,7 +474,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 }), gc.next().anchor(GridBagConstraints.LINE_START));
             }
             else {
-                java.util.List<LanguageHighlightLevel> levels = controller.getHighlightLevels();
+                List<LanguageHighlightLevel> levels = controller.getHighlightLevels();
 
                 if (levels.size() == 1) {
                     JLabel highlightLabel = new JLabel(EditorBundle.message("iw.highlight.label") + " ");
@@ -613,11 +525,25 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
     }
 
-    private class MenuAction extends DefaultActionGroup implements HintManagerImpl.ActionToIgnore {
+    private class WrapperGroup extends ActionGroup implements DumbAware, HintManagerImpl.ActionToIgnore {
+        private final ActionGroup[] myActions;
+
+        public WrapperGroup(@Nonnull List<? extends AnAction> actions) {
+            myActions = new ActionGroup[]{new MenuAction(actions)};
+        }
+
+        @Nonnull
+        @Override
+        public AnAction[] getChildren(@Nullable AnActionEvent e) {
+            return myActions;
+        }
+    }
+
+    private class MenuAction extends DefaultActionGroup implements DumbAware, HintManagerImpl.ActionToIgnore {
         private MenuAction(@Nonnull List<? extends AnAction> actions) {
             setPopup(true);
             addAll(actions);
-            add(new ToggleAction(EditorBundle.message("iw.compact.view")) {
+            add(new ToggleAction(CodeEditorLocalize.iwCompactView()) {
                 @Override
                 public boolean isSelected(@Nonnull AnActionEvent e) {
                     return !showToolbar;
@@ -631,6 +557,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                     //ActionsCollector.getInstance().record(e.getProject(), this, e, null);
                 }
 
+                @RequiredUIAccess
                 @Override
                 public void update(@Nonnull AnActionEvent e) {
                     super.update(e);
@@ -643,6 +570,17 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 }
             });
         }
+
+        @Override
+        public boolean showBelowArrow() {
+            return false;
+        }
+
+        @Nullable
+        @Override
+        protected Image getTemplateIcon() {
+            return PlatformIconGroup.actionsMorevertical();
+        }
     }
 
     private static class TrackableLinkLabel extends LinkLabel<Object> {
@@ -650,10 +588,10 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
         private TrackableLinkLabel(@Nonnull String text, @Nonnull Runnable action) {
             super(text, (Image) null);
-            //setListener((__, ___) -> {
-            //  action.run();
-            //  ActionsCollector.getInstance().record(null, myEvent, getClass());
-            //}, null);
+            setListener((aSource, aLinkData) -> {
+                action.run();
+                //  ActionsCollector.getInstance().record(null, myEvent, getClass());
+            }, null);
         }
 
         @Override
@@ -663,14 +601,10 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
     }
 
-    private static final Key<java.util.List<StatusItem>> EXPANDED_STATUS = Key.create("EXPANDED_STATUS");
+    private static final Key<List<StatusItem>> EXPANDED_STATUS = Key.create("EXPANDED_STATUS");
     private static final Key<Boolean> TRANSLUCENT_STATE = Key.create("TRANSLUCENT_STATE");
     private static final int DELTA_X = 6;
     private static final int DELTA_Y = 6;
-
-    private static final EditorColorKey HOVER_BACKGROUND = EditorColorKey.createColorKey("ActionButton.hoverBackground", TargetAWT.from(JBCurrentTheme.ActionButton.hoverBackground()));
-
-    private static final EditorColorKey PRESSED_BACKGROUND = EditorColorKey.createColorKey("ActionButton.pressedBackground", TargetAWT.from(JBCurrentTheme.ActionButton.pressedBackground()));
 
     private static final EditorColorKey ICON_TEXT_COLOR = EditorColorKey.createColorKey("ActionButtonImpl.iconTextForeground", TargetAWT.from(UIUtil.getContextHelpForeground()));
 
@@ -713,7 +647,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
         AnAction statusAction = new StatusAction();
         ActionGroup actions = new DefaultActionGroup(statusAction, navigateGroup);
-        statusToolbar = new ActionToolbarImpl(ActionPlaces.EDITOR_INSPECTIONS_TOOLBAR, actions, true);
+        statusToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_INSPECTIONS_TOOLBAR, actions, true);
 
         MessageBusConnection connection = Application.get().getMessageBus().connect(this);
         connection.subscribe(AnActionListener.class, new AnActionListener() {
@@ -740,9 +674,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     }
 
     public void updateUI() {
-        JComponent toolbar = statusToolbar.getComponent();
-        toolbar.setLayout(new StatusComponentLayout());
-        toolbar.addComponentListener(toolbarComponentListener);
+        JComponent toolbarComponent = statusToolbar.getComponent();
+        toolbarComponent.addComponentListener(toolbarComponentListener);
 
         DesktopEditorFloatPanel statusPanel = new DesktopEditorFloatPanel() {
             @Override
@@ -752,7 +685,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         };
         statusPanel.setVisible(!myEditor.isOneLineMode());
         statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
-        statusPanel.add(statusToolbar.getComponent());
+        statusPanel.add(toolbarComponent);
 
         statusToolbar.setTargetComponent(statusPanel);
 
