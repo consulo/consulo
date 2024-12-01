@@ -28,8 +28,15 @@ import java.util.*;
 public abstract class ActionGroup extends AnAction {
     public abstract static class Builder {
         protected final List<AnAction> myActions = new ArrayList<>();
+        protected boolean myPopup;
 
         protected Builder() {
+        }
+
+        @Nonnull
+        public Builder setPopup() {
+            myPopup = true;
+            return this;
         }
 
         @Nonnull
@@ -70,10 +77,17 @@ public abstract class ActionGroup extends AnAction {
     }
 
     private static class ImmutableActionGroup extends ActionGroup implements DumbAware {
-        private AnAction[] myChildren;
+        private final AnAction[] myChildren;
+        private final boolean myPopup;
 
-        private ImmutableActionGroup(AnAction[] chilren) {
+        private ImmutableActionGroup(AnAction[] chilren, boolean popup) {
             myChildren = chilren;
+            myPopup = popup;
+        }
+
+        @Override
+        public boolean isPopup() {
+            return myPopup;
         }
 
         @Nonnull
@@ -90,7 +104,7 @@ public abstract class ActionGroup extends AnAction {
         @Nonnull
         @Override
         public ActionGroup build() {
-            return new ImmutableActionGroup(ContainerUtil.toArray(myActions, ARRAY_FACTORY));
+            return new ImmutableActionGroup(ContainerUtil.toArray(myActions, ARRAY_FACTORY), myPopup);
         }
     }
 
