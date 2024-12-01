@@ -584,6 +584,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     private ConfigurableSessionImpl myConfigurableSession;
 
+    private boolean myConfigurablesLoaded;
     private Configurable[] myBuildConfigurables = Configurable.EMPTY_ARRAY;
 
     public OptionsEditor(Project project,
@@ -708,6 +709,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
             Configurable preselectedConfigurable = myConfigurablePreselectStrategy.get(myBuildConfigurables);
 
+            myConfigurablesLoaded = true;
+
             myProject.getUIAccess().give(() -> {
                 myTreeDecoratorPanel.invalidate();
                 myTreeDecoratorPanel.stopLoading();
@@ -736,6 +739,9 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         }
     }
 
+    public boolean isConfigurablesLoaded() {
+        return myConfigurablesLoaded;
+    }
 
     @Override
     public void uiSettingsChanged(UISettings source) {

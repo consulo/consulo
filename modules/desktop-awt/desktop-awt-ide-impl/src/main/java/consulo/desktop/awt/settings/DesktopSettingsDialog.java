@@ -203,6 +203,10 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     private void saveCurrentConfigurable() {
+        if (!myEditor.isConfigurablesLoaded()) {
+            return;
+        }
+        
         final Configurable current = myEditor.getContext().getCurrentConfigurable();
         if (current == null) {
             return;
