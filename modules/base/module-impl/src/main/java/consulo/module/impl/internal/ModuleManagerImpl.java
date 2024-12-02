@@ -19,7 +19,6 @@ package consulo.module.impl.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -384,11 +383,11 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             }
             final Module module = myModuleModel.removeModuleByDirUrl(dirUrl);
             if (module != null) {
-                ApplicationManager.getApplication().invokeLater(() -> Disposer.dispose(module));
+                myProject.getApplication().invokeLater(() -> Disposer.dispose(module));
             }
         }
 
-        if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
+        if (myProject.getApplication().isHeadlessEnvironment()) {
             throw new RuntimeException(errors.get(0).getDescription());
         }
 
@@ -403,7 +402,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Override
     @Nonnull
     public ModifiableModuleModel getModifiableModel() {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        myProject.getApplication().assertReadAccessAllowed();
         return new ModuleModelImpl(myModuleModel);
     }
 
@@ -481,12 +480,17 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Nonnull
     public Module[] getModules() {
         if (!myReady) {
-            LOG.error("Modules not initialized at current moment");
+            Exception trace = DebugStackTrace.getTrace();
+            if (trace != null) {
+                LOG.error("Modules not initialized at current moment", trace);
+            } else {
+                LOG.error("Modules not initialized at current moment");
+            }
             return Module.EMPTY_ARRAY;
         }
 
         if (myModuleModel.myIsWritable) {
-            ApplicationManager.getApplication().assertReadAccessAllowed();
+            myProject.getApplication().assertReadAccessAllowed();
         }
         return myModuleModel.getModules();
     }
@@ -502,7 +506,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return Module.EMPTY_ARRAY;
         }
 
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        myProject.getApplication().assertReadAccessAllowed();
         deliverPendingEvents();
         if (myCachedSortedModules == null) {
             myCachedSortedModules = myModuleModel.getSortedModules();
@@ -517,7 +521,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             throw new IllegalArgumentException("Modules not initialized at current moment");
         }
 
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.findModuleByName(name);
     }
 
@@ -527,7 +531,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Override
     @Nonnull
     public Comparator<Module> moduleDependencyComparator() {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        myProject.getApplication().assertReadAccessAllowed();
         deliverPendingEvents();
         if (myCachedModuleComparator == null) {
             myCachedModuleComparator = myModuleModel.moduleDependencyComparator();
@@ -549,7 +553,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Nonnull
     @Override
     public Graph<Module> moduleGraph(boolean includeTests) {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.moduleGraph(includeTests);
     }
 
@@ -557,14 +561,14 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Override
     @Nonnull
     public List<Module> getModuleDependentModules(@Nonnull Module module) {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.getModuleDependentModules(module);
     }
 
     @RequiredReadAction
     @Override
     public boolean isModuleDependent(@Nonnull Module module, @Nonnull Module onModule) {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.isModuleDependent(module, onModule);
     }
 
@@ -580,7 +584,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     @RequiredUIAccess
     protected void fireModuleAddedInWriteAction(final Module module) {
-        ApplicationManager.getApplication().runWriteAction(() -> {
+        myProject.getApplication().runWriteAction(() -> {
             ((ModuleEx) module).moduleAdded();
             fireModuleAdded(module);
         });
@@ -756,7 +760,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             String dirUrl = item.getDirUrl();
             if (dirUrl != null) {
                 Ref<VirtualFile> ref = Ref.create();
-                ApplicationManager.getApplication().invokeAndWait(() -> ref.set(VirtualFileManager.getInstance().refreshAndFindFileByUrl(dirUrl)));
+                myProject.getApplication().invokeAndWait(() -> ref.set(VirtualFileManager.getInstance().refreshAndFindFileByUrl(dirUrl)));
                 VirtualFile moduleDir = ref.get();
 
                 if (moduleDir == null || !moduleDir.exists() || !moduleDir.isDirectory()) {
@@ -773,7 +777,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                 collapseOrExpandMacros(oldModule, item.getElement(), false);
 
                 final ModuleRootManagerImpl moduleRootManager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(oldModule);
-                ApplicationManager.getApplication().runReadAction(() -> moduleRootManager.loadState(item.getElement(), progressIndicator));
+                myProject.getApplication().runReadAction(() -> moduleRootManager.loadState(item.getElement(), progressIndicator));
             }
             return oldModule;
         }
@@ -865,7 +869,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         @Override
         public void dispose() {
             assertWritable();
-            ApplicationManager.getApplication().assertWriteAccessAllowed();
+            myProject.getApplication().assertWriteAccessAllowed();
             final Collection<Module> list = myModuleModel.myModules;
             final Collection<Module> thisModules = myModules;
             for (Module thisModule : thisModules) {
@@ -929,7 +933,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     private void commitModel(final ModuleModelImpl moduleModel, final Runnable runnable) {
         myModuleModel.myModulesCache = null;
         myModificationCount++;
-        ApplicationManager.getApplication().assertWriteAccessAllowed();
+        myProject.getApplication().assertWriteAccessAllowed();
         final Collection<Module> oldModules = myModuleModel.myModules;
         final Collection<Module> newModules = moduleModel.myModules;
         final List<Module> removedModules = new ArrayList<>(oldModules);

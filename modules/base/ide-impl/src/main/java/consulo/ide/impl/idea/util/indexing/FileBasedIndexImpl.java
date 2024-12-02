@@ -2294,7 +2294,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     @Nonnull Project project,
     @Nonnull ProgressIndicator indicator
   ) {
-    PushedFilePropertiesUpdaterImpl.invokeConcurrentlyIfPossible(myApplication, collectScanRootRunnables(processor, project, indicator));
+    PushedFilePropertiesUpdaterImpl.invokeConcurrentlyIfPossible(new Exception(), myApplication, collectScanRootRunnables(processor, project, indicator));
   }
 
   @Override
