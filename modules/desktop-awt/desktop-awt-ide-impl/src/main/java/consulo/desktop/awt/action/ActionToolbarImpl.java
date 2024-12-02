@@ -382,8 +382,8 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
                                                @Nonnull Presentation presentation,
                                                @Nonnull Size minimumSize) {
         ActionButton actionButton;
-        if (action instanceof ToggleAction) {
-            actionButton = new ActionToggleToolbarButtonImpl(action, presentation, place, minimumSize) {
+        if (action instanceof ToggleAction toggleAction) {
+            actionButton = new ActionToggleToolbarButtonImpl(toggleAction, presentation, place, minimumSize) {
                 @Override
                 protected DataContext getDataContext() {
                     return getToolbarDataContext();
