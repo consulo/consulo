@@ -78,8 +78,8 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
     public BackgroundableProcessIndicator(Project project,
                                           @Nls final LocalizeValue progressTitle,
                                           @Nonnull PerformInBackgroundOption option,
-                                          @Nls final LocalizeValue cancelButtonText,
-                                          @Nls final LocalizeValue backgroundStopTooltip,
+                                          @Nonnull LocalizeValue cancelButtonText,
+                                          @Nonnull LocalizeValue backgroundStopTooltip,
                                           final boolean cancellable) {
         this(project, new TaskInfo() {
 
