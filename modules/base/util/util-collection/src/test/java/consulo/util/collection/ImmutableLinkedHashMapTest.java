@@ -482,6 +482,31 @@ public class ImmutableLinkedHashMapTest {
     }
 
     @Test
+    public void testReversed() {
+        ImmutableLinkedHashMap<Integer, String> map = create(3);
+
+        assertThat(map)
+            .hasToString("{0=0, 1=1, 2=2}");
+
+        assertThat(map.reversed())
+            .hasSameSizeAs(map)
+            .isNotSameAs(map)
+            .hasToString("{2=2, 1=1, 0=0}");
+
+        assertThat(map.without(2).reversed())
+            .hasToString("{1=1, 0=0}");
+
+        assertThat(map.sequencedKeySet().reversed())
+            .hasToString("[2, 1, 0]");
+
+        assertThat(map.sequencedValues().reversed())
+            .hasToString("[2, 1, 0]");
+
+        assertThat(map.sequencedEntrySet().reversed())
+            .hasToString("[2=2, 1=1, 0=0]");
+    }
+
+    @Test
     @Disabled
     @SuppressWarnings({"InfiniteLoopStatement", "unused"})
     public void testGC() throws InterruptedException {

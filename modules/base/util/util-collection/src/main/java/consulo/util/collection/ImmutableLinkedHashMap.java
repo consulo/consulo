@@ -43,7 +43,7 @@ import java.util.function.Consumer;
  * @author UNV
  * @since 2024-11-18
  */
-public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, ReusableLinkedHashtableUser {
+public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, SequencedMap<K, V>, ReusableLinkedHashtableUser {
     private static final ImmutableLinkedHashMap<Object, Object> EMPTY = of(ReusableLinkedHashtable.empty());
 
     protected ReusableLinkedHashtable<K, V>.Range myRange;
@@ -114,6 +114,11 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
             newTable.insertNullable(entry.getKey(), entry.getValue());
         }
         return of(newTable);
+    }
+
+    @Override
+    public ImmutableLinkedHashMap<K, V> reversed() {
+        return of(myRange.copyReversed());
     }
 
     /**
@@ -309,13 +314,13 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
     @Nonnull
     @Override
     public Set<K> keySet() {
-        return new MyKeySet();
+        return sequencedKeySet();
     }
 
     @Nonnull
     @Override
     public Collection<V> values() {
-        return new MyValues();
+        return sequencedValues();
     }
 
     /**
@@ -331,6 +336,21 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
     @Nonnull
     @Override
     public Set<Entry<K, V>> entrySet() {
+        return sequencedEntrySet();
+    }
+
+    @Override
+    public SequencedSet<K> sequencedKeySet() {
+        return new MyKeySet();
+    }
+
+    @Override
+    public SequencedCollection<V> sequencedValues() {
+        return new MyValues();
+    }
+
+    @Override
+    public SequencedSet<Entry<K, V>> sequencedEntrySet() {
         return new MyEntrySet();
     }
 
@@ -439,7 +459,7 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
         }
     }
 
-    private class MyKeySet extends AbstractSet<K> {
+    private class MyKeySet extends AbstractSet<K> implements SequencedSet<K> {
         @Nonnull
         @Override
         public Iterator<K> iterator() {
@@ -460,9 +480,14 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
         public int size() {
             return ImmutableLinkedHashMap.this.size();
         }
+
+        @Override
+        public SequencedSet<K> reversed() {
+            return ImmutableLinkedHashMap.this.reversed().sequencedKeySet();
+        }
     }
 
-    private class MyValues extends AbstractCollection<V> {
+    private class MyValues extends AbstractCollection<V> implements SequencedCollection<V> {
         @Nonnull
         @Override
         public Iterator<V> iterator() {
@@ -483,9 +508,14 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
         public int size() {
             return ImmutableLinkedHashMap.this.size();
         }
+
+        @Override
+        public SequencedCollection<V> reversed() {
+            return ImmutableLinkedHashMap.this.reversed().sequencedValues();
+        }
     }
 
-    private class MyEntrySet extends AbstractSet<Entry<K, V>> {
+    private class MyEntrySet extends AbstractSet<Entry<K, V>> implements SequencedSet<Map.Entry<K, V>> {
         @Nonnull
         @Override
         public Iterator<Entry<K, V>> iterator() {
@@ -495,6 +525,11 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Reusabl
         @Override
         public int size() {
             return ImmutableLinkedHashMap.this.size();
+        }
+
+        @Override
+        public SequencedSet<Entry<K, V>> reversed() {
+            return ImmutableLinkedHashMap.this.reversed().sequencedEntrySet();
         }
     }
 }

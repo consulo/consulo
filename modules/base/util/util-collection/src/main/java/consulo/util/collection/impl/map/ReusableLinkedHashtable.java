@@ -207,6 +207,13 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         return blankOfSize(myStrategy, size);
     }
 
+    public ReusableLinkedHashtable<K, V> copy() {
+        ReusableLinkedHashtable<K, V> newTable =
+            new ReusableLinkedHashtable<>(myStrategy, myData.clone(), myNextPosAndHash.clone(), mySize);
+        newTable.myEndPos = myEndPos;
+        return newTable;
+    }
+
     @SuppressWarnings("unchecked")
     public ReusableLinkedHashtable<K, V> copyOfSize(int maxSize) {
         ReusableLinkedHashtable<K, V> newTable = blankOfSize(maxSize);
@@ -218,6 +225,12 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
                 }
             }
         }
+        return newTable;
+    }
+
+    public ReusableLinkedHashtable<K, V> copyReversed() {
+        ReusableLinkedHashtable<K, V> newTable = copy();
+        newTable.reverse();
         return newTable;
     }
 
@@ -491,6 +504,24 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         }
     }
 
+    protected void reverse() {
+        if (mySize <= 0) {
+            return;
+        }
+
+        int endPos = myEndPos, startPos = getStartPos(), prevPos = endPos, pos = startPos;
+        while (true) {
+            int nextPos = myNextPosAndHash[pos];
+            myNextPosAndHash[pos] = prevPos;
+            if (pos == endPos) {
+                break;
+            }
+            prevPos = pos;
+            pos = nextPos;
+        }
+        myEndPos = startPos;
+    }
+
     public class Range extends WeakReference<ReusableLinkedHashtableUser> implements ReusableLinkedHashtableRange {
         protected Range myPrevious, myNext;
         public final int myStartPos, myEndPos, mySize;
@@ -572,6 +603,17 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         @Nonnull
         public ReusableLinkedHashtable<K, V> copy() {
             return copyWithout(mySize, null, -1);
+        }
+
+        @Nonnull
+        public ReusableLinkedHashtable<K, V> copyReversed() {
+            if (isMasterRange()) {
+                return ReusableLinkedHashtable.this.copyReversed();
+            }
+
+            ReusableLinkedHashtable<K, V> newTable = copy();
+            newTable.reverse();
+            return newTable;
         }
 
         @Nonnull
