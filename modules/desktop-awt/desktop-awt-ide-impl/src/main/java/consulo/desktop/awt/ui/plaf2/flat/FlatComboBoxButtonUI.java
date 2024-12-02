@@ -105,7 +105,7 @@ public class FlatComboBoxButtonUI extends FlatComboBoxUI implements ComboBoxButt
     public void update(Graphics g, JComponent c) {
         float focusWidth = FlatUIUtils.getBorderFocusWidth(c);
         float arc = FlatUIUtils.getBorderArc(c);
-        boolean paintBackground = true;
+        boolean paintBackground = c.isOpaque();
 
         // check whether used as cell renderer
         boolean isCellRenderer = c.getParent() instanceof CellRendererPane;
@@ -133,7 +133,7 @@ public class FlatComboBoxButtonUI extends FlatComboBoxUI implements ComboBoxButt
         boolean isLeftToRight = comboBox.getComponentOrientation().isLeftToRight();
 
         // paint background
-        if (paintBackground || c.isOpaque()) {
+        if (paintBackground) {
             g2.setColor(getBackground(enabled));
             FlatUIUtils.paintComponentBackground(g2, 0, 0, width, height, focusWidth, arc);
 
