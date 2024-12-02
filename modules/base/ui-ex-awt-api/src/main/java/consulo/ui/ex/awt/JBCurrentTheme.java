@@ -597,6 +597,6 @@ public class JBCurrentTheme {
 
     @Nonnull
     public static Border listCellBorder() {
-        return JBUI.Borders.empty(4);
+        return JBUI.Borders.empty(2, 4);
     }
 }

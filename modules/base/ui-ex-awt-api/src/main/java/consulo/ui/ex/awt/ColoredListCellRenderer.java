@@ -54,6 +54,9 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
     @Override
     public Component getListCellRendererComponent(JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
         clear();
+
+        setBorder(JBCurrentTheme.listCellBorder());
+
         mySeparator = false;
         mySeparatorText = null;
 
@@ -75,8 +78,6 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
             setOpaque(true);
             setBackground(selected ? list.getSelectionBackground() : null);
         }
-
-        setPaintFocusBorder(hasFocus);
 
         customizeCellRenderer(list, value, index, selected, hasFocus);
 

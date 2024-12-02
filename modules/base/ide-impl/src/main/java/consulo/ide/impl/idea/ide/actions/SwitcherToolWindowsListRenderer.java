@@ -44,8 +44,6 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
     @Override
     @RequiredUIAccess
     protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
-        setBorder(JBCurrentTheme.listCellBorder());
-
         String nameToMatch = "";
         if (value instanceof ToolWindow) {
             ToolWindow tw = ((ToolWindow) value);

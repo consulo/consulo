@@ -129,11 +129,6 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
             public void updateUI() {
                 super.updateUI();
 
-                TreeUI treeUI = getUI();
-                if (treeUI instanceof BasicTreeUI) {
-                    ((BasicTreeUI) treeUI).setLeftChildIndent(JBUI.scale(10));
-                }
-
                 setFont(JBUI.Fonts.biggerFont());
             }
         };

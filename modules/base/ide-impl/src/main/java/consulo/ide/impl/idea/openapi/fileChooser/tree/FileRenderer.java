@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 

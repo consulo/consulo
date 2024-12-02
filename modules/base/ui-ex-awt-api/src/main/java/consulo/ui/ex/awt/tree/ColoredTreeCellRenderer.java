@@ -5,6 +5,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.SpeedSearchUtilBase;
 import consulo.ui.ex.awt.UIUtil;
@@ -43,7 +44,9 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
   @Override
   public final Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     try {
-      rendererComponentInner(tree, value, selected, expanded, leaf, row, hasFocus);
+        setBorder(JBCurrentTheme.listCellBorder());
+
+        rendererComponentInner(tree, value, selected, expanded, leaf, row, hasFocus);
     }
     catch (ProcessCanceledException e) {
       throw e;

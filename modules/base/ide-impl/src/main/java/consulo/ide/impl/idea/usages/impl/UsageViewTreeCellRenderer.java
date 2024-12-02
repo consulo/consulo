@@ -15,26 +15,25 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.ui.style.StyleManager;
-import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
-import consulo.usage.*;
-import consulo.usage.UsageTreeColorsScheme;
-import consulo.ui.ex.DarculaColors;
-import consulo.ui.ex.awt.FontUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.document.util.TextRange;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
+import consulo.ui.ex.DarculaColors;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.FontUtil;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
-
+import consulo.ui.style.StyleManager;
+import consulo.usage.*;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;

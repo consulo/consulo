@@ -43,7 +43,6 @@ public class DropDownLink<T> extends LinkLabel<Object> {
               setRenderer(new ColoredListCellRenderer() {
                   @Override
                   protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                      setBorder(JBCurrentTheme.listCellBorder());
                       append(value == null ? "" : value.toString());
                   }
               }).
