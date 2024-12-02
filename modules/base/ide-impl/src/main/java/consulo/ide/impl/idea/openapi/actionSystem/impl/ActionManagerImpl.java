@@ -604,6 +604,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         if (!myInitialized.get()) {
             long wait = System.currentTimeMillis();
             myInitializeLocker.waitFor();
+            // FIXME [VISTALL] this lock will block UI until load - maybe make progress panel until load?
             LOG.warn("wait " + (System.currentTimeMillis() - wait) + " nanos, until initialize");
         }
 
