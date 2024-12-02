@@ -8,6 +8,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.Semaphore;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.component.bind.InjectingBinding;
@@ -75,6 +76,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Singleton
 @ServiceImpl
@@ -147,6 +149,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     private final ComponentBinding myComponentBinding;
     private final KeymapManagerEx myKeymapManager;
 
+    private final AtomicBoolean myInitialized = new AtomicBoolean();
+    private final Semaphore myInitializeLocker;
+
     @Inject
     ActionManagerImpl(Application application,
                       ActionToolbarFactory toolbarFactory,
@@ -158,11 +163,17 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         myPopupMenuFactory = popupMenuFactory;
         myComponentBinding = componentBinding;
         myKeymapManager = (KeymapManagerEx) keymapManager;
+
+        myInitializeLocker = new Semaphore(1);
     }
 
-    public void underLock(Runnable runnable) {
-        synchronized (myLock) {
-            runnable.run();
+    public void initialize(Runnable runnable) {
+        if (myInitialized.compareAndSet(false, true)) {
+            synchronized (myLock) {
+                runnable.run();
+
+                myInitializeLocker.up();
+            }
         }
     }
 
@@ -590,6 +601,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Nullable
     private AnAction getActionImpl(@Nonnull String id, boolean canReturnStub) {
+        if (!myInitialized.get()) {
+            long wait = System.currentTimeMillis();
+            myInitializeLocker.waitFor();
+            LOG.warn("wait " + (System.currentTimeMillis() - wait) + " nanos, until initialize");
+        }
+
         AnAction action;
         synchronized (myLock) {
             action = myId2Action.get(id);

@@ -17,7 +17,6 @@ package consulo.application.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.application.progress.ProgressIndicator;
 import jakarta.annotation.Nonnull;
 
@@ -31,8 +30,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PreloadingActivity {
-  public static final ExtensionPointName<PreloadingActivity> EP_NAME = ExtensionPointName.create(PreloadingActivity.class);
-
   /**
    * Perform the preloading
    * @param indicator a progress indicator for the background preloading process.
@@ -40,5 +37,4 @@ public abstract class PreloadingActivity {
    *                  Long actions should periodically perform <code>indicator.checkCanceled()</code>.
    */
   public abstract void preload(@Nonnull ProgressIndicator indicator);
-
 }
