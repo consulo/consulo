@@ -569,6 +569,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     private final MergingUpdateQueue myModificationChecker;
     private JPanel myRootPanel;
+    private final Runnable myAfterTreeLoad;
 
     private final SpotlightPainter mySpotlightPainter = new SpotlightPainter();
     private final MergingUpdateQueue mySpotlightUpdate;
@@ -590,11 +591,13 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     public OptionsEditor(Project project,
                          Function<Project, Configurable[]> configurablesBuilder,
                          ConfigurablePreselectStrategy configurablePreselectStrategy,
-                         JPanel rootPanel) {
+                         JPanel rootPanel,
+                         Runnable afterTreeLoad) {
         myProject = project;
         myConfigurablesBuilder = configurablesBuilder;
         myConfigurablePreselectStrategy = configurablePreselectStrategy;
         myRootPanel = rootPanel;
+        myAfterTreeLoad = afterTreeLoad;
 
         myConfigurableSession = new ConfigurableSessionImpl(project);
 
@@ -724,6 +727,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                             myTree.selectFirst();
                         }
                     }
+
+                    myAfterTreeLoad.run();
                 });
 
                 mySearchWrapper.setVisible(true);

@@ -532,7 +532,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         FilteringTreeStructure treeStructure = (FilteringTreeStructure) myBuilder.getTreeStructure();
         treeStructure.rebuild();
 
-        myBuilder.queueUpdate().doWhenDone(after);
+        myBuilder.queueUpdate().doWhenProcessed(after);
     }
 
     @Override

@@ -95,20 +95,13 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
             DesktopSettingsDialog dialog;
             if (ModalityPerProjectEAPDescriptor.is()) {
-                dialog = new DesktopSettingsDialog(actualProject, configurableBuilder, strategy, true);
+                dialog = new DesktopSettingsDialog(actualProject, configurableBuilder, strategy, true, onShow);
             }
             else {
-                dialog = new DesktopSettingsDialog(actualProject, configurableBuilder, strategy);
+                dialog = new DesktopSettingsDialog(actualProject, configurableBuilder, strategy, onShow);
             }
 
-            Disposer.register(dialog.getDisposable(), () -> clearCaches());
-
-            new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
-                @Override
-                public void showNotify() {
-                    onShow.accept(dialog);
-                }
-            });
+            Disposer.register(dialog.getDisposable(), this::clearCaches);
 
             dialog.showAsync().doWhenProcessed(() -> myShown.set(false)).notify(result);
         });

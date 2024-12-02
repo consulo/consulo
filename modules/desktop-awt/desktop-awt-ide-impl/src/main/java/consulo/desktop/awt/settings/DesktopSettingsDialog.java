@@ -47,6 +47,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class DesktopSettingsDialog extends WholeWestDialogWrapper implements DataProvider {
@@ -54,6 +55,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     private Project myProject;
     private final Function<Project, Configurable[]> myConfigurablesBuilder;
     private ConfigurablePreselectStrategy myPreselectStrategy;
+    private final Consumer<DesktopSettingsDialog> myAfteLoad;
     private OptionsEditor myEditor;
 
     private ApplyAction myApplyAction;
@@ -68,23 +70,27 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     public DesktopSettingsDialog(Project project,
                                  Function<Project, Configurable[]> configurablesBuilder,
                                  @Nonnull ConfigurablePreselectStrategy strategy,
-                                 boolean applicationModalIfPossible
+                                 boolean applicationModalIfPossible,
+                                 Consumer<DesktopSettingsDialog> afteLoad
     ) {
         super(true, applicationModalIfPossible);
         myProject = project;
         myConfigurablesBuilder = configurablesBuilder;
         myPreselectStrategy = strategy;
+        myAfteLoad = afteLoad;
         setTitle(Platform.current().os().isMac() ? CommonLocalize.titleSettingsMac() : CommonLocalize.titleSettings());
         init();
     }
 
     public DesktopSettingsDialog(Project project,
                                  Function<Project, Configurable[]> configurablesBuilder,
-                                 @Nonnull ConfigurablePreselectStrategy strategy) {
+                                 @Nonnull ConfigurablePreselectStrategy strategy,
+                                 Consumer<DesktopSettingsDialog> afteLoad) {
         super(project, true);
         myProject = project;
         myConfigurablesBuilder = configurablesBuilder;
         myPreselectStrategy = strategy;
+        myAfteLoad = afteLoad;
         setTitle(Platform.current().os().isMac() ? CommonLocalize.titleSettingsMac() : CommonLocalize.titleSettings());
         init();
     }
@@ -123,7 +129,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     @Nonnull
     @Override
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
-        myEditor = new OptionsEditor(myProject, myConfigurablesBuilder, myPreselectStrategy, rootPanel);
+        myEditor = new OptionsEditor(myProject, myConfigurablesBuilder, myPreselectStrategy, rootPanel, () -> myAfteLoad.accept(this));
         myEditor.getContext().addColleague(new OptionsEditorColleague() {
             @Override
             public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
