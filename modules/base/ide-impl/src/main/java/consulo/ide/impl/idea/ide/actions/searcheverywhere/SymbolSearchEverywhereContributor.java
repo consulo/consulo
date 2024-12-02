@@ -5,8 +5,10 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoSymbolModel2;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 
@@ -33,8 +35,8 @@ public class SymbolSearchEverywhereContributor extends AbstractGotoSEContributor
   }
 
   @Nonnull
-  public String includeNonProjectItemsText() {
-    return IdeBundle.message("checkbox.include.non.project.symbols", IdeUICustomization.getInstance().getProjectConceptName());
+  public LocalizeValue includeNonProjectItemsText() {
+    return IdeLocalize.checkboxIncludeNonProjectSymbols();
   }
 
   @Override

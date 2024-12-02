@@ -1,14 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoClassAction;
 import consulo.ide.impl.idea.ide.actions.GotoClassPresentationUpdater;
 import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoClassModel2;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoClassSymbolConfiguration;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.ui.IdeUICustomization;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.DependentLanguage;
 import consulo.language.Language;
 import consulo.language.editor.ui.PopupNavigationUtil;
@@ -16,13 +14,15 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.LanguageUtil;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -58,8 +58,8 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
   }
 
   @Nonnull
-  public String includeNonProjectItemsText() {
-    return IdeBundle.message("checkbox.include.non.project.classes", IdeUICustomization.getInstance().getProjectConceptName());
+  public LocalizeValue includeNonProjectItemsText() {
+    return IdeLocalize.checkboxIncludeNonProjectClasses();
   }
 
   @Override

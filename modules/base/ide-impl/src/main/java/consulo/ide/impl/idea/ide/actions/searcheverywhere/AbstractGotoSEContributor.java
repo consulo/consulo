@@ -16,7 +16,6 @@ import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.psi.PsiElement;
@@ -24,21 +23,24 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.util.EditSourceUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxButton;
+import consulo.ui.ex.awt.action.ComboBoxButtonImpl;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.PopupStep;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
@@ -118,7 +120,9 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     @Nonnull
-    protected List<AnAction> doGetActions(@Nonnull String everywhereText, @Nullable PersistentSearchEverywhereContributorFilter<?> filter, @Nonnull Runnable onChanged) {
+    protected List<AnAction> doGetActions(@Nonnull LocalizeValue everywhereText,
+                                          @Nullable PersistentSearchEverywhereContributorFilter<?> filter,
+                                          @Nonnull Runnable onChanged) {
         if (myProject == null || filter == null) {
             return Collections.emptyList();
         }
@@ -434,7 +438,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         }
     }
 
-    abstract static class ScopeChooserAction extends ActionGroup implements DumbAware, SearchEverywhereToggleAction {
+    abstract static class ScopeChooserAction extends ComboBoxAction implements DumbAware, SearchEverywhereToggleAction {
 
         static final char CHOOSE = 'O';
         static final char TOGGLE = 'P';
@@ -447,21 +451,22 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
         abstract void onProjectScopeToggled();
 
-        @Override
-        public boolean canBePerformed(@Nonnull DataContext context) {
-            return true;
-        }
-
-        @Override
-        public boolean isPopup() {
-            return true;
-        }
 
         @Nonnull
         @Override
-        public AnAction[] getChildren(@Nullable AnActionEvent e) {
-            return EMPTY_ARRAY;
+        protected ComboBoxButton createComboBoxButton(Presentation presentation) {
+            ComboBoxButtonImpl button = (ComboBoxButtonImpl) super.createComboBoxButton(presentation);
+            button.setBorder(JBUI.Borders.empty());
+            button.setOpaque(false);
+            return button;
         }
+
+        @Override
+        public boolean displayTextInToolbar() {
+            return true;
+        }
+
+
         // TODO
 //        @Nonnull
 //        @Override
@@ -507,13 +512,9 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             }
         }
 
+        @Nonnull
         @Override
-        @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-            JComponent button = e.getPresentation().getClientProperty(CustomComponentAction.COMPONENT_KEY);
-            if (button == null || !button.isValid()) {
-                return;
-            }
+        public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Presentation presentation, @Nonnull Runnable onDispose) {
             JList<ScopeDescriptor> fakeList = new JBList<>();
             ListCellRenderer<ScopeDescriptor> renderer = new ListCellRenderer<>() {
                 final ListCellRenderer<ScopeDescriptor> delegate = ScopeChooserCombo.createDefaultRenderer();
@@ -530,7 +531,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
                 }
             };
             List<ScopeDescriptor> items = new ArrayList<>();
-            processScopes(e.getDataContext(), o -> {
+            processScopes(context, o -> {
                 Component c = renderer.getListCellRendererComponent(fakeList, o, -1, false, false);
                 if (c instanceof JSeparator
                     || c instanceof TitledSeparator
@@ -545,7 +546,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
                 @RequiredUIAccess
                 public PopupStep onChosen(ScopeDescriptor selectedValue, boolean finalChoice) {
                     onScopeSelected(selectedValue);
-                    ActionToolbar toolbar = UIUtil.uiParents(button, true).filter(ActionToolbar.class).first();
+                    ActionToolbar toolbar = UIUtil.uiParents(component, true).filter(ActionToolbar.class).first();
                     if (toolbar != null) {
                         toolbar.updateActionsImmediately();
                     }
@@ -570,11 +571,17 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             };
             ScopeDescriptor selection = getSelectedScope();
             step.setDefaultOptionIndex(ContainerUtil.indexOf(items, o -> Comparing.equal(o.getDisplayName(), selection.getDisplayName())));
-            ListPopupImpl popup = new ListPopupImpl(e.getData(Project.KEY), step);
+            ListPopupImpl popup = new ListPopupImpl(context.getData(Project.KEY), step);
             popup.setMaxRowCount(10);
             //noinspection unchecked
             popup.getList().setCellRenderer(renderer);
-            popup.showUnderneathOf(button);
+            return popup;
+        }
+
+        @Nonnull
+        @Override
+        protected ActionGroup createPopupActionGroup(JComponent button) {
+            throw new UnsupportedOperationException();
         }
     }
 }

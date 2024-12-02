@@ -100,9 +100,6 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
     return myPopupTitle;
   }
 
-  public boolean isSmallVariant() {
-    return false;
-  }
 
   @RequiredUIAccess
   @Override
