@@ -41,14 +41,13 @@ import consulo.navigation.NavigationItem;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
-import consulo.ui.color.RGBColor;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
-import consulo.ui.util.LightDarkColorValue;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
@@ -67,7 +66,7 @@ public class BookmarkImpl implements Bookmark {
 
     @Nonnull
     public static Image getDefaultIcon(boolean gutter) {
-        return gutter ? PlatformIconGroup.actionsBookmarksmall() : PlatformIconGroup.actionsBookmark();
+        return gutter ? PlatformIconGroup.gutterBookmark() : PlatformIconGroup.actionsBookmark();
     }
 
     @Nonnull
@@ -90,26 +89,20 @@ public class BookmarkImpl implements Bookmark {
 
     @Nonnull
     private static Image createMnemonicIcon(char cha, boolean gutter) {
-        int width = gutter ? 12 : 16;
-        int height = gutter ? 12 : 16;
-        int fontSize = gutter ? 11 : 13;
+        ImageKey base = PlatformIconGroup.gutterMnemonic();
 
-        return ImageEffects.canvas(width, height, c -> {
-            c.setFillStyle(new LightDarkColorValue(new RGBColor(255, 255, 204), new RGBColor(103, 81, 51)));
-            c.fillRect(0, 0, width, height);
-
-            c.setStrokeStyle(StandardColors.GRAY);
-            c.rect(0, 0, width, height);
-            c.stroke();
-
+        return ImageEffects.layered(PlatformIconGroup.gutterMnemonic(), ImageEffects.canvas(base.getWidth(), base.getHeight(), c -> {
             c.setFillStyle(ComponentColors.TEXT);
+
             EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-            c.setFont(FontManager.get().createFont(scheme.getEditorFontName(), fontSize, consulo.ui.font.Font.STYLE_PLAIN));
+            int editorFontSize = scheme.getEditorFontSize();
+
+            c.setFont(FontManager.get().createFont(scheme.getEditorFontName(), editorFontSize, consulo.ui.font.Font.STYLE_PLAIN));
             c.setTextAlign(Canvas2D.TextAlign.center);
             c.setTextBaseline(Canvas2D.TextBaseline.middle);
 
-            c.fillText(Character.toString(cha), width / 2, height / 2 - 1);
-        });
+            c.fillText(Character.toString(cha), base.getWidth() / 2 - 1, base.getHeight() / 2 - 1);
+        }));
     }
 
     private final VirtualFile myFile;
