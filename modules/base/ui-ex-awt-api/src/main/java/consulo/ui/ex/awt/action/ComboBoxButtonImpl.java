@@ -22,7 +22,6 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
@@ -55,7 +54,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
-                append(StringUtil.notNullize(myPresentation.getText()));
+                append(myPresentation.getTextValue().get());
                 setIcon(myPresentation.getIcon());
             }
         });

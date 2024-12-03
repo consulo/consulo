@@ -59,7 +59,7 @@ create.run.configuration.for.item.dialog.title:
 edit.configuration.action:
   text: '&Edit Configurations'
 save.temporary.run.configuration.action.name:
-  text: '&Save ''''{0}'''' Configuration'
+  text: 'Save ''''{0}'''' Configuration'
 choose.run.configuration.action.description:
   text: Open run/debug configurations dropdown
 perform.action.with.context.configuration.action.name:

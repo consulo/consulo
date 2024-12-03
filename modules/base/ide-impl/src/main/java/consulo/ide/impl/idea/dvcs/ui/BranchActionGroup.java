@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.dvcs.ui;
 
-import consulo.ui.ex.action.ActionGroup;
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageState;
-import consulo.ide.impl.idea.dvcs.DvcsImplIcons;
-
 import jakarta.annotation.Nonnull;
 
 public abstract class BranchActionGroup extends ActionGroup implements DumbAware {
@@ -30,9 +30,9 @@ public abstract class BranchActionGroup extends ActionGroup implements DumbAware
   private ImageState<Boolean> myIconState = new ImageState<>(Boolean.FALSE);
 
   public BranchActionGroup() {
-    super("", true);
+    super(LocalizeValue.of(), true);
     getTemplatePresentation().setDisabledMnemonic(true);
-    setIcons(DvcsImplIcons.Favorite, Image.empty(Image.DEFAULT_ICON_SIZE), DvcsImplIcons.Favorite, DvcsImplIcons.NotFavoriteOnHover);
+    setIcons(PlatformIconGroup.nodesFavorite(), Image.empty(Image.DEFAULT_ICON_SIZE), PlatformIconGroup.nodesFavorite(), PlatformIconGroup.nodesNotfavoriteonhover());
   }
 
   protected void setIcons(@Nonnull Image favorite, @Nonnull Image notFavorite, @Nonnull Image favoriteOnHover, @Nonnull Image notFavoriteOnHover) {

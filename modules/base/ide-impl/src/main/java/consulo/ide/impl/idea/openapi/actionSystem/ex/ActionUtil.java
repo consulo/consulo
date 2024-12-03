@@ -197,7 +197,7 @@ public class ActionUtil {
     }
     finally {
       if (--insidePerformDumbAwareUpdate == 0) {
-        ActionPauses.STAT.finished(presentation.getText() + " action update (" + action.getClass() + ")");
+        ActionPauses.STAT.finished(presentation.getTextValue().get() + " action update (" + action.getClass() + ")");
       }
       if (notAllowed) {
         if (wasEnabledBefore == null) {
@@ -432,7 +432,7 @@ public class ActionUtil {
   @Nullable
   public static ShortcutSet getMnemonicAsShortcut(@Nonnull AnAction action) {
     int mnemonic = KeyEvent.getExtendedKeyCodeForChar(
-      TextWithMnemonic.parse(action.getTemplatePresentation().getTextWithMnemonic()).getMnemonic()
+      TextWithMnemonic.parse(action.getTemplatePresentation().getTextValue().get()).getMnemonic()
     );
     if (mnemonic != KeyEvent.VK_UNDEFINED) {
       KeyboardShortcut ctrlAltShortcut = new KeyboardShortcut(

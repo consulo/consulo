@@ -139,7 +139,7 @@ class ActionStepBuilder {
   private void appendAction(@Nonnull AnAction action) {
     Presentation presentation = myPresentationFactory.getPresentation(action);
     boolean enabled = presentation.isEnabled();
-    LocalizeValue textValue = presentation.getTextValue().map(Presentation.NO_MNEMONIC);
+    LocalizeValue textValue = presentation.getTextValue();
     if ((myShowDisabled || enabled) && presentation.isVisible()) {
       if (myShowNumbers) {
         String text = presentation.getText();
