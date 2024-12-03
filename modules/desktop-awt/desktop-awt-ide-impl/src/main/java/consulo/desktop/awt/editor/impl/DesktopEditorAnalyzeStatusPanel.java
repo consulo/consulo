@@ -40,7 +40,6 @@ import consulo.ide.impl.idea.ui.popup.util.PopupState;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.impl.internal.markup.*;
 import consulo.localize.LocalizeValue;
-import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -72,8 +71,6 @@ import kava.beans.PropertyChangeListener;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.LabelUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -86,7 +83,7 @@ import java.util.function.Function;
  * @since 2020-06-19
  */
 public class DesktopEditorAnalyzeStatusPanel implements Disposable {
-    private static class StatusButton extends JPanel {
+    private static class StatusButton extends JButton {
         private static final int LEFT_RIGHT_INDENT = 5;
         private static final int INTER_GROUP_OFFSET = 6;
 
@@ -96,9 +93,15 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         private final EditorColorsScheme colorsScheme;
         private boolean translucent;
 
+        private final JPanel myContainerPanel;
+
         private StatusButton(@Nonnull AnAction action, @Nonnull Presentation presentation, @Nonnull String place, @Nonnull EditorColorsScheme colorsScheme, @Nonnull BooleanSupplier hasNavButtons) {
-            setLayout(new GridBagLayout());
-            setOpaque(false);
+            myContainerPanel = new JPanel(new GridBagLayout());
+            myContainerPanel.setOpaque(false);
+
+            putClientProperty("JButton.buttonType", "borderless");
+
+            add(myContainerPanel);
 
             this.presentation = presentation;
             this.colorsScheme = colorsScheme;
@@ -166,29 +169,29 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
 
         private ActionToolbar getActionToolbar() {
-            return ComponentUtil.getParentOfType((Class<? extends ActionToolbar>) ActionToolbar.class, this);
+            return ComponentUtil.getParentOfType(ActionToolbar.class, this);
         }
 
         private void updateContents(@Nonnull List<StatusItem> status) {
-            removeAll();
+            myContainerPanel.removeAll();
 
             setEnabled(!status.isEmpty());
             setVisible(!status.isEmpty());
 
             GridBag gc = new GridBag().nextLine();
             if (status.size() == 1 && StringUtil.isEmpty(status.get(0).getText())) {
-                add(createStyledLabel(null, status.get(0).getIcon(), SwingConstants.CENTER), gc.next().weightx(1).fillCellHorizontally());
+                myContainerPanel.add(createStyledLabel(null, status.get(0).getIcon(), SwingConstants.CENTER), gc.next().weightx(1).fillCellHorizontally());
             }
             else if (status.size() > 0) {
                 int leftRightOffset = JBUIScale.scale(LEFT_RIGHT_INDENT);
-                add(Box.createHorizontalStrut(leftRightOffset), gc.next());
+                myContainerPanel.add(Box.createHorizontalStrut(leftRightOffset), gc.next());
 
                 int counter = 0;
                 for (StatusItem item : status) {
-                    add(createStyledLabel(item.getText(), item.getIcon(), SwingConstants.LEFT), gc.next().insetLeft(counter++ > 0 ? INTER_GROUP_OFFSET : 0));
+                    myContainerPanel.add(createStyledLabel(item.getText(), item.getIcon(), SwingConstants.LEFT), gc.next().insetLeft(counter++ > 0 ? INTER_GROUP_OFFSET : 0));
                 }
 
-                add(Box.createHorizontalStrut(leftRightOffset), gc.next());
+                myContainerPanel.add(Box.createHorizontalStrut(leftRightOffset), gc.next());
             }
         }
 
@@ -206,36 +209,12 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                         g2.dispose();
                     }
                 }
-
-                @Override
-                public void setUI(LabelUI ui) {
-                    super.setUI(ui);
-
-                    if (!Platform.current().os().isWindows()) {
-                        Font font = getFont();
-                        font = new FontUIResource(font.deriveFont(font.getStyle(), font.getSize() - JBUIScale.scale(2))); // Allow to reset the font by UI
-                        setFont(font);
-                    }
-                }
             };
 
             label.setForeground(new JBColor(() -> ObjectUtil.notNull(TargetAWT.to(colorsScheme.getColor(ICON_TEXT_COLOR)), TargetAWT.to(ICON_TEXT_COLOR.getDefaultColorValue()))));
             label.setIconTextGap(JBUIScale.scale(1));
 
             return label;
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            if (getComponentCount() == 0) {
-                return JBUI.emptySize();
-            }
-
-            Dimension size = super.getPreferredSize();
-            Insets i = getInsets();
-            size.height = Math.max(getStatusIconSize() + i.top + i.bottom, size.height);
-            size.width = Math.max(getStatusIconSize() + i.left + i.right, size.width);
-            return size;
         }
     }
 
