@@ -46,7 +46,7 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
 
       DumbService.getInstance(project).queueTask(new DumbModeTask() {
         @Override
-        public void performInDumbMode(@Nonnull ProgressIndicator indicator) {
+        public void performInDumbMode(@Nonnull ProgressIndicator indicator, Exception trace) {
           while (myDumb) {
             indicator.checkCanceled();
             TimeoutUtil.sleep(100);

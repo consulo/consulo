@@ -15,7 +15,9 @@
  */
 package consulo.desktop.awt.startup;
 
+import com.formdev.flatlaf.ui.FlatNativeMacLibrary;
 import com.formdev.flatlaf.ui.FlatNativeWindowsLibrary;
+import com.formdev.flatlaf.util.HiDPIUtils;
 import com.google.gson.Gson;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
@@ -31,6 +33,7 @@ import consulo.builtinWebServer.json.JsonBaseRequestHandler;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.builtinWebServer.json.JsonPostRequestHandler;
 import consulo.component.impl.internal.ComponentBinding;
+import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
@@ -69,6 +72,7 @@ import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -76,6 +80,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
+import java.io.File;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -155,12 +160,34 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         // execute it in parallel
         pool.execute(DesktopAWTFontRegistry::registerBundledFonts);
 
+        // region FlatLaf
+        // disable safe triangle hacks, due we use own event queue
+        System.setProperty("flatlaf.useSubMenuSafeTriangle", "false");
+        // remap native file path
+        System.setProperty("flatlaf.nativeLibraryPath", "system");
+        // hack for disabling mac rounded borders
+        if (myPlatform.os().isMac()) {
+            if (Boolean.getBoolean("consulo.mac.disable.use.rounded.border")) {
+                System.setProperty("flatlaf.useRoundedPopupBorder", "false");
+            } else {
+                System.setProperty("flatlaf.useRoundedPopupBorder", "true");
+            }
+        }
+
         // preload all flat native libraries
         pool.execute(() -> {
-            FlatNativeWindowsLibrary.isLoaded();
-//            FlatNativeMacLibrary.isLoaded();
-//            FlatNativeLinuxLibrary.isLoaded();
+            if (myPlatform.os().isWindows()) {
+                FlatNativeWindowsLibrary.isLoaded();
+
+                // replace hidpi repaint manager for fixing windows issues
+                SwingUtilities.invokeLater(HiDPIUtils::installHiDPIRepaintManager);
+            }
+
+            if (myPlatform.os().isMac()) {
+                FlatNativeMacLibrary.isLoaded();
+            }
         });
+        // endregion
 
         SwingUtilities.invokeLater(() -> {
             if (myPlatform.os().isXWindow()) {

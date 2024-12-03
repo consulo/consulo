@@ -19,75 +19,74 @@ import consulo.disposer.Disposable;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 10/07/2021
  */
 public class DesktopSwtTextBoxImpl extends SWTComponentDelegate<Text> implements TextBox {
-  private String myText;
+    private String myText;
 
-  public DesktopSwtTextBoxImpl(String text) {
-    myText = StringUtil.notNullize(text);
-  }
-
-  @Override
-  protected Text createSWT(Composite parent) {
-    return new Text(parent, SWT.BORDER);
-  }
-
-  @Override
-  protected void initialize(Text component) {
-    super.initialize(component);
-    component.setText(myText);
-  }
-
-  @Override
-  public void selectAll() {
-
-  }
-
-  @Override
-  public void setEditable(boolean editable) {
-
-  }
-
-  @Override
-  public boolean isEditable() {
-    return false;
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addValidator(@Nonnull Validator<String> validator) {
-    return null;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean validate() {
-    return false;
-  }
-
-  @Nullable
-  @Override
-  public String getValue() {
-    return myText;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(String value, boolean fireListeners) {
-    myText = StringUtil.notNullize(value);
-
-    if(myComponent != null) {
-      myComponent.setText(myText);
+    public DesktopSwtTextBoxImpl(String text) {
+        myText = StringUtil.notNullize(text);
     }
-  }
+
+    @Override
+    protected Text createSWT(Composite parent) {
+        return new Text(parent, SWT.BORDER);
+    }
+
+    @Override
+    protected void initialize(Text component) {
+        super.initialize(component);
+        component.setText(myText);
+    }
+
+    @Override
+    public void selectAll() {
+
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+
+    }
+
+    @Override
+    public boolean isEditable() {
+        return false;
+    }
+
+    @Nonnull
+    @Override
+    public Disposable addValidator(@Nonnull Validator<String> validator) {
+        return null;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean validate() {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public String getValue() {
+        return myText;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setValue(String value, boolean fireListeners) {
+        myText = StringUtil.notNullize(value);
+
+        if (myComponent != null) {
+            myComponent.setText(myText);
+        }
+    }
 }

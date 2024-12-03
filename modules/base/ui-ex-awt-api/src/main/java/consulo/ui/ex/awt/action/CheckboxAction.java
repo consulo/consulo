@@ -38,6 +38,7 @@ public abstract class CheckboxAction extends ToggleAction implements CustomCompo
 
   protected CheckboxAction() {}
 
+  @Deprecated
   protected CheckboxAction(final String text) {
     super(text);
   }

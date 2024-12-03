@@ -47,7 +47,7 @@ public class Advertiser implements LookupAdvertiser {
     myComponent.add(myTextPanel);
     myComponent.add(myNextLabel);
     myComponent.setOpaque(true);
-    myComponent.setBackground(JBCurrentTheme.Advertiser.background());
+    myComponent.setBackground(UIUtil.getPanelBackground());
     myComponent.setBorder(JBCurrentTheme.Advertiser.border());
   }
 
@@ -100,7 +100,7 @@ public class Advertiser implements LookupAdvertiser {
   }
 
   public void setBackground(@Nullable Color background) {
-    myComponent.setBackground(background != null ? background : JBCurrentTheme.Advertiser.background());
+    myComponent.setBackground(background != null ? background : UIUtil.getPanelBackground());
   }
 
   public JComponent getAdComponent() {

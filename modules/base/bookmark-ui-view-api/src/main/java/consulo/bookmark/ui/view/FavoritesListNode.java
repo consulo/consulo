@@ -16,7 +16,7 @@
 package consulo.bookmark.ui.view;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -62,7 +62,7 @@ public class FavoritesListNode extends AbstractTreeNode<String> {
 
   @Override
   protected void update(PresentationData presentation) {
-    presentation.setIcon(AllIcons.Toolwindows.ToolWindowFavorites);
+    presentation.setIcon(PlatformIconGroup.actionsBookmark());
     presentation.setPresentableText(myName);
     presentation.setLocationString(myDescription);
   }

@@ -3,11 +3,11 @@ package consulo.ui.ex.awt.util;
 
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
+import consulo.ui.ex.awt.tree.table.TreeTableTree;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Supplier;
@@ -191,7 +191,7 @@ public final class RenderingUtil {
   }
 
   private static JTable getTableFor(@Nonnull JTree tree) {
-    @SuppressWarnings("deprecation") Object property = tree.getClientProperty(WideSelectionTreeUI.TREE_TABLE_TREE_KEY);
+    Object property = tree.getClientProperty(TreeTableTree.TREE_TABLE_TREE_KEY);
     if (property instanceof JTable) return (JTable)property;
     JComponent sibling = UIUtil.getClientProperty(tree, FOCUSABLE_SIBLING);
     return sibling instanceof JTable ? (JTable)sibling : null;

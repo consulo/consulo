@@ -1,12 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.action.ui;
 
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 
@@ -29,8 +24,6 @@ public class NewItemWithTemplatesPopupPanel<T> extends NewItemSimplePopupPanel {
   private final Collection<TemplatesListVisibilityListener> myVisibilityListeners = new ArrayList<>();
 
   public NewItemWithTemplatesPopupPanel(List<T> templatesList, ListCellRenderer<T> renderer) {
-    setBackground(JBCurrentTheme.NewClassDialog.panelBackground());
-
     myTemplatesListModel = new MyListModel(templatesList);
     myTemplatesList = createTemplatesList(myTemplatesListModel, renderer);
 
@@ -84,7 +77,7 @@ public class NewItemWithTemplatesPopupPanel<T> extends NewItemSimplePopupPanel {
     list.setFocusable(false);
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    Border border = JBUI.Borders.merge(JBUI.Borders.emptyLeft(JBUIScale.scale(5)), JBUI.Borders.customLine(JBCurrentTheme.NewClassDialog.bordersColor(), 1, 0, 0, 0), true);
+    Border border = JBUI.Borders.merge(JBUI.Borders.empty(0), JBUI.Borders.customLine(JBCurrentTheme.NewClassDialog.bordersColor(), 1, 0, 0, 0), true);
     list.setBorder(border);
     return list;
   }

@@ -23,22 +23,20 @@ package consulo.project.ui.wm;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.ui.UISettings;
-import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 
 import javax.swing.*;
 
 @ExtensionAPI(ComponentScope.PROJECT)
-public abstract class IdeRootPaneNorthExtension implements Disposable {
-  public static final ExtensionPointName<IdeRootPaneNorthExtension> EP_NAME = ExtensionPointName.create(IdeRootPaneNorthExtension.class);
+public interface IdeRootPaneNorthExtension extends Disposable {
+    Class<? extends IdeRootPaneNorthExtension> getApiClass();
 
-  public abstract String getKey();
+    JComponent getComponent();
 
-  public abstract JComponent getComponent();
+    void uiSettingsChanged(UISettings settings);
 
-  public abstract void uiSettingsChanged(UISettings settings);
+    IdeRootPaneNorthExtension copy();
 
-  public abstract IdeRootPaneNorthExtension copy();
-  
-  public void revalidate(){}
+    default void revalidate() {
+    }
 }

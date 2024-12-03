@@ -21,25 +21,26 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
-import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.content.library.ui.DocumentationUtil;
-import consulo.ide.impl.idea.util.IconUtil;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.SdkPathEditor;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -60,7 +61,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
   @Nonnull
   @Override
   public Image getIcon() {
-    return AllIcons.Nodes.JavaDocFolder;
+    return PlatformIconGroup.filetypesText();
   }
 
   @Nonnull
@@ -79,7 +80,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
 
     @Override
     protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
-      AnAction specifyUrlButton = new AnAction(ProjectBundle.message("sdk.paths.specify.url.button"), null, IconUtil.getAddLinkIcon()) {
+      AnAction specifyUrlButton = new DumbAwareAction(ProjectLocalize.sdkPathsSpecifyUrlButton(), LocalizeValue.of(), PlatformIconGroup.nodesPpweb()) {
         {
           setShortcutSet(CustomShortcutSet.fromString("alt S"));
         }

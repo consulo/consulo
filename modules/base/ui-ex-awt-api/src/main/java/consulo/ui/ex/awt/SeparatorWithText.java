@@ -16,11 +16,11 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.util.UISettingsUtil;
+import jakarta.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -53,7 +53,7 @@ public class SeparatorWithText extends JComponent implements Accessible {
   }
 
   protected static int getVgap() {
-    return UIUtil.isUnderNativeMacLookAndFeel() ? 1 : 3;
+    return 3;
   }
 
   protected static int getHgap() {

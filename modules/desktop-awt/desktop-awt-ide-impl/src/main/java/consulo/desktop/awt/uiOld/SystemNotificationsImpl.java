@@ -16,19 +16,17 @@
 package consulo.desktop.awt.uiOld;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.application.Application;
 import consulo.application.util.AtomicNullableLazyValue;
 import consulo.application.util.NullableLazyValue;
 import consulo.application.util.SystemInfo;
+import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.SystemNotifications;
-import consulo.util.lang.SystemProperties;
-import consulo.logging.Logger;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
@@ -36,61 +34,56 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public class SystemNotificationsImpl extends SystemNotifications {
-  interface Notifier {
-    void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description);
-  }
-
-  private final NullableLazyValue<Notifier> myNotifier = AtomicNullableLazyValue.createValue(SystemNotificationsImpl::getPlatformNotifier);
-
-  private final Application myApplication;
-
-  @Inject
-  public SystemNotificationsImpl(Application application) {
-    myApplication = application;
-  }
-
-  @Override
-  public boolean isAvailable() {
-    return myNotifier.getValue() != null;
-  }
-
-  @Override
-  public void notify(@Nonnull String notificationName, @Nonnull String title, @Nonnull String text) {
-    if (NotificationsConfigurationImpl.getInstanceImpl().SYSTEM_NOTIFICATIONS && !myApplication.isActive()) {
-      Notifier notifier = myNotifier.getValue();
-      if (notifier != null) {
-        notifier.notify(notificationName, title, text);
-      }
+    interface Notifier {
+        void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description);
     }
-  }
 
-  private static Notifier getPlatformNotifier() {
-    try {
-      if (Platform.current().os().isMac()) {
-        if (SystemInfo.isMacOSMountainLion && SystemProperties.getBooleanProperty("ide.mac.mountain.lion.notifications.enabled", true)) {
-          return MountainLionNotifications.getInstance();
+    private final NullableLazyValue<Notifier> myNotifier = AtomicNullableLazyValue.createValue(SystemNotificationsImpl::getPlatformNotifier);
+
+    private final Application myApplication;
+
+    @Inject
+    public SystemNotificationsImpl(Application application) {
+        myApplication = application;
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return myNotifier.getValue() != null;
+    }
+
+    @Override
+    public void notify(@Nonnull String notificationName, @Nonnull String title, @Nonnull String text) {
+        if (NotificationsConfigurationImpl.getInstanceImpl().SYSTEM_NOTIFICATIONS && !myApplication.isActive()) {
+            Notifier notifier = myNotifier.getValue();
+            if (notifier != null) {
+                notifier.notify(notificationName, title, text);
+            }
         }
-        else {
-          return GrowlNotifications.getInstance();
-        }
-      }
-      else if (Platform.current().os().isXWindow()) {
-        return LibNotifyWrapper.getInstance();
-      }
-      else if (SystemInfo.isWin10OrNewer) {
-        return JTrayNotificationImpl.getWin10Instance();
-      }
-    }
-    catch (Throwable t) {
-      Logger logger = Logger.getInstance(SystemNotifications.class);
-      if (logger.isDebugEnabled()) {
-        logger.debug(t);
-      }
-      else {
-        logger.info(t.getMessage(), t);
-      }
     }
 
-    return null;
-  }
+    private static Notifier getPlatformNotifier() {
+        try {
+            if (Platform.current().os().isMac()) {
+                return MountainLionNotifications.getInstance();
+            }
+            else if (Platform.current().os().isXWindow()) {
+                return LibNotifyWrapper.getInstance();
+            }
+            else if (SystemInfo.isWin10OrNewer) {
+                return JTrayNotificationImpl.getWin10Instance();
+            }
+        }
+        catch (Throwable t) {
+            Logger logger = Logger.getInstance(SystemNotifications.class);
+            if (logger.isDebugEnabled()) {
+                logger.debug(t);
+            }
+            else {
+                logger.info(t.getMessage(), t);
+            }
+        }
+
+        return null;
+    }
 }

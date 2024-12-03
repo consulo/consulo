@@ -95,7 +95,6 @@ public class ActionsTree {
     myTree.setRootVisible(false);
     myTree.setShowsRootHandles(true);
 
-    myTree.putClientProperty(WideSelectionTreeUI.STRIPED_CLIENT_PROPERTY, Boolean.TRUE);
     myTree.setCellRenderer(new KeymapsRenderer());
 
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

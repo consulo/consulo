@@ -16,9 +16,9 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.SimpleTextAttributes;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -26,128 +26,127 @@ import java.awt.*;
  * @author Vladimir Kondratyev
  */
 public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent implements ListCellRenderer<T> {
-  protected boolean mySelected;
-  protected Color myForeground;
-  protected Color mySelectionForeground;
-  @Nullable
-  private final JComboBox myComboBox;
+    protected boolean mySelected;
+    protected Color myForeground;
+    protected Color mySelectionForeground;
+    @Nullable
+    private final JComboBox myComboBox;
 
-  private boolean mySeparator;
-  private String mySeparatorText;
+    private boolean mySeparator;
+    private String mySeparatorText;
 
-  public ColoredListCellRenderer() {
-    this(null);
-  }
-
-  public ColoredListCellRenderer(@Nullable JComboBox comboBox) {
-    myComboBox = comboBox;
-    setFocusBorderAroundIcon(true);
-    getIpad().left = getIpad().right = JBUIScale.scale(UIUtil.getListCellHPadding());
-  }
-
-  public void setSeparator(@Nullable String text) {
-    mySeparator = true;
-    mySeparatorText = text;
-  }
-
-  @Override
-  public Component getListCellRendererComponent(JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
-    clear();
-    mySeparator = false;
-    mySeparatorText = null;
-
-    if (myComboBox != null) {
-      setEnabled(myComboBox.isEnabled());
+    public ColoredListCellRenderer() {
+        this(null);
     }
 
-    setFont(list.getFont());
+    public ColoredListCellRenderer(@Nullable JComboBox comboBox) {
+        myComboBox = comboBox;
 
-    mySelected = selected;
-    myForeground = isEnabled() ? list.getForeground() : UIManager.getColor("Label.disabledForeground");
-    mySelectionForeground = list.getSelectionForeground();
-
-    if (index == -1) {
-      setOpaque(false);
-      mySelected = false;
-    }
-    else {
-      setOpaque(true);
-      setBackground(selected ? list.getSelectionBackground() : null);
+        setFocusBorderAroundIcon(true);
+        setIpad(JBUI.insets(0, UIUtil.getListCellHPadding()));
     }
 
-    setPaintFocusBorder(hasFocus);
-
-    customizeCellRenderer(list, value, index, selected, hasFocus);
-
-    if (mySeparator) {
-      final TitledSeparator separator = new TitledSeparator(mySeparatorText);
-      separator.setBorder(JBUI.Borders.empty(0, 2, 0, 0));
-
-      if (!UIUtil.isUnderGTKLookAndFeel()) {
-        separator.setOpaque(false);
-        separator.setBackground(UIUtil.TRANSPARENT_COLOR);
-        separator.getLabel().setOpaque(false);
-        separator.getLabel().setBackground(UIUtil.TRANSPARENT_COLOR);
-      }
-      return separator;
+    public void setSeparator(@Nullable String text) {
+        mySeparator = true;
+        mySeparatorText = text;
     }
 
-    return this;
-  }
+    @Override
+    public Component getListCellRendererComponent(JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
+        clear();
 
-  /**
-   * When the item is selected then we use default tree's selection foreground.
-   * It guaranties readability of selected text in any LAF.
-   */
-  @Override
-  public final void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
-    if (mySelected) {
-      super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), mySelectionForeground), isMainText);
-    }
-    else if (attributes.getFgColor() == null) {
-      super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), myForeground), isMainText);
-    }
-    else {
-      super.append(fragment, attributes, isMainText);
-    }
-  }
+        setBorder(JBCurrentTheme.listCellBorder());
 
-  @Override
-  @Nonnull
-  public Dimension getPreferredSize() {
-    // There is a bug in BasicComboPopup. It does not add renderer into CellRendererPane,
-    // so font can be null here.
+        mySeparator = false;
+        mySeparatorText = null;
 
-    Font oldFont = getFont();
-    if (oldFont == null) {
-      setFont(UIUtil.getListFont());
+        if (myComboBox != null) {
+            setEnabled(myComboBox.isEnabled());
+        }
+
+        setFont(list.getFont());
+
+        mySelected = selected;
+        myForeground = isEnabled() ? list.getForeground() : UIManager.getColor("Label.disabledForeground");
+        mySelectionForeground = list.getSelectionForeground();
+
+        if (index == -1) {
+            setOpaque(false);
+            mySelected = false;
+        }
+        else {
+            setOpaque(true);
+            setBackground(selected ? list.getSelectionBackground() : null);
+        }
+
+        customizeCellRenderer(list, value, index, selected, hasFocus);
+
+        if (mySeparator) {
+            final TitledSeparator separator = new TitledSeparator(mySeparatorText);
+            separator.setBorder(JBUI.Borders.empty(0, 2, 0, 0));
+            separator.setOpaque(false);
+            separator.setBackground(UIUtil.TRANSPARENT_COLOR);
+            separator.getLabel().setOpaque(false);
+            separator.getLabel().setBackground(UIUtil.TRANSPARENT_COLOR);
+            return separator;
+        }
+
+        return this;
     }
-    Dimension result = super.getPreferredSize();
-    if (oldFont == null) {
-      setFont(null);
+
+    /**
+     * When the item is selected then we use default tree's selection foreground.
+     * It guaranties readability of selected text in any LAF.
+     */
+    @Override
+    public final void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
+        if (mySelected) {
+            super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), mySelectionForeground), isMainText);
+        }
+        else if (attributes.getFgColor() == null) {
+            super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), myForeground), isMainText);
+        }
+        else {
+            super.append(fragment, attributes, isMainText);
+        }
     }
 
-    return UIUtil.updateListRowHeight(result);
-  }
+    @Override
+    @Nonnull
+    public Dimension getPreferredSize() {
+        // There is a bug in BasicComboPopup. It does not add renderer into CellRendererPane,
+        // so font can be null here.
 
-  protected abstract void customizeCellRenderer(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus);
+        Font oldFont = getFont();
+        if (oldFont == null) {
+            setFont(UIUtil.getListFont());
+        }
+        Dimension result = super.getPreferredSize();
+        if (oldFont == null) {
+            setFont(null);
+        }
 
-  /**
-   * Copied AS IS
-   *
-   * @see javax.swing.DefaultListCellRenderer#isOpaque()
-   */
-  @Override
-  public boolean isOpaque() {
-    Color back = getBackground();
-    Component p = getParent();
-    if (p != null) {
-      p = p.getParent();
+        return UIUtil.updateListRowHeight(result);
     }
-    // p should now be the JList.
-    boolean colorMatch = (back != null) && (p != null) &&
-                         back.equals(p.getBackground()) &&
-                         p.isOpaque();
-    return !colorMatch && super.isOpaque();
-  }
+
+    protected abstract void customizeCellRenderer(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus);
+
+    /**
+     * Copied AS IS
+     *
+     * @see javax.swing.DefaultListCellRenderer#isOpaque()
+     */
+    @Override
+    public boolean isOpaque() {
+        Color back = getBackground();
+        Component p = getParent();
+        if (p != null) {
+            p = p.getParent();
+        }
+        // p should now be the JList.
+        boolean colorMatch = (back != null) && (p != null) &&
+            back.equals(p.getBackground()) &&
+            p.isOpaque();
+        return !colorMatch && super.isOpaque();
+    }
 }

@@ -17,6 +17,7 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -179,7 +180,7 @@ public interface ActionToolbar {
 
   void setReservePlaceAutoPopupIcon(final boolean reserve);
 
-  void setSecondaryActionsTooltip(String secondaryActionsTooltip);
+  void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip);
 
   void setMiniMode(boolean minimalMode);
 

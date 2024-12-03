@@ -30,6 +30,7 @@ import consulo.document.event.DocumentListener;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.ui.EditorSettingsProvider;
+import consulo.language.editor.ui.internal.BasicEditorTextFieldUI;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -52,6 +53,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import javax.swing.plaf.PanelUI;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
@@ -146,6 +148,8 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     private MouseListener myMouseListeners;
     private ProxyListeners myProxyListeners = new ProxyListeners();
 
+    private final Wrapper myEditorWrapper;
+
     public EditorTextField() {
         this("");
     }
@@ -188,6 +192,9 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         setFocusTraversalPolicy(new Jdk7DelegatingToRootTraversalPolicy());
 
         setFont(UIManager.getFont("TextField.font"));
+
+        myEditorWrapper = new Wrapper();
+        add(myEditorWrapper, BorderLayout.CENTER);
     }
 
     public void setSupplementary(boolean supplementary) {
@@ -275,7 +282,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
             EditorEx newEditor = createEditor();
             releaseEditor(myEditor);
             myEditor = newEditor;
-            add(myEditor.getComponent(), BorderLayout.CENTER);
+            onEditorChange();
 
             validate();
             if (isFocused) {
@@ -425,7 +432,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
             myEditor.getCaretModel().moveToOffset(myCaretPosition);
             myEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         }
-        add(myEditor.getComponent(), BorderLayout.CENTER);
+        onEditorChange();
     }
 
     @Override
@@ -507,7 +514,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
         // color scheme settings:
         setupEditorFont(editor);
-        updateBorder(editor);
         editor.setBackgroundColor(TargetAWT.from(getBackgroundColor(isEnabled())));
     }
 
@@ -592,10 +598,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         return editor;
     }
 
-    @Deprecated
-    protected void updateBorder(@Nonnull final EditorEx editor) {
-    }
-
     public static boolean managesEditor(@Nonnull Editor editor) {
         return editor.getUserData(MANAGED_BY_FIELD) == Boolean.TRUE;
     }
@@ -613,6 +615,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         }
     }
 
+    @Deprecated
     protected boolean shouldHaveBorder() {
         return true;
     }
@@ -656,15 +659,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
 
     @Override
-    protected void addImpl(Component comp, Object constraints, int index) {
-        if (myEditor == null || comp != myEditor.getComponent()) {
-            assert false : "You are not allowed to add anything to EditorTextField";
-        }
-
-        super.addImpl(comp, constraints, index);
-    }
-
-    @Override
     public Dimension getPreferredSize() {
         if (isPreferredSizeSet()) {
             return super.getPreferredSize();
@@ -685,6 +679,9 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
             if (myPreferredWidth != -1) {
                 preferredSize.width = myPreferredWidth;
             }
+
+            Wrapper editorWrapper = myEditorWrapper;
+            JBInsets.addTo(preferredSize, editorWrapper.getInsets());
 
             JBInsets.addTo(preferredSize, getInsets());
             size = preferredSize;
@@ -834,6 +831,19 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         }
 
         return null;
+    }
+
+    private void onEditorChange() {
+        myEditorWrapper.setContent(myEditor.getComponent());
+
+        PanelUI ui = getUI();
+        if (ui instanceof BasicEditorTextFieldUI editorUI) {
+            editorUI.editorChanged(this);
+        }
+    }
+
+    public Wrapper getEditorWrapper() {
+        return myEditorWrapper;
     }
 
     public void setFileType(FileType fileType) {

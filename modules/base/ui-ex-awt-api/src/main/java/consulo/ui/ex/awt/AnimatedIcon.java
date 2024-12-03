@@ -77,19 +77,6 @@ public class AnimatedIcon implements Icon, Image {
     public static final List<Icon> ICONS = immutableList(AllIcons.Ide.Macro.Recording_1, AllIcons.Ide.Macro.Recording_2, AllIcons.Ide.Macro.Recording_3, AllIcons.Ide.Macro.Recording_4);
   }
 
-  @Deprecated
-  public static class FS extends AnimatedIcon {
-    public FS() {
-      super(DELAY, ICONS.toArray(new Icon[0]));
-    }
-
-    public static final int DELAY = 50;
-    public static final List<Icon> ICONS =
-            immutableList(AllIcons.Process.FS.Step_1, AllIcons.Process.FS.Step_2, AllIcons.Process.FS.Step_3, AllIcons.Process.FS.Step_4, AllIcons.Process.FS.Step_5, AllIcons.Process.FS.Step_6,
-                          AllIcons.Process.FS.Step_7, AllIcons.Process.FS.Step_8, AllIcons.Process.FS.Step_9, AllIcons.Process.FS.Step_10, AllIcons.Process.FS.Step_11, AllIcons.Process.FS.Step_12,
-                          AllIcons.Process.FS.Step_13, AllIcons.Process.FS.Step_14, AllIcons.Process.FS.Step_15, AllIcons.Process.FS.Step_16, AllIcons.Process.FS.Step_17, AllIcons.Process.FS.Step_18);
-  }
-
   private static List<Icon> immutableList(Image... images) {
       return List.copyOf(Arrays.stream(images).map(TargetAWT::to).collect(Collectors.toList()));
   }

@@ -1,6 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
-  <g fill="#7F8B91" fill-opacity=".5" fill-rule="evenodd">
-    <path d="M8.67131958,2.67131958 L11.1713196,0.171319581 L11.8784264,0.878426362 L9.37842636,3.37842636 L11.5,5.5 L6.5,5.5 L6.5,0.5 L8.67131958,2.67131958 Z"/>
-    <path d="M2.29289322,9 L4.79289322,6.5 L5.5,7.20710678 L3,9.70710678 L5.17157288,11.8786797 L0.171572875,11.8786797 L0.171572875,6.87867966 L2.29289322,9 Z" transform="rotate(180 2.836 9.19)"/>
-  </g>
+<!-- Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license. -->
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.5 14.5L6 10M14.5 1.5L9.99998 6.00001M2.5 9.50001H6.5L6.5 13.5M13.5 6.5L9.5 6.50003V2.5" stroke="#A8ADBD" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

@@ -69,6 +69,12 @@ public interface TextBox extends ValueComponent<String>, ValidableComponent<Stri
 
   void selectAll();
 
+  default void select(int from, int to) {
+  }
+
+  default void moveCaretTo(int index) {
+  }
+
   void setEditable(boolean editable);
 
   boolean isEditable();

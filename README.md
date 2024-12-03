@@ -6,7 +6,7 @@ Main goal - to create an **open** IDE, where you don't need to select an IDE for
 
 ## Contributing
 
-If you can't describe the issue, you can use our [forum](https://discuss.consulo.io/), or you can read the [contributing guide](https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md) and report the issue at GitHub
+If you can't describe the issue, you can use our [forum](https://github.com/orgs/consulo/discussions/), or you can read the [contributing guide](https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md) and report the issue at GitHub
 
 ## Building & Running
 
@@ -35,7 +35,7 @@ If you want run Consulo from repository
    ```sh
     mvn install
 
-    mvn consulo:run-desktop -pl consulo:consulo-sandbox-desktop
+    mvn consulo:run-desktop-awt-fork -pl consulo:consulo-sandbox-desktop-awt
    ```
 
  * as a web application

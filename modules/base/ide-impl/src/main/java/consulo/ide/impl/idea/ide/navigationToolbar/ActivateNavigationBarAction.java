@@ -20,39 +20,35 @@ import consulo.application.ui.UISettings;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.IdeRootPaneNorthExtension;
+import consulo.project.ui.wm.NavBarRootPaneExtension;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-
-import javax.swing.*;
 
 /**
  * @author Anna Kozlova
  * @author Konstantin Bulenkov
  */
 public class ActivateNavigationBarAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(Project.KEY);
-    if (project != null && UISettings.getInstance().SHOW_NAVIGATION_BAR) {
-      final IdeFrame frame = WindowManagerEx.getInstance().getIdeFrame(project);
-      final IdeRootPaneNorthExtension navBarExt = frame.getNorthExtension(NavBarRootPaneExtension.NAV_BAR);
-      if (navBarExt != null) {
-        final JComponent c = navBarExt.getComponent();
-        final NavBarPanel panel = (NavBarPanel)c.getClientProperty("NavBarPanel");
-        panel.rebuildAndSelectTail(true);
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getDataContext().getData(Project.KEY);
+        if (project != null && UISettings.getInstance().SHOW_NAVIGATION_BAR) {
+            final IdeFrame frame = WindowManagerEx.getInstance().getIdeFrame(project);
+            final NavBarRootPaneExtension navBarExt = frame.getNorthExtension(NavBarRootPaneExtension.class);
+            if (navBarExt != null) {
+                navBarExt.rebuildAndSelectTail();
+            }
+        }
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(Project.KEY);
-    UISettings settings = UISettings.getInstance();
-    final boolean enabled = project != null && settings.SHOW_NAVIGATION_BAR && !settings.PRESENTATION_MODE;
-    e.getPresentation().setEnabled(enabled);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        final Project project = e.getDataContext().getData(Project.KEY);
+        UISettings settings = UISettings.getInstance();
+        final boolean enabled = project != null && settings.SHOW_NAVIGATION_BAR && !settings.PRESENTATION_MODE;
+        e.getPresentation().setEnabled(enabled);
+    }
 }

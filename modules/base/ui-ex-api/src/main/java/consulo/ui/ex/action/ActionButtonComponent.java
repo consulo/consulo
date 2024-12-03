@@ -32,6 +32,7 @@ public interface ActionButtonComponent {
   @interface ButtonState { }
 
   @ButtonState
+  @Deprecated
   int getPopState();
 
   int getWidth();

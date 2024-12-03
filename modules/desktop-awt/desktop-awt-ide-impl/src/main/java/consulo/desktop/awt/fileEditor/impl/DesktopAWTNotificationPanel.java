@@ -93,7 +93,7 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
             protected void hyperlinkActivated(HyperlinkEvent e) {
                 action.onEvent(new consulo.ui.event.HyperlinkEvent(TargetAWT.wrap(label),
                     StringUtil.notNullize(e.getDescription()),
-                    DesktopAWTInputDetails.convert(e.getInputEvent()))
+                    DesktopAWTInputDetails.convert(label, e.getInputEvent()))
                 );
             }
         });
@@ -112,7 +112,7 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
             @Override
             @RequiredUIAccess
             public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-                action.onEvent(new ClickEvent(TargetAWT.wrap(myGearLabel), DesktopAWTInputDetails.convert(e)));
+                action.onEvent(new ClickEvent(TargetAWT.wrap(myGearLabel), DesktopAWTInputDetails.convert(myGearLabel, e)));
                 return true;
             }
         }.installOn(myGearLabel);

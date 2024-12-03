@@ -24,6 +24,7 @@ import consulo.desktop.awt.wm.impl.status.InfoAndProgressPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
+import consulo.ide.impl.idea.openapi.wm.impl.DesktopStripeButtonUI;
 import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
@@ -40,7 +41,6 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
-import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
@@ -350,11 +350,6 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public String getInfoRequestor() {
-        return null;
-    }
-
-    @Override
     public void addProgress(@Nonnull ProgressIndicator indicator, @Nonnull TaskInfo info) {
         this.<InfoAndProgressPanel>findWidget(widget -> widget instanceof InfoAndProgressPanel).ifPresent(widget -> {
             widget.addProgress(indicator, info);
@@ -432,7 +427,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
             myHoveredComponent.setBackground(null);
         }
         if (component != null && component.isEnabled()) {
-            component.setBackground(JBCurrentTheme.StatusBar.hoverBackground());
+            component.setBackground(DesktopStripeButtonUI.BACKGROUND_COLOR);
         }
         repaint();
     }
@@ -564,7 +559,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         if (myHoveredComponent != null && myHoveredComponent.isEnabled() && !(myHoveredComponent instanceof MemoryUsagePanel)) {
             Rectangle bounds = myHoveredComponent.getBounds();
             Point point = new RelativePoint(myHoveredComponent.getParent(), bounds.getLocation()).getPoint(this);
-            g.setColor(JBCurrentTheme.StatusBar.hoverBackground());
+            g.setColor(DesktopStripeButtonUI.BACKGROUND_COLOR);
             g.fillRect(point.x, point.y, bounds.width, bounds.height);
         }
     }

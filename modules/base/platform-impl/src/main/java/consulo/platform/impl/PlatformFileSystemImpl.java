@@ -19,6 +19,7 @@ import consulo.platform.Platform;
 import consulo.platform.PlatformFileSystem;
 import consulo.platform.PlatformOperatingSystem;
 
+import consulo.platform.os.WindowsOperatingSystem;
 import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class PlatformFileSystemImpl implements PlatformFileSystem {
   public PlatformFileSystemImpl(Platform platform, Map<String, String> jvmProperties) {
     PlatformOperatingSystem os = platform.os();
     myIsFileSystemCaseSensitive = os.isUnix() && !os.isMac() || "true".equalsIgnoreCase(jvmProperties.get("consulo.case.sensitive.fs"));
-    myAreSymLinksSupported = os.isUnix() || os.isWindows() && os.asWindows().isWindows7OrNewer();
+    myAreSymLinksSupported = os.isUnix() || os instanceof WindowsOperatingSystem win && win.isWindows7OrNewer();
   }
 
   @Nonnull

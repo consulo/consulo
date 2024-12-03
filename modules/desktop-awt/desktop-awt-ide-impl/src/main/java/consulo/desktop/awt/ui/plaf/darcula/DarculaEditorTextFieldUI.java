@@ -15,12 +15,12 @@
  */
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import consulo.desktop.awt.ui.plaf.BasicEditorTextFieldUI;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.awt.JBUIScale;
+import consulo.language.editor.ui.internal.BasicEditorTextFieldUI;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,11 +32,6 @@ import java.awt.*;
 public class DarculaEditorTextFieldUI extends BasicEditorTextFieldUI {
   public static BasicEditorTextFieldUI createUI(JComponent c) {
     return new DarculaEditorTextFieldUI();
-  }
-
-  @Override
-  protected void setBorder(JComponent c) {
-    c.setBorder(new DarculaEditorTextFieldBorder());
   }
 
   @Override

@@ -28,7 +28,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -77,7 +76,7 @@ public class GeneralCommandLine implements UserDataHolder {
   private Map<String, String> myEnvParams;
   private ParentEnvironmentType myParentEnvironmentType = ParentEnvironmentType.CONSOLE;
   private final ParametersList myProgramParams = new ParametersList();
-  private Charset myCharset = CharsetToolkit.getDefaultSystemCharset();
+  private Charset myCharset = defaultCharset();
   private boolean myRedirectErrorStream = false;
   private Map<Object, Object> myUserData = null;
   private String mySudoPromt = null;
@@ -98,6 +97,10 @@ public class GeneralCommandLine implements UserDataHolder {
     myRedirectErrorStream = original.myRedirectErrorStream;
     // this is intentional memory waste, to avoid warning suppression. We should not copy UserData, but can't suppress a warning for a single field
     myUserData = new HashMap<>();
+  }
+
+  private static Charset defaultCharset() {
+    return DefaultCharsetProvider.getInstance().getDefaultCharset();
   }
 
   public void setPlatform(@Nonnull Platform platform) {

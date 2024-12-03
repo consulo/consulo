@@ -15,15 +15,10 @@
  */
 package consulo.platform;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.platform.os.MacOperatingSystem;
-import consulo.platform.os.WindowsOperatingSystem;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,17 +31,7 @@ public interface PlatformOperatingSystem {
 
   boolean isWindows();
 
-  @Nonnull
-  default WindowsOperatingSystem asWindows() {
-    return (WindowsOperatingSystem)this;
-  }
-
   boolean isMac();
-
-  @Nonnull
-  default MacOperatingSystem asMac() {
-    return (MacOperatingSystem)this;
-  }
 
   boolean isLinux();
 

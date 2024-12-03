@@ -15,13 +15,10 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.application.AllIcons;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.ImageEffects;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -103,8 +100,7 @@ public class HideableDecorator {
 
   protected void on() {
     myOn = true;
-    myTitledSeparator.getLabel().setIcon(TargetAWT.to(AllIcons.General.SplitDown));
-    myTitledSeparator.getLabel().setDisabledIcon(TargetAWT.to(ImageEffects.transparent(AllIcons.General.SplitDown, 0.5f)));
+    myTitledSeparator.getLabel().setIcon(UIUtil.getTreeExpandedIcon());
     myTitledSeparator.getLabel().setIconTextGap(5);
     if (myContent != null) {
       myContent.setVisible(true);
@@ -116,8 +112,7 @@ public class HideableDecorator {
 
   protected void off() {
     myOn = false;
-    myTitledSeparator.getLabel().setIcon(TargetAWT.to(AllIcons.General.SplitRight));
-    myTitledSeparator.getLabel().setDisabledIcon(TargetAWT.to(ImageEffects.transparent(AllIcons.General.SplitRight, 0.5f)));
+    myTitledSeparator.getLabel().setIcon(UIUtil.getTreeCollapsedIcon());
     if (myContent != null) {
       myContent.setVisible(false);
       myPreviousContentSize = myContent.getSize();

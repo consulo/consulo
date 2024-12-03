@@ -74,14 +74,12 @@ public class AllIcons {
     public static final Image Help = PlatformIconGroup.actionsHelp(); // 16x16
     public static final Image Install = PlatformIconGroup.actionsInstall(); // 16x16
     public static final Image IntentionBulb = PlatformIconGroup.actionsIntentionbulb(); // 16x16
-    public static final Image Left = PlatformIconGroup.actionsLeft(); // 16x16
     public static final Image LoginAvator = PlatformIconGroup.actionsLoginavatar(); // 16x16
     public static final Image Lightning = PlatformIconGroup.actionsLightning(); // 16x16
     public static final Image Menu_cut = PlatformIconGroup.actionsMenu_cut(); // 16x16
     public static final Image Menu_help = PlatformIconGroup.actionsMenu_help(); // 16x16
     public static final Image Menu_open = PlatformIconGroup.actionsMenu_open(); // 16x16
     public static final Image Menu_paste = PlatformIconGroup.actionsMenu_paste(); // 16x16
-    public static final Image Menu_replace = PlatformIconGroup.actionsMenu_replace(); // 16x16
     public static final Image Menu_saveall = PlatformIconGroup.actionsMenu_saveall(); // 16x16
     public static final Image Module = PlatformIconGroup.actionsModule(); // 16x16
     public static final Image More = PlatformIconGroup.actionsMorevertical();
@@ -103,7 +101,6 @@ public class AllIcons {
     public static final Image QuickfixBulb = PlatformIconGroup.actionsQuickfixbulb(); // 16x16
     public static final Image QuickfixOffBulb = PlatformIconGroup.actionsQuickfixoffbulb(); // 16x16
     public static final Image QuickList = PlatformIconGroup.actionsQuicklist(); // 16x16
-    public static final Image RealIntentionBulb = PlatformIconGroup.actionsRealintentionbulb(); // 16x16
     public static final Image Redo = PlatformIconGroup.actionsRedo(); // 16x16
     public static final Image RefactoringBulb = PlatformIconGroup.actionsRefactoringbulb(); // 16x16
     public static final Image Refresh = PlatformIconGroup.actionsRefresh(); // 16x16
@@ -112,7 +109,6 @@ public class AllIcons {
     public static final Image Rerun = PlatformIconGroup.actionsRerun(); // 16x16
     public static final Image Restart = PlatformIconGroup.actionsRestart(); // 16x16
     public static final Image Resume = PlatformIconGroup.actionsResume(); // 16x16
-    public static final Image Right = PlatformIconGroup.actionsRight(); // 16x16
     public static final Image Rollback = PlatformIconGroup.actionsRollback(); // 16x16
     public static final Image RunToCursor = PlatformIconGroup.actionsRuntocursor(); // 16x16
     public static final Image Run_anything = PlatformIconGroup.actionsRun_anything();
@@ -131,8 +127,6 @@ public class AllIcons {
     public static final Image ShowReadAccess = PlatformIconGroup.actionsShowreadaccess(); // 16x16
     public static final Image ShowViewer = PlatformIconGroup.actionsShowviewer(); // 16x16
     public static final Image ShowWriteAccess = PlatformIconGroup.actionsShowwriteaccess(); // 16x16
-    public static final Image SortAsc = PlatformIconGroup.actionsSortasc(); // 9x8
-    public static final Image SortDesc = PlatformIconGroup.actionsSortdesc(); // 9x8
     public static final Image SplitHorizontally = PlatformIconGroup.actionsSplithorizontally(); // 16x16
     public static final Image SplitVertically = PlatformIconGroup.actionsSplitvertically(); // 16x16
     public static final Image StartDebugger = PlatformIconGroup.actionsStartdebugger(); // 16x16
@@ -148,7 +142,6 @@ public class AllIcons {
     public static final Image Uninstall = PlatformIconGroup.actionsUninstall(); // 16x16
     public static final Image Unselectall = PlatformIconGroup.actionsUnselectall(); // 16x16
     public static final Image Unshare = PlatformIconGroup.actionsUnshare(); // 14x14
-    public static final Image UP = PlatformIconGroup.actionsUp(); // 16x16
 
     /**
      * 16x16
@@ -357,7 +350,6 @@ public class AllIcons {
     public static final Image LayoutPreviewOnly = PlatformIconGroup.generalLayoutpreviewonly(); // 16x16
     public static final Image Add = PlatformIconGroup.generalAdd(); // 16x16
     public static final Image AddFavoritesList = PlatformIconGroup.generalAddfavoriteslist(); // 16x16
-    public static final Image AddJdk = PlatformIconGroup.generalAddjdk(); // 16x16
     public static final Image ArrowDown = PlatformIconGroup.generalArrowdown(); // 7x6
     public static final Image AutoscrollFromSource = PlatformIconGroup.generalAutoscrollfromsource(); // 16x16
     public static final Image AutoscrollToSource = PlatformIconGroup.generalAutoscrolltosource(); // 16x16
@@ -394,7 +386,6 @@ public class AllIcons {
     public static final Image InspectionsTrafficOff = PlatformIconGroup.generalInspectionstrafficoff(); // 14x14
     public static final Image InspectionsPowerSaveMode = PlatformIconGroup.generalInspectionspowersavemode(); // 14x14
     public static final Image InspectionsTypos = PlatformIconGroup.generalInspectionstypos(); // 14x14
-    public static final Image LinkDropTriangle = PlatformIconGroup.generalLinkdroptriangle();
     public static final Image Jdk = PlatformIconGroup.generalJdk(); // 16x16
     public static final Image Youtube = PlatformIconGroup.generalYoutube(); // 32x32
     public static final Image Locate = PlatformIconGroup.generalLocate(); // 14x16
@@ -422,7 +413,6 @@ public class AllIcons {
     public static final Image Settings = PlatformIconGroup.generalSettings(); // 16x16
     public static final Image Show_to_implement = PlatformIconGroup.generalShow_to_implement(); // 16x16
     public static final Image Show_to_override = PlatformIconGroup.generalShow_to_override(); // 16x16
-    public static final Image SmallConfigurableVcs = PlatformIconGroup.generalSmallconfigurablevcs(); // 16x16
     public static final Image SplitCenterH = PlatformIconGroup.generalSplitcenterh(); // 7x7
     public static final Image SplitCenterV = PlatformIconGroup.generalSplitcenterv(); // 6x7
     public static final Image SplitDown = PlatformIconGroup.generalSplitdown(); // 7x7
@@ -486,14 +476,6 @@ public class AllIcons {
   public static final Image Icon16 = PlatformIconGroup.icon16(); // 16x16
   public static final Image Icon16_Sandbox = PlatformIconGroup.icon16_sandbox(); // 16x16
   public static final Image Icon32 = PlatformIconGroup.icon32(); // 32x32
-
-  public static class Icons {
-
-    public static class Ide {
-      public static final Image NextStep = PlatformIconGroup.iconsIdeNextstep(); // 12x12
-      public static final Image NextStepInverted = PlatformIconGroup.iconsIdeNextstepinverted(); // 12x12
-    }
-  }
 
   public static class Ide {
 
@@ -601,7 +583,6 @@ public class AllIcons {
     public static final Image Class = PlatformIconGroup.nodesClass(); // 16x16
     public static final Image ClassInitializer = PlatformIconGroup.nodesClassinitializer(); // 16x16
     public static final Image ConfigFolder = PlatformIconGroup.nodesConfigfolder(); // 16x16
-    public static final Image CompiledClassesFolder = PlatformIconGroup.nodesCompiledclassesfolder(); // 16x16
     public static final Image CopyOfFolder = PlatformIconGroup.nodesCopyoffolder(); // 16x16
     public static final Image Deploy = PlatformIconGroup.nodesDeploy(); // 16x16
     public static final Image Desktop = PlatformIconGroup.nodesDesktop(); // 16x16
@@ -635,15 +616,13 @@ public class AllIcons {
     public static final Image MethodReference = PlatformIconGroup.nodesMethodreference(); // 16x16
     public static final Image Module = PlatformIconGroup.nodesModule(); // 16x16
     public static final Image ModuleGroup = PlatformIconGroup.nodesModulegroup(); // 16x16
-    public static final Image NewFolder = PlatformIconGroup.nodesNewfolder(); // 16x16
     public static final Image NodePlaceholder = PlatformIconGroup.nodesNodeplaceholder(); // 16x16
     public static final Image Package = PlatformIconGroup.nodesPackage(); // 16x16
     public static final Image TestPackage = Package; // 16x16
     public static final Image Padlock = PlatformIconGroup.nodesPadlock(); // 16x16
     public static final Image Parameter = PlatformIconGroup.nodesParameter(); // 16x16
     public static final Image Plugin = PlatformIconGroup.nodesPlugin(); // 16x16
-    public static final Image Pointcut = PlatformIconGroup.nodesPointcut(); // 16x16
-    public static final Image PpFile = PlatformIconGroup.nodesPpfile(); // 16x16
+    public static final Image PpFile = PlatformIconGroup.nodesFolder(); // 16x16
     public static final Image PpInvalid = PlatformIconGroup.nodesPpinvalid(); // 16x16
     @Deprecated
     public static final Image PpJar = PlatformIconGroup.filetypesArchive();
@@ -713,30 +692,6 @@ public class AllIcons {
 
     }
 
-    public static class FS {
-      public static final Image Step_1 = PlatformIconGroup.processFsStep_1(); // 16x16
-      public static final Image Step_10 = PlatformIconGroup.processFsStep_10(); // 16x16
-      public static final Image Step_11 = PlatformIconGroup.processFsStep_11(); // 16x16
-      public static final Image Step_12 = PlatformIconGroup.processFsStep_12(); // 16x16
-      public static final Image Step_13 = PlatformIconGroup.processFsStep_13(); // 16x16
-      public static final Image Step_14 = PlatformIconGroup.processFsStep_14(); // 16x16
-      public static final Image Step_15 = PlatformIconGroup.processFsStep_15(); // 16x16
-      public static final Image Step_16 = PlatformIconGroup.processFsStep_16(); // 16x16
-      public static final Image Step_17 = PlatformIconGroup.processFsStep_17(); // 16x16
-      public static final Image Step_18 = PlatformIconGroup.processFsStep_18(); // 16x16
-      public static final Image Step_2 = PlatformIconGroup.processFsStep_2(); // 16x16
-      public static final Image Step_3 = PlatformIconGroup.processFsStep_3(); // 16x16
-      public static final Image Step_4 = PlatformIconGroup.processFsStep_4(); // 16x16
-      public static final Image Step_5 = PlatformIconGroup.processFsStep_5(); // 16x16
-      public static final Image Step_6 = PlatformIconGroup.processFsStep_6(); // 16x16
-      public static final Image Step_7 = PlatformIconGroup.processFsStep_7(); // 16x16
-      public static final Image Step_8 = PlatformIconGroup.processFsStep_8(); // 16x16
-      public static final Image Step_9 = PlatformIconGroup.processFsStep_9(); // 16x16
-      public static final Image Step_mask = PlatformIconGroup.processFsStep_mask(); // 16x16
-      public static final Image Step_passive = PlatformIconGroup.processFsStep_passive(); // 16x16
-
-    }
-
     public static final Image Step_1 = PlatformIconGroup.processStep_1(); // 16x16
     public static final Image Step_2 = PlatformIconGroup.processStep_2(); // 16x16
     public static final Image Step_3 = PlatformIconGroup.processStep_3(); // 16x16
@@ -793,30 +748,12 @@ public class AllIcons {
 
   }
 
-  public static class ToolbarDecorator {
-    public static final Image AddBlankLine = PlatformIconGroup.toolbardecoratorAddblankline(); // 16x16
-    public static final Image AddClass = PlatformIconGroup.toolbardecoratorAddclass(); // 16x16
-    public static final Image AddFolder = PlatformIconGroup.toolbardecoratorAddfolder(); // 16x16
-    public static final Image AddIcon = PlatformIconGroup.toolbardecoratorAddicon(); // 16x16
-    public static final Image AddJira = PlatformIconGroup.toolbardecoratorAddjira(); // 16x16
-    public static final Image AddLink = PlatformIconGroup.toolbardecoratorAddlink(); // 16x16
-    public static final Image AddPackage = PlatformIconGroup.toolbardecoratorAddpackage(); // 16x16
-    public static final Image AddPattern = PlatformIconGroup.toolbardecoratorAddpattern(); // 16x16
-    public static final Image AddRemoteDatasource = PlatformIconGroup.toolbardecoratorAddremotedatasource(); // 16x16
-    public static final Image AddYouTrack = PlatformIconGroup.toolbardecoratorAddyoutrack(); // 16x16
-    @Deprecated
-    public static final Image Export = PlatformIconGroup.actionsExport(); // 16x16
-    @Deprecated
-    public static final Image Import = PlatformIconGroup.actionsImport(); // 16x16
-  }
-
   public static class Toolwindows {
     public static final Image Documentation = PlatformIconGroup.toolwindowsDocumentation(); // 13x13
     public static final Image ToolWindowChanges = PlatformIconGroup.toolwindowsToolwindowchanges(); // 13x13
     public static final Image ToolWindowCommander = PlatformIconGroup.toolwindowsToolwindowcommander(); // 13x13
     public static final Image ToolWindowCoverage = PlatformIconGroup.toolwindowsToolwindowcoverage(); // 13x13
     public static final Image ToolWindowDebugger = PlatformIconGroup.toolwindowsToolwindowdebugger(); // 13x13
-    public static final Image ToolWindowFavorites = PlatformIconGroup.toolwindowsToolwindowfavorites(); // 13x13
     public static final Image ToolWindowFind = PlatformIconGroup.toolwindowsToolwindowfind(); // 13x13
     public static final Image ToolWindowHierarchy = PlatformIconGroup.toolwindowsToolwindowhierarchy(); // 13x13
     public static final Image ToolWindowInspection = PlatformIconGroup.toolwindowsToolwindowinspection(); // 13x13
@@ -828,7 +765,6 @@ public class AllIcons {
     public static final Image ToolWindowStructure = PlatformIconGroup.toolwindowsToolwindowstructure(); // 13x13
     public static final Image ToolWindowTodo = PlatformIconGroup.toolwindowsToolwindowtodo(); // 13x13
     public static final Image WebToolWindow = PlatformIconGroup.toolwindowsWebtoolwindow(); // 13x13
-
   }
 
   public static class Vcs {

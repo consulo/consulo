@@ -111,12 +111,8 @@ public class RecentLocationsAction extends DumbAwareAction {
 
     JLabel title = createTitle(showChanged);
 
-    JPanel topPanel = createHeaderPanel(title, checkBox);
+    CaptionPanel topPanel = createHeaderPanel(title, checkBox);
     JPanel mainPanel = createMainPanel(listWithFilter, topPanel);
-
-    Color
-      borderColor = /*SystemInfo.isMac && LafManager.getInstance().getCurrentLookAndFeel() instanceof DarculaLookAndFeelInfo ? topPanel.getBackground() : */
-      null;
 
     Ref<Boolean> navigationRef = Ref.create(false);
     JBPopup popup = JBPopupFactory.getInstance()
@@ -133,7 +129,6 @@ public class RecentLocationsAction extends DumbAwareAction {
       })
       .setResizable(true)
       .setMovable(true)
-      .setBorderColor(borderColor)
       .setDimensionServiceKey(project, LOCATION_SETTINGS_KEY, true)
       .setMinSize(new Dimension(MINIMUM_WIDTH.get(), MINIMUM_HEIGHT.get()))
       .setLocateWithinScreenBounds(false)
@@ -260,16 +255,17 @@ public class RecentLocationsAction extends DumbAwareAction {
   }
 
   @Nonnull
-  private static JPanel createMainPanel(@Nonnull ListWithFilter listWithFilter, @Nonnull JPanel topPanel) {
+  private static JPanel createMainPanel(@Nonnull ListWithFilter listWithFilter, @Nonnull CaptionPanel topPanel) {
     JPanel mainPanel = new JPanel(new BorderLayout());
+    UIUtil.putClientProperty(mainPanel, CaptionPanel.KEY, topPanel);
     mainPanel.add(topPanel, BorderLayout.NORTH);
     mainPanel.add(listWithFilter, BorderLayout.CENTER);
     return mainPanel;
   }
 
   @Nonnull
-  private static JPanel createHeaderPanel(@Nonnull JLabel title, @Nonnull JComponent checkbox) {
-    JPanel topPanel = new CaptionPanel();
+  private static CaptionPanel createHeaderPanel(@Nonnull JLabel title, @Nonnull JComponent checkbox) {
+    CaptionPanel topPanel = new CaptionPanel();
     topPanel.add(title, BorderLayout.WEST);
     topPanel.add(checkbox, BorderLayout.EAST);
 

@@ -36,7 +36,6 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awt.util.StringHtmlUtil;
 import consulo.ui.ex.util.LafProperty;
-import consulo.ui.image.ImageKey;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
@@ -72,7 +71,6 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.basic.BasicRadioButtonUI;
 import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
@@ -108,7 +106,7 @@ public class UIUtil {
     @Deprecated
     @DeprecationInfo("StyleManager.get().getCurrentStyle().isDark(), and don't call this method inside swing paint code")
     public static boolean isUnderDarkTheme() {
-        return DarkThemeCalculator.isDark();
+        return DarkThemeCalculator.isDark() ;
     }
 
     public static final Key<Iterable<? extends Component>> NOT_IN_HIERARCHY_COMPONENTS = Key.create("NOT_IN_HIERARCHY_COMPONENTS");
@@ -264,10 +262,6 @@ public class UIUtil {
     private static final GrayFilter DEFAULT_GRAY_FILTER = new GrayFilter(true, 65);
     private static final GrayFilter DARCULA_GRAY_FILTER = new GrayFilter(true, 30);
 
-    public static GrayFilter getGrayFilter() {
-        return getGrayFilter(isUnderDarkTheme());
-    }
-
     public static GrayFilter getGrayFilter(boolean dark) {
         return dark ? DARCULA_GRAY_FILTER : DEFAULT_GRAY_FILTER;
     }
@@ -303,6 +297,7 @@ public class UIUtil {
         MINI
     }
 
+    @Deprecated
     public enum ComponentStyle {
         LARGE,
         REGULAR,
@@ -391,29 +386,7 @@ public class UIUtil {
 
     private static final Ref<Boolean> ourRetina = Ref.create(Platform.current().os().isMac() ? null : false);
 
-    private static volatile StyleSheet ourDefaultHtmlKitCss;
-
     private UIUtil() {
-    }
-
-    public static void configureHtmlKitStylesheet(@Nonnull Supplier<? extends StyleSheet> styleSheetFactory) {
-        if (ourDefaultHtmlKitCss != null) {
-            return;
-        }
-
-
-        // save the default JRE CSS and ..
-        HTMLEditorKit kit = new HTMLEditorKit();
-        ourDefaultHtmlKitCss = kit.getStyleSheet();
-        // .. erase global ref to this CSS so no one can alter it
-        kit.setStyleSheet(null);
-
-        // Applied to all JLabel instances, including subclasses. Supported in JBR only.
-        UIManager.getDefaults().put("javax.swing.JLabel.userStyleSheet", styleSheetFactory.get());
-    }
-
-    public static StyleSheet getDefaultHtmlKitCss() {
-        return ourDefaultHtmlKitCss;
     }
 
     /**
@@ -1421,31 +1394,26 @@ public class UIUtil {
         return UIManager.getIcon("Tree.expandedIcon");
     }
 
+    public static Icon getMenuArrowIcon(boolean selected) {
+        if (selected) {
+            Icon icon = UIManager.getIcon("Menu.selectedArrowIcon");
+            if (icon != null) {
+                return icon;
+            }
+        }
+        return UIManager.getIcon("Menu.arrowIcon");
+    }
+
     public static Icon getTreeIcon(boolean expanded) {
         return expanded ? getTreeExpandedIcon() : getTreeCollapsedIcon();
     }
 
-    private static final ImageKey selectedCollapsedIcon =
-        ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeCollapsedSelected", 9, 11);
-
     public static Icon getTreeSelectedCollapsedIcon() {
-        Icon icon = UIManager.getIcon("Tree.collapsedSelectedIcon");
-        if (icon != null) {
-            return icon;
-        }
-        return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedCollapsedIcon : getTreeCollapsedIcon();
+        return getTreeCollapsedIcon();
     }
 
-    private static final ImageKey selectedExpandedIcon =
-        ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeExpandedSelected", 11, 9);
-
     public static Icon getTreeSelectedExpandedIcon() {
-        Icon icon = UIManager.getIcon("Tree.expandedSelectedIcon");
-        if (icon != null) {
-            return icon;
-        }
-
-        return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedExpandedIcon : getTreeExpandedIcon();
+        return getTreeExpandedIcon();
     }
 
     public static Border getTableHeaderCellBorder() {
@@ -1467,31 +1435,18 @@ public class UIUtil {
     @SuppressWarnings({"HardCodedStringLiteral"})
     @Deprecated
     @DeprecationInfo(value = "Look & Feel is not supported")
-    public static boolean isUnderWindowsLookAndFeel() {
-        return UIManager.getLookAndFeel().getName().equals("Windows");
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    @Deprecated
-    @DeprecationInfo(value = "Look & Feel is not supported")
-    public static boolean isUnderWindowsClassicLookAndFeel() {
-        return UIManager.getLookAndFeel().getName().equals("Windows Classic");
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    @Deprecated
-    @DeprecationInfo(value = "Look & Feel is not supported")
     public static boolean isUnderNimbusLookAndFeel() {
         return false;
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
+    @Deprecated
     public static boolean isUnderAquaLookAndFeel() {
-        return Platform.current().os().isMac() && UIManager.getLookAndFeel().getName().contains("Mac OS X");
+        return false;
     }
 
     public static boolean isUnderAquaBasedLookAndFeel() {
-        return Platform.current().os().isMac() && (isUnderAquaLookAndFeel() || isUnderDarkBuildInLaf());
+        return false;
     }
 
     @Deprecated
@@ -1530,70 +1485,14 @@ public class UIUtil {
         return isUnderDarkTheme();
     }
 
+    @Deprecated
     public static boolean isUnderBuildInLaF() {
-        LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-        return lookAndFeel instanceof BuildInLookAndFeel;
+        return true;
     }
 
+    @Deprecated
     public static boolean isUnderGTKLookAndFeel() {
-        return UIManager.getLookAndFeel().getName().contains("GTK");
-    }
-
-    public static final Color GTK_AMBIANCE_TEXT_COLOR = new Color(223, 219, 210);
-    public static final Color GTK_AMBIANCE_BACKGROUND_COLOR = new Color(67, 66, 63);
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    @Nullable
-    public static String getGtkThemeName() {
-        final LookAndFeel laf = UIManager.getLookAndFeel();
-        if (laf != null && "GTKLookAndFeel".equals(laf.getClass().getSimpleName())) {
-            try {
-                final Method method = laf.getClass().getDeclaredMethod("getGtkThemeName");
-                method.setAccessible(true);
-                final Object theme = method.invoke(laf);
-                if (theme != null) {
-                    return theme.toString();
-                }
-            }
-            catch (Exception ignored) {
-            }
-        }
-        return null;
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    public static boolean isMurrineBasedTheme() {
-        final String gtkTheme = getGtkThemeName();
-        return "Ambiance".equalsIgnoreCase(gtkTheme) || "Radiance".equalsIgnoreCase(gtkTheme) || "Dust".equalsIgnoreCase(gtkTheme) || "Dust Sand"
-            .equalsIgnoreCase(gtkTheme);
-    }
-
-    public static Color shade(final Color c, final double factor, final double alphaFactor) {
-        assert factor >= 0 : factor;
-        return new Color(
-            Math.min((int)Math.round(c.getRed() * factor), 255),
-            Math.min((int)Math.round(c.getGreen() * factor), 255),
-            Math.min((int)Math.round(c.getBlue() * factor), 255),
-            Math.min((int)Math.round(c.getAlpha() * alphaFactor), 255)
-        );
-    }
-
-    public static Color mix(final Color c1, final Color c2, final double factor) {
-        assert 0 <= factor && factor <= 1.0 : factor;
-        final double backFactor = 1.0 - factor;
-        return new Color(
-            Math.min((int)Math.round(c1.getRed() * backFactor + c2.getRed() * factor), 255),
-            Math.min((int)Math.round(c1.getGreen() * backFactor + c2.getGreen() * factor), 255),
-            Math.min((int)Math.round(c1.getBlue() * backFactor + c2.getBlue() * factor), 255)
-        );
-    }
-
-    public static boolean isFullRowSelectionLAF() {
         return false;
-    }
-
-    public static boolean isUnderNativeMacLookAndFeel() {
-        return Platform.current().os().isMac();
     }
 
     public static int getListCellHPadding() {
@@ -1609,11 +1508,7 @@ public class UIUtil {
     }
 
     public static Insets getListViewportPadding() {
-        return JBUI.emptyInsets();
-    }
-
-    public static boolean isToUseDottedCellBorder() {
-        return !isUnderNativeMacLookAndFeel();
+        return JBUI.insets(8, 0);
     }
 
     public static boolean isControlKeyDown(MouseEvent mouseEvent) {
@@ -2507,10 +2402,6 @@ public class UIUtil {
         return "<style> " + body + " " + link + "</style>";
     }
 
-    public static boolean isWinLafOnVista() {
-        return SystemInfo.isWinVistaOrNewer && "Windows".equals(UIManager.getLookAndFeel().getName());
-    }
-
     public static Color getFocusedFillColor() {
         return toAlpha(getListSelectionBackground(), 100);
     }
@@ -2568,14 +2459,6 @@ public class UIUtil {
         for (MouseWheelListener each : mouseWheelListeners) {
             c.removeMouseWheelListener(each);
         }
-    }
-
-    public static void disposeProgress(final JProgressBar progress) {
-        if (!isUnderNativeMacLookAndFeel()) {
-            return;
-        }
-
-        SwingUtilities.invokeLater(() -> progress.setUI(null));
     }
 
     @Nullable
@@ -2664,7 +2547,7 @@ public class UIUtil {
     }
 
     public static FontUIResource getFontWithFallback(@Nonnull String familyName, @JdkConstants.FontStyle int style, int size) {
-        Font fontWithFallback = new StyleContext().getFont(familyName, style, size);
+        Font fontWithFallback = StyleContext.getDefaultStyleContext().getFont(familyName, style, size);
         return fontWithFallback instanceof FontUIResource ? (FontUIResource)fontWithFallback : new FontUIResource(fontWithFallback);
     }
 

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.ui.impl;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.RemoteDesktopService;
@@ -394,8 +393,6 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
     private MyDialog(IdeGlassPaneEx pane, DialogWrapper wrapper, Project project) {
       setLayout(new BorderLayout());
       setOpaque(false);
-      setBorder(BorderFactory.createEmptyBorder(AllIcons.Ide.Shadow.Top.getHeight(), AllIcons.Ide.Shadow.Left.getWidth(), AllIcons.Ide.Shadow.Bottom.getHeight(),
-                                                AllIcons.Ide.Shadow.Right.getWidth()));
 
       myPane = pane;
       myDialogWrapper = new WeakReference<>(wrapper);

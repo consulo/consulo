@@ -41,6 +41,6 @@ public class DesktopWelcomeFrameManager extends WelcomeFrameManager {
   @Nonnull
   @Override
   public IdeFrame createFrame() {
-    return new DesktopWelcomeIdeFrame(this::frameClosed);
+    return new DesktopWelcomeIdeFrame(myApplication, this::frameClosed);
   }
 }

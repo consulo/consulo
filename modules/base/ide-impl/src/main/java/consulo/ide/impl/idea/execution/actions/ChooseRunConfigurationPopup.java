@@ -38,6 +38,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -745,12 +746,12 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         else {
           if (wrapper.isChecked()) {
             myTextLabel.setIcon(TargetAWT.to(
-              isSelected ? RunConfigurationsComboBoxAction.CHECKED_SELECTED_ICON : RunConfigurationsComboBoxAction.CHECKED_ICON
+              isSelected ? PlatformIconGroup.actionsChecked_selected() : PlatformIconGroup.actionsChecked()
             ));
           }
           else {
             if (myTextLabel.getIcon() == null) {
-              myTextLabel.setIcon(TargetAWT.to(RunConfigurationsComboBoxAction.EMPTY_ICON));
+              myTextLabel.setIcon(TargetAWT.to(Image.empty(Image.DEFAULT_ICON_SIZE)));
             }
           }
           myLabel.setText("");

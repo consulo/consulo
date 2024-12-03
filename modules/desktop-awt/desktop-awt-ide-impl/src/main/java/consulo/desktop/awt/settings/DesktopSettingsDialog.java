@@ -25,7 +25,6 @@ import consulo.ide.impl.configurable.ConfigurablePreselectStrategy;
 import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
-import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -48,12 +47,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class DesktopSettingsDialog extends WholeWestDialogWrapper implements DataProvider {
 
     private Project myProject;
-    private Configurable[] myConfigurables;
+    private final Function<Project, Configurable[]> myConfigurablesBuilder;
     private ConfigurablePreselectStrategy myPreselectStrategy;
+    private final Consumer<DesktopSettingsDialog> myAfteLoad;
     private OptionsEditor myEditor;
 
     private ApplyAction myApplyAction;
@@ -65,34 +67,32 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
      *
      * @deprecated
      */
-    public DesktopSettingsDialog(
-        Project project,
-        Configurable[] configurables,
-        @Nonnull ConfigurablePreselectStrategy strategy,
-        boolean applicationModalIfPossible
+    public DesktopSettingsDialog(Project project,
+                                 Function<Project, Configurable[]> configurablesBuilder,
+                                 @Nonnull ConfigurablePreselectStrategy strategy,
+                                 boolean applicationModalIfPossible,
+                                 Consumer<DesktopSettingsDialog> afteLoad
     ) {
         super(true, applicationModalIfPossible);
-        init(project, configurables, strategy);
-    }
-
-    public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nonnull ConfigurablePreselectStrategy strategy) {
-        super(project, true);
-        init(project, configurables, strategy);
-    }
-
-    private void init(final Project project, final Configurable[] configurables, @Nonnull ConfigurablePreselectStrategy strategy) {
         myProject = project;
-        myConfigurables = configurables;
+        myConfigurablesBuilder = configurablesBuilder;
         myPreselectStrategy = strategy;
-
+        myAfteLoad = afteLoad;
         setTitle(Platform.current().os().isMac() ? CommonLocalize.titleSettingsMac() : CommonLocalize.titleSettings());
-
         init();
     }
 
-    @Override
-    public boolean isTypeAheadEnabled() {
-        return true;
+    public DesktopSettingsDialog(Project project,
+                                 Function<Project, Configurable[]> configurablesBuilder,
+                                 @Nonnull ConfigurablePreselectStrategy strategy,
+                                 Consumer<DesktopSettingsDialog> afteLoad) {
+        super(project, true);
+        myProject = project;
+        myConfigurablesBuilder = configurablesBuilder;
+        myPreselectStrategy = strategy;
+        myAfteLoad = afteLoad;
+        setTitle(Platform.current().os().isMac() ? CommonLocalize.titleSettingsMac() : CommonLocalize.titleSettings());
+        init();
     }
 
     @Nonnull
@@ -129,8 +129,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     @Nonnull
     @Override
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
-        Configurable configurable = myPreselectStrategy.get(myConfigurables);
-        myEditor = new OptionsEditor(myProject, myConfigurables, configurable, rootPanel);
+        myEditor = new OptionsEditor(myProject, myConfigurablesBuilder, myPreselectStrategy, rootPanel, () -> myAfteLoad.accept(this));
         myEditor.getContext().addColleague(new OptionsEditorColleague() {
             @Override
             public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
@@ -210,6 +209,10 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     private void saveCurrentConfigurable() {
+        if (!myEditor.isConfigurablesLoaded()) {
+            return;
+        }
+        
         final Configurable current = myEditor.getContext().getCurrentConfigurable();
         if (current == null) {
             return;

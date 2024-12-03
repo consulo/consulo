@@ -18,10 +18,7 @@ package consulo.ide.impl.idea.ide.errorTreeView;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.progress.util.StatusBarProgress;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -61,11 +58,6 @@ public class ErrorViewTreeBuilder extends AbstractTreeBuilder{
 
   protected boolean isAutoExpandNode(NodeDescriptor nodeDescriptor) {
     return nodeDescriptor.getParentDescriptor() == null || nodeDescriptor.getElement() instanceof GroupingElement;
-  }
-
-  @Nonnull
-  protected ProgressIndicator createProgressIndicator() {
-    return new StatusBarProgress();
   }
 }
 

@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.application.util.Semaphore;
@@ -40,7 +41,7 @@ public class Waiter extends Task.Modal {
     super(project, VcsBundle.message("change.list.manager.wait.lists.synchronization", title), cancellable);
     myRunnable = runnable;
     mySemaphore.down();
-    setCancelText("Skip");
+    setCancelText(LocalizeValue.localizeTODO("Skip"));
   }
 
   public void run(@Nonnull ProgressIndicator indicator) {

@@ -17,14 +17,11 @@ package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
-import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
-import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -116,8 +113,9 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
     }
 
     @Override
-    public void setPlaceholder(@Nullable LocalizeValue text) {
-        toAWTComponent().getEmptyText().setText(text.get());
+    public void setPlaceholder(@Nonnull LocalizeValue text) {
+        MyJBTextField field = toAWTComponent();
+        field.putClientProperty("JTextField.placeholderText", text == LocalizeValue.empty() ? null : text.getValue());
     }
 
     @Override
@@ -128,6 +126,18 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
     @Override
     public void selectAll() {
         toAWTComponent().selectAll();
+    }
+
+    @Override
+    public void select(int from, int to) {
+        toAWTComponent().setCaretPosition(from);
+        toAWTComponent().moveCaretPosition(to);
+    }
+
+    @Override
+    public void moveCaretTo(int index) {
+        toAWTComponent().setCaretPosition(index);
+        toAWTComponent().moveCaretPosition(index);
     }
 
     @Override

@@ -25,7 +25,7 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  */
 @Deprecated
-@DeprecationInfo(value = "Use AllIcons or PlatformIconGroup")
+@DeprecationInfo(value = "Use PlatformIconGroup")
 public interface PlatformIcons {
   Icon PUBLIC_ICON = (Icon)AllIcons.Nodes.C_public;
   Icon LOCKED_ICON = (Icon)(Icon)AllIcons.Nodes.Locked;
@@ -68,7 +68,6 @@ public interface PlatformIcons {
   Icon PROJECT_ICON = (Icon)AllIcons.Icon16;
   Icon UI_FORM_ICON = (Icon)AllIcons.FileTypes.UiForm;
 
-  Icon SMALL_VCS_CONFIGURABLE = (Icon)AllIcons.General.SmallConfigurableVcs;
   Icon GROUP_BY_PACKAGES = (Icon)AllIcons.Actions.GroupByPackage;
   Icon ADD_ICON = (Icon)IconUtil.getAddIcon();
   Icon DELETE_ICON = (Icon)IconUtil.getRemoveIcon();
@@ -105,7 +104,4 @@ public interface PlatformIcons {
   @Deprecated Icon CONTENT_ROOT_ICON_OPEN = (Icon)CONTENT_ROOT_ICON_CLOSED;
 
   Icon UP_DOWN_ARROWS = (Icon)AllIcons.Ide.UpDown;
-
-  Icon EXPORT_ICON = (Icon)AllIcons.ToolbarDecorator.Export;
-  Icon IMPORT_ICON = (Icon)AllIcons.ToolbarDecorator.Import;
 }

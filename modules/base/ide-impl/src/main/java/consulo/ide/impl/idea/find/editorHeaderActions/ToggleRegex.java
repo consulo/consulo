@@ -22,9 +22,14 @@ import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.SearchSession;
 import jakarta.annotation.Nonnull;
 
-public class ToggleRegex extends EditorHeaderToggleAction implements Embeddable {
+public class ToggleRegex extends EditorSearchToggleAction implements Embeddable {
     public ToggleRegex() {
         super(FindLocalize.findRegex(), AllIcons.Actions.Regex, AllIcons.Actions.RegexHovered, AllIcons.Actions.RegexSelected);
+    }
+
+    @Override
+    public boolean displayTextInToolbar() {
+        return false;
     }
 
     @Override

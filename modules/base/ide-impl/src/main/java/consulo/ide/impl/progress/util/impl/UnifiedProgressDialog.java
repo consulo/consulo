@@ -104,7 +104,7 @@ public class UnifiedProgressDialog implements ProgressDialog {
   }
 
   @Override
-  public void changeCancelButtonText(String text) {
+  public void changeCancelButtonText(LocalizeValue text) {
 
   }
 

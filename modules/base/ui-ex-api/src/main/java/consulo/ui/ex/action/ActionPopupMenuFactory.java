@@ -28,8 +28,8 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ActionPopupMenuFactory {
   @Nonnull
-  static ActionButtonFactory getInstance() {
-    return Application.get().getInstance(ActionButtonFactory.class);
+  static ActionPopupMenuFactory getInstance() {
+    return Application.get().getInstance(ActionPopupMenuFactory.class);
   }
 
   /**

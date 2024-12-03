@@ -16,6 +16,7 @@
 package consulo.ide.impl.progress.util;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -47,7 +48,7 @@ public interface ProgressDialog extends Disposable {
 
   void runRepaintRunnable();
 
-  void changeCancelButtonText(String text);
+  void changeCancelButtonText(@Nonnull LocalizeValue text);
 
   void enableCancelButtonIfNeeded(boolean value);
 

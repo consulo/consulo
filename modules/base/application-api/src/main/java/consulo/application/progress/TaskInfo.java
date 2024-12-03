@@ -15,15 +15,18 @@
  */
 package consulo.application.progress;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 public interface TaskInfo {
   @Nonnull
   String getTitle();
 
-  String getCancelText();
+  @Nonnull
+  LocalizeValue getCancelTextValue();
 
-  String getCancelTooltipText();
+  @Nonnull
+  LocalizeValue getCancelTooltipTextValue();
 
   boolean isCancellable();
 }

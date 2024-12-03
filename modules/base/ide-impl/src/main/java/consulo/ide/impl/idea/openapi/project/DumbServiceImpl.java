@@ -277,7 +277,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
         if (LOG.isDebugEnabled()) {
             LOG.debug("Scheduling task " + task);
         }
-        
+
         if (myProject.isDefault()) {
             LOG.error("No indexing tasks should be created for default project: " + task);
         }
@@ -301,18 +301,20 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
             indicator = new EmptyProgressIndicator();
         }
 
+        Exception trace = new Exception();
+        
         indicator.pushState();
-        ((CoreProgressManager)ProgressManager.getInstance()).suppressPrioritizing();
+        ((CoreProgressManager) ProgressManager.getInstance()).suppressPrioritizing();
         try {
             final ProgressIndicator finalIndicator = indicator;
             HeavyProcessLatch.INSTANCE.performOperation(
                 HeavyProcessLatch.Type.Indexing,
                 IdeLocalize.progressPerformingIndexingTasks().get(),
-                () -> task.performInDumbMode(finalIndicator)
+                () -> task.performInDumbMode(finalIndicator, trace)
             );
         }
         finally {
-            ((CoreProgressManager)ProgressManager.getInstance()).restorePrioritizing();
+            ((CoreProgressManager) ProgressManager.getInstance()).restorePrioritizing();
             indicator.popState();
             Disposer.dispose(task);
         }
@@ -320,18 +322,18 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
     @VisibleForTesting
     void queueAsynchronousTask(@Nonnull DumbModeTask task) {
-        Throwable trace = new Throwable(); // please report exceptions here to peter
+        Exception trace = new Exception(); // please report exceptions here to peter
         myProject.getUIAccess().giveIfNeed(() -> queueTaskOnEdt(task, trace));
     }
 
-    private void queueTaskOnEdt(@Nonnull DumbModeTask task, @Nonnull Throwable trace) {
+    private void queueTaskOnEdt(@Nonnull DumbModeTask task, @Nonnull Exception trace) {
         if (!addTaskToQueue(task)) {
             return;
         }
 
         if (myState.get() == State.SMART || myState.get() == State.WAITING_FOR_FINISH) {
             enterDumbMode(trace);
-            myApplication.invokeLater(this::startBackgroundProcess, myProject.getDisposed());
+            myApplication.invokeLater(() -> startBackgroundProcess(trace), myProject.getDisposed());
         }
     }
 
@@ -520,14 +522,15 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     }
 
     private void showModalProgress() {
+        Exception trace = new Exception();
         NoAccessDuringPsiEvents.checkCallContext();
         try {
-            ((ApplicationEx)myApplication).executeSuspendingWriteAction(
+            ((ApplicationEx) myApplication).executeSuspendingWriteAction(
                 myProject,
                 IdeLocalize.progressIndexing().get(),
                 () -> {
                     assertState(State.SCHEDULED_TASKS);
-                    runBackgroundProcess(ProgressManager.getInstance().getProgressIndicator());
+                    runBackgroundProcess(ProgressManager.getInstance().getProgressIndicator(), trace);
                     assertState(State.SMART, State.WAITING_FOR_FINISH);
                 }
             );
@@ -559,12 +562,12 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
         }
     }
 
-    private void startBackgroundProcess() {
+    private void startBackgroundProcess(@Nonnull Exception startTrace) {
         try {
             ProgressManager.getInstance().run(new Task.Backgroundable(myProject, IdeLocalize.progressIndexing(), false) {
                 @Override
                 public void run(@Nonnull final ProgressIndicator visibleIndicator) {
-                    runBackgroundProcess(visibleIndicator);
+                    runBackgroundProcess(visibleIndicator, startTrace);
                 }
             });
         }
@@ -574,8 +577,8 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
         }
     }
 
-    private void runBackgroundProcess(@Nonnull final ProgressIndicator visibleIndicator) {
-        ((ProgressManagerImpl)ProgressManager.getInstance()).markProgressSafe((ProgressWindow)visibleIndicator);
+    private void runBackgroundProcess(@Nonnull ProgressIndicator visibleIndicator, @Nonnull Exception trace) {
+        ((ProgressManagerImpl) ProgressManager.getInstance()).markProgressSafe((ProgressWindow) visibleIndicator);
 
         if (!myState.compareAndSet(State.SCHEDULED_TASKS, State.RUNNING_DUMB_TASKS)) {
             return;
@@ -593,7 +596,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
             try {
                 shutdownTracker.registerStopperThread(self);
 
-                ((ProgressIndicatorEx)visibleIndicator).addStateDelegate(new AppIconProgress());
+                ((ProgressIndicatorEx) visibleIndicator).addStateDelegate(new AppIconProgress());
 
                 DumbModeTask task = null;
                 while (true) {
@@ -610,7 +613,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
                         @Override
                         protected void delegateProgressChange(@Nonnull IndicatorAction action) {
                             super.delegateProgressChange(action);
-                            action.execute((ProgressIndicatorEx)visibleIndicator);
+                            action.execute((ProgressIndicatorEx) visibleIndicator);
                         }
                     });
 
@@ -618,7 +621,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
                     HeavyProcessLatch.INSTANCE.performOperation(
                         HeavyProcessLatch.Type.Indexing,
                         IdeLocalize.progressPerformingIndexingTasks().get(),
-                        () -> runSingleTask(finalTask, taskIndicator)
+                        () -> runSingleTask(finalTask, taskIndicator, trace)
                     );
                 }
             }
@@ -637,7 +640,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
         }
     }
 
-    private void runSingleTask(final DumbModeTask task, final ProgressIndicatorEx taskIndicator) {
+    private void runSingleTask(DumbModeTask task, ProgressIndicatorEx taskIndicator, Exception trace) {
         if (myApplication.isInternal()) {
             LOG.info("Running dumb mode task: " + task);
         }
@@ -651,7 +654,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
                     taskIndicator.setIndeterminate(true);
                     taskIndicator.setTextValue(IdeLocalize.progressIndexingScanning());
 
-                    task.performInDumbMode(taskIndicator);
+                    task.performInDumbMode(taskIndicator, trace);
                 }
                 catch (ProcessCanceledException ignored) {
                 }

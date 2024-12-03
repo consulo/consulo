@@ -502,7 +502,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     };
 
     boolean result = myApplication.runProcessWithProgressSynchronously(taskContainer, task.getTitle(), task.isCancellable(), task.isModal(),
-                                                                       task.getProject(), task.getParentComponent(), task.getCancelText());
+                                                                       task.getProject(), task.getParentComponent(), task.getCancelTextValue());
 
     ApplicationUtil.invokeAndWaitSomewhere(myApplication, task.whereToRunCallbacks(),
                                            myApplication.getDefaultModalityState(), () -> finishTask(task, !result, exceptionRef.get()));

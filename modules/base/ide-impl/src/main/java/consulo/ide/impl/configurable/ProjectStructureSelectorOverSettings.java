@@ -33,17 +33,17 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectL
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
-import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.ProjectBundle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.util.concurrent.AsyncResult;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 
 /**
@@ -51,127 +51,129 @@ import java.util.function.BiConsumer;
  * @since 20/04/2021
  */
 public class ProjectStructureSelectorOverSettings implements ProjectStructureSelector {
-  private final Settings mySettings;
+    private final Settings mySettings;
 
-  public ProjectStructureSelectorOverSettings(Settings settings) {
-    mySettings = settings;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public AsyncResult<Void> select(@Nullable Artifact artifact, boolean requestFocus) {
-    return selectAsync(ArtifactsStructureConfigurable.ID, ArtifactsStructureConfigurable.class, (artifactsStructureConfigurable, runnable) -> {
-      artifactsStructureConfigurable.selectNodeInTree(artifact);
-      runnable.run();
-    });
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public AsyncResult<Void> select(@Nonnull Sdk sdk, boolean requestFocus) {
-    return selectAsync(SdkListConfigurable.ID, SdkListConfigurable.class, (sdkListConfigurable, runnable) -> {
-      sdkListConfigurable.selectNodeInTree(sdk);
-      runnable.run();
-    });
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public AsyncResult<Void> select(@Nullable String moduleToSelect, @Nullable String tabId, boolean requestFocus) {
-    return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
-      // just select Modules
-      if (moduleToSelect == null) {
-        runnable.run();
-        return;
-      }
-      moduleStructureConfigurable.selectNodeInTree(moduleToSelect).doWhenDone((node) -> {
-        MasterDetailsConfigurable configurable = ((MasterDetailsComponent.MyNode)node).getConfigurable();
-        if (configurable == null) {
-          return;
-        }
-
-        ModuleEditor moduleEditor = ((ModuleConfigurable)configurable).getModuleEditor();
-
-        if (tabId == null) {
-          moduleEditor.selectEditor(ProjectBundle.message("module.paths.title"));
-        }
-        else {
-          moduleEditor.selectEditor(tabId);
-        }
-
-        runnable.run();
-      });
-    });
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public AsyncResult<Void> select(@Nonnull LibraryOrderEntry libraryOrderEntry, boolean requestFocus) {
-    Library library = libraryOrderEntry.getLibrary();
-    if (library == null) {
-      return AsyncResult.rejected();
+    public ProjectStructureSelectorOverSettings(Settings settings) {
+        mySettings = settings;
     }
-    return selectProjectOrGlobalLibrary(library, requestFocus);
-  }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public AsyncResult<Void> selectOrderEntry(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
-    return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
-      moduleStructureConfigurable.selectNodeInTree(module).doWhenDone((node) -> {
-        ModuleEditor moduleEditor = ((ModuleConfigurable)((MasterDetailsComponent.MyNode)node).getConfigurable()).getModuleEditor();
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public AsyncResult<Void> select(@Nullable Artifact artifact, boolean requestFocus) {
+        return selectAsync(ArtifactsStructureConfigurable.ID, ArtifactsStructureConfigurable.class, (artifactsStructureConfigurable, runnable) -> {
+            artifactsStructureConfigurable.selectNodeInTree(artifact);
+            runnable.run();
+        });
+    }
 
-        moduleEditor.selectEditor(ProjectBundle.message("module.dependencies.title"));
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public AsyncResult<Void> select(@Nonnull Sdk sdk, boolean requestFocus) {
+        return selectAsync(SdkListConfigurable.ID, SdkListConfigurable.class, (sdkListConfigurable, runnable) -> {
+            sdkListConfigurable.selectNodeInTree(sdk);
+            runnable.run();
+        });
+    }
 
-        ClasspathEditor editor = (ClasspathEditor)moduleEditor.getEditor(ProjectBundle.message("module.dependencies.title"));
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public AsyncResult<Void> select(@Nullable String moduleToSelect, @Nullable String tabId, boolean requestFocus) {
+        return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
+            // just select Modules
+            if (moduleToSelect == null) {
+                runnable.run();
+                return;
+            }
+            moduleStructureConfigurable.selectNodeInTree(moduleToSelect).doWhenDone((node) -> {
+                MasterDetailsConfigurable configurable = ((MasterDetailsComponent.MyNode) node).getConfigurable();
+                if (configurable == null) {
+                    return;
+                }
 
-        if (orderEntry != null) {
-          editor.selectOrderEntry(orderEntry);
+                ModuleEditor moduleEditor = ((ModuleConfigurable) configurable).getModuleEditor();
+
+                if (tabId == null) {
+                    moduleEditor.selectEditor(ProjectBundle.message("module.paths.title"));
+                }
+                else {
+                    moduleEditor.selectEditor(tabId);
+                }
+
+                runnable.run();
+            });
+        });
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public AsyncResult<Void> select(@Nonnull LibraryOrderEntry libraryOrderEntry, boolean requestFocus) {
+        Library library = libraryOrderEntry.getLibrary();
+        if (library == null) {
+            return AsyncResult.rejected();
         }
-        
-        runnable.run();
-      });
-    });
-  }
+        return selectProjectOrGlobalLibrary(library, requestFocus);
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public AsyncResult<Void> selectProjectOrGlobalLibrary(@Nonnull Library library, boolean requestFocus) {
-    return selectAsync(ProjectLibrariesConfigurable.ID, ProjectLibrariesConfigurable.class, (projectLibrariesConfigurable, runnable) -> {
-      projectLibrariesConfigurable.selectNodeInTree(library);
-      runnable.run();
-    });
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public AsyncResult<Void> selectOrderEntry(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
+        return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
+            moduleStructureConfigurable.selectNodeInTree(module).doWhenDone((node) -> {
+                ModuleEditor moduleEditor = ((ModuleConfigurable) ((MasterDetailsComponent.MyNode) node).getConfigurable()).getModuleEditor();
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public AsyncResult<Void> selectProjectGeneralSettings(boolean requestFocus) {
-    return selectAsync(StandardConfigurableIds.PROJECT_GROUP, ProjectConfigurableGroup.class, (projectConfigurable, runnable) -> {
-      runnable.run();
-    });
-  }
+                moduleEditor.selectEditor(ProjectBundle.message("module.dependencies.title"));
 
-  @RequiredUIAccess
-  @Nonnull
-  private <T extends UnnamedConfigurable> AsyncResult<Void> selectAsync(String id, Class<T> cls, BiConsumer<T, Runnable> consumer) {
-    AsyncResult<Void> result = AsyncResult.undefined();
+                ClasspathEditor editor = (ClasspathEditor) moduleEditor.getEditor(ProjectBundle.message("module.dependencies.title"));
 
-    UIAccess.current().give(() -> {
-      SearchableConfigurable configurable = mySettings.findConfigurableById(id);
-      assert configurable != null;
+                if (orderEntry != null) {
+                    editor.selectOrderEntry(orderEntry);
+                }
 
-      T config = ConfigurableWrapper.cast(configurable, cls);
+                runnable.run();
+            });
+        });
+    }
 
-      mySettings.select(configurable).doWhenDone(() -> consumer.accept(config, result::setDone));
-    });
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public AsyncResult<Void> selectProjectOrGlobalLibrary(@Nonnull Library library, boolean requestFocus) {
+        return selectAsync(ProjectLibrariesConfigurable.ID, ProjectLibrariesConfigurable.class, (projectLibrariesConfigurable, runnable) -> {
+            projectLibrariesConfigurable.selectNodeInTree(library);
+            runnable.run();
+        });
+    }
 
-    return result;
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public AsyncResult<Void> selectProjectGeneralSettings(boolean requestFocus) {
+        return selectAsync(StandardConfigurableIds.PROJECT_GROUP, ProjectConfigurableGroup.class, (projectConfigurable, runnable) -> {
+            runnable.run();
+        });
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    private <T extends UnnamedConfigurable> AsyncResult<Void> selectAsync(String id, Class<T> cls, BiConsumer<T, Runnable> consumer) {
+        AsyncResult<Void> result = AsyncResult.undefined();
+
+        UIAccess.current().give(() -> {
+            SearchableConfigurable configurable = mySettings.findConfigurableById(id);
+            if (configurable == null) {
+                return;
+            }
+
+            T config = ConfigurableWrapper.cast(configurable, cls);
+
+            mySettings.select(configurable).doWhenDone(() -> consumer.accept(config, result::setDone));
+        });
+
+        return result;
+    }
 }

@@ -91,7 +91,6 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
 
     myName.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));
     myName.setIpad(JBUI.emptyInsets());
-    myName.setMyBorder(null);
 
     JPanel rightBottom = new JPanel(new HorizontalLayout(JBUI.scale(5)));
     rightBottom.setOpaque(false);

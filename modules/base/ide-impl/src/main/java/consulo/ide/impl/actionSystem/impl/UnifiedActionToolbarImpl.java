@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.actionSystem.impl;
 
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
+import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.MagicConstant;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
@@ -37,110 +38,111 @@ import java.util.List;
  * @since 2020-05-11
  */
 public class UnifiedActionToolbarImpl implements ActionToolbar {
-  private final String myPlace;
+    private final String myPlace;
 
-  private final ActionGroup myGroup;
+    private final ActionGroup myGroup;
 
-  private int myLayoutPolicy;
+    private int myLayoutPolicy;
 
-  private Layout myComponent;
+    private Layout myComponent;
 
-  private int myOrientation;
+    private int myOrientation;
 
-  public UnifiedActionToolbarImpl(String place, ActionGroup group, boolean horizontal, boolean decorateButtons) {
-    myPlace = place;
-    myGroup = group;
-    myOrientation = horizontal ? HORIZONTAL_ORIENTATION : VERTICAL_ORIENTATION;
+    public UnifiedActionToolbarImpl(String place, ActionGroup group, boolean horizontal, boolean decorateButtons) {
+        myPlace = place;
+        myGroup = group;
+        myOrientation = horizontal ? HORIZONTAL_ORIENTATION : VERTICAL_ORIENTATION;
 
-    rebuildUI();
-  }
+        rebuildUI();
+    }
 
-  private void rebuildUI() {
-    myComponent = myOrientation == HORIZONTAL_ORIENTATION ? HorizontalLayout.create() : VerticalLayout.create();
-  }
+    private void rebuildUI() {
+        myComponent = myOrientation == HORIZONTAL_ORIENTATION ? HorizontalLayout.create() : VerticalLayout.create();
+    }
 
-  public void setTargetComponent(final javax.swing.JComponent component) {
-  }
+    public void setTargetComponent(final javax.swing.JComponent component) {
+    }
 
-  @Nonnull
-  @Override
-  public javax.swing.JComponent getComponent() {
-    // FIXME [VISTALL] just stub - not throw on old ui
-    return new JPanel();
-  }
+    @Nonnull
+    @Override
+    public javax.swing.JComponent getComponent() {
+        // FIXME [VISTALL] just stub - not throw on old ui
+        return new JPanel();
+    }
 
-  @Nonnull
-  @Override
-  public Component getUIComponent() {
-    return myComponent;
-  }
+    @Nonnull
+    @Override
+    public Component getUIComponent() {
+        return myComponent;
+    }
 
-  @Override
-  public int getLayoutPolicy() {
-    return myLayoutPolicy;
-  }
+    @Override
+    public int getLayoutPolicy() {
+        return myLayoutPolicy;
+    }
 
-  @Override
-  public void setLayoutPolicy(int layoutPolicy) {
-    myLayoutPolicy = layoutPolicy;
-  }
+    @Override
+    public void setLayoutPolicy(int layoutPolicy) {
+        myLayoutPolicy = layoutPolicy;
+    }
 
-  @Override
-  public void adjustTheSameSize(boolean value) {
+    @Override
+    public void adjustTheSameSize(boolean value) {
 
-  }
+    }
 
-  @Override
-  public void setMinimumButtonSize(@Nonnull Size size) {
+    @Override
+    public void setMinimumButtonSize(@Nonnull Size size) {
 
-  }
+    }
 
-  @Override
-  public void setOrientation(@MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION}) int orientation) {
-    myOrientation = orientation;
+    @Override
+    public void setOrientation(@MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION}) int orientation) {
+        myOrientation = orientation;
 
-    rebuildUI();
-  }
+        rebuildUI();
+    }
 
-  @Override
-  public int getMaxButtonHeight() {
-    return 0;
-  }
+    @Override
+    public int getMaxButtonHeight() {
+        return 0;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void updateActionsImmediately() {
+    @RequiredUIAccess
+    @Override
+    public void updateActionsImmediately() {
 
-  }
+    }
 
-  @Override
-  public boolean hasVisibleActions() {
-    return false;
-  }
+    @Override
+    public boolean hasVisibleActions() {
+        return false;
+    }
 
-  @Override
-  public void setReservePlaceAutoPopupIcon(boolean reserve) {
+    @Override
+    public void setReservePlaceAutoPopupIcon(boolean reserve) {
 
-  }
+    }
 
-  @Override
-  public void setSecondaryActionsTooltip(String secondaryActionsTooltip) {
+    @Override
+    public void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip) {
 
-  }
+    }
 
-  @Override
-  public void setMiniMode(boolean minimalMode) {
 
-  }
+    @Override
+    public void setMiniMode(boolean minimalMode) {
 
-  @Override
-  public DataContext getToolbarDataContext() {
-    return null;
-  }
+    }
 
-  @Nonnull
-  @Override
-  public List<AnAction> getActions() {
-    return Collections.emptyList();
-  }
+    @Override
+    public DataContext getToolbarDataContext() {
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public List<AnAction> getActions() {
+        return Collections.emptyList();
+    }
 }

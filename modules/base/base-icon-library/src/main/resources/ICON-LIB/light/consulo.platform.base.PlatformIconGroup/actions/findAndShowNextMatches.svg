@@ -1,3 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <polygon fill="#6E6E6E" fill-rule="evenodd" points="4.912 4.175 8.738 8 4.912 11.825 6.088 13 11.088 8 6.088 3" transform="matrix(0 1 1 0 0 0)"/>
+<!-- Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license. -->
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.5 6.25L8 9.75L4.5 6.25" stroke="#818594" stroke-linecap="round"/>
 </svg>

@@ -196,7 +196,7 @@ public class TranslationSourceFileInfo {
   }
 
   long getTimestamp(final int projectId) {
-    return myTimestamps == null ? -1L : myTimestamps.get(projectId);
+    return myTimestamps == null ? -1L : myTimestamps.getOrDefault(projectId, 0L);
   }
 
   public void processOutputPaths(final int projectId, final TranslatingCompilerFilesMonitorImpl.Proc proc) {

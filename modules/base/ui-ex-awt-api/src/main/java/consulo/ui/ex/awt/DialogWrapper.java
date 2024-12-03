@@ -488,8 +488,7 @@ public abstract class DialogWrapper {
         Map<Action, JButton> buttonMap = new LinkedHashMap<>();
 
         boolean hasHelpToMoveToLeftSide = false;
-        if (SwingUIDecorator.get(SwingUIDecorator::decorateHelpButton) == Boolean.TRUE
-            && Arrays.asList(actions).contains(getHelpAction())) {
+        if (Arrays.asList(actions).contains(getHelpAction())) {
             hasHelpToMoveToLeftSide = true;
             actions = ArrayUtil.remove(actions, getHelpAction());
         }
@@ -502,10 +501,6 @@ public abstract class DialogWrapper {
                     break;
                 }
             }
-        }
-        else if (UIUtil.isUnderGTKLookAndFeel() && Arrays.asList(actions).contains(getHelpAction())) {
-            leftSideActions = ArrayUtil.append(leftSideActions, getHelpAction());
-            actions = ArrayUtil.remove(actions, getHelpAction());
         }
 
         JPanel panel = new JPanel(new BorderLayout());
@@ -617,10 +612,6 @@ public abstract class DialogWrapper {
 
     protected boolean toBeShown() {
         return !myCheckBoxDoNotShowDialog.isSelected();
-    }
-
-    public boolean isTypeAheadEnabled() {
-        return false;
     }
 
     @Nonnull
@@ -778,10 +769,6 @@ public abstract class DialogWrapper {
         }
 
         String text = button.getText();
-
-        if (Platform.current().os().isMac()) {
-            button.putClientProperty("JButton.buttonType", "text");
-        }
 
         updateMnemonic(button, text, action);
 

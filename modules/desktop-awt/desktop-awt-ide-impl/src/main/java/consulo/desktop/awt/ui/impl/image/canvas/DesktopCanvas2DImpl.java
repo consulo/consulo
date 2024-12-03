@@ -1,5 +1,7 @@
 package consulo.desktop.awt.ui.impl.image.canvas;
 
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxLightweightLabel;

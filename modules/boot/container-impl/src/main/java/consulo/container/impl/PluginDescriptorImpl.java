@@ -36,6 +36,8 @@ import java.util.*;
  * @author mike
  */
 public class PluginDescriptorImpl extends PluginDescriptorStub {
+    private static final String META_INF_VERSION = "META-INF/versions/";
+
     public static final PluginDescriptorImpl[] EMPTY_ARRAY = new PluginDescriptorImpl[0];
 
     private String myName;
@@ -349,7 +351,13 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
                         throw new IllegalArgumentException("Broken jar index: " + jarIndex);
                     }
 
-                    data.computeIfAbsent(currentJarFile, s -> new HashSet<>()).add(line);
+                    Set<String> paths = data.computeIfAbsent(currentJarFile, s -> new HashSet<>());
+                    if (line.startsWith(META_INF_VERSION)) {
+                        int metaInfVersionIndex = line.indexOf('/', META_INF_VERSION.length() + 1);
+                        paths.add(line.substring(metaInfVersionIndex + 1, line.length()));
+                    } else {
+                        paths.add(line);
+                    }
                 }
             }
 

@@ -1,14 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup.list;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.ide.impl.idea.openapi.ui.popup.ListPopupStepEx;
-import consulo.ui.ex.popup.MultiSelectionListPopupStep;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
 import consulo.ide.impl.idea.ui.popup.NextStepHandler;
@@ -24,8 +21,10 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
+import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -532,7 +531,7 @@ public class ListPopupImpl extends WizardPopup implements ListPopup, NextStepHan
       JBInsets.removeFrom(bounds, UIUtil.getListCellPadding());
     }
     final Point point = e.getPoint();
-    return bounds != null && point.getX() > bounds.width + bounds.getX() - AllIcons.Icons.Ide.NextStep.getWidth();
+    return bounds != null && point.getX() > bounds.width + bounds.getX() - UIUtil.getMenuArrowIcon(false).getIconWidth();
   }
 
   @Override

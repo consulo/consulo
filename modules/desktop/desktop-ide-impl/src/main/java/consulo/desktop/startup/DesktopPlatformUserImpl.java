@@ -23,6 +23,7 @@ import consulo.desktop.util.windows.WindowsElevationUtil;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.platform.impl.PlatformUserImpl;
+import consulo.platform.os.MacOperatingSystem;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.StringUtil;
 
@@ -56,7 +57,7 @@ public class DesktopPlatformUserImpl extends PlatformUserImpl {
     if (os.isWindows()) {
       return checkWindowsDarkTheme();
     }
-    else if (os.isMac() && os.asMac().isMacMojave()) {
+    else if (os instanceof MacOperatingSystem mac && mac.isMacMojave()) {
       return checkMacOsDarkTheme();
     }
     return false;

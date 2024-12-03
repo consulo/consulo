@@ -31,29 +31,20 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.action.ComboBoxButton;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class RunConfigurationsComboBoxAction extends ComboBoxAction implements DumbAware {
-  @Deprecated
-  public static final Image CHECKED_ICON = ImageEffects.resize(AllIcons.Actions.Checked, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
-  @Deprecated
-  public static final Image CHECKED_SELECTED_ICON = ImageEffects.resize(AllIcons.Actions.Checked_selected, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
-  @Deprecated
-  public static final Image EMPTY_ICON = Image.empty(Image.DEFAULT_ICON_SIZE);
-
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
@@ -94,7 +85,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
           name += " | Nothing to run on";
         }
       }
-      presentation.setText(name, false);
+      presentation.setDisabledMnemonic(true);
+      presentation.setTextValue(LocalizeValue.localizeTODO(name));
       presentation.putClientProperty(ComboBoxButton.LIKE_BUTTON, null);
       setConfigurationIcon(presentation, settings, project);
     }
@@ -132,16 +124,6 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     return true;
   }
 
-  @Nonnull
-  @Override
-  public JComponent createCustomComponent(final Presentation presentation, String place) {
-    ComboBoxButton button = createComboBoxButton(presentation);
-    NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
-    panel.setBorder(IdeBorderFactory.createEmptyBorder(0, 0, 0, 2));
-    panel.add(button.getComponent());
-    return panel;
-  }
-
   @Override
   @Nonnull
   public ActionGroup createPopupActionGroup(JComponent button) {
@@ -168,7 +150,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         final DefaultActionGroup actionGroup = new DefaultActionGroup();
         Map<String, List<RunnerAndConfigurationSettings>> structure = runManager.getStructure(type);
         for (Map.Entry<String, List<RunnerAndConfigurationSettings>> entry : structure.entrySet()) {
-          DefaultActionGroup group = entry.getKey() != null ? new DefaultActionGroup(entry.getKey(), true) : actionGroup;
+          DefaultActionGroup group = entry.getKey() != null ? new DefaultActionGroup(LocalizeValue.of(entry.getKey()), true) : actionGroup;
           group.getTemplatePresentation().setIcon(AllIcons.Nodes.Folder);
           for (RunnerAndConfigurationSettings settings : entry.getValue()) {
             group.add(new SelectConfigAction(settings, project));
@@ -253,8 +235,9 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
       String name = target.getDisplayName();
       Presentation presentation = getTemplatePresentation();
-      presentation.setText(name, false);
-      presentation.setDescription("Select " + name);
+      presentation.setDisabledMnemonic(true);
+      presentation.setTextValue(LocalizeValue.of(name));
+      presentation.setDescriptionValue(LocalizeValue.localizeTODO("Select " + name));
 
       presentation.setIcon(selected ? ImageEffects.resize(AllIcons.Actions.Checked, Image.DEFAULT_ICON_SIZE) : Image.empty(Image.DEFAULT_ICON_SIZE));
       presentation.setSelectedIcon(selected ? ImageEffects.resize(AllIcons.Actions.Checked_selected, Image.DEFAULT_ICON_SIZE) : Image.empty(Image.DEFAULT_ICON_SIZE));
@@ -275,15 +258,13 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     public SelectConfigAction(final RunnerAndConfigurationSettings configuration, final Project project) {
       myConfiguration = configuration;
       myProject = project;
-      String name = configuration.getName();
-      if (name == null || name.length() == 0) {
-        name = " ";
-      }
+      String name = StringUtil.notNullize(configuration.getName());
       final Presentation presentation = getTemplatePresentation();
-      presentation.setText(name, false);
+      presentation.setDisabledMnemonic(true);
+      presentation.setTextValue(LocalizeValue.of(name));
       final ConfigurationType type = configuration.getType();
       if (type != null) {
-        presentation.setDescription("Select " + type.getConfigurationTypeDescription() + " '" + name + "'");
+        presentation.setDescriptionValue(LocalizeValue.localizeTODO("Select " + type.getConfigurationTypeDescription() + " '" + name + "'"));
       }
       updateIcon(presentation);
     }

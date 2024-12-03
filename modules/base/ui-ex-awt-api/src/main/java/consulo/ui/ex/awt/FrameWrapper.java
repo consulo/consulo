@@ -123,8 +123,6 @@ public class FrameWrapper implements Disposable, DataProvider {
       ((JDialog)frame).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
-    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, ((RootPaneContainer)frame).getRootPane());
-
     final WindowAdapter focusListener = new WindowAdapter() {
       @Override
       public void windowOpened(WindowEvent e) {
@@ -264,7 +262,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     return getPeerFactory().createJDialog(this, parent);
   }
 
-  public IdeRootPaneNorthExtension getNorthExtension(String key) {
+  public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
     return null;
   }
 

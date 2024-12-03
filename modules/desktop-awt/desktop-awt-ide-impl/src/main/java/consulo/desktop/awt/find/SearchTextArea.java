@@ -6,7 +6,7 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.EditorCopyPasteHelper;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.action.ActionButtonImpl;
+import consulo.desktop.awt.action.toolbar.ActionToggleToolbarButtonImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.find.FindInProjectSettings;
 import consulo.find.localize.FindLocalize;
@@ -18,17 +18,16 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.image.Image;
-import consulo.ui.style.StyleManager;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -40,7 +39,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.awt.event.InputEvent.*;
@@ -52,30 +50,16 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
         KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, (Platform.current().os().isMac() ? META_DOWN_MASK : CTRL_DOWN_MASK) | SHIFT_DOWN_MASK);
     private final JTextArea myTextArea;
     private final boolean mySearchMode;
-    private final JPanel myIconsPanel = new NonOpaquePanel();
-    private final ActionButtonImpl myNewLineButton;
-    private final ActionButtonImpl myClearButton;
-    private final NonOpaquePanel myExtraActionsPanel = new NonOpaquePanel();
+
     private final JBScrollPane myScrollPane;
-    private final ActionButtonImpl myHistoryPopupButton;
     private boolean myMultilineEnabled = true;
 
-    @Deprecated
-    public SearchTextArea(boolean searchMode) {
-        this(new JBTextArea(), searchMode);
-    }
-
-    @Deprecated
-    public SearchTextArea(@Nonnull JTextArea textArea, boolean searchMode, boolean infoMode) {
-        this(textArea, searchMode);
-    }
-
-    @Deprecated
-    public SearchTextArea(@Nonnull JTextArea textArea, boolean searchMode, boolean infoMode, boolean allowInsertTabInMultiline) {
-        this(textArea, searchMode);
-    }
+    private final DefaultActionGroup mySuffixToolbarGroup;
+    private final ActionToolbar myPrefixToolbar;
+    private final ActionToolbar mySuffixToolbar;
 
     public SearchTextArea(@Nonnull JTextArea textArea, boolean searchMode) {
+        super(new BorderLayout());
         myTextArea = textArea;
         mySearchMode = searchMode;
         updateFont();
@@ -109,7 +93,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
                 }
                 int rows = Math.min(Registry.get("ide.find.max.rows").asInteger(), myTextArea.getLineCount());
                 myTextArea.setRows(Math.max(1, Math.min(25, rows)));
-                updateIconsLayout();
+                updateScrollBar();
             }
         });
         myTextArea.setOpaque(false);
@@ -126,42 +110,44 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
                 setBorder(JBUI.Borders.empty(2, 0, 2, 2));
             }
         };
-        myTextArea.setBorder(new Border() {
-            @Override
-            public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-            }
 
-            @Override
-            public Insets getBorderInsets(Component c) {
-                if (Platform.current().os().isMac()) {
-                    return new JBInsets(3, 0, 2, 0);
-                }
-                else {
-                    int bottom = (StringUtil.getLineBreakCount(myTextArea.getText()) > 0) ? 2 :
-                        StyleManager.get().getCurrentStyle().isDark() ? 1 : 0;
-                    int top = myTextArea.getFontMetrics(myTextArea.getFont()).getHeight() <= 16 ? 2 : 1;
-                    if (JBUIScale.isUsrHiDPI()) {
-                        bottom = 0;
-                        top = 2;
-                    }
-                    return new JBInsets(top, 0, bottom, 0);
-                }
-            }
+        myTextArea.setBorder(JBUI.Borders.empty(4, 0, 0, 0));
 
-            @Override
-            public boolean isBorderOpaque() {
-                return false;
-            }
-        });
         myScrollPane.getViewport().setBorder(null);
         myScrollPane.getViewport().setOpaque(false);
         myScrollPane.setOpaque(false);
 
-        myHistoryPopupButton = new MyActionButton(new ShowHistoryAction(), false);
-        myClearButton = new MyActionButton(new ClearAction(), false);
-        myNewLineButton = new MyActionButton(new NewLineAction(), false);
+        ActionManager actionManager = ActionManager.getInstance();
+        mySuffixToolbarGroup = new DefaultActionGroup();
+        mySuffixToolbarGroup.add(new ClearAction(), actionManager);
+        mySuffixToolbarGroup.add(new NewLineAction(), actionManager);
 
-        updateLayout();
+        myPrefixToolbar = ActionManager.getInstance().createActionToolbar("SearchPrefixHistoryToolbar",
+            ActionGroup.newImmutableBuilder().add(new ShowHistoryAction()).build(),
+            true
+        );
+        myPrefixToolbar.setTargetComponent(this);
+
+        mySuffixToolbar = ActionManager.getInstance().createActionToolbar("SearchSuffixHistoryToolbar",
+            mySuffixToolbarGroup,
+            true
+        );
+        mySuffixToolbar.setTargetComponent(this);
+
+        setBorder(JBUI.Borders.empty());
+
+        JComponent historyComponent = myPrefixToolbar.getComponent();
+        historyComponent.setOpaque(false);
+
+        add(historyComponent, BorderLayout.WEST);
+        add(myScrollPane, BorderLayout.CENTER);
+
+        JComponent suffixComponent = mySuffixToolbar.getComponent();
+        suffixComponent.setOpaque(false);
+
+        add(suffixComponent, BorderLayout.EAST);
+
+        updateScrollBar();
     }
 
     @Override
@@ -182,90 +168,25 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
         }
     }
 
-    protected void updateLayout() {
-        JPanel historyButtonWrapper = new NonOpaquePanel(new BorderLayout());
-        historyButtonWrapper.setBorder(JBUI.Borders.emptyTop(1));
-        historyButtonWrapper.add(myHistoryPopupButton, BorderLayout.NORTH);
-        JPanel iconsPanelWrapper = new NonOpaquePanel(new BorderLayout());
-        iconsPanelWrapper.setBorder(JBUI.Borders.emptyTop(1));
-        JPanel p = new NonOpaquePanel(new BorderLayout());
-        p.add(myIconsPanel, BorderLayout.NORTH);
-        iconsPanelWrapper.add(p, BorderLayout.WEST);
-        iconsPanelWrapper.add(myExtraActionsPanel, BorderLayout.CENTER);
-
-        removeAll();
-        setLayout(new BorderLayout(JBUIScale.scale(3), 0));
-        setBorder(JBUI.Borders.empty(Platform.current().os().isLinux() ? JBUI.scale(2) : JBUI.scale(1)));
-        add(historyButtonWrapper, BorderLayout.WEST);
-        add(myScrollPane, BorderLayout.CENTER);
-        add(iconsPanelWrapper, BorderLayout.EAST);
-        updateIconsLayout();
-    }
-
-    private void updateIconsLayout() {
-        if (myIconsPanel.getParent() == null) {
-            return;
-        }
-
-        boolean showClearIcon = !StringUtil.isEmpty(myTextArea.getText());
-        boolean showNewLine = myMultilineEnabled;
-        boolean wrongVisibility = ((myClearButton.getParent() == null) == showClearIcon)
-            || ((myNewLineButton.getParent() == null) == showNewLine);
-
+    private void updateScrollBar() {
         boolean multiline = StringUtil.getLineBreakCount(myTextArea.getText()) > 0;
-        if (wrongVisibility) {
-            myIconsPanel.removeAll();
-            myIconsPanel.setLayout(new BorderLayout());
-            myIconsPanel.add(myClearButton, BorderLayout.CENTER);
-            myIconsPanel.add(myNewLineButton, BorderLayout.EAST);
-            myIconsPanel.setPreferredSize(myIconsPanel.getPreferredSize());
-            if (!showClearIcon) {
-                myIconsPanel.remove(myClearButton);
-            }
-            if (!showNewLine) {
-                myIconsPanel.remove(myNewLineButton);
-            }
-            myIconsPanel.revalidate();
-            myIconsPanel.repaint();
-        }
+
         myScrollPane.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_AS_NEEDED);
         myScrollPane.setVerticalScrollBarPolicy(multiline ? VERTICAL_SCROLLBAR_AS_NEEDED : VERTICAL_SCROLLBAR_NEVER);
         myScrollPane.getHorizontalScrollBar().setVisible(multiline);
         myScrollPane.revalidate();
-        doLayout();
     }
 
-    public List<Component> setExtraActions(AnAction... actions) {
-        myExtraActionsPanel.removeAll();
-        myExtraActionsPanel.setBorder(JBUI.Borders.empty());
-        ArrayList<Component> addedButtons = new ArrayList<>();
-        if (actions != null && actions.length > 0) {
-            JPanel buttonsGrid = new NonOpaquePanel(new GridLayout(1, actions.length, 0, 0));
-            for (AnAction action : actions) {
-                ActionButtonImpl button = new MyActionButton(action, true);
-                addedButtons.add(button);
-                buttonsGrid.add(button);
-            }
-            myExtraActionsPanel.setLayout(new BorderLayout());
-            myExtraActionsPanel.add(buttonsGrid, BorderLayout.NORTH);
-            myExtraActionsPanel.setBorder(new CompoundBorder(
-                JBUI.Borders.customLine(
-                    JBCurrentTheme.CustomFrameDecorations.separatorForeground(),
-                    0,
-                    1,
-                    0,
-                    0
-                ),
-                JBUI.Borders.emptyLeft(4)
-            ));
-        }
-        return addedButtons;
+    @RequiredUIAccess
+    public void setSuffixActions(List<AnAction> actions) {
+        mySuffixToolbarGroup.addAll(actions, ActionManager.getInstance());
+
+        mySuffixToolbar.updateActionsImmediately();
     }
 
+    @RequiredUIAccess
     public void updateExtraActions() {
-        for (ActionButtonImpl button : UIUtil.findComponentsOfType(myExtraActionsPanel, ActionButtonImpl.class)) {
-            button.update();
-        }
+        mySuffixToolbar.updateActionsImmediately();
     }
 
     private final KeyAdapter myEnterRedispatcher = new KeyAdapter() {
@@ -294,7 +215,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
             myTextArea.getInputMap().put(KeyStroke.getKeyStroke("shift DOWN"), "selection-down");
             myTextArea.removeKeyListener(myEnterRedispatcher);
         }
-        updateIconsLayout();
+        updateScrollBar();
     }
 
     @Nonnull
@@ -312,8 +233,8 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
         if ("background".equals(evt.getPropertyName())) {
             repaint();
         }
-        if ("font".equals(evt.getPropertyName())) {
-            updateLayout();
+        else if ("font".equals(evt.getPropertyName())) {
+            updateScrollBar();
         }
     }
 
@@ -351,6 +272,12 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
             myTextArea.putClientProperty(JUST_CLEARED_KEY, !myTextArea.getText().isEmpty());
             myTextArea.setText("");
         }
+
+        @RequiredUIAccess
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+            e.getPresentation().setEnabledAndVisible(!StringUtil.isEmpty(myTextArea.getText()));
+        }
     }
 
     private class NewLineAction extends DumbAwareAction {
@@ -365,39 +292,11 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
         public void actionPerformed(@Nonnull AnActionEvent e) {
             new DefaultEditorKit.InsertBreakAction().actionPerformed(new ActionEvent(myTextArea, 0, "action"));
         }
-    }
 
-    private static class MyActionButton extends ActionButtonImpl {
-
-        private MyActionButton(@Nonnull AnAction action, boolean focusable) {
-            super(action, action.getTemplatePresentation().clone(), ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
-
-            setFocusable(focusable);
-            updateIcon();
-
-            setDecorateButtons(false);
-            setMinimalMode(true);
-        }
-
+        @RequiredUIAccess
         @Override
-        protected DataContext getDataContext() {
-            return DataManager.getInstance().getDataContext(this);
-        }
-
-        @Override
-        public int getPopState() {
-            return isSelected() ? SELECTED : super.getPopState();
-        }
-
-        @Override
-        public Image getIcon() {
-            if (isEnabled() && isSelected()) {
-                Image selectedIcon = myPresentation.getSelectedIcon();
-                if (selectedIcon != null) {
-                    return selectedIcon;
-                }
-            }
-            return super.getIcon();
+        public void update(@Nonnull AnActionEvent e) {
+            e.getPresentation().setEnabledAndVisible(myMultilineEnabled);
         }
     }
 }

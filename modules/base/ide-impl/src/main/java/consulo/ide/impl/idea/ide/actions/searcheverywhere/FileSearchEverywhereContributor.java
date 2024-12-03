@@ -8,10 +8,12 @@ import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileConfiguration;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
@@ -47,8 +49,8 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
     return "Files";
   }
 
-  public String includeNonProjectItemsText() {
-    return IdeBundle.message("checkbox.include.non.project.files", IdeUICustomization.getInstance().getProjectConceptName());
+  public LocalizeValue includeNonProjectItemsText() {
+    return IdeLocalize.checkboxIncludeNonProjectFiles();
   }
 
   @Override

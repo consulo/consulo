@@ -118,12 +118,13 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
 
   }
 
-  @Override
-  public IdeRootPaneNorthExtension getNorthExtension(String key) {
-    return null;
-  }
+    @Nullable
+    @Override
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+        return null;
+    }
 
-  @Nullable
+    @Nullable
   @Override
   public BalloonLayout getBalloonLayout() {
     return null;

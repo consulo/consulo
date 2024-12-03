@@ -15,44 +15,45 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
+import consulo.application.dumb.DumbAware;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesControl;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Toggleable;
-import consulo.application.ApplicationBundle;
-import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.util.IconUtil;
 import consulo.util.collection.primitive.ints.IntList;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
  * @since 10/29/12 11:01 AM
  */
 public class EditArrangementRuleAction extends AbstractArrangementRuleAction implements DumbAware, Toggleable {
-
-  public EditArrangementRuleAction() {
-    getTemplatePresentation().setText(ApplicationBundle.message("arrangement.action.rule.edit.text"));
-    getTemplatePresentation().setDescription(ApplicationBundle.message("arrangement.action.rule.edit.description"));
-    getTemplatePresentation().setIcon(IconUtil.getEditIcon());
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    ArrangementMatchingRulesControl control = getRulesControl(e);
-    e.getPresentation().setEnabled(control != null && control.getSelectedModelRows().size() == 1);
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    ArrangementMatchingRulesControl control = getRulesControl(e);
-    if (control == null) {
-      return;
+    public EditArrangementRuleAction() {
+        super(ApplicationLocalize.arrangementActionRuleEditText(), ApplicationLocalize.arrangementActionRuleEditDescription(), PlatformIconGroup.actionsEdit());
     }
-    IntList rows = control.getSelectedModelRows();
-    if (rows.size() != 1) {
-      return;
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ArrangementMatchingRulesControl control = getRulesControl(e);
+        e.getPresentation().setEnabled(control != null && control.getSelectedModelRows().size() == 1);
     }
-    final int row = rows.get(0);
-    control.showEditor(row);
-    scrollRowToVisible(control, row);
-  }
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ArrangementMatchingRulesControl control = getRulesControl(e);
+        if (control == null) {
+            return;
+        }
+        IntList rows = control.getSelectedModelRows();
+        if (rows.size() != 1) {
+            return;
+        }
+        final int row = rows.get(0);
+        control.showEditor(row);
+        scrollRowToVisible(control, row);
+    }
 }

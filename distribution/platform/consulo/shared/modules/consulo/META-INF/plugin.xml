@@ -567,10 +567,8 @@
                 </group>
                 <separator/>
                 <group id="FindMenuGroup" popup="true">
-                    <action id="Find" class="consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction"
-                            icon="consulo.platform.base.PlatformIconGroup@actions.search"/>
-                    <action id="Replace" class="consulo.ide.impl.idea.openapi.editor.actions.ReplaceAction"
-                            icon="consulo.platform.base.PlatformIconGroup@actions.menu_replace"/>
+                    <action id="Find" class="consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction"/>
+                    <action id="Replace" class="consulo.ide.impl.idea.openapi.editor.actions.ReplaceAction"/>
                     <action id="FindNext" class="consulo.ide.impl.idea.ide.actions.SearchAgainAction"/>
                     <action id="FindPrevious" class="consulo.ide.impl.idea.ide.actions.SearchBackAction"/>
                     <action id="FindWordAtCaret" class="consulo.ide.impl.idea.openapi.editor.actions.FindWordAtCaretAction"/>
@@ -886,6 +884,9 @@
         </group>
 
         <group id="WelcomeScreen.QuickStart">
+            <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.impl.newProject.actions.WelcomeNewProjectAction"/>
+            <action id="WelcomeScreen.OpenProject" class="consulo.ide.impl.newProject.actions.WelcomeOpenFileAction"/>
+            <action id="WelcomeScreen.GetFromVcs" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomeGetFromVcsAction"/>
         </group>
 
         <group id="WelcomeScreen.Configure">
@@ -1213,11 +1214,6 @@
                 icon="consulo.platform.base.PlatformIconGroup@general.reset">
         </action>
 
-        <action id="WelcomeScreen.GetFromVcs" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.GetFromVcsAction"
-                icon="consulo.platform.base.PlatformIconGroup@general.getprojectfromvcs">
-            <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
-        </action>
-
         <group id="Shelve.KeymapGroup" text="Shelve">
             <reference ref="ChangesView.Shelve"/>
             <reference ref="ShelveChanges.UnshelveWithDialog"/>
@@ -1237,14 +1233,6 @@
         </group>
 
         <group id="DebuggerActions">
-        </group>
-
-        <group id="WelcomeScreen.QuickStart.IDEA">
-            <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.impl.newProject.actions.NewProjectAction"
-                    icon="consulo.platform.base.PlatformIconGroup@welcome.createnewproject"/>
-            <action id="WelcomeScreen.OpenProject" class="consulo.ide.impl.idea.ide.actions.OpenFileAction"
-                    icon="consulo.platform.base.PlatformIconGroup@welcome.openproject"/>
-            <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
         </group>
 
         <action id="IncrementalSearch" class="consulo.ide.impl.idea.codeInsight.navigation.actions.IncrementalSearchAction"/>

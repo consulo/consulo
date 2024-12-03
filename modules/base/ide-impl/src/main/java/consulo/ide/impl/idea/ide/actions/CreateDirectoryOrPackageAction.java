@@ -46,6 +46,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 
 import jakarta.annotation.Nonnull;
@@ -106,7 +107,9 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
   ) {
     NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
     TextBox nameField = contentPanel.getTextField();
-    nameField.setValue(defaultValue);
+    if (!StringUtil.isEmptyOrSpaces(defaultValue)) {
+        nameField.setValue(defaultValue);
+    }
     JBPopup popup = NewItemPopupUtil.createNewItemPopup(title, contentPanel, (JComponent)TargetAWT.to(nameField));
     contentPanel.addValidator(value -> {
       if (!validator.checkInput(value)) {

@@ -17,25 +17,36 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.LinkListener;
+import consulo.ui.ex.awt.LocalizeAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdesktop.swingx.JXHyperlink;
+
+import java.awt.event.ActionEvent;
 
 /**
  * @author VISTALL
  * @since 16/07/2021
  */
 public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlinkImpl.MyLinkLabel> implements Hyperlink {
-  public class MyLinkLabel extends LinkLabel<Object> implements FromSwingComponentWrapper {
-    public MyLinkLabel(String text, @Nullable Image icon, @Nullable LinkListener<Object> aListener) {
-      super(text, icon, aListener);
+  public class MyLinkLabel extends JXHyperlink implements FromSwingComponentWrapper {
+    public MyLinkLabel(String text, @Nullable Image icon) {
+      super(new LocalizeAction(LocalizeValue.of(text)) {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(DesktopHyperlinkImpl.this, ""));
+          }
+      });
+
+      setFocusPainted(false);
+      setIcon(TargetAWT.to(icon));
     }
 
     @Nonnull
@@ -46,9 +57,7 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
   }
 
   public DesktopHyperlinkImpl(String text) {
-    MyLinkLabel label = new MyLinkLabel(text, null, (aSource, aLinkData) -> {
-      getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, ""));
-    });
+    MyLinkLabel label = new MyLinkLabel(text, null);
     initialize(label);
   }
 

@@ -152,9 +152,7 @@ open module consulo.ide.impl {
 
   provides consulo.ui.image.IconLibraryDescriptor with
     consulo.ide.impl.ui.impl.LightIconLibraryDescriptor,
-    consulo.ide.impl.ui.impl.LightMonoIconLibraryDescriptor,
-    consulo.ide.impl.ui.impl.DarkIconLibraryDescriptor,
-    consulo.ide.impl.ui.impl.DarkMonoIconLibraryDescriptor;
+    consulo.ide.impl.ui.impl.DarkIconLibraryDescriptor;
 
   exports consulo.ide.impl.dataContext to consulo.desktop.awt.ide.impl;
 
@@ -402,7 +400,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.impl.dataRules;
   exports consulo.ide.impl.idea.ide.macro;
   exports consulo.ide.impl.idea.ide.navigationToolbar;
-  exports consulo.ide.impl.idea.ide.navigationToolbar.ui;
   exports consulo.ide.impl.idea.ide.plugins;
   exports consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
   exports consulo.ide.impl.idea.ide.plugins.sorters;

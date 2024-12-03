@@ -23,71 +23,67 @@ import consulo.document.Document;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
-import javax.swing.*;
+
 import java.awt.*;
 
 /**
  * User: spLeaner
  */
 public class ComboboxEditorTextField extends EditorTextField {
-  public ComboboxEditorTextField(@Nonnull String text, Project project, FileType fileType) {
-    super(text, project, fileType);
-    setOneLineMode(true);
-  }
-
-  public ComboboxEditorTextField(Document document, Project project, FileType fileType) {
-    this(document, project, fileType, false);
-    setOneLineMode(true);
-  }
-
-  public ComboboxEditorTextField(Document document, Project project, FileType fileType, boolean isViewer) {
-    super(document, project, fileType, isViewer);
-    setOneLineMode(true);
-  }
-
-  @Override
-  protected boolean shouldHaveBorder() {
-    return UIManager.getBorder("ComboBox.border") == null && !UIUtil.isUnderBuildInLaF();
-  }
-
-  @Override
-  public void setBounds(int x, int y, int width, int height) {
-    UIUtil.setComboBoxEditorBounds(x, y, width, height, this);
-  }
-
-  @Override
-  protected EditorEx createEditor() {
-    final EditorEx result = super.createEditor();
-
-    result.addFocusListener(new FocusChangeListener() {
-      @Override
-      public void focusGained(Editor editor) {
-        repaintComboBox();
-      }
-
-      @Override
-      public void focusLost(Editor editor) {
-        repaintComboBox();
-      }
-    });
-
-    return result;
-  }
-
-  @Override
-  public Dimension getMinimumSize() {
-    return getPreferredSize();
-  }
-
-  private void repaintComboBox() {
-    // TODO:
-    if (UIUtil.isUnderBuildInLaF()) {
-      ApplicationIdeFocusManager.getInstance().getInstanceForProject(getProject()).doWhenFocusSettlesDown(() -> {
-        final Container parent = getParent();
-        if (parent != null) parent.repaint();
-      });
+    public ComboboxEditorTextField(@Nonnull String text, Project project, FileType fileType) {
+        super(text, project, fileType);
+        setOneLineMode(true);
+        putClientProperty("JComboBox.isTableCellEditor", true);
     }
-  }
+
+    public ComboboxEditorTextField(Document document, Project project, FileType fileType) {
+        this(document, project, fileType, false);
+        setOneLineMode(true);
+        putClientProperty("JComboBox.isTableCellEditor", true);
+    }
+
+    public ComboboxEditorTextField(Document document, Project project, FileType fileType, boolean isViewer) {
+        super(document, project, fileType, isViewer);
+        setOneLineMode(true);
+        putClientProperty("JComboBox.isTableCellEditor", true);
+    }
+
+    @Override
+    public void setBounds(int x, int y, int width, int height) {
+        UIUtil.setComboBoxEditorBounds(x, y, width, height, this);
+    }
+
+    @Override
+    protected EditorEx createEditor() {
+        final EditorEx result = super.createEditor();
+
+        result.addFocusListener(new FocusChangeListener() {
+            @Override
+            public void focusGained(Editor editor) {
+                repaintComboBox();
+            }
+
+            @Override
+            public void focusLost(Editor editor) {
+                repaintComboBox();
+            }
+        });
+
+        return result;
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        return getPreferredSize();
+    }
+
+    private void repaintComboBox() {
+        ApplicationIdeFocusManager.getInstance().getInstanceForProject(getProject()).doWhenFocusSettlesDown(() -> {
+            final Container parent = getParent();
+            if (parent != null) {
+                parent.repaint();
+            }
+        });
+    }
 }

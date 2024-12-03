@@ -15,8 +15,8 @@
  */
 package consulo.eawt.wrapper.event;
 
-import com.apple.eawt.AppEvent;
 import com.apple.eawt.FullScreenListener;
+import com.apple.eawt.event.FullScreenEvent;
 
 /**
  * @author VISTALL
@@ -25,22 +25,22 @@ import com.apple.eawt.FullScreenListener;
 public abstract class FullScreenListenerWrapper {
   private FullScreenListener myFullScreenListener = new FullScreenListener() {
     @Override
-    public void windowEnteringFullScreen(AppEvent.FullScreenEvent fullScreenEvent) {
+    public void windowEnteringFullScreen(FullScreenEvent fullScreenEvent) {
       FullScreenListenerWrapper.this.windowEnteringFullScreen(new AppFullScreenEventWrapper(fullScreenEvent));
     }
 
     @Override
-    public void windowEnteredFullScreen(AppEvent.FullScreenEvent fullScreenEvent) {
+    public void windowEnteredFullScreen(FullScreenEvent fullScreenEvent) {
       FullScreenListenerWrapper.this.windowEnteredFullScreen(new AppFullScreenEventWrapper(fullScreenEvent));
     }
 
     @Override
-    public void windowExitingFullScreen(AppEvent.FullScreenEvent fullScreenEvent) {
+    public void windowExitingFullScreen(FullScreenEvent fullScreenEvent) {
       FullScreenListenerWrapper.this.windowExitingFullScreen(new AppFullScreenEventWrapper(fullScreenEvent));
     }
 
     @Override
-    public void windowExitedFullScreen(AppEvent.FullScreenEvent fullScreenEvent) {
+    public void windowExitedFullScreen(FullScreenEvent fullScreenEvent) {
       FullScreenListenerWrapper.this.windowExitedFullScreen(new AppFullScreenEventWrapper(fullScreenEvent));
     }
   };

@@ -24,6 +24,7 @@ import consulo.module.ModuleManager;
 import consulo.module.content.*;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.impl.internal.DebugStackTrace;
 import consulo.project.*;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.util.collection.ContainerUtil;
@@ -170,7 +171,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
         actions.forEach(myTasks::offer);
         DumbModeTask task = new DumbModeTask(this) {
             @Override
-            public void performInDumbMode(@Nonnull ProgressIndicator indicator) {
+            public void performInDumbMode(@Nonnull ProgressIndicator indicator, Exception trace) {
                 performPushTasks();
             }
         };
@@ -293,10 +294,10 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
             tasks.add(iteration);
         }
 
-        invokeConcurrentlyIfPossible(myProject.getApplication(), tasks);
+        invokeConcurrentlyIfPossible(new Exception(), myProject.getApplication(), tasks);
     }
 
-    public static void invokeConcurrentlyIfPossible(Application application, List<? extends Runnable> tasks) {
+    public static void invokeConcurrentlyIfPossible(Exception exception, Application application, List<? extends Runnable> tasks) {
         if (tasks.size() == 1 || application.isWriteAccessAllowed()) {
             for (Runnable r : tasks) r.run();
             return;
@@ -311,8 +312,10 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
 
             for (int i = 0; i < numThreads; ++i) {
                 results.add(application.executeOnPooledThread(() -> ProgressManager.getInstance().runProcess(() -> {
-                    Runnable runnable;
-                    while ((runnable = tasksQueue.poll()) != null) runnable.run();
+                    DebugStackTrace.with(exception, () -> {
+                        Runnable runnable;
+                        while ((runnable = tasksQueue.poll()) != null) runnable.run();
+                    });
                 }, ProgressWrapper.wrap(progress))));
             }
         }

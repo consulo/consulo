@@ -1,0 +1,151 @@
+name: WindowsNatives
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-2022
+    defaults:
+      run:
+        working-directory: ./native/WinRestarter/
+
+    steps:
+    - uses: actions/setup-java@v1
+      with:
+        distribution: 'temurin'
+        java-version: 21
+    - uses: actions/checkout@v4
+############################ WindowsRestarter ############################
+# WindowsRestarter X64
+    - uses: threeal/cmake-action@main
+      with:
+        generator: Visual Studio 17 2022
+        source-dir: ./native/WinRestarter
+        build-dir: ./native/WinRestarter/build64
+        options: CMAKE_BUILD_TYPE=Release
+        build-args:  --config Release
+        args: -A x64
+    - uses: actions/upload-artifact@v4
+      with:
+        name: restarter64.exe
+        path: ./native/WinRestarter/build64/Release/restarter64.exe
+        if-no-files-found: error
+# WindowsRestarter ARM64
+    - uses: threeal/cmake-action@main
+      with:
+        generator: Visual Studio 17 2022
+        source-dir: ./native/WinRestarter
+        build-dir: ./native/WinRestarter/build
+        options: CMAKE_BUILD_TYPE=Release
+        build-args:  --config Release
+        args: -A ARM64
+    - uses: actions/upload-artifact@v4
+      with:
+        name: restarter-aarch64.exe
+        path: ./native/WinRestarter/build/Release/restarter-aarch64.exe
+        if-no-files-found: error
+# WindowsRestarter ARM64
+    - uses: threeal/cmake-action@main
+      with:
+        generator: Visual Studio 17 2022
+        source-dir: ./native/WinRestarter
+        build-dir: ./native/WinRestarter/buildA64
+        options: CMAKE_BUILD_TYPE=Release
+        build-args:  --config Release
+        args: -A Win32
+    - uses: actions/upload-artifact@v4
+      with:
+        name: restarter.exe
+        path: ./native/WinRestarter/buildA64/Release/restarter.exe
+        if-no-files-found: error
+############################ WinRunner ############################
+# WinRunner X64
+    - uses: threeal/cmake-action@main
+      with:
+        generator: Visual Studio 17 2022
+        source-dir: ./native/WinRunner
+        build-dir: ./native/WinRunner/build64
+        options: CMAKE_BUILD_TYPE=Release
+        build-args:  --config Release
+        args: -A x64
+    - uses: actions/upload-artifact@v4
+      with:
+        name: runnerw64.exe
+        path: ./native/WinRunner/build64/Release/runnerw64.exe
+        if-no-files-found: error
+# WinRunner ARM64
+    - uses: threeal/cmake-action@main
+      with:
+        generator: Visual Studio 17 2022
+        source-dir: ./native/WinRunner
+        build-dir: ./native/WinRunner/buildA64
+        options: CMAKE_BUILD_TYPE=Release
+        build-args:  --config Release
+        args: -A ARM64
+    - uses: actions/upload-artifact@v4
+      with:
+        name: runnerw-aarch64.exe
+        path: ./native/WinRunner/buildA64/Release/runnerw-aarch64.exe
+        if-no-files-found: error
+# WinRunner X86
+    - uses: threeal/cmake-action@main
+      with:
+        generator: Visual Studio 17 2022
+        source-dir: ./native/WinRunner
+        build-dir: ./native/WinRunner/build
+        options: CMAKE_BUILD_TYPE=Release
+        build-args:  --config Release
+        args: -A Win32
+    - uses: actions/upload-artifact@v4
+      with:
+        name: runnerw.exe
+        path: ./native/WinRunner/build/Release/runnerw.exe
+        if-no-files-found: error
+############################ WinLoader ############################
+# WinLoader X64
+    - uses: threeal/cmake-action@main
+      with:
+        generator: Visual Studio 17 2022
+        source-dir: ./native/WinLoader
+        build-dir: ./native/WinLoader/build64
+        options: CMAKE_BUILD_TYPE=Release
+        build-args:  --config Release
+        args: -A x64
+    - uses: actions/upload-artifact@v4
+      with:
+        name: consulo64.exe
+        path: ./native/WinLoader/build64/Release/consulo64.exe
+        if-no-files-found: error
+# WinLoader ARM64
+    - uses: threeal/cmake-action@main
+      with:
+        generator: Visual Studio 17 2022
+        source-dir: ./native/WinLoader
+        build-dir: ./native/WinLoader/buildA64
+        options: CMAKE_BUILD_TYPE=Release
+        build-args:  --config Release
+        args: -A ARM64
+    - uses: actions/upload-artifact@v4
+      with:
+        name: consulo-aarch64.exe
+        path: ./native/WinLoader/buildA64/Release/consulo-aarch64.exe
+        if-no-files-found: error
+# WinLoader X86
+    - uses: threeal/cmake-action@main
+      with:
+        generator: Visual Studio 17 2022
+        source-dir: ./native/WinLoader
+        build-dir: ./native/WinLoader/build
+        options: CMAKE_BUILD_TYPE=Release
+        build-args:  --config Release
+        args: -A Win32
+    - uses: actions/upload-artifact@v4
+      with:
+        name: consulo.exe
+        path: ./native/WinLoader/build/Release/consulo.exe
+        if-no-files-found: error

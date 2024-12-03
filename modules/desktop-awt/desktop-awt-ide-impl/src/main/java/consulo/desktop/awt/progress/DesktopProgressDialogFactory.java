@@ -18,6 +18,7 @@ package consulo.desktop.awt.progress;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ide.impl.progress.util.ProgressDialog;
 import consulo.ide.impl.progress.util.ProgressDialogFactory;
@@ -44,14 +45,18 @@ public class DesktopProgressDialogFactory implements ProgressDialogFactory {
 
   @Nonnull
   @Override
-  public ProgressDialog create(ProgressWindow progressWindow, boolean shouldShowBackground, JComponent parentComponent, Project project, String cancelText) {
+  public ProgressDialog create(ProgressWindow progressWindow,
+                               boolean shouldShowBackground,
+                               JComponent parentComponent,
+                               Project project,
+                               @Nonnull LocalizeValue cancelText) {
     Component parent = parentComponent;
     if (parent == null && project == null && !myApplication.isHeadlessEnvironment()) {
       parent = JOptionPane.getRootFrame();
     }
 
     return parent == null
-           ? new consulo.desktop.awt.progress.ProgressDialog(progressWindow, shouldShowBackground, project, cancelText)
-           : new consulo.desktop.awt.progress.ProgressDialog(progressWindow, shouldShowBackground, parent, cancelText);
+           ? new DesktopAWTProgressDialogImpl(progressWindow, shouldShowBackground, project, cancelText)
+           : new DesktopAWTProgressDialogImpl(progressWindow, shouldShowBackground, parent, cancelText);
   }
 }

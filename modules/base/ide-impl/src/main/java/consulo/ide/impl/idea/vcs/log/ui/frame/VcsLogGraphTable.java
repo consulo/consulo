@@ -681,9 +681,8 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     }
 
     public int getHorizontalTextPadding() {
-      Insets borderInsets = getMyBorder().getBorderInsets(this);
       Insets ipad = getIpad();
-      return borderInsets.left + borderInsets.right + ipad.left + ipad.right;
+      return ipad.left + ipad.right;
     }
   }
 

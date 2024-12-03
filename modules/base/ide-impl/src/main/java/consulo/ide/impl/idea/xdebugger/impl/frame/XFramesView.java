@@ -103,6 +103,7 @@ public class XFramesView extends XDebugView {
     myMainPanel.add(ScrollPaneFactory.createScrollPane(myFramesList), BorderLayout.CENTER);
 
     myThreadComboBox = new ComboBox();
+    myThreadComboBox.putClientProperty("JComponent.roundRect", false);
     myThreadComboBox.setRenderer(new ThreadComboBoxRenderer());
     myThreadComboBox.addItemListener(new ItemListener() {
       @Override

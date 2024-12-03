@@ -29,7 +29,7 @@ public class TabsUtil {
   }
 
   public static int getTabsHeight() {
-    return JBUI.scale(24);
+    return JBUI.scale(26);
   }
 
   public static int getRealTabsHeight() {

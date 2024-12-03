@@ -29,42 +29,42 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 13-Sep-17
  */
-public interface Button extends Component {
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use #create(LocalizeValue)")
-  static Button create(@Nonnull String text) {
-    return create(LocalizeValue.of(text));
-  }
+public interface Button extends Component, HasComponentStyle<ButtonStyle> {
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use #create(LocalizeValue)")
+    static Button create(@Nonnull String text) {
+        return create(LocalizeValue.of(text));
+    }
 
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use #create(LocalizeValue, ComponentEventListener<Component, ClickEvent>)")
-  static Button create(@Nonnull String text, @Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
-    return create(LocalizeValue.of(text), clickListener);
-  }
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use #create(LocalizeValue, ComponentEventListener<Component, ClickEvent>)")
+    static Button create(@Nonnull String text, @Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
+        return create(LocalizeValue.of(text), clickListener);
+    }
 
-  @Nonnull
-  static Button create(@Nonnull LocalizeValue text) {
-    return UIInternal.get()._Components_button(text);
-  }
+    @Nonnull
+    static Button create(@Nonnull LocalizeValue text) {
+        return UIInternal.get()._Components_button(text);
+    }
 
-  @Nonnull
-  static Button create(@Nonnull LocalizeValue text, @Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
-    Button button = create(text);
-    button.addClickListener(clickListener);
-    return button;
-  }
+    @Nonnull
+    static Button create(@Nonnull LocalizeValue text, @Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
+        Button button = create(text);
+        button.addClickListener(clickListener);
+        return button;
+    }
 
-  @Nonnull
-  LocalizeValue getText();
+    @Nonnull
+    LocalizeValue getText();
 
-  @RequiredUIAccess
-  void setText(@Nonnull LocalizeValue text);
+    @RequiredUIAccess
+    void setText(@Nonnull LocalizeValue text);
 
-  @Nullable
-  Image getIcon();
+    @Nullable
+    Image getIcon();
 
-  @RequiredUIAccess
-  void setIcon(@Nullable Image image);
+    @RequiredUIAccess
+    void setIcon(@Nullable Image image);
 }

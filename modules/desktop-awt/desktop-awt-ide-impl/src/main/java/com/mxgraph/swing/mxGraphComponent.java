@@ -20,8 +20,8 @@ import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.*;
 import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.desktop.awt.ui.IconLookup;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
@@ -317,12 +317,12 @@ public class mxGraphComponent extends JScrollPane implements Printable {
   /**
    *
    */
-  protected Icon expandedIcon = IconLookup.get().getIcon("treeExpanded", false, false, true);
+  protected Icon expandedIcon = UIUtil.getTreeExpandedIcon();
 
   /**
    *
    */
-  protected Icon collapsedIcon = IconLookup.get().getIcon("treeColapsed", false, false, true);
+  protected Icon collapsedIcon = UIUtil.getTreeCollapsedIcon();
 
   /**
    *

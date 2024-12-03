@@ -1,10 +1,7 @@
-<!-- Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file. -->
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <g fill="none" fill-rule="evenodd">
-    <rect width="2.2" height="6.242" x="11.157" y="9.036" fill="#AFB1B3" transform="rotate(-45 12.257 12.157)"/>
-    <path fill="#AFB1B3" d="M1.00533709,7 C1.0017911,6.91710914 1,6.83376374 1,6.75 C1,3.57436269 3.57436269,1 6.75,1 C9.92563731,1 12.5,3.57436269 12.5,6.75 C12.5,9.49635877 10.5745933,11.7930147 8,12.3637477 L8,10.2866179 C9.45649047,9.77182236 10.5,8.38277353 10.5,6.75 C10.5,4.67893219 8.82106781,3 6.75,3 C4.67893219,3 3,4.67893219 3,6.75 C3,6.83400714 3.00276234,6.9173691 3.00820114,7 L1.00533709,7 Z"/>
-    <rect width="3" height="3" x="2" y="8" fill="#AFB1B3"/>
-    <rect width="3" height="3" y="12" fill="#AFB1B3"/>
-    <rect width="3" height="3" x="4" y="12" fill="#AFB1B3"/>
-  </g>
+<!-- Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license. -->
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="0.5" y="13.5" width="2" height="2" rx="0.5" fill="#25324D" stroke="#548AF7"/>
+<rect x="4.5" y="13.5" width="2" height="2" rx="0.5" fill="#25324D" stroke="#548AF7"/>
+<rect x="2.5" y="9.5" width="2" height="2" rx="0.5" fill="#25324D" stroke="#548AF7"/>
+<path d="M7 12C8.20049 12 9.30216 11.5769 10.164 10.8717L13.1459 13.8499C13.3413 14.045 13.6578 14.0449 13.853 13.8495C14.0481 13.6541 14.0479 13.3375 13.8526 13.1424L10.8712 10.1647C11.5767 9.3027 12 8.20078 12 7C12 4.23858 9.76142 2 7 2C4.23858 2 2 4.23858 2 7C2 7.41092 2.04957 7.81026 2.14306 8.19237C2.40279 8.06902 2.69334 8 3 8H3.12602C3.04375 7.68038 3 7.3453 3 7C3 4.79086 4.79086 3 7 3C9.20914 3 11 4.79086 11 7C11 9.20914 9.20914 11 7 11C6.6547 11 6.31962 10.9562 6 10.874V11C6 11.3067 5.93098 11.5972 5.80763 11.8569C6.18974 11.9504 6.58908 12 7 12Z" fill="#CED0D6"/>
 </svg>

@@ -1,6 +1,10 @@
 package consulo.ide.impl.welcomeScreen;
 
+import consulo.disposer.Disposable;
+import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -8,7 +12,13 @@ import javax.swing.*;
  * @since 2019-08-02
  */
 public interface WelcomeScreenSlider {
-  void setTitle(@Nonnull String title);
+    Key<WelcomeScreenSlider> KEY = Key.create(WelcomeScreenSlider.class);
 
-  void removeSlide(@Nonnull JComponent target);
+    void setTitle(@Nonnull String title);
+
+    void removeSlide(@Nonnull JComponent target);
+
+    TitlelessDecorator getTitlelessDecorator();
+
+    Disposable getDisposable();
 }

@@ -55,7 +55,7 @@ public abstract class WelcomeFrameManager {
 
   private IdeFrame myFrameInstance;
 
-  private final Application myApplication;
+  protected final Application myApplication;
 
   protected WelcomeFrameManager(Application application) {
     myApplication = application;

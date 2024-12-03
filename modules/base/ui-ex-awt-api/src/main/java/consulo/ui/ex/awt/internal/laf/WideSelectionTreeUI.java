@@ -29,7 +29,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.TreePath;
@@ -307,12 +306,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     return myWideSelection;
   }
 
-  public static boolean isWideSelection(@Nonnull JTree tree) {
-    TreeUI ui = tree.getUI();
-    return ui instanceof WideSelectionTreeUI && ((WideSelectionTreeUI)ui).isWideSelection() || ui != null && ui.getClass().getName().equals(DefaultTreeUI.class.getName());
-  }
-
-  @Override
+    @Override
   protected void paintRow(final Graphics g,
                           final Rectangle clipBounds,
                           final Insets insets,

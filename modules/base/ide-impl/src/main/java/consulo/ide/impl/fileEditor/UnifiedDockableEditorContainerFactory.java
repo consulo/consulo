@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
 import consulo.project.ui.wm.dock.DockContainer;
@@ -26,7 +27,7 @@ import org.jdom.Element;
  * @author VISTALL
  * @since 02/06/2023
  */
-@ExtensionImpl
+@ExtensionImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedDockableEditorContainerFactory implements DockableEditorContainerFactory {
 
   @Override

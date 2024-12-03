@@ -11,48 +11,33 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.desktop.awt.internal.notification.EventLog;
-import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.FileEditorsSplitters;
-import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspenderListener;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.wm.impl.status.InlineProgressIndicator;
-import consulo.ide.impl.idea.openapi.wm.impl.status.PresentationModeProgressPanel;
-import consulo.ide.impl.idea.openapi.wm.impl.status.ProgressButton;
-import consulo.ide.impl.idea.ui.InplaceButton;
-import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
+import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.ui.internal.BalloonLayoutEx;
-import consulo.project.ui.util.ProjectUIUtil;
 import consulo.project.ui.wm.CustomStatusBarWidget;
-import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.PositionTracker;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.HorizontalLayout;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.event.JBPopupListener;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.*;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SoftReference;
@@ -73,8 +58,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     private static final Logger LOG = Logger.getInstance(InfoAndProgressPanel.class);
     private final ProcessPopup myPopup;
 
-    private final StatusPanel myInfoPanel;
-
     private final List<ProgressIndicatorEx> myOriginals = new ArrayList<>();
     private final List<TaskInfo> myInfos = new ArrayList<>();
     private final Map<InlineProgressIndicator, ProgressIndicatorEx> myInline2Original = new HashMap<>();
@@ -84,7 +67,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
     private boolean myShouldClosePopupAndOnProcessFinish;
 
-    private String myCurrentRequestor;
     private boolean myDisposed;
     private WeakReference<Balloon> myLastShownBalloon;
 
@@ -106,11 +88,10 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     private LinkLabel<Object> myMultiProcessLink;
 
     public InfoAndProgressPanel(@Nonnull Supplier<Project> getProjectSupplier) {
+        super(new HorizontalLayout(0, SwingConstants.CENTER));
         setOpaque(false);
-        setBorder(JBUI.Borders.empty());
+        setBorder(StatusWidgetBorders.DEFAULT_BORDER);
         setEnabled(false);
-
-        myInfoPanel = new StatusPanel(getProjectSupplier);
 
         myUpdateQueue = new MergingUpdateQueue("Progress indicator", 50, true, MergingUpdateQueue.ANY_COMPONENT);
         myPopup = new ProcessPopup(this);
@@ -317,20 +298,10 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
         myMultiProcessLink = new LinkLabel<>(getMultiProgressLinkText(), null, (aSource, aLinkData) -> triggerPopupShowing());
 
-        if (Platform.current().os().isMac()) {
-            myMultiProcessLink.setFont(JBUI.Fonts.label(11));
-        }
-
-        myMultiProcessLink.setOpaque(false);
-
-        JPanel iconAndProgress = new JPanel(new HorizontalLayout(5));
-        iconAndProgress.setOpaque(false);
-
-        iconAndProgress.add(myMultiProcessLink);
-
-        add(iconAndProgress, BorderLayout.CENTER);
+        add(myMultiProcessLink);
 
         revalidate();
+
         repaint();
     }
 
@@ -362,141 +333,19 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
     private void buildInInlineIndicator(@Nonnull MyInlineProgressIndicator inline) {
         removeAll();
+        
         final JRootPane pane = getRootPane();
         if (pane == null) {
             return; // e.g. project frame is closed
         }
 
-        final JPanel inlinePanel = new JPanel(new BorderLayout());
-        inline.getComponent().setBorder(JBUI.Borders.empty(1, 0, 0, 2));
-
-        final JComponent inlineComponent = inline.getComponent();
-        inlineComponent.setOpaque(false);
-
-        JPanel iconAndProgress = new JPanel(new HorizontalLayout(5));
-        iconAndProgress.setOpaque(false);
-        iconAndProgress.add(inlineComponent);
-
-        inlinePanel.add(iconAndProgress, BorderLayout.CENTER);
-
         inline.updateProgressNow();
-        inlinePanel.setOpaque(false);
 
-        add(inlinePanel, BorderLayout.CENTER);
+        add(inline.getComponent());
 
-        if (inline.myPresentationModeProgressPanel != null) {
-            return;
-        }
+        revalidate();
 
-        inline.myPresentationModeProgressPanel = new PresentationModeProgressPanel(inline);
-
-        Component anchor = getAnchor(pane);
-        final BalloonLayoutEx balloonLayout = getBalloonLayout(pane);
-
-        Balloon balloon = JBPopupFactory.getInstance()
-            .createBalloonBuilder(inline.myPresentationModeProgressPanel.getProgressPanel())
-            .setFadeoutTime(0)
-            .setFillColor(Gray.TRANSPARENT)
-            .setShowCallout(false)
-            .setBorderColor(Gray.TRANSPARENT)
-            .setBorderInsets(JBUI.emptyInsets())
-            .setAnimationCycle(0)
-            .setCloseButtonEnabled(false)
-            .setHideOnClickOutside(false)
-            .setDisposable(inline)
-            .setHideOnFrameResize(false)
-            .setHideOnKeyOutside(false)
-            .setBlockClicksThroughBalloon(true)
-            .setHideOnAction(false)
-            .setShadow(false)
-            .createBalloon();
-        if (balloonLayout != null) {
-            class MyListener implements JBPopupListener, Runnable {
-                @Override
-                public void beforeShown(@Nonnull LightweightWindowEvent event) {
-                    balloonLayout.addListener(this);
-                }
-
-                @Override
-                public void onClosed(@Nonnull LightweightWindowEvent event) {
-                    balloonLayout.removeListener(this);
-                }
-
-                @Override
-                public void run() {
-                    if (!balloon.isDisposed()) {
-                        balloon.revalidate();
-                    }
-                }
-            }
-            balloon.addListener(new MyListener());
-        }
-        balloon.show(
-            new PositionTracker<>(anchor) {
-                @Override
-                public RelativePoint recalculateLocation(Balloon object) {
-                    Component c = getAnchor(pane);
-                    int y = c.getHeight() - JBUIScale.scale(45);
-                    if (balloonLayout != null && !isBottomSideToolWindowsVisible(pane)) {
-                        Component component = balloonLayout.getTopBalloonComponent();
-                        if (component != null) {
-                            y = SwingUtilities.convertPoint(component, 0, -JBUIScale.scale(45), c).y;
-                        }
-                    }
-
-                    return new RelativePoint(c, new Point(c.getWidth() - JBUIScale.scale(150), y));
-                }
-            },
-            Balloon.Position.above
-        );
-    }
-
-    @Nullable
-    private static BalloonLayoutEx getBalloonLayout(@Nonnull JRootPane pane) {
-        Component parent = UIUtil.findUltimateParent(pane);
-        if (parent instanceof Window) {
-            consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
-
-            IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-            if (ideFrame == null) {
-                return null;
-            }
-            return (BalloonLayoutEx)ideFrame.getBalloonLayout();
-        }
-        return null;
-    }
-
-    @Nonnull
-    private static Component getAnchor(@Nonnull JRootPane pane) {
-        Component tabWrapper = UIUtil.findComponentOfType(pane, TabbedPaneWrapper.TabWrapper.class);
-        if (tabWrapper != null) {
-            return tabWrapper;
-        }
-        FileEditorsSplitters splitters = AWTComponentProviderUtil.findChild(pane, FileEditorsSplitters.class);
-        if (splitters != null) {
-            return splitters.isShowing() ? splitters.getComponent() : pane;
-        }
-        FileEditorManagerEx ex = FileEditorManagerEx.getInstanceEx(ProjectUIUtil.guessCurrentProject(pane));
-        if (ex == null) {
-            return pane;
-        }
-        splitters = ex.getSplitters();
-        return splitters.isShowing() ? splitters.getComponent() : pane;
-    }
-
-    private static boolean isBottomSideToolWindowsVisible(@Nonnull JRootPane parent) {
-        ToolWindowPanelImplEx pane = AWTComponentProviderUtil.findChild(parent, ToolWindowPanelImplEx.class);
-        return pane != null && pane.isBottomSideToolWindowsVisible();
-    }
-
-    public Couple<String> setText(@Nullable final String text, @Nullable final String requestor) {
-        if (StringUtil.isEmpty(text) && !Comparing.equal(requestor, myCurrentRequestor) && !EventLog.LOG_REQUESTOR.equals(requestor)) {
-            return Couple.of(myInfoPanel.getText(), myCurrentRequestor);
-        }
-
-        boolean logMode = myInfoPanel.updateText(EventLog.LOG_REQUESTOR.equals(requestor) ? "" : text);
-        myCurrentRequestor = logMode ? EventLog.LOG_REQUESTOR : requestor;
-        return Couple.of(text, requestor);
+        repaint();
     }
 
     public BalloonHandler notifyByBalloon(MessageType type, String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
@@ -612,8 +461,44 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     }
 
     private class MyInlineProgressIndicator extends InlineProgressIndicator {
+        private class SuspendAction extends DumbAwareAction {
+            public SuspendAction() {
+                super(LocalizeValue.of(), LocalizeValue.of(), PlatformIconGroup.actionsPause());
+            }
+
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                ProgressSuspender suspender = getSuspender();
+                if (suspender == null) {
+                    LOG.assertTrue(myOriginal == null, "The process is expected to be finished at this point");
+                    return;
+                }
+
+                if (suspender.isSuspended()) {
+                    suspender.resumeProcess();
+                }
+                else {
+                    suspender.suspendProcess(LocalizeValue.empty());
+                }
+                //UIEventLogger.logUIEvent(suspender.isSuspended() ? UIEventId.ProgressPaused : UIEventId.ProgressResumed);
+            }
+
+            @RequiredUIAccess
+            @Override
+            public void update(@Nonnull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+
+                ProgressSuspender suspender = getSuspender();
+                presentation.setEnabledAndVisible(suspender != null);
+                if (suspender != null) {
+                    presentation.setIcon(suspender.isSuspended() ? AllIcons.Actions.Resume : AllIcons.Actions.Pause);
+                    presentation.setText(suspender.isSuspended() ? "Resume" : "Pause");
+                }
+            }
+        }
+
         private ProgressIndicatorEx myOriginal;
-        private PresentationModeProgressPanel myPresentationModeProgressPanel;
 
         MyInlineProgressIndicator(final boolean compact, @Nonnull TaskInfo task, @Nonnull ProgressIndicatorEx original) {
             super(compact, task);
@@ -638,36 +523,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
 
         @Override
-        protected JBIterable<ProgressButton> createEastButtons() {
-            return JBIterable.of(createSuspendButton()).append(super.createEastButtons());
-        }
-
-        private ProgressButton createSuspendButton() {
-            InplaceButton suspendButton = new InplaceButton("", AllIcons.Actions.Pause, e -> {
-                ProgressSuspender suspender = getSuspender();
-                if (suspender == null) {
-                    LOG.assertTrue(myOriginal == null, "The process is expected to be finished at this point");
-                    return;
-                }
-
-                if (suspender.isSuspended()) {
-                    suspender.resumeProcess();
-                }
-                else {
-                    suspender.suspendProcess(LocalizeValue.empty());
-                }
-                //UIEventLogger.logUIEvent(suspender.isSuspended() ? UIEventId.ProgressPaused : UIEventId.ProgressResumed);
-            }).setFillBg(false);
-            suspendButton.setVisible(false);
-
-            return new ProgressButton(suspendButton, () -> {
-                ProgressSuspender suspender = getSuspender();
-                suspendButton.setVisible(suspender != null);
-                if (suspender != null) {
-                    suspendButton.setIcon(suspender.isSuspended() ? AllIcons.Actions.Resume : AllIcons.Actions.Pause);
-                    suspendButton.setToolTipText(suspender.isSuspended() ? "Resume" : "Pause");
-                }
-            });
+        public List<AnAction> createEastButtons() {
+            return Lists.append(super.createEastButtons(), new SuspendAction());
         }
 
         @Nullable
@@ -727,9 +584,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         public void updateProgressNow() {
             myProgress.setVisible(!PowerSaveMode.isEnabled() || !isPaintingIndeterminate());
             super.updateProgressNow();
-            if (myPresentationModeProgressPanel != null) {
-                myPresentationModeProgressPanel.update();
-            }
             if (myOriginal == getLatestProgress() && myMultiProcessLink != null) {
                 myMultiProcessLink.setText(getMultiProgressLinkText());
             }

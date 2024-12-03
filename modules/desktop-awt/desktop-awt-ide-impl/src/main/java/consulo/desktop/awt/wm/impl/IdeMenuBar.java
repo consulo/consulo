@@ -471,9 +471,6 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
       }
 
       updateMenuActions();
-      if (UIUtil.isWinLafOnVista()) {
-        repaint();
-      }
     }
   }
 

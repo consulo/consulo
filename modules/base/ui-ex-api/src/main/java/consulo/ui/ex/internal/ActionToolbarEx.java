@@ -16,10 +16,8 @@
 package consulo.ui.ex.internal;
 
 import consulo.ui.ex.action.ActionButton;
-import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.action.ActionToolbar;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -27,22 +25,12 @@ import java.util.function.Consumer;
  * @since 15/01/2023
  */
 public interface ActionToolbarEx extends ActionToolbar {
-  public interface PopupStateModifier {
-    @ActionButtonComponent.ButtonState
-    int getModifiedPopupState();
+    default void setNoGapMode() {
+    }
 
-    boolean willModify();
-  }
+    ActionButton getSecondaryActionsButton();
 
-  default void setSecondaryButtonPopupStateModifier(@Nonnull PopupStateModifier popupStateModifier) {
-  }
+    void forEachButton(Consumer<ActionButton> buttonConsumer);
 
-  default void setNoGapMode() {
-  }
-
-  ActionButton getSecondaryActionsButton();
-
-  void forEachButton(Consumer<ActionButton> buttonConsumer);
-
-  void reset();
+    void reset();
 }

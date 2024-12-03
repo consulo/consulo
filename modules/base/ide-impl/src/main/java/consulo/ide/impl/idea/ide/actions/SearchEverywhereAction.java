@@ -24,85 +24,81 @@ import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.ui.ex.action.*;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.util.MacKeymapUtil;
-import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ui.ex.internal.CustomTooltipBuilder;
 import consulo.ui.ex.keymap.KeymapManager;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class SearchEverywhereAction extends AnAction implements CustomComponentAction, DumbAware {
-  public SearchEverywhereAction(ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
-    setEnabledInModalContext(false);
+public class SearchEverywhereAction extends AnAction implements DumbAware {
+    public SearchEverywhereAction(ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
+        setEnabledInModalContext(false);
 
-    modifierKeyDoubleClickHandler.registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, KeyEvent.VK_SHIFT, -1);
-  }
-
-  @Nonnull
-  @Override
-  public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
-    ActionButtonFactory buttonFactory = ActionButtonFactory.getInstance();
-    ActionButton button = buttonFactory.create(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
-    button.setCustomTooltipBuilder((helpTooltip, p) -> {
-      String shortcutText = getShortcut();
-
-      helpTooltip.setTitle(p.getText())
-                 .setShortcut(shortcutText)
-                 .setDescription("Searches for:<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings");
-
-    });
-    return button.getComponent();
-  }
-
-  private static String getShortcut() {
-    String shortcutText;
-    final Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
-    if (shortcuts.length == 0) {
-      shortcutText = "Double " + (Platform.current().os().isMac() ? MacKeymapUtil.SHIFT : "Shift");
+        modifierKeyDoubleClickHandler.registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, KeyEvent.VK_SHIFT, -1);
     }
-    else {
-      shortcutText = KeymapUtil.getShortcutsText(shortcuts);
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().putClientProperty(CustomTooltipBuilder.KEY, (tooltip, presentation) -> {
+            String shortcutText = getShortcut();
+
+            tooltip.setTitle(presentation.getText())
+                .setShortcut(shortcutText)
+                .setDescription("Searches for:<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings");
+        });
     }
-    return shortcutText;
-  }
 
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    actionPerformed(e, null);
-  }
-
-  public void actionPerformed(AnActionEvent e, MouseEvent me) {
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_SEARCH_EVERYWHERE);
-
-      SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(project);
-      String searchProviderID = SearchEverywhereManagerImpl.ALL_CONTRIBUTORS_GROUP_ID;
-      if (seManager.isShown()) {
-        if (searchProviderID.equals(seManager.getSelectedContributorID())) {
-          seManager.toggleEverywhereFilter();
+    private static String getShortcut() {
+        String shortcutText;
+        final Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
+        if (shortcuts.length == 0) {
+            shortcutText = "Double " + (Platform.current().os().isMac() ? MacKeymapUtil.SHIFT : "Shift");
         }
         else {
-          seManager.setSelectedContributor(searchProviderID);
-          //FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(searchProviderID).addInputEvent(e);
-          //SearchEverywhereUsageTriggerCollector.trigger(e.getProject(), SearchEverywhereUsageTriggerCollector.TAB_SWITCHED, data);
+            shortcutText = KeymapUtil.getShortcutsText(shortcuts);
         }
-        return;
-      }
-
-      //FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(searchProviderID);
-      //SearchEverywhereUsageTriggerCollector.trigger(e.getProject(), SearchEverywhereUsageTriggerCollector.DIALOG_OPEN, data);
-      IdeEventQueueProxy.getInstance().closeAllPopups(false);
-      String text = GotoActionBase.getInitialTextForNavigation(e);
-      seManager.show(searchProviderID, text, e);
-      return;
+        return shortcutText;
     }
-  }
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+
+        FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_SEARCH_EVERYWHERE);
+
+        SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(project);
+        String searchProviderID = SearchEverywhereManagerImpl.ALL_CONTRIBUTORS_GROUP_ID;
+        if (seManager.isShown()) {
+            if (searchProviderID.equals(seManager.getSelectedContributorID())) {
+                seManager.toggleEverywhereFilter();
+            }
+            else {
+                seManager.setSelectedContributor(searchProviderID);
+                //FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(searchProviderID).addInputEvent(e);
+                //SearchEverywhereUsageTriggerCollector.trigger(e.getProject(), SearchEverywhereUsageTriggerCollector.TAB_SWITCHED, data);
+            }
+            return;
+        }
+
+        //FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(searchProviderID);
+        //SearchEverywhereUsageTriggerCollector.trigger(e.getProject(), SearchEverywhereUsageTriggerCollector.DIALOG_OPEN, data);
+        IdeEventQueueProxy.getInstance().closeAllPopups(false);
+        String text = GotoActionBase.getInitialTextForNavigation(e);
+        seManager.show(searchProviderID, text, e);
+    }
 }
 

@@ -50,6 +50,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
 
   private final List<FocusRequestInfo> myRequests = new LinkedList<>();
 
+  
   private final IdeEventQueue myQueue;
 
   private final Map<IdeFrame, Component> myLastFocused = Maps.newWeakValueHashMap();

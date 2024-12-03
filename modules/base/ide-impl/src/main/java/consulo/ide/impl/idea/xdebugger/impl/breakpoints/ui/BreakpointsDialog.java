@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui;
 
-import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -23,7 +22,6 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
-import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.idea.ui.ToggleActionButton;
 import consulo.ide.impl.idea.ui.popup.util.DetailController;
 import consulo.ide.impl.idea.ui.popup.util.DetailViewImpl;
@@ -37,17 +35,18 @@ import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointsDialogState;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointItemNode;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeController;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.Couple;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.*;
@@ -104,6 +103,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     setModal(false);
     init();
     setOKButtonText("Done");
+
+    myTitlelessDecorator.install(getWindow());
   }
 
   @Nonnull
@@ -287,7 +288,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
               return enabled;
             }).
             setToolbarPosition(ActionToolbarPosition.TOP).
-            setToolbarBackgroundColor(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor)).
+            setToolbarBackgroundColor(UIUtil.getPanelBackground()).
             setToolbarBorder(IdeBorderFactory.createEmptyBorder());
 
     tree.setBorder(JBUI.Borders.empty());
@@ -296,8 +297,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
       decorator.addExtraAction(action);
     }
 
-    JPanel decoratedTree = decorator.createPanel();
-    decoratedTree.setBorder(IdeBorderFactory.createEmptyBorder());
+    JPanel panel = decorator.createPanel();
+    panel.setBorder(IdeBorderFactory.createEmptyBorder());
 
     myTreeController.setTreeView(tree);
 
@@ -315,7 +316,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
       provider.addListener(listener, myProject, myListenerDisposable);
     }
 
-    return decoratedTree;
+    return panel;
   }
 
   private void navigate(final boolean requestFocus) {
@@ -441,7 +442,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     public void actionPerformed(@Nonnull AnActionEvent e) {
       String groupName = myGroup;
       if (myNewGroup) {
-        groupName = Messages.showInputDialog("New group name", "New Group", AllIcons.Nodes.NewFolder);
+        groupName = Messages.showInputDialog("New group name", "New Group", PlatformIconGroup.actionsNewfolder());
         if (groupName == null) {
           return;
         }

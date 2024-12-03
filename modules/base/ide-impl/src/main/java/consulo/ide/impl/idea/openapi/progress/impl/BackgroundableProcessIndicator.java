@@ -21,140 +21,147 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.Task;
 import consulo.application.progress.TaskInfo;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.project.ui.internal.WindowManagerEx;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.project.ui.internal.StatusBarEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
 
 public class BackgroundableProcessIndicator extends ProgressWindow {
-  protected StatusBarEx myStatusBar;
+    protected StatusBarEx myStatusBar;
 
-  private PerformInBackgroundOption myOption;
-  private TaskInfo myInfo;
+    private PerformInBackgroundOption myOption;
+    private TaskInfo myInfo;
 
-  private boolean myDisposed;
-  private DumbModeAction myDumbModeAction = DumbModeAction.NOTHING;
+    private boolean myDisposed;
+    private DumbModeAction myDumbModeAction = DumbModeAction.NOTHING;
 
-  public BackgroundableProcessIndicator(@Nonnull Task.Backgroundable task) {
-    this((Project)task.getProject(), task, task);
+    public BackgroundableProcessIndicator(@Nonnull Task.Backgroundable task) {
+        this((Project) task.getProject(), task, task);
 
-    myDumbModeAction = task.getDumbModeAction();
-    if (myDumbModeAction == DumbModeAction.CANCEL) {
-      task.getProject().getMessageBus().connect(this).subscribe(DumbModeListener.class, new DumbModeListener() {
+        myDumbModeAction = task.getDumbModeAction();
+        if (myDumbModeAction == DumbModeAction.CANCEL) {
+            task.getProject().getMessageBus().connect(this).subscribe(DumbModeListener.class, new DumbModeListener() {
 
-        @Override
-        public void enteredDumbMode() {
-          cancel();
+                @Override
+                public void enteredDumbMode() {
+                    cancel();
+                }
+            });
         }
-      });
-    }
-  }
-
-  public BackgroundableProcessIndicator(@Nullable final Project project, @Nonnull TaskInfo info, @Nonnull PerformInBackgroundOption option) {
-    super(info.isCancellable(), true, project, info.getCancelText());
-    setOwnerTask(info);
-    myOption = option;
-    myInfo = info;
-    setTitle(info.getTitle());
-    final Project nonDefaultProject = project == null || project.isDisposed() ? null : project.isDefault() ? null : project;
-    final IdeFrame frame = ((WindowManagerEx)WindowManager.getInstance()).findFrameFor(nonDefaultProject);
-    myStatusBar = frame != null ? (StatusBarEx)frame.getStatusBar() : null;
-    myBackgrounded = shouldStartInBackground();
-    if (myBackgrounded) {
-      doBackground();
-    }
-  }
-
-  private boolean shouldStartInBackground() {
-    return myOption.shouldStartInBackground() && myStatusBar != null;
-  }
-
-  public BackgroundableProcessIndicator(Project project,
-                                        @Nls final String progressTitle,
-                                        @Nonnull PerformInBackgroundOption option,
-                                        @Nls final String cancelButtonText,
-                                        @Nls final String backgroundStopTooltip, final boolean cancellable) {
-    this(project, new TaskInfo() {
-
-      @Override
-      @Nonnull
-      public String getTitle() {
-        return progressTitle;
-      }
-
-      @Override
-      public String getCancelText() {
-        return cancelButtonText;
-      }
-
-      @Override
-      public String getCancelTooltipText() {
-        return backgroundStopTooltip;
-      }
-
-      @Override
-      public boolean isCancellable() {
-        return cancellable;
-      }
-    }, option);
-  }
-
-  /**
-   * to remove in IDEA 16
-   */
-  @Deprecated
-  public DumbModeAction getDumbModeAction() {
-    return myDumbModeAction;
-  }
-
-  @Override
-  protected void showDialog() {
-    if (myDisposed) return;
-
-    if (shouldStartInBackground()) {
-      return;
     }
 
-    super.showDialog();
-  }
-
-  @Override
-  public void background() {
-    if (myDisposed) return;
-
-    myOption.processSentToBackground();
-    doBackground();
-    super.background();
-  }
-
-  private void doBackground() {
-    if (myStatusBar != null) { //not welcome screen
-      myStatusBar.addProgress(this, myInfo);
+    public BackgroundableProcessIndicator(@Nullable final Project project, @Nonnull TaskInfo info, @Nonnull PerformInBackgroundOption option) {
+        super(info.isCancellable(), true, project, info.getCancelTextValue());
+        setOwnerTask(info);
+        myOption = option;
+        myInfo = info;
+        setTitle(info.getTitle());
+        final Project nonDefaultProject = project == null || project.isDisposed() ? null : project.isDefault() ? null : project;
+        final IdeFrame frame = ((WindowManagerEx) WindowManager.getInstance()).findFrameFor(nonDefaultProject);
+        myStatusBar = frame != null ? (StatusBarEx) frame.getStatusBar() : null;
+        myBackgrounded = shouldStartInBackground();
+        if (myBackgrounded) {
+            doBackground();
+        }
     }
-  }
 
-  @Override
-  public void dispose() {
-    super.dispose();
-    myDisposed = true;
-    myInfo = null;
-    myStatusBar = null;
-    myOption = null;
-  }
+    private boolean shouldStartInBackground() {
+        return myOption.shouldStartInBackground() && myStatusBar != null;
+    }
 
-  @Override
-  public boolean isShowing() {
-    return isModal() || ! isBackgrounded();
-  }
+    public BackgroundableProcessIndicator(Project project,
+                                          @Nls final LocalizeValue progressTitle,
+                                          @Nonnull PerformInBackgroundOption option,
+                                          @Nonnull LocalizeValue cancelButtonText,
+                                          @Nonnull LocalizeValue backgroundStopTooltip,
+                                          final boolean cancellable) {
+        this(project, new TaskInfo() {
 
-  @Override
-  public String toString() {
-    return super.toString() + "; task=" + myInfo;
-  }
+            @Override
+            @Nonnull
+            public String getTitle() {
+                return progressTitle.get();
+            }
+
+            @Nonnull
+            @Override
+            public LocalizeValue getCancelTextValue() {
+                return cancelButtonText;
+            }
+
+            @Nonnull
+            @Override
+            public LocalizeValue getCancelTooltipTextValue() {
+                return backgroundStopTooltip;
+            }
+
+            @Override
+            public boolean isCancellable() {
+                return cancellable;
+            }
+        }, option);
+    }
+
+    /**
+     * to remove in IDEA 16
+     */
+    @Deprecated
+    public DumbModeAction getDumbModeAction() {
+        return myDumbModeAction;
+    }
+
+    @Override
+    protected void showDialog() {
+        if (myDisposed) {
+            return;
+        }
+
+        if (shouldStartInBackground()) {
+            return;
+        }
+
+        super.showDialog();
+    }
+
+    @Override
+    public void background() {
+        if (myDisposed) {
+            return;
+        }
+
+        myOption.processSentToBackground();
+        doBackground();
+        super.background();
+    }
+
+    private void doBackground() {
+        if (myStatusBar != null) { //not welcome screen
+            myStatusBar.addProgress(this, myInfo);
+        }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        myDisposed = true;
+        myInfo = null;
+        myStatusBar = null;
+        myOption = null;
+    }
+
+    @Override
+    public boolean isShowing() {
+        return isModal() || !isBackgrounded();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "; task=" + myInfo;
+    }
 }

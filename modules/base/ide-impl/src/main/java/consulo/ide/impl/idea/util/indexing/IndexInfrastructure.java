@@ -188,6 +188,6 @@ public class IndexInfrastructure {
   }
 
   public static boolean hasIndices() {
-    return !SystemProperties.is("idea.skip.indices.initialization");
+    return false;
   }
 }

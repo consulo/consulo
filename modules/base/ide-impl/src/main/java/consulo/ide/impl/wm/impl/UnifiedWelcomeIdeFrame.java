@@ -18,7 +18,6 @@ package consulo.ide.impl.wm.impl;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.BalloonLayout;
-import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Rectangle2D;
@@ -74,8 +73,9 @@ public class UnifiedWelcomeIdeFrame implements IdeFrameEx {
         myWindow.setTitle(fileTitle);
     }
 
+    @Nullable
     @Override
-    public IdeRootPaneNorthExtension getNorthExtension(String key) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
         return null;
     }
 

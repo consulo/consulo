@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16" height="16" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
- <circle cx="8" cy="8" r="7" fill="#C39DE9" fill-opacity=".6"/>
- <path d="m7 4h1v2h1.5v1h-1.5c 0 1.97 0 2.97 0 3 0 0.5 0.14 0.93 0.44 1.03 0.49 0.164 1.14-0.05 1.26-0.092l0.3 0.84c-0.08 0.03-0.53 0.23-1.17 0.226s-1-0.06-1.33-0.39c-0.32-0.31-0.47-0.83-0.481-1.61 0 -0.04 0-2.95 0-3 0 -0.02-0.33-0.02-1 0v-0.97h1v-2.03z" fill="#231F20" fill-opacity=".7"/>
+<!-- Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license. -->
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1 8C1 4.13401 4.13401 1 8 1V1C11.866 1 15 4.13401 15 8V8C15 11.866 11.866 15 8 15V15C4.13401 15 1 11.866 1 8V8Z"
+          fill="#FAF5FF"/>
+    <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M2 8C2 11.3137 4.68629 14 8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8ZM8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1Z"
+          fill="#834DF0"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 6H5V5H11V6H8.5V12H7.5V6Z" fill="#834DF0"/>
 </svg>

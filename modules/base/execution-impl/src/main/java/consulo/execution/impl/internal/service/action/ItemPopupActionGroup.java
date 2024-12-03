@@ -16,6 +16,7 @@
 package consulo.execution.impl.internal.service.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.execution.impl.internal.service.ServiceViewActionProvider;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
@@ -28,7 +29,7 @@ import jakarta.annotation.Nullable;
 * @since 17.05.2024
 */
 @ActionImpl(id = "ServiceViewItemPopupGroup")
-public final class ItemPopupActionGroup extends ActionGroup {
+public final class ItemPopupActionGroup extends ActionGroup implements DumbAware {
   @Override
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {

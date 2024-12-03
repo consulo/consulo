@@ -20,10 +20,9 @@ import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
-import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
+import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.ui.ColorIcon;
@@ -46,6 +45,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -122,7 +122,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     }
   }
 
-  private static class InspectorWindow extends JDialogAsUIWindow {
+  private static class InspectorWindow extends JFrameAsUIWindow {
     private InspectorTable myInspectorTable;
     private Component myComponent;
     private List<PropertyBean> myInfo;
@@ -132,9 +132,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     private final JPanel myWrapperPanel;
 
     private InspectorWindow(@Nonnull Component component) throws HeadlessException {
-      super(TargetAWT.from(findWindow(component)), false);
       Window window = findWindow(component);
-      setModal(window instanceof JDialog dialog && dialog.isModal());
       myComponent = component;
       myInitialComponent = component;
       getRootPane().setBorder(JBUI.Borders.empty(5));
@@ -161,7 +159,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
       actions.addSeparator();
 
-      actions.add(new AnAction("Refresh") {
+      actions.add(new DumbAwareAction("Refresh") {
 
         @RequiredUIAccess
         @Override
@@ -1023,6 +1021,12 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static Image createColorIcon(Color color1, @Nullable Color color2) {
+    if (color1 == null && color2 == null) {
+      return Image.empty(11);
+    }
+    if (color1 == null) {
+      return ImageEffects.colorFilled(11, 11, TargetAWT.from(color2));
+    }
     if (color2 == null) {
       return ImageEffects.colorFilled(11, 11, TargetAWT.from(color1));
     }

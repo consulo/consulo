@@ -51,254 +51,254 @@ import java.util.function.Supplier;
  * @since 09-Jun-16
  */
 public abstract class UIInternal {
-  private static UIInternal ourInstance = PlatformServiceLoader.findImplementation(UIInternal.class, ServiceLoader::load);
+    private static UIInternal ourInstance = PlatformServiceLoader.findImplementation(UIInternal.class, ServiceLoader::load);
 
-  @Nonnull
-  public static UIInternal get() {
-    return ourInstance;
-  }
-
-  public abstract CheckBox _Components_checkBox();
-
-  public abstract DockLayout _Layouts_dock(int gapInPixels);
-
-  public abstract WrappedLayout _Layouts_wrapped();
-
-  public abstract VerticalLayout _Layouts_vertical(int vGap);
-
-  public abstract SwipeLayout _Layouts_swipe();
-
-  public abstract TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position);
-
-  public abstract ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position);
-
-  public abstract TabbedLayout _Layouts_tabbed();
-
-  public abstract LabeledLayout _Layouts_labeled(LocalizeValue label);
-
-  public TableLayout _Layouts_table(StaticPosition fillOption) {
-    throw new UnsupportedOperationException();
-  }
-
-  public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
-    throw new UnsupportedOperationException();
-  }
-
-  public abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
-
-  public abstract Label _Components_label(LocalizeValue text, LabelOptions options);
-
-  public abstract HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions);
-
-  public abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
-
-  public abstract TextBox _Components_textBox(String text);
-
-  public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
-    throw new UnsupportedOperationException();
-  }
-
-  public abstract ProgressBar _Components_progressBar();
-
-  @Nonnull
-  public abstract IntBox _Components_intBox(int value);
-
-  public IntSlider _Components_intSlider(int min, int max, int value) {
-    throw new UnsupportedOperationException();
-  }
-
-  public abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
-
-  @Nonnull
-  public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
-    throw new UnsupportedOperationException();
-  }
-
-  public Button _Components_button(LocalizeValue text) {
-    throw new UnsupportedOperationException();
-  }
-
-  public abstract Hyperlink _Components_hyperlink(String text);
-
-  public abstract ImageBox _Components_imageBox(Image image);
-
-  public abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
-
-  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
-    throw new UnsupportedOperationException();
-  }
-
-  public Image _Image_fromUrl(URL url) throws IOException {
-    Image.ImageType imageType = Image.ImageType.PNG;
-    String urlString = url.toString();
-    if (urlString.endsWith(".svg")) {
-      imageType = Image.ImageType.SVG;
+    @Nonnull
+    public static UIInternal get() {
+        return ourInstance;
     }
 
-    try (InputStream stream = url.openStream()) {
-      return _Image_fromStream(imageType, stream);
+    public abstract CheckBox _Components_checkBox();
+
+    public abstract DockLayout _Layouts_dock(int gapInPixels);
+
+    public abstract WrappedLayout _Layouts_wrapped();
+
+    public abstract VerticalLayout _Layouts_vertical(int vGap);
+
+    public abstract SwipeLayout _Layouts_swipe();
+
+    public abstract TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position);
+
+    public abstract ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position);
+
+    public abstract TabbedLayout _Layouts_tabbed();
+
+    public abstract LabeledLayout _Layouts_labeled(LocalizeValue label);
+
+    public TableLayout _Layouts_table(StaticPosition fillOption) {
+        throw new UnsupportedOperationException();
     }
-  }
 
-  public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
-    throw new UnsupportedOperationException();
-  }
+    public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
+        throw new UnsupportedOperationException();
+    }
 
-  public abstract Image _Image_lazy(Supplier<Image> imageSupplier);
+    public abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
 
-  public abstract Image _ImageEffects_layered(@Nonnull Image[] images);
+    public abstract Label _Components_label(LocalizeValue text, LabelOptions options);
 
-  public abstract Image _ImageEffects_transparent(@Nonnull Image original, float alpha);
+    public abstract HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions);
 
-  public abstract Image _ImageEffects_grayed(@Nonnull Image original);
+    public abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
-  public abstract Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1);
+    public abstract TextBox _Components_textBox(String text);
 
-  public abstract Image _ImageEffects_empty(int width, int height);
+    public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
+        throw new UnsupportedOperationException();
+    }
 
-  public abstract Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer);
+    public abstract ProgressBar _Components_progressBar();
 
-  public abstract Image _ImageEffects_withText(Image baseImage, String text);
+    @Nonnull
+    public abstract IntBox _Components_intBox(int value);
 
-  public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
-    throw new UnsupportedOperationException();
-  }
+    public IntSlider _Components_intSlider(int min, int max, int value) {
+        throw new UnsupportedOperationException();
+    }
 
-  public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
-    throw new UnsupportedOperationException();
-  }
+    public abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
 
-  public abstract Image _ImageEffects_resize(Image original, int width, int height);
+    @Nonnull
+    public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
+        throw new UnsupportedOperationException();
+    }
 
-  public Image _ImageEffects_resize(Image original, float scale) {
-    int width = (int)Math.ceil(original.getWidth() * scale);
-    int height = (int)Math.ceil(original.getHeight() * scale);
-    return _ImageEffects_resize(original, width, height);
-  }
+    public Button _Components_button(LocalizeValue text) {
+        throw new UnsupportedOperationException();
+    }
 
-  public abstract MenuItem _MenuItem_create(String text);
+    public abstract Hyperlink _Components_hyperlink(String text);
 
-  public abstract Menu _Menu_create(String text);
+    public abstract ImageBox _Components_imageBox(Image image);
 
-  public abstract MenuSeparator _MenuSeparator_create();
+    public abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
 
-  public abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
+    public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
+        throw new UnsupportedOperationException();
+    }
 
-  public abstract MenuBar _MenuItems_menuBar();
+    public Image _Image_fromUrl(URL url) throws IOException {
+        Image.ImageType imageType = Image.ImageType.PNG;
+        String urlString = url.toString();
+        if (urlString.endsWith(".svg")) {
+            imageType = Image.ImageType.SVG;
+        }
 
-  @Nonnull
-  public abstract StyleManager _StyleManager_get();
+        try (InputStream stream = url.openStream()) {
+            return _Image_fromStream(imageType, stream);
+        }
+    }
 
-  @Nonnull
-  public abstract FontManager _FontManager_get();
+    public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
+        throw new UnsupportedOperationException();
+    }
 
-  @Nonnull
-  public abstract Window _Window_create(String title, WindowOptions options);
+    public abstract Image _Image_lazy(Supplier<Image> imageSupplier);
 
-  @Nullable
-  public abstract Window _Window_getActiveWindow();
+    public abstract Image _ImageEffects_layered(@Nonnull Image[] images);
 
-  @Nullable
-  public Window _Window_getFocusedWindow() {
-    return _Window_getActiveWindow();
-  }
+    public abstract Image _ImageEffects_transparent(@Nonnull Image original, float alpha);
 
-  public abstract <T> Alert<T> _Alerts_create();
+    public abstract Image _ImageEffects_grayed(@Nonnull Image original);
 
-  public abstract <T> ListModel<T> _ListModel_create(Collection<? extends T> list);
+    public abstract Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1);
 
-  public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
-    throw new UnsupportedOperationException();
-  }
+    public abstract Image _ImageEffects_empty(int width, int height);
 
-  public abstract <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list);
+    public abstract Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer);
 
-  @RequiredUIAccess
-  @Nonnull
-  public abstract UIAccess _UIAccess_get();
+    public abstract Image _ImageEffects_withText(Image baseImage, String text);
 
-  public abstract boolean _UIAccess_isUIThread();
+    public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
+        throw new UnsupportedOperationException();
+    }
 
-  public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage,
-                                                                              String dialogTitle,
-                                                                              Function<String, List<String>> parser,
-                                                                              Function<List<String>, String> joiner);
+    public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
+        throw new UnsupportedOperationException();
+    }
 
-  public abstract TextBoxWithExtensions _Components_textBoxWithExtensions(String text);
+    public abstract Image _ImageEffects_resize(Image original, int width, int height);
 
-  public abstract FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show);
+    public Image _ImageEffects_resize(Image original, float scale) {
+        int width = (int) Math.ceil(original.getWidth() * scale);
+        int height = (int) Math.ceil(original.getHeight() * scale);
+        return _ImageEffects_resize(original, width, height);
+    }
 
-  @Nonnull
-  public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
-    throw new UnsupportedOperationException();
-  }
+    public abstract MenuItem _MenuItem_create(String text);
 
-  public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
-    throw new UnsupportedOperationException();
-  }
+    public abstract Menu _Menu_create(String text);
 
-  @Nonnull
-  public IconLibraryManager _IconLibraryManager_get() {
-    throw new UnsupportedOperationException();
-  }
+    public abstract MenuSeparator _MenuSeparator_create();
 
-  @Nonnull
-  public TaskBar _TaskBar_get() {
-    throw new UnsupportedOperationException();
-  }
+    public abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
 
-  public FocusManager _FocusManager_get() {
-    throw new UnsupportedOperationException();
-  }
+    public abstract MenuBar _MenuItems_menuBar();
 
-  public <T> Table<T> _Table_create(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<T> model) {
-    throw new UnsupportedOperationException();
-  }
+    @Nonnull
+    public abstract StyleManager _StyleManager_get();
 
-  public ToggleSwitch _Components_toggleSwitch(boolean selected) {
-    throw new UnsupportedOperationException();
-  }
+    @Nonnull
+    public abstract FontManager _FontManager_get();
 
-  @Nonnull
-  public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
-    throw new UnsupportedOperationException();
-  }
+    @Nonnull
+    public abstract Window _Window_create(String title, WindowOptions options);
 
-  public void _ShowNotifier_once(@Nonnull Component component, @RequiredUIAccess @Nonnull Runnable action) {
-    throw new UnsupportedOperationException();
-  }
+    @Nullable
+    public abstract Window _Window_getActiveWindow();
 
-  @Nonnull
-  public PopupMenu _PopupMenu_create(Component target) {
-    throw new UnsupportedOperationException();
-  }
+    @Nullable
+    public Window _Window_getFocusedWindow() {
+        return _Window_getActiveWindow();
+    }
 
-  @Nonnull
-  public AdvancedLabel _Components_advancedLabel() {
-    throw new UnsupportedOperationException();
-  }
+    public abstract <T> Alert<T> _Alerts_create();
 
-  @Nonnull
-  public HtmlView _Components_htmlView() {
-    throw new UnsupportedOperationException();
-  }
+    public abstract <T> ListModel<T> _ListModel_create(Collection<? extends T> list);
 
-  public void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
-    throw new UnsupportedOperationException();
-  }
+    public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Nonnull
-  public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(@Nonnull L innerLayout, @Nonnull Disposable parent) {
-    throw new UnsupportedOperationException();
-  }
+    public abstract <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list);
 
-  @Nonnull
-  public ModalityState _ModalityState_any() {
-    throw new UnsupportedOperationException();
-  }
+    @RequiredUIAccess
+    @Nonnull
+    public abstract UIAccess _UIAccess_get();
 
-  @Nonnull
-  public ModalityState _ModalityState_nonModal() {
-    throw new UnsupportedOperationException();
-  }
+    public abstract boolean _UIAccess_isUIThread();
+
+    public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage,
+                                                                                String dialogTitle,
+                                                                                Function<String, List<String>> parser,
+                                                                                Function<List<String>, String> joiner);
+
+    public abstract TextBoxWithExtensions _Components_textBoxWithExtensions(String text);
+
+    public abstract FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show);
+
+    @Nonnull
+    public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
+        throw new UnsupportedOperationException();
+    }
+
+    public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public IconLibraryManager _IconLibraryManager_get() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public TaskBar _TaskBar_get() {
+        throw new UnsupportedOperationException();
+    }
+
+    public FocusManager _FocusManager_get() {
+        throw new UnsupportedOperationException();
+    }
+
+    public <T> Table<T> _Table_create(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<T> model) {
+        throw new UnsupportedOperationException();
+    }
+
+    public ToggleSwitch _Components_toggleSwitch(boolean selected) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void _ShowNotifier_once(@Nonnull Component component, @RequiredUIAccess @Nonnull Runnable action) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public PopupMenu _PopupMenu_create(Component target) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public AdvancedLabel _Components_advancedLabel() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public HtmlView _Components_htmlView() {
+        throw new UnsupportedOperationException();
+    }
+
+    public void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(@Nonnull L innerLayout, @Nonnull Disposable parent) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public ModalityState _ModalityState_any() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public ModalityState _ModalityState_nonModal() {
+        throw new UnsupportedOperationException();
+    }
 }

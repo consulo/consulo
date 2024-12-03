@@ -16,14 +16,12 @@
 
 package consulo.language.editor.intention;
 
-import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -63,6 +61,6 @@ public final class EmptyIntentionAction extends AbstractEmptyIntentionAction imp
 
   @Override
   public Image getIcon(@IconFlags int flags) {
-    return AllIcons.Actions.RealIntentionBulb;
+    return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 }

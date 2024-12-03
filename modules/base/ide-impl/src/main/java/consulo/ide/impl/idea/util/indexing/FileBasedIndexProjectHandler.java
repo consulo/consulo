@@ -57,7 +57,7 @@ public class FileBasedIndexProjectHandler {
 
         return new DumbModeTask(project) {
             @Override
-            public void performInDumbMode(@Nonnull ProgressIndicator indicator) {
+            public void performInDumbMode(@Nonnull ProgressIndicator indicator, Exception trace) {
                 long start = System.currentTimeMillis();
                 Collection<VirtualFile> files = index.getFilesToUpdate(project);
                 long calcDuration = System.currentTimeMillis() - start;

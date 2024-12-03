@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.grouping;
 
-import consulo.application.AllIcons;
-import consulo.util.lang.StringUtil;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 /**
@@ -58,6 +58,6 @@ public class XBreakpointCustomGroupingRule<B> extends XBreakpointGroupingRule<B,
   @Nullable
   @Override
   public Image getIcon() {
-    return AllIcons.Nodes.NewFolder;
+    return PlatformIconGroup.actionsNewfolder();
   }
 }

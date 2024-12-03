@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 18-Jun-22
  */
-@ExtensionImpl(id = "InitToolWindows", order = "after FileBasedIndexProjectHandlerActivity")
+@ExtensionImpl(id = "InitToolWindows", order = "first")
 public class InitToolWindowsActivity implements PostStartupActivity, DumbAware {
     @RequiredUIAccess
     @Override

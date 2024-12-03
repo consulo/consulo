@@ -61,7 +61,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.DialogWrapperDialog;
 import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
@@ -456,7 +455,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         final AnCancelAction anCancelAction = new AnCancelAction();
         final JRootPane rootPane = getRootPane();
-        SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
         anCancelAction.registerCustomShortcutSet(CommonShortcuts.ESCAPE, rootPane);
         myDisposeActions.add(() -> anCancelAction.unregisterCustomShortcutSet(rootPane));
 
@@ -514,7 +512,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         final AnCancelAction anCancelAction = new AnCancelAction();
         final JRootPane rootPane = getRootPane();
-        SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
         anCancelAction.registerCustomShortcutSet(CommonShortcuts.ESCAPE, rootPane);
         myDisposeActions.add(() -> anCancelAction.unregisterCustomShortcutSet(rootPane));
 

@@ -21,15 +21,14 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.project.ProjectBundle;
-import consulo.content.bundle.Sdk;
-import consulo.ide.ui.SdkPathEditor;
-import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.content.base.SourcesOrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.ide.ui.OrderRootTypeUIFactory;
+import consulo.ide.ui.SdkPathEditor;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ProjectBundle;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -51,7 +50,7 @@ public class SourcesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
   @Nonnull
   @Override
   public Image getIcon() {
-    return AllIcons.Nodes.Package;
+    return PlatformIconGroup.modulesSourceroot();
   }
 
   @Nonnull

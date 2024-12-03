@@ -21,7 +21,10 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.wm.*;
+import consulo.project.ui.wm.BalloonLayout;
+import consulo.project.ui.wm.FrameTitleBuilder;
+import consulo.project.ui.wm.IdeRootPaneNorthExtension;
+import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,96 +43,97 @@ import java.util.Objects;
  * @since 24-Sep-17
  */
 public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
-  private final Project myProject;
-  private final WebIdeRootView myRootView;
+    private final Project myProject;
+    private final WebIdeRootView myRootView;
 
-  private UnifiedStatusBarImpl myStatusBar;
+    private UnifiedStatusBarImpl myStatusBar;
 
-  private VaadinRootLayout myRootLayout;
+    private VaadinRootLayout myRootLayout;
 
-  public WebIdeFrameImpl(Project project) {
-    myProject = project;
-    myRootView = new WebIdeRootView(project);
-  }
+    public WebIdeFrameImpl(Project project) {
+        myProject = project;
+        myRootView = new WebIdeRootView(project);
+    }
 
-  @RequiredUIAccess
-  public void show() {
-    UI ui = UI.getCurrent();
+    @RequiredUIAccess
+    public void show() {
+        UI ui = UI.getCurrent();
 
-    VaadinRootLayout view = (VaadinRootLayout)ui.getCurrentView();
+        VaadinRootLayout view = (VaadinRootLayout) ui.getCurrentView();
 
-    myRootLayout = view;
+        myRootLayout = view;
 
-    String projectTitle = FrameTitleBuilder.getInstance().getProjectTitle(myProject);
+        String projectTitle = FrameTitleBuilder.getInstance().getProjectTitle(myProject);
 
-    ui.getPage().setTitle(projectTitle);
+        ui.getPage().setTitle(projectTitle);
 
-    myStatusBar = new UnifiedStatusBarImpl(myProject.getApplication(), null);
-    Disposer.register(this, myStatusBar);
-    myStatusBar.install(this);
+        myStatusBar = new UnifiedStatusBarImpl(myProject.getApplication(), null);
+        Disposer.register(this, myStatusBar);
+        myStatusBar.install(this);
 
-    myRootView.setStatusBar(myStatusBar);
+        myRootView.setStatusBar(myStatusBar);
 
-    myRootView.update();
-    
-    myRootLayout.update(TargetVaddin.to(myRootView.getRootPanel().getComponent()));
-  }
+        myRootView.update();
 
-  public WebRootPaneImpl getRootPanel() {
-    return myRootView.getRootPanel();
-  }
+        myRootLayout.update(TargetVaddin.to(myRootView.getRootPanel().getComponent()));
+    }
 
-  @Nonnull
-  @Override
-  public Window getWindow() {
-    return (Window)Objects.requireNonNull(myRootLayout).toUIComponent();
-  }
+    public WebRootPaneImpl getRootPanel() {
+        return myRootView.getRootPanel();
+    }
 
-  public void close() {
-    WebApplication.invokeOnCurrentSession(() -> {
-      UI.getCurrent().getPage().executeJs("window.close();");
-    });
-  }
+    @Nonnull
+    @Override
+    public Window getWindow() {
+        return (Window) Objects.requireNonNull(myRootLayout).toUIComponent();
+    }
 
-  @Override
-  public StatusBar getStatusBar() {
-    return myStatusBar;
-  }
+    public void close() {
+        WebApplication.invokeOnCurrentSession(() -> {
+            UI.getCurrent().getPage().executeJs("window.close();");
+        });
+    }
 
-  @Override
-  public Rectangle2D suggestChildFrameBounds() {
-    return null;
-  }
+    @Override
+    public StatusBar getStatusBar() {
+        return myStatusBar;
+    }
 
-  @Nullable
-  @Override
-  public Project getProject() {
-    return myProject;
-  }
+    @Override
+    public Rectangle2D suggestChildFrameBounds() {
+        return null;
+    }
 
-  @Override
-  public void setFrameTitle(String title) {
+    @Nullable
+    @Override
+    public Project getProject() {
+        return myProject;
+    }
 
-  }
+    @Override
+    public void setFrameTitle(String title) {
 
-  @Override
-  public void setFileTitle(String fileTitle, File ioFile) {
+    }
 
-  }
+    @Override
+    public void setFileTitle(String fileTitle, File ioFile) {
 
-  @Override
-  public IdeRootPaneNorthExtension getNorthExtension(String key) {
-    return null;
-  }
+    }
 
-  @Nullable
-  @Override
-  public BalloonLayout getBalloonLayout() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+        return null;
+    }
 
-  @Override
-  public void dispose() {
+    @Nullable
+    @Override
+    public BalloonLayout getBalloonLayout() {
+        return null;
+    }
 
-  }
+    @Override
+    public void dispose() {
+
+    }
 }

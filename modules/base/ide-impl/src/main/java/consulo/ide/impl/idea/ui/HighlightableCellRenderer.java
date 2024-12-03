@@ -17,51 +17,45 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.awt.HighlightableComponent;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 
 public class HighlightableCellRenderer extends HighlightableComponent implements TreeCellRenderer, ListCellRenderer {
-  public Component getTreeCellRendererComponent(
-    JTree tree,
-    Object value,
-    boolean selected,
-    boolean expanded,
-    boolean leaf,
-    int row,
-    boolean hasFocus
+    @Override
+    public Component getTreeCellRendererComponent(
+        JTree tree,
+        Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
     ) {
-    setText(tree.convertValueToText(value, selected, expanded, leaf, row, hasFocus));
-    setFont(UIUtil.getTreeFont());
-    setIcon(null);
+        setText(tree.convertValueToText(value, selected, expanded, leaf, row, hasFocus));
+        setFont(UIUtil.getTreeFont());
+        setIcon(null);
 
-    if (WideSelectionTreeUI.isWideSelection(tree)) {
-      setOpaque(false);
-      myIsSelected = false;
-      myHasFocus = false;
-      setDoNotHighlight(selected && hasFocus);
-      setForeground(selected && hasFocus ? UIUtil.getTreeSelectionForeground() : UIUtil.getTreeForeground());
-    } else {
-      setOpaque(true);
-      myIsSelected = selected;
-      myHasFocus = hasFocus;
-      setDoNotHighlight(false);
+        setOpaque(false);
+        myIsSelected = false;
+        myHasFocus = false;
+        setDoNotHighlight(selected && hasFocus);
+        setForeground(selected && hasFocus ? UIUtil.getTreeSelectionForeground() : UIUtil.getTreeForeground());
+
+        myHasFocus = hasFocus;
+        return this;
     }
-    
-    myHasFocus = hasFocus;
-    return this;
-  }
 
-  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-    setText((value == null) ? "" : value.toString());
-    setFont(UIUtil.getListFont());
-    setIcon(null);
+    @Override
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        setText((value == null) ? "" : value.toString());
+        setFont(UIUtil.getListFont());
+        setIcon(null);
 
-    myIsSelected = isSelected;
-    myHasFocus = cellHasFocus;
-    return this;
-  }
+        myIsSelected = isSelected;
+        myHasFocus = cellHasFocus;
+        return this;
+    }
 
 }

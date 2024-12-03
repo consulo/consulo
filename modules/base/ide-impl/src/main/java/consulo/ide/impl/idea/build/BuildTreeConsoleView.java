@@ -33,11 +33,10 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ui.ex.awt.tree.EditSourceOnEnterKeyHandler;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -45,7 +44,6 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.NonNavigatable;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.ide.localize.IdeLocalize;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
@@ -53,6 +51,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.TreeOptions;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
@@ -64,6 +63,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -96,7 +96,6 @@ import static consulo.ide.impl.idea.util.containers.ContainerUtil.addIfNotNull;
 import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
 import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
 import static consulo.ui.ex.awt.UIUtil.*;
-import static consulo.ui.ex.awt.internal.laf.DefaultTreeUI.AUTO_EXPAND_ALLOWED;
 import static consulo.ui.ex.awt.util.RenderingHelper.SHRINK_LONG_RENDERER;
 import static consulo.util.lang.ObjectUtil.chooseNotNull;
 import static consulo.util.lang.StringUtil.isEmpty;
@@ -930,7 +929,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     Tree tree = new Tree(model);
     tree.setLargeModel(true);
     ComponentUtil.putClientProperty(tree, ANIMATION_IN_RENDERER_ALLOWED, true);
-    ComponentUtil.putClientProperty(tree, AUTO_EXPAND_ALLOWED, false);
+    ComponentUtil.putClientProperty(tree, TreeOptions.AUTO_EXPAND_ALLOWED, false);
     tree.setRootVisible(false);
     EditSourceOnDoubleClickHandler.install(tree);
     EditSourceOnEnterKeyHandler.install(tree);
@@ -1090,7 +1089,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     private void updateProgressBar(long total, long progress) {
-      myPanelWithProgress.updateProgress(total, progress);
+      myProject.getUIAccess().give(() -> myPanelWithProgress.updateProgress(total, progress));
     }
 
     private

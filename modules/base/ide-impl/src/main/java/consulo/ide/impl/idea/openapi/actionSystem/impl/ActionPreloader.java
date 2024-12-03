@@ -27,7 +27,7 @@ import jakarta.inject.Inject;
 /**
  * @author yole
  */
-@ExtensionImpl(order = "after executorRegister")
+@ExtensionImpl(order = "first")
 public class ActionPreloader extends PreloadingActivity {
     private final ActionManager myActionManager;
     private final ExecutorRegistry myExecutorRegistry;
@@ -42,7 +42,7 @@ public class ActionPreloader extends PreloadingActivity {
     public void preload(@Nonnull ProgressIndicator indicator) {
         ActionManagerImpl actionManager = (ActionManagerImpl) myActionManager;
 
-        actionManager.underLock(() -> {
+        actionManager.initialize(() -> {
             actionManager.loadActions();
 
             // need it due its register actions

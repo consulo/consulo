@@ -21,6 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.KeyReleasedEvent;
 import consulo.ui.event.details.KeyboardInputDetails;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -41,6 +42,6 @@ public class AWTKeyAdapterAsKeyReleasedListener extends KeyAdapter {
     @Override
     @RequiredUIAccess
     public void keyReleased(KeyEvent e) {
-        myKeyListener.onEvent(new KeyReleasedEvent(myComponent, (KeyboardInputDetails) DesktopAWTInputDetails.convert(e)));
+        myKeyListener.onEvent(new KeyReleasedEvent(myComponent, (KeyboardInputDetails) DesktopAWTInputDetails.convert(TargetAWT.to(myComponent), e)));
     }
 }

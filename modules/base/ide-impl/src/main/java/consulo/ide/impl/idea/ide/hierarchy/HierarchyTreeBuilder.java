@@ -16,8 +16,6 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.progress.util.StatusBarProgress;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
@@ -81,13 +79,6 @@ public class HierarchyTreeBuilder extends AbstractTreeBuilder {
   @Override
   protected final boolean isDisposeOnCollapsing(final NodeDescriptor nodeDescriptor) {
     return false; // prevents problems with building descriptors for invalidated elements
-  }
-
-
-  @Override
-  @Nonnull
-  protected ProgressIndicator createProgressIndicator() {
-    return new StatusBarProgress();
   }
 
   private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {

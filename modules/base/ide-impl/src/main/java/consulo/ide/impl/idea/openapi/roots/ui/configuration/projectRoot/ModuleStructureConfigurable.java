@@ -43,6 +43,7 @@ import consulo.module.ModuleManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.ui.view.tree.ModuleGroup;
@@ -570,7 +571,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
         AnAction importModuleAction = new AddModuleAction(true);
         importModuleAction.getTemplatePresentation().setText("Import Module");
-        importModuleAction.getTemplatePresentation().setIcon(AllIcons.ToolbarDecorator.Import);
+        importModuleAction.getTemplatePresentation().setIcon(PlatformIconGroup.actionsImport());
         result.add(importModuleAction);
 
         return result.toArray(new AnAction[result.size()]);

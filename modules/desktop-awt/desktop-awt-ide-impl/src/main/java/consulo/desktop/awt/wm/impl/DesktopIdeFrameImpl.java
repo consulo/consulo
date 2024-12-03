@@ -31,7 +31,6 @@ import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
-import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -247,6 +246,8 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
     private MyFrame myJFrame;
 
+    private final TitlelessDecorator myTitlelessDecorator;
+
     public DesktopIdeFrameImpl(ActionManager actionManager, DataManager dataManager, Application application) {
         myJFrame = new MyFrame();
         myJFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
@@ -255,6 +256,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myJFrame.setTitle(FrameTitleUtil.buildTitle());
         myRootPane = createRootPane(actionManager, dataManager, application);
         myJFrame.setRootPane(myRootPane);
+        myTitlelessDecorator = TitlelessDecorator.of(myRootPane, TitlelessDecorator.MAIN_WINDOW);
         myJFrame.setBackground(UIUtil.getPanelBackground());
         AppIconUtil.updateWindowIcon(myJFrame);
         final Dimension size = ScreenUtil.getMainScreenBounds().getSize();
@@ -267,10 +269,12 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
         myJFrame.setFocusTraversalPolicy(new IdeFocusTraversalPolicy());
 
+        myTitlelessDecorator.install(myJFrame);
+
         setupCloseAction();
         MnemonicHelper.init(myJFrame);
 
-        myBalloonLayout = new DesktopBalloonLayoutImpl(myRootPane, new Insets(8, 8, 8, 8));
+        myBalloonLayout = new DesktopBalloonLayoutImpl(myRootPane, JBUI.insets(8));
 
         // to show window thumbnail under Macs
         // http://lists.apple.com/archives/java-dev/2009/Dec/msg00240.html
@@ -359,6 +363,10 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return new IdeRootPane(actionManager, dataManager, application, this);
     }
 
+    public TitlelessDecorator getTitlelessDecorator() {
+        return myTitlelessDecorator;
+    }
+
     @Override
     public JComponent getComponent() {
         return myJFrame.getRootPane();
@@ -425,8 +433,9 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     }
 
     @Override
-    public IdeRootPaneNorthExtension getNorthExtension(String key) {
-        return myRootPane.findByName(key);
+    @SuppressWarnings("unchecked")
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+        return (E) myRootPane.findExtension(extensioClass);
     }
 
     private void updateTitle() {
@@ -525,7 +534,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     @Override
     public void initialize() {
         if (myRootPane != null) {
-            myRootPane.installNorthComponents(myProject);
+            myRootPane.installNorthComponents(myProject, myTitlelessDecorator);
             myProject.getMessageBus().connect().subscribe(StatusBarInfo.class, myRootPane.getStatusBar());
         }
 

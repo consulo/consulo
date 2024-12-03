@@ -57,6 +57,7 @@ import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
@@ -254,8 +255,8 @@ public class DesktopApplicationImpl extends BaseApplication {
         boolean shouldShowModalWindow,
         @Nullable final ComponentManager project,
         final JComponent parentComponent,
-        final String cancelText
-    ) {
+        @Nonnull LocalizeValue cancelText
+        ) {
         if (isDispatchThread() && isWriteAccessAllowed()
             // Disallow running process in separate thread from under write action.
             // The thread will deadlock trying to get read action otherwise.
@@ -302,7 +303,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         boolean shouldShowModalWindow,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nullable String cancelText
+        @Nonnull LocalizeValue cancelText
     ) {
         if (SwingUtilities.isEventDispatchThread()) {
             return CompletableFuture.completedFuture(createProgressWindow(
@@ -533,7 +534,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         @Nullable JComponent parentComponent,
         @Nonnull Consumer<? super ProgressIndicator> action
     ) {
-        return runEdtProgressWriteAction(title, project, parentComponent, null, action);
+        return runEdtProgressWriteAction(title, project, parentComponent, LocalizeValue.of(), action);
     }
 
     @Override
@@ -543,14 +544,14 @@ public class DesktopApplicationImpl extends BaseApplication {
         @Nullable JComponent parentComponent,
         @Nonnull Consumer<? super ProgressIndicator> action
     ) {
-        return runEdtProgressWriteAction(title, project, parentComponent, IdeLocalize.actionStop().get(), action);
+        return runEdtProgressWriteAction(title, project, parentComponent, IdeLocalize.actionStop(), action);
     }
 
     private boolean runEdtProgressWriteAction(
         @Nonnull String title,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
+        @Nonnull LocalizeValue cancelText,
         @Nonnull Consumer<? super ProgressIndicator> action
     ) {
         // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
@@ -568,7 +569,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         boolean shouldShowModalWindow,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nullable String cancelText
+        @Nonnull LocalizeValue cancelText
     ) {
         ProgressWindow progress = new ProgressWindow(canBeCanceled, !shouldShowModalWindow, (Project)project, parentComponent, cancelText);
         // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below

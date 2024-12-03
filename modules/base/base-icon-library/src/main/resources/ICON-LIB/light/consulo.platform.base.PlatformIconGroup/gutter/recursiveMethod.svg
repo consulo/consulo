@@ -1,7 +1,5 @@
-<svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="6" cy="6" r="2" fill="#59A869"/>
-  <g fill="#6E6E6E">
-    <path d="m5 1.1v1.03c-1.73 0.444-3 2.01-3 3.87 0 2.21 1.79 4 4 4s4-1.79 4-4c0-1.48-0.804-2.77-2-3.46v-1.12c1.77 0.772 3 2.53 3 4.58 0 2.76-2.24 5-5 5s-5-2.24-5-5c0-2.42 1.72-4.44 4-4.9z"/>
-    <polygon points="7 1 11 1 7 5"/>
-  </g>
+<!-- Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license. -->
+<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.5 1.40029L9.5 1.40029L9.5 2M9.5 5.40029L9.5 2M9.5 2C11.2808 2.91036 12.5 4.76295 12.5 6.90029C12.5 9.93786 10.0376 12.4003 7 12.4003C3.96243 12.4003 1.5 9.93786 1.5 6.90029C1.5 4.76295 2.71916 2.91036 4.5 2" stroke="#6C707E" stroke-linecap="round"/>
+<circle cx="7" cy="7" r="2" fill="#55A76A"/>
 </svg>

@@ -98,7 +98,7 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
             @Override
             @RequiredUIAccess
             public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
-                clickListener.onEvent(new ClickEvent(SwingComponentDelegate.this, DesktopAWTInputDetails.convert(event)));
+                clickListener.onEvent(new ClickEvent(SwingComponentDelegate.this, DesktopAWTInputDetails.convert(event.getComponent(), event)));
                 return true;
             }
         };

@@ -65,6 +65,7 @@
             <action internal="true" id="ReloadProjectAction" class="consulo.ide.impl.idea.internal.ReloadProjectAction"/>
             <action internal="true" id="RestartInfo" class="consulo.ide.impl.idea.internal.RestartInfoAction" text="Restart Info"/>
             <action id="DumbMode" internal="true" class="consulo.ide.impl.idea.internal.ToggleDumbModeAction" text="Dumb mode"/>
+            <action id="StartModalTask" internal="true" class="consulo.ide.impl.idea.internal.StartModalTaskAction" />
             <action id="LaggingMode" internal="true" class="consulo.ide.impl.idea.internal.ToggleLaggingModeAction" text="Lagging mode"/>
             <separator/>
 

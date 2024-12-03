@@ -3,13 +3,13 @@ package consulo.language.editor.ui;
 
 import consulo.application.ReadAction;
 import consulo.application.ui.UISettings;
+import consulo.application.util.matcher.Matcher;
+import consulo.application.util.matcher.MatcherHolder;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.util.Iconable;
 import consulo.fileEditor.VfsPresentationUtil;
-import consulo.application.util.matcher.Matcher;
-import consulo.application.util.matcher.MatcherHolder;
 import consulo.language.editor.ui.navigation.NavigationItemListCellRenderer;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.icon.IconDescriptorUpdaters;
@@ -23,6 +23,7 @@ import consulo.ui.ex.ColoredItemPresentation;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -33,13 +34,11 @@ import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
-import javax.accessibility.Accessible;
-import javax.accessibility.AccessibleContext;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import javax.accessibility.Accessible;
+import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
@@ -54,6 +53,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
 
     protected PsiElementListCellRenderer() {
         super(new BorderLayout());
+        setBorder(JBCurrentTheme.listCellBorder());
     }
 
     private class MyAccessibleContext extends JPanel.AccessibleJPanel {
@@ -109,7 +109,6 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
             Color bgColor = UIUtil.getListBackground();
             Color color = list.getForeground();
-            setPaintFocusBorder(false);
 
             PsiElement target = NavigationItemListCellRenderer.getPsiElement(value);
             VirtualFile vFile = PsiUtilCore.getVirtualFile(target);

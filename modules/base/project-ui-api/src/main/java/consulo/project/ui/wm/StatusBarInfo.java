@@ -17,7 +17,6 @@ package consulo.project.ui.wm;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -25,13 +24,16 @@ import jakarta.annotation.Nullable;
  */
 // FIXME [VISTALL] this topic is App&Project level
 @TopicAPI(ComponentScope.APPLICATION)
+@Deprecated
 public interface StatusBarInfo {
 
-  /**
-   * Set status bar text
-   * @param s text to be shown in the status bar
-   */
-  void setInfo(@Nullable String s);
+    /**
+     * Set status bar text
+     *
+     * @param s text to be shown in the status bar
+     */
+    @Deprecated
+    void setInfo(@Nullable String s);
 
-  void setInfo(@Nullable String s, @Nullable String requestor);
+    void setInfo(@Nullable String s, @Nullable String requestor);
 }

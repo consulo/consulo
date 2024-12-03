@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ui.popup;
 
 import consulo.awt.hacking.PopupHacking;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.PopupUtil;
@@ -27,168 +26,187 @@ import javax.swing.*;
 import java.awt.*;
 
 public interface PopupComponent {
-  Logger LOG = Logger.getInstance(PopupComponent.class);
+    Logger LOG = Logger.getInstance(PopupComponent.class);
 
-  void hide(boolean dispose);
+    void hide(boolean dispose);
 
-  void show();
+    void show();
 
-  Window getWindow();
+    Window getWindow();
 
-  void setRequestFocus(boolean requestFocus);
+    void setRequestFocus(boolean requestFocus);
 
-  boolean isPopupWindow(Window window);
+    boolean isPopupWindow(Window window);
 
-  interface Factory {
-    PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup);
+    interface Factory {
+        PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup);
 
-    boolean isNativePopup();
+        boolean isNativePopup();
 
-    class AwtDefault implements Factory {
-      public PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup) {
-        final PopupFactory factory = PopupFactory.getSharedInstance();
-        final Popup popup = factory.getPopup(owner, content, x, y);
-        return new AwtPopupWrapper(popup, jbPopup);
-      }
+        class AwtDefault implements Factory {
+            @Override
+            public PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup) {
+                final PopupFactory factory = PopupFactory.getSharedInstance();
+                final Popup popup = factory.getPopup(owner, content, x, y);
 
-      public boolean isNativePopup() {
-        return true;
-      }
-    }
+                Window resolvedWindow = SwingUtilities.getWindowAncestor(content);
+                return new AwtPopupWrapper(popup, jbPopup, resolvedWindow);
+            }
 
-    class AwtHeavyweight implements Factory {
-      public PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup) {
-        final PopupFactory factory = PopupFactory.getSharedInstance();
-
-        final int oldType = PopupUtil.getPopupType(factory);
-        PopupUtil.setPopupType(factory, 2);
-        final Popup popup = factory.getPopup(owner, content, x, y);
-        if (oldType >= 0) PopupUtil.setPopupType(factory, oldType);
-
-        return new AwtPopupWrapper(popup, jbPopup);
-      }
-
-      public boolean isNativePopup() {
-        return true;
-      }
-    }
-
-    class Dialog implements Factory {
-      public PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup) {
-        return new DialogPopupWrapper(owner, content, x, y, jbPopup);
-      }
-
-      public boolean isNativePopup() {
-        return false;
-      }
-    }
-  }
-
-  class DialogPopupWrapper implements PopupComponent {
-    private final JDialog myDialog;
-    private boolean myRequestFocus = true;
-
-    public void setRequestFocus(boolean requestFocus) {
-      myRequestFocus = requestFocus;
-    }
-
-    @Override
-    public boolean isPopupWindow(Window window) {
-      return myDialog != null && myDialog == window;
-    }
-
-    public DialogPopupWrapper(Component owner, Component content, int x, int y, JBPopup jbPopup) {
-      if (!owner.isShowing()) {
-        throw new IllegalArgumentException("Popup owner must be showing");
-      }
-
-      final Window wnd = owner instanceof Window ? (Window)owner: SwingUtilities.getWindowAncestor(owner);
-      if (wnd instanceof Frame) {
-        myDialog = new JDialog((Frame)wnd);
-      } else if (wnd instanceof Dialog) {
-        myDialog = new JDialog((Dialog)wnd);
-      } else {
-        myDialog = new JDialog();
-      }
-
-      myDialog.getContentPane().setLayout(new BorderLayout());
-      myDialog.getContentPane().add(content, BorderLayout.CENTER);
-      myDialog.getRootPane().putClientProperty(JBPopup.KEY, jbPopup);
-      myDialog.setUndecorated(true);
-      myDialog.setBackground(UIUtil.getPanelBackground());
-      myDialog.pack();
-      myDialog.setLocation(x, y);
-    }
-
-    public Window getWindow() {
-      return myDialog;
-    }
-
-    public void hide(boolean dispose) {
-      myDialog.setVisible(false);
-      if (dispose) {
-        myDialog.dispose();
-        myDialog.getRootPane().putClientProperty(JBPopup.KEY, null);
-      }
-    }
-
-    public void show() {
-      if (!myRequestFocus) {
-        myDialog.setFocusableWindowState(false);
-      }
-      myDialog.setVisible(true);
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          myDialog.setFocusableWindowState(true);
+            @Override
+            public boolean isNativePopup() {
+                return true;
+            }
         }
-      });
-    }
-  }
 
-  class AwtPopupWrapper implements PopupComponent {
+        class AwtHeavyweight implements Factory {
+            @Override
+            public PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup) {
+                final PopupFactory factory = PopupFactory.getSharedInstance();
 
-    private final Popup myPopup;
-    private JBPopup myJBPopup;
+                final int oldType = PopupUtil.getPopupType(factory);
+                PopupUtil.setPopupType(factory, 2);
+                final Popup popup = factory.getPopup(owner, content, x, y);
+                if (oldType >= 0) {
+                    PopupUtil.setPopupType(factory, oldType);
+                }
 
-    public AwtPopupWrapper(Popup popup, JBPopup jbPopup) {
-      myPopup = popup;
-      myJBPopup = jbPopup;
+                Window resolvedWindow = SwingUtilities.getWindowAncestor(content);
+                return new AwtPopupWrapper(popup, jbPopup, resolvedWindow);
+            }
 
-      if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel()) {
-        final Component c = PopupHacking.getComponent(myPopup);
-        c.setBackground(UIUtil.getPanelBackground());
-      }
-    }
+            @Override
+            public boolean isNativePopup() {
+                return true;
+            }
+        }
 
-    @Override
-    public boolean isPopupWindow(Window window) {
-      final Window wnd = getWindow();
-      return wnd != null && wnd == window;
-    }
+        class Dialog implements Factory {
+            @Override
+            public PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup) {
+                return new DialogPopupWrapper(owner, content, x, y, jbPopup);
+            }
 
-    public void hide(boolean dispose) {
-      myPopup.hide();
-
-      Window window = getWindow();
-      JRootPane rootPane = window instanceof RootPaneContainer ? ((RootPaneContainer)window).getRootPane() : null;
-      DialogWrapper.cleanupRootPane(rootPane);
-      DialogWrapper.cleanupWindowListeners(window);
-    }
-
-    public void show() {
-      myPopup.show();
-      Window wnd = getWindow();
-      if (wnd instanceof JWindow) {
-        ((JWindow)wnd).getRootPane().putClientProperty(JBPopup.KEY, myJBPopup);
-      }
+            @Override
+            public boolean isNativePopup() {
+                return false;
+            }
+        }
     }
 
-    public Window getWindow() {
-      final Component c = PopupHacking.getComponent(myPopup);
-      return c instanceof JWindow ? (JWindow)c : null;
+    class DialogPopupWrapper implements PopupComponent {
+        private final JDialog myDialog;
+        private boolean myRequestFocus = true;
+
+        @Override
+        public void setRequestFocus(boolean requestFocus) {
+            myRequestFocus = requestFocus;
+        }
+
+        @Override
+        public boolean isPopupWindow(Window window) {
+            return myDialog != null && myDialog == window;
+        }
+
+        public DialogPopupWrapper(Component owner, Component content, int x, int y, JBPopup jbPopup) {
+            if (!owner.isShowing()) {
+                throw new IllegalArgumentException("Popup owner must be showing");
+            }
+
+            final Window wnd = owner instanceof Window ? (Window) owner : SwingUtilities.getWindowAncestor(owner);
+            if (wnd instanceof Frame) {
+                myDialog = new JDialog((Frame) wnd);
+            }
+            else if (wnd instanceof Dialog) {
+                myDialog = new JDialog((Dialog) wnd);
+            }
+            else {
+                myDialog = new JDialog();
+            }
+
+            myDialog.getContentPane().setLayout(new BorderLayout());
+            myDialog.getContentPane().add(content, BorderLayout.CENTER);
+            myDialog.getRootPane().putClientProperty(JBPopup.KEY, jbPopup);
+            myDialog.setUndecorated(true);
+            myDialog.setBackground(UIUtil.getPanelBackground());
+            myDialog.pack();
+            myDialog.setLocation(x, y);
+        }
+
+        @Override
+        public Window getWindow() {
+            return myDialog;
+        }
+
+        @Override
+        public void hide(boolean dispose) {
+            myDialog.setVisible(false);
+            if (dispose) {
+                myDialog.dispose();
+                myDialog.getRootPane().putClientProperty(JBPopup.KEY, null);
+            }
+        }
+
+        @Override
+        public void show() {
+            if (!myRequestFocus) {
+                myDialog.setFocusableWindowState(false);
+            }
+            myDialog.setVisible(true);
+            
+            SwingUtilities.invokeLater(() -> myDialog.setFocusableWindowState(true));
+        }
     }
 
-    public void setRequestFocus(boolean requestFocus) {
+    class AwtPopupWrapper implements PopupComponent {
+
+        private final Popup myPopup;
+        private final JBPopup myJBPopup;
+        private final Window myResolvedWindow;
+
+        public AwtPopupWrapper(Popup popup, JBPopup jbPopup, Window resolvedWindow) {
+            myPopup = popup;
+            myJBPopup = jbPopup;
+            myResolvedWindow = resolvedWindow;
+        }
+
+        @Override
+        public boolean isPopupWindow(Window window) {
+            final Window wnd = getWindow();
+            return wnd != null && wnd == window;
+        }
+
+        @Override
+        public void hide(boolean dispose) {
+            myPopup.hide();
+
+            Window window = getWindow();
+            JRootPane rootPane = window instanceof RootPaneContainer ? ((RootPaneContainer) window).getRootPane() : null;
+            DialogWrapper.cleanupRootPane(rootPane);
+            DialogWrapper.cleanupWindowListeners(window);
+        }
+
+        @Override
+        public void show() {
+            myPopup.show();
+            Window wnd = getWindow();
+            if (wnd instanceof JWindow) {
+                ((JWindow) wnd).getRootPane().putClientProperty(JBPopup.KEY, myJBPopup);
+            }
+        }
+
+        @Override
+        public Window getWindow() {
+            if (myResolvedWindow != null) {
+                return myResolvedWindow;
+            }
+
+            final Component c = PopupHacking.getComponent(myPopup);
+            return c instanceof JWindow ? (JWindow) c : null;
+        }
+
+        @Override
+        public void setRequestFocus(boolean requestFocus) {
+        }
     }
-  }
 }

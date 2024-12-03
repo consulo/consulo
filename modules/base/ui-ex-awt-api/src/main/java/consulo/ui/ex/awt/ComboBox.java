@@ -47,7 +47,6 @@ import java.util.List;
  */
 public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventListener {
   private int myMinimumAndPreferredWidth;
-  protected boolean myPaintingNow;
 
   public ComboBox() {
     this(-1);
@@ -199,30 +198,6 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     }
 
     return new Dimension(width, preferredSize.height);
-  }
-
-  @Override
-  public boolean hasFocus() {
-    if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel() && myPaintingNow) {
-      return false;
-    }
-    return super.hasFocus();
-  }
-
-  @Override
-  protected Dimension getOriginalPreferredSize() {
-    return super.getPreferredSize();
-  }
-
-  @Override
-  public void paint(Graphics g) {
-    try {
-      myPaintingNow = true;
-      super.paint(g);
-      if (Boolean.TRUE != getClientProperty("JComboBox.isTableCellEditor")) MacUIUtil.drawComboboxFocusRing(this, g);
-    } finally {
-      myPaintingNow = false;
-    }
   }
 
   private static final class MyEditor implements ComboBoxEditor {

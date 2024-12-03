@@ -164,7 +164,7 @@ public final class Presentation implements Cloneable {
   public void setTextValue(@Nonnull LocalizeValue newTextValue) {
     LocalizeValue oldValue = myTextValue;
     myTextValue = newTextValue;
-    if(oldValue != newTextValue) {
+    if(Objects.equals(oldValue, newTextValue)) {
       fireObjectPropertyChange(PROP_TEXT, oldValue, newTextValue);
     }
   }
@@ -201,21 +201,8 @@ public final class Presentation implements Cloneable {
     setText(text, true);
   }
 
-  @Deprecated
-  @DeprecationInfo("Must be reviewed usage of this method, since changed logic for action presentation mnemonic")
-  public static String restoreTextWithMnemonic(@Nullable String text, final int mnemonic) {
-    if (text == null) {
-      return null;
-    }
-    for (int i = 0; i < text.length(); i++) {
-      if (Character.toUpperCase(text.charAt(i)) == mnemonic) {
-        return text.substring(0, i) + "_" + text.substring(i);
-      }
-    }
-    return text;
-  }
-
   @Nonnull
+  @DeprecationInfo("see #getDescriptionValue")
   public String getDescription() {
     return myDescriptionValue.getValue();
   }

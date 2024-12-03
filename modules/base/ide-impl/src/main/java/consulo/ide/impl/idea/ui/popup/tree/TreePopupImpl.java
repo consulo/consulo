@@ -1,30 +1,28 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup.tree;
 
-import consulo.application.AllIcons;
-import consulo.ui.ex.tree.AlphaComparator;
-import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ide.impl.idea.ui.popup.NextStepHandler;
+import consulo.ide.impl.idea.ui.popup.WizardPopup;
+import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeBuilder;
+import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.NodeRenderer;
+import consulo.ui.ex.awt.tree.SimpleTree;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.TreePopup;
 import consulo.ui.ex.popup.TreePopupStep;
-import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.ui.popup.NextStepHandler;
-import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import consulo.ui.ex.awt.tree.SimpleTree;
-import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeBuilder;
-import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.tree.AlphaComparator;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -429,7 +427,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
         final boolean hasNextStep = getTreeStep().hasSubstep(extractUserObject(lastPathComponent));
         if (!hasNextStep) continue;
 
-        Icon icon = TargetAWT.to(isPathSelected(eachPath) ? AllIcons.Icons.Ide.NextStep : AllIcons.Icons.Ide.NextStepInverted);
+        Icon icon = UIUtil.getMenuArrowIcon(isPathSelected(eachPath));
         final Rectangle rec = getPathBounds(eachPath);
         int x = getSize().width - icon.getIconWidth() - 1;
         int y = rec.y + (rec.height - icon.getIconWidth()) / 2;

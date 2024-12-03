@@ -48,11 +48,6 @@ class FictiveBackgroundable extends Task.Backgroundable {
     runOrInvokeLaterAboveProgress(() -> myWaiter.onSuccess(), notNull(myState, IdeaModalityState.nonModal()), (Project)myProject);
   }
 
-  @Override
-  public boolean isHeadless() {
-    return false;
-  }
-
   public void done() {
     myWaiter.done();
   }

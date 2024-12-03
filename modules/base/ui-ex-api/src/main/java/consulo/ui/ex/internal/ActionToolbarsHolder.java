@@ -16,6 +16,7 @@
 package consulo.ui.ex.internal;
 
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionToolbar;
 
 import java.util.ArrayList;
@@ -27,33 +28,33 @@ import java.util.Set;
  * @since 15/01/2023
  */
 public class ActionToolbarsHolder {
-  private static final Set<ActionToolbarEx> ourToolbars = new LinkedHashSet<>();
+    private static final Set<ActionToolbarEx> ourToolbars = new LinkedHashSet<>();
 
-  @RequiredUIAccess
-  public static void updateAllToolbarsImmediately() {
-    for (ActionToolbarEx toolbar : new ArrayList<>(ourToolbars)) {
-      toolbar.updateActionsImmediately();
-      toolbar.forEachButton(b -> {
-        if (b instanceof ActionButtonEx buttonEx) {
-          buttonEx.updateToolTipText();
-          buttonEx.updateIcon();
+    @RequiredUIAccess
+    public static void updateAllToolbarsImmediately() {
+        for (ActionToolbarEx toolbar : new ArrayList<>(ourToolbars)) {
+            toolbar.updateActionsImmediately();
+            toolbar.forEachButton(b -> {
+                if (b instanceof ActionButton button) {
+                    button.updateToolTipText();
+                    button.updateIcon();
+                }
+            });
         }
-      });
     }
-  }
 
-  @RequiredUIAccess
-  public static void add(ActionToolbarEx toolbarEx) {
-    ourToolbars.add(toolbarEx);
-  }
+    @RequiredUIAccess
+    public static void add(ActionToolbarEx toolbarEx) {
+        ourToolbars.add(toolbarEx);
+    }
 
-  @RequiredUIAccess
-  public static void remove(ActionToolbarEx toolbarEx) {
-    ourToolbars.remove(toolbarEx);
-  }
+    @RequiredUIAccess
+    public static void remove(ActionToolbarEx toolbarEx) {
+        ourToolbars.remove(toolbarEx);
+    }
 
-  @RequiredUIAccess
-  public static boolean contains(ActionToolbar toolbar) {
-    return ourToolbars.contains(toolbar);
-  }
+    @RequiredUIAccess
+    public static boolean contains(ActionToolbar toolbar) {
+        return ourToolbars.contains(toolbar);
+    }
 }

@@ -17,22 +17,15 @@ package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
-import consulo.desktop.awt.ui.plaf.LafExtendUtil;
 import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.desktop.awt.uiOld.components.fields.ExpandableTextField;
-import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ComponentEvent;
-import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.ex.awt.ComponentWithBrowseButton;
-import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.image.Image;
-import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -48,12 +41,7 @@ import java.util.function.Function;
 public class DesktopTextBoxWithExpandAction {
     @RequiredUIAccess
     public static TextBoxWithExpandAction create(@Nullable Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
-        SupportTextBoxWithExpandActionExtender extender = LafExtendUtil.getExtender(SupportTextBoxWithExpandActionExtender.class);
-        if (extender != null) {
-            return new SupportedTextBoxWithExpandAction(parser, joiner, extender);
-        }
-
-        return new FallbackTextBoxWithExpandAction(editButtonImage, dialogTitle, parser, joiner);
+        return new SupportedTextBoxWithExpandAction(parser, joiner, SupportTextBoxWithExpandActionExtender.INSTANCE);
     }
 
     private static class SupportedTextBoxWithExpandAction extends DocumentSwingValidator<String, ExpandableTextField> implements TextBoxWithExpandAction, TextBoxWithTextField {
@@ -113,7 +101,8 @@ public class DesktopTextBoxWithExpandAction {
 
         @Override
         public void setPlaceholder(@Nonnull LocalizeValue text) {
-            toAWTComponent().getEmptyText().setText(text.getValue());
+            JTextField field = toAWTComponent();
+            field.putClientProperty("JTextField.placeholderText", text == LocalizeValue.empty() ? null : text.getValue());
         }
 
         @Override
@@ -127,6 +116,18 @@ public class DesktopTextBoxWithExpandAction {
         }
 
         @Override
+        public void select(int from, int to) {
+            toAWTComponent().setCaretPosition(from);
+            toAWTComponent().moveCaretPosition(to);
+        }
+
+        @Override
+        public void moveCaretTo(int index) {
+            toAWTComponent().setCaretPosition(index);
+            toAWTComponent().moveCaretPosition(index);
+        }
+
+        @Override
         public void setEditable(boolean editable) {
             toAWTComponent().setEditable(editable);
         }
@@ -134,95 +135,6 @@ public class DesktopTextBoxWithExpandAction {
         @Override
         public boolean isEditable() {
             return toAWTComponent().isEditable();
-        }
-    }
-
-    private static class FallbackTextBoxWithExpandAction extends DocumentSwingValidator<String, ComponentWithBrowseButton<JComponent>> implements TextBoxWithTextField, TextBoxWithExpandAction {
-        private DesktopTextBoxImpl myTextBox;
-
-        private String myDialogTitle;
-
-        @RequiredUIAccess
-        private FallbackTextBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
-            myTextBox = new DesktopTextBoxImpl("");
-            myDialogTitle = StringUtil.notNullize(dialogTitle);
-
-            JTextField awtTextField = myTextBox.toAWTComponent();
-
-            initialize(new ComponentWithBrowseButton<>(awtTextField, e -> Messages.showTextAreaDialog(awtTextField, myDialogTitle, myDialogTitle, parser::apply, joiner::apply)));
-
-            addDocumentListenerForValidator(awtTextField.getDocument());
-
-            if (editButtonImage != null) {
-                toAWTComponent().setButtonIcon(editButtonImage);
-            }
-        }
-
-        @Nonnull
-        @Override
-        public JTextField getTextField() {
-            return myTextBox.getTextField();
-        }
-
-        @Nonnull
-        @Override
-        public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass, @Nonnull ComponentEventListener<C, E> listener) {
-            return myTextBox.addListener(eventClass, listener);
-        }
-
-        @Nonnull
-        @Override
-        public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
-            return myTextBox.getListenerDispatcher(eventClass);
-        }
-
-        @Override
-        public boolean hasFocus() {
-            return myTextBox.hasFocus();
-        }
-
-        @Nullable
-        @Override
-        public String getValue() {
-            return myTextBox.getValue();
-        }
-
-        @RequiredUIAccess
-        @Override
-        public void setValue(String value, boolean fireListeners) {
-            myTextBox.setValue(value, fireListeners);
-        }
-
-        @Nonnull
-        @Override
-        public TextBoxWithExpandAction withDialogTitle(@Nonnull String text) {
-            myDialogTitle = text;
-            return this;
-        }
-
-        @Override
-        public void setPlaceholder(@Nullable LocalizeValue text) {
-            myTextBox.setPlaceholder(text);
-        }
-
-        @Override
-        public void setVisibleLength(int columns) {
-            myTextBox.setVisibleLength(columns);
-        }
-
-        @Override
-        public void selectAll() {
-            myTextBox.selectAll();
-        }
-
-        @Override
-        public void setEditable(boolean editable) {
-            myTextBox.setEditable(editable);
-        }
-
-        @Override
-        public boolean isEditable() {
-            return myTextBox.isEditable();
         }
     }
 }
