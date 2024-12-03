@@ -2347,6 +2347,15 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         PushedFilePropertiesUpdaterImpl.invokeConcurrentlyIfPossible(new Exception(), myApplication, collectScanRootRunnables(processor, project, indicator));
     }
 
+    public void iterateIndexableFilesConcurrently(
+        @Nonnull ContentIterator processor,
+        @Nonnull Project project,
+        @Nonnull ProgressIndicator indicator,
+        @Nonnull Exception exception
+    ) {
+        PushedFilePropertiesUpdaterImpl.invokeConcurrentlyIfPossible(exception, myApplication, collectScanRootRunnables(processor, project, indicator));
+    }
+
     @Override
     public void iterateIndexableFiles(
         @Nonnull final ContentIterator processor,

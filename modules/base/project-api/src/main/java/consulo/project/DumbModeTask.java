@@ -48,7 +48,7 @@ public abstract class DumbModeTask implements Disposable {
     return myEquivalenceObject;
   }
 
-  public abstract void performInDumbMode(@Nonnull ProgressIndicator indicator);
+  public abstract void performInDumbMode(@Nonnull ProgressIndicator indicator, Exception trace);
 
   @Override
   public void dispose() {
