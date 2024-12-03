@@ -587,10 +587,6 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
     private static final EditorColorKey ICON_TEXT_COLOR = EditorColorKey.createColorKey("ActionButtonImpl.iconTextForeground", TargetAWT.from(UIUtil.getContextHelpForeground()));
 
-    private static int getStatusIconSize() {
-        return JBUIScale.scale(18);
-    }
-
     private final DesktopEditorMarkupModelImpl myModel;
 
     private final DesktopEditorImpl myEditor;
