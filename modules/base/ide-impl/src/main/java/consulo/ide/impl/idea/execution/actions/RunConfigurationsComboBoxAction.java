@@ -44,13 +44,6 @@ import java.util.List;
 import java.util.Map;
 
 public class RunConfigurationsComboBoxAction extends ComboBoxAction implements DumbAware {
-  @Deprecated
-  public static final Image CHECKED_ICON = ImageEffects.resize(AllIcons.Actions.Checked, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
-  @Deprecated
-  public static final Image CHECKED_SELECTED_ICON = ImageEffects.resize(AllIcons.Actions.Checked_selected, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
-  @Deprecated
-  public static final Image EMPTY_ICON = Image.empty(Image.DEFAULT_ICON_SIZE);
-
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {

@@ -590,7 +590,7 @@ public class LookupCellRenderer implements ListCellRenderer {
 
     public LookupPanel() {
       super(new BorderLayout());
-      setBorder(JBCurrentTheme.listCellBorder());
+      setBorder(JBCurrentTheme.listCellBorderFull());
     }
 
     public void setUpdateExtender(boolean updateExtender) {

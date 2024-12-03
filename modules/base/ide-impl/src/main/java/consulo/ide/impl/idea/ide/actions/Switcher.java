@@ -1431,6 +1431,7 @@ public class Switcher extends AnAction implements DumbAware {
             boolean selected,
             boolean hasFocus
         ) {
+            setBorder(JBCurrentTheme.listCellBorderFull());
             Project project = mySwitcherPanel.project;
             VirtualFile virtualFile = value.getFirst();
             String renderedName = value.getNameForRendering();
