@@ -20,23 +20,27 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import jakarta.annotation.Nonnull;
 
 // from kotlin
 public class VcsMainMenuActionGroup extends DefaultActionGroup implements DumbAware {
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
-    }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-    AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getSingleVCS();
-    if (vcs != null) {
-      e.getPresentation().setEnabledAndVisible(!vcs.isWithCustomMenu());
+        AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getSingleVCS();
+        if (vcs != null) {
+            Presentation presentation = e.getPresentation();
+
+            presentation.setTextValue(vcs.getShortNameWithMnemonic());
+            presentation.setEnabledAndVisible(!vcs.isWithCustomMenu());
+        }
     }
-  }
 }
