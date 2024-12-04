@@ -27,6 +27,7 @@ import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessNotCreatedException;
@@ -177,22 +178,8 @@ public class ExecutionUtil {
   @Nonnull
   public static Image getIconWithLiveIndicator(@Nullable Image base) {
     if (base == null) {
-      base = Image.empty(13);
+        return PlatformIconGroup.greenbadge();
     }
-
-    int width = base.getWidth();
-    int height = base.getHeight();
-
-    return ImageEffects.layered(base, ImageEffects.canvas(width, height, ctx -> {
-      int iSize = 2;
-
-      ctx.setFillStyle(StandardColors.GREEN);
-      ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
-      ctx.fill();
-
-      ctx.setStrokeStyle(StandardColors.BLACK.withAlpha(0.4f));
-      ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
-      ctx.stroke();
-    }));
+    return ImageEffects.layered(base, PlatformIconGroup.greenbadge());
   }
 }
