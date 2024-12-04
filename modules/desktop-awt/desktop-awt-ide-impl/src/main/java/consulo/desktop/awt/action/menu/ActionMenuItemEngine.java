@@ -18,7 +18,6 @@ package consulo.desktop.awt.action.menu;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
-import consulo.desktop.awt.action.PoppedIcon;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
@@ -28,7 +27,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
@@ -308,10 +306,6 @@ public class ActionMenuItemEngine {
 
                 if (icon != null && !myUseDarkIcons && shouldConvertIconToDarkVariant(currentStyle)) {
                     selectedIcon = iconLibraryManager.inverseIcon(icon);
-                }
-
-                if (action instanceof ToggleAction toggleAction && toggleAction.isSelected(myEvent)) {
-                    icon = new PoppedIcon(icon, JBUI.scale(Image.DEFAULT_ICON_SIZE), JBUI.scale(Image.DEFAULT_ICON_SIZE));
                 }
 
                 myButton.setIcon(TargetAWT.to(icon));
