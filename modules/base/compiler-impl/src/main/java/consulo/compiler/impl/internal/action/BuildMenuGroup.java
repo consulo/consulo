@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
+import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
@@ -36,7 +37,7 @@ import consulo.ui.ex.action.IdeActions;
   @ActionRef(type = AnSeparator.class),
   @ActionRef(id = "BuildArtifact")
 }, parents = @ActionParentRef(value = @ActionRef(id = IdeActions.GROUP_MAIN_MENU), anchor = ActionRefAnchor.BEFORE, relatedToAction = @ActionRef(id = IdeActions.GROUP_RUN)))
-public class BuildMenuGroup extends DefaultActionGroup {
+public class BuildMenuGroup extends DefaultActionGroup implements DumbAware {
   @Override
   public boolean isPopup() {
     return true;
