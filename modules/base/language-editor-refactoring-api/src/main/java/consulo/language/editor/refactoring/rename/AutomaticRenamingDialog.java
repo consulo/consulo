@@ -280,7 +280,7 @@ public class AutomaticRenamingDialog extends DialogWrapper {
         case CHECK_COLUMN:
           return Boolean.valueOf(myShouldRename[rowIndex]);
         case OLD_NAME_COLUMN:
-          return "<html><nobr>" + RefactoringUIUtil.getDescription(myRenames[rowIndex], true) + "</nobr></html>";
+          return "<html>" + RefactoringUIUtil.getDescription(myRenames[rowIndex], true) + "</html>";
         case NEW_NAME_COLUMN:
           return myNewNames[rowIndex];
         default:
