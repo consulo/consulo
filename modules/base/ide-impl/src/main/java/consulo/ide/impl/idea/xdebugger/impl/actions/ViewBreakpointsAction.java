@@ -23,10 +23,10 @@ package consulo.ide.impl.idea.xdebugger.impl.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -38,7 +38,7 @@ public class ViewBreakpointsAction extends AnAction implements AnAction.Transpar
     private Object myInitialBreakpoint;
 
     public ViewBreakpointsAction() {
-        super(ActionLocalize.actionViewbreakpointsText(), LocalizeValue.of(), PlatformIconGroup.debuggerViewbreakpoints());
+        super(ActionLocalize.actionViewbreakpointsText(), LocalizeValue.of(), ExecutionDebugIconGroup.breakpointMultiplebreakpoints());
     }
 
     @RequiredUIAccess

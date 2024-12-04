@@ -42,7 +42,6 @@ import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.frame.*;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.project.ui.util.ProjectUIUtil;
@@ -216,7 +215,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
             DebuggerContentInfo.WATCHES_CONTENT,
             myWatchesView.getPanel(),
             XDebuggerLocalize.debuggerSessionTabWatchesTitle().get(),
-            PlatformIconGroup.debuggerWatch(),
+            ExecutionDebugIconGroup.nodeWatch(),
             null
         );
         watchesContent.setCloseable(false);

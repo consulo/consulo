@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.unscramble;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.unscramble.*;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -405,7 +406,7 @@ public class UnscrambleDialog extends DialogWrapper {
         }
         if (ContainerUtil.find(threadDump, DEADLOCK_CONDITION) != null) {
             message = IdeLocalize.unscrambleUnscrambledDeadlockTab().get();
-            icon = PlatformIconGroup.debuggerKillprocess();
+            icon = ExecutionIconGroup.actionKillprocess();
         }
         return AnalyzeStacktraceUtil.addConsole(project, threadDump.size() > 1 ? (consoleView, toolbarActions) -> {
             ThreadDumpConsoleFactory factory = new ThreadDumpConsoleFactory(project, threadDump);
