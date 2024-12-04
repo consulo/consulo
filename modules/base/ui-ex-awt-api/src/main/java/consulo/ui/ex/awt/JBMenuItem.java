@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 
 import javax.swing.*;
@@ -23,6 +24,8 @@ import java.awt.*;
 /**
  * @author ignatov
  */
+@Deprecated
+@DeprecationInfo("Use new UI")
 public class JBMenuItem extends JMenuItem {
   public JBMenuItem(String message) {
     super(message);
