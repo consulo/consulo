@@ -188,6 +188,6 @@ public class IndexInfrastructure {
   }
 
   public static boolean hasIndices() {
-    return false;
+    return true;
   }
 }
