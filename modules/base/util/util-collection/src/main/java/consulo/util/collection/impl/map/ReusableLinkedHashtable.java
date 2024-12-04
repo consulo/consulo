@@ -17,7 +17,7 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.ImmutableLinkedHashMap;
+import consulo.util.collection.ReusableImmutableLinkedHashMap;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ import java.util.function.Consumer;
  * hash-table resize. Also during resize we don't compare keys by .equals() but only by ==. This prevents calling any methods
  * on key objects which could produce exceptions during resize (which is undesirable since resize may occur asynchronously after GC).</p>
  *
- * <p>This class is intended to work in pair with {@link ImmutableLinkedHashMap}. There may be several {@code ImmutableLinkedHashMap}s
+ * <p>This class is intended to work in pair with {@link ReusableImmutableLinkedHashMap}. There may be several {@code ImmutableLinkedHashMap}s
  * pointing to the same {@code ReusableLinkedHashtable}. Only one of {@code ImmutableLinkedHashMap}s would have all the key/value
  * entries of the whole hash-table. This map is called master-map. Other maps are sattelites.</p>
  *
@@ -56,7 +56,7 @@ import java.util.function.Consumer;
  * If there's no master-map present, hash-table detaches all the remaining sattelite maps preventing memory leaks.</p>
  *
  * @author UNV
- * @see ImmutableLinkedHashMap
+ * @see ReusableImmutableLinkedHashMap
  * @see HashingStrategy
  * @since 2024-11-20
  */
