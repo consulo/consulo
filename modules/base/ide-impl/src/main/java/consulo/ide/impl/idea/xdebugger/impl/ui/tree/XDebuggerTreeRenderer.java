@@ -66,6 +66,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
     final int row,
     final boolean hasFocus
   ) {
+    setBorder(JBCurrentTheme.listCellBorderSemi());
     myHaveLink = false;
     myLink.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
     XDebuggerTreeNode node = (XDebuggerTreeNode)value;

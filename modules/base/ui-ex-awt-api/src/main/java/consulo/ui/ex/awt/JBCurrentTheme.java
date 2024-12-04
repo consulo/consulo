@@ -601,6 +601,11 @@ public class JBCurrentTheme {
     }
 
     @Nonnull
+    public static Border listCellBorderSemi() {
+        return JBUI.Borders.empty(3, 4);
+    }
+
+    @Nonnull
     public static Border listCellBorderFull() {
         return JBUI.Borders.empty(4);
     }
