@@ -21,6 +21,7 @@ import consulo.ui.image.Image;
 /**
  * Better use PlatformIconGroup
  */
+@Deprecated
 public class AllIcons {
 
   public static class Actions {
@@ -110,7 +111,6 @@ public class AllIcons {
     public static final Image Restart = PlatformIconGroup.actionsRestart(); // 16x16
     public static final Image Resume = PlatformIconGroup.actionsResume(); // 16x16
     public static final Image Rollback = PlatformIconGroup.actionsRollback(); // 16x16
-    public static final Image RunToCursor = PlatformIconGroup.actionsRuntocursor(); // 16x16
     public static final Image Run_anything = PlatformIconGroup.actionsRun_anything();
     public static final Image Scratch = PlatformIconGroup.actionsScratch(); // 16x16
     public static final Image Search = PlatformIconGroup.actionsSearch(); // 16x16
@@ -129,7 +129,6 @@ public class AllIcons {
     public static final Image ShowWriteAccess = PlatformIconGroup.actionsShowwriteaccess(); // 16x16
     public static final Image SplitHorizontally = PlatformIconGroup.actionsSplithorizontally(); // 16x16
     public static final Image SplitVertically = PlatformIconGroup.actionsSplitvertically(); // 16x16
-    public static final Image StartDebugger = PlatformIconGroup.actionsStartdebugger(); // 16x16
     public static final Image StepOut = PlatformIconGroup.actionsStepout(); // 16x16
     public static final Image Suspend = PlatformIconGroup.actionsSuspend(); // 16x16
     public static final Image SwapPanels = PlatformIconGroup.actionsSwappanels(); // 16x16
@@ -194,107 +193,6 @@ public class AllIcons {
      * 16x16
      */
     public static final Image PreserveCaseSelected = PlatformIconGroup.actionsPreservecaseselected();
-  }
-
-  public static class Debugger {
-
-    public static class Actions {
-      public static final Image Force_run_to_cursor = PlatformIconGroup.debuggerActionsForce_run_to_cursor(); // 16x16
-      public static final Image Force_step_into = PlatformIconGroup.debuggerActionsForce_step_into(); // 16x16
-      public static final Image Force_step_over = PlatformIconGroup.debuggerActionsForce_step_over(); // 16x16
-    }                                                                      
-
-    public static final Image AddToWatch = PlatformIconGroup.debuggerAddtowatch(); // 16x16
-    public static final Image AutoVariablesMode = PlatformIconGroup.debuggerAutovariablesmode(); // 16x16
-    public static final Image BreakpointAlert = PlatformIconGroup.debuggerBreakpointalert(); // 16x16
-    public static final Image CommandLine = PlatformIconGroup.debuggerCommandline(); // 16x16
-    public static final Image Console = PlatformIconGroup.debuggerConsole(); // 16x16
-    public static final Image Db_array = PlatformIconGroup.debuggerDb_array(); // 16x16
-    public static final Image Db_db_object = PlatformIconGroup.debuggerDb_db_object(); // 16x16
-    public static final Image Db_dep_exception_breakpoint = PlatformIconGroup.debuggerDb_dep_exception_breakpoint(); // 12x12
-    public static final Image Db_dep_field_breakpoint = PlatformIconGroup.debuggerDb_dep_field_breakpoint(); // 12x12
-    public static final Image Db_dep_line_breakpoint = PlatformIconGroup.debuggerDb_dep_line_breakpoint(); // 12x12
-    public static final Image Db_dep_method_breakpoint = PlatformIconGroup.debuggerDb_dep_method_breakpoint(); // 12x12
-    public static final Image Db_disabled_breakpoint = PlatformIconGroup.debuggerDb_disabled_breakpoint(); // 12x12
-    public static final Image Db_disabled_breakpoint_process = PlatformIconGroup.debuggerDb_disabled_breakpoint_process(); // 16x16
-    public static final Image Db_disabled_exception_breakpoint = PlatformIconGroup.debuggerDb_disabled_exception_breakpoint(); // 12x12
-    public static final Image Db_disabled_field_breakpoint = PlatformIconGroup.debuggerDb_disabled_field_breakpoint(); // 12x12
-    public static final Image Db_disabled_method_breakpoint = PlatformIconGroup.debuggerDb_disabled_method_breakpoint(); // 12x12
-    public static final Image Db_exception_breakpoint = PlatformIconGroup.debuggerDb_exception_breakpoint(); // 12x12
-    public static final Image Db_field_breakpoint = PlatformIconGroup.debuggerDb_field_breakpoint(); // 12x12
-    public static final Image Db_field_warning_breakpoint = PlatformIconGroup.debuggerDb_field_warning_breakpoint(); // 16x16
-    public static final Image Db_invalid_breakpoint = PlatformIconGroup.debuggerDb_invalid_breakpoint(); // 12x12
-    public static final Image Db_invalid_field_breakpoint = PlatformIconGroup.debuggerDb_invalid_field_breakpoint(); // 12x12
-    public static final Image Db_invalid_method_breakpoint = PlatformIconGroup.debuggerDb_invalid_method_breakpoint(); // 12x12
-    public static final Image Db_method_breakpoint = PlatformIconGroup.debuggerDb_method_breakpoint(); // 12x12
-    public static final Image Db_method_warning_breakpoint = PlatformIconGroup.debuggerDb_method_warning_breakpoint(); // 16x16
-    public static final Image Db_muted_breakpoint = PlatformIconGroup.debuggerDb_muted_breakpoint(); // 12x12
-    public static final Image Db_muted_dep_exception_breakpoint = PlatformIconGroup.debuggerDb_muted_dep_exception_breakpoint(); // 12x12
-    public static final Image Db_muted_dep_field_breakpoint = PlatformIconGroup.debuggerDb_muted_dep_field_breakpoint(); // 12x12
-    public static final Image Db_muted_dep_line_breakpoint = PlatformIconGroup.debuggerDb_muted_dep_line_breakpoint(); // 12x12
-    public static final Image Db_muted_dep_method_breakpoint = PlatformIconGroup.debuggerDb_muted_dep_method_breakpoint(); // 12x12
-    public static final Image Db_muted_disabled_breakpoint = PlatformIconGroup.debuggerDb_muted_disabled_breakpoint(); // 12x12
-    public static final Image Db_muted_disabled_breakpoint_process = PlatformIconGroup.debuggerDb_muted_disabled_breakpoint_process(); // 16x16
-    public static final Image Db_muted_disabled_exception_breakpoint = PlatformIconGroup.debuggerDb_muted_disabled_exception_breakpoint(); // 12x12
-    public static final Image Db_muted_disabled_field_breakpoint = PlatformIconGroup.debuggerDb_muted_disabled_field_breakpoint(); // 12x12
-    public static final Image Db_muted_disabled_method_breakpoint = PlatformIconGroup.debuggerDb_muted_disabled_method_breakpoint(); // 12x12
-    public static final Image Db_muted_exception_breakpoint = PlatformIconGroup.debuggerDb_muted_exception_breakpoint(); // 12x12
-    public static final Image Db_muted_field_breakpoint = PlatformIconGroup.debuggerDb_muted_field_breakpoint(); // 12x12
-    public static final Image Db_muted_field_warning_breakpoint = PlatformIconGroup.debuggerDb_muted_field_warning_breakpoint(); // 16x16
-    public static final Image Db_muted_invalid_breakpoint = PlatformIconGroup.debuggerDb_muted_invalid_breakpoint(); // 12x12
-    public static final Image Db_muted_invalid_field_breakpoint = PlatformIconGroup.debuggerDb_muted_invalid_field_breakpoint(); // 12x12
-    public static final Image Db_muted_invalid_method_breakpoint = PlatformIconGroup.debuggerDb_muted_invalid_method_breakpoint(); // 12x12
-    public static final Image Db_muted_method_breakpoint = PlatformIconGroup.debuggerDb_muted_method_breakpoint(); // 12x12
-    public static final Image Db_muted_method_warning_breakpoint = PlatformIconGroup.debuggerDb_muted_method_warning_breakpoint(); // 16x16
-    public static final Image Db_muted_temporary_breakpoint = PlatformIconGroup.debuggerDb_muted_temporary_breakpoint(); // 12x12
-    public static final Image Db_muted_verified_breakpoint = PlatformIconGroup.debuggerDb_muted_verified_breakpoint(); // 12x12
-    public static final Image Db_muted_verified_field_breakpoint = PlatformIconGroup.debuggerDb_muted_verified_field_breakpoint(); // 12x12
-    public static final Image Db_muted_verified_method_breakpoint = PlatformIconGroup.debuggerDb_muted_verified_method_breakpoint(); // 12x12
-    public static final Image Db_muted_verified_warning_breakpoint = PlatformIconGroup.debuggerDb_muted_verified_warning_breakpoint(); // 16x16
-    public static final Image Db_obsolete = PlatformIconGroup.debuggerDb_obsolete(); // 12x12
-    public static final Image Db_primitive = PlatformIconGroup.debuggerDb_primitive(); // 16x16
-    public static final Image Db_set_breakpoint = PlatformIconGroup.debuggerDb_set_breakpoint(); // 12x12
-    public static final Image Db_temporary_breakpoint = PlatformIconGroup.debuggerDb_temporary_breakpoint(); // 12x12
-    public static final Image Db_verified_breakpoint = PlatformIconGroup.debuggerDb_verified_breakpoint(); // 12x12
-    public static final Image Db_verified_field_breakpoint = PlatformIconGroup.debuggerDb_verified_field_breakpoint(); // 12x12
-    public static final Image Db_verified_method_breakpoint = PlatformIconGroup.debuggerDb_verified_method_breakpoint(); // 12x12
-    public static final Image Db_verified_warning_breakpoint = PlatformIconGroup.debuggerDb_verified_warning_breakpoint(); // 16x16
-    public static final Image Disable_value_calculation = PlatformIconGroup.debuggerDisable_value_calculation(); // 16x16
-    public static final Image EvaluateExpression = PlatformIconGroup.debuggerEvaluateexpression(); // 16x16
-    public static final Image Frame = PlatformIconGroup.debuggerFrame(); // 16x16
-    public static final Image KillProcess = PlatformIconGroup.debuggerKillprocess(); // 16x16
-    public static final Image LambdaBreakpoint = PlatformIconGroup.debuggerLambdabreakpoint(); // 12x12
-
-    public static class MemoryView {
-      public static final Image Active = PlatformIconGroup.debuggerMemoryviewActive(); // 13x13
-    }
-
-    public static final Image MuteBreakpoints = PlatformIconGroup.debuggerMutebreakpoints(); // 16x16
-    public static final Image Question_badge = PlatformIconGroup.debuggerQuestion_badge(); // 6x9
-    public static final Image RestoreLayout = PlatformIconGroup.debuggerRestorelayout(); // 16x16
-    public static final Image Selfreference = PlatformIconGroup.debuggerSelfreference(); // 16x16
-    public static final Image ShowCurrentFrame = PlatformIconGroup.debuggerShowcurrentframe(); // 16x16
-    public static final Image ThreadAtBreakpoint = PlatformIconGroup.debuggerThreadatbreakpoint(); // 16x16
-    public static final Image ThreadCurrent = PlatformIconGroup.debuggerThreadcurrent(); // 16x16
-    public static final Image ThreadFrozen = PlatformIconGroup.debuggerThreadfrozen(); // 16x16
-    public static final Image ThreadGroup = PlatformIconGroup.debuggerThreadgroup(); // 16x16
-    public static final Image ThreadGroupCurrent = PlatformIconGroup.debuggerThreadgroupcurrent(); // 16x16
-    public static final Image ThreadRunning = PlatformIconGroup.debuggerThreadrunning(); // 16x16
-    public static final Image Threads = PlatformIconGroup.debuggerThreads(); // 16x16
-
-    public static class ThreadStates {
-      public static final Image Daemon_sign = PlatformIconGroup.debuggerThreadstatesDaemon_sign(); // 16x16
-      public static final Image Idle = PlatformIconGroup.debuggerThreadstatesIdle(); // 16x16
-      public static final Image Socket = PlatformIconGroup.debuggerThreadstatesSocket(); // 16x16
-
-    }
-
-    public static final Image ThreadSuspended = PlatformIconGroup.debuggerThreadsuspended(); // 16x16
-    public static final Image Value = PlatformIconGroup.debuggerValue(); // 16x16
-    public static final Image ViewBreakpoints = PlatformIconGroup.debuggerViewbreakpoints(); // 16x16
-    public static final Image Watch = PlatformIconGroup.debuggerWatch(); // 16x16
-    public static final Image WatchLastReturnValue = PlatformIconGroup.debuggerWatchlastreturnvalue(); // 16x16
-
   }
 
   public static class Diff {
@@ -753,7 +651,6 @@ public class AllIcons {
     public static final Image ToolWindowChanges = PlatformIconGroup.toolwindowsToolwindowchanges(); // 13x13
     public static final Image ToolWindowCommander = PlatformIconGroup.toolwindowsToolwindowcommander(); // 13x13
     public static final Image ToolWindowCoverage = PlatformIconGroup.toolwindowsToolwindowcoverage(); // 13x13
-    public static final Image ToolWindowDebugger = PlatformIconGroup.toolwindowsToolwindowdebugger(); // 13x13
     public static final Image ToolWindowFind = PlatformIconGroup.toolwindowsToolwindowfind(); // 13x13
     public static final Image ToolWindowHierarchy = PlatformIconGroup.toolwindowsToolwindowhierarchy(); // 13x13
     public static final Image ToolWindowInspection = PlatformIconGroup.toolwindowsToolwindowinspection(); // 13x13

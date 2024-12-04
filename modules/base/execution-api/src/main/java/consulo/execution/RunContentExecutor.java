@@ -1,6 +1,5 @@
 package consulo.execution;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.disposer.Disposable;
@@ -24,9 +23,9 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -182,7 +181,7 @@ public class RunContentExecutor implements Disposable {
 
   private class RerunAction extends AnAction {
     public RerunAction(JComponent consolePanel) {
-      super("Rerun", "Rerun", AllIcons.Actions.Restart);
+      super("Rerun", "Rerun", PlatformIconGroup.actionsRestart());
       registerCustomShortcutSet(CommonShortcuts.getRerun(), consolePanel);
     }
 
@@ -207,7 +206,7 @@ public class RunContentExecutor implements Disposable {
 
   private class StopAction extends AnAction implements DumbAware {
     public StopAction() {
-      super("Stop", "Stop", AllIcons.Actions.Suspend);
+      super("Stop", "Stop", PlatformIconGroup.actionsSuspend());
     }
 
     @RequiredUIAccess

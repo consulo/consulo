@@ -15,23 +15,32 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesView;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.WatchesRootNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class XNewWatchAction extends XWatchesTreeActionBase {
-  @Override
-  protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
-    XDebuggerTreeNode root = tree.getRoot();
-    if (root instanceof WatchesRootNode) {
-      final WatchesRootNode watchesRoot = (WatchesRootNode)root;
-      watchesRoot.addNewWatch();
+    @Override
+    protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
+        XDebuggerTreeNode root = tree.getRoot();
+        if (root instanceof WatchesRootNode) {
+            final WatchesRootNode watchesRoot = (WatchesRootNode) root;
+            watchesRoot.addNewWatch();
+        }
     }
-  }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return ExecutionDebugIconGroup.actionAddtowatch();
+    }
 }

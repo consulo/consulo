@@ -15,57 +15,68 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class MuteBreakpointAction extends ToggleAction {
-  @Override
-  public boolean isSelected(final AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
-        DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
-        if (handler.isEnabled(project, e)) {
-          return handler.isSelected(project, e);
+    @Override
+    public boolean isSelected(final AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project != null) {
+            for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
+                DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
+                if (handler.isEnabled(project, e)) {
+                    return handler.isSelected(project, e);
+                }
+            }
         }
-      }
+        return false;
     }
-    return false;
-  }
 
-  @Override
-  public void setSelected(final AnActionEvent e, final boolean state) {
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
-        DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
-        if (handler.isEnabled(project, e)) {
-          handler.setSelected(project, e, state);
-          return;
+    @Override
+    public void setSelected(final AnActionEvent e, final boolean state) {
+        Project project = e.getData(Project.KEY);
+        if (project != null) {
+            for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
+                DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
+                if (handler.isEnabled(project, e)) {
+                    handler.setSelected(project, e, state);
+                    return;
+                }
+            }
         }
-      }
     }
-  }
 
-  @Override
-  public void update(@Nonnull final AnActionEvent e) {
-    super.update(e);
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
-        DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
-        if (handler.isEnabled(project, e)) {
-          e.getPresentation().setEnabled(true);
-          return;
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull final AnActionEvent e) {
+        super.update(e);
+        Project project = e.getData(Project.KEY);
+        if (project != null) {
+            for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
+                DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
+                if (handler.isEnabled(project, e)) {
+                    e.getPresentation().setEnabled(true);
+                    return;
+                }
+            }
         }
-      }
+        e.getPresentation().setEnabled(false);
     }
-    e.getPresentation().setEnabled(false);
-  }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return ExecutionDebugIconGroup.breakpointMultiplebreakpointsmuted();
+    }
 }

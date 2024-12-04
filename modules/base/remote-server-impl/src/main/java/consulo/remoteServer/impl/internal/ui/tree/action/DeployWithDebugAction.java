@@ -2,7 +2,7 @@
 package consulo.remoteServer.impl.internal.ui.tree.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.remoteServer.impl.internal.ui.tree.DeploymentNode;
 import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -17,7 +17,10 @@ import static consulo.remoteServer.impl.internal.util.ApplicationActionUtils.get
 @ActionImpl(id = "Servers.DeployWithDebug")
 public class DeployWithDebugAction extends DumbAwareAction {
     public DeployWithDebugAction() {
-        super(RemoteServerLocalize.actionServersDeploywithdebugText(), RemoteServerLocalize.actionServersDeploywithdebugDescription(), PlatformIconGroup.actionsStartdebugger());
+        super(RemoteServerLocalize.actionServersDeploywithdebugText(),
+            RemoteServerLocalize.actionServersDeploywithdebugDescription(),
+            ExecutionDebugIconGroup.actionStartdebugger()
+        );
     }
 
     @RequiredUIAccess

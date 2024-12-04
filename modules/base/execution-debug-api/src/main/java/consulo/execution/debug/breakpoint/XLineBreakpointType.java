@@ -18,12 +18,12 @@ package consulo.execution.debug.breakpoint;
 
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
+import consulo.document.util.TextRange;
 import consulo.execution.debug.XDebugProcess;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
-import consulo.document.util.TextRange;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
@@ -31,11 +31,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -97,8 +97,9 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     return Collections.emptyList();
   }
 
+  @Nonnull
   public Image getTemporaryIcon() {
-    return AllIcons.Debugger.Db_temporary_breakpoint;
+    return ExecutionDebugIconGroup.breakpointBreakpoint();
   }
 
   /**

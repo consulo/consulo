@@ -20,53 +20,56 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class ViewBreakpointsAction extends AnAction implements AnAction.TransparentUpdate, DumbAware {
-  private Object myInitialBreakpoint;
+    private Object myInitialBreakpoint;
 
-  public ViewBreakpointsAction(){
-    this(ActionLocalize.actionViewbreakpointsText().get(), null);
-  }
-
-  public ViewBreakpointsAction(String name, Object initialBreakpoint) {
-    super(name);
-    myInitialBreakpoint = initialBreakpoint;
-  }
-
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null) return;
-
-    if (myInitialBreakpoint == null) {
-      Editor editor = dataContext.getData(Editor.KEY);
-      if (editor != null) {
-        myInitialBreakpoint = XBreakpointUtil.findSelectedBreakpoint(project, editor).second;
-      }
+    public ViewBreakpointsAction() {
+        super(ActionLocalize.actionViewbreakpointsText(), LocalizeValue.of(), PlatformIconGroup.debuggerViewbreakpoints());
     }
 
-    BreakpointsDialogFactory.getInstance(project).showDialog(myInitialBreakpoint);
-    myInitialBreakpoint = null;
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-  public void update(AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    Project project = event.getDataContext().getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+        if (myInitialBreakpoint == null) {
+            Editor editor = dataContext.getData(Editor.KEY);
+            if (editor != null) {
+                myInitialBreakpoint = XBreakpointUtil.findSelectedBreakpoint(project, editor).second;
+            }
+        }
+
+        BreakpointsDialogFactory.getInstance(project).showDialog(myInitialBreakpoint);
+        myInitialBreakpoint = null;
     }
-    presentation.setEnabled(true);
-  }
 
+    @RequiredUIAccess
+    @Override
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getDataContext().getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        presentation.setEnabled(true);
+    }
 }

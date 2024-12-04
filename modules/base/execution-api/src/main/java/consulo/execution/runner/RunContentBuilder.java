@@ -15,7 +15,6 @@
  */
 package consulo.execution.runner;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposer;
@@ -25,6 +24,7 @@ import consulo.execution.configuration.ExecutionSearchScopeProvider;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.executor.Executor;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.ExecutionConsoleEx;
 import consulo.execution.ui.RunContentDescriptor;
@@ -39,10 +39,10 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.action.ToolWindowActions;
 import consulo.util.collection.SmartList;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -160,7 +160,7 @@ public class RunContentBuilder extends RunTab {
 
   public static void buildConsoleUiDefault(RunnerLayoutUi ui, final ExecutionConsole console) {
     final Content consoleContent = ui.createContent(ExecutionConsole.CONSOLE_CONTENT_ID, console.getComponent(), "Console",
-                                                    AllIcons.Debugger.Console,
+                                                    ExecutionIconGroup.console(),
                                                     console.getPreferredFocusableComponent());
 
     consoleContent.setCloseable(false);

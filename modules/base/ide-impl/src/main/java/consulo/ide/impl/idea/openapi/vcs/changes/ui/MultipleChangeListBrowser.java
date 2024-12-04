@@ -19,13 +19,12 @@ import consulo.application.AllIcons;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.UnversionedViewDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackDialogAction;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -41,10 +40,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.*;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserUnversionedFilesNode;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -444,7 +440,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   private class ShowHideUnversionedFilesAction extends ToggleAction {
 
     private ShowHideUnversionedFilesAction() {
-      super("Show Unversioned Files", null, AllIcons.Debugger.Disable_value_calculation);
+      super("Show Unversioned Files", null, PlatformIconGroup.processStop());
     }
 
     @Override

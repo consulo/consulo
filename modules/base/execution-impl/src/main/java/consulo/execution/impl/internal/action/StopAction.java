@@ -5,6 +5,7 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunProfile;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.impl.internal.ExecutionManagerImpl;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.RunContentDescriptor;
@@ -78,7 +79,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
         }
         else if (processHandler instanceof KillableProcessHandler && ((KillableProcessHandler)processHandler).canKillProcess()) {
           enable = true;
-          icon = AllIcons.Debugger.KillProcess;
+          icon = ExecutionIconGroup.actionKillprocess();
           description = ExecutionLocalize.actionTerminatingProcessProgressKillDescription();
         }
       }

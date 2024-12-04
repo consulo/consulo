@@ -16,7 +16,6 @@
 
 package consulo.execution.debug;
 
-import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.debug.breakpoint.XBreakpoint;
@@ -36,9 +35,9 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.event.HyperlinkListener;
 
 /**
@@ -107,7 +106,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
    * Call this method to setup custom icon and/or error message (it will be shown in tooltip) for breakpoint
    *
    * @param breakpoint   breakpoint
-   * @param icon         icon (<code>null</code> if default icon should be used). You can use icons from {@link AllIcons.Debugger}
+   * @param icon         icon (<code>null</code> if default icon should be used). You can use icons from {@link consulo.execution.debug.icon.ExecutionDebugIconGroup}
    * @param errorMessage an error message if breakpoint isn't successfully registered
    */
   void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);

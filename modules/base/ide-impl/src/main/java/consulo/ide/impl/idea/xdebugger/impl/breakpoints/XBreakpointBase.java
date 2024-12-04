@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.markup.GutterDraggableObject;
 import consulo.codeEditor.markup.GutterIconRenderer;
@@ -24,6 +23,7 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.*;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
@@ -415,7 +415,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         if (!XDebuggerUtil.getInstance().isEmptyExpression(getConditionExpression())) {
             myIcon = ImageEffects.canvas(icon.getWidth(), icon.getHeight(), ctx -> {
                 ctx.drawImage(icon, 0, 0);
-                ctx.drawImage(AllIcons.Debugger.Question_badge, 7, 6, 3, 7);
+                ctx.drawImage(ExecutionDebugIconGroup.breakpointQuestionbadge(), 7, 6, 7, 10);
             });
         }
         else {

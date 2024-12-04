@@ -32,6 +32,7 @@ import consulo.execution.debug.event.XBreakpointListener;
 import consulo.execution.debug.event.XDebugSessionListener;
 import consulo.execution.debug.event.XDebuggerManagerListener;
 import consulo.execution.debug.frame.*;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.step.XSmartStepIntoVariant;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
@@ -681,7 +682,7 @@ public class XDebugSessionImpl implements XDebugSession {
 
   @Override
   public void setBreakpointInvalid(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable String errorMessage) {
-    updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, errorMessage);
+    updateBreakpointPresentation(breakpoint, ExecutionDebugIconGroup.breakpointBreakpointinvalid(), errorMessage);
   }
 
   @Override

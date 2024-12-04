@@ -3,18 +3,18 @@ package consulo.ide.impl.idea.xdebugger.impl.actions;
 
 import consulo.execution.debug.attach.XAttachDebuggerProvider;
 import consulo.execution.debug.attach.XAttachHostProvider;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.localize.XDebuggerLocalize;
-import consulo.platform.base.icon.PlatformIconGroup;
 
 public class AttachToProcessAction extends AttachToProcessActionBase {
-  public AttachToProcessAction() {
-    super(
-      XDebuggerLocalize.xdebuggerAttachAction(),
-      XDebuggerLocalize.xdebuggerAttachActionDescription(),
-      PlatformIconGroup.debuggerAttachtoprocess(),
-      () -> XAttachDebuggerProvider.getAttachDebuggerProviders(),
-      () -> XAttachHostProvider.EP.getExtensionList(),
-      XDebuggerLocalize.xdebuggerAttachPopupSelectdebuggerTitle().get()
-    );
-  }
+    public AttachToProcessAction() {
+        super(
+            XDebuggerLocalize.xdebuggerAttachAction(),
+            XDebuggerLocalize.xdebuggerAttachActionDescription(),
+            ExecutionDebugIconGroup.actionAttachtoprocess(),
+            () -> XAttachDebuggerProvider.getAttachDebuggerProviders(),
+            () -> XAttachHostProvider.EP.getExtensionList(),
+            XDebuggerLocalize.xdebuggerAttachPopupSelectdebuggerTitle().get()
+        );
+    }
 }

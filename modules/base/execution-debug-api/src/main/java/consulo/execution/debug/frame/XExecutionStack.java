@@ -15,13 +15,13 @@
  */
 package consulo.execution.debug.frame;
 
-import consulo.application.AllIcons;
-import consulo.execution.debug.Obsolescent;
 import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.execution.debug.Obsolescent;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -39,7 +39,7 @@ public abstract class XExecutionStack {
    * @param displayName presentable name of the thread to be shown in the combobox in 'Frames' tab
    */
   protected XExecutionStack(final String displayName) {
-    this(displayName, AllIcons.Debugger.ThreadSuspended);
+    this(displayName, ExecutionDebugIconGroup.threadThreadsuspended());
   }
 
   /**

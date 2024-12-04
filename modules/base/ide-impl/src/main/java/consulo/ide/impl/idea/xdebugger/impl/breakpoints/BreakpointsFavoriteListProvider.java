@@ -22,6 +22,7 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.bookmark.ui.view.AbstractFavoritesListProvider;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
@@ -217,7 +218,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
                                 int row,
                                 boolean hasFocus) {
     renderer.clear();
-    renderer.setIcon(AllIcons.Debugger.Db_set_breakpoint);
+    renderer.setIcon(ExecutionDebugIconGroup.breakpointBreakpoint());
     if (value instanceof BreakpointItem) {
       BreakpointItem breakpointItem = (BreakpointItem)value;
       breakpointItem.setupGenericRenderer(renderer, true);

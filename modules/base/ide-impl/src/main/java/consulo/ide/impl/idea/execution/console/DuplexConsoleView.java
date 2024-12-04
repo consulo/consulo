@@ -22,6 +22,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.console.*;
 import consulo.execution.ui.console.language.LanguageConsoleView;
@@ -29,7 +30,6 @@ import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.ui.ex.action.AnAction;
@@ -326,7 +326,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
   private class SwitchDuplexConsoleViewAction extends ToggleAction implements DumbAware {
 
     public SwitchDuplexConsoleViewAction() {
-      super(ExecutionLocalize.runConfigurationShowCommandLineActionName(), LocalizeValue.empty(), PlatformIconGroup.debuggerConsole());
+      super(ExecutionLocalize.runConfigurationShowCommandLineActionName(), LocalizeValue.empty(), ExecutionIconGroup.console());
     }
 
     @Override

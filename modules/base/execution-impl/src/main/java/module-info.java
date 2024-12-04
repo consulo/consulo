@@ -33,6 +33,8 @@ module consulo.execution.impl {
     consulo.ide.impl,
     consulo.desktop.awt.ide.impl;
 
+  exports consulo.execution.impl.internal.dashboard.action to consulo.execution.debug.impl;
+
   opens consulo.execution.impl.internal.ui.layout.action to consulo.component.impl;
 
   opens consulo.execution.impl.internal.action to consulo.component.impl;

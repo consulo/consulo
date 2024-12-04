@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
 
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesView;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
@@ -24,7 +25,9 @@ import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This action works only in the variables view
@@ -32,35 +35,41 @@ import jakarta.annotation.Nonnull;
  * @see consulo.ide.impl.idea.xdebugger.impl.actions.AddToWatchesAction
  */
 public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
-  @Override
-  protected boolean isEnabled(@Nonnull final XValueNodeImpl node, @Nonnull AnActionEvent e) {
-    return super.isEnabled(node, e) && DebuggerUIUtil.hasEvaluationExpression(node.getValueContainer()) && getWatchesView(e) != null;
-  }
-
-  @Override
-  protected void perform(final XValueNodeImpl node, @Nonnull final String nodeName, final AnActionEvent e) {
-    final XWatchesView watchesView = getWatchesView(e);
-    if (watchesView != null) {
-      node.getValueContainer().calculateEvaluationExpression().doWhenDone(expression -> {
-        if (expression != null) {
-          watchesView.addWatchExpression(expression, -1, true);
-        }
-      });
+    @Override
+    protected boolean isEnabled(@Nonnull final XValueNodeImpl node, @Nonnull AnActionEvent e) {
+        return super.isEnabled(node, e) && DebuggerUIUtil.hasEvaluationExpression(node.getValueContainer()) && getWatchesView(e) != null;
     }
-  }
 
-  private static XWatchesView getWatchesView(@Nonnull AnActionEvent e) {
-    XWatchesView view = e.getData(XWatchesView.DATA_KEY);
-    Project project = e.getData(Project.KEY);
-    if (view == null && project != null) {
-      XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
-      if (session != null) {
-        XDebugSessionTab tab = ((XDebugSessionImpl)session).getSessionTab();
-        if (tab != null) {
-          return tab.getWatchesView();
+    @Override
+    protected void perform(final XValueNodeImpl node, @Nonnull final String nodeName, final AnActionEvent e) {
+        final XWatchesView watchesView = getWatchesView(e);
+        if (watchesView != null) {
+            node.getValueContainer().calculateEvaluationExpression().doWhenDone(expression -> {
+                if (expression != null) {
+                    watchesView.addWatchExpression(expression, -1, true);
+                }
+            });
         }
-      }
     }
-    return view;
-  }
+
+    private static XWatchesView getWatchesView(@Nonnull AnActionEvent e) {
+        XWatchesView view = e.getData(XWatchesView.DATA_KEY);
+        Project project = e.getData(Project.KEY);
+        if (view == null && project != null) {
+            XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
+            if (session != null) {
+                XDebugSessionTab tab = ((XDebugSessionImpl) session).getSessionTab();
+                if (tab != null) {
+                    return tab.getWatchesView();
+                }
+            }
+        }
+        return view;
+    }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return ExecutionDebugIconGroup.actionAddtowatch();
+    }
 }

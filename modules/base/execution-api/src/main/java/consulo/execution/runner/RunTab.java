@@ -15,7 +15,6 @@
  */
 package consulo.execution.runner;
 
-import consulo.application.AllIcons;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
@@ -25,6 +24,7 @@ import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.log.LogConsoleManagerBase;
 import consulo.execution.configuration.log.LogFilesManager;
 import consulo.execution.configuration.log.OutputFileUtil;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.layout.RunnerLayoutUi;
@@ -102,7 +102,7 @@ public abstract class RunTab implements DataProvider, Disposable {
       logConsoleManager = new LogConsoleManagerBase(myProject, mySearchScope) {
         @Override
         protected Image getDefaultIcon() {
-          return AllIcons.Debugger.Console;
+          return ExecutionIconGroup.console();
         }
 
         @Override

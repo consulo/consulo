@@ -15,20 +15,29 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class AddToWatchesAction extends XDebuggerActionBase {
-  public AddToWatchesAction() {
-    super(true);
-  }
+    public AddToWatchesAction() {
+        super(true);
+    }
 
-  @Nonnull
-  @Override
-  protected DebuggerActionHandler getHandler(@Nonnull DebuggerSupport debuggerSupport) {
-    return debuggerSupport.getAddToWatchesActionHandler();
-  }
+    @Nonnull
+    @Override
+    protected DebuggerActionHandler getHandler(@Nonnull DebuggerSupport debuggerSupport) {
+        return debuggerSupport.getAddToWatchesActionHandler();
+    }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return ExecutionDebugIconGroup.actionAddtowatch();
+    }
 }

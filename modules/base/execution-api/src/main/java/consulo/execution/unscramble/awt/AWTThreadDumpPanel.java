@@ -45,26 +45,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static consulo.application.AllIcons.Debugger.ThreadStates.Idle;
-
 /**
  * @author Jeka
  * @author Konstantin Bulenkov
  */
 public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
-    private static final Image PAUSE_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.actionsPause(), PlatformIconGroup.debuggerThreadstatesDaemon_sign());
-    private static final Image LOCKED_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.debuggerMutebreakpoints(),
-        PlatformIconGroup.debuggerThreadstatesDaemon_sign());
-    private static final Image RUNNING_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.actionsResume(),
-        PlatformIconGroup.debuggerThreadstatesDaemon_sign());
-    private static final Image SOCKET_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.debuggerThreadstatesSocket(),
-        PlatformIconGroup.debuggerThreadstatesDaemon_sign());
-    private static final Image IDLE_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.debuggerThreadstatesIdle(),
-        PlatformIconGroup.debuggerThreadstatesDaemon_sign());
-    private static final Image EDT_BUSY_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.actionsProfilecpu(),
-        PlatformIconGroup.debuggerThreadstatesDaemon_sign());
-    private static final Image IO_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.actionsMenu_saveall(),
-        PlatformIconGroup.debuggerThreadstatesDaemon_sign());
     private final JBList<ThreadState> myThreadList;
 
     public AWTThreadDumpPanel(Project project, final ConsoleView consoleView, final DefaultActionGroup toolbarActions, final List<ThreadState> threadDump) {
@@ -103,26 +88,34 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
     }
 
     private static Image getThreadStateIcon(final ThreadState threadState) {
+        Image icon = getThreadIcon(threadState);
         final boolean daemon = threadState.isDaemon();
+        if (!daemon) {
+            return icon;
+        }
+        return ImageEffects.layered(icon, PlatformIconGroup.redbadge());
+    }
+
+    private static Image getThreadIcon(ThreadState threadState) {
         if (threadState.isSleeping()) {
-            return daemon ? PAUSE_ICON_DAEMON : PlatformIconGroup.actionsPause();
+            return PlatformIconGroup.actionsPause();
         }
         if (threadState.isWaiting()) {
-            return daemon ? LOCKED_ICON_DAEMON : PlatformIconGroup.debuggerMutebreakpoints();
+            return PlatformIconGroup.vcsHistory();
         }
         if (threadState.getOperation() == ThreadOperation.Socket) {
-            return daemon ? SOCKET_ICON_DAEMON : PlatformIconGroup.debuggerThreadstatesSocket();
+            return PlatformIconGroup.nodesPlugin();
         }
         if (threadState.getOperation() == ThreadOperation.IO) {
-            return daemon ? IO_ICON_DAEMON : PlatformIconGroup.actionsMenu_saveall();
+            return PlatformIconGroup.actionsMenu_saveall();
         }
         if (threadState.isEDT()) {
             if ("idle".equals(threadState.getThreadStateDetail())) {
-                return daemon ? IDLE_ICON_DAEMON : Idle;
+                return PlatformIconGroup.debuggerThreadstatesIdle();
             }
-            return daemon ? EDT_BUSY_ICON_DAEMON : PlatformIconGroup.actionsProfilecpu();
+            return PlatformIconGroup.actionsProfilecpu();
         }
-        return daemon ? RUNNING_ICON_DAEMON : PlatformIconGroup.actionsResume();
+        return PlatformIconGroup.actionsResume();
     }
 
     @Nonnull

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.xdebugger.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.util.function.Computable;
@@ -46,6 +45,7 @@ import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.frame.XValueContainer;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.execution.debug.setting.XDebuggerSettings;
 import consulo.execution.debug.ui.DebuggerColors;
@@ -65,7 +65,6 @@ import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NonNavigatable;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -569,7 +568,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   public static Image getVerifiedIcon(@Nonnull XBreakpoint breakpoint) {
     return breakpoint.getSuspendPolicy() == SuspendPolicy.NONE
-      ? PlatformIconGroup.debuggerDb_verified_no_suspend_breakpoint()
-      : AllIcons.Debugger.Db_verified_breakpoint;
+      ? ExecutionDebugIconGroup.breakpointBreakpointunsuspendentvalid()
+      : ExecutionDebugIconGroup.breakpointBreakpointvalid();
   }
 }

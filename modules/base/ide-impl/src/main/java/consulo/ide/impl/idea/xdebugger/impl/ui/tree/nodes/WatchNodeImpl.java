@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.execution.debug.frame.*;
-import consulo.util.concurrent.AsyncResult;
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.evaluation.XInstanceEvaluator;
+import consulo.execution.debug.frame.*;
 import consulo.execution.debug.frame.presentation.XErrorValuePresentation;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
+import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -95,7 +95,7 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
       }
       else {
-        node.setPresentation(AllIcons.Debugger.Watch, EMPTY_PRESENTATION, false);
+        node.setPresentation(ExecutionDebugIconGroup.nodeWatch(), EMPTY_PRESENTATION, false);
       }
     }
 

@@ -15,14 +15,12 @@
  */
 package consulo.execution.debug.frame;
 
-import consulo.application.AllIcons;
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * Represents a node in debugger tree. This interface isn't supposed to be implemented by a plugin.
@@ -40,16 +38,16 @@ public interface XValueNode extends Obsolescent {
 
   /**
    * Setup presentation of the value
-   * @param icon icon representing value type (see {@link AllIcons.Debugger})
+   * @param icon icon representing value type (see {@link consulo.execution.debug.icon.ExecutionDebugIconGroup})
    * @param type optional type of the value, it is shown in gray color and surrounded by braces
    * @param value string representation of value. It is also used in 'Copy Value' action
    * @param hasChildren {@code false} if the node is a leaf
    */
-  void setPresentation(@Nullable Image icon, @NonNls @Nullable String type, @NonNls @Nonnull String value, boolean hasChildren);
+  void setPresentation(@Nullable Image icon, @Nullable String type,  @Nonnull String value, boolean hasChildren);
 
   /**
    * Setup presentation of the value. This method allows to change separator between name and value and customize the way value text is shown
-   * @param icon icon representing value type (see {@link AllIcons.Debugger})
+   * @param icon icon representing value type (see {@link consulo.execution.debug.icon.ExecutionDebugIconGroup})
    * @param presentation a new {@link XValuePresentation} instance which determines how the value is show
    * @param hasChildren {@code false} if the node is a leaf
    */

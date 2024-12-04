@@ -1,7 +1,6 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.ui.tree;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.configurable.internal.ShowConfigurableService;
 import consulo.execution.ProgramRunnerUtil;
@@ -10,6 +9,7 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -404,7 +404,7 @@ public final class ServersTreeStructure {
 
         @Override
         protected void update(@Nonnull PresentationData presentation) {
-            presentation.setIcon(AllIcons.Debugger.Console);
+            presentation.setIcon(ExecutionIconGroup.console());
             presentation.setPresentableText(getLogName());
         }
 

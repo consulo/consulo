@@ -15,31 +15,30 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
-import consulo.execution.debug.ui.DebuggerContentInfo;
-import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.application.ApplicationManager;
 import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.debug.DefaultDebugExecutor;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.execution.debug.ui.DebuggerContentInfo;
+import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.runner.RunContentBuilder;
 import consulo.execution.runner.RunTab;
-import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.ExecutionConsole;
-import consulo.execution.ui.console.ObservableConsoleView;
 import consulo.execution.ui.RunContentManager;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.execution.ui.console.ObservableConsoleView;
 import consulo.execution.ui.layout.LayoutAttractionPolicy;
 import consulo.execution.ui.layout.LayoutViewOptions;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ui.ex.content.Content;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.execution.debug.XDebuggerBundle;
-import consulo.platform.base.icon.PlatformIconGroup;
-
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -52,7 +51,7 @@ public abstract class DebuggerSessionTabBase extends RunTab {
   public DebuggerSessionTabBase(@Nonnull Project project, @Nonnull String runnerId, @Nonnull String sessionName, @Nonnull GlobalSearchScope searchScope) {
     super(project, searchScope, runnerId, XDebuggerBundle.message("xdebugger.default.content.title"), sessionName);
 
-    myUi.getDefaults().initTabDefaults(0, XDebuggerBundle.message("xdebugger.debugger.tab.title"), PlatformIconGroup.actionsStartdebugger())
+    myUi.getDefaults().initTabDefaults(0, XDebuggerBundle.message("xdebugger.debugger.tab.title"), ExecutionDebugIconGroup.actionStartdebugger())
             .initFocusContent(DebuggerContentInfo.FRAME_CONTENT, XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION)
             .initFocusContent(DebuggerContentInfo.CONSOLE_CONTENT, LayoutViewOptions.STARTUP, new LayoutAttractionPolicy.FocusOnce(false));
   }

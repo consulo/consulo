@@ -16,7 +16,7 @@
 package consulo.execution.debug;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
@@ -33,6 +33,7 @@ import jakarta.annotation.Nonnull;
 public class DefaultDebugExecutor extends Executor {
     public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
 
+    @Nonnull
     @Override
     public String getToolWindowId() {
         return ToolWindowId.DEBUG;
@@ -40,13 +41,13 @@ public class DefaultDebugExecutor extends Executor {
 
     @Override
     public Image getToolWindowIcon() {
-        return AllIcons.Toolwindows.ToolWindowDebugger;
+        return ExecutionDebugIconGroup.toolwindowDebug();
     }
 
     @Override
     @Nonnull
     public Image getIcon() {
-        return AllIcons.Actions.StartDebugger;
+        return ExecutionDebugIconGroup.actionStartdebugger();
     }
 
     @Override

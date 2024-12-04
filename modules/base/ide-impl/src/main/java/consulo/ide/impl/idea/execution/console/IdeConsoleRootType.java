@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.execution.console;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.scratch.FileEditorTrackingRootType;
@@ -54,9 +55,9 @@ public class IdeConsoleRootType extends ConsoleRootType implements FileEditorTra
     if (file.isDirectory()) return null;
     FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(file.getNameSequence());
     Image icon =
-      fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE ? AllIcons.Debugger.Console : ObjectUtil.notNull(
+      fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE ? ExecutionIconGroup.console() : ObjectUtil.notNull(
         fileType.getIcon(),
-        AllIcons.Debugger.Console);
+          ExecutionIconGroup.console());
     return ImageEffects.layered(icon, AllIcons.Nodes.RunnableMark);
   }
 

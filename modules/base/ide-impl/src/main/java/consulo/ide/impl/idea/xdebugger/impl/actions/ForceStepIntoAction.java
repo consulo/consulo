@@ -15,15 +15,25 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import jakarta.annotation.Nonnull;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class ForceStepIntoAction extends XDebuggerActionBase {
-  @Nonnull
-  protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
-    return debuggerSupport.getForceStepIntoHandler();
-  }
+    @Override
+    @Nonnull
+    protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
+        return debuggerSupport.getForceStepIntoHandler();
+    }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return ExecutionDebugIconGroup.actionForcestepinto();
+    }
 }

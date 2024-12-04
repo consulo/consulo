@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataManager;
@@ -24,6 +23,7 @@ import consulo.disposer.Disposer;
 import consulo.execution.ExecutionManager;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerActions;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.DebuggerContentInfo;
 import consulo.execution.debug.ui.XDebugTabLayouter;
@@ -199,7 +199,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
             DebuggerContentInfo.VARIABLES_CONTENT,
             variablesView.getPanel(),
             XDebuggerLocalize.debuggerSessionTabVariablesTitle().get(),
-            AllIcons.Debugger.Value,
+            ExecutionDebugIconGroup.nodeValue(),
             null
         );
         result.setCloseable(false);
@@ -231,7 +231,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
             DebuggerContentInfo.FRAME_CONTENT,
             framesView.getMainPanel(),
             XDebuggerLocalize.debuggerSessionTabFramesTitle().get(),
-            AllIcons.Debugger.Frame,
+            ExecutionDebugIconGroup.nodeFrame(),
             null
         );
         framesContent.setCloseable(false);
@@ -263,10 +263,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
         layouter.registerAdditionalContent(myUi);
         RunContentBuilder.addAdditionalConsoleEditorActions(myConsole, consoleContent);
-
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
-            return;
-        }
 
         DefaultActionGroup leftToolbar = new DefaultActionGroup();
         if (myEnvironment != null) {

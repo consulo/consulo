@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.console.ConsoleExecuteAction;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.language.LanguageConsoleView;
@@ -28,9 +28,9 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 public final class UseConsoleInputAction extends ToggleAction implements DumbAware {
@@ -38,7 +38,7 @@ public final class UseConsoleInputAction extends ToggleAction implements DumbAwa
   private boolean useProcessStdIn;
 
   public UseConsoleInputAction(@Nonnull String processInputStateKey) {
-    super("Use Console Input", null, AllIcons.Debugger.CommandLine);
+    super("Use Console Input", null, ExecutionIconGroup.console());
 
     this.processInputStateKey = processInputStateKey;
     useProcessStdIn = ApplicationPropertiesComponent.getInstance().getBoolean(processInputStateKey);

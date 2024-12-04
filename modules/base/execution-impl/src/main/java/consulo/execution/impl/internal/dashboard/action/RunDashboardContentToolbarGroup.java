@@ -25,9 +25,9 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @since 14.05.2024
  */
 @ActionImpl(id = RunDashboardServiceViewContributor.RUN_DASHBOARD_CONTENT_TOOLBAR, children = {
-  @ActionRef(type = RunAction.class),
-  @ActionRef(type = DebugAction.class),
-  @ActionRef(type = StopAction.class)
+    @ActionRef(type = RunAction.class),
+    // possible debug action from debug module
+    @ActionRef(type = StopAction.class)
 })
 public class RunDashboardContentToolbarGroup extends DefaultActionGroup {
 }

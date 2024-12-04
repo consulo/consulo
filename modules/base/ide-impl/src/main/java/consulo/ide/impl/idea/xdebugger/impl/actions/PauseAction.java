@@ -15,15 +15,25 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import jakarta.annotation.Nonnull;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class PauseAction extends XDebuggerActionBase {
-  @Nonnull
-  protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
-    return debuggerSupport.getPauseHandler();
-  }
+    @Override
+    @Nonnull
+    protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
+        return debuggerSupport.getPauseHandler();
+    }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.actionsPause();
+    }
 }

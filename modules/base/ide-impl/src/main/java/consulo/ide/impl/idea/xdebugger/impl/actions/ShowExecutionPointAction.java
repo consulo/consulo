@@ -15,17 +15,25 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
-
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class ShowExecutionPointAction extends XDebuggerActionBase {
-  @Override
-  @Nonnull
-  protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
-    return debuggerSupport.getShowExecutionPointHandler();
-  }
+    @Override
+    @Nonnull
+    protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
+        return debuggerSupport.getShowExecutionPointHandler();
+    }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return ExecutionDebugIconGroup.actionShowcurrentframe();
+    }
 }

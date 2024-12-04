@@ -20,18 +20,30 @@
  */
 package consulo.execution.impl.internal.ui.layout.action;
 
+import consulo.execution.icon.ExecutionIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 
 public class RestoreLayoutAction extends DumbAwareAction {
 
-  @Override
-  public void actionPerformed(final AnActionEvent e) {
-    ToggleToolbarLayoutAction.getRunnerUi(e).restoreLayout();
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(final AnActionEvent e) {
+        ToggleToolbarLayoutAction.getRunnerUi(e).restoreLayout();
+    }
 
-  @Override
-  public void update(final AnActionEvent e) {
-    e.getPresentation().setEnabled(ToggleToolbarLayoutAction.getRunnerUi(e) != null);
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(final AnActionEvent e) {
+        e.getPresentation().setEnabled(ToggleToolbarLayoutAction.getRunnerUi(e) != null);
+    }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return ExecutionIconGroup.actionRestorelayout();
+    }
 }

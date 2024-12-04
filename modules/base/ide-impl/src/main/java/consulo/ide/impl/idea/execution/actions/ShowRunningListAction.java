@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.execution.actions;
 
-import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.execution.executor.Executor;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.impl.internal.ExecutionManagerImpl;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.RunContentDescriptor;
@@ -152,7 +152,7 @@ public class ShowRunningListAction extends AnAction {
             .append("@").append(System.identityHashCode(executor.getIcon())).append(";");
           ProcessHandler processHandler = descriptor.getProcessHandler();
           Image icon = (processHandler instanceof KillableProcessHandler && processHandler.isProcessTerminating())
-            ? AllIcons.Debugger.KillProcess : executor.getIcon();
+            ? ExecutionIconGroup.actionKillprocess() : executor.getIcon();
           JLabel label = new JLabel(
             "<html><body><a href=\"\">" + descriptor.getDisplayName() + "</a></body></html>",
             TargetAWT.to(icon),
