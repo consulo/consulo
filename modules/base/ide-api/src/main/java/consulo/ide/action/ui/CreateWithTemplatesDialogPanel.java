@@ -63,6 +63,7 @@ public class CreateWithTemplatesDialogPanel extends NewItemWithTemplatesPopupPan
     private static final ListCellRenderer<Trinity<String, Image, String>> LIST_RENDERER = new ColoredListCellRenderer<>() {
         @Override
         protected void customizeCellRenderer(@Nonnull JList<? extends Trinity<String, Image, String>> list, Trinity<String, Image, String> value, int index, boolean selected, boolean hasFocus) {
+            setBorder(JBCurrentTheme.listCellBorderFull());
             if (value != null) {
                 append(value.first);
                 setIcon(value.second);
