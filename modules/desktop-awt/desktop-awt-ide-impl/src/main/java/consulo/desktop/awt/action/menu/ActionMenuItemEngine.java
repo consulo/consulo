@@ -164,8 +164,6 @@ public class ActionMenuItemEngine {
         }
     }
 
-    private static final Image ourDefaultIcon = Image.empty(Image.DEFAULT_ICON_SIZE);
-
     private final ActionRef<AnAction> myAction;
     private final Presentation myPresentation;
     private final String myPlace;
