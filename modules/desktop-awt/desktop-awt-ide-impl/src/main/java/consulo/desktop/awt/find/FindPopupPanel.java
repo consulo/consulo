@@ -50,6 +50,7 @@ import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
@@ -77,8 +78,8 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.style.ComponentColors;
@@ -1755,36 +1756,42 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
     }
 
-    private class MyShowFilterPopupAction extends ToggleAction implements DumbAware {
-        private final DefaultActionGroup mySwitchContextGroup;
+    private class MyShowFilterPopupAction extends DefaultActionGroup implements DumbAware {
+        private final Image myPrimaryImage;
 
         MyShowFilterPopupAction() {
-            super(FindLocalize.findPopupShowFilterPopup(), LocalizeValue.empty(), AllIcons.General.Filter);
-            getTemplatePresentation().setIcon(AllIcons.General.Filter);
+            super(FindLocalize.findPopupShowFilterPopup(), true);
+            myPrimaryImage = PlatformIconGroup.generalFilter();
+
             KeyboardShortcut keyboardShortcut = ActionManager.getInstance().getKeyboardShortcut("ShowFilterPopup");
             if (keyboardShortcut != null) {
                 setShortcutSet(new CustomShortcutSet(keyboardShortcut));
             }
-            mySwitchContextGroup = new DefaultActionGroup();
-            mySwitchContextGroup.add(new MySwitchContextToggleAction(FindSearchContext.ANY));
-            mySwitchContextGroup.add(new MySwitchContextToggleAction(FindSearchContext.IN_COMMENTS));
-            mySwitchContextGroup.add(new MySwitchContextToggleAction(FindSearchContext.IN_STRING_LITERALS));
-            mySwitchContextGroup.add(new MySwitchContextToggleAction(FindSearchContext.EXCEPT_COMMENTS));
-            mySwitchContextGroup.add(new MySwitchContextToggleAction(FindSearchContext.EXCEPT_STRING_LITERALS));
-            mySwitchContextGroup.add(new MySwitchContextToggleAction(FindSearchContext.EXCEPT_COMMENTS_AND_STRING_LITERALS));
-            mySwitchContextGroup.setPopup(true);
+            
+            add(new MySwitchContextToggleAction(FindSearchContext.ANY));
+            add(new MySwitchContextToggleAction(FindSearchContext.IN_COMMENTS));
+            add(new MySwitchContextToggleAction(FindSearchContext.IN_STRING_LITERALS));
+            add(new MySwitchContextToggleAction(FindSearchContext.EXCEPT_COMMENTS));
+            add(new MySwitchContextToggleAction(FindSearchContext.EXCEPT_STRING_LITERALS));
+            add(new MySwitchContextToggleAction(FindSearchContext.EXCEPT_COMMENTS_AND_STRING_LITERALS));
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
-            return !FindSearchContext.ANY.equals(mySelectedContext);
+        public boolean showBelowArrow() {
+            return false;
         }
-
+        
+        @RequiredUIAccess
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-            ListPopup listPopup =
-                JBPopupFactory.getInstance().createActionGroupPopup(null, mySwitchContextGroup, e.getDataContext(), false, null, 10);
-            listPopup.showUnderneathOf(e.getInputEvent().getComponent());
+        public void update(@Nonnull AnActionEvent e) {
+            super.update(e);
+
+            if (!FindSearchContext.ANY.equals(mySelectedContext)) {
+                e.getPresentation().setIcon(ImageEffects.layered(myPrimaryImage, PlatformIconGroup.greenbadge()));
+            }
+            else {
+                e.getPresentation().setIcon(myPrimaryImage);
+            }
         }
     }
 

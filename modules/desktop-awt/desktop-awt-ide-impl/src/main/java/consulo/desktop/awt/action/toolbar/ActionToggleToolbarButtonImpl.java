@@ -33,8 +33,19 @@ import javax.swing.*;
 public class ActionToggleToolbarButtonImpl extends JToggleButton implements ActionButton {
     private final ActionToolbarButtonEngine myEngine;
 
-    public ActionToggleToolbarButtonImpl(ToggleAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
+    public ActionToggleToolbarButtonImpl(AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
         myEngine = new ActionToolbarButtonEngine(this, action, presentation, place, this::getDataContext);
+
+        setModel(new DefaultButtonModel() {
+            @Override
+            public boolean isSelected() {
+                return Toggleable.isSelected(presentation);
+            }
+
+            @Override
+            public void setSelected(boolean b) {
+            }
+        });
 
         setMinimumSize(TargetAWT.to(minimumSize));
 
@@ -43,8 +54,6 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
         myEngine.updateTextAndMnemonic(presentation.getTextValue());
 
         addActionListener(e -> myEngine.click());
-        
-        setSelected(Toggleable.isSelected(presentation));
 
         myEngine.updateEnabled();
     }

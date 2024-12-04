@@ -288,7 +288,7 @@ public class ActionToolbarButtonEngine {
             case Presentation.PROP_VISIBLE:
                 myButton.setVisible(myPresentation.isVisible());
                 break;
-            case "selected":
+            case Toggleable.SELECTED_PROPERTY:
                 repaint();
                 break;
         }

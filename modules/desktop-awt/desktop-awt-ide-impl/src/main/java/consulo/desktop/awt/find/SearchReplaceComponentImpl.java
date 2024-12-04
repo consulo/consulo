@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.platform.Platform;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -28,7 +27,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.ui.ex.internal.ActionToolbarEx;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -614,16 +612,22 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     @Nonnull
     private ActionToolbar createSearchToolbar1(@Nonnull DefaultActionGroup group) {
-        ActionToolbar toolbar = createToolbar(group);
-        toolbar.setSecondaryActionsTooltip(FindLocalize.findPopupShowFilterPopup());
-        toolbar.setSecondaryActionsIcon(PlatformIconGroup.generalFilter());
+        ActionGroup.Builder toolbarGroup = ActionGroup.newImmutableBuilder();
 
-        KeyboardShortcut keyboardShortcut = ActionManager.getInstance().getKeyboardShortcut("ShowFilterPopup");
-        if (keyboardShortcut != null) {
-            toolbar.setSecondaryActionsShortcut(KeymapUtil.getShortcutText(keyboardShortcut));
+        ContextFilterActionGroup contextGroup = new ContextFilterActionGroup();
+
+        for (AnAction anAction : group.getChildren(null)) {
+            if (anAction instanceof EditorHeaderSetSearchContextAction) {
+                contextGroup.add(anAction);
+            } else {
+                toolbarGroup.add(anAction);
+            }
         }
 
-        new ShowMoreOptions(toolbar, mySearchFieldWrapper);
+        toolbarGroup.add(contextGroup);
+
+        ActionToolbar toolbar = createToolbar(toolbarGroup.build());
+
         return toolbar;
     }
 
