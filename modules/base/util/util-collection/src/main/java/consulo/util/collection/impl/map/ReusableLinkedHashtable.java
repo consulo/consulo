@@ -47,18 +47,17 @@ import java.util.function.Consumer;
  *
  * <p>If master-map is garbage-collected but some of sattelite maps remain in memory, some of the key/value entries become unreachable
  * but still referenced from hash-table. This creates memory leak and one of this hash-table purposes is to resolve such leaks.
- * Each map referencing this hash-table must call {@link #link(ReusableLinkedHashtableUser)} method providing an instance implementing
- * {@link ReusableLinkedHashtableUser} interface. This instance must answer if it is a master map and be able to detach
- * from the hash-table via creating new one containing only the key/value enries owned by the map.</p>
+ * While creating hashtable Range map must provide an instance implementing {@link ReusableLinkedHashtableUser} interface. This instance
+ * must be able to detach from the hash-table via creating new one containing only the key/value entries owned by the map.</p>
  *
  * <p>Links to maps using this hash-table are stored in {@code WeakReference}s, so maps are free to be garbage-collected.
- * But when GC collects such a map it notifies hash-table via thread which reads {@link ReferenceQueue} connected to
- * {@link WeakReference}. So hash-table can check if master-map referencing it is still present or the master-map was garbage-collected.
+ * But when GC collects such a map it notifies hash-table via thread which reads {@link ReferenceQueue} connected to {@link WeakReference}.
+ * So hash-table can check if master-map referencing it is still present or the master-map was garbage-collected.
  * If there's no master-map present, hash-table detaches all the remaining sattelite maps preventing memory leaks.</p>
  *
+ * @author UNV
  * @see ImmutableLinkedHashMap
  * @see HashingStrategy
- * @author UNV
  * @since 2024-11-20
  */
 public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRange {
@@ -78,7 +77,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
     private Range myLargestRange = null;
 
-    public abstract class MyIterator<E> implements Iterator<E> {
+    protected abstract class MyIterator<E> implements Iterator<E> {
         protected final int myStartPos, myEndPos;
         protected int pos = -1;
 
@@ -104,8 +103,8 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         protected abstract E get(int pos);
     }
 
-    public class MyKeyIterator extends MyIterator<K> {
-        public MyKeyIterator(ReusableLinkedHashtableRange range) {
+    public class KeyIterator extends MyIterator<K> {
+        public KeyIterator(ReusableLinkedHashtableRange range) {
             super(range);
         }
 
@@ -115,8 +114,8 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         }
     }
 
-    public class MyValueIterator extends MyIterator<V> {
-        public MyValueIterator(ReusableLinkedHashtableRange range) {
+    public class ValueIterator extends MyIterator<V> {
+        public ValueIterator(ReusableLinkedHashtableRange range) {
             super(range);
         }
 
@@ -127,7 +126,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         }
     }
 
-    public class MyEntryIterator extends MyIterator<Map.Entry<K, V>> {
+    public class EntryIterator extends MyIterator<Map.Entry<K, V>> {
         private class FlyweightEntry implements Map.Entry<K, V> {
             @Override
             public K getKey() {
@@ -164,7 +163,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
         private final FlyweightEntry entry = new FlyweightEntry();
 
-        public MyEntryIterator(ReusableLinkedHashtableRange range) {
+        public EntryIterator(ReusableLinkedHashtableRange range) {
             super(range);
         }
 
@@ -216,6 +215,10 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
     @SuppressWarnings("unchecked")
     public ReusableLinkedHashtable<K, V> copyOfSize(int maxSize) {
+        if (canResizeTableTo(maxSize)) {
+            return copy();
+        }
+
         ReusableLinkedHashtable<K, V> newTable = blankOfSize(maxSize);
         if (mySize > 0) {
             for (int pos = getStartPos(), endPos = myEndPos; ; pos = myNextPosAndHash[pos]) {
@@ -231,6 +234,30 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     public ReusableLinkedHashtable<K, V> copyReversed() {
         ReusableLinkedHashtable<K, V> newTable = copy();
         newTable.reverse();
+        return newTable;
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public ReusableLinkedHashtable<K, V> copyRangeWithout(
+        int maxSize,
+        ReusableLinkedHashtableRange range,
+        Set<? extends K> excludeKeys,
+        int excludePos
+    ) {
+        ReusableLinkedHashtable<K, V> newTable = blankOfSize(maxSize);
+        int startPos = range.getStartPos();
+        if (startPos >= 0) {
+            for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
+                K key = (K)myData[pos];
+                if ((excludeKeys == null || !excludeKeys.contains(key)) && pos != excludePos) {
+                    newTable.insertByIdentity(myNextPosAndHash[pos + 1], key, (V)myData[pos + 1]);
+                }
+                if (pos == endPos) {
+                    break;
+                }
+            }
+        }
         return newTable;
     }
 
@@ -258,6 +285,15 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
     public int getSize() {
         return mySize;
+    }
+
+    /**
+     * <p>Checks if new size doesn't exceed upper size limit for current hash-table. Set to 50% to prevent long hash collisions.
+     * Hash-table must be recreated after reaching this limit.</p>
+     */
+    public boolean canResizeTableTo(int newSize) {
+        int maxSafeSize = myData.length >> 2;
+        return newSize < maxSafeSize;
     }
 
     @Override
@@ -580,8 +616,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
          * Hash-table must be recreated after reaching this limit.</p>
          */
         public boolean canResizeTableTo(int newSize) {
-            int maxSafeSize = myData.length >> 2;
-            return newSize < maxSafeSize && isMasterRange();
+            return ReusableLinkedHashtable.this.canResizeTableTo(newSize) && isMasterRange();
         }
 
         public boolean isMasterRange() {
@@ -602,7 +637,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
         @Nonnull
         public ReusableLinkedHashtable<K, V> copy() {
-            return copyWithout(mySize, null, -1);
+            return copyRangeWithout(mySize, this, null, -1);
         }
 
         @Nonnull
@@ -619,20 +654,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         @Nonnull
         @SuppressWarnings("unchecked")
         public ReusableLinkedHashtable<K, V> copyWithout(int maxSize, Set<? extends K> excludeKeys, int excludePos) {
-            ReusableLinkedHashtable<K, V> newTable = blankOfSize(maxSize);
-            int startPos = myStartPos;
-            if (startPos >= 0) {
-                for (int pos = startPos, endPos = myEndPos; ; pos = myNextPosAndHash[pos]) {
-                    K key = (K)myData[pos];
-                    if ((excludeKeys == null || !excludeKeys.contains(key)) && pos != excludePos) {
-                        newTable.insertByIdentity(myNextPosAndHash[pos + 1], key, (V)myData[pos + 1]);
-                    }
-                    if (pos == endPos) {
-                        break;
-                    }
-                }
-            }
-            return newTable;
+            return copyRangeWithout(maxSize, this, excludeKeys, excludePos);
         }
 
         @SuppressWarnings("unchecked")
@@ -652,17 +674,17 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
         @Nonnull
         public Iterator<Map.Entry<K, V>> entryIterator() {
-            return new MyEntryIterator(this);
+            return new EntryIterator(this);
         }
 
         @Nonnull
         public Iterator<K> keyIterator() {
-            return new MyKeyIterator(this);
+            return new KeyIterator(this);
         }
 
         @Nonnull
         public Iterator<V> valueIterator() {
-            return new MyValueIterator(this);
+            return new ValueIterator(this);
         }
 
         protected void preventMemoryLeaks() {

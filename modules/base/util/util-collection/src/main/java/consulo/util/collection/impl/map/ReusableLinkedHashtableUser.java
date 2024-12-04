@@ -25,15 +25,6 @@ package consulo.util.collection.impl.map;
  */
 public interface ReusableLinkedHashtableUser {
     /**
-     * <p>Returns size of this hash-table user to check if it is the same as size of the hash-table. If size is the same, this is
-     * the master user and it is free to add new entries to the hash-table, reusing it. Loosing master-user of the hash-table
-     * means that it has unreachable keys/values which create memory leaks. This needs additional actions to prevent memory leaks.</p>
-     *
-     * @return size of this hash-table user.
-     */
-    int size();
-
-    /**
      * <p>Stop reusing current hash-table by creating a new one containing only the key/value enries owned by the map.
      * This prevents memory leak.</p>
      */

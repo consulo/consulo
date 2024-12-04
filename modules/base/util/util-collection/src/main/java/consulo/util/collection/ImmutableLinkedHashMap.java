@@ -43,7 +43,7 @@ import java.util.function.Consumer;
  * @author UNV
  * @since 2024-11-18
  */
-public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, SequencedMap<K, V>, ReusableLinkedHashtableUser {
+public class ImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, V> implements SequencedMap<K, V>, ReusableLinkedHashtableUser {
     private static final ImmutableLinkedHashMap<Object, Object> EMPTY = of(ReusableLinkedHashtable.empty());
 
     protected ReusableLinkedHashtable<K, V>.Range myRange;
@@ -354,35 +354,8 @@ public class ImmutableLinkedHashMap<K, V> implements ImmutableMap<K, V>, Sequenc
         return new MyEntrySet();
     }
 
+    @Nonnull
     @Override
-    @SuppressWarnings("unchecked")
-    public int hashCode() {
-        HashingStrategy<K> strategy = getStrategy();
-        int[] h = new int[]{0};
-        forEach((key, value) -> h[0] += strategy.hashCode(key) ^ Objects.hashCode(value));
-        return h[0];
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public boolean equals(Object obj) {
-        return obj instanceof Map map
-            && size() == map.size()
-            && entrySet().stream().allMatch(entry -> Objects.equals(map.get(entry.getKey()), entry.getValue()));
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder().append('{');
-        forEach((k, v) -> {
-            if (sb.length() > 1) {
-                sb.append(", ");
-            }
-            sb.append(k).append('=').append(v);
-        });
-        return sb.append('}').toString();
-    }
-
     public HashingStrategy<K> getStrategy() {
         return myRange.getTable().getStrategy();
     }

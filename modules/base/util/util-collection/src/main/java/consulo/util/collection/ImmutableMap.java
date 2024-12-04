@@ -58,6 +58,9 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      */
     ImmutableMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map);
 
+    @Nonnull
+    HashingStrategy<K> getStrategy();
+
     /**
      * Unsupported operation: this map is immutable. Use {@link #with(Object, Object)} to create a new
      * {@code ImmutableMap} with an additional element.
