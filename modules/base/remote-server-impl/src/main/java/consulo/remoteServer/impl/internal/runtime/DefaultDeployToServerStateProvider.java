@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2024-12-03
  */
-@ExtensionImpl(order = "default")
+@ExtensionImpl(order = "last")
 public class DefaultDeployToServerStateProvider implements DeployToServerStateProvider {
     @Nullable
     @Override
