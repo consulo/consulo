@@ -28,10 +28,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * @author UNV
  * @since 2024-12-04
  */
-public class SimpleImmutableLinkedHashMapTest {
+public class ImmutableLinkedHashMapTest {
     @Test
     public void testEmpty() {
-        SimpleImmutableLinkedHashMap<Object, Object> empty = SimpleImmutableLinkedHashMap.empty();
+        ImmutableLinkedHashMap<Object, Object> empty = ImmutableLinkedHashMap.empty();
         assertThat(empty)
             .doesNotContainKey("foo")
             .hasSize(0)
@@ -44,13 +44,13 @@ public class SimpleImmutableLinkedHashMapTest {
         assertThat(empty.withAll(map))
             .isEqualTo(map);
 
-        assertThat(SimpleImmutableLinkedHashMap.empty(HashingStrategy.identity()))
+        assertThat(ImmutableLinkedHashMap.empty(HashingStrategy.identity()))
             .isEmpty();
     }
 
     @Test
     public void testNull() {
-        SimpleImmutableLinkedHashMap<Object, Object> empty = SimpleImmutableLinkedHashMap.empty();
+        ImmutableLinkedHashMap<Object, Object> empty = ImmutableLinkedHashMap.empty();
 
         assertThat(empty.containsKey(null))
             .isFalse();
@@ -63,7 +63,7 @@ public class SimpleImmutableLinkedHashMapTest {
         nullMap.put(null, null);
 
         for (int size : new int[]{1, 2, 5, 10}) {
-            SimpleImmutableLinkedHashMap<Integer, String> map = create(size);
+            ImmutableLinkedHashMap<Integer, String> map = create(size);
             assertThatThrownBy(() -> map.withAll(nullMap))
                 .isInstanceOf(IllegalArgumentException.class);
         }
@@ -72,14 +72,14 @@ public class SimpleImmutableLinkedHashMapTest {
     @SuppressWarnings("deprecation")
     @Test
     public void testPut() {
-        assertThatThrownBy(() -> SimpleImmutableLinkedHashMap.empty().put("foo", "bar"))
+        assertThatThrownBy(() -> ImmutableLinkedHashMap.empty().put("foo", "bar"))
             .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @SuppressWarnings("deprecation")
     @Test
     public void testRemove() {
-        assertThatThrownBy(() -> SimpleImmutableLinkedHashMap.empty().remove("foo"))
+        assertThatThrownBy(() -> ImmutableLinkedHashMap.empty().remove("foo"))
             .isInstanceOf(UnsupportedOperationException.class);
     }
 
@@ -87,20 +87,20 @@ public class SimpleImmutableLinkedHashMapTest {
     @Test
     public void testPutAll() {
         //noinspection RedundantCollectionOperation
-        assertThatThrownBy(() -> SimpleImmutableLinkedHashMap.empty().putAll(Collections.singletonMap("foo", "bar")))
+        assertThatThrownBy(() -> ImmutableLinkedHashMap.empty().putAll(Collections.singletonMap("foo", "bar")))
             .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @SuppressWarnings("deprecation")
     @Test
     public void testClear() {
-        assertThatThrownBy(() -> SimpleImmutableLinkedHashMap.empty().clear())
+        assertThatThrownBy(() -> ImmutableLinkedHashMap.empty().clear())
             .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     public void testWith() {
-        SimpleImmutableLinkedHashMap<Integer, String> map = SimpleImmutableLinkedHashMap.empty();
+        ImmutableLinkedHashMap<Integer, String> map = ImmutableLinkedHashMap.empty();
         for (int i = 0; i < 5; i++) {
             String value = String.valueOf(i);
             map = map.with(i, value);
@@ -113,11 +113,11 @@ public class SimpleImmutableLinkedHashMapTest {
             assertThat(map)
                 .extractingByKey(i + 1).isNull();
 
-            SimpleImmutableLinkedHashMap<Integer, String> map1 = map.with(i, value);
+            ImmutableLinkedHashMap<Integer, String> map1 = map.with(i, value);
             assertThat(map)
                 .isSameAs(map1);
 
-            SimpleImmutableLinkedHashMap<Integer, String> map2 = map.with(i, String.valueOf(i + 1));
+            ImmutableLinkedHashMap<Integer, String> map2 = map.with(i, String.valueOf(i + 1));
             assertThat(map)
                 .isNotSameAs(map2)
                 .hasSameSizeAs(map)
@@ -130,9 +130,9 @@ public class SimpleImmutableLinkedHashMapTest {
 
     @Test
     public void testWithNonMain() {
-        SimpleImmutableLinkedHashMap<Integer, String> map = create(5);
-        SimpleImmutableLinkedHashMap<Integer, String> superMap = map.with(5, "5");
-        SimpleImmutableLinkedHashMap<Integer, String> subMap = superMap.without(5);
+        ImmutableLinkedHashMap<Integer, String> map = create(5);
+        ImmutableLinkedHashMap<Integer, String> superMap = map.with(5, "5");
+        ImmutableLinkedHashMap<Integer, String> subMap = superMap.without(5);
 
         assertThat(subMap.with(4, map.get(4)))
             .isSameAs(subMap);
@@ -157,10 +157,10 @@ public class SimpleImmutableLinkedHashMapTest {
     @Test
     public void testWithAll() {
         for (int size : new int[]{0, 1, 2, 5, 10}) {
-            SimpleImmutableLinkedHashMap<Integer, String> map = create(size);
+            ImmutableLinkedHashMap<Integer, String> map = create(size);
             assertThat(map.get(null)).isNull();
 
-            SimpleImmutableLinkedHashMap<Integer, String> map2 = map.withAll(Map.of());
+            ImmutableLinkedHashMap<Integer, String> map2 = map.withAll(Map.of());
             assertThat(map2)
                 .isSameAs(map);
 
@@ -187,12 +187,12 @@ public class SimpleImmutableLinkedHashMapTest {
     @Test
     public void testWithAllDuplicated() {
         for (int size : new int[]{1, 2, 5, 10}) {
-            SimpleImmutableLinkedHashMap<Integer, String> map = create(size);
+            ImmutableLinkedHashMap<Integer, String> map = create(size);
 
             int k0 = 0;
             String v0 = map.get(0);
 
-            SimpleImmutableLinkedHashMap<Integer, String> map2 = map.withAll(Map.of(k0, v0));
+            ImmutableLinkedHashMap<Integer, String> map2 = map.withAll(Map.of(k0, v0));
             assertThat(map2)
                 .isSameAs(map);
 
@@ -210,7 +210,7 @@ public class SimpleImmutableLinkedHashMapTest {
 
     @Test
     public void testWithAllDifferentValue() {
-        SimpleImmutableLinkedHashMap<Integer, String> map = create(5);
+        ImmutableLinkedHashMap<Integer, String> map = create(5);
 
         assertThat(map.withAll(Map.of(0, map.get(0), 1, map.get(1))))
             .isNotSameAs(map);
@@ -227,7 +227,7 @@ public class SimpleImmutableLinkedHashMapTest {
 
     @Test
     public void testWithAllNullable() {
-        SimpleImmutableLinkedHashMap<Integer, String> map = create(5);
+        ImmutableLinkedHashMap<Integer, String> map = create(5);
 
         LinkedHashMap<Integer, String> mapWithNull = new LinkedHashMap<>();
         mapWithNull.put(5, "5");
@@ -240,12 +240,12 @@ public class SimpleImmutableLinkedHashMapTest {
 
     @Test
     public void testWithout() {
-        SimpleImmutableLinkedHashMap<Integer, String> empty = SimpleImmutableLinkedHashMap.empty();
+        ImmutableLinkedHashMap<Integer, String> empty = ImmutableLinkedHashMap.empty();
         assertThat(empty.without(1))
             .isSameAs(empty);
 
         int size = 11;
-        SimpleImmutableLinkedHashMap<Integer, String> map = create(size);
+        ImmutableLinkedHashMap<Integer, String> map = create(size);
         for (int i = 0; i < size; i++) {
             map = map.without(i);
             assertThat(map)
@@ -275,7 +275,7 @@ public class SimpleImmutableLinkedHashMapTest {
 
     @Test
     public void testAddCollisions() {
-        SimpleImmutableLinkedHashMap<Long, String> map = SimpleImmutableLinkedHashMap.empty();
+        ImmutableLinkedHashMap<Long, String> map = ImmutableLinkedHashMap.empty();
         for (int i = 0; i < 50; i++) {
             long key = ((long)i << 32) | i ^ 135;
             map = map.with(key, String.valueOf(key));
@@ -292,7 +292,7 @@ public class SimpleImmutableLinkedHashMapTest {
 
     @Test
     public void testGet() {
-        SimpleImmutableLinkedHashMap<Integer, String> map = create(10);
+        ImmutableLinkedHashMap<Integer, String> map = create(10);
         assertThat(map.get(null))
             .isNull();
         assertThat(map.get(0))
@@ -308,7 +308,7 @@ public class SimpleImmutableLinkedHashMapTest {
     @Test
     public void testIterate() {
         for (int size : new int[]{0, 1, 2, 5, 10}) {
-            SimpleImmutableLinkedHashMap<Integer, String> map = create(size);
+            ImmutableLinkedHashMap<Integer, String> map = create(size);
 
             assertThat(map.keySet())
                 .isEqualTo(IntStream.range(0, size).boxed().collect(Collectors.toSet()));
@@ -347,7 +347,7 @@ public class SimpleImmutableLinkedHashMapTest {
 
     @Test
     public void testIterateEmpty() {
-        SimpleImmutableLinkedHashMap<Object, Object> empty = SimpleImmutableLinkedHashMap.empty();
+        ImmutableLinkedHashMap<Object, Object> empty = ImmutableLinkedHashMap.empty();
         assertThatThrownBy(() -> empty.keySet().iterator().next())
             .isInstanceOf(NoSuchElementException.class);
 
@@ -360,7 +360,7 @@ public class SimpleImmutableLinkedHashMapTest {
 
     @Test
     public void testValues() {
-        SimpleImmutableLinkedHashMap<Integer, String> map = create(10);
+        ImmutableLinkedHashMap<Integer, String> map = create(10);
         assertThat(map.values().contains("9"))
             .isTrue();
         assertThat(map.values().contains("11"))
@@ -370,7 +370,7 @@ public class SimpleImmutableLinkedHashMapTest {
     @Test
     public void testForEach() {
         for (int size : new int[]{0, 1, 2, 5, 10}) {
-            SimpleImmutableLinkedHashMap<Integer, String> map = create(size);
+            ImmutableLinkedHashMap<Integer, String> map = create(size);
             Set<Integer> keys1 = new HashSet<>();
             Set<String> values1 = new HashSet<>();
             map.keySet().forEach(keys1::add);
@@ -396,7 +396,7 @@ public class SimpleImmutableLinkedHashMapTest {
     @Test
     public void testToString() {
         for (int size : new int[]{0, 1, 2, 5, 10}) {
-            SimpleImmutableLinkedHashMap<Integer, String> map = create(size);
+            ImmutableLinkedHashMap<Integer, String> map = create(size);
             String actual = map.toString();
             assertThat(actual)
                 .startsWith("{")
@@ -418,8 +418,8 @@ public class SimpleImmutableLinkedHashMapTest {
     @SuppressWarnings("EqualsBetweenInconvertibleTypes")
     public void testEquals() {
         for (int size : new int[]{0, 1, 2, 5, 10}) {
-            SimpleImmutableLinkedHashMap<Integer, String> map = create(size);
-            SimpleImmutableLinkedHashMap<Integer, String> map1 = map.with(size - 1, String.valueOf(size));
+            ImmutableLinkedHashMap<Integer, String> map = create(size);
+            ImmutableLinkedHashMap<Integer, String> map1 = map.with(size - 1, String.valueOf(size));
             HashMap<Integer, String> hashMap = new HashMap<>(map);
 
             assertThat(map)
@@ -441,7 +441,7 @@ public class SimpleImmutableLinkedHashMapTest {
     @Test
     public void testHashCode() {
         for (int size : new int[]{0, 1, 2, 5, 10}) {
-            SimpleImmutableLinkedHashMap<Integer, String> map = create(size);
+            ImmutableLinkedHashMap<Integer, String> map = create(size);
             HashMap<Integer, String> hashMap = new HashMap<>(map);
             assertThat(hashMap.hashCode()).isEqualTo(map.hashCode());
         }
@@ -449,17 +449,17 @@ public class SimpleImmutableLinkedHashMapTest {
 
     @Test
     public void testFromMap() {
-        SimpleImmutableLinkedHashMap<Integer, String> map = create(10);
+        ImmutableLinkedHashMap<Integer, String> map = create(10);
         assertThat(map)
-            .isSameAs(SimpleImmutableLinkedHashMap.fromMap(map));
+            .isSameAs(ImmutableLinkedHashMap.fromMap(map));
 
-        assertThat(SimpleImmutableLinkedHashMap.fromMap(Map.of()))
-            .isSameAs(SimpleImmutableLinkedHashMap.empty());
+        assertThat(ImmutableLinkedHashMap.fromMap(Map.of()))
+            .isSameAs(ImmutableLinkedHashMap.empty());
     }
 
     @Test
     public void testReversed() {
-        SimpleImmutableLinkedHashMap<Integer, String> map = create(3);
+        ImmutableLinkedHashMap<Integer, String> map = create(3);
 
         assertThat(map)
             .hasToString("{0=0, 1=1, 2=2}");
@@ -482,11 +482,11 @@ public class SimpleImmutableLinkedHashMapTest {
             .hasToString("[2=2, 1=1, 0=0]");
     }
 
-    private static SimpleImmutableLinkedHashMap<Integer, String> create(int size) {
+    private static ImmutableLinkedHashMap<Integer, String> create(int size) {
         Map<Integer, String> srcMap = IntStream.range(0, size)
             .mapToObj(i -> new AbstractMap.SimpleImmutableEntry<>(i, String.valueOf(i)))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        SimpleImmutableLinkedHashMap<Integer, String> map = SimpleImmutableLinkedHashMap.fromMap(srcMap);
+        ImmutableLinkedHashMap<Integer, String> map = ImmutableLinkedHashMap.fromMap(srcMap);
         return map;
     }
 }

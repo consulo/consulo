@@ -28,8 +28,8 @@ import java.util.function.Consumer;
  * @author UNV
  * @since 2024-12-03
  */
-public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, V> implements SequencedMap<K, V> {
-    private static final SimpleImmutableLinkedHashMap<Object, Object> EMPTY = of(ReusableLinkedHashtable.empty());
+public class ImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, V> implements SequencedMap<K, V> {
+    private static final ImmutableLinkedHashMap<Object, Object> EMPTY = of(ReusableLinkedHashtable.empty());
 
     protected ReusableLinkedHashtable<K, V> myTable;
 
@@ -42,8 +42,8 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
      */
     @Nonnull
     @SuppressWarnings("unchecked")
-    public static <K, V> SimpleImmutableLinkedHashMap<K, V> empty() {
-        return (SimpleImmutableLinkedHashMap<K, V>)EMPTY;
+    public static <K, V> ImmutableLinkedHashMap<K, V> empty() {
+        return (ImmutableLinkedHashMap<K, V>)EMPTY;
     }
 
     /**
@@ -53,7 +53,7 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
      * @return an empty {@code SimpleImmutableLinkedHashMap}.
      */
     @Nonnull
-    public static <K, V> SimpleImmutableLinkedHashMap<K, V> empty(HashingStrategy<K> strategy) {
+    public static <K, V> ImmutableLinkedHashMap<K, V> empty(HashingStrategy<K> strategy) {
         return strategy == HashingStrategy.canonical() ? empty() : of(ReusableLinkedHashtable.<K, V>empty(strategy));
     }
 
@@ -67,7 +67,7 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
      * @throws IllegalArgumentException if map contains {@code null} keys.
      */
     @Nonnull
-    public static <K, V> SimpleImmutableLinkedHashMap<K, V> fromMap(@Nonnull Map<? extends K, ? extends V> map) {
+    public static <K, V> ImmutableLinkedHashMap<K, V> fromMap(@Nonnull Map<? extends K, ? extends V> map) {
         return fromMap(HashingStrategy.canonical(), map);
     }
 
@@ -82,13 +82,13 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
      */
     @Nonnull
     @SuppressWarnings("unchecked")
-    public static <K, V> SimpleImmutableLinkedHashMap<K, V> fromMap(
+    public static <K, V> ImmutableLinkedHashMap<K, V> fromMap(
         @Nonnull HashingStrategy<K> strategy,
         @Nonnull Map<? extends K, ? extends V> map
     ) {
-        if (map instanceof SimpleImmutableLinkedHashMap ilhm && ilhm.getStrategy() == strategy) {
+        if (map instanceof ImmutableLinkedHashMap ilhm && ilhm.getStrategy() == strategy) {
             // Same strategy SimpleImmutableLinkedHashMap. Reusing it.
-            return (SimpleImmutableLinkedHashMap<K, V>)ilhm;
+            return (ImmutableLinkedHashMap<K, V>)ilhm;
         }
         else if (map.isEmpty()) {
             // Empty map optimization.
@@ -103,7 +103,7 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
     }
 
     @Override
-    public SimpleImmutableLinkedHashMap<K, V> reversed() {
+    public ImmutableLinkedHashMap<K, V> reversed() {
         return of(myTable.copyReversed());
     }
 
@@ -116,7 +116,7 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
     @Contract(pure = true)
     @Nonnull
     @Override
-    public SimpleImmutableLinkedHashMap<K, V> without(@Nonnull K key) {
+    public ImmutableLinkedHashMap<K, V> without(@Nonnull K key) {
         if (isEmpty()) {
             return this;
         }
@@ -150,7 +150,7 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
     @Contract(pure = true)
     @Nonnull
     @Override
-    public SimpleImmutableLinkedHashMap<K, V> with(@Nonnull K key, @Nullable V value) {
+    public ImmutableLinkedHashMap<K, V> with(@Nonnull K key, @Nullable V value) {
         if (isEmpty()) {
             return fromMap(Collections.singletonMap(key, value));
         }
@@ -182,7 +182,7 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
      */
     @Nonnull
     @Override
-    public SimpleImmutableLinkedHashMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map) {
+    public ImmutableLinkedHashMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map) {
         if (isEmpty()) {
             // Optimization for empty current map.
             return fromMap(getStrategy(), map);
@@ -299,12 +299,12 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
         return myTable.getStrategy();
     }
 
-    protected SimpleImmutableLinkedHashMap(@Nonnull ReusableLinkedHashtable<K, V> table) {
+    protected ImmutableLinkedHashMap(@Nonnull ReusableLinkedHashtable<K, V> table) {
         myTable = table;
     }
 
-    private static <K, V> SimpleImmutableLinkedHashMap<K, V> of(ReusableLinkedHashtable<K, V> table) {
-        return new SimpleImmutableLinkedHashMap<>(table);
+    private static <K, V> ImmutableLinkedHashMap<K, V> of(ReusableLinkedHashtable<K, V> table) {
+        return new ImmutableLinkedHashMap<>(table);
     }
 
     private class MyKeySet extends AbstractSet<K> implements SequencedSet<K> {
@@ -326,12 +326,12 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
 
         @Override
         public int size() {
-            return SimpleImmutableLinkedHashMap.this.size();
+            return ImmutableLinkedHashMap.this.size();
         }
 
         @Override
         public SequencedSet<K> reversed() {
-            return SimpleImmutableLinkedHashMap.this.reversed().sequencedKeySet();
+            return ImmutableLinkedHashMap.this.reversed().sequencedKeySet();
         }
     }
 
@@ -354,16 +354,16 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
 
         @Override
         public int size() {
-            return SimpleImmutableLinkedHashMap.this.size();
+            return ImmutableLinkedHashMap.this.size();
         }
 
         @Override
         public SequencedCollection<V> reversed() {
-            return SimpleImmutableLinkedHashMap.this.reversed().sequencedValues();
+            return ImmutableLinkedHashMap.this.reversed().sequencedValues();
         }
     }
 
-    private class MyEntrySet extends AbstractSet<Entry<K, V>> implements SequencedSet<Map.Entry<K, V>> {
+    private class MyEntrySet extends AbstractSet<Entry<K, V>> implements SequencedSet<Entry<K, V>> {
         @Nonnull
         @Override
         public Iterator<Entry<K, V>> iterator() {
@@ -372,12 +372,12 @@ public class SimpleImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, 
 
         @Override
         public int size() {
-            return SimpleImmutableLinkedHashMap.this.size();
+            return ImmutableLinkedHashMap.this.size();
         }
 
         @Override
         public SequencedSet<Entry<K, V>> reversed() {
-            return SimpleImmutableLinkedHashMap.this.reversed().sequencedEntrySet();
+            return ImmutableLinkedHashMap.this.reversed().sequencedEntrySet();
         }
     }
 }
