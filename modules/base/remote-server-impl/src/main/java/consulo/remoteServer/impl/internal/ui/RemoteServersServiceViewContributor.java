@@ -2,9 +2,13 @@
 package consulo.remoteServer.impl.internal.ui;
 
 import consulo.component.util.text.UniqueNameGenerator;
+import consulo.configurable.internal.ShowConfigurableService;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.execution.service.*;
+import consulo.execution.service.ServiceEventListener;
+import consulo.execution.service.ServiceViewContributor;
+import consulo.execution.service.ServiceViewDescriptor;
+import consulo.execution.service.ServiceViewProvidingContributor;
 import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -12,16 +16,17 @@ import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.configuration.ServerConfiguration;
+import consulo.remoteServer.impl.internal.configuration.RemoteServerListConfigurable;
 import consulo.remoteServer.impl.internal.ui.tree.DeploymentNode;
 import consulo.remoteServer.impl.internal.ui.tree.ServersTreeStructure;
 import consulo.remoteServer.runtime.ServerConnection;
-import consulo.remoteServer.runtime.ServerConnectionManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ObjectUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -35,18 +40,18 @@ public abstract class RemoteServersServiceViewContributor
     implements ServiceViewContributor<RemoteServersServiceViewContributor.RemoteServerNodeServiceViewContributor>,
     Comparator<RemoteServersServiceViewContributor.RemoteServerNodeServiceViewContributor>,
     ServersTreeStructure.DeploymentNodeProducer {
-    public abstract boolean accept(@NotNull RemoteServer<?> server);
+    public abstract boolean accept(@Nonnull RemoteServer<?> server);
 
-    public abstract void selectLog(@NotNull AbstractTreeNode<?> deploymentNode, @NotNull String logName);
+    public abstract void selectLog(@Nonnull AbstractTreeNode<?> deploymentNode, @Nonnull String logName);
 
-    public abstract @NotNull ActionGroups getActionGroups();
+    public abstract @Nonnull ActionGroups getActionGroups();
 
-    protected @NotNull RemoteServerNodeServiceViewContributor createNodeContributor(@NotNull AbstractTreeNode<?> node) {
+    protected @Nonnull RemoteServerNodeServiceViewContributor createNodeContributor(@Nonnull AbstractTreeNode<?> node) {
         return new RemoteServerNodeServiceViewContributor(this, node);
     }
 
     @Override
-    public @NotNull List<RemoteServerNodeServiceViewContributor> getServices(@NotNull Project project) {
+    public @Nonnull List<RemoteServerNodeServiceViewContributor> getServices(@Nonnull Project project) {
         List<RemoteServerNodeServiceViewContributor> services = RemoteServersManager.getInstance().getServers().stream()
             .filter(this::accept)
             .map(server -> createNodeContributor(new ServersTreeStructure.RemoteServerNode(project, server, this)))
@@ -56,7 +61,7 @@ public abstract class RemoteServersServiceViewContributor
     }
 
     @Override
-    public @NotNull ServiceViewDescriptor getServiceDescriptor(@NotNull Project project, @NotNull RemoteServerNodeServiceViewContributor service) {
+    public @Nonnull ServiceViewDescriptor getServiceDescriptor(@Nonnull Project project, @Nonnull RemoteServerNodeServiceViewContributor service) {
         return service.getViewDescriptor(project);
     }
 
@@ -72,24 +77,26 @@ public abstract class RemoteServersServiceViewContributor
         String name2 = getName.apply(o2);
 
         if (name1 == null || name2 == null) {
-            if (name1 == null && name2 == null) return 0;
+            if (name1 == null && name2 == null) {
+                return 0;
+            }
             return name1 == null ? -1 : 1;
         }
 
         return name1.compareTo(name2);
     }
 
-    protected @Nullable ServiceEventListener.ServiceEvent createDeploymentsChangedEvent(@NotNull ServerConnection<?> connection) {
+    protected @Nullable ServiceEventListener.ServiceEvent createDeploymentsChangedEvent(@Nonnull ServerConnection<?> connection) {
         return ServiceEventListener.ServiceEvent.createResetEvent(this.getClass());
     }
 
-    protected static @NotNull ActionGroup getToolbarActions(@NotNull ActionGroups groups) {
+    protected static @Nonnull ActionGroup getToolbarActions(@Nonnull ActionGroups groups) {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(ActionManager.getInstance().getAction(groups.getMainToolbarID()));
         return group;
     }
 
-    protected static @NotNull ActionGroup getPopupActions(@NotNull ActionGroups groups) {
+    protected static @Nonnull ActionGroup getPopupActions(@Nonnull ActionGroups groups) {
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(ActionManager.getInstance().getAction(groups.getMainToolbarID()));
         group.add(ActionManager.getInstance().getAction(groups.getPopupID()));
@@ -100,7 +107,7 @@ public abstract class RemoteServersServiceViewContributor
         List<RemoteServer<?>> servers = ContainerUtil.filter(
             RemoteServersManager.getInstance().getServers(),
             server -> server.getType().equals(serverType));
-        return UniqueNameGenerator.generateUniqueName(serverType.getPresentableName(), s -> {
+        return UniqueNameGenerator.generateUniqueName(serverType.getPresentableName().get(), s -> {
             for (RemoteServer<?> server : servers) {
                 if (server.getName().equals(s)) {
                     return false;
@@ -110,38 +117,28 @@ public abstract class RemoteServersServiceViewContributor
         });
     }
 
-    /**
-     * @return newly created remote server or {@code null} if edit server configurable dialog was cancelled
-     */
-    public static <C extends ServerConfiguration> RemoteServer<C> addNewRemoteServer(@NotNull Project project,
-                                                                                     @NotNull ServerType<C> serverType,
-                                                                                     @Nullable Class<?> contributorClass) {
+    @RequiredUIAccess
+    public static <C extends ServerConfiguration> void addNewRemoteServer(@Nonnull Project project,
+                                                                          @Nonnull ServerType<C> serverType,
+                                                                          @Nullable Class<?> contributorClass) {
+        ShowConfigurableService service = project.getApplication().getInstance(ShowConfigurableService.class);
+
         String name = generateUniqueServerName(serverType);
         RemoteServersManager remoteServersManager = RemoteServersManager.getInstance();
         RemoteServer<C> server = remoteServersManager.createServer(serverType, name);
-        SingleRemoteServerConfigurable configurable = new SingleRemoteServerConfigurable(server, null, true);
-        configurable.setDisplayName(CloudBundle.message("new.cloud.connection.configurable.title", serverType.getPresentableName()));
-        Runnable advancedInitialization = () -> {
-            configurable.setDisplayName(name);
-            configurable.updateName();
-        };
-        if (ShowSettingsUtil.getInstance().editConfigurable(project, configurable, advancedInitialization)) {
-            remoteServersManager.addServer(server);
-            if (contributorClass != null) {
-                ServerConnectionManager.getInstance().getOrCreateConnection(server).connect(EmptyRunnable.INSTANCE);
-                RemoteServerNode node = new RemoteServerNode(project, server, (connection, serverNode, deployment) -> null);
-                ServiceViewManager.getInstance(project).select(node, contributorClass, true, true);
-            }
-            return server;
-        }
-        return null;
+
+        service.showAndSelect(project, RemoteServerListConfigurable.class, listConfigurable -> {
+            MasterDetailsComponent.MyNode node = listConfigurable.addServerNode(server, true);
+
+            listConfigurable.selectNodeInTree(node);
+        });
     }
 
     public static class RemoteServerNodeDescriptor implements ServiceViewDescriptor {
         private final AbstractTreeNode<?> myNode;
         private final ActionGroups myActionGroups;
 
-        protected RemoteServerNodeDescriptor(@NotNull AbstractTreeNode<?> node, @NotNull ActionGroups actionGroups) {
+        protected RemoteServerNodeDescriptor(@Nonnull AbstractTreeNode<?> node, @Nonnull ActionGroups actionGroups) {
             myNode = node;
             myActionGroups = actionGroups;
         }
@@ -179,12 +176,12 @@ public abstract class RemoteServersServiceViewContributor
         }
 
         @Override
-        public @NotNull ItemPresentation getPresentation() {
+        public @Nonnull ItemPresentation getPresentation() {
             return myNode.getPresentation();
         }
 
         @Override
-        public boolean handleDoubleClick(@NotNull MouseEvent event) {
+        public boolean handleDoubleClick(@Nonnull MouseEvent event) {
             AnAction connectAction = ActionManager.getInstance().getAction("RemoteServers.ConnectServer");
             DataContext dataContext = DataManager.getInstance().getDataContext(event.getComponent());
             AnActionEvent actionEvent = AnActionEvent.createFromAnAction(connectAction, event, ActionPlaces.UNKNOWN, dataContext);
@@ -201,7 +198,7 @@ public abstract class RemoteServersServiceViewContributor
             return null;
         }
 
-        protected @NotNull AbstractTreeNode<?> getNode() {
+        protected @Nonnull AbstractTreeNode<?> getNode() {
             return myNode;
         }
     }
@@ -211,57 +208,57 @@ public abstract class RemoteServersServiceViewContributor
         private final RemoteServersServiceViewContributor myRootContributor;
         private final AbstractTreeNode<?> myNode;
 
-        protected RemoteServerNodeServiceViewContributor(@NotNull RemoteServersServiceViewContributor rootContributor,
-                                                         @NotNull AbstractTreeNode<?> node) {
+        protected RemoteServerNodeServiceViewContributor(@Nonnull RemoteServersServiceViewContributor rootContributor,
+                                                         @Nonnull AbstractTreeNode<?> node) {
             myRootContributor = rootContributor;
             myNode = node;
         }
 
         @Override
-        public @NotNull AbstractTreeNode<?> asService() {
+        public @Nonnull AbstractTreeNode<?> asService() {
             return myNode;
         }
 
         @Override
-        public @NotNull ServiceViewDescriptor getViewDescriptor(@NotNull Project project) {
+        public @Nonnull ServiceViewDescriptor getViewDescriptor(@Nonnull Project project) {
             return new RemoteServerNodeDescriptor(myNode, myRootContributor.getActionGroups());
         }
 
         @Override
-        public @NotNull List<RemoteServerNodeServiceViewContributor> getServices(@NotNull Project project) {
+        public @Nonnull List<RemoteServerNodeServiceViewContributor> getServices(@Nonnull Project project) {
             return ContainerUtil.map(myNode.getChildren(), myRootContributor::createNodeContributor);
         }
 
         @Override
-        public @NotNull ServiceViewDescriptor getServiceDescriptor(@NotNull Project project, @NotNull RemoteServerNodeServiceViewContributor service) {
+        public @Nonnull ServiceViewDescriptor getServiceDescriptor(@Nonnull Project project, @Nonnull RemoteServerNodeServiceViewContributor service) {
             return service.getViewDescriptor(project);
         }
 
-        protected @NotNull RemoteServersServiceViewContributor getRootContributor() {
+        protected @Nonnull RemoteServersServiceViewContributor getRootContributor() {
             return myRootContributor;
         }
     }
 
     public static class ActionGroups {
-        private final @NotNull String myMainToolbarID;
-        private final @NotNull String mySecondaryToolbarID;
-        private final @NotNull String myPopupID;
+        private final @Nonnull String myMainToolbarID;
+        private final @Nonnull String mySecondaryToolbarID;
+        private final @Nonnull String myPopupID;
 
-        public ActionGroups(@NotNull String mainToolbarID, @NotNull String secondaryToolbarID, @NotNull String popupID) {
+        public ActionGroups(@Nonnull String mainToolbarID, @Nonnull String secondaryToolbarID, @Nonnull String popupID) {
             myMainToolbarID = mainToolbarID;
             mySecondaryToolbarID = secondaryToolbarID;
             myPopupID = popupID;
         }
 
-        public @NotNull String getMainToolbarID() {
+        public @Nonnull String getMainToolbarID() {
             return myMainToolbarID;
         }
 
-        public @NotNull String getPopupID() {
+        public @Nonnull String getPopupID() {
             return myPopupID;
         }
 
-        public @NotNull String getSecondaryToolbarID() {
+        public @Nonnull String getSecondaryToolbarID() {
             return mySecondaryToolbarID;
         }
 

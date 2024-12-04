@@ -1,7 +1,7 @@
 package consulo.remoteServer.impl.internal.ui.tree;
 
 import consulo.project.Project;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface ServerNode extends ServersTreeNode {
     @Nullable

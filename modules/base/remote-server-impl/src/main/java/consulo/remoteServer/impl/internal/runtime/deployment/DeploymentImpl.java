@@ -10,9 +10,9 @@ import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentStatus;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 public class DeploymentImpl<D extends DeploymentConfiguration> implements Deployment {
     private final ServerConnectionImpl<D> myConnection;
@@ -21,9 +21,9 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     private volatile DeploymentState myState;
     private @Nls String myPresentableName;
 
-    public DeploymentImpl(@NotNull ServerConnectionImpl<D> connection,
-                          @NotNull String name,
-                          @NotNull DeploymentStatus status,
+    public DeploymentImpl(@Nonnull ServerConnectionImpl<D> connection,
+                          @Nonnull String name,
+                          @Nonnull DeploymentStatus status,
                           @Nullable @Nls String statusText,
                           @Nullable DeploymentRuntime runtime,
                           @Nullable DeploymentTask<D> deploymentTask) {
@@ -34,17 +34,17 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public @NotNull String getName() {
+    public @Nonnull String getName() {
         return myName;
     }
 
     @Override
-    public @NotNull DeploymentStatus getStatus() {
+    public @Nonnull DeploymentStatus getStatus() {
         return myState.getStatus();
     }
 
     @Override
-    public @NotNull @Nls String getStatusText() {
+    public @Nonnull @Nls String getStatusText() {
         String statusText = myState.getStatusText();
         return statusText != null ? statusText : myState.getStatus().getPresentableText().get();
     }
@@ -60,7 +60,7 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public @NotNull DeploymentLogManager getOrCreateLogManager(@NotNull Project project) {
+    public @Nonnull DeploymentLogManager getOrCreateLogManager(@Nonnull Project project) {
         return myConnection.getOrCreateLogManager(project, this);
     }
 
@@ -69,12 +69,12 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public void setStatus(final @NotNull DeploymentStatus status, final @Nullable @Nls String statusText) {
+    public void setStatus(final @Nonnull DeploymentStatus status, final @Nullable @Nls String statusText) {
         myConnection.changeDeploymentState(this, getRuntime(), myState.getStatus(), status, statusText);
     }
 
     @Override
-    public @NotNull ServerConnection<?> getConnection() {
+    public @Nonnull ServerConnection<?> getConnection() {
         return myConnection;
     }
 
@@ -84,8 +84,8 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
         return runtime == null ? null : runtime.getParent();
     }
 
-    public boolean changeState(@NotNull DeploymentStatus oldStatus,
-                               @NotNull DeploymentStatus newStatus,
+    public boolean changeState(@Nonnull DeploymentStatus oldStatus,
+                               @Nonnull DeploymentStatus newStatus,
                                @Nullable @Nls String statusText,
                                @Nullable DeploymentRuntime runtime) {
         if (myState.getStatus() == oldStatus) {
@@ -96,7 +96,7 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public @NotNull String getPresentableName() {
+    public @Nonnull String getPresentableName() {
         return myPresentableName == null ? getName() : myPresentableName;
     }
 
@@ -109,13 +109,13 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
         private final @Nls String myStatusText;
         private final DeploymentRuntime myRuntime;
 
-        private DeploymentState(@NotNull DeploymentStatus status, @Nullable @Nls String statusText, @Nullable DeploymentRuntime runtime) {
+        private DeploymentState(@Nonnull DeploymentStatus status, @Nullable @Nls String statusText, @Nullable DeploymentRuntime runtime) {
             myStatus = status;
             myStatusText = statusText;
             myRuntime = runtime;
         }
 
-        public @NotNull DeploymentStatus getStatus() {
+        public @Nonnull DeploymentStatus getStatus() {
             return myStatus;
         }
 

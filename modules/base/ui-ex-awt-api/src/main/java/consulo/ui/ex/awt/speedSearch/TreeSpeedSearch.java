@@ -26,6 +26,19 @@ import java.util.function.Function;
 import static javax.swing.tree.TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION;
 
 public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
+    @Nonnull
+    public static TreeSpeedSearch installOn(@Nonnull JTree tree,
+                                            boolean canExpand,
+                                            @Nonnull Function<? super TreePath, String> presentableStringFunction) {
+        return new TreeSpeedSearch(tree, presentableStringFunction, canExpand);
+    }
+
+    @Nonnull
+    public static TreeSpeedSearch installOn(@Nonnull JTree tree) {
+        return installOn(tree, false, TO_STRING);
+    }
+
+
     protected boolean myCanExpand;
 
     private static final Function<TreePath, String> TO_STRING = path -> path.getLastPathComponent().toString();

@@ -17,6 +17,7 @@ package consulo.remoteServer.impl.internal.runtime.deployment;
 
 import consulo.application.AllIcons;
 import consulo.component.util.pointer.NamedPointer;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
@@ -84,8 +85,8 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
 
   @Nonnull
   @Override
-  public String getPresentableName() {
-    return myPointer.getName();
+  public LocalizeValue getPresentableName() {
+    return LocalizeValue.of(myPointer.getName());
   }
 
   @Nullable

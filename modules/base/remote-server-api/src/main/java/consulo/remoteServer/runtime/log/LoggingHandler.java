@@ -2,16 +2,16 @@ package consulo.remoteServer.runtime.log;
 
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.ProcessHandler;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public interface LoggingHandler {
-    void print(@NotNull String s);
+    void print(@Nonnull String s);
 
-    void printHyperlink(@NotNull String url);
+    void printHyperlink(@Nonnull String url);
 
-    void printHyperlink(@NotNull String text, HyperlinkInfo info);
+    void printHyperlink(@Nonnull String text, HyperlinkInfo info);
 
-    void attachToProcess(@NotNull ProcessHandler handler);
+    void attachToProcess(@Nonnull ProcessHandler handler);
 
     void clear();
 

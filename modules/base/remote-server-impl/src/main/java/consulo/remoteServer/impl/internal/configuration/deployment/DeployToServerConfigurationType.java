@@ -1,150 +1,149 @@
-/*
- * Copyright 2000-2013 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.configuration.deployment;
 
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationTypeBase;
-import consulo.execution.configuration.RunConfiguration;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.remoteServer.ServerType;
-import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
+import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
-import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
-import consulo.remoteServer.impl.internal.configuration.localServer.LocalServerRunConfiguration;
 import consulo.remoteServer.localize.RemoteServerLocalize;
-import consulo.remoteServer.runtime.local.LocalRunner;
-import consulo.util.collection.ContainerUtil;
+import consulo.remoteServer.runtime.deployment.SingletonDeploymentSourceType;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
+import jakarta.annotation.Nullable;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * @author nik
- */
-public class DeployToServerConfigurationType extends ConfigurationTypeBase {
-  private final ServerType<?> myServerType;
+public final class DeployToServerConfigurationType<C extends ServerConfiguration> extends ConfigurationTypeBase {
 
-  public DeployToServerConfigurationType(ServerType<?> serverType) {
-    super(serverType.getId() + "-deploy", RemoteServerLocalize.deployToServerDisplayName(serverType.getPresentableName()), RemoteServerLocalize.deployToServerDisplayDescription(
-      serverType.getPresentableName()), serverType.getIcon());
-    addFactory(new DeployToServerConfigurationFactory());
-    LocalRunner localRunner = serverType.getLocalRunner();
-    if (localRunner != null) {
-      addFactory(new LocalServerConfigurationFactory(localRunner));
-    }
-    myServerType = serverType;
-  }
+    private final @Nonnull ServerType<C> myServerType;
+    private final @Nullable MultiSourcesConfigurationFactory myMultiSourcesFactory;
+    private final Map<String, SingletonTypeConfigurationFactory> myPerTypeFactories = new HashMap<>();
 
-  public class DeployToServerConfigurationFactory extends ConfigurationFactory {
-    public DeployToServerConfigurationFactory() {
-      super(DeployToServerConfigurationType.this);
-    }
+    public DeployToServerConfigurationType(@Nonnull ServerType<C> serverType) {
+        super(serverType.getId() + "-deploy",
+            serverType.getPresentableName(),
+            RemoteServerLocalize.deployToServerConfigurationTypeDescription(serverType.getPresentableName()),
+            Image.empty(Image.DEFAULT_ICON_SIZE));
 
-    @Nonnull
-    @Override
-    public String getId() {
-      return getType() + "#remote";
-    }
-
-    @Override
-    @Nonnull
-    public LocalizeValue getDisplayName() {
-      return RemoteServerLocalize.deployToServerFactoryRemote();
-    }
-
-    @Override
-    public boolean isApplicable(@Nonnull Project project) {
-      return myServerType.isConfigurationTypeIsAvailable(project);
-    }
-
-    @Override
-    public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
-      DeployToServerRunConfiguration deployConfiguration = (DeployToServerRunConfiguration)configuration;
-      if (deployConfiguration.getServerName() == null) {
-        RemoteServer<?> server = ContainerUtil.getFirstItem(RemoteServersManager.getInstance().getServers(myServerType));
-        if (server != null) {
-          deployConfiguration.setServerName(server.getName());
+        myServerType = serverType;
+        if (serverType.mayHaveProjectSpecificDeploymentSources()) {
+            myMultiSourcesFactory = new MultiSourcesConfigurationFactory();
+            addFactory(myMultiSourcesFactory);
         }
-      }
-
-      if (deployConfiguration.getDeploymentSource() == null) {
-        List<DeploymentSource> sources = deployConfiguration.getDeploymentConfigurator().getAvailableDeploymentSources();
-        DeploymentSource source = ContainerUtil.getFirstItem(sources);
-        if (source != null) {
-          deployConfiguration.setDeploymentSource(source);
-          DeploymentSourceType type = source.getType();
-          type.setBuildBeforeRunTask(configuration, source);
+        else {
+            myMultiSourcesFactory = null;
         }
-      }
-    }
 
-    @Override
-    public RunConfiguration createTemplateConfiguration(Project project) {
-      DeploymentConfigurator<?> deploymentConfigurator = myServerType.createDeploymentConfigurator(project);
-      return new DeployToServerRunConfiguration(project, this, "", myServerType, deploymentConfigurator);
-    }
-  }
-
-  public class LocalServerConfigurationFactory extends ConfigurationFactory {
-    private final LocalRunner myLocalRunner;
-
-    public LocalServerConfigurationFactory(LocalRunner localRunner) {
-      super(DeployToServerConfigurationType.this);
-      myLocalRunner = localRunner;
-    }
-
-    @Nonnull
-    @Override
-    public String getId() {
-      return getType().getId() + "#local";
-    }
-
-    @Override
-    @Nonnull
-    public LocalizeValue getDisplayName() {
-      return RemoteServerLocalize.deployToServerFactoryLocal();
-    }
-
-    @Override
-    public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
-      LocalServerRunConfiguration deployConfiguration = (LocalServerRunConfiguration)configuration;
-
-      if (deployConfiguration.getDeploymentSource() == null) {
-        List<DeploymentSource> sources = deployConfiguration.getDeploymentConfigurator().getAvailableDeploymentSources();
-        DeploymentSource source = ContainerUtil.getFirstItem(sources);
-        if (source != null) {
-          deployConfiguration.setDeploymentSource(source);
-          DeploymentSourceType type = source.getType();
-          type.setBuildBeforeRunTask(configuration, source);
+        for (SingletonDeploymentSourceType next : serverType.getSingletonDeploymentSourceTypes()) {
+            SingletonTypeConfigurationFactory nextFactory = new SingletonTypeConfigurationFactory(next);
+            addFactory(nextFactory);
+            myPerTypeFactories.put(next.getId(), nextFactory);
         }
-      }
+    }
+
+    /**
+     * @param sourceType hint for a type of deployment source or null if unknown
+     */
+    public @Nonnull ConfigurationFactory getFactoryForType(@Nullable DeploymentSourceType<?> sourceType) {
+        ConfigurationFactory result = null;
+        if (sourceType instanceof SingletonDeploymentSourceType &&
+            myServerType.getSingletonDeploymentSourceTypes().contains(sourceType)) {
+            result = myPerTypeFactories.get(sourceType.getId());
+        }
+        if (result == null) {
+            result = myMultiSourcesFactory;
+        }
+        assert result != null : "server type: " + myServerType.getId() + ", requested source type: " + sourceType;
+        return result;
     }
 
     @Override
-    public boolean isApplicable(@Nonnull Project project) {
-      return myServerType.isConfigurationTypeIsAvailable(project);
+    public @Nonnull Image getIcon() {
+        return myServerType.getIcon();
     }
 
-    @Override
-    public RunConfiguration createTemplateConfiguration(Project project) {
-      DeploymentConfigurator<?> deploymentConfigurator = myServerType.createDeploymentConfigurator(project);
-      return new LocalServerRunConfiguration(project, this, "", myServerType, deploymentConfigurator, myLocalRunner);
+    public String getHelpTopic() {
+        return "reference.dialogs.rundebug." + getId();
     }
-  }
+
+    // todo do not extends ConfigurationFactoryEx once Google Cloud Tools plugin will get rid of getFactory() usage
+    public abstract class DeployToServerConfigurationFactory extends ConfigurationFactory {
+
+        public DeployToServerConfigurationFactory() {
+            super(DeployToServerConfigurationType.this);
+        }
+
+        @Override
+        public boolean isApplicable(@Nonnull Project project) {
+            return myServerType.canAutoDetectConfiguration() ||
+                !RemoteServersManager.getInstance().getServers(myServerType).isEmpty();
+        }
+
+        @Override
+        public @Nonnull DeployToServerRunConfiguration<C, ?> createTemplateConfiguration(@Nonnull Project project) {
+            DeploymentConfigurator<?, C> deploymentConfigurator = myServerType.createDeploymentConfigurator(project);
+            return new DeployToServerRunConfiguration<>(project, this, "", myServerType, deploymentConfigurator);
+        }
+    }
+
+    public final class MultiSourcesConfigurationFactory extends DeployToServerConfigurationFactory {
+
+        @Override
+        public @Nonnull @NonNls String getId() {
+            //compatibility reasons, before 173 it was the only configuration factory stored with this ID
+            return myServerType.getDeploymentConfigurationFactoryId();
+        }
+    }
+
+    public final class SingletonTypeConfigurationFactory extends DeployToServerConfigurationFactory {
+
+        private final @Nonnull
+        @NonNls String mySourceTypeId;
+        private final LocalizeValue myPresentableName;
+
+        public SingletonTypeConfigurationFactory(@Nonnull SingletonDeploymentSourceType sourceType) {
+            mySourceTypeId = sourceType.getId();
+            myPresentableName = sourceType.getPresentableName();
+        }
+
+        @Override
+        public @Nonnull @NonNls String getId() {
+            return mySourceTypeId;
+        }
+
+        @Override
+        public LocalizeValue getDisplayName() {
+            return myPresentableName;
+        }
+
+        @Override
+        public @Nonnull DeployToServerRunConfiguration<C, ?> createTemplateConfiguration(@Nonnull Project project) {
+            DeployToServerRunConfiguration<C, ?> result = super.createTemplateConfiguration(project);
+            DeploymentSourceType<?> type = getSourceTypeImpl();
+            if (type instanceof SingletonDeploymentSourceType) {
+                result.lockDeploymentSource((SingletonDeploymentSourceType) type);
+            }
+            return result;
+        }
+
+        private @Nullable DeploymentSourceType<?> getSourceTypeImpl() {
+            return DeploymentSourceType.EP_NAME.findFirstSafe(next -> mySourceTypeId.equals(next.getId()));
+        }
+
+        public boolean isEditableInDumbMode() {
+            return getSourceTypeImpl().isEditableInDumbMode();
+        }
+    }
+
+    public ServerType<C> getServerType() {
+        return myServerType;
+    }
 }
+

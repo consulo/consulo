@@ -1,14 +1,15 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.runtime.deployment;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -22,34 +23,34 @@ import java.io.File;
  * {@link SingletonDeploymentSourceType} to any other deployment source without recreating of the configuration.
  */
 public class SingletonDeploymentSourceType extends DeploymentSourceType<DeploymentSource> {
-    private final @Nls String myPresentableName;
+    private final LocalizeValue myPresentableName;
     private final SingletonDeploymentSource mySourceInstance;
 
-    public SingletonDeploymentSourceType(@NotNull String id, @NotNull @Nls String name, @NotNull Image icon) {
+    public SingletonDeploymentSourceType(@Nonnull String id, LocalizeValue name, @Nonnull Image icon) {
         super(id);
         myPresentableName = name;
         mySourceInstance = new SingletonDeploymentSource(icon, getClass());
     }
 
-    protected static <T extends SingletonDeploymentSourceType> T findExtension(@NotNull Class<? extends T> clazz) {
+    protected static <T extends SingletonDeploymentSourceType> T findExtension(@Nonnull Class<? extends T> clazz) {
         return DeploymentSourceType.EP_NAME.findExtension(clazz);
     }
 
-    public @NotNull DeploymentSource getSingletonSource() {
+    public @Nonnull DeploymentSource getSingletonSource() {
         return mySourceInstance;
     }
 
     @Override
-    public void save(@NotNull DeploymentSource source, @NotNull Element tag) {
+    public void save(@Nonnull DeploymentSource source, @Nonnull Element tag) {
         //
     }
 
     @Override
-    public @NotNull DeploymentSource load(@NotNull Element tag, @NotNull Project project) {
+    public @Nonnull DeploymentSource load(@Nonnull Element tag, @Nonnull Project project) {
         return getSingletonSource();
     }
 
-    public final @Nls @NotNull String getPresentableName() {
+    public final LocalizeValue getPresentableName() {
         return myPresentableName;
     }
 
@@ -57,7 +58,7 @@ public class SingletonDeploymentSourceType extends DeploymentSourceType<Deployme
         private final Class<? extends SingletonDeploymentSourceType> myTypeClass;
         private final Image myIcon;
 
-        SingletonDeploymentSource(@NotNull Image icon, @NotNull Class<? extends SingletonDeploymentSourceType> typeClass) {
+        SingletonDeploymentSource(@Nonnull Image icon, @Nonnull Class<? extends SingletonDeploymentSourceType> typeClass) {
             myIcon = icon;
             myTypeClass = typeClass;
         }
@@ -89,12 +90,13 @@ public class SingletonDeploymentSourceType extends DeploymentSourceType<Deployme
         }
 
         @Override
-        public final @NotNull String getPresentableName() {
+        @Nonnull
+        public final LocalizeValue getPresentableName() {
             return getType().getPresentableName();
         }
 
         @Override
-        public @NotNull SingletonDeploymentSourceType getType() {
+        public @Nonnull SingletonDeploymentSourceType getType() {
             return findExtension(myTypeClass);
         }
     }

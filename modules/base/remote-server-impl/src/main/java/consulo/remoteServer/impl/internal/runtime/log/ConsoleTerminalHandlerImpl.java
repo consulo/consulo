@@ -6,7 +6,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.process.NopProcessHandler;
 import consulo.project.Project;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.*;

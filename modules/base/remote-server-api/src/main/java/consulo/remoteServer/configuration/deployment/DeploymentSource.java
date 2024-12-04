@@ -15,10 +15,11 @@
  */
 package consulo.remoteServer.configuration.deployment;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 /**
@@ -32,7 +33,7 @@ public interface DeploymentSource {
   String getFilePath();
 
   @Nonnull
-  String getPresentableName();
+  LocalizeValue getPresentableName();
 
   @Nullable
   Image getIcon();

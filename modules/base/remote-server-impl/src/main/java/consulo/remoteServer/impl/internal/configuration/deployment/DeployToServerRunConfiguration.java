@@ -1,9 +1,14 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.configuration.deployment;
 
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.component.persist.ComponentSerializationUtil;
 import consulo.execution.RuntimeConfigurationException;
-import consulo.execution.configuration.*;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.LocatableConfiguration;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunProfileState;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.execution.executor.Executor;
@@ -11,6 +16,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
+import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
@@ -19,6 +25,7 @@ import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
+import consulo.remoteServer.runtime.deployment.DeployToServerStateProvider;
 import consulo.remoteServer.runtime.deployment.SingletonDeploymentSourceType;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.xml.serializer.InvalidDataException;
@@ -27,18 +34,18 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class DeployToServerRunConfiguration<S extends ServerConfiguration, D extends DeploymentConfiguration> extends RunConfigurationBase
+public class DeployToServerRunConfiguration<S extends ServerConfiguration, D extends DeploymentConfiguration>
+    extends consulo.remoteServer.configuration.deployment.DeployToServerRunConfiguration<S, D>
     implements LocatableConfiguration {
     private static final Logger LOG = Logger.getInstance(DeployToServerRunConfiguration.class);
     private static final String DEPLOYMENT_SOURCE_TYPE_ATTRIBUTE = "type";
-    public static final @NonNls String SETTINGS_ELEMENT = "settings";
+    public static final String SETTINGS_ELEMENT = "settings";
     private static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
     private final String myServerTypeId;
     private final DeploymentConfigurator<D, S> myDeploymentConfigurator;
@@ -57,12 +64,12 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
         myDeploymentConfigurator = deploymentConfigurator;
     }
 
-    void lockDeploymentSource(@NotNull SingletonDeploymentSourceType theOnlySourceType) {
+    void lockDeploymentSource(@Nonnull SingletonDeploymentSourceType theOnlySourceType) {
         myDeploymentSourceIsLocked = true;
         myDeploymentSource = theOnlySourceType.getSingletonSource();
     }
 
-    public @NotNull ServerType<S> getServerType() {
+    public @Nonnull ServerType<S> getServerType() {
         //noinspection unchecked
         ServerType<S> result = (ServerType<S>) ServerType.EP_NAME.findFirstSafe(next -> next.getId().equals(myServerTypeId));
         assert result != null : "Server type `" + myServerTypeId + "` had been unloaded already";
@@ -73,17 +80,17 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
         return myServerName;
     }
 
-    private @NotNull DeploymentConfigurator<D, S> getDeploymentConfigurator() {
+    private @Nonnull DeploymentConfigurator<D, S> getDeploymentConfigurator() {
         return myDeploymentConfigurator;
     }
 
     @Override
-    public @NotNull SettingsEditor<DeployToServerRunConfiguration> getConfigurationEditor() {
+    public @Nonnull SettingsEditor<DeployToServerRunConfiguration> getConfigurationEditor() {
         ServerType<S> serverType = getServerType();
         //noinspection unchecked
         SettingsEditor<DeployToServerRunConfiguration> commonEditor =
-            myDeploymentSourceIsLocked ? new LockedSource(serverType, myDeploymentConfigurator, getProject(), myDeploymentSource)
-                : new AnySource(serverType, myDeploymentConfigurator, getProject());
+            myDeploymentSourceIsLocked ? new DeployToServerSettingsEditor.LockedSource(serverType, myDeploymentConfigurator, getProject(), myDeploymentSource)
+                : new DeployToServerSettingsEditor.AnySource(serverType, myDeploymentConfigurator, getProject());
 
 
         SettingsEditorGroup<DeployToServerRunConfiguration> group = new SettingsEditorGroup<>();
@@ -95,7 +102,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     }
 
     @Override
-    public @Nullable RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
+    public @Nullable RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
         String serverName = getServerName();
         if (serverName == null) {
             throw new ExecutionException(CloudBundle.message("DeployToServerRunConfiguration.error.server.required"));
@@ -110,7 +117,14 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
             throw new ExecutionException(CloudBundle.message("DeployToServerRunConfiguration.error.deployment.not.selected"));
         }
 
-        return DeployToServerStateProvider.getFirstNotNullState(server, executor, env, myDeploymentSource, myDeploymentConfiguration);
+        ExtensionPoint<DeployToServerStateProvider> point = Application.get().getExtensionPoint(DeployToServerStateProvider.class);
+        for (DeployToServerStateProvider provider : point) {
+            RunProfileState state = provider.getState(server, executor, env, myDeploymentSource, myDeploymentConfiguration);
+            if (state != null) {
+                return state;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -175,7 +189,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     }
 
     @Override
-    public void readExternal(@NotNull Element element) throws InvalidDataException {
+    public void readExternal(@Nonnull Element element) throws InvalidDataException {
         super.readExternal(element);
         ConfigurationState state = XmlSerializer.deserialize(element, ConfigurationState.class);
         myServerName = null;
@@ -209,7 +223,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
 
     @SuppressWarnings("unchecked")
     @Override
-    public void writeExternal(@NotNull Element element) throws WriteExternalException {
+    public void writeExternal(@Nonnull Element element) throws WriteExternalException {
         ConfigurationState state = new ConfigurationState();
         state.myServerName = myServerName;
         if (myDeploymentSource != null) {

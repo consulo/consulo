@@ -1,9 +1,12 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.util;
 
+import consulo.credentialStorage.CredentialAttributes;
+import consulo.credentialStorage.Credentials;
+import consulo.credentialStorage.PasswordSafe;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -22,7 +25,7 @@ public final class CloudConfigurationUtil {
     public static void doSetSafeValue(@Nullable CredentialAttributes credentialAttributes,
                                       @Nullable String credentialUser,
                                       @Nullable String secretValue,
-                                      @NotNull Consumer<? super String> unsafeSetter) {
+                                      @Nonnull Consumer<? super String> unsafeSetter) {
 
         if (credentialAttributes != null) {
             PasswordSafe.getInstance().set(credentialAttributes, new Credentials(credentialUser, secretValue), false);
@@ -39,7 +42,7 @@ public final class CloudConfigurationUtil {
             .map(Credentials::getPasswordAsString);
     }
 
-    public static String doGetSafeValue(@Nullable CredentialAttributes credentialAttributes, @NotNull Supplier<String> unsafeGetter) {
+    public static String doGetSafeValue(@Nullable CredentialAttributes credentialAttributes, @Nonnull Supplier<String> unsafeGetter) {
         return doGetSafeValue(credentialAttributes).orElseGet(unsafeGetter);
     }
 

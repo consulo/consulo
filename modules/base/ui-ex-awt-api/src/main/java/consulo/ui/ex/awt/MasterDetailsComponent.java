@@ -108,7 +108,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     private boolean myHasDeletedItems;
     protected AutoScrollToSourceHandler myAutoScrollHandler;
 
-    private boolean myToReInitWholePanel = true;
+    protected boolean myToReInitWholePanel = true;
 
     private Disposable myDisposable;
 
@@ -972,7 +972,9 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     public interface ActionGroupWithPreselection {
         ActionGroup getActionGroup();
 
-        int getDefaultIndex();
+        default int getDefaultIndex() {
+            return 0;
+        }
     }
 
     protected class MyActionGroupWrapper extends AnAction implements DumbAware {

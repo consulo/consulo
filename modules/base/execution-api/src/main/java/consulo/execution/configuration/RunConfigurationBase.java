@@ -41,7 +41,7 @@ import java.util.List;
  *
  * @author dyoma
  */
-public abstract class RunConfigurationBase extends UserDataHolderBase implements RunConfiguration, TargetAwareRunProfile {
+public abstract class RunConfigurationBase extends UserDataHolderBase implements RunConfiguration, TargetAwareRunProfile, ConfigurationCreationListener {
   private final ConfigurationFactory myFactory;
   private final Project myProject;
   private String myName = "";

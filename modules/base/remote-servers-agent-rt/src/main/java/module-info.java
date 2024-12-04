@@ -7,4 +7,6 @@ module consulo.remote.servers.agent.rt {
 
   exports consulo.remoteServer.agent.shared;
   exports consulo.remoteServer.agent.shared.annotation;
+  exports consulo.remoteServer.agent.shared.util;
+  exports consulo.remoteServer.agent.shared.util.log;
 }

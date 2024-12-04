@@ -15,15 +15,15 @@ import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.ui.ServersTreeNodeSelector;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.ObjectUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 public final class ApplicationActionUtils {
     private ApplicationActionUtils() {
     }
 
-    public static @Nullable DeploymentNode getDeploymentTarget(@NotNull AnActionEvent e) {
+    public static @Nullable DeploymentNode getDeploymentTarget(@Nonnull AnActionEvent e) {
         return ServiceViewActionUtils.getTarget(e, DeploymentNode.class);
     }
 
@@ -32,20 +32,20 @@ public final class ApplicationActionUtils {
     }
 
     @Contract("null, _ -> null")
-    public static @Nullable <T> T getApplicationRuntime(@Nullable DeploymentNode node, @NotNull Class<T> clazz) {
+    public static @Nullable <T> T getApplicationRuntime(@Nullable DeploymentNode node, @Nonnull Class<T> clazz) {
         Deployment deployment = getDeployment(node);
         return deployment == null ? null : ObjectUtil.tryCast(deployment.getRuntime(), clazz);
     }
 
-    public static @Nullable <T> T getApplicationRuntime(@NotNull AnActionEvent e, @NotNull Class<T> clazz) {
+    public static @Nullable <T> T getApplicationRuntime(@Nonnull AnActionEvent e, @Nonnull Class<T> clazz) {
         Deployment deployment = getDeployment(getDeploymentTarget(e));
         return deployment == null ? null : ObjectUtil.tryCast(deployment.getRuntime(), clazz);
     }
 
-    public static @NotNull Runnable createLogSelector(@NotNull Project project,
-                                                      @NotNull ServersTreeNodeSelector selector,
-                                                      @NotNull DeploymentNode node,
-                                                      @NotNull String logName) {
+    public static @Nonnull Runnable createLogSelector(@Nonnull Project project,
+                                                      @Nonnull ServersTreeNodeSelector selector,
+                                                      @Nonnull DeploymentNode node,
+                                                      @Nonnull String logName) {
         SelectLogRunnable selectLogRunnable = new SelectLogRunnable(project, selector, node, logName);
         DisposableSelectLogRunnableWrapper wrapper = new DisposableSelectLogRunnableWrapper(selectLogRunnable);
         Disposer.register(project, wrapper);
@@ -80,10 +80,10 @@ public final class ApplicationActionUtils {
         private final DeploymentNode myNode;
         private final String myLogName;
 
-        SelectLogRunnable(@NotNull Project project,
-                          @NotNull ServersTreeNodeSelector selector,
-                          @NotNull DeploymentNode node,
-                          @NotNull String logName) {
+        SelectLogRunnable(@Nonnull Project project,
+                          @Nonnull ServersTreeNodeSelector selector,
+                          @Nonnull DeploymentNode node,
+                          @Nonnull String logName) {
             myProject = project;
             mySelector = selector;
             myNode = node;

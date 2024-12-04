@@ -7,9 +7,9 @@ import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentStatus;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
 import consulo.remoteServer.runtime.deployment.ServerRuntimeInstance;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -18,12 +18,12 @@ public class LocalDeploymentImpl<D extends DeploymentConfiguration> extends Depl
     private final ServerRuntimeInstance<D> myServerInstance;
     private DeploymentImpl myRemoteDeployment;
 
-    public LocalDeploymentImpl(@NotNull ServerRuntimeInstance<D> instance,
-                               @NotNull ServerConnectionImpl<D> connection,
-                               @NotNull DeploymentStatus status,
+    public LocalDeploymentImpl(@Nonnull ServerRuntimeInstance<D> instance,
+                               @Nonnull ServerConnectionImpl<D> connection,
+                               @Nonnull DeploymentStatus status,
                                @Nullable @Nls String statusText,
                                @Nullable DeploymentRuntime runtime,
-                               @NotNull DeploymentTask<D> deploymentTask) {
+                               @Nonnull DeploymentTask<D> deploymentTask) {
         super(connection,
             instance.getDeploymentName(deploymentTask.getSource(), deploymentTask.getConfiguration()),
             status,
@@ -47,7 +47,7 @@ public class LocalDeploymentImpl<D extends DeploymentConfiguration> extends Depl
     }
 
     @Override
-    public @NotNull DeploymentTask<D> getDeploymentTask() {
+    public @Nonnull DeploymentTask<D> getDeploymentTask() {
         return Objects.requireNonNull(super.getDeploymentTask());
     }
 
@@ -56,12 +56,12 @@ public class LocalDeploymentImpl<D extends DeploymentConfiguration> extends Depl
     }
 
     @Override
-    public @NotNull DeploymentStatus getStatus() {
+    public @Nonnull DeploymentStatus getStatus() {
         return isLocalState() ? super.getStatus() : myRemoteDeployment.getStatus();
     }
 
     @Override
-    public @NotNull String getStatusText() {
+    public @Nonnull String getStatusText() {
         return isLocalState() ? super.getStatusText() : myRemoteDeployment.getStatusText();
     }
 
@@ -70,8 +70,8 @@ public class LocalDeploymentImpl<D extends DeploymentConfiguration> extends Depl
     }
 
     @Override
-    public boolean changeState(@NotNull DeploymentStatus oldStatus,
-                               @NotNull DeploymentStatus newStatus,
+    public boolean changeState(@Nonnull DeploymentStatus oldStatus,
+                               @Nonnull DeploymentStatus newStatus,
                                @Nullable String statusText,
                                @Nullable DeploymentRuntime runtime) {
         boolean result = super.changeState(oldStatus, newStatus, statusText, runtime);

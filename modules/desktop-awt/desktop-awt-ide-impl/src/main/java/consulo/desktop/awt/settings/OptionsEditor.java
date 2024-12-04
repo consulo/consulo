@@ -312,7 +312,6 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             try {
                 final boolean sameText = myConfigurableToLastOption.containsKey(current) && text.equals(myConfigurableToLastOption.get(current));
 
-
                 if (current == null) {
                     myVisible = false;
                     myGP.clear();

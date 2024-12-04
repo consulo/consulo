@@ -17,6 +17,7 @@ package consulo.sandboxPlugin.ide.remoteServer;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
@@ -34,7 +35,6 @@ import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +57,7 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public RemoteServerConfigurable createServerConfigurable(SandServerConfiguration configuration) {
         return new RemoteServerConfigurable() {
             @RequiredUIAccess
@@ -69,7 +69,7 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
             @RequiredUIAccess
             @Nullable
             @Override
-            public Component createUIComponent() {
+            public Component createUIComponent(Disposable uiDisposable) {
                 return Label.create("Sand stub UI");
             }
 
@@ -88,7 +88,7 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
     }
 
     @Override
-    public @NotNull DeploymentConfigurator<?, SandServerConfiguration> createDeploymentConfigurator(Project project) {
+    public @Nonnull DeploymentConfigurator<?, SandServerConfiguration> createDeploymentConfigurator(Project project) {
         return new DeploymentConfigurator<>() {
             @Nonnull
             @Override
@@ -100,7 +100,7 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
                     .collect(Collectors.toList());
             }
 
-            @NotNull
+            @Nonnull
             @Override
             public DeploymentConfiguration createDefaultConfiguration(DeploymentSource source) {
                 return new DummyDeploymentConfiguration();

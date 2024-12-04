@@ -1,7 +1,7 @@
 package consulo.remoteServer.configuration;
 
 import consulo.component.persist.PersistentStateComponent;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 public abstract class ServerConfiguration {
     public abstract PersistentStateComponent<?> getSerializer();

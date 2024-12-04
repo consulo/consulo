@@ -19,14 +19,15 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.execution.BuildArtifactsBeforeRunTaskHelper;
-import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import consulo.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
+import javax.swing.*;
 
 /**
  * @author nik
@@ -60,11 +61,11 @@ public class ArtifactDeploymentSourceType extends DeploymentSourceType<ArtifactD
   }
 
   @Override
-  public void updateBuildBeforeRunOption(@Nonnull DataContext dataContext, @Nonnull Project project, @Nonnull ArtifactDeploymentSource source, boolean select) {
+  public void updateBuildBeforeRunOption(@Nonnull JComponent component, @Nonnull Project project, @Nonnull ArtifactDeploymentSource source, boolean select) {
     Artifact artifact = source.getArtifact();
     if (artifact != null) {
       BuildArtifactsBeforeRunTaskHelper helper = project.getInstance(BuildArtifactsBeforeRunTaskHelper.class);
-      helper.setBuildArtifactBeforeRunOption(dataContext, artifact, select);
+      helper.setBuildArtifactBeforeRunOption(DataManager.getInstance().getDataContext(component), artifact, select);
     }
   }
 }

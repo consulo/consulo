@@ -1,14 +1,17 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.util;
 
+import consulo.credentialStorage.CredentialAttributes;
+import consulo.credentialStorage.PasswordSafe;
+import consulo.http.HttpProxyManager;
 import consulo.remoteServer.agent.shared.CloudAgentConfigBase;
 import consulo.remoteServer.agent.shared.CloudProxySettings;
 import consulo.remoteServer.configuration.ServerConfigurationBase;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Transient;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -46,27 +49,27 @@ public class CloudConfigurationBase<Self extends CloudConfigurationBase<Self>>
     @Transient
     @Override
     public CloudProxySettings getProxySettings() {
-        final HttpConfigurable httpConfigurable = HttpConfigurable.getInstance();
+        final HttpProxyManager httpConfigurable = HttpProxyManager.getInstance();
         return new CloudProxySettings() {
 
             @Override
             public boolean useHttpProxy() {
-                return httpConfigurable.USE_HTTP_PROXY;
+                return httpConfigurable.isHttpProxyEnabled();
             }
 
             @Override
             public String getHost() {
-                return httpConfigurable.PROXY_HOST;
+                return httpConfigurable.getProxyHost();
             }
 
             @Override
             public int getPort() {
-                return httpConfigurable.PROXY_PORT;
+                return httpConfigurable.getProxyPort();
             }
 
             @Override
             public boolean useAuthentication() {
-                return httpConfigurable.PROXY_AUTHENTICATION;
+                return httpConfigurable.isProxyAuthenticationEnabled();
             }
 
             @Override
@@ -118,12 +121,12 @@ public class CloudConfigurationBase<Self extends CloudConfigurationBase<Self>>
     protected static void doSetSafeValue(@Nullable CredentialAttributes credentialAttributes,
                                          @Nullable String credentialUser,
                                          @Nullable String secretValue,
-                                         @NotNull Consumer<? super String> unsafeSetter) {
+                                         @Nonnull Consumer<? super String> unsafeSetter) {
 
         CloudConfigurationUtil.doSetSafeValue(credentialAttributes, credentialUser, secretValue, unsafeSetter);
     }
 
-    protected static String doGetSafeValue(@Nullable CredentialAttributes credentialAttributes, @NotNull Supplier<String> unsafeGetter) {
+    protected static String doGetSafeValue(@Nullable CredentialAttributes credentialAttributes, @Nonnull Supplier<String> unsafeGetter) {
         return CloudConfigurationUtil.doGetSafeValue(credentialAttributes, unsafeGetter);
     }
 

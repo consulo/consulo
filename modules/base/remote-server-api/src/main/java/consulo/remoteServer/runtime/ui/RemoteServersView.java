@@ -6,18 +6,18 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.remoteServer.runtime.ServerConnection;
 import consulo.util.lang.function.Condition;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class RemoteServersView {
-    public static RemoteServersView getInstance(@NotNull Project project) {
+    public static RemoteServersView getInstance(@Nonnull Project project) {
         return project.getInstance(RemoteServersView.class);
     }
 
-    public abstract void showServerConnection(@NotNull ServerConnection<?> connection);
+    public abstract void showServerConnection(@Nonnull ServerConnection<?> connection);
 
-    public abstract void showDeployment(@NotNull ServerConnection<?> connection, @NotNull String deploymentName);
+    public abstract void showDeployment(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName);
 
-    public abstract void registerTreeNodeSelector(@NotNull ServersTreeNodeSelector selector,
-                                                  @NotNull Condition<ServerConnection<?>> condition);
+    public abstract void registerTreeNodeSelector(@Nonnull ServersTreeNodeSelector selector,
+                                                  @Nonnull Condition<ServerConnection<?>> condition);
 }

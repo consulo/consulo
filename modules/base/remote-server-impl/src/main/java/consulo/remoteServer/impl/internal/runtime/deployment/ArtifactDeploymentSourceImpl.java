@@ -4,6 +4,7 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.element.ArtifactRootElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.localize.LocalizeValue;
 import consulo.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.ui.image.Image;
@@ -57,8 +58,8 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
 
   @Nonnull
   @Override
-  public String getPresentableName() {
-    return myPointer.getName();
+  public LocalizeValue getPresentableName() {
+    return LocalizeValue.of(myPointer.getName());
   }
 
   @Override

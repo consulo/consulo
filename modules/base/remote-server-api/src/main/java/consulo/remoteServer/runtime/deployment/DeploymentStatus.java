@@ -5,7 +5,7 @@ import consulo.application.AllIcons;
 import consulo.localize.LocalizeValue;
 import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public class DeploymentStatus {
 
@@ -29,7 +29,7 @@ public class DeploymentStatus {
     private final LocalizeValue myPresentableText;
     private final boolean myTransition;
 
-    public DeploymentStatus(Image icon, @NotNull LocalizeValue presentableText, boolean transition) {
+    public DeploymentStatus(Image icon, @Nonnull LocalizeValue presentableText, boolean transition) {
         myIcon = icon;
         myPresentableText = presentableText;
         myTransition = transition;

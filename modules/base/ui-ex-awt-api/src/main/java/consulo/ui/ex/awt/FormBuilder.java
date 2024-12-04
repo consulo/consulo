@@ -124,6 +124,11 @@ public class FormBuilder {
     return addLabeledComponent(new JLabel(), component, topInset);
   }
 
+  @Nonnull
+  public FormBuilder addComponentFillVertically(@Nonnull JComponent component, int topInset) {
+    return addComponent(component); // TODO not supported !
+  }
+
   public FormBuilder addLabeledComponent(@Nullable Component label, @Nonnull Component component, int topInset, boolean labelOnTop) {
     GridBagConstraints c = new GridBagConstraints();
     topInset = myLineCount > 0 ? topInset : 0;

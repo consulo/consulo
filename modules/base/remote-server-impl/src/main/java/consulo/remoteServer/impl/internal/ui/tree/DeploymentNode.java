@@ -1,10 +1,10 @@
 package consulo.remoteServer.impl.internal.ui.tree;
 
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public interface DeploymentNode extends ServersTreeNode {
 
-    @NotNull
+    @Nonnull
     ServerNode getServerNode();
 
     boolean isDeployActionVisible();

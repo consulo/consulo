@@ -6,6 +6,8 @@ module consulo.remote.server.impl {
   requires transitive consulo.remote.server.api;
   requires consulo.execution.debug.api;
   requires consulo.remote.servers.agent.rt;
+  requires consulo.http.api;
+  requires consulo.credential.storage.api;
 
   exports consulo.remoteServer.impl.internal.configuration to consulo.ide.impl;
   exports consulo.remoteServer.impl.internal.runtime to consulo.ide.impl;
@@ -13,6 +15,7 @@ module consulo.remote.server.impl {
   exports consulo.remoteServer.impl.internal.runtime.log to consulo.ide.impl;
 
   opens consulo.remoteServer.impl.internal.configuration to consulo.util.xml.serializer;
+  opens consulo.remoteServer.impl.internal.configuration.deployment to consulo.util.xml.serializer;
   opens consulo.remoteServer.impl.internal.ui.tree.action to consulo.component.impl;
 
   // TODO remove in future

@@ -15,37 +15,53 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nullable;
+import jakarta.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import javax.swing.*;
 import java.util.List;
 
 /**
  * @author yole
  */
-public class CollectionComboBoxModel<T> extends AbstractCollectionComboBoxModel<T> {
-    private final List<T> myItems;
+public class CollectionComboBoxModel<T> extends CollectionListModel<T> implements ComboBoxModel<T> {
+    protected T mySelection;
 
     public CollectionComboBoxModel() {
-        super(null);
-        myItems = new ArrayList<>();
+        super();
+        mySelection = null;
     }
 
-    public CollectionComboBoxModel(final List<? extends T> items, @Nullable final T selection) {
-        super(selection);
-        myItems = Collections.unmodifiableList(items);
+    public CollectionComboBoxModel(@Nonnull List<T> items) {
+        this(items, ContainerUtil.getFirstItem(items));
     }
 
-    public CollectionComboBoxModel(List<T> items) {
-        super(items.isEmpty() ? null : items.get(0));
-        myItems = items;
+    public CollectionComboBoxModel(@Nonnull List<T> items, @Nullable T selection) {
+        super(items, true);
+        mySelection = selection;
     }
 
     @Override
-    @Nonnull
-    final protected List<T> getItems() {
-        return myItems;
+    public void setSelectedItem(@Nullable Object item) {
+        if (mySelection != item) {
+            @SuppressWarnings("unchecked") T t = (T) item;
+            mySelection = t;
+            update();
+        }
     }
+
+    @Override
+    public @Nullable Object getSelectedItem() {
+        return mySelection;
+    }
+
+    public @Nullable T getSelected() {
+        return mySelection;
+    }
+
+    public void update() {
+        super.fireContentsChanged(this, -1, -1);
+    }
+
 }

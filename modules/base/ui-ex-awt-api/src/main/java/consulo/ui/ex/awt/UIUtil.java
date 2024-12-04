@@ -923,10 +923,6 @@ public class UIUtil {
         return UIManager.getColor("Table.selectionBackground");
     }
 
-    public static Color getActiveTextColor() {
-        return LafProperty.getActiveTextColor();
-    }
-
     public static Color getInactiveTextColor() {
         return LafProperty.getInactiveTextColor();
     }

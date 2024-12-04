@@ -16,8 +16,7 @@ import consulo.remoteServer.runtime.deployment.SingletonDeploymentSourceType;
 import consulo.remoteServer.runtime.deployment.debug.DebugConnector;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,7 +33,7 @@ public abstract class ServerType<C extends ServerConfiguration> {
     private final LocalizeValue myPresentableName;
     private final Image myIcon;
 
-    protected ServerType(@NotNull String id, @Nonnull String deploymentId, LocalizeValue presentableName, Image icon) {
+    protected ServerType(@Nonnull String id, @Nonnull String deploymentId, LocalizeValue presentableName, Image icon) {
         myId = id;
         myDeploymentId = deploymentId;
         myPresentableName = presentableName;
@@ -58,12 +57,12 @@ public abstract class ServerType<C extends ServerConfiguration> {
         return myDeploymentId;
     }
 
-    @NotNull
+    @Nonnull
     public String getHelpTopic() {
         return "reference.settings.clouds";
     }
 
-    @NotNull
+    @Nonnull
     public final Image getIcon() {
         return myIcon;
     }
@@ -80,15 +79,15 @@ public abstract class ServerType<C extends ServerConfiguration> {
         return false;
     }
 
-    @NotNull
+    @Nonnull
     public abstract C createDefaultConfiguration();
 
-    @NotNull
-    public RemoteServerConfigurable createServerConfigurable(@NotNull C configuration) {
+    @Nonnull
+    public RemoteServerConfigurable createServerConfigurable(@Nonnull C configuration) {
         throw new UnsupportedOperationException();
     }
 
-    @NotNull
+    @Nonnull
     public abstract DeploymentConfigurator<?, C> createDeploymentConfigurator(Project project);
 
     /**
@@ -107,9 +106,9 @@ public abstract class ServerType<C extends ServerConfiguration> {
         return true;
     }
 
-    public abstract @NotNull ServerConnector<?> createConnector(@NotNull C configuration, @NotNull ServerTaskExecutor asyncTasksExecutor);
+    public abstract @Nonnull ServerConnector<?> createConnector(@Nonnull C configuration, @Nonnull ServerTaskExecutor asyncTasksExecutor);
 
-    public @NotNull ServerConnector<?> createConnector(@NotNull RemoteServer<C> server, @NotNull ServerTaskExecutor asyncTasksExecutor) {
+    public @Nonnull ServerConnector<?> createConnector(@Nonnull RemoteServer<C> server, @Nonnull ServerTaskExecutor asyncTasksExecutor) {
         return createConnector(server.getConfiguration(), asyncTasksExecutor);
     }
 
@@ -120,7 +119,7 @@ public abstract class ServerType<C extends ServerConfiguration> {
         return null;
     }
 
-    public @NotNull Comparator<Deployment> getDeploymentComparator() {
+    public @Nonnull Comparator<Deployment> getDeploymentComparator() {
         return Comparator.comparing(Deployment::getName);
     }
 

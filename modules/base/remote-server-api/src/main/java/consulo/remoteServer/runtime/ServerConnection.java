@@ -21,39 +21,39 @@ import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.function.Consumer;
 
 public interface ServerConnection<D extends DeploymentConfiguration> {
-    @NotNull
+    @Nonnull
     RemoteServer<?> getServer();
 
-    @NotNull
+    @Nonnull
     ConnectionStatus getStatus();
 
-    @NotNull
+    @Nonnull
     @Nls
     String getStatusText();
 
-    void connect(@NotNull Runnable onFinished);
+    void connect(@Nonnull Runnable onFinished);
 
     void disconnect();
 
-    void deploy(@NotNull DeploymentTask<D> task, @NotNull Consumer<? super String> onDeploymentStarted);
+    void deploy(@Nonnull DeploymentTask<D> task, @Nonnull Consumer<? super String> onDeploymentStarted);
 
-    void computeDeployments(@NotNull Runnable onFinished);
+    void computeDeployments(@Nonnull Runnable onFinished);
 
-    void undeploy(@NotNull Deployment deployment, @Nullable DeploymentRuntime runtime);
+    void undeploy(@Nonnull Deployment deployment, @Nullable DeploymentRuntime runtime);
 
-    @NotNull
+    @Nonnull
     Collection<Deployment> getDeployments();
 
     @Nullable
-    DeploymentLogManager getLogManager(@NotNull Project project, @NotNull Deployment deployment);
+    DeploymentLogManager getLogManager(@Nonnull Project project, @Nonnull Deployment deployment);
 
     void connectIfNeeded(ServerConnector.ConnectionCallback<D> callback);
 }

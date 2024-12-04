@@ -25,9 +25,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UserActivityWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.function.Supplier;
@@ -37,119 +37,137 @@ import java.util.function.Supplier;
  * {@link #getComponent()} should be called before {@link #resetFrom(Object)}
  */
 public abstract class SettingsEditor<Settings> implements Disposable {
-  private final List<SettingsEditorListener<Settings>> myListeners = Lists.newLockFreeCopyOnWriteList();
-  private UserActivityWatcher myWatcher;
-  private boolean myIsInUpdate = false;
-  private final Supplier<Settings> mySettingsFactory;
-  private CompositeSettingsEditor<Settings> myOwner;
-  private JComponent myEditorComponent;
+    private final List<SettingsEditorListener<Settings>> myListeners = Lists.newLockFreeCopyOnWriteList();
+    private UserActivityWatcher myWatcher;
+    private boolean myIsInUpdate = false;
+    private final Supplier<Settings> mySettingsFactory;
+    private CompositeSettingsEditor<Settings> myOwner;
+    private JComponent myEditorComponent;
 
-  protected abstract void resetEditorFrom(Settings s);
-  protected abstract void applyEditorTo(Settings s) throws ConfigurationException;
+    protected abstract void resetEditorFrom(Settings s);
 
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo(value = "Implement interface via overriding 'createUIComponent()' method")
-  protected JComponent createEditor() {
-    Component uiComponent = createUIComponent();
-    if(uiComponent != null) {
-      return (JComponent)TargetAWT.to(uiComponent);
+    protected abstract void applyEditorTo(Settings s) throws ConfigurationException;
+
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo(value = "Implement interface via overriding 'createUIComponent()' method")
+    protected JComponent createEditor() {
+        Component uiComponent = createUIComponent();
+        if (uiComponent != null) {
+            return (JComponent) TargetAWT.to(uiComponent);
+        }
+
+        throw new AbstractMethodError("please implement 'createEditor()' or 'createUIComponent()'");
     }
 
-    throw new AbstractMethodError("please implement 'createEditor()' or 'createUIComponent()'");
-  }
-
-  @Nullable
-  @RequiredUIAccess
-  protected Component createUIComponent() {
-    return null;
-  }
-
-  protected void disposeEditor() {
-  }
-
-  public SettingsEditor() {
-    this(null);
-  }
-
-  public SettingsEditor(Supplier<Settings> settingsFactory) {
-    mySettingsFactory = settingsFactory;
-    Disposer.register(this, () -> {
-      disposeEditor();
-      uninstallWatcher();
-    });
-  }
-
-  public Settings getSnapshot() throws ConfigurationException {
-    if (myOwner != null) return myOwner.getSnapshot();
-
-    Settings settings = mySettingsFactory.get();
-    applyTo(settings);
-    return settings;
-  }
-
-  final void setOwner(CompositeSettingsEditor<Settings> owner) {
-    myOwner = owner;
-  }
-
-  public final CompositeSettingsEditor<Settings> getOwner() {
-    return myOwner;
-  }
-
-  public Supplier<Settings> getFactory() {
-    return mySettingsFactory;
-  }
-
-  public final void resetFrom(Settings s) {
-    myIsInUpdate = true;
-    try {
-      resetEditorFrom(s);
+    @Nullable
+    @RequiredUIAccess
+    protected Component createUIComponent() {
+        return null;
     }
-    finally {
-      myIsInUpdate = false;
+
+    protected void disposeEditor() {
     }
-  }
 
-  public final void applyTo(Settings s) throws ConfigurationException {
-    applyEditorTo(s);
-  }
-
-  public final JComponent getComponent() {
-    if (myEditorComponent == null) {
-      myEditorComponent = createEditor();
-      installWatcher(myEditorComponent);
+    public SettingsEditor() {
+        this(null);
     }
-    return myEditorComponent;
-  }
 
-  @Override
-  public final void dispose() {
-  }
-
-  protected void uninstallWatcher() {
-    myWatcher = null;
-  }
-
-  protected void installWatcher(JComponent c) {
-    myWatcher = new UserActivityWatcher();
-    myWatcher.register(c);
-
-    myWatcher.addUserActivityListener(this::fireEditorStateChanged, this);
-  }
-
-  public final void addSettingsEditorListener(SettingsEditorListener<Settings> listener) {
-    myListeners.add(listener);
-  }
-
-  public final void removeSettingsEditorListener(SettingsEditorListener<Settings> listener) {
-    myListeners.remove(listener);
-  }
-
-  @SuppressWarnings("unchecked")
-  protected final void fireEditorStateChanged() {
-    if (myIsInUpdate || myListeners == null) return;
-    for (SettingsEditorListener listener : myListeners) {
-      listener.stateChanged(this);
+    public SettingsEditor(Supplier<Settings> settingsFactory) {
+        mySettingsFactory = settingsFactory;
+        Disposer.register(this, () -> {
+            disposeEditor();
+            uninstallWatcher();
+        });
     }
-  }
+
+    public Settings getSnapshot() throws ConfigurationException {
+        if (myOwner != null) {
+            return myOwner.getSnapshot();
+        }
+
+        Settings settings = mySettingsFactory.get();
+        applyTo(settings);
+        return settings;
+    }
+
+    final void setOwner(CompositeSettingsEditor<Settings> owner) {
+        myOwner = owner;
+    }
+
+    public final CompositeSettingsEditor<Settings> getOwner() {
+        return myOwner;
+    }
+
+    public Supplier<Settings> getFactory() {
+        return mySettingsFactory;
+    }
+
+    public final void resetFrom(Settings s) {
+        myIsInUpdate = true;
+        try {
+            resetEditorFrom(s);
+        }
+        finally {
+            myIsInUpdate = false;
+        }
+    }
+
+    public final void bulkUpdate(Runnable runnable) {
+        boolean wasInUpdate = myIsInUpdate;
+        try {
+            myIsInUpdate = true;
+            runnable.run();
+        }
+        finally {
+            myIsInUpdate = wasInUpdate;
+        }
+        fireEditorStateChanged();
+    }
+
+
+    public final void applyTo(Settings s) throws ConfigurationException {
+        applyEditorTo(s);
+    }
+
+    public final JComponent getComponent() {
+        if (myEditorComponent == null) {
+            myEditorComponent = createEditor();
+            installWatcher(myEditorComponent);
+        }
+        return myEditorComponent;
+    }
+
+    @Override
+    public final void dispose() {
+    }
+
+    protected void uninstallWatcher() {
+        myWatcher = null;
+    }
+
+    protected void installWatcher(JComponent c) {
+        myWatcher = new UserActivityWatcher();
+        myWatcher.register(c);
+
+        myWatcher.addUserActivityListener(this::fireEditorStateChanged, this);
+    }
+
+    public final void addSettingsEditorListener(SettingsEditorListener<Settings> listener) {
+        myListeners.add(listener);
+    }
+
+    public final void removeSettingsEditorListener(SettingsEditorListener<Settings> listener) {
+        myListeners.remove(listener);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected final void fireEditorStateChanged() {
+        if (myIsInUpdate || myListeners == null) {
+            return;
+        }
+        for (SettingsEditorListener listener : myListeners) {
+            listener.stateChanged(this);
+        }
+    }
 }

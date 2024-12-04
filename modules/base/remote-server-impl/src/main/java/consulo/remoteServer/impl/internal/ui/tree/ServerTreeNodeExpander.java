@@ -2,8 +2,8 @@
 package consulo.remoteServer.impl.internal.ui.tree;
 
 import consulo.remoteServer.runtime.ServerConnection;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public interface ServerTreeNodeExpander {
-    void expand(@NotNull ServerConnection<?> connection, @NotNull String deploymentName);
+    void expand(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName);
 }

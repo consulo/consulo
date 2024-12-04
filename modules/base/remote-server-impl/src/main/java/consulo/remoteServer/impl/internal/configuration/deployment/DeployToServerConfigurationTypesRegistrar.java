@@ -16,34 +16,46 @@
 package consulo.remoteServer.impl.internal.configuration.deployment;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.execution.configuration.ConfigurationType;
+import consulo.application.Application;
 import consulo.component.ComponentManager;
-import consulo.remoteServer.ServerType;
 import consulo.component.extension.ExtensionExtender;
-import jakarta.inject.Singleton;
-
+import consulo.execution.configuration.ConfigurationType;
+import consulo.remoteServer.ServerType;
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 /**
  * @author nik
  */
-@Singleton
 @ExtensionImpl
+@SuppressWarnings("unchecked")
 public class DeployToServerConfigurationTypesRegistrar implements ExtensionExtender<ConfigurationType> {
-  @Override
-  public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<ConfigurationType> consumer) {
-    ServerType.EP_NAME.forEachExtensionSafe(DeployToServerConfigurationType::new);
-  }
+    @Nonnull
+    public static DeployToServerConfigurationType<?> getConfigurationType(ServerType<?> serverType) {
+        return (DeployToServerConfigurationType<?>) Application.get().getExtensionPoint(ConfigurationType.class).findFirstSafe(configurationType -> {
+            if (configurationType instanceof DeployToServerConfigurationType deploy) {
+                return deploy.getServerType() == serverType;
+            }
+            return false;
+        });
+    }
 
-  @Override
-  public boolean hasAnyExtensions(ComponentManager componentManager) {
-    return ServerType.EP_NAME.hasAnyExtensions();
-  }
+    @Override
+    public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<ConfigurationType> consumer) {
+        componentManager.getExtensionPoint(ServerType.class).forEachExtensionSafe(serverType -> {
+            consumer.accept(new DeployToServerConfigurationType(serverType));
+        });
+    }
 
-  @Nonnull
-  @Override
-  public Class<ConfigurationType> getExtensionClass() {
-    return ConfigurationType.class;
-  }
+    @Override
+    public boolean hasAnyExtensions(ComponentManager componentManager) {
+        return componentManager.getExtensionPoint(ServerType.class).hasAnyExtensions();
+    }
+
+    @Nonnull
+    @Override
+    public Class<ConfigurationType> getExtensionClass() {
+        return ConfigurationType.class;
+    }
 }

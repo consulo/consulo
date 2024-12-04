@@ -16,6 +16,7 @@
 package consulo.execution.configuration;
 
 import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
@@ -35,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -156,6 +158,16 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
     for (T extension : getEnabledExtensions(configuration, runnerSettings)) {
       extension.attachToProcess(configuration, handler, runnerSettings);
     }
+  }
+
+  protected void processApplicableExtensions(@Nonnull U configuration, @Nonnull Consumer<T> acceptor) {
+      ExtensionPoint<T> point = Application.get().getExtensionPoint(myExtensionClass);
+
+      point.forEachExtensionSafe(t -> {
+          if (t.isApplicableFor(configuration)) {
+              acceptor.accept(t);
+          }
+      });
   }
 
   @Nonnull

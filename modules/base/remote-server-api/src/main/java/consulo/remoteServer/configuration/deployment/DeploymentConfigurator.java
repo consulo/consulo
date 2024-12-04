@@ -18,27 +18,27 @@ package consulo.remoteServer.configuration.deployment;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.ServerConfiguration;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
 public abstract class DeploymentConfigurator<D extends DeploymentConfiguration, S extends ServerConfiguration> {
-    @NotNull
+    @Nonnull
     public abstract List<DeploymentSource> getAvailableDeploymentSources();
 
-    @NotNull
-    public abstract D createDefaultConfiguration(@NotNull DeploymentSource source);
+    @Nonnull
+    public abstract D createDefaultConfiguration(@Nonnull DeploymentSource source);
 
     @Nullable
-    public abstract SettingsEditor<D> createEditor(@NotNull DeploymentSource source, @Nullable RemoteServer<S> server);
+    public abstract SettingsEditor<D> createEditor(@Nonnull DeploymentSource source, @Nullable RemoteServer<S> server);
 
     /**
      * @see LocatableConfiguration#isGeneratedName()
      */
-    public boolean isGeneratedConfigurationName(@NotNull String name,
-                                                @NotNull DeploymentSource deploymentSource,
-                                                @NotNull D deploymentConfiguration) {
+    public boolean isGeneratedConfigurationName(@Nonnull String name,
+                                                @Nonnull DeploymentSource deploymentSource,
+                                                @Nonnull D deploymentConfiguration) {
         return false;
     }
 
@@ -46,7 +46,7 @@ public abstract class DeploymentConfigurator<D extends DeploymentConfiguration, 
      * @see LocatableConfiguration#suggestedName()
      */
     @Nullable
-    public String suggestConfigurationName(@NotNull DeploymentSource deploymentSource, @NotNull D deploymentConfiguration) {
+    public String suggestConfigurationName(@Nonnull DeploymentSource deploymentSource, @Nonnull D deploymentConfiguration) {
         return null;
     }
 }

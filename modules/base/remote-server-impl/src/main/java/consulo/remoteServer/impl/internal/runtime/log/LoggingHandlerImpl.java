@@ -9,7 +9,7 @@ import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
 import consulo.remoteServer.runtime.log.LoggingHandler;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -17,11 +17,11 @@ public class LoggingHandlerImpl extends LoggingHandlerBase implements LoggingHan
     private final ConsoleView myConsole;
     private boolean myClosed = false;
 
-    public LoggingHandlerImpl(String presentableName, @NotNull Project project) {
+    public LoggingHandlerImpl(String presentableName, @Nonnull Project project) {
         this(presentableName, project, false);
     }
 
-    public LoggingHandlerImpl(String presentableName, @NotNull Project project, boolean isViewer) {
+    public LoggingHandlerImpl(String presentableName, @Nonnull Project project, boolean isViewer) {
         super(presentableName);
 
         final TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
@@ -38,35 +38,35 @@ public class LoggingHandlerImpl extends LoggingHandlerBase implements LoggingHan
         return myConsole.getComponent();
     }
 
-    public @NotNull ConsoleView getConsole() {
+    public @Nonnull ConsoleView getConsole() {
         return myConsole;
     }
 
     @Override
-    public void print(@NotNull String s) {
+    public void print(@Nonnull String s) {
         printText(s, ConsoleViewContentType.NORMAL_OUTPUT);
     }
 
-    protected void printText(@NotNull String text, @NotNull ConsoleViewContentType contentType) {
+    protected void printText(@Nonnull String text, @Nonnull ConsoleViewContentType contentType) {
         myConsole.print(text, contentType);
     }
 
     @Override
-    public void printHyperlink(@NotNull String url) {
+    public void printHyperlink(@Nonnull String url) {
         printHyperlink(url, new BrowserHyperlinkInfo(url));
     }
 
     @Override
-    public void printHyperlink(@NotNull String text, HyperlinkInfo info) {
+    public void printHyperlink(@Nonnull String text, HyperlinkInfo info) {
         myConsole.printHyperlink(text, info);
     }
 
-    public void printlnSystemMessage(@NotNull String s) {
+    public void printlnSystemMessage(@Nonnull String s) {
         printText(s + "\n", ConsoleViewContentType.SYSTEM_OUTPUT);
     }
 
     @Override
-    public void attachToProcess(@NotNull ProcessHandler handler) {
+    public void attachToProcess(@Nonnull ProcessHandler handler) {
         myConsole.attachToProcess(handler);
     }
 
@@ -93,20 +93,20 @@ public class LoggingHandlerImpl extends LoggingHandlerBase implements LoggingHan
 
         private final AnsiEscapeDecoder myAnsiEscapeDecoder = new AnsiEscapeDecoder();
 
-        public Colored(String presentableName, @NotNull Project project) {
+        public Colored(String presentableName, @Nonnull Project project) {
             super(presentableName, project);
         }
 
-        public Colored(String presentableName, @NotNull Project project, boolean isViewer) {
+        public Colored(String presentableName, @Nonnull Project project, boolean isViewer) {
             super(presentableName, project, isViewer);
         }
 
         @Override
-        public void print(@NotNull String s) {
+        public void print(@Nonnull String s) {
             myAnsiEscapeDecoder.escapeText(s, ProcessOutputTypes.STDOUT, this::printTextWithOutputKey);
         }
 
-        private void printTextWithOutputKey(@NotNull String text, Key outputType) {
+        private void printTextWithOutputKey(@Nonnull String text, Key outputType) {
             printText(text, ConsoleViewContentType.getConsoleViewType(outputType));
         }
     }

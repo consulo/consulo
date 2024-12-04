@@ -5,22 +5,22 @@ import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentStatus;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface Deployment {
-    @NotNull
+    @Nonnull
     String getName();
 
-    @NotNull
+    @Nonnull
     @Nls
     String getPresentableName();
 
-    @NotNull
+    @Nonnull
     DeploymentStatus getStatus();
 
-    @NotNull
+    @Nonnull
     @Nls
     String getStatusText();
 
@@ -33,11 +33,11 @@ public interface Deployment {
     @Nullable
     DeploymentTask<?> getDeploymentTask();
 
-    @NotNull
-    DeploymentLogManager getOrCreateLogManager(@NotNull Project project);
+    @Nonnull
+    DeploymentLogManager getOrCreateLogManager(@Nonnull Project project);
 
-    void setStatus(@NotNull DeploymentStatus status, @Nullable String statusText);
+    void setStatus(@Nonnull DeploymentStatus status, @Nullable String statusText);
 
-    @NotNull
+    @Nonnull
     ServerConnection<?> getConnection();
 }

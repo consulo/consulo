@@ -4,27 +4,27 @@ package consulo.remoteServer.runtime.deployment;
 import consulo.project.Project;
 import consulo.remoteServer.runtime.log.LoggingHandler;
 import consulo.remoteServer.runtime.log.TerminalHandler;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface DeploymentLogManager {
-    @NotNull
+    @Nonnull
     Project getProject();
 
-    @NotNull
+    @Nonnull
     LoggingHandler getMainLoggingHandler();
 
-    @NotNull
-    LoggingHandler addAdditionalLog(@NotNull String presentableName);
+    @Nonnull
+    LoggingHandler addAdditionalLog(@Nonnull String presentableName);
 
-    void removeAdditionalLog(@NotNull String presentableName);
+    void removeAdditionalLog(@Nonnull String presentableName);
 
     boolean isTtySupported();
 
     @Nullable
-    TerminalHandler addTerminal(@NotNull @Nls String presentableName, InputStream terminalOutput, OutputStream terminalInput);
+    TerminalHandler addTerminal(@Nonnull @Nls String presentableName, InputStream terminalOutput, OutputStream terminalInput);
 }

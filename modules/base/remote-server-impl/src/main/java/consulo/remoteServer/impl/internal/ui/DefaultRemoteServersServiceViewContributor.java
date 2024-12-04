@@ -1,6 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.execution.service.ServiceViewDescriptor;
 import consulo.execution.service.ServiceViewManager;
@@ -18,25 +19,26 @@ import consulo.remoteServer.runtime.ServerConnection;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
+@ExtensionImpl
 public class DefaultRemoteServersServiceViewContributor extends RemoteServersServiceViewContributor {
     private final ServiceViewDescriptor myContributorDescriptor = new DefaultRemoteServersServiceViewDescriptor();
 
     @Override
-    public @NotNull ServiceViewDescriptor getViewDescriptor(@NotNull Project project) {
+    public @Nonnull ServiceViewDescriptor getViewDescriptor(@Nonnull Project project) {
         return myContributorDescriptor;
     }
 
     @Override
-    public boolean accept(@NotNull RemoteServer server) {
+    public boolean accept(@Nonnull RemoteServer server) {
         return isDefaultRemoteServer(server);
     }
 
     @Override
-    public void selectLog(@NotNull AbstractTreeNode deploymentNode, @NotNull String logName) {
+    public void selectLog(@Nonnull AbstractTreeNode deploymentNode, @Nonnull String logName) {
         ServersTreeStructure.DeploymentNodeImpl node = ObjectUtil.tryCast(deploymentNode, ServersTreeStructure.DeploymentNodeImpl.class);
         if (node == null) {
             return;
@@ -62,7 +64,7 @@ public class DefaultRemoteServersServiceViewContributor extends RemoteServersSer
     }
 
     @Override
-    public @NotNull ActionGroups getActionGroups() {
+    public @Nonnull ActionGroups getActionGroups() {
         return RemoteServersServiceViewContributor.ActionGroups.SHARED_ACTION_GROUPS;
     }
 
@@ -99,18 +101,18 @@ public class DefaultRemoteServersServiceViewContributor extends RemoteServersSer
         }
 
         @Override
-        public @NotNull String getToolWindowId() {
+        public @Nonnull String getToolWindowId() {
             return getId();
         }
 
         @Override
-        @NotNull
+        @Nonnull
         public Image getToolWindowIcon() {
             return PlatformIconGroup.toolwindowsToolwindowservices();
         }
 
         @Override
-        public @NotNull String getStripeTitle() {
+        public @Nonnull String getStripeTitle() {
             String title = getToolWindowId();
             return title;
         }

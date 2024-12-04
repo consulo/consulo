@@ -15,6 +15,5 @@ import consulo.application.progress.ProgressManager;
  * <p>
  * Update methods should call {@link ProgressManager#checkCanceled()} often enough to guard against UI freezes.
  */
-//@ApiStatus.Experimental
 public interface UpdateInBackground {
 }

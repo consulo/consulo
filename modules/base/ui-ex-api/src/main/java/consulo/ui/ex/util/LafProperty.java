@@ -54,10 +54,6 @@ public final class LafProperty {
     return foreground != null ? foreground : getListForeground();
   }
 
-  public static Color getActiveTextColor() {
-    return UIManager.getColor("textActiveText");
-  }
-
   public static Color getInactiveTextColor() {
     return UIManager.getColor("textInactiveText");
   }

@@ -3,7 +3,7 @@ package consulo.remoteServer.impl.internal.runtime.log;
 
 import consulo.remoteServer.agent.shared.TerminalListener;
 import consulo.remoteServer.runtime.log.TerminalHandler;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -12,7 +12,7 @@ public abstract class TerminalHandlerBase extends LoggingHandlerBase implements 
     private TerminalListener.TtyResizeHandler myResizeHandler = (width, height) -> {
     };
 
-    public TerminalHandlerBase(@NotNull String presentableName) {
+    public TerminalHandlerBase(@Nonnull String presentableName) {
         super(presentableName);
     }
 
@@ -29,11 +29,11 @@ public abstract class TerminalHandlerBase extends LoggingHandlerBase implements 
         myClosed = true;
     }
 
-    public void setResizeHandler(@NotNull TerminalListener.TtyResizeHandler resizeHandler) {
+    public void setResizeHandler(@Nonnull TerminalListener.TtyResizeHandler resizeHandler) {
         myResizeHandler = resizeHandler;
     }
 
-    protected @NotNull TerminalListener.TtyResizeHandler getResizeHandler() {
+    protected @Nonnull TerminalListener.TtyResizeHandler getResizeHandler() {
         return myResizeHandler;
     }
 }

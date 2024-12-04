@@ -129,8 +129,14 @@ public abstract class ConfigurationFactory {
   }
 
   public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
+      if (configuration instanceof ConfigurationCreationListener listener) {
+          listener.onNewConfigurationCreated();
+      }
   }
 
   public void onConfigurationCopied(@Nonnull RunConfiguration configuration) {
+      if (configuration instanceof ConfigurationCreationListener listener) {
+          listener.onConfigurationCopied();
+      }
   }
 }

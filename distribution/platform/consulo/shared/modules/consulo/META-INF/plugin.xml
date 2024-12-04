@@ -2774,39 +2774,11 @@
             <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>
         </action>
 
-        <group id="RemoteServersViewToolbar">
-            <action id="RemoteServers.ConnectServer" icon="AllIcons.Actions.Execute"
-                    class="consulo.remoteServer.impl.internal.ui.tree.action.RemoteServerConnectAction"/>
-            <action id="RemoteServers.DisconnectServer" icon="AllIcons.Actions.Suspend"
-                    class="consulo.remoteServer.impl.internal.ui.tree.action.RemoteServerDisconnectAction"/>
-            <action id="RemoteServers.EditServerConfig" icon="AllIcons.Actions.EditSource" use-shortcut-of="EditSourceInNewWindow"
-                    class="consulo.remoteServer.impl.internal.ui.tree.action.RemoteServerConfigAction"/>
-            <action id="RemoteServers.ChooseServerDeployment" icon="AllIcons.Nodes.Deploy"
-                    class="consulo.remoteServer.impl.internal.ui.tree.action.ChooseDeploymentAction"/>
-            <action id="RemoteServers.ChooseServerDeploymentWithDebug" icon="AllIcons.Actions.StartDebugger"
-                    class="consulo.remoteServer.impl.internal.ui.tree.action.ChooseDeploymentWithDebugAction"/>
-            <action id="Servers.Deploy" icon="AllIcons.Nodes.Deploy"
-                    class="consulo.remoteServer.impl.internal.ui.tree.action.DeployAction">
-                <add-to-group group-id="RunDashboardContentToolbar" anchor="last"/>
-            </action>
-            <action id="Servers.Undeploy" icon="AllIcons.Nodes.Undeploy"
-                    class="consulo.remoteServer.impl.internal.ui.tree.action.UndeployAction">
-                <add-to-group group-id="RunDashboardContentToolbar" anchor="last"/>
-            </action>
-            <action id="Servers.DeployWithDebug" icon="AllIcons.Actions.StartDebugger"
-                    class="consulo.remoteServer.impl.internal.ui.tree.action.DeployWithDebugAction"/>
-            <action id="RemoteServers.EditDeploymentConfig" icon="AllIcons.Actions.EditSource"
-                    class="consulo.remoteServer.impl.internal.ui.tree.action.DeploymentConfigAction"/>
-            <add-to-group group-id="Other.KeymapGroup"/>
-        </group>
         <group id="RemoteServersViewPopup"/>
         <group id="RemoteServersViewToolbar.Top">
             <add-to-group group-id="Other.KeymapGroup"/>
         </group>
-        <group id="RemoteServers.AddCloudConnectionGroup" popup="true"
-               class="consulo.remoteServer.impl.internal.ui.tree.action.AddCloudConnectionActionGroup">
-            <add-to-group group-id="ServiceView.AddService"/>
-        </group>
+
 
         <group id="task.actions">
             <action id="tasks.switch" class="consulo.ide.impl.idea.tasks.actions.SwitchTaskAction" text="_Switch Task...">

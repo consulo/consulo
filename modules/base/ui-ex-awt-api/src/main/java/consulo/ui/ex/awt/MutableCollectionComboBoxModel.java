@@ -1,84 +1,73 @@
-/*
- * Copyright 2000-2013 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
-
-import consulo.util.collection.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
 import javax.swing.*;
 import java.util.List;
 
-/**
- * @author traff
- */
-public class MutableCollectionComboBoxModel<T> extends AbstractCollectionComboBoxModel<T> implements MutableComboBoxModel<T> {
-  private List<T> myItems;
-
-  public MutableCollectionComboBoxModel(@Nonnull List<T> items) {
-    this(items, ContainerUtil.getFirstItem(items));
-  }
-
-  public MutableCollectionComboBoxModel(@Nonnull List<T> items, @Nullable T selection) {
-    super(selection);
-
-    myItems = items;
-  }
-
-  @Nonnull
-  @Override
-  final protected List<T> getItems() {
-    return myItems;
-  }
-
-  public void update(@Nonnull List<T> items) {
-    myItems = items;
-    super.update();
-  }
-
-  public void addItem(T item) {
-    myItems.add(item);
-
-    fireIntervalAdded(this, myItems.size() - 1, myItems.size() - 1);
-    if (myItems.size() == 1 && getSelectedItem() == null && item != null) {
-      setSelectedItem(item);
+public class MutableCollectionComboBoxModel<T> extends CollectionComboBoxModel<T> implements MutableComboBoxModel<T> {
+    @Contract(mutates = "param1")
+    public MutableCollectionComboBoxModel(@Nonnull List<T> items) {
+        super(items);
     }
-  }
 
-  @Override
-  public void addElement(T item) {
-    addItem(item);
-  }
-
-  @Override
-  public void removeElement(Object obj) {
-    int i = myItems.indexOf(obj);
-    if (i != -1) {
-      myItems.remove(i);
-      fireIntervalRemoved(this, i, i);
+    public MutableCollectionComboBoxModel() {
+        super();
     }
-  }
 
-  @Override
-  public void insertElementAt(T item, int index) {
-    throw new UnsupportedOperationException();
-  }
+    @Contract(mutates = "param1")
+    public MutableCollectionComboBoxModel(@Nonnull List<T> items, @Nullable T selection) {
+        super(items, selection);
+    }
 
-  @Override
-  public void removeElementAt(int index) {
-    throw new UnsupportedOperationException();
-  }
+    public void update(@Nonnull List<? extends T> items) {
+        replaceAll(items);
+    }
+
+    public void addItem(T item) {
+        add(item);
+    }
+
+    @Override
+    protected final void fireIntervalAdded(Object source, int index0, int index1) {
+        super.fireIntervalAdded(source, index0, index1);
+
+        if (getSize() == 1 && getSelectedItem() == null) {
+            setSelectedItem(getElementAt(0));
+        }
+    }
+
+    @Override
+    protected final void fireIntervalRemoved(Object source, int index0, int index1) {
+        super.fireIntervalRemoved(source, index0, index1);
+
+        if (getSelected() != null && !contains(getSelected())) {
+            setSelectedItem(isEmpty() ? null : getElementAt(index0 == 0 ? 0 : index0 - 1));
+        }
+    }
+
+    @Override
+    public void addElement(T item) {
+        add(item);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void removeElement(Object obj) {
+        T item = ((T) obj);
+        remove(item);
+    }
+
+    @Override
+    public void insertElementAt(T item, int index) {
+        add(index, item);
+    }
+
+    @Override
+    public void removeElementAt(int index) {
+        remove(index);
+    }
 }

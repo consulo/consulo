@@ -4,20 +4,20 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public interface DeploymentTask<D extends DeploymentConfiguration> {
-    @NotNull
+    @Nonnull
     DeploymentSource getSource();
 
-    @NotNull
+    @Nonnull
     D getConfiguration();
 
-    @NotNull
+    @Nonnull
     Project getProject();
 
     boolean isDebugMode();
 
-    @NotNull
+    @Nonnull
     ExecutionEnvironment getExecutionEnvironment();
 }

@@ -5,27 +5,29 @@ import consulo.disposer.Disposer;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.RuntimeConfigurationWarning;
 import consulo.execution.configuration.RuntimeConfigurationError;
+import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.configuration.ServerConfiguration;
+import consulo.remoteServer.impl.internal.configuration.RemoteServerConnectionTester;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> extends RemoteServerCombo<S> {
     private AutoDetectedItem myAutoDetectedItem;
 
-    public RemoteServerComboWithAutoDetect(@NotNull ServerType<S> serverType) {
+    public RemoteServerComboWithAutoDetect(@Nonnull ServerType<S> serverType) {
         super(serverType);
     }
 
     @Override
-    protected @NotNull ServerItem getNoServersItem() {
+    protected @Nonnull ServerItem getNoServersItem() {
         return getServerType().canAutoDetectConfiguration() ? findOrCreateAutoDetectedItem() : super.getNoServersItem();
     }
 
@@ -82,7 +84,7 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
         }
 
         @Override
-        public void render(@NotNull SimpleColoredComponent ui) {
+        public void render(@Nonnull SimpleColoredComponent ui) {
             ui.setIcon(getServerType().getIcon());
 
             boolean failed = myTestConnectionStateA.get() == TestConnectionState.FAILED;
@@ -120,7 +122,7 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
             return myServerInstance;
         }
 
-        private void setTestConnectionState(@NotNull TestConnectionState state) {
+        private void setTestConnectionState(@Nonnull TestConnectionState state) {
             boolean changed = myTestConnectionStateA.getAndSet(state) != state;
             if (changed) {
                 UIUtil.invokeLaterIfNeeded(RemoteServerComboWithAutoDetect.this::fireStateChanged);

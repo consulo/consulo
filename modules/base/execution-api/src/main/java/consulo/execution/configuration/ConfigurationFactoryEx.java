@@ -28,12 +28,4 @@ public abstract class ConfigurationFactoryEx extends ConfigurationFactory {
   protected ConfigurationFactoryEx(@Nonnull ConfigurationType type) {
     super(type);
   }
-
-  @Override
-  public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
-  }
-
-  @Override
-  public void onConfigurationCopied(@Nonnull RunConfiguration configuration) {
-  }
 }

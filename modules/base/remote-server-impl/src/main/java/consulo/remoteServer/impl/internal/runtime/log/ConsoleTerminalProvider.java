@@ -3,8 +3,8 @@ package consulo.remoteServer.impl.internal.runtime.log;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,10 +14,10 @@ import java.io.OutputStream;
 public class ConsoleTerminalProvider extends CloudTerminalProvider {
 
     @Override
-    public @NotNull TerminalHandlerBase createTerminal(@NotNull String presentableName,
-                                                       @NotNull Project project,
-                                                       @NotNull InputStream terminalOutput,
-                                                       @NotNull OutputStream terminalInput) {
+    public @Nonnull TerminalHandlerBase createTerminal(@Nonnull String presentableName,
+                                                       @Nonnull Project project,
+                                                       @Nonnull InputStream terminalOutput,
+                                                       @Nonnull OutputStream terminalInput) {
         return new ConsoleTerminalHandlerImpl(presentableName, project, terminalOutput, terminalInput);
     }
 
