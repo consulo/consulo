@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.ui.customization;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -24,6 +23,7 @@ import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.action.*;
@@ -70,6 +70,8 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
   private final List<Pair> myIdToNameList = new ArrayList<>();
 
   private static final Logger LOG = Logger.getInstance(CustomActionsSchemaImpl.class);
+
+  private boolean myInitial = true;
 
   @Inject
   public CustomActionsSchemaImpl(Application application) {
@@ -134,10 +136,6 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
 
   public boolean isModified(CustomActionsSchemaImpl schema) {
     final ArrayList<ActionUrl> storedActions = schema.getActions();
-    if (Application.get().isUnitTestMode() && !storedActions.isEmpty()) {
-      System.err.println("stored: " + storedActions.toString());
-      System.err.println("actual: " + getActions().toString());
-    }
     if (storedActions.size() != getActions().size()) {
       return true;
     }
@@ -173,9 +171,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
       url.readExternal((Element)groupElement);
       myActions.add(url);
     }
-    if (Application.get().isUnitTestMode()) {
-      System.err.println("read custom actions: " + myActions.toString());
-    }
+
     readIcons(element);
   }
 
@@ -324,13 +320,13 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
             icon = Image.fromUrl(VfsUtil.convertToURL(VfsUtil.pathToUrl(iconPath)));
           }
           catch (IOException e) {
-            icon = AllIcons.Toolbar.Unknown;
+            icon = PlatformIconGroup.actionsHelp();
 
             LOG.warn(e);
           }
         }
         else {
-          icon = AllIcons.Toolbar.Unknown;
+          icon = PlatformIconGroup.actionsHelp();
         }
         if (anAction.getTemplatePresentation() != null) {
           anAction.getTemplatePresentation().setIcon(icon);
@@ -338,10 +334,15 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         }
       }
     }
-    final IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(null);
-    if (frame != null) {
-      frame.updateView();
+
+    if (!myInitial) {
+        final IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(null);
+        if (frame != null) {
+            frame.updateView();
+        }
     }
+
+    myInitial = false;
   }
 
   private static class Pair {
