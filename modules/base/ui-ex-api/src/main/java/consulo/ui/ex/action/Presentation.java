@@ -164,7 +164,8 @@ public final class Presentation implements Cloneable {
   public void setTextValue(@Nonnull LocalizeValue newTextValue) {
     LocalizeValue oldValue = myTextValue;
     myTextValue = newTextValue;
-    if(Objects.equals(oldValue, newTextValue)) {
+    
+    if(!Objects.equals(oldValue, newTextValue)) {
       fireObjectPropertyChange(PROP_TEXT, oldValue, newTextValue);
     }
   }
