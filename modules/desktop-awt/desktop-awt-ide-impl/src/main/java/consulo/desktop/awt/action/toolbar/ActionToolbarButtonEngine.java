@@ -111,7 +111,7 @@ public class ActionToolbarButtonEngine {
                 String id = ActionManager.getInstance().getId(myIdeAction);
                 if (!textValue.equals(descriptionValue) && (id != null && WHITE_LIST.contains(id) || myIdeAction instanceof TooltipDescriptionProvider)) {
                     if (descriptionValue != LocalizeValue.of()) {
-                        ht.setDescription(descriptionValue.getValue());
+                        ht.setDescription(descriptionValue.map(Presentation.NO_MNEMONIC).getValue());
                     }
                 }
             }
