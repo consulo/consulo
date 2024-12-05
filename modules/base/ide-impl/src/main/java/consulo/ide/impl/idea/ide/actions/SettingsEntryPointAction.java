@@ -11,7 +11,6 @@ import consulo.dataContext.DataManager;
 import consulo.externalService.update.UpdateSettings;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.TooltipDescriptionProvider;
 import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
 import consulo.localize.LocalizeValue;
@@ -41,7 +40,7 @@ import java.util.function.Consumer;
 /**
  * @author Alexander Lobas
  */
-public final class SettingsEntryPointAction extends DumbAwareAction implements RightAlignedToolbarAction, TooltipDescriptionProvider {
+public final class SettingsEntryPointAction extends DumbAwareAction implements RightAlignedToolbarAction {
   private boolean myShowPopup = true;
 
   @Override

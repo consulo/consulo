@@ -19,7 +19,6 @@ import consulo.dataContext.DataContext;
 import consulo.desktop.awt.action.DesktopActionPopupMenuImpl;
 import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.TooltipDescriptionProvider;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.localize.LocalizeValue;
@@ -44,7 +43,6 @@ import kava.beans.PropertyChangeListener;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -52,9 +50,6 @@ import java.util.function.Supplier;
  * @since 2024-11-21
  */
 public class ActionToolbarButtonEngine {
-    // Contains actions IDs which descriptions are permitted for displaying in the ActionButtonImpl tooltip
-    private static final Set<String> WHITE_LIST = Set.of();
-
     private PropertyChangeListener myPresentationListener;
 
     private final AbstractButton myButton;
@@ -108,11 +103,8 @@ public class ActionToolbarButtonEngine {
                 ht.setTitle(textValue.map(Presentation.NO_MNEMONIC).getValue());
                 ht.setShortcut(getShortcutText());
 
-                String id = ActionManager.getInstance().getId(myIdeAction);
-                if (!textValue.equals(descriptionValue) && (id != null && WHITE_LIST.contains(id) || myIdeAction instanceof TooltipDescriptionProvider)) {
-                    if (descriptionValue != LocalizeValue.of()) {
-                        ht.setDescription(descriptionValue.map(Presentation.NO_MNEMONIC).getValue());
-                    }
+                if (descriptionValue != LocalizeValue.of()) {
+                    ht.setDescription(descriptionValue.map(Presentation.NO_MNEMONIC).getValue());
                 }
             }
             ht.installOn(myButton);
@@ -274,6 +266,9 @@ public class ActionToolbarButtonEngine {
         switch (propertyName) {
             case Presentation.PROP_TEXT:
                 updateTextAndMnemonic((LocalizeValue) e.getNewValue());
+                updateToolTipText();
+                break;
+            case Presentation.PROP_DESCRIPTION:
                 updateToolTipText();
                 break;
             case Presentation.PROP_ENABLED:

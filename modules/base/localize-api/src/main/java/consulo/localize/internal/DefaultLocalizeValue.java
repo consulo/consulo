@@ -19,8 +19,10 @@ import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import jakarta.annotation.Nonnull;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -42,5 +44,22 @@ public final class DefaultLocalizeValue extends BaseLocalizeValue {
     @Override
     protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
         return localizeManager.getUnformattedText(myLocalizeKey);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DefaultLocalizeValue that = (DefaultLocalizeValue) o;
+        return Objects.equals(myLocalizeKey, that.myLocalizeKey) && Arrays.equals(myArgs, that.myArgs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(myLocalizeKey, myArgs);
     }
 }

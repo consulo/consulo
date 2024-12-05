@@ -223,7 +223,8 @@ public final class Presentation implements Cloneable {
   public void setDescriptionValue(@Nonnull LocalizeValue newDescriptionValue) {
     LocalizeValue oldDescription = myDescriptionValue;
     myDescriptionValue = newDescriptionValue;
-    if(oldDescription != newDescriptionValue) {
+
+    if(!Objects.equals(oldDescription, newDescriptionValue)) {
       fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescriptionValue);
     }
   }
