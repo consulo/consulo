@@ -77,6 +77,6 @@ public class MuteBreakpointAction extends ToggleAction {
     @Nullable
     @Override
     protected Image getTemplateIcon() {
-        return ExecutionDebugIconGroup.breakpointMultiplebreakpointsmuted();
+        return ExecutionDebugIconGroup.actionMutebreakpoints();
     }
 }

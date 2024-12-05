@@ -38,7 +38,7 @@ public class ViewBreakpointsAction extends AnAction implements AnAction.Transpar
     private Object myInitialBreakpoint;
 
     public ViewBreakpointsAction() {
-        super(ActionLocalize.actionViewbreakpointsText(), LocalizeValue.of(), ExecutionDebugIconGroup.breakpointMultiplebreakpoints());
+        super(ActionLocalize.actionViewbreakpointsText(), LocalizeValue.of(), ExecutionDebugIconGroup.actionViewbreakpoints());
     }
 
     @RequiredUIAccess
