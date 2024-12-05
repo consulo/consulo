@@ -228,11 +228,6 @@ public class ImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, V> imp
     }
 
     @Override
-    public V get(Object key) {
-        return getOrDefault(key, null);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public V getOrDefault(Object key, V defaultValue) {
         if (key == null) {

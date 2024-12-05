@@ -413,11 +413,6 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
     }
 
     @Override
-    public V get(Object key) {
-        return getOrDefault(key, null);
-    }
-
-    @Override
     public V getOrDefault(Object key, V defaultValue) {
         if (key == null) {
             return defaultValue;

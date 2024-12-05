@@ -61,6 +61,11 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
     @Nonnull
     HashingStrategy<K> getStrategy();
 
+    @Override
+    default V get(Object key) {
+        return getOrDefault(key, null);
+    }
+
     /**
      * Unsupported operation: this map is immutable. Use {@link #with(Object, Object)} to create a new
      * {@code ImmutableMap} with an additional element.

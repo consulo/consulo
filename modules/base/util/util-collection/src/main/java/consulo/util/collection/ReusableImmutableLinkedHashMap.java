@@ -280,18 +280,13 @@ public class ReusableImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K
     }
 
     @Override
-    public V get(Object key) {
-        return getOrDefault(key, null);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public V getOrDefault(Object key, V defaultValue) {
-        ReusableLinkedHashtable<K, V>.Range range = myRange;
-        if (key == null || range.mySize == 0) {
+        if (key == null) {
             return defaultValue;
         }
 
+        ReusableLinkedHashtable<K, V>.Range range = myRange;
         ReusableLinkedHashtable<K, V> table = range.getTable();
         int keyPos = table.getPos((K)key);
         if (keyPos < 0) {
