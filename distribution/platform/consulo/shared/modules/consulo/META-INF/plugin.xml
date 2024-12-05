@@ -1244,11 +1244,8 @@
         <group id="SendToFavoritesGroup" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.SendToFavoritesGroup" popup="true"/>
 
         <action id="RunConfiguration" class="consulo.ide.impl.idea.execution.actions.RunConfigurationsComboBoxAction"/>
-        <action id="ChooseRunConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopupAction" text="Run..."
-                description="Choose and run configuration" icon="consulo.platform.base.PlatformIconGroup@actions.execute"/>
-        <action id="ChooseDebugConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseDebugConfigurationPopupAction"
-                text="Debug..."
-                description="Choose and debug configuration" icon="consulo.platform.base.PlatformIconGroup@actions.startdebugger"/>
+        <action id="ChooseRunConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopupAction"  />
+        <action id="ChooseDebugConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseDebugConfigurationPopupAction" />
 
         <group id="RunContextGroup" popup="false">
             <!-- A dynamic group filled with executor actions -->

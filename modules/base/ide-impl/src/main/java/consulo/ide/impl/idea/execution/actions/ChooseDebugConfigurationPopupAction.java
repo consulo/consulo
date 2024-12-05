@@ -16,9 +16,14 @@
 
 package consulo.ide.impl.idea.execution.actions;
 
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.executor.Executor;
 
 public class ChooseDebugConfigurationPopupAction extends ChooseRunConfigurationPopupAction {
+    public ChooseDebugConfigurationPopupAction() {
+        super("Debug...", "Choose and debug configuration", ExecutionDebugIconGroup.actionStartdebugger());
+    }
+
     @Override
     protected Executor getDefaultExecutor() {
         return super.getAlternativeExecutor();

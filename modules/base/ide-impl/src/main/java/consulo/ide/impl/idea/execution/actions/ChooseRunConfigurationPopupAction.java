@@ -19,14 +19,33 @@ package consulo.ide.impl.idea.execution.actions;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 public class ChooseRunConfigurationPopupAction extends AnAction {
+    @Inject
+    public ChooseRunConfigurationPopupAction() {
+        super("Run...", "Choose and run configuration", PlatformIconGroup.actionsExecute());
+    }
+
+    public ChooseRunConfigurationPopupAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
+    public ChooseRunConfigurationPopupAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {

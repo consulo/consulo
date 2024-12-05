@@ -32,7 +32,6 @@ import consulo.execution.internal.PreferredProducerFind;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.runner.ProgramRunner;
 import consulo.ide.impl.idea.execution.impl.EditConfigurationsDialog;
-import consulo.ide.impl.idea.execution.impl.RunDialog;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
@@ -235,7 +234,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
   void editConfiguration(@Nonnull final Project project, @Nonnull final RunnerAndConfigurationSettings configuration) {
     final Executor executor = getExecutor();
     PropertiesComponent.getInstance().setValue("run.configuration.edit.ad", Boolean.toString(true));
-    if (RunDialog.editConfiguration(project, configuration, "Edit configuration settings", executor)) {
+    if (RunConfigurationEditor.getInstance(project).editConfiguration(project, configuration, "Edit configuration settings", executor)) {
       RunManagerEx.getInstanceEx(project).setSelectedConfiguration(configuration);
       ExecutionUtil.runConfiguration(configuration, executor);
     }
