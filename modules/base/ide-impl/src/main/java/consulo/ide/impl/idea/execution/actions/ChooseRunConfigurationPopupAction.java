@@ -16,58 +16,58 @@
 
 package consulo.ide.impl.idea.execution.actions;
 
+import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
-import consulo.execution.executor.DefaultRunExecutor;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowId;
 
 public class ChooseRunConfigurationPopupAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    assert project != null;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        assert project != null;
 
-    new ChooseRunConfigurationPopup(project, getAdKey(), getDefaultExecutor(), getAlternativeExecutor()).show();
-  }
-
-  protected Executor getDefaultExecutor() {
-    return DefaultRunExecutor.getRunExecutorInstance();
-  }
-
-  protected Executor getAlternativeExecutor() {
-    return ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG);
-  }
-
-  protected String getAdKey() {
-    return "run.configuration.alternate.action.ad";
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    final Project project = e.getData(Project.KEY);
-
-    presentation.setEnabled(true);
-    if (project == null || project.isDisposed()) {
-      presentation.setEnabled(false);
-      presentation.setVisible(false);
-      return;
+        new ChooseRunConfigurationPopup(project, getAdKey(), getDefaultExecutor(), getAlternativeExecutor()).show();
     }
 
-    if (null == getDefaultExecutor()) {
-      presentation.setEnabled(false);
-      presentation.setVisible(false);
-      return;
+    protected Executor getDefaultExecutor() {
+        return DefaultRunExecutor.getRunExecutorInstance();
     }
 
-    presentation.setEnabled(true);
-    presentation.setVisible(true);
-  }
+    protected Executor getAlternativeExecutor() {
+        return ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG);
+    }
+
+    protected String getAdKey() {
+        return "run.configuration.alternate.action.ad";
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        final Presentation presentation = e.getPresentation();
+        final Project project = e.getData(Project.KEY);
+
+        presentation.setEnabled(true);
+        if (project == null || project.isDisposed()) {
+            presentation.setEnabled(false);
+            presentation.setVisible(false);
+            return;
+        }
+
+        if (null == getDefaultExecutor()) {
+            presentation.setEnabled(false);
+            presentation.setVisible(false);
+            return;
+        }
+
+        presentation.setEnabled(true);
+        presentation.setVisible(true);
+    }
 }

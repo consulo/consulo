@@ -19,18 +19,18 @@ package consulo.ide.impl.idea.execution.actions;
 import consulo.execution.executor.Executor;
 
 public class ChooseDebugConfigurationPopupAction extends ChooseRunConfigurationPopupAction {
-  @Override
-  protected Executor getDefaultExecutor() {
-    return super.getAlternativeExecutor();
-  }
+    @Override
+    protected Executor getDefaultExecutor() {
+        return super.getAlternativeExecutor();
+    }
 
-  @Override
-  protected Executor getAlternativeExecutor() {
-    return super.getDefaultExecutor();
-  }
+    @Override
+    protected Executor getAlternativeExecutor() {
+        return super.getDefaultExecutor();
+    }
 
-  @Override
-  protected String getAdKey() {
-    return "debug.configuration.alternate.action.ad";
-  }
+    @Override
+    protected String getAdKey() {
+        return "debug.configuration.alternate.action.ad";
+    }
 }
