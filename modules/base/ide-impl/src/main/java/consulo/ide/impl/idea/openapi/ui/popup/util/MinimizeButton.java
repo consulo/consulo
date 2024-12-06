@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.openapi.ui.popup.util;
 import consulo.application.AllIcons;
 import consulo.ui.ex.popup.IconButton;
 
+@Deprecated
 public class MinimizeButton extends IconButton {
 
   public MinimizeButton(final String tooltip) {

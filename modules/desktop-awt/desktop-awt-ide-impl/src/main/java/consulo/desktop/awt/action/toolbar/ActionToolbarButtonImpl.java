@@ -93,11 +93,6 @@ public class ActionToolbarButtonImpl extends JButton implements ActionButton {
         myEngine.updateIcon();
     }
 
-    @Override
-    public int getPopState() {
-        return 0;
-    }
-
     @Nonnull
     @Override
     public Component getUIComponent() {

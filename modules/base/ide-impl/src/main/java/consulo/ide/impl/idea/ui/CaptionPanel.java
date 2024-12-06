@@ -16,13 +16,10 @@
 
 package consulo.ide.impl.idea.ui;
 
-import consulo.ui.ex.ActiveComponent;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -35,11 +32,31 @@ public class CaptionPanel extends JPanel {
     private static final String uiClassUD = "CaptionPanelUI";
 
     private boolean myActive = false;
-    private ActiveComponent myButtonComponent;
-    private JComponent mySettingComponent;
 
     public CaptionPanel() {
-        setLayout(new BorderLayout());
+        super(new BorderLayout());
+    }
+
+    public void setLeftComponent(@Nonnull JComponent component) {
+        BorderLayout layout = (BorderLayout) getLayout();
+
+        Component prev = layout.getLayoutComponent(BorderLayout.WEST);
+        if (prev != null) {
+            remove(prev);
+        }
+
+        add(component, BorderLayout.WEST);
+    }
+
+    public void setRightComponent(@Nonnull JComponent component) {
+        BorderLayout layout = (BorderLayout) getLayout();
+
+        Component prev = layout.getLayoutComponent(BorderLayout.EAST);
+        if (prev != null) {
+            remove(prev);
+        }
+
+        add(component, BorderLayout.EAST);
     }
 
     @Override
@@ -53,42 +70,13 @@ public class CaptionPanel extends JPanel {
 
     public void setActive(final boolean active) {
         myActive = active;
-        if (myButtonComponent != null) {
-            myButtonComponent.setActive(active);
-        }
         repaint();
     }
 
-    public void setButtonComponent(@Nonnull ActiveComponent component, @Nullable Border border) {
-        if (myButtonComponent != null) {
-            remove(myButtonComponent.getComponent());
-        }
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(border);
-        panel.add(new JLabel(" "), BorderLayout.WEST);
-        panel.add(component.getComponent(), BorderLayout.CENTER);
-        panel.setOpaque(false);
-        add(panel, BorderLayout.EAST);
-        myButtonComponent = component;
-    }
-
-    public void addSettingsComponent(Component component) {
-        if (mySettingComponent == null) {
-            mySettingComponent = new JPanel();
-            mySettingComponent.setOpaque(false);
-            mySettingComponent.setLayout(new BoxLayout(mySettingComponent, BoxLayout.X_AXIS));
-            add(mySettingComponent, BorderLayout.WEST);
-        }
-        mySettingComponent.add(component);
-    }
-
     public boolean isWithinPanel(MouseEvent e) {
-        final Point p = SwingUtilities.convertPoint(e.getComponent(), e.getX(), e.getY(), this);
-        final Component c = findComponentAt(p);
-        return c != null && c != myButtonComponent;
-    }
-
-    protected boolean containsSettingsControls() {
-        return mySettingComponent != null || myButtonComponent != null;
+        return false;
+//        final Point p = SwingUtilities.convertPoint(e.getComponent(), e.getX(), e.getY(), this);
+//        final Component c = findComponentAt(p);
+//        return c != null && myButtonComponent != null && c != myButtonComponent.component();
     }
 }

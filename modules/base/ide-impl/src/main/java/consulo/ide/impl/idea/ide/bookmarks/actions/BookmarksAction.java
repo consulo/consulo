@@ -80,7 +80,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
     list.getEmptyText().setText("No Bookmarks");
 
     EditBookmarkDescriptionAction editDescriptionAction = new EditBookmarkDescriptionAction(project, list);
-    DefaultActionGroup actions = new DefaultActionGroup();
+    List<AnAction> actions = new ArrayList<>();
     actions.add(editDescriptionAction);
     actions.add(new DeleteBookmarkAction(project, list));
     actions.add(new MoveBookmarkUpAction(project, list));

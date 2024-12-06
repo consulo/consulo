@@ -19,9 +19,11 @@ package consulo.execution.impl.internal.ui.layout.action;
 import consulo.execution.impl.internal.ui.layout.Grid;
 import consulo.execution.impl.internal.ui.layout.Tab;
 import consulo.execution.impl.internal.ui.layout.ViewContext;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.content.Content;
+import jakarta.annotation.Nullable;
 
 public abstract class BaseViewAction extends DumbAwareAction {
 
@@ -55,6 +57,7 @@ public abstract class BaseViewAction extends DumbAwareAction {
 
   }
 
+  @RequiredUIAccess
   @Override
   public final void actionPerformed(final AnActionEvent e) {
     actionPerformed(e, getViewFacade(e), getContent(e));
@@ -64,17 +67,17 @@ public abstract class BaseViewAction extends DumbAwareAction {
   protected abstract void actionPerformed(AnActionEvent e, ViewContext context, Content[] content);
 
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private ViewContext getViewFacade(final AnActionEvent e) {
     return e.getData(ViewContext.CONTEXT_KEY);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private Content[] getContent(final AnActionEvent e) {
     return e.getData(ViewContext.CONTENT_KEY);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected static Tab getTabFor(final ViewContext context, final Content[] content) {
     Grid grid = context.findGridFor(content[0]);
     return context.getTabFor(grid);

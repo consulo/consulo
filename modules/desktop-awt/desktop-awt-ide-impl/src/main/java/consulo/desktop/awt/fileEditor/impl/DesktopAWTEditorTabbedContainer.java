@@ -37,7 +37,6 @@ import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.FileDropHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
@@ -562,7 +561,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
                 }
                 // clicks on the close window button don't count in determining whether we have a double-click on tab (IDEA-70403)
                 final Component deepestComponent = SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
-                if (!(deepestComponent instanceof InplaceButton)) {
+                if (!(deepestComponent instanceof ActionButtonComponent)) {
                     myActionClickCount++;
                 }
                 if (myActionClickCount > 1 && !isFloating()) {

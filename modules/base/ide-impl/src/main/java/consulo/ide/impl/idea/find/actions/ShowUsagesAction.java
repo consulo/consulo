@@ -47,7 +47,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.usages.impl.*;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
@@ -69,7 +68,6 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -521,7 +519,11 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         if (isWarning) {
             label.setBackground(MessageType.WARNING.getPopupBackground());
         }
-        InplaceButton button = createSettingsButton(handler, popupPosition, editor, maxUsages, cancelAction);
+        AnAction settingAction = createSettingsAction(handler, popupPosition, editor, maxUsages, cancelAction);
+
+        ActionToolbar hintToolbar = ActionManager.getInstance().createActionToolbar("HintToolbar", ActionGroup.newImmutableBuilder().add(settingAction).build(), true);
+        hintToolbar.setTargetComponent(null);
+        hintToolbar.setMiniMode(true);
 
         JPanel panel = new JPanel(new BorderLayout()) {
             @Override
@@ -536,37 +538,43 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
                 super.removeNotify();
             }
         };
-        button.setBackground(label.getBackground());
         panel.setBackground(label.getBackground());
         label.setOpaque(false);
         label.setBorder(null);
         panel.setBorder(HintUtil.createHintBorder());
         panel.add(label, BorderLayout.CENTER);
-        panel.add(button, BorderLayout.EAST);
+        panel.add(hintToolbar.getComponent(), BorderLayout.EAST);
+        panel.add(hintToolbar.getComponent(), BorderLayout.EAST);
         return panel;
     }
 
     @Nonnull
-    private InplaceButton createSettingsButton(
+    private AnAction createSettingsAction(
         @Nonnull final FindUsagesHandler handler,
         @Nonnull final RelativePoint popupPosition,
         final Editor editor,
         final int maxUsages,
         @Nonnull final Runnable cancelAction
     ) {
-        String shortcutText = "";
-        KeyboardShortcut shortcut = UsageViewUtil.getShowUsagesWithSettingsShortcut();
-        if (shortcut != null) {
-            shortcutText = "(" + KeymapUtil.getShortcutText(shortcut) + ")";
-        }
-        return new InplaceButton("Settings..." + shortcutText, PlatformIconGroup.generalGearplain(), e -> {
-            Application.get().invokeLater(() -> {
-                DataContext context = DataManager.getInstance().getDataContext();
+        return new DumbAwareAction("Settings", null, PlatformIconGroup.generalGearplain()) {
+            {
+                KeyboardShortcut shortcut = UsageViewUtil.getShowUsagesWithSettingsShortcut();
+                if (shortcut != null) {
+                    setShortcutSet(new CustomShortcutSet(shortcut));
+                }
+            }
 
-                showDialogAndFindUsagesAsync(context, handler, popupPosition, editor, maxUsages);
-            });
-            cancelAction.run();
-        });
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                Application.get().invokeLater(() -> {
+                    DataContext context = DataManager.getInstance().getDataContext();
+
+                    showDialogAndFindUsagesAsync(context, handler, popupPosition, editor, maxUsages);
+                });
+                cancelAction.run();
+            }
+        };
     }
 
     @RequiredUIAccess
@@ -784,55 +792,31 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
             }.registerCustomShortcutSet(new CustomShortcutSet(shortcut.getFirstKeyStroke()), table);
         }
 
-        InplaceButton settingsButton = createSettingsButton(handler, popupPosition, editor, maxUsages, () -> cancel(popup[0]));
+        AnAction settingsButton = createSettingsAction(handler, popupPosition, editor, maxUsages, () -> cancel(popup[0]));
 
-        ActiveComponent spinningProgress = new ActiveComponent.Adapter() {
-            @Override
-            public JComponent getComponent() {
-                return processIcon;
-            }
-        };
-        final DefaultActionGroup pinGroup = new DefaultActionGroup();
-        final ActiveComponent pin = createPinButton(project, handler, usageView, options, popup, pinGroup);
-        builder.setCommandButton(new CompositeActiveComponent(spinningProgress, settingsButton, pin));
+        final AnAction pin = createPinButton(project, handler, usageView, options, popup);
 
-        DefaultActionGroup toolbar = new DefaultActionGroup();
-        usageView.addFilteringActions(toolbar);
+        List<AnAction> leftActions = new ArrayList<>();
+        usageView.addFilteringActions(leftActions::add);
+        leftActions.add(UsageGroupingRuleProviderImpl.createGroupByFileStructureAction(usageView));
 
-        toolbar.add(UsageGroupingRuleProviderImpl.createGroupByFileStructureAction(usageView));
-        ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.USAGE_VIEW_TOOLBAR, toolbar, true);
-        actionToolbar.setReservePlaceAutoPopupIcon(false);
-        final JComponent toolBar = actionToolbar.getComponent();
-        toolBar.setOpaque(false);
-        builder.setSettingButton(toolBar);
+        builder.setHeaderLeftActions(leftActions);
+        builder.setHeaderRightActions(List.of(new ProgressIconAsAction(processIcon), settingsButton, pin));
+
         builder.setCancelKeyEnabled(false);
 
-        popup[0] = builder.createPopup();
-        JComponent content = popup[0].getContent();
-
-        for (AnAction action : toolbar.getChildren(null)) {
-            action.unregisterCustomShortcutSet(usageView.getComponent());
-            action.registerCustomShortcutSet(action.getShortcutSet(), content);
-        }
-
-        for (AnAction action : pinGroup.getChildren(null)) {
-            action.unregisterCustomShortcutSet(usageView.getComponent());
-            action.registerCustomShortcutSet(action.getShortcutSet(), content);
-        }
-
-        return popup[0];
+        return builder.createPopup();
     }
 
-    private ActiveComponent createPinButton(
+    private AnAction createPinButton(
         @Nonnull Project project,
         @Nonnull final FindUsagesHandler handler,
         @Nonnull final UsageViewImpl usageView,
         @Nonnull final FindUsagesOptions options,
-        @Nonnull final JBPopup[] popup,
-        @Nonnull DefaultActionGroup pinGroup
+        @Nonnull final JBPopup[] popup
     ) {
         Image icon = ToolWindowManager.getInstance(project).getLocationIcon(ToolWindowId.FIND, AllIcons.General.Pin_tab);
-        final AnAction pinAction = new AnAction("Open Find Usages Toolwindow", "Show all usages in a separate toolwindow", icon) {
+        DumbAwareAction pinAction = new DumbAwareAction("Open Find Usages Toolwindow", "Show all usages in a separate toolwindow", icon) {
             {
                 AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_USAGES);
                 setShortcutSet(action.getShortcutSet());
@@ -853,19 +837,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
                 );
             }
         };
-        pinGroup.add(pinAction);
-        final ActionToolbar pinToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.USAGE_VIEW_TOOLBAR, pinGroup, true);
-        pinToolbar.setReservePlaceAutoPopupIcon(false);
-        final JComponent pinToolBar = pinToolbar.getComponent();
-        pinToolBar.setBorder(null);
-        pinToolBar.setOpaque(false);
-
-        return new ActiveComponent.Adapter() {
-            @Override
-            public JComponent getComponent() {
-                return pinToolBar;
-            }
-        };
+        return pinAction;
     }
 
     private static void cancel(@Nullable JBPopup popup) {

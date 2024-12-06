@@ -1,3 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <path fill="#AFB1B3" fill-rule="evenodd" d="M2,2 L14,2 L14,14 L2,14 L2,2 Z M3,3 L3,13 L13,13 L13,3 L3,3 Z M13,10 L13,13 L3,13 L3,10 L13,10 Z" transform="matrix(1 0 0 -1 0 16)"/>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="16px" height="16px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<path fill-rule="evenodd" clip-rule="evenodd" fill="#CED0D6" d="M2.1,4c0-1.1,0.8-2,1.7-2h8.6c0.9,0,1.7,0.9,1.7,2v8
+	c0,1.1-0.8,2-1.7,2H3.8c-0.9,0-1.7-0.9-1.7-2V4z M3.8,3h8.6c0.5,0,0.9,0.4,0.9,1v1H3V4C3,3.4,3.3,3,3.8,3z M3,6v6c0,0.6,0.4,1,0.9,1
+	h8.6c0.5,0,0.9-0.4,0.9-1V6H3z"/>
 </svg>

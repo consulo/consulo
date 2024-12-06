@@ -84,7 +84,6 @@ public class AllIcons {
     public static final Image Menu_saveall = PlatformIconGroup.actionsMenu_saveall(); // 16x16
     public static final Image Module = PlatformIconGroup.actionsModule(); // 16x16
     public static final Image More = PlatformIconGroup.actionsMorevertical();
-    public static final Image Move_to_button = PlatformIconGroup.actionsMove_to_button(); // 11x10
     public static final Image MoveDown = PlatformIconGroup.actionsMovedown(); // 14x14
     public static final Image MoveToAnotherChangelist = PlatformIconGroup.actionsMovetoanotherchangelist(); // 16x16
     public static final Image MoveUp = PlatformIconGroup.actionsMoveup(); // 14x14
@@ -260,7 +259,6 @@ public class AllIcons {
     public static final Image CollapseComponentHover = PlatformIconGroup.generalCollapsecomponenthover();
     public static final Image CollapseAll = PlatformIconGroup.actionsCollapseall(); // 11x16
     public static final Image ContextHelp = PlatformIconGroup.generalContexthelp();
-    public static final Image Divider = PlatformIconGroup.generalDivider(); // 2x19
     public static final Image Dropdown = PlatformIconGroup.generalDropdown(); // 16x16
     public static final Image EditColors = PlatformIconGroup.generalEditcolors(); // 16x16
     public static final Image Ellipsis = PlatformIconGroup.generalEllipsis(); // 9x9
@@ -287,9 +285,6 @@ public class AllIcons {
     public static final Image Jdk = PlatformIconGroup.generalJdk(); // 16x16
     public static final Image Youtube = PlatformIconGroup.generalYoutube(); // 32x32
     public static final Image Locate = PlatformIconGroup.generalLocate(); // 14x16
-    public static final Image Mdot_empty = PlatformIconGroup.generalMdot_empty(); // 8x8
-    public static final Image Mdot_white = PlatformIconGroup.generalMdot_white(); // 8x8
-    public static final Image Mdot = PlatformIconGroup.generalMdot(); // 8x8
     public static final Image Modified = PlatformIconGroup.generalModified(); // 24x16
     public static final Image MoreTabs = PlatformIconGroup.generalMoretabs(); // 16x16
     public static final Image Mouse = PlatformIconGroup.generalMouse(); // 32x32

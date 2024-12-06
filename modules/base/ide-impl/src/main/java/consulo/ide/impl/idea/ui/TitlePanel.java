@@ -16,11 +16,10 @@
 
 package consulo.ide.impl.idea.ui;
 
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -83,7 +82,6 @@ public class TitlePanel extends CaptionPanel {
     }
 
     final Dimension preferredSize = super.getPreferredSize();
-    preferredSize.height = JBCurrentTheme.Popup.headerHeight(containsSettingsControls());
     int maxWidth = JBUIScale.scale(350);
     if (!myHtml && preferredSize.width > maxWidth) { // do not allow caption to extend parent container
       return new Dimension(maxWidth, preferredSize.height);

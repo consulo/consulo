@@ -569,10 +569,6 @@ public class JBCurrentTheme {
             return JBColor.border();
         }
 
-        public static int headerHeight(boolean hasControls) {
-            return hasControls ? JBUIScale.scale(28) : JBUIScale.scale(24);
-        }
-
         @Deprecated
         public static Color separatorColor() {
             return JBColor.border();

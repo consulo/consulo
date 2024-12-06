@@ -16,10 +16,11 @@
 package consulo.desktop.awt.wm.impl.status;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.ui.popup.util.MinimizeButton;
 import consulo.ide.impl.idea.openapi.wm.impl.status.InlineProgressIndicator;
 import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.awt.*;
@@ -140,7 +141,7 @@ public class ProcessPopup  {
     builder.setBelongsToGlobalPopupStack(false);
     builder.setLocateByContent(true);
 
-    builder.setCancelButton(new MinimizeButton("Hide"));
+    builder.setCancelButton(PlatformIconGroup.generalHidetoolwindow(), LocalizeValue.localizeTODO("Hide"));
 
     JFrame frame = (JFrame)UIUtil.findUltimateParent(myProgressPanel);
     Dimension contentSize = myRootContent.getPreferredSize();

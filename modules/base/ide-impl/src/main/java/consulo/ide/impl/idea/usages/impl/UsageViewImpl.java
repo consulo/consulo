@@ -839,30 +839,30 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     @RequiredUIAccess
-    public void addFilteringActions(@Nonnull DefaultActionGroup group) {
+    public void addFilteringActions(@Nonnull Consumer<AnAction> group) {
         Application.get().assertIsDispatchThread();
         addFilteringActions(group, true);
     }
 
-    private void addFilteringActions(@Nonnull DefaultActionGroup group, boolean includeExtensionPoints) {
+    private void addFilteringActions(@Nonnull Consumer<AnAction> group, boolean includeExtensionPoints) {
         if (getPresentation().isMergeDupLinesAvailable()) {
             final MergeDupLines mergeDupLines = new MergeDupLines();
             final JComponent component = myRootPanel;
             if (component != null) {
                 mergeDupLines.registerCustomShortcutSet(mergeDupLines.getShortcutSet(), component, this);
             }
-            group.add(mergeDupLines);
+            group.accept(mergeDupLines);
         }
         if (includeExtensionPoints) {
             addFilteringFromExtensionPoints(group);
         }
     }
 
-    private void addFilteringFromExtensionPoints(@Nonnull DefaultActionGroup group) {
+    private void addFilteringFromExtensionPoints(@Nonnull Consumer<AnAction> group) {
         for (UsageFilteringRuleProvider provider : UsageFilteringRuleProvider.EP_NAME.getExtensionList()) {
             AnAction[] actions = provider.createFilteringActions(this);
             for (AnAction action : actions) {
-                group.add(action);
+                group.accept(action);
             }
         }
     }
@@ -921,9 +921,9 @@ public class UsageViewImpl implements UsageViewEx {
             group.add(new AnSeparator());
         }
 
-        addFilteringActions(group, false);
+        addFilteringActions(group::add, false);
         DefaultActionGroup filteringSubgroup = new DefaultActionGroup();
-        addFilteringFromExtensionPoints(filteringSubgroup);
+        addFilteringFromExtensionPoints(filteringSubgroup::add);
 
         return new AnAction[]{
             ActionManager.getInstance().getAction("UsageView.Rerun"),

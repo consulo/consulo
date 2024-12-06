@@ -16,9 +16,9 @@
 
 package consulo.execution.impl.internal.ui.layout.action;
 
-import consulo.application.AllIcons;
 import consulo.execution.impl.internal.ui.layout.Tab;
 import consulo.execution.impl.internal.ui.layout.ViewContext;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.content.Content;
 
@@ -27,7 +27,7 @@ public class MinimizeViewAction extends BaseViewAction {
   @Override
   protected void update(final AnActionEvent e, final ViewContext context, final Content[] content) {
     setEnabled(e, isEnabled(context, content, e.getPlace()));
-    e.getPresentation().setIcon(AllIcons.Actions.Move_to_button);
+    e.getPresentation().setIcon(PlatformIconGroup.actionsMovetobutton());
   }
 
   @Override

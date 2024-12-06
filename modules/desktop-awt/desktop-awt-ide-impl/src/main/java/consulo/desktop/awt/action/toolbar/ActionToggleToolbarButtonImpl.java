@@ -107,11 +107,6 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
         myEngine.updateIcon();
     }
 
-    @Override
-    public int getPopState() {
-        return 0;
-    }
-
     @Nonnull
     @Override
     public Component getUIComponent() {

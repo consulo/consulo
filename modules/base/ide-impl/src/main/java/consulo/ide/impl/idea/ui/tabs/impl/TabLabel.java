@@ -15,17 +15,14 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl;
 
-import consulo.ide.impl.idea.ui.InplaceButton;
-import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.awt.tab.TabInfo;
-import consulo.ide.impl.idea.ui.tabs.TabsUtil;
-import consulo.ui.ex.awt.tab.UiDecorator;
-import consulo.util.lang.function.PairConsumer;
-import consulo.ide.impl.idea.util.ui.Centerizer;
 import consulo.application.ui.UISettings;
 import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.ui.tabs.TabsUtil;
+import consulo.ide.impl.idea.util.ui.Centerizer;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -34,12 +31,15 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.tab.TabInfo;
+import consulo.ui.ex.awt.tab.UiDecorator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-
+import consulo.util.lang.function.PairConsumer;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -47,7 +47,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class TabLabel extends JPanel {
   public class IconInfo {
@@ -99,7 +98,7 @@ public class TabLabel extends JPanel {
             myInfo.setPreviousSelection(selectedInfo);
           }
           Component c = SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
-          if (c instanceof InplaceButton) return;
+          if (c instanceof ActionButton) return;
           myTabs.select(info, true);
         }
         else {
@@ -378,13 +377,7 @@ public class TabLabel extends JPanel {
 
     if (group == null) return;
 
-    myActionPanel = new ActionPanel(myTabs, myInfo, new Consumer<>() {
-      @Override
-      public void accept(final MouseEvent event) {
-        final MouseEvent me = SwingUtilities.convertMouseEvent(event.getComponent(), event, TabLabel.this);
-        processMouseEvent(me);
-      }
-    });
+    myActionPanel = new ActionPanel(myTabs, myInfo);
 
     toggleShowActions(false);
 

@@ -17,24 +17,11 @@ package consulo.ui.ex.action;
 
 import consulo.ui.Component;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import org.intellij.lang.annotations.MagicConstant;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 public interface ActionButtonComponent {
-  int NORMAL = 0;
-  int POPPED = 1;
-  int PUSHED = -1;
-  int SELECTED = 2;
-
-  @MagicConstant(flags = {NORMAL, POPPED, PUSHED, SELECTED})
-  @interface ButtonState { }
-
-  @ButtonState
-  @Deprecated
-  int getPopState();
-
   int getWidth();
 
   int getHeight();

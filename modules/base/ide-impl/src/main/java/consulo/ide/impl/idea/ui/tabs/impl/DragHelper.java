@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.ui.tabs.impl;
 
 import consulo.application.ui.UISettings;
-import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.MouseDragHelper;
 import consulo.ide.impl.idea.ui.util.Axis;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.tab.JBTabsPosition;
 import consulo.ui.ex.awt.tab.TabInfo;
@@ -208,7 +208,7 @@ class DragHelper extends MouseDragHelper {
   @Nullable
   private TabLabel findLabel(Point dragPoint) {
     final Component at = myTabs.findComponentAt(dragPoint);
-    if (at instanceof InplaceButton) return null;
+    if (at instanceof ActionButtonComponent) return null;
     final TabLabel label = findLabel(at);
 
     return label != null && label.getParent() == myTabs && label.getInfo() != myDragSource ? label : null;

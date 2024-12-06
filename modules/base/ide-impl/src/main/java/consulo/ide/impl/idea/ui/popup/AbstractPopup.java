@@ -8,7 +8,6 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
@@ -32,10 +31,10 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
 import consulo.ide.impl.idea.util.ui.ScrollUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -50,6 +49,10 @@ import consulo.ui.Size;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.*;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
@@ -240,8 +243,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
                                  boolean cancelOnClickOutside,
                                  @Nullable Set<JBPopupListener> listeners,
                                  boolean useDimServiceForXYLocation,
-                                 ActiveComponent commandButton,
-                                 @Nullable IconButton cancelButton,
+                                 @Nullable ComponentPopupBuilderImpl.CancelButtonInfo cancelButtonInfo,
                                  @Nullable MouseChecker cancelOnMouseOutCallback,
                                  boolean cancelOnWindow,
                                  @Nullable ActiveIcon titleIcon,
@@ -257,15 +259,16 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
                                  @Nullable String adText,
                                  int adTextAlignment,
                                  boolean headerAlwaysFocusable,
-                                 @Nonnull List<? extends consulo.util.lang.Pair<ActionListener, KeyStroke>> keyboardActions,
-                                 Component settingsButtons,
-                                 @Nullable final Processor<? super JBPopup> pinCallback,
+                                 @Nonnull List<? extends Pair<ActionListener, KeyStroke>> keyboardActions,
+                                 @Nullable final Predicate<? super JBPopup> pinCallback,
                                  boolean mayBeParent,
                                  boolean showShadow,
                                  boolean showBorder,
                                  Color borderColor,
                                  boolean cancelOnWindowDeactivation,
-                                 @Nullable Predicate<? super KeyEvent> keyEventHandler) {
+                                 @Nullable Predicate<? super KeyEvent> keyEventHandler,
+                                 @Nonnull List<AnAction> headerLeftActions,
+                                 @Nonnull List<AnAction> headerRightActions) {
         assert !requestFocus || focusable : "Incorrect argument combination: requestFocus=true focusable=false";
 
         all.add(this);
@@ -314,23 +317,6 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
                 else {
                     myCaption = new CaptionPanel();
                 }
-
-                if (pinCallback != null) {
-                    Image icon =
-                        ToolWindowManagerEx
-                            .getInstanceEx(myProject != null ? myProject : ProjectUtil.guessCurrentProject((JComponent) myOwner))
-                            .getLocationIcon(ToolWindowId.FIND, AllIcons.General.Pin_tab);
-                    myCaption.setButtonComponent(new InplaceButton(
-                        new IconButton(IdeLocalize.showInFindWindowButtonName().get(), icon),
-                        e -> pinCallback.process(this)), JBUI.Borders.empty(4)
-                    );
-                }
-                else if (cancelButton != null) {
-                    myCaption.setButtonComponent(new InplaceButton(cancelButton, e -> cancel()), JBUI.Borders.empty(4));
-                }
-                else if (commandButton != null) {
-                    myCaption.setButtonComponent(commandButton, null);
-                }
             }
             else {
                 myCaption = new CaptionPanel();
@@ -340,6 +326,42 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
             myHeaderPanel.add(myCaption, BorderLayout.NORTH);
         }
 
+        if (myCaption != null) {
+            List<AnAction> rightActions = new ArrayList<>(headerRightActions);
+
+            if (pinCallback != null) {
+                Image icon = ToolWindowManagerEx
+                    .getInstanceEx(myProject != null ? myProject : ProjectUtil.guessCurrentProject((JComponent) myOwner))
+                    .getLocationIcon(ToolWindowId.FIND, PlatformIconGroup.generalPin_tab());
+
+                rightActions.add(new PinToToolWindowAction(pinCallback, icon, this));
+            }
+            else if (cancelButtonInfo != null) {
+                ClosePopupAction action = new ClosePopupAction(cancelButtonInfo.tooltipText(), cancelButtonInfo.icon(), this);
+                rightActions.add(action);
+            }
+
+            if (!rightActions.isEmpty()) {
+                ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("PopupRight", ActionGroup.newImmutableBuilder().addAll(rightActions).build(), true);
+                toolbar.setMiniMode(true);
+                toolbar.setTargetComponent(myContent);
+
+                myCaption.setRightComponent(toolbar.getComponent());
+            }
+
+            if (!headerLeftActions.isEmpty()) {
+                ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("PopupLeft", ActionGroup.newImmutableBuilder().addAll(headerLeftActions).build(), true);
+                toolbar.setMiniMode(true);
+                toolbar.setTargetComponent(myContent);
+
+                myCaption.setLeftComponent(toolbar.getComponent());
+            }
+        }
+
+        if (myCaption != null && myCaption.getComponentCount() > 0) {
+            myCaption.setBorder(JBCurrentTheme.listCellBorderFull());
+        }
+        
         setWindowActive(myHeaderAlwaysFocusable);
 
         myContent.add(myHeaderPanel, BorderLayout.NORTH);
@@ -362,10 +384,6 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
         for (Pair<ActionListener, KeyStroke> pair : keyboardActions) {
             myContent.registerKeyboardAction(pair.getFirst(), pair.getSecond(), JComponent.WHEN_IN_FOCUSED_WINDOW);
-        }
-
-        if (settingsButtons != null) {
-            myCaption.addSettingsComponent(settingsButtons);
         }
 
         myKeyEventHandler = keyEventHandler;

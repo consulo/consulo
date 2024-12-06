@@ -22,7 +22,7 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nullable;
 
 @Deprecated
-@DeprecationInfo("Use Image#stated")
+@DeprecationInfo("Use Image#stated. Or use Buttons.")
 public class IconButton extends ActiveIcon {
 
   private String myTooltip;

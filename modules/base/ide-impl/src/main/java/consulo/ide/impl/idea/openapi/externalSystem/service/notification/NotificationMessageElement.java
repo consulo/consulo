@@ -76,7 +76,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
 
       @Nonnull
       private Image getIcon(@Nonnull ErrorTreeElementKind kind) {
-        Image icon = AllIcons.General.Mdot_empty;
+        Image icon = Image.empty(Image.DEFAULT_ICON_SIZE);
         switch (kind) {
           case INFO:
             icon = AllIcons.General.Information;
@@ -91,7 +91,6 @@ public class NotificationMessageElement extends NavigatableMessageElement {
             icon = AllIcons.General.Tip;
             break;
           case GENERIC:
-            icon = AllIcons.General.Mdot_empty;
             break;
         }
         return icon;

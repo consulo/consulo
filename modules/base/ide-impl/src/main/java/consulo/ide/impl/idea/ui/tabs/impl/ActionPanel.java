@@ -15,95 +15,60 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ide.impl.idea.ui.InplaceButton;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.tab.TabInfo;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class ActionPanel extends NonOpaquePanel {
+    private boolean myAutoHide;
+    private boolean myActionsIsVisible = false;
 
-  private final List<ActionButton> myButtons = new ArrayList<ActionButton>();
-  private final JBTabsImpl myTabs;
+    private final ActionToolbar myActionToolbar;
 
-  private boolean myAutoHide;
-  private boolean myActionsIsVisible = false;
+    public ActionPanel(JBTabsImpl tabs, TabInfo tabInfo) {
+        ActionGroup group = tabInfo.getTabLabelActions() != null ? tabInfo.getTabLabelActions() : new DefaultActionGroup();
 
-  public ActionPanel(JBTabsImpl tabs, TabInfo tabInfo, Consumer<MouseEvent> pass) {
-    myTabs = tabs;
-    ActionGroup group = tabInfo.getTabLabelActions() != null ? tabInfo.getTabLabelActions() : new DefaultActionGroup();
-    AnAction[] children = group.getChildren(null);
+        myActionToolbar = ActionManager.getInstance().createActionToolbar("RunToolbar", group, true);
+        myActionToolbar.setTargetComponent(tabs);
+        myActionToolbar.setMiniMode(true);
 
-    final NonOpaquePanel wrapper = new NonOpaquePanel(new BorderLayout());
-    wrapper.add(Box.createHorizontalStrut(2), BorderLayout.WEST);
-    NonOpaquePanel inner = new NonOpaquePanel();
-    inner.setLayout(new BoxLayout(inner, BoxLayout.X_AXIS));
-    wrapper.add(inner, BorderLayout.CENTER);
-    for (AnAction each : children) {
-      ActionButton eachButton = new ActionButton(myTabs, tabInfo, each, tabInfo.getTabActionPlace(), pass, tabs.getTabActionsMouseDeadzone()) {
-        @Override
-        protected void repaintComponent(final Component c) {
-          TabLabel tabLabel = (TabLabel) SwingUtilities.getAncestorOfClass(TabLabel.class, c);
-          if (tabLabel != null) {
-            Point point = SwingUtilities.convertPoint(c, new Point(0, 0), tabLabel);
-            Dimension d = c.getSize();
-            tabLabel.repaint(point.x, point.y, d.width, d.height);
-          } else {
-            super.repaintComponent(c);
-          }
-        }
-      };
-
-      myButtons.add(eachButton);
-      InplaceButton component = eachButton.getComponent();
-      inner.add(component);
+        JComponent component = myActionToolbar.getComponent();
+        component.setBorder(JBUI.Borders.empty(2, 6, 0, 0));
+        add(component);
     }
 
-    add(wrapper);
-  }
+    @RequiredUIAccess
+    public boolean update() {
+        boolean old = myActionsIsVisible;
 
-  public boolean update() {
-    boolean changed = false;
-    boolean anyVisible = false;
-    for (ActionButton each : myButtons) {
-      changed |= each.update();
-      each.setMouseDeadZone(myTabs.getTabActionsMouseDeadzone());
-      anyVisible |= each.getComponent().isVisible();
+        myActionToolbar.updateActionsImmediately();
+        myActionsIsVisible = myActionToolbar.hasVisibleActions();
+
+        return old != myActionsIsVisible;
     }
 
-    myActionsIsVisible = anyVisible;
-
-    return changed;
-  }
-
-  public boolean isAutoHide() {
-    return myAutoHide;
-  }
-
-  public void setAutoHide(final boolean autoHide) {
-    myAutoHide = autoHide;
-    for (ActionButton each : myButtons) {
-      each.setAutoHide(myAutoHide);
+    public boolean isAutoHide() {
+        return myAutoHide;
     }
-  }
 
-  @Override
-  public Dimension getPreferredSize() {
-    return myActionsIsVisible ? super.getPreferredSize() : new Dimension(0, 0);
-  }
-
-  public void toggleShowActions(final boolean show) {
-    for (ActionButton each : myButtons) {
-      each.toggleShowActions(show);
+    public void setAutoHide(final boolean autoHide) {
+        myAutoHide = autoHide;
     }
-  }
 
+    @Override
+    public Dimension getPreferredSize() {
+        return myActionsIsVisible ? super.getPreferredSize() : new Dimension(0, 0);
+    }
+
+    public void toggleShowActions(final boolean show) {
+        myActionToolbar.getComponent().setVisible(show);
+    }
 }
