@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt.popup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.popup.ListPopup;
 import jakarta.annotation.Nullable;
@@ -25,6 +26,8 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2024-12-06
  */
+@Deprecated
+@DeprecationInfo("Do not depend to Swing classes")
 public interface AWTListPopup extends ListPopup {
     ListPopupModel getListModel();
 

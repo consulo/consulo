@@ -19,6 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import consulo.ui.ex.popup.ListPopupStep;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.function.Function;
@@ -41,6 +42,7 @@ public interface AWTPopupFactory {
 
     AWTListPopup createListPopup(@Nonnull Project project,
                                  @Nonnull ListPopupStep step,
+                                 @Nullable AWTListPopup parentPopup,
                                  @Nonnull Function<AWTListPopup, ListCellRenderer> rendererFactory,
                                  @Nonnull AWTPopupSubFactory factory);
 }

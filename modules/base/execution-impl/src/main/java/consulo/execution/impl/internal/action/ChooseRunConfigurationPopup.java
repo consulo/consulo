@@ -89,13 +89,13 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         myAlternativeExecutor = alternativeExecutor;
 
         ConfigurationListPopupStep step = new ConfigurationListPopupStep(this, myProject, this, myDefaultExecutor.getActionName().get());
-        myPopup = create(step);
+        myPopup = create(step, null);
     }
 
-    private AWTListPopup create(ListPopupStep step) {
+    private AWTListPopup create(ListPopupStep step, AWTListPopup parentPopup) {
         AWTPopupFactory factory = (AWTPopupFactory) JBPopupFactory.getInstance();
 
-        AWTListPopup listPopup = factory.createListPopup(myProject, step, popup -> {
+        AWTListPopup listPopup = factory.createListPopup(myProject, step, parentPopup, popup -> {
             boolean hasSideBar = false;
             for (Object each : popup.getListStep().getValues()) {
                 if (each instanceof Wrapper wrapper && wrapper.getMnemonic() != -1) {
@@ -104,9 +104,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
                 }
             }
             return new RunListElementRenderer(popup, hasSideBar);
-        }, (parent, subStep) -> {
-            return create((ListPopupStep) subStep);
-        });
+        }, (parent, subStep) -> create((ListPopupStep) subStep, parent));
 
         registerActions(listPopup);
 

@@ -15,12 +15,15 @@
  */
 package consulo.ui.ex.awt.popup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.popup.PopupStep;
 
 /**
  * @author VISTALL
  * @since 2024-12-06
  */
+@Deprecated
+@DeprecationInfo("Do not depend to Swing classes")
 public interface AWTPopupSubFactory {
     AWTListPopup create(AWTListPopup parent, PopupStep step);
 }

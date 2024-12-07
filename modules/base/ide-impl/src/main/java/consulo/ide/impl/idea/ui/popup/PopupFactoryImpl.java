@@ -77,9 +77,10 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
     @Override
     public AWTListPopup createListPopup(@Nonnull Project project,
                                         @Nonnull ListPopupStep step,
+                                        @Nullable AWTListPopup parentPopup,
                                         @Nonnull Function<AWTListPopup, ListCellRenderer> rendererFactory,
                                         @Nonnull AWTPopupSubFactory factory) {
-        return new ListPopupImpl(step) {
+        return new ListPopupImpl(project, (WizardPopup) parentPopup, step, null) {
             @Override
             protected ListCellRenderer getListElementRenderer() {
                 return rendererFactory.apply(this);
