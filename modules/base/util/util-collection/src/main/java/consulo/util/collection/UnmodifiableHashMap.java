@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * and has exactly half empty entries, and up to three separate key/value pairs stored in the fields. This allows reusing the
  * same table when a new element is added. Thanks to this rehashing occurs only once in four additions.
  */
-public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
+public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     private static final UnmodifiableHashMap<Object, Object> EMPTY =
         new UnmodifiableHashMap<>(HashingStrategy.canonical(), ArrayUtil.EMPTY_OBJECT_ARRAY, null, null, null, null, null, null);
 
@@ -173,6 +173,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
      */
     @Contract(pure = true)
     @Nonnull
+    @Override
     public UnmodifiableHashMap<K, V> without(@Nonnull K key) {
         int pos = data.length == 0 ? -1 : tablePos(strategy, data, key);
         if (pos >= 0) {
@@ -217,17 +218,19 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     }
 
     /**
-     * Returns an {@code UnmodifiableHashMap} which contains all the entries as this map plus the supplied mapping
+     * <p>Returns an {@code UnmodifiableHashMap} which contains all the entries as this map plus the supplied mapping.</p>
+     *
+     * <p>May return the same map if given key is already associated with the same value. Note, however, that if value is
+     * not the same but equal object, the new map will be created as sometimes it's desired to replace the object with
+     * another one which is equal to the old object.</p>
      *
      * @param key   a key to add/replace
      * @param value a value to associate with the key
      * @return an {@code UnmodifiableHashMap} which contains all the entries as this map plus the supplied mapping.
-     * May return the same map if given key is already associated with the same value. Note, however, that if value is
-     * not the same but equal object, the new map will be created as sometimes it's desired to replace the object with
-     * another one which is equal to the old object.
      */
     @Contract(pure = true)
     @Nonnull
+    @Override
     public UnmodifiableHashMap<K, V> with(@Nonnull K key, @Nullable V value) {
         int pos = data.length == 0 ? -1 : tablePos(strategy, data, key);
         if (pos >= 0) {
@@ -274,16 +277,17 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     }
 
     /**
-     * Returns an {@code UnmodifiableHashMap} which contains all the entries as this map plus all the mappings
-     * of the supplied map.
+     * <p>Returns an {@code UnmodifiableHashMap} which contains all the entries as this map plus all the mappings of the supplied map.</p>
+     *
+     * <p>May (but not guaranteed) return the same map if the supplied map is empty or all its
+     * mappings already exist in this map (assuming values are compared by reference). The equals/hashCode strategy
+     * of the resulting map is the same as the strategy of this map.</p>
      *
      * @param map to add entries from
-     * @return an {@code UnmodifiableHashMap} which contains all the entries as this map plus all the mappings
-     * of the supplied map. May (but not guaranteed) return the same map if the supplied map is empty or all its
-     * mappings already exist in this map (assuming values are compared by reference). The equals/hashCode strategy
-     * of the resulting map is the same as the strategy of this map.
+     * @return an {@code UnmodifiableHashMap} which contains all the entries as this map plus all the mappings of the supplied map.
      */
     @Nonnull
+    @Override
     public UnmodifiableHashMap<K, V> withAll(@Nonnull Map<? extends K, ? extends V> map) {
         if (isEmpty()) {
             return fromMap(strategy, map);
@@ -342,6 +346,12 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         data[insertPos] = k;
         data[insertPos + 1] = v;
         return replacing;
+    }
+
+    @Nonnull
+    @Override
+    public HashingStrategy<K> getStrategy() {
+        return strategy;
     }
 
     @Override
@@ -403,11 +413,6 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public V get(Object key) {
-        return getOrDefault(key, null);
-    }
-
-    @Override
     public V getOrDefault(Object key, V defaultValue) {
         if (key == null) {
             return defaultValue;
@@ -460,27 +465,6 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public int hashCode() {
-        int h = 0;
-        if (k1 != null) {
-            h += strategy.hashCode(k1) ^ Objects.hashCode(v1);
-            if (k2 != null) {
-                h += strategy.hashCode(k2) ^ Objects.hashCode(v2);
-                if (k3 != null) {
-                    h += strategy.hashCode(k3) ^ Objects.hashCode(v3);
-                }
-            }
-        }
-        for (int i = 0; i < data.length; i += 2) {
-            @SuppressWarnings("unchecked") K key = (K)data[i];
-            if (key != null) {
-                h += strategy.hashCode(key) ^ Objects.hashCode(data[i + 1]);
-            }
-        }
-        return h;
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Map)) {
             return false;
@@ -511,45 +495,6 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
         return true;
     }
 
-    /**
-     * Unsupported operation: this map is immutable. Use {@link #with(Object, Object)} to create a new
-     * {@code UnmodifiableHashMap} with an additional element.
-     */
-    @Deprecated
-    @Override
-    public V put(K key, V value) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Unsupported operation: this map is immutable. Use {@link #without(Object)} to create a new
-     * {@code UnmodifiableHashMap} without some element.
-     */
-    @Deprecated
-    @Override
-    public V remove(Object key) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Unsupported operation: this map is immutable. Use {@link #withAll(Map)} to create a new
-     * {@code UnmodifiableHashMap} with additional elements from the specified Map.
-     */
-    @Deprecated
-    @Override
-    public void putAll(@Nonnull Map<? extends K, ? extends V> m) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Unsupported operation: this map is immutable. Use {@link #empty()} to get an empty {@code UnmodifiableHashMap}.
-     */
-    @Deprecated
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public void forEach(BiConsumer<? super K, ? super V> action) {
@@ -568,18 +513,6 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
                 action.accept((K)key, (V)data[i + 1]);
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder().append('{');
-        forEach((k, v) -> {
-            if (sb.length() > 1) {
-                sb.append(", ");
-            }
-            sb.append(k).append('=').append(v);
-        });
-        return sb.append('}').toString();
     }
 
     private abstract class MyIterator<E> implements Iterator<E> {
