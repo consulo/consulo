@@ -30,7 +30,7 @@ import consulo.language.editor.CustomUncommenter;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.language.custom.CustomSyntaxTableFileType;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.language.editor.MultipleLangCommentProvider;
@@ -175,8 +175,8 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
           hintPosition = targetPosition;
         }
       }
-      LightweightHint hint = new LightweightHint(HintUtil.createInformationLabel(myWarning));
-      Point p = HintManagerImpl.getHintPosition(hint, myEditor, hintPosition, HintManager.ABOVE);
+      LightweightHintImpl hint = new LightweightHintImpl(HintUtil.createInformationLabel(myWarning));
+      Point p = HintManagerImpl.getInstanceImpl().getHintPosition(hint, myEditor, hintPosition, HintManager.ABOVE);
       HintManagerImpl.getInstanceImpl().showEditorHint(hint, myEditor, p, 0, 0, false);
     }
   }

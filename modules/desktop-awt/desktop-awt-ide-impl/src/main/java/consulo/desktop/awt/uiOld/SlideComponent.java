@@ -15,12 +15,12 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.HintHint;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.Balloon;
@@ -42,7 +42,7 @@ class SlideComponent extends JComponent {
   private final String myTitle;
 
   private final List<Consumer<Integer>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  private LightweightHint myTooltipHint;
+  private LightweightHintImpl myTooltipHint;
   private final JLabel myLabel = new JLabel();
   private Unit myUnit = Unit.LEVEL;
 
@@ -135,7 +135,7 @@ class SlideComponent extends JComponent {
     final Point point = myVertical ? new Point(0, myPointerValue) : new Point(myPointerValue, 0);
     myLabel.setText(myTitle + ": " + Unit.formatValue(myValue, myUnit));
     if (myTooltipHint == null) {
-      myTooltipHint = new LightweightHint(myLabel);
+      myTooltipHint = new LightweightHintImpl(myLabel);
       myTooltipHint.setCancelOnClickOutside(false);
       myTooltipHint.setCancelOnOtherWindowOpen(false);
 

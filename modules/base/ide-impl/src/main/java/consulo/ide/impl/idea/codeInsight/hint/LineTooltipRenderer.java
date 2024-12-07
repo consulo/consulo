@@ -5,11 +5,12 @@ import consulo.codeEditor.Editor;
 import consulo.component.util.ComparableObject;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.ide.TooltipEvent;
+import consulo.ui.ex.awt.hint.TooltipEvent;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.ui.ListenerUtil;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.hint.HintManager;
@@ -166,8 +167,8 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
   }
 
   @Override
-  public LightweightHint show(@Nonnull final Editor editor, @Nonnull final Point p, final boolean alignToRight, @Nonnull final TooltipGroup group, @Nonnull final HintHint hintHint) {
-    LightweightHint hint = createHint(editor, p, alignToRight, group, hintHint, true, true, true, null);
+  public LightweightHintImpl show(@Nonnull final Editor editor, @Nonnull final Point p, final boolean alignToRight, @Nonnull final TooltipGroup group, @Nonnull final HintHint hintHint) {
+    LightweightHintImpl hint = createHint(editor, p, alignToRight, group, hintHint, true, true, true, null);
     if (hint != null) {
       HintManagerImpl.getInstanceImpl()
               .showEditorHint(hint, editor, p, HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_OTHER_HINT | HintManager.HIDE_BY_SCROLLING, 0, false, hintHint);
@@ -175,15 +176,15 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
     return hint;
   }
 
-  public LightweightHint createHint(@Nonnull final Editor editor,
-                                    @Nonnull final Point p,
-                                    final boolean alignToRight,
-                                    @Nonnull final TooltipGroup group,
-                                    @Nonnull final HintHint hintHint,
-                                    boolean newLayout,
-                                    boolean highlightActions,
-                                    boolean limitWidthToScreen,
-                                    @Nullable TooltipReloader tooltipReloader) {
+  public LightweightHintImpl createHint(@Nonnull final Editor editor,
+                                        @Nonnull final Point p,
+                                        final boolean alignToRight,
+                                        @Nonnull final TooltipGroup group,
+                                        @Nonnull final HintHint hintHint,
+                                        boolean newLayout,
+                                        boolean highlightActions,
+                                        boolean limitWidthToScreen,
+                                        @Nullable TooltipReloader tooltipReloader) {
     if (myText == null) return null;
 
     //setup text
@@ -239,7 +240,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
         }
       });
     }
-    final LightweightHint hint = new LightweightHint(grid) {
+    final LightweightHintImpl hint = new LightweightHintImpl(grid) {
 
       @Override
       public void hide() {
@@ -372,7 +373,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
     return true;
   }
 
-  private void reloadFor(@Nonnull LightweightHint hint,
+  private void reloadFor(@Nonnull LightweightHintImpl hint,
                          @Nonnull Editor editor,
                          @Nonnull Point p,
                          @Nonnull JComponent pane,
@@ -390,7 +391,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
 
   protected void fillPanel(@Nonnull Editor editor,
                            @Nonnull JPanel component,
-                           @Nonnull LightweightHint hint,
+                           @Nonnull LightweightHintImpl hint,
                            @Nonnull HintHint hintHint,
                            @Nonnull List<? super AnAction> actions,
                            @Nonnull TooltipReloader expandCallback,

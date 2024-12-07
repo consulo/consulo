@@ -6,7 +6,7 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
-import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
+import consulo.language.editor.scope.NonProjectFilesScope;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

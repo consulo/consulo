@@ -260,7 +260,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
                                                                                                  return null;
                                                                                                }
                                                                                              })
-                                                                                             .setTabLabelActionsAutoHide(false)
                                                                                              .setInnerInsets(JBUI.emptyInsets())
                                                                                              .setToDrawBorderIfTabsHidden(false)
                                                                                              .setTabDraggingEnabled(

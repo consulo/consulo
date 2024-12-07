@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
+import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;

@@ -17,7 +17,7 @@
 package consulo.language.editor.ui;
 
 import consulo.dataContext.DataContext;
-import consulo.language.editor.ui.awt.EditorAWTUtil;
+import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.editor.ui.internal.LanguageEditorPopupFactory;
 import consulo.language.editor.util.LanguageEditorNavigationUtil;
 import consulo.language.navigation.GotoRelatedItem;
@@ -77,7 +77,7 @@ public final class PopupNavigationUtil {
                                                                   @Nonnull final PsiElementProcessor<T> processor,
                                                                   @Nullable final T initialSelection) {
     assert elements.length > 0 : "Attempted to show a navigation popup with zero elements";
-    IPopupChooserBuilder<T> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(List.of(elements)).setRenderer(renderer).setFont(EditorAWTUtil.getEditorFont()).withHintUpdateSupply();
+    IPopupChooserBuilder<T> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(List.of(elements)).setRenderer(renderer).setFont(AWTLanguageEditorUtil.getEditorFont()).withHintUpdateSupply();
     if (initialSelection != null) {
       builder.setSelectedValue(initialSelection, true);
     }

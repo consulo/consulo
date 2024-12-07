@@ -46,9 +46,9 @@ import consulo.colorScheme.TextAttributes;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.ui.ex.awt.HintHint;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.application.util.StringSearcher;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -83,7 +83,7 @@ public class IncrementalSearchHandler {
   }
 
   private static class PerEditorSearchData {
-    LightweightHint hint;
+    LightweightHintImpl hint;
     String lastSearch;
   }
 
@@ -139,7 +139,7 @@ public class IncrementalSearchHandler {
     final CaretListener[] caretListener = new CaretListener[1];
     final Document document = editor.getDocument();
 
-    final LightweightHint hint = new LightweightHint(panel) {
+    final LightweightHintImpl hint = new LightweightHintImpl(panel) {
       @Override
       public void hide() {
         PerHintSearchData data = getUserData(SEARCH_DATA_IN_HINT_KEY);
@@ -372,7 +372,7 @@ public class IncrementalSearchHandler {
         if (myOriginalHandler != null) myOriginalHandler.execute(editor, charTyped, dataContext);
       }
       else{
-        LightweightHint hint = data.hint;
+        LightweightHintImpl hint = data.hint;
         PerHintSearchData hintData = hint.getUserData(SEARCH_DATA_IN_HINT_KEY);
         String text = hintData.label.getText();
         text += charTyped;
@@ -402,7 +402,7 @@ public class IncrementalSearchHandler {
         myOriginalHandler.execute(editor, caret, dataContext);
       }
       else{
-        LightweightHint hint = data.hint;
+        LightweightHintImpl hint = data.hint;
         PerHintSearchData hintData = hint.getUserData(SEARCH_DATA_IN_HINT_KEY);
         String text = hintData.label.getText();
         if (text.length() > 0){
@@ -428,7 +428,7 @@ public class IncrementalSearchHandler {
         myOriginalHandler.execute(editor, caret, dataContext);
       }
       else{
-        LightweightHint hint = data.hint;
+        LightweightHintImpl hint = data.hint;
         PerHintSearchData hintData = hint.getUserData(SEARCH_DATA_IN_HINT_KEY);
         String prefix = hintData.label.getText();
         if (prefix == null) return;
@@ -461,7 +461,7 @@ public class IncrementalSearchHandler {
         myOriginalHandler.execute(editor, caret, dataContext);
       }
       else{
-        LightweightHint hint = data.hint;
+        LightweightHintImpl hint = data.hint;
         PerHintSearchData hintData = hint.getUserData(SEARCH_DATA_IN_HINT_KEY);
         String prefix = hintData.label.getText();
         if (prefix == null) return;

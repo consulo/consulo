@@ -50,7 +50,7 @@ import consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.hint.HintManager;
@@ -897,7 +897,7 @@ public class FindUtil {
             editor.getCaretModel().addCaretListener(listener);
         }
         JComponent component = HintUtil.createInformationLabel(JDOMUtil.escapeText(message.get(), false, false));
-        final LightweightHint hint = new LightweightHint(component);
+        final LightweightHintImpl hint = new LightweightHintImpl(component);
         HintManagerImpl.getInstanceImpl().showEditorHint(
             hint,
             editor,

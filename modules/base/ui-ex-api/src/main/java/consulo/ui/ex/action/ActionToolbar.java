@@ -23,9 +23,9 @@ import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.MagicConstant;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -34,187 +34,190 @@ import java.util.List;
  * @see ActionManager#createActionToolbar(String, ActionGroup, boolean)
  */
 public interface ActionToolbar {
-  String ACTION_TOOLBAR_PROPERTY_KEY = "ACTION_TOOLBAR";
+    String ACTION_TOOLBAR_PROPERTY_KEY = "ACTION_TOOLBAR";
 
-  /**
-   * This is default layout policy for the toolbar. It defines that
-   * all toolbar component are in one row / column and they are not wrapped
-   * when toolbar is small
-   */
-  int NOWRAP_LAYOUT_POLICY = 0;
-  /**
-   * This is experimental layout policy which allow toolbar to
-   * wrap components in multiple rows.
-   */
-  int WRAP_LAYOUT_POLICY = 1;
-  /**
-   * This is experimental layout policy which allow toolbar auto-hide and show buttons that don't fit into actual side
-   */
-  int AUTO_LAYOUT_POLICY = 2;
+    /**
+     * This is default layout policy for the toolbar. It defines that
+     * all toolbar component are in one row / column and they are not wrapped
+     * when toolbar is small
+     */
+    int NOWRAP_LAYOUT_POLICY = 0;
+    /**
+     * This is experimental layout policy which allow toolbar to
+     * wrap components in multiple rows.
+     */
+    int WRAP_LAYOUT_POLICY = 1;
+    /**
+     * This is experimental layout policy which allow toolbar auto-hide and show buttons that don't fit into actual side
+     */
+    int AUTO_LAYOUT_POLICY = 2;
 
-  /**
-   * Horizontal orientation. Used for scrollbars and sliders.
-   */
-  int HORIZONTAL_ORIENTATION = 0;
-  /**
-   * Vertical orientation. Used for scrollbars and sliders.
-   */
-  int VERTICAL_ORIENTATION = 1;
+    /**
+     * Horizontal orientation. Used for scrollbars and sliders.
+     */
+    int HORIZONTAL_ORIENTATION = 0;
+    /**
+     * Vertical orientation. Used for scrollbars and sliders.
+     */
+    int VERTICAL_ORIENTATION = 1;
 
-  /**
-   * This is default minimum size of the toolbar button, without scaling
-   */
-  Size DEFAULT_MINIMUM_BUTTON_SIZE = new Size(25, 25);
+    /**
+     * This is default minimum size of the toolbar button, without scaling
+     */
+    Size DEFAULT_MINIMUM_BUTTON_SIZE = new Size(25, 25);
 
-  Size NAVBAR_MINIMUM_BUTTON_SIZE = new Size(20, 20);
+    Size NAVBAR_MINIMUM_BUTTON_SIZE = new Size(20, 20);
 
-  /**
-   * Constraint that's passed to <code>Container.add</code> when ActionButton is added to the toolbar.
-   */
-  String ACTION_BUTTON_CONSTRAINT = "Constraint.ActionButton";
+    /**
+     * Constraint that's passed to <code>Container.add</code> when ActionButton is added to the toolbar.
+     */
+    String ACTION_BUTTON_CONSTRAINT = "Constraint.ActionButton";
 
-  /**
-   * Constraint that's passed to <code>Container.add</code> when a custom component is added to the toolbar.
-   */
-  String CUSTOM_COMPONENT_CONSTRAINT = "Constraint.CustomComponent";
+    /**
+     * Constraint that's passed to <code>Container.add</code> when a custom component is added to the toolbar.
+     */
+    String CUSTOM_COMPONENT_CONSTRAINT = "Constraint.CustomComponent";
 
-  /**
-   * Constraint that's passed to <code>Container.add</code> when a Separator is added to the toolbar.
-   */
-  String SEPARATOR_CONSTRAINT = "Constraint.Separator";
+    /**
+     * Constraint that's passed to <code>Container.add</code> when a Separator is added to the toolbar.
+     */
+    String SEPARATOR_CONSTRAINT = "Constraint.Separator";
 
-  /**
-   * Constraint that's passed to <code>Container.add</code> when a secondary action is added to the toolbar.
-   */
-  String SECONDARY_ACTION_CONSTRAINT = "Constraint.SecondaryAction";
+    /**
+     * Constraint that's passed to <code>Container.add</code> when a secondary action is added to the toolbar.
+     */
+    String SECONDARY_ACTION_CONSTRAINT = "Constraint.SecondaryAction";
 
-  /**
-   * @return component which represents the tool bar on UI
-   */
-  @Nonnull
-  default javax.swing.JComponent getComponent() {
-    return (javax.swing.JComponent)TargetAWT.to(getUIComponent());
-  }
+    /**
+     * @return component which represents the tool bar on UI
+     */
+    @Nonnull
+    default javax.swing.JComponent getComponent() {
+        return (javax.swing.JComponent) TargetAWT.to(getUIComponent());
+    }
 
-  /**
-   * @return component which represents the tool bar on UI
-   */
-  @Nonnull
-  default Component getUIComponent() {
-    throw new AbstractMethodError();
-  }
+    /**
+     * @return component which represents the tool bar on UI
+     */
+    @Nonnull
+    default Component getUIComponent() {
+        throw new AbstractMethodError();
+    }
 
-  /**
-   * @return current layout policy
-   * @see #NOWRAP_LAYOUT_POLICY
-   * @see #WRAP_LAYOUT_POLICY
-   */
-  int getLayoutPolicy();
+    /**
+     * @return current layout policy
+     * @see #NOWRAP_LAYOUT_POLICY
+     * @see #WRAP_LAYOUT_POLICY
+     */
+    int getLayoutPolicy();
 
-  /**
-   * Sets new component layout policy. Method accepts {@link #WRAP_LAYOUT_POLICY} and
-   * {@link #NOWRAP_LAYOUT_POLICY} values.
-   */
-  void setLayoutPolicy(int layoutPolicy);
+    /**
+     * Sets new component layout policy. Method accepts {@link #WRAP_LAYOUT_POLICY} and
+     * {@link #NOWRAP_LAYOUT_POLICY} values.
+     */
+    void setLayoutPolicy(int layoutPolicy);
 
-  /**
-   * If the valus is <code>true</code> then the all button on toolbar are
-   * the same size. It very useful when you create "Outlook" like toolbar.
-   * Currently this method can be considered as hot fix.
-   */
-  void adjustTheSameSize(boolean value);
+    /**
+     * If the valus is <code>true</code> then the all button on toolbar are
+     * the same size. It very useful when you create "Outlook" like toolbar.
+     * Currently this method can be considered as hot fix.
+     */
+    void adjustTheSameSize(boolean value);
 
-  /**
-   * Sets minimum size of toolbar button. By default all buttons
-   * at toolbar has 25x25 pixels size.
-   *
-   * @throws IllegalArgumentException if <code>size</code>
-   *                                  is <code>null</code>
-   */
-  @Deprecated
-  @DeprecationInfo("Use with Size parameter")
-  default void setMinimumButtonSize(@Nonnull java.awt.Dimension size) {
-    setMinimumButtonSize(new Size(size.width, size.height));
-  }
+    /**
+     * Sets minimum size of toolbar button. By default all buttons
+     * at toolbar has 25x25 pixels size.
+     *
+     * @throws IllegalArgumentException if <code>size</code>
+     *                                  is <code>null</code>
+     */
+    @Deprecated
+    @DeprecationInfo("Use with Size parameter")
+    default void setMinimumButtonSize(@Nonnull java.awt.Dimension size) {
+        setMinimumButtonSize(new Size(size.width, size.height));
+    }
 
-  /**
-   * Sets minimum size of toolbar button. By default all buttons
-   * at toolbar has 25x25 pixels size.
-   *
-   * @throws IllegalArgumentException if <code>size</code>
-   *                                  is <code>null</code>
-   */
-  void setMinimumButtonSize(@Nonnull Size size);
+    /**
+     * Sets minimum size of toolbar button. By default all buttons
+     * at toolbar has 25x25 pixels size.
+     *
+     * @throws IllegalArgumentException if <code>size</code>
+     *                                  is <code>null</code>
+     */
+    void setMinimumButtonSize(@Nonnull Size size);
 
-  /**
-   * Sets toolbar orientation
-   *
-   * @see #HORIZONTAL_ORIENTATION
-   * @see #VERTICAL_ORIENTATION
-   */
-  void setOrientation(@MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION}) int orientation);
+    /**
+     * Sets toolbar orientation
+     *
+     * @see #HORIZONTAL_ORIENTATION
+     * @see #VERTICAL_ORIENTATION
+     */
+    void setOrientation(@MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION}) int orientation);
 
-  /**
-   * @return maximum button height
-   */
-  int getMaxButtonHeight();
+    /**
+     * @return maximum button height
+     */
+    int getMaxButtonHeight();
 
-  /**
-   * Forces update of the all actions in the toolbars. Actions, however, normally updated automatially every 500msec.
-   */
-  @RequiredUIAccess
-  void updateActionsImmediately();
+    /**
+     * Forces update of the all actions in the toolbars. Actions, however, normally updated automatially every 500msec.
+     */
+    @RequiredUIAccess
+    void updateActionsImmediately();
 
-  boolean hasVisibleActions();
+    boolean hasVisibleActions();
 
-  /**
-   * @param component will be used for datacontext computations
-   */
-  default void setTargetComponent(final javax.swing.JComponent component) {
-    throw new AbstractMethodError();
-  }
+    /**
+     * @param component will be used for datacontext computations
+     */
+    default void setTargetComponent(final javax.swing.JComponent component) {
+        throw new AbstractMethodError();
+    }
 
-  default void setTargetUIComponent(@Nonnull Component component) {
-    setTargetComponent((javax.swing.JComponent)TargetAWT.to(component));
-  }
+    default void setTargetUIComponent(@Nonnull Component component) {
+        setTargetComponent((javax.swing.JComponent) TargetAWT.to(component));
+    }
 
-  void setReservePlaceAutoPopupIcon(final boolean reserve);
+    void setReservePlaceAutoPopupIcon(final boolean reserve);
 
-  void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip);
+    void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip);
 
-  void setMiniMode(boolean minimalMode);
+    void setMiniMode(boolean minimalMode);
 
-  DataContext getToolbarDataContext();
+    DataContext getToolbarDataContext();
 
-  @Nonnull
-  List<AnAction> getActions();
+    @Nonnull
+    List<AnAction> getActions();
 
-  default void setSecondaryActionsIcon(Image icon) {
-  }
+    default void setSecondaryActionsIcon(Image icon) {
+    }
 
-  default void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
-  }
+    default void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
+    }
 
-  default void setSecondaryActionsShortcut(@Nonnull String secondaryActionsShortcut) {
-  }
+    default void setSecondaryActionsShortcut(@Nonnull String secondaryActionsShortcut) {
+    }
 
-  /**
-   * Enables showing titles of separators as labels in the toolbar (off by default).
-   */
-  default void setShowSeparatorTitles(boolean showSeparatorTitles) {
-  }
+    /**
+     * Enables showing titles of separators as labels in the toolbar (off by default).
+     */
+    default void setShowSeparatorTitles(boolean showSeparatorTitles) {
+    }
 
-  /**
-   * Forces the minimum size of the toolbar to show all buttons, When set to {@code true}. By default ({@code false}) the
-   * toolbar will shrink further and show the auto popup chevron button.
-   */
-  default void setForceMinimumSize(boolean force) {
-  }
+    /**
+     * Forces the minimum size of the toolbar to show all buttons, When set to {@code true}. By default ({@code false}) the
+     * toolbar will shrink further and show the auto popup chevron button.
+     */
+    default void setForceMinimumSize(boolean force) {
+    }
 
-  /**
-   * By default minimum size is to show chevron only.
-   * If this option is {@code true} toolbar shows at least one (the first) component plus chevron (if need)
-   */
-  default void setForceShowFirstComponent(boolean showFirstComponent) {
-  }
+    /**
+     * By default minimum size is to show chevron only.
+     * If this option is {@code true} toolbar shows at least one (the first) component plus chevron (if need)
+     */
+    default void setForceShowFirstComponent(boolean showFirstComponent) {
+    }
+
+    default void setContentAreaFilled(boolean b) {
+    }
 }

@@ -7,7 +7,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
-import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
+import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.language.LangBundle;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;

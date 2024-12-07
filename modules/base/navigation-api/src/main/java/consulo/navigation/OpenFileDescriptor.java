@@ -16,34 +16,36 @@
 package consulo.navigation;
 
 import consulo.component.ComponentManager;
+import consulo.disposer.Disposable;
+import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 /**
- * @see OpenFileDescriptorFactory
- *
  * @author VISTALL
+ * @see OpenFileDescriptorFactory
  * @since 19-Feb-22
  */
-public interface OpenFileDescriptor extends Navigatable, Comparable<OpenFileDescriptor> {
-  @Nonnull
-  VirtualFile getFile();
+public interface OpenFileDescriptor extends Disposable, UserDataHolder, Navigatable, Comparable<OpenFileDescriptor> {
+    @Nonnull
+    VirtualFile getFile();
 
-  @Nonnull
-  ComponentManager getProject();
+    @Nonnull
+    ComponentManager getProject();
 
-  int getOffset();
+    int getOffset();
 
-  int getLine();
+    int getLine();
 
-  int getColumn();
+    int getColumn();
 
-  default boolean isValid() {
-    return true;
-  }
+    default boolean isValid() {
+        return true;
+    }
 
-  default boolean isUseCurrentWindow() {
-    return false;
-  }
+    default boolean isUseCurrentWindow() {
+        return false;
+    }
+
+    boolean navigateInEditor(boolean requestFocus);
 }

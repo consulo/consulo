@@ -15,10 +15,14 @@
  */
 package consulo.codeEditor;
 
+import consulo.util.dataholder.Key;
+
 public enum ScrollType {
-  RELATIVE,
-  CENTER,
-  MAKE_VISIBLE,
-  CENTER_UP,
-  CENTER_DOWN
+    RELATIVE,
+    CENTER,
+    MAKE_VISIBLE,
+    CENTER_UP,
+    CENTER_DOWN;
+
+    public static final Key<ScrollType> KEY = Key.create(ScrollType.class);
 }

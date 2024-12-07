@@ -26,11 +26,10 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
 import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.TargetElementUtil;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
@@ -818,7 +817,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
         CompletionParameters parameters = getParameters();
         if (myHandler.invokedExplicitly && parameters != null) {
-            LightweightHint hint = showErrorHint(getProject(), getEditor(), getNoSuggestionsMessage(parameters));
+            LightweightHintImpl hint = showErrorHint(getProject(), getEditor(), getNoSuggestionsMessage(parameters));
             if (awaitSecondInvocation) {
                 CompletionServiceImpl.setCompletionPhase(new CompletionPhase.NoSuggestionsHint(hint, this));
                 return;
@@ -837,8 +836,8 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     }
 
     @RequiredUIAccess
-    private static LightweightHint showErrorHint(Project project, Editor editor, String text) {
-        final LightweightHint[] result = {null};
+    private static LightweightHintImpl showErrorHint(Project project, Editor editor, String text) {
+        final LightweightHintImpl[] result = {null};
         final EditorHintListener listener = (project1, hint, flags) -> result[0] = hint;
         final MessageBusConnection connection = project.getMessageBus().connect();
         connection.subscribe(EditorHintListener.class, listener);

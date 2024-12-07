@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.actions.NextVariableAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.AutoPopupController;
@@ -88,7 +88,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-public class LookupImpl extends LightweightHint implements LookupEx, Disposable, LookupElementListPresenter {
+public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposable, LookupElementListPresenter {
     private static final Logger LOG = Logger.getInstance(LookupImpl.class);
     private static final Key<Font> CUSTOM_FONT_KEY = Key.create("CustomLookupElementFont");
 
@@ -802,7 +802,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
             return false;
         }
         if (isVisible()) {
-            HintManagerImpl.updateLocation(this, myEditor, myUi.calculatePosition().getLocation());
+            HintManagerImpl.getInstanceImpl().updateLocation(this, myEditor, myUi.calculatePosition().getLocation());
         }
         checkValid();
         return true;
@@ -887,7 +887,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
                 HintManager.HIDE_BY_ESCAPE | HintManager.UPDATE_BY_SCROLLING,
                 0,
                 false,
-                HintManagerImpl.createHintHint(myEditor, p, this, HintManager.UNDER)
+                HintManagerImpl.getInstanceImpl().createHintHint(myEditor, p, this, HintManager.UNDER)
                     .setRequestFocus(ScreenReader.isActive())
                     .setAwtTooltip(false)
             );

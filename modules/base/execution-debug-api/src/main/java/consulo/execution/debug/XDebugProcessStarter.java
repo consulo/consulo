@@ -15,8 +15,8 @@
  */
 package consulo.execution.debug;
 
+import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.process.ExecutionException;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -26,12 +26,23 @@ import jakarta.annotation.Nonnull;
  */
 @FunctionalInterface
 public interface XDebugProcessStarter {
-  /**
-   * Create a new instance of {@link XDebugProcess} implementation. Note that <code>session</code> isn't initialized when this method is
-   * called so in order to perform code depending on <code>session</code> parameter override {@link XDebugProcess#sessionInitialized} method
-   * @param session session to be passed to {@link XDebugProcess#XDebugProcess} constructor
-   * @return new {@link XDebugProcess} instance
-   */
-  @Nonnull
-  public XDebugProcess start(@Nonnull XDebugSession session) throws ExecutionException;
+    /**
+     * Create a new instance of {@link XDebugProcess} implementation. Note that <code>session</code> isn't initialized when this method is
+     * called so in order to perform code depending on <code>session</code> parameter override {@link XDebugProcess#sessionInitialized} method
+     *
+     * @param session session to be passed to {@link XDebugProcess#XDebugProcess} constructor
+     * @return new {@link XDebugProcess} instance
+     */
+    @Nonnull
+    public XDebugProcess start(@Nonnull XDebugSession session) throws ExecutionException;
+
+    /**
+     * If return true {@link #configure(XDebugSessionData)} will be called and {@link XDebugSession} will be activated
+     */
+    default boolean canConfigure() {
+        return false;
+    }
+
+    default void configure(XDebugSessionData data) {
+    }
 }

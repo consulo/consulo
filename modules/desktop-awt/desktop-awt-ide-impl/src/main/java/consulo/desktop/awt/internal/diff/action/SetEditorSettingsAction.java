@@ -20,12 +20,12 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.codeEditor.RealEditor;
+import consulo.codeEditor.util.SoftWrapUtil;
 import consulo.desktop.awt.internal.diff.util.SyncScrollSupport;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.util.HighlightingLevel;
 import consulo.diff.localize.DiffLocalize;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.editor.actions.AbstractToggleUseSoftWrapsAction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
@@ -141,7 +141,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
                         mySyncScrollSupport.enterDisableScrollSection();
                     }
                     try {
-                        AbstractToggleUseSoftWrapsAction.toggleSoftWraps(editor, null, value);
+                        SoftWrapUtil.toggleSoftWraps(editor, null, value);
                     }
                     finally {
                         if (mySyncScrollSupport != null) {

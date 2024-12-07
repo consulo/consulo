@@ -42,7 +42,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
 import consulo.ide.impl.diff.DiffDrawUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.CompositeShortcutSet;
+import consulo.ui.ex.action.CompositeShortcutSet;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;

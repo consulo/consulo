@@ -47,7 +47,7 @@ import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.language.psi.IdePsiManagerImpl;
 import consulo.language.editor.hint.HintManager;
@@ -776,7 +776,7 @@ public class FindUsagesManager {
     @RequiredUIAccess
     private static void showEditorHint(@Nonnull LocalizeValue message, final Editor editor) {
         JComponent component = HintUtil.createInformationLabel(message.get());
-        final LightweightHint hint = new LightweightHint(component);
+        final LightweightHintImpl hint = new LightweightHintImpl(component);
         HintManagerImpl.getInstanceImpl().showEditorHint(
             hint,
             editor,

@@ -7,7 +7,7 @@ import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.Language;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.Lookup;
@@ -162,7 +162,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
     ParameterInfoComponent component = new ParameterInfoComponent(descriptors, editor, handler, requestFocus, false);
     component.update(false);
 
-    final LightweightHint hint = new LightweightHint(component);
+    final LightweightHintImpl hint = new LightweightHintImpl(component);
     hint.setSelectingHint(true);
     final HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
     final Pair<Point, Short> pos = ParameterInfoController.chooseBestHintPosition(editor, null, hint, HintManager.DEFAULT, true);

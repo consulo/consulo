@@ -30,9 +30,9 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.editor.refactoring.action.BaseRefactoringIntentionAction;
-import consulo.ui.ex.awt.HintHint;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;
+import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
@@ -390,7 +390,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
   }
 
   @TestOnly
-  public LightweightHint getComponentHint() {
+  public LightweightHintImpl getComponentHint() {
     return myComponentHint;
   }
 
@@ -511,7 +511,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     recreateMyPopup(intentionListStep);
   }
 
-  private static class MyComponentHint extends LightweightHint {
+  private static class MyComponentHint extends LightweightHintImpl {
     private boolean myVisible;
     private boolean myShouldDelay;
 

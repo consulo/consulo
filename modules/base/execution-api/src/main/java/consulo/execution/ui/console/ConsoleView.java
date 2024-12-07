@@ -21,62 +21,65 @@ import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiPredicate;
 
 /**
  * @see TextConsoleBuilder
  */
 public interface ConsoleView extends ExecutionConsole {
-  static Key<ConsoleView> KEY = Key.create(ConsoleView.class);
+    Key<ConsoleView> KEY = Key.create(ConsoleView.class);
 
-  void print(@Nonnull String s, @Nonnull ConsoleViewContentType contentType);
+    Key<ConsoleView> CONSOLE_VIEW_IN_EDITOR_VIEW = Key.create("CONSOLE_VIEW_IN_EDITOR_VIEW");
 
-  void clear();
+    void print(@Nonnull String s, @Nonnull ConsoleViewContentType contentType);
 
-  void scrollTo(int offset);
+    void clear();
 
-  void attachToProcess(ProcessHandler processHandler);
+    void scrollTo(int offset);
 
-  void setOutputPaused(boolean value);
+    void attachToProcess(ProcessHandler processHandler);
 
-  boolean isOutputPaused();
+    void setOutputPaused(boolean value);
 
-  boolean hasDeferredOutput();
+    boolean isOutputPaused();
 
-  void performWhenNoDeferredOutput(Runnable runnable);
+    boolean hasDeferredOutput();
 
-  void setHelpId(String helpId);
+    void performWhenNoDeferredOutput(Runnable runnable);
 
-  void addMessageFilter(Filter filter);
+    void setHelpId(String helpId);
 
-  /**
-   * Set filter for console message consumer. If predicate return true - message will be not print to console
-   * @param filter
-   */
-  void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> filter);
+    void addMessageFilter(Filter filter);
 
-  @Nullable
-  BiPredicate<ProcessEvent, Key> getProcessTextFilter();
+    /**
+     * Set filter for console message consumer. If predicate return true - message will be not print to console
+     *
+     * @param filter
+     */
+    void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> filter);
 
-  void printHyperlink(String hyperlinkText, HyperlinkInfo info);
+    @Nullable
+    BiPredicate<ProcessEvent, Key> getProcessTextFilter();
 
-  int getContentSize();
+    void printHyperlink(String hyperlinkText, HyperlinkInfo info);
 
-  boolean canPause();
+    int getContentSize();
 
-  @Nonnull
-  AnAction[] createConsoleActions();
+    boolean canPause();
 
-  void allowHeavyFilters();
+    @Nonnull
+    AnAction[] createConsoleActions();
 
-  default void requestScrollingToEnd() {
-  }
+    void allowHeavyFilters();
 
-  @Nullable
-  default Editor getEditor() {
-    return null;
-  }
+    default void requestScrollingToEnd() {
+    }
+
+    @Nullable
+    default Editor getEditor() {
+        return null;
+    }
 }

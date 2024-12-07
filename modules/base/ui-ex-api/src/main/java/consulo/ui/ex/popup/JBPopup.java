@@ -25,190 +25,202 @@ import java.awt.event.KeyEvent;
  * @see JBPopupFactory
  */
 public interface JBPopup extends Disposable, LightweightWindow {
-  String KEY = "JBPopup";
+    String KEY = "JBPopup";
 
-  /**
-   * Shows the popup at the bottom left corner of the specified component.
-   *
-   * @param componentUnder the component near which the popup should be displayed.
-   */
-  void showUnderneathOf(@Nonnull Component componentUnder);
+    /**
+     * Shows the popup at the bottom left corner of the specified component.
+     *
+     * @param componentUnder the component near which the popup should be displayed.
+     */
+    void showUnderneathOf(@Nonnull Component componentUnder);
 
-  /**
-   * Shows the popup at the specified point.
-   *
-   * @param point the relative point where the popup should be displayed.
-   */
-  void show(@Nonnull RelativePoint point);
+    /**
+     * Shows the popup at the specified point.
+     *
+     * @param point the relative point where the popup should be displayed.
+     */
+    void show(@Nonnull RelativePoint point);
 
-  void showInScreenCoordinates(@Nonnull Component owner, @Nonnull Point point);
+    void showInScreenCoordinates(@Nonnull Component owner, @Nonnull Point point);
 
-  /**
-   * Returns location most appropriate for the specified data context.
-   *
-   * @see #showInBestPositionFor(DataContext)
-   * @see #setLocation(Point)
-   */
-  @Nonnull
-  Point getBestPositionFor(@Nonnull DataContext dataContext);
+    /**
+     * Returns location most appropriate for the specified data context.
+     *
+     * @see #showInBestPositionFor(DataContext)
+     * @see #setLocation(Point)
+     */
+    @Nonnull
+    Point getBestPositionFor(@Nonnull DataContext dataContext);
 
-  /**
-   * Shows the popup in the position most appropriate for the specified data context.
-   *
-   * @param dataContext the data context to which the popup is related.
-   * @see JBPopupFactory#guessBestPopupLocation(DataContext)
-   * @see #getBestPositionFor(DataContext)
-   */
-  void showInBestPositionFor(@Nonnull DataContext dataContext);
+    /**
+     * Shows the popup in the position most appropriate for the specified data context.
+     *
+     * @param dataContext the data context to which the popup is related.
+     * @see JBPopupFactory#guessBestPopupLocation(DataContext)
+     * @see #getBestPositionFor(DataContext)
+     */
+    void showInBestPositionFor(@Nonnull DataContext dataContext);
 
-  /**
-   * Shows the popup near the cursor location in the specified editor.
-   *
-   * @param editor the editor relative to which the popup should be displayed.
-   * @see JBPopupFactory#guessBestPopupLocation(Editor)
-   */
-  //void showInBestPositionFor(@Nonnull Editor editor);
+    /**
+     * Shows the popup near the cursor location in the specified editor.
+     *
+     * @param editor the editor relative to which the popup should be displayed.
+     * @see JBPopupFactory#guessBestPopupLocation(Editor)
+     */
+    //void showInBestPositionFor(@Nonnull Editor editor);
 
-  /**
-   * Shows the popup in the center of the specified component.
-   *
-   * @param component the component at which the popup should be centered.
-   */
-  void showInCenterOf(@Nonnull Component component);
+    /**
+     * Shows the popup in the center of the specified component.
+     *
+     * @param component the component at which the popup should be centered.
+     */
+    void showInCenterOf(@Nonnull Component component);
 
 
-  /**
-   * Shows the popups in the center of currently focused component
-   */
-  void showInFocusCenter();
+    /**
+     * Shows the popups in the center of currently focused component
+     */
+    void showInFocusCenter();
 
-  /**
-   * Shows in best position with a given owner
-   */
-  void show(@Nonnull Component owner);
+    /**
+     * Shows in best position with a given owner
+     */
+    void show(@Nonnull Component owner);
 
-  /**
-   * Shows popup inside position by event
-   */
-  void showBy(@Nonnull ComponentEvent<? extends consulo.ui.Component> uiEvent);
+    /**
+     * Shows popup inside position by event
+     */
+    void showBy(@Nonnull ComponentEvent<? extends consulo.ui.Component> uiEvent);
 
-  /**
-   * Shows the popup in the center of the active window in the IDE frame for the specified project.
-   *
-   * @param project the project in which the popup should be displayed.
-   */
-  void showCenteredInCurrentWindow(@Nonnull ComponentManager project);
+    /**
+     * Shows the popup in the center of the active window in the IDE frame for the specified project.
+     *
+     * @param project the project in which the popup should be displayed.
+     */
+    void showCenteredInCurrentWindow(@Nonnull ComponentManager project);
 
-  /**
-   * Hides popup as if <kbd>Enter</kbd> was pressed or or any other "accept" action.
-   */
-  void closeOk(@Nullable InputEvent e);
+    /**
+     * Hides popup as if <kbd>Enter</kbd> was pressed or or any other "accept" action.
+     */
+    void closeOk(@Nullable InputEvent e);
 
-  /**
-   * Cancels the popup as if <kbd>Esc</kbd> was pressed or any other "cancel" action.
-   */
-  void cancel();
+    /**
+     * Cancels the popup as if <kbd>Esc</kbd> was pressed or any other "cancel" action.
+     */
+    void cancel();
 
-  /**
-   * @param b {@code true} if popup should request focus.
-   */
-  void setRequestFocus(final boolean b);
+    /**
+     * @param b {@code true} if popup should request focus.
+     */
+    void setRequestFocus(final boolean b);
 
-  /**
-   * Cancels the popup as a response to some mouse action. All the subsequent mouse events originated from the event's point
-   * will be consumed.
-   */
-  void cancel(@Nullable InputEvent e);
+    /**
+     * Cancels the popup as a response to some mouse action. All the subsequent mouse events originated from the event's point
+     * will be consumed.
+     */
+    void cancel(@Nullable InputEvent e);
 
-  /**
-   * Checks if it's currently allowed to close the popup.
-   *
-   * @return {@code true} if the popup can be closed, {@code false} if a callback disallowed closing the popup.
-   * @see ComponentPopupBuilder#setCancelCallback(java.util.function.Supplier)
-   */
-  boolean canClose();
+    /**
+     * Checks if it's currently allowed to close the popup.
+     *
+     * @return {@code true} if the popup can be closed, {@code false} if a callback disallowed closing the popup.
+     * @see ComponentPopupBuilder#setCancelCallback(java.util.function.Supplier)
+     */
+    boolean canClose();
 
-  /**
-   * Checks if the popup is currently visible.
-   *
-   * @return {@code true} if the popup is visible, {@code false} otherwise.
-   */
-  boolean isVisible();
+    /**
+     * Checks if the popup is currently visible.
+     *
+     * @return {@code true} if the popup is visible, {@code false} otherwise.
+     */
+    boolean isVisible();
 
-  /**
-   * Returns the Swing component contained in the popup.
-   *
-   * @return the contents of the popup.
-   */
-  @Nonnull
-  JComponent getContent();
+    /**
+     * Returns the Swing component contained in the popup.
+     *
+     * @return the contents of the popup.
+     */
+    @Nonnull
+    JComponent getContent();
 
-  /**
-   * Moves popup to the given point. Does nothing if popup is invisible.
-   *
-   * @param screenPoint Point to move to.
-   */
-  void setLocation(@Nonnull Point screenPoint);
+    /**
+     * Moves popup to the given point. Does nothing if popup is invisible.
+     *
+     * @param screenPoint Point to move to.
+     */
+    void setLocation(@Nonnull Point screenPoint);
 
-  void setSize(@Nonnull Dimension size);
+    void setSize(@Nonnull Dimension size);
 
-  Dimension getSize();
+    Dimension getSize();
 
-  void setCaption(@Nonnull String title);
+    void setCaption(@Nonnull String title);
 
-  boolean isPersistent();
+    boolean isPersistent();
 
-  boolean isModalContext();
+    boolean isModalContext();
 
-  boolean isNativePopup();
+    boolean isNativePopup();
 
-  void setUiVisible(boolean visible);
+    void setUiVisible(boolean visible);
 
-  @Nullable
-  <T> T getUserData(@Nonnull Class<T> userDataClass);
+    @Nullable
+    <T> T getUserData(@Nonnull Class<T> userDataClass);
 
-  boolean isFocused();
+    boolean isFocused();
 
-  boolean isCancelKeyEnabled();
+    boolean isCancelKeyEnabled();
 
-  void addListener(@Nonnull JBPopupListener listener);
+    void addListener(@Nonnull JBPopupListener listener);
 
-  void removeListener(@Nonnull JBPopupListener listener);
+    void removeListener(@Nonnull JBPopupListener listener);
 
-  boolean isDisposed();
+    boolean isDisposed();
 
-  Component getOwner();
+    Component getOwner();
 
-  void setMinimumSize(@Nullable Dimension size);
+    void setMinimumSize(@Nullable Dimension size);
 
-  void setFinalRunnable(@Nullable Runnable runnable);
+    void setFinalRunnable(@Nullable Runnable runnable);
 
-  void moveToFitScreen();
+    void moveToFitScreen();
 
-  @Nonnull
-  Point getLocationOnScreen();
+    @Nonnull
+    Point getLocationOnScreen();
 
-  void pack(boolean width, boolean height);
+    void pack(boolean width, boolean height);
 
-  void setAdText(String s, @JdkConstants.HorizontalAlignment int alignment);
+    default void setAdText(@Nonnull final String s) {
+        setAdText(s, SwingConstants.LEFT);
+    }
 
-  void setDataProvider(@Nonnull DataProvider dataProvider);
+    void setAdText(String s, @JdkConstants.HorizontalAlignment int alignment);
 
-  /**
-   * This callback is called when new key event from the event queue is being processed.
-   * <p/>
-   * The popup has a right to decide if its further processing should be continued (method return value).
-   *
-   * @param e new key event being processed
-   * @return {@code true} if the event is completely dispatched, i.e. no further processing is necessary;
-   * {@code false} otherwise
-   */
-  boolean dispatchKeyEvent(@Nonnull KeyEvent e);
+    void setDataProvider(@Nonnull DataProvider dataProvider);
 
-  /**
-   * Whether it's OK to invoke one of the 'show' methods. Some implementation might prohibit it e.g. if the popup is shown already.
-   */
-  default boolean canShow() {
-    return !isDisposed();
-  }
+    /**
+     * This callback is called when new key event from the event queue is being processed.
+     * <p/>
+     * The popup has a right to decide if its further processing should be continued (method return value).
+     *
+     * @param e new key event being processed
+     * @return {@code true} if the event is completely dispatched, i.e. no further processing is necessary;
+     * {@code false} otherwise
+     */
+    boolean dispatchKeyEvent(@Nonnull KeyEvent e);
+
+    /**
+     * Whether it's OK to invoke one of the 'show' methods. Some implementation might prohibit it e.g. if the popup is shown already.
+     */
+    default boolean canShow() {
+        return !isDisposed();
+    }
+
+    default void registerAction(String aActionName, int aKeyCode, @JdkConstants.InputEventMask int aModifier, Action aAction) {
+        throw new UnsupportedOperationException();
+    }
+
+    default void registerAction(String aActionName, KeyStroke keyStroke, Action aAction) {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -38,7 +38,7 @@ import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.coverage.actions.ShowCoveringTestsAction;
 import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -47,7 +47,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ColoredSideBorder;
-import consulo.ui.ex.awt.HintHint;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -207,7 +207,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             uEditor = null;
         }
 
-        final LightweightHint hint = new LightweightHint(panel) {
+        final LightweightHintImpl hint = new LightweightHintImpl(panel) {
             @Override
             public void hide() {
                 if (uEditor != null) {

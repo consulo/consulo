@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl;
 
+import consulo.ide.impl.idea.execution.ui.layout.impl.JBRunnerTabs;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -28,7 +29,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ActionPanel extends NonOpaquePanel {
-    private boolean myAutoHide;
     private boolean myActionsIsVisible = false;
 
     private final ActionToolbar myActionToolbar;
@@ -39,9 +39,16 @@ public class ActionPanel extends NonOpaquePanel {
         myActionToolbar = ActionManager.getInstance().createActionToolbar("RunToolbar", group, true);
         myActionToolbar.setTargetComponent(tabs);
         myActionToolbar.setMiniMode(true);
+        myActionToolbar.setContentAreaFilled(false);
+
+        int topPadding = 1;
+        int leftPadding = 2;
+        if (tabs instanceof JBRunnerTabs) {
+            topPadding = 4;
+        }
 
         JComponent component = myActionToolbar.getComponent();
-        component.setBorder(JBUI.Borders.empty(2, 6, 0, 0));
+        component.setBorder(JBUI.Borders.empty(topPadding, leftPadding, 0, 0));
         add(component);
     }
 
@@ -55,20 +62,8 @@ public class ActionPanel extends NonOpaquePanel {
         return old != myActionsIsVisible;
     }
 
-    public boolean isAutoHide() {
-        return myAutoHide;
-    }
-
-    public void setAutoHide(final boolean autoHide) {
-        myAutoHide = autoHide;
-    }
-
     @Override
     public Dimension getPreferredSize() {
         return myActionsIsVisible ? super.getPreferredSize() : new Dimension(0, 0);
-    }
-
-    public void toggleShowActions(final boolean show) {
-        myActionToolbar.getComponent().setVisible(show);
     }
 }

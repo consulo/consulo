@@ -16,6 +16,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.codeEditor.internal.TextAttributesPatcher;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -25,12 +26,11 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoTypeDeclarationAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.documentation.DocumentationManager;
@@ -40,6 +40,7 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.editor.ui.awt.HintUtil;
+import consulo.language.editor.ui.internal.HintManagerEx;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.search.DefinitionsScopedSearch;
@@ -101,7 +102,7 @@ public final class CtrlMouseHandler {
     private TooltipProvider myTooltipProvider;
     @Nullable
     private Point myPrevMouseLocation;
-    private LightweightHint myHint;
+    private LightweightHintImpl myHint;
 
     public enum BrowseMode {
         None,
@@ -232,7 +233,7 @@ public final class CtrlMouseHandler {
 
     @Nullable
     private Rectangle getHintBounds() {
-        LightweightHint hint = myHint;
+        LightweightHintImpl hint = myHint;
         if (hint == null) {
             return null;
         }
@@ -626,7 +627,7 @@ public final class CtrlMouseHandler {
         }
     }
 
-    private void updateText(@Nonnull String updatedText, @Nonnull Consumer<? super String> newTextConsumer, @Nonnull LightweightHint hint, @Nonnull Editor editor) {
+    private void updateText(@Nonnull String updatedText, @Nonnull Consumer<? super String> newTextConsumer, @Nonnull LightweightHintImpl hint, @Nonnull Editor editor) {
         UIUtil.invokeLaterIfNeeded(() -> {
             // There is a possible case that quick doc control width is changed, e.g. it contained text
             // like 'public final class String implements java.io.Serializable, java.lang.Comparable<java.lang.String>' and
@@ -653,7 +654,7 @@ public final class CtrlMouseHandler {
                     // re-show the hint here. Benefits: there is a possible case that we'll be able to show nice layered pane-based balloon;
                     // the popup will be re-positioned according to the new width.
                     hint.hide();
-                    tooltipProvider.showHint(new LightweightHint(component), editor);
+                    tooltipProvider.showHint(new LightweightHintImpl(component), editor);
                 }
                 else {
                     component.setPreferredSize(new Dimension(newSize.width, oldSize.height));
@@ -818,7 +819,7 @@ public final class CtrlMouseHandler {
             JComponent component = HintUtil.createInformationLabel(docInfo.text, hyperlinkListener, null, newTextConsumerRef);
             component.setBorder(JBUI.Borders.empty(6, 6, 5, 6));
 
-            final LightweightHint hint = new LightweightHint(wrapInScrollPaneIfNeeded(component, editor));
+            final LightweightHintImpl hint = new LightweightHintImpl(wrapInScrollPaneIfNeeded(component, editor));
 
             myHint = hint;
             hint.addHintListener(__ -> myHint = null);
@@ -853,7 +854,7 @@ public final class CtrlMouseHandler {
             return new Dimension((int) (0.9 * Math.max(640, rectangle.width)), (int) (0.33 * Math.max(480, rectangle.height)));
         }
 
-        private void updateOnPsiChanges(@Nonnull LightweightHint hint, @Nonnull Info info, @Nonnull Consumer<? super String> textConsumer, @Nonnull String oldText, @Nonnull Editor editor) {
+        private void updateOnPsiChanges(@Nonnull LightweightHintImpl hint, @Nonnull Info info, @Nonnull Consumer<? super String> textConsumer, @Nonnull String oldText, @Nonnull Editor editor) {
             if (!hint.isVisible()) {
                 return;
             }
@@ -876,20 +877,21 @@ public final class CtrlMouseHandler {
                 .coalesceBy(hint).submit(AppExecutorUtil.getAppExecutorService()));
         }
 
-        public void showHint(@Nonnull LightweightHint hint, @Nonnull Editor editor) {
-            if (ApplicationManager.getApplication().isUnitTestMode() || editor.isDisposed()) {
+        @RequiredUIAccess
+        public void showHint(@Nonnull LightweightHintImpl hint, @Nonnull Editor editor) {
+            if ( editor.isDisposed()) {
                 return;
             }
-            final HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
+            final HintManagerEx hintManager = (HintManagerEx) HintManager.getInstance();
             short constraint = HintManager.ABOVE;
             LogicalPosition position = editor.offsetToLogicalPosition(getOffset(editor));
-            Point p = HintManagerImpl.getHintPosition(hint, editor, position, constraint);
+            Point p = hintManager.getHintPosition(hint, editor, position, constraint);
             if (p.y - hint.getComponent().getPreferredSize().height < 0) {
                 constraint = HintManager.UNDER;
-                p = HintManagerImpl.getHintPosition(hint, editor, position, constraint);
+                p = hintManager.getHintPosition(hint, editor, position, constraint);
             }
             hintManager.showEditorHint(hint, editor, p, HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING, 0, false,
-                HintManagerImpl.createHintHint(editor, p, hint, constraint).setContentActive(false));
+                hintManager.createHintHint(editor, p, hint, constraint).setContentActive(false));
         }
     }
 
@@ -908,7 +910,7 @@ public final class CtrlMouseHandler {
                 ? EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.REFERENCE_HYPERLINK_COLOR)
                 : new TextAttributes(null, HintUtil.getInformationColor(), null, null, Font.PLAIN);
             for (TextRange range : info.getRanges()) {
-                TextAttributes attr = NavigationImplUtil.patchAttributesColor(attributes, range, editor);
+                TextAttributes attr = TextAttributesPatcher.patchAttributesColor(attributes, range, editor);
                 final RangeHighlighter highlighter =
                     editor.getMarkupModel().addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), HighlighterLayer.HYPERLINK, attr, HighlighterTargetArea.EXACT_RANGE);
                 highlighters.add(highlighter);
@@ -1002,7 +1004,7 @@ public final class CtrlMouseHandler {
             DumbService.getInstance(myProject).withAlternativeResolveEnabled(() -> {
                 PsiElement targetElement = myProvider.getDocumentationElementForLink(PsiManager.getInstance(myProject), elementName, myContext);
                 if (targetElement != null) {
-                    LightweightHint hint = myHint;
+                    LightweightHintImpl hint = myHint;
                     if (hint != null) {
                         hint.hide(true);
                     }

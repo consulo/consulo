@@ -6,6 +6,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
+import consulo.codeEditor.internal.FoldingUtil;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.language.editor.folding.FoldingDescriptor;

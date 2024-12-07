@@ -5,7 +5,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModelEx;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUtil;
+import consulo.codeEditor.internal.FoldingUtil;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.folding.CollapseBlockHandler;
 import consulo.language.editor.folding.EditorFoldingInfo;

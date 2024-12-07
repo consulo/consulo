@@ -22,7 +22,7 @@ import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;
-import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
+import consulo.language.editor.scope.NonProjectFilesScope;
 import consulo.ide.impl.psi.search.scope.ProjectFilesScope;
 import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;

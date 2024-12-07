@@ -7,7 +7,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.application.ApplicationManager;
 import consulo.util.concurrent.ActionCallback;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
+import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.tree.PatchedDefaultMutableTreeNode;
 import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.awt.tree.Tree;

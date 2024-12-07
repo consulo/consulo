@@ -55,7 +55,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.FoldingPopupManager;
 import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
 import consulo.ide.impl.idea.util.EditorPopupHandler;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -307,7 +307,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         myCaretModel.addCaretListener(new CaretListener() {
             @Nullable
-            private LightweightHint myCurrentHint;
+            private LightweightHintImpl myCurrentHint;
             @Nullable
             private IndentGuideDescriptor myCurrentCaretGuide;
 

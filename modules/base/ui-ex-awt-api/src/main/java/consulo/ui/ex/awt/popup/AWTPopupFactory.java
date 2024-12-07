@@ -16,9 +16,12 @@
 package consulo.ui.ex.awt.popup;
 
 import consulo.annotation.DeprecationInfo;
-
+import consulo.project.Project;
+import consulo.ui.ex.popup.ListPopupStep;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
+import java.util.function.Function;
 
 /**
  * Inteface for JBPopupFactory impl
@@ -29,6 +32,15 @@ import javax.swing.*;
 @Deprecated
 @DeprecationInfo("Do not depend to Swing classes")
 public interface AWTPopupFactory {
-  @Deprecated
-  <T> AWTPopupChooserBuilder<T> createListPopupBuilder(@Nonnull JList<T> list);
+    @Deprecated
+    <T> AWTPopupChooserBuilder<T> createListPopupBuilder(@Nonnull JList<T> list);
+
+    AWTListPopup createListPopup(@Nonnull Project project,
+                                 @Nonnull ListPopupStep step,
+                                 @Nonnull Function<AWTListPopup, ListCellRenderer> rendererFactory);
+
+    AWTListPopup createListPopup(@Nonnull Project project,
+                                 @Nonnull ListPopupStep step,
+                                 @Nonnull Function<AWTListPopup, ListCellRenderer> rendererFactory,
+                                 @Nonnull AWTPopupSubFactory factory);
 }

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl.layout;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
-import consulo.ide.impl.idea.ui.HideableDecorator;
+import consulo.ui.ex.awt.HideableDecorator;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

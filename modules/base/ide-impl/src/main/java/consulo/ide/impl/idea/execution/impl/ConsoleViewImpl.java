@@ -98,7 +98,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   private static final int DEFAULT_FLUSH_DELAY = SystemProperties.getIntProperty("console.flush.delay.ms", 200);
 
-  public static final Key<ConsoleViewImpl> CONSOLE_VIEW_IN_EDITOR_VIEW = Key.create("CONSOLE_VIEW_IN_EDITOR_VIEW");
   private static final Key<ConsoleViewContentType> CONTENT_TYPE = Key.create("ConsoleViewContentType");
   private static final Key<Boolean> USER_INPUT_SENT = Key.create("USER_INPUT_SENT");
   private static final Key<Boolean> MANUAL_HYPERLINK = Key.create("MANUAL_HYPERLINK");
@@ -1200,7 +1199,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     @Override
     @RequiredUIAccess
     public void execute(@Nonnull final Editor editor, final char charTyped, @Nonnull final DataContext dataContext) {
-      final ConsoleViewImpl consoleView = editor.getUserData(CONSOLE_VIEW_IN_EDITOR_VIEW);
+      final ConsoleViewImpl consoleView = (ConsoleViewImpl) editor.getUserData(CONSOLE_VIEW_IN_EDITOR_VIEW);
       if (consoleView == null || !consoleView.myState.isRunning() || consoleView.myIsViewer) {
         if (myOriginalHandler != null) {
           myOriginalHandler.execute(editor, charTyped, dataContext);
@@ -1266,7 +1265,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     private static ConsoleViewImpl getRunningConsole(@Nonnull DataContext context) {
       final Editor editor = context.getData(Editor.KEY);
       if (editor != null) {
-        final ConsoleViewImpl console = editor.getUserData(CONSOLE_VIEW_IN_EDITOR_VIEW);
+        final ConsoleViewImpl console = (ConsoleViewImpl) editor.getUserData(CONSOLE_VIEW_IN_EDITOR_VIEW);
         if (console != null && console.myState.isRunning()) {
           return console;
         }

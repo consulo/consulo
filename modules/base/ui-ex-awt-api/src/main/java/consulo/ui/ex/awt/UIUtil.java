@@ -2326,6 +2326,10 @@ public class UIUtil {
         return e.getButton() == MouseEvent.BUTTON2 || e.getButton() == MouseEvent.BUTTON1 && e.isShiftDown();
     }
 
+    public static boolean isCloseRequest(KeyEvent e) {
+        return e != null && e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE && e.getModifiers() == 0;
+    }
+
     public static boolean isActionClick(MouseEvent e) {
         return isActionClick(e, MouseEvent.MOUSE_PRESSED);
     }

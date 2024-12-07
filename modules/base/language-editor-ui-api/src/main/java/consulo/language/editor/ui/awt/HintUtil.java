@@ -10,6 +10,7 @@ import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.internal.IdeTooltipManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;

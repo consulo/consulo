@@ -42,7 +42,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
@@ -54,6 +54,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -774,7 +775,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       DiffImplUtil.createNotificationText(next ? "Press again to go to the next file" : "Press again to go to the previous file",
                                           "You can disable this feature in " + DiffImplUtil.getSettingsConfigurablePath());
 
-    final LightweightHint hint = new LightweightHint(HintUtil.createInformationLabel(message));
+    final LightweightHintImpl hint = new LightweightHintImpl(HintUtil.createInformationLabel(message));
     Point point = new Point(myContentPanel.getWidth() / 2, next ? myContentPanel.getHeight() - JBUI.scale(40) : JBUI.scale(40));
 
     if (editor == null) {

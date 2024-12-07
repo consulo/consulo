@@ -10,6 +10,8 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.hint.TooltipEvent;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;

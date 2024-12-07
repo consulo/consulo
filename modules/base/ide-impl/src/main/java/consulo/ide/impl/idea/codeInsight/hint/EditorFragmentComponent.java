@@ -9,11 +9,11 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.hint.HintManager;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.awt.HintHint;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
@@ -33,7 +33,7 @@ import java.lang.ref.WeakReference;
 
 public class EditorFragmentComponent extends JPanel {
   private static final Logger LOG = Logger.getInstance(EditorFragmentComponent.class);
-  private static final Key<WeakReference<LightweightHint>> CURRENT_HINT = Key.create("EditorFragmentComponent.currentHint");
+  private static final Key<WeakReference<LightweightHintImpl>> CURRENT_HINT = Key.create("EditorFragmentComponent.currentHint");
   private static final int LINE_BORDER_THICKNESS = 1;
   private static final int EMPTY_BORDER_THICKNESS = 2;
 
@@ -157,7 +157,7 @@ public class EditorFragmentComponent extends JPanel {
    * @param y {@code y} coordinate in layered pane coordinate system.
    */
   @Nullable
-  static LightweightHint showEditorFragmentHintAt(
+  static LightweightHintImpl showEditorFragmentHintAt(
     Editor editor,
     TextRange range,
     int y,
@@ -204,11 +204,11 @@ public class EditorFragmentComponent extends JPanel {
     final JComponent c = editor.getComponent();
     int x = SwingUtilities.convertPoint(c, new Point(JBUIScale.scale(-3), 0), UIUtil.getRootPane(c)).x; //IDEA-68016
 
-    LightweightHint currentHint = SoftReference.dereference(editor.getUserData(CURRENT_HINT));
+    LightweightHintImpl currentHint = SoftReference.dereference(editor.getUserData(CURRENT_HINT));
     if (currentHint != null) currentHint.hide();
 
     Point p = new Point(x, y);
-    LightweightHint hint = new MyComponentHint(fragmentComponent);
+    LightweightHintImpl hint = new MyComponentHint(fragmentComponent);
     HintManagerImpl.getInstanceImpl().showEditorHint(
       hint,
       editor,
@@ -271,7 +271,7 @@ public class EditorFragmentComponent extends JPanel {
   }
 
   @Nullable
-  public static LightweightHint showEditorFragmentHint(Editor editor, TextRange range, boolean showFolding, boolean hideByAnyKey) {
+  public static LightweightHintImpl showEditorFragmentHint(Editor editor, TextRange range, boolean showFolding, boolean hideByAnyKey) {
     if (!(editor instanceof EditorEx)) return null;
     JRootPane rootPane = editor.getComponent().getRootPane();
     if (rootPane == null) return null;
@@ -322,7 +322,7 @@ public class EditorFragmentComponent extends JPanel {
     return availableVisualLines;
   }
 
-  private static class MyComponentHint extends LightweightHint {
+  private static class MyComponentHint extends LightweightHintImpl {
     MyComponentHint(JComponent component) {
       super(component);
       setForceLightweightPopup(true);

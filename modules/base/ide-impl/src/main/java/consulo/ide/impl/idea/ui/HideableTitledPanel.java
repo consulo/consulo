@@ -2,6 +2,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.DeprecationInfo;
 
+import consulo.ui.ex.awt.HideableDecorator;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;

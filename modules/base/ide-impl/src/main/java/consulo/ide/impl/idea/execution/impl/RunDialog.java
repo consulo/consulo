@@ -22,6 +22,8 @@ import consulo.configurable.ConfigurationException;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.executor.Executor;
+import consulo.execution.impl.internal.ui.RunConfigurable;
+import consulo.execution.impl.internal.ui.SingleConfigurationConfigurable;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;

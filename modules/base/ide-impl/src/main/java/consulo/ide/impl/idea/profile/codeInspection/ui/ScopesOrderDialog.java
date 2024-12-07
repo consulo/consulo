@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.profile.codeInspection.ui;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
-import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
+import consulo.language.editor.scope.NonProjectFilesScope;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;

@@ -6,7 +6,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.ToolwindowPaintUtil;
-import consulo.language.editor.ui.awt.EditorAWTUtil;
+import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.project.Project;
 import consulo.ui.TextBoxWithExtensions;
@@ -82,7 +82,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         myResultsList.setCellRenderer(createCellRenderer());
 
         if (Registry.is("new.search.everywhere.use.editor.font")) {
-            Font editorFont = EditorAWTUtil.getEditorFont();
+            Font editorFont = AWTLanguageEditorUtil.getEditorFont();
             myResultsList.setFont(editorFont);
         }
 

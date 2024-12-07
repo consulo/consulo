@@ -6,7 +6,8 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.OpaquePanel;
 import consulo.ide.impl.idea.ui.popup.list.IconListPopupRenderer;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
+import consulo.ui.ex.awt.popup.AWTListPopup;
+import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
@@ -24,9 +25,9 @@ public class PopupListElementRendererWithIcon extends PopupListElementRenderer<O
 
   @Override
   public boolean isIconAt(@Nonnull Point point) {
-    JList list = myPopup.getList();
-    int index = myPopup.getList().locationToIndex(point);
-    Rectangle bounds = myPopup.getList().getCellBounds(index, index);
+    JList list = ((AWTListPopup) myPopup).getList();
+    int index = list.locationToIndex(point);
+    Rectangle bounds = list.getCellBounds(index, index);
     Component renderer = getListCellRendererComponent(list, list.getSelectedValue(), index, true, true);
     renderer.setBounds(bounds);
     renderer.doLayout();

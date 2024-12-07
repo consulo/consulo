@@ -16,15 +16,16 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.codeEditor.*;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorSettings;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.impl.SettingsImpl;
+import consulo.codeEditor.util.SoftWrapUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-
-import java.awt.*;
 
 /**
  * Provides common functionality for <code>'toggle soft wraps usage'</code> actions.
@@ -34,73 +35,57 @@ import java.awt.*;
  */
 public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction implements DumbAware {
 
-  private final SoftWrapAppliancePlaces myAppliancePlace;
-  private final boolean myGlobal;
+    private final SoftWrapAppliancePlaces myAppliancePlace;
+    private final boolean myGlobal;
 
-  /**
-   * Creates new <code>AbstractToggleUseSoftWrapsAction</code> object.
-   *
-   * @param appliancePlace    defines type of the place where soft wraps are applied
-   * @param global            indicates if soft wraps should be changed for the current editor only or for the all editors
-   *                          used at the target appliance place
-   */
-  public AbstractToggleUseSoftWrapsAction(@Nonnull SoftWrapAppliancePlaces appliancePlace, boolean global) {
-    myAppliancePlace = appliancePlace;
-    myGlobal = global;
-  }
+    /**
+     * Creates new <code>AbstractToggleUseSoftWrapsAction</code> object.
+     *
+     * @param appliancePlace defines type of the place where soft wraps are applied
+     * @param global         indicates if soft wraps should be changed for the current editor only or for the all editors
+     *                       used at the target appliance place
+     */
+    public AbstractToggleUseSoftWrapsAction(@Nonnull SoftWrapAppliancePlaces appliancePlace, boolean global) {
+        myAppliancePlace = appliancePlace;
+        myGlobal = global;
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    if (myGlobal) {
-      Editor editor = getEditor(e);
-      if (editor != null) {
-        EditorSettings settings = editor.getSettings();
-        if (settings instanceof SettingsImpl settingsImpl && settingsImpl.getSoftWrapAppliancePlace() != myAppliancePlace) {
-          e.getPresentation().setEnabledAndVisible(false);
-          return;
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        if (myGlobal) {
+            Editor editor = getEditor(e);
+            if (editor != null) {
+                EditorSettings settings = editor.getSettings();
+                if (settings instanceof SettingsImpl settingsImpl && settingsImpl.getSoftWrapAppliancePlace() != myAppliancePlace) {
+                    e.getPresentation().setEnabledAndVisible(false);
+                    return;
+                }
+            }
         }
-      }
-    }
-    super.update(e);
-  }
-
-  @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
-    if (myGlobal) return EditorSettingsExternalizable.getInstance().isUseSoftWraps(myAppliancePlace);
-    Editor editor = getEditor(e);
-    return editor != null && editor.getSettings().isUseSoftWraps();
-  }
-
-  @Override
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-    final Editor editor = getEditor(e);
-    if (editor == null) {
-      return;
+        super.update(e);
     }
 
-    toggleSoftWraps(editor, myGlobal ? myAppliancePlace : null, state);
-  }
-
-  public static void toggleSoftWraps(@Nonnull Editor editor, @Nullable SoftWrapAppliancePlaces places, boolean state) {
-    Point point = editor.getScrollingModel().getVisibleArea().getLocation();
-    LogicalPosition anchorPosition = editor.xyToLogicalPosition(point);
-    int intraLineShift = point.y - editor.logicalPositionToXY(anchorPosition).y;
-
-    if (places != null) {
-      EditorSettingsExternalizable.getInstance().setUseSoftWraps(state, places);
-      EditorFactory.getInstance().refreshAllEditors();
-    }
-    if (editor.getSettings().isUseSoftWraps() != state) {
-      editor.getSettings().setUseSoftWraps(state);
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        if (myGlobal) {
+            return EditorSettingsExternalizable.getInstance().isUseSoftWraps(myAppliancePlace);
+        }
+        Editor editor = getEditor(e);
+        return editor != null && editor.getSettings().isUseSoftWraps();
     }
 
-    editor.getScrollingModel().disableAnimation();
-    editor.getScrollingModel().scrollVertically(editor.logicalPositionToXY(anchorPosition).y + intraLineShift);
-    editor.getScrollingModel().enableAnimation();
-  }
+    @Override
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        final Editor editor = getEditor(e);
+        if (editor == null) {
+            return;
+        }
 
-  @Nullable
-  protected Editor getEditor(AnActionEvent e) {
-    return e.getData(Editor.KEY);
-  }
+        SoftWrapUtil.toggleSoftWraps(editor, myGlobal ? myAppliancePlace : null, state);
+    }
+
+    @Nullable
+    protected Editor getEditor(AnActionEvent e) {
+        return e.getData(Editor.KEY);
+    }
 }

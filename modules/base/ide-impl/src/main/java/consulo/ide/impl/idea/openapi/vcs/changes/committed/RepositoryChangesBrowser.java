@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
-import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;

@@ -5,7 +5,7 @@ import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -201,7 +201,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     queue(new AfterModelUpdate(ID.REVALIDATE) {
       @Override
       protected void after() {
-        final LightweightHint hint = myPanel.getHint();
+        final LightweightHintImpl hint = myPanel.getHint();
         if (hint != null) {
           myPanel.getHintContainerShowPoint().doWhenDone(relativePoint -> {
             hint.setSize(myPanel.getPreferredSize());

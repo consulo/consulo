@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -27,21 +26,15 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class KeymapGroupFactory {
-  public static KeymapGroupFactory getInstance() {
-    return Application.get().getInstance(KeymapGroupFactory.class);
-  }
+    public static KeymapGroupFactory getInstance() {
+        return Application.get().getInstance(KeymapGroupFactory.class);
+    }
 
-  @Nonnull
-  public abstract KeymapGroup createGroup(String name);
+    @Nonnull
+    public abstract KeymapGroup createGroup(String name);
 
-  @Nonnull
-  public abstract KeymapGroup createGroup(String name, Image icon);
+    public abstract KeymapGroup createGroup(String name, String id, Image icon);
 
-  /**
-   * closed/open icons supposed to be the same
-   */
-  @Deprecated
-  public KeymapGroup createGroup(String name, Image closedIcon, @SuppressWarnings("unused") Image openIcon) {
-    return createGroup(name, closedIcon);
-  }
+    @Nonnull
+    public abstract KeymapGroup createGroup(String name, Image icon);
 }

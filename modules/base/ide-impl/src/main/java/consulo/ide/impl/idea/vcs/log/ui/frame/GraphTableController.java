@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ui.ex.popup.Balloon;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
-import consulo.ui.ex.awt.HintHint;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.VcsShortCommitDetails;

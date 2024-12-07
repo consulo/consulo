@@ -36,7 +36,7 @@ import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
 import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;

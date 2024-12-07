@@ -19,9 +19,10 @@ import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.ui.ListenerUtil;
-import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.util.ListenerUtil;
+import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupOwner;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
@@ -94,7 +95,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
   private final IdeView myIdeView;
   private FocusListener myNavBarItemFocusListener;
 
-  private LightweightHint myHint = null;
+  private LightweightHintImpl myHint = null;
   private NavBarPopup myNodePopup = null;
   private JComponent myHintContainer;
   private Component myContextComponent;
@@ -185,7 +186,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     return myNodePopup != null && myNodePopup.isVisible();
   }
 
-  public LightweightHint getHint() {
+  public LightweightHintImpl getHint() {
     return myHint;
   }
 
@@ -801,7 +802,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     panel.setOpaque(true);
     panel.setBackground(UIUtil.getListBackground());
 
-    myHint = new LightweightHint(panel) {
+    myHint = new LightweightHintImpl(panel) {
       @Override
       public void hide() {
         super.hide();

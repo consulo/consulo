@@ -28,7 +28,7 @@ import consulo.desktop.awt.facade.FromSwingWindowWrapper;
 import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.ProhibitAWTEvents;
-import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.language.editor.PlatformDataKeys;

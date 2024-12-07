@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
+import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingRunConfigurationItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;

@@ -22,7 +22,7 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.application.util.DateFormatUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.impl.idea.util.ui.TextTransferable;
+import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.platform.Platform;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;

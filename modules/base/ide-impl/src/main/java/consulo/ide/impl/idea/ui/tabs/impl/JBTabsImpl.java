@@ -15,55 +15,55 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl;
 
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.awt.*;
-import consulo.ide.impl.idea.openapi.ui.ShadowAction;
-import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ui.ex.action.QuickActionProvider;
-import consulo.ide.impl.idea.ui.tabs.*;
-import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;
-import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowPassInfo;
-import consulo.ide.impl.idea.ui.tabs.impl.table.TableLayout;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.tab.*;
-import consulo.ui.ex.awt.util.TimedDeadzone;
-import consulo.ide.impl.idea.util.ui.update.LazyUiDisposable;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;
 import consulo.application.util.function.Computable;
 import consulo.component.util.ActiveRunnable;
-import consulo.component.util.Weighted;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.ui.ShadowAction;
+import consulo.ide.impl.idea.openapi.util.Getter;
+import consulo.ide.impl.idea.ui.tabs.TabsUtil;
+import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;
+import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowPassInfo;
+import consulo.ide.impl.idea.ui.tabs.impl.table.TableLayout;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.ui.update.LazyUiDisposable;
 import consulo.ide.impl.ui.laf.JBEditorTabsUI;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.Gray;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tab.*;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.*;
@@ -76,7 +76,7 @@ import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
  * For implementation use {@link JBEditorTabs} or {@link TabbedPaneWrapper}
  */
 public abstract class JBTabsImpl extends JComponent
-        implements JBTabs, PropertyChangeListener, TimerListener, DataProvider, PopupMenuListener, consulo.disposer.Disposable, JBTabsPresentation, Queryable, QuickActionProvider {
+        implements JBTabs, PropertyChangeListener, TimerListener, DataProvider, PopupMenuListener, Disposable, JBTabsPresentation, Queryable, QuickActionProvider {
 
   private static final String uiClassID = "JBEditorTabsUI";
 
@@ -152,9 +152,6 @@ public abstract class JBTabsImpl extends JComponent
   private boolean myToDrawBorderIfTabsHidden = true;
   private Color myActiveTabFillIn;
 
-  private boolean myTabLabelActionsAutoHide;
-
-  private final TabActionsAutoHideListener myTabActionsAutoHideListener = new TabActionsAutoHideListener();
   private IdeGlassPane myGlassPane;
   @NonNls
   private static final String LAYOUT_DONE = "Layout.done";
@@ -283,7 +280,7 @@ public abstract class JBTabsImpl extends JComponent
 
 
     if(parent != null) {
-      consulo.disposer.Disposer.register(parent, this);
+      Disposer.register(parent, this);
 
       if (myActionManager != null) {
         myNextAction = new SelectNextAction(this, myActionManager);
@@ -295,17 +292,16 @@ public abstract class JBTabsImpl extends JComponent
 
       new LazyUiDisposable<JBTabsImpl>(parent, this, this) {
         @Override
-        protected void initialize(@Nonnull consulo.disposer.Disposable parent, @Nonnull JBTabsImpl child, @Nullable Project project) {
+        protected void initialize(@Nonnull Disposable parent, @Nonnull JBTabsImpl child, @Nullable Project project) {
           if (project != null) {
             myProject = project;
           }
 
-          consulo.disposer.Disposer.register(child, myAnimator);
-          consulo.disposer.Disposer.register(child, () -> removeTimerUpdate());
+          Disposer.register(child, myAnimator);
+          Disposer.register(child, () -> removeTimerUpdate());
 
           final IdeGlassPane gp = IdeGlassPaneUtil.find(child);
           if (gp != null) {
-            gp.addMouseMotionPreprocessor(myTabActionsAutoHideListener, child);
             myGlassPane = gp;
           }
 
@@ -473,7 +469,6 @@ public abstract class JBTabsImpl extends JComponent
     removeTimerUpdate();
 
     if (ScreenUtil.isStandardAddRemoveNotify(this) && myGlassPane != null) {
-      myGlassPane.removeMouseMotionPreprocessor(myTabActionsAutoHideListener);
       myGlassPane = null;
     }
   }
@@ -535,48 +530,6 @@ public abstract class JBTabsImpl extends JComponent
 
   public int tabMSize() {
     return 20;
-  }
-
-  class TabActionsAutoHideListener extends MouseMotionAdapter implements Weighted {
-
-    private TabLabel myCurrentOverLabel;
-    private Point myLastOverPoint;
-
-    @Override
-    public double getWeight() {
-      return 1;
-    }
-
-    @Override
-    public void mouseMoved(final MouseEvent e) {
-      if (!myTabLabelActionsAutoHide) return;
-
-      myLastOverPoint = SwingUtilities.convertPoint(e.getComponent(), e.getX(), e.getY(), JBTabsImpl.this);
-      processMouseOver();
-    }
-
-    void processMouseOver() {
-      if (!myTabLabelActionsAutoHide) return;
-
-      if (myLastOverPoint == null) return;
-
-      if (myLastOverPoint.x >= 0 && myLastOverPoint.x < getWidth() && myLastOverPoint.y > 0 && myLastOverPoint.y < getHeight()) {
-        final TabLabel label = myInfo2Label.get(_findInfo(myLastOverPoint, true));
-        if (label != null) {
-          if (myCurrentOverLabel != null) {
-            myCurrentOverLabel.toggleShowActions(false);
-          }
-          label.toggleShowActions(true);
-          myCurrentOverLabel = label;
-          return;
-        }
-      }
-
-      if (myCurrentOverLabel != null) {
-        myCurrentOverLabel.toggleShowActions(false);
-        myCurrentOverLabel = null;
-      }
-    }
   }
 
   @Override
@@ -1419,10 +1372,6 @@ public abstract class JBTabsImpl extends JComponent
       myHeaderFitSize = computeHeaderFitSize();
 
       final Collection<TabLabel> labels = myInfo2Label.values();
-      for (TabLabel each : labels) {
-        each.setTabActionsAutoHide(myTabLabelActionsAutoHide);
-      }
-
 
       List<TabInfo> visible = new ArrayList<>();
       visible.addAll(myVisibleInfos);
@@ -1455,8 +1404,6 @@ public abstract class JBTabsImpl extends JComponent
       }
 
       moveDraggedTabLabel();
-
-      myTabActionsAutoHideListener.processMouseOver();
     }
     finally {
       myForcedRelayout = false;
@@ -1967,16 +1914,6 @@ public abstract class JBTabsImpl extends JComponent
   private static boolean isChanged(Object oldObject, Object newObject) {
     if (oldObject == null && newObject == null) return false;
     return oldObject != null && !oldObject.equals(newObject) || newObject != null && !newObject.equals(oldObject);
-  }
-
-  @Override
-  @Nonnull
-  public JBTabsPresentation setTabLabelActionsAutoHide(final boolean autoHide) {
-    if (myTabLabelActionsAutoHide != autoHide) {
-      myTabLabelActionsAutoHide = autoHide;
-      revalidateAndRepaint(false);
-    }
-    return this;
   }
 
   @Nullable

@@ -21,7 +21,7 @@ import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.execution.editor.RunConfigurationFileEditorEarlyAccessDescriptor;
 import consulo.ide.impl.execution.editor.RunConfigurationVirtualFile;
-import consulo.ide.impl.idea.execution.impl.EditConfigurationsDialog;
+import consulo.execution.impl.internal.ui.EditConfigurationsDialog;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

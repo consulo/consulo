@@ -21,7 +21,7 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
+import consulo.language.editor.scope.NonProjectFilesScope;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

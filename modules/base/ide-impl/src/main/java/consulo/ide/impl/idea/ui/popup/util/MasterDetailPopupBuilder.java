@@ -15,7 +15,10 @@
  */
 package consulo.ide.impl.idea.ui.popup.util;
 
+import consulo.codeEditor.util.popup.*;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.ui.awt.DetailViewImpl;
+import consulo.language.editor.ui.awt.ItemWrapperListRenderer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -32,8 +35,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
@@ -198,6 +199,7 @@ public class MasterDetailPopupBuilder implements MasterController {
 
         if (myDoneRunnable != null) {
             new AnAction("Done") {
+                @RequiredUIAccess
                 @Override
                 public void actionPerformed(AnActionEvent e) {
                     myDoneRunnable.run();
@@ -324,12 +326,7 @@ public class MasterDetailPopupBuilder implements MasterController {
     public MasterDetailPopupBuilder setList(final JBList list) {
         setChooser(list);
         myDetailController.setList(list);
-        list.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent event) {
-                myDetailController.updateDetailView();
-            }
-        });
+        list.getSelectionModel().addListSelectionListener(event -> myDetailController.updateDetailView());
         return this;
     }
 
@@ -347,12 +344,14 @@ public class MasterDetailPopupBuilder implements MasterController {
             }
         });
         new AnAction() {
+            @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
                 chooseItemWithEnterOrDoubleClick();
             }
         }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)), list);
         new AnAction() {
+            @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
                 chooseItemWithEnterOrDoubleClick();

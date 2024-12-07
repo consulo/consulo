@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.ui.ex.awt.hint.TooltipEvent;
 import consulo.ui.ex.popup.Balloon;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.RelativePoint;

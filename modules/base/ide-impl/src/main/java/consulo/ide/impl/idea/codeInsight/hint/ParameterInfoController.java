@@ -24,7 +24,7 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ParameterHintsPresentationManager;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
@@ -47,7 +47,7 @@ import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.HintHint;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
@@ -86,7 +86,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
   private final Editor myEditor;
 
   private final RangeMarker myLbraceMarker;
-  private LightweightHint myHint;
+  private LightweightHintImpl myHint;
   private final ParameterInfoComponent myComponent;
   private boolean myKeepOnHintHidden;
 
@@ -224,10 +224,10 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     myHandler.syncUpdateOnCaretMove(new MyLazyUpdateParameterInfoContext());
   }
 
-  private LightweightHint createHint() {
+  private LightweightHintImpl createHint() {
     JPanel wrapper = new WrapperPanel();
     wrapper.add(myComponent);
-    return new LightweightHint(wrapper);
+    return new LightweightHintImpl(wrapper);
   }
 
   @Override
@@ -255,7 +255,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     int caretOffset = myEditor.getCaretModel().getOffset();
     Pair<Point, Short> pos =
       myProvider.getBestPointPosition(myHint, myComponent.getParameterOwner(), caretOffset, null, HintManager.ABOVE);
-    HintHint hintHint = HintManagerImpl.createHintHint(myEditor, pos.getFirst(), myHint, pos.getSecond());
+    HintHint hintHint = HintManagerImpl.getInstanceImpl().createHintHint(myEditor, pos.getFirst(), myHint, pos.getSecond());
     hintHint.setExplicitClose(true);
     hintHint.setRequestFocus(requestFocus);
     hintHint.setShowImmediately(true);
@@ -370,7 +370,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
             short position = tooltip != null ? toShort(tooltip.getPreferredPosition()) : HintManager.ABOVE;
             Pair<Point, Short> pos =
               myProvider.getBestPointPosition(myHint, elementForUpdating, caretOffset, myEditor.getCaretModel().getVisualPosition(), position);
-            HintManagerImpl.adjustEditorHintPosition(myHint, myEditor, pos.getFirst(), pos.getSecond());
+            HintManagerImpl.getInstanceImpl().adjustEditorHintPosition(myHint, myEditor, pos.getFirst(), pos.getSecond());
           }
         });
       }
@@ -636,11 +636,11 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
    * Second value is a {@link HintManager.PositionFlags position flag}.
    */
   static Pair<Point, Short> chooseBestHintPosition(
-    Editor editor,
-    VisualPosition pos,
-    LightweightHint hint,
-    short preferredPosition,
-    boolean showLookupHint
+      Editor editor,
+      VisualPosition pos,
+      LightweightHintImpl hint,
+      short preferredPosition,
+      boolean showLookupHint
   ) {
     if (Application.get().isUnitTestMode() || Application.get().isHeadlessEnvironment()) return Pair.pair(new Point(), HintManager.DEFAULT);
 
@@ -656,8 +656,8 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
       p2 = hintManager.getHintPosition(hint, editor, HintManager.ABOVE);
     }
     else {
-      p1 = HintManagerImpl.getHintPosition(hint, editor, pos, HintManager.UNDER);
-      p2 = HintManagerImpl.getHintPosition(hint, editor, pos, HintManager.ABOVE);
+      p1 = HintManagerImpl.getInstanceImpl().getHintPosition(hint, editor, pos, HintManager.UNDER);
+      p2 = HintManagerImpl.getInstanceImpl().getHintPosition(hint, editor, pos, HintManager.ABOVE);
     }
 
     boolean p1Ok = p1.y + hintSize.height < layeredPane.getHeight();
@@ -900,11 +900,11 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     @Nonnull
     @RequiredReadAction
     private Pair<Point, Short> getBestPointPosition(
-      LightweightHint hint,
-      final PsiElement list,
-      int offset,
-      VisualPosition pos,
-      short preferredPosition
+        LightweightHintImpl hint,
+        final PsiElement list,
+        int offset,
+        VisualPosition pos,
+        short preferredPosition
     ) {
       if (list != null) {
         TextRange range = list.getTextRange();
@@ -924,7 +924,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         position = chooseBestHintPosition(myEditor, pos, hint, preferredPosition, false);
       }
       else {
-        Point p = HintManagerImpl.getHintPosition(hint, myEditor, pos, HintManager.ABOVE);
+        Point p = HintManagerImpl.getInstanceImpl().getHintPosition(hint, myEditor, pos, HintManager.ABOVE);
         position = new Pair<>(p, HintManager.ABOVE);
       }
       previousBestPoint = position.getFirst();

@@ -84,7 +84,6 @@ open module consulo.ide.impl {
   requires consulo.file.editor.impl;
   requires consulo.compiler.impl;
   requires consulo.execution.impl;
-  requires consulo.execution.debug.impl;
   requires consulo.execution.test.impl;
   requires consulo.builtin.web.server.impl;
   requires consulo.credential.storage.impl;
@@ -178,7 +177,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.copyright.impl.options;
   exports consulo.ide.impl.copyright.impl.pattern;
   exports consulo.ide.impl.copyright.impl.ui;
-  exports consulo.ide.impl.debugger;
   exports consulo.ide.impl.desktop;
   exports consulo.ide.impl.desktop.awt.graphics;
   exports consulo.ide.impl.diagram.actions;
@@ -574,7 +572,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.ui.impl;
   exports consulo.ide.impl.idea.openapi.ui.playback;
   exports consulo.ide.impl.idea.openapi.ui.playback.commands;
-  exports consulo.ide.impl.idea.openapi.ui.popup;
   exports consulo.ide.impl.idea.openapi.ui.popup.util;
   exports consulo.ide.impl.idea.openapi.updateSettings.impl;
   exports consulo.ide.impl.idea.openapi.util;
@@ -720,7 +717,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.usages.impl.rules;
   exports consulo.ide.impl.idea.util;
   exports consulo.ide.impl.idea.util.concurrency;
-  exports consulo.ide.impl.idea.util.config;
   exports consulo.ide.impl.idea.util.containers;
   exports consulo.ide.impl.idea.util.continuation;
   exports consulo.ide.impl.idea.util.exception;
@@ -777,23 +773,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.vcs.log.util;
   exports consulo.ide.impl.idea.vcsUtil;
   exports consulo.ide.impl.idea.webcore.packaging;
-  exports consulo.ide.impl.idea.xdebugger.impl;
-  exports consulo.ide.impl.idea.xdebugger.impl.actions;
-  exports consulo.ide.impl.idea.xdebugger.impl.actions.handlers;
-  exports consulo.ide.impl.idea.xdebugger.impl.breakpoints;
-  exports consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui;
-  exports consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.grouping;
-  exports consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree;
-  exports consulo.ide.impl.idea.xdebugger.impl.evaluate;
-  exports consulo.ide.impl.idea.xdebugger.impl.evaluate.quick;
-  exports consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common;
-  exports consulo.ide.impl.idea.xdebugger.impl.frame;
-  exports consulo.ide.impl.idea.xdebugger.impl.frame.actions;
-  exports consulo.ide.impl.idea.xdebugger.impl.settings;
-  exports consulo.ide.impl.idea.xdebugger.impl.ui;
-  exports consulo.ide.impl.idea.xdebugger.impl.ui.tree;
-  exports consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
-  exports consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
   exports consulo.ide.impl.idea.xml;
   exports consulo.ide.impl.idea.xml.util;
   exports consulo.ide.impl.intelliLang;

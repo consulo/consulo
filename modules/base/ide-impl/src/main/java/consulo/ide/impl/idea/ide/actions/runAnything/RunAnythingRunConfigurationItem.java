@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
+import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
 import consulo.ui.image.Image;

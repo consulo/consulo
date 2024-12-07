@@ -57,6 +57,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.*;
@@ -424,10 +425,6 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     public void setDimensionServiceKey(@Nullable final String dimensionServiceKey) {
         myDimensionServiceKey = dimensionServiceKey;
-    }
-
-    public void setAdText(@Nonnull final String s) {
-        setAdText(s, SwingConstants.LEFT);
     }
 
     @Nonnull
@@ -2068,8 +2065,9 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return myAdComponent == null ? new Dimension(0, 0) : myAdComponent.getPreferredSize();
     }
 
+    @Deprecated
     public static boolean isCloseRequest(KeyEvent e) {
-        return e != null && e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE && e.getModifiers() == 0;
+        return UIUtil.isCloseRequest(e);
     }
 
     private Point fixLocateByContent(Point location, boolean save) {

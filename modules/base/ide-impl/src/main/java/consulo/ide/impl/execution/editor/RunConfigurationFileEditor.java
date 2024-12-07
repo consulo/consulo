@@ -20,7 +20,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
-import consulo.ide.impl.idea.execution.impl.RunConfigurable;
+import consulo.execution.impl.internal.ui.RunConfigurable;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.project.Project;
 import consulo.project.internal.ProjectExListener;

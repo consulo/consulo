@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
+import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.navigation.GotoRelatedProvider;

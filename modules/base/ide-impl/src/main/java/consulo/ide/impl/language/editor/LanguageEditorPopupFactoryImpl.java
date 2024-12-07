@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.ide.PsiCopyPasteManagerImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
+import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.editor.ui.PsiElementListCellRenderer;

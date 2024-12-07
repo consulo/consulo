@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
+import consulo.codeEditor.internal.FoldingUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;

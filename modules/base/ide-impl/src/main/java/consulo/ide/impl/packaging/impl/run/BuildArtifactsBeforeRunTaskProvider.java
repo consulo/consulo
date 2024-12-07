@@ -28,7 +28,7 @@ import consulo.execution.BeforeRunTask;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.ide.impl.idea.execution.impl.ConfigurationSettingsEditorWrapper;
+import consulo.execution.impl.internal.ui.ConfigurationSettingsEditorWrapper;
 import consulo.compiler.artifact.ArtifactAwareCompiler;
 import consulo.compiler.impl.internal.artifact.ArtifactCompileScope;
 import consulo.compiler.impl.internal.artifact.ArtifactsCompiler;

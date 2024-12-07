@@ -8,7 +8,7 @@ import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.refactoring.IntroduceTargetChooser;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.ExpressionTypeProvider;
@@ -171,7 +171,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
       setInstance(this);
       AccessibleContextUtil.setName(label, "Expression type hint");
       HintManagerImpl hintManager = (HintManagerImpl)HintManager.getInstance();
-      LightweightHint hint = new LightweightHint(label);
+      LightweightHintImpl hint = new LightweightHintImpl(label);
       hint.addHintListener(e -> ApplicationManager.getApplication().invokeLater(() -> setInstance(null)));
       Point p = hintManager.getHintPosition(hint, myEditor, HintManager.ABOVE);
       int flags = HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING;

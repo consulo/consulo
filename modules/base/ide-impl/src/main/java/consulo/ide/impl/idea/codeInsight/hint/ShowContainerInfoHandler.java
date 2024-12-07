@@ -31,7 +31,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
@@ -39,7 +39,7 @@ import java.awt.*;
 import java.lang.ref.WeakReference;
 
 public class ShowContainerInfoHandler implements CodeInsightActionHandler {
-  private static final Key<WeakReference<LightweightHint>> MY_LAST_HINT_KEY = Key.create("MY_LAST_HINT_KEY");
+  private static final Key<WeakReference<LightweightHintImpl>> MY_LAST_HINT_KEY = Key.create("MY_LAST_HINT_KEY");
   private static final Key<PsiElement> CONTAINER_KEY = Key.create("CONTAINER_KEY");
 
   @RequiredUIAccess
@@ -48,8 +48,8 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     PsiElement container = null;
-    WeakReference<LightweightHint> ref = editor.getUserData(MY_LAST_HINT_KEY);
-    LightweightHint hint = SoftReference.dereference(ref);
+    WeakReference<LightweightHintImpl> ref = editor.getUserData(MY_LAST_HINT_KEY);
+    LightweightHintImpl hint = SoftReference.dereference(ref);
     if (hint != null && hint.isVisible()){
       hint.hide();
       container = hint.getUserData(CONTAINER_KEY);
@@ -104,7 +104,7 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
     }
     final PsiElement _container = container;
     ApplicationManager.getApplication().invokeLater(() -> {
-      LightweightHint hint1 = EditorFragmentComponent.showEditorFragmentHint(editor, range, true, true);
+      LightweightHintImpl hint1 = EditorFragmentComponent.showEditorFragmentHint(editor, range, true, true);
       if (hint1 != null) {
         hint1.putUserData(CONTAINER_KEY, _container);
         editor.putUserData(MY_LAST_HINT_KEY, new WeakReference<>(hint1));

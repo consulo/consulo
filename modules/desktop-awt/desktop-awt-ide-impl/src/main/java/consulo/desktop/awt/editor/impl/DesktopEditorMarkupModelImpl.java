@@ -45,7 +45,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ide.impl.idea.ui.BalloonImpl;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
@@ -56,6 +56,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -96,7 +97,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
   private int myMinMarkHeight = JBUI.scale(2);
 
-  private LightweightHint myEditorPreviewHint = null;
+  private LightweightHintImpl myEditorPreviewHint = null;
   private final EditorFragmentRenderer myEditorFragmentRenderer;
   private int myRowAdjuster = 0;
   private int myWheelAccumulator = 0;
@@ -476,9 +477,9 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
         }
 
         @Override
-        public LightweightHint show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintHint) {
+        public LightweightHintImpl show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintHint) {
           JLabel label = new JLabel("WTF");
-          return new LightweightHint(label) {
+          return new LightweightHintImpl(label) {
             @Override
             public void hide() {
               super.hide();
@@ -544,7 +545,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     }
 
     @Override
-    public LightweightHint show(@Nonnull final Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull final HintHint hintInfo) {
+    public LightweightHintImpl show(@Nonnull final Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull final HintHint hintInfo) {
       final HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
       boolean needDelay = false;
       if (myEditorPreviewHint == null) {
@@ -672,7 +673,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
             }
           }
         };
-        myEditorPreviewHint = new LightweightHint(editorFragmentPreviewPanel) {
+        myEditorPreviewHint = new LightweightHintImpl(editorFragmentPreviewPanel) {
 
           @Override
           public void hide(boolean ok) {

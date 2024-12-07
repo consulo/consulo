@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvi
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.codeEditor.internal.EditorMouseHoverPopupControl;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
@@ -47,6 +47,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -525,16 +526,16 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
                                                            PopupBridge popupBridge,
                                                            boolean requestFocus) {
       SimpleReference<WrapperPanel> wrapperPanelRef = new SimpleReference<>();
-      SimpleReference<LightweightHint> mockHintRef = new SimpleReference<>();
+      SimpleReference<LightweightHintImpl> mockHintRef = new SimpleReference<>();
       HintHint hintHint = new HintHint().setAwtTooltip(true).setRequestFocus(requestFocus);
-      LightweightHint hint =
+      LightweightHintImpl hint =
         renderer.createHint(editor, new Point(), false, EDITOR_INFO_GROUP, hintHint, true, highlightActions, false, expand -> {
           LineTooltipRenderer newRenderer = renderer.createRenderer(renderer.getText(), expand ? 1 : 0);
           JComponent newComponent = createHighlightInfoComponent(editor, newRenderer, highlightActions, popupBridge, requestFocus);
           AbstractPopup popup = popupBridge.getPopup();
           WrapperPanel wrapper = wrapperPanelRef.get();
           if (newComponent != null && popup != null && wrapper != null) {
-            LightweightHint mockHint = mockHintRef.get();
+            LightweightHintImpl mockHint = mockHintRef.get();
             if (mockHint != null) closeHintIgnoreBinding(mockHint);
             wrapper.setContent(newComponent);
             validatePopupSize(popup);
@@ -553,7 +554,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
       return wrapper;
     }
 
-    private static void bindHintHiding(LightweightHint hint, PopupBridge popupBridge) {
+    private static void bindHintHiding(LightweightHintImpl hint, PopupBridge popupBridge) {
       AtomicBoolean inProcess = new AtomicBoolean();
       hint.addHintListener(e -> {
         if (hint.getUserData(DISABLE_BINDING) == null && inProcess.compareAndSet(false, true)) {
@@ -580,7 +581,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
       });
     }
 
-    private static void closeHintIgnoreBinding(LightweightHint hint) {
+    private static void closeHintIgnoreBinding(LightweightHintImpl hint) {
       hint.putUserData(DISABLE_BINDING, Boolean.TRUE);
       hint.hide();
     }

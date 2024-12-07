@@ -6,11 +6,11 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ui.PopupBorder;
 import consulo.ide.impl.idea.ui.popup.async.AsyncPopupImpl;
-import consulo.ide.impl.idea.ui.popup.async.AsyncPopupStep;
+import consulo.ui.ex.popup.AsyncPopupStep;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
 import consulo.ide.impl.idea.ui.popup.util.MnemonicsSearch;
-import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
+import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -21,7 +21,6 @@ import consulo.ui.ex.popup.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -251,7 +250,8 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         }
     }
 
-    public final void registerAction(@NonNls String aActionName, int aKeyCode, @JdkConstants.InputEventMask int aModifier, Action aAction) {
+    @Override
+    public final void registerAction(String aActionName, int aKeyCode, @JdkConstants.InputEventMask int aModifier, Action aAction) {
         myInputMap.put(KeyStroke.getKeyStroke(aKeyCode, aModifier), aActionName);
         myActionMap.put(aActionName, aAction);
     }
@@ -260,7 +260,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         return (String) myInputMap.get(keyStroke);
     }
 
-    public final void registerAction(@NonNls String aActionName, KeyStroke keyStroke, Action aAction) {
+    public void registerAction(String aActionName, KeyStroke keyStroke, Action aAction) {
         myInputMap.put(keyStroke, aActionName);
         myActionMap.put(aActionName, aAction);
     }
@@ -446,7 +446,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     }
 
-    protected abstract void onChildSelectedFor(Object value);
+    public abstract void onChildSelectedFor(Object value);
 
     protected final void notifyParentOnChildSelection() {
         if (myParent == null || myParentValue == null) {
@@ -454,7 +454,6 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         }
         myParent.onChildSelectedFor(myParentValue);
     }
-
 
     private class MyComponentAdapter extends ComponentAdapter {
         @Override

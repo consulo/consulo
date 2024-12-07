@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.util.ui.table;
 
 import consulo.component.util.Iconable;
-import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.util.ListWithSelection;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.EnumComboBoxModel;
 
+import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
 import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;

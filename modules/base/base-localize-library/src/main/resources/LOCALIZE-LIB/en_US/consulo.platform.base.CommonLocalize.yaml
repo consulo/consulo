@@ -351,3 +351,7 @@ safe.write.restored:
     Cannot save {0}.
     Unable to write data.
     Original content was restored from backup.
+action.collapse:
+  text: Collapse
+action.expand:
+  text: Expand

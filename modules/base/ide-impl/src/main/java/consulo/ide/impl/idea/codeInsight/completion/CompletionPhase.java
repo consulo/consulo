@@ -22,12 +22,12 @@ import consulo.document.event.DocumentListener;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.FocusChangeListenerImpl;
 import consulo.project.ui.util.AppUIUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.Language;
 import consulo.language.editor.completion.CompletionConfidence;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionType;
-import consulo.language.editor.impl.internal.hint.HintListener;
+import consulo.ui.ex.awt.hint.HintListener;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -239,7 +239,7 @@ public abstract class CompletionPhase implements Disposable {
 
   public static abstract class ZombiePhase extends CompletionPhase {
 
-    protected ZombiePhase(@Nullable final LightweightHint hint, final CompletionProgressIndicator indicator) {
+    protected ZombiePhase(@Nullable final LightweightHintImpl hint, final CompletionProgressIndicator indicator) {
       super(indicator);
       @Nonnull Editor editor = indicator.getEditor();
       final HintListener hintListener = new HintListener() {
@@ -311,7 +311,7 @@ public abstract class CompletionPhase implements Disposable {
   }
 
   public static class NoSuggestionsHint extends ZombiePhase {
-    public NoSuggestionsHint(@Nullable LightweightHint hint, CompletionProgressIndicator indicator) {
+    public NoSuggestionsHint(@Nullable LightweightHintImpl hint, CompletionProgressIndicator indicator) {
       super(hint, indicator);
     }
 

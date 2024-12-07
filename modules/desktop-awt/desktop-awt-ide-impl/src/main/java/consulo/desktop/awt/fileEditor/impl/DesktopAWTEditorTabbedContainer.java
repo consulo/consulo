@@ -125,7 +125,6 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             .setTabDraggingEnabled(true)
             .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(TabsUtil.TAB_VERTICAL_PADDING, 8)))
             .setTabLabelActionsMouseDeadzone(TimedDeadzone.NULL)
-            .setTabLabelActionsAutoHide(false)
             .setActiveTabFillIn(TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground()))
             .setPaintFocus(true)
             .getJBTabs()

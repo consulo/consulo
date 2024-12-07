@@ -33,7 +33,7 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.language.editor.internal.intention.ResourceTextDescriptor;
 import consulo.language.editor.internal.intention.TextDescriptor;
-import consulo.language.editor.ui.awt.EditorAWTUtil;
+import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -69,7 +69,7 @@ public class IntentionDescriptionPanel {
     myDescriptionBrowser = new JEditorPane("text/html", "");
     myDescriptionBrowser.setEditable(false);
     myDescriptionBrowser.setBorder(JBUI.Borders.customLine(JBColor.border(), 1));
-    myDescriptionBrowser.setFont(EditorAWTUtil.getEditorFont());
+    myDescriptionBrowser.setFont(AWTLanguageEditorUtil.getEditorFont());
 
     myPanel.add(new BorderLayoutPanel().withBorder(JBUI.Borders.empty(5)).addToTop(new TitledSeparator("Description")).addToCenter(myDescriptionBrowser), BorderLayout.CENTER);
 

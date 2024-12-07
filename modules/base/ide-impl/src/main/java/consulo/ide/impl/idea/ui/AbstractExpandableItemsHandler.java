@@ -390,9 +390,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
   }
 
   public static Rectangle getScreenRectangle(Point location) {
-    return !Registry.is("ide.expansion.hints.on.all.screens")
-           ? ScreenUtil.getScreenRectangle(location)
-           : ScreenUtil.getAllScreensRectangle();
+    return ScreenUtil.getScreenRectangle(location);
   }
 
   protected boolean isPaintBorder() {

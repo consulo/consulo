@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
+import consulo.ui.ex.awt.VerticalLayout;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;

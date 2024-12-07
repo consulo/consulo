@@ -15,21 +15,20 @@
  */
 package consulo.ide.impl.idea.execution.ui.layout.impl;
 
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.project.Project;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.tab.TabInfo;
-import consulo.ui.ex.awt.tab.UiDecorator;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
-import consulo.disposer.Disposable;
-
+import consulo.project.Project;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.awt.tab.TabInfo;
+import consulo.ui.ex.awt.tab.UiDecorator;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import javax.swing.*;
+
 import java.awt.*;
 import java.util.Map;
 
@@ -82,11 +81,6 @@ public class JBRunnerTabs extends JBEditorTabs {
     @Override
     public void apply(UiDecorator.UiDecoration decoration) {
       super.apply(decoration);
-    }
-
-    @Override
-    public void setTabActionsAutoHide(boolean autoHide) {
-      super.setTabActionsAutoHide(autoHide);
     }
 
     @Override

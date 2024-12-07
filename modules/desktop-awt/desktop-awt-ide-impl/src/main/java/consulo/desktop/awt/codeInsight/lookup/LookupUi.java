@@ -192,7 +192,7 @@ class LookupUi {
             myLookup.myResizePending = false;
             myLookup.pack();
         }
-        HintManagerImpl.updateLocation(myLookup, editor, rectangle.getLocation());
+        HintManagerImpl.getInstanceImpl().updateLocation(myLookup, editor, rectangle.getLocation());
 
         if (reused || selectionVisible || onExplicitAction) {
             myLookup.ensureSelectionVisible(false);

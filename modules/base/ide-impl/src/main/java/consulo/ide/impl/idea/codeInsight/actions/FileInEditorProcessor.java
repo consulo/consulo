@@ -22,7 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiFile;
@@ -204,7 +204,7 @@ class FileInEditorProcessor {
 
   public static void showHint(@Nonnull Editor editor, @Nonnull String info, @Nullable HyperlinkListener hyperlinkListener) {
     JComponent component = HintUtil.createInformationLabel(info, hyperlinkListener, null, null);
-    LightweightHint hint = new LightweightHint(component);
+    LightweightHintImpl hint = new LightweightHintImpl(component);
     HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, HintManager.UNDER,
                                                      HintManager.HIDE_BY_ANY_KEY |
                                                      HintManager.HIDE_BY_TEXT_CHANGE |

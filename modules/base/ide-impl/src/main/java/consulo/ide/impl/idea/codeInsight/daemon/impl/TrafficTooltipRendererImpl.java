@@ -23,9 +23,9 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.TrafficTooltipRenderer;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
-import consulo.ui.ex.awt.HintHint;
-import consulo.language.editor.impl.internal.hint.HintListener;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.hint.HintListener;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.component.util.ComparableObject;
 
 import jakarta.annotation.Nonnull;
@@ -55,12 +55,12 @@ class TrafficTooltipRendererImpl extends ComparableObject.Impl implements Traffi
   }
 
   @Override
-  public LightweightHint show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintHint) {
+  public LightweightHintImpl show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintHint) {
     myTrafficLightRenderer = (TrafficLightRenderer)((EditorMarkupModel)editor.getMarkupModel()).getErrorStripeRenderer();
     myPanel = new TrafficProgressPanel(myTrafficLightRenderer, editor, hintHint);
     repaintTooltipWindow();
     LineTooltipRenderer.correctLocation(editor, myPanel, p, alignToRight, true, myPanel.getMinWidth());
-    LightweightHint hint = new LightweightHint(myPanel);
+    LightweightHintImpl hint = new LightweightHintImpl(myPanel);
 
     HintManagerImpl hintManager = (HintManagerImpl)HintManager.getInstance();
     hintManager.showEditorHint(hint, editor, p,

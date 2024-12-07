@@ -20,7 +20,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.setting.AttributesDescriptor;
-import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
+import consulo.ui.ex.awt.VerticalLayout;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;

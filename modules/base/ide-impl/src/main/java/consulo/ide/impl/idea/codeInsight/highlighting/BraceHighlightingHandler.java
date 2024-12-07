@@ -30,7 +30,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.ApplicationEx;
 import consulo.language.editor.highlight.HighlighterIteratorWrapper;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.application.Application;
@@ -78,7 +78,7 @@ import java.util.Set;
 public class BraceHighlightingHandler {
   private static final Key<List<RangeHighlighter>> BRACE_HIGHLIGHTERS_IN_EDITOR_VIEW_KEY = Key.create("BraceHighlighter.BRACE_HIGHLIGHTERS_IN_EDITOR_VIEW_KEY");
   private static final Key<RangeHighlighter> LINE_MARKER_IN_EDITOR_KEY = Key.create("BraceHighlighter.LINE_MARKER_IN_EDITOR_KEY");
-  private static final Key<LightweightHint> HINT_IN_EDITOR_KEY = Key.create("BraceHighlighter.HINT_IN_EDITOR_KEY");
+  private static final Key<LightweightHintImpl> HINT_IN_EDITOR_KEY = Key.create("BraceHighlighter.HINT_IN_EDITOR_KEY");
 
   /**
    * Holds weak references to the editors that are being processed at non-EDT.
@@ -550,7 +550,7 @@ public class BraceHighlightingHandler {
           int line2 = myDocument.getLineNumber(range.getEndOffset());
           line1 = Math.max(line1, line2 - 5);
           range = new TextRange(myDocument.getLineStartOffset(line1), range.getEndOffset());
-          LightweightHint hint = EditorFragmentComponent.showEditorFragmentHint(myEditor, range, true, true);
+          LightweightHintImpl hint = EditorFragmentComponent.showEditorFragmentHint(myEditor, range, true, true);
           myEditor.putUserData(HINT_IN_EDITOR_KEY, hint);
         }
       });
@@ -564,7 +564,7 @@ public class BraceHighlightingHandler {
     }
     highlighters.clear();
 
-    LightweightHint hint = myEditor.getUserData(HINT_IN_EDITOR_KEY);
+    LightweightHintImpl hint = myEditor.getUserData(HINT_IN_EDITOR_KEY);
     if (hint != null) {
       hint.hide();
       myEditor.putUserData(HINT_IN_EDITOR_KEY, null);

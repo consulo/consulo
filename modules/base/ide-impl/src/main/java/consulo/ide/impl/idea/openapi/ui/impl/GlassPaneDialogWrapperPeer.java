@@ -24,7 +24,7 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneEx;
 import consulo.logging.Logger;
 import consulo.platform.Platform;

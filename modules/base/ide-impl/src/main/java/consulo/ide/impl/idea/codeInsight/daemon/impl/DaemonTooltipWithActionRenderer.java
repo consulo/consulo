@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.BalloonImpl;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.localize.DaemonLocalize;
@@ -35,6 +35,7 @@ import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -207,15 +208,15 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
     }
 
     @Override
-    public LightweightHint createHint(@Nonnull Editor editor,
-                                      @Nonnull Point p,
-                                      boolean alignToRight,
-                                      @Nonnull TooltipGroup group,
-                                      @Nonnull HintHint hintHint,
-                                      boolean newLayout,
-                                      boolean highlightActions,
-                                      boolean limitWidthToScreen,
-                                      @Nullable TooltipReloader tooltipReloader) {
+    public LightweightHintImpl createHint(@Nonnull Editor editor,
+                                          @Nonnull Point p,
+                                          boolean alignToRight,
+                                          @Nonnull TooltipGroup group,
+                                          @Nonnull HintHint hintHint,
+                                          boolean newLayout,
+                                          boolean highlightActions,
+                                          boolean limitWidthToScreen,
+                                          @Nullable TooltipReloader tooltipReloader) {
         return super.createHint(editor, p, alignToRight, group, hintHint, newLayout, highlightActions || !(TooltipActionProvider.isShowActions() && tooltipAction != null && hintHint.isAwtTooltip()),
             limitWidthToScreen, tooltipReloader);
     }
@@ -234,7 +235,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
     @Override
     protected void fillPanel(@Nonnull Editor editor,
                              @Nonnull JPanel grid,
-                             @Nonnull LightweightHint hint,
+                             @Nonnull LightweightHintImpl hint,
                              @Nonnull HintHint hintHint,
                              @Nonnull List<? super AnAction> actions,
                              @Nonnull TooltipReloader tooltipReloader,
@@ -260,7 +261,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         }
     }
 
-    private void addActionsRow(HintHint hintHint, LightweightHint hint, Editor editor, List<? super AnAction> actions, JComponent grid, boolean newLayout, boolean highlightActions) {
+    private void addActionsRow(HintHint hintHint, LightweightHintImpl hint, Editor editor, List<? super AnAction> actions, JComponent grid, boolean newLayout, boolean highlightActions) {
         if (tooltipAction == null || !hintHint.isAwtTooltip()) {
             return;
         }

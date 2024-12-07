@@ -23,7 +23,7 @@ import consulo.document.util.TextRange;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
@@ -46,7 +46,7 @@ abstract public class SelectOccurrencesActionHandler extends EditorActionHandler
     @RequiredUIAccess
     protected static void showHint(final Editor editor) {
         LocalizeValue message = FindLocalize.selectNextOccurenceNotFoundMessage();
-        final LightweightHint hint = new LightweightHint(HintUtil.createInformationLabel(message.get()));
+        final LightweightHintImpl hint = new LightweightHintImpl(HintUtil.createInformationLabel(message.get()));
         HintManagerImpl.getInstanceImpl().showEditorHint(
             hint,
             editor,

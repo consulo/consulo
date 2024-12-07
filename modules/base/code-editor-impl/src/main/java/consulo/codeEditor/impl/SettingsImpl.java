@@ -335,6 +335,7 @@ public class SettingsImpl implements EditorSettings {
     fireEditorRefresh();
   }
 
+  @Override
   public void setSoftWrapAppliancePlace(SoftWrapAppliancePlaces softWrapAppliancePlace) {
     if (softWrapAppliancePlace != mySoftWrapAppliancePlace) {
       mySoftWrapAppliancePlace = softWrapAppliancePlace;

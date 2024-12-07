@@ -6,7 +6,7 @@ import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
+import consulo.language.editor.scope.NonProjectFilesScope;
 import consulo.ide.impl.psi.search.scope.TestsScope;
 import consulo.ide.impl.psi.search.scope.impl.CustomScopesAggregator;
 import consulo.content.scope.NamedScope;

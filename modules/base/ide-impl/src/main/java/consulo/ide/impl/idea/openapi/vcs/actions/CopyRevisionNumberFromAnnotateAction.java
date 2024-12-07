@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.UpToDateLineNumberListener;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.util.ui.TextTransferable;
+import consulo.ui.ex.awt.transferable.TextTransferable;
 
 /**
  * @author Konstantin Bulenkov

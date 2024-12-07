@@ -11,7 +11,7 @@ import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.language.editor.completion.CompletionProcess;
@@ -57,7 +57,7 @@ public class LookupManagerImpl extends LookupManager {
 
     project.getMessageBus().connect().subscribe(EditorHintListener.class, new EditorHintListener() {
       @Override
-      public void hintShown(final Project project, @Nonnull final LightweightHint hint, final int flags) {
+      public void hintShown(final Project project, @Nonnull final LightweightHintImpl hint, final int flags) {
         if (project == myProject) {
           Lookup lookup = getActiveLookup();
           if (lookup != null && BitUtil.isSet(flags, HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE)) {

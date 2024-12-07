@@ -16,14 +16,12 @@
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.KeymapGroupFactory;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ui.image.Image;
-
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author yole
@@ -31,15 +29,20 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public class KeymapGroupFactoryImpl extends KeymapGroupFactory {
-  @Nonnull
-  @Override
-  public KeymapGroup createGroup(final String name) {
-    return new KeymapGroupImpl(name, null, null);
-  }
+    @Nonnull
+    @Override
+    public KeymapGroup createGroup(final String name) {
+        return new KeymapGroupImpl(name, null, null);
+    }
 
-  @Nonnull
-  @Override
-  public KeymapGroup createGroup(final String name, final Image icon) {
-    return new KeymapGroupImpl(name, icon);
-  }
+    @Override
+    public KeymapGroup createGroup(String name, String id, Image icon) {
+        return new KeymapGroupImpl(name, id, icon);
+    }
+
+    @Nonnull
+    @Override
+    public KeymapGroup createGroup(final String name, final Image icon) {
+        return new KeymapGroupImpl(name, icon);
+    }
 }

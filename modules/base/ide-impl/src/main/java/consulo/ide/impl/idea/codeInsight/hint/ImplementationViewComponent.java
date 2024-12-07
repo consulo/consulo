@@ -28,7 +28,7 @@ import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.CompositeShortcutSet;
+import consulo.ui.ex.action.CompositeShortcutSet;
 import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.editor.localize.CodeInsightLocalize;

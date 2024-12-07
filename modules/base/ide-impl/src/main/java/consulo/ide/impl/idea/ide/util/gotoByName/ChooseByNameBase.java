@@ -46,7 +46,7 @@ import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.language.editor.ui.awt.EditorAWTUtil;
+import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.impl.internal.psi.AstLoadingFilter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
@@ -464,7 +464,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                                                           myTextField);
 
     myTextFieldPanel.add(myTextField);
-    Font editorFont = EditorAWTUtil.getEditorFont();
+    Font editorFont = AWTLanguageEditorUtil.getEditorFont();
     myTextField.setFont(editorFont);
     myTextField.putClientProperty("caretWidth", JBUIScale.scale(EditorUtil.getDefaultCaretWidth()));
 

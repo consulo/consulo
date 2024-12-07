@@ -27,7 +27,7 @@ import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.TextRange;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.execution.ui.console.language.LanguageConsoleView;
-import consulo.ide.impl.idea.openapi.actionSystem.CompositeShortcutSet;
+import consulo.ui.ex.action.CompositeShortcutSet;
 import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;

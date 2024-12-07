@@ -39,7 +39,7 @@ import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.ReplacePromptDialog;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
@@ -1140,7 +1140,7 @@ public class FindManagerImpl extends FindManager {
                     : FindLocalize.findSearchAgainFromBottomHotkeyMessage(message, shortcutsText);
             }
             JComponent component = HintUtil.createInformationLabel(message.get());
-            final LightweightHint hint = new LightweightHint(component);
+            final LightweightHintImpl hint = new LightweightHintImpl(component);
             HintManagerImpl.getInstanceImpl().showEditorHint(
                 hint,
                 editor,

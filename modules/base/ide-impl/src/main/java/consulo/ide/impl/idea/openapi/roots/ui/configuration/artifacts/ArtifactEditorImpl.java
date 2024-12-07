@@ -27,7 +27,7 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions.*;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.LibrarySourceItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;

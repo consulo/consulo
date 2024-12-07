@@ -16,7 +16,7 @@
 package consulo.ui.ex.awt.dnd;
 
 import consulo.platform.Platform;
-import consulo.ui.ex.awt.TransferableList;
+import consulo.ui.ex.awt.transferable.TransferableList;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;

@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.codeInsight.folding.impl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModelEx;
+import consulo.codeEditor.internal.FoldingUtil;
 import consulo.document.Document;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.internal.EditorFoldingInfoImpl;

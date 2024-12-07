@@ -31,15 +31,15 @@ import consulo.document.FileDocumentManager;
 import consulo.ide.impl.diff.DiffDrawUtil;
 import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.impl.internal.hint.HintListener;
+import consulo.ui.ex.awt.hint.HintListener;
 import consulo.language.plain.PlainTextFileType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.awt.HintHint;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
@@ -130,7 +130,7 @@ public abstract class LineStatusMarkerPopup {
 
     PopupPanel popupPanel = new PopupPanel(myEditor, toolbar, editorComponent);
 
-    LightweightHint hint = new LightweightHint(popupPanel);
+    LightweightHintImpl hint = new LightweightHintImpl(popupPanel);
     HintListener closeListener = new HintListener() {
       public void hintHidden(final EventObject event) {
         Disposer.dispose(disposable);
@@ -139,7 +139,7 @@ public abstract class LineStatusMarkerPopup {
     hint.addHintListener(closeListener);
 
     int line = myEditor.getCaretModel().getLogicalPosition().line;
-    Point point = HintManagerImpl.getHintPosition(hint, myEditor, new LogicalPosition(line, 0), HintManager.UNDER);
+    Point point = HintManagerImpl.getInstanceImpl().getHintPosition(hint, myEditor, new LogicalPosition(line, 0), HintManager.UNDER);
     if (mousePosition != null) { // show right after the nearest line
       int lineHeight = myEditor.getLineHeight();
       int delta = (point.y - mousePosition.y) % lineHeight;

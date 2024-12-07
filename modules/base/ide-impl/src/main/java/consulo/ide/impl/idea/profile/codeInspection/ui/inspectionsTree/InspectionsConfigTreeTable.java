@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.profile.codeInspection.ui.table.ScopesAndSeverities
 import consulo.ide.impl.idea.profile.codeInspection.ui.table.ThreeStateCheckBoxRenderer;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.TextTransferable;
+import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.ToolsImpl;

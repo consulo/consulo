@@ -19,7 +19,7 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.util.concurrent.ActionCallback;
-import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
+import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;

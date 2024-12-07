@@ -6,7 +6,7 @@ import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUIManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.ide.ui.popup.HintUpdateSupply;
@@ -14,6 +14,7 @@ import consulo.platform.Platform;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -29,7 +30,7 @@ import java.util.Map;
 /**
  * @author Konstantin Bulenkov
  */
-public class NavBarPopup extends LightweightHint implements Disposable {
+public class NavBarPopup extends LightweightHintImpl implements Disposable {
   private static final String JBLIST_KEY = "OriginalList";
   private static final String DISPOSED_OBJECTS = "DISPOSED_OBJECTS";
 

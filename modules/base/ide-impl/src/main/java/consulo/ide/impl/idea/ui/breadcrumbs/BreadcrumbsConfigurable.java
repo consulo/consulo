@@ -9,7 +9,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;
-import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
+import consulo.ui.ex.awt.VerticalLayout;
 import consulo.language.Language;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;

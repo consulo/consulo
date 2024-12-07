@@ -87,6 +87,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     private int myLayoutPolicy;
     private int myOrientation;
     private final ActionGroup myActionGroup;
+    private Boolean myContentAreaFilled;
     @Nonnull
     private final String myPlace;
     List<? extends AnAction> myVisibleActions;
@@ -322,6 +323,10 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
                 myPresentationFactory.getPresentation(mySecondaryActions),
                 myPlace,
                 getMinimumButtonSize());
+
+            if (myContentAreaFilled != null) {
+                mySecondaryActionsButton.setContentAreaFilled(myContentAreaFilled);
+            }
             mySecondaryActionsButton.setNoIconsInPopup(true);
             add(mySecondaryActionsButton);
         }
@@ -397,6 +402,10 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
                     return getToolbarDataContext();
                 }
             };
+        }
+
+        if (myContentAreaFilled != null) {
+            actionButton.setContentAreaFilled(myContentAreaFilled);
         }
 
         tweakActionComponentUI(actionButton.getComponent());
@@ -1428,6 +1437,17 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         for (Component component : getComponents()) {
             if (component instanceof ActionButton actionButton) {
                 buttonConsumer.accept(actionButton);
+            }
+        }
+    }
+
+    @Override
+    public void setContentAreaFilled(boolean contentAreaFilled) {
+        myContentAreaFilled = contentAreaFilled;
+
+        for (Component component : getComponents()) {
+            if (component instanceof ActionButton actionButton) {
+                actionButton.setContentAreaFilled(myContentAreaFilled);
             }
         }
     }

@@ -28,9 +28,9 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -39,96 +39,101 @@ import java.util.Objects;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface CodeEditorInternalHelper {
-  public static class CaretDataContext extends DataContextWrapper {
-    protected final Caret myCaret;
+    public static class CaretDataContext extends DataContextWrapper {
+        protected final Caret myCaret;
 
-    public CaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
-      super(delegate);
-      myCaret = caret;
+        public CaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
+            super(delegate);
+            myCaret = caret;
+        }
+
+        @Nullable
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> T getData(@Nonnull Key<T> dataId) {
+            if (Caret.KEY == dataId) {
+                return (T) myCaret;
+            }
+            return super.getData(dataId);
+        }
+    }
+
+    public static CodeEditorInternalHelper getInstance() {
+        return Application.get().getInstance(CodeEditorInternalHelper.class);
+    }
+
+    @Nonnull
+    default CaretDataContext createCaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
+        return new CaretDataContext(delegate, caret);
+    }
+
+    default boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
+        return false;
     }
 
     @Nullable
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getData(@Nonnull Key<T> dataId) {
-      if (Caret.KEY == dataId) return (T)myCaret;
-      return super.getData(dataId);
+    default String getProperIndent(Project project, Document document, int offset) {
+        return null;
     }
-  }
 
-  public static CodeEditorInternalHelper getInstance() {
-    return Application.get().getInstance(CodeEditorInternalHelper.class);
-  }
+    default boolean isLexemeBoundary(@Nullable Object leftTokenType, @Nullable Object rightTokenType) {
+        return !Objects.equals(leftTokenType, rightTokenType);
+    }
 
-  @Nonnull
-  default CaretDataContext createCaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
-    return new CaretDataContext(delegate, caret);
-  }
+    default void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull final EditorHighlighter highlighter) {
+    }
 
-  default boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
-    return false;
-  }
+    default void updateNotifications(Project project, VirtualFile file) {
+    }
 
-  @Nullable
-  default String getProperIndent(Project project, Document document, int offset) {
-    return null;
-  }
+    default boolean shouldUseSmartTabs(Project project, @Nonnull Editor editor) {
+        return false;
+    }
 
-  default boolean isLexemeBoundary(@Nullable Object leftTokenType, @Nullable Object rightTokenType) {
-    return !Objects.equals(leftTokenType, rightTokenType);
-  }
+    default int calcColumnNumber(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int offset) {
+        return calcColumnNumber(editor, text, start, offset, EditorUtil.getTabSize(editor));
+    }
 
-  default void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull final EditorHighlighter highlighter) {
-  }
+    default int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, final int start, final int offset, final int tabSize) {
+        return 0;
+    }
 
-  default void updateNotifications(Project project, VirtualFile file) {
-  }
+    default int getLastVisualLineColumnNumber(@Nonnull Editor editor, final int line) {
+        return line;
+    }
 
-  default boolean shouldUseSmartTabs(Project project, @Nonnull Editor editor) {
-    return false;
-  }
+    default int getSpaceWidth(@Nonnull Editor editor) {
+        return 1;
+    }
 
-  default int calcColumnNumber(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int offset) {
-    return calcColumnNumber(editor, text, start, offset, EditorUtil.getTabSize(editor));
-  }
+    @Nullable
+    MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create);
 
-  default int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, final int start, final int offset, final int tabSize) {
-    return 0;
-  }
+    default boolean isShowMethodSeparators() {
+        return false;
+    }
 
-  default int getLastVisualLineColumnNumber(@Nonnull Editor editor, final int line) {
-    return line;
-  }
+    default void setShowMethodSeparators(boolean value) {
+    }
 
-  default int getSpaceWidth(@Nonnull Editor editor) {
-    return 1;
-  }
+    @RequiredUIAccess
+    default void showParametersHitOptions() {
+    }
 
-  @Nullable
-  MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create);
+    default boolean hasAnyInlayExtensions() {
+        return false;
+    }
 
-  default boolean isShowMethodSeparators() {
-    return false;
-  }
+    @Nonnull
+    default LineWrapPositionStrategy getLineWrapPositionStrategy(@Nonnull Editor editor) {
+        return new DefaultLineWrapPositionStrategy();
+    }
 
-  default void setShowMethodSeparators(boolean value) {
-  }
+    @Nonnull
+    default EditorHighlighter createEmptyHighlighter(Project project, Document document) {
+        throw new UnsupportedOperationException();
+    }
 
-  @RequiredUIAccess
-  default void showParametersHitOptions() {
-  }
-
-  default boolean hasAnyInlayExtensions() {
-    return false;
-  }
-
-  @Nonnull
-  default LineWrapPositionStrategy getLineWrapPositionStrategy(@Nonnull Editor editor) {
-    return new DefaultLineWrapPositionStrategy();
-  }
-
-  @Nonnull
-  default EditorHighlighter createEmptyHighlighter(Project project, Document document) {
-    throw new UnsupportedOperationException();
-  }
+    default void updateFoldRegions(@Nonnull Project project, @Nonnull Editor editor) {
+    }
 }

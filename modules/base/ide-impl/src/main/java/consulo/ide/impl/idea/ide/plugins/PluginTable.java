@@ -19,7 +19,7 @@ import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ide.impl.idea.util.ui.TextTransferable;
+import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;

@@ -379,13 +379,10 @@ public class TabLabel extends JPanel {
 
     myActionPanel = new ActionPanel(myTabs, myInfo);
 
-    toggleShowActions(false);
-
     add(myActionPanel, BorderLayout.EAST);
 
     myTabs.revalidateAndRepaint(false);
   }
-
 
   private void removeOldActionPanel() {
     if (myActionPanel != null) {
@@ -490,20 +487,6 @@ public class TabLabel extends JPanel {
 
   private Image getLayeredIcon(int layer) {
     return myIconInfos[layer].myImage;
-  }
-
-  public void setTabActionsAutoHide(final boolean autoHide) {
-    if (myActionPanel == null || myActionPanel.isAutoHide() == autoHide) {
-      return;
-    }
-
-    myActionPanel.setAutoHide(autoHide);
-  }
-
-  public void toggleShowActions(boolean show) {
-    if (myActionPanel != null) {
-      myActionPanel.toggleShowActions(show);
-    }
   }
 
   public void setActionPanelVisible(boolean visible) {

@@ -13,6 +13,7 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.impl.*;
+import consulo.codeEditor.internal.FoldingUtil;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EditorFontType;
@@ -28,8 +29,8 @@ import consulo.document.Document;
 import consulo.document.MarkupIterator;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.Segment;
+import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.ide.impl.idea.codeInsight.daemon.NonHideableIconGutterMark;
-import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUtil;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
@@ -58,6 +59,7 @@ import consulo.ui.ex.awt.dnd.DnDImage;
 import consulo.ui.ex.awt.dnd.DnDNativeTarget;
 import consulo.ui.ex.awt.dnd.DnDSupport;
 import consulo.ui.ex.awt.event.HoverStateListener;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.paint.LinePainter2D.StrokeType;
 import consulo.ui.ex.awt.paint.PaintUtil;
@@ -725,7 +727,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
 
                         consulo.ui.image.Image iconOnTheLine = null;
                         consulo.ui.image.Image hoverIcon = null;
-                        if (ExperimentalUI.isNewUI() /*&& EditorUtil.isRealFileEditor(getEditor())*/ && EditorUtil.isBreakPointsOnLineNumbers()) {
+                        if (BreakpointEditorUtil.isBreakPointsOnLineNumbers()) {
                             VisualPosition visualPosition = myEditor.logicalToVisualPosition(new LogicalPosition(logicalLine, 0));
                             Optional<GutterMark> breakpoint = getGutterRenderers(visualPosition.line).stream()
                                 .filter(r -> r instanceof GutterIconRenderer &&

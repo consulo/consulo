@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.folding.impl.actions;
 
-import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUtil;
+import consulo.codeEditor.internal.FoldingUtil;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

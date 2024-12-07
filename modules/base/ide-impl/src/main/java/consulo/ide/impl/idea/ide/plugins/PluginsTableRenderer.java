@@ -21,7 +21,7 @@ import consulo.container.impl.PluginValidator;
 import consulo.container.plugin.*;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
+import consulo.ui.ex.awt.VerticalLayout;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;
 import consulo.ide.impl.plugins.PluginIconHolder;
 import consulo.localize.LocalizeValue;

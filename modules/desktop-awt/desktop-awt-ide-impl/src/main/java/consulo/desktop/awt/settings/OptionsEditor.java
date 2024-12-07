@@ -38,7 +38,7 @@ import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
 import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
-import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
+import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.roots.ui.configuration.session.internal.ConfigurableSessionImpl;
 import consulo.ide.setting.ProjectStructureSelector;

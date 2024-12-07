@@ -17,9 +17,9 @@ package consulo.util.dataholder;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.internal.KeyRegistry;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -29,86 +29,98 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 public class Key<T> {
-  private static final KeyRegistry ourRegistry = KeyRegistry.ourInstance;
+    private static final KeyRegistry ourRegistry = KeyRegistry.ourInstance;
 
-  private final String myName; // for debug purposes only
-  private final int myIndex;
+    private final String myName; // for debug purposes only
+    private final int myIndex;
 
-  @Deprecated
-  @DeprecationInfo("Use #create(name)")
-  public Key(@Nonnull String name) {
-    myName = name;
-    myIndex = ourRegistry.register(this);
-  }
-
-  public boolean is(Key<?> key) {
-    return this == key;
-  }
-
-  // made final because many classes depend on one-to-one key index <-> key instance relationship. See e.g. UserDataHolderBase
-  @Override
-  public final int hashCode() {
-    return myIndex;
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    return obj == this;
-  }
-
-  @Override
-  public String toString() {
-    return myName;
-  }
-
-  @Nonnull
-  @SuppressWarnings("deprecation")
-  public static <T> Key<T> create(@Nonnull Class<? extends T> clazz) {
-    return new Key<>(clazz.getName());
-  }
-
-  @Nonnull
-  @SuppressWarnings("deprecation")
-  public static <T> Key<T> create(@Nonnull String name) {
-    return new Key<>(name);
-  }
-
-  public T get(@Nullable UserDataHolder holder) {
-    return holder == null ? null : holder.getUserData(this);
-  }
-
-  @Nullable
-  @SuppressWarnings("unchecked")
-  public T get(@Nullable Map<Key, ?> holder) {
-    return holder == null ? null : (T)holder.get(this);
-  }
-
-  public T get(@Nullable UserDataHolder holder, T defaultValue) {
-    final T t = get(holder);
-    return t == null ? defaultValue : t;
-  }
-
-  /**
-   * Returns {@code true} if and only if the {@code holder} has
-   * not null value by the key.
-   *
-   * @param holder user data holder object
-   * @return {@code true} if holder.getUserData(this) != null
-   * {@code false} otherwise.
-   */
-  public boolean isIn(@Nullable UserDataHolder holder) {
-    return get(holder) != null;
-  }
-
-  public void set(@Nullable UserDataHolder holder, @Nullable T value) {
-    if (holder != null) {
-      holder.putUserData(this, value);
+    @Deprecated
+    @DeprecationInfo("Use #create(name)")
+    public Key(@Nonnull String name) {
+        myName = name;
+        myIndex = ourRegistry.register(this);
     }
-  }
 
-  public void set(@Nullable Map<Key, Object> holder, T value) {
-    if (holder != null) {
-      holder.put(this, value);
+    public boolean is(Key<?> key) {
+        return this == key;
     }
-  }
+
+    // made final because many classes depend on one-to-one key index <-> key instance relationship. See e.g. UserDataHolderBase
+    @Override
+    public final int hashCode() {
+        return myIndex;
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
+        return obj == this;
+    }
+
+    @Override
+    public String toString() {
+        return myName;
+    }
+
+    @Nonnull
+    @SuppressWarnings("deprecation")
+    public static <T> Key<T> of(@Nonnull Class<? extends T> clazz) {
+        return new Key<>(clazz.getName());
+    }
+
+    @Nonnull
+    @SuppressWarnings("deprecation")
+    public static <T> Key<T> create(@Nonnull Class<? extends T> clazz) {
+        return of(clazz);
+    }
+
+    @Nonnull
+    @SuppressWarnings("deprecation")
+    public static <T> Key<T> of(@Nonnull String name) {
+        return new Key<>(name);
+    }
+
+    @Nonnull
+    @SuppressWarnings("deprecation")
+    public static <T> Key<T> create(@Nonnull String name) {
+        return of(name);
+    }
+
+    public T get(@Nullable UserDataHolder holder) {
+        return holder == null ? null : holder.getUserData(this);
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public T get(@Nullable Map<Key, ?> holder) {
+        return holder == null ? null : (T) holder.get(this);
+    }
+
+    public T get(@Nullable UserDataHolder holder, T defaultValue) {
+        final T t = get(holder);
+        return t == null ? defaultValue : t;
+    }
+
+    /**
+     * Returns {@code true} if and only if the {@code holder} has
+     * not null value by the key.
+     *
+     * @param holder user data holder object
+     * @return {@code true} if holder.getUserData(this) != null
+     * {@code false} otherwise.
+     */
+    public boolean isIn(@Nullable UserDataHolder holder) {
+        return get(holder) != null;
+    }
+
+    public void set(@Nullable UserDataHolder holder, @Nullable T value) {
+        if (holder != null) {
+            holder.putUserData(this, value);
+        }
+    }
+
+    public void set(@Nullable Map<Key, Object> holder, T value) {
+        if (holder != null) {
+            holder.put(this, value);
+        }
+    }
 }

@@ -16,8 +16,9 @@
 package consulo.language.editor.impl.internal.hint;
 
 import consulo.codeEditor.Editor;
-import consulo.ui.ex.awt.HintHint;
+import consulo.ui.ex.awt.hint.HintHint;
 
+import consulo.ui.ex.awt.hint.Hint;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.awt.*;

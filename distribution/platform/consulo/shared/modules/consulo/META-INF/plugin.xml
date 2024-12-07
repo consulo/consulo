@@ -1244,8 +1244,8 @@
         <group id="SendToFavoritesGroup" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.SendToFavoritesGroup" popup="true"/>
 
         <action id="RunConfiguration" class="consulo.ide.impl.idea.execution.actions.RunConfigurationsComboBoxAction"/>
-        <action id="ChooseRunConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopupAction"  />
-        <action id="ChooseDebugConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseDebugConfigurationPopupAction" />
+        <action id="ChooseRunConfiguration" class="consulo.execution.impl.internal.action.ChooseRunConfigurationPopupAction"  />
+        <action id="ChooseDebugConfiguration" class="consulo.execution.debug.impl.internal.action.ChooseDebugConfigurationPopupAction" />
 
         <group id="RunContextGroup" popup="false">
             <!-- A dynamic group filled with executor actions -->
@@ -1920,35 +1920,35 @@
         <action id="TypeHierarchy.Subtypes" class="consulo.ide.impl.idea.ide.hierarchy.ViewSubtypesHierarchyAction"/>
         <action id="TypeHierarchy.Supertypes" class="consulo.ide.impl.idea.ide.hierarchy.ViewSupertypesHierarchyAction"/>
 
-        <action id="EditBreakpoint" class="consulo.ide.impl.idea.xdebugger.impl.actions.EditBreakpointAction"/>
+        <action id="EditBreakpoint" class="consulo.execution.debug.impl.internal.action.EditBreakpointAction"/>
         <group id="DebugMainMenu">
             <separator/>
-            <action id="StepOver" class="consulo.ide.impl.idea.xdebugger.impl.actions.StepOverAction"/>
-            <action id="ForceStepOver" class="consulo.ide.impl.idea.xdebugger.impl.actions.ForceStepOverAction"/>
-            <action id="StepInto" class="consulo.ide.impl.idea.xdebugger.impl.actions.StepIntoAction"/>
-            <action id="ForceStepInto" class="consulo.ide.impl.idea.xdebugger.impl.actions.ForceStepIntoAction"/>
-            <action id="SmartStepInto" class="consulo.ide.impl.idea.xdebugger.impl.actions.SmartStepIntoAction"/>
-            <action id="StepOut" class="consulo.ide.impl.idea.xdebugger.impl.actions.StepOutAction"/>
-            <action id="RunToCursor" class="consulo.ide.impl.idea.xdebugger.impl.actions.RunToCursorAction"/>
-            <action id="ForceRunToCursor" class="consulo.ide.impl.idea.xdebugger.impl.actions.ForceRunToCursorAction"/>
-            <action id="Pause" class="consulo.ide.impl.idea.xdebugger.impl.actions.PauseAction"/>
-            <action id="Resume" class="consulo.ide.impl.idea.xdebugger.impl.actions.ResumeAction"/>
+            <action id="StepOver" class="consulo.execution.debug.impl.internal.action.StepOverAction"/>
+            <action id="ForceStepOver" class="consulo.execution.debug.impl.internal.action.ForceStepOverAction"/>
+            <action id="StepInto" class="consulo.execution.debug.impl.internal.action.StepIntoAction"/>
+            <action id="ForceStepInto" class="consulo.execution.debug.impl.internal.action.ForceStepIntoAction"/>
+            <action id="SmartStepInto" class="consulo.execution.debug.impl.internal.action.SmartStepIntoAction"/>
+            <action id="StepOut" class="consulo.execution.debug.impl.internal.action.StepOutAction"/>
+            <action id="RunToCursor" class="consulo.execution.debug.impl.internal.action.RunToCursorAction"/>
+            <action id="ForceRunToCursor" class="consulo.execution.debug.impl.internal.action.ForceRunToCursorAction"/>
+            <action id="Pause" class="consulo.execution.debug.impl.internal.action.PauseAction"/>
+            <action id="Resume" class="consulo.execution.debug.impl.internal.action.ResumeAction"/>
             <separator/>
-            <action id="EvaluateExpression" class="consulo.ide.impl.idea.xdebugger.impl.actions.EvaluateAction"/>
-            <action id="QuickEvaluateExpression" class="consulo.ide.impl.idea.xdebugger.impl.actions.QuickEvaluateAction"/>
-            <action id="ShowExecutionPoint" class="consulo.ide.impl.idea.xdebugger.impl.actions.ShowExecutionPointAction"/>
+            <action id="EvaluateExpression" class="consulo.execution.debug.impl.internal.action.EvaluateAction"/>
+            <action id="QuickEvaluateExpression" class="consulo.execution.debug.impl.internal.action.QuickEvaluateAction"/>
+            <action id="ShowExecutionPoint" class="consulo.execution.debug.impl.internal.action.ShowExecutionPointAction"/>
             <separator/>
-            <action id="ToggleLineBreakpoint" class="consulo.ide.impl.idea.xdebugger.impl.actions.ToggleLineBreakpointAction"/>
+            <action id="ToggleLineBreakpoint" class="consulo.execution.debug.impl.internal.action.ToggleLineBreakpointAction"/>
             <action id="ToggleTemporaryLineBreakpoint"
-                    class="consulo.ide.impl.idea.xdebugger.impl.actions.ToggleTemporaryLineBreakpointAction"/>
-            <action id="ViewBreakpoints" class="consulo.ide.impl.idea.xdebugger.impl.actions.ViewBreakpointsAction"/>
+                    class="consulo.execution.debug.impl.internal.action.ToggleTemporaryLineBreakpointAction"/>
+            <action id="ViewBreakpoints" class="consulo.execution.debug.impl.internal.action.ViewBreakpointsAction"/>
             <separator/>
 
             <add-to-group group-id="RunMenu" anchor="last"/>
         </group>
 
-        <action id="Debugger.AddToWatch" class="consulo.ide.impl.idea.xdebugger.impl.actions.AddToWatchesAction"/>
-        <action id="Debugger.EvaluateInConsole" class="consulo.ide.impl.idea.xdebugger.impl.actions.EvaluateInConsoleAction"/>
+        <action id="Debugger.AddToWatch" class="consulo.execution.debug.impl.internal.action.AddToWatchesAction"/>
+        <action id="Debugger.EvaluateInConsole" class="consulo.execution.debug.impl.internal.action.EvaluateInConsoleAction"/>
 
         <group id="EditorPopupMenuDebug">
             <separator/>
@@ -1964,34 +1964,34 @@
 
 
         <group id="XDebugger.Actions">
-            <action id="XDebugger.SetValue" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XSetValueAction"/>
-            <action id="XDebugger.CopyValue" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XCopyValueAction"/>
+            <action id="XDebugger.SetValue" class="consulo.execution.debug.impl.internal.ui.tree.action.XSetValueAction"/>
+            <action id="XDebugger.CopyValue" class="consulo.execution.debug.impl.internal.ui.tree.action.XCopyValueAction"/>
             <action id="XDebugger.CompareValueWithClipboard"
-                    class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XCompareWithClipboardAction"/>
-            <action id="XDebugger.CopyName" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XCopyNameAction"/>
-            <action id="XDebugger.Inspect" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XInspectAction"/>
-            <action id="XDebugger.JumpToSource" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XJumpToSourceAction"/>
-            <action id="XDebugger.JumpToTypeSource" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XJumpToTypeSourceAction"/>
+                    class="consulo.execution.debug.impl.internal.ui.tree.action.XCompareWithClipboardAction"/>
+            <action id="XDebugger.CopyName" class="consulo.execution.debug.impl.internal.ui.tree.action.XCopyNameAction"/>
+            <action id="XDebugger.Inspect" class="consulo.execution.debug.impl.internal.ui.tree.action.XInspectAction"/>
+            <action id="XDebugger.JumpToSource" class="consulo.execution.debug.impl.internal.ui.tree.action.XJumpToSourceAction"/>
+            <action id="XDebugger.JumpToTypeSource" class="consulo.execution.debug.impl.internal.ui.tree.action.XJumpToTypeSourceAction"/>
 
-            <action id="Debugger.Tree.AddToWatches" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XAddToWatchesTreeAction"/>
+            <action id="Debugger.Tree.AddToWatches" class="consulo.execution.debug.impl.internal.ui.tree.action.XAddToWatchesTreeAction"/>
             <action id="Debugger.Tree.EvaluateInConsole"
-                    class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.EvaluateInConsoleFromTreeAction"/>
+                    class="consulo.execution.debug.impl.internal.ui.tree.action.EvaluateInConsoleFromTreeAction"/>
 
-            <action id="XDebugger.NewWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XNewWatchAction"/>
-            <action id="XDebugger.EditWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XEditWatchAction"/>
-            <action id="XDebugger.CopyWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XCopyWatchAction"
+            <action id="XDebugger.NewWatch" class="consulo.execution.debug.impl.internal.frame.action.XNewWatchAction"/>
+            <action id="XDebugger.EditWatch" class="consulo.execution.debug.impl.internal.frame.action.XEditWatchAction"/>
+            <action id="XDebugger.CopyWatch" class="consulo.execution.debug.impl.internal.frame.action.XCopyWatchAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.copy" text="Copy Watch"/>
-            <action id="XDebugger.RemoveWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XRemoveWatchAction"
+            <action id="XDebugger.RemoveWatch" class="consulo.execution.debug.impl.internal.frame.action.XRemoveWatchAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
             <action id="XDebugger.SwitchWatchesInVariables"
-                    class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XSwitchWatchesInVariables"/>
-            <action id="XDebugger.RemoveAllWatches" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XRemoveAllWatchesAction"/>
-            <action id="XDebugger.MuteBreakpoints" class="consulo.ide.impl.idea.xdebugger.impl.actions.MuteBreakpointAction"/>
-            <action id="XDebugger.ToggleSortValues" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.SortValuesToggleAction"
+                    class="consulo.execution.debug.impl.internal.frame.action.XSwitchWatchesInVariables"/>
+            <action id="XDebugger.RemoveAllWatches" class="consulo.execution.debug.impl.internal.frame.action.XRemoveAllWatchesAction"/>
+            <action id="XDebugger.MuteBreakpoints" class="consulo.execution.debug.impl.internal.action.MuteBreakpointAction"/>
+            <action id="XDebugger.ToggleSortValues" class="consulo.execution.debug.impl.internal.ui.tree.action.SortValuesToggleAction"
                     icon="consulo.platform.base.PlatformIconGroup@objectbrowser.sorted"/>
-            <action id="Debugger.MarkObject" class="consulo.ide.impl.idea.xdebugger.impl.actions.MarkObjectAction"/>
-            <action id="Debugger.FocusOnBreakpoint" class="consulo.ide.impl.idea.xdebugger.impl.actions.FocusOnBreakpointAction"/>
-            <action id="Debugger.ShowReferring" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.ShowReferringObjectsAction"/>
+            <action id="Debugger.MarkObject" class="consulo.execution.debug.impl.internal.action.MarkObjectAction"/>
+            <action id="Debugger.FocusOnBreakpoint" class="consulo.execution.debug.impl.internal.action.FocusOnBreakpointAction"/>
+            <action id="Debugger.ShowReferring" class="consulo.execution.debug.impl.internal.ui.tree.action.ShowReferringObjectsAction"/>
         </group>
 
         <group id="XDebugger.ToolWindow.TopToolbar">
@@ -2042,7 +2042,7 @@
         </group>
 
         <group id="XDebugger.Frames.TopToolbar">
-            <action id="Debugger.ShowLibraryFrames" class="consulo.ide.impl.idea.xdebugger.impl.actions.ShowLibraryFramesAction"/>
+            <action id="Debugger.ShowLibraryFrames" class="consulo.execution.debug.impl.internal.action.ShowLibraryFramesAction"/>
         </group>
 
         <group id="XDebugger.Variables.Tree.Popup">
@@ -2074,13 +2074,13 @@
         </group>
 
         <group id="XDebugger.Settings" icon="consulo.platform.base.PlatformIconGroup@general.gearplain" popup="true">
-            <action id="XDebugger.Inline" class="consulo.ide.impl.idea.xdebugger.impl.actions.UseInlineDebuggerAction"/>
+            <action id="XDebugger.Inline" class="consulo.execution.debug.impl.internal.action.UseInlineDebuggerAction"/>
             <separator/>
             <reference ref="XDebugger.ToggleSortValues"/>
-            <!--<action id="XDebugger.AutoTooltip" class="consulo.ide.impl.idea.xdebugger.impl.actions.ValueTooltipAutoShowAction"/>-->
+            <!--<action id="XDebugger.AutoTooltip" class="consulo.execution.debug.impl.internal.action.ValueTooltipAutoShowAction"/>-->
             <!--<action id="XDebugger.AutoTooltipOnSelection" class="consulo.ide.impl.idea.xdebugger.impl.actions.ValueTooltipAutoShowOnSelectionAction"/>-->
             <separator/>
-            <action id="XDebugger.UnmuteOnStop" class="consulo.ide.impl.idea.xdebugger.impl.actions.UnmuteOnStopAction"/>
+            <action id="XDebugger.UnmuteOnStop" class="consulo.execution.debug.impl.internal.action.UnmuteOnStopAction"/>
         </group>
 
         <group id="RunnerLayoutActions">
@@ -2915,7 +2915,7 @@
         </group>
 
         <group id="XDebugger.AttachGroup">
-            <action id="XDebugger.AttachToProcess" class="consulo.ide.impl.idea.xdebugger.impl.actions.AttachToProcessAction"/>
+            <action id="XDebugger.AttachToProcess" class="consulo.execution.debug.impl.internal.action.AttachToProcessAction"/>
             <add-to-group group-id="RunMenu" anchor="before" relative-to-action="editRunConfigurations"/>
         </group>
 

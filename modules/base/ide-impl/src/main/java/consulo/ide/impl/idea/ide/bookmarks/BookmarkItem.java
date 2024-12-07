@@ -17,14 +17,15 @@ package consulo.ide.impl.idea.ide.bookmarks;
 
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.language.editor.FileColorManager;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ide.impl.idea.ui.popup.util.DetailView;
-import consulo.ide.impl.idea.ui.popup.util.ItemWrapper;
+import consulo.codeEditor.util.popup.DetailView;
+import consulo.codeEditor.util.popup.ItemWrapper;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
@@ -58,11 +59,11 @@ public class BookmarkItem extends ItemWrapper {
   }
 
   @Override
-  public void setupRenderer(ColoredListCellRenderer renderer, Project project, boolean selected) {
+  public void setupRenderer(ColoredTextContainer renderer, Project project, boolean selected) {
     setupRenderer(renderer, project, myBookmark, selected);
   }
 
-  public static void setupRenderer(SimpleColoredComponent renderer, Project project, Bookmark bookmark, boolean selected) {
+  public static void setupRenderer(ColoredTextContainer renderer, Project project, Bookmark bookmark, boolean selected) {
     VirtualFile file = bookmark.getFile();
     if (!file.isValid()) {
       return;
@@ -97,11 +98,6 @@ public class BookmarkItem extends ItemWrapper {
         }
       }
     }
-  }
-
-  @Override
-  public void setupRenderer(ColoredTreeCellRenderer renderer, Project project, boolean selected) {
-    setupRenderer(renderer, project, myBookmark, selected);
   }
 
   @Override

@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
  */
 public class DesktopVerticalLayoutImpl extends DesktopLayoutBase implements VerticalLayout {
   public DesktopVerticalLayoutImpl(int vGap) {
-    initDefaultPanel(new consulo.ide.impl.idea.ui.components.panels.VerticalLayout(JBUI.scale(vGap)));
+    initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(JBUI.scale(vGap)));
   }
 
   @RequiredUIAccess

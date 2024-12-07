@@ -452,7 +452,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
   }
 
   @Override
-  protected void onChildSelectedFor(Object value) {
+  public void onChildSelectedFor(Object value) {
     TreePath path = (TreePath)value;
     if (myWizardTree.getSelectionPath() != path) {
       myWizardTree.setSelectionPath(path);

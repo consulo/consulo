@@ -45,4 +45,6 @@ public interface ActionButton extends AnActionHolder, ActionButtonComponent {
     void setOpaque(boolean value);
 
     void updateIcon();
+
+    void setContentAreaFilled(boolean filled);
 }

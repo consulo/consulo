@@ -26,17 +26,18 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsConfigurable;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 import consulo.language.editor.action.WordBoundaryFilter;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
+import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -44,12 +45,12 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**
@@ -59,137 +60,147 @@ import java.awt.*;
 @Singleton
 @ServiceImpl
 public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelper {
-  private static class FileEditorAffectCaretContext extends CaretDataContext {
+    private static class FileEditorAffectCaretContext extends CaretDataContext {
 
-    public FileEditorAffectCaretContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
-      super(delegate, caret);
+        public FileEditorAffectCaretContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
+            super(delegate, caret);
+        }
+
+        @Nullable
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> T getData(@Nonnull Key<T> dataId) {
+            Project project = super.getData(Project.KEY);
+            if (project != null) {
+                FileEditorManager fm = FileEditorManager.getInstance(project);
+                if (fm != null) {
+                    Object data = fm.getData(dataId, myCaret.getEditor(), myCaret);
+                    if (data != null) {
+                        return (T) data;
+                    }
+                }
+            }
+            return super.getData(dataId);
+        }
+    }
+
+    private final Provider<DaemonCodeAnalyzerSettings> myDaemonCodeAnalyzerSettings;
+
+    @Inject
+    public LanguageCodeEditorInternalHelper(Provider<DaemonCodeAnalyzerSettings> daemonCodeAnalyzerSettings) {
+        myDaemonCodeAnalyzerSettings = daemonCodeAnalyzerSettings;
     }
 
     @Nullable
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getData(@Nonnull Key<T> dataId) {
-      Project project = super.getData(Project.KEY);
-      if (project != null) {
-        FileEditorManager fm = FileEditorManager.getInstance(project);
-        if (fm != null) {
-          Object data = fm.getData(dataId, myCaret.getEditor(), myCaret);
-          if (data != null) return (T)data;
+    public String getProperIndent(Project project, Document document, int offset) {
+        PsiDocumentManager.getInstance(project).commitDocument(document); // Sync document and PSI before formatting.
+        return offset >= document.getTextLength() ? "" : CodeStyleFacade.getInstance(project).getLineIndent(document, offset);
+    }
+
+    @Nonnull
+    @Override
+    public CaretDataContext createCaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
+        return new FileEditorAffectCaretContext(delegate, caret);
+    }
+
+    @Override
+    public boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
+        Editor editor = hostCaret.getEditor();
+        Project project = editor.getProject();
+        if (project != null && InjectedLanguageManager.getInstance(project).mightHaveInjectedFragmentAtOffset(editor.getDocument(), hostCaret.getOffset())) {
+            PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
+            return true;
         }
-      }
-      return super.getData(dataId);
+        return false;
     }
-  }
 
-  private final Provider<DaemonCodeAnalyzerSettings> myDaemonCodeAnalyzerSettings;
-
-  @Inject
-  public LanguageCodeEditorInternalHelper(Provider<DaemonCodeAnalyzerSettings> daemonCodeAnalyzerSettings) {
-    myDaemonCodeAnalyzerSettings = daemonCodeAnalyzerSettings;
-  }
-
-  @Nullable
-  @Override
-  public String getProperIndent(Project project, Document document, int offset) {
-    PsiDocumentManager.getInstance(project).commitDocument(document); // Sync document and PSI before formatting.
-    return offset >= document.getTextLength() ? "" : CodeStyleFacade.getInstance(project).getLineIndent(document, offset);
-  }
-
-  @Nonnull
-  @Override
-  public CaretDataContext createCaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
-    return new FileEditorAffectCaretContext(delegate, caret);
-  }
-
-  @Override
-  public boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
-    Editor editor = hostCaret.getEditor();
-    Project project = editor.getProject();
-    if (project != null && InjectedLanguageManager.getInstance(project).mightHaveInjectedFragmentAtOffset(editor.getDocument(), hostCaret.getOffset())) {
-      PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
-      return true;
+    @Override
+    public boolean isLexemeBoundary(@Nullable Object left, @Nullable Object right) {
+        IElementType leftTokenType = (IElementType) left;
+        IElementType rightTokenType = (IElementType) right;
+        return leftTokenType != null && rightTokenType != null && WordBoundaryFilter.forLanguage(rightTokenType.getLanguage()).isWordBoundary(leftTokenType, rightTokenType);
     }
-    return false;
-  }
 
-  @Override
-  public boolean isLexemeBoundary(@Nullable Object left, @Nullable Object right) {
-    IElementType leftTokenType = (IElementType)left;
-    IElementType rightTokenType = (IElementType)right;
-    return leftTokenType != null && rightTokenType != null && WordBoundaryFilter.forLanguage(rightTokenType.getLanguage()).isWordBoundary(leftTokenType, rightTokenType);
-  }
-
-  @Override
-  public void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull EditorHighlighter highlighter) {
-    if (!(highlighter instanceof EmptyEditorHighlighter)) {
-      EditorHighlighterCache.rememberEditorHighlighterForCachesOptimization(document, highlighter);
+    @Override
+    public void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull EditorHighlighter highlighter) {
+        if (!(highlighter instanceof EmptyEditorHighlighter)) {
+            EditorHighlighterCache.rememberEditorHighlighterForCachesOptimization(document, highlighter);
+        }
     }
-  }
 
-  @Override
-  public void updateNotifications(Project project, VirtualFile file) {
-    EditorNotifications.getInstance(project).updateNotifications(file);
-  }
+    @Override
+    public void updateNotifications(Project project, VirtualFile file) {
+        EditorNotifications.getInstance(project).updateNotifications(file);
+    }
 
-  @Override
-  public boolean shouldUseSmartTabs(Project project, @Nonnull Editor editor) {
-    if (!(editor instanceof EditorEx)) return false;
-    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    return CodeStyleSettingsManager.getSettings(project).getIndentOptionsByFile(file).SMART_TABS;
-  }
+    @Override
+    public boolean shouldUseSmartTabs(Project project, @Nonnull Editor editor) {
+        if (!(editor instanceof EditorEx)) {
+            return false;
+        }
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        return CodeStyleSettingsManager.getSettings(project).getIndentOptionsByFile(file).SMART_TABS;
+    }
 
-  @Override
-  public int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, int start, int offset, int tabSize) {
-    return EditorImplUtil.calcColumnNumber(editor, text, start, offset, tabSize);
-  }
+    @Override
+    public int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, int start, int offset, int tabSize) {
+        return EditorImplUtil.calcColumnNumber(editor, text, start, offset, tabSize);
+    }
 
-  @Override
-  public int getLastVisualLineColumnNumber(@Nonnull Editor editor, int line) {
-    return EditorImplUtil.getLastVisualLineColumnNumber(editor, line);
-  }
+    @Override
+    public int getLastVisualLineColumnNumber(@Nonnull Editor editor, int line) {
+        return EditorImplUtil.getLastVisualLineColumnNumber(editor, line);
+    }
 
-  @Override
-  public int getSpaceWidth(@Nonnull Editor editor) {
-    return EditorImplUtil.getSpaceWidth(Font.PLAIN, editor);
-  }
+    @Override
+    public int getSpaceWidth(@Nonnull Editor editor) {
+        return EditorImplUtil.getSpaceWidth(Font.PLAIN, editor);
+    }
 
-  @Nonnull
-  @Override
-  public MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
-    return DocumentMarkupModelImpl.forDocument(document, project, create);
-  }
+    @Nonnull
+    @Override
+    public MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
+        return DocumentMarkupModelImpl.forDocument(document, project, create);
+    }
 
-  @Override
-  public void setShowMethodSeparators(boolean value) {
-    myDaemonCodeAnalyzerSettings.get().SHOW_METHOD_SEPARATORS = value;
-  }
+    @Override
+    public void setShowMethodSeparators(boolean value) {
+        myDaemonCodeAnalyzerSettings.get().SHOW_METHOD_SEPARATORS = value;
+    }
 
-  @Override
-  public boolean isShowMethodSeparators() {
-    return myDaemonCodeAnalyzerSettings.get().SHOW_METHOD_SEPARATORS;
-  }
+    @Override
+    public boolean isShowMethodSeparators() {
+        return myDaemonCodeAnalyzerSettings.get().SHOW_METHOD_SEPARATORS;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void showParametersHitOptions() {
-    ParameterNameHintsConfigurable configurable = new ParameterNameHintsConfigurable();
-    configurable.showAsync();
-  }
+    @RequiredUIAccess
+    @Override
+    public void showParametersHitOptions() {
+        ParameterNameHintsConfigurable configurable = new ParameterNameHintsConfigurable();
+        configurable.showAsync();
+    }
 
-  @Override
-  public boolean hasAnyInlayExtensions() {
-    return Application.get().getExtensionPoint(InlayParameterHintsProvider.class).hasAnyExtensions();
-  }
+    @Override
+    public boolean hasAnyInlayExtensions() {
+        return Application.get().getExtensionPoint(InlayParameterHintsProvider.class).hasAnyExtensions();
+    }
 
-  @Nonnull
-  @Override
-  public LineWrapPositionStrategy getLineWrapPositionStrategy(@Nonnull Editor editor) {
-    return LanguageLineWrapPositionStrategy.forEditor(editor);
-  }
+    @Nonnull
+    @Override
+    public LineWrapPositionStrategy getLineWrapPositionStrategy(@Nonnull Editor editor) {
+        return LanguageLineWrapPositionStrategy.forEditor(editor);
+    }
 
-  @Nonnull
-  @Override
-  public EditorHighlighter createEmptyHighlighter(Project project, Document document) {
-    return EditorUtil.createEmptyHighlighter(project, document);
-  }
+    @Nonnull
+    @Override
+    public EditorHighlighter createEmptyHighlighter(Project project, Document document) {
+        return EditorUtil.createEmptyHighlighter(project, document);
+    }
+
+    @Override
+    public void updateFoldRegions(@Nonnull Project project, @Nonnull Editor editor) {
+        CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(project);
+        foldingManager.updateFoldRegions(editor);
+    }
 }
