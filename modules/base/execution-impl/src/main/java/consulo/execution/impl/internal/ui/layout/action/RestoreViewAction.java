@@ -1,52 +1,96 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 
 package consulo.execution.impl.internal.ui.layout.action;
 
-import consulo.execution.impl.internal.ui.layout.CellTransform;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.AnAction;
+import consulo.execution.internal.layout.RunnerContentUi;
+import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.ui.ex.content.Content;
+import jakarta.annotation.Nonnull;
 
-public class RestoreViewAction extends AnAction {
+import java.util.Objects;
 
-  private final Content myContent;
-  private final CellTransform.Restore myRestoreAction;
+public final class RestoreViewAction extends DumbAwareToggleAction implements ViewLayoutModificationAction {
 
-  public RestoreViewAction(final Content content, CellTransform.Restore restore) {
-    myContent = content;
-    myRestoreAction = restore;
-  }
+    private final Content myContent;
+    private final ContentLayoutStateSettings myLayoutSettings;
 
-  @Override
-  public void update(final AnActionEvent e) {
-    Presentation p = e.getPresentation();
-    p.setTextValue(ActionLocalize.actionRunnerRestoreviewText(myContent.getDisplayName()));
-    p.setDescriptionValue(ActionLocalize.actionRunnerRestoreviewDescription());
-    p.setIcon(myContent.getIcon());
-  }
+    public RestoreViewAction(@Nonnull RunnerContentUi ui, @Nonnull Content content) {
+        this(content, new DefaultContentStateSettings(ui, content));
+    }
 
-  @Override
-  public void actionPerformed(final AnActionEvent e) {
-    myRestoreAction.restoreInGrid();
-  }
+    public RestoreViewAction(@Nonnull Content content, ContentLayoutStateSettings layoutSettings) {
+        myContent = content;
+        myLayoutSettings = layoutSettings;
+    }
 
-  public Content getContent() {
-    return myContent;
-  }
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        return myLayoutSettings.isSelected();
+    }
+
+    @Override
+    public @Nonnull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.EDT;
+    }
+
+    @Override
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        myLayoutSettings.setSelected(state);
+    }
+
+    @Override
+    public void update(final @Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setText(myLayoutSettings.getDisplayName(), false);
+        e.getPresentation().setEnabled(myLayoutSettings.isEnabled());
+    }
+
+    public @Nonnull Content getContent() {
+        return myContent;
+    }
+
+    private static final class DefaultContentStateSettings implements ContentLayoutStateSettings {
+
+        private final RunnerContentUi myUi;
+        private final Content myContent;
+
+        public DefaultContentStateSettings(@Nonnull RunnerContentUi ui,
+                                           @Nonnull Content content) {
+            myUi = ui;
+            myContent = content;
+        }
+
+        @Override
+        public boolean isSelected() {
+            return myContent.isValid() && Objects.requireNonNull(myContent.getManager()).getIndexOfContent(myContent) != -1;
+        }
+
+        @Override
+        public void setSelected(boolean state) {
+            if (state) {
+                myUi.restore(myContent);
+                myUi.select(myContent, true);
+            }
+            else {
+                myUi.minimize(myContent, null);
+            }
+        }
+
+        @Override
+        public void restore() {
+            setSelected(true);
+        }
+
+        @Override
+        public @Nonnull String getDisplayName() {
+            return myContent.getDisplayName();
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return !isSelected() || myUi.getContentManager().getContents().length > 1;
+        }
+    }
 }

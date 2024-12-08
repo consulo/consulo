@@ -16,9 +16,9 @@
 
 package consulo.execution.impl.internal.ui.layout.action;
 
-import consulo.execution.impl.internal.ui.layout.Grid;
-import consulo.execution.impl.internal.ui.layout.Tab;
-import consulo.execution.impl.internal.ui.layout.ViewContext;
+import consulo.execution.internal.layout.Grid;
+import consulo.execution.internal.layout.Tab;
+import consulo.execution.internal.layout.ViewContext;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -54,7 +54,6 @@ public abstract class BaseViewAction extends DumbAwareAction {
   }
 
   protected void update(AnActionEvent e, ViewContext context, Content[] content) {
-
   }
 
   @RequiredUIAccess
@@ -63,9 +62,7 @@ public abstract class BaseViewAction extends DumbAwareAction {
     actionPerformed(e, getViewFacade(e), getContent(e));
   }
 
-
   protected abstract void actionPerformed(AnActionEvent e, ViewContext context, Content[] content);
-
 
   @Nullable
   private ViewContext getViewFacade(final AnActionEvent e) {

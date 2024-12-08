@@ -24,6 +24,10 @@ public abstract class StatusText {
 
   private static final int Y_GAP = 2;
 
+  public static String getDefaultEmptyText() {
+      return DEFAULT_EMPTY_TEXT_VALUE.get();
+  }
+
   @Nullable
   private Component myOwner;
   private Component myMouseTarget;

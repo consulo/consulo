@@ -17,7 +17,7 @@ import consulo.execution.impl.internal.action.FakeRerunAction;
 import consulo.execution.impl.internal.action.StopAction;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.impl.internal.dashboard.tree.*;
-import consulo.execution.internal.RunnerLayoutUiImpl;
+import consulo.execution.internal.layout.RunnerLayoutUiImpl;
 import consulo.execution.lineMarker.ExecutorAction;
 import consulo.execution.service.*;
 import consulo.execution.ui.RunContentDescriptor;

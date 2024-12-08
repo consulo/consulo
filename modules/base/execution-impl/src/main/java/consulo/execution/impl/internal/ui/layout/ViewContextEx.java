@@ -16,11 +16,13 @@
 
 package consulo.execution.impl.internal.ui.layout;
 
+import consulo.execution.internal.layout.GridCell;
+import consulo.execution.internal.layout.ViewContext;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.util.concurrent.AsyncResult;
 
 public interface ViewContextEx extends ViewContext {
-  RunnerLayout getLayoutSettings();
+  RunnerLayoutImpl getLayoutSettings();
 
   ActionGroup getCellPopupGroup(String place);
 

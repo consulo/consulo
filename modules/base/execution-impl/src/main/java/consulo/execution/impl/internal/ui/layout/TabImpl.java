@@ -16,6 +16,7 @@
 
 package consulo.execution.impl.internal.ui.layout;
 
+import consulo.execution.internal.layout.Tab;
 import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.ui.image.Image;
 

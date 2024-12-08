@@ -6,7 +6,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
-import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
+import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.util.collection.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;

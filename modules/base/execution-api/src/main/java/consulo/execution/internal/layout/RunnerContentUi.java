@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.impl.internal.ui.layout;
+package consulo.execution.internal.layout;
 
 import consulo.disposer.Disposable;
 import consulo.project.ui.wm.dock.DockContainer;
@@ -21,6 +21,7 @@ import consulo.ui.ex.action.QuickActionProvider;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentUI;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 
@@ -31,19 +32,26 @@ import javax.swing.*;
  * @since 12.05.2024
  */
 public interface RunnerContentUi extends ContentUI, CellTransform.Facade, ViewContext, Disposable, PropertyChangeListener, QuickActionProvider, DockContainer, DockContainer.Dialog {
-  Key<RunnerContentUi> KEY = Key.create("DebuggerContentUI");
+    Key<RunnerContentUi> KEY = Key.create("DebuggerContentUI");
 
-  @Override
-  default JComponent getComponent() {
-    throw new AbstractMethodError();
-  }
+    @Override
+    default JComponent getComponent() {
+        throw new AbstractMethodError();
+    }
 
-  @Nullable
-  Content findContent(final String key);
+    @Nullable
+    Content findContent(final String key);
 
-  void restoreContent(final String key);
+    void restore(@Nonnull Content content);
 
-  boolean isHorizontalToolbar();
+    @Nullable
+    Content findOrRestoreContentIfNeeded(@Nonnull String key);
 
-  void setHorizontalToolbar(final boolean state);
+    boolean isHorizontalToolbar();
+
+    void setHorizontalToolbar(final boolean state);
+
+    void updateTabsUI(final boolean validateNow);
+
+    RunnerLayout getLayoutSettings();
 }

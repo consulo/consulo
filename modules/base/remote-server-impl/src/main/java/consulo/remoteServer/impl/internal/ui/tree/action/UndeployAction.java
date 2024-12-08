@@ -12,7 +12,6 @@ import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 import static consulo.remoteServer.impl.internal.util.ApplicationActionUtils.getDeploymentTarget;
 
@@ -44,7 +43,7 @@ public class UndeployAction extends DumbAwareAction {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }

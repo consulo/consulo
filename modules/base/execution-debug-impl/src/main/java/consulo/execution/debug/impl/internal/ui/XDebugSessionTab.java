@@ -18,7 +18,6 @@ package consulo.execution.debug.impl.internal.ui;
 import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.execution.ExecutionManager;
 import consulo.execution.debug.XDebugSession;
@@ -31,8 +30,9 @@ import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.DebuggerContentInfo;
 import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.execution.debug.ui.XDebugTabLayouter;
-import consulo.execution.impl.internal.ui.layout.RunnerContentUi;
+import consulo.execution.internal.layout.RunnerContentUi;
 import consulo.execution.impl.internal.ui.layout.ViewImpl;
+import consulo.execution.internal.layout.RunnerLayoutUiImpl;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.RunContentBuilder;
 import consulo.execution.ui.RunContentDescriptor;
@@ -354,34 +354,19 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         showView(session, DebuggerContentInfo.FRAME_CONTENT);
     }
 
-    private static void showView(@Nonnull XDebugSessionImpl session, String viewId) {
-        XDebugSessionTab tab = session.getSessionTab();
+    private static void showView(@Nullable XDebugSessionImpl session, String viewId) {
+        XDebugSessionTab tab = session != null ? session.getSessionTab() : null;
         if (tab != null) {
             tab.toFront(false, null);
-            // restore watches tab if minimized
-            tab.restoreContent(viewId);
-
-            JComponent component = tab.getUi().getComponent();
-            if (component instanceof DataProvider) {
-                RunnerContentUi ui = ((DataProvider) component).getDataUnchecked(RunnerContentUi.KEY);
-                if (ui != null) {
-                    Content content = ui.findContent(viewId);
-
-                    // if the view is not visible (e.g. Console tab is selected, while Debugger tab is not)
-                    // make sure we make it visible to the user
-                    if (content != null) {
-                        ui.select(content, false);
-                    }
-                }
+            Content content = tab.findOrRestoreContentIfNeeded(viewId);
+            // make sure we make it visible to the user
+            if (content != null) {
+                tab.myUi.selectAndFocus(content, false, false);
             }
         }
     }
 
     public void toFront(boolean focus, @Nullable final Runnable onShowCallback) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
-            return;
-        }
-
         ApplicationManager.getApplication().invokeLater(() -> {
             if (myRunContentDescriptor != null) {
                 RunContentManager manager = ExecutionManager.getInstance(myProject).getContentManager();
@@ -422,21 +407,22 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
 
     private void removeContent(String contentId) {
-        restoreContent(contentId); //findContent returns null if content is minimized
-        myUi.removeContent(myUi.findContent(contentId), true);
+        myUi.removeContent(findOrRestoreContentIfNeeded(contentId), true);
+        unregisterView(contentId);
+    }
+
+    protected void unregisterView(String contentId) {
         XDebugView view = myViews.remove(contentId);
         if (view != null) {
             Disposer.dispose(view);
         }
     }
 
-    private void restoreContent(String contentId) {
-        JComponent component = myUi.getComponent();
-        if (component instanceof DataProvider) {
-            RunnerContentUi ui = ((DataProvider) component).getDataUnchecked(RunnerContentUi.KEY);
-            if (ui != null) {
-                ui.restoreContent(contentId);
-            }
+    public @Nullable Content findOrRestoreContentIfNeeded(@Nonnull String contentId) {
+        RunnerContentUi contentUi = myUi instanceof RunnerLayoutUiImpl o ? o.getContentUI() : null;
+        if (contentUi != null) {
+            return contentUi.findOrRestoreContentIfNeeded(contentId);
         }
+        return myUi.findContent(contentId);
     }
 }

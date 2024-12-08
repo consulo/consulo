@@ -16,14 +16,21 @@
 package consulo.ide.impl.execution;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.execution.impl.RunDialog;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.executor.Executor;
+import consulo.execution.impl.internal.ui.EditConfigurationsDialog;
+import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.execution.editor.RunConfigurationFileEditorEarlyAccessDescriptor;
+import consulo.ide.impl.execution.editor.RunConfigurationVirtualFile;
+import consulo.ide.impl.idea.execution.impl.RunDialog;
 import consulo.project.Project;
-import jakarta.inject.Singleton;
-
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -32,8 +39,26 @@ import jakarta.annotation.Nullable;
 @Singleton
 @ServiceImpl
 public class RunConfigurationEditorImpl implements RunConfigurationEditor {
-  @Override
-  public boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title, @Nullable Executor executor) {
-    return RunDialog.editConfiguration(project, configuration, title, executor);
-  }
+    private final Project myProject;
+
+    @Inject
+    public RunConfigurationEditorImpl(Project project) {
+        myProject = project;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void editAll() {
+        if (EarlyAccessProgramManager.is(RunConfigurationFileEditorEarlyAccessDescriptor.class)) {
+            UIAccess.current().give(() -> FileEditorManager.getInstance(myProject).openFile(new RunConfigurationVirtualFile(), true));
+        }
+        else {
+            new EditConfigurationsDialog(myProject).showAsync();
+        }
+    }
+
+    @Override
+    public boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title, @Nullable Executor executor) {
+        return RunDialog.editConfiguration(project, configuration, title, executor);
+    }
 }

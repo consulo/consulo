@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.execution.internal.layout;
 
-package consulo.execution.impl.internal.ui.layout;
+/**
+ * @author VISTALL
+ * @since 2024-12-08
+ */
+public interface RunnerLayout {
+    boolean isTabLabelsHidden();
 
-import consulo.execution.ui.layout.PlaceInGrid;
-
-public interface View {
-  Tab getTab();
-
-  PlaceInGrid getPlaceInGrid();
-
-  boolean isMinimizedInGrid();
-
-  int getTabIndex();
-
-  void setMinimizedInGrid(boolean minimizedInGrid);
-
-  void setPlaceInGrid(PlaceInGrid placeInGrid);
-
-  void assignTab(Tab tab);
-
-  void setTabIndex(int tabIndex);
-
-  int getWindow();
-
-  void setWindow(int windowNumber);
+    void setTabLabelsHidden(boolean hidden);
 }

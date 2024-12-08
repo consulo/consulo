@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.execution.impl.internal.ui.layout;
+package consulo.execution.internal.layout;
 
-import consulo.execution.ui.layout.PlaceInGrid;
+import consulo.ui.ex.content.Content;
 
-public interface Tab {
+public interface GridCell {
+  int getContentCount();
 
-  boolean isDefault();
-
-  void setDetached(final PlaceInGrid placeInGrid, final boolean detached);
-
-  int getIndex();
-
-  int getDefaultIndex();
-
-  boolean isDetached(final PlaceInGrid placeInGrid);
+  void minimize(final Content content);
 }

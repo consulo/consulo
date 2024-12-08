@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.execution.actions;
+package consulo.execution.impl.internal.action;
 
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;

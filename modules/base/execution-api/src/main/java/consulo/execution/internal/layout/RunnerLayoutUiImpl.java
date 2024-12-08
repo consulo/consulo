@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.internal;
+package consulo.execution.internal.layout;
 
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.execution.internal.layout.RunnerContentUi;
 import consulo.execution.ui.layout.LayoutStateDefaults;
 import consulo.execution.ui.layout.LayoutViewOptions;
 import consulo.execution.ui.layout.RunnerLayoutUi;
@@ -29,13 +30,15 @@ import java.util.List;
  * @since 12.05.2024
  */
 public interface RunnerLayoutUiImpl extends Disposable.Parent, RunnerLayoutUi, LayoutStateDefaults, LayoutViewOptions, DataProvider {
-  void setLeftToolbarVisible(boolean value);
+    void setLeftToolbarVisible(boolean value);
 
-  void setTopLeftActionsBefore(boolean value);
+    void setTopLeftActionsBefore(boolean value);
 
-  void setContentToolbarBefore(boolean value);
+    void setContentToolbarBefore(boolean value);
 
-  void setTopLeftActionsVisible(boolean value);
+    void setTopLeftActionsVisible(boolean value);
 
-  List<AnAction> getActions();
+    List<AnAction> getActions();
+
+    RunnerContentUi getContentUI();
 }

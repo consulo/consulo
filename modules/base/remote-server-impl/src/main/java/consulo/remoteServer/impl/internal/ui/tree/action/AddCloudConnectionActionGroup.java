@@ -14,7 +14,6 @@ import consulo.ui.ex.action.*;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -68,7 +67,7 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
         }
 
         @Override
-        @NotNull
+        @Nonnull
         public ActionUpdateThread getActionUpdateThread() {
             return ActionUpdateThread.EDT;
         }

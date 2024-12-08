@@ -34,7 +34,6 @@ import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.notification.Notification;
@@ -109,10 +108,9 @@ class EventLogConsole {
             }
         });
 
-        ((EditorMarkupModel) editor.getMarkupModel()).setErrorStripeVisible(true);
+        editor.getMarkupModel().setErrorStripeVisible(true);
 
         final ClearLogAction clearLog = new ClearLogAction(this);
-        clearLog.registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.CONSOLE_CLEAR_ALL).getShortcutSet(), editor.getContentComponent());
 
         editor.installPopupHandler(new ContextMenuPopupHandler() {
             @Nullable

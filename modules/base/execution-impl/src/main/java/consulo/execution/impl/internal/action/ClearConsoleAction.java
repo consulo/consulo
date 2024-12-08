@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.execution.actions;
+package consulo.execution.impl.internal.action;
 
-import consulo.application.AllIcons;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -15,7 +15,7 @@ public class ClearConsoleAction extends DumbAwareAction {
     super(
       ExecutionLocalize.clearAllFromConsoleActionName(),
       LocalizeValue.localizeTODO("Clear the contents of the console"),
-      AllIcons.Actions.GC
+        PlatformIconGroup.actionsGc()
     );
   }
 

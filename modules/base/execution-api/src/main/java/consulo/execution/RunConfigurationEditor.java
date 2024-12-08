@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,17 +30,20 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface RunConfigurationEditor {
-  static RunConfigurationEditor getInstance(Project project) {
-    return project.getInstance(RunConfigurationEditor.class);
-  }
+    static RunConfigurationEditor getInstance(Project project) {
+        return project.getInstance(RunConfigurationEditor.class);
+    }
 
-  default boolean editConfiguration(final Project project, final RunnerAndConfigurationSettings configuration, final String title) {
-    return editConfiguration(project, configuration, title, null);
-  }
+    @RequiredUIAccess
+    void editAll();
 
-  default boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull String title) {
-    return editConfiguration(environment.getProject(), environment.getRunnerAndConfigurationSettings(), title, environment.getExecutor());
-  }
+    default boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title) {
+        return editConfiguration(project, configuration, title, null);
+    }
 
-  boolean editConfiguration(final Project project, final RunnerAndConfigurationSettings configuration, final String title, @Nullable final Executor executor);
+    default boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull String title) {
+        return editConfiguration(environment.getProject(), environment.getRunnerAndConfigurationSettings(), title, environment.getExecutor());
+    }
+
+    boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title, @Nullable Executor executor);
 }

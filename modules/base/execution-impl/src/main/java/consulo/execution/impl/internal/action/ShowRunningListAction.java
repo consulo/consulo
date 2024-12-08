@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.actions;
+package consulo.execution.impl.internal.action;
 
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.execution.executor.Executor;

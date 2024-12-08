@@ -16,7 +16,7 @@
 
 package consulo.execution.impl.internal.ui.layout.action;
 
-import consulo.execution.impl.internal.ui.layout.ViewContext;
+import consulo.execution.internal.layout.ViewContext;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;

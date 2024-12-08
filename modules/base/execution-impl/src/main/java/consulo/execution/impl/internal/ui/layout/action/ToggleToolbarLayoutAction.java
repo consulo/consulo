@@ -16,7 +16,7 @@
 
 package consulo.execution.impl.internal.ui.layout.action;
 
-import consulo.execution.impl.internal.ui.layout.RunnerContentUi;
+import consulo.execution.internal.layout.RunnerContentUi;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nullable;

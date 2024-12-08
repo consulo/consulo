@@ -49,169 +49,173 @@ import javax.swing.event.HyperlinkListener;
  * @author nik
  */
 public interface XDebugSession extends AbstractDebuggerSession {
-  Key<XDebugSession> DATA_KEY = Key.create("XDebugSessionTab.XDebugSession");
+    Key<XDebugSession> DATA_KEY = Key.create("XDebugSessionTab.XDebugSession");
 
-  @Nonnull
-  Project getProject();
+    @Nonnull
+    Project getProject();
 
-  @Nonnull
-  XDebugProcess getDebugProcess();
+    @Nonnull
+    XDebugProcess getDebugProcess();
 
-  boolean isSuspended();
+    boolean isSuspended();
 
-  @Nullable
-  XStackFrame getCurrentStackFrame();
+    @Nullable
+    XStackFrame getCurrentStackFrame();
 
-  XSuspendContext getSuspendContext();
+    XSuspendContext getSuspendContext();
 
-  /**
-   * Position2D from the current frame
-   *
-   * @return
-   */
-  @Nullable
-  XSourcePosition getCurrentPosition();
+    /**
+     * Position2D from the current frame
+     *
+     * @return
+     */
+    @Nullable
+    XSourcePosition getCurrentPosition();
 
-  /**
-   * Position2D from the top frame
-   *
-   * @return
-   */
-  @Nullable
-  XSourcePosition getTopFramePosition();
+    /**
+     * Position2D from the top frame
+     *
+     * @return
+     */
+    @Nullable
+    XSourcePosition getTopFramePosition();
 
-  void stepOver(boolean ignoreBreakpoints);
+    void stepOver(boolean ignoreBreakpoints);
 
-  void stepInto();
+    void stepInto();
 
-  void stepOut();
+    void stepOut();
 
-  void forceStepInto();
+    void forceStepInto();
 
-  void runToPosition(@Nonnull XSourcePosition position, final boolean ignoreBreakpoints);
+    void runToPosition(@Nonnull XSourcePosition position, final boolean ignoreBreakpoints);
 
-  void pause();
+    void pause();
 
-  void resume();
+    void resume();
 
-  void showExecutionPoint();
+    void showExecutionPoint();
 
-  void setCurrentStackFrame(@Nonnull XExecutionStack executionStack, @Nonnull XStackFrame frame, boolean isTopFrame);
+    void setCurrentStackFrame(@Nonnull XExecutionStack executionStack, @Nonnull XStackFrame frame, boolean isTopFrame);
 
-  default void setCurrentStackFrame(@Nonnull XExecutionStack executionStack, @Nonnull XStackFrame frame) {
-    setCurrentStackFrame(executionStack, frame, frame.equals(executionStack.getTopFrame()));
-  }
+    default void setCurrentStackFrame(@Nonnull XExecutionStack executionStack, @Nonnull XStackFrame frame) {
+        setCurrentStackFrame(executionStack, frame, frame.equals(executionStack.getTopFrame()));
+    }
 
-  /**
-   * Call this method to setup custom icon and/or error message (it will be shown in tooltip) for breakpoint
-   *
-   * @param breakpoint   breakpoint
-   * @param icon         icon (<code>null</code> if default icon should be used). You can use icons from {@link consulo.execution.debug.icon.ExecutionDebugIconGroup}
-   * @param errorMessage an error message if breakpoint isn't successfully registered
-   */
-  void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);
+    /**
+     * Call this method to setup custom icon and/or error message (it will be shown in tooltip) for breakpoint
+     *
+     * @param breakpoint   breakpoint
+     * @param icon         icon (<code>null</code> if default icon should be used). You can use icons from {@link consulo.execution.debug.icon.ExecutionDebugIconGroup}
+     * @param errorMessage an error message if breakpoint isn't successfully registered
+     */
+    void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);
 
-  /**
-   * Marks the provide breakpoint as verified in the current session
-   */
-  void setBreakpointVerified(@Nonnull XLineBreakpoint<?> breakpoint);
+    /**
+     * Marks the provide breakpoint as verified in the current session
+     */
+    void setBreakpointVerified(@Nonnull XLineBreakpoint<?> breakpoint);
 
-  /**
-   * Marks the provide breakpoint as invalid in the current session
-   */
-  void setBreakpointInvalid(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable String errorMessage);
+    /**
+     * Marks the provide breakpoint as invalid in the current session
+     */
+    void setBreakpointInvalid(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable String errorMessage);
 
-  /**
-   * Call this method when a breakpoint is reached if its condition ({@link XBreakpoint#getCondition()}) evaluates to {@code true}.
-   * <p/>
-   * <strong>The underlying debugging process should be suspended only if the method returns {@code true}. </strong>
-   *
-   * @param breakpoint             reached breakpoint
-   * @param evaluatedLogExpression value of {@link XBreakpoint#getLogExpression()} evaluated in the current context
-   * @param suspendContext         context
-   * @return <code>true</code> if the debug process should be suspended
-   */
-  boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nullable String evaluatedLogExpression, @Nonnull XSuspendContext suspendContext);
+    /**
+     * Call this method when a breakpoint is reached if its condition ({@link XBreakpoint#getCondition()}) evaluates to {@code true}.
+     * <p/>
+     * <strong>The underlying debugging process should be suspended only if the method returns {@code true}. </strong>
+     *
+     * @param breakpoint             reached breakpoint
+     * @param evaluatedLogExpression value of {@link XBreakpoint#getLogExpression()} evaluated in the current context
+     * @param suspendContext         context
+     * @return <code>true</code> if the debug process should be suspended
+     */
+    boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nullable String evaluatedLogExpression, @Nonnull XSuspendContext suspendContext);
 
-  /**
-   * @deprecated use {@link #breakpointReached(consulo.ide.impl.idea.xdebugger.breakpoints.XBreakpoint, String, consulo.ide.impl.idea.xdebugger.frame.XSuspendContext)} instead
-   */
-  boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nonnull XSuspendContext suspendContext);
+    /**
+     * @deprecated use {@link #breakpointReached(consulo.ide.impl.idea.xdebugger.breakpoints.XBreakpoint, String, consulo.ide.impl.idea.xdebugger.frame.XSuspendContext)} instead
+     */
+    boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nonnull XSuspendContext suspendContext);
 
-  /**
-   * Call this method when position is reached (e.g. after "Run to cursor" or "Step over" command)
-   *
-   * @param suspendContext context
-   */
-  default void positionReached(@Nonnull XSuspendContext suspendContext) {
-    positionReached(suspendContext, false);
-  }
+    /**
+     * Call this method when position is reached (e.g. after "Run to cursor" or "Step over" command)
+     *
+     * @param suspendContext context
+     */
+    default void positionReached(@Nonnull XSuspendContext suspendContext) {
+        positionReached(suspendContext, false);
+    }
 
-  /**
-   * Call this method when position is reached (e.g. after "Run to cursor" or "Step over" command)
-   *
-   * @param suspendContext context
-   * @param attract        attract to debugger panel, and active breakpoint panel if setting enable
-   */
-  void positionReached(@Nonnull XSuspendContext suspendContext, boolean attract);
+    /**
+     * Call this method when position is reached (e.g. after "Run to cursor" or "Step over" command)
+     *
+     * @param suspendContext context
+     * @param attract        attract to debugger panel, and active breakpoint panel if setting enable
+     */
+    void positionReached(@Nonnull XSuspendContext suspendContext, boolean attract);
 
-  /**
-   * Call this method when session resumed because of some external event, e.g. from the debugger console
-   */
-  void sessionResumed();
+    /**
+     * Call this method when session resumed because of some external event, e.g. from the debugger console
+     */
+    void sessionResumed();
 
-  void stop();
+    void stop();
 
-  void setBreakpointMuted(boolean muted);
+    void setBreakpointMuted(boolean muted);
 
-  boolean areBreakpointsMuted();
+    boolean areBreakpointsMuted();
 
 
-  void addSessionListener(@Nonnull XDebugSessionListener listener, @Nonnull Disposable parentDisposable);
+    void addSessionListener(@Nonnull XDebugSessionListener listener, @Nonnull Disposable parentDisposable);
 
-  void addSessionListener(@Nonnull XDebugSessionListener listener);
+    void addSessionListener(@Nonnull XDebugSessionListener listener);
 
-  void removeSessionListener(@Nonnull XDebugSessionListener listener);
+    void removeSessionListener(@Nonnull XDebugSessionListener listener);
 
-  default void reportError(@Nonnull final String message) {
-    reportMessage(message, NotificationType.ERROR);
-  }
+    default void reportError(@Nonnull final String message) {
+        reportMessage(message, NotificationType.ERROR);
+    }
 
-  default void reportMessage(@Nonnull final String message, @Nonnull final NotificationType type) {
-    reportMessage(message, type, null);
-  }
+    default void reportMessage(@Nonnull final String message, @Nonnull final NotificationType type) {
+        reportMessage(message, type, null);
+    }
 
-  void reportMessage(@Nonnull String message, @Nonnull NotificationType type, @Nullable HyperlinkListener listener);
+    void reportMessage(@Nonnull String message, @Nonnull NotificationType type, @Nullable HyperlinkListener listener);
 
-  @Nonnull
-  String getSessionName();
+    @Nonnull
+    String getSessionName();
 
-  @Nonnull
-  RunContentDescriptor getRunContentDescriptor();
+    @Nonnull
+    RunContentDescriptor getRunContentDescriptor();
 
-  @Nullable
-  RunProfile getRunProfile();
+    @Nullable
+    RunProfile getRunProfile();
 
-  void setPauseActionSupported(boolean isSupported);
+    void setPauseActionSupported(boolean isSupported);
 
-  void rebuildViews();
+    void rebuildViews();
 
-  <V extends XSmartStepIntoVariant> void smartStepInto(XSmartStepIntoHandler<V> handler, V variant);
+    <V extends XSmartStepIntoVariant> void smartStepInto(XSmartStepIntoHandler<V> handler, V variant);
 
-  void updateExecutionPosition();
+    void updateExecutionPosition();
 
-  void initBreakpoints();
+    void initBreakpoints();
 
-  ConsoleView getConsoleView();
+    ConsoleView getConsoleView();
 
-  RunnerLayoutUi getUI();
+    RunnerLayoutUi getUI();
 
-  @Nullable
-  XValueMarkers<?, ?> getValueMarkers();
+    @Nullable
+    XValueMarkers<?, ?> getValueMarkers();
 
-  void addRestartActions(AnAction... restartActions);
+    void addRestartActions(AnAction... restartActions);
 
-  void addExtraActions(AnAction... extraActions);
+    void addExtraActions(AnAction... extraActions);
 
-  void addExtraStopActions(AnAction... extraStopActions);
+    void addExtraStopActions(AnAction... extraStopActions);
+
+    boolean isReadOnly();
+
+    void setReadOnly(boolean readOnly);
 }

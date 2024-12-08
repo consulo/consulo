@@ -9,7 +9,6 @@ import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Konstantin Bulenkov
@@ -40,7 +39,7 @@ public class ShowBreakpointsOverLineNumbersAction extends ToggleAction implement
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }

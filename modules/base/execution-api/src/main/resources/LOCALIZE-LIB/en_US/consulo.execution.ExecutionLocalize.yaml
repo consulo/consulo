@@ -881,3 +881,5 @@ run.dashboard.restart.debugger.action.description:
   text: Rerun selected configuration(s) in Debug Mode
 open.message.view:
   text: Open Message View
+action.Runner.ToggleTabLabels.text:
+  text: Show Tab Labels

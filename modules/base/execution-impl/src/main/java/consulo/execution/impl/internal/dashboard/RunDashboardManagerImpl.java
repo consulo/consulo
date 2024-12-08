@@ -29,7 +29,7 @@ import consulo.execution.impl.internal.dashboard.tree.RunDashboardStatusFilter;
 import consulo.execution.impl.internal.service.ServiceViewManagerImpl;
 import consulo.execution.impl.internal.service.ServiceViewUIUtils;
 import consulo.execution.impl.internal.ui.RunContentManagerImpl;
-import consulo.execution.internal.RunnerLayoutUiImpl;
+import consulo.execution.internal.layout.RunnerLayoutUiImpl;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.service.ServiceEventListener;

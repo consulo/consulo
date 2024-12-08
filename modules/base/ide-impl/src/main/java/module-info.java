@@ -314,7 +314,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.dvcs.ui;
   exports consulo.ide.impl.idea.errorreport;
   exports consulo.ide.impl.idea.execution.actions;
-  exports consulo.ide.impl.idea.execution.configuration;
   exports consulo.ide.impl.idea.execution.configurations;
   exports consulo.ide.impl.idea.execution.console;
   exports consulo.ide.impl.idea.execution.filters;

@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
-import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
+import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.impl.internal.wm.statusBar.StatusBarWidgetSettings;

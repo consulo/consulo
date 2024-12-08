@@ -59,6 +59,10 @@ public abstract class PopupHandler extends MouseAdapter {
     }
   }
 
+  public static void installPopupMenu(JComponent component, @NonNls String groupId, @NonNls String place) {
+      installPopupHandler(component, groupId, place);
+  }
+
   public static void installPopupHandler(JComponent component, @NonNls String groupId, @NonNls String place) {
     ActionManager actionManager = ActionManager.getInstance();
     ActionGroup group = (ActionGroup)actionManager.getAction(groupId);

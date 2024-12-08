@@ -1243,7 +1243,7 @@
         <action id="AddNewFavoritesList" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddNewFavoritesListAction"/>
         <group id="SendToFavoritesGroup" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.SendToFavoritesGroup" popup="true"/>
 
-        <action id="RunConfiguration" class="consulo.ide.impl.idea.execution.actions.RunConfigurationsComboBoxAction"/>
+        <action id="RunConfiguration" class="consulo.execution.impl.internal.action.RunConfigurationsComboBoxAction"/>
         <action id="ChooseRunConfiguration" class="consulo.execution.impl.internal.action.ChooseRunConfigurationPopupAction"  />
         <action id="ChooseDebugConfiguration" class="consulo.execution.debug.impl.internal.action.ChooseDebugConfigurationPopupAction" />
 
@@ -1571,11 +1571,11 @@
             <group id="RunnerActions"/>
             <reference ref="ChooseRunConfiguration"/>
             <reference ref="ChooseDebugConfiguration"/>
-            <action id="editRunConfigurations" class="consulo.ide.impl.idea.execution.actions.EditRunConfigurationsAction"/>
+            <action id="editRunConfigurations" class="consulo.execution.impl.internal.action.EditRunConfigurationsAction"/>
             <action id="Stop" class="consulo.execution.impl.internal.action.StopAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.suspend"/>
             <action id="StopBackgroundProcesses" class="consulo.execution.impl.internal.action.StopBackgroundProcessesAction"/>
-            <action id="ShowLiveRunConfigurations" class="consulo.ide.impl.idea.execution.actions.ShowRunningListAction"/>
+            <action id="ShowLiveRunConfigurations" class="consulo.execution.impl.internal.action.ShowRunningListAction"/>
 
             <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RefactoringMenu"/>
         </group>
@@ -2084,6 +2084,8 @@
         </group>
 
         <group id="RunnerLayoutActions">
+            <action id="Runner.ToggleTabLabels" class="consulo.execution.impl.internal.ui.layout.action.ToggleShowTabLabelsAction"/>
+
             <group id="Runner.Layout">
                 <action id="Runner.RestoreLayout" class="consulo.execution.impl.internal.ui.layout.action.RestoreLayoutAction"/>
             </group>
@@ -2106,7 +2108,6 @@
 
 
             <group id="Runner.View.Toolbar">
-                <reference ref="Runner.MinimizeView"/>
                 <reference ref="Runner.CloseView"/>
             </group>
         </group>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.execution.impl.internal.ui.layout;
+package consulo.execution.internal.layout;
 
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ui.ex.action.ActionManager;

@@ -16,6 +16,8 @@
 
 package consulo.execution.impl.internal.ui.layout;
 
+import consulo.execution.internal.layout.Tab;
+import consulo.execution.internal.layout.View;
 import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.util.dataholder.Key;
 import consulo.util.xml.serializer.XmlSerializer;
@@ -44,7 +46,7 @@ public class ViewImpl implements View {
     myWindow = window;
   }
 
-  public ViewImpl(RunnerLayout settings, Element element) {
+  public ViewImpl(RunnerLayoutImpl settings, Element element) {
     XmlSerializer.deserializeInto(this, element);
     assignTab(settings.getOrCreateTab(myTabIndex));
   }
@@ -123,7 +125,7 @@ public class ViewImpl implements View {
       myMinimizedInGrid = minimizedInGrid;
     }
 
-    public ViewImpl createView(RunnerLayout settings) {
+    public ViewImpl createView(RunnerLayoutImpl settings) {
       final TabImpl tab = myTabID == Integer.MAX_VALUE ? settings.createNewTab() : settings.getOrCreateTab(myTabID);
       return new ViewImpl(myID, tab, myPlaceInGrid, myMinimizedInGrid, 0);
     }

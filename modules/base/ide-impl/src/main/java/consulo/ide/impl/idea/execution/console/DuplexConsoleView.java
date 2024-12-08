@@ -26,7 +26,7 @@ import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.console.*;
 import consulo.execution.ui.console.language.LanguageConsoleView;
-import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
+import consulo.execution.impl.internal.action.ClearConsoleAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.localize.LocalizeValue;
