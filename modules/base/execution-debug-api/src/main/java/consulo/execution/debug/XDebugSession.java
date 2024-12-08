@@ -65,17 +65,13 @@ public interface XDebugSession extends AbstractDebuggerSession {
     XSuspendContext getSuspendContext();
 
     /**
-     * Position2D from the current frame
-     *
-     * @return
+     * source position from the current frame
      */
     @Nullable
     XSourcePosition getCurrentPosition();
 
     /**
-     * Position2D from the top frame
-     *
-     * @return
+     * source position from the top frame
      */
     @Nullable
     XSourcePosition getTopFramePosition();
@@ -91,6 +87,8 @@ public interface XDebugSession extends AbstractDebuggerSession {
     void runToPosition(@Nonnull XSourcePosition position, final boolean ignoreBreakpoints);
 
     void pause();
+
+    void unsetPaused();
 
     void resume();
 
@@ -133,8 +131,10 @@ public interface XDebugSession extends AbstractDebuggerSession {
      */
     boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nullable String evaluatedLogExpression, @Nonnull XSuspendContext suspendContext);
 
+    void breakpointReachedNoProcessing(@Nonnull final XBreakpoint<?> breakpoint, @Nonnull XSuspendContext suspendContext);
+
     /**
-     * @deprecated use {@link #breakpointReached(consulo.ide.impl.idea.xdebugger.breakpoints.XBreakpoint, String, consulo.ide.impl.idea.xdebugger.frame.XSuspendContext)} instead
+     * @deprecated use {@link #breakpointReached(XBreakpoint, String, XSuspendContext)} instead
      */
     boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nonnull XSuspendContext suspendContext);
 

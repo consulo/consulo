@@ -717,6 +717,7 @@ public class XDebugSessionImpl implements XDebugSession {
         return breakpointReached(breakpoint, evaluatedLogExpression, suspendContext, true);
     }
 
+    @Override
     public void breakpointReachedNoProcessing(@Nonnull final XBreakpoint<?> breakpoint, @Nonnull XSuspendContext suspendContext) {
         breakpointReached(breakpoint, null, suspendContext, false);
     }
@@ -809,6 +810,7 @@ public class XDebugSessionImpl implements XDebugSession {
         });
     }
 
+    @Override
     public void unsetPaused() {
         myPaused.set(false);
     }
