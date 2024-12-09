@@ -250,7 +250,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
     if (isVisible() && getComponentCount() == 0) {
       boolean cursorSet = false;
       if (meComponent != null) {
-        final Point point = SwingUtilities.convertPoint(meComponent, me.getPoint(), myRootPane.getContentPane());
+        final Point point = SwingUtilities.convertPoint(meComponent, me.getPoint(), myRootPane.getContentPane().getParent());
 
         if (myRootPane.getMenuBar() != null && myRootPane.getMenuBar().isVisible()) {
           point.y += myRootPane.getMenuBar().getHeight();
@@ -322,8 +322,9 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
         if (!myListener2Cursor.isEmpty()) {
           cursor = myListener2Cursor.values().iterator().next();
 
-          final Point point = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), myRootPane.getContentPane());
-          Component target = SwingUtilities.getDeepestComponentAt(myRootPane.getContentPane().getParent(), point.x, point.y);
+          Container parent = myRootPane.getContentPane().getParent();
+          final Point point = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), parent);
+          Component target = SwingUtilities.getDeepestComponentAt(parent, point.x, point.y);
 
           if (canProcessCursorFor(target)) {
             target = getCompWithCursor(target);
