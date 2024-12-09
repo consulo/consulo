@@ -29,6 +29,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
 import consulo.execution.debug.XDebuggerActions;
+import consulo.execution.debug.evaluation.ValueLookupManager;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.editor.ui.internal.HintManagerEx;
@@ -64,7 +65,7 @@ public abstract class AbstractValueHint {
         @Override
         public void keyReleased(KeyEvent e) {
             if (!isAltMask(e.getModifiers())) {
-                ValueLookupManager.getInstance(myProject).hideHint();
+                ((ValueLookupManagerImpl) ValueLookupManager.getInstance(myProject)).hideHint();
             }
         }
     };

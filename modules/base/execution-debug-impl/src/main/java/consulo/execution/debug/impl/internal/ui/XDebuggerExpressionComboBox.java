@@ -22,7 +22,7 @@ import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
-import consulo.execution.debug.impl.internal.XDebuggerHistoryManager;
+import consulo.execution.debug.impl.internal.XDebuggerHistoryManagerImpl;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.editor.ui.awt.EditorComboBoxEditor;
 import consulo.language.editor.ui.awt.EditorComboBoxRenderer;
@@ -104,7 +104,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
         myComboBox.setEditor(myEditor);
         //myEditor.setItem(myExpression);
         myComboBox.setRenderer(new EditorComboBoxRenderer(myEditor));
-        myComboBox.setMaximumRowCount(XDebuggerHistoryManager.MAX_RECENT_EXPRESSIONS);
+        myComboBox.setMaximumRowCount(XDebuggerHistoryManagerImpl.MAX_RECENT_EXPRESSIONS);
     }
 
     @Override

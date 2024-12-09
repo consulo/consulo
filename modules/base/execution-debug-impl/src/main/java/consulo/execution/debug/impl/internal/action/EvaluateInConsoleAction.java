@@ -15,18 +15,19 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
-import consulo.execution.debug.impl.internal.DebuggerSupport;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import jakarta.annotation.Nonnull;
 
 final class EvaluateInConsoleAction extends XDebuggerActionBase {
-  public EvaluateInConsoleAction() {
-    super(true);
-  }
+    private final XEvaluateInConsoleFromEditorActionHandler myHandler = new XEvaluateInConsoleFromEditorActionHandler();
 
-  @Nonnull
-  @Override
-  protected DebuggerActionHandler getHandler(@Nonnull DebuggerSupport debuggerSupport) {
-    return debuggerSupport.getEvaluateInConsoleActionHandler();
-  }
+    public EvaluateInConsoleAction() {
+        super(true);
+    }
+
+    @Nonnull
+    @Override
+    protected DebuggerActionHandler getHandler() {
+        return myHandler;
+    }
 }

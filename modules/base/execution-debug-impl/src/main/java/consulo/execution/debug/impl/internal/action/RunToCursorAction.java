@@ -16,8 +16,8 @@
 package consulo.execution.debug.impl.internal.action;
 
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
-import consulo.execution.debug.impl.internal.DebuggerSupport;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
+import consulo.execution.debug.impl.internal.action.handler.XDebuggerRunToCursorActionHandler;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -26,13 +26,16 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public class RunToCursorAction extends XDebuggerActionBase {
+    private final XDebuggerRunToCursorActionHandler myHandler = new XDebuggerRunToCursorActionHandler(false);
+
     public RunToCursorAction() {
         super(true);
     }
 
+    @Override
     @Nonnull
-    protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
-        return debuggerSupport.getRunToCursorHandler();
+    protected DebuggerActionHandler getHandler() {
+        return myHandler;
     }
 
     @Nullable

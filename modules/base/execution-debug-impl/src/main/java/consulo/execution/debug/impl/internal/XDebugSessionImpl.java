@@ -27,6 +27,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.debug.*;
 import consulo.execution.debug.breakpoint.*;
+import consulo.execution.debug.evaluation.ValueLookupManager;
 import consulo.execution.debug.event.XBreakpointListener;
 import consulo.execution.debug.event.XDebugSessionListener;
 import consulo.execution.debug.event.XDebuggerManagerListener;
@@ -34,7 +35,6 @@ import consulo.execution.debug.frame.*;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.XDependentBreakpointListener;
 import consulo.execution.debug.impl.internal.breakpoint.*;
-import consulo.execution.debug.impl.internal.evaluate.ValueLookupManager;
 import consulo.execution.debug.impl.internal.evaluate.XDebuggerEditorLinePainter;
 import consulo.execution.debug.impl.internal.frame.XWatchesViewImpl;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
@@ -452,6 +452,7 @@ public class XDebugSessionImpl implements XDebugSession {
         }
     }
 
+    @Override
     public boolean isBreakpointActive(@Nonnull XBreakpoint<?> b) {
         ApplicationManager.getApplication().assertReadAccessAllowed();
         return !areBreakpointsMuted() && b.isEnabled() && !isInactiveSlaveBreakpoint(b) && !((XBreakpointBase) b).isDisposed();
@@ -776,7 +777,8 @@ public class XDebugSessionImpl implements XDebugSession {
         });
     }
 
-    public void processDependencies(final XBreakpoint<?> breakpoint) {
+    @Override
+    public void processDependencies(@Nonnull final XBreakpoint<?> breakpoint) {
         XDependentBreakpointManager dependentBreakpointManager = myDebuggerManager.getBreakpointManager().getDependentBreakpointManager();
         if (!dependentBreakpointManager.isMasterOrSlave(breakpoint)) {
             return;

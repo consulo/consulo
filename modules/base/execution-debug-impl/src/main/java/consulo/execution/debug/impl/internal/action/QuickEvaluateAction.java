@@ -18,12 +18,12 @@ package consulo.execution.debug.impl.internal.action;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutter;
 import consulo.codeEditor.LogicalPosition;
+import consulo.execution.debug.evaluation.ValueLookupManager;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
-import consulo.execution.debug.impl.internal.action.XDebuggerActionBase;
-import consulo.execution.debug.impl.internal.DebuggerSupport;
+import consulo.execution.debug.impl.internal.action.handler.XQuickEvaluateHandler;
 import consulo.execution.debug.impl.internal.evaluate.QuickEvaluateHandler;
 import consulo.execution.debug.impl.internal.evaluate.ValueHintType;
-import consulo.execution.debug.impl.internal.evaluate.ValueLookupManager;
+import consulo.execution.debug.impl.internal.evaluate.ValueLookupManagerImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
@@ -32,41 +32,41 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class QuickEvaluateAction extends XDebuggerActionBase {
-  public QuickEvaluateAction() {
-    super(true);
-  }
-
-  @Override
-  @Nonnull
-  protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
-    return new QuickEvaluateHandlerWrapper(debuggerSupport.getQuickEvaluateHandler());
-  }
-
-  private static class QuickEvaluateHandlerWrapper extends DebuggerActionHandler {
-    private final QuickEvaluateHandler myHandler;
-
-    public QuickEvaluateHandlerWrapper(final QuickEvaluateHandler handler) {
-      myHandler = handler;
+    public QuickEvaluateAction() {
+        super(true);
     }
 
     @Override
-    public void perform(@Nonnull final Project project, final AnActionEvent event) {
-      Editor editor = event.getData(Editor.KEY);
-      if (editor != null) {
-        LogicalPosition logicalPosition = editor.getCaretModel().getLogicalPosition();
-        ValueLookupManager.getInstance(project)
-          .showHint(myHandler, editor, editor.logicalPositionToXY(logicalPosition), ValueHintType.MOUSE_CLICK_HINT);
-      }
+    @Nonnull
+    protected DebuggerActionHandler getHandler() {
+        return new QuickEvaluateHandlerWrapper(XQuickEvaluateHandler.getInstance());
     }
 
-    @Override
-    public boolean isEnabled(@Nonnull final Project project, final AnActionEvent event) {
-      if (!myHandler.isEnabled(project)) {
-        return false;
-      }
+    private static class QuickEvaluateHandlerWrapper extends DebuggerActionHandler {
+        private final QuickEvaluateHandler myHandler;
 
-      Editor editor = event.getData(Editor.KEY);
-      return editor != null && event.getData(EditorGutter.KEY) == null;
+        public QuickEvaluateHandlerWrapper(final QuickEvaluateHandler handler) {
+            myHandler = handler;
+        }
+
+        @Override
+        public void perform(@Nonnull final Project project, final AnActionEvent event) {
+            Editor editor = event.getData(Editor.KEY);
+            if (editor != null) {
+                LogicalPosition logicalPosition = editor.getCaretModel().getLogicalPosition();
+                ((ValueLookupManagerImpl) ValueLookupManager.getInstance(project))
+                    .showHint(myHandler, editor, editor.logicalPositionToXY(logicalPosition), ValueHintType.MOUSE_CLICK_HINT);
+            }
+        }
+
+        @Override
+        public boolean isEnabled(@Nonnull final Project project, final AnActionEvent event) {
+            if (!myHandler.isEnabled(project)) {
+                return false;
+            }
+
+            Editor editor = event.getData(Editor.KEY);
+            return editor != null && event.getData(EditorGutter.KEY) == null;
+        }
     }
-  }
 }

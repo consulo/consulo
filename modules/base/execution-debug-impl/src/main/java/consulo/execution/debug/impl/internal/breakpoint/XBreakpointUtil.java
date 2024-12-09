@@ -26,10 +26,9 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.*;
-import consulo.execution.debug.impl.internal.DebuggerSupport;
 import consulo.execution.debug.impl.internal.XDebuggerUtilImpl;
 import consulo.execution.debug.impl.internal.XSourcePositionImpl;
-import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointItem;
+import consulo.execution.debug.impl.internal.action.handler.XBreakpointPanelProvider;
 import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointPanelProvider;
 import consulo.project.Project;
 import consulo.util.collection.SmartList;
@@ -40,9 +39,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -84,49 +80,24 @@ public class XBreakpointUtil {
         int offset = editor.getCaretModel().getOffset();
         Document editorDocument = editor.getDocument();
 
-        List<DebuggerSupport> debuggerSupports = DebuggerSupport.getDebuggerSupports();
-        for (DebuggerSupport debuggerSupport : debuggerSupports) {
-            final BreakpointPanelProvider<?> provider = debuggerSupport.getBreakpointPanelProvider();
+        final BreakpointPanelProvider<?> provider = XBreakpointPanelProvider.getInstance();
 
-            final int textLength = editor.getDocument().getTextLength();
-            if (offset > textLength) {
-                offset = textLength;
-            }
-
-            Object breakpoint = provider.findBreakpoint(project, editorDocument, offset);
-            if (breakpoint != null) {
-                final GutterIconRenderer iconRenderer = provider.getBreakpointGutterIconRenderer(breakpoint);
-                return Pair.create(iconRenderer, breakpoint);
-            }
+        final int textLength = editor.getDocument().getTextLength();
+        if (offset > textLength) {
+            offset = textLength;
         }
+
+        Object breakpoint = provider.findBreakpoint(project, editorDocument, offset);
+        if (breakpoint != null) {
+            final GutterIconRenderer iconRenderer = provider.getBreakpointGutterIconRenderer(breakpoint);
+            return Pair.create(iconRenderer, breakpoint);
+        }
+
         return Pair.create(null, null);
     }
 
     public static List<BreakpointPanelProvider> collectPanelProviders() {
-        List<BreakpointPanelProvider> panelProviders = new ArrayList<BreakpointPanelProvider>();
-        for (DebuggerSupport debuggerSupport : DebuggerSupport.getDebuggerSupports()) {
-            panelProviders.add(debuggerSupport.getBreakpointPanelProvider());
-        }
-        Collections.sort(panelProviders, new Comparator<BreakpointPanelProvider>() {
-            @Override
-            public int compare(BreakpointPanelProvider o1, BreakpointPanelProvider o2) {
-                return o2.getPriority() - o1.getPriority();
-            }
-        });
-        return panelProviders;
-    }
-
-    @Nullable
-    public static DebuggerSupport getDebuggerSupport(Project project, BreakpointItem breakpointItem) {
-        List<BreakpointItem> items = new ArrayList<BreakpointItem>();
-        for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
-            support.getBreakpointPanelProvider().provideBreakpointItems(project, items);
-            if (items.contains(breakpointItem)) {
-                return support;
-            }
-            items.clear();
-        }
-        return null;
+        return List.of(XBreakpointPanelProvider.getInstance());
     }
 
     @RequiredReadAction

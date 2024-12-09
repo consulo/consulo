@@ -39,7 +39,7 @@ public class XMarkObjectActionHandler extends MarkObjectActionHandler {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     if (session == null) return;
 
-    XValueMarkers<?, ?> markers = ((XDebugSessionImpl)session).getValueMarkers();
+    XValueMarkers<?, ?> markers = session.getValueMarkers();
     XValueNodeImpl node = XDebuggerTreeActionBase.getSelectedNode(event.getDataContext());
     if (markers == null || node == null) return;
     XValue value = node.getValueContainer();

@@ -166,7 +166,6 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     boolean areBreakpointsMuted();
 
-
     void addSessionListener(@Nonnull XDebugSessionListener listener, @Nonnull Disposable parentDisposable);
 
     void addSessionListener(@Nonnull XDebugSessionListener listener);
@@ -218,4 +217,8 @@ public interface XDebugSession extends AbstractDebuggerSession {
     boolean isReadOnly();
 
     void setReadOnly(boolean readOnly);
+
+    boolean isBreakpointActive(@Nonnull XBreakpoint<?> b);
+
+    void processDependencies(@Nonnull XBreakpoint<?> breakpoint);
 }

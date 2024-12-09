@@ -67,6 +67,8 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
 
     void setLogExpression(@Nullable String expression);
 
+    void setLogExpressionEnabled(boolean logExpressionEnabled);
+
     @Nullable
     XExpression getLogExpressionObject();
 
@@ -93,4 +95,6 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
 
     @Nonnull
     XBreakpointManager getBreakpointManager();
+
+    void fireBreakpointChanged();
 }

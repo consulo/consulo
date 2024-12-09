@@ -17,8 +17,8 @@ package consulo.execution.debug.impl.internal.action;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.execution.debug.impl.internal.DebuggerSupport;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
+import consulo.execution.debug.impl.internal.action.handler.XDebuggerEditBreakpointActionHandler;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -28,30 +28,30 @@ import jakarta.annotation.Nonnull;
 
 public class EditBreakpointAction extends XDebuggerActionBase {
 
-  public static class ContextAction extends AnAction {
-    private final GutterIconRenderer myRenderer;
-    private final Object myBreakpoint;
-    private DebuggerSupport myDebuggerSupport;
+    public static class ContextAction extends AnAction {
+        private final GutterIconRenderer myRenderer;
+        private final Object myBreakpoint;
 
-    public ContextAction(GutterIconRenderer breakpointRenderer, Object breakpoint, DebuggerSupport debuggerSupport) {
-      super(ActionLocalize.actionEditbreakpointText());
-      myRenderer = breakpointRenderer;
-      myBreakpoint = breakpoint;
-      myDebuggerSupport = debuggerSupport;
+        public ContextAction(GutterIconRenderer breakpointRenderer, Object breakpoint) {
+            super(ActionLocalize.actionEditbreakpointText());
+            myRenderer = breakpointRenderer;
+            myBreakpoint = breakpoint;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            final Editor editor = e.getDataContext().getData(Editor.KEY);
+            if (editor == null) {
+                return;
+            }
+            XDebuggerEditBreakpointActionHandler.INSTANCE.editBreakpoint(e.getData(Project.KEY), editor, myBreakpoint, myRenderer);
+        }
     }
 
+    @Nonnull
     @Override
-    @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-      final Editor editor = e.getDataContext().getData(Editor.KEY);
-      if (editor == null) return;
-      myDebuggerSupport.getEditBreakpointAction().editBreakpoint(e.getData(Project.KEY), editor, myBreakpoint, myRenderer);
+    protected DebuggerActionHandler getHandler() {
+        return XDebuggerEditBreakpointActionHandler.INSTANCE;
     }
-  }
-
-  @Nonnull
-  @Override
-  protected DebuggerActionHandler getHandler(@Nonnull DebuggerSupport debuggerSupport) {
-    return debuggerSupport.getEditBreakpointAction();
-  }
 }

@@ -23,6 +23,7 @@ import consulo.document.FileDocumentManager;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.*;
+import consulo.execution.debug.frame.presentation.XValueNodePresentationConfigurator;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.impl.internal.XDebuggerInlayUtil;
 import consulo.execution.debug.impl.internal.frame.XDebugView;

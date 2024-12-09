@@ -36,12 +36,13 @@ import consulo.execution.debug.*;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.execution.debug.evaluation.ValueLookupManager;
 import consulo.execution.debug.event.XBreakpointListener;
 import consulo.execution.debug.event.XDebuggerManagerListener;
 import consulo.execution.debug.impl.internal.action.ShowBreakpointsOverLineNumbersAction;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointManagerImpl;
-import consulo.execution.debug.impl.internal.evaluate.ValueLookupManager;
+import consulo.execution.debug.impl.internal.evaluate.ValueLookupManagerImpl;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
 import consulo.execution.debug.impl.internal.ui.ExecutionPointHighlighter;
 import consulo.execution.debug.impl.internal.ui.XDebugSessionTab;
@@ -357,7 +358,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
 
     private void onActiveSessionChanged() {
         myBreakpointManager.getLineBreakpointManager().queueAllBreakpointsUpdate();
-        ApplicationManager.getApplication().invokeLater(() -> ValueLookupManager.getInstance(myProject).hideHint(), myProject.getDisposed());
+        ApplicationManager.getApplication().invokeLater(() -> ((ValueLookupManagerImpl) ValueLookupManager.getInstance(myProject)).hideHint(), myProject.getDisposed());
     }
 
     @Override

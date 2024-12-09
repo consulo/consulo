@@ -15,8 +15,8 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
-import consulo.execution.debug.impl.internal.DebuggerSupport;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
+import consulo.execution.debug.impl.internal.action.handler.XDebuggerPauseActionHandler;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -26,10 +26,12 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public class PauseAction extends XDebuggerActionBase {
+    private final XDebuggerPauseActionHandler myHandler = new XDebuggerPauseActionHandler();
+
     @Override
     @Nonnull
-    protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
-        return debuggerSupport.getPauseHandler();
+    protected DebuggerActionHandler getHandler() {
+        return myHandler;
     }
 
     @Nullable

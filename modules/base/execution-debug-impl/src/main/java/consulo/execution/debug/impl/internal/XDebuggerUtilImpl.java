@@ -48,7 +48,7 @@ import consulo.execution.debug.frame.XValueContainer;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
 import consulo.execution.debug.impl.internal.breakpoint.ui.group.XBreakpointFileGroupingRule;
-import consulo.execution.debug.impl.internal.evaluate.ValueLookupManager;
+import consulo.execution.debug.impl.internal.evaluate.ValueLookupManagerImpl;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
 import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
 import consulo.execution.debug.impl.internal.ui.tree.action.XDebuggerTreeActionBase;
@@ -555,7 +555,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
     @Override
     public void disableValueLookup(@Nonnull Editor editor) {
-        ValueLookupManager.DISABLE_VALUE_LOOKUP.set(editor, Boolean.TRUE);
+        ValueLookupManagerImpl.DISABLE_VALUE_LOOKUP.set(editor, Boolean.TRUE);
     }
 
     @Nullable

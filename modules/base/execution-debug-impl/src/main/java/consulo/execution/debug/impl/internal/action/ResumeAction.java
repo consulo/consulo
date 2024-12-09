@@ -16,11 +16,11 @@
 package consulo.execution.debug.impl.internal.action;
 
 import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
-import consulo.execution.debug.impl.internal.action.XDebuggerActionBase;
-import consulo.execution.debug.impl.internal.DebuggerSupport;
+import consulo.execution.debug.impl.internal.action.handler.XDebuggerActionHandler;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -35,6 +35,18 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public class ResumeAction extends XDebuggerActionBase implements DumbAware {
+    private final DebuggerActionHandler myHandler = new XDebuggerActionHandler() {
+        @Override
+        protected boolean isEnabled(@Nonnull final XDebugSession session, final DataContext dataContext) {
+            return session.isPaused();
+        }
+
+        @Override
+        protected void perform(@Nonnull final XDebugSession session, final DataContext dataContext) {
+            session.resume();
+        }
+    };
+
     @Override
     protected boolean isEnabled(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
@@ -62,8 +74,8 @@ public class ResumeAction extends XDebuggerActionBase implements DumbAware {
 
     @Override
     @Nonnull
-    protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
-        return debuggerSupport.getResumeActionHandler();
+    protected DebuggerActionHandler getHandler() {
+        return myHandler;
     }
 
     @Nullable

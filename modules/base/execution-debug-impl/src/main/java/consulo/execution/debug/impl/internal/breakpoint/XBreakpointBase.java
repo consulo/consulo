@@ -24,9 +24,7 @@ import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
-import consulo.execution.debug.impl.internal.DebuggerSupport;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
-import consulo.execution.debug.impl.internal.XDebuggerSupport;
 import consulo.execution.debug.impl.internal.action.EditBreakpointAction;
 import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.execution.debug.localize.XDebuggerLocalize;
@@ -119,6 +117,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         return myBreakpointManager;
     }
 
+    @Override
     public final void fireBreakpointChanged() {
         clearIcon();
         myBreakpointManager.fireBreakpointChanged(this);
@@ -193,6 +192,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         return myLogExpressionEnabled;
     }
 
+    @Override
     public void setLogExpressionEnabled(boolean logExpressionEnabled) {
         if (myLogExpressionEnabled != logExpressionEnabled) {
             myLogExpressionEnabled = logExpressionEnabled;
@@ -548,8 +548,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         public AnAction getRightButtonClickAction() {
             return new EditBreakpointAction.ContextAction(
                 this,
-                XBreakpointBase.this,
-                DebuggerSupport.getDebuggerSupport(XDebuggerSupport.class)
+                XBreakpointBase.this
             );
         }
 

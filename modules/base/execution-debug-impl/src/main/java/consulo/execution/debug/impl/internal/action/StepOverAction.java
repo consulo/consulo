@@ -15,10 +15,11 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.dataContext.DataContext;
+import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
-import consulo.execution.debug.impl.internal.action.XDebuggerActionBase;
-import consulo.execution.debug.impl.internal.DebuggerSupport;
+import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -27,10 +28,17 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public class StepOverAction extends XDebuggerActionBase {
+    private final DebuggerActionHandler myHandler = new XDebuggerSuspendedActionHandler() {
+        @Override
+        protected void perform(@Nonnull final XDebugSession session, final DataContext dataContext) {
+            session.stepOver(false);
+        }
+    };
+
     @Override
     @Nonnull
-    protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
-        return debuggerSupport.getStepOverHandler();
+    protected DebuggerActionHandler getHandler() {
+        return myHandler;
     }
 
     @Nullable

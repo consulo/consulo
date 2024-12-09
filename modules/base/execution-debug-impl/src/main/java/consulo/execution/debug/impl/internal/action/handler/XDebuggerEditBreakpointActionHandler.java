@@ -31,17 +31,21 @@ import javax.swing.*;
 import java.awt.*;
 
 public class XDebuggerEditBreakpointActionHandler extends EditBreakpointActionHandler {
-  @Override
-  protected void doShowPopup(Project project, JComponent component, Point whereToShow, Object breakpoint) {
-    DebuggerUIUtil.showXBreakpointEditorBalloon(project, whereToShow, component, false, (XBreakpoint)breakpoint);
-  }
+    public static final XDebuggerEditBreakpointActionHandler INSTANCE = new XDebuggerEditBreakpointActionHandler();
 
-  @Override
-  public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
-    DataContext dataContext = event.getDataContext();
-    Editor editor = dataContext.getData(Editor.KEY);
-    if (editor == null) return false;
-    final Pair<GutterIconRenderer,Object> pair = XBreakpointUtil.findSelectedBreakpoint(project, editor);
-    return pair.first != null && pair.second instanceof XLineBreakpointImpl;
-  }
+    @Override
+    protected void doShowPopup(Project project, JComponent component, Point whereToShow, Object breakpoint) {
+        DebuggerUIUtil.showXBreakpointEditorBalloon(project, whereToShow, component, false, (XBreakpoint) breakpoint);
+    }
+
+    @Override
+    public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
+        DataContext dataContext = event.getDataContext();
+        Editor editor = dataContext.getData(Editor.KEY);
+        if (editor == null) {
+            return false;
+        }
+        final Pair<GutterIconRenderer, Object> pair = XBreakpointUtil.findSelectedBreakpoint(project, editor);
+        return pair.first != null && pair.second instanceof XLineBreakpointImpl;
+    }
 }

@@ -16,8 +16,6 @@
 package consulo.execution.debug.impl.internal.action;
 
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
-import consulo.execution.debug.impl.internal.DebuggerSupport;
-import consulo.execution.debug.impl.internal.action.handler.DebuggerToggleActionHandler;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -30,15 +28,14 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public class MuteBreakpointAction extends ToggleAction {
+    private final XDebuggerMuteBreakpointsHandler myHandler = new XDebuggerMuteBreakpointsHandler();
+
     @Override
     public boolean isSelected(final AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
-            for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
-                DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
-                if (handler.isEnabled(project, e)) {
-                    return handler.isSelected(project, e);
-                }
+            if (myHandler.isEnabled(project, e)) {
+                return myHandler.isSelected(project, e);
             }
         }
         return false;
@@ -48,12 +45,8 @@ public class MuteBreakpointAction extends ToggleAction {
     public void setSelected(final AnActionEvent e, final boolean state) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
-            for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
-                DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
-                if (handler.isEnabled(project, e)) {
-                    handler.setSelected(project, e, state);
-                    return;
-                }
+            if (myHandler.isEnabled(project, e)) {
+                myHandler.setSelected(project, e, state);
             }
         }
     }
@@ -64,12 +57,9 @@ public class MuteBreakpointAction extends ToggleAction {
         super.update(e);
         Project project = e.getData(Project.KEY);
         if (project != null) {
-            for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
-                DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
-                if (handler.isEnabled(project, e)) {
-                    e.getPresentation().setEnabled(true);
-                    return;
-                }
+            if (myHandler.isEnabled(project, e)) {
+                e.getPresentation().setEnabled(true);
+                return;
             }
         }
         e.getPresentation().setEnabled(false);

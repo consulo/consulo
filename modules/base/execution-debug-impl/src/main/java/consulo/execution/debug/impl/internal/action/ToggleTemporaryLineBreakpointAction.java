@@ -17,20 +17,22 @@ package consulo.execution.debug.impl.internal.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
-import consulo.execution.debug.impl.internal.action.XDebuggerActionBase;
-import consulo.execution.debug.impl.internal.DebuggerSupport;
+import consulo.execution.debug.impl.internal.action.handler.XToggleLineBreakpointActionHandler;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class ToggleTemporaryLineBreakpointAction extends XDebuggerActionBase implements DumbAware {
-  public ToggleTemporaryLineBreakpointAction() {
-    super(true);
-  }
+    private final XToggleLineBreakpointActionHandler myHandler = new XToggleLineBreakpointActionHandler(true);
 
-  @Nonnull
-  protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
-    return debuggerSupport.getToggleTemporaryLineBreakpointHandler();
-  }
+    public ToggleTemporaryLineBreakpointAction() {
+        super(true);
+    }
+
+    @Override
+    @Nonnull
+    protected DebuggerActionHandler getHandler() {
+        return myHandler;
+    }
 }
