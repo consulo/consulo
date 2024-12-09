@@ -276,3 +276,8 @@ settings.tooltip.label:
   text: If disabled, use "{0}" to show/hide tooltips
 ad.extra.selection.shortcut:
   text: 'You can also choose an item with: {0}'
+action.Debugger.PopFrame.text:
+  text: Reset _Frame
+action.Debugger.PopFrame.description:
+  text: Moves execution point back to the method call dropping current method frames from the stack
+

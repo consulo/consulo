@@ -16,13 +16,16 @@
 package consulo.execution.debug.impl.internal.action;
 
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik
@@ -35,6 +38,15 @@ public abstract class XDebuggerActionBase extends AnAction implements AnAction.T
     }
 
     protected XDebuggerActionBase(boolean hideDisabledInPopup) {
+        myHideDisabledInPopup = hideDisabledInPopup;
+    }
+
+    protected XDebuggerActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        this(text, description, icon, false);
+    }
+
+    protected XDebuggerActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon, boolean hideDisabledInPopup) {
+        super(text, description, icon);
         myHideDisabledInPopup = hideDisabledInPopup;
     }
 

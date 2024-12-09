@@ -1931,6 +1931,8 @@
             <action id="StepOut" class="consulo.execution.debug.impl.internal.action.StepOutAction"/>
             <action id="RunToCursor" class="consulo.execution.debug.impl.internal.action.RunToCursorAction"/>
             <action id="ForceRunToCursor" class="consulo.execution.debug.impl.internal.action.ForceRunToCursorAction"/>
+            <action id="Debugger.PopFrame" class="consulo.execution.debug.impl.internal.action.ResetFrameAction"/>
+
             <action id="Pause" class="consulo.execution.debug.impl.internal.action.PauseAction"/>
             <action id="Resume" class="consulo.execution.debug.impl.internal.action.ResumeAction"/>
             <separator/>

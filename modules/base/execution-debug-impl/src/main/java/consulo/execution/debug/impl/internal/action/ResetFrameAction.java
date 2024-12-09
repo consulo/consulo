@@ -15,19 +15,47 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.dataContext.DataContext;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.frame.XDropFrameHandler;
+import consulo.execution.debug.frame.XStackFrame;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
+import consulo.execution.debug.impl.internal.action.handler.XDebuggerActionHandler;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2024-12-06
  */
-public class ResetFrameAction extends DumbAwareAction {
-    @RequiredUIAccess
+public class ResetFrameAction extends XDebuggerActionBase {
+    public ResetFrameAction() {
+        super(XDebuggerLocalize.actionDebuggerPopframeText(), XDebuggerLocalize.actionDebuggerPopframeDescription(), ExecutionDebugIconGroup.actionInlinedropframe());
+    }
+
+    private final DebuggerActionHandler myHandler = new XDebuggerActionHandler() {
+        @Override
+        protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
+            XStackFrame currentStackFrame = session.getCurrentStackFrame();
+            XDropFrameHandler handler = session.getDebugProcess().getDropFrameHandler();
+            return currentStackFrame != null && handler != null && handler.canDrop(currentStackFrame);
+        }
+
+        @Override
+        protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+            XStackFrame currentStackFrame = session.getCurrentStackFrame();
+            XDropFrameHandler handler = session.getDebugProcess().getDropFrameHandler();
+
+            if (handler != null && currentStackFrame != null && handler.canDrop(currentStackFrame)) {
+                handler.drop(currentStackFrame);
+            }
+        }
+    };
+
+    @Nonnull
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-        // TODO !
+    protected DebuggerActionHandler getHandler() {
+        return myHandler;
     }
 }
