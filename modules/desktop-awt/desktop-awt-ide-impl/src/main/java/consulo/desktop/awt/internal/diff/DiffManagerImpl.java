@@ -16,15 +16,9 @@
 package consulo.desktop.awt.internal.diff;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.desktop.awt.internal.diff.binary.BinaryDiffTool;
-import consulo.desktop.awt.internal.diff.dir.DirDiffTool;
 import consulo.desktop.awt.internal.diff.editor.ChainDiffVirtualFile;
 import consulo.desktop.awt.internal.diff.external.ExternalDiffTool;
-import consulo.desktop.awt.internal.diff.fragment.UnifiedDiffTool;
-import consulo.desktop.awt.internal.diff.merge.BinaryMergeTool;
 import consulo.desktop.awt.internal.diff.merge.MergeWindow;
-import consulo.desktop.awt.internal.diff.merge.TextMergeTool;
-import consulo.desktop.awt.internal.diff.simple.SimpleDiffTool;
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffEditorTabFilesManager;
@@ -51,7 +45,6 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
@@ -126,23 +119,13 @@ public class DiffManagerImpl extends DiffManagerEx {
   @Nonnull
   @Override
   public List<DiffTool> getDiffTools() {
-    List<DiffTool> result = new ArrayList<>();
-    result.addAll(DiffTool.EP_NAME.getExtensionList());
-    result.add(SimpleDiffTool.INSTANCE);
-    result.add(UnifiedDiffTool.INSTANCE);
-    result.add(BinaryDiffTool.INSTANCE);
-    result.add(DirDiffTool.INSTANCE);
-    return result;
+    return DiffTool.EP_NAME.getExtensionList();
   }
 
   @Nonnull
   @Override
   public List<MergeTool> getMergeTools() {
-    List<MergeTool> result = new ArrayList<>();
-    result.addAll(MergeTool.EP_NAME.getExtensionList());
-    result.add(TextMergeTool.INSTANCE);
-    result.add(BinaryMergeTool.INSTANCE);
-    return result;
+    return MergeTool.EP_NAME.getExtensionList();
   }
 
   @Override

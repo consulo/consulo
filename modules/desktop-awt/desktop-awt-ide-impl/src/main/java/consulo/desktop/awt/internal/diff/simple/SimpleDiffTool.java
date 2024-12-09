@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.simple;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
 import consulo.diff.localize.DiffLocalize;
@@ -22,10 +23,8 @@ import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
-@SuppressWarnings("ExtensionImplIsNotAnnotated")
+@ExtensionImpl(id = "simple")
 public class SimpleDiffTool implements FrameDiffTool {
-    public static final SimpleDiffTool INSTANCE = new SimpleDiffTool();
-
     @Nonnull
     @Override
     @RequiredUIAccess

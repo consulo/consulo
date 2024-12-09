@@ -16,7 +16,9 @@
 package consulo.desktop.awt.internal.diff.merge;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.application.Application;
 import consulo.application.HelpManager;
+import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
@@ -55,6 +57,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
 // TODO: support merge request chains
@@ -222,18 +225,8 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     @Nonnull
     private MergeTool getFittedTool() {
-        for (MergeTool tool : myAvailableTools) {
-            try {
-                if (tool.canShow(myContext, myRequest)) {
-                    return tool;
-                }
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-            }
-        }
-
-        return ErrorMergeTool.INSTANCE;
+        ExtensionPoint<MergeTool> point = Application.get().getExtensionPoint(MergeTool.class);
+        return Objects.requireNonNull(point.findFirstSafe(t -> t.canShow(myContext, myRequest)), "Missed error impl");
     }
 
     private void setTitle(@Nullable String title) {

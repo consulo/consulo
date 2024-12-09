@@ -34,7 +34,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
-@ExtensionImpl
+@ExtensionImpl(id = "binary", order = "after text")
 public class BinaryMergeTool implements MergeTool {
     public static final BinaryMergeTool INSTANCE = new BinaryMergeTool();
 

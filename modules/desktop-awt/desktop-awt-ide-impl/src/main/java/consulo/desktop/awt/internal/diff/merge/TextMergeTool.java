@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.merge;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.diff.merge.MergeContext;
 import consulo.diff.merge.MergeTool;
 import consulo.diff.merge.MergeRequest;
@@ -24,7 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
 
-@SuppressWarnings("ExtensionImplIsNotAnnotated")
+@ExtensionImpl(id = "text")
 public class TextMergeTool implements MergeTool {
     public static final TextMergeTool INSTANCE = new TextMergeTool();
 

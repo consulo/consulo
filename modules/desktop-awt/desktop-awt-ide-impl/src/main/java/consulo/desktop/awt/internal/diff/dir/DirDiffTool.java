@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.dir;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
 import consulo.diff.localize.DiffLocalize;
@@ -23,10 +24,8 @@ import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
-@SuppressWarnings("ExtensionImplIsNotAnnotated")
+@ExtensionImpl(id = "dir", order = "after binary")
 public class DirDiffTool implements FrameDiffTool {
-    public static final DirDiffTool INSTANCE = new DirDiffTool();
-
     @Nonnull
     @Override
     @RequiredUIAccess

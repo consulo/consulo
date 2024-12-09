@@ -29,7 +29,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-@ExtensionImpl
+@ExtensionImpl(order = "last")
 public class ErrorMergeTool implements MergeTool {
     public static final ErrorMergeTool INSTANCE = new ErrorMergeTool();
 

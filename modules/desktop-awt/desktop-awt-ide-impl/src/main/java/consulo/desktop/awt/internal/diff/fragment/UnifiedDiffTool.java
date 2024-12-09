@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.fragment;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.desktop.awt.internal.diff.simple.SimpleOnesideDiffViewer;
 import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
@@ -23,10 +24,8 @@ import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
-@SuppressWarnings("ExtensionImplIsNotAnnotated")
+@ExtensionImpl(id = "unified", order = "after simple")
 public class UnifiedDiffTool implements FrameDiffTool {
-    public static final UnifiedDiffTool INSTANCE = new UnifiedDiffTool();
-
     @Nonnull
     @Override
     @RequiredUIAccess
