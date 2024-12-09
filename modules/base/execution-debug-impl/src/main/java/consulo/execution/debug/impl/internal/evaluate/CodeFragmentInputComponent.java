@@ -21,7 +21,7 @@ import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.impl.internal.ui.XDebuggerEditorBase;
-import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionEditor;
+import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionEditorImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBSplitter;
@@ -35,7 +35,7 @@ import java.awt.*;
  * @author nik
  */
 public class CodeFragmentInputComponent extends EvaluationInputComponent {
-  private final XDebuggerExpressionEditor myMultilineEditor;
+  private final XDebuggerExpressionEditorImpl myMultilineEditor;
   private final JPanel myMainPanel;
   private final String mySplitterProportionKey;
 
@@ -46,7 +46,7 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
                                     String splitterProportionKey,
                                     Disposable parentDisposable) {
     super(XDebuggerBundle.message("dialog.title.evaluate.code.fragment"));
-    myMultilineEditor = new XDebuggerExpressionEditor(project, editorsProvider, "evaluateCodeFragment", sourcePosition,
+    myMultilineEditor = new XDebuggerExpressionEditorImpl(project, editorsProvider, "evaluateCodeFragment", sourcePosition,
                                                       statements != null ? statements : XExpression.EMPTY_CODE_FRAGMENT, true, true, false);
     myMainPanel = new JPanel(new BorderLayout());
     JPanel editorPanel = new JPanel(new BorderLayout());

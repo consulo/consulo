@@ -409,7 +409,7 @@ public abstract class XDebuggerEditorBase {
             return;
         }
 
-        XDebuggerExpressionEditor expressionEditor = new XDebuggerExpressionEditor(myProject, myDebuggerEditorsProvider, myHistoryId, mySourcePosition, getExpression(), true, true, false) {
+        XDebuggerExpressionEditorImpl expressionEditor = new XDebuggerExpressionEditorImpl(myProject, myDebuggerEditorsProvider, myHistoryId, mySourcePosition, getExpression(), true, true, false) {
             @Override
             protected JComponent decorate(JComponent component, boolean multiline, boolean showEditor) {
                 return component;

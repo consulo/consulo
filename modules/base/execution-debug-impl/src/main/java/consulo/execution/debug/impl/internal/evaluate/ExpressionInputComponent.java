@@ -21,7 +21,7 @@ import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.impl.internal.ui.XDebuggerEditorBase;
-import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionEditor;
+import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionEditorImpl;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
@@ -49,7 +49,7 @@ import java.util.List;
  * @author nik
  */
 public class ExpressionInputComponent extends EvaluationInputComponent {
-    private final XDebuggerExpressionEditor myExpressionEditor;
+    private final XDebuggerExpressionEditorImpl myExpressionEditor;
     private final JPanel myMainPanel;
     @Nonnull
     private final Project myProject;
@@ -64,7 +64,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
         super(XDebuggerLocalize.xdebuggerDialogTitleEvaluateExpression().get());
         myProject = project;
         myMainPanel = new JPanel(new BorderLayout());
-        myExpressionEditor = new XDebuggerExpressionEditor(
+        myExpressionEditor = new XDebuggerExpressionEditorImpl(
             project,
             editorsProvider,
             "evaluateExpression",

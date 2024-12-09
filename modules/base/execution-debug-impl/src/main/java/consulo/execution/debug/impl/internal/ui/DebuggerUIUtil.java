@@ -57,6 +57,7 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.Obsolescent;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -406,7 +407,7 @@ public class DebuggerUIUtil {
     }
 
     public static boolean isObsolete(Object object) {
-        return object instanceof Obsolescent && ((Obsolescent) object).isObsolete();
+        return Obsolescent.isObsolete(object);
     }
 
     public static void setTreeNodeValue(XValueNodeImpl valueNode, String text, final Consumer<String> errorConsumer) {

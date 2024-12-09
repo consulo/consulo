@@ -20,8 +20,10 @@ package consulo.execution.debug;
  */
 public interface Obsolescent extends consulo.util.concurrent.Obsolescent {
 
-  /**
-   * @return <code>true</code> if result of computation won't be used so computation may be interrupted 
-   */
-  boolean isObsolete();
+    /**
+     * @return <code>true</code> if result of computation won't be used so computation may be interrupted
+     */
+    default boolean isObsolete() {
+        return false;
+    }
 }

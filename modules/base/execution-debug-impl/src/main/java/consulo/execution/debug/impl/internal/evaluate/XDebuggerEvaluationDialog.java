@@ -47,7 +47,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
@@ -58,6 +57,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.function.Predicate;
 
 /**
  * @author nik
@@ -146,7 +146,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK)), getRootPane(),
             myDisposable);
 
-        Condition<TreeNode> rootFilter = node -> node.getParent() instanceof EvaluatingExpressionRootNode;
+        Predicate<TreeNode> rootFilter = node -> node.getParent() instanceof EvaluatingExpressionRootNode;
         myTreePanel.getTree().expandNodesOnLoad(rootFilter);
         myTreePanel.getTree().selectNodeOnLoad(rootFilter);
 

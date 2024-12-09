@@ -20,8 +20,8 @@ import consulo.application.ApplicationManager;
 import consulo.execution.debug.frame.XValueNode;
 import consulo.execution.debug.frame.presentation.XRegularValuePresentation;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.Obsolescent;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -120,7 +120,7 @@ public final class XValueNodePresentationConfigurator {
     final boolean hasChildren,
     final ConfigurableXValueNode node
   ) {
-    if (DebuggerUIUtil.isObsolete(node)) {
+    if (Obsolescent.isObsolete(node)) {
       return;
     }
 
