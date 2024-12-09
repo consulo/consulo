@@ -2139,7 +2139,7 @@
         <group id="ConsoleView.PopupMenu">
             <reference ref="ConsoleEditorPopupMenu"/>
             <separator/>
-            <action id="ConsoleView.ClearAll" class="consulo.ide.impl.idea.execution.impl.ConsoleViewImpl$ClearAllAction"/>
+            <action id="ConsoleView.ClearAll" class="consulo.execution.impl.internal.action.ClearConsoleAction"/>
         </group>
 
         <group>
