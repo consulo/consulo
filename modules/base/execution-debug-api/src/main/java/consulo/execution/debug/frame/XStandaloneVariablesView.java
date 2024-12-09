@@ -16,6 +16,7 @@
 package consulo.execution.debug.frame;
 
 import consulo.annotation.UsedInPlugin;
+import consulo.disposer.Disposable;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -25,7 +26,7 @@ import javax.swing.*;
  * @since 2024-12-08
  */
 @UsedInPlugin
-public interface XStandaloneVariablesView {
+public interface XStandaloneVariablesView extends Disposable {
     void rebuildView();
 
     @Nonnull
