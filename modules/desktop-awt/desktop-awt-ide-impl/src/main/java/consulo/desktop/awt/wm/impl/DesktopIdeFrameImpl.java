@@ -401,15 +401,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
                     WelcomeFrameManager.getInstance().showIfNoProjectOpened();
                 }
                 else {
-                    UIAccess uiAccess = UIAccess.current();
-
-                    Task.Modal.queue(myProject, "Closing Project...", false, indicator -> {
-                        for (Project project : openProjects) {
-                            projectManager.closeAndDisposeAsync(project, uiAccess).getResultSync();
-                        }
-                    }, () -> {
-                        Application.get().exit();
-                    });
+                    Application.get().exit();
                 }
             }
         });

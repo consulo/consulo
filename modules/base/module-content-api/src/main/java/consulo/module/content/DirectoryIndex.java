@@ -16,6 +16,7 @@
 
 package consulo.module.content;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.query.Query;
@@ -48,7 +49,7 @@ public abstract class DirectoryIndex {
   public abstract DirectoryInfo getInfoForFile(@Nonnull VirtualFile file);
 
   @Nullable
-  public abstract ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo info);
+  public abstract ContentFolderTypeProvider getContentFolderType(@Nonnull VirtualFile file, @Nonnull DirectoryInfo info);
 
   @Nonnull
   public abstract Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources);
@@ -57,5 +58,6 @@ public abstract class DirectoryIndex {
   public abstract String getPackageName(@Nonnull VirtualFile dir);
 
   @Nonnull
+  @RequiredReadAction
   public abstract OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info);
 }

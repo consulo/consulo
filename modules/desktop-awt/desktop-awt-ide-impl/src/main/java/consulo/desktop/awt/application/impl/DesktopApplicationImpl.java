@@ -183,6 +183,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     private boolean disposeSelf(final boolean checkCanCloseProject) {
         final ProjectManagerEx manager = ProjectManagerEx.getInstanceEx();
         final boolean[] canClose = {true};
+        boolean wantSaveSettingsAgain = false;
         for (final Project project : manager.getOpenProjects()) {
             try {
                 CommandProcessor.getInstance().newCommand()
@@ -193,6 +194,7 @@ public class DesktopApplicationImpl extends BaseApplication {
                             canClose[0] = false;
                         }
                     });
+                wantSaveSettingsAgain = true;
             }
             catch (Throwable e) {
                 LOG.error(e);
@@ -201,6 +203,11 @@ public class DesktopApplicationImpl extends BaseApplication {
                 return false;
             }
         }
+
+        if (wantSaveSettingsAgain) {
+            saveSettings();
+        }
+
         runWriteAction(() -> Disposer.dispose(DesktopApplicationImpl.this));
 
         Disposer.assertIsEmpty();

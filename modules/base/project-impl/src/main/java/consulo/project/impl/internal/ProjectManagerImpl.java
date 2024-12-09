@@ -561,7 +561,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                                   boolean init,
                                   UIAccess uiAccess,
                                   ProjectOpenContext context) {
-        Task.Modal.queue(project, ProjectLocalize.projectLoadProgress().get(), canCancelProjectLoading(), indicator -> {
+        Task.Modal.queue(project, ProjectLocalize.projectLoadProgress(), canCancelProjectLoading(), indicator -> {
             indicator.setIndeterminate(true);
 
             try {

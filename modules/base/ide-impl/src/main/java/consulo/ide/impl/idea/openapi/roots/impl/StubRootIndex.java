@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.impl;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.query.EmptyQuery;
 import consulo.application.util.query.Query;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.DirectoryInfo;
@@ -28,20 +29,37 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2024-12-09
  */
-public interface RootIndex {
-    @Nonnull
-    Query<VirtualFile> getDirectoriesByPackageName(@Nonnull final String packageName, final boolean includeLibrarySources);
+public class StubRootIndex implements RootIndex {
+    public static final StubRootIndex INSTANCE = new StubRootIndex();
 
     @Nonnull
-    DirectoryInfo getInfoForFile(@Nonnull VirtualFile file);
+    @Override
+    public Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources) {
+        return EmptyQuery.getEmptyQuery();
+    }
+
+    @Nonnull
+    @Override
+    public DirectoryInfo getInfoForFile(@Nonnull VirtualFile file) {
+        return NonProjectDirectoryInfo.INVALID;
+    }
 
     @Nullable
-    ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo directoryInfo);
+    @Override
+    public ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo directoryInfo) {
+        return null;
+    }
 
     @Nullable
-    String getPackageName(@Nonnull final VirtualFile dir);
+    @Override
+    public String getPackageName(@Nonnull VirtualFile dir) {
+        return null;
+    }
 
-    @Nonnull
     @RequiredReadAction
-    OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info);
+    @Nonnull
+    @Override
+    public OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info) {
+        return OrderEntry.EMPTY_ARRAY;
+    }
 }

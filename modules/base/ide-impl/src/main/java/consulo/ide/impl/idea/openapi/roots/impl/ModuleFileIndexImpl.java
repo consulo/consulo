@@ -113,7 +113,8 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
   @Override
   public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule()) && LanguageContentFolderScopes.test().test(myDirectoryIndexProvider.get().getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule()) &&
+        LanguageContentFolderScopes.test().test(myDirectoryIndexProvider.get().getContentFolderType(fileOrDir, info));
   }
 
   @Nullable
@@ -121,7 +122,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
   public ContentFolderTypeProvider getContentFolderTypeForFile(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
     if (info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule())) {
-      return myDirectoryIndexProvider.get().getContentFolderType(info);
+      return myDirectoryIndexProvider.get().getContentFolderType(fileOrDir, info);
     }
     return null;
   }
@@ -141,7 +142,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
       }
       return null;
     }
-    int index = Collections.binarySearch(orderEntries, new FakeOrderEntry(ownerModule), RootIndex.BY_OWNER_MODULE);
+    int index = Collections.binarySearch(orderEntries, new FakeOrderEntry(ownerModule), RootIndexImpl.BY_OWNER_MODULE);
     return index < 0 ? null : orderEntries.get(index);
   }
 
@@ -153,7 +154,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
       OrderEntry entry = entries.get(0);
       return entry.getOwnerModule() == ownerModule ? ContainerUtil.newArrayList(entries) : Collections.emptyList();
     }
-    int index = Collections.binarySearch(entries, new FakeOrderEntry(ownerModule), RootIndex.BY_OWNER_MODULE);
+    int index = Collections.binarySearch(entries, new FakeOrderEntry(ownerModule), RootIndexImpl.BY_OWNER_MODULE);
     if (index < 0) {
       return Collections.emptyList();
     }

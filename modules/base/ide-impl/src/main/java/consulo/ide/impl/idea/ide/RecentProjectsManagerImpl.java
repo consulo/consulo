@@ -37,6 +37,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectGroup;
 import consulo.project.ProjectManager;
+import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.impl.internal.store.ProjectStoreImpl;
@@ -485,6 +486,7 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
         GeneralSettings generalSettings = GeneralSettings.getInstance();
         if (generalSettings.isReopenLastProject()) {
             Set<String> openPaths;
+            Map<String, IdeFrameState> states = new HashMap<>();
             boolean forceNewFrame = true;
             synchronized (myStateLock) {
                 openPaths = new LinkedHashSet<>(myState.openPaths);
@@ -492,11 +494,24 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
                     openPaths = ContainerUtil.createMaybeSingletonSet(myState.lastPath);
                     forceNewFrame = false;
                 }
+
+                for (String openPath : openPaths) {
+                    IdeFrameState state = myState.frameStates.get(openPath);
+                    if (state != null) {
+                        states.put(openPath, state);
+                    }
+                }
             }
 
             for (String openPath : openPaths) {
                 if (isValidProjectPath(openPath)) {
-                    ProjectImplUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current());
+                    ProjectOpenContext context = new ProjectOpenContext();
+                    IdeFrameState state = states.get(openPath);
+                    if (state != null) {
+                        context.putUserData(IdeFrameState.KEY, state);
+                    }
+
+                    ProjectImplUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current(), context);
                 }
             }
         }

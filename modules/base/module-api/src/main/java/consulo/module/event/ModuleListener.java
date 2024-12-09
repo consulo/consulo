@@ -28,11 +28,15 @@ import java.util.List;
  */
 @TopicAPI(ComponentScope.PROJECT)
 public interface ModuleListener extends EventListener {
-  void moduleAdded(Project project, Module module);
+    default void moduleAdded(Project project, Module module) {
+    }
 
-  void beforeModuleRemoved(Project project, Module module);
+    default void beforeModuleRemoved(Project project, Module module) {
+    }
 
-  void moduleRemoved(Project project, Module module);
+    default void moduleRemoved(Project project, Module module) {
+    }
 
-  void modulesRenamed(Project project, List<Module> modules);
+    default void modulesRenamed(Project project, List<Module> modules) {
+    }
 }

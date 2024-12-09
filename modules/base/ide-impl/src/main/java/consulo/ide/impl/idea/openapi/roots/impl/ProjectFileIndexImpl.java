@@ -194,13 +194,15 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   @Override
   public boolean isInResource(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && ProductionResourceContentFolderTypeProvider.getInstance().equals(myDirectoryIndexProvider.get().getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) &&
+        ProductionResourceContentFolderTypeProvider.getInstance().equals(myDirectoryIndexProvider.get().getContentFolderType(fileOrDir, info));
   }
 
   @Override
   public boolean isInTestResource(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && TestResourceContentFolderTypeProvider.getInstance().equals(myDirectoryIndexProvider.get().getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) &&
+        TestResourceContentFolderTypeProvider.getInstance().equals(myDirectoryIndexProvider.get().getContentFolderType(fileOrDir, info));
   }
 
   @Override
@@ -244,14 +246,15 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   @Override
   public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && LanguageContentFolderScopes.test().test(myDirectoryIndexProvider.get().getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) &&
+        LanguageContentFolderScopes.test().test(myDirectoryIndexProvider.get().getContentFolderType(fileOrDir, info));
   }
 
   @Nullable
   @Override
   public ContentFolderTypeProvider getContentFolderTypeForFile(@Nonnull VirtualFile file) {
     DirectoryInfo info = getInfoForFileOrDirectory(file);
-    return myDirectoryIndexProvider.get().getContentFolderType(info);
+    return myDirectoryIndexProvider.get().getContentFolderType(file, info);
   }
 
   @Override

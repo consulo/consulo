@@ -559,22 +559,20 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
             myProject2Frame.put(project, ideFrame);
             ideFrame.setProject(project);
             jFrame = (JFrame) TargetAWT.to(ideFrame.getWindow());
+
+            setState(jFrame, state);
         }
         else {
             ideFrame = new DesktopIdeFrameImpl(myActionManager, myDataManager, myApplication);
 
             jFrame = (JFrame) TargetAWT.to(ideFrame.getWindow());
 
-            if (state != null) {
-                jFrame.setBounds(new Rectangle(state.x(), state.y(), state.width(), state.height()));
-
-                if (state.maximized()) {
-                    jFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
-                }
-            }
+            setState(jFrame, state);
 
             myProject2Frame.put(project, ideFrame);
+
             ideFrame.setProject(project);
+
             jFrame.setVisible(true);
         }
 
@@ -582,6 +580,18 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         myEventDispatcher.getMulticaster().frameCreated(ideFrame);
 
         return ideFrame;
+    }
+
+    private void setState(@Nonnull JFrame jFrame, @Nullable IdeFrameState state) {
+        if (state == null) {
+            return;
+        }
+
+        jFrame.setBounds(new Rectangle(state.x(), state.y(), state.width(), state.height()));
+
+        if (state.maximized()) {
+            jFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+        }
     }
 
     private void proceedDialogDisposalQueue(Project project) {

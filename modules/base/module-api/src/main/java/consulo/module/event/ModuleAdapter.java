@@ -24,17 +24,22 @@ import java.util.List;
 /**
  * @author nik
  */
+@Deprecated
 public abstract class ModuleAdapter implements ModuleListener {
 
+  @Override
   public void moduleAdded(Project project, Module module) {
   }
 
+  @Override
   public void beforeModuleRemoved(Project project, Module module) {
   }
 
+  @Override
   public void moduleRemoved(Project project, Module module) {
   }
 
+  @Override
   public void modulesRenamed(Project project, List<Module> modules) {
   }
 }
