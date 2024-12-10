@@ -942,17 +942,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>com.formdev</groupId>
-                <artifactId>flatlaf-jide-oss</artifactId>
-                <version>${flatlaf.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.formdev</groupId>
-                        <artifactId>flatlaf</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.swinglabs.swingx</groupId>
                 <artifactId>swingx-all</artifactId>
                 <version>1.6.5</version>

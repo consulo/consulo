@@ -51,7 +51,6 @@ open module consulo.desktop.awt.ide.impl {
   requires com.formdev.flatlaf;
   requires com.formdev.flatlaf.intellijthemes;
   requires com.formdev.flatlaf.swingx;
-  requires flatlaf.jide.oss;
 
   requires swingx.all;
 
@@ -70,6 +69,5 @@ open module consulo.desktop.awt.ide.impl {
   provides org.cobraparser.css.DefaultCssFactory with consulo.desktop.awt.ui.impl.htmlView.ConsuloDefaultCssFactory;
   provides org.cobraparser.css.StandardColorProvider with consulo.desktop.awt.ui.impl.htmlView.ConsuloStandardColorProvider;
 
-  provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.plaf2.flat.ConsuloFlatDefaultsAddon,
-      consulo.desktop.awt.ui.plaf2.flat.ConsuloFlatJideOssDefaultsAddon;
+  provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.plaf2.flat.ConsuloFlatDefaultsAddon;
 }

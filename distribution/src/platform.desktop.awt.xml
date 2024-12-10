@@ -30,7 +30,6 @@
                 <include>com.formdev:flatlaf</include>
                 <include>com.formdev:flatlaf-intellij-themes</include>
                 <include>com.formdev:flatlaf-swingx</include>
-                <include>com.formdev:flatlaf-jide-oss</include>
                 <include>org.swinglabs.swingx:swingx-all</include>
             </includes>
         </dependencySet>
