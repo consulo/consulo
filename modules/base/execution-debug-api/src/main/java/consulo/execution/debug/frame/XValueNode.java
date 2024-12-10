@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.frame;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.ui.XValueTree;
@@ -78,6 +79,11 @@ public interface XValueNode extends Obsolescent {
     @Nullable
     XValueTree getTree();
 
+    @UsedInPlugin
     default void clearFullValueEvaluator() {
+    }
+
+    @UsedInPlugin
+    default void clearChildren() {
     }
 }

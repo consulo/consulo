@@ -19,6 +19,8 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposable;
 import consulo.execution.debug.XBreakpointManager;
@@ -29,6 +31,7 @@ import consulo.execution.debug.event.XBreakpointListener;
 import consulo.execution.debug.event.XTopicBreakpointListener;
 import consulo.execution.debug.impl.internal.XDebuggerManagerImpl;
 import consulo.execution.debug.impl.internal.action.handler.XBreakpointsDialogState;
+import consulo.execution.debug.impl.internal.action.handler.XDebuggerEditBreakpointActionHandler;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
@@ -66,7 +69,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     private final XLineBreakpointManager myLineBreakpointManager;
     private final Project myProject;
     private final XDebuggerManagerImpl myDebuggerManager;
-    private final XDependentBreakpointManager myDependentBreakpointManager;
+    private final XDependentBreakpointManagerImpl myDependentBreakpointManager;
     private long myTime;
     private String myDefaultGroup;
 
@@ -77,7 +80,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
                                   ApplicationConcurrency applicationConcurrency) {
         myProject = project;
         myDebuggerManager = debuggerManager;
-        myDependentBreakpointManager = new XDependentBreakpointManager(this);
+        myDependentBreakpointManager = new XDependentBreakpointManagerImpl(this);
         myLineBreakpointManager = new XLineBreakpointManager(project, myDependentBreakpointManager, startupManager, applicationConcurrency);
 
         if (!project.isDefault()) {
@@ -109,8 +112,15 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
         return myLineBreakpointManager;
     }
 
-    public XDependentBreakpointManager getDependentBreakpointManager() {
+    @Nonnull
+    @Override
+    public XDependentBreakpointManagerImpl getDependentBreakpointManager() {
         return myDependentBreakpointManager;
+    }
+
+    @Override
+    public void editBreakpoint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Object breakpoint, @Nonnull GutterIconRenderer breakpointGutterRenderer) {
+        XDebuggerEditBreakpointActionHandler.INSTANCE.editBreakpoint(project, editor, breakpoint, breakpointGutterRenderer);
     }
 
     public XDebuggerManagerImpl getDebuggerManager() {

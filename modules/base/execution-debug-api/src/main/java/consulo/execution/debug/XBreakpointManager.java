@@ -18,6 +18,8 @@ package consulo.execution.debug;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.disposer.Disposable;
 import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.event.XBreakpointListener;
@@ -99,4 +101,9 @@ public interface XBreakpointManager {
 
     @Nonnull
     Project getProject();
+
+    @Nonnull
+    XDependentBreakpointManager getDependentBreakpointManager();
+
+    void editBreakpoint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Object breakpoint, @Nonnull GutterIconRenderer breakpointGutterRenderer);
 }

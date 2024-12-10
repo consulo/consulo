@@ -201,6 +201,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     return new File(path).getName();
   }
 
+  @Override
   @Nullable
   public RangeHighlighter getHighlighter() {
     return myHighlighter instanceof RangeHighlighter rangeHighlighter ? rangeHighlighter : null;

@@ -16,8 +16,8 @@
 
 package consulo.execution.debug.breakpoint;
 
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -28,24 +28,27 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public interface XLineBreakpoint<P extends XBreakpointProperties> extends XBreakpoint<P> {
-  XLineBreakpoint<?>[] EMPTY_ARRAY = new XLineBreakpoint[0];
+    XLineBreakpoint<?>[] EMPTY_ARRAY = new XLineBreakpoint[0];
 
-  int getLine();
+    int getLine();
 
-  String getFileUrl();
+    String getFileUrl();
 
-  String getPresentableFilePath();
+    String getPresentableFilePath();
 
-  @Nullable
-  VirtualFile getFile();
+    @Nullable
+    VirtualFile getFile();
 
-  @Override
-  @Nonnull
-  XLineBreakpointType<P> getType();
+    @Override
+    @Nonnull
+    XLineBreakpointType<P> getType();
 
-  String getShortFilePath();
+    String getShortFilePath();
 
-  boolean isTemporary();
+    boolean isTemporary();
 
-  void setTemporary(boolean temporary);
+    void setTemporary(boolean temporary);
+
+    @Nullable
+    RangeHighlighter getHighlighter();
 }

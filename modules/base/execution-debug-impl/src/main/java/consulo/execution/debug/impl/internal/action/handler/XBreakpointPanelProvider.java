@@ -32,7 +32,6 @@ import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.execution.debug.event.XBreakpointListener;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
-import consulo.execution.debug.impl.internal.breakpoint.XLineBreakpointImpl;
 import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointItem;
 import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointPanelProvider;
 import consulo.execution.debug.impl.internal.breakpoint.ui.group.XBreakpointCustomGroupingRule;
@@ -118,8 +117,8 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
     @Override
     public GutterIconRenderer getBreakpointGutterIconRenderer(Object breakpoint) {
-        if (breakpoint instanceof XLineBreakpointImpl) {
-            RangeHighlighter highlighter = ((XLineBreakpointImpl) breakpoint).getHighlighter();
+        if (breakpoint instanceof XLineBreakpoint lineBreakpoint) {
+            RangeHighlighter highlighter = lineBreakpoint.getHighlighter();
             if (highlighter != null) {
                 return highlighter.getGutterIconRenderer();
             }

@@ -27,6 +27,7 @@ import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.step.XSmartStepIntoVariant;
+import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.layout.RunnerLayoutUi;
@@ -201,6 +202,8 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     void initBreakpoints();
 
+    void resetBreakpoints();
+
     ConsoleView getConsoleView();
 
     RunnerLayoutUi getUI();
@@ -221,4 +224,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
     boolean isBreakpointActive(@Nonnull XBreakpoint<?> b);
 
     void processDependencies(@Nonnull XBreakpoint<?> breakpoint);
+
+    @Nonnull
+    XDebugSessionData getSessionData();
 }

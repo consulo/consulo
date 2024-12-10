@@ -305,7 +305,8 @@ public class XDebugSessionImpl implements XDebugSession {
         return mySessionTab;
     }
 
-    public void reset() {
+    @Override
+    public void resetBreakpoints() {
         breakpointsInitialized = false;
     }
 
@@ -316,7 +317,7 @@ public class XDebugSessionImpl implements XDebugSession {
         breakpointsInitialized = true;
 
         XBreakpointManagerImpl breakpointManager = myDebuggerManager.getBreakpointManager();
-        XDependentBreakpointManager dependentBreakpointManager = breakpointManager.getDependentBreakpointManager();
+        XDependentBreakpointManagerImpl dependentBreakpointManager = breakpointManager.getDependentBreakpointManager();
         disableSlaveBreakpoints(dependentBreakpointManager);
         processAllBreakpoints(true, false);
 
@@ -352,11 +353,13 @@ public class XDebugSessionImpl implements XDebugSession {
         myDebugProcess.sessionInitialized();
     }
 
+    @Nonnull
+    @Override
     public XDebugSessionData getSessionData() {
         return mySessionData;
     }
 
-    private void disableSlaveBreakpoints(final XDependentBreakpointManager dependentBreakpointManager) {
+    private void disableSlaveBreakpoints(final XDependentBreakpointManagerImpl dependentBreakpointManager) {
         Set<XBreakpoint<?>> slaveBreakpoints = dependentBreakpointManager.getAllSlaveBreakpoints();
         if (slaveBreakpoints.isEmpty()) {
             return;
@@ -779,7 +782,7 @@ public class XDebugSessionImpl implements XDebugSession {
 
     @Override
     public void processDependencies(@Nonnull final XBreakpoint<?> breakpoint) {
-        XDependentBreakpointManager dependentBreakpointManager = myDebuggerManager.getBreakpointManager().getDependentBreakpointManager();
+        XDependentBreakpointManagerImpl dependentBreakpointManager = myDebuggerManager.getBreakpointManager().getDependentBreakpointManager();
         if (!dependentBreakpointManager.isMasterOrSlave(breakpoint)) {
             return;
         }

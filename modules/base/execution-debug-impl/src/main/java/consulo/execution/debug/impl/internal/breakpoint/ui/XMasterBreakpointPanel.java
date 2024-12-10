@@ -21,7 +21,7 @@ import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.impl.internal.action.handler.XBreakpointPanelProvider;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointManagerImpl;
-import consulo.execution.debug.impl.internal.breakpoint.XDependentBreakpointManager;
+import consulo.execution.debug.impl.internal.breakpoint.XDependentBreakpointManagerImpl;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
@@ -40,7 +40,7 @@ public class XMasterBreakpointPanel extends XBreakpointPropertiesSubPanel {
     private JPanel myMainPanel;
 
     private BreakpointChooser myMasterBreakpointChooser;
-    private XDependentBreakpointManager myDependentBreakpointManager;
+    private XDependentBreakpointManagerImpl myDependentBreakpointManager;
 
     private List<BreakpointItem> getBreakpointItemsExceptMy() {
         List<BreakpointItem> items = new ArrayList<>();

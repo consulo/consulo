@@ -77,11 +77,11 @@ public class XLineBreakpointManager {
   private final BidirectionalMap<XLineBreakpointImpl, Document> myBreakpoints = new BidirectionalMap<>();
   private final MergingQueue<Runnable> myBreakpointsUpdateQueue;
   private final Project myProject;
-  private final XDependentBreakpointManager myDependentBreakpointManager;
+  private final XDependentBreakpointManagerImpl myDependentBreakpointManager;
   private final StartupManager myStartupManager;
 
   public XLineBreakpointManager(Project project,
-                                XDependentBreakpointManager dependentBreakpointManager,
+                                XDependentBreakpointManagerImpl dependentBreakpointManager,
                                 StartupManager startupManager,
                                 ApplicationConcurrency applicationConcurrency) {
     myProject = project;
