@@ -358,7 +358,7 @@ public class DialogBuilder implements Disposable {
     }
 
     private abstract static class BuiltinAction implements ActionDescriptor, CustomizableAction {
-        protected LocalizeValue myText = null;
+        protected LocalizeValue myText = LocalizeValue.empty();
 
         @Override
         public void setText(@Nonnull LocalizeValue text) {
