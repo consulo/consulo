@@ -317,13 +317,8 @@ public class CheckboxTreeNoPolicy extends Tree {
       }
       myTextRenderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
-      if (UIUtil.isUnderGTKLookAndFeel()) {
-        final Color background = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
-        UIUtil.changeBackGround(this, background);
-      }
-      else if (UIUtil.isUnderNimbusLookAndFeel()) {
-        UIUtil.changeBackGround(this, UIUtil.TRANSPARENT_COLOR);
-      }
+      UIUtil.changeBackGround(this, UIUtil.TRANSPARENT_COLOR);
+
       customizeRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
       revalidate();
 
