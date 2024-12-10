@@ -24,6 +24,7 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -40,9 +41,11 @@ public interface XDebuggerManager {
         return project.getInstance(XDebuggerManager.class);
     }
 
+    @RequiredUIAccess
+    void showSettings();
+
     @Nonnull
     XBreakpointManager getBreakpointManager();
-
 
     @Nonnull
     XDebugSession[] getDebugSessions();

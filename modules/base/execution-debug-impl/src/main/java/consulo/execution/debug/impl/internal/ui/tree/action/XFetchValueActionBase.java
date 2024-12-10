@@ -17,7 +17,7 @@ package consulo.execution.debug.impl.internal.ui.tree.action;
 
 import consulo.execution.debug.frame.HeadlessValueEvaluationCallback;
 import consulo.execution.debug.frame.XFullValueEvaluator;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.WatchNodeImpl;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
@@ -77,7 +77,7 @@ public abstract class XFetchValueActionBase extends AnAction {
     else {
       XFullValueEvaluator fullValueEvaluator = valueNode.getFullValueEvaluator();
       if (fullValueEvaluator == null || !fullValueEvaluator.isShowValuePopup()) {
-        valueCollector.add(StringUtil.notNullize(DebuggerUIUtil.getNodeRawValue(valueNode)));
+        valueCollector.add(StringUtil.notNullize(DebuggerUIImplUtil.getNodeRawValue(valueNode)));
       }
       else {
         new CopyValueEvaluationCallback(valueNode, valueCollector).startFetchingValue(fullValueEvaluator);

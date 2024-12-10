@@ -17,7 +17,7 @@ package consulo.execution.debug.impl.internal.ui.tree;
 
 import consulo.execution.debug.frame.ImmediateFullValueEvaluator;
 import consulo.execution.debug.frame.XDebuggerTreeNodeHyperlink;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.localize.XDebuggerLocalize;
@@ -85,7 +85,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
       int notFittingWidth = rowX + super.getPreferredSize().width - visibleRectRightX;
       if (node instanceof XValueNodeImpl && notFittingWidth > 0) {
         // text does not fit visible area - show link
-        String rawValue = DebuggerUIUtil.getNodeRawValue((XValueNodeImpl)node);
+        String rawValue = DebuggerUIImplUtil.getNodeRawValue((XValueNodeImpl)node);
         if (!StringUtil.isEmpty(rawValue) && tree.isShowing()) {
           Point treeRightSideOnScreen = new Point(visibleRectRightX, 0);
           SwingUtilities.convertPointToScreen(treeRightSideOnScreen, tree);
@@ -207,7 +207,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
 
     @Override
     public void onClick(MouseEvent event) {
-      DebuggerUIUtil.showValuePopup(new ImmediateFullValueEvaluator(myText), event, myProject, null);
+      DebuggerUIImplUtil.showValuePopup(new ImmediateFullValueEvaluator(myText), event, myProject, null);
       event.consume();
     }
   }

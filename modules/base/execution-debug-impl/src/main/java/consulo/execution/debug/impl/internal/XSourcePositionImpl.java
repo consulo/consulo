@@ -193,29 +193,19 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
     @Override
     @Nonnull
     public Navigatable createNavigatable(@Nonnull Project project) {
-        return doCreateOpenFileDescriptor(project, this);
+        return new XSourcePositionFactoryImpl.XSourcePositionNavigatable(project, this);
     }
 
     @Nonnull
     public static OpenFileDescriptor createOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
-        Navigatable navigatable = position.createNavigatable(project);
-        if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
-            return openFileDescriptor;
-        }
-        else {
-            return doCreateOpenFileDescriptor(project, position);
-        }
-    }
-
-    @Nonnull
-    public static OpenFileDescriptor doCreateOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
         OpenFileDescriptorFactory factory = OpenFileDescriptorFactory.getInstance(project);
 
         OpenFileDescriptorFactory.Builder builder = factory.newBuilder(position.getFile());
         builder = builder.line(position.getLine());
         if (position.getOffset() != -1) {
             builder = builder.offset(position.getOffset());
-        } else {
+        }
+        else {
             builder = builder.column(0);
         }
         return builder.build();

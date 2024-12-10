@@ -26,6 +26,7 @@ import consulo.execution.debug.ui.DebuggerColors;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
+import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -68,7 +69,7 @@ public class ExecutionPointHighlighter {
             mySourcePosition = position;
 
             clearDescriptor();
-            myOpenFileDescriptor = XSourcePositionImpl.createOpenFileDescriptor(myProject, position);
+            myOpenFileDescriptor = findOpenFileDescriptor(myProject, position);
 
             if (!XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isScrollToCenter()) {
                 myOpenFileDescriptor.putUserData(ScrollType.KEY, notTopFrame ? ScrollType.CENTER : ScrollType.MAKE_VISIBLE);
@@ -81,6 +82,17 @@ public class ExecutionPointHighlighter {
 
             doShow(true);
         });
+    }
+
+    @Nonnull
+    private OpenFileDescriptor findOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
+        Navigatable navigatable = position.createNavigatable(project);
+        if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
+            return openFileDescriptor;
+        }
+        else {
+            return XSourcePositionImpl.createOpenFileDescriptor(project, position);
+        }
     }
 
     public void hide() {

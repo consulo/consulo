@@ -26,6 +26,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.configurable.internal.ShowConfigurableService;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -43,6 +44,7 @@ import consulo.execution.debug.impl.internal.action.ShowBreakpointsOverLineNumbe
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointManagerImpl;
 import consulo.execution.debug.impl.internal.evaluate.ValueLookupManagerImpl;
+import consulo.execution.debug.impl.internal.setting.DebuggerConfigurable;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
 import consulo.execution.debug.impl.internal.ui.ExecutionPointHighlighter;
 import consulo.execution.debug.impl.internal.ui.XDebugSessionTab;
@@ -261,6 +263,13 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
         if (file.equals(myExecutionPointHighlighter.getCurrentFile())) {
             myExecutionPointHighlighter.update(navigate);
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void showSettings() {
+        ShowConfigurableService service = myProject.getApplication().getInstance(ShowConfigurableService.class);
+        service.showAndSelect(myProject, DebuggerConfigurable.class);
     }
 
     @Override

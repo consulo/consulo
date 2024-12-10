@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
 import consulo.execution.debug.impl.internal.breakpoint.XLineBreakpointImpl;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
@@ -35,7 +35,7 @@ public class XDebuggerEditBreakpointActionHandler extends EditBreakpointActionHa
 
     @Override
     protected void doShowPopup(Project project, JComponent component, Point whereToShow, Object breakpoint) {
-        DebuggerUIUtil.showXBreakpointEditorBalloon(project, whereToShow, component, false, (XBreakpoint) breakpoint);
+        DebuggerUIImplUtil.showXBreakpointEditorBalloon(project, whereToShow, component, false, (XBreakpoint) breakpoint);
     }
 
     @Override

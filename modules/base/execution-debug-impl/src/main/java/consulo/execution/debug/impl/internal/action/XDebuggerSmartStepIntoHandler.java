@@ -27,7 +27,7 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.step.XSmartStepIntoVariant;
 import consulo.ui.image.Image;
@@ -89,6 +89,6 @@ public class XDebuggerSmartStepIntoHandler extends XDebuggerSuspendedActionHandl
         return FINAL_CHOICE;
       }
     });
-    DebuggerUIUtil.showPopupForEditorLine(popup, editor, position.getLine());
+    DebuggerUIImplUtil.showPopupForEditorLine(popup, editor, position.getLine());
   }
 }

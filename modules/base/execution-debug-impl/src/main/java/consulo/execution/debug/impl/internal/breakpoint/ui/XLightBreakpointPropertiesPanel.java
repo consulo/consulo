@@ -28,7 +28,7 @@ import consulo.execution.debug.breakpoint.ui.XBreakpointCustomPropertiesPanel;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionComboBox;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBCheckBox;
@@ -149,7 +149,7 @@ public class XLightBreakpointPropertiesPanel implements XSuspendPolicyPanel.Dele
                     onCheckboxChanged();
                 }
             });
-            DebuggerUIUtil.focusEditorOnCheck(myConditionEnabledCheckbox, myConditionComboBox.getEditorComponent());
+            DebuggerUIImplUtil.focusEditorOnCheck(myConditionEnabledCheckbox, myConditionComboBox.getEditorComponent());
         }
         else {
             myConditionPanel.setVisible(false);

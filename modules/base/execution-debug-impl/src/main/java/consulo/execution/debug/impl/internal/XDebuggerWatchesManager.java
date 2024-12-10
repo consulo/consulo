@@ -17,7 +17,7 @@ package consulo.execution.debug.impl.internal;
 
 import consulo.component.persist.PersistentStateComponent;
 import consulo.execution.debug.breakpoint.XExpression;
-import consulo.execution.debug.impl.internal.breakpoint.XExpressionState;
+import consulo.execution.debug.breakpoint.XExpressionState;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;

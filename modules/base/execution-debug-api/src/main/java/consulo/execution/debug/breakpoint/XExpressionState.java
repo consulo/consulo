@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.debug.impl.internal.breakpoint;
+package consulo.execution.debug.breakpoint;
 
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.language.Language;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Text;
-import consulo.execution.debug.breakpoint.XExpression;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -59,7 +58,7 @@ public class XExpressionState {
     this(false, expression);
   }
 
-  void checkConverted() {
+  public void checkConverted() {
     if (myOldExpression != null) {
       myExpression = myOldExpression;
       myOldExpression = null;

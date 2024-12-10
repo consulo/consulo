@@ -21,7 +21,7 @@ import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionComboBox;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
@@ -65,7 +65,7 @@ public class XBreakpointActionsPanel extends XBreakpointPropertiesSubPanel {
       myLogExpressionComboBox.setEnabled(false);
       myTemporaryCheckBox.setVisible(breakpoint instanceof XLineBreakpoint);
       myLogExpressionCheckBox.addActionListener(listener);
-      DebuggerUIUtil.focusEditorOnCheck(myLogExpressionCheckBox, myLogExpressionComboBox.getEditorComponent());
+      DebuggerUIImplUtil.focusEditorOnCheck(myLogExpressionCheckBox, myLogExpressionComboBox.getEditorComponent());
     }
     else {
       myExpressionPanel.getParent().remove(myExpressionPanel);

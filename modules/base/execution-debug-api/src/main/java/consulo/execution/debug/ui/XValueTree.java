@@ -18,6 +18,7 @@ package consulo.execution.debug.ui;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueNode;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -41,6 +42,9 @@ public interface XValueTree {
 
     @Nullable
     XDebugSession getSession();
+
+    @Nonnull
+    Project getProject();
 
     @Nullable
     default XValue getSelectedValue() {

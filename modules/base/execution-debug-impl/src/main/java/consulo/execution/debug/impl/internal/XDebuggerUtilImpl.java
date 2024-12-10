@@ -17,9 +17,7 @@ package consulo.execution.debug.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -50,7 +48,7 @@ import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
 import consulo.execution.debug.impl.internal.breakpoint.ui.group.XBreakpointFileGroupingRule;
 import consulo.execution.debug.impl.internal.evaluate.ValueLookupManagerImpl;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.action.XDebuggerTreeActionBase;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.execution.debug.setting.XDebuggerSettings;
@@ -58,8 +56,6 @@ import consulo.execution.debug.ui.DebuggerColors;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.Language;
 import consulo.language.psi.*;
-import consulo.navigation.Navigatable;
-import consulo.navigation.NonNavigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -152,7 +148,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
             else {
                 List<? extends XLineBreakpointType<P>.XLineBreakpointVariant> variants = type.computeVariants(project, position);
                 if (!variants.isEmpty() && editor != null) {
-                    RelativePoint relativePoint = DebuggerUIUtil.getPositionForPopup(editor, line);
+                    RelativePoint relativePoint = DebuggerUIImplUtil.getPositionForPopup(editor, line);
                     if (variants.size() > 1 && relativePoint != null) {
                         final AsyncResult<XLineBreakpoint> res = new AsyncResult<>();
                         class MySelectionListener implements ListSelectionListener {
@@ -246,8 +242,8 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
                         };
 
                         ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
-                        DebuggerUIUtil.registerExtraHandleShortcuts(popup, IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT);
-                        popup.setAdText(DebuggerUIUtil.getSelectionShortcutsAdText(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT));
+                        DebuggerUIImplUtil.registerExtraHandleShortcuts(popup, IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT);
+                        popup.setAdText(DebuggerUIImplUtil.getSelectionShortcutsAdText(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT));
                         popup.addListSelectionListener(selectionListener);
                         popup.show(relativePoint);
                         return res;
@@ -311,87 +307,6 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     @Override
     public XValueContainer getValueContainer(DataContext dataContext) {
         return XDebuggerTreeActionBase.getSelectedValue(dataContext);
-    }
-
-    @Override
-    @Nullable
-    public XSourcePosition createPosition(@Nullable VirtualFile file, int line) {
-        return file == null ? null : XSourcePositionImpl.create(file, line);
-    }
-
-    @Override
-    @Nullable
-    public XSourcePosition createPosition(@Nullable VirtualFile file, final int line, final int column) {
-        return file == null ? null : XSourcePositionImpl.create(file, line, column);
-    }
-
-    @Override
-    @Nullable
-    public XSourcePosition createPositionByOffset(final VirtualFile file, final int offset) {
-        return XSourcePositionImpl.createByOffset(file, offset);
-    }
-
-    @Override
-    @Nullable
-    public XSourcePosition createPositionByElement(PsiElement element) {
-        if (element == null) {
-            return null;
-        }
-
-        PsiFile psiFile = element.getContainingFile();
-        if (psiFile == null) {
-            return null;
-        }
-
-        final VirtualFile file = psiFile.getVirtualFile();
-        if (file == null) {
-            return null;
-        }
-
-        final SmartPsiElementPointer<PsiElement> pointer =
-            SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
-
-        return new XSourcePosition() {
-            private volatile XSourcePosition myDelegate;
-
-            private XSourcePosition getDelegate() {
-                if (myDelegate == null) {
-                    myDelegate = Application.get().runReadAction((Computable<XSourcePosition>) () -> {
-                        PsiElement elem = pointer.getElement();
-                        return XSourcePositionImpl.createByOffset(pointer.getVirtualFile(), elem != null ? elem.getTextOffset() : -1);
-                    });
-                }
-                return myDelegate;
-            }
-
-            @Override
-            public int getLine() {
-                return getDelegate().getLine();
-            }
-
-            @Override
-            public int getOffset() {
-                return getDelegate().getOffset();
-            }
-
-            @Nonnull
-            @Override
-            public VirtualFile getFile() {
-                return file;
-            }
-
-            @Nonnull
-            @Override
-            @RequiredReadAction
-            public Navigatable createNavigatable(@Nonnull Project project) {
-                // no need to create delegate here, it may be expensive
-                if (myDelegate != null) {
-                    return myDelegate.createNavigatable(project);
-                }
-                PsiElement elem = pointer.getElement();
-                return elem instanceof Navigatable navigatable ? navigatable : NonNavigatable.INSTANCE;
-            }
-        };
     }
 
     @Override

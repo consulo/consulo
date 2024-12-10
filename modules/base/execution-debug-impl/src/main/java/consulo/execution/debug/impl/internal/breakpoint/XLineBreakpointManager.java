@@ -39,7 +39,7 @@ import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.impl.internal.XSourcePositionImpl;
 import consulo.execution.debug.impl.internal.action.handler.XDependentBreakpointListener;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
@@ -283,7 +283,7 @@ public class XLineBreakpointManager {
               breakpoint.setLogMessage(true);
             }
             // edit breakpoint
-            DebuggerUIUtil.showXBreakpointEditorBalloon(myProject,
+            DebuggerUIImplUtil.showXBreakpointEditorBalloon(myProject,
                                                         mouseEvent.getPoint(),
                                                         ((EditorEx)editor).getGutterComponentEx().getComponent(),
                                                         false,

@@ -21,7 +21,7 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.execution.debug.impl.internal.action.AddToWatchesAction;
 import consulo.execution.debug.impl.internal.frame.XWatchesView;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.XDebugSessionTab;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.project.Project;
@@ -38,7 +38,7 @@ import jakarta.annotation.Nullable;
 public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
     @Override
     protected boolean isEnabled(@Nonnull final XValueNodeImpl node, @Nonnull AnActionEvent e) {
-        return super.isEnabled(node, e) && DebuggerUIUtil.hasEvaluationExpression(node.getValueContainer()) && getWatchesView(e) != null;
+        return super.isEnabled(node, e) && DebuggerUIImplUtil.hasEvaluationExpression(node.getValueContainer()) && getWatchesView(e) != null;
     }
 
     @Override

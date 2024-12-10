@@ -77,4 +77,7 @@ public interface XValueNode extends Obsolescent {
 
     @Nullable
     XValueTree getTree();
+
+    default void clearFullValueEvaluator() {
+    }
 }

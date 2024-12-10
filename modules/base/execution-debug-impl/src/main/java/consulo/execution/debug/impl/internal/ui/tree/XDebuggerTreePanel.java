@@ -21,7 +21,7 @@ import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XValueMarkers;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -71,7 +71,7 @@ public class XDebuggerTreePanel implements DnDSource {
   }
 
   private XValueNodeImpl[] getNodesToDrag() {
-    return myTree.getSelectedNodes(XValueNodeImpl.class, node -> DebuggerUIUtil.hasEvaluationExpression(node.getValueContainer()));
+    return myTree.getSelectedNodes(XValueNodeImpl.class, node -> DebuggerUIImplUtil.hasEvaluationExpression(node.getValueContainer()));
   }
 
   @Override

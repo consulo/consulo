@@ -17,7 +17,7 @@ package consulo.execution.debug.impl.internal.frame.action;
 
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.impl.internal.frame.XWatchesView;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.WatchNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
@@ -46,7 +46,7 @@ public class XCopyWatchAction extends XWatchesTreeActionBase {
         public void accept(XExpression expr) {
           final XExpression watchExpression = expr != null ? expr : XExpression.fromText(node.getName());
           if (watchExpression != null) {
-            DebuggerUIUtil.invokeLater(new Runnable() {
+            DebuggerUIImplUtil.invokeLater(new Runnable() {
               @Override
               public void run() {
                 watchesView.addWatchExpression(watchExpression, node instanceof WatchNode ? root.getIndex(node) + 1 : -1, true);

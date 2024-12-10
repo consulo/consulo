@@ -30,7 +30,7 @@ import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.frame.XValueNode;
 import consulo.execution.debug.frame.XValuePlace;
 import consulo.execution.debug.impl.internal.frame.XDebugView;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.node.*;
 import consulo.execution.debug.ui.XValueTree;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -281,6 +281,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         return myEditorsProvider;
     }
 
+    @Override
     @Nonnull
     public Project getProject() {
         return myProject;
@@ -304,7 +305,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         if (PlatformDataKeys.PREDEFINED_TEXT == dataId) {
             XValueNodeImpl[] selectedNodes = getSelectedNodes(XValueNodeImpl.class, null);
             if (selectedNodes.length == 1 && selectedNodes[0].getFullValueEvaluator() == null) {
-                return DebuggerUIUtil.getNodeRawValue(selectedNodes[0]);
+                return DebuggerUIImplUtil.getNodeRawValue(selectedNodes[0]);
             }
         }
         return null;
@@ -357,11 +358,11 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     }
 
     private void registerShortcuts() {
-        DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.SET_VALUE, this, this);
-        DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.COPY_VALUE, this, this);
-        DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.JUMP_TO_SOURCE, this, this);
-        DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.JUMP_TO_TYPE_SOURCE, this, this);
-        DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.MARK_OBJECT, this, this);
+        DebuggerUIImplUtil.registerActionOnComponent(XDebuggerActions.SET_VALUE, this, this);
+        DebuggerUIImplUtil.registerActionOnComponent(XDebuggerActions.COPY_VALUE, this, this);
+        DebuggerUIImplUtil.registerActionOnComponent(XDebuggerActions.JUMP_TO_SOURCE, this, this);
+        DebuggerUIImplUtil.registerActionOnComponent(XDebuggerActions.JUMP_TO_TYPE_SOURCE, this, this);
+        DebuggerUIImplUtil.registerActionOnComponent(XDebuggerActions.MARK_OBJECT, this, this);
     }
 
     private static void markNodesObsolete(final XValueContainerNode<?> node) {

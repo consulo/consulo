@@ -19,13 +19,15 @@ import consulo.application.ApplicationManager;
 import consulo.application.ui.DimensionService;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.LogicalPosition;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.debug.*;
+import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.event.XTopicBreakpointListener;
@@ -38,6 +40,7 @@ import consulo.execution.debug.impl.internal.breakpoint.ui.XLightBreakpointPrope
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTreeState;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.execution.debug.ui.DebuggerUIUtil;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValueTextProvider;
 import consulo.language.editor.hint.HintColorUtil;
@@ -61,22 +64,19 @@ import consulo.util.concurrent.Obsolescent;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-public class DebuggerUIUtil {
-    @NonNls
-    public static final String FULL_VALUE_POPUP_DIMENSION_KEY = "XDebugger.FullValuePopup";
+public class DebuggerUIImplUtil {
+    public static final String FULL_VALUE_POPUP_DIMENSION_KEY = DebuggerUIUtil.FULL_VALUE_POPUP_DIMENSION_KEY;
 
-    private DebuggerUIUtil() {
+    private DebuggerUIImplUtil() {
     }
 
     public static void enableEditorOnCheck(final JCheckBox checkbox, final JComponent textfield) {
@@ -88,49 +88,21 @@ public class DebuggerUIUtil {
     }
 
     public static void focusEditorOnCheck(final JCheckBox checkbox, final JComponent component) {
-        final Runnable runnable = () -> IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(component);
-        checkbox.addActionListener(e -> {
-            if (checkbox.isSelected()) {
-                SwingUtilities.invokeLater(runnable);
-            }
-        });
+        DebuggerUIUtil.focusEditorOnCheck(checkbox, component);
     }
 
+    @Deprecated
     public static void invokeLater(Runnable runnable) {
         ApplicationManager.getApplication().invokeLater(runnable);
     }
 
-    @Deprecated
-    public static RelativePoint calcPopupLocation(@Nonnull Editor editor, final int line) {
-        Point p = editor.logicalPositionToXY(new LogicalPosition(line + 1, 0));
-
-        final Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
-        if (!visibleArea.contains(p)) {
-            p = new Point((visibleArea.x + visibleArea.width) / 2, (visibleArea.y + visibleArea.height) / 2);
-        }
-        return new RelativePoint(editor.getContentComponent(), p);
-    }
-
     @Nullable
     public static RelativePoint getPositionForPopup(@Nonnull Editor editor, int line) {
-        Point p = editor.logicalPositionToXY(new LogicalPosition(line + 1, 0));
-        return editor.getScrollingModel().getVisibleArea().contains(p) ? new RelativePoint(editor.getContentComponent(), p) : null;
+        return DebuggerUIUtil.getPositionForPopup(editor, line);
     }
 
     public static void showPopupForEditorLine(@Nonnull JBPopup popup, @Nonnull Editor editor, int line) {
-        RelativePoint point = getPositionForPopup(editor, line);
-        if (point != null) {
-            popup.show(point);
-        }
-        else {
-            Project project = editor.getProject();
-            if (project != null) {
-                popup.showCenteredInCurrentWindow(project);
-            }
-            else {
-                popup.showInFocusCenter();
-            }
-        }
+        DebuggerUIUtil.showPopupForEditorLine(popup, editor, line);
     }
 
     public static void showValuePopup(@Nonnull XFullValueEvaluator evaluator, @Nonnull MouseEvent event, @Nonnull Project project, @Nullable Editor editor) {
@@ -164,15 +136,7 @@ public class DebuggerUIUtil {
     }
 
     public static JBPopup createValuePopup(Project project, JComponent component, @Nullable final FullValueEvaluationCallbackImpl callback) {
-        ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(component, null);
-        builder.setResizable(true).setMovable(true).setDimensionServiceKey(project, FULL_VALUE_POPUP_DIMENSION_KEY, false).setRequestFocus(false);
-        if (callback != null) {
-            builder.setCancelCallback(() -> {
-                callback.setObsolete();
-                return true;
-            });
-        }
-        return builder.createPopup();
+        return DebuggerUIUtil.createValuePopup(project, component, callback == null ? null : callback::setObsolete);
     }
 
     public static void showXBreakpointEditorBalloon(final Project project,
@@ -379,17 +343,7 @@ public class DebuggerUIUtil {
     }
 
     public static void registerExtraHandleShortcuts(final ListPopup popup, String... actionNames) {
-        for (String name : actionNames) {
-            KeyStroke stroke = ShortcutUtil.getKeyStroke(ActionManager.getInstance().getAction(name).getShortcutSet());
-            if (stroke != null) {
-                popup.registerAction("handleSelection " + stroke, stroke, new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        popup.handleSelect(true);
-                    }
-                });
-            }
-        }
+        DebuggerUIUtil.registerExtraHandleShortcuts(popup, actionNames);
     }
 
     public static String getSelectionShortcutsAdText(String... actionNames) {

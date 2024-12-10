@@ -78,7 +78,11 @@ public abstract class XDebuggerUtil {
      * @return source position
      */
     @Nullable
-    public abstract XSourcePosition createPosition(@Nullable VirtualFile file, int line);
+    @Deprecated
+    public XSourcePosition createPosition(@Nullable VirtualFile file, int line) {
+        XSourcePositionFactory factory = Application.get().getInstance(XSourcePositionFactory.class);
+        return factory.createPosition(file, line);
+    }
 
     /**
      * Create {@link XSourcePosition} instance by line and column number
@@ -89,7 +93,11 @@ public abstract class XDebuggerUtil {
      * @return source position
      */
     @Nullable
-    public abstract XSourcePosition createPosition(@Nullable VirtualFile file, int line, int column);
+    @Deprecated
+    public XSourcePosition createPosition(@Nullable VirtualFile file, int line, int column) {
+        XSourcePositionFactory factory = Application.get().getInstance(XSourcePositionFactory.class);
+        return factory.createPosition(file, line, column);
+    }
 
     /**
      * Create {@link XSourcePosition} instance by line number
@@ -99,10 +107,18 @@ public abstract class XDebuggerUtil {
      * @return source position
      */
     @Nullable
-    public abstract XSourcePosition createPositionByOffset(@Nullable VirtualFile file, int offset);
+    @Deprecated
+    public XSourcePosition createPositionByOffset(@Nullable VirtualFile file, int offset) {
+        XSourcePositionFactory factory = Application.get().getInstance(XSourcePositionFactory.class);
+        return factory.createPositionByOffset(file, offset);
+    }
 
     @Nullable
-    public abstract XSourcePosition createPositionByElement(@Nullable PsiElement element);
+    @Deprecated
+    public XSourcePosition createPositionByElement(@Nullable PsiElement element) {
+        XSourcePositionFactory factory = Application.get().getInstance(XSourcePositionFactory.class);
+        return factory.createPositionByElement(element);
+    }
 
     public abstract <B extends XLineBreakpoint<?>> XBreakpointGroupingRule<B, ?> getGroupingByFileRule();
 

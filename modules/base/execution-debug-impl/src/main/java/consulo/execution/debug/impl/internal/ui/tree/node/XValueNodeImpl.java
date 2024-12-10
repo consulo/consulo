@@ -28,7 +28,7 @@ import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.impl.internal.XDebuggerInlayUtil;
 import consulo.execution.debug.impl.internal.frame.XDebugView;
 import consulo.execution.debug.impl.internal.frame.XVariablesView;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.execution.debug.ui.ValueMarkup;
@@ -183,6 +183,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
     });
   }
 
+  @Override
   public void clearFullValueEvaluator() {
     myFullValueEvaluator = null;
   }
@@ -254,7 +255,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
         @Override
         public void onClick(MouseEvent event) {
           if (myFullValueEvaluator.isShowValuePopup()) {
-            DebuggerUIUtil.showValuePopup(myFullValueEvaluator, event, myTree.getProject(), null);
+            DebuggerUIImplUtil.showValuePopup(myFullValueEvaluator, event, myTree.getProject(), null);
           }
           else {
             new HeadlessValueEvaluationCallback(XValueNodeImpl.this, myTree.getProject()).startFetchingValue(myFullValueEvaluator);

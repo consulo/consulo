@@ -23,7 +23,7 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueContainerNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
@@ -68,7 +68,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
     }
 
     XStackFrame stackFrame = session.getCurrentStackFrame();
-    DebuggerUIUtil.invokeLater(() -> {
+    DebuggerUIImplUtil.invokeLater(() -> {
       XDebuggerTree tree = getTree();
 
       if (event == SessionEvent.BEFORE_RESUME || event == SessionEvent.SETTINGS_CHANGED) {

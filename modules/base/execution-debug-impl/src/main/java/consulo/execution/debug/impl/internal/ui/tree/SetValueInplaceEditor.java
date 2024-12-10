@@ -22,7 +22,7 @@ import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValuePresentationUtil;
 import consulo.project.ui.util.AppUIUtil;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.language.editor.hint.HintManager;
 import consulo.ui.ex.awt.JBUI;
@@ -104,7 +104,7 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
   public void doOKAction() {
     if (myModifier == null) return;
 
-    DebuggerUIUtil.setTreeNodeValue(myValueNode, getExpression().getExpression(), errorMessage -> {
+    DebuggerUIImplUtil.setTreeNodeValue(myValueNode, getExpression().getExpression(), errorMessage -> {
       Editor editor = getEditor();
       if (editor != null) {
         HintManager.getInstance().showErrorHint(editor, errorMessage);

@@ -25,7 +25,7 @@ import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.execution.debug.impl.internal.ui.DebuggerSessionTabBase;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.XDebugSessionTab;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.action.XWatchTransferable;
@@ -76,10 +76,10 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     XDebuggerTree tree = getTree();
     createNewRootNode(null);
 
-    DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.XNEW_WATCH, tree, myDisposables);
-    DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.XREMOVE_WATCH, tree, myDisposables);
-    DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.XCOPY_WATCH, tree, myDisposables);
-    DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.XEDIT_WATCH, tree, myDisposables);
+    DebuggerUIImplUtil.registerActionOnComponent(XDebuggerActions.XNEW_WATCH, tree, myDisposables);
+    DebuggerUIImplUtil.registerActionOnComponent(XDebuggerActions.XREMOVE_WATCH, tree, myDisposables);
+    DebuggerUIImplUtil.registerActionOnComponent(XDebuggerActions.XCOPY_WATCH, tree, myDisposables);
+    DebuggerUIImplUtil.registerActionOnComponent(XDebuggerActions.XEDIT_WATCH, tree, myDisposables);
 
     EmptyAction.registerWithShortcutSet(
       XDebuggerActions.XNEW_WATCH,

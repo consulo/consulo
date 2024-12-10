@@ -28,7 +28,7 @@ import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.frame.*;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerEvaluateActionHandler;
-import consulo.execution.debug.impl.internal.ui.DebuggerUIUtil;
+import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.frame.presentation.XValueNodePresentationConfigurator;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
@@ -201,7 +201,7 @@ public class XValueHint extends AbstractValueHint {
                                     myFullValueEvaluator.getLinkText(),
                                     XDebuggerTreeNodeHyperlink.TEXT_ATTRIBUTES,
                                     (Consumer<MouseEvent>) event ->
-                                        DebuggerUIUtil.showValuePopup(myFullValueEvaluator, event, getProject(), getEditor())
+                                        DebuggerUIImplUtil.showValuePopup(myFullValueEvaluator, event, getProject(), getEditor())
                                 );
                                 LinkMouseListenerBase.installSingleTagOn(component);
                             }
