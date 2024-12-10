@@ -19,7 +19,6 @@ package consulo.desktop.awt.ui.plaf2.flat;
 import com.formdev.flatlaf.ui.FlatStylingSupport;
 import com.formdev.flatlaf.ui.FlatStylingSupport.Styleable;
 import com.formdev.flatlaf.ui.FlatStylingSupport.StyleableUI;
-import com.formdev.flatlaf.ui.FlatTreeUI;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.HiDPIUtils;
 import com.formdev.flatlaf.util.LoggingFacade;
@@ -217,7 +216,7 @@ public class FlatTreeUIWidePatch
     private Map<String, Object> oldStyleValues;
 
     public static ComponentUI createUI(JComponent c) {
-        return new FlatTreeUI();
+        return new FlatTreeUIWidePatch();
     }
 
     @Override
