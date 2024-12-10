@@ -54,7 +54,11 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
-                append(myPresentation.getTextValue().get());
+                if (myPresentation.isDisabledMnemonic()) {
+                    append(myPresentation.getTextValue().get());
+                } else {
+                    append(myPresentation.getTextValue().map(Presentation.NO_MNEMONIC).get());
+                }
                 setIcon(myPresentation.getIcon());
             }
         });

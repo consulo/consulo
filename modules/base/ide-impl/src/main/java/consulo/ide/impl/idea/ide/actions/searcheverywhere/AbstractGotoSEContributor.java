@@ -143,11 +143,6 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             }
 
             @Override
-            void onProjectScopeToggled() {
-                setEverywhere(!myScopeDescriptor.scopeEquals(myEverywhereScope));
-            }
-
-            @Override
             public boolean isEverywhere() {
                 return myScopeDescriptor.scopeEquals(myEverywhereScope);
             }
@@ -442,15 +437,11 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
         static final char CHOOSE = 'O';
         static final char TOGGLE = 'P';
-        static final String TOGGLE_ACTION_NAME = "toggleProjectScope";
 
         abstract void onScopeSelected(@Nonnull ScopeDescriptor o);
 
         @Nonnull
         abstract ScopeDescriptor getSelectedScope();
-
-        abstract void onProjectScopeToggled();
-
 
         @Nonnull
         @Override
@@ -466,42 +457,13 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             return true;
         }
 
-
-        // TODO
-//        @Nonnull
-//        @Override
-//        public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
-//            ActionButtonFactory buttonFactory = ActionButtonFactory.getInstance();
-//            JComponent component = buttonFactory.createWithText(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE).getComponent();
-//            UIUtil.putClientProperty(component, MnemonicHelper.MNEMONIC_CHECKER, keyCode -> KeyEvent.getExtendedKeyCodeForChar(TOGGLE) == keyCode || KeyEvent.getExtendedKeyCodeForChar(CHOOSE) == keyCode);
-//
-//            MnemonicHelper.registerMnemonicAction(component, CHOOSE);
-//            InputMap map = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-//            int mask = MnemonicHelper.getFocusAcceleratorKeyMask();
-//            map.put(KeyStroke.getKeyStroke(TOGGLE, mask, false), TOGGLE_ACTION_NAME);
-//            component.getActionMap().put(TOGGLE_ACTION_NAME, new AbstractAction() {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    // mimic AnAction event invocation to trigger myEverywhereAutoSet=false logic
-//                    DataContext dataContext = DataManager.getInstance().getDataContext(component);
-//                    KeyEvent inputEvent = new KeyEvent(component, KeyEvent.KEY_PRESSED, e.getWhen(), MnemonicHelper.getFocusAcceleratorKeyMask(), KeyEvent.getExtendedKeyCodeForChar(TOGGLE), TOGGLE);
-//                    AnActionEvent event = AnActionEvent.createFromAnAction(ScopeChooserAction.this, inputEvent, ActionPlaces.TOOLBAR, dataContext);
-//                    ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
-//                    actionManager.fireBeforeActionPerformed(ScopeChooserAction.this, dataContext, event);
-//                    onProjectScopeToggled();
-//                    actionManager.fireAfterActionPerformed(ScopeChooserAction.this, dataContext, event);
-//                }
-//            });
-//            return component;
-//        }
-
         @Override
         @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             ScopeDescriptor selection = getSelectedScope();
             String name = StringUtil.trimMiddle(selection.getDisplayName(), 30);
             String text = StringUtil.escapeMnemonics(name).replaceFirst("(?i)([" + TOGGLE + CHOOSE + "])", "_$1");
-            e.getPresentation().setText(text);
+            e.getPresentation().setTextValue(LocalizeValue.of(text));
             e.getPresentation().setIcon(selection.getIcon());
             String shortcutText = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(CHOOSE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));
             String shortcutText2 = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(TOGGLE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));
