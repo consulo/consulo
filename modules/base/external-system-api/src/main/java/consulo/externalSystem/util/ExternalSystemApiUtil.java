@@ -29,7 +29,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.RunnerRegistry;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.event.ExecutionListener;

@@ -34,6 +34,7 @@ import consulo.execution.impl.internal.ui.EditConfigurationsDialog;
 import consulo.execution.internal.PreferredProducerFind;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.DumbService;

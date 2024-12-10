@@ -20,7 +20,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.RunnerRegistry;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.configuration.ConfigurationPerRunnerSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunnerSettings;

@@ -15,7 +15,7 @@
  */
 package consulo.execution.test.action;
 
-import consulo.execution.RunnerRegistry;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
 import consulo.execution.configuration.log.LogFileOptions;

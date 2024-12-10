@@ -19,7 +19,7 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.execution.DefaultExecutionTarget;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.ExecutionTargetProvider;
-import consulo.execution.RunnerRegistry;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.configuration.*;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;

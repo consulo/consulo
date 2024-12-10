@@ -13,6 +13,7 @@ import consulo.execution.impl.internal.compound.CompoundRunConfiguration;
 import consulo.execution.impl.internal.ui.RunContentManagerImpl;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ProcessHandler;
 import consulo.project.DumbService;
@@ -109,7 +110,7 @@ public abstract class ExecutorAction extends DumbAwareAction {
 
     if (!isValid(settings)) return false;
 
-    ProgramRunner<?> runner = ProgramRunner.getRunner(executorId, configuration);
+    ProgramRunner<?> runner = RunnerRegistry.getInstance().getRunner(executorId, configuration);
     if (runner == null) return false;
 
     if (target == null) {

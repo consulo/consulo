@@ -21,7 +21,6 @@ import consulo.disposer.Disposer;
 import consulo.execution.DefaultExecutionTarget;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.RunnerRegistry;
 import consulo.execution.configuration.ConfigurationPerRunnerSettings;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;

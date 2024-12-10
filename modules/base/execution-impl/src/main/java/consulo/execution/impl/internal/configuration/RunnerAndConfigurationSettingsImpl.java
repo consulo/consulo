@@ -22,6 +22,7 @@ import consulo.execution.configuration.*;
 import consulo.execution.executor.Executor;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
 import consulo.util.jdom.JDOMUtil;

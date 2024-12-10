@@ -23,6 +23,7 @@ import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.externalService.statistic.ConvertUsagesUtil;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.logging.Logger;

@@ -27,6 +27,7 @@ import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Pair;

@@ -36,6 +36,7 @@ import jakarta.annotation.Nullable;
  *
  * @param <Settings>
  * @see GenericProgramRunner
+ * @see RunnerRegistry
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ProgramRunner<Settings extends RunnerSettings> {
@@ -43,26 +44,6 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
 
   interface Callback {
     void processStarted(RunContentDescriptor descriptor);
-  }
-
-  @Nullable
-  static ProgramRunner findRunnerById(@Nonnull String id) {
-    for (ProgramRunner registeredRunner : PROGRAM_RUNNER_EP.getExtensionList()) {
-      if (id.equals(registeredRunner.getRunnerId())) {
-        return registeredRunner;
-      }
-    }
-    return null;
-  }
-
-  @Nullable
-  static ProgramRunner<RunnerSettings> getRunner(@Nonnull String executorId, @Nonnull RunProfile settings) {
-    for (ProgramRunner<RunnerSettings> runner : PROGRAM_RUNNER_EP.getExtensionList()) {
-      if (runner.canRun(executorId, settings)) {
-        return runner;
-      }
-    }
-    return null;
   }
 
   /**

@@ -19,7 +19,7 @@ package consulo.execution.impl.internal.ui;
 import consulo.application.AllIcons;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.RunnerRegistry;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
 import consulo.execution.configuration.ui.SettingsEditor;

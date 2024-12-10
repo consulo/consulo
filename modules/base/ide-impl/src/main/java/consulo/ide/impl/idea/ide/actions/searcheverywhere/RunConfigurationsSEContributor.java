@@ -7,11 +7,11 @@ import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.dataContext.DataManager;
 import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
-import consulo.execution.runner.ProgramRunner;
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.localize.IdeLocalize;
@@ -256,7 +256,7 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
     }
 
     RunConfiguration runConf = settings.getConfiguration();
-    if (ProgramRunner.getRunner(executor.getId(), runConf) == null) {
+    if (RunnerRegistry.getInstance().getRunner(executor.getId(), runConf) == null) {
       executor = runExecutor == executor ? debugExecutor : runExecutor;
     }
 

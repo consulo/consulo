@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution;
+package consulo.execution.runner;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.execution.configuration.RunProfile;
-import consulo.execution.runner.ProgramRunner;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
