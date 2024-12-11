@@ -31,10 +31,7 @@ import java.lang.ref.SoftReference;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class XmlSerializerImpl {
@@ -104,6 +101,7 @@ public class XmlSerializerImpl {
             aClass == Boolean.class ||
             aClass == Double.class ||
             aClass == Float.class ||
+            aClass == UUID.class ||
             aClass.isEnum() ||
             Date.class.isAssignableFrom(aClass)) {
             return null;
@@ -194,6 +192,9 @@ public class XmlSerializerImpl {
         else if (valueClass == long.class || valueClass == Long.class) {
             return Long.parseLong(value);
         }
+        else if (valueClass == UUID.class) {
+            return UUID.fromString(value);
+        }
         else if (valueClass.isEnum()) {
             for (Object enumConstant : valueClass.getEnumConstants()) {
                 if (enumConstant.toString().equals(value)) {
@@ -276,6 +277,9 @@ public class XmlSerializerImpl {
             }
             else if (valueClass == Float.class) {
                 deserializedValue = Float.parseFloat(value);
+            }
+            else if (valueClass == UUID.class) {
+                deserializedValue = UUID.fromString(value);
             }
             accessor.set(host, deserializedValue);
         }
