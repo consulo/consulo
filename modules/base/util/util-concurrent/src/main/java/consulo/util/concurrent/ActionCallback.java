@@ -17,6 +17,9 @@ package consulo.util.concurrent;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -24,256 +27,258 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class ActionCallback {
-  public static final ActionCallback DONE = new Done();
-  public static final ActionCallback REJECTED = new Rejected();
+    private static final Logger LOG = LoggerFactory.getLogger(ActionCallback.class);
 
-  private final ExecutionCallback myDone;
-  private final ExecutionCallback myRejected;
+    public static final ActionCallback DONE = new Done();
+    public static final ActionCallback REJECTED = new Rejected();
 
-  protected String myError;
-  protected Throwable myThrowable;
+    private final ExecutionCallback myDone;
+    private final ExecutionCallback myRejected;
 
-  private final String myName;
+    protected String myError;
+    protected Throwable myThrowable;
 
-  public ActionCallback() {
-    this(null);
-  }
+    private final String myName;
 
-  public ActionCallback(String name) {
-    myName = name;
-    myDone = new ExecutionCallback();
-    myRejected = new ExecutionCallback();
-  }
-
-  public ActionCallback(int countToDone) {
-    this(null, countToDone);
-  }
-
-  public ActionCallback(String name, int countToDone) {
-    myName = name;
-
-    assert countToDone >= 0 : "count=" + countToDone;
-
-    int count = countToDone >= 1 ? countToDone : 1;
-
-    myDone = new ExecutionCallback(count);
-    myRejected = new ExecutionCallback();
-
-    if (countToDone < 1) {
-      setDone();
-    }
-  }
-
-  public void setDone() {
-    if(isProcessed()) {
-      throw new IllegalArgumentException("can't change state after set state");
+    public ActionCallback() {
+        this(null);
     }
 
-    if (myDone.setExecuted()) {
-      myRejected.clear();
-      freeResources();
-    }
-  }
-
-  public boolean isDone() {
-    return myDone.isExecuted();
-  }
-
-  public boolean isRejected() {
-    return myRejected.isExecuted();
-  }
-
-  public boolean isProcessed() {
-    return isDone() || isRejected();
-  }
-
-  public void setRejected() {
-    if (isProcessed()) {
-      throw new IllegalArgumentException("can't change state after set state");
+    public ActionCallback(String name) {
+        myName = name;
+        myDone = new ExecutionCallback();
+        myRejected = new ExecutionCallback();
     }
 
-    if (myRejected.setExecuted()) {
-      myDone.clear();
-      freeResources();
+    public ActionCallback(int countToDone) {
+        this(null, countToDone);
     }
-  }
 
-  protected void freeResources() {
-  }
+    public ActionCallback(String name, int countToDone) {
+        myName = name;
 
-  @Nonnull
-  public ActionCallback reject(String error) {
-    myError = error;
-    setRejected();
-    return this;
-  }
+        assert countToDone >= 0 : "count=" + countToDone;
 
-  @Nonnull
-  public ActionCallback rejectWithThrowable(Throwable error) {
-    myThrowable = error;
-    setRejected();
-    return this;
-  }
+        int count = countToDone >= 1 ? countToDone : 1;
 
-  @Nullable
-  public String getError() {
-    return myError;
-  }
+        myDone = new ExecutionCallback(count);
+        myRejected = new ExecutionCallback();
 
-  @Nonnull
-  public ActionCallback doWhenDone(@Nonnull final Runnable runnable) {
-    myDone.doWhenExecuted(runnable);
-    return this;
-  }
+        if (countToDone < 1) {
+            setDone();
+        }
+    }
 
-  @Nonnull
-  public final ActionCallback doWhenRejected(@Nonnull final Runnable runnable) {
-    myRejected.doWhenExecuted(runnable);
-    return this;
-  }
+    public void setDone() {
+        if (isProcessed()) {
+            LOG.warn("can't change state after set state", new UnsupportedOperationException());
+        }
 
-  @Nonnull
-  public final ActionCallback doWhenRejectedButNotThrowable(@Nonnull final Runnable runnable) {
-    myRejected.doWhenExecuted(() -> {
-      if (myThrowable == null) {
+        if (myDone.setExecuted()) {
+            myRejected.clear();
+            freeResources();
+        }
+    }
+
+    public boolean isDone() {
+        return myDone.isExecuted();
+    }
+
+    public boolean isRejected() {
+        return myRejected.isExecuted();
+    }
+
+    public boolean isProcessed() {
+        return isDone() || isRejected();
+    }
+
+    public void setRejected() {
+        if (isProcessed()) {
+            LOG.warn("can't change state after set state", new UnsupportedOperationException());
+        }
+
+        if (myRejected.setExecuted()) {
+            myDone.clear();
+            freeResources();
+        }
+    }
+
+    protected void freeResources() {
+    }
+
+    @Nonnull
+    public ActionCallback reject(String error) {
+        myError = error;
+        setRejected();
+        return this;
+    }
+
+    @Nonnull
+    public ActionCallback rejectWithThrowable(Throwable error) {
+        myThrowable = error;
+        setRejected();
+        return this;
+    }
+
+    @Nullable
+    public String getError() {
+        return myError;
+    }
+
+    @Nonnull
+    public ActionCallback doWhenDone(@Nonnull final Runnable runnable) {
+        myDone.doWhenExecuted(runnable);
+        return this;
+    }
+
+    @Nonnull
+    public final ActionCallback doWhenRejected(@Nonnull final Runnable runnable) {
+        myRejected.doWhenExecuted(runnable);
+        return this;
+    }
+
+    @Nonnull
+    public final ActionCallback doWhenRejectedButNotThrowable(@Nonnull final Runnable runnable) {
+        myRejected.doWhenExecuted(() -> {
+            if (myThrowable == null) {
+                runnable.run();
+            }
+        });
+        return this;
+    }
+
+    @Nonnull
+    public final ActionCallback doWhenRejectedWithThrowable(@Nonnull final Consumer<Throwable> consumer) {
+        myRejected.doWhenExecuted(() -> {
+            if (myThrowable != null) {
+                consumer.accept(myThrowable);
+            }
+        });
+        return this;
+    }
+
+    @Nonnull
+    public final ActionCallback doWhenRejected(@Nonnull final Consumer<String> consumer) {
+        myRejected.doWhenExecuted(() -> consumer.accept(myError));
+        return this;
+    }
+
+    @Nonnull
+    public ActionCallback doWhenProcessed(@Nonnull final Runnable runnable) {
+        doWhenDone(runnable);
+        doWhenRejected(runnable);
+        return this;
+    }
+
+    @Nonnull
+    public final ActionCallback notifyWhenDone(@Nonnull final ActionCallback child) {
+        return doWhenDone(child.createSetDoneRunnable());
+    }
+
+    @Nonnull
+    public final ActionCallback notifyWhenRejected(@Nonnull final ActionCallback child) {
+        return doWhenRejected(() -> child.reject(myError));
+    }
+
+    @Nonnull
+    public ActionCallback notify(@Nonnull final ActionCallback child) {
+        return doWhenDone(child.createSetDoneRunnable()).notifyWhenRejected(child);
+    }
+
+    @Nonnull
+    public final ActionCallback processOnDone(@Nonnull Runnable runnable, boolean requiresDone) {
+        if (requiresDone) {
+            return doWhenDone(runnable);
+        }
         runnable.run();
-      }
-    });
-    return this;
-  }
-
-  @Nonnull
-  public final ActionCallback doWhenRejectedWithThrowable(@Nonnull final Consumer<Throwable> consumer) {
-    myRejected.doWhenExecuted(() -> {
-      if (myThrowable != null) {
-        consumer.accept(myThrowable);
-      }
-    });
-    return this;
-  }
-
-  @Nonnull
-  public final ActionCallback doWhenRejected(@Nonnull final Consumer<String> consumer) {
-    myRejected.doWhenExecuted(() -> consumer.accept(myError));
-    return this;
-  }
-
-  @Nonnull
-  public ActionCallback doWhenProcessed(@Nonnull final Runnable runnable) {
-    doWhenDone(runnable);
-    doWhenRejected(runnable);
-    return this;
-  }
-
-  @Nonnull
-  public final ActionCallback notifyWhenDone(@Nonnull final ActionCallback child) {
-    return doWhenDone(child.createSetDoneRunnable());
-  }
-
-  @Nonnull
-  public final ActionCallback notifyWhenRejected(@Nonnull final ActionCallback child) {
-    return doWhenRejected(() -> child.reject(myError));
-  }
-
-  @Nonnull
-  public ActionCallback notify(@Nonnull final ActionCallback child) {
-    return doWhenDone(child.createSetDoneRunnable()).notifyWhenRejected(child);
-  }
-
-  @Nonnull
-  public final ActionCallback processOnDone(@Nonnull Runnable runnable, boolean requiresDone) {
-    if (requiresDone) {
-      return doWhenDone(runnable);
+        return this;
     }
-    runnable.run();
-    return this;
-  }
 
-  public static class Done extends ActionCallback {
-    public Done() {
-      setDone();
+    public static class Done extends ActionCallback {
+        public Done() {
+            setDone();
+        }
     }
-  }
 
-  public static class Rejected extends ActionCallback {
-    public Rejected() {
-      setRejected();
+    public static class Rejected extends ActionCallback {
+        public Rejected() {
+            setRejected();
+        }
     }
-  }
 
-  @Override
-  public String toString() {
-    final String name = myName != null ? myName : super.toString();
-    return name + " done=[" + myDone + "] rejected=[" + myRejected + "]";
-  }
+    @Override
+    public String toString() {
+        final String name = myName != null ? myName : super.toString();
+        return name + " done=[" + myDone + "] rejected=[" + myRejected + "]";
+    }
 
-  public static class Chunk {
-    private final Set<ActionCallback> myCallbacks = new LinkedHashSet<>();
+    public static class Chunk {
+        private final Set<ActionCallback> myCallbacks = new LinkedHashSet<>();
 
-    public void add(@Nonnull ActionCallback callback) {
-      myCallbacks.add(callback);
+        public void add(@Nonnull ActionCallback callback) {
+            myCallbacks.add(callback);
+        }
+
+        @Nonnull
+        public ActionCallback create() {
+            if (myCallbacks.isEmpty()) {
+                return new Done();
+            }
+
+            ActionCallback result = new ActionCallback(myCallbacks.size());
+            Runnable doneRunnable = result.createSetDoneRunnable();
+            for (ActionCallback each : myCallbacks) {
+                each.doWhenDone(doneRunnable).notifyWhenRejected(result);
+            }
+            return result;
+        }
+
+        @Nonnull
+        public ActionCallback getWhenProcessed() {
+            final ActionCallback result = new ActionCallback(myCallbacks.size());
+            Runnable setDoneRunnable = result.createSetDoneRunnable();
+            for (ActionCallback each : myCallbacks) {
+                each.doWhenProcessed(setDoneRunnable);
+            }
+            return result;
+        }
     }
 
     @Nonnull
-    public ActionCallback create() {
-      if (myCallbacks.isEmpty()) {
-        return new Done();
-      }
-
-      ActionCallback result = new ActionCallback(myCallbacks.size());
-      Runnable doneRunnable = result.createSetDoneRunnable();
-      for (ActionCallback each : myCallbacks) {
-        each.doWhenDone(doneRunnable).notifyWhenRejected(result);
-      }
-      return result;
+    public Runnable createSetDoneRunnable() {
+        return this::setDone;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     @Nonnull
-    public ActionCallback getWhenProcessed() {
-      final ActionCallback result = new ActionCallback(myCallbacks.size());
-      Runnable setDoneRunnable = result.createSetDoneRunnable();
-      for (ActionCallback each : myCallbacks) {
-        each.doWhenProcessed(setDoneRunnable);
-      }
-      return result;
-    }
-  }
-
-  @Nonnull
-  public Runnable createSetDoneRunnable() {
-    return this::setDone;
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  @Nonnull
-  @Deprecated
-  /**
-   * @deprecated use {@link #notifyWhenRejected(ActionCallback)}
-   */ public Runnable createSetRejectedRunnable() {
-    return this::setRejected;
-  }
-
-  public boolean waitFor(long msTimeout) {
-    if (isProcessed()) {
-      return true;
+    @Deprecated
+    /**
+     * @deprecated use {@link #notifyWhenRejected(ActionCallback)}
+     */ public Runnable createSetRejectedRunnable() {
+        return this::setRejected;
     }
 
-    final CountDownLatch countDownLatch = new CountDownLatch(1);
-    doWhenProcessed(countDownLatch::countDown);
+    public boolean waitFor(long msTimeout) {
+        if (isProcessed()) {
+            return true;
+        }
 
-    try {
-      if (msTimeout == -1) {
-        countDownLatch.await();
-      }
-      else if (!countDownLatch.await(msTimeout, TimeUnit.MILLISECONDS)) {
-        reject("Time limit exceeded");
-        return false;
-      }
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        doWhenProcessed(countDownLatch::countDown);
+
+        try {
+            if (msTimeout == -1) {
+                countDownLatch.await();
+            }
+            else if (!countDownLatch.await(msTimeout, TimeUnit.MILLISECONDS)) {
+                reject("Time limit exceeded");
+                return false;
+            }
+        }
+        catch (InterruptedException e) {
+            reject(e.getMessage());
+            return false;
+        }
+        return true;
     }
-    catch (InterruptedException e) {
-      reject(e.getMessage());
-      return false;
-    }
-    return true;
-  }
 }
