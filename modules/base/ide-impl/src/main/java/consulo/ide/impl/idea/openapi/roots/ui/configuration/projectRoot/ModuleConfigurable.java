@@ -46,142 +46,150 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * User: anna
  * Date: 04-Jun-2006
  */
 public class ModuleConfigurable extends ProjectStructureElementConfigurable<Module> {
-  private final Module myModule;
-  private final ModulesConfiguratorImpl myConfigurator;
-  private String myModuleName;
-  private final ModuleProjectStructureElement myProjectStructureElement;
+    private final Module myModule;
+    private final ModulesConfiguratorImpl myConfigurator;
+    private String myModuleName;
+    private final ModuleProjectStructureElement myProjectStructureElement;
 
-  public ModuleConfigurable(ModulesConfigurator modulesConfigurator, Module module, Runnable updateTree) {
-    super(true, updateTree);
-    myModule = module;
-    myModuleName = myModule.getName();
-    myConfigurator = (ModulesConfiguratorImpl)modulesConfigurator;
-    myProjectStructureElement = new ModuleProjectStructureElement(modulesConfigurator, myModule);
-  }
-
-  @Override
-  public void setDisplayName(String name) {
-    name = name.trim();
-    final ModifiableModuleModel modifiableModuleModel = myConfigurator.getModuleModel();
-    if (StringUtil.isEmpty(name)) return; //empty string comes on double click on module node
-    if (Comparing.strEqual(name, myModuleName)) return; //nothing changed
-    try {
-      modifiableModuleModel.renameModule(myModule, name);
+    public ModuleConfigurable(ModulesConfigurator modulesConfigurator, Module module, Runnable updateTree) {
+        super(true, updateTree);
+        myModule = module;
+        myModuleName = myModule.getName();
+        myConfigurator = (ModulesConfiguratorImpl) modulesConfigurator;
+        myProjectStructureElement = new ModuleProjectStructureElement(modulesConfigurator, myModule);
     }
-    catch (ModuleWithNameAlreadyExistsException ignored) {
+
+    @Override
+    public void setDisplayName(String name) {
+        name = name.trim();
+        final ModifiableModuleModel modifiableModuleModel = myConfigurator.getModuleModel();
+        if (StringUtil.isEmpty(name)) {
+            return; //empty string comes on double click on module node
+        }
+        if (Comparing.strEqual(name, myModuleName)) {
+            return; //nothing changed
+        }
+        try {
+            modifiableModuleModel.renameModule(myModule, name);
+        }
+        catch (ModuleWithNameAlreadyExistsException ignored) {
+        }
+        myConfigurator.moduleRenamed(myModule, myModuleName, name);
+        myModuleName = name;
+        myConfigurator.setModified(!Comparing.strEqual(myModuleName, myModule.getName()));
+
+        // TODO [VISTALL] myContext.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
     }
-    myConfigurator.moduleRenamed(myModule, myModuleName, name);
-    myModuleName = name;
-    myConfigurator.setModified(!Comparing.strEqual(myModuleName, myModule.getName()));
-    
-    // TODO [VISTALL] myContext.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
-  }
 
-  @Nullable
-  @Override
-  protected JComponent createTopRightComponent(JTextField nameField) {
-    return createLayerConfigurationPanel(getModuleEditor());
-  }
+    @Nullable
+    @Override
+    protected JComponent createTopRightComponent(JTextField nameField) {
+        return createLayerConfigurationPanel(getModuleEditor());
+    }
 
-  @Nonnull
-  private static JPanel createLayerConfigurationPanel(@Nonnull final ModuleEditor moduleEditor) {
-    BorderLayoutPanel panel = JBUI.Panels.simplePanel();
+    @Nonnull
+    private static JPanel createLayerConfigurationPanel(@Nonnull final ModuleEditor moduleEditor) {
+        BorderLayoutPanel panel = JBUI.Panels.simplePanel();
 
-    ModifiableRootModel moduleRootModel = moduleEditor.getModifiableRootModelProxy();
+        ModifiableRootModel moduleRootModel = moduleEditor.getModifiableRootModelProxy();
 
-    final MutableCollectionComboBoxModel<String> model = new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()), moduleRootModel.getCurrentLayerName());
+        final MutableCollectionComboBoxModel<String> model = new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()), moduleRootModel.getCurrentLayerName());
 
-    final ComboBox comboBox = new ComboBox(model);
-    comboBox.setEnabled(model.getSize() > 1);
+        final ComboBox comboBox = new ComboBox(model);
+        comboBox.setEnabled(model.getSize() > 1);
 
-    moduleEditor.addChangeListener(moduleRootModel1 -> {
-      model.update(new ArrayList<String>(moduleRootModel1.getLayers().keySet()));
-      model.setSelectedItem(moduleRootModel1.getCurrentLayerName());
-      model.update();
+        moduleEditor.addChangeListener(moduleRootModel1 -> {
+            model.update(new ArrayList<String>(moduleRootModel1.getLayers().keySet()));
+            model.setSelectedItem(moduleRootModel1.getCurrentLayerName());
+            model.update();
 
-      comboBox.setEnabled(comboBox.getItemCount() > 1);
-    });
+            comboBox.setEnabled(comboBox.getItemCount() > 1);
+        });
 
-    comboBox.addItemListener(e -> {
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        moduleEditor.getModifiableRootModelProxy().setCurrentLayer((String)comboBox.getSelectedItem());
-      }
-    });
+        comboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String selectedItem = (String) comboBox.getSelectedItem();
+                if (!Objects.equals(moduleEditor.getModifiableRootModelProxy().getCurrentLayerName(), selectedItem)) {
+                    moduleEditor.getModifiableRootModelProxy().setCurrentLayer(selectedItem);
+                }
+            }
+        });
 
-    DefaultActionGroup group = new DefaultActionGroup();
-    group.add(new NewLayerAction(moduleEditor, false));
-    group.add(new DeleteLayerAction(moduleEditor));
-    group.add(new NewLayerAction(moduleEditor, true));
+        DefaultActionGroup group = new DefaultActionGroup();
+        group.add(new NewLayerAction(moduleEditor, false));
+        group.add(new DeleteLayerAction(moduleEditor));
+        group.add(new NewLayerAction(moduleEditor, true));
 
-    ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
-    actionToolbar.setTargetComponent(panel);
-    JComponent toolbarComponent = actionToolbar.getComponent();
-    toolbarComponent.setBorder(JBUI.Borders.empty());
+        ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        actionToolbar.setTargetComponent(panel);
+        JComponent toolbarComponent = actionToolbar.getComponent();
+        toolbarComponent.setBorder(JBUI.Borders.empty());
 
-    panel.addToLeft(LabeledComponent.left(comboBox, "Layer")).addToRight(toolbarComponent);
-    return panel;
-  }
+        panel.addToLeft(LabeledComponent.left(comboBox, "Layer")).addToRight(toolbarComponent);
+        return panel;
+    }
 
-  @Override
-  public ProjectStructureElement getProjectStructureElement() {
-    return myProjectStructureElement;
-  }
+    @Override
+    public ProjectStructureElement getProjectStructureElement() {
+        return myProjectStructureElement;
+    }
 
-  @Override
-  public Module getEditableObject() {
-    return myModule;
-  }
+    @Override
+    public Module getEditableObject() {
+        return myModule;
+    }
 
-  @Override
-  public String getBannerSlogan() {
-    return ProjectLocalize.projectRootsModuleBannerText(myModuleName).get();
-  }
+    @Override
+    public String getBannerSlogan() {
+        return ProjectLocalize.projectRootsModuleBannerText(myModuleName).get();
+    }
 
-  @Override
-  public String getDisplayName() {
-    return myModuleName;
-  }
+    @Override
+    public String getDisplayName() {
+        return myModuleName;
+    }
 
-  @Override
-  public Image getIcon(final boolean open) {
-    return AllIcons.Nodes.Module;
-  }
+    @Override
+    public Image getIcon(final boolean open) {
+        return AllIcons.Nodes.Module;
+    }
 
-  public Module getModule() {
-    return myModule;
-  }
+    public Module getModule() {
+        return myModule;
+    }
 
-  @Override
-  @Nullable
-  public String getHelpTopic() {
-    final ModuleEditor moduleEditor = getModuleEditor();
-    return moduleEditor != null ? moduleEditor.getHelpTopic() : null;
-  }
+    @Override
+    @Nullable
+    public String getHelpTopic() {
+        final ModuleEditor moduleEditor = getModuleEditor();
+        return moduleEditor != null ? moduleEditor.getHelpTopic() : null;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public JComponent createOptionsPanel(@Nonnull Disposable parentUIDisposable) {
-    return getModuleEditor().getPanel(parentUIDisposable);
-  }
+    @RequiredUIAccess
+    @Override
+    public JComponent createOptionsPanel(@Nonnull Disposable parentUIDisposable) {
+        return getModuleEditor().getPanel(parentUIDisposable);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    return false;
-  }
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        return false;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-  }
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+    }
 
-  public ModuleEditor getModuleEditor() {
-    return myConfigurator.getModuleEditor(myModule);
-  }
+    public ModuleEditor getModuleEditor() {
+        return myConfigurator.getModuleEditor(myModule);
+    }
 }
