@@ -187,7 +187,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
 
   @Override
   public List<Library> chooseLibraries(final String title) {
-    final ChooseLibrariesFromTablesDialog dialog = ChooseLibrariesFromTablesDialog.createDialog(title, getProject(), false);
+    final ChooseLibrariesFromTablesDialog dialog = ChooseLibrariesFromTablesDialog.createDialog(title, getProject());
     dialog.show();
     return dialog.isOK() ? dialog.getSelectedLibraries() : Collections.<Library>emptyList();
   }

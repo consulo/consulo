@@ -15,49 +15,40 @@
  */
 package consulo.ide.impl.idea.util.ui.classpath;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
-import consulo.ui.ex.ColoredStringBuilder;
-import consulo.ui.ex.ColoredTextContainer;
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ui.ex.awt.tree.DefaultTreeExpander;
-import consulo.ui.ex.TreeExpander;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.application.util.function.CommonProcessors;
+import consulo.application.util.function.Processor;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
-import consulo.ide.ui.OrderEntryAppearanceService;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.util.lang.StringUtil;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.tree.SimpleNode;
-import consulo.ui.ex.awt.tree.SimpleTree;
-import consulo.ui.ex.awt.tree.SimpleTreeBuilder;
-import consulo.ui.ex.awt.tree.WeightBasedComparator;
-import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;
-
+import consulo.ide.ui.OrderEntryAppearanceService;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.ui.ex.ColoredStringBuilder;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.tree.*;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -73,7 +64,8 @@ import java.util.function.Consumer;
 /**
  * @author Gregory.Shrago
  */
-
+@Deprecated
+@DeprecationInfo("Use ChooseLibrariesFromTablesDialog")
 public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
   private final SimpleTree myTree = new SimpleTree();
   private AbstractTreeBuilder myBuilder;
@@ -157,14 +149,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
 
   @Override
   protected JComponent createNorthPanel() {
-    final DefaultActionGroup group = new DefaultActionGroup();
-    final TreeExpander expander = new DefaultTreeExpander(myTree);
-    final CommonActionsManager actionsManager = CommonActionsManager.getInstance();
-    group.add(actionsManager.createExpandAllAction(expander, myTree));
-    group.add(actionsManager.createCollapseAllAction(expander, myTree));
-    final JComponent component = ActionManager.getInstance().createActionToolbar(ActionPlaces.PROJECT_VIEW_TOOLBAR, group, true).getComponent();
-    component.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.darkGray), component.getBorder()));
-    return component;
+    return null;
   }
 
   @Override

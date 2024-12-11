@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.util.ui.classpath;
 
 import consulo.application.Application;
-import consulo.project.Project;
-import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import consulo.content.library.LibraryTablesRegistrar;
+import consulo.project.Project;
+import consulo.project.content.library.ProjectLibraryTable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,27 +34,22 @@ import java.util.List;
  */
 public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
   private @Nullable final Project myProject;
-  private final boolean myShowCustomLibraryTables;
 
-  protected ChooseLibrariesFromTablesDialog(@Nonnull String title, @Nonnull Project project, final boolean showCustomLibraryTables) {
+  protected ChooseLibrariesFromTablesDialog(@Nonnull String title, @Nonnull Project project) {
     super(project, title);
-    myShowCustomLibraryTables = showCustomLibraryTables;
     myProject = project;
   }
 
   protected ChooseLibrariesFromTablesDialog(@Nonnull JComponent parentComponent,
                                             @Nonnull String title,
-                                            @Nullable Project project,
-                                            final boolean showCustomLibraryTables) {
+                                            @Nullable Project project) {
     super(parentComponent, title);
-    myShowCustomLibraryTables = showCustomLibraryTables;
     myProject = project;
   }
 
   public static ChooseLibrariesFromTablesDialog createDialog(@Nonnull String title,
-                                                             @Nonnull Project project,
-                                                             final boolean showCustomLibraryTables) {
-    final ChooseLibrariesFromTablesDialog dialog = new ChooseLibrariesFromTablesDialog(title, project, showCustomLibraryTables);
+                                                             @Nonnull Project project) {
+    final ChooseLibrariesFromTablesDialog dialog = new ChooseLibrariesFromTablesDialog(title, project);
     dialog.init();
     return dialog;
   }
@@ -88,10 +83,9 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
   }
 
   public static List<LibraryTable> getLibraryTables(final Project project) {
-    final List<LibraryTable> tables = new ArrayList<LibraryTable>();
-    final LibraryTablesRegistrar registrar = LibraryTablesRegistrar.getInstance();
+    final List<LibraryTable> tables = new ArrayList<>();
     if (project != null) {
-      tables.add(registrar.getLibraryTable(project));
+      tables.add(ProjectLibraryTable.getInstance(project));
     }
     return tables;
   }
@@ -108,14 +102,13 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
 
   @Override
   protected int getLibraryTableWeight(@Nonnull LibraryTable libraryTable) {
-    if (libraryTable.getTableLevel().equals(LibraryTableImplUtil.MODULE_LEVEL)) return 0;
+    if (libraryTable.getTableLevel().equals(LibraryEx.MODULE_LEVEL)) return 0;
     if (isProjectLibraryTable(libraryTable)) return 1;
     return 3;
   }
 
   private boolean isProjectLibraryTable(LibraryTable libraryTable) {
-    final LibraryTablesRegistrar registrar = LibraryTablesRegistrar.getInstance();
-    return myProject != null && libraryTable.equals(registrar.getLibraryTable(myProject));
+    return myProject != null && libraryTable.equals(ProjectLibraryTable.getInstance(myProject));
   }
 
   @Override
