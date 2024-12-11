@@ -105,9 +105,9 @@ public class XFramesView extends XDebugView {
 
         myMainPanel.add(ScrollPaneFactory.createScrollPane(myFramesList), BorderLayout.CENTER);
 
-        myThreadComboBox = new ComboBox<XExecutionStack>();
+        myThreadComboBox = new ComboBox<>();
         myThreadComboBox.putClientProperty("JComponent.roundRect", false);
-        myThreadComboBox.putClientProperty("FlatLaf.style", "borderColor: #0000; disabledBorderColor: #0000");
+        myThreadComboBox.putClientProperty("FlatLaf.style", "borderColor: #0000; disabledBorderColor: #0000; borderWidth: 0; focusWidth: 0; innerFocusWidth: 1; innerOutlineWidth: 1");
         myThreadComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(@Nonnull JList list, XExecutionStack value, int index, boolean selected, boolean hasFocus) {
