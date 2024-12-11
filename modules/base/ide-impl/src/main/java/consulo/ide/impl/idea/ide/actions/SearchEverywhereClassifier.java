@@ -4,9 +4,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.GlobalSearchScope;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -53,15 +51,6 @@ public interface SearchEverywhereClassifier {
       }
       return null;
     }
-
-    @Nullable
-    public static GlobalSearchScope getProjectScope(@Nonnull Project project) {
-      for (SearchEverywhereClassifier classifier : SearchEverywhereClassifier.EP_NAME.getExtensionList()) {
-        GlobalSearchScope scope = classifier.getProjectScope(project);
-        if (scope != null) return scope;
-      }
-      return null;
-    }
   }
 
   ExtensionPointName<SearchEverywhereClassifier> EP_NAME = ExtensionPointName.create(SearchEverywhereClassifier.class);
@@ -75,9 +64,4 @@ public interface SearchEverywhereClassifier {
 
   @Nullable
   Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus);
-
-  @Nullable
-  default GlobalSearchScope getProjectScope(@Nonnull Project project) {
-    return null;
-  }
 }
