@@ -71,6 +71,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StandardColors;
+import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.*;
@@ -79,6 +80,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -160,7 +162,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     private List<FoldRegion> myActiveFoldRegions = Collections.emptyList();
     protected int myTextAnnotationGuttersSize;
     protected int myTextAnnotationExtraSize;
-    final IntList myTextAnnotationGutterSizes = IntLists.newArrayList();
+    final it.unimi.dsi.fastutil.ints.IntList myTextAnnotationGutterSizes = new IntArrayList();
     final ArrayList<TextAnnotationGutterProvider> myTextAnnotationGutters = new ArrayList<>();
     private boolean myGapAfterAnnotations;
     private final Map<TextAnnotationGutterProvider, EditorGutterAction> myProviderToListener = new HashMap<>();
@@ -525,7 +527,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
                     break;
                 }
 
-                int annotationSize = myTextAnnotationGutterSizes.get(i);
+                int annotationSize = myTextAnnotationGutterSizes.getInt(i);
 
                 int logicalLine = -1;
                 ColorValue bg = null;
@@ -1974,7 +1976,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
             return null;
         }
         for (int i = 0; i < myTextAnnotationGutterSizes.size(); i++) {
-            current += myTextAnnotationGutterSizes.get(i);
+            current += myTextAnnotationGutterSizes.getInt(i);
             if (clickPoint.x <= current) {
                 return myTextAnnotationGutters.get(i);
             }
@@ -2132,13 +2134,13 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
             return;
         }
 
-        Set<TextAnnotationGutterProvider> toClose = Sets.newHashSet(annotations, ContainerUtil.identityStrategy());
+        Set<TextAnnotationGutterProvider> toClose = Sets.newHashSet(annotations, HashingStrategy.identity());
         for (int i = myTextAnnotationGutters.size() - 1; i >= 0; i--) {
             TextAnnotationGutterProvider provider = myTextAnnotationGutters.get(i);
             if (toClose.contains(provider)) {
                 provider.gutterClosed();
                 myTextAnnotationGutters.remove(i);
-                myTextAnnotationGutterSizes.remove(i);
+                myTextAnnotationGutterSizes.removeInt(i);
                 myProviderToListener.remove(provider);
             }
         }

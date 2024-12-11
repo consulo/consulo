@@ -134,6 +134,10 @@
             <artifactId>commons-imaging</artifactId>
         </dependency>
         <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.weisj</groupId>
             <artifactId>jsvg</artifactId>
         </dependency>

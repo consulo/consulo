@@ -22,6 +22,8 @@ open module consulo.desktop.awt.ide.impl {
   requires cobra.core;
   requires net.sf.cssbox.jstyleparser;
 
+  requires it.unimi.dsi.fastutil;
+
   requires org.apache.commons.imaging;
 
   requires consulo.container.api;
