@@ -19,11 +19,13 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.util.ModificationTracker;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -36,7 +38,14 @@ public interface WebBrowserManager extends ModificationTracker {
     }
 
     @Nonnull
+    @RequiredUIAccess
+    CompletableFuture<?> showSettings();
+
+    @Nonnull
     List<WebBrowser> getBrowsers();
+
+    @Nonnull
+    List<WebBrowser> getBrowsers(@Nonnull Predicate<? super WebBrowser> condition);
 
     @Nonnull
     List<WebBrowser> getActiveBrowsers();
@@ -57,4 +66,16 @@ public interface WebBrowserManager extends ModificationTracker {
 
     @Nonnull
     String getAlternativeBrowserPath();
+
+    void setShowBrowserHover(boolean showBrowserHover);
+
+    boolean isShowBrowserHover();
+
+    boolean isUseDefaultBrowser();
+
+    void setUseDefaultBrowser(boolean useDefaultBrowser);
+
+    boolean isConfirmExtractFiles();
+
+    void setConfirmExtractFiles(boolean confirmExtractFiles);
 }

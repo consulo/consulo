@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-import consulo.ide.impl.idea.util.ListWithSelection;
+import consulo.util.collection.ListWithSelection;
 import consulo.logging.Logger;
 import consulo.util.lang.ObjectUtil;
 

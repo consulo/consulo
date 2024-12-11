@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.project.Project;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.action.BaseTaskAction;

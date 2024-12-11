@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.ide.startup;
 
 import consulo.ide.impl.idea.ide.actions.ImportSettingsFilenameFilter;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.util.io.zip.ZipUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;

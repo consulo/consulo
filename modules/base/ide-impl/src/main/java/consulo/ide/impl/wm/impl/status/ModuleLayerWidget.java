@@ -18,7 +18,7 @@ package consulo.ide.impl.wm.impl.status;
 import consulo.application.WriteAction;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedStatusBarPopup;
-import consulo.ide.impl.idea.util.ListWithSelection;
+import consulo.util.collection.ListWithSelection;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;

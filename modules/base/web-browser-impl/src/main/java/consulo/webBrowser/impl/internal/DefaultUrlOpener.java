@@ -13,22 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.browsers.impl;
+package consulo.webBrowser.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.UrlOpener;
 import consulo.webBrowser.WebBrowser;
-import consulo.project.Project;
-import consulo.ide.impl.idea.util.ArrayUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 @ExtensionImpl(order = "last")
 public final class DefaultUrlOpener implements UrlOpener {
-  @Override
-  public boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project) {
-    return BrowserLauncher.getInstance().browseUsingPath(url, null, browser, project, ArrayUtil.EMPTY_STRING_ARRAY);
-  }
+    private final Provider<BrowserLauncher> myBrowserLauncher;
+
+    @Inject
+    public DefaultUrlOpener(Provider<BrowserLauncher> browserLauncher) {
+        myBrowserLauncher = browserLauncher;
+    }
+
+    @Override
+    public boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project) {
+        return myBrowserLauncher.get().browseUsingPath(url, null, browser, project, ArrayUtil.EMPTY_STRING_ARRAY);
+    }
 }

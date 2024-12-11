@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.dvcs.push.ui;
 
 import consulo.language.editor.ui.awt.HintUtil;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;

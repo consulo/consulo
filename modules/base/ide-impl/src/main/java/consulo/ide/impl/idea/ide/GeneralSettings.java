@@ -23,7 +23,6 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.execution.ProcessCloseConfirmation;
 import consulo.ide.ServiceManager;
-import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.OptionTag;
 import jakarta.annotation.Nullable;
@@ -40,8 +39,6 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
     public static final String PROP_SUPPORT_SCREEN_READERS = "supportScreenReaders";
     public static final String PROP_INACTIVE_TIMEOUT = "inactiveTimeout";
 
-    private String myBrowserPath;
-
     private boolean myShowTipsOnStartup = true;
     private int myLastTip = 0;
     private boolean mySupportScreenReaders = false;
@@ -52,8 +49,6 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
     private int myInactiveTimeout = 15; // Number of seconds of inactivity after which IDEA automatically saves all files
     private boolean myUseSafeWrite = true;
     private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
-    private boolean myUseDefaultBrowser = true;
-    private boolean myConfirmExtractFiles = true;
     private boolean mySearchInBackground;
     private boolean myConfirmExit = true;
     private int myConfirmOpenNewProject = OPEN_PROJECT_ASK;
@@ -69,22 +64,6 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         myPropertyChangeSupport.removePropertyChangeListener(listener);
-    }
-
-    public String getBrowserPathOrDefault() {
-        if (!StringUtil.isEmpty(myBrowserPath)) {
-            return myBrowserPath;
-        }
-
-        return BrowserUtil.getDefaultAlternativeBrowserPath();
-    }
-
-    public String getBrowserPath() {
-        return myBrowserPath;
-    }
-
-    public void setBrowserPath(String browserPath) {
-        myBrowserPath = browserPath;
     }
 
     @Deprecated
@@ -193,22 +172,6 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
     @Override
     public void loadState(GeneralSettings state) {
         XmlSerializerUtil.copyBean(state, this);
-    }
-
-    public boolean isUseDefaultBrowser() {
-        return myUseDefaultBrowser;
-    }
-
-    public void setUseDefaultBrowser(boolean value) {
-        myUseDefaultBrowser = value;
-    }
-
-    public boolean isConfirmExtractFiles() {
-        return myConfirmExtractFiles;
-    }
-
-    public void setConfirmExtractFiles(boolean value) {
-        myConfirmExtractFiles = value;
     }
 
     public boolean isConfirmExit() {

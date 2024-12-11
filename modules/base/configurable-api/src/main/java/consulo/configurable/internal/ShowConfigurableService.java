@@ -17,12 +17,16 @@ package consulo.configurable.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -31,14 +35,21 @@ import java.util.function.Consumer;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ShowConfigurableService {
-  @RequiredUIAccess
-  default <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect) {
-    showAndSelect(project, toSelect, o -> {
-    });
-  }
+    @RequiredUIAccess
+    default <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect) {
+        showAndSelect(project, toSelect, o -> {
+        });
+    }
 
-  @RequiredUIAccess
-  <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project,
-                                                     @Nonnull Class<T> toSelect,
-                                                     @Nonnull Consumer<T> afterSelect);
+    @RequiredUIAccess
+    <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project,
+                                                       @Nonnull Class<T> toSelect,
+                                                       @Nonnull Consumer<T> afterSelect);
+
+    @RequiredUIAccess
+    CompletableFuture<?> show(@Nullable Project project, @Nonnull Class<? extends UnnamedConfigurable> toSelect);
+
+    @RequiredUIAccess
+    @Deprecated
+    AsyncResult<Void> editConfigurable(Component parent, Configurable configurable);
 }

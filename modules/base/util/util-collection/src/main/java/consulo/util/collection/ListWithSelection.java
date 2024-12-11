@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util;
+package consulo.util.collection;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,6 +50,6 @@ public class ListWithSelection<E> extends ArrayList<E> {
   }
 
   public Integer getSelectedIndex() {
-    return new Integer(indexOf(mySelection));
+    return indexOf(mySelection);
   }
 }

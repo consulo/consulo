@@ -15,14 +15,14 @@
  */
 package consulo.ide.newModule;
 
-import consulo.ide.util.ZipUtil;
 import consulo.logging.Logger;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.util.io.FileUtil;
+import consulo.util.io.zip.ZipUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

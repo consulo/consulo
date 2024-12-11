@@ -1,6 +1,6 @@
 package consulo.desktop.awt.ui.impl.htmlView;
 
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import org.cobraparser.html.AbstractHtmlRendererContext;
 import org.cobraparser.html.FormInput;
 import org.cobraparser.html.domimpl.HTMLDocumentImpl;

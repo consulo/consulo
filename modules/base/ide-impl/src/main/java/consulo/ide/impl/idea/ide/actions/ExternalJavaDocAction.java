@@ -23,7 +23,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.TargetElementUtil;

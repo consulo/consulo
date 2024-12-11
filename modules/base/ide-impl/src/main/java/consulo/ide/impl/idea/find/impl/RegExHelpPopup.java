@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.find.impl;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

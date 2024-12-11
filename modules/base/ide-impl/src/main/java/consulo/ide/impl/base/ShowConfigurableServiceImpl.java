@@ -16,17 +16,20 @@
 package consulo.ide.impl.base;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.configurable.internal.ShowConfigurableService;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Inject;
-
+import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -36,18 +39,32 @@ import java.util.function.Consumer;
 @Singleton
 @ServiceImpl
 public class ShowConfigurableServiceImpl implements ShowConfigurableService {
-  private final ShowSettingsUtil myShowSettingsUtil;
+    private final ShowSettingsUtil myShowSettingsUtil;
 
-  @Inject
-  public ShowConfigurableServiceImpl(ShowSettingsUtil showSettingsUtil) {
-    myShowSettingsUtil = showSettingsUtil;
-  }
+    @Inject
+    public ShowConfigurableServiceImpl(ShowSettingsUtil showSettingsUtil) {
+        myShowSettingsUtil = showSettingsUtil;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project,
-                                                            @Nonnull Class<T> toSelect,
-                                                            @Nonnull Consumer<T> afterSelect) {
-    myShowSettingsUtil.showAndSelect(project, toSelect, afterSelect);
-  }
+    @RequiredUIAccess
+    @Override
+    public <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project,
+                                                              @Nonnull Class<T> toSelect,
+                                                              @Nonnull Consumer<T> afterSelect) {
+        myShowSettingsUtil.showAndSelect(project, toSelect, afterSelect);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public CompletableFuture<?> show(@Nullable Project project, @Nonnull Class<? extends UnnamedConfigurable> toSelect) {
+        CompletableFuture<?> future = new CompletableFuture<>();
+        myShowSettingsUtil.showAndSelect(project, toSelect).doWhenDone(() -> future.complete(null));
+        return future;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public AsyncResult<Void> editConfigurable(Component parent, Configurable configurable) {
+        return myShowSettingsUtil.editConfigurable(parent, configurable);
+    }
 }

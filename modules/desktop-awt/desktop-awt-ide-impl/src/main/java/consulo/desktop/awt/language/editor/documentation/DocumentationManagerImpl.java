@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.codeInsight.documentation.DockablePopupManager;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.ParameterInfoController;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.actions.BaseNavigateToSourceAction;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;

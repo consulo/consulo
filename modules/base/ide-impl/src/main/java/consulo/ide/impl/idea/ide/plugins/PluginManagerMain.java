@@ -24,7 +24,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.externalService.update.UpdateSettings;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.plugins.sorters.SortByStatusAction;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;

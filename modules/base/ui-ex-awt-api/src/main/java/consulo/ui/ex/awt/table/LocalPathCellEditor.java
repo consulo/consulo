@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.ui;
+package consulo.ui.ex.awt.table;
 
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.AbstractTableCellEditor;
 import consulo.ui.ex.awt.CellEditorComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

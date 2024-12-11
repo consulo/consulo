@@ -21,7 +21,7 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.DefaultKeymap;

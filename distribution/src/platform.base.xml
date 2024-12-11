@@ -118,6 +118,7 @@
                 <include>consulo:consulo-path-macro-impl</include>
                 <include>consulo:consulo-module-ui-api</include>
                 <include>consulo:consulo-web-browser-api</include>
+                <include>consulo:consulo-web-browser-impl</include>
                 <include>consulo:consulo-version-control-system-api</include>
                 <include>consulo:consulo-version-control-system-impl</include>
                 <include>consulo:consulo-version-control-system-distributed-api</include>

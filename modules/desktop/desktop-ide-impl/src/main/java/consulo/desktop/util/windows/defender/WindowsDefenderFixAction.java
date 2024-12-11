@@ -16,7 +16,7 @@
 package consulo.desktop.util.windows.defender;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.SystemHealthMonitor;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ide.impl.internal.localize.DiagnosticLocalize;

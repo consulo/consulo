@@ -16,7 +16,7 @@
 package consulo.desktop.awt.platform.impl;
 
 import consulo.desktop.startup.DesktopPlatformUserImpl;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.platform.PlatformFileSystem;
 import consulo.platform.PlatformUser;

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.ui.table;
+package consulo.ui.ex.awt.table;
 
 import consulo.component.util.Iconable;
-import consulo.ide.impl.idea.util.ListWithSelection;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.EnumComboBoxModel;
-
 import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
+import consulo.util.collection.ListWithSelection;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import java.awt.*;

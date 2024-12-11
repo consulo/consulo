@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.component.util.localize.BundleBase;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;

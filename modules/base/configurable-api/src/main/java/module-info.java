@@ -23,5 +23,6 @@ module consulo.configurable.api {
         consulo.ui.ex.awt.api,
         consulo.execution.debug.impl,
         consulo.remote.server.impl,
-        consulo.execution.impl;
+        consulo.execution.impl,
+        consulo.web.browser.impl;
 }

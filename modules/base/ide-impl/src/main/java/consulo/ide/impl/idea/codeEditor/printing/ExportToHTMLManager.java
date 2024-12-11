@@ -24,7 +24,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.language.editor.action.PrintOption;
 import consulo.language.psi.*;
 import consulo.logging.Logger;

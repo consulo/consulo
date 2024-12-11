@@ -1,32 +1,32 @@
 package consulo.webBrowser;
 
-import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.ui.image.Image;
 import consulo.webBrowser.chrome.ChromeSettings;
 import consulo.webBrowser.firefox.FirefoxSettings;
+import consulo.webBrowser.icon.WebBrowserIconGroup;
 import consulo.webBrowser.localize.WebBrowserLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public enum BrowserFamily implements Iconable {
-    CHROME(WebBrowserLocalize.browsersChrome(), "chrome", "google-chrome", "Google Chrome", AllIcons.Xml.Browsers.Chrome16) {
+    CHROME(WebBrowserLocalize.browsersChrome(), "chrome", "google-chrome", "Google Chrome", WebBrowserIconGroup.chrome()) {
         @Override
         public BrowserSpecificSettings createBrowserSpecificSettings() {
             return new ChromeSettings();
         }
     },
-    FIREFOX(WebBrowserLocalize.browsersFirefox(), "firefox", "firefox", "Firefox", AllIcons.Xml.Browsers.Firefox16) {
+    FIREFOX(WebBrowserLocalize.browsersFirefox(), "firefox", "firefox", "Firefox", WebBrowserIconGroup.firefox()) {
         @Override
         public BrowserSpecificSettings createBrowserSpecificSettings() {
             return new FirefoxSettings();
         }
     },
-    EXPLORER(WebBrowserLocalize.browsersExplorer(), "iexplore", null, null, AllIcons.Xml.Browsers.Explorer16),
-    OPERA(WebBrowserLocalize.browsersOpera(), "opera", "opera", "Opera", AllIcons.Xml.Browsers.Opera16),
-    SAFARI(WebBrowserLocalize.browsersSafari(), "safari", null, "Safari", AllIcons.Xml.Browsers.Safari16);
+    EXPLORER(WebBrowserLocalize.browsersExplorer(), "iexplore", null, null, WebBrowserIconGroup.explorer()),
+    OPERA(WebBrowserLocalize.browsersOpera(), "opera", "opera", "Opera", WebBrowserIconGroup.opera()),
+    SAFARI(WebBrowserLocalize.browsersSafari(), "safari", null, "Safari", WebBrowserIconGroup.safari());
 
     private final LocalizeValue myName;
     private final String myWindowsPath;

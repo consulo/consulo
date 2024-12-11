@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.application.util.Patches;
 import consulo.ide.impl.idea.application.options.OptionsConstants;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.application.ApplicationBundle;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;

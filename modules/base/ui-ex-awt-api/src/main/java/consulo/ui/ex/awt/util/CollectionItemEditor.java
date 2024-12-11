@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.ui;
+package consulo.ui.ex.awt.util;
 
 import jakarta.annotation.Nonnull;
 

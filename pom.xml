@@ -144,6 +144,7 @@
     <module>modules/base/language-editor-refactoring-api</module>
     <module>modules/base/language-copyright-api</module>
     <module>modules/base/web-browser-api</module>
+    <module>modules/base/web-browser-impl</module>
     <module>modules/base/external-service-api</module>
     <module>modules/base/external-service-impl</module>
     <module>modules/base/external-system-api</module>

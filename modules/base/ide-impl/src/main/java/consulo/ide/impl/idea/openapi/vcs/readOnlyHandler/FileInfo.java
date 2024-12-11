@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ListWithSelection;
+import consulo.util.collection.ListWithSelection;
 
 class FileInfo {
   private final VirtualFile myFile;

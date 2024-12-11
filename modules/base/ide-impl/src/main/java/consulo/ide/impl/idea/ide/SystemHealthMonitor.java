@@ -57,6 +57,7 @@ import consulo.util.jna.JnaLoader;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.TimeoutUtil;
+import consulo.webBrowser.BrowserUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;

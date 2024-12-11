@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.browsers;
+package consulo.webBrowser.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.ide.IdeBundle;
-import consulo.ide.ServiceManager;
-import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
-import consulo.webBrowser.WebSearchOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.webBrowser.WebBrowser;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import org.jetbrains.annotations.Nls;
-
+import consulo.webBrowser.WebSearchOptions;
+import consulo.webBrowser.localize.WebBrowserLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
 import javax.swing.*;
 
 @ExtensionImpl
@@ -37,12 +34,6 @@ public class BrowserSettings implements ApplicationConfigurable, SearchableConfi
   private BrowserSettingsPanel myPanel;
 
   private Provider<WebSearchOptions> myWebSearchOptionsProvider;
-
-  @Deprecated
-  @DeprecationInfo("Don't use custom creating. Use initialize via extensions")
-  public BrowserSettings() {
-    this(() -> ServiceManager.getService(WebSearchOptions.class));
-  }
 
   @Inject
   public BrowserSettings(Provider<WebSearchOptions> webSearchOptionsProvider) {
@@ -61,10 +52,10 @@ public class BrowserSettings implements ApplicationConfigurable, SearchableConfi
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
+  @Nonnull
   @Override
-  @Nls
   public String getDisplayName() {
-    return IdeBundle.message("browsers.settings");
+    return WebBrowserLocalize.browsersSettings().get();
   }
 
   @RequiredUIAccess

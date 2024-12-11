@@ -16,7 +16,7 @@
 package consulo.ide.impl.externalService.impl.action;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

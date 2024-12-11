@@ -18,6 +18,7 @@ package consulo.project.ui.util;
 import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.Balloon;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -41,11 +42,11 @@ public class AppUIUtil {
     }
   }
 
-  public static void invokeOnEdt(Runnable runnable) {
+  public static void invokeOnEdt(@RequiredUIAccess Runnable runnable) {
     invokeOnEdt(runnable, null);
   }
 
-  public static void invokeOnEdt(Runnable runnable, @Nullable BooleanSupplier condition) {
+  public static void invokeOnEdt(@RequiredUIAccess Runnable runnable, @Nullable BooleanSupplier condition) {
     final Application application = Application.get();
     if (application.isDispatchThread()) {
       runnable.run();

@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionTreeNode;
 import consulo.ide.impl.idea.codeInspection.util.RefEntityAlphabeticalComparator;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.inspection.HTMLExporter;

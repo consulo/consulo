@@ -13,32 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.ui.table;
+package consulo.ui.ex.awt.table;
 
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
+import consulo.ui.ex.awt.util.CollectionItemEditor;
+import consulo.ui.ex.awt.util.CollectionModelEditor;
 import consulo.ui.ex.awt.util.TableUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.collection.Lists;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.table.JBTable;
-import consulo.ui.ex.awt.table.TableView;
-import java.util.function.Function;
-import consulo.ide.impl.idea.util.FunctionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.CollectionItemEditor;
-import consulo.ide.impl.idea.util.ui.CollectionModelEditor;
-import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.util.lang.ref.Ref;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ide.localize.IdeLocalize;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -47,6 +42,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItemEditor<T>> {
   private final TableView<T> table;
@@ -54,8 +51,11 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
 
   private final MyListTableModel model;
 
-  public TableModelEditor(@Nonnull ColumnInfo[] columns, @Nonnull CollectionItemEditor<T> itemEditor, @Nonnull String emptyText) {
-    this(Collections.emptyList(), columns, itemEditor, emptyText);
+  public TableModelEditor(@Nonnull ColumnInfo[] columns,
+                          @Nonnull CollectionItemEditor<T> itemEditor,
+                          @Nonnull String emptyText,
+                          @Nonnull Supplier<T> itemFactory) {
+    this(Collections.emptyList(), columns, itemEditor, emptyText, itemFactory);
   }
 
   /**
@@ -63,8 +63,12 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
    *
    * Implement {@link DialogItemEditor} instead of {@link CollectionItemEditor} if you want provide dialog to edit.
    */
-  public TableModelEditor(@Nonnull List<T> items, @Nonnull ColumnInfo[] columns, @Nonnull CollectionItemEditor<T> itemEditor, @Nonnull String emptyText) {
-    super(itemEditor);
+  public TableModelEditor(@Nonnull List<T> items,
+                          @Nonnull ColumnInfo[] columns,
+                          @Nonnull CollectionItemEditor<T> itemEditor,
+                          @Nonnull String emptyText,
+                          @Nonnull Supplier<T> itemFactory) {
+    super(itemEditor, itemFactory);
 
     model = new MyListTableModel(columns, new ArrayList<>(items));
     table = new TableView<>(model);
@@ -113,7 +117,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
         if (item != null) {
           Function<T, T> mutator;
           if (helper.isMutable(item)) {
-            mutator = FunctionUtil.id();
+            mutator = Function.identity();
           }
           else {
             final int selectedRow = table.getSelectedRow();
@@ -259,7 +263,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
   @Nonnull
   public JComponent createComponent() {
     return toolbarDecorator.addExtraAction(
-      new ToolbarDecorator.ElementActionButton(IdeLocalize.buttonCopy(), PlatformIconGroup.actionsCopy()) {
+      new ToolbarDecorator.ElementActionButton(CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy()) {
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           TableUtil.stopEditing(table);
@@ -321,7 +325,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
           ((DialogItemEditor<T>)itemEditor).applyEdited(oldItem, newItem);
         }
 
-        model.items.set(ContainerUtil.indexOfIdentity(model.items, newItem), oldItem);
+        model.items.set(Lists.indexOfIdentity(model.items, newItem), oldItem);
       });
     }
 

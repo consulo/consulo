@@ -200,6 +200,11 @@
             <artifactId>consulo-virtual-file-watcher-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-web-browser-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!--TODO [VISTALL] temp dependency-->
         <dependency>

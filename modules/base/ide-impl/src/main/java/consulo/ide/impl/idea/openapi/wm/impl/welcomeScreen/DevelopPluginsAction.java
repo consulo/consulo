@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

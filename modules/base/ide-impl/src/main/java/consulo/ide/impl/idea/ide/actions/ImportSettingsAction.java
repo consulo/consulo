@@ -25,7 +25,6 @@ import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.container.boot.ContainerPathManager;
 import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
-import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,6 +35,7 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.io.FileUtil;
+import consulo.util.io.zip.ZipUtil;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;

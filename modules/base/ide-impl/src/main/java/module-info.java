@@ -375,8 +375,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.actions.tree;
   exports consulo.ide.impl.idea.ide.bookmarks;
   exports consulo.ide.impl.idea.ide.bookmarks.actions;
-  exports consulo.ide.impl.idea.ide.browsers;
-  exports consulo.ide.impl.idea.ide.browsers.impl;
   exports consulo.ide.impl.idea.ide.caches;
   exports consulo.ide.impl.idea.ide.dnd;
   exports consulo.ide.impl.idea.ide.errorTreeView;

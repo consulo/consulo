@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.util;
 
-import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
+import consulo.util.io.zip.ZipUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.management.MBeanServer;

@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.codeEditor.Editor;
 import consulo.component.util.ComparableObject;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ui.ex.awt.hint.TooltipEvent;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;

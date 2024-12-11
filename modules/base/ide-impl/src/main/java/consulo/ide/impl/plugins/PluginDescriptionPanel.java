@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.plugins;
 
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.webBrowser.BrowserUtil;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.plugins.PluginHeaderPanel;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerColumnInfo;
