@@ -49,7 +49,6 @@ public class FavoritesPanel {
   private FavoritesTreeViewPanel myViewPanel;
   private DnDAwareTree myTree;
   private AbstractTreeBuilder myTreeBuilder;
-  private FavoritesTreeStructure myTreeStructure;
 
   public FavoritesPanel(Project project) {
     myProject = project;
@@ -59,7 +58,6 @@ public class FavoritesPanel {
     if (myTreeBuilder != null) {
       Disposer.register(myProject, myTreeBuilder);
     }
-    myTreeStructure = myViewPanel.getFavoritesTreeStructure();
     setupDnD();
   }
 

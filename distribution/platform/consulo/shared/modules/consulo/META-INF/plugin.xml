@@ -157,24 +157,6 @@
         <!--<editorTypedHandler implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupTypedHandler" id="lookup"/>-->
 
 
-        <toolWindow id="Project"
-                    anchor="left"
-                    icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowproject"
-                    displayName="consulo.platform.base.IdeLocalize@title.project"
-                    factoryClass="consulo.ide.impl.idea.ide.projectView.impl.ProjectViewToolWindowFactory"/>
-        <toolWindow id="TODO" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowtodo"
-                    factoryClass="consulo.ide.impl.idea.ide.todo.TodoToolWindowFactory" canCloseContents="true"/>
-        <toolWindow id="Structure" anchor="left" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowstructure"
-                    secondary="true"
-                    factoryClass="consulo.ide.impl.idea.ide.structureView.impl.StructureViewToolWindowFactory"/>
-        <toolWindow id="Favorites" anchor="left" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowfavorites"
-                    secondary="true"
-                    factoryClass="consulo.ide.impl.idea.ide.projectView.impl.FavoritesViewToolWindowFactory"/>
-        <toolWindow id="Run Dashboard" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowrun"
-                    factoryClass="consulo.ide.impl.idea.execution.dashboard.RunDashboardToolWindowFactory"
-                    conditionClass="consulo.ide.impl.idea.execution.dashboard.RunDashboardToolWindowFactory"/>
-
-
         <!--<globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"-->
         <!--enabledByDefault="true" level="ERROR"-->
         <!--implementationClass="consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$AnnotatorBasedInspection"/>-->

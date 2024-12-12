@@ -27,7 +27,6 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
@@ -37,7 +36,7 @@ import jakarta.annotation.Nonnull;
  * @author Konstantin Bulenkov
  */
 @ExtensionImpl
-public class FavoritesViewToolWindowFactory implements ToolWindowFactory, DumbAware {
+public class BookmarksToolWindowFactory implements ToolWindowFactory, DumbAware {
   @Nonnull
   @Override
   public String getId() {
@@ -49,9 +48,12 @@ public class FavoritesViewToolWindowFactory implements ToolWindowFactory, DumbAw
   public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
     final ContentManager contentManager = toolWindow.getContentManager();
     final FavoritesTreeViewPanel panel = new FavoritesPanel(project).getPanel();
-    panel.setupToolWindow((ToolWindowEx)toolWindow);
-    final Content content = contentManager.getFactory().createContent(panel, null, false);
+    panel.setupToolWindow(toolWindow);
+
+    Content content = contentManager.getFactory().createContent(panel, null, false);
+
     contentManager.addContent(content);
+    contentManager.addDataProvider(panel);
   }
 
   @Override
