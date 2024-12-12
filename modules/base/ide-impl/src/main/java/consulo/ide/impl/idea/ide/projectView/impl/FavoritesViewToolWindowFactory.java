@@ -17,21 +17,20 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.bookmark.icon.BookmarkIconGroup;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesPanel;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -69,7 +68,7 @@ public class FavoritesViewToolWindowFactory implements ToolWindowFactory, DumbAw
   @Nonnull
   @Override
   public Image getIcon() {
-    return PlatformIconGroup.toolwindowsToolwindowbookmarks();
+    return BookmarkIconGroup.toolwindowBookmarks();
   }
 
   @Nonnull

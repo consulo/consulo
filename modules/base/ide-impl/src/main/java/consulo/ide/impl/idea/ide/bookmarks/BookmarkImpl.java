@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.bookmarks;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.bookmark.Bookmark;
+import consulo.bookmark.icon.BookmarkIconGroup;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.*;
@@ -66,7 +67,7 @@ public class BookmarkImpl implements Bookmark {
 
     @Nonnull
     public static Image getDefaultIcon(boolean gutter) {
-        return gutter ? PlatformIconGroup.gutterBookmark() : PlatformIconGroup.actionsBookmark();
+        return gutter ? BookmarkIconGroup.gutterBookmark() : BookmarkIconGroup.actionBookmark();
     }
 
     @Nonnull

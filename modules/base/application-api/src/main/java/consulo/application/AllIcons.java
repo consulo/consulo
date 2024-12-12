@@ -91,7 +91,6 @@ public class AllIcons {
         public static final Image NewFolder = PlatformIconGroup.actionsNewfolder(); // 16x16
         public static final Image NextOccurence = PlatformIconGroup.actionsNextoccurence(); // 16x16
         public static final Image Pause = PlatformIconGroup.actionsPause(); // 16x16
-        public static final Image PopFrame = PlatformIconGroup.actionsPopframe(); // 16x16
         public static final Image Preview = PlatformIconGroup.actionsPreview(); // 16x16
         public static final Image PreviewDetails = PlatformIconGroup.actionsPreviewdetails(); // 16x16
         public static final Image PreviousOccurence = PlatformIconGroup.actionsPreviousoccurence(); // 14x14
@@ -246,7 +245,6 @@ public class AllIcons {
         public static final Image LayoutEditorPreview = PlatformIconGroup.generalLayouteditorpreview(); // 16x16
         public static final Image LayoutPreviewOnly = PlatformIconGroup.generalLayoutpreviewonly(); // 16x16
         public static final Image Add = PlatformIconGroup.generalAdd(); // 16x16
-        public static final Image AddFavoritesList = PlatformIconGroup.generalAddfavoriteslist(); // 16x16
         public static final Image ArrowDown = PlatformIconGroup.generalArrowdown(); // 7x6
         public static final Image AutoscrollFromSource = PlatformIconGroup.generalAutoscrollfromsource(); // 16x16
         public static final Image AutoscrollToSource = PlatformIconGroup.generalAutoscrolltosource(); // 16x16

@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.AllIcons;
+import consulo.bookmark.icon.BookmarkIconGroup;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -28,32 +28,32 @@ import consulo.ui.ex.action.AnActionEvent;
  * Date: Feb 28, 2005
  */
 class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
-  public AddAllOpenFilesToNewFavoritesListAction() {
-    super(
-      IdeLocalize.actionAddAllOpenTabsToNewFavoritesList(),
-      IdeLocalize.actionAddToNewFavoritesList(),
-      AllIcons.General.AddFavoritesList
-    );
-  }
+    public AddAllOpenFilesToNewFavoritesListAction() {
+        super(
+            IdeLocalize.actionAddAllOpenTabsToNewFavoritesList(),
+            IdeLocalize.actionAddToNewFavoritesList(),
+            BookmarkIconGroup.actionAddbookmarkslist()
+        );
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final String newName = AddNewFavoritesListAction.doAddNewFavoritesList(e.getData(Project.KEY));
-    if (newName != null) {
-      new AddAllOpenFilesToFavorites(newName).actionPerformed(e);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final String newName = AddNewFavoritesListAction.doAddNewFavoritesList(e.getData(Project.KEY));
+        if (newName != null) {
+            new AddAllOpenFilesToFavorites(newName).actionPerformed(e);
+        }
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      e.getPresentation().setEnabled(false);
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            e.getPresentation().setEnabled(false);
+        }
+        else {
+            e.getPresentation().setEnabled(!AddAllOpenFilesToFavorites.getFilesToAdd(project).isEmpty());
+        }
     }
-    else {
-      e.getPresentation().setEnabled(!AddAllOpenFilesToFavorites.getFilesToAdd(project).isEmpty());
-    }
-  }
 }

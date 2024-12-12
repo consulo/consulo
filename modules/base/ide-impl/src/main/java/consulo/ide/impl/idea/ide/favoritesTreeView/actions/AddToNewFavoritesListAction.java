@@ -17,10 +17,10 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
+import consulo.bookmark.icon.BookmarkIconGroup;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
-import consulo.localize.LocalizeValue;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,30 +34,30 @@ import java.util.Collection;
  * Date: Feb 28, 2005
  */
 class AddToNewFavoritesListAction extends AnAction {
-  public AddToNewFavoritesListAction() {
-    super(
-      IdeLocalize.actionAddToNewFavoritesList(),
-      LocalizeValue.localizeTODO("Add To New Favorites List"),
-      AllIcons.General.AddFavoritesList
-    );
-  }
-
-  @Override
-  @RequiredReadAction
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    Collection<AbstractTreeNode> nodesToAdd = AddToFavoritesAction.getNodesToAdd(e.getDataContext(), true);
-    if (nodesToAdd != null) {
-      final String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
-      if (newName != null) {
-        FavoritesManagerImpl.getInstance(project).addRoots(newName, nodesToAdd);
-      }
+    public AddToNewFavoritesListAction() {
+        super(
+            IdeLocalize.actionAddToNewFavoritesList(),
+            LocalizeValue.localizeTODO("Add To New Favorites List"),
+            BookmarkIconGroup.actionAddbookmarkslist()
+        );
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));
-  }
+    @Override
+    @RequiredReadAction
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        Collection<AbstractTreeNode> nodesToAdd = AddToFavoritesAction.getNodesToAdd(e.getDataContext(), true);
+        if (nodesToAdd != null) {
+            final String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
+            if (newName != null) {
+                FavoritesManagerImpl.getInstance(project).addRoots(newName, nodesToAdd);
+            }
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));
+    }
 }
