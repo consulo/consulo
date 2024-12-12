@@ -19,6 +19,7 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
 import jakarta.annotation.Nonnull;
@@ -34,6 +35,7 @@ public class QuickChangeSchemesAction extends QuickSwitchSchemeAction implements
     }
   }
 
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     super.actionPerformed(e);
     FeatureUsageTracker.getInstance().triggerFeatureUsed("ui.scheme.quickswitch");

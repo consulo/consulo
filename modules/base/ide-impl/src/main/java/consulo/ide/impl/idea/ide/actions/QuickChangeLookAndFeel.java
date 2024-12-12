@@ -15,40 +15,41 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.ui.LafManager;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
+import consulo.ui.style.Style;
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
+import java.util.List;
 
 /**
  * @author max
  */
 public class QuickChangeLookAndFeel extends QuickSwitchSchemeAction {
-  @Override
-  protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
-    final LafManager manager = LafManager.getInstance();
-    final UIManager.LookAndFeelInfo[] lfs = manager.getInstalledLookAndFeels();
-    final UIManager.LookAndFeelInfo current = manager.getCurrentLookAndFeel();
-    for (final UIManager.LookAndFeelInfo lf : lfs) {
-      group.add(new DumbAwareAction(lf.getName(), "", lf == current ? ourCurrentAction : ourNotCurrentAction) {
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-          final UIManager.LookAndFeelInfo cur = manager.getCurrentLookAndFeel();
-          if (cur == lf) return;
-          manager.setCurrentLookAndFeel(lf);
-          manager.updateUI();
+    @Override
+    protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
+        StyleManager styleManager = StyleManager.get();
+        List<Style> styles = styleManager.getStyles();
+        Style currentStyle = styleManager.getCurrentStyle();
+        for (Style newStyle : styles) {
+            group.add(new DumbAwareAction(LocalizeValue.of(newStyle.getName()), LocalizeValue.of(), newStyle == currentStyle ? ourCurrentAction : ourNotCurrentAction) {
+                @RequiredUIAccess
+                @Override
+                public void actionPerformed(@Nonnull AnActionEvent e) {
+                    StyleManager.get().setCurrentStyle(newStyle);
+                }
+            });
         }
-      });
     }
-  }
 
-  @Override
-  protected boolean isEnabled() {
-    return LafManager.getInstance().getInstalledLookAndFeels().length > 1;
-  }
+    @Override
+    protected boolean isEnabled() {
+        return StyleManager.get().getStyles().size() > 1;
+    }
 }

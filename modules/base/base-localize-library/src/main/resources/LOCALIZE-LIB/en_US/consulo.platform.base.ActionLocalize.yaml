@@ -1857,9 +1857,9 @@ action.ChangeKeymap.text:
 action.ChangeKeymap.description:
   text: Change current keymap
 action.ChangeLaf.text:
-  text: Switch Look and Feel
+  text: Switch UI Theme
 action.ChangeLaf.description:
-  text: Change current Look\&Feel
+  text: Change current UI Theme
 action.ChangeInspectionProfile.text:
   text: Switch Error Highlighting
 action.ChangeInspectionProfile.description:
