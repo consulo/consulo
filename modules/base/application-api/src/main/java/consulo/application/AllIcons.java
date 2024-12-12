@@ -512,7 +512,6 @@ public class AllIcons {
         public static final Image NodePlaceholder = PlatformIconGroup.nodesNodeplaceholder(); // 16x16
         public static final Image Package = PlatformIconGroup.nodesPackage(); // 16x16
         public static final Image TestPackage = Package; // 16x16
-        public static final Image Padlock = PlatformIconGroup.nodesPadlock(); // 16x16
         public static final Image Parameter = PlatformIconGroup.nodesParameter(); // 16x16
         public static final Image Plugin = PlatformIconGroup.nodesPlugin(); // 16x16
         public static final Image PpFile = PlatformIconGroup.nodesFolder(); // 16x16

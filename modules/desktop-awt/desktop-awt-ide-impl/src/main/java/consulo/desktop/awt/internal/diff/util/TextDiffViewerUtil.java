@@ -39,6 +39,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.ui.ToggleActionButton;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.action.ComboBoxAction;
@@ -376,7 +377,7 @@ public class TextDiffViewerUtil {
         protected final TextDiffSettings mySettings;
 
         public ReadOnlyLockAction(@Nonnull DiffContext context) {
-            super("Disable editing", null, AllIcons.Nodes.Padlock);
+            super("Disable editing", null, PlatformIconGroup.ideReadonly());
             myContext = context;
             mySettings = getTextSettings(context);
             setEnabledInModalContext(true);
