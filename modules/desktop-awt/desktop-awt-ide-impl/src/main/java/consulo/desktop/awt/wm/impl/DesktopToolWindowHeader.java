@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import consulo.application.AllIcons;
 import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
@@ -31,7 +30,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -49,7 +47,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         private NotNullProducer<ActionGroup> myGearProducer;
 
         public GearAction(NotNullProducer<ActionGroup> gearProducer) {
-            super("Show options", null, PlatformIconGroup.generalGearplain());
+            super("Options", null, PlatformIconGroup.actionsMorevertical());
             myGearProducer = gearProducer;
         }
 
@@ -90,12 +88,8 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
             boolean visible = myToolWindow.isVisible();
             presentation.setEnabled(visible);
             if (visible) {
-                presentation.setIcon(getHideIcon(myToolWindow));
+                presentation.setIcon(PlatformIconGroup.generalHidetoolwindow());
             }
-        }
-
-        private Image getHideIcon(ToolWindow toolWindow) {
-            return AllIcons.General.HideToolWindow;
         }
     }
 
