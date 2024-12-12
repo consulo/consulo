@@ -22,7 +22,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
-import consulo.ide.impl.idea.openapi.wm.impl.DesktopStripeButtonUI;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
@@ -159,9 +158,8 @@ public class LightToolWindow extends JPanel {
 
         myMinimizeButton = new AnchoredButton(title, icon) {
             @Override
-            public void updateUI() {
-                setUI(DesktopStripeButtonUI.createUI(this));
-                setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
+            public String getUIClassID() {
+                return "StripeButtonUI";
             }
 
             @Override

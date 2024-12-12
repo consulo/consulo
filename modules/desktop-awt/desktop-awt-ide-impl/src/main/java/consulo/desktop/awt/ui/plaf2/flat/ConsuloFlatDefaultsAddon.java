@@ -19,9 +19,7 @@ import com.formdev.flatlaf.FlatDefaultsAddon;
 import consulo.desktop.awt.ui.plaf.BasicStatusBarUI;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
-import consulo.platform.Platform;
-import consulo.platform.PlatformOperatingSystem;
-import consulo.platform.os.WindowsOperatingSystem;
+import consulo.desktop.awt.ui.plaf.BasicStripeButtonUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +37,8 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
 
     @Override
     public void afterDefaultsLoading(LookAndFeel laf, UIDefaults uiDefaults) {
+        uiDefaults.put("StripeButtonUI", BasicStripeButtonUI.class.getName());
+
         uiDefaults.put("JBEditorTabsUI", IntelliJEditorTabsUI.class.getName());
         uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
         uiDefaults.put("EditorTextFieldUI", FlatEditorTextFieldUI.class.getName());
@@ -53,17 +53,7 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         uiDefaults.put("TreeUI", FlatTreeUIWidePatch.class.getName());
         uiDefaults.put("Tree.wideCellRenderer", true);
 
-        PlatformOperatingSystem os = Platform.current().os();
-        if (os instanceof WindowsOperatingSystem win && win.isWindows11OrNewer()) {
-            uiDefaults.put("ScrollBar.thumbArc", 999);
-            uiDefaults.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2));
-        }
-
         uiDefaults.put("Menu.selectedArrowIcon", new FlatSelectedMenuArrowIcon());
-
-        if ("FlatGrayIJTheme".equals(laf.getClass().getSimpleName())) {
-            uiDefaults.put("Component.arrowType", "chevron");
-        }
 
         uiDefaults.put("TitlePane.titleMargins", new Insets(3, 0, 3, 6));
         //uiDefaults.put("FlatLaf.debug.panel.showPlaceholders", true);

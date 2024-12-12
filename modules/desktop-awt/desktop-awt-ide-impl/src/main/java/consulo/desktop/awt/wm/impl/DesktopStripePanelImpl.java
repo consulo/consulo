@@ -25,6 +25,7 @@ import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.paint.LinePainter2D;
@@ -83,7 +84,7 @@ final class DesktopStripePanelImpl extends JPanel {
         @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
             Insets insets = ((JComponent) c).getInsets();
-            g.setColor(UIUtil.CONTRAST_BORDER_COLOR);
+            g.setColor(JBColor.border());
             drawBorder((Graphics2D) g, x, y, width, height, insets);
         }
 

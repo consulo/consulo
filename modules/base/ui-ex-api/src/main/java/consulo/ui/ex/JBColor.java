@@ -306,6 +306,6 @@ public class JBColor extends Color {
   }
 
   public static Color border() {
-    return namedColor("Borders.color", new JBColor(Gray._192, Gray._50));
+    return namedColor("Component.borderColor", new JBColor(Gray._192, Gray._50));
   }
 }

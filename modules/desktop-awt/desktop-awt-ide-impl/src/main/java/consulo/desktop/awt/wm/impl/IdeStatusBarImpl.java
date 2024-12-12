@@ -24,7 +24,7 @@ import consulo.desktop.awt.wm.impl.status.InfoAndProgressPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.openapi.wm.impl.DesktopStripeButtonUI;
+import consulo.desktop.awt.ui.plaf.BasicStripeButtonUI;
 import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
@@ -427,7 +427,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
             myHoveredComponent.setBackground(null);
         }
         if (component != null && component.isEnabled()) {
-            component.setBackground(DesktopStripeButtonUI.BACKGROUND_COLOR);
+            component.setBackground(BasicStripeButtonUI.BACKGROUND_COLOR);
         }
         repaint();
     }
@@ -559,7 +559,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         if (myHoveredComponent != null && myHoveredComponent.isEnabled() && !(myHoveredComponent instanceof MemoryUsagePanel)) {
             Rectangle bounds = myHoveredComponent.getBounds();
             Point point = new RelativePoint(myHoveredComponent.getParent(), bounds.getLocation()).getPoint(this);
-            g.setColor(DesktopStripeButtonUI.BACKGROUND_COLOR);
+            g.setColor(BasicStripeButtonUI.BACKGROUND_COLOR);
             g.fillRect(point.x, point.y, bounds.width, bounds.height);
         }
     }

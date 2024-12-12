@@ -966,7 +966,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
                 offset = ActionToolbarImpl.this.getWidth() - getMaxButtonWidth() - 1;
             }
 
-            g.setColor(JBCurrentTheme.CustomFrameDecorations.separatorForeground());
+            g.setColor(JBColor.border());
             if (myOrientation == SwingConstants.HORIZONTAL) {
                 int y2 = ActionToolbarImpl.this.getHeight() - gap * 2 - offset;
                 LinePainter2D.paint((Graphics2D) g, center, gap, center, y2);

@@ -32,6 +32,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -44,7 +45,7 @@ import jakarta.annotation.Nullable;
  * <p>
  * Extracted part independent part from IDEA ToolWindowImpl (named DesktopToolWindowImpl)
  */
-public abstract class ToolWindowBase implements ToolWindowEx {
+public abstract class ToolWindowBase extends UserDataHolderBase implements ToolWindowEx {
   private static final Logger LOG = Logger.getInstance(ToolWindowBase.class);
 
   protected final ToolWindowManagerBase myToolWindowManager;

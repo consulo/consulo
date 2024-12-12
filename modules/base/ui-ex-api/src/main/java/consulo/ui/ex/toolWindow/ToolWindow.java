@@ -26,10 +26,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-public interface ToolWindow extends BusyObject {
+public interface ToolWindow extends BusyObject, UserDataHolder {
   Key<ToolWindow> KEY = Key.create(ToolWindow.class);
   Key<Boolean> SHOW_CONTENT_ICON = Key.create("ContentIcon");
 

@@ -17,8 +17,6 @@ package consulo.desktop.awt.ui.plaf;
 
 import com.formdev.flatlaf.*;
 import com.formdev.flatlaf.intellijthemes.FlatAllIJThemes;
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
-import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.application.ui.UIFontManager;
@@ -31,6 +29,8 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.desktop.awt.ui.impl.style.DesktopStyleImpl;
+import consulo.desktop.awt.ui.plaf2.ConsuloDarkLaf;
+import consulo.desktop.awt.ui.plaf2.ConsuloLightLaf;
 import consulo.desktop.awt.ui.plaf2.IdeLookAndFeelInfo;
 import consulo.desktop.awt.ui.plaf2.SmoothScrollingListener;
 import consulo.disposer.Disposable;
@@ -112,6 +112,9 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         lafList.add(new IdeLookAndFeelInfo("Default Light", defaultLafs.getFirst().getName(), false));
         lafList.add(new IdeLookAndFeelInfo("Default Dark", defaultLafs.getSecond().getName(), true));
 
+        lafList.add(new IdeLookAndFeelInfo("Flat Light", FlatLightLaf.class.getName(), false));
+        lafList.add(new IdeLookAndFeelInfo("Flat Dark", FlatDarkLaf.class.getName(), false));
+
         lafList.add(new IdeLookAndFeelInfo("IntelliJ", FlatIntelliJLaf.class.getName(), false));
         lafList.add(new IdeLookAndFeelInfo("Darcula", FlatDarculaLaf.class.getName(), true));
 
@@ -129,16 +132,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     public static Couple<Class<? extends FlatLaf>> getDefaultLafs() {
-        Platform platform = Platform.current();
-
-        Class<? extends FlatLaf> light = FlatLightLaf.class;
-        Class<? extends FlatLaf> dark = FlatDarkLaf.class;
-        if (platform.os().isMac()) {
-            light = FlatMacLightLaf.class;
-            dark = FlatMacDarkLaf.class;
-        }
-
-        return Couple.of(light, dark);
+        return Couple.of(ConsuloLightLaf.class, ConsuloDarkLaf.class);
     }
 
     @Override

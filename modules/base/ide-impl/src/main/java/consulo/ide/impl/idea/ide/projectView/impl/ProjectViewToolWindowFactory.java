@@ -17,19 +17,18 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.project.ui.view.ProjectView;
 import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.projectView.ProjectViewEx;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.ide.impl.projectView.ProjectViewEx;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -37,40 +36,40 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAware {
-  @Nonnull
-  @Override
-  public String getId() {
-    return ToolWindowId.PROJECT_VIEW;
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return ToolWindowId.PROJECT_VIEW;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
-    ((ProjectViewEx) ProjectView.getInstance(project)).setupToolWindow(toolWindow, true);
-  }
+    @RequiredUIAccess
+    @Override
+    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+        ((ProjectViewEx) ProjectView.getInstance(project)).setupToolWindow(toolWindow, true);
+    }
 
-  @Override
-  public boolean isUnified() {
-    return true;
-  }
+    @Override
+    public boolean isUnified() {
+        return true;
+    }
 
-  @Nonnull
-  @Override
-  public ToolWindowAnchor getAnchor() {
-    return ToolWindowAnchor.LEFT;
-  }
+    @Nonnull
+    @Override
+    public ToolWindowAnchor getAnchor() {
+        return ToolWindowAnchor.LEFT;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return PlatformIconGroup.toolwindowsToolwindowproject();
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.toolwindowsToolwindowproject();
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Project");
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Project");
+    }
 
     @Override
     public boolean activateOnProjectOpening() {

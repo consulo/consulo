@@ -19,13 +19,10 @@ import consulo.application.AllIcons;
 import consulo.component.util.Weighted;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.IdeGlassPane;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
-import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.disposer.Disposable;
@@ -157,7 +154,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
 
     myDividerWidth = onePixelDividers ? 1 : 7;
     if (onePixelDividers) {
-      Color bg = UIUtil.CONTRAST_BORDER_COLOR;
+      Color bg = MorphColor.of(JBColor::border);
       myFirstDivider.setBackground(bg);
       myLastDivider.setBackground(bg);
     }
