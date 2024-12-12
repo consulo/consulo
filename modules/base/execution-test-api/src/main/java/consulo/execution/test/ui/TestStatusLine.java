@@ -17,7 +17,7 @@ package consulo.execution.test.ui;
 
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.ColorProgressBar;
+import consulo.ui.ex.awt.ProgressBarColors;
 import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBProgressBar;
 import consulo.ui.ex.awt.SimpleColoredComponent;
@@ -30,8 +30,8 @@ import java.awt.*;
  * @author yole
  */
 public class TestStatusLine extends JPanel {
-  private static final SimpleTextAttributes IGNORE_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, ColorProgressBar.YELLOW);
-  private static final SimpleTextAttributes ERROR_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, ColorProgressBar.RED_TEXT);
+  private static final SimpleTextAttributes IGNORE_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, ProgressBarColors.YELLOW);
+  private static final SimpleTextAttributes ERROR_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, ProgressBarColors.RED_TEXT);
 
   protected final JProgressBar myProgressBar = new JBProgressBar();
   protected final SimpleColoredComponent myState = new SimpleColoredComponent();
@@ -44,7 +44,7 @@ public class TestStatusLine extends JPanel {
     myProgressBar.setMaximum(100);
     myProgressPanel.add(myProgressBar, new GridBagConstraints(0, 0, 0, 0, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                                                               new Insets(2, 8, 0, 8), 0, 0));
-    setStatusColor(ColorProgressBar.GREEN);
+    setStatusColor(ProgressBarColors.GREEN);
     add(myState, BorderLayout.CENTER);
     myState.append(ExecutionLocalize.junitRuningInfoStartingLabel().get());
   }

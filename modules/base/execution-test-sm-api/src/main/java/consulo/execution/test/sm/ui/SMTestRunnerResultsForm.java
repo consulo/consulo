@@ -47,7 +47,7 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.awt.ColorProgressBar;
+import consulo.ui.ex.awt.ProgressBarColors;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.Update;
 import consulo.util.collection.Lists;
@@ -243,7 +243,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     myTreeBuilder.updateFromRoot();
 
     // Status line
-    myStatusLine.setStatusColor(ColorProgressBar.GREEN);
+    myStatusLine.setStatusColor(ProgressBarColors.GREEN);
 
     // Tests tree
     selectAndNotify(myTestsRootNode);
@@ -300,7 +300,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
 
     fireOnTestingFinished();
 
-    if (testsRoot.wasTerminated() && myStatusLine.getStatusColor() == ColorProgressBar.GREEN) {
+    if (testsRoot.wasTerminated() && myStatusLine.getStatusColor() == ProgressBarColors.GREEN) {
       myStatusLine.setStatusColor(JBColor.LIGHT_GRAY);
     }
 
@@ -634,12 +634,12 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
 
   private void updateStatusLabel(final boolean testingFinished) {
     if (myFailedTestCount > 0) {
-      myStatusLine.setStatusColor(ColorProgressBar.RED);
+      myStatusLine.setStatusColor(ProgressBarColors.RED);
     }
 
     if (testingFinished) {
       if (myTotalTestCount == 0) {
-        myStatusLine.setStatusColor(myTestsRootNode.wasLaunched() || !myTestsRootNode.isTestsReporterAttached() ? JBColor.LIGHT_GRAY : ColorProgressBar.RED);
+        myStatusLine.setStatusColor(myTestsRootNode.wasLaunched() || !myTestsRootNode.isTestsReporterAttached() ? JBColor.LIGHT_GRAY : ProgressBarColors.RED);
       }
       // else color will be according failed/passed tests
     }
