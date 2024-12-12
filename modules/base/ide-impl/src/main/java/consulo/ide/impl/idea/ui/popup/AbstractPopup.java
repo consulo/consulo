@@ -24,6 +24,7 @@ import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.ide.impl.idea.openapi.wm.impl.ModalityHelper;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
 import consulo.ide.impl.idea.util.FunctionUtil;
@@ -48,7 +49,10 @@ import consulo.ui.Position2D;
 import consulo.ui.Size;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
-import consulo.ui.ex.*;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.UiActivity;
+import consulo.ui.ex.UiActivityMonitor;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
@@ -63,6 +67,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
 import consulo.ui.image.Image;
 import consulo.util.collection.WeakList;
 import consulo.util.dataholder.Key;
@@ -465,25 +470,51 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     public void showCenteredInCurrentWindow(@Nonnull ComponentManager project) {
-        if (UiInterceptors.tryIntercept(this)) {
-            return;
+        if (UiInterceptors.tryIntercept(this)) return;
+
+        Window window = getCurrentWindow((Project) project);
+
+        if (window != null && window.isShowing()) {
+            showInCenterOf(window);
         }
+    }
+
+    @Nullable
+    public static Window getCurrentWindow(@Nonnull Project project) {
         Window window = null;
 
-        Component focusedComponent = getWndManager().getFocusedComponent((Project) project);
-        if (focusedComponent != null) {
-            Component parent = UIUtil.findUltimateParent(focusedComponent);
-            if (parent instanceof Window parentWindow) {
-                window = parentWindow;
-            }
+        WindowManagerEx manager = getWndManager();
+        if (manager != null) {
+            window = getTargetWindow(manager.getFocusedComponent(project));
         }
         if (window == null) {
             window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
         }
 
-        if (window != null && window.isShowing()) {
-            showInCenterOf(window);
+        // also skip heavy popup
+        if ((window == null || !window.isShowing() || window.getType() == Window.Type.POPUP) && manager != null) {
+            window = manager.getFrame(project);
         }
+
+        return window;
+    }
+
+    private static Window getTargetWindow(Component component) {
+        Window res = null;
+        while (component != null) {
+            if (component instanceof ToolWindowFloatingDecorator fd) {
+                return (Window) fd;
+            }
+
+            Component parent = component.getParent();
+
+            if (component instanceof Window w) {
+                if (ModalityHelper.isModalBlocked(w)) break;
+                res = w;
+            }
+            component = parent;
+        }
+        return res;
     }
 
     @Override
@@ -492,7 +523,6 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         Point popupPoint = getCenterOf(aComponent, getPreferredContentSize());
         show(aComponent, popupPoint.x, popupPoint.y, false);
     }
-
 
     @Override
     public void showUnderneathOf(@Nonnull Component aComponent) {
