@@ -29,7 +29,9 @@ public abstract class ColoredTableCellRenderer extends SimpleColoredRenderer imp
   public final Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected, boolean hasFocus, int row, int col) {
     clear();
-    setPaintFocusBorder(hasFocus && table.getCellSelectionEnabled());
+
+    setBorder(JBCurrentTheme.listCellBorder());
+      
     acquireState(table, isSelected, hasFocus, row, col);
     getCellState().updateRenderer(this);
     customizeCellRenderer(table, value, isSelected, hasFocus, row, col);

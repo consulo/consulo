@@ -16,60 +16,15 @@
 
 package consulo.ui.ex.awt.table;
 
-import consulo.ui.ex.Gray;
-import jakarta.annotation.Nonnull;
-
-import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-import java.awt.*;
 
 /**
  * @author spleaner
  * @author Konstantin Bulenkov
  */
+@Deprecated
 public class StripeTable extends JBTable {
-  private static final Color GRID_COLOR = Gray._217;
-  private static final CellRendererPane RENDER_PANE = new CellRendererPane();
-
   public StripeTable(TableModel model) {
     super(model);
-    apply(this);
-  }
-
-  public static void apply(@Nonnull JBTable table) {
-    table.setAutoResizeMode(AUTO_RESIZE_OFF);
-    table.setTableHeader(createTableHeader(table.getColumnModel()));
-    table.getTableHeader().setReorderingAllowed(false);
-    //setOpaque(false);
-    table.setGridColor(GRID_COLOR);
-    table.setIntercellSpacing(new Dimension(1, 0));
-    table.setShowGrid(false);
-    table.setStriped(true);
-  }
-
-  private static JTableHeader createTableHeader(@Nonnull TableColumnModel columnModel) {
-    return new JTableHeader(columnModel) {
-      @Override
-      protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        JViewport viewport = (JViewport)table.getParent();
-        if (viewport != null && table.getWidth() < viewport.getWidth()) {
-          int x = table.getWidth();
-          int width = viewport.getWidth() - table.getWidth();
-          paintHeader(g, getTable(), x, width);
-        }
-      }
-    };
-  }
-
-  private static void paintHeader(Graphics g, JTable table, int x, int width) {
-    TableCellRenderer renderer = table.getTableHeader().getDefaultRenderer();
-    Component component = renderer.getTableCellRendererComponent(table, "", false, false, -1, 2);
-    component.setBounds(0, 0, width, table.getTableHeader().getHeight());
-    ((JComponent)component).setOpaque(false);
-    RENDER_PANE.paintComponent(g, component, null, x, 0, width, table.getTableHeader().getHeight(), true);
   }
 }
