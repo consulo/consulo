@@ -1120,31 +1120,9 @@ public class UIUtil {
         return UIManager.getColor(TABLE_FOCUS_CELL_BACKGROUND_PROPERTY);
     }
 
-    private static final class UnfocusedSelection {
-        private static final Color BACKGROUND = new JBColor(0xD4D4D4, 0x0D293E);
-        private static final Color LIST_BACKGROUND = JBColor.namedColor("List.selectionInactiveBackground", BACKGROUND);
-        private static final Color TREE_BACKGROUND = JBColor.namedColor("Tree.selectionInactiveBackground", BACKGROUND);
-        private static final Color TABLE_BACKGROUND = JBColor.namedColor("Table.selectionInactiveBackground", BACKGROUND);
-    }
-
-    private static final class FocusedSelection {
-        private static final Color BACKGROUND = new JBColor(0x3875D6, 0x2F65CA);
-        private static final Color LIST_BACKGROUND = JBColor.namedColor("List.selectionBackground", BACKGROUND);
-        private static final Color TREE_BACKGROUND = JBColor.namedColor("Tree.selectionBackground", BACKGROUND);
-        private static final Color TABLE_BACKGROUND = JBColor.namedColor("Table.selectionBackground", BACKGROUND);
-    }
-
-    private static final JBValue SELECTED_ITEM_ALPHA = new JBValue.UIInteger("List.selectedItemAlpha", 75);
-
     @Nonnull
     public static Color getListSelectionBackground(boolean focused) {
-        if (!focused) {
-            return UnfocusedSelection.LIST_BACKGROUND;
-        }
-        Color color = UIManager.getColor("List.selectionBackground");
-        double alpha = SELECTED_ITEM_ALPHA.getFloat() / 100.0;
-        //noinspection UseJBColor
-        return isUnderDefaultMacTheme() && alpha >= 0 && alpha <= 1.0 ? ColorUtil.mix(Color.WHITE, color, alpha) : color;
+        return UIManager.getColor(focused ? "List.selectionBackground" : "List.selectionInactiveBackground");
     }
 
     @Nonnull
@@ -1181,7 +1159,7 @@ public class UIUtil {
 
     @Nonnull
     public static Color getTreeSelectionBackground(boolean focused) {
-        return focused ? FocusedSelection.TREE_BACKGROUND : UnfocusedSelection.TREE_BACKGROUND;
+        return UIManager.getColor(focused ? "Tree.selectionBackground" : "Tree.selectionInactiveBackground");
     }
 
     /**
@@ -1471,8 +1449,9 @@ public class UIUtil {
         return !isUnderDarkBuildInLaf();
     }
 
+    @Deprecated
     public static boolean isUnderDefaultMacTheme() {
-        return Platform.current().os().isMac() && isUnderIntelliJLaF();
+        return false;
     }
 
     @Deprecated

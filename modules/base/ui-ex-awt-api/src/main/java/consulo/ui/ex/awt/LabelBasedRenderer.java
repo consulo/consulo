@@ -1,8 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.ui.ex.awt.util.RenderingUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -21,8 +19,8 @@ public class LabelBasedRenderer extends JLabel {
     @Override
     public Component getListCellRendererComponent(@Nonnull JList<? extends E> list, @Nullable E value, int index, boolean selected, boolean focused) {
       configure(list, value);
-      setForeground(RenderingUtil.getForeground(list, selected));
-      setBackground(RenderingUtil.getBackground(list, selected));
+      setForeground(UIUtil.getListForeground(selected, focused));
+      setBackground(UIUtil.getListBackground(selected, focused));
       setBorder(EMPTY);
       return this;
     }
@@ -35,8 +33,8 @@ public class LabelBasedRenderer extends JLabel {
     @Override
     public Component getTreeCellRendererComponent(@Nonnull JTree tree, @Nullable Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean focused) {
       configure(tree, tree.convertValueToText(value, selected, expanded, leaf, row, focused));
-      setForeground(RenderingUtil.getForeground(tree, selected));
-      setBackground(RenderingUtil.getBackground(tree, selected));
+      setForeground(UIUtil.getTreeForeground(selected, focused));
+      setBackground(selected ? UIUtil.getTreeSelectionBackground(focused) : UIUtil.getTreeBackground());
       setBorder(EMPTY);
       return this;
     }

@@ -384,15 +384,8 @@ public class JBCurrentTheme {
             private static final Color BACKGROUND = JBColor.namedColor("List.selectionBackground", DEFAULT_RENDERER_SELECTION_BACKGROUND);
             private static final Color FOREGROUND = JBColor.namedColor("List.selectionForeground", Label.foreground(true));
 
-            public static
             @Nonnull
-            Color background(boolean focused) {
-                if (focused && UIUtil.isUnderDefaultMacTheme()) {
-                    double alpha = JBUI.getInt("List.selectedItemAlpha", 75);
-                    if (0 <= alpha && alpha < 100) {
-                        return ColorUtil.mix(Color.WHITE, BACKGROUND, alpha / 100.0);
-                    }
-                }
+            public static Color background(boolean focused) {
                 return focused ? BACKGROUND : List.Selection.Inactive.BACKGROUND;
             }
 
