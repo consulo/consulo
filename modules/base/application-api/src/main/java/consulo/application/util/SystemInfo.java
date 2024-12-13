@@ -107,11 +107,6 @@ public class SystemInfo {
     return ourOsReleaseInfo.get().get("VERSION");
   }
 
-  // public static final boolean isMacSystemMenu = isMac && "true".equals(System.getProperty("apple.laf.useScreenMenuBar"));
-
-  public static final boolean areSymLinksSupported = isUnix || isWinVistaOrNewer;
-
-  public static final boolean isAMD64 = "amd64".equals(OS_ARCH);
 
   private static final Supplier<Boolean> ourHasXdgOpen = LazyValue.atomicNotNull(() -> {
     return isUnix && new File("/usr/bin/xdg-open").canExecute();

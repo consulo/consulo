@@ -3,15 +3,13 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
-import consulo.platform.Platform;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.UIUtil;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
@@ -77,9 +75,6 @@ public class SimpleTree extends Tree implements CellEditorListener {
         }
       }
     });
-    if (Platform.current().os().isWindows() && !SystemInfo.isWinVistaOrNewer) {
-      setUI(new BasicTreeUI());   // In WindowsXP UI handles are not shown :(
-    }
 
     setOpaque(false);
   }

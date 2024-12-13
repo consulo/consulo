@@ -333,7 +333,7 @@ public class DateFormatUtil {
 
     boolean loaded = false;
     try {
-      if (SystemInfo.isWin7OrNewer && JnaLoader.isLoaded()) {
+      if (JnaLoader.isLoaded()) {
         loaded = getWindowsFormats(formats);
       }
       else if (Platform.current().os().isMac()) {
