@@ -122,8 +122,8 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
      */
     @Override
     public void append(@Nonnull @Nls String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
-        if (mySelected) {
-            super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), UIUtil.getTreeSelectionForeground(myFocused)), isMainText);
+        if (mySelected && myFocused) {
+            super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), UIUtil.getTreeSelectionForeground(true)), isMainText);
         }
         else {
             super.append(fragment, attributes, isMainText);
