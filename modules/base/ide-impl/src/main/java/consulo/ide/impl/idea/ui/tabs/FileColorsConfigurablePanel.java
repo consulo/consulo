@@ -16,22 +16,22 @@
 
 package consulo.ide.impl.idea.ui.tabs;
 
-import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
 import consulo.application.ui.UISettings;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
+import consulo.ide.impl.idea.openapi.ui.MessageType;
+import consulo.ide.setting.Settings;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
-import consulo.ide.setting.Settings;
-import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.JBLabel;
-import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.ToolbarDecorator;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -94,7 +94,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
     };
 
     final JPanel panel = ToolbarDecorator.createDecorator(myLocalTable)
-      .addExtraAction(new AnAction("Share", null, AllIcons.Actions.Share) {
+      .addExtraAction(new AnAction("Share", null, PlatformIconGroup.actionsShow()) {
         @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
@@ -132,7 +132,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
     final JPanel sharedPanel = new JPanel(new BorderLayout());
     sharedPanel.setBorder(IdeBorderFactory.createTitledBorder("Shared colors", false));
     final JPanel shared = ToolbarDecorator.createDecorator(mySharedTable)
-      .addExtraAction(new AnAction("Unshare", null, AllIcons.Actions.Unshare) {
+      .addExtraAction(new AnAction("Unshare", null, PlatformIconGroup.actionsCancel()) {
         @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {

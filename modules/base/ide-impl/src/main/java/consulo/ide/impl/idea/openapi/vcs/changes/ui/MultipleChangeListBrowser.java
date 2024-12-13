@@ -440,7 +440,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   private class ShowHideUnversionedFilesAction extends ToggleAction {
 
     private ShowHideUnversionedFilesAction() {
-      super("Show Unversioned Files", null, PlatformIconGroup.processStop());
+      super("Show Unversioned Files", null, PlatformIconGroup.actionsCancel());
     }
 
     @Override

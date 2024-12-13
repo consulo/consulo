@@ -180,7 +180,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
       }
     };
 
-    final AnAction editAction = new AnAction("Edit", "Edit", AllIcons.Actions.Properties) {
+    final AnAction editAction = new AnAction("Edit", "Edit", PlatformIconGroup.actionsEdit()) {
       @RequiredUIAccess
       @Override
       public void update(final AnActionEvent e) {

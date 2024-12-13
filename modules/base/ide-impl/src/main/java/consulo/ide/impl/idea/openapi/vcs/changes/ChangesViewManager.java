@@ -41,6 +41,7 @@ import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.language.impl.DebugUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.JBColor;
@@ -505,7 +506,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
       super(
         VcsLocalize.changesActionShowIgnoredText(),
         VcsLocalize.changesActionShowIgnoredDescription(),
-        AllIcons.Actions.ShowHiddens
+        PlatformIconGroup.actionsTogglevisibility()
       );
     }
 

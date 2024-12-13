@@ -94,7 +94,6 @@ public class AllIcons {
         public static final Image PreviousOccurence = PlatformIconGroup.actionsPreviousoccurence(); // 14x14
         public static final Image ProfileCPU = PlatformIconGroup.actionsProfilecpu(); // 16x16
         public static final Image ProfileMemory = PlatformIconGroup.actionsProfilememory(); // 16x16
-        public static final Image Properties = PlatformIconGroup.actionsProperties(); // 16x16
         public static final Image QuickfixBulb = PlatformIconGroup.actionsQuickfixbulb(); // 16x16
         public static final Image QuickfixOffBulb = PlatformIconGroup.actionsQuickfixoffbulb(); // 16x16
         public static final Image QuickList = PlatformIconGroup.actionsQuicklist(); // 16x16
@@ -118,7 +117,6 @@ public class AllIcons {
         public static final Image ShortcutFilter = PlatformIconGroup.actionsShortcutfilter(); // 16x16
         public static final Image ShowAsTree = PlatformIconGroup.actionsShowastree(); // 16x16
         public static final Image ShowChangesOnly = PlatformIconGroup.actionsShowchangesonly(); // 16x16
-        public static final Image ShowHiddens = PlatformIconGroup.actionsShowhiddens(); // 16x16
         public static final Image ShowImportStatements = PlatformIconGroup.actionsShowimportstatements(); // 16x16
         public static final Image ShowReadAccess = PlatformIconGroup.actionsShowreadaccess(); // 16x16
         @Deprecated

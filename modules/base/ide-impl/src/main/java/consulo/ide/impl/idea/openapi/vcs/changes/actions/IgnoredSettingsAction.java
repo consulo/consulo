@@ -16,9 +16,9 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.IgnoredSettingsDialog;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -33,7 +33,7 @@ public class IgnoredSettingsAction extends AnAction implements DumbAware {
     super(
       "Configure Ignored Files...",
       "Specify file paths and masks which are ignored",
-      AllIcons.Actions.Properties
+       PlatformIconGroup.filetypesAny_type()
     );
   }
 

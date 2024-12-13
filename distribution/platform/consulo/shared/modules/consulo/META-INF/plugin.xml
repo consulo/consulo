@@ -1047,8 +1047,7 @@
             <action id="ChangesView.AddUnversioned" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForAdditionAction">
                 <keyboard-shortcut first-keystroke="control alt A" keymap="$default"/>
             </action>
-            <action id="ChangesView.Ignore" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoreUnversionedAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.properties"/>
+            <action id="ChangesView.Ignore" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoreUnversionedAction" />
             <action id="ChangesView.RemoveDeleted" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForRemovalAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
             <action id="ChangesView.Edit" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.EditAction"/>

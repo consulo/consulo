@@ -75,7 +75,6 @@ public interface PlatformIcons {
   Icon EDIT = (Icon)IconUtil.getEditIcon();
   Icon SELECT_ALL_ICON = (Icon)AllIcons.Actions.Selectall;
   Icon UNSELECT_ALL_ICON = (Icon)AllIcons.Actions.Unselectall;
-  Icon PROPERTIES_ICON = (Icon)AllIcons.Actions.Properties;
   Icon SYNCHRONIZE_ICON = (Icon)AllIcons.Actions.Refresh;
   Icon SHOW_SETTINGS_ICON = (Icon)AllIcons.General.Settings;
 
