@@ -1,16 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.application.AllIcons;
-import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TimerUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -176,15 +175,16 @@ public class JBPopupMenu extends JPopupMenu {
           g.setColor(dim[i]);
           g.drawLine(0, i, myTarget.getWidth(), i);
         }
-        TargetAWT.to(AllIcons.General.SplitUp).paintIcon(myTarget, g, myTarget.getWidth() / 2 - AllIcons.General.SplitUp.getWidth() / 2, 0);
+        Icon icon = TargetAWT.to(PlatformIconGroup.generalArrowup());
+        icon.paintIcon(myTarget, g, myTarget.getWidth() / 2 - icon.getIconWidth() / 2, 0);
       }
       if (super.preferredLayoutSize(myTarget).height - getMaxHeight() - myShift > 0) {
         for (int i = 0; i < dim.length; i++) {
           g.setColor(dim[i]);
           g.drawLine(0, myTarget.getHeight() - i, myTarget.getWidth(), myTarget.getHeight() - i);
         }
-        TargetAWT.to(AllIcons.General.ArrowDown)
-                .paintIcon(myTarget, g, myTarget.getWidth() / 2 - AllIcons.General.ArrowDown.getWidth() / 2, myTarget.getHeight() - AllIcons.General.ArrowDown.getHeight());
+        Icon icon = TargetAWT.to(PlatformIconGroup.generalArrowdown());
+        icon.paintIcon(myTarget, g, myTarget.getWidth() / 2 - icon.getIconWidth() / 2, myTarget.getHeight() - icon.getIconHeight());
       }
     }
 

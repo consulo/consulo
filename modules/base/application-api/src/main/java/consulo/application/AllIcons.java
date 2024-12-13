@@ -44,7 +44,6 @@ public class AllIcons {
         public static final Image Copy = PlatformIconGroup.actionsCopy(); // 16x16
         public static final Image Diff = PlatformIconGroup.actionsDiff(); // 16x16
         public static final Image DiffWithCurrent = PlatformIconGroup.actionsDiffwithcurrent(); // 16x16
-        public static final Image Down = PlatformIconGroup.actionsDown(); // 16x16
         public static final Image Download = PlatformIconGroup.actionsDownload(); // 16x16
         public static final Image Dump = PlatformIconGroup.actionsDump(); // 16x16
         public static final Image Edit = PlatformIconGroup.actionsEdit(); // 14x14
@@ -304,14 +303,6 @@ public class AllIcons {
         public static final Image Settings = PlatformIconGroup.generalSettings(); // 16x16
         public static final Image Show_to_implement = PlatformIconGroup.generalShow_to_implement(); // 16x16
         public static final Image Show_to_override = PlatformIconGroup.generalShow_to_override(); // 16x16
-        public static final Image SplitCenterH = PlatformIconGroup.generalSplitcenterh(); // 7x7
-        public static final Image SplitCenterV = PlatformIconGroup.generalSplitcenterv(); // 6x7
-        public static final Image SplitDown = PlatformIconGroup.generalSplitdown(); // 7x7
-        public static final Image SplitGlueH = PlatformIconGroup.generalSplitglueh(); // 6x17
-        public static final Image SplitGlueV = PlatformIconGroup.generalSplitgluev(); // 17x6
-        public static final Image SplitLeft = PlatformIconGroup.generalSplitleft(); // 7x7
-        public static final Image SplitRight = PlatformIconGroup.generalSplitright(); // 7x7
-        public static final Image SplitUp = PlatformIconGroup.generalSplitup(); // 7x7
         public static final Image TbHidden = PlatformIconGroup.generalTbhidden(); // 16x16
         public static final Image TbShown = PlatformIconGroup.generalTbshown(); // 16x16
         public static final Image Tip = PlatformIconGroup.generalTip(); // 32x32

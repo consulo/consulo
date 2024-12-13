@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -69,7 +70,7 @@ public class QuickListPanel {
                       public void run(AnActionButton button) {
                         includeSelectedAction();
                       }
-                    }).addExtraAction(new AnActionButton("Add Separator", AllIcons.General.SeparatorH) {
+                    }).addExtraAction(new AnActionButton("Add Separator", PlatformIconGroup.generalRemove()) {
               @Override
               public void actionPerformed(@Nullable AnActionEvent e) {
                 addSeparator();

@@ -15,22 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.ui;
 
-import consulo.application.AllIcons;
-import consulo.component.util.Weighted;
 import consulo.application.util.registry.Registry;
-import consulo.ui.ex.IdeGlassPane;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
-import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.component.util.Weighted;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.image.Image;
-
-import jakarta.annotation.Nonnull;
+import consulo.ui.ex.IdeGlassPane;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.MorphColor;
+import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
+import consulo.ui.ex.update.Activatable;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -68,7 +66,6 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
   private int myLastSize = 0;
   private int myMinSize = 0;
 
-  private boolean myShowDividerControls;
   private int myDividerZone;
 
   private class MyFocusTraversalPolicy extends FocusTraversalPolicy {
@@ -146,7 +143,6 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
 
   public ThreeComponentsSplitter(boolean vertical, boolean onePixelDividers) {
     myVerticalSplit = vertical;
-    myShowDividerControls = false;
     myFirstDivider = new Divider(true, onePixelDividers);
     Disposer.register(this, myFirstDivider);
     myLastDivider = new Divider(false, onePixelDividers);
@@ -166,11 +162,6 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     add(myLastDivider);
   }
 
-  public void setShowDividerControls(boolean showDividerControls) {
-    myShowDividerControls = showDividerControls;
-    setOrientation(myVerticalSplit);
-  }
-
   public void setDividerMouseZoneSize(int size) {
     myDividerZone = size;
   }
@@ -183,6 +174,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     myHonorMinimumSize = honorMinimumSize;
   }
 
+  @Override
   public boolean isVisible() {
     return super.isVisible() && (firstVisible() || innerVisible() || lastVisible());
   }
@@ -214,6 +206,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     return innerVisible() && lastVisible();
   }
 
+  @Override
   public Dimension getMinimumSize() {
     if (isHonorMinimumSize()) {
       final int dividerWidth = getDividerWidth();
@@ -240,6 +233,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     return super.getMinimumSize();
   }
 
+  @Override
   public void doLayout() {
     final int width = getWidth();
     final int height = getHeight();
@@ -382,8 +376,6 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
    */
   public void setOrientation(boolean verticalSplit) {
     myVerticalSplit = verticalSplit;
-    myFirstDivider.setOrientation(verticalSplit);
-    myLastDivider.setOrientation(verticalSplit);
     doLayout();
     repaint();
   }
@@ -599,7 +591,6 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
       setFocusable(false);
       enableEvents(MouseEvent.MOUSE_EVENT_MASK | MouseEvent.MOUSE_MOTION_EVENT_MASK);
       myIsFirst = isFirst;
-      setOrientation(myVerticalSplit);
 
       new UiNotifyConnector.Once(this, new Activatable.Adapter() {
         @Override
@@ -643,92 +634,8 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
       myGlassPane.addMousePreprocessor(myListener, this);
     }
 
+    @Override
     public void dispose() {
-    }
-
-    private void setOrientation(boolean isVerticalSplit) {
-      removeAll();
-
-      if (!myShowDividerControls) {
-        return;
-      }
-
-      int xMask = isVerticalSplit ? 1 : 0;
-      int yMask = isVerticalSplit ? 0 : 1;
-
-      Image glueIcon = isVerticalSplit ? AllIcons.General.SplitGlueV : AllIcons.General.SplitCenterH;
-      int glueFill = isVerticalSplit ? GridBagConstraints.VERTICAL : GridBagConstraints.HORIZONTAL;
-      add(new JBLabel(glueIcon),
-          new GridBagConstraints(0, 0, 1, 1, 0, 0, isVerticalSplit ? GridBagConstraints.EAST : GridBagConstraints.NORTH, glueFill, new Insets(0, 0, 0, 0), 0, 0));
-      JLabel splitDownlabel = new JBLabel(isVerticalSplit ? AllIcons.General.SplitDown : AllIcons.General.SplitRight);
-      splitDownlabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      splitDownlabel.setToolTipText(isVerticalSplit ? UIBundle.message("splitter.down.tooltip.text") : UIBundle
-              .message("splitter.right.tooltip.text"));
-      new ClickListener() {
-        @Override
-        public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-          if (myInnerComponent != null) {
-            final int income = myVerticalSplit ? myInnerComponent.getHeight() : myInnerComponent.getWidth();
-            if (myIsFirst) {
-              setFirstSize(myFirstSize + income);
-            }
-            else {
-              setLastSize(myLastSize + income);
-            }
-          }
-          return true;
-        }
-      }.installOn(splitDownlabel);
-
-      add(splitDownlabel,
-          new GridBagConstraints(isVerticalSplit ? 1 : 0,
-                                 isVerticalSplit ? 0 : 5,
-                                 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-      //
-      add(new JBLabel(glueIcon),
-          new GridBagConstraints(2 * xMask, 2 * yMask, 1, 1, 0, 0, GridBagConstraints.CENTER, glueFill, new Insets(0, 0, 0, 0), 0, 0));
-      JLabel splitCenterlabel = new JBLabel(isVerticalSplit ? AllIcons.General.SplitCenterV : AllIcons.General.SplitCenterH);
-      splitCenterlabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      splitCenterlabel.setToolTipText(UIBundle.message("splitter.center.tooltip.text"));
-      new ClickListener() {
-        @Override
-        public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-          center();
-          return true;
-        }
-      }.installOn(splitCenterlabel);
-      add(splitCenterlabel,
-          new GridBagConstraints(3 * xMask, 3 * yMask, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-      add(new JBLabel(glueIcon),
-          new GridBagConstraints(4 * xMask, 4 * yMask, 1, 1, 0, 0, GridBagConstraints.CENTER, glueFill, new Insets(0, 0, 0, 0), 0, 0));
-      //
-      JLabel splitUpLabel = new JBLabel(isVerticalSplit ? AllIcons.General.SplitUp : AllIcons.General.SplitLeft);
-      splitUpLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      splitUpLabel.setToolTipText(isVerticalSplit ? UIBundle.message("splitter.up.tooltip.text") : UIBundle
-              .message("splitter.left.tooltip.text"));
-      new ClickListener() {
-        @Override
-        public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-          if (myInnerComponent != null) {
-            final int income = myVerticalSplit ? myInnerComponent.getHeight() : myInnerComponent.getWidth();
-            if (myIsFirst) {
-              setFirstSize(myFirstSize + income);
-            }
-            else {
-              setLastSize(myLastSize + income);
-            }
-          }
-          return true;
-        }
-      }.installOn(splitUpLabel);
-
-      add(splitUpLabel,
-          new GridBagConstraints(isVerticalSplit ? 5 : 0,
-                                 isVerticalSplit ? 0 : 1,
-                                 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-      add(new JBLabel(glueIcon),
-          new GridBagConstraints(6 * xMask, 6 * yMask, 1, 1, 0, 0,
-                                 isVerticalSplit ? GridBagConstraints.WEST : GridBagConstraints.SOUTH, glueFill, new Insets(0, 0, 0, 0), 0, 0));
     }
 
     private void center() {
@@ -743,6 +650,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
       }
     }
 
+    @Override
     protected void processMouseMotionEvent(MouseEvent e) {
       super.processMouseMotionEvent(e);
 
@@ -795,6 +703,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
       }
     }
 
+    @Override
     protected void processMouseEvent(MouseEvent e) {
       super.processMouseEvent(e);
       if (!isShowing()) {
