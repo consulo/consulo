@@ -30,5 +30,4 @@ module consulo.version.control.system.impl {
   // TODO remove in future
   requires java.desktop;
   requires forms.rt;
-  requires microba;
 }

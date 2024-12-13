@@ -96,11 +96,6 @@
         </dependency>
         
         <dependency>
-            <groupId>jgraph</groupId>
-            <artifactId>jgraph</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>jakarta.inject</groupId>
             <artifactId>jakarta.inject-api</artifactId>
             <scope>compile</scope>

@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.wm.impl.content;
 
-import com.formdev.flatlaf.icons.FlatTreeExpandedIcon;
 import consulo.ui.ex.awt.JBUI;
 
 import javax.swing.*;
@@ -25,7 +24,7 @@ public abstract class ComboIcon {
     private final Icon myImage;
 
     public ComboIcon() {
-        myImage = new FlatTreeExpandedIcon();
+        myImage = UIManager.getIcon("Tree.expandedIcon");
     }
 
     public void paintIcon(final Component c, final Graphics g) {

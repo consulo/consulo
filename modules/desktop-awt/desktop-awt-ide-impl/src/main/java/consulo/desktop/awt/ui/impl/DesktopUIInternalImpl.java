@@ -513,4 +513,10 @@ public class DesktopUIInternalImpl extends UIInternal {
     public ModalityState _ModalityState_nonModal() {
         return ModalityStateImpl.NON_MODAL;
     }
+
+    @Nonnull
+    @Override
+    public DatePicker _Components_datePicker(@Nullable String datePattern) {
+        return new DesktopDatePickerImpl(datePattern);
+    }
 }

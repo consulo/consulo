@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.filter;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -99,9 +100,10 @@ class DateFilterPopupComponent extends FilterPopupComponent<VcsLogDateFilter> {
       super("Select...");
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      final DateFilterComponent dateComponent = new DateFilterComponent(false, DateFormatUtil.getDateFormat().getDelegate());
+      final DateFilterComponent dateComponent = new DateFilterComponent(false, DateFormatUtil.getDateFormat().toPattern());
       VcsLogDateFilter currentFilter = myFilterModel.getFilter();
       if (currentFilter != null) {
         if (currentFilter.getBefore() != null) {

@@ -5,7 +5,6 @@
 module consulo.version.control.system.api {
   // TODO remove this in future
   requires java.desktop;
-  requires microba;
   requires forms.rt;
 
   requires transitive consulo.application.api;

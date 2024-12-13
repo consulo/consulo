@@ -15,19 +15,17 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui;
 
-import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.RoundedLineBorder;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.awt.ClickListener;
-import consulo.ui.ex.awt.RoundedLineBorder;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-
 import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.event.*;
@@ -63,7 +61,7 @@ public abstract class VcsLogPopupComponent extends JPanel {
     add(myNameLabel);
     add(myValueLabel);
     add(Box.createHorizontalStrut(GAP_BEFORE_ARROW));
-    add(new JBLabel(AllIcons.Ide.Statusbar_arrows));
+    add(new JLabel(UIManager.getIcon("Tree.expandedIcon")));
 
     installChangeListener(() -> {
       myValueLabel.revalidate();

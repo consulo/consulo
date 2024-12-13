@@ -125,17 +125,6 @@
                 <version>2.11.0</version>
             </dependency>
             <dependency>
-                <groupId>consulo.internal</groupId>
-                <artifactId>microba</artifactId>
-                <version>0.4.4</version>
-            </dependency>
-            <dependency>
-                <!--TODO remove this dependency. For now it's fix microba dep-->
-                <groupId>jgraph</groupId>
-                <artifactId>jgraph</artifactId>
-                <version>5.8.3.1</version>
-            </dependency>
-            <dependency>
                 <groupId>consulo.internal.sound</groupId>
                 <artifactId>jogg</artifactId>
                 <version>3-SNAPSHOT</version>

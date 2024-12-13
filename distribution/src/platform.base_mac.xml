@@ -196,8 +196,6 @@
                 <include>org.slf4j:jcl-over-slf4j</include>
                 <include>org.slf4j:slf4j-api</include>
                 <include>jakarta.inject:jakarta.inject-api</include>
-                <include>consulo.internal:microba</include>
-                <include>jgraph:jgraph</include>
                 <include>com.google.guava:guava</include>
                 <include>com.google.guava:failureaccess</include>
                 <include>org.apache.httpcomponents:httpcore</include>

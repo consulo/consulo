@@ -16,119 +16,176 @@
 
 package consulo.versionControlSystem.versionBrowser.ui.awt;
 
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ui.ex.awt.IdeBorderFactory;
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import consulo.application.util.DateFormatUtil;
-import com.michaelbaranov.microba.calendar.DatePicker;
+import consulo.ui.DatePicker;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
-
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyVetoException;
-import java.text.DateFormat;
 import java.util.Date;
 
 /**
  * @author yole
  */
 public class DateFilterComponent {
-  private JPanel myDatePanel;
-  private JCheckBox myUseDateAfterFilter;
-  private JCheckBox myUseDateBeforeFilter;
-  private DatePicker myDateAfter;
-  private DatePicker myDateBefore;
-  private JPanel myRootPanel;
+    private final String myDatePattern;
 
-  public DateFilterComponent() {
-    this(true, DateFormatUtil.getDateTimeFormat().getDelegate());
-  }
+    private JPanel myDatePanel;
+    private JCheckBox myUseDateAfterFilter;
+    private JCheckBox myUseDateBeforeFilter;
+    private DatePicker myDateAfter;
+    private DatePicker myDateBefore;
+    private JPanel myRootPanel;
 
-  public DateFilterComponent(final boolean showBorder, final DateFormat dateFormat) {
-    if (showBorder) {
-      myDatePanel.setBorder(IdeBorderFactory.createTitledBorder(VcsBundle.message("border.changes.filter.date.filter"), true));
+    public DateFilterComponent() {
+        this(true, DateFormatUtil.getDateTimeFormat().toPattern());
     }
-    myDateAfter.setDateFormat(dateFormat);
-    myDateBefore.setDateFormat(dateFormat);
-    ActionListener listener = new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        updateAllEnabled(e);
-      }
-    };
-    myUseDateAfterFilter.addActionListener(listener);
-    myUseDateBeforeFilter.addActionListener(listener);
-    updateAllEnabled(null);
-  }
 
-  private void updateAllEnabled(final ActionEvent e) {
-    StandardVersionFilterComponent.updatePair(myUseDateBeforeFilter, myDateBefore, e);
-    StandardVersionFilterComponent.updatePair(myUseDateAfterFilter, myDateAfter, e);
-  }
+    public DateFilterComponent(final boolean showBorder, final String datePattern) {
+        myDatePattern = datePattern;
+        $$$setupUI$$$();
 
-  public JPanel getPanel() {
-    return myRootPanel;
-  }
+        if (showBorder) {
+            myDatePanel.setBorder(IdeBorderFactory.createTitledBorder(VcsBundle.message("border.changes.filter.date.filter"), true));
+        }
 
-  public void setBefore(final long beforeTs) {
-    myUseDateBeforeFilter.setSelected(true);
-    try {
-      myDateBefore.setDate(new Date(beforeTs));
-      myDateBefore.setEnabled(true);
+        ActionListener listener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateAllEnabled(e);
+            }
+        };
+        myUseDateAfterFilter.addActionListener(listener);
+        myUseDateBeforeFilter.addActionListener(listener);
+        updateAllEnabled(null);
     }
-    catch (PropertyVetoException e) {
-      //
-    }
-  }
 
-  public void setAfter(final long afterTs) {
-    myUseDateAfterFilter.setSelected(true);
-    try {
-      myDateAfter.setDate(new Date(afterTs));
-      myDateAfter.setEnabled(true);
+    private void updateAllEnabled(final ActionEvent e) {
+        StandardVersionFilterComponent.updatePair(myUseDateBeforeFilter, (JComponent) TargetAWT.to(myDateBefore), e);
+        StandardVersionFilterComponent.updatePair(myUseDateAfterFilter, (JComponent) TargetAWT.to(myDateAfter), e);
     }
-    catch (PropertyVetoException e) {
-      //
-    }
-  }
 
-  public long getBefore() {
-    return myUseDateBeforeFilter.isSelected() ? myDateBefore.getDate().getTime() : -1;
-  }
-
-  public long getAfter() {
-    return myUseDateAfterFilter.isSelected() ? myDateAfter.getDate().getTime() : -1;
-  }
-
-  public void initValues(ChangeBrowserSettings settings) {
-    myUseDateBeforeFilter.setSelected(settings.USE_DATE_BEFORE_FILTER);
-    myUseDateAfterFilter.setSelected(settings.USE_DATE_AFTER_FILTER);
-    try {
-      myDateBefore.setDate(settings.getDateBefore());
-      myDateAfter.setDate(settings.getDateAfter());
+    public JPanel getPanel() {
+        return myRootPanel;
     }
-    catch (PropertyVetoException e) {
-      // TODO: handle?
-    }
-    updateAllEnabled(null);
-  }
 
-  public void saveValues(ChangeBrowserSettings settings) {
-    settings.USE_DATE_BEFORE_FILTER = myUseDateBeforeFilter.isSelected();
-    settings.USE_DATE_AFTER_FILTER = myUseDateAfterFilter.isSelected();
-    settings.setDateBefore(myDateBefore.getDate());
-    settings.setDateAfter(myDateAfter.getDate());
-  }
+    @RequiredUIAccess
+    public void setBefore(final long beforeTs) {
+        myUseDateBeforeFilter.setSelected(true);
+        myDateBefore.setValue(new Date(beforeTs));
+        myDateBefore.setEnabled(true);
+    }
 
-  @Nullable
-  public String validateInput() {
-    if (myUseDateAfterFilter.isSelected() && myDateAfter.getDate() == null) {
-      return "Date After must be a valid date";
+    @RequiredUIAccess
+    public void setAfter(final long afterTs) {
+        myUseDateAfterFilter.setSelected(true);
+        myDateAfter.setValue(new Date(afterTs));
+        myDateAfter.setEnabled(true);
     }
-    if (myUseDateBeforeFilter.isSelected() && myDateBefore.getDate() == null) {
-      return "Date Before must be a valid date";
+
+    public long getBefore() {
+        return myUseDateBeforeFilter.isSelected() ? myDateBefore.getValueOrError().getTime() : -1;
     }
-    return null;
-  }
+
+    public long getAfter() {
+        return myUseDateAfterFilter.isSelected() ? myDateAfter.getValueOrError().getTime() : -1;
+    }
+
+    public void initValues(ChangeBrowserSettings settings) {
+        myUseDateBeforeFilter.setSelected(settings.USE_DATE_BEFORE_FILTER);
+        myUseDateAfterFilter.setSelected(settings.USE_DATE_AFTER_FILTER);
+        myDateBefore.setValue(settings.getDateBefore());
+        myDateAfter.setValue(settings.getDateAfter());
+        updateAllEnabled(null);
+    }
+
+    public void saveValues(ChangeBrowserSettings settings) {
+        settings.USE_DATE_BEFORE_FILTER = myUseDateBeforeFilter.isSelected();
+        settings.USE_DATE_AFTER_FILTER = myUseDateAfterFilter.isSelected();
+        settings.setDateBefore(myDateBefore.getValue());
+        settings.setDateAfter(myDateAfter.getValue());
+    }
+
+    @Nullable
+    public String validateInput() {
+        if (myUseDateAfterFilter.isSelected() && myDateAfter.getValue() == null) {
+            return "Date After must be a valid date";
+        }
+        if (myUseDateBeforeFilter.isSelected() && myDateBefore.getValue() == null) {
+            return "Date Before must be a valid date";
+        }
+        return null;
+    }
+
+    /**
+     * Method generated by Consulo GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
+     *
+     * @noinspection ALL
+     */
+    private void $$$setupUI$$$() {
+        myRootPanel = new JPanel();
+        myRootPanel.setLayout(new BorderLayout(0, 0));
+        myDatePanel = new JPanel();
+        myDatePanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        myRootPanel.add(myDatePanel, BorderLayout.CENTER);
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+        myDatePanel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        myUseDateAfterFilter = new JCheckBox();
+        this.$$$loadButtonText$$$(myUseDateAfterFilter, VcsBundle.message("checkbox.show.changes.after.date"));
+        panel1.add(myUseDateAfterFilter, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        myUseDateBeforeFilter = new JCheckBox();
+        this.$$$loadButtonText$$$(myUseDateBeforeFilter, VcsBundle.message("checkbox.show.changes.before.date"));
+        panel1.add(myUseDateBeforeFilter, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        myDateAfter = DatePicker.create(myDatePattern);
+        panel1.add(TargetAWT.to(myDateAfter), new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        myDateBefore = DatePicker.create(myDatePattern);
+        panel1.add(TargetAWT.to(myDateBefore), new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private void $$$loadButtonText$$$(AbstractButton component, String text) {
+        StringBuffer result = new StringBuffer();
+        boolean haveMnemonic = false;
+        char mnemonic = '\0';
+        int mnemonicIndex = -1;
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '&') {
+                i++;
+                if (i == text.length()) {
+                    break;
+                }
+                if (!haveMnemonic && text.charAt(i) != '&') {
+                    haveMnemonic = true;
+                    mnemonic = text.charAt(i);
+                    mnemonicIndex = result.length();
+                }
+            }
+            result.append(text.charAt(i));
+        }
+        component.setText(result.toString());
+        if (haveMnemonic) {
+            component.setMnemonic(mnemonic);
+            component.setDisplayedMnemonicIndex(mnemonicIndex);
+        }
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    public JComponent $$$getRootComponent$$$() {
+        return myRootPanel;
+    }
 }

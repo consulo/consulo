@@ -301,4 +301,9 @@ public abstract class UIInternal {
     public ModalityState _ModalityState_nonModal() {
         throw new UnsupportedOperationException();
     }
+
+    @Nonnull
+    public DatePicker _Components_datePicker(@Nullable String datePattern) {
+        throw new UnsupportedOperationException();
+    }
 }

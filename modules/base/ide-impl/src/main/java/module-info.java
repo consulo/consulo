@@ -136,7 +136,6 @@ open module consulo.ide.impl {
   requires org.lz4.java;
 
   requires miglayout;
-  requires microba;
   requires imgscalr.lib;
   requires args4j;
   requires winp;

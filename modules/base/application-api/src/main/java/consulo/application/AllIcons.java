@@ -433,7 +433,6 @@ public class AllIcons {
         }
 
         public static final Image SharedScope = PlatformIconGroup.ideSharedscope(); // 16x16
-        public static final Image Statusbar_arrows = PlatformIconGroup.ideStatusbar_arrows(); // 7x10
         public static final Image UpDown = PlatformIconGroup.ideUpdown(); // 16x16
         public static final Image NavBarSeparator = PlatformIconGroup.ideNavbarseparator(); // 16x16
 
