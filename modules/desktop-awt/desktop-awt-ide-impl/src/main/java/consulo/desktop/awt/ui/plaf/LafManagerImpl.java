@@ -113,7 +113,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         lafList.add(new IdeLookAndFeelInfo("Default Dark", defaultLafs.getSecond().getName(), true));
 
         lafList.add(new IdeLookAndFeelInfo("Flat Light", FlatLightLaf.class.getName(), false));
-        lafList.add(new IdeLookAndFeelInfo("Flat Dark", FlatDarkLaf.class.getName(), false));
+        lafList.add(new IdeLookAndFeelInfo("Flat Dark", FlatDarkLaf.class.getName(), true));
 
         lafList.add(new IdeLookAndFeelInfo("IntelliJ", FlatIntelliJLaf.class.getName(), false));
         lafList.add(new IdeLookAndFeelInfo("Darcula", FlatDarculaLaf.class.getName(), true));
