@@ -19,10 +19,15 @@ import com.formdev.flatlaf.FlatDefaultsAddon;
 import consulo.desktop.awt.ui.plaf.BasicStatusBarUI;
 import consulo.desktop.awt.ui.plaf.BasicStripeButtonUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
+import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
+import consulo.platform.os.WindowsOperatingSystem;
 
 import javax.swing.*;
+import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -58,5 +63,23 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         //uiDefaults.put("FlatLaf.debug.panel.showPlaceholders", true);
 
         uiDefaults.put("Menu.selectedCheckboxIcon", new FlatSelectedCheckboxIcon());
+
+        PlatformOperatingSystem os = Platform.current().os();
+        if (os instanceof WindowsOperatingSystem win && !win.isWindows11OrNewer()) {
+            for (Map.Entry<Object, Object> entry : uiDefaults.entrySet()) {
+                String key = entry.getKey().toString();
+
+                if (key.endsWith(".arc")) {
+                    uiDefaults.put(key, 0);
+                }
+            }
+
+            uiDefaults.put("ComboBox.selectionArc", 0);
+            uiDefaults.put("ComboBox.borderCornerRadius", 0);
+            uiDefaults.put("PopupMenu.borderCornerRadius", 0);
+            uiDefaults.put("ScrollBar.thumbArc", 0);
+            uiDefaults.put("ScrollBar.width", 10);
+            uiDefaults.put("ScrollBar.thumbInsets", new InsetsUIResource(0, 0, 0, 0));
+        }
     }
 }
