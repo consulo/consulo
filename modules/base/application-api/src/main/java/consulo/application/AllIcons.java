@@ -122,7 +122,8 @@ public class AllIcons {
         public static final Image ShowHiddens = PlatformIconGroup.actionsShowhiddens(); // 16x16
         public static final Image ShowImportStatements = PlatformIconGroup.actionsShowimportstatements(); // 16x16
         public static final Image ShowReadAccess = PlatformIconGroup.actionsShowreadaccess(); // 16x16
-        public static final Image ShowViewer = PlatformIconGroup.actionsShowviewer(); // 16x16
+        @Deprecated
+        public static final Image ShowViewer = PlatformIconGroup.actionsShow();
         public static final Image ShowWriteAccess = PlatformIconGroup.actionsShowwriteaccess(); // 16x16
         public static final Image SplitHorizontally = PlatformIconGroup.actionsSplithorizontally(); // 16x16
         public static final Image SplitVertically = PlatformIconGroup.actionsSplitvertically(); // 16x16
