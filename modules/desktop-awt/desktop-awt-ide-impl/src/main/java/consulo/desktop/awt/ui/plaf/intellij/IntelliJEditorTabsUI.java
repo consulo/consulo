@@ -339,6 +339,12 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
         TabLabel label = tabs.getSelectedLabel();
         Rectangle rect = label.getBounds();
 
+        fillActiveTabWithColor(label, tabs, g2d);
+
+        paintSelection(tabs, rect, g2d);
+    }
+
+    protected void fillActiveTabWithColor(TabLabel label, JBTabsImpl tabs, Graphics2D g2d) {
         ShapeInfo shape = computeLabelShape(tabs, label);
 
         Color tabColor = label.getInfo().getTabColor();
@@ -352,8 +358,6 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
         g2d.setColor(tabColor);
 
         g2d.fill(shape.fillPath.getShape());
-
-        paintSelection(tabs, rect, g2d);
     }
 
     private void paintSelection(JBTabsImpl tabs, Rectangle rect, Graphics2D g2d) {
@@ -402,6 +406,20 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
 
         ShapeInfo shape = computeLabelShape(tabs, label);
 
+        fillInactiveTab(tabs, g2d, label, shape);
+
+        if (tabs.getTabsPosition() == JBTabsPosition.top) {
+            g2d.setColor(JBColor.border());
+
+            LinePainter2D.paint(g2d, rect.x, rect.y + rect.height - JBUI.scale(1), rect.x + rect.width, rect.y + rect.height - JBUI.scale(1));
+        }
+    }
+
+    protected void fillInactiveTab(JBTabsImpl tabs, Graphics2D g2d, TabLabel label, ShapeInfo shape) {
+        g2d.setColor(JBColor.border());
+
+        g2d.fill(shape.fillPath.getShape());
+
         Color tabColor = label.getInfo().getTabColor();
         if (tabs.isPaintFocus() && tabs.isHoveredTab(label)) {
             tabColor = ColorUtil.toAlpha(tabColor != null ? tabColor : UIUtil.getControlColor(), 180);
@@ -410,19 +428,8 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
             tabColor = tabColor != null ? ColorUtil.toAlpha(tabColor, 150) : UIUtil.getControlColor();
         }
 
-        g2d.setColor(JBColor.border());
-
-        g2d.fill(shape.fillPath.getShape());
-
         g2d.setColor(tabColor);
-
         g2d.fill(shape.fillPath.getShape());
-
-        if (tabs.getTabsPosition() == JBTabsPosition.top) {
-            g2d.setColor(JBColor.border());
-
-            LinePainter2D.paint(g2d, rect.x, rect.y + rect.height - JBUI.scale(1), rect.x + rect.width, rect.y + rect.height - JBUI.scale(1));
-        }
     }
 
     protected ShapeInfo computeLabelShape(JBTabsImpl tabs, TabLabel tabLabel) {

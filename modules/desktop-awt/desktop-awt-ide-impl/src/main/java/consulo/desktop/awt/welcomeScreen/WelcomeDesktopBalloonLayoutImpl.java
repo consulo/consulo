@@ -22,7 +22,7 @@ import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ui.BalloonImpl;
-import consulo.ide.impl.idea.ui.NotificationBalloonShadowBorderProvider;
+import consulo.desktop.awt.internal.notification.NotificationBalloonShadowBorderProvider;
 import consulo.platform.Platform;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.JBColor;

@@ -29,7 +29,6 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.ui.BalloonImpl;
-import consulo.ide.impl.idea.ui.NotificationBalloonShadowBorderProvider;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -47,7 +46,6 @@ import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.*;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -95,10 +93,9 @@ import java.util.function.Function;
 public class NotificationsManagerImpl extends NotificationsManager {
   private static final Logger LOG = Logger.getInstance(NotificationsManagerImpl.class);
 
-  public static final Color DEFAULT_TEXT_COLOR = new JBColor(Gray._0, Gray._191);
-  public static final Color FILL_COLOR = JBColor.namedColor("Notification.background", new JBColor(Gray._242, new Color(0x4E5052)));
-  public static final Color BORDER_COLOR =
-    JBColor.namedColor("Notification.borderColor", new JBColor(0xCDB2B2B2, 0xCD565A5C));
+  public static final Color DEFAULT_TEXT_COLOR = MorphColor.of(UIUtil::getLabelForeground);
+  public static final Color FILL_COLOR = MorphColor.of(UIUtil::getPanelBackground);
+  public static final Color BORDER_COLOR = MorphColor.of(UIUtil::getBorderColor);
 
   private final Application myApplication;
 

@@ -17,9 +17,8 @@ package consulo.desktop.awt.ui.plaf2.flat;
 
 import com.formdev.flatlaf.FlatDefaultsAddon;
 import consulo.desktop.awt.ui.plaf.BasicStatusBarUI;
-import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
-import consulo.desktop.awt.uiOld.components.OnOffButton;
 import consulo.desktop.awt.ui.plaf.BasicStripeButtonUI;
+import consulo.desktop.awt.uiOld.components.OnOffButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +38,7 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
     public void afterDefaultsLoading(LookAndFeel laf, UIDefaults uiDefaults) {
         uiDefaults.put("StripeButtonUI", BasicStripeButtonUI.class.getName());
 
-        uiDefaults.put("JBEditorTabsUI", IntelliJEditorTabsUI.class.getName());
+        uiDefaults.put("JBEditorTabsUI", FlatEditorTabsUI.class.getName());
         uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
         uiDefaults.put("EditorTextFieldUI", FlatEditorTextFieldUI.class.getName());
         uiDefaults.put("OnOffButtonUI", OnOffButton.OnOffButtonUI.class.getName());
