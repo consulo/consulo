@@ -15,19 +15,18 @@
  */
 package consulo.sandboxPlugin.ide.action;
 
-import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.sandboxPlugin.ui.UITester;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.dialog.DialogService;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
