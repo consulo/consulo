@@ -81,7 +81,6 @@ public class AllIcons {
         public static final Image Menu_open = PlatformIconGroup.actionsMenu_open(); // 16x16
         public static final Image Menu_paste = PlatformIconGroup.actionsMenu_paste(); // 16x16
         public static final Image Menu_saveall = PlatformIconGroup.actionsMenu_saveall(); // 16x16
-        public static final Image Module = PlatformIconGroup.actionsModule(); // 16x16
         public static final Image More = PlatformIconGroup.actionsMorevertical();
         public static final Image MoveDown = PlatformIconGroup.actionsMovedown(); // 14x14
         public static final Image MoveToAnotherChangelist = PlatformIconGroup.actionsMovetoanotherchangelist(); // 16x16

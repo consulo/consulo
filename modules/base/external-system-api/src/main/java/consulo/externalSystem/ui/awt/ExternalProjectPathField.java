@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.ui.awt;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
@@ -37,6 +36,7 @@ import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldCompletionProviderDumbAware;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -49,8 +49,8 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -97,7 +97,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
     final EditorTextField textField = createTextField(project, externalSystemId);
     
     final FixedSizeButton selectRegisteredProjectButton = new FixedSizeButton();
-    selectRegisteredProjectButton.setIcon(TargetAWT.to(AllIcons.Actions.Module));
+    selectRegisteredProjectButton.setIcon(TargetAWT.to(PlatformIconGroup.nodesModule()));
     String tooltipText = ExternalSystemBundle.message("run.configuration.tooltip.choose.registered.project",
                                                       externalSystemId.getReadableName());
     selectRegisteredProjectButton.setToolTipText(tooltipText);

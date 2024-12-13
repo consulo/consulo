@@ -614,7 +614,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     private final boolean myImport;
 
     public AddModuleAction(boolean anImport) {
-      super(ProjectLocalize.addNewModuleTextFull(), LocalizeValue.empty(), AllIcons.Actions.Module);
+      super(ProjectLocalize.addNewModuleTextFull(), LocalizeValue.empty(), PlatformIconGroup.nodesModule());
       myImport = anImport;
     }
 
