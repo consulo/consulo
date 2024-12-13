@@ -80,6 +80,16 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
             uiDefaults.put("ScrollBar.thumbArc", 0);
             uiDefaults.put("ScrollBar.width", 10);
             uiDefaults.put("ScrollBar.thumbInsets", new InsetsUIResource(0, 0, 0, 0));
+
+            uiDefaults.put("MenuItem.selectionArc", 0);
+            uiDefaults.put("MenuItem.selectionInsets", new InsetsUIResource(0, 0, 0, 0));
+
+            uiDefaults.put("MenuBar.selectionArc", 0);
+            uiDefaults.put("MenuBar.selectionEmbeddedInsets", new InsetsUIResource(0, 0, 0, 0));
+
+            uiDefaults.put("List.selectionArc", 0);
+            uiDefaults.put("Tree.selectionArc", 0);
+            uiDefaults.put("Table.selectionArc", 0);
         }
     }
 }
