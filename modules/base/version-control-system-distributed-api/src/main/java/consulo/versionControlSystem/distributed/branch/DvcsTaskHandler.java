@@ -85,13 +85,8 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
   @Override
   public void switchToTask(@Nonnull TaskInfo taskInfo, @Nullable Runnable invokeAfter) {
     final String branchName = taskInfo.getName();
-    List<R> repositories = getRepositories(taskInfo.getRepositories());
-    List<R> notFound = ContainerUtil.filter(repositories, new Condition<R>() {
-      @Override
-      public boolean value(R repository) {
-        return !hasBranch(repository, taskInfo);
-      }
-    });
+    List<R> repositories = new ArrayList<>(getRepositories(taskInfo.getRepositories()));
+    List<R> notFound = ContainerUtil.filter(repositories, repository -> !hasBranch(repository, taskInfo));
     if (!notFound.isEmpty()) {
       checkoutAsNewBranch(branchName, notFound);
     }
