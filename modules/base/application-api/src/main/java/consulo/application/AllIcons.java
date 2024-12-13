@@ -113,7 +113,6 @@ public class AllIcons {
         public static final Image SearchNewLine = PlatformIconGroup.actionsSearchnewline(); // 16x16
         public static final Image SearchNewLineHover = PlatformIconGroup.actionsSearchnewlinehover(); // 16x16
         public static final Image Selectall = PlatformIconGroup.actionsSelectall(); // 16x16
-        public static final Image Share = PlatformIconGroup.actionsShare(); // 14x14
         public static final Image ShortcutFilter = PlatformIconGroup.actionsShortcutfilter(); // 16x16
         public static final Image ShowAsTree = PlatformIconGroup.actionsShowastree(); // 16x16
         public static final Image ShowChangesOnly = PlatformIconGroup.actionsShowchangesonly(); // 16x16
@@ -135,7 +134,6 @@ public class AllIcons {
         public static final Image Undo = PlatformIconGroup.actionsUndo(); // 16x16
         public static final Image Uninstall = PlatformIconGroup.actionsUninstall(); // 16x16
         public static final Image Unselectall = PlatformIconGroup.actionsUnselectall(); // 16x16
-        public static final Image Unshare = PlatformIconGroup.actionsUnshare(); // 14x14
 
         /**
          * 16x16
