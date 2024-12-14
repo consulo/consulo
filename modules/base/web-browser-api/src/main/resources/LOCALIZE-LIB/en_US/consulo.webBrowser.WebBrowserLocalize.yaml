@@ -36,3 +36,9 @@ error.file.does.not.exist:
   text: File {0} does not exist.
 error.please.specify.path.to.web.browser:
   text: Please specify a path to web browser in {0} | Web Browsers
+action.open.in.browser.action.group.text:
+  text: Open in _Browser
+action.open.in.browser.action.group.description:
+  text: Open selected file in browser
+action.open.in.browser.action.group.short.text:
+  text: _Browser

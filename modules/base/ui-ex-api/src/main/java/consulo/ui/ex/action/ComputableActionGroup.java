@@ -17,45 +17,59 @@ package consulo.ui.ex.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.component.util.ModificationTracker;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import consulo.util.lang.lazy.LazyValue;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Supplier;
 
 public abstract class ComputableActionGroup extends ActionGroup implements DumbAware {
-  private Supplier<AnAction[]> myActions;
+    private Supplier<AnAction[]> myActions;
 
-  protected ComputableActionGroup() {
-  }
-
-  protected ComputableActionGroup(boolean popup) {
-    setPopup(popup);
-  }
-
-  @Override
-  public boolean hideIfNoVisibleChildren() {
-    return true;
-  }
-
-  @Nonnull
-  protected ModificationTracker getModificationTracker() {
-    return ModificationTracker.NEVER_CHANGED;
-  }
-
-  @Nonnull
-  protected abstract AnAction[] computeChildren(@Nonnull ActionManager manager);
-
-  @Override
-  @Nonnull
-  public final AnAction[] getChildren(@Nullable AnActionEvent e) {
-    if (e == null) {
-      return EMPTY_ARRAY;
+    protected ComputableActionGroup() {
     }
 
-    if (myActions == null) {
-      myActions = LazyValue.notNullWithModCount(() -> computeChildren(e.getActionManager()), () -> getModificationTracker().getModificationCount());
+    protected ComputableActionGroup(boolean popup) {
+        setPopup(popup);
     }
-    return myActions.get();
-  }
+
+    protected ComputableActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
+    protected ComputableActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
+    protected ComputableActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+        super(text, popup);
+    }
+
+    @Override
+    public boolean hideIfNoVisibleChildren() {
+        return true;
+    }
+
+    @Nonnull
+    protected ModificationTracker getModificationTracker() {
+        return ModificationTracker.NEVER_CHANGED;
+    }
+
+    @Nonnull
+    protected abstract AnAction[] computeChildren(@Nonnull ActionManager manager);
+
+    @Override
+    @Nonnull
+    public final AnAction[] getChildren(@Nullable AnActionEvent e) {
+        if (e == null) {
+            return EMPTY_ARRAY;
+        }
+
+        if (myActions == null) {
+            myActions = LazyValue.notNullWithModCount(() -> computeChildren(e.getActionManager()), () -> getModificationTracker().getModificationCount());
+        }
+        return myActions.get();
+    }
 }

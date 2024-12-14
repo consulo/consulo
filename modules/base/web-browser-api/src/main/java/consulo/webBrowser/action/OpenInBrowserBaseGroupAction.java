@@ -17,10 +17,12 @@ package consulo.webBrowser.action;
 
 import consulo.application.AllIcons;
 import consulo.component.util.ModificationTracker;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
+import consulo.webBrowser.localize.WebBrowserLocalize;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -29,12 +31,12 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
     private OpenFileInDefaultBrowserAction myDefaultBrowserAction;
 
     protected OpenInBrowserBaseGroupAction(boolean popup) {
-        super(popup);
+        super(WebBrowserLocalize.actionOpenInBrowserActionGroupText(),
+            WebBrowserLocalize.actionOpenInBrowserActionGroupDescription(),
+            PlatformIconGroup.nodesPpweb()
+        );
 
-        Presentation p = getTemplatePresentation();
-        p.setText("Open in _Browser");
-        p.setDescription("Open selected file in browser");
-        p.setIcon(AllIcons.Nodes.PpWeb);
+        setPopup(popup);
     }
 
     @Nonnull
@@ -70,6 +72,19 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
     public static final class OpenInBrowserGroupAction extends OpenInBrowserBaseGroupAction {
         public OpenInBrowserGroupAction() {
             super(true);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+            String place = e.getPlace();
+
+            if (ActionPlaces.PROJECT_VIEW_POPUP.equals(place)) {
+                e.getPresentation().setTextValue(WebBrowserLocalize.actionOpenInBrowserActionGroupShortText());
+            }
+            else {
+                e.getPresentation().setTextValue(WebBrowserLocalize.actionOpenInBrowserActionGroupText());
+            }
         }
     }
 

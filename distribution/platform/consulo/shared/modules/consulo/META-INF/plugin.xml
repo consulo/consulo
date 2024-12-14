@@ -2641,7 +2641,7 @@
 
         <group id="OpenInBrowserGroup" class="consulo.webBrowser.action.OpenInBrowserBaseGroupAction$OpenInBrowserGroupAction">
             <add-to-group group-id="ViewMenu" anchor="after" relative-to-action="ViewSource"/>
-            <add-to-group group-id="RunContextPopupGroup" anchor="last"/>
+            <add-to-group group-id="RevealGroup" anchor="last"/>
         </group>
         <group id="OpenInBrowserEditorContextBarGroupAction"
                class="consulo.webBrowser.action.OpenInBrowserBaseGroupAction$OpenInBrowserEditorContextBarGroupAction"
