@@ -902,8 +902,7 @@
             <action id="FileChooser.Refresh" class="consulo.ide.impl.idea.openapi.fileChooser.actions.RefreshFileChooserAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
             <separator/>
-            <action id="FileChooser.ShowHiddens" class="consulo.ide.impl.idea.openapi.fileChooser.actions.ShowHiddensAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.showhiddens"/>
+            <action id="FileChooser.ShowHiddens" class="consulo.ide.impl.idea.openapi.fileChooser.actions.ShowHiddensAction"/>
         </group>
 
         <group id="DiffPanel.Toolbar">

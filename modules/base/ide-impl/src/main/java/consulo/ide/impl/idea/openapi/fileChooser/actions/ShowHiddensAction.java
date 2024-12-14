@@ -15,24 +15,35 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Vladimir Kondratyev
  */
 public final class ShowHiddensAction extends ToggleAction implements DumbAware {
-  public boolean isSelected(AnActionEvent e) {
-    final FileSystemTree fileSystemTree = e.getData(FileSystemTree.DATA_KEY);
-    return fileSystemTree != null && fileSystemTree.areHiddensShown();
-  }
-
-  public void setSelected(AnActionEvent e, boolean state) {
-    final FileSystemTree fileSystemTree = e.getData(FileSystemTree.DATA_KEY);
-    if (fileSystemTree != null) {
-      fileSystemTree.showHiddens(state);
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        final FileSystemTree fileSystemTree = e.getData(FileSystemTree.DATA_KEY);
+        return fileSystemTree != null && fileSystemTree.areHiddensShown();
     }
-  }
+
+    @Override
+    public void setSelected(AnActionEvent e, boolean state) {
+        final FileSystemTree fileSystemTree = e.getData(FileSystemTree.DATA_KEY);
+        if (fileSystemTree != null) {
+            fileSystemTree.showHiddens(state);
+        }
+    }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.actionsTogglevisibility();
+    }
 }
