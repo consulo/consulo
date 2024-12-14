@@ -88,6 +88,7 @@ public class PlatformOrPluginUpdateChecker {
   private static final PluginId ourLinuxNoJre = PluginId.getId("consulo.dist.linux.no.jre");
   private static final PluginId ourLinux = PluginId.getId("consulo.dist.linux");
   private static final PluginId ourLinux64 = PluginId.getId("consulo.dist.linux64");
+  private static final PluginId ourLinuxA64 = PluginId.getId("consulo.dist.linuxA64");
 
   // mac ids
   private static final PluginId ourMac64NoJre = PluginId.getId("consulo.dist.mac64.no.jre");
@@ -110,6 +111,8 @@ public class PlatformOrPluginUpdateChecker {
     ourLinux,
     // linux x64 (tar)
     ourLinux64,
+    // linux ARM64
+    ourLinuxA64,
     // mac x64 no jre (tar)
     ourMac64NoJre,
     // mac x64 with jre (tar)
@@ -165,7 +168,7 @@ public class PlatformOrPluginUpdateChecker {
     else {
       if (isJreBuild) {
         if (arch == CpuArchitecture.AARCH64) {
-          // TODO [VISTALL] linux aarch64 support?
+          return ourLinuxA64;
         }
         else if (arch == CpuArchitecture.X86_64) {
           return ourLinux64;
