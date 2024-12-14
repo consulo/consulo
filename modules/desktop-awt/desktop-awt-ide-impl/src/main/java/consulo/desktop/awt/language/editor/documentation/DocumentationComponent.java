@@ -73,12 +73,14 @@ import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.image.ImageKey;
 import consulo.ui.util.LightDarkColorValue;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -1003,7 +1005,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             }
         }
 
-        return "<a href='external_doc'>External documentation" + (title == null ? "" : (" for `" + title + "`")) + "<icon src='consulo.platform.base.PlatformIconGroup@ide.external_link_arrow'></a></div>";
+        return "<a href='external_doc'>External documentation" + (title == null ? "" : (" for `" + title + "`")) + buildIconTag(PlatformIconGroup.ideExternallink()) + "</a></div>";
     }
 
     private static String getLink(String title, String url) {
@@ -1074,7 +1076,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     private static String addExternalLinksIcon(String text) {
-        return text.replaceAll("(<a\\s*href=[\"']http[^>]*>)([^>]*)(</a>)", "$1$2<icon src='consulo.platform.base.PlatformIconGroup@ide.external_link_arrow'>$3");
+        return text.replaceAll("(<a\\s*href=[\"']http[^>]*>)([^>]*)(</a>)", "$1$2" +
+            buildIconTag(PlatformIconGroup.ideExternallink()) + "$3");
     }
 
     @RequiredReadAction
@@ -1095,21 +1098,29 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
                 if (ModuleManager.getInstance(element.getProject()).getModules().length == 1) {
                     return null;
                 }
-                return "<icon src='consulo.platform.base.PlatformIconGroup@actions.module'>&nbsp;" +
-                    module.getName().replace("<", "&lt;");
+                return buildIconTag(PlatformIconGroup.nodesModule()) + "&nbsp;" + XmlStringUtil.escapeString(module.getName());
             }
             else {
                 List<OrderEntry> entries = fileIndex.getOrderEntriesForFile(vfile);
                 for (OrderEntry order : entries) {
                     if (order instanceof OrderEntryWithTracking) {
-                        return "<icon src='consulo.platform.base.PlatformIconGroup@nodes.pplib" + "'>&nbsp;" +
-                            order.getPresentableName().replace("<", "&lt;");
+                        return buildIconTag(PlatformIconGroup.nodesPplib()) + "&nbsp;" +
+                            XmlStringUtil.escapeString(order.getPresentableName());
                     }
                 }
             }
         }
 
         return null;
+    }
+
+    private static String buildIconTag(ImageKey imageKey) {
+        StringBuilder builder = new StringBuilder("<icon src='");
+        builder.append(imageKey.getGroupId());
+        builder.append("@");
+        builder.append(imageKey.getImageId());
+        builder.append("'>");
+        return builder.toString();
     }
 
     private void applyFontProps() {
@@ -1294,7 +1305,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         public WrapperActionGroup(@Nonnull AnAction... actions) {
             myActions = actions;
         }
-        
+
         @Nonnull
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
