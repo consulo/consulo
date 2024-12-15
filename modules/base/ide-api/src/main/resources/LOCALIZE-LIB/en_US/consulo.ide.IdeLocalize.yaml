@@ -2141,20 +2141,6 @@ share.scope.checkbox.title:
   text: Share scope
 bean.property:
   text: Bean Property
-plugin.manager.enable.column.title:
-  text: Enable
-plugin.manager.tooltip.warning:
-  text: Required plugin ''{0}'' is not included
-plugin.manager.incompatible.not.loaded.tooltip:
-  text: The plugin was not loaded
-plugin.manager.incompatible.deps.tooltip:
-  text: Required {0, choice, 1#plugin|2#plugins} {1} {0, choice, 1#is|2#are} not enabled
-plugin.manager.incompatible.tooltip:
-  text: Plugin is incompatible with current installation
-plugin.advestiser.notification.text:
-  text: '{0, choice, 1#Plugin|2#Plugins} supporting current file are found'
-plugin.advestiser.notification.install.link:
-  text: Install {0, choice, 1#plugin|2#plugins}
 project.new.wizard.project.identification:
   text: project
 project.new.wizard.module.identification:

@@ -17,8 +17,8 @@ package consulo.ide.impl.plugins.whatsNew;
 
 import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
+import consulo.application.util.Html;
 import consulo.application.util.HtmlBuilder;
-import consulo.application.util.HtmlChunk;
 import consulo.application.util.JBDateFormat;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.container.plugin.PluginDescriptor;
@@ -32,9 +32,11 @@ import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryReq
 import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryResponse;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.PluginIconHolder;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.impl.updateSettings.impl.UpdateHistory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
@@ -47,10 +49,10 @@ import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import kava.beans.PropertyChangeListener;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -63,284 +65,287 @@ import java.util.concurrent.Future;
  * @since 2021-11-15
  */
 public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements FileEditor {
+    private final UpdateHistory myUpdateHistory;
+    private final VirtualFile myFile;
+    private JEditorPane myEditorPanel;
 
-  private final UpdateHistory myUpdateHistory;
-  private final VirtualFile myFile;
-  private JEditorPane myEditorPanel;
+    private JBLoadingPanel myLoadingPanel;
 
-  private JBLoadingPanel myLoadingPanel;
+    private Future<?> myLoadingFuture = CompletableFuture.completedFuture(null);
 
-  private Future<?> myLoadingFuture = CompletableFuture.completedFuture(null);
-
-  public WhatsNewVirtualFileEditor(Project project, UpdateHistory updateHistory, VirtualFile file) {
-    myUpdateHistory = updateHistory;
-    myFile = file;
-  }
-
-  @Nonnull
-  @Override
-  public JComponent getComponent() {
-    myLoadingPanel = new JBLoadingPanel(new BorderLayout(), this);
-
-    myEditorPanel = new JEditorPane("text/html", "");
-    myEditorPanel.setFont(EditorUtil.getEditorFont());
-    JBHtmlEditorKit kit = JBHtmlEditorKit.create();
-    kit.setImageResolver(src -> {
-      PluginId pluginId = PluginId.getId(src);
-      if (PlatformOrPluginUpdateChecker.isPlatform(pluginId)) {
-        return PluginIconHolder.decorateIcon(Application.get().getBigIcon());
-      }
-
-      PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
-      if (plugin != null) {
-        return PluginIconHolder.get(plugin);
-      }
-
-      return null;
-    });
-    myEditorPanel.setEditorKit(kit);
-    myEditorPanel.setEditable(false);
-    myEditorPanel.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
-
-    myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myEditorPanel, true), BorderLayout.CENTER);
-
-    UiNotifyConnector.doWhenFirstShown(myLoadingPanel, () -> {
-      myLoadingPanel.setLoadingText("Fetching change list...");
-      myLoadingPanel.startLoading();
-      fetchData();
-    });
-
-    return myLoadingPanel;
-  }
-
-  private void fetchData() {
-    myLoadingFuture = AppExecutorUtil.getAppExecutorService().submit(() -> {
-      List<PluginDescriptor> plugins = PluginManager.getPlugins();
-
-      MultiMap<PluginId, PluginHistoryEntry> entries = MultiMap.createLinked();
-      PluginId platformPluginId = PlatformOrPluginUpdateChecker.getPlatformPluginId();
-      String platformBuild = ApplicationInfo.getInstance().getBuild().asString();
-
-      List<PluginHistoryRequest.PluginInfo> infos = new ArrayList<>(plugins.size() + 1);
-
-      addPlugin(infos, platformPluginId, platformBuild);
-      for (PluginDescriptor plugin : plugins) {
-        if (myLoadingFuture.isCancelled()) {
-          return;
-        }
-
-        if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
-          continue;
-        }
-
-        String version = plugin.getVersion();
-        if (version == null || "SNAPSHOT".equals(version)) {
-          continue;
-        }
-
-        addPlugin(infos, plugin.getPluginId(), version);
-      }
-
-
-      PluginHistoryResponse response = PluginHistoryManager.fetchBatchHistory(new PluginHistoryRequest(infos));
-
-      for (PluginHistoryResponse.PluginHistory entry : response.entries) {
-        if (myLoadingFuture.isCancelled()) {
-          return;
-        }
-
-        entries.putValue(PluginId.getId(entry.id), entry);
-      }
-
-      SwingUtilities.invokeLater(() -> {
-        setHtmlFromEntries(entries);
-
-        myLoadingPanel.invalidate();
-        
-        myLoadingPanel.stopLoading();
-      });
-    });
-  }
-
-  private void addPlugin(List<PluginHistoryRequest.PluginInfo> result, PluginId pluginId, String version) {
-    String oldVersion = myUpdateHistory.getHistoryVersion(pluginId, version);
-
-    if (Objects.equals(oldVersion, version)) {
-      result.add(new PluginHistoryRequest.PluginInfo(pluginId.getIdString(), version));
-    } else {
-      result.add(new PluginHistoryRequest.PluginInfo(pluginId.getIdString(), oldVersion, version, true));
+    public WhatsNewVirtualFileEditor(Project project, UpdateHistory updateHistory, VirtualFile file) {
+        myUpdateHistory = updateHistory;
+        myFile = file;
     }
-  }
 
-  private void setHtmlFromEntries(MultiMap<PluginId, PluginHistoryEntry> map) {
-    HtmlBuilder html = new HtmlBuilder();
+    @Nonnull
+    @Override
+    public JComponent getComponent() {
+        myLoadingPanel = new JBLoadingPanel(new BorderLayout(), this);
 
-    HtmlChunk.Element body = HtmlChunk.body();
-    body = body.style("padding: 0px 15px");
-    body = body.child(HtmlChunk.tag("h1").addText(myFile.getName()));
+        myEditorPanel = new JEditorPane("text/html", "");
+        myEditorPanel.setFont(EditorUtil.getEditorFont());
+        JBHtmlEditorKit kit = JBHtmlEditorKit.create();
+        kit.setImageResolver(src -> {
+            PluginId pluginId = PluginId.getId(src);
+            if (PlatformOrPluginUpdateChecker.isPlatform(pluginId)) {
+                return PluginIconHolder.decorateIcon(Application.get().getBigIcon());
+            }
 
-    if (map != null && !map.isEmpty()) {
-      for (Map.Entry<PluginId, Collection<PluginHistoryEntry>> entry : map.entrySet()) {
-        PluginId key = entry.getKey();
+            PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
+            if (plugin != null) {
+                return PluginIconHolder.get(plugin);
+            }
 
-        Set<PluginHistoryEntry> entries = new TreeSet<>((o1, o2) -> Long.compareUnsigned(o1.commitTimestamp, o2.commitTimestamp));
-        entries.addAll(entry.getValue());
+            return null;
+        });
+        myEditorPanel.setEditorKit(kit);
+        myEditorPanel.setEditable(false);
+        myEditorPanel.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
 
-        String pluginName;
-        String pluginVersion;
-        if (PlatformOrPluginUpdateChecker.isPlatform(key)) {
-          pluginName = "Platform";
-          pluginVersion = ApplicationInfo.getInstance().getBuild().asString();
+        myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myEditorPanel, true), BorderLayout.CENTER);
+
+        UiNotifyConnector.doWhenFirstShown(
+            myLoadingPanel,
+            () -> {
+                myLoadingPanel.setLoadingText(PluginLocalize.whatsNewFetchingChangeList().get());
+                myLoadingPanel.startLoading();
+                fetchData();
+            }
+        );
+
+        return myLoadingPanel;
+    }
+
+    private void fetchData() {
+        myLoadingFuture = AppExecutorUtil.getAppExecutorService().submit(() -> {
+            List<PluginDescriptor> plugins = PluginManager.getPlugins();
+
+            MultiMap<PluginId, PluginHistoryEntry> entries = MultiMap.createLinked();
+            PluginId platformPluginId = PlatformOrPluginUpdateChecker.getPlatformPluginId();
+            String platformBuild = ApplicationInfo.getInstance().getBuild().asString();
+
+            List<PluginHistoryRequest.PluginInfo> infos = new ArrayList<>(plugins.size() + 1);
+
+            addPlugin(infos, platformPluginId, platformBuild);
+            for (PluginDescriptor plugin : plugins) {
+                if (myLoadingFuture.isCancelled()) {
+                    return;
+                }
+
+                if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
+                    continue;
+                }
+
+                String version = plugin.getVersion();
+                if (version == null || "SNAPSHOT".equals(version)) {
+                    continue;
+                }
+
+                addPlugin(infos, plugin.getPluginId(), version);
+            }
+
+            PluginHistoryResponse response = PluginHistoryManager.fetchBatchHistory(new PluginHistoryRequest(infos));
+
+            for (PluginHistoryResponse.PluginHistory entry : response.entries) {
+                if (myLoadingFuture.isCancelled()) {
+                    return;
+                }
+
+                entries.putValue(PluginId.getId(entry.id), entry);
+            }
+
+            SwingUtilities.invokeLater(() -> {
+                setHtmlFromEntries(entries);
+
+                myLoadingPanel.invalidate();
+
+                myLoadingPanel.stopLoading();
+            });
+        });
+    }
+
+    private void addPlugin(List<PluginHistoryRequest.PluginInfo> result, PluginId pluginId, String version) {
+        String oldVersion = myUpdateHistory.getHistoryVersion(pluginId, version);
+
+        if (Objects.equals(oldVersion, version)) {
+            result.add(new PluginHistoryRequest.PluginInfo(pluginId.getIdString(), version));
         }
         else {
-          PluginDescriptor plugin = PluginManager.findPlugin(key);
-          assert plugin != null;
-          pluginName = plugin.getName();
-          pluginVersion = plugin.getVersion();
+            result.add(new PluginHistoryRequest.PluginInfo(pluginId.getIdString(), oldVersion, version, true));
         }
+    }
 
-        HtmlChunk.Element imgTd = HtmlChunk.tag("td");
+    private void setHtmlFromEntries(MultiMap<PluginId, PluginHistoryEntry> map) {
+        HtmlBuilder html = new HtmlBuilder();
 
-        HtmlChunk.Element pluginImg = HtmlChunk.tag("img").attr("src", key.getIdString()).attr("width", PluginIconHolder.ICON_SIZE).attr("height", PluginIconHolder.ICON_SIZE);
-        imgTd = imgTd.child(pluginImg);
+        Html.Element body = Html.body();
+        body = body.style("padding: 0px 15px");
+        body = body.child(Html.tag("h1").addText(LocalizeValue.of(myFile.getName())));
 
-        HtmlChunk.Element nameTd = HtmlChunk.tag("td").style("padding-left: 10px");
+        if (map != null && !map.isEmpty()) {
+            for (Map.Entry<PluginId, Collection<PluginHistoryEntry>> entry : map.entrySet()) {
+                PluginId key = entry.getKey();
 
-        Font font = UIUtil.getLabelFont(UIUtil.FontSize.BIGGER);
+                Set<PluginHistoryEntry> entries = new TreeSet<>((o1, o2) -> Long.compareUnsigned(o1.commitTimestamp, o2.commitTimestamp));
+                entries.addAll(entry.getValue());
 
-        nameTd = nameTd.child(HtmlChunk.span("font-weight: bold; font-size: " + font.getSize()).addText(pluginName));
+                LocalizeValue pluginName;
+                String pluginVersion;
+                if (PlatformOrPluginUpdateChecker.isPlatform(key)) {
+                    pluginName = PluginLocalize.whatsNewPlatform();
+                    pluginVersion = ApplicationInfo.getInstance().getBuild().asString();
+                }
+                else {
+                    PluginDescriptor plugin = PluginManager.findPlugin(key);
+                    assert plugin != null;
+                    pluginName = LocalizeValue.of(plugin.getName());
+                    pluginVersion = plugin.getVersion();
+                }
 
-        StringBuilder versionHistorySpan = new StringBuilder();
-        String historyVersion = myUpdateHistory.getHistoryVersion(key, pluginVersion);
-        if (!historyVersion.equals(pluginVersion)) {
-          versionHistorySpan.append("#");
-          versionHistorySpan.append(historyVersion);
-          versionHistorySpan.append(" ");
-          versionHistorySpan.append(UIUtil.rightArrow());
-          versionHistorySpan.append(" ");
-        }
+                Html.Element imgTd = Html.tag("td");
 
-        versionHistorySpan.append("#");
-        versionHistorySpan.append(pluginVersion);
+                Html.Element pluginImg = Html.img()
+                    .src(key.getIdString())
+                    .width(PluginIconHolder.ICON_SIZE)
+                    .height(PluginIconHolder.ICON_SIZE);
+                imgTd = imgTd.child(pluginImg);
 
-        nameTd = nameTd.child(HtmlChunk.br()).child(HtmlChunk.tag("code").addText(versionHistorySpan.toString()));
+                Html.Element nameTd = Html.tag("td").style("padding-left: 10px");
 
-        HtmlChunk.Element tr = HtmlChunk.tag("tr");
-        tr = tr.children(imgTd, nameTd);
+                Font font = UIUtil.getLabelFont(UIUtil.FontSize.BIGGER);
 
-        body = body.child(HtmlChunk.tag("table").child(tr));
+                nameTd = nameTd.child(Html.span().style("font-weight: bold; font-size: " + font.getSize()).addText(pluginName));
 
-        HtmlChunk.Element ul = HtmlChunk.ul();
+                StringBuilder versionHistorySpan = new StringBuilder();
+                String historyVersion = myUpdateHistory.getHistoryVersion(key, pluginVersion);
+                if (!historyVersion.equals(pluginVersion)) {
+                    versionHistorySpan.append("#").append(historyVersion)
+                        .append(" ").append(UIUtil.rightArrow()).append(" ");
+                }
 
-        for (PluginHistoryEntry pluginHistoryEntry : entries) {
-          List<HtmlChunk> children = new ArrayList<>();
+                versionHistorySpan.append("#").append(pluginVersion);
 
-          children.add(HtmlChunk.tag("code").addText("#").addText(pluginHistoryEntry.pluginVersion));
-          children.add(HtmlChunk.nbsp());
+                nameTd = nameTd.child(Html.br()).child(Html.tag("code").addText(versionHistorySpan.toString()));
 
-          if (pluginHistoryEntry.commitTimestamp != 0) {
-            String date = JBDateFormat.getFormatter().formatPrettyDateTime(pluginHistoryEntry.commitTimestamp);
+                Html.Element tr = Html.tag("tr");
+                tr = tr.children(imgTd, nameTd);
 
-            children.add(HtmlChunk.tag("code").addText("[" + date + "]"));
-            children.add(HtmlChunk.nbsp());
-          }
+                body = body.child(Html.tag("table").child(tr));
 
-          children.add(WhatsNewCommitParser.parse(pluginHistoryEntry.commitMessage));
+                Html.Element ul = Html.ul();
 
-          if (!StringUtil.isEmptyOrSpaces(pluginHistoryEntry.commitHash)) {
-            children.add(HtmlChunk.nbsp());
-            String commitShort = StringUtil.first(pluginHistoryEntry.commitHash, 7, false);
-            HtmlChunk.Element commitSpan = HtmlChunk.span();
-            commitSpan = commitSpan.addText("(commit: ");
-            String commitUrl = buildCommitUrl(pluginHistoryEntry.repoUrl, pluginHistoryEntry.commitHash);
-            if (commitUrl != null) {
-              commitSpan = commitSpan.child(HtmlChunk.tag("a").attr("href", commitUrl).addText(commitShort));
+                for (PluginHistoryEntry pluginHistoryEntry : entries) {
+                    List<Html.Chunk> children = new ArrayList<>();
+
+                    children.add(Html.tag("code").addFormattedText(LocalizeValue.of("#" + pluginHistoryEntry.pluginVersion)));
+                    children.add(Html.nbsp());
+
+                    if (pluginHistoryEntry.commitTimestamp != 0) {
+                        String date = JBDateFormat.getFormatter().formatPrettyDateTime(pluginHistoryEntry.commitTimestamp);
+
+                        children.add(Html.tag("code").addFormattedText(PluginLocalize.whatsNewCommitDate(date)));
+                        children.add(Html.nbsp());
+                    }
+
+                    children.add(WhatsNewCommitParser.parse(pluginHistoryEntry.commitMessage));
+
+                    if (!StringUtil.isEmptyOrSpaces(pluginHistoryEntry.commitHash)) {
+                        children.add(Html.nbsp());
+                        LocalizeValue commitShort =
+                            LocalizeValue.of(StringUtil.first(pluginHistoryEntry.commitHash, 7, false));
+                        Html.Element commitSpan = Html.span();
+                        commitSpan = commitSpan.addText(PluginLocalize.whatsNewCommitPrefix());
+                        String commitUrl = buildCommitUrl(pluginHistoryEntry.repoUrl, pluginHistoryEntry.commitHash);
+                        if (commitUrl != null) {
+                            commitSpan = commitSpan.child(Html.a().href(commitUrl).addText(commitShort));
+                        }
+                        else {
+                            commitSpan = commitSpan.addText(commitShort);
+                        }
+                        commitSpan = commitSpan.addText(PluginLocalize.whatsNewCommitSuffix());
+
+                        children.add(commitSpan);
+                    }
+                    ul = ul.child(Html.li().children(children));
+                }
+
+                body = body.child(ul);
+
+                body = body.child(Html.hr()
+                    .attr("size", 1)
+                    .attr("noshade", "")
+                    .attr("color", "#" + ColorValueUtil.toHex(StandardColors.LIGHT_GRAY)));
+
+                body = body.child(Html.br());
             }
-            else {
-              commitSpan = commitSpan.addText(commitShort);
-            }
-            commitSpan = commitSpan.addText(")");
-
-            children.add(commitSpan);
-          }
-          ul = ul.child(HtmlChunk.li().children(children));
+        }
+        else {
+            body = body.child(Html.span().addText(PluginLocalize.whatsNewNoChanges()));
         }
 
-        body = body.child(ul);
+        html.append(body);
 
-        body = body.child(HtmlChunk.hr().attr("size", 1).attr("noshade", "").attr("color", "#" + ColorValueUtil.toHex(StandardColors.LIGHT_GRAY)));
-
-        body = body.child(HtmlChunk.br());
-      }
-    }
-    else {
-      body = body.child(HtmlChunk.span().addText("No changes"));
+        myEditorPanel.setText(html.wrapWith("html").toString());
+        myEditorPanel.setCaretPosition(0);
     }
 
-    html.append(body);
+    private static String buildCommitUrl(String url, String commitHash) {
+        if (StringUtil.isEmptyOrSpaces(url) || StringUtil.isEmptyOrSpaces(commitHash)) {
+            return null;
+        }
 
-    myEditorPanel.setText(html.wrapWith("html").toString());
-    myEditorPanel.setCaretPosition(0);
-  }
+        if (url.startsWith("https://github.com")) {
+            StringBuilder builder = new StringBuilder(url);
+            if (!url.endsWith("/")) {
+                builder.append("/");
+            }
+            builder.append("commit/").append(commitHash);
+            return builder.toString();
+        }
 
-  private static String buildCommitUrl(String url, String commitHash) {
-    if (StringUtil.isEmptyOrSpaces(url) || StringUtil.isEmptyOrSpaces(commitHash)) {
-      return null;
+        return null;
     }
 
-    if (url.startsWith("https://github.com")) {
-      StringBuilder builder = new StringBuilder();
-      builder.append(url);
-      if (!url.endsWith("/")) {
-        builder.append("/");
-      }
-      builder.append("commit/");
-      builder.append(commitHash);
-      return builder.toString();
+    @Nullable
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return myEditorPanel;
     }
 
-    return null;
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return myFile.getName();
+    }
 
-  @Nullable
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myEditorPanel;
-  }
+    @Override
+    public boolean isModified() {
+        return false;
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return myFile.getName();
-  }
+    @Override
+    public void selectNotify() {
 
-  @Override
-  public boolean isModified() {
-    return false;
-  }
+    }
 
-  @Override
-  public void selectNotify() {
+    @Override
+    public void deselectNotify() {
 
-  }
+    }
 
-  @Override
-  public void deselectNotify() {
+    @Override
+    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
 
-  }
+    }
 
-  @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    @Override
+    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
 
-  }
+    }
 
-  @Override
-  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
-
-  }
-
-  @Override
-  public void dispose() {
-    myLoadingFuture.cancel(false);
-  }
+    @Override
+    public void dispose() {
+        myLoadingFuture.cancel(false);
+    }
 }

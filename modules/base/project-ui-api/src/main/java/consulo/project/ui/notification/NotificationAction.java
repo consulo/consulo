@@ -15,39 +15,61 @@
  */
 package consulo.project.ui.notification;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 
 /**
  * @author Alexander Lobas
  */
 public abstract class NotificationAction extends DumbAwareAction {
-  @Nonnull
-  public static NotificationAction create(@Nullable String text, @RequiredUIAccess @Nonnull BiConsumer<? super AnActionEvent, ? super Notification> actionPerformed) {
-    return new NotificationAction(text) {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-        actionPerformed.accept(e, notification);
-      }
-    };
-  }
+    @Nonnull
+    public static NotificationAction create(
+        @Nonnull LocalizeValue text,
+        @RequiredUIAccess @Nonnull BiConsumer<? super AnActionEvent, ? super Notification> actionPerformed
+    ) {
+        return new NotificationAction(text) {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+                actionPerformed.accept(e, notification);
+            }
+        };
+    }
 
-  public NotificationAction(@Nullable String text) {
-    super(text);
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @Nonnull
+    public static NotificationAction create(
+        @Nullable String text,
+        @RequiredUIAccess @Nonnull BiConsumer<? super AnActionEvent, ? super Notification> actionPerformed
+    ) {
+        return create(LocalizeValue.ofNullable(text), actionPerformed);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    actionPerformed(e, Notification.get(e));
-  }
+    public NotificationAction(@Nonnull LocalizeValue text) {
+        super(text);
+    }
 
-  @RequiredUIAccess
-  public abstract void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification);
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public NotificationAction(@Nullable String text) {
+        super(text);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        actionPerformed(e, Notification.get(e));
+    }
+
+    @RequiredUIAccess
+    public abstract void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification);
 }

@@ -23,11 +23,11 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 13/09/2021
+ * @since 2021-09-13
  */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface PluginActionListener {
-  void pluginsInstalled(@Nonnull PluginId[] pluginIds);
+    void pluginsInstalled(@Nonnull PluginId[] pluginIds);
 
-  void pluginsUninstalled(@Nonnull PluginId[] pluginIds);
+    void pluginsUninstalled(@Nonnull PluginId[] pluginIds);
 }

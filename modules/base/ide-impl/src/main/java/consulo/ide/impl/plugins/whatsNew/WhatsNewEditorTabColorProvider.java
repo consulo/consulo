@@ -23,20 +23,18 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.LightColors;
 
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 15/11/2021
+ * @since 2021-11-15
  */
 @ExtensionImpl
 public class WhatsNewEditorTabColorProvider implements EditorTabColorProvider, DumbAware {
-  @Nullable
-  @Override
-  public Color getEditorTabColor(Project project, VirtualFile file) {
-    if (file instanceof WhatsNewVirtualFile) {
-      return LightColors.SLIGHTLY_GREEN;
+    @Nullable
+    @Override
+    public Color getEditorTabColor(Project project, VirtualFile file) {
+        return file instanceof WhatsNewVirtualFile ? LightColors.SLIGHTLY_GREEN : null;
     }
-    return null;
-  }
 }

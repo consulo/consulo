@@ -19,30 +19,32 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.externalService.statistic.UsagesCollector;
 import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.Set;
 
 @ExtensionImpl
 public class PluginsUsagesCollector extends UsagesCollector {
-  @Override
-  @Nonnull
-  public Set<UsageDescriptor> getUsages(@Nullable Project project) {
-    final List<PluginDescriptor> plugins = PluginManager.getPlugins();
-    final List<PluginDescriptor> enabledPlugins = ContainerUtil.filter(plugins, d -> d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()));
+    @Override
+    @Nonnull
+    public Set<UsageDescriptor> getUsages(@Nullable Project project) {
+        final List<PluginDescriptor> plugins = PluginManager.getPlugins();
+        final List<PluginDescriptor> enabledPlugins =
+            ContainerUtil.filter(plugins, d -> d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()));
 
-    return ContainerUtil.map2Set(enabledPlugins, descriptor -> new UsageDescriptor(descriptor.getPluginId().getIdString(), 1));
-  }
+        return ContainerUtil.map2Set(enabledPlugins, descriptor -> new UsageDescriptor(descriptor.getPluginId().getIdString(), 1));
+    }
 
-  @Override
-  @Nonnull
-  public String getGroupId() {
-    return "consulo.platform.base:plugins";
-  }
+    @Override
+    @Nonnull
+    public String getGroupId() {
+        return "consulo.platform.base:plugins";
+    }
 }

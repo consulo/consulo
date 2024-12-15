@@ -41,39 +41,35 @@ import java.util.List;
 
 /**
  * @author stathik
- * @since Mar 28, 2003
+ * @since 2003-03-28
  */
 public class RepositoryHelper {
     @Nonnull
     public static String buildUrlForList(@Nonnull UpdateChannel channel, @Nonnull String platformVersion) {
         return new StringBuilder().append(WebServiceApi.REPOSITORY_API.buildUrl("list"))
-            .append("?platformVersion=")
-            .append(platformVersion)
-            .append("&channel=")
-            .append(channel)
+            .append("?platformVersion=").append(platformVersion)
+            .append("&channel=").append(channel)
             .append("&addObsoletePlatforms=false")
             .toString();
     }
 
     @Nonnull
-    public static String buildUrlForDownload(@Nonnull UpdateChannel channel,
-                                             @Nonnull String pluginId,
-                                             @Nullable String platformVersion,
-                                             boolean noTracking,
-                                             boolean viaUpdate,
-                                             boolean noRedirect) {
+    public static String buildUrlForDownload(
+        @Nonnull UpdateChannel channel,
+        @Nonnull String pluginId,
+        @Nullable String platformVersion,
+        boolean noTracking,
+        boolean viaUpdate,
+        boolean noRedirect
+    ) {
         if (platformVersion == null) {
             platformVersion = ApplicationInfo.getInstance().getBuild().asString();
         }
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(WebServiceApi.REPOSITORY_API.buildUrl("download"));
-        builder.append("?platformVersion=");
-        builder.append(platformVersion);
-        builder.append("&channel=");
-        builder.append(channel);
-        builder.append("&id=");
-        builder.append(pluginId);
+        StringBuilder builder = new StringBuilder(WebServiceApi.REPOSITORY_API.buildUrl("download"))
+            .append("?platformVersion=").append(platformVersion)
+            .append("&channel=").append(channel)
+            .append("&id=").append(pluginId);
 
         if (!noTracking) {
             noTracking = SystemProperties.getBooleanProperty("consulo.repository.no.tracking", false);
@@ -95,10 +91,11 @@ public class RepositoryHelper {
      * Load & return only plugins from repository
      */
     @Nonnull
-    public static List<PluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator,
-                                                                       @Nonnull UpdateChannel channel,
-                                                                       @Nonnull EarlyAccessProgramManager eapManager)
-        throws Exception {
+    public static List<PluginDescriptor> loadOnlyPluginsFromRepository(
+        @Nullable ProgressIndicator indicator,
+        @Nonnull UpdateChannel channel,
+        @Nonnull EarlyAccessProgramManager eapManager
+    ) throws Exception {
         List<PluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
         return ContainerUtil.filter(ideaPluginDescriptors, it -> isPluginAllowed(it, eapManager));
     }
@@ -112,15 +109,19 @@ public class RepositoryHelper {
     }
 
     @Nonnull
-    public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
-                                                                   @Nonnull UpdateChannel channel) throws Exception {
+    public static List<PluginDescriptor> loadPluginsFromRepository(
+        @Nullable ProgressIndicator indicator,
+        @Nonnull UpdateChannel channel
+    ) throws Exception {
         return loadPluginsFromRepository(indicator, channel, null);
     }
 
     @Nonnull
-    public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
-                                                                   @Nonnull UpdateChannel channel,
-                                                                   @Nullable String buildNumber) throws Exception {
+    public static List<PluginDescriptor> loadPluginsFromRepository(
+        @Nullable ProgressIndicator indicator,
+        @Nonnull UpdateChannel channel,
+        @Nullable String buildNumber
+    ) throws Exception {
         if (buildNumber == null) {
             ApplicationInfo appInfo = ApplicationInfo.getInstance();
             buildNumber = appInfo.getBuild().asString();

@@ -65,7 +65,10 @@ public class PluginManagerCore {
 
     @Nullable
     public static PluginId getPluginByClassName(@Nonnull String className) {
-        if (className.startsWith("java.") || className.startsWith("javax.") || className.startsWith("kotlin.") || className.startsWith("groovy.")) {
+        if (className.startsWith("java.")
+            || className.startsWith("javax.")
+            || className.startsWith("kotlin.")
+            || className.startsWith("groovy.")) {
             return null;
         }
 
@@ -80,12 +83,12 @@ public class PluginManagerCore {
 
     private static boolean hasLoadedClass(@Nonnull String className, ClassLoader loader) {
         if (loader instanceof PluginClassLoader) {
-            return ((PluginClassLoader) loader).hasLoadedClass(className);
+            return ((PluginClassLoader)loader).hasLoadedClass(className);
         }
 
         // it can be an UrlClassLoader loaded by another class loader, so instanceof doesn't work
         try {
-            return (Boolean) loader.getClass().getMethod("hasLoadedClass", String.class).invoke(loader, className);
+            return (Boolean)loader.getClass().getMethod("hasLoadedClass", String.class).invoke(loader, className);
         }
         catch (Exception e) {
             return false;
@@ -98,7 +101,7 @@ public class PluginManagerCore {
         if (!(loader instanceof PluginClassLoader)) {
             return null;
         }
-        return ((PluginClassLoader) loader).getPluginId();
+        return ((PluginClassLoader)loader).getPluginId();
     }
 
     public static boolean isPluginClass(String className) {
@@ -114,28 +117,38 @@ public class PluginManagerCore {
 
     @Deprecated
     @DeprecationInfo("Must be never used from plugin or platform")
-    public static void loadDescriptors(String pluginsPath, List<PluginDescriptorImpl> result, @Nullable StartupProgress progress, int pluginsCount, boolean isHeadlessMode, boolean isPreInstalledPath) {
+    public static void loadDescriptors(
+        String pluginsPath,
+        List<PluginDescriptorImpl> result,
+        @Nullable StartupProgress progress,
+        int pluginsCount,
+        boolean isHeadlessMode,
+        boolean isPreInstalledPath
+    ) {
         loadDescriptors(new File(pluginsPath), result, progress, pluginsCount, isHeadlessMode, isPreInstalledPath);
     }
 
     @Deprecated
     @DeprecationInfo("Must be never used from plugin or platform")
-    public static void loadDescriptors(@Nonnull File pluginsHome,
-                                       List<PluginDescriptorImpl> result,
-                                       @Nullable StartupProgress progress,
-                                       int pluginsCount,
-                                       boolean isHeadlessMode,
-                                       boolean isPreInstalledPath) {
+    public static void loadDescriptors(
+        @Nonnull File pluginsHome,
+        List<PluginDescriptorImpl> result,
+        @Nullable StartupProgress progress,
+        int pluginsCount,
+        boolean isHeadlessMode,
+        boolean isPreInstalledPath
+    ) {
         final File[] files = pluginsHome.listFiles();
         if (files != null) {
             int i = result.size();
             for (File file : files) {
-                final PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isPreInstalledPath, PluginsLoader.C_LOG);
+                final PluginDescriptorImpl descriptor =
+                    PluginDescriptorLoader.loadDescriptor(file, isPreInstalledPath, PluginsLoader.C_LOG);
                 if (descriptor == null) {
                     continue;
                 }
                 if (progress != null) {
-                    progress.showProgress(descriptor.getName(), PLUGINS_PROGRESS_MAX_VALUE * ((float) ++i / pluginsCount));
+                    progress.showProgress(descriptor.getName(), PLUGINS_PROGRESS_MAX_VALUE * ((float)++i / pluginsCount));
                 }
                 int oldIndex = result.indexOf(descriptor);
                 if (oldIndex >= 0) {
@@ -187,7 +200,7 @@ public class PluginManagerCore {
 
     public static void markAsDeletedPlugin(PluginDescriptor descriptor) {
         if (descriptor instanceof PluginDescriptorImpl) {
-            ((PluginDescriptorImpl) descriptor).setDeleted(true);
+            ((PluginDescriptorImpl)descriptor).setDeleted(true);
         }
     }
 }

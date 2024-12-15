@@ -24,12 +24,12 @@ import javax.swing.table.TableCellRenderer;
  * @author Konstantin Bulenkov
  */
 class AvailablePluginColumnInfo extends PluginManagerColumnInfo {
-  public AvailablePluginColumnInfo(AvailablePluginsTableModel model) {
-    super(PluginManagerColumnInfo.COLUMN_NAME, model);
-  }
+    public AvailablePluginColumnInfo(AvailablePluginsTableModel model) {
+        super(PluginManagerColumnInfo.COLUMN_NAME, model);
+    }
 
-  @Override
-  public TableCellRenderer getRenderer(final PluginDescriptor pluginDescriptor) {
-    return new PluginsTableRenderer(pluginDescriptor, true);
-  }
+    @Override
+    public TableCellRenderer getRenderer(final PluginDescriptor pluginDescriptor) {
+        return new PluginsTableRenderer(pluginDescriptor, true);
+    }
 }

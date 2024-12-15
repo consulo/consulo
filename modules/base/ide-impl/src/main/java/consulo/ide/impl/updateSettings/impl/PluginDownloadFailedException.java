@@ -22,40 +22,40 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 23/11/2021
+ * @since 2021-11-23
  */
 public class PluginDownloadFailedException extends Exception {
-  @Nonnull
-  private final PluginId myPluginId;
-  @Nonnull
-  private final String myPluginName;
-  @Nonnull
-  private final LocalizeValue myMessage;
+    @Nonnull
+    private final PluginId myPluginId;
+    @Nonnull
+    private final String myPluginName;
+    @Nonnull
+    private final LocalizeValue myMessage;
 
-  public PluginDownloadFailedException(@Nonnull PluginId pluginId, @Nonnull String pluginName, @Nonnull LocalizeValue message) {
-    super(message.get());
-    myPluginId = pluginId;
-    myPluginName = pluginName;
-    myMessage = message;
-  }
+    public PluginDownloadFailedException(@Nonnull PluginId pluginId, @Nonnull String pluginName, @Nonnull LocalizeValue message) {
+        super(message.get());
+        myPluginId = pluginId;
+        myPluginName = pluginName;
+        myMessage = message;
+    }
 
-  @Nonnull
-  public LocalizeValue getLocalizeMessage() {
-    return myMessage;
-  }
+    @Nonnull
+    public LocalizeValue getLocalizeMessage() {
+        return myMessage;
+    }
 
-  @Nonnull
-  public PluginId getPluginId() {
-    return myPluginId;
-  }
+    @Nonnull
+    public PluginId getPluginId() {
+        return myPluginId;
+    }
 
-  @Nonnull
-  public String getPluginName() {
-    return myPluginName;
-  }
+    @Nonnull
+    public String getPluginName() {
+        return myPluginName;
+    }
 
-  @Override
-  public String getLocalizedMessage() {
-    return myMessage.get();
-  }
+    @Override
+    public String getLocalizedMessage() {
+        return myMessage.get();
+    }
 }

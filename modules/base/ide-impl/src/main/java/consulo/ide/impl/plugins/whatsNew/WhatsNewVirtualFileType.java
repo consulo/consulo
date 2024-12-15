@@ -25,26 +25,26 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 15/11/2021
+ * @since 2021-11-15
  */
 public class WhatsNewVirtualFileType implements FileType {
-  public static final WhatsNewVirtualFileType INSTANCE = new WhatsNewVirtualFileType();
+    public static final WhatsNewVirtualFileType INSTANCE = new WhatsNewVirtualFileType();
 
-  @Nonnull
-  @Override
-  public String getId() {
-    return "WHATS_NEW";
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return "WHATS_NEW";
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDescription() {
-    return LocalizeValue.of();
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return LocalizeValue.of();
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return ImageEffects.layered(PlatformIconGroup.filetypesText(), PlatformIconGroup.actionsNew());
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return ImageEffects.layered(PlatformIconGroup.filetypesText(), PlatformIconGroup.actionsNew());
+    }
 }

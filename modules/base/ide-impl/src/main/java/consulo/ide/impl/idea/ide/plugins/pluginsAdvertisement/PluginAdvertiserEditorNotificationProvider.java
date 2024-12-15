@@ -26,11 +26,10 @@ import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.EditorNotificationProvider;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditor;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.localize.PluginLocalize;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.language.plain.PlainTextFileType;
-import consulo.localize.LocalizeValue;
 import consulo.project.internal.UnknownFeaturesCollector;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -48,8 +47,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * User: anna
- * Date: 10/11/13
+ * @author anna
+ * @since 2013-10-11
  */
 @ExtensionImpl
 public class PluginAdvertiserEditorNotificationProvider implements EditorNotificationProvider, DumbAware {
@@ -59,7 +58,11 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     private final PluginAdvertiserRequester myPluginAdvertiserRequester;
 
     @Inject
-    public PluginAdvertiserEditorNotificationProvider(UnknownFeaturesCollector unknownFeaturesCollector, final EditorNotifications notifications, PluginAdvertiserRequester pluginAdvertiserRequester) {
+    public PluginAdvertiserEditorNotificationProvider(
+        UnknownFeaturesCollector unknownFeaturesCollector,
+        final EditorNotifications notifications,
+        PluginAdvertiserRequester pluginAdvertiserRequester
+    ) {
         myUnknownFeaturesCollector = unknownFeaturesCollector;
         myNotifications = notifications;
         myPluginAdvertiserRequester = pluginAdvertiserRequester;
@@ -74,7 +77,11 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     @RequiredReadAction
     @Nullable
     @Override
-    public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
+    public EditorNotificationBuilder buildNotification(
+        @Nonnull VirtualFile file,
+        @Nonnull FileEditor fileEditor,
+        @Nonnull Supplier<EditorNotificationBuilder> builderFactory
+    ) {
         if (!isValidFile(file)) {
             return null;
         }
@@ -114,39 +121,58 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
 
     @RequiredReadAction
     @Nonnull
-    private EditorNotificationBuilder build(VirtualFile virtualFile, Set<PluginDescriptor> plugins, List<PluginDescriptor> allPlugins, EditorNotificationBuilder builder) {
+    private EditorNotificationBuilder build(
+        VirtualFile virtualFile,
+        Set<PluginDescriptor> plugins,
+        List<PluginDescriptor> allPlugins,
+        EditorNotificationBuilder builder
+    ) {
         String extension = virtualFile.getExtension();
 
-        builder.withText(LocalizeValue.localizeTODO(IdeBundle.message("plugin.advestiser.notification.text", plugins.size())));
-        final PluginDescriptor disabledPlugin = getDisabledPlugin(plugins.stream().map(PluginDescriptor::getPluginId).collect(Collectors.toSet()));
+        builder.withText(PluginLocalize.pluginAdvestiserNotificationText(plugins.size()));
+        final PluginDescriptor disabledPlugin =
+            getDisabledPlugin(plugins.stream().map(PluginDescriptor::getPluginId).collect(Collectors.toSet()));
         if (disabledPlugin != null) {
-            builder.withAction(LocalizeValue.localizeTODO("Enable " + disabledPlugin.getName() + " plugin"), (i) -> {
-                myEnabledExtensions.add(extension);
-                PluginManager.enablePlugin(disabledPlugin.getPluginId());
-                myNotifications.updateAllNotifications();
-                PluginManagerMain.notifyPluginsWereUpdated("Plugin was successfully enabled", null);
-            });
+            builder.withAction(
+                PluginLocalize.actionEnablePluginText(disabledPlugin.getName()),
+                i -> {
+                    myEnabledExtensions.add(extension);
+                    PluginManager.enablePlugin(disabledPlugin.getPluginId());
+                    myNotifications.updateAllNotifications();
+                    PluginManagerMain.notifyPluginsWereUpdated(PluginLocalize.messagePluginWasSuccessfullyEnabled().get(), null);
+                }
+            );
         }
         else {
-            builder.withAction(LocalizeValue.localizeTODO(IdeBundle.message("plugin.advestiser.notification.install.link", plugins.size())), (i) -> {
-                final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, allPlugins, new ArrayList<>(plugins));
-                advertiserDialog.show();
-                if (advertiserDialog.isUserInstalledPlugins()) {
-                    myEnabledExtensions.add(extension);
-                    myNotifications.updateAllNotifications();
+            builder.withAction(
+                PluginLocalize.pluginAdvestiserNotificationInstallLink(plugins.size()),
+                (i) -> {
+                    final PluginsAdvertiserDialog advertiserDialog =
+                        new PluginsAdvertiserDialog(null, allPlugins, new ArrayList<>(plugins));
+                    advertiserDialog.show();
+                    if (advertiserDialog.isUserInstalledPlugins()) {
+                        myEnabledExtensions.add(extension);
+                        myNotifications.updateAllNotifications();
+                    }
                 }
-            });
+            );
         }
 
-        builder.withAction(LocalizeValue.localizeTODO("Ignore by file name"), (i) -> {
-            myUnknownFeaturesCollector.ignoreFeature(ExtensionPreview.of(FileTypeFactory.class, virtualFile.getName()));
-            myNotifications.updateAllNotifications();
-        });
+        builder.withAction(
+            PluginLocalize.actionIgnoreByFileNameText(),
+            i -> {
+                myUnknownFeaturesCollector.ignoreFeature(ExtensionPreview.of(FileTypeFactory.class, virtualFile.getName()));
+                myNotifications.updateAllNotifications();
+            }
+        );
 
-        builder.withAction(LocalizeValue.localizeTODO("Ignore by extension"), (i) -> {
-            myUnknownFeaturesCollector.ignoreFeature(ExtensionPreview.of(FileTypeFactory.class, "*." + virtualFile.getExtension()));
-            myNotifications.updateAllNotifications();
-        });
+        builder.withAction(
+            PluginLocalize.actionIgnoreByExtensionText(),
+            i -> {
+                myUnknownFeaturesCollector.ignoreFeature(ExtensionPreview.of(FileTypeFactory.class, "*." + virtualFile.getExtension()));
+                myNotifications.updateAllNotifications();
+            }
+        );
 
         return builder;
     }
@@ -159,20 +185,14 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         }
 
         extension = ExtensionPreview.of(FileTypeFactory.class, virtualFile.getName());
-        if (myUnknownFeaturesCollector.isIgnored(extension)) {
-            return true;
-        }
 
-        return false;
+        return myUnknownFeaturesCollector.isIgnored(extension);
     }
 
     @Nullable
     private static PluginDescriptor getDisabledPlugin(Set<PluginId> plugins) {
         final List<PluginId> disabledPlugins = new ArrayList<>(PluginManager.getDisabledPlugins());
         disabledPlugins.retainAll(plugins);
-        if (disabledPlugins.size() == 1) {
-            return PluginManager.findPlugin(disabledPlugins.get(0));
-        }
-        return null;
+        return disabledPlugins.size() == 1 ? PluginManager.findPlugin(disabledPlugins.get(0)) : null;
     }
 }

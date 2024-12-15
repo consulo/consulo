@@ -30,32 +30,32 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 15/11/2021
+ * @since 2021-11-15
  */
 @ExtensionImpl
 public class WhatsNewVirtualFileEditorProvider implements FileEditorProvider, DumbAware {
-  private final Provider<UpdateHistory> myUpdateHistoryProvider;
+    private final Provider<UpdateHistory> myUpdateHistoryProvider;
 
-  @Inject
-  public WhatsNewVirtualFileEditorProvider(Provider<UpdateHistory> updateHistoryProvider) {
-    myUpdateHistoryProvider = updateHistoryProvider;
-  }
+    @Inject
+    public WhatsNewVirtualFileEditorProvider(Provider<UpdateHistory> updateHistoryProvider) {
+        myUpdateHistoryProvider = updateHistoryProvider;
+    }
 
-  @Override
-  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return file instanceof WhatsNewVirtualFile;
-  }
+    @Override
+    public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+        return file instanceof WhatsNewVirtualFile;
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return new WhatsNewVirtualFileEditor(project, myUpdateHistoryProvider.get(), file);
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+        return new WhatsNewVirtualFileEditor(project, myUpdateHistoryProvider.get(), file);
+    }
 
-  @Nonnull
-  @Override
-  public String getEditorTypeId() {
-    return "whats_new";
-  }
+    @Nonnull
+    @Override
+    public String getEditorTypeId() {
+        return "whats_new";
+    }
 }

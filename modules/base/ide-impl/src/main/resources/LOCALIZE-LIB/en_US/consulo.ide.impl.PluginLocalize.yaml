@@ -1,0 +1,222 @@
+plugin.manager.enable.column.title:
+    text: "Enable"
+plugin.manager.tooltip.warning:
+    text: "Required plugin ''{0}'' is not included"
+plugin.manager.incompatible.not.loaded.tooltip:
+    text: "The plugin was not loaded"
+plugin.manager.incompatible.deps.tooltip:
+    text: "Required {0,choice,1#plugin|2#plugins} {1} {0,choice,1#is|2#are} not enabled"
+plugin.manager.incompatible.tooltip:
+    text: "Plugin is incompatible with current {0} installation"
+plugin.manager.wrong.platform.not.loaded.tooltip:
+    text: "The plugin ''{0}'' was not loaded due wrong platform"
+plugin.advestiser.notification.text:
+    text: "{0,choice,1#Plugin|2#Plugins} supporting current file are found"
+plugin.advestiser.notification.install.link:
+    text: Install {0,choice,1#plugin|2#plugins}
+update.settings.title:
+    text: "Update Settings"
+update.settings.repository.settings.section:
+    text: "Repository settings"
+update.settings.updates.enabled:
+    text: "Updates enabled"
+update.settings.channel.label:
+    text: "Channel"
+plugin.description.version.label:
+    text: "Version:"
+plugin.description.permissions.label:
+    text: "Permissions:"
+plugin.description.permissions.not.set:
+    text: "<no special permissions>"
+plugin.description.description.not.set:
+    text: "<description not provided>"
+plugin.description.change.notes.label:
+    text: "Change Notes:"
+plugin.description.vendor.label:
+    text: "Vendor:"
+plugin.description.homepage.label:
+    text: "Plugin homepage:"
+plugin.description.size.label:
+    text: "Size"
+plugin.description.depends.on.label:
+    text: "Depends on plugins:"
+plugin.description.depends.on.optional:
+    text: "(optional)"
+plugin.description.dependent.label:
+    text: "Dependent plugins:"
+plugin.description.tags.label:
+    text: "Tags:"
+plugin.header.n.downloads:
+    text: "{0} downloads"
+plugin.header.date.updated:
+    text: "Updated {0}"
+tab.from.repository:
+    text: "From Repository"
+tab.installed:
+    text: "Installed"
+whats.new.platform:
+    text: "Platform"
+whats.new.loading:
+    text: "Fetching change list…"
+whats.new.commit.prefix:
+    text: "(commit: "
+whats.new.commit.suffix:
+    text: ")"
+whats.new.commit.date:
+    text: "[{0}]"
+whats.new.no.changes:
+    text: "No changes"
+whats.new.fetching.change.list:
+    text: "Fetching change list…"
+message.plugin.depends.on.disabled.plugins:
+    text: "Plugin {0} depends on disabled {2,choice,1#plugin|2#plugins} {1}. Enable disabled {2,choice,1#plugin|2#plugins}?"
+    types:
+        - string
+        - string
+        - int
+    names:
+        - pluginName
+        - dependsOnPlugins
+        - nDependsOnPlugins
+message.plugin.depends.on.unknown.plugins:
+    text: "Plugin {0} depends on unknown {2,choice,1#plugin|2#plugins} {1}"
+    types:
+        - string
+        - string
+        - int
+    names:
+        - pluginName
+        - dependsOnNames
+        - nDependsOn
+message.plugin.wont.load:
+    text: "Unable to apply changes: {0,choice,1#plugin|2#plugins} {1} won''t be able to load."
+message.dependent.plugins.to.disable:
+    text: "<html>The following {3,choice,1#plugin|2#plugins}<br/><b>{2}</b><br/>{3,choice,1#is|2#are} enabled and {3,choice,1#depends|2#depend} on <br/><b>{0}</b><br/>Would you like to disable {3,choice,1#it|2#them} too?</html>"
+    types:
+        - string
+        - int
+        - string
+        - int
+    names:
+        - selectedNames
+        - nSelected
+        - dependsOnNames
+        - nDependsOn
+message.dependent.plugins.to.enable:
+    text: "<html>The following {3,choice,1#plugin|2#plugins} on which<br/><b>{0}</b><br/>{1,choice,1#depends|2#depend} {3,choice,1#is|2#are} disabled:<br/><b>{2}</b><br/>Would you like to enable {3,choice,1#it|2#them} too?</html>"
+    types:
+        - string
+        - int
+        - string
+        - int
+    names:
+        - selectedNames
+        - nSelected
+        - dependsOnNames
+        - nDependsOn
+message.nothing.to.show.click.button:
+    text: "Nothing to show. Go to tab \"From Repository\" to view available plugins"
+message.plugin.from.file.title:
+    text: "Choose Plugin File"
+message.plugin.from.file.description:
+    text: "'consulo-plugin' files are accepted"
+message.plugin.from.file.failed.to.load.descriptor:
+    text: "Fail to load plugin descriptor from file {0}"
+message.plugin.from.file.is.incompatible:
+    text: "Plugin {0} is incompatible with current installation"
+message.plugin.from.file.already.installed:
+    text: "Plugin {0} was already installed"
+message.experimental.plugin.installation.confirm:
+    text: "Are you sure you want to install experimental plugin? Plugin can make IDE unstable, and may not implement expected features"
+message.updated.plugins.disabled:
+    text: "Updated {1,choice,1#plugin|2#plugins} {0} {1,choice,1#is|2#are} disabled."
+message.updated.plugins.depend.on.disabled:
+    text: "Updated {1,choice,1#plugin|2#plugins} {0} {1,choice,1#depends|2#depend} on disabled {3,choice,1#plugin|2#plugins} {2}."
+message.disabled.plugins.wont.be.activated.after.restart:
+    text: "Disabled plugins and plugins which depends on disabled plugins won't be activated after restart."
+message.ask.enable.updated.plugins:
+    text: "Would you like to enable updated {0,choice,1#plugin|2#plugins}?"
+message.ask.enable.plugin.dependencies:
+    text: "Would you like to enable plugin {0,choice,1#dependency|2#dependencies}?"
+message.some.plugins.wont.be.updated:
+    text: "Few plugins will not be updated. Those plugins will be disabled after update. Are you sure?"
+message.following.nodes.will.be.downloaded.and.installed:
+    text: "Following nodes will be downloaded & installed"
+message.experimental:
+    text: "Experimental"
+message.platform.or.plugins.update:
+    text: "Platform Or Plugins Update"
+message.plugin.was.successfully.enabled:
+    text: "Plugin was successfully enabled"
+message.plugins.suggestion:
+    text: "Plugins Suggestion"
+message.plugins.suggestion.notification:
+    text: "Features covered by non-installed plugins are detected."
+message.plugins.lifecycle.group:
+    text: "Plugins Lifecycle Group"
+message.plugins.were.installed:
+    text: "{1,choice,1#Plugin|2#Plugins} {0} {1,choice,1#was|2#were} successfully installed"
+    types:
+        - string
+        - int
+    names:
+        - pluginNames
+        - nPlugins
+message.plugin.advertizer.choose.plugins.to.install:
+    text: "Choose Plugins to Install"
+action.reload.list.of.plugins.text:
+    text: "Reload List of Plugins"
+action.reload.list.of.plugins.description:
+    text: "Reload list of plugins"
+action.install.from.disk.text:
+    text: "Install plugin from disk…"
+action.sort.by.text:
+    text: "Sort by"
+action.sort.by.label:
+    text: "Sort by:"
+action.tag.label:
+    text: "Tag:"
+action.enable.dependent.plugins.text:
+    text: "Enable Dependent Plugins"
+action.disable.dependent.plugins.text:
+    text: "Disable Plugins with Dependency on this"
+action.enable.all.text:
+    text: "Enable all"
+action.enable.updated.plugins.text:
+    text: "Enable updated {0,choice,1#plugin|2#plugins}"
+action.enable.plugin.text:
+    text: "Enable {0} plugin"
+action.ignore.by.file.name.text:
+    text: "Ignore by file name"
+action.plugins.suggestion.install.text:
+    text: "Install plugins…"
+action.plugins.suggestion.ignore.text:
+    text: "Ignore"
+action.ignore.by.extension.text:
+    text: "Ignore by extension"
+enabled.filter.label:
+    text: "Show:"
+enabled.filter.all.plugins:
+    text: "All plugins"
+enabled.filter.enabled.plugins:
+    text: "Enabled plugins"
+enabled.filter.disabled.plugins:
+    text: "Disabled plugins"
+sort.by.name:
+    text: "Name"
+sort.by.downloads:
+    text: "Downloads"
+sort.by.rating:
+    text: "Rating"
+sort.by.status:
+    text: "Status"
+sort.by.last.updated:
+    text: "Last Updated"
+tag.filter.label:
+    text: "Tag:"
+installation.action.install:
+    text: "Install"
+installation.action.uninstall:
+    text: "Uninstall"
+installation.action.restart:
+    text: "Restart"

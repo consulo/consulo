@@ -11,28 +11,28 @@ import java.util.function.Predicate;
 
 @ServiceAPI(value = ComponentScope.PROJECT)
 public abstract class PushedFilePropertiesUpdater {
-  @Nonnull
-  public static PushedFilePropertiesUpdater getInstance(@Nonnull Project project) {
-    return project.getInstance(PushedFilePropertiesUpdater.class);
-  }
+    @Nonnull
+    public static PushedFilePropertiesUpdater getInstance(@Nonnull Project project) {
+        return project.getInstance(PushedFilePropertiesUpdater.class);
+    }
 
-  public abstract void initializeProperties();
+    public abstract void initializeProperties();
 
-  public abstract void pushAll(final FilePropertyPusher<?>... pushers);
+    public abstract void pushAll(final FilePropertyPusher<?>... pushers);
 
-  /**
-   * @deprecated Use {@link #filePropertiesChanged(VirtualFile, Predicate)}
-   */
-  @Deprecated
-  public abstract void filePropertiesChanged(@Nonnull final VirtualFile file);
+    /**
+     * @deprecated Use {@link #filePropertiesChanged(VirtualFile, Predicate)}
+     */
+    @Deprecated
+    public abstract void filePropertiesChanged(@Nonnull final VirtualFile file);
 
-  public abstract void pushAllPropertiesNow();
+    public abstract void pushAllPropertiesNow();
 
-  public abstract <T> void findAndUpdateValue(final VirtualFile fileOrDir, final FilePropertyPusher<T> pusher, final T moduleValue);
+    public abstract <T> void findAndUpdateValue(final VirtualFile fileOrDir, final FilePropertyPusher<T> pusher, final T moduleValue);
 
-  /**
-   * Invalidates indices and other caches for the given file or its immediate children (in case it's a directory).
-   * Only files matching the condition are processed.
-   */
-  public abstract void filePropertiesChanged(@Nonnull VirtualFile fileOrDir, @Nonnull Predicate<? super VirtualFile> acceptFileCondition);
+    /**
+     * Invalidates indices and other caches for the given file or its immediate children (in case it's a directory).
+     * Only files matching the condition are processed.
+     */
+    public abstract void filePropertiesChanged(@Nonnull VirtualFile fileOrDir, @Nonnull Predicate<? super VirtualFile> acceptFileCondition);
 }
