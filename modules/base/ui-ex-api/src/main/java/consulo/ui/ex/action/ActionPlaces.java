@@ -16,6 +16,7 @@
 package consulo.ui.ex.action;
 
 
+import consulo.annotation.DeprecationInfo;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -141,6 +142,7 @@ public abstract class ActionPlaces {
     public static final String SERVICES_POPUP = "ServicesPopup";
     public static final String SERVICES_TOOLBAR = "ServicesToolbar";
     public static final String RUNNER_LAYOUT_BUTTON_TOOLBAR = "RunnerLayoutButtonToolbar";
+    public static final String RUNNER_TOOLBAR = "RunnerToolbar";
 
     public static final String EDITOR_INSPECTIONS_TOOLBAR = "EditorInspectionsToolbar";
 
@@ -151,7 +153,8 @@ public abstract class ActionPlaces {
 
     private static final String POPUP_PREFIX = "popup@";
 
-
+    @Deprecated
+    @DeprecationInfo("Use consulo.ui.ex.action.AnActionEvent#isFromActionToolbar")
     public static boolean isToolbarPlace(@Nonnull String place) {
         return ourToolbarPlaces.contains(place);
     }

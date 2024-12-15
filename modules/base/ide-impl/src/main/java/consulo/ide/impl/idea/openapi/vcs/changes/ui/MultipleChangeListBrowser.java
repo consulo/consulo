@@ -447,7 +447,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
 
-      e.getPresentation().setEnabledAndVisible(ActionPlaces.isToolbarPlace(e.getPlace()));
+      e.getPresentation().setEnabledAndVisible(e.isFromActionToolbar());
     }
 
     @Override

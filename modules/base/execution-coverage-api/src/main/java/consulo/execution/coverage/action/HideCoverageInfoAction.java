@@ -5,7 +5,6 @@ import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -30,7 +29,7 @@ public class HideCoverageInfoAction extends AnAction {
   public void update(AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     presentation.setEnabled(false);
-    presentation.setVisible(ActionPlaces.isToolbarPlace(e.getPlace()));
+    presentation.setVisible(e.isFromActionToolbar());
     final Project project = e.getData(Project.KEY);
     if (project != null) {
       final CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();

@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -35,7 +34,7 @@ public class ToggleUseSoftWrapsMenuAction extends AbstractToggleUseSoftWrapsActi
   @Override
   public void update(@Nonnull AnActionEvent e){
     super.update(e);
-    if (!ActionPlaces.isToolbarPlace(e.getPlace())) {
+    if (!e.isFromActionToolbar()) {
       e.getPresentation().setIcon(null);
     }
     e.getPresentation().setEnabled(getEditor(e) != null);

@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.AllIcons;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.ide.IdeBundle;
-import consulo.project.ui.wm.ContentManagerUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.wm.ContentManagerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
@@ -69,7 +69,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     boolean enabled = handler != null;
     boolean selected = enabled && handler.isPinned;
 
-    e.getPresentation().setIcon(ActionPlaces.isToolbarPlace(e.getPlace()) ? AllIcons.General.Pin_tab : null);
+    e.getPresentation().setIcon(e.isFromActionToolbar() ? PlatformIconGroup.generalPin_tab() : null);
     e.getPresentation().putClientProperty(SELECTED_PROPERTY, selected);
 
     String text;
