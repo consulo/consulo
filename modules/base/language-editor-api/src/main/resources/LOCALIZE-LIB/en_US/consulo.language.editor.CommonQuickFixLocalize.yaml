@@ -1,0 +1,34 @@
+fix.unwrap:
+  text: Unwrap ''{0}''
+fix.unwrap.statement:
+  text: Unwrap ''{0}'' statement
+fix.remove:
+  text: Remove ''{0}''
+fix.remove.title:
+  text: Remove {0}
+fix.remove.title.x:
+  text: Remove {0} ''{1}''
+fix.remove.redundant:
+  text: Remove redundant ''{0}''
+fix.remove.statement:
+  text: Remove ''{0}'' statement
+fix.replace.with.x:
+  text: Replace with ''{0}''
+fix.can.replace.with.x:
+  text: Can be replaced with ''{0}''
+fix.replace.x.with.y:
+  text: Replace ''{0}'' with ''{1}''
+fix.can.replace.x.with.y:
+  text: '''''{0}'''' can be replaced with ''''{1}'''''
+fix.convert.to.x:
+  text: Convert to ''{0}''
+fix.use:
+  text: Use ''{0}''
+fix.call:
+  text: Call ''{0}''
+fix.simplify:
+  text: Simplify
+fix.create.title:
+  text: Create {0}
+fix.create.title.x:
+  text: Create {0} ''{1}''
