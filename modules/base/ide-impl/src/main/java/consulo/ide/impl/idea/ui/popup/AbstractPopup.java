@@ -1016,6 +1016,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
             LOG.debug("expected preferred size: " + myContent.getPreferredSize());
         }
         myPopup = factory.getPopup(popupOwner, myContent, targetBounds.x, targetBounds.y, this);
+
+        if (!factory.isNativeBorder()) {
+            myContent.initBorder();
+        }
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("  actual preferred size: " + myContent.getPreferredSize());
         }
@@ -1650,12 +1655,19 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     public static class MyContentPanel extends JPanel implements DataProvider {
+        private final PopupBorder myBorder;
+
         @Nullable
         private DataProvider myDataProvider;
 
         public MyContentPanel(PopupBorder border) {
             super(new BorderLayout());
+            myBorder = border;
             putClientProperty(UIUtil.TEXT_COPY_ROOT, Boolean.TRUE);
+        }
+
+        public void initBorder() {
+            setBorder(myBorder);
         }
 
         public Dimension computePreferredSize() {

@@ -43,11 +43,19 @@ public interface PopupComponent {
 
         boolean isNativePopup();
 
+        boolean isNativeBorder();
+
         class AwtDefault implements Factory {
+            private boolean myNativeBorder;
+
             @Override
             public PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup) {
                 final PopupFactory factory = PopupFactory.getSharedInstance();
                 final Popup popup = factory.getPopup(owner, content, x, y);
+
+                if (content instanceof JComponent jComponent) {
+                    myNativeBorder = jComponent.getClientProperty("FlatLaf.internal.FlatPopupFactory.popupUsesNativeBorder") != null;
+                }
 
                 Window resolvedWindow = SwingUtilities.getWindowAncestor(content);
                 return new AwtPopupWrapper(popup, jbPopup, resolvedWindow);
@@ -57,9 +65,16 @@ public interface PopupComponent {
             public boolean isNativePopup() {
                 return true;
             }
+
+            @Override
+            public boolean isNativeBorder() {
+                return myNativeBorder;
+            }
         }
 
         class AwtHeavyweight implements Factory {
+            private boolean myNativeBorder;
+
             @Override
             public PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup) {
                 final PopupFactory factory = PopupFactory.getSharedInstance();
@@ -71,8 +86,17 @@ public interface PopupComponent {
                     PopupUtil.setPopupType(factory, oldType);
                 }
 
+                if (content instanceof JComponent jComponent) {
+                    myNativeBorder = jComponent.getClientProperty("FlatLaf.internal.FlatPopupFactory.popupUsesNativeBorder") != null;
+                }
+
                 Window resolvedWindow = SwingUtilities.getWindowAncestor(content);
                 return new AwtPopupWrapper(popup, jbPopup, resolvedWindow);
+            }
+
+            @Override
+            public boolean isNativeBorder() {
+                return myNativeBorder;
             }
 
             @Override
@@ -89,6 +113,11 @@ public interface PopupComponent {
 
             @Override
             public boolean isNativePopup() {
+                return false;
+            }
+
+            @Override
+            public boolean isNativeBorder() {
                 return false;
             }
         }
