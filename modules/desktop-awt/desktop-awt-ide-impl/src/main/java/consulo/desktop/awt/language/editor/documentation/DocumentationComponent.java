@@ -353,10 +353,14 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
         DefaultActionGroup toolbarActions = new DefaultActionGroup();
         toolbarActions.add(actions);
-        toolbarActions.addAction(new ShowAsToolwindowAction()).setAsSecondary(true);
-        toolbarActions.addAction(new MyShowSettingsAction(true)).setAsSecondary(true);
-        toolbarActions.addAction(new ShowToolbarAction()).setAsSecondary(true);
-        toolbarActions.addAction(new RestoreDefaultSizeAction()).setAsSecondary(true);
+
+        DocumentationMoreActionGroup rightActions = new DocumentationMoreActionGroup();
+        rightActions.add(new ShowAsToolwindowAction());
+        rightActions.add(new MyShowSettingsAction(true));
+        rightActions.add(new ShowToolbarAction());
+        rightActions.add(new RestoreDefaultSizeAction());
+        toolbarActions.add(rightActions);
+
         myToolBar = new ActionToolbarImpl(ActionPlaces.JAVADOC_TOOLBAR, toolbarActions, true) {
             Point initialClick;
 
