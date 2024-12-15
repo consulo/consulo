@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ide;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.awt.VerticalLayout;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -18,6 +17,7 @@ import consulo.ui.ex.internal.HelpTooltip;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.lang.BitUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -27,8 +27,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -131,6 +130,8 @@ public class HelpTooltipImpl implements HelpTooltip {
     private String myToolTipText;
 
     protected MouseAdapter myMouseListener;
+
+    private HierarchyListener myHierarchyListener;
 
     /**
      * Location of the HelpTooltip relatively to the owner component.
@@ -298,6 +299,12 @@ public class HelpTooltipImpl implements HelpTooltip {
                 }
             }
         };
+
+        myHierarchyListener = e -> {
+            if (BitUtil.isSet(e.getChangeFlags(), HierarchyEvent.PARENT_CHANGED)) {
+                scheduleHide(link == null, myHideDelay);
+            }
+        };
     }
 
     private void initPopupBuilder() {
@@ -372,11 +379,13 @@ public class HelpTooltipImpl implements HelpTooltip {
     private void installMouseListeners(@Nonnull JComponent owner) {
         owner.addMouseListener(myMouseListener);
         owner.addMouseMotionListener(myMouseListener);
+        owner.addHierarchyListener(myHierarchyListener);
     }
 
     private void uninstallMouseListeners(@Nonnull JComponent owner) {
         owner.removeMouseListener(myMouseListener);
         owner.removeMouseMotionListener(myMouseListener);
+        owner.removeHierarchyListener(myHierarchyListener);
     }
 
     /**
