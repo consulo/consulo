@@ -22,19 +22,19 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.webBrowser.BrowserUtil;
-import consulo.ui.ex.action.AnAction;
+import consulo.annotation.component.ActionImpl;
+import consulo.ide.impl.externalService.impl.WebServiceApi;
+import consulo.platform.Platform;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.DumbAwareAction;
+import jakarta.annotation.Nonnull;
 
-public class TechnicalSupportAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    BrowserUtil.launchBrowser(ApplicationInfoImpl.getShadowInstance().getSupportUrl());
-  }
-
-  @Override
-  public void update(final AnActionEvent e) {
-    e.getPresentation().setVisible(ApplicationInfoImpl.getShadowInstance().getSupportUrl() != null);
-  }
+@ActionImpl(id = "TechnicalSupport")
+public class TechnicalSupportAction extends DumbAwareAction {
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Platform.current().openInBrowser(WebServiceApi.DISCUSSION.buildUrl());
+    }
 }

@@ -162,11 +162,6 @@ public class ApplicationInfo {
     return "consulo.io";
   }
 
-  @Nonnull
-  public final String getSupportUrl() {
-    return "https://discuss.consulo.io";
-  }
-
   public String getFullVersion() {
     final String majorVersion = getMajorVersion();
     if (majorVersion.trim().length() > 0) {

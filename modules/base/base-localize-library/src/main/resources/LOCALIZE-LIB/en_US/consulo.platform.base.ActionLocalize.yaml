@@ -2046,18 +2046,14 @@ action.Graph.print:
   text: Print Graph
 action.Graph.print.preview:
   text: Print Preview
-action.SendFeedback.text:
-  text: Submit _Feedback
-action.SendFeedback.description:
-  text: Submit feedback to the JetBrains Web site
 action.ShowLog.text:
   text: Open Log file
 action.ShowLog.description:
   text: Opens folder with log file
 action.TechnicalSupport.text:
-  text: Contact _Support Team
+  text: Contact _Developer Team
 action.TechnicalSupport.description:
-  text: Access technical support on JetBrains Web site
+  text: Open developer community site
 action.TextComponent.ClearAction.text:
   text: Clear text
 action.TextComponent.ClearAction.description:

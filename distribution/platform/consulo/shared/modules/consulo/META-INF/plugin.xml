@@ -782,14 +782,13 @@
                 <reference id="ShowTips"/>
                 <action id="ProductivityGude" class="consulo.ide.impl.idea.featureStatistics.actions.ShowFeatureUsageStatisticsAction"/>
                 <separator/>
-                <action id="TechnicalSupport" class="consulo.ide.impl.idea.ide.actions.TechnicalSupportAction"/>
-                <action id="SendFeedback" class="consulo.ide.impl.idea.ide.actions.SendFeedbackAction"/>
                 <action id="ShowLog" class="consulo.ide.impl.idea.ide.actions.ShowLogAction"/>
                 <separator/>
                 <reference id="OnlineDocAction"/>
                 <reference id="Help.KeymapReference"/>
                 <reference id="Help.Youtube"/>
                 <reference id="Help.JoinDiscordChannel"/>
+                <reference id="TechnicalSupport"/>
                 <separator/>
                 <reference id="CheckForUpdate"/>
                 <reference id="About"/>

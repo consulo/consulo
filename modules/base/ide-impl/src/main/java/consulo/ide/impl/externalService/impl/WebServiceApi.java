@@ -33,7 +33,8 @@ public enum WebServiceApi {
   STORAGE_API("https://api.consulo.io/storage/"),
   OAUTH_API("https://api.consulo.io/oauth/"),
   LINK_CONSULO("https://hub.consulo.io/link"),
-  REPOSITORY_API("https://api.consulo.io/repository/");
+  REPOSITORY_API("https://api.consulo.io/repository/"),
+  DISCUSSION("https://github.com/orgs/consulo/discussions");
 
   private String myDefaultUrl;
   private String myOverrideProperty;
