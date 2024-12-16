@@ -15,12 +15,10 @@
  */
 package consulo.ide.impl.plugins.whatsNew;
 
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.application.Application;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
-
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -45,6 +43,6 @@ public class WhatsNewVirtualFileType implements FileType {
   @Nonnull
   @Override
   public Image getIcon() {
-    return ImageEffects.layered(PlatformIconGroup.filetypesText(), PlatformIconGroup.actionsNew());
+    return Application.get().getIcon();
   }
 }
