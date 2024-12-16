@@ -3716,16 +3716,11 @@ public class UIUtil {
 
     @Nonnull
     public static Color getTooltipSeparatorColor() {
-        return JBColor.namedColor("Tooltip.separatorColor", 0xd1d1d1, 0x545658);
+        return JBColor.border();
     }
 
     public static boolean isHelpButton(Component button) {
         return button instanceof JButton && "help".equals(((JComponent)button).getClientProperty("JButton.buttonType"));
-    }
-
-    @Nonnull
-    public static Color getToolTipActionBackground() {
-        return JBColor.namedColor("ToolTip.Actions.background", new JBColor(Gray.xEB, new Color(0x43474a)));
     }
 
     public static void doNotScrollToCaret(@Nonnull JTextComponent textComponent) {

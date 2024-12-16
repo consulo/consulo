@@ -478,7 +478,6 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             controller.fillHectorPanels(panel, gc);
 
             panel.setOpaque(true);
-            panel.setBackground(UIUtil.getToolTipActionBackground());
             panel.setBorder(JBUI.Borders.empty(4, 10));
             return panel;
         }

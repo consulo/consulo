@@ -23,7 +23,6 @@ import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
@@ -32,13 +31,11 @@ import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Html;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -48,7 +45,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -354,39 +350,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
     private JPanel createActionPanelWithBackground(boolean highlight) {
         JPanel wrapper;
 
-        if (highlight) {
-            wrapper = new JPanel(new BorderLayout()) {
-                @Override
-                public void paint(Graphics g) {
-                    g.setColor(UIUtil.getToolTipActionBackground());
-                    if (JBPopupFactory.getInstance().getParentBalloonFor(this) == null) {
-                        g.fillRect(0, 0, getWidth(), getHeight());
-                    }
-                    else {
-                        Graphics2D graphics2D = (Graphics2D) g;
-                        GraphicsConfig cfg = new GraphicsConfig(g);
-                        cfg.setAntialiasing(true);
-
-                        Rectangle bounds = getBounds();
-                        graphics2D.fill(new RoundRectangle2D.Double(1.0, 0.0, bounds.width - 2.5, (bounds.height / 2), 0.0, 0.0));
-
-                        double arc = BalloonImpl.ARC.get();
-
-                        RoundRectangle2D.Double d = new RoundRectangle2D.Double(1.0, 0.0, bounds.width - 2.5, (bounds.height - 1), arc, arc);
-
-                        graphics2D.fill(d);
-
-                        cfg.restore();
-                    }
-
-                    super.paint(g);
-                }
-            };
-        }
-        else {
-            wrapper = new JPanel(new BorderLayout());
-        }
-
+        wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
         wrapper.setBorder(JBUI.Borders.empty());
         return wrapper;
@@ -394,7 +358,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
 
     private JComponent createKeymapHint(String shortcutRunAction) {
         JBLabel fixHint = new JBLabel(shortcutRunAction);
-        fixHint.setForeground(MorphColor.of(this::getKeymapColor));
+        fixHint.setOpaque(false);
         fixHint.setBorder(JBUI.Borders.empty());
         fixHint.setFont(getActionFont());
         return fixHint;
@@ -412,10 +376,6 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         }
 
         return toolTipFont;
-    }
-
-    private Color getKeymapColor() {
-        return JBColor.namedColor("ToolTip.Actions.infoForeground", new JBColor(0x99a4ad, 0x919191));
     }
 
     private JComponent createSettingsComponent(HintHint hintHint, TooltipReloader reloader, boolean hasMore) {

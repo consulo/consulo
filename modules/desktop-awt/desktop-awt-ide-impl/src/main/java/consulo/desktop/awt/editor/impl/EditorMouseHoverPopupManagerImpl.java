@@ -609,9 +609,6 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
       class MyDocComponent extends DocumentationComponent {
         private MyDocComponent() {
           super((DocumentationManagerImpl)documentationManager, false);
-          if (deEmphasize) {
-            setBackground(UIUtil.getToolTipActionBackground());
-          }
         }
 
         @Override
