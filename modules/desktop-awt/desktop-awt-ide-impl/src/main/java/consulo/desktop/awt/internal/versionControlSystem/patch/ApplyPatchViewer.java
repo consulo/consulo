@@ -42,6 +42,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
 import consulo.ide.impl.diff.DiffDrawUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.CompositeShortcutSet;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
@@ -749,7 +750,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
     private class ShowDiffWithLocalAction extends DumbAwareAction {
         public ShowDiffWithLocalAction() {
-            super("Compare with local content", null, AllIcons.Diff.Diff);
+            super("Compare with local content", null, PlatformIconGroup.diffDiff());
         }
 
         @Override

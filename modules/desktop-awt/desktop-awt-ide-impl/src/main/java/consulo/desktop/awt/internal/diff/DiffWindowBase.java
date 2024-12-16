@@ -27,7 +27,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.WindowWrapper;
-import consulo.ui.ex.awt.internal.ImageLoader;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -67,7 +66,7 @@ public abstract class DiffWindowBase {
               }
             })
             .build();
-    myWrapper.setImage(new DesktopAWTScalableImage(PlatformIconGroup.diffDiff()));
+    myWrapper.setImage(new DesktopAWTScalableImage(PlatformIconGroup.actionsDiff()));
     Disposer.register(myWrapper, myProcessor);
 
     new DumbAwareAction() {

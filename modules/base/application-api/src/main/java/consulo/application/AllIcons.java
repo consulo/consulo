@@ -197,7 +197,6 @@ public class AllIcons {
         public static final Image ArrowRight = PlatformIconGroup.diffArrowright(); // 11x11
         public static final Image ArrowRightDown = PlatformIconGroup.diffArrowright(); // 11x11
         public static final Image BranchDiff = PlatformIconGroup.diffBranchdiff(); // 16x16
-        public static final Image Diff = PlatformIconGroup.diffDiff(); // 16x16
         public static final Image LeftDiff = PlatformIconGroup.diffLeftdiff(); // 16x16
         public static final Image MagicResolve = PlatformIconGroup.diffMagicresolve(); // 12x12
         public static final Image Remove = PlatformIconGroup.diffRemove(); // 11x11
@@ -643,7 +642,6 @@ public class AllIcons {
     }
 
     public static class Vcs {
-        public static final Image AllRevisions = PlatformIconGroup.vcsAllrevisions(); // 16x16
         public static final Image Arrow_left = PlatformIconGroup.vcsArrow_left(); // 16x16
         public static final Image Arrow_right = PlatformIconGroup.vcsArrow_right(); // 16x16
         public static final Image Equal = PlatformIconGroup.vcsEqual(); // 16x16

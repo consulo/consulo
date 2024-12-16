@@ -97,7 +97,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
     setProject(project);
     setDimensionKey(getPropertiesKey());
-    setImage(TargetAWT.toAWTImage(PlatformIconGroup.diffDiff()));
+    setImage(TargetAWT.toAWTImage(PlatformIconGroup.actionsDiff()));
     closeOnEsc();
 
     if (doInit) init();

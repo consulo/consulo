@@ -1126,8 +1126,7 @@
         </group>
 
         <group id="Vcs.History">
-            <action id="VcsHistory.ShowAllAffected" class="consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction"
-                    icon="consulo.platform.base.PlatformIconGroup@vcs.allrevisions"/>
+            <action id="VcsHistory.ShowAllAffected" class="consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction" />
         </group>
 
         <action id="ChangesView.Browse" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.BrowseChangesAction"/>
