@@ -4,6 +4,7 @@ package consulo.language.codeStyle;
 import consulo.application.util.HtmlBuilder;
 import consulo.application.util.HtmlChunk;
 import consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
+import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.ColorValueUtil;
@@ -52,14 +53,13 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
   }
 
   @Nonnull
-  public static
-  String createTooltip(@Nls String indentInfo, String hint) {
+  public static String createTooltip(@Nls String indentInfo, String hint) {
     HtmlBuilder builder = new HtmlBuilder();
-    builder.append(CodeStyleBundle.message("indent.status.bar.indent.tooltip")).append(indentInfo);
+    builder.append(CodeStyleLocalize.indentStatusBarIndentTooltip().get()).append(HtmlChunk.nbsp()).append(indentInfo);
     if (hint != null) {
       builder.nbsp(2).append(HtmlChunk.span("color:" + ColorValueUtil.toHtmlColor(StandardColors.GRAY)).addText(hint));
     }
-    return builder.wrapWith("html").toString();
+    return builder.wrapWithHtmlBody().toString();
   }
 
   @Nonnull

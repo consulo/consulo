@@ -25,6 +25,7 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -77,10 +78,13 @@ public final class PositionPanel extends EditorBasedWidget
 
     @Override
     public String getTooltipText() {
-        final String shortcut = KeymapUtil.getFirstKeyboardShortcutText("GotoLine");
-        return shortcut.isEmpty()
-            ? UILocalize.goToLineCommandName().get()
-            : UILocalize.goToLineCommandNameWithShortkut(shortcut).get();
+        return UILocalize.goToLineCommandName().get();
+    }
+
+    @Nullable
+    @Override
+    public String getShortcutText() {
+        return KeymapUtil.getFirstKeyboardShortcutText("GotoLine");
     }
 
     @Override

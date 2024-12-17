@@ -560,7 +560,13 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
             Rectangle bounds = myHoveredComponent.getBounds();
             Point point = new RelativePoint(myHoveredComponent.getParent(), bounds.getLocation()).getPoint(this);
             g.setColor(BasicStripeButtonUI.BACKGROUND_COLOR);
-            g.fillRect(point.x, point.y, bounds.width, bounds.height);
+            int arc = UIManager.getInt("Component.arc");
+            if (arc > 0) {
+                g.fillRoundRect(3 + point.x, 3 + point.y, bounds.width - 6, bounds.height - 6, arc, arc);
+            }
+            else {
+                g.fillRect(point.x, point.y, bounds.width, bounds.height);
+            }
         }
     }
 
