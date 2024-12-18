@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
@@ -36,59 +37,66 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class PlatformVirtualFileManager extends BaseVirtualFileManager {
-  @Nonnull
-  private final ManagingFS myManagingFS;
+    @Nonnull
+    private final ManagingFS myManagingFS;
 
-  @Inject
-  public PlatformVirtualFileManager(@Nonnull Application application, @Nonnull ManagingFS managingFS) {
-    super(application);
-    myManagingFS = managingFS;
-  }
-
-  @Override
-  public Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
-    return VfsIconUtil.getIcon(file, flags, (Project)project);
-  }
-
-  @Override
-  protected long doRefresh(boolean asynchronous, @Nullable Runnable postAction) {
-    if (!asynchronous) {
-      myApplication.assertIsDispatchThread();
+    @Inject
+    public PlatformVirtualFileManager(@Nonnull Application application, @Nonnull ManagingFS managingFS) {
+        super(application);
+        myManagingFS = managingFS;
     }
 
-    // todo: get an idea how to deliver changes from local FS to jar fs before they go refresh
-    RefreshSession session = RefreshQueue.getInstance().createSession(asynchronous, true, postAction);
-    session.addAllFiles(myManagingFS.getRoots());
-    session.launch();
+    @Override
+    public Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
+        return VfsIconUtil.getIcon(file, flags, (Project) project);
+    }
 
-    super.doRefresh(asynchronous, postAction);
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public Image getFileIconNoDefer(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
+        return VfsIconUtil.getIconNoDefer(file, flags, (Project) project);
+    }
 
-    return session.getId();
-  }
+    @Override
+    protected long doRefresh(boolean asynchronous, @Nullable Runnable postAction) {
+        if (!asynchronous) {
+            myApplication.assertIsDispatchThread();
+        }
 
-  @Override
-  public long getModificationCount() {
-    return myManagingFS.getModificationCount();
-  }
+        // todo: get an idea how to deliver changes from local FS to jar fs before they go refresh
+        RefreshSession session = RefreshQueue.getInstance().createSession(asynchronous, true, postAction);
+        session.addAllFiles(myManagingFS.getRoots());
+        session.launch();
 
-  @Override
-  public long getStructureModificationCount() {
-    return myManagingFS.getStructureModificationCount();
-  }
+        super.doRefresh(asynchronous, postAction);
 
-  @Override
-  public VirtualFile findFileById(int id) {
-    return myManagingFS.findFileById(id);
-  }
+        return session.getId();
+    }
 
-  @Nonnull
-  @Override
-  public CharSequence getVFileName(int nameId) {
-    return FileNameCache.getVFileName(nameId);
-  }
+    @Override
+    public long getModificationCount() {
+        return myManagingFS.getModificationCount();
+    }
 
-  @Override
-  public int storeName(@Nonnull String name) {
-    return FileNameCache.storeName(name);
-  }
+    @Override
+    public long getStructureModificationCount() {
+        return myManagingFS.getStructureModificationCount();
+    }
+
+    @Override
+    public VirtualFile findFileById(int id) {
+        return myManagingFS.findFileById(id);
+    }
+
+    @Nonnull
+    @Override
+    public CharSequence getVFileName(int nameId) {
+        return FileNameCache.getVFileName(nameId);
+    }
+
+    @Override
+    public int storeName(@Nonnull String name) {
+        return FileNameCache.storeName(name);
+    }
 }

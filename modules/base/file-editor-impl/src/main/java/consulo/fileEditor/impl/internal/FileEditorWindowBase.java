@@ -22,6 +22,7 @@ import consulo.fileEditor.*;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
@@ -87,14 +88,12 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
   @Nullable
   @RequiredReadAction
   protected Image getFileIcon(@Nonnull final VirtualFile file) {
+    UIAccess.assetIsNotUIThread();
     if (!file.isValid()) {
       return UnknownFileType.INSTANCE.getIcon();
     }
 
-    final Image baseIcon = VirtualFileManager.getInstance().getFileIcon(file, getManager().getProject(), Iconable.ICON_FLAG_READ_STATUS);
-    if (baseIcon == null) {
-      return null;
-    }
+    final Image baseIcon = VirtualFileManager.getInstance().getFileIconNoDefer(file, getManager().getProject(), Iconable.ICON_FLAG_READ_STATUS);
 
     final FileEditorWithProviderComposite composite = findFileComposite(file);
 

@@ -39,7 +39,7 @@ public abstract class MergingProcessingQueue<K, V> {
   private final int myTickInMiliseconds;
 
   private Future<?> myUpdateFuture = CompletableFuture.completedFuture(null);
-  private final Queue<K> myUpdateQeueu = new ConcurrentLinkedDeque<K>();
+  private final Queue<K> myUpdateQeueu = new ConcurrentLinkedDeque<>();
 
   public MergingProcessingQueue(ApplicationConcurrency applicationConcurrency,
                                 Project project,
@@ -52,13 +52,13 @@ public abstract class MergingProcessingQueue<K, V> {
   public void queueAdd(K key) {
     myUpdateQeueu.add(key);
 
-    if (myUpdateFuture.isCancelled() || myUpdateFuture.isDone()) {
+    if (myUpdateFuture.state() != Future.State.RUNNING) {
       restart();
     }
   }
 
   private void restart() {
-    myApplicationConcurrency.getScheduledExecutorService().schedule(() -> {
+    myUpdateFuture = myApplicationConcurrency.getScheduledExecutorService().schedule(() -> {
       if (myProject.isDisposed()) return;
 
       List<Pair<K, V>> collectedValues = new ArrayList<>(myUpdateQeueu.size());
