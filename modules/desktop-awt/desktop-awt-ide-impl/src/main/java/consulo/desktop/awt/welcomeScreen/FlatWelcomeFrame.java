@@ -28,7 +28,6 @@ import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.BalloonLayout;
-import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.Coordinate2D;
 import consulo.ui.Rectangle2D;
@@ -61,7 +60,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         myClearInstance = clearInstance;
         final JRootPane rootPane = getRootPane();
 
-        myTitlelessDecorator = TitlelessDecorator.of(getRootPane());
+        myTitlelessDecorator = TitlelessDecorator.of(getRootPane(), TitlelessDecorator.WELCOME_WINDOW);
 
         FlatWelcomeScreen screen = new FlatWelcomeScreen(this, myTitlelessDecorator);
 

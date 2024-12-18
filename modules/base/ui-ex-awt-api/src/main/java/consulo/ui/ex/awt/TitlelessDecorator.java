@@ -16,6 +16,7 @@
 package consulo.ui.ex.awt;
 
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -30,19 +31,32 @@ import java.util.function.Function;
  */
 public interface TitlelessDecorator {
     String MAIN_WINDOW = "MainWindow";
+    String WELCOME_WINDOW = "WelcomeWindow";
 
+    @Nonnull
     static TitlelessDecorator of(@Nonnull JRootPane pane) {
         return of(pane, "");
     }
 
+    @Nonnull
     static TitlelessDecorator of(@Nonnull JRootPane pane, @Nonnull String windowId) {
-        if (Platform.current().os().isMac()) {
+        PlatformOperatingSystem os = Platform.current().os();
+        if (os.isMac()) {
             return new MacFrameDecorator(pane);
         }
 
-        //if (!MAIN_WINDOW.equals(windowId) && Platform.current().os().isWindows()) {
-        //    return new WindowsFameDecorator(pane);
-        //}
+        if (os.isWindows()) {
+            // no sence for it - we already without title
+            if (MAIN_WINDOW.equals(windowId)) {
+                return NOTHING;
+            }
+
+            if (WELCOME_WINDOW.equals(windowId)) {
+                return new WindowsFameDecorator(pane);
+            }
+
+            // FIXME for now we not support other titleless - due bug with moving
+        }
 
         return NOTHING;
     }
