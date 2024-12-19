@@ -77,6 +77,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -144,7 +145,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     private boolean myModalContext;
 
     private Component[] myFocusOwners;
-    private PopupBorder myPopupBorder;
+    private Border myPopupBorder;
     private Dimension myRestoreWindowSize;
     protected Component myOwner;
     private Component myRequestorComponent;
@@ -404,13 +405,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         if (myCaption != null) {
             myCaption.setActive(value);
         }
-        myPopupBorder.setActive(value);
         myContent.repaint();
     }
 
 
     @Nonnull
-    protected MyContentPanel createContentPanel(final boolean resizable, PopupBorder border, boolean isToDrawMacCorner) {
+    protected MyContentPanel createContentPanel(final boolean resizable, Border border, boolean isToDrawMacCorner) {
         return new MyContentPanel(border);
     }
 
@@ -433,7 +433,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Nonnull
-    public PopupBorder getPopupBorder() {
+    public Border getPopupBorder() {
         return myPopupBorder;
     }
 
@@ -1655,12 +1655,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     public static class MyContentPanel extends JPanel implements DataProvider {
-        private final PopupBorder myBorder;
+        private final Border myBorder;
 
         @Nullable
         private DataProvider myDataProvider;
 
-        public MyContentPanel(PopupBorder border) {
+        public MyContentPanel(Border border) {
             super(new BorderLayout());
             myBorder = border;
             putClientProperty(UIUtil.TEXT_COPY_ROOT, Boolean.TRUE);

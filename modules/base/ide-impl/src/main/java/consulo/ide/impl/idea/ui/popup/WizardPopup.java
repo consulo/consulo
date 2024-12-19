@@ -4,16 +4,14 @@ package consulo.ide.impl.idea.ui.popup;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.PopupBorder;
 import consulo.ide.impl.idea.ui.popup.async.AsyncPopupImpl;
-import consulo.ui.ex.popup.AsyncPopupStep;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
 import consulo.ide.impl.idea.ui.popup.util.MnemonicsSearch;
-import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TimerUtil;
@@ -23,6 +21,7 @@ import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Collections;
@@ -275,7 +274,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     @Override
     @Nonnull
-    protected MyContentPanel createContentPanel(final boolean resizable, final PopupBorder border, final boolean isToDrawMacCorner) {
+    protected MyContentPanel createContentPanel(final boolean resizable, final Border border, final boolean isToDrawMacCorner) {
         return new MyContainer(border);
     }
 
@@ -284,7 +283,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
     }
 
     private static class MyContainer extends MyContentPanel {
-        private MyContainer(PopupBorder border) {
+        private MyContainer(Border border) {
             super(border);
             setOpaque(true);
             setFocusCycleRoot(true);

@@ -37,6 +37,7 @@ import consulo.ide.impl.idea.ui.SeparatorComponent;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
+import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
@@ -474,7 +475,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
         @Override
         public Color getBackground() {
-            return mySelectedTab == this ? UIUtil.getPanelBackground() : super.getBackground();
+            return mySelectedTab == this ? ToolwindowPaintUtil.getActiveToolWindowHeaderColor() : super.getBackground();
         }
     }
 

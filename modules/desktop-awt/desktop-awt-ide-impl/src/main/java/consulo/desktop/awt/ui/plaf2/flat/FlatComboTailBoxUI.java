@@ -68,7 +68,8 @@ public class FlatComboTailBoxUI extends FlatComboBoxUI {
     @Override
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
-        Object tail = comboBox.getClientProperty(TAIL_PROPERTY);
+        
+        Object tail = c.getClientProperty(TAIL_PROPERTY);
         if (tail instanceof JComponent component) {
             myTailPanel.remove(component);
         }

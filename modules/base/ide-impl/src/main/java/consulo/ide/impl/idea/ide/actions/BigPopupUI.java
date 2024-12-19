@@ -5,7 +5,6 @@ import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.project.Project;
@@ -67,8 +66,6 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     }
 
     public void init() {
-        withBackground(ToolwindowPaintUtil.getActiveToolWindowHeaderColor());
-
         myResultsList = createList();
 
         JPanel topLeftPanel = createTopLeftPanel();
