@@ -43,6 +43,7 @@ import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.DocumentBasedComponent;
 import consulo.ui.ex.TextComponent;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.HasSuffixComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
 import consulo.undoRedo.CommandProcessor;
@@ -63,7 +64,7 @@ import java.util.List;
 /**
  * @author max
  */
-public class EditorTextField extends NonOpaquePanel implements DocumentListener, TextComponent, DataProvider, DocumentBasedComponent {
+public class EditorTextField extends NonOpaquePanel implements DocumentListener, TextComponent, DataProvider, DocumentBasedComponent, HasSuffixComponent {
     private static final String uiClassID = "EditorTextFieldUI";
 
     private static final Logger LOG = Logger.getInstance(EditorTextField.class);
@@ -848,6 +849,25 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
     public void setFileType(FileType fileType) {
         setNewDocumentAndFileType(fileType, getDocument());
+    }
+
+    @Override
+    public void setSuffixComponent(JComponent component) {
+        BorderLayout layout = (BorderLayout) getLayout();
+
+        Component oldSuffix = layout.getLayoutComponent(BorderLayout.EAST);
+        if (oldSuffix != null) {
+            remove(oldSuffix);
+        }
+
+        if (component != null) {
+            add(component, BorderLayout.EAST);
+
+            PanelUI ui = getUI();
+            if (ui instanceof BasicEditorTextFieldUI editorUI) {
+                editorUI.suffixChanged(this, component);
+            }
+        }
     }
 
     public void setNewDocumentAndFileType(@Nonnull FileType fileType, Document document) {

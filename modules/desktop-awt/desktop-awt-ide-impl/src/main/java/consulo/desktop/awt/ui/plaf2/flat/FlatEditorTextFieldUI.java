@@ -33,9 +33,8 @@ import java.awt.event.FocusListener;
 
 /**
  * @author VISTALL
- * @since 2024-11-30
- *
  * @see FlatTextFieldUI
+ * @since 2024-11-30
  */
 public class FlatEditorTextFieldUI extends BasicEditorTextFieldUI {
     public static BasicEditorTextFieldUI createUI(JComponent c) {
@@ -74,6 +73,14 @@ public class FlatEditorTextFieldUI extends BasicEditorTextFieldUI {
         wrapper.setOpaque(true);
         wrapper.setBackground(field.getBackground());
         wrapper.setBorder(JBUI.Borders.empty(myTextEditorMargin).asUIResource());
+    }
+
+    @Override
+    public void suffixChanged(EditorTextField field, JComponent component) {
+        InplaceComponent.prepareLeadingOrTrailingComponent(component);
+
+        component.setOpaque(true);
+        component.setBackground(field.getBackground());
     }
 
     @Override

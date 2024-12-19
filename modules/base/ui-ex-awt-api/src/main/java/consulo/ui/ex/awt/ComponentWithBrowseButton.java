@@ -24,7 +24,7 @@ import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -32,6 +32,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.ui.ex.awt.internal.HasSuffixComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.localize.UILocalize;
@@ -58,24 +59,25 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     private static final Logger LOG = Logger.getInstance(ComponentWithBrowseButton.class);
 
     private final Comp myComponent;
+
+    @Nonnull
     private final FixedSizeButton myBrowseButton;
     private boolean myButtonEnabled = true;
 
     public ComponentWithBrowseButton(Comp component, @Nullable ActionListener browseActionListener) {
-        super(new BorderLayout(Platform.current().os().isMac() ? 0 : 2, 0));
+        super(new BorderLayout());
 
         myComponent = component;
         // required! otherwise JPanel will occasionally gain focus instead of the component
         setFocusable(false);
         add(myComponent, BorderLayout.CENTER);
-
         myBrowseButton = new FixedSizeButton(myComponent);
+
         if (browseActionListener != null) {
             myBrowseButton.addActionListener(browseActionListener);
         }
-        add(centerComponentVertically(myBrowseButton), BorderLayout.EAST);
-
         myBrowseButton.setToolTipText(UILocalize.componentWithBrowseButtonBrowseButtonTooltipText().get());
+
         // FixedSizeButton isn't focusable but it should be selectable via keyboard.
         //noinspection deprecation
         if (ApplicationManager.getApplication() != null) {  // avoid crash at design time
@@ -84,6 +86,23 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         if (ScreenReader.isActive()) {
             myBrowseButton.setFocusable(true);
             myBrowseButton.getAccessibleContext().setAccessibleName("Browse");
+        }
+
+        if (ApplicationManager.getApplication() != null && HasSuffixComponent.isSuffixComponent(myComponent)) {
+            setOpaque(false);
+            
+            myBrowseButton.setMargin(null);
+            myBrowseButton.setAttachedComponent(null);
+
+            JToolBar toolBar = new JToolBar();
+            toolBar.add(myBrowseButton);
+
+            setButtonIcon(PlatformIconGroup.generalInlinevariables());
+
+            HasSuffixComponent.setSuffixComponent(myComponent, toolBar);
+        }
+        else {
+            add(centerComponentVertically(myBrowseButton), BorderLayout.EAST);
         }
     }
 
@@ -102,11 +121,14 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         final Comp comp = getChildComponent();
         Dimension size = GuiUtils.getSizeByChars(charCount, comp);
         comp.setPreferredSize(size);
-        final Dimension preferredSize = myBrowseButton.getPreferredSize();
-        setPreferredSize(new Dimension(
-            size.width + preferredSize.width + 2,
-            UIUtil.isUnderAquaLookAndFeel() ? preferredSize.height : preferredSize.height + 2
-        ));
+
+        if (getComponentCount() != 1) {
+            final Dimension preferredSize = myBrowseButton.getPreferredSize();
+            setPreferredSize(new Dimension(
+                size.width + preferredSize.width + 2,
+                preferredSize.height + 2
+            ));
+        }
     }
 
     @Override
@@ -130,6 +152,10 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
      * Adds specified <code>listener</code> to the browse button.
      */
     public void addActionListener(ActionListener listener) {
+        if (listener instanceof BrowseFolderActionListener) {
+            setButtonIcon(PlatformIconGroup.nodesFolder());
+        }
+
         myBrowseButton.addActionListener(listener);
     }
 
@@ -149,6 +175,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
+    @SuppressWarnings("deprecation")
     public void addBrowseFolderListener(
         @Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
         @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) String description,
@@ -159,10 +186,9 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         addActionListener(new BrowseFolderActionListener<>(title, description, this, project, fileChooserDescriptor, accessor));
     }
 
-    /**
-     * @deprecated use {@link #addBrowseFolderListener(String, String, Project, FileChooserDescriptor, TextComponentAccessor)} instead
-     */
     @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @SuppressWarnings("deprecation")
     public void addBrowseFolderListener(
         @Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
         @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) String description,
@@ -204,6 +230,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
     }
 
+    @Nullable
     public FixedSizeButton getButton() {
         return myBrowseButton;
     }
@@ -241,6 +268,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
     }
 
+    @SuppressWarnings("deprecation")
     public static class BrowseFolderActionListener<T extends JComponent> implements ActionListener {
         private final LocalizeValue myTitle;
         private final LocalizeValue myDescription;
@@ -309,7 +337,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         public void actionPerformed(ActionEvent e) {
             FileChooserDescriptor fileChooserDescriptor = myFileChooserDescriptor;
             if (myTitle != LocalizeValue.empty() || myDescription != LocalizeValue.empty()) {
-                fileChooserDescriptor = (FileChooserDescriptor)myFileChooserDescriptor.clone();
+                fileChooserDescriptor = (FileChooserDescriptor) myFileChooserDescriptor.clone();
                 if (myTitle != LocalizeValue.empty()) {
                     fileChooserDescriptor.withTitleValue(myTitle);
                 }

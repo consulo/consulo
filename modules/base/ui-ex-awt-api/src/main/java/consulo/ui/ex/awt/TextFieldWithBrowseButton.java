@@ -102,7 +102,12 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
 
   public void setEditable(boolean b) {
     getTextField().setEditable(b);
-    getButton().setFocusable(!b);
+    FixedSizeButton button = getButton();
+    if (button != null) {
+      getButton().setFocusable(!b);
+    } else {
+      setButtonEnabled(false);
+    }
   }
 
   public static class NoPathCompletion extends TextFieldWithBrowseButton {

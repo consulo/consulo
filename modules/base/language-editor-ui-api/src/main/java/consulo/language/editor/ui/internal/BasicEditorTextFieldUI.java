@@ -33,6 +33,9 @@ public class BasicEditorTextFieldUI extends BasicPanelUI {
     public void editorChanged(EditorTextField field) {
     }
 
+    public void suffixChanged(EditorTextField field, JComponent component) {
+    }
+
     @Override
     public void installUI(JComponent c) {
         setBorder(c);
