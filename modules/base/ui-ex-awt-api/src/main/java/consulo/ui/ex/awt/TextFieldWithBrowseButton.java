@@ -102,7 +102,7 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
 
   public void setEditable(boolean b) {
     getTextField().setEditable(b);
-    FixedSizeButton button = getButton();
+    JButton button = getButton();
     if (button != null) {
       getButton().setFocusable(!b);
     } else {

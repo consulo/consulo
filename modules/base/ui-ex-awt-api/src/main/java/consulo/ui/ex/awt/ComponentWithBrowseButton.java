@@ -61,7 +61,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     private final Comp myComponent;
 
     @Nonnull
-    private final FixedSizeButton myBrowseButton;
+    private final JButton myBrowseButton;
     private boolean myButtonEnabled = true;
 
     public ComponentWithBrowseButton(Comp component, @Nullable ActionListener browseActionListener) {
@@ -71,14 +71,37 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         // required! otherwise JPanel will occasionally gain focus instead of the component
         setFocusable(false);
         add(myComponent, BorderLayout.CENTER);
-        myBrowseButton = new FixedSizeButton(myComponent);
 
+
+        if (ApplicationManager.getApplication() != null && HasSuffixComponent.isSuffixComponent(myComponent)) {
+            setOpaque(false);
+
+            Image icon;
+            if (myComponent instanceof JComboBox) {
+                icon = PlatformIconGroup.generalGearplain();
+            }
+            else {
+                icon = PlatformIconGroup.generalInlinevariables();
+            }
+
+            myBrowseButton = new JButton(TargetAWT.to(icon));
+
+            JToolBar toolBar = new JToolBar();
+            toolBar.add(myBrowseButton);
+
+            HasSuffixComponent.setSuffixComponent(myComponent, toolBar);
+        }
+        else {
+            myBrowseButton = new FixedSizeButton(myComponent);
+
+            add(centerComponentVertically(myBrowseButton), BorderLayout.EAST);
+        }
+        // FixedSizeButton isn't focusable but it should be selectable via keyboard.
         if (browseActionListener != null) {
             myBrowseButton.addActionListener(browseActionListener);
         }
         myBrowseButton.setToolTipText(UILocalize.componentWithBrowseButtonBrowseButtonTooltipText().get());
 
-        // FixedSizeButton isn't focusable but it should be selectable via keyboard.
         //noinspection deprecation
         if (ApplicationManager.getApplication() != null) {  // avoid crash at design time
             new MyDoClickAction(myBrowseButton).registerShortcut(myComponent);
@@ -88,26 +111,6 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
             myBrowseButton.getAccessibleContext().setAccessibleName("Browse");
         }
 
-        if (ApplicationManager.getApplication() != null && HasSuffixComponent.isSuffixComponent(myComponent)) {
-            setOpaque(false);
-            
-            myBrowseButton.setMargin(null);
-            myBrowseButton.setAttachedComponent(null);
-
-            JToolBar toolBar = new JToolBar();
-            toolBar.add(myBrowseButton);
-
-            if (myComponent instanceof JComboBox) {
-                setButtonIcon(PlatformIconGroup.generalGearplain());
-            } else {
-                setButtonIcon(PlatformIconGroup.generalInlinevariables());
-            }
-
-            HasSuffixComponent.setSuffixComponent(myComponent, toolBar);
-        }
-        else {
-            add(centerComponentVertically(myBrowseButton), BorderLayout.EAST);
-        }
     }
 
     @Nonnull
@@ -235,7 +238,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     }
 
     @Nullable
-    public FixedSizeButton getButton() {
+    public JButton getButton() {
         return myBrowseButton;
     }
 
@@ -243,9 +246,9 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
      * Do not use this class directly it is public just to hack other implementation of controls similar to TextFieldWithBrowseButton.
      */
     public static final class MyDoClickAction extends DumbAwareAction {
-        private final FixedSizeButton myBrowseButton;
+        private final JButton myBrowseButton;
 
-        public MyDoClickAction(FixedSizeButton browseButton) {
+        public MyDoClickAction(JButton browseButton) {
             myBrowseButton = browseButton;
         }
 
