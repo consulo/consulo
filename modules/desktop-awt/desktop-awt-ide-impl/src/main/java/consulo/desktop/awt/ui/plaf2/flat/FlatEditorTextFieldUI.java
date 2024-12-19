@@ -70,8 +70,7 @@ public class FlatEditorTextFieldUI extends BasicEditorTextFieldUI {
             return;
         }
 
-        wrapper.setOpaque(true);
-        wrapper.setBackground(field.getBackground());
+        wrapper.setOpaque(false);
         wrapper.setBorder(JBUI.Borders.empty(myTextEditorMargin).asUIResource());
     }
 
@@ -79,8 +78,7 @@ public class FlatEditorTextFieldUI extends BasicEditorTextFieldUI {
     public void suffixChanged(EditorTextField field, JComponent component) {
         InplaceComponent.prepareLeadingOrTrailingComponent(component);
 
-        component.setOpaque(true);
-        component.setBackground(field.getBackground());
+        component.setOpaque(false);
     }
 
     @Override
@@ -97,7 +95,25 @@ public class FlatEditorTextFieldUI extends BasicEditorTextFieldUI {
     }
 
     @Override
-    protected void paintBackground(Graphics g, EditorTextField field) {
+    protected void paintBackground(Graphics g, EditorTextField c) {
+        float arc = FlatUIUtils.getBorderArc(c);
+
+        if (arc > 0) {
+            FlatUIUtils.paintParentBackground(g, c);
+        }
+        float focusWidth = FlatUIUtils.getBorderFocusWidth(c);
+
+        // paint background
+        Graphics2D g2 = (Graphics2D) g.create();
+        try {
+            FlatUIUtils.setRenderingHints(g2);
+
+            g2.setColor(c.getBackground());
+            FlatUIUtils.paintComponentBackground(g2, 0, 0, c.getWidth(), c.getHeight(), focusWidth, arc);
+        }
+        finally {
+            g2.dispose();
+        }
     }
 
     @Override
