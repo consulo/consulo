@@ -97,7 +97,11 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
             JToolBar toolBar = new JToolBar();
             toolBar.add(myBrowseButton);
 
-            setButtonIcon(PlatformIconGroup.generalInlinevariables());
+            if (myComponent instanceof JComboBox) {
+                setButtonIcon(PlatformIconGroup.generalGearplain());
+            } else {
+                setButtonIcon(PlatformIconGroup.generalInlinevariables());
+            }
 
             HasSuffixComponent.setSuffixComponent(myComponent, toolBar);
         }

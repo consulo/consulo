@@ -31,12 +31,20 @@ public interface HasSuffixComponent {
             return true;
         }
 
+        if (component instanceof JComboBox) {
+            return true;
+        }
+
         return false;
     }
 
     static void setSuffixComponent(JComponent target, JComponent suffix) {
         if (target instanceof JTextField) {
             target.putClientProperty("JTextField.trailingComponent", suffix);
+        }
+
+        if (target instanceof JComboBox) {
+            target.putClientProperty("JComboBox.trailingComponent", suffix);
         }
 
         if (target instanceof HasSuffixComponent hasSuffixComponent) {
