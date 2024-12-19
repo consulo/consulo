@@ -17,20 +17,21 @@ package consulo.language.editor.rawHighlight;
 
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.HashMap;
+
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class HighlightDisplayKey {
   private static final Logger LOG = Logger.getInstance(HighlightDisplayKey.class);
 
-  private static final Map<String, HighlightDisplayKey> ourNameToKeyMap = new HashMap<>();
-  private static final Map<String, HighlightDisplayKey> ourIdToKeyMap = new HashMap<>();
-  private static final Map<HighlightDisplayKey, Supplier<String>> ourKeyToDisplayNameMap = new HashMap<>();
-  private static final Map<HighlightDisplayKey, String> ourKeyToAlternativeIDMap = new HashMap<>();
+  // TODO [VISTALL] this registry unsafe, and plugins not remove data after uninstall(in runtime)
+  private static final Map<String, HighlightDisplayKey> ourNameToKeyMap = new ConcurrentHashMap<>();
+  private static final Map<String, HighlightDisplayKey> ourIdToKeyMap = new ConcurrentHashMap<>();
+  private static final Map<HighlightDisplayKey, Supplier<String>> ourKeyToDisplayNameMap = new ConcurrentHashMap<>();
+  private static final Map<HighlightDisplayKey, String> ourKeyToAlternativeIDMap = new ConcurrentHashMap<>();
 
   private final String myName;
   private final String myID;
