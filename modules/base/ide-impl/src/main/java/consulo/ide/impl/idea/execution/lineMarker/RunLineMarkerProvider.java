@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.execution.lineMarker;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.lineMarker.RunLineMarkerContributor;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
@@ -29,9 +29,9 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -125,6 +125,6 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
   @Nullable
   @Override
   public Image getIcon() {
-    return AllIcons.RunConfigurations.TestState.Run;
+    return ExecutionIconGroup.gutterRun();
   }
 }

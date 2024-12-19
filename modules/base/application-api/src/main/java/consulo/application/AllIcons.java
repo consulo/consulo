@@ -603,15 +603,6 @@ public class AllIcons {
         public static final Image TestPaused = PlatformIconGroup.runconfigurationsTestpaused(); // 16x16
         public static final Image TestSkipped = PlatformIconGroup.runconfigurationsTestskipped(); // 16x16
         public static final Image TestTerminated = PlatformIconGroup.runconfigurationsTestterminated(); // 16x16
-
-        public static class TestState {
-            public static final Image Green2 = PlatformIconGroup.runconfigurationsTeststateGreen2(); // 12x12
-            public static final Image Red2 = PlatformIconGroup.runconfigurationsTeststateRed2(); // 12x12
-            public static final Image Run = PlatformIconGroup.runconfigurationsTeststateRun(); // 12x12
-            public static final Image Run_run = PlatformIconGroup.runconfigurationsTeststateRun_run(); // 12x12
-            public static final Image Yellow2 = PlatformIconGroup.runconfigurationsTeststateYellow2(); // 12x12
-        }
-
         public static final Image TrackCoverage = PlatformIconGroup.runconfigurationsTrackcoverage(); // 16x16
         public static final Image Web_app = PlatformIconGroup.runconfigurationsWeb_app(); // 16x16
 

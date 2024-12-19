@@ -23,6 +23,7 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.ServiceManager;
@@ -346,7 +347,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
   private class RunOnFameActivationAction extends AnAction {
 
     private RunOnFameActivationAction() {
-      super("Run On Frame Activation", "", AllIcons.RunConfigurations.TestState.Run);
+      super("Run On Frame Activation", "", PlatformIconGroup.actionsExecute());
     }
 
     @Override
