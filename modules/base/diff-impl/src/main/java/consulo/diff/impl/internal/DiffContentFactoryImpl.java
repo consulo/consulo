@@ -387,9 +387,8 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
     if (isBOM) charset = bomCharset;
 
     boolean malformedContent = false;
-    String text = CharsetToolkit.tryDecodeString(content, charset);
+    String text = StringUtil.notNullize(CharsetToolkit.tryDecodeString(content, charset));
 
-    LineSeparator separator = LineSeparator.detectSeparators(text);
     String correctedContent = StringUtil.convertLineSeparators(text);
 
     DocumentContent documentContent = createImpl(project, correctedContent, fileType, fileName, highlightFile, charset, isBOM, true, true);
