@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.wm.navigationToolbar.ui;
 
-import consulo.application.AllIcons;
 import consulo.application.ui.UISettings;
 import consulo.desktop.awt.wm.navigationToolbar.NavBarItem;
 import consulo.desktop.awt.wm.navigationToolbar.NavBarPanel;
@@ -189,8 +188,8 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
     if (!item.isLastElement()) {
       if (!selected && (!navbar.isFocused() | !item.isNextSelected())) {
-        Icon icon = TargetAWT.to(AllIcons.Ide.NavBarSeparator);
-        icon.paintIcon(item, g2, w - icon.getIconWidth() - JBUIScale.scale(1), h2 - icon.getIconHeight() / 2);
+        Icon icon = UIUtil.getTreeCollapsedIcon();
+        icon.paintIcon(item, g2, w - icon.getIconWidth() + JBUI.scale(2), h2 - icon.getIconHeight() / 2);
       }
     }
 
