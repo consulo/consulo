@@ -29,7 +29,7 @@ import java.util.List;
 public class DesktopSwtStyleManagerImpl extends StyleManagerImpl  {
   public static final DesktopSwtStyleManagerImpl INSTANCE = new DesktopSwtStyleManagerImpl();
 
-  private Style myCurrentStyle = new DesktopSwtStyleImpl("Default");
+  private Style myCurrentStyle = new DesktopSwtStyleImpl("light", "Light");
 
   @Nonnull
   @Override

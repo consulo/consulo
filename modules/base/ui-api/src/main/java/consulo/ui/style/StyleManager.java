@@ -17,34 +17,46 @@ package consulo.ui.style;
 
 import consulo.ui.AntialiasingType;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author VISTALL
  * @since 22-Jun-16
  */
 public interface StyleManager {
-  @Nonnull
-  static StyleManager get() {
-    return UIInternal.get()._StyleManager_get();
-  }
+    @Nonnull
+    static StyleManager get() {
+        return UIInternal.get()._StyleManager_get();
+    }
 
-  @Nonnull
-  List<Style> getStyles();
+    @Nonnull
+    List<Style> getStyles();
 
-  @Nonnull
-  Style getCurrentStyle();
+    @Nullable
+    default Style getStyle(@Nonnull String styleId) {
+        for (Style style : getStyles()) {
+            if (Objects.equals(style.getId(), styleId)) {
+                return style;
+            }
+        }
+        return null;
+    }
 
-  void setCurrentStyle(@Nonnull Style newStyle);
+    @Nonnull
+    Style getCurrentStyle();
 
-  @Nonnull
-  Runnable addChangeListener(@Nonnull StyleChangeListener listener);
+    void setCurrentStyle(@Nonnull Style newStyle);
 
-  default void refreshAntialiasingType(@Nonnull AntialiasingType antialiasingType) {
-  }
+    @Nonnull
+    Runnable addChangeListener(@Nonnull StyleChangeListener listener);
 
-  default void refreshUI() {
-  }
+    default void refreshAntialiasingType(@Nonnull AntialiasingType antialiasingType) {
+    }
+
+    default void refreshUI() {
+    }
 }

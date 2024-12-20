@@ -21,8 +21,6 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.ide.IdeBundle;
-import consulo.webBrowser.BrowserUtil;
-import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.DefaultKeymap;
 import consulo.ide.impl.util.URLDictionatyLoader;
@@ -40,9 +38,10 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.style.StyleManager;
 import consulo.util.io.ResourceUtil;
 import consulo.util.lang.Pair;
-
+import consulo.webBrowser.BrowserUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -101,7 +100,7 @@ public class TipUIUtil {
       if (browser.getUI() == null) {
         browser.updateUI();
         boolean succeed = browser.getUI() != null;
-        String message = "reinit JEditorPane.ui: " + (succeed ? "OK" : "FAIL") + ", laf=" + LafManager.getInstance().getCurrentLookAndFeel();
+        String message = "reinit JEditorPane.ui: " + (succeed ? "OK" : "FAIL") + ", themeId=" + StyleManager.get().getCurrentStyle().getId();
         if (succeed) {
           LOG.warn(message);
         }

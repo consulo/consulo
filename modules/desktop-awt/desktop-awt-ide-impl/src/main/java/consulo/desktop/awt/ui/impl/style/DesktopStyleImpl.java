@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl.style;
 import com.formdev.flatlaf.FlatLaf;
 import consulo.desktop.awt.ui.impl.image.DesktopAWTImage;
 import consulo.desktop.awt.ui.plaf.LafWithIconLibrary;
+import consulo.desktop.awt.ui.plaf2.IdeLookAndFeelInfo;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
@@ -130,6 +131,15 @@ public class DesktopStyleImpl extends StyleImpl {
     @Nonnull
     public String getClassName() {
         return myLookAndFeelInfo.getClassName();
+    }
+
+    @Nonnull
+    @Override
+    public String getId() {
+        if (myLookAndFeelInfo instanceof IdeLookAndFeelInfo ideLookAndFeelInfo) {
+            return ideLookAndFeelInfo.getId();
+        }
+        return getClassName();
     }
 
     @Nonnull

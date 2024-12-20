@@ -16,15 +16,11 @@
 package consulo.desktop.awt.startup.customize;
 
 import consulo.application.CommonBundle;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.desktop.awt.ui.plaf.LafWithColorScheme;
-import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.ui.style.Style;
+import consulo.ui.style.StyleManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,38 +28,39 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
-    private static final String LIGHT = "Light";
-    private static final String DARK = "Dark";
     private boolean myColumnMode;
 
     public CustomizeUIThemeStepPanel(boolean darkTheme) {
         setLayout(new BorderLayout(10, 10));
 
-        Map<String, Image> lafNames = new LinkedHashMap<>();
+        Map<String, Image> previewImages = new LinkedHashMap<>();
 
-        lafNames.put(LIGHT, PlatformIconGroup.lafsLightpreview());
-        lafNames.put(DARK, PlatformIconGroup.lafsDarkpreview());
+        previewImages.put(Style.LIGHT_ID, PlatformIconGroup.lafsLightpreview());
+        previewImages.put(Style.DARK_ID, PlatformIconGroup.lafsDarkpreview());
 
         myColumnMode = true;
 
-        JPanel buttonsPanel = new JPanel(new GridLayout(lafNames.size(), 1, 5, 5));
+        JPanel buttonsPanel = new JPanel(new GridLayout(previewImages.size(), 1, 5, 5));
         ButtonGroup group = new ButtonGroup();
-        String defaultLafName = darkTheme ? DARK : LIGHT;
+        String defaultStyleId = darkTheme ? Style.DARK_ID : Style.LIGHT_ID;
 
-        for (Map.Entry<String, Image> entry : lafNames.entrySet()) {
-            final String lafName = entry.getKey();
-            Image icon = entry.getValue();
-            final JRadioButton radioButton = new JRadioButton(lafName, defaultLafName.equals(lafName));
+        for (Style style : StyleManager.get().getStyles()) {
+            Image image = previewImages.get(style.getId());
+            if (image == null) {
+                continue;
+            }
+
+            final JRadioButton radioButton = new JRadioButton(style.getName(), defaultStyleId.equals(style.getId()));
             radioButton.setOpaque(false);
 
             final JPanel panel = createBigButtonPanel(
                 new BorderLayout(10, 10),
                 radioButton,
-                () -> applyLaf(lafName, CustomizeUIThemeStepPanel.this)
+                () -> applyStyle(style)
             );
             panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             panel.add(radioButton, BorderLayout.NORTH);
-            final JLabel label = new JLabel(TargetAWT.to(icon)) {
+            final JLabel label = new JLabel(TargetAWT.to(image)) {
                 @Override
                 public Dimension getPreferredSize() {
                     Dimension size = super.getPreferredSize();
@@ -79,6 +76,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
             group.add(radioButton);
             buttonsPanel.add(panel);
         }
+
         add(buttonsPanel, BorderLayout.CENTER);
     }
 
@@ -105,31 +103,8 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
         return "UI theme can be changed later in " + CommonBundle.settingsTitle() + " | Appearance";
     }
 
-    private void applyLaf(String lafName, Component component) {
-        UIManager.LookAndFeelInfo info = getLookAndFeelInfo(lafName);
-        if (info == null) {
-            return;
-        }
-
-        LafManager.getInstance().setCurrentLookAndFeel(info);
-
-        LafManager.getInstance().setCurrentLookAndFeel(info);
-        if (info instanceof LafWithColorScheme) {
-            EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
-            EditorColorsScheme scheme = editorColorsManager.getScheme(((LafWithColorScheme)info).getColorSchemeName());
-            if (scheme != null) {
-                editorColorsManager.setGlobalScheme(scheme);
-            }
-        }
-    }
-
-    @Nullable
-    private static UIManager.LookAndFeelInfo getLookAndFeelInfo(@Nonnull String name) {
-        for (UIManager.LookAndFeelInfo lookAndFeelInfo : LafManager.getInstance().getInstalledLookAndFeels()) {
-            if (name.equals(lookAndFeelInfo.getName())) {
-                return lookAndFeelInfo;
-            }
-        }
-        return null;
+    private void applyStyle(Style style) {
+        StyleManager styleManager = StyleManager.get();
+        styleManager.setCurrentStyle(style);
     }
 }

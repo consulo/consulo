@@ -18,13 +18,11 @@ package consulo.ide.impl.idea.ide.ui;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.ide.ServiceManager;
 import consulo.ui.style.Style;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -45,14 +43,6 @@ public interface LafManager {
 
   @Nonnull
   Style getCurrentStyle();
-
-  @Nonnull
-  UIManager.LookAndFeelInfo[] getInstalledLookAndFeels();
-
-  @Nonnull
-  UIManager.LookAndFeelInfo getCurrentLookAndFeel();
-
-  void setCurrentLookAndFeel(@Nonnull UIManager.LookAndFeelInfo lookAndFeelInfo);
 
   void updateUI();
 

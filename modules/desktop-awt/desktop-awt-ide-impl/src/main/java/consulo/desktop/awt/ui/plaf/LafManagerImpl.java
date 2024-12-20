@@ -49,6 +49,7 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.Messages;
@@ -58,11 +59,10 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.style.Style;
-import consulo.util.lang.Comparing;
+import consulo.util.collection.impl.map.LinkedHashMap;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -72,8 +72,8 @@ import javax.swing.plaf.UIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Eugene Belyaev
@@ -89,16 +89,22 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     private static final String ELEMENT_LOCALE = "locale";
     private static final String ELEMENT_ICON = "icon";
     private static final String ATTRIBUTE_CLASS_NAME = "class-name";
+    private static final String ELEMENT_THEME = "theme";
 
     private final EventDispatcher<LafManagerListener> myListenerList = EventDispatcher.create(LafManagerListener.class);
 
-    private final List<DesktopStyleImpl> myStyles;
+    private final Map<String, DesktopStyleImpl> myStyles = new LinkedHashMap<>();
     private DesktopStyleImpl myCurrentStyle;
 
     private final LocalizeManager myLocalizeManager;
     private final IconLibraryManager myIconLibraryManager;
 
     private boolean myInitialLoadState = true;
+
+    private static Map<String, String> ourOldMapping = Map.of(
+        "consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf", Style.LIGHT_ID,
+        "consulo.desktop.awt.ui.plaf.darcula.DarculaLaf", Style.DARK_ID
+    );
 
     @Inject
     LafManagerImpl() {
@@ -109,23 +115,23 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
         Couple<Class<? extends FlatLaf>> defaultLafs = getDefaultLafs();
 
-        lafList.add(new IdeLookAndFeelInfo("Default Light", defaultLafs.getFirst().getName(), false));
-        lafList.add(new IdeLookAndFeelInfo("Default Dark", defaultLafs.getSecond().getName(), true));
+        lafList.add(new IdeLookAndFeelInfo(Style.LIGHT_ID, "Default Light", defaultLafs.getFirst().getName(), false));
+        lafList.add(new IdeLookAndFeelInfo(Style.DARK_ID, "Default Dark", defaultLafs.getSecond().getName(), true));
 
         lafList.add(new IdeLookAndFeelInfo("Flat Light", FlatLightLaf.class.getName(), false));
         lafList.add(new IdeLookAndFeelInfo("Flat Dark", FlatDarkLaf.class.getName(), true));
 
-        lafList.add(new IdeLookAndFeelInfo("IntelliJ", FlatIntelliJLaf.class.getName(), false));
-        lafList.add(new IdeLookAndFeelInfo("Darcula", FlatDarculaLaf.class.getName(), true));
+        lafList.add(new IdeLookAndFeelInfo("IntelliJ", "IntelliJ", FlatIntelliJLaf.class.getName(), false));
+        lafList.add(new IdeLookAndFeelInfo("Darcula", "Darcula", FlatDarculaLaf.class.getName(), true));
 
         for (FlatAllIJThemes.FlatIJLookAndFeelInfo info : FlatAllIJThemes.INFOS) {
             lafList.add(new IdeLookAndFeelInfo(info.getName(), info.getClassName(), info.isDark()));
         }
 
-        myStyles = new ArrayList<>(lafList.size());
-
         for (UIManager.LookAndFeelInfo lookAndFeelInfo : lafList) {
-            myStyles.add(new DesktopStyleImpl(lookAndFeelInfo));
+            DesktopStyleImpl style = new DesktopStyleImpl(lookAndFeelInfo);
+
+            myStyles.put(style.getId(), style);
         }
 
         myCurrentStyle = getDefaultStyle();
@@ -158,12 +164,14 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     public void afterLoadState() {
         myInitialLoadState = false;
 
-        if (myCurrentStyle != null) {
-            final DesktopStyleImpl laf = findStyleByClassName(myCurrentStyle.getLookAndFeelInfo().getClassName());
+        DesktopStyleImpl style = myCurrentStyle;
+        
+        if (style != null) {
+            final DesktopStyleImpl laf = myStyles.get(style.getId());
             if (laf != null) {
                 BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager) IconLibraryManager.get();
                 boolean fromStyle = iconLibraryManager.isFromStyle();
-                String activeLibraryId = iconLibraryManager.getActiveLibraryId(myCurrentStyle);
+                String activeLibraryId = iconLibraryManager.getActiveLibraryId(style);
                 setCurrentStyle(laf, false, false, fromStyle ? null : activeLibraryId);
             }
         }
@@ -180,11 +188,11 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     @Override
     public void loadState(final Element element) {
-        String className = null;
+        String oldLafClassName = null;
 
         Element lafElement = element.getChild(ELEMENT_LAF);
         if (lafElement != null) {
-            className = lafElement.getAttributeValue(ATTRIBUTE_CLASS_NAME);
+            oldLafClassName = lafElement.getAttributeValue(ATTRIBUTE_CLASS_NAME);
         }
 
         String localeText = element.getChildText(ELEMENT_LOCALE);
@@ -202,8 +210,13 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
             }
         }
 
-        DesktopStyleImpl styleFromXml = className == null ? null : findStyleByClassName(className);
-        // If LAF is undefined (wrong class name or something else) we have set default LAF anyway.
+        String themeId = element.getChildTextTrim(ELEMENT_THEME);
+        if (themeId == null && oldLafClassName != null) {
+            themeId = ourOldMapping.get(oldLafClassName);
+        }
+
+        DesktopStyleImpl styleFromXml = themeId == null ? null : myStyles.get(themeId);
+
         if (styleFromXml == null) {
             styleFromXml = getDefaultStyle();
         }
@@ -225,10 +238,8 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     public Element getState() {
         Element element = new Element("state");
         if (myCurrentStyle != null) {
-            String className = myCurrentStyle.getClassName();
-
-            Element child = new Element(ELEMENT_LAF);
-            child.setAttribute(ATTRIBUTE_CLASS_NAME, className);
+            Element child = new Element(ELEMENT_THEME);
+            child.setText(myCurrentStyle.getId());
             element.addContent(child);
         }
 
@@ -251,7 +262,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     @Nonnull
     @Override
     public List<Style> getStyles() {
-        return Collections.unmodifiableList(myStyles);
+        return new ArrayList<>(myStyles.values());
     }
 
     @Nonnull
@@ -261,50 +272,13 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     @Nonnull
-    @Override
-    public UIManager.LookAndFeelInfo[] getInstalledLookAndFeels() {
-        return myStyles.stream().map(DesktopStyleImpl::getLookAndFeelInfo).toArray(UIManager.LookAndFeelInfo[]::new);
-    }
-
-    @Override
-    public UIManager.LookAndFeelInfo getCurrentLookAndFeel() {
-        return myCurrentStyle.getLookAndFeelInfo();
-    }
-
-    @Nonnull
     private DesktopStyleImpl getDefaultStyle() {
-        Couple<Class<? extends FlatLaf>> defaultLafs = getDefaultLafs();
         boolean darked = Platform.current().user().darkTheme();
-        Class<? extends FlatLaf> themeClass = darked ? defaultLafs.getSecond() : defaultLafs.getFirst();
-
-        DesktopStyleImpl ideaLaf = findStyleByClassName(themeClass.getName());
-        if (ideaLaf != null) {
-            return ideaLaf;
+        DesktopStyleImpl style = myStyles.get(darked ? Style.DARK_ID : Style.LIGHT_ID);
+        if (style != null) {
+            return style;
         }
         throw new IllegalStateException("No default look&feel found");
-    }
-
-    /**
-     * Finds LAF by its class name.
-     * will be returned.
-     */
-    @Nullable
-    private DesktopStyleImpl findStyleByClassName(@Nonnull String className) {
-        for (DesktopStyleImpl style : myStyles) {
-            UIManager.LookAndFeelInfo lookAndFeelInfo = style.getLookAndFeelInfo();
-
-            if (Comparing.equal(lookAndFeelInfo.getClassName(), className)) {
-                return style;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void setCurrentLookAndFeel(@Nonnull UIManager.LookAndFeelInfo lookAndFeelInfo) {
-        DesktopStyleImpl style = findStyleByClassName(lookAndFeelInfo.getClassName());
-        LOG.assertTrue(style != null, "Class not found : " + lookAndFeelInfo.getClassName());
-        setCurrentStyle(style, true, true, null);
     }
 
     @Override
@@ -313,8 +287,9 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         setCurrentStyle(style, true, true, null);
     }
 
+    @RequiredUIAccess
     private void setCurrentStyle(DesktopStyleImpl style, boolean wantChangeScheme, boolean fire, String iconLibraryId) {
-        if (findStyleByClassName(style.getClassName()) == null) {
+        if (myStyles.get(style.getId()) == null) {
             LOG.error("unknown LookAndFeel : " + style);
             return;
         }
@@ -393,6 +368,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         return (LookAndFeel) ReflectionUtil.newInstance(clazz);
     }
 
+    @RequiredUIAccess
     private static void fireUpdate() {
         UISettings.getInstance().fireUISettingsChanged();
 

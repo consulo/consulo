@@ -18,7 +18,6 @@ package consulo.desktop.swt.ui.impl;
 import consulo.ui.color.ColorValue;
 import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.style.StyleColorValue;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -26,21 +25,29 @@ import jakarta.annotation.Nonnull;
  * @since 29/04/2021
  */
 public class DesktopSwtStyleImpl extends StyleImpl {
-  private final String myName;
+    private final String myId;
+    private final String myName;
 
-  public DesktopSwtStyleImpl(String name) {
-    myName = name;
-  }
+    public DesktopSwtStyleImpl(String id, String name) {
+        myId = id;
+        myName = name;
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return myName;
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return myId;
+    }
 
-  @Nonnull
-  @Override
-  public ColorValue getColorValue(@Nonnull StyleColorValue colorKey) {
-    return colorKey.toRGB();
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return myName;
+    }
+
+    @Nonnull
+    @Override
+    public ColorValue getColorValue(@Nonnull StyleColorValue colorKey) {
+        return colorKey.toRGB();
+    }
 }

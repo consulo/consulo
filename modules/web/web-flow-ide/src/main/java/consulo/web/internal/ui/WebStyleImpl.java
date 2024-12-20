@@ -17,10 +17,10 @@ package consulo.web.internal.ui;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import consulo.ui.style.StyleColorValue;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.Style;
+import consulo.ui.style.StyleColorValue;
 import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
@@ -31,35 +31,43 @@ import java.util.Map;
  * @since 15-Sep-17
  */
 public class WebStyleImpl implements Style {
-  private Map<StyleColorValue, ColorValue> myColors = new HashMap<>();
-  private final String myName;
+    private Map<StyleColorValue, ColorValue> myColors = new HashMap<>();
+    private final String myId;
+    private final String myName;
 
-  public WebStyleImpl(String name) {
-    myName = name;
+    public WebStyleImpl(String id, String name) {
+        myId = id;
+        myName = name;
 
-    for (StandardColors color : StandardColors.values()) {
-      myColors.put(color, color.getStaticValue());
+        for (StandardColors color : StandardColors.values()) {
+            myColors.put(color, color.getStaticValue());
+        }
+
+        myColors.put(ComponentColors.BORDER, new RGBColor(192, 192, 192));
+        myColors.put(ComponentColors.TEXT, StandardColors.BLACK.getStaticValue());
+        myColors.put(ComponentColors.TEXT_FOREGROUND, StandardColors.BLACK.getStaticValue());
+        myColors.put(ComponentColors.LAYOUT, StandardColors.WHITE.getStaticValue());
     }
 
-    myColors.put(ComponentColors.BORDER, new RGBColor(192, 192, 192));
-    myColors.put(ComponentColors.TEXT, StandardColors.BLACK.getStaticValue());
-    myColors.put(ComponentColors.TEXT_FOREGROUND, StandardColors.BLACK.getStaticValue());
-    myColors.put(ComponentColors.LAYOUT, StandardColors.WHITE.getStaticValue());
-  }
-
-  @Nonnull
-  @Override
-  public String getName() {
-    return myName;
-  }
-
-  @Nonnull
-  @Override
-  public ColorValue getColorValue(@Nonnull StyleColorValue colorKey) {
-    ColorValue colorValue = myColors.get(colorKey);
-    if(colorValue == null) {
-      return StandardColors.RED.getStaticValue();
+    @Nonnull
+    @Override
+    public String getId() {
+        return myId;
     }
-    return colorValue;
-  }
+
+    @Nonnull
+    @Override
+    public String getName() {
+        return myName;
+    }
+
+    @Nonnull
+    @Override
+    public ColorValue getColorValue(@Nonnull StyleColorValue colorKey) {
+        ColorValue colorValue = myColors.get(colorKey);
+        if (colorValue == null) {
+            return StandardColors.RED.getStaticValue();
+        }
+        return colorValue;
+    }
 }

@@ -29,7 +29,7 @@ import java.util.List;
 public class WebStyleManagerImpl extends StyleManagerImpl {
   public static final WebStyleManagerImpl ourInstance = new WebStyleManagerImpl();
 
-  private Style myCurrentStyle = new WebStyleImpl("Default");
+  private Style myCurrentStyle = new WebStyleImpl("light", "Light");
 
   @Nonnull
   @Override

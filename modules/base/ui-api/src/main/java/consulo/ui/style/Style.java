@@ -25,33 +25,39 @@ import jakarta.annotation.Nonnull;
  * @since 22-Jun-16
  */
 public interface Style {
-  @Nonnull
-  String getName();
+    static String LIGHT_ID = "light";
+    static String DARK_ID = "dark";
 
-  @Nonnull
-  default String getIconLibraryId() {
-    return IconLibraryManager.LIGHT_LIBRARY_ID;
-  }
+    @Nonnull
+    String getId();
 
-  @Nonnull
-  ColorValue getColorValue(@Nonnull StyleColorValue colorKey);
+    @Nonnull
+    String getName();
 
-  /**
-   * Try to modify source image to showing in current style. Can return same image. Also step into composite icons
-   *
-   * @param image source image
-   * @return cloned image in current style, or source image
-   */
-  @Nonnull
-  default Image getImage(@Nonnull Image image) {
-    return image;
-  }
+    @Nonnull
+    default String getIconLibraryId() {
+        return IconLibraryManager.LIGHT_LIBRARY_ID;
+    }
 
-  default boolean isLight() {
-    return !isDark();
-  }
+    @Nonnull
+    ColorValue getColorValue(@Nonnull StyleColorValue colorKey);
 
-  default boolean isDark() {
-    return false;
-  }
+    /**
+     * Try to modify source image to showing in current style. Can return same image. Also step into composite icons
+     *
+     * @param image source image
+     * @return cloned image in current style, or source image
+     */
+    @Nonnull
+    default Image getImage(@Nonnull Image image) {
+        return image;
+    }
+
+    default boolean isLight() {
+        return !isDark();
+    }
+
+    default boolean isDark() {
+        return false;
+    }
 }

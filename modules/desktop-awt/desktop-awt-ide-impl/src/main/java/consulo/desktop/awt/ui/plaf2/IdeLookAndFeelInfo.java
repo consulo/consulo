@@ -29,11 +29,21 @@ import javax.swing.*;
  * @since 2024-11-21
  */
 public class IdeLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme, LafWithIconLibrary {
+    private final String myId;
     private final boolean myDark;
 
     public IdeLookAndFeelInfo(String name, String className, boolean dark) {
+        this(className, name, className, dark);
+    }
+
+    public IdeLookAndFeelInfo(String id, String name, String className, boolean dark) {
         super(name, className);
+        myId = id;
         myDark = dark;
+    }
+
+    public String getId() {
+        return myId;
     }
 
     @Override
