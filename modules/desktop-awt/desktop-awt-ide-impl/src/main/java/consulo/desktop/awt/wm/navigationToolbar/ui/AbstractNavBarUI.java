@@ -11,7 +11,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.paint.PaintUtil;
-import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
@@ -226,10 +225,6 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   private static boolean shouldPaintWrapperPanel() {
     return false; //return !UISettings.getInstance().SHOW_MAIN_TOOLBAR && NavBarRootPaneExtension.runToolbarExists();
-  }
-
-  protected Color getBackgroundColor() {
-    return ColorUtil.darker(UIUtil.getPanelBackground(), 1);
   }
 
   @Override
