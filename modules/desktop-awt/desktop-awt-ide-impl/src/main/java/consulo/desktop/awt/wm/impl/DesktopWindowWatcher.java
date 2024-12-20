@@ -133,7 +133,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
   }
 
   private void dispatchHiddenOrClosed(consulo.ui.Window window) {
-    LOG.warn("enter: dispatchClosed(" + TargetAWT.to(window) + ")");
+    LOG.debug("enter: dispatchClosed(" + TargetAWT.to(window) + ")");
 
     synchronized (myLock) {
       final WindowInfo info = myWindow2Info.get(window);
