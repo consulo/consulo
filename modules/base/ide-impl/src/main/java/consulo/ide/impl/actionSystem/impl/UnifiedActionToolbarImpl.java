@@ -48,7 +48,7 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
 
     private int myOrientation;
 
-    public UnifiedActionToolbarImpl(String place, ActionGroup group, boolean horizontal, boolean decorateButtons) {
+    public UnifiedActionToolbarImpl(String place, ActionGroup group, boolean horizontal) {
         myPlace = place;
         myGroup = group;
         myOrientation = horizontal ? HORIZONTAL_ORIENTATION : VERTICAL_ORIENTATION;

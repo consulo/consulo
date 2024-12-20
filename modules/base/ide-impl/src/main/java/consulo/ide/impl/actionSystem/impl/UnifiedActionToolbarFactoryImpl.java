@@ -33,7 +33,7 @@ import jakarta.annotation.Nonnull;
 public class UnifiedActionToolbarFactoryImpl implements ActionToolbarFactory {
   @Nonnull
   @Override
-  public ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal, boolean decorateButtons) {
-    return new UnifiedActionToolbarImpl(place, group, horizontal, decorateButtons);
+  public ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal) {
+    return new UnifiedActionToolbarImpl(place, group, horizontal);
   }
 }

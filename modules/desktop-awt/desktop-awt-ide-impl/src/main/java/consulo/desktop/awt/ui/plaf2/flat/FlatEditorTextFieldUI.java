@@ -96,6 +96,10 @@ public class FlatEditorTextFieldUI extends BasicEditorTextFieldUI {
 
     @Override
     protected void paintBackground(Graphics g, EditorTextField c) {
+        if (FlatUIUtils.isCellEditor(c)) {
+            return;
+        }
+        
         float arc = FlatUIUtils.getBorderArc(c);
 
         if (arc > 0) {

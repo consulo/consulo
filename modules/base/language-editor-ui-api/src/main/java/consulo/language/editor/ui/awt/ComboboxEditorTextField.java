@@ -21,10 +21,11 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.event.FocusChangeListener;
 import consulo.document.Document;
 import consulo.project.Project;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -35,23 +36,31 @@ public class ComboboxEditorTextField extends EditorTextField {
         super(text, project, fileType);
         setOneLineMode(true);
         putClientProperty("JComboBox.isTableCellEditor", true);
+        setBorder(JBUI.Borders.empty());
     }
 
     public ComboboxEditorTextField(Document document, Project project, FileType fileType) {
         this(document, project, fileType, false);
         setOneLineMode(true);
         putClientProperty("JComboBox.isTableCellEditor", true);
+        setBorder(JBUI.Borders.empty());
     }
 
     public ComboboxEditorTextField(Document document, Project project, FileType fileType, boolean isViewer) {
         super(document, project, fileType, isViewer);
         setOneLineMode(true);
         putClientProperty("JComboBox.isTableCellEditor", true);
+        setBorder(JBUI.Borders.empty());
+    }
+
+    @Nonnull
+    @Override
+    protected Color getBackgroundColor(boolean enabled) {
+        return enabled ? super.getBackgroundColor(enabled) : UIManager.getColor("ComboBox.disabledBackground");
     }
 
     @Override
-    public void setBounds(int x, int y, int width, int height) {
-        UIUtil.setComboBoxEditorBounds(x, y, width, height, this);
+    protected void addFocusHacks() {
     }
 
     @Override

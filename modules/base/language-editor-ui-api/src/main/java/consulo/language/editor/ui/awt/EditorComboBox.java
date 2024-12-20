@@ -27,7 +27,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.TextComponentAccessor;
-import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
@@ -129,13 +128,6 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
         for (DocumentListener documentListener : myDocumentListeners) {
             documentListener.documentChanged(event);
         }
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-
-        MacUIUtil.drawComboboxFocusRing(this, g);
     }
 
     public Project getProject() {

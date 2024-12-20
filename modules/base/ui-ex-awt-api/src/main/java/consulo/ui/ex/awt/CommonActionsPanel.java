@@ -21,7 +21,6 @@ import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -35,8 +34,6 @@ import java.util.*;
  * @author Konstantin Bulenkov
  */
 public class CommonActionsPanel extends JPanel {
-  private final boolean myDecorateButtons;
-
   public enum Buttons {
     ADD, REMOVE, EDIT,  UP, DOWN;
 
@@ -136,27 +133,15 @@ public class CommonActionsPanel extends JPanel {
           toolbarActions.set(i, ((AnActionButton.CheckedAnActionButton)toolbarActions.get(i)).getDelegate());
         }
     }
-    myDecorateButtons = UIUtil.isUnderAquaLookAndFeel() && position == ActionToolbarPosition.BOTTOM;
 
     final ActionManager mgr = ActionManager.getInstance();
     final ActionToolbar toolbar = mgr.createActionToolbar(ActionPlaces.UNKNOWN,
                                                           new DefaultActionGroup(toolbarActions.toArray(new AnAction[toolbarActions.size()])),
-                                                          position == ActionToolbarPosition.BOTTOM || position == ActionToolbarPosition.TOP,
-                                                          myDecorateButtons);
+                                                          position == ActionToolbarPosition.BOTTOM || position == ActionToolbarPosition.TOP);
     toolbar.getComponent().setOpaque(false);
     toolbar.setTargetComponent(contextComponent);
     toolbar.getComponent().setBorder(null);
     add(toolbar.getComponent(), BorderLayout.CENTER);
-  }
-
-  @Override
-  protected void paintComponent(Graphics g2) {
-    final Graphics2D g = (Graphics2D)g2;
-    if (myDecorateButtons) {
-      MacUIUtil.drawToolbarDecoratorBackground(g, getWidth(), getHeight());
-    } else {
-      super.paintComponent(g);
-    }
   }
 
   public AnActionButton getAnActionButton(Buttons button) {

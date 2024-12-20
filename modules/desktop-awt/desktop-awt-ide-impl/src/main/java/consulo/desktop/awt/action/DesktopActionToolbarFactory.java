@@ -19,10 +19,8 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
-import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -33,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class DesktopActionToolbarFactory implements ActionToolbarFactory {
   @Nonnull
   @Override
-  public ActionToolbar createActionToolbar(@NonNls String place, ActionGroup group, boolean horizontal, boolean decorateButtons) {
-    return new ActionToolbarImpl(place, group, horizontal, decorateButtons);
+  public ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal) {
+    return new ActionToolbarImpl(place, group, horizontal);
   }
 }

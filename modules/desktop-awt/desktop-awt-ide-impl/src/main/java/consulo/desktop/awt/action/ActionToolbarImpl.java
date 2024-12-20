@@ -92,7 +92,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     private final String myPlace;
     List<? extends AnAction> myVisibleActions;
     private final PresentationFactory myPresentationFactory = new BasePresentationFactory();
-    private final boolean myDecorateButtons;
 
     private final ToolbarUpdater myUpdater;
 
@@ -131,17 +130,12 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     private final AlphaAnimationContext myAlphaContext = new AlphaAnimationContext(this);
 
     public ActionToolbarImpl(@Nonnull String place, @Nonnull final ActionGroup actionGroup, boolean horizontal) {
-        this(place, actionGroup, horizontal, false, false);
-    }
-
-    public ActionToolbarImpl(@Nonnull String place, @Nonnull ActionGroup actionGroup, boolean horizontal, boolean decorateButtons) {
-        this(place, actionGroup, horizontal, decorateButtons, false);
+        this(place, actionGroup, horizontal, false);
     }
 
     public ActionToolbarImpl(@Nonnull String place,
                              @Nonnull ActionGroup actionGroup,
                              final boolean horizontal,
-                             final boolean decorateButtons,
                              boolean updateActionsNow) {
         super(null);
         myAlphaContext.getAnimator().setVisibleImmediately(true);
@@ -150,7 +144,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         myActionGroup = actionGroup;
         myVisibleActions = new ArrayList<>();
         myDataManager = DataManager.getInstance();
-        myDecorateButtons = decorateButtons;
         myUpdater = new ToolbarUpdater(KeymapManagerEx.getInstanceEx(), this) {
             @Override
             protected void updateActionsImpl(boolean transparentOnly, boolean forced) {
@@ -382,7 +375,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     @Nonnull
     protected ActionButton createToolbarButton(@Nonnull AnAction action,
                                                boolean minimalMode,
-                                               boolean decorateButtons,
                                                @Nonnull String place,
                                                @Nonnull Presentation presentation,
                                                @Nonnull Size minimumSize) {
@@ -417,7 +409,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     private ActionButton createToolbarButton(@Nonnull AnAction action) {
         return createToolbarButton(action,
             myMinimalMode,
-            myDecorateButtons,
             myPlace,
             myPresentationFactory.getPresentation(action),
             myMinimumButtonSize);
@@ -1291,7 +1282,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         private final JComponent myParent;
 
         PopupToolbar(@Nonnull String place, @Nonnull ActionGroup actionGroup, final boolean horizontal, @Nonnull JComponent parent) {
-            super(place, actionGroup, horizontal, false, true);
+            super(place, actionGroup, horizontal, true);
             ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.class, this);
             myParent = parent;
             setBorder(myParent.getBorder());
@@ -1395,7 +1386,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         }
         else {
             setBorder(JBUI.Borders.empty(2));
-            setMinimumButtonSize(myDecorateButtons ? new Size(30, 20) : DEFAULT_MINIMUM_BUTTON_SIZE);
+            setMinimumButtonSize(DEFAULT_MINIMUM_BUTTON_SIZE);
             setOpaque(true);
             setLayoutPolicy(AUTO_LAYOUT_POLICY);
         }

@@ -573,13 +573,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     @Nonnull
     @Override
     public ActionToolbar createActionToolbar(@Nonnull final String place, @Nonnull final ActionGroup group, final boolean horizontal) {
-        return createActionToolbar(place, group, horizontal, false);
-    }
-
-    @Nonnull
-    @Override
-    public ActionToolbar createActionToolbar(@Nonnull final String place, @Nonnull final ActionGroup group, final boolean horizontal, final boolean decorateButtons) {
-        return myToolbarFactory.createActionToolbar(place, group, horizontal, decorateButtons);
+        return myToolbarFactory.createActionToolbar(place, group, horizontal);
     }
 
     public void registerPluginActions(@Nonnull PluginDescriptor plugin, LocalizeHelper localizeHelper) {

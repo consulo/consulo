@@ -132,7 +132,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     private boolean myIsViewer;
     private boolean myIsSupplementary;
     private boolean myInheritSwingFont = true;
-    private Color myEnforcedBgColor;
+    protected Color myEnforcedBgColor;
     private boolean myOneLineMode; // use getter to access this field! It is allowed to override getter and change initial behaviour
     private boolean myEnsureWillComputePreferredSize;
     private Dimension myPassivePreferredSize;
@@ -178,6 +178,16 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         setDocument(document);
         myProject = project;
         myFileType = fileType;
+
+        addFocusHacks();
+
+        setFont(UIManager.getFont("TextField.font"));
+
+        myEditorWrapper = new Wrapper();
+        add(myEditorWrapper, BorderLayout.CENTER);
+    }
+
+    protected void addFocusHacks() {
         enableEvents(AWTEvent.KEY_EVENT_MASK);
         // todo[dsl,max]
         setFocusable(true);
@@ -191,11 +201,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
         setFocusTraversalPolicyProvider(true);
         setFocusTraversalPolicy(new Jdk7DelegatingToRootTraversalPolicy());
-
-        setFont(UIManager.getFont("TextField.font"));
-
-        myEditorWrapper = new Wrapper();
-        add(myEditorWrapper, BorderLayout.CENTER);
     }
 
     public void setSupplementary(boolean supplementary) {
@@ -551,6 +556,8 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         scrollPane.setBorder(JBUI.Borders.empty());
         scrollPane.setViewportBorder(JBUI.Borders.empty());
 
+        editor.getContentComponent().setBorder(JBUI.Borders.empty());
+
         if (myProject != null) {
             PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
             if (psiFile != null) {
@@ -649,7 +656,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
 
     @Nonnull
-    private Color getBackgroundColor(boolean enabled) {
+    protected Color getBackgroundColor(boolean enabled) {
         if (myEnforcedBgColor != null) {
             return myEnforcedBgColor;
         }

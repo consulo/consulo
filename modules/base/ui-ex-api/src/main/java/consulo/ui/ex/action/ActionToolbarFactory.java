@@ -38,10 +38,5 @@ public interface ActionToolbarFactory {
    * @return An instance of <code>ActionToolbar</code>
    */
   @Nonnull
-  default ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal) {
-    return createActionToolbar(place, group, horizontal, false);
-  }
-
-  @Nonnull
-  ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal, boolean decorateButtons);
+  ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal);
 }
