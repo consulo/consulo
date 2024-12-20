@@ -36,7 +36,11 @@ public abstract class ContentFolderPropertyProvider<T> {
   public abstract Key<T> getKey();
 
   @Nullable
-  public abstract Image getLayerIcon(@Nonnull T value);
+  public abstract Image getIcon(@Nonnull T value, @Nonnull ContentFolderTypeProvider typeProvider);
+
+  public boolean isUpdateFullIcon() {
+      return false;
+  }
 
   public abstract T fromString(@Nonnull String value);
 

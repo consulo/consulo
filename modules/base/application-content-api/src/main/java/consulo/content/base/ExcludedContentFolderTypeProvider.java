@@ -34,41 +34,47 @@ import java.util.function.Supplier;
  * @since 22:46/31.10.13
  */
 @ExtensionImpl
-public final class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Supplier<ExcludedContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
+public final class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider implements BuiltInGeneratedIconOwner {
+    private static final Supplier<ExcludedContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 
-  private static final ColorValue EXCLUDED_COLOR = new LightDarkColorValue(new RGBColor(153, 46, 0), StandardColors.RED);
+    private static final ColorValue EXCLUDED_COLOR = new LightDarkColorValue(new RGBColor(153, 46, 0), StandardColors.RED);
 
-  @Nonnull
-  public static ExcludedContentFolderTypeProvider getInstance() {
-    return INSTANCE.get();
-  }
+    @Nonnull
+    public static ExcludedContentFolderTypeProvider getInstance() {
+        return INSTANCE.get();
+    }
 
-  public ExcludedContentFolderTypeProvider() {
-    super("EXCLUDED");
-  }
+    public ExcludedContentFolderTypeProvider() {
+        super("EXCLUDED");
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return PlatformIconGroup.modulesExcluderoot();
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.modulesExcluderoot();
+    }
 
-  @Nonnull
-  @Override
-  public Image getChildDirectoryIcon() {
-    return PlatformIconGroup.modulesExcluderoot();
-  }
+    @Nonnull
+    @Override
+    public Image getChildDirectoryIcon() {
+        return PlatformIconGroup.modulesExcluderoot();
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return ProjectLocalize.moduleToggleExcludedAction().get();
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return ProjectLocalize.moduleToggleExcludedAction().get();
+    }
 
-  @Nonnull
-  @Override
-  public ColorValue getGroupColor() {
-    return EXCLUDED_COLOR;
-  }
+    @Nonnull
+    @Override
+    public ColorValue getGroupColor() {
+        return EXCLUDED_COLOR;
+    }
+
+    @Nonnull
+    @Override
+    public Image getGeneratedIcon() {
+        return PlatformIconGroup.modulesGeneratedexcluderoot();
+    }
 }

@@ -20,6 +20,8 @@ import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.TestLikeContentFolderTypeProvider;
+import consulo.content.base.BuiltInGeneratedIconOwner;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectBundle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -34,45 +36,51 @@ import java.util.function.Supplier;
  * @since 22:44/31.10.13
  */
 @ExtensionImpl
-public class TestContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider implements TestLikeContentFolderTypeProvider {
-  private static final ColorValue TESTS_COLOR = new LightDarkColorValue(new RGBColor(0, 140, 46), new RGBColor(73, 140, 101));
-  private static final Supplier<TestContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
-  );
+public class TestContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider implements TestLikeContentFolderTypeProvider, BuiltInGeneratedIconOwner {
+    private static final ColorValue TESTS_COLOR = new LightDarkColorValue(new RGBColor(0, 140, 46), new RGBColor(73, 140, 101));
+    private static final Supplier<TestContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
+    );
 
-  @Nonnull
-  public static TestContentFolderTypeProvider getInstance() {
-    return INSTANCE.get();
-  }
+    @Nonnull
+    public static TestContentFolderTypeProvider getInstance() {
+        return INSTANCE.get();
+    }
 
-  public TestContentFolderTypeProvider() {
-    super("TEST");
-  }
+    public TestContentFolderTypeProvider() {
+        super("TEST");
+    }
 
-  @Override
-  public int getWeight() {
-    return 150;
-  }
+    @Override
+    public int getWeight() {
+        return 150;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Modules.TestRoot;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return AllIcons.Modules.TestRoot;
+    }
 
-  @Override
-  public Image getChildPackageIcon() {
-    return AllIcons.Nodes.TestPackage;
-  }
+    @Nonnull
+    @Override
+    public Image getGeneratedIcon() {
+        return PlatformIconGroup.modulesGeneratedtestroot();
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return ProjectBundle.message("module.toggle.test.sources.action");
-  }
+    @Override
+    public Image getChildPackageIcon() {
+        return PlatformIconGroup.nodesPackage();
+    }
 
-  @Nonnull
-  @Override
-  public ColorValue getGroupColor() {
-    return TESTS_COLOR;
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return ProjectBundle.message("module.toggle.test.sources.action");
+    }
+
+    @Nonnull
+    @Override
+    public ColorValue getGroupColor() {
+        return TESTS_COLOR;
+    }
 }

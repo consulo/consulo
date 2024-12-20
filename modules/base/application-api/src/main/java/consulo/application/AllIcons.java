@@ -432,11 +432,9 @@ public class AllIcons {
         public static final Image AddExcludedRoot = PlatformIconGroup.modulesAddexcludedroot(); // 16x16
         public static final Image Annotation = PlatformIconGroup.modulesAnnotation(); // 16x16
         public static final Image ExcludeRoot = PlatformIconGroup.modulesExcluderoot(); // 16x16
-        public static final Image GeneratedMark = PlatformIconGroup.modulesGeneratedmark(); // 16x16
         public static final Image SourceRoot = PlatformIconGroup.modulesSourceroot(); // 16x16
         public static final Image ResourcesRoot = PlatformIconGroup.modulesResourcesroot(); // 16x16
         public static final Image TestResourcesRoot = PlatformIconGroup.modulesTestresourcesroot(); // 16x16
-        public static final Image Split = PlatformIconGroup.modulesSplit(); // 16x16
         public static final Image TestRoot = PlatformIconGroup.modulesTestroot(); // 16x16
         public static final Image WebRoot = PlatformIconGroup.modulesWebroot(); // 16x16
 
