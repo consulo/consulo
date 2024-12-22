@@ -23,6 +23,7 @@ import consulo.localize.internal.SingleLocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -81,6 +82,11 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     String getValue();
 
     long getModificationCount();
+
+    @Nonnull
+    default Optional<LocalizeKey> getKey() {
+        return Optional.empty();
+    }
 
     @Nonnull
     default LocalizeValue map(@Nonnull BiFunction<LocalizeManager, String, String> mapper) {

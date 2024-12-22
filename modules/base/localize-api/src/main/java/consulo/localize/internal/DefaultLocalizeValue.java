@@ -19,10 +19,7 @@ import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import jakarta.annotation.Nonnull;
 
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -38,6 +35,12 @@ public final class DefaultLocalizeValue extends BaseLocalizeValue {
     public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey, @Nonnull Object... args) {
         super(args);
         myLocalizeKey = localizeKey;
+    }
+
+    @Nonnull
+    @Override
+    public Optional<LocalizeKey> getKey() {
+        return Optional.of(myLocalizeKey);
     }
 
     @Nonnull
