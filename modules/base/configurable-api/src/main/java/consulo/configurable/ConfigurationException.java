@@ -30,9 +30,9 @@ public class ConfigurationException extends Exception {
         this(message, LocalizeValue.empty());
     }
 
-    public ConfigurationException(@Nonnull LocalizeValue message, @Nonnull LocalizeValue title) {
+    public ConfigurationException(@Nonnull LocalizeValue message, @Nonnull LocalizeValue titleValue) {
         super(message.get());
-        myTitle = title;
+        myTitle = titleValue == LocalizeValue.of() ? DEFAULT_TITLE : titleValue;
     }
 
     @Deprecated
@@ -48,6 +48,7 @@ public class ConfigurationException extends Exception {
     }
 
     //TODO: rename into getTitle after deprecation removal
+    @Nonnull
     public LocalizeValue getTitleValue() {
         return myTitle;
     }
