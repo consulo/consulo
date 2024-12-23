@@ -416,10 +416,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             case CANCEL_EXIT_CODE:
                 return;
             case DisablePluginWarningDialog.DISABLE_EXIT_CODE:
-                consulo.container.plugin.PluginManager.disablePlugin(pluginId);
                 break;
             case DisablePluginWarningDialog.DISABLE_AND_RESTART_EXIT_CODE:
-                consulo.container.plugin.PluginManager.disablePlugin(pluginId);
                 app.restart();
                 break;
         }

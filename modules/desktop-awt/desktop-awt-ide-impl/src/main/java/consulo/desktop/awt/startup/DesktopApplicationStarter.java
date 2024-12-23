@@ -33,7 +33,6 @@ import consulo.builtinWebServer.json.JsonBaseRequestHandler;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.builtinWebServer.json.JsonPostRequestHandler;
 import consulo.component.impl.internal.ComponentBinding;
-import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
@@ -51,10 +50,10 @@ import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
-import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.idea.ide.plugins.PlatformOrPluginsNotificationGroupContributor;
+import consulo.ide.impl.idea.ide.plugins.PluginContants;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
-import consulo.ide.impl.plugins.PluginsConfigurable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
@@ -72,7 +71,6 @@ import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -80,7 +78,6 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
-import java.io.File;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -328,14 +325,11 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     static void reportPluginError(PluginsInitializeInfo info) {
         List<CompositeMessage> pluginErrors = info.getPluginErrors();
 
-        Set<PluginId> plugins2Disable = info.getPlugins2Disable();
-        Set<PluginId> plugins2Enable = info.getPlugins2Enable();
-
         if (pluginErrors != null) {
             for (CompositeMessage pluginError : pluginErrors) {
                 LocalizeValue message = IdeLocalize.titlePluginNotificationTitle();
                 Notifications.Bus.notify(new Notification(
-                    PluginManagerMain.ourPluginsLifecycleGroup,
+                    PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup,
                     message.get(),
                     pluginError.toString(),
                     NotificationType.ERROR,
@@ -349,23 +343,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                             if (PluginsInitializeInfo.EDIT.equals(description)) {
                                 IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
                                 ShowSettingsUtil.getInstance()
-                                    .showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginsConfigurable.ID, null);
-                                return;
+                                    .showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginContants.CONFIGURABLE_ID, null);
                             }
-
-                            Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
-                            if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
-                                for (PluginId pluginId : plugins2Disable) {
-                                    if (!disabledPlugins.contains(pluginId)) {
-                                        disabledPlugins.add(pluginId);
-                                    }
-                                }
-                            }
-                            else if (plugins2Enable != null && PluginsInitializeInfo.ENABLE.equals(description)) {
-                                disabledPlugins.removeAll(plugins2Enable);
-                            }
-
-                            PluginManager.replaceDisabledPlugins(disabledPlugins);
                         }
                     }
                 ));

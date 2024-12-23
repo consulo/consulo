@@ -395,7 +395,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.navigationToolbar;
   exports consulo.ide.impl.idea.ide.plugins;
   exports consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
-  exports consulo.ide.impl.idea.ide.plugins.sorters;
   exports consulo.ide.impl.idea.ide.projectView;
   exports consulo.ide.impl.idea.ide.projectView.actions;
   exports consulo.ide.impl.idea.ide.projectView.impl;

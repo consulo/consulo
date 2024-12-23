@@ -63,24 +63,4 @@ public class LightPluginManager implements PluginManagerInternal {
   public PluginDescriptor getPlugin(Class<?> pluginClass) {
     return myTestPlugin;
   }
-
-  @Override
-  public Set<PluginId> getDisabledPlugins() {
-    return null;
-  }
-
-  @Override
-  public boolean disablePlugin(PluginId id) {
-    return false;
-  }
-
-  @Override
-  public boolean enablePlugin(PluginId id) {
-    return false;
-  }
-
-  @Override
-  public void replaceDisabledPlugins(Set<PluginId> ids) {
-
-  }
 }

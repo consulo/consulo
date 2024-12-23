@@ -127,8 +127,6 @@ public class PluginsLoader {
     final Map<PluginId, String> disabledPluginNames = new HashMap<>();
     List<String> brokenPluginsList = new SmartList<>();
 
-    Set<PluginId> disabledPlugins = PluginValidator.getDisabledPlugins();
-
     for (PluginDescriptorImpl descriptor : pluginDescriptors) {
       // platform plugins not controlled by user, always enabled
       if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
@@ -136,10 +134,7 @@ public class PluginsLoader {
         continue;
       }
 
-      if (disabledPlugins.contains(descriptor.getPluginId())) {
-        descriptor.setStatus(PluginDescriptorStatus.DISABLED_BY_USER);
-      }
-      else if (PluginValidator.isIncompatible(descriptor)) {
+      if (PluginValidator.isIncompatible(descriptor)) {
         descriptor.setStatus(PluginDescriptorStatus.WRONG_PLATFORM_VERSION);
 
         brokenPluginsList.add(descriptor.getName());
@@ -390,8 +385,6 @@ public class PluginsLoader {
       }
     }
 
-    final Set<PluginId> disabledPluginIds = new LinkedHashSet<>();
-    final Set<PluginId> faultyDescriptors = new LinkedHashSet<>();
     for (final Iterator<PluginDescriptorImpl> it = result.iterator(); it.hasNext(); ) {
       final PluginDescriptorImpl pluginDescriptor = it.next();
       PluginValidator.checkDependants(pluginDescriptor, idToDescriptorMap::get, pluginId -> {
@@ -400,8 +393,6 @@ public class PluginsLoader {
 
           // if dependent plugin is platform - do not show error, just disable it
           if (!PluginIds.isPlatformImplementationPlugin(pluginId)) {
-            faultyDescriptors.add(pluginId);
-            disabledPluginIds.add(pluginDescriptor.getPluginId());
             message.append("<br>");
             final String name = pluginDescriptor.getName();
             final PluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
@@ -417,9 +408,7 @@ public class PluginsLoader {
               pluginName = descriptor.getName();
             }
 
-            message.append(
-              PluginManager.getDisabledPlugins().contains(pluginId) ? ApplicationLocalize.errorRequiredPluginDisabled(name,
-                                                                                                                      pluginName) : ApplicationLocalize.errorRequiredPluginNotInstalled(
+            message.append(ApplicationLocalize.errorRequiredPluginNotInstalled(
                 name,
                 pluginName));
           }
@@ -432,37 +421,6 @@ public class PluginsLoader {
       });
     }
 
-    if (!disabledPluginIds.isEmpty()) {
-      info.setPluginsForDisable(disabledPluginIds);
-      info.setPluginsForEnable(faultyDescriptors);
-
-      message.append("<br>");
-      message.append("<br>").append("<a href=\"" + PluginsInitializeInfo.DISABLE + "\">Disable ");
-      if (disabledPluginIds.size() == 1) {
-        final PluginId pluginId2Disable = disabledPluginIds.iterator().next();
-        message.append(idToDescriptorMap.containsKey(pluginId2Disable) ? idToDescriptorMap.get(pluginId2Disable)
-                                                                                          .getName() : pluginId2Disable.getIdString());
-      }
-      else {
-        message.append("not loaded plugins");
-      }
-      message.append("</a>");
-      boolean possibleToEnable = true;
-      for (PluginId descriptor : faultyDescriptors) {
-        if (disabledPluginNames.get(descriptor) == null) {
-          possibleToEnable = false;
-          break;
-        }
-      }
-      if (possibleToEnable) {
-        message.append("<br>")
-               .append("<a href=\"" + PluginsInitializeInfo.ENABLE + "\">Enable ")
-               .append(faultyDescriptors.size() == 1 ? disabledPluginNames.get(faultyDescriptors.iterator()
-                                                                                                .next()) : " all necessary plugins")
-               .append("</a>");
-      }
-      message.append("<br>").append("<a href=\"" + PluginsInitializeInfo.EDIT + "\">Open plugin manager</a>");
-    }
     if (!message.isEmpty()) {
       return message;
     }

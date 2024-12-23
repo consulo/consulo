@@ -22,7 +22,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.plugins.PluginsConfigurable;
+import consulo.ide.impl.idea.ide.plugins.ui.PluginsConfigurable;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.logging.Logger;
 import consulo.application.localize.ApplicationLocalize;

@@ -17,19 +17,17 @@ package consulo.component.store.impl.internal;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.ApplicationProperties;
 import consulo.component.ComponentManager;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginId;
-import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ShutDownTracker;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 
 public final class StoreUtil {
@@ -62,12 +60,8 @@ public final class StoreUtil {
         StorageNotificationService.getInstance().notify(NotificationType.ERROR, "Unable to save settings", "<p>Failed to save settings." + messagePostfix, project);
       }
       else {
-        if (!ApplicationProperties.isInSandbox()) {
-          PluginManager.disablePlugin(pluginId);
-        }
-
         StorageNotificationService.getInstance()
-                .notify(NotificationType.ERROR, "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been " + "disabled." + messagePostfix,
+                .notify(NotificationType.ERROR, "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings." + messagePostfix,
                         project);
       }
     }
@@ -101,12 +95,8 @@ public final class StoreUtil {
           StorageNotificationService.getInstance().notify(NotificationType.ERROR, "Unable to save settings", "<p>Failed to save settings." + messagePostfix, project);
         }
         else {
-          if (!ApplicationProperties.isInSandbox()) {
-            PluginManager.disablePlugin(pluginId);
-          }
-
           StorageNotificationService.getInstance()
-                  .notify(NotificationType.ERROR, "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been " + "disabled." + messagePostfix,
+                  .notify(NotificationType.ERROR, "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings." + messagePostfix,
                           project);
         }
       });

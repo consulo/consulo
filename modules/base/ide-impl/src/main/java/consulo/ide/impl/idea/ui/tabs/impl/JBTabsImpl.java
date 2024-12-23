@@ -30,7 +30,6 @@ import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowPassInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.table.TableLayout;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.update.LazyUiDisposable;
 import consulo.ide.impl.ui.laf.JBEditorTabsUI;
 import consulo.project.Project;
@@ -45,6 +44,7 @@ import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.Lists;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -95,8 +95,8 @@ public abstract class JBTabsImpl extends JComponent
 
   private Insets myInnerInsets = JBUI.emptyInsets();
 
-  private final List<EventListener> myTabMouseListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  private final List<TabsListener> myTabListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<EventListener> myTabMouseListeners = Lists.newLockFreeCopyOnWriteList();
+  private final List<TabsListener> myTabListeners = Lists.newLockFreeCopyOnWriteList();
   private boolean myFocused;
 
   private Getter<ActionGroup> myPopupGroup;

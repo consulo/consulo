@@ -26,6 +26,7 @@ import consulo.container.impl.PluginValidator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -33,7 +34,6 @@ import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Deprecated
 @DeprecationInfo("Use consulo.container.plugin.PluginManager")
@@ -48,48 +48,13 @@ public class PluginManagerCore {
     @DeprecationInfo("Use consulo.container.plugin.PluginManager#getPlugins()")
     @SuppressWarnings("deprecation")
     public static PluginDescriptor[] getPlugins() {
-        List<PluginDescriptor> plugins = consulo.container.plugin.PluginManager.getPlugins();
+        List<PluginDescriptor> plugins = PluginManager.getPlugins();
         PluginDescriptor[] array = new PluginDescriptor[plugins.size()];
         for (int i = 0; i < plugins.size(); i++) {
             PluginDescriptor pluginDescriptor = plugins.get(i);
             array[i] = pluginDescriptor;
         }
         return array;
-    }
-
-    @Nonnull
-    @Deprecated
-    public static Set<PluginId> getDisabledPlugins() {
-        return consulo.container.plugin.PluginManager.getDisabledPlugins();
-    }
-
-    @Nullable
-    public static PluginId getPluginByClassName(@Nonnull String className) {
-        if (className.startsWith("java.") || className.startsWith("javax.") || className.startsWith("kotlin.") || className.startsWith("groovy.")) {
-            return null;
-        }
-
-        for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-            if (hasLoadedClass(className, descriptor.getPluginClassLoader())) {
-                PluginId id = descriptor.getPluginId();
-                return CORE_PLUGIN_ID.equals(id.getIdString()) ? null : id;
-            }
-        }
-        return null;
-    }
-
-    private static boolean hasLoadedClass(@Nonnull String className, ClassLoader loader) {
-        if (loader instanceof PluginClassLoader) {
-            return ((PluginClassLoader) loader).hasLoadedClass(className);
-        }
-
-        // it can be an UrlClassLoader loaded by another class loader, so instanceof doesn't work
-        try {
-            return (Boolean) loader.getClass().getMethod("hasLoadedClass", String.class).invoke(loader, className);
-        }
-        catch (Exception e) {
-            return false;
-        }
     }
 
     @Nullable
@@ -99,10 +64,6 @@ public class PluginManagerCore {
             return null;
         }
         return ((PluginClassLoader) loader).getPluginId();
-    }
-
-    public static boolean isPluginClass(String className) {
-        return consulo.container.plugin.PluginManager.isInitialized() && getPluginByClassName(className) != null;
     }
 
     @Nullable
@@ -183,11 +144,5 @@ public class PluginManagerCore {
 
     public static boolean isIncompatible(final PluginDescriptor descriptor) {
         return PluginValidator.isIncompatible(descriptor);
-    }
-
-    public static void markAsDeletedPlugin(PluginDescriptor descriptor) {
-        if (descriptor instanceof PluginDescriptorImpl) {
-            ((PluginDescriptorImpl) descriptor).setDeleted(true);
-        }
     }
 }

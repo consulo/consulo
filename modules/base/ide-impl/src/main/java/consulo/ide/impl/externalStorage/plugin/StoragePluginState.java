@@ -18,11 +18,12 @@ package consulo.ide.impl.externalStorage.plugin;
 /**
  * @author VISTALL
  * @since 13/09/2021
- *
+ * <p>
  * see hub impl
  */
 public enum StoragePluginState {
-  ENABLED,
-  DISABLED,
-  UNINSTALLED
+    ENABLED,
+    @Deprecated
+    DISABLED,
+    UNINSTALLED
 }

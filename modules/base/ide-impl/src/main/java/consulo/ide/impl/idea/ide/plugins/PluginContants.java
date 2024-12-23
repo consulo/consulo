@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.configurable;
-
-import consulo.ui.annotation.RequiredUIAccess;
+package consulo.ide.impl.idea.ide.plugins;
 
 /**
  * @author VISTALL
- * @since 01-Aug-22
+ * @since 2024-12-23
  */
-public interface SelectableConfigurable {
-  @RequiredUIAccess
-  void onSelected();
+public interface PluginContants {
+    public static final String CONFIGURABLE_ID = "platformAndPlugins";
 }

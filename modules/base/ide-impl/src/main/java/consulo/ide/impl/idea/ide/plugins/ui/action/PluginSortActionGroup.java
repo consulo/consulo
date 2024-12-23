@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.internal;
+package consulo.ide.impl.idea.ide.plugins.ui.action;
 
-import consulo.container.plugin.PluginDescriptor;
-
-import java.io.File;
-import java.util.List;
+import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
  * @author VISTALL
- * @since 2019-07-25
+ * @since 2024-12-23
  */
-public interface PluginManagerInternal {
-  List<PluginDescriptor> getPlugins();
-
-  boolean isInitialized();
-
-  File getPluginPath(Class<?> pluginClass);
-
-  PluginDescriptor getPlugin(Class<?> pluginClass);
+public class PluginSortActionGroup extends DefaultActionGroup implements DumbAware {
+    public PluginSortActionGroup() {
+        super("Sort By", true);
+    }
 }

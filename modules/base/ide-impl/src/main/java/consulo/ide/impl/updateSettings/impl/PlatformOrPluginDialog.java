@@ -24,23 +24,28 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
+import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
-import consulo.ide.impl.idea.ide.plugins.*;
+import consulo.ide.impl.idea.ide.plugins.PluginInstallUtil;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerUISettings;
+import consulo.ide.impl.idea.ide.plugins.PluginNode;
+import consulo.ide.impl.idea.ide.plugins.ui.PluginSorter;
+import consulo.ide.impl.idea.ide.plugins.ui.PluginsList;
+import consulo.ide.impl.idea.ide.plugins.ui.PluginsListRender;
+import consulo.ide.impl.idea.ide.plugins.ui.PluginsPanel;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.CompositePluginInstallIndicator;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginActionListener;
-import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
-import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
@@ -49,8 +54,6 @@ import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
@@ -63,338 +66,303 @@ import java.util.function.Predicate;
  * @since 07-Nov-16
  */
 public class PlatformOrPluginDialog extends DialogWrapper {
-  private static final Logger LOG = Logger.getInstance(PlatformOrPluginDialog.class);
+    @Nonnull
+    private JComponent myRoot;
+    @Nonnull
+    private List<PlatformOrPluginNode> myNodes;
+    @Nullable
+    private Project myProject;
+    @Nullable
+    private Consumer<Collection<PluginDescriptor>> myAfterCallback;
+    @Nullable
+    private String myPlatformVersion;
+    @Nonnull
+    private Predicate<PluginId> myGreenStrategy;
+    @Nonnull
+    private PlatformOrPluginUpdateResult.Type myType;
 
-  private class OurPluginColumnInfo extends PluginManagerColumnInfo {
-    public OurPluginColumnInfo(PluginTableModel model) {
-      super(PluginManagerColumnInfo.COLUMN_NAME, model);
-    }
-
-    @Override
-    public TableCellRenderer getRenderer(final PluginDescriptor pluginDescriptor) {
-      return new PluginsTableRenderer(pluginDescriptor, true) {
-        @Override
-        protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginNode, TableModel model) {
-          PlatformOrPluginNode node = ContainerUtil.find(myNodes, it -> it.getPluginId().equals(pluginDescriptor.getPluginId()));
-          assert node != null;
-
-          PluginDescriptor currentDescriptor = node.getCurrentDescriptor();
-          if (currentDescriptor != null) {
-            myCategory.setText(
-              currentDescriptor.getVersion() + " " + UIUtil.rightArrow() + " " +
-                (node.getFutureDescriptor() == null ? "??" : pluginNode.getVersion())
-            );
-          }
-          else {
-            myCategory.setText(pluginNode.getVersion());
-          }
-
-          FileStatus status = FileStatus.MODIFIED;
-          if (myGreenStrategy.test(pluginNode.getPluginId())) {
-            status = FileStatus.ADDED;
-          }
-          if (node.getFutureDescriptor() == null) {
-            status = FileStatus.UNKNOWN;
-          }
-
-          myRating.setVisible(false);
-          myDownloads.setVisible(false);
-
-          if (!isSelected) myName.setForeground(TargetAWT.to(status.getColor()));
-        }
-      };
-    }
-
-    @Override
-    public Comparator<PluginDescriptor> getComparator() {
-      return null;
-    }
-  }
-
-  private class OurPluginModel extends PluginTableModel {
-    private OurPluginModel() {
-      setSortKey(new RowSorter.SortKey(getNameColumn(), SortOrder.ASCENDING));
-      super.columns = new ColumnInfo[]{new OurPluginColumnInfo(this)};
-      view = new ArrayList<>();
-    }
-
-    @Override
-    public void updatePluginsList(List<PluginDescriptor> list) {
-      view.clear();
-      filtered.clear();
-      view.addAll(list);
-      fireTableDataChanged();
-    }
-
-    @Override
-    public int getNameColumn() {
-      return 0;
-    }
-
-    @Override
-    public boolean isPluginDescriptorAccepted(PluginDescriptor descriptor) {
-      return true;
-    }
-  }
-
-  @Nonnull
-  private JComponent myRoot;
-  @Nonnull
-  private List<PlatformOrPluginNode> myNodes;
-  @Nullable
-  private Project myProject;
-  @Nullable
-  private Consumer<Collection<PluginDescriptor>> myAfterCallback;
-  @Nullable
-  private String myPlatformVersion;
-  @Nonnull
-  private Predicate<PluginId> myGreenStrategy;
-  @Nonnull
-  private PlatformOrPluginUpdateResult.Type myType;
-
-  public PlatformOrPluginDialog(
-    @Nullable Project project,
-    @Nonnull PlatformOrPluginUpdateResult updateResult,
-    @Nullable Predicate<PluginId> greenStrategy,
-    @Nullable Consumer<Collection<PluginDescriptor>> afterCallback
-  ) {
-    super(project);
-    myProject = project;
-    myAfterCallback = afterCallback;
-    myType = updateResult.getType();
-    setTitle(
-      updateResult.getType() == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL
-        ? IdeLocalize.pluginInstallDialogTitle()
-        : IdeLocalize.updateAvailableGroup()
-    );
-
-    myNodes = updateResult.getPlugins();
-
-    if (greenStrategy != null) {
-      myGreenStrategy = greenStrategy;
-    }
-    else {
-      myGreenStrategy = pluginId -> {
-        PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
-        boolean platform = PlatformOrPluginUpdateChecker.isPlatform(pluginId);
-        return plugin == null && !platform;
-      };
-    }
-
-    Set<PluginId> brokenPlugins = new HashSet<>();
-    List<PluginDescriptor> toShowPluginList = new ArrayList<>();
-    for (PlatformOrPluginNode node : myNodes) {
-      PluginDescriptor futureDescriptor = node.getFutureDescriptor();
-      if (futureDescriptor != null) {
-        toShowPluginList.add(futureDescriptor);
-      }
-      else {
-        brokenPlugins.add(node.getPluginId());
-
-        toShowPluginList.add(node.getCurrentDescriptor());
-      }
-
-      if (PlatformOrPluginUpdateChecker.isPlatform(node.getPluginId())) {
-        assert futureDescriptor != null;
-
-        myPlatformVersion = futureDescriptor.getVersion();
-      }
-    }
-
-    Lists.quickSort(toShowPluginList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-
-    Lists.weightSort(toShowPluginList, pluginDescriptor -> {
-      if (PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId())) {
-        return 100;
-      }
-
-      if (brokenPlugins.contains(pluginDescriptor.getPluginId())) {
-        return 200;
-      }
-
-      return 0;
-    });
-
-    OurPluginModel model = new OurPluginModel();
-    model.updatePluginsList(toShowPluginList);
-
-    PluginTable pluginList = new PluginTable(model);
-
-    myRoot = JBUI.Panels.simplePanel().addToCenter(ScrollPaneFactory.createScrollPane(pluginList, true));
-    setResizable(false);
-    init();
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void doOKAction() {
-    super.doOKAction();
-
-    PlatformOrPluginNode brokenPlugin = myNodes.stream()
-      .filter(c -> c.getFutureDescriptor() == null)
-      .findFirst()
-      .orElse(null);
-    if (brokenPlugin != null) {
-      if (Messages.showOkCancelDialog(
-        myProject,
-        "Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?",
-        Application.get().getName().get(),
-        Messages.getErrorIcon()
-      ) != Messages.OK) {
-        return;
-      }
-    }
-
-    UIAccess uiAccess = UIAccess.current();
-
-    Task.Backgroundable.queue(
-      myProject,
-      IdeLocalize.progressDownloadPlugins().get(),
-      true,
-      PluginManagerUISettings.getInstance(),
-      indicator -> {
-        List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
-
-        int installCount = (int)myNodes
-          .stream()
-          .filter(it -> it.getFutureDescriptor() != null)
-          .count();
-        
-        List<PluginDownloader> forInstall = new ArrayList<>(myNodes.size());
-        int i = 0;
-        for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
-          PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
-          // update list contains broken plugins
-          if (pluginDescriptor == null) {
-            continue;
-          }
-
-          try {
-            PluginDownloader downloader = PluginDownloader.createDownloader(
-              pluginDescriptor,
-              myPlatformVersion,
-              myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL
-            );
-
-            forInstall.add(downloader);
-
-            downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
-          }
-          catch (PluginDownloadFailedException e) {
-            uiAccess.give(() -> Alerts.okError(e.getLocalizeMessage()).showAsync());
-            return;
-          }
-        }
-
-        indicator.setTextValue(IdeLocalize.progressInstallingPlugins());
-
-        Application application = Application.get();
-        UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
-
-        InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
-        for (PluginDownloader downloader : forInstall) {
-          try {
-            // already was installed
-            if (installedPluginsState.wasUpdated(downloader.getPluginId())) {
-              continue;
-            }
-
-            installedPluginsState.getUpdatedPlugins().add(downloader.getPluginId());
-
-            downloader.install(indicator, true);
-
-            PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
-
-            if (pluginDescriptor instanceof PluginNode) {
-              ((PluginNode)pluginDescriptor).setInstallStatus(PluginNode.STATUS_DOWNLOADED);
-
-              if (myType == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
-                updateHistory.setShowExperimentalWarning(true);
-              }
-            }
-
-            installed.add(pluginDescriptor);
-          }
-          catch (IOException e) {
-            uiAccess.give(() -> Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync());
-            return;
-          }
-        }
-
-        application.getMessageBus().syncPublisher(PluginActionListener.class).pluginsInstalled(
-          installed.stream()
-            .filter(it -> it instanceof PluginNode)
-            .map(PluginDescriptor::getPluginId)
-            .toArray(PluginId[]::new)
+    public PlatformOrPluginDialog(
+        @Nullable Project project,
+        @Nonnull PlatformOrPluginUpdateResult updateResult,
+        @Nullable Predicate<PluginId> greenStrategy,
+        @Nullable Consumer<Collection<PluginDescriptor>> afterCallback
+    ) {
+        super(project);
+        myProject = project;
+        myAfterCallback = afterCallback;
+        myType = updateResult.getType();
+        setTitle(
+            updateResult.getType() == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL
+                ? IdeLocalize.pluginInstallDialogTitle()
+                : IdeLocalize.updateAvailableGroup()
         );
 
-        Map<String, String> pluginHistory = new HashMap<>();
-        for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-          if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
-            continue;
-          }
+        myNodes = updateResult.getPlugins();
 
-          pluginHistory.put(descriptor.getPluginId().getIdString(), StringUtil.notNullize(descriptor.getVersion()));
+        if (greenStrategy != null) {
+            myGreenStrategy = greenStrategy;
+        }
+        else {
+            myGreenStrategy = pluginId -> {
+                PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
+                boolean platform = PlatformOrPluginUpdateChecker.isPlatform(pluginId);
+                return plugin == null && !platform;
+            };
         }
 
-        pluginHistory.put(
-          PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(),
-          ApplicationInfo.getInstance().getBuild().toString()
-        );
-
-        updateHistory.replaceHistory(pluginHistory);
-
-        if (myAfterCallback != null) {
-          myAfterCallback.accept(installed);
-        }
-
-        if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
-          SwingUtilities.invokeLater(() -> {
-            UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
-            updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
-
-            SettingsEntryPointAction.updateState(updateSettings);
-
-            if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
-              Application.get().restart(true);
+        Set<PluginId> brokenPlugins = new HashSet<>();
+        List<PluginDescriptor> toShowPluginList = new ArrayList<>();
+        for (PlatformOrPluginNode node : myNodes) {
+            PluginDescriptor futureDescriptor = node.getFutureDescriptor();
+            if (futureDescriptor != null) {
+                toShowPluginList.add(futureDescriptor);
             }
-          });
+            else {
+                brokenPlugins.add(node.getPluginId());
+
+                toShowPluginList.add(node.getCurrentDescriptor());
+            }
+
+            if (PlatformOrPluginUpdateChecker.isPlatform(node.getPluginId())) {
+                assert futureDescriptor != null;
+
+                myPlatformVersion = futureDescriptor.getVersion();
+            }
         }
-      }
-    );
-  }
 
-  @Nullable
-  @Override
-  protected String getDimensionServiceKey() {
-    setScalableSize(600, 300);
-    return getClass().getSimpleName();
-  }
+        Lists.quickSort(toShowPluginList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
-  @Nullable
-  @Override
-  protected Border createContentPaneBorder() {
-    return null;
-  }
+        Lists.weightSort(toShowPluginList, pluginDescriptor -> {
+            if (PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId())) {
+                return 100;
+            }
 
-  @Nullable
-  @Override
-  protected JComponent createSouthPanel() {
-    JComponent southPanel = super.createSouthPanel();
-    if (southPanel != null) {
-      southPanel.add(new JBLabel("Following nodes will be downloaded & installed"), BorderLayout.WEST);
-      southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
+            if (brokenPlugins.contains(pluginDescriptor.getPluginId())) {
+                return 200;
+            }
 
-      BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
-      borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
-      return borderLayoutPanel;
+            return 0;
+        });
+
+        PluginsList pluginsList = new PluginsList(null) {
+            @Nonnull
+            @Override
+            protected PluginsListRender createRender(PluginsPanel pluginsPanel) {
+                return new PluginsListRender(null) {
+                    @Override
+                    protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginNode) {
+                        PlatformOrPluginNode node = ContainerUtil.find(myNodes, it -> it.getPluginId().equals(pluginNode.getPluginId()));
+                        assert node != null;
+
+                        PluginDescriptor currentDescriptor = node.getCurrentDescriptor();
+                        if (currentDescriptor != null) {
+                            myCategory.setText(
+                                currentDescriptor.getVersion() + " " + UIUtil.rightArrow() + " " +
+                                    (node.getFutureDescriptor() == null ? "??" : pluginNode.getVersion())
+                            );
+                        }
+                        else {
+                            myCategory.setText(pluginNode.getVersion());
+                        }
+
+                        FileStatus status = FileStatus.MODIFIED;
+                        if (myGreenStrategy.test(pluginNode.getPluginId())) {
+                            status = FileStatus.ADDED;
+                        }
+                        if (node.getFutureDescriptor() == null) {
+                            status = FileStatus.UNKNOWN;
+                        }
+
+                        myRating.setVisible(false);
+                        myDownloads.setVisible(false);
+
+                        if (!isSelected) {
+                            myName.setForeground(TargetAWT.to(status.getColor()));
+                        }
+                    }
+                };
+            }
+        };
+
+        // change default sort to as is
+        pluginsList.reSort(PluginSorter.AS_IS);
+        pluginsList.modifyPluginsList(toShowPluginList);
+
+        myRoot = JBUI.Panels.simplePanel().addToCenter(ScrollPaneFactory.createScrollPane(pluginsList.getComponent(), true));
+        setResizable(false);
+        init();
     }
-    return null;
-  }
 
-  @Nullable
-  @Override
-  protected JComponent createCenterPanel() {
-    return myRoot;
-  }
+    @Override
+    @RequiredUIAccess
+    public void doOKAction() {
+        super.doOKAction();
+
+        PlatformOrPluginNode brokenPlugin = myNodes.stream()
+            .filter(c -> c.getFutureDescriptor() == null)
+            .findFirst()
+            .orElse(null);
+        if (brokenPlugin != null) {
+            if (Messages.showOkCancelDialog(
+                myProject,
+                "Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?",
+                Application.get().getName().get(),
+                Messages.getErrorIcon()
+            ) != Messages.OK) {
+                return;
+            }
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+
+        Task.Backgroundable.queue(
+            myProject,
+            IdeLocalize.progressDownloadPlugins().get(),
+            true,
+            PluginManagerUISettings.getInstance(),
+            indicator -> {
+                List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
+
+                int installCount = (int) myNodes
+                    .stream()
+                    .filter(it -> it.getFutureDescriptor() != null)
+                    .count();
+
+                List<PluginDownloader> forInstall = new ArrayList<>(myNodes.size());
+                int i = 0;
+                for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
+                    PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
+                    // update list contains broken plugins
+                    if (pluginDescriptor == null) {
+                        continue;
+                    }
+
+                    try {
+                        PluginDownloader downloader = PluginDownloader.createDownloader(
+                            pluginDescriptor,
+                            myPlatformVersion,
+                            myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL
+                        );
+
+                        forInstall.add(downloader);
+
+                        downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
+                    }
+                    catch (PluginDownloadFailedException e) {
+                        uiAccess.give(() -> Alerts.okError(e.getLocalizeMessage()).showAsync());
+                        return;
+                    }
+                }
+
+                indicator.setTextValue(IdeLocalize.progressInstallingPlugins());
+
+                Application application = Application.get();
+                UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
+
+                InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
+                for (PluginDownloader downloader : forInstall) {
+                    try {
+                        // already was installed
+                        if (installedPluginsState.wasUpdated(downloader.getPluginId())) {
+                            continue;
+                        }
+
+                        installedPluginsState.getUpdatedPlugins().add(downloader.getPluginId());
+
+                        downloader.install(indicator, true);
+
+                        PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
+
+                        if (pluginDescriptor instanceof PluginNode) {
+                            ((PluginNode) pluginDescriptor).setInstallStatus(PluginNode.STATUS_DOWNLOADED);
+
+                            if (myType == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
+                                updateHistory.setShowExperimentalWarning(true);
+                            }
+                        }
+
+                        installed.add(pluginDescriptor);
+                    }
+                    catch (IOException e) {
+                        uiAccess.give(() -> Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync());
+                        return;
+                    }
+                }
+
+                application.getMessageBus().syncPublisher(PluginActionListener.class).pluginsInstalled(
+                    installed.stream()
+                        .filter(it -> it instanceof PluginNode)
+                        .map(PluginDescriptor::getPluginId)
+                        .toArray(PluginId[]::new)
+                );
+
+                Map<String, String> pluginHistory = new HashMap<>();
+                for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+                    if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
+                        continue;
+                    }
+
+                    pluginHistory.put(descriptor.getPluginId().getIdString(), StringUtil.notNullize(descriptor.getVersion()));
+                }
+
+                pluginHistory.put(
+                    PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(),
+                    ApplicationInfo.getInstance().getBuild().toString()
+                );
+
+                updateHistory.replaceHistory(pluginHistory);
+
+                if (myAfterCallback != null) {
+                    myAfterCallback.accept(installed);
+                }
+
+                if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
+                    SwingUtilities.invokeLater(() -> {
+                        UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
+                        updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
+
+                        SettingsEntryPointAction.updateState(updateSettings);
+
+                        if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
+                            Application.get().restart(true);
+                        }
+                    });
+                }
+            }
+        );
+    }
+
+    @Nullable
+    @Override
+    protected String getDimensionServiceKey() {
+        setScalableSize(600, 300);
+        return getClass().getSimpleName();
+    }
+
+    @Nullable
+    @Override
+    protected Border createContentPaneBorder() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    protected JComponent createSouthPanel() {
+        JComponent southPanel = super.createSouthPanel();
+        if (southPanel != null) {
+            southPanel.add(new JBLabel("Following nodes will be downloaded & installed"), BorderLayout.WEST);
+            southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
+
+            BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
+            borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
+            return borderLayoutPanel;
+        }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    protected JComponent createCenterPanel() {
+        return myRoot;
+    }
 }

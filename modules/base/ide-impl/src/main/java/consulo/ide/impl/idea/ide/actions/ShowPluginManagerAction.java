@@ -19,7 +19,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.plugins.PluginsConfigurable;
+import consulo.ide.impl.idea.ide.plugins.ui.PluginsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

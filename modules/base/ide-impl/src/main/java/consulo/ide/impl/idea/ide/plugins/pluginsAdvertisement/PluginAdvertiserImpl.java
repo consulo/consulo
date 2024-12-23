@@ -23,8 +23,6 @@ import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.extension.preview.ExtensionPreviewAcceptor;
 import consulo.component.internal.PluginDescritorWithExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginId;
-import consulo.container.plugin.PluginManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.logging.Logger;
@@ -111,12 +109,9 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
                 previews.add(feature);
 
                 final Set<PluginDescriptor> descriptors = findImpl(allDescriptors, feature);
-                //do not suggest to download disabled plugins
-                final Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
+
                 for (PluginDescriptor id : descriptors) {
-                    if (!disabledPlugins.contains(id.getPluginId())) {
-                        ids.add(id);
-                    }
+                    ids.add(id);
                 }
             });
         });

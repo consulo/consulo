@@ -7,7 +7,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.idea.ide.plugins.ui.PluginTab;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.SwingHelper;
@@ -148,7 +148,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     UiNotifyConnector.doWhenFirstShown(myPackages, () -> initModel(""));
     myOptionsCheckBox.addActionListener(event -> myOptionsField.setEnabled(myOptionsCheckBox.isSelected()));
     myInstallButton.setEnabled(false);
-    myDescriptionTextArea.addHyperlinkListener(new PluginManagerMain.MyHyperlinkListener());
+    myDescriptionTextArea.addHyperlinkListener(new PluginTab.MyHyperlinkListener());
     addInstallAction();
     myInstalledPackages = new HashSet<>();
     updateInstalledPackages();

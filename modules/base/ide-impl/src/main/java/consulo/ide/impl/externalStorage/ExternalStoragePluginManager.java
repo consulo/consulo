@@ -108,8 +108,6 @@ public class ExternalStoragePluginManager implements PluginActionListener {
     switch (state) {
       case ENABLED:
         return true;
-      case DISABLED:
-        return false;
       default:
         throw new IllegalArgumentException(state.name());
     }
@@ -130,7 +128,7 @@ public class ExternalStoragePluginManager implements PluginActionListener {
           continue;
         }
 
-        inPlugins.add(new StoragePlugin(plugin.getPluginId().toString(), plugin.isEnabled() ? StoragePluginState.ENABLED : StoragePluginState.DISABLED));
+        inPlugins.add(new StoragePlugin(plugin.getPluginId().toString(), StoragePluginState.ENABLED));
       }
 
       StoragePlugin[] beans = WebServiceApiSender.doPost(WebServiceApi.STORAGE_API, "/plugins/merge", inPlugins, StoragePlugin[].class);
@@ -152,15 +150,8 @@ public class ExternalStoragePluginManager implements PluginActionListener {
             }
             break;
           case ENABLED:
-          case DISABLED:
             if (plugin == null) {
               if(InstalledPluginsState.getInstance().getInstalledPlugins().contains(pluginId)) {
-                if (bean.state == StoragePluginState.ENABLED) {
-                  PluginManager.enablePlugin(pluginId);
-                }
-                else {
-                  PluginManager.disablePlugin(pluginId);
-                }
                 continue;
               }
 
@@ -234,13 +225,6 @@ public class ExternalStoragePluginManager implements PluginActionListener {
 
               InstalledPluginsState.getInstance().getInstalledPlugins().add(pluginId);
               downloader.install(indicator, true);
-
-              if (pluginEnabled) {
-                PluginManager.enablePlugin(entry.getKey());
-              }
-              else {
-                PluginManager.disablePlugin(entry.getKey());
-              }
               break;
             case NO:
               PluginInstallUtil.prepareToUninstall(pluginId);

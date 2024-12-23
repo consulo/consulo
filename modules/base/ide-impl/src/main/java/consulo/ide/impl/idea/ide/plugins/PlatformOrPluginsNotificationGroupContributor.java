@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 import jakarta.annotation.Nonnull;
@@ -29,9 +30,15 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class PlatformOrPluginsNotificationGroupContributor implements NotificationGroupContributor {
-  @Override
-  public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
-    registrator.accept(PluginManagerMain.ourPluginsLifecycleGroup);
-    registrator.accept(PlatformOrPluginUpdateChecker.ourGroup);
-  }
+    public static final NotificationGroup ourPluginsLifecycleGroup = new NotificationGroup(
+        "Plugins Lifecycle Group",
+        NotificationDisplayType.STICKY_BALLOON,
+        true
+    );
+
+    @Override
+    public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+        registrator.accept(ourPluginsLifecycleGroup);
+        registrator.accept(PlatformOrPluginUpdateChecker.ourGroup);
+    }
 }

@@ -20,195 +20,217 @@ package consulo.ui.ex.awt;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class DetailsComponent {
 
-  private final JPanel myComponent;
+    private final JPanel myComponent;
 
-  private JComponent myContent;
+    private JComponent myContent;
 
-  private final Banner myBannerLabel;
+    private final Banner myBannerLabel;
 
-  private final JLabel myEmptyContentLabel;
-  private final NonOpaquePanel myBanner;
+    private final JLabel myEmptyContentLabel;
+    private final NonOpaquePanel myBanner;
 
-  private String[] myBannerText;
-  private boolean myDetailsEnabled;
-  private boolean myPaintBorder;
-  private String[] myPrefix;
-  private String[] myText;
+    private String[] myBannerText;
+    private boolean myDetailsEnabled;
+    private boolean myPaintBorder;
+    private String[] myPrefix;
+    private String[] myText;
 
-  private final Wrapper myContentGutter = new Wrapper();
+    private final Wrapper myContentGutter = new Wrapper();
 
-  public DetailsComponent() {
-    this(true, true);
-  }
-
-  public DetailsComponent(boolean detailsEnabled, boolean paintBorder) {
-    myDetailsEnabled = detailsEnabled;
-    myPaintBorder = paintBorder;
-    myComponent = new JPanel(new BorderLayout());
-
-    myComponent.setOpaque(false);
-    myContentGutter.setOpaque(false);
-    myContentGutter.setBorder(null);
-
-    myBanner = new NonOpaquePanel(new BorderLayout());
-    myBannerLabel = new Banner();
-
-    if (myDetailsEnabled) {
-      myBanner.add(myBannerLabel, BorderLayout.CENTER);
+    public DetailsComponent() {
+        this(true, true);
     }
 
-    myEmptyContentLabel = new JLabel("", SwingConstants.CENTER);
+    public DetailsComponent(boolean detailsEnabled, boolean paintBorder) {
+        myDetailsEnabled = detailsEnabled;
+        myPaintBorder = paintBorder;
+        myComponent = new JPanel(new BorderLayout());
 
-    revalidateDetailsMode();
-  }
+        myComponent.setOpaque(false);
+        myContentGutter.setOpaque(false);
+        myContentGutter.setBorder(null);
 
-  private void revalidateDetailsMode() {
-    myComponent.removeAll();
-    myComponent.add(myContentGutter, BorderLayout.CENTER);
+        myBanner = new NonOpaquePanel(new BorderLayout());
+        myBannerLabel = new Banner();
 
-    if (myDetailsEnabled) {
-      myComponent.add(myBanner, BorderLayout.NORTH);
+        if (myDetailsEnabled) {
+            myBanner.add(myBannerLabel, BorderLayout.CENTER);
+        }
+
+        myEmptyContentLabel = new JLabel("", SwingConstants.CENTER);
+
+        revalidateDetailsMode();
     }
 
-    if (myContent != null) {
-      myContentGutter.add(myContent, BorderLayout.CENTER);
-      invalidateContentBorder();
+    private void revalidateDetailsMode() {
+        myComponent.removeAll();
+        myComponent.add(myContentGutter, BorderLayout.CENTER);
+
+        if (myDetailsEnabled) {
+            myComponent.add(myBanner, BorderLayout.NORTH);
+        }
+
+        if (myContent != null) {
+            myContentGutter.add(myContent, BorderLayout.CENTER);
+            invalidateContentBorder();
+        }
+
+        myComponent.revalidate();
+        myComponent.repaint();
     }
 
-    myComponent.revalidate();
-    myComponent.repaint();
-  }
+    public void setBannerActions(Action[] actions) {
+        myBannerLabel.clearActions();
+        for (Action each : actions) {
+            myBannerLabel.addAction(each);
+        }
 
-  public void setBannerActions(Action[] actions) {
-    myBannerLabel.clearActions();
-    for (Action each : actions) {
-      myBannerLabel.addAction(each);
+        myComponent.revalidate();
+        myComponent.repaint();
     }
 
-    myComponent.revalidate();
-    myComponent.repaint();
-  }
+    public void setFullContent(@Nonnull JComponent c, Consumer<JComponent> bannerLabelSetter) {
+        myBanner.setVisible(false);
 
-  public void setContent(@Nullable JComponent c) {
-    if (myContent != null) {
-      myContentGutter.remove(myContent);
+        myBanner.remove(myBannerLabel);
+
+        bannerLabelSetter.accept(myBannerLabel);
+
+        setContentImpl(c);
     }
 
-    myContent = new MyWrapper(c);
+    public void setContent(@Nullable JComponent c) {
+        myBanner.setVisible(true);
 
-    myContent.setOpaque(false);
+        if (myDetailsEnabled && myBannerLabel.getParent() != myBanner) {
+            myBanner.add(myBannerLabel, BorderLayout.CENTER);
+        }
 
-    invalidateContentBorder();
-
-    myContentGutter.add(myContent, BorderLayout.CENTER);
-
-    updateBanner();
-
-    myComponent.revalidate();
-    myComponent.repaint();
-  }
-
-  private void invalidateContentBorder() {
-    if (myDetailsEnabled && myPaintBorder) {
-      myContent.setBorder(new EmptyBorder(0, 8, 0, 8));
-    }
-    else {
-      myContent.setBorder(null);
-    }
-  }
-
-  public void setProjectIconDescription(@Nullable String toolTipText) {
-    myBannerLabel.setProjectIconDescription(toolTipText);
-  }
-  public void setPrefix(@Nullable String... prefix) {
-    myPrefix = prefix;
-    if (myText != null) {
-      setText(myText);
-    }
-  }
-
-  public void setText(@Nullable String... text) {
-    myText = text;
-    update();
-  }
-
-  public void update() {
-    ArrayList<String> strings = new ArrayList<String>();
-    if (myPrefix != null) {
-      ContainerUtil.addAll(strings, myPrefix);
+        setContentImpl(c);
     }
 
-    if (myText != null) {
-      ContainerUtil.addAll(strings, myText);
+    private void setContentImpl(@Nullable JComponent c) {
+        if (myContent != null) {
+            myContentGutter.remove(myContent);
+        }
+
+        myContent = new MyWrapper(c);
+
+        myContent.setOpaque(false);
+
+        invalidateContentBorder();
+
+        myContentGutter.add(myContent, BorderLayout.CENTER);
+
+        updateBanner();
+
+        myComponent.revalidate();
+        myComponent.repaint();
     }
 
-    myBannerText = ArrayUtil.toStringArray(strings);
-
-    updateBanner();
-  }
-
-  private void updateBanner() {
-    myBannerLabel.setText(NullableComponent.Check.isNull(myContent) || myBannerText == null ? ArrayUtil.EMPTY_STRING_ARRAY : myBannerText);
-
-    myBannerLabel.revalidate();
-    myBannerLabel.repaint();
-  }
-
-  public void setPaintBorder(final boolean paintBorder) {
-  }
-
-  public DetailsComponent setEmptyContentText(@Nullable final String emptyContentText) {
-    final String s = XmlStringUtil.wrapInHtml("<center>" + (emptyContentText != null ? emptyContentText : "") + "</center>");
-    myEmptyContentLabel.setText(s);
-    return this;
-  }
-
-  public JComponent getComponent() {
-    return myComponent;
-  }
-
-  public JComponent getContentGutter() {
-    return myContentGutter;
-  }
-
-  public DetailsComponent setBannerMinHeight(final int height) {
-    myBannerLabel.setMinHeight(height);
-    return this;
-  }
-
-  public void disposeUIResources() {
-    setContent(null);
-  }
-
-  public void updateBannerActions() {
-    myBannerLabel.updateActions();
-  }
-
-  public void setDetailsModeEnabled(final boolean enabled) {
-    if (myDetailsEnabled == enabled) return;
-
-    myDetailsEnabled = enabled;
-
-    revalidateDetailsMode();
-  }
-
-  private class MyWrapper extends Wrapper implements NullableComponent {
-    public MyWrapper(final JComponent c) {
-      super(c == null || NullableComponent.Check.isNull(c) ? myEmptyContentLabel : c);
+    private void invalidateContentBorder() {
+        if (myDetailsEnabled && myPaintBorder) {
+            myContent.setBorder(new EmptyBorder(0, 8, 0, 8));
+        }
+        else {
+            myContent.setBorder(null);
+        }
     }
 
-    @Override
-    public boolean isNull() {
-      return getTargetComponent() == myEmptyContentLabel;
+    public void setProjectIconDescription(@Nullable String toolTipText) {
+        myBannerLabel.setProjectIconDescription(toolTipText);
     }
-  }
+
+    public void setPrefix(@Nullable String... prefix) {
+        myPrefix = prefix;
+        if (myText != null) {
+            setText(myText);
+        }
+    }
+
+    public void setText(@Nullable String... text) {
+        myText = text;
+        update();
+    }
+
+    public void update() {
+        ArrayList<String> strings = new ArrayList<String>();
+        if (myPrefix != null) {
+            ContainerUtil.addAll(strings, myPrefix);
+        }
+
+        if (myText != null) {
+            ContainerUtil.addAll(strings, myText);
+        }
+
+        myBannerText = ArrayUtil.toStringArray(strings);
+
+        updateBanner();
+    }
+
+    private void updateBanner() {
+        myBannerLabel.setText(NullableComponent.Check.isNull(myContent) || myBannerText == null ? ArrayUtil.EMPTY_STRING_ARRAY : myBannerText);
+
+        myBannerLabel.revalidate();
+        myBannerLabel.repaint();
+    }
+
+    public DetailsComponent setEmptyContentText(@Nullable final String emptyContentText) {
+        final String s = XmlStringUtil.wrapInHtml("<center>" + (emptyContentText != null ? emptyContentText : "") + "</center>");
+        myEmptyContentLabel.setText(s);
+        return this;
+    }
+
+    public JComponent getComponent() {
+        return myComponent;
+    }
+
+    public JComponent getContentGutter() {
+        return myContentGutter;
+    }
+
+    public DetailsComponent setBannerMinHeight(final int height) {
+        myBannerLabel.setMinHeight(height);
+        return this;
+    }
+
+    public void disposeUIResources() {
+        setContent(null);
+    }
+
+    public void updateBannerActions() {
+        myBannerLabel.updateActions();
+    }
+
+    public void setDetailsModeEnabled(final boolean enabled) {
+        if (myDetailsEnabled == enabled) {
+            return;
+        }
+
+        myDetailsEnabled = enabled;
+
+        revalidateDetailsMode();
+    }
+
+    private class MyWrapper extends Wrapper implements NullableComponent {
+        public MyWrapper(final JComponent c) {
+            super(c == null || NullableComponent.Check.isNull(c) ? myEmptyContentLabel : c);
+        }
+
+        @Override
+        public boolean isNull() {
+            return getTargetComponent() == myEmptyContentLabel;
+        }
+    }
 }

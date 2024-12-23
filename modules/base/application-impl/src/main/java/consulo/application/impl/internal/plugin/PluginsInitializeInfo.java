@@ -26,13 +26,9 @@ import java.util.Set;
  * @since 2020-05-23
  */
 public class PluginsInitializeInfo {
-  public static final String DISABLE = "disable";
-  public static final String ENABLE = "enable";
   public static final String EDIT = "edit";
 
   private List<CompositeMessage> myPluginErrors = null;
-  private Set<PluginId> myPlugins2Disable = null;
-  private Set<PluginId> myPlugins2Enable = null;
 
   public void addPluginErrors(List<CompositeMessage> problems) {
     if (myPluginErrors == null) {
@@ -43,23 +39,7 @@ public class PluginsInitializeInfo {
     }
   }
 
-  public void setPluginsForDisable(Set<PluginId> pluginsForDisable) {
-    myPlugins2Disable = pluginsForDisable;
-  }
-
-  public void setPluginsForEnable(Set<PluginId> pluginsForEnable) {
-    myPlugins2Enable = pluginsForEnable;
-  }
-
   public List<CompositeMessage> getPluginErrors() {
     return myPluginErrors;
-  }
-
-  public Set<PluginId> getPlugins2Disable() {
-    return myPlugins2Disable;
-  }
-
-  public Set<PluginId> getPlugins2Enable() {
-    return myPlugins2Enable;
   }
 }

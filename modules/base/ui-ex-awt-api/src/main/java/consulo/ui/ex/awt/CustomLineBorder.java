@@ -15,7 +15,10 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.ui.ex.JBColor;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import javax.swing.border.Border;
 import java.awt.*;
 
@@ -23,50 +26,60 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class CustomLineBorder implements Border {
-  private final Color myColor;
-  private final Insets myInsets;
+    private final Color myColor;
+    private final Insets myInsets;
 
-  public CustomLineBorder(@Nonnull Color color, @Nonnull Insets insets) {
-    myColor = color;
-    myInsets = insets;
-  }
+    public CustomLineBorder(@Nullable Color color, @Nonnull Insets insets) {
+        myColor = color;
+        myInsets = insets;
+    }
 
-  public CustomLineBorder(@Nonnull Color color, int top, int left, int bottom, int right) {
-    this(color, new Insets(top, left, bottom, right));
-  }
+    public CustomLineBorder(@Nonnull Color color, int top, int left, int bottom, int right) {
+        this(color, new Insets(top, left, bottom, right));
+    }
 
-  public CustomLineBorder(@Nonnull Insets insets) {
-    this(UIUtil.getBorderColor(), insets);
-  }
+    public CustomLineBorder(@Nonnull Insets insets) {
+        this(UIUtil.getBorderColor(), insets);
+    }
 
-  public CustomLineBorder(int top, int left, int bottom, int right) {
-    this(new Insets(top, left, bottom, right));
-  }
+    public CustomLineBorder(int top, int left, int bottom, int right) {
+        this(new Insets(top, left, bottom, right));
+    }
 
-  @Override
-  public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
-    final Color oldColor = g.getColor();
-    g.setColor(getColor());
+    @Override
+    public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
+        final Color oldColor = g.getColor();
 
-    if (myInsets.left > 0) g.fillRect(x, y, x + myInsets.left, y + h);
-    if (myInsets.bottom > 0) g.fillRect(x, y + h - myInsets.bottom, x + w, y + h);
-    if (myInsets.right> 0) g.fillRect(x + w - myInsets.right, y, x + w, y + h);
-    if (myInsets.top > 0) g.fillRect(x, y, x + w, y + myInsets.top);
+        Color color = myColor;
+        if (color == null) {
+            color = JBColor.border();
+        }
 
-    g.setColor(oldColor);
-  }
+        g.setColor(color);
 
-  protected Color getColor() {
-    return myColor;
-  }
+        if (myInsets.left > 0) {
+            g.fillRect(x, y, x + myInsets.left, y + h);
+        }
+        if (myInsets.bottom > 0) {
+            g.fillRect(x, y + h - myInsets.bottom, x + w, y + h);
+        }
+        if (myInsets.right > 0) {
+            g.fillRect(x + w - myInsets.right, y, x + w, y + h);
+        }
+        if (myInsets.top > 0) {
+            g.fillRect(x, y, x + w, y + myInsets.top);
+        }
 
-  @Override
-  public Insets getBorderInsets(Component c) {
-    return myInsets;
-  }
+        g.setColor(oldColor);
+    }
 
-  @Override
-  public boolean isBorderOpaque() {
-    return true;
-  }
+    @Override
+    public Insets getBorderInsets(Component c) {
+        return myInsets;
+    }
+
+    @Override
+    public boolean isBorderOpaque() {
+        return true;
+    }
 }

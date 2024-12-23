@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.internal.ApplicationEx;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.ide.impl.idea.ide.plugins.ui.PluginTab;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.ide.impl.idea.util.containers.ArrayListSet;
 import consulo.ide.impl.plugins.InstalledPluginsState;
@@ -147,7 +148,7 @@ public class PluginInstallUtil {
         StartupActionScriptManager.addActionCommand(deleteOld);
       }
       else {
-        PluginManagerMain.LOG.error("Plugin not found: " + pluginId);
+        PluginTab.LOG.error("Plugin not found: " + pluginId);
       }
     }
   }

@@ -15,7 +15,6 @@
  */
 package consulo.application.impl.internal.start;
 
-import consulo.application.ApplicationProperties;
 import consulo.application.internal.ApplicationInfo;
 import consulo.container.ExitCodes;
 import consulo.container.boot.ContainerPathManager;
@@ -220,13 +219,10 @@ public class StartupUtil {
     if (pluginId != null && !PluginIds.isPlatformPlugin(pluginId)) {
       LoggerHolder.ourLogger.warn(t);
 
-      if (!ApplicationProperties.isInSandbox()) {
-        PluginManager.disablePlugin(pluginId);
-      }
 
       StringWriter message = new StringWriter();
-      message.append("Plugin '").append(pluginId.getIdString()).append("' failed to initialize and will be disabled. ");
-      message.append(" Please restart IDE").append('.');
+      message.append("Plugin '").append(pluginId.getIdString()).append("' failed to initialize. ");
+      message.append(" Please remove plugin, and restart IDE.").append('.');
       message.append("\n\n");
       t.printStackTrace(new PrintWriter(message));
 

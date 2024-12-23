@@ -22,6 +22,7 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.configurable.*;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.configurable.internal.FullContentConfigurable;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
@@ -843,8 +844,16 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
                     updateContent();
 
-                    myOwnDetails.setContent(myContentWrapper);
-                    myOwnDetails.setText(getBannerText(configurable));
+                    String[] bannerText = getBannerText(configurable);
+                    myOwnDetails.setText(bannerText);
+
+                    FullContentConfigurable fullContent = ConfigurableWrapper.cast(configurable, FullContentConfigurable.class);
+                    if (fullContent != null) {
+                        myOwnDetails.setFullContent(myContentWrapper, fullContent::setBannerComponent);
+                    } else {
+                        myOwnDetails.setContent(myContentWrapper);
+                    }
+
                     if (isProjectConfigurable(configurable) && myProject != null) {
                         myOwnDetails.setProjectIconDescription(ProjectBundle.message(myProject.isDefault() ? "configurable.default.project.tooltip" : "configurable.current.project.tooltip"));
                     }
@@ -858,10 +867,6 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
                     checkModified(oldConfigurable);
                     checkModified(configurable);
-
-                    if (configurable instanceof SelectableConfigurable selectableConfigurable) {
-                        selectableConfigurable.onSelected();
-                    }
 
                     if (myTree.myBuilder.getSelectedElements().size() == 0) {
                         select(configurable).notify(result);
