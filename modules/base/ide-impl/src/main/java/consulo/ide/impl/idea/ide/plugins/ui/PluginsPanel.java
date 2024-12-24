@@ -83,7 +83,7 @@ public class PluginsPanel implements Disposable {
         myRepositoryTab.setInstalledTab(myInstalledTab);
         myRepositoryTab.setAvailableTab(myRepositoryTab);
 
-        myTabbedPane.addTab("From Repository", myRepositoryTab.getMainPanel());
+        myTabbedPane.addTab("Repository", myRepositoryTab.getMainPanel());
         myTabbedPane.addTab("Installed", myInstalledTab.getMainPanel());
 
         int pluginsCount = PluginManager.getPluginsCount();
