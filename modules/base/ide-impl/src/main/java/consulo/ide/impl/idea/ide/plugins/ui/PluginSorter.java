@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.plugins.ui;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 
 import java.util.function.Function;
@@ -30,11 +31,26 @@ public enum PluginSorter {
     AS_IS(LocalizeValue.empty(), pluginDescriptor -> {
         throw new IllegalArgumentException();
     }),
-    NAME(IdeLocalize.columnPluginsName(), PluginDescriptor::getName),
+    NAME(IdeLocalize.columnPluginsName(), pluginDescriptor -> {
+        String name = pluginDescriptor.getName();
+        name = name.toLowerCase(LocalizeManager.get().getLocale());
+
+        if (!Character.isAlphabetic(name.charAt(0))) {
+            // find first alphabetic symbol
+            for (int i = 0; i < name.length(); i++) {
+                if (Character.isAlphabetic(name.charAt(i))) {
+                    return name.substring(i, name.length());
+                }
+            }
+            return name;
+        } else {
+            return name;
+        }
+    }),
     RATING(IdeLocalize.columnPluginsRate(), pluginDescriptor -> ((PluginNode) pluginDescriptor).getRating()),
     DOWNLOADS(IdeLocalize.columnPluginsDownloads(), PluginDescriptor::getDownloads),
     LAST_UPDATED(IdeLocalize.columnPluginsDate(), pluginDescriptor -> ((PluginNode) pluginDescriptor).getDate()),
-    STATUS(IdeLocalize.pluginStatusInstalled(), PluginDescriptor::getStatus);
+    STATUS(LocalizeValue.localizeTODO("Status"), PluginDescriptor::getStatus);
 
     private final LocalizeValue mySortName;
     private final Function<PluginDescriptor, Comparable> myValueGetter;
