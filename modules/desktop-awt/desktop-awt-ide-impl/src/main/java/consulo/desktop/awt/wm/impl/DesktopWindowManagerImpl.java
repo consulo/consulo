@@ -31,6 +31,7 @@ import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -708,7 +709,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     public boolean isFullScreenSupportedInCurrentOS() {
         return Platform.current().os().isMac()
             || Platform.current().os().isWindows()
-            || Platform.current().os().isXWindow() && X11UiUtil.isFullScreenSupported();
+            || Platform.current().os() instanceof UnixOperationSystem os && os.isXWindow() && X11UiUtil.isFullScreenSupported();
     }
 
     @Override

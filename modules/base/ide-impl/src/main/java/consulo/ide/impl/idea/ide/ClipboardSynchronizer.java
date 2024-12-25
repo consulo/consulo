@@ -17,6 +17,7 @@ import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
 import consulo.ide.impl.idea.util.concurrency.FutureResult;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -67,7 +68,7 @@ public class ClipboardSynchronizer implements Disposable {
     else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && Platform.current().os().isMac()) {
       myClipboardHandler = new MacClipboardHandler();
     }
-    else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && Platform.current().os().isXWindow()) {
+    else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && Platform.current().os() instanceof UnixOperationSystem os && os.isXWindow()) {
       myClipboardHandler = new XWinClipboardHandler();
     }
     else {

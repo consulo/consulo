@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
 import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.keymap.Keymap;
@@ -30,19 +31,23 @@ import java.awt.event.MouseEvent;
  * @since Nov 21, 2003
  */
 class DefaultKeymapImpl extends KeymapImpl {
-  public boolean canModify() {
-    return false;
-  }
-
-  public String getPresentableName() {
-    return DefaultKeymap.getInstance().getKeymapPresentableName(this);
-  }
-
-  public void readExternal(Element keymapElement, Keymap[] existingKeymaps) throws InvalidDataException {
-    super.readExternal(keymapElement, existingKeymaps);
-
-    if (KeymapManager.DEFAULT_IDEA_KEYMAP.equals(getName()) && !Platform.current().os().isXWindow()) {
-      addShortcut(IdeActions.ACTION_GOTO_DECLARATION, new MouseShortcut(MouseEvent.BUTTON2, 0, 1));
+    @Override
+    public boolean canModify() {
+        return false;
     }
-  }
+
+    @Override
+    public String getPresentableName() {
+        return DefaultKeymap.getInstance().getKeymapPresentableName(this);
+    }
+
+    @Override
+    public void readExternal(Element keymapElement, Keymap[] existingKeymaps) throws InvalidDataException {
+        super.readExternal(keymapElement, existingKeymaps);
+
+        if (KeymapManager.DEFAULT_IDEA_KEYMAP.equals(getName())
+            && !(Platform.current().os() instanceof UnixOperationSystem os && os.isXWindow())) {
+            addShortcut(IdeActions.ACTION_GOTO_DECLARATION, new MouseShortcut(MouseEvent.BUTTON2, 0, 1));
+        }
+    }
 }

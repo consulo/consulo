@@ -3,6 +3,8 @@ package consulo.awt.hacking;
 
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 import jakarta.annotation.Nonnull;
@@ -43,7 +45,12 @@ public final class X11Hacking {
     private SystemInfo() {
       Platform platform = Platform.current();
       isAny64Bit = platform.jvm().isAny64Bit();
-      isXWindow = platform.os().isXWindow();
+      PlatformOperatingSystem os = platform.os();
+      if (os instanceof UnixOperationSystem) {
+        isXWindow = ((UnixOperationSystem) os).isXWindow();
+      } else {
+        isXWindow = false;
+      }
     }
   }
 

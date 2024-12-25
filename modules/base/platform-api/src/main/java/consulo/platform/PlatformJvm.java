@@ -48,16 +48,8 @@ public interface PlatformJvm {
   @Nonnull
   Map<String, String> getRuntimeProperties();
 
-  default boolean isArm64() {
-    return CpuArchitecture.AARCH64 == arch();
-  }
-
-  default boolean isAmd64() {
-    return CpuArchitecture.X86_64 == arch();
-  }
-
   default boolean isAny64Bit() {
-    return arch().getWidth() == 64;
+    return arch().width() == 64;
   }
 
   @Nonnull

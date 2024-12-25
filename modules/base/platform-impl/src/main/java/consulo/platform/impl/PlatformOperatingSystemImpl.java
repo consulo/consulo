@@ -34,140 +34,141 @@ import java.util.function.Supplier;
  * @since 25/04/2023
  */
 public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
-  private static final Logger LOG = LoggerFactory.getLogger(PlatformOperatingSystemImpl.class);
-  
-  private final String myOSArch;
-  protected final String OS_NAME;
-  private final String OS_VERSION;
+    private static final Logger LOG = LoggerFactory.getLogger(PlatformOperatingSystemImpl.class);
 
-  private final boolean isWindows;
-  private final boolean isMac;
-  private final boolean isLinux;
-  private final boolean isFreeBSD;
+    private final String myOSArch;
+    protected final String OS_NAME;
+    private final String OS_VERSION;
 
-  public final boolean isXWindow;
-  public final boolean isGNOME;
-  public final boolean isKDE;
+    private final boolean isWindows;
+    private final boolean isMac;
+    private final boolean isLinux;
+    private final boolean isFreeBSD;
 
-  private final Function<String, String> getEnvFunc;
-  private final Supplier<Map<String, String>> getEnvsSup;
+    private final Function<String, String> getEnvFunc;
+    private final Supplier<Map<String, String>> getEnvsSup;
 
-  public PlatformOperatingSystemImpl(Map<String, String> jvmProperties,
-                                     Function<String, String> getEnvFunc,
-                                     Supplier<Map<String, String>> getEnvsSup) {
-    this.getEnvFunc = getEnvFunc;
-    this.getEnvsSup = getEnvsSup;
+    private final String myFileNamePrefix;
 
-    myOSArch = StringUtil.notNullize(jvmProperties.get("os.arch"));
-    OS_NAME = jvmProperties.get("os.name");
-    OS_VERSION = jvmProperties.get("os.version").toLowerCase(Locale.ROOT);
-    String osNameLowered = OS_NAME.toLowerCase(Locale.ROOT);
-    isWindows = osNameLowered.startsWith("windows");
-    isMac = osNameLowered.startsWith("mac");
-    isLinux = osNameLowered.startsWith("linux");
-    isFreeBSD = osNameLowered.startsWith("freebsd");
+    public PlatformOperatingSystemImpl(Map<String, String> jvmProperties,
+                                       Function<String, String> getEnvFunc,
+                                       Supplier<Map<String, String>> getEnvsSup) {
+        this.getEnvFunc = getEnvFunc;
+        this.getEnvsSup = getEnvsSup;
 
-    isXWindow = !isWindows && !isMac;
-    /* http://askubuntu.com/questions/72549/how-to-determine-which-window-manager-is-running/227669#227669 */
-    isGNOME = isXWindow &&
-      (StringUtil.notNullize(getEnvFunc.apply("GDMSESSION")).startsWith("gnome") ||
-        StringUtil.notNullize(getEnvFunc.apply("XDG_CURRENT_DESKTOP")).toLowerCase(Locale.ROOT).endsWith("gnome"));
-    /* https://userbase.kde.org/KDE_System_Administration/Environment_Variables#KDE_FULL_SESSION */
-    isKDE = isXWindow && !StringUtil.isEmpty(getEnvFunc.apply("KDE_FULL_SESSION"));
-  }
+        myOSArch = StringUtil.notNullize(jvmProperties.get("os.arch"));
+        OS_NAME = jvmProperties.get("os.name");
+        OS_VERSION = jvmProperties.get("os.version").toLowerCase(Locale.ROOT);
+        String osNameLowered = OS_NAME.toLowerCase(Locale.ROOT);
+        isWindows = osNameLowered.startsWith("windows");
+        isMac = osNameLowered.startsWith("mac");
+        isLinux = osNameLowered.startsWith("linux");
+        isFreeBSD = osNameLowered.startsWith("freebsd");
 
-  public boolean isOsVersionAtLeast(@Nonnull String version) {
-    return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
-  }
-
-  @Nonnull
-  @Override
-  public Collection<ProcessInfo> processes() {
-    List<ProcessInfo> processInfos = new ArrayList<>();
-
-    ProcessHandle.allProcesses().forEach(it -> {
-      long pid = it.pid();
-
-      try {
-        ProcessHandle.Info info = it.info();
-
-        Optional<String> commandOptional = info.command();
-        // no access to process info
-        if (commandOptional.isEmpty() && info.user().isEmpty()) {
-          return;
+        if (isWindows) {
+            myFileNamePrefix = "windows";
         }
+        else if (isMac) {
+            myFileNamePrefix = "mac";
+        }
+        else {
+            myFileNamePrefix = "linux";
+        }
+    }
 
-        String command = commandOptional.orElse("");
-        String commandLine = info.commandLine().orElse("");
-        String args = StringUtil.join(info.arguments().orElse(ArrayUtil.EMPTY_STRING_ARRAY), " ");
+    @Override
+    public boolean isUnix() {
+        return !isWindows && !isMac;
+    }
 
-        processInfos.add(new ProcessInfo((int)pid, commandLine, new File(command).getName(), args, command));
-      }
-      catch (Throwable e) {
-        LOG.warn("Failed to get #info() for processId: " + pid, e);
-      }
-    });
+    @Nonnull
+    @Override
+    public String fileNamePrefix() {
+        return myFileNamePrefix;
+    }
 
-    return processInfos;
-  }
+    public boolean isOsVersionAtLeast(@Nonnull String version) {
+        return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
+    }
 
-  @Override
-  public boolean isFreeBSD() {
-    return isFreeBSD;
-  }
+    @Nonnull
+    @Override
+    public Collection<ProcessInfo> processes() {
+        List<ProcessInfo> processInfos = new ArrayList<>();
 
-  @Override
-  public boolean isWindows() {
-    return isWindows;
-  }
+        ProcessHandle.allProcesses().forEach(it -> {
+            long pid = it.pid();
 
-  @Override
-  public boolean isMac() {
-    return isMac;
-  }
+            try {
+                ProcessHandle.Info info = it.info();
 
-  @Override
-  public boolean isLinux() {
-    return isLinux;
-  }
+                Optional<String> commandOptional = info.command();
+                // no access to process info
+                if (commandOptional.isEmpty() && info.user().isEmpty()) {
+                    return;
+                }
 
-  @Override
-  public boolean isKDE() {
-    return isKDE;
-  }
+                String command = commandOptional.orElse("");
+                String commandLine = info.commandLine().orElse("");
+                String args = StringUtil.join(info.arguments().orElse(ArrayUtil.EMPTY_STRING_ARRAY), " ");
 
-  @Override
-  public boolean isGNOME() {
-    return isGNOME;
-  }
+                processInfos.add(new ProcessInfo((int) pid, commandLine, new File(command).getName(), args, command));
+            }
+            catch (Throwable e) {
+                LOG.warn("Failed to get #info() for processId: " + pid, e);
+            }
+        });
 
-  @Nonnull
-  @Override
-  public String name() {
-    return OS_NAME;
-  }
+        return processInfos;
+    }
 
-  @Nonnull
-  @Override
-  public String version() {
-    return OS_VERSION;
-  }
+    @Override
+    public boolean isFreeBSD() {
+        return isFreeBSD;
+    }
 
-  @Nullable
-  @Override
-  public String getEnvironmentVariable(@Nonnull String key) {
-    return getEnvFunc.apply(key);
-  }
+    @Override
+    public boolean isWindows() {
+        return isWindows;
+    }
 
-  @Nonnull
-  @Override
-  public Map<String, String> environmentVariables() {
-    return getEnvsSup.get();
-  }
+    @Override
+    public boolean isMac() {
+        return isMac;
+    }
 
-  @Nonnull
-  @Override
-  public String arch() {
-    return myOSArch;
-  }
+    @Override
+    public boolean isLinux() {
+        return isLinux;
+    }
+
+    @Nonnull
+    @Override
+    public String name() {
+        return OS_NAME;
+    }
+
+    @Nonnull
+    @Override
+    public String version() {
+        return OS_VERSION;
+    }
+
+    @Nullable
+    @Override
+    public String getEnvironmentVariable(@Nonnull String key) {
+        return getEnvFunc.apply(key);
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, String> environmentVariables() {
+        return getEnvsSup.get();
+    }
+
+    @Nonnull
+    @Override
+    public String arch() {
+        return myOSArch;
+    }
 }

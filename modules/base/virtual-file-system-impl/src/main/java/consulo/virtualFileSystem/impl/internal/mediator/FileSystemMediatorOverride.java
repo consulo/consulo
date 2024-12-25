@@ -42,7 +42,7 @@ public class FileSystemMediatorOverride {
       Platform platform = Platform.current();
       PlatformOperatingSystem os = platform.os();
       try {
-        if ((os.isLinux() || os.isMac() || os.isFreeBSD()) && platform.jvm().arch() == CpuArchitecture.X86_64 && JnaLoader.isLoaded()) {
+        if (!os.isWindows() && platform.jvm().arch() == CpuArchitecture.X86_64 && JnaLoader.isLoaded()) {
           return check(os, new JnaUnixMediatorImpl(os));
         }
       }

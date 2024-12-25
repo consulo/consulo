@@ -16,9 +16,9 @@
 package consulo.colorScheme;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.platform.Platform;
-
+import consulo.platform.PlatformOperatingSystem;
+import consulo.platform.os.UnixOperationSystem;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -80,14 +80,15 @@ public interface FontPreferences {
     }
 
     static String getDefaultFontName() {
-        if (Platform.current().os().isWindows()) {
+        PlatformOperatingSystem os = Platform.current().os();
+        if (os.isWindows()) {
             return WINDOWS_DEFAULT_FONT_FAMILY;
         }
-        if (SystemInfo.isMacOSSnowLeopard) {
+        if (os.isMac()) {
             return MAC_OS_DEFAULT_FONT_FAMILY;
         }
-        if (Platform.current().os().isXWindow() && !GraphicsEnvironment.isHeadless()
-            && !ApplicationManager.getApplication().isCommandLine()) {
+
+        if (os instanceof UnixOperationSystem unix && unix.isXWindow()) {
             for (Font font : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
                 if (LINUX_DEFAULT_FONT_FAMILY.equals(font.getName())) {
                     return font.getFontName();

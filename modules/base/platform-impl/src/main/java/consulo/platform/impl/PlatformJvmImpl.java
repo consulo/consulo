@@ -65,7 +65,7 @@ class PlatformJvmImpl implements PlatformJvm {
           width = StringUtil.parseInt(sunArchModel, 0);
         }
 
-        myCpuArchitecture = new CpuArchitecture(name, width);
+        myCpuArchitecture = new CpuArchitecture(name, width, "-" + name);
         break;
     }
   }

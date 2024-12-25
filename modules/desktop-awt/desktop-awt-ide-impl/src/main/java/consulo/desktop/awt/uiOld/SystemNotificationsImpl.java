@@ -19,10 +19,12 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.util.AtomicNullableLazyValue;
 import consulo.application.util.NullableLazyValue;
-import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
+import consulo.platform.os.UnixOperationSystem;
+import consulo.platform.os.WindowsOperatingSystem;
 import consulo.ui.ex.SystemNotifications;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -64,13 +66,14 @@ public class SystemNotificationsImpl extends SystemNotifications {
 
     private static Notifier getPlatformNotifier() {
         try {
-            if (Platform.current().os().isMac()) {
+            PlatformOperatingSystem os = Platform.current().os();
+            if (os.isMac()) {
                 return MountainLionNotifications.getInstance();
             }
-            else if (Platform.current().os().isXWindow()) {
+            else if (os instanceof UnixOperationSystem unix && unix.isXWindow()) {
                 return LibNotifyWrapper.getInstance();
             }
-            else if (SystemInfo.isWin10OrNewer) {
+            else if (os instanceof WindowsOperatingSystem win && win.isWindows10OrNewer()) {
                 return JTrayNotificationImpl.getWin10Instance();
             }
         }

@@ -15,6 +15,7 @@
  */
 package consulo.platform;
 
+import consulo.platform.os.UnixOperationSystem;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -26,52 +27,50 @@ import java.util.Map;
  * @since 25/04/2023
  */
 public interface PlatformOperatingSystem {
-  @Nonnull
-  Collection<ProcessInfo> processes();
+    @Nonnull
+    Collection<ProcessInfo> processes();
 
-  boolean isWindows();
+    boolean isWindows();
 
-  boolean isMac();
+    boolean isMac();
 
-  boolean isLinux();
+    boolean isLinux();
 
-  boolean isFreeBSD();
+    boolean isFreeBSD();
 
-  default boolean isUnix() {
-    return !isWindows();
-  }
+    boolean isUnix();
 
-  default boolean isXWindow() {
-    return isUnix() && !isMac();
-  }
+    @Deprecated
+    default boolean isXWindow() {
+        return this instanceof UnixOperationSystem linux && linux.isXWindow();
+    }
 
-  boolean isKDE();
+    @Nonnull
+    default LineSeparator lineSeparator() {
+        return LineSeparator.LF;
+    }
 
-  boolean isGNOME();
+    @Nonnull
+    String name();
 
-  @Nonnull
-  default LineSeparator lineSeparator() {
-    return LineSeparator.LF;
-  }
+    @Nonnull
+    String version();
 
-  @Nonnull
-  String name();
+    @Nonnull
+    String arch();
 
-  @Nonnull
-  String version();
+    @Nonnull
+    Map<String, String> environmentVariables();
 
-  @Nonnull
-  String arch();
+    @Nullable
+    String getEnvironmentVariable(@Nonnull String key);
 
-  @Nonnull
-  Map<String, String> environmentVariables();
+    @Nonnull
+    String fileNamePrefix();
 
-  @Nullable
-  String getEnvironmentVariable(@Nonnull String key);
-
-  @Nullable
-  default String getEnvironmentVariable(@Nonnull String key, @Nonnull String defaultValue) {
-    String environmentVariable = getEnvironmentVariable(key);
-    return environmentVariable == null ? defaultValue : environmentVariable;
-  }
+    @Nullable
+    default String getEnvironmentVariable(@Nonnull String key, @Nonnull String defaultValue) {
+        String environmentVariable = getEnvironmentVariable(key);
+        return environmentVariable == null ? defaultValue : environmentVariable;
+    }
 }

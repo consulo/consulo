@@ -15,117 +15,105 @@
  */
 package consulo.platform;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.platform.internal.PlatformInternal;
-import consulo.ui.image.Image;
-
 import consulo.util.dataholder.UserDataHolder;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 16-May-17
  */
 public interface Platform extends UserDataHolder {
-  static String LOCAL = "local";
+    static String LOCAL = "local";
 
-  @Nonnull
-  static Platform current() {
-    return PlatformInternal.current();
-  }
-
-  @Nonnull
-  String getId();
-
-  @Nonnull
-  String getName();
-
-  @Nonnull
-  PlatformFileSystem fs();
-
-  @Nonnull
-  PlatformOperatingSystem os();
-
-  @Nonnull
-  PlatformJvm jvm();
-
-  @Nonnull
-  PlatformUser user();
-
-  default void openInBrowser(String url) {
-    try {
-      openInBrowser(new URL(url));
-    }
-    catch (MalformedURLException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  void openInBrowser(@Nonnull URL url);
-
-  default void openFileInFileManager(@Nonnull Path path) {
-    openFileInFileManager(path.toFile());
-  }
-
-  void openFileInFileManager(@Nonnull File file);
-
-  default void openDirectoryInFileManager(@Nonnull Path path) {
-    openFileInFileManager(path.toFile());
-  }
-
-  void openDirectoryInFileManager(@Nonnull File file);
-
-  @Nonnull
-  default String mapExecutableName(@Nonnull String baseName) {
-    if (jvm().isAmd64()) {
-      return baseName + "64";
+    @Nonnull
+    static Platform current() {
+        return PlatformInternal.current();
     }
 
-    if (jvm().isArm64()) {
-      return baseName + "-aarch64";
+    @Nonnull
+    String getId();
+
+    @Nonnull
+    String getName();
+
+    @Nonnull
+    PlatformFileSystem fs();
+
+    @Nonnull
+    PlatformOperatingSystem os();
+
+    @Nonnull
+    PlatformJvm jvm();
+
+    @Nonnull
+    PlatformUser user();
+
+    @SuppressWarnings("deprecation")
+    default void openInBrowser(String url) {
+        try {
+            openInBrowser(new URL(url));
+        }
+        catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    return baseName;
-  }
+    void openInBrowser(@Nonnull URL url);
 
-  @Nonnull
-  default String mapAnyExecutableName(@Nonnull String baseName) {
-    if (os().isWindows()) {
-      return mapWindowsExecutable(baseName, "exe");
+    default void openFileInFileManager(@Nonnull Path path) {
+        openFileInFileManager(path.toFile());
     }
 
-    return mapExecutableName(baseName);
-  }
+    void openFileInFileManager(@Nonnull File file);
 
-  @Nonnull
-  default String mapWindowsExecutable(@Nonnull String baseName, @Nonnull String extension) {
-    if (!os().isWindows()) {
-      throw new IllegalArgumentException("Must be Windows");
+    default void openDirectoryInFileManager(@Nonnull Path path) {
+        openFileInFileManager(path.toFile());
     }
 
-    return mapExecutableName(baseName) + "." + extension;
-  }
+    void openDirectoryInFileManager(@Nonnull File file);
 
-  @Nonnull
-  default String mapLibraryName(@Nonnull String libName) {
-    String baseName = libName;
-    if (jvm().isAmd64()) {
-      baseName = baseName + "64";
-    }
-    else if (jvm().isArm64()) {
-      baseName = baseName + "-aarch64";
+    @Nonnull
+    default String mapExecutableName(@Nonnull String baseName) {
+        String archSuffix = jvm().arch().fileNameSuffix();
+        return !archSuffix.isEmpty() ? baseName + archSuffix : baseName;
     }
 
-    String fileName = System.mapLibraryName(baseName);
-    if (os().isMac()) {
-      fileName = fileName.replace(".jnilib", ".dylib");
+    @Nonnull
+    default String mapAnyExecutableName(@Nonnull String baseName) {
+        if (os().isWindows()) {
+            return mapWindowsExecutable(baseName, "exe");
+        }
+
+        return mapExecutableName(baseName);
     }
-    return fileName;
-  }
+
+    @Nonnull
+    default String mapWindowsExecutable(@Nonnull String baseName, @Nonnull String extension) {
+        if (!os().isWindows()) {
+            throw new IllegalArgumentException("Must be Windows");
+        }
+
+        return mapExecutableName(baseName) + "." + extension;
+    }
+
+    @Nonnull
+    default String mapLibraryName(@Nonnull String libName) {
+        String baseName = libName;
+        String archSuffix = jvm().arch().fileNameSuffix();
+        if (!archSuffix.isEmpty()) {
+            baseName = baseName + archSuffix;
+        }
+
+        String fileName = System.mapLibraryName(baseName);
+        if (os().isMac()) {
+            fileName = fileName.replace(".jnilib", ".dylib");
+        }
+        return fileName;
+    }
 }

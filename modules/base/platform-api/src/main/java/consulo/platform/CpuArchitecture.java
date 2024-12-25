@@ -16,6 +16,7 @@
 package consulo.platform;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Objects;
 
 /**
@@ -23,42 +24,56 @@ import java.util.Objects;
  * @since 25-Feb-22
  */
 public final class CpuArchitecture {
-  public static final CpuArchitecture X86 = new CpuArchitecture("X86", 32);
-  public static final CpuArchitecture X86_64 = new CpuArchitecture("X86_64", 64);
-  public static final CpuArchitecture AARCH64 = new CpuArchitecture("AARCH64", 64);
+    public static final CpuArchitecture X86 = new CpuArchitecture("X86", 32, "");
+    public static final CpuArchitecture X86_64 = new CpuArchitecture("X86_64", 64, "64");
+    public static final CpuArchitecture AARCH64 = new CpuArchitecture("AARCH64", 64, "-aarch64");
+    public static final CpuArchitecture RISCV64 = new CpuArchitecture("RISCV64", 64, "-riscv64");
 
-  private final String myName;
-  private final int myWidth;
+    @Nonnull
+    private final String myName;
+    private final int myWidth;
+    @Nonnull
+    private final String mySuffix;
 
-  public CpuArchitecture(@Nonnull String name, int width) {
-    myName = name;
-    myWidth = width;
-  }
+    public CpuArchitecture(@Nonnull String name, int width, @Nonnull String suffix) {
+        myName = name;
+        myWidth = width;
+        mySuffix = suffix;
+    }
 
-  public String getName() {
-    return myName;
-  }
+    public String name() {
+        return myName;
+    }
 
-  public int getWidth() {
-    return myWidth;
-  }
+    public int width() {
+        return myWidth;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    CpuArchitecture that = (CpuArchitecture)o;
-    return myWidth == that.myWidth && Objects.equals(myName, that.myName);
-  }
+    @Nonnull
+    public String fileNameSuffix() {
+        return mySuffix;
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myName, myWidth);
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CpuArchitecture that = (CpuArchitecture) o;
+        return myWidth == that.myWidth && Objects.equals(myName, that.myName);
+    }
 
-  @Override
-  public String toString() {
-    return "CpuArchitecture{" + "myName='" + myName + '\'' + ", myWidth=" + myWidth + '}';
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(myName, myWidth);
+    }
+
+    @Override
+    public String toString() {
+        return "CpuArchitecture{" + "myName='" + myName + '\'' + ", myWidth=" + myWidth + '}';
+    }
 }
 

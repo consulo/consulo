@@ -59,6 +59,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -187,7 +188,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         // endregion
 
         SwingUtilities.invokeLater(() -> {
-            if (myPlatform.os().isXWindow()) {
+            if (myPlatform.os() instanceof UnixOperationSystem os && os.isXWindow()) {
                 X11Hacking.updateFrameClass(ApplicationStarter.getFrameClass());
             }
         });
