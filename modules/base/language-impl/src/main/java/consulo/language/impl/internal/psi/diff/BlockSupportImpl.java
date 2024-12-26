@@ -20,6 +20,7 @@ import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.impl.psi.DummyHolder;
 import consulo.language.impl.psi.DummyHolderFactory;
 import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.impl.psi.template.OuterLanguageElementType;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.*;
 import consulo.language.template.ITemplateDataElementType;
@@ -36,6 +37,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
+
+import java.util.function.Function;
 
 @Singleton
 @ServiceImpl
@@ -82,7 +85,7 @@ public class BlockSupportImpl extends BlockSupport {
                                         @Nonnull CharSequence lastCommittedText) {
         PsiFileImpl fileImpl = (PsiFileImpl) file;
 
-        final Couple<ASTNode> reparseableRoots = findReparseableRoots(fileImpl, oldFileNode, changedPsiRange, newFileText);
+        Couple<ASTNode> reparseableRoots = findReparseableRoots(fileImpl, oldFileNode, changedPsiRange, newFileText);
         if (reparseableRoots == null) {
             return makeFullParse(fileImpl, oldFileNode, newFileText, indicator, lastCommittedText);
         }
@@ -99,54 +102,97 @@ public class BlockSupportImpl extends BlockSupport {
      * @return Pair (target reparseable node, new replacement node)
      * or {@code null} if can't parse incrementally.
      */
-    @Nullable
-    public static Couple<ASTNode> findReparseableRoots(@Nonnull PsiFileImpl file, @Nonnull FileASTNode oldFileNode, @Nonnull TextRange changedPsiRange, @Nonnull CharSequence newFileText) {
-        final FileElement fileElement = (FileElement) oldFileNode;
-        final CharTable charTable = fileElement.getCharTable();
-        int lengthShift = newFileText.length() - fileElement.getTextLength();
+    public static @Nullable Couple<ASTNode> findReparseableRoots(@Nonnull PsiFileImpl file,
+                                                                 @Nonnull FileASTNode oldFileNode,
+                                                                 @Nonnull TextRange changedPsiRange,
+                                                                 @Nonnull CharSequence newFileText) {
+        CharTable charTable = oldFileNode.getCharTable();
+        int lengthShift = newFileText.length() - oldFileNode.getTextLength();
 
-        if (fileElement.getElementType() instanceof ITemplateDataElementType || isTooDeep(file)) {
-            // unable to perform incremental reparse for template data in JSP, or in exceptionally deep trees
+        if (isTooDeep(file)) {
             return null;
         }
 
-        final ASTNode leafAtStart = fileElement.findLeafElementAt(Math.max(0, changedPsiRange.getStartOffset() - 1));
-        final ASTNode leafAtEnd = fileElement.findLeafElementAt(Math.min(changedPsiRange.getEndOffset(), fileElement.getTextLength() - 1));
-        ASTNode node = leafAtStart != null && leafAtEnd != null ? TreeUtil.findCommonParent(leafAtStart, leafAtEnd) : fileElement;
+        boolean isTemplateFile = oldFileNode.getElementType() instanceof ITemplateDataElementType;
+
+        ASTNode leafAtStart = oldFileNode.findLeafElementAt(Math.max(0, changedPsiRange.getStartOffset() - 1));
+        ASTNode leafAtEnd = oldFileNode.findLeafElementAt(Math.min(changedPsiRange.getEndOffset(), oldFileNode.getTextLength() - 1));
+        ASTNode node = leafAtStart != null && leafAtEnd != null ? TreeUtil.findCommonParent(leafAtStart, leafAtEnd) : oldFileNode;
         Language baseLanguage = file.getViewProvider().getBaseLanguage();
 
-        while (node != null && !(node instanceof FileElement)) {
-            IElementType elementType = node.getElementType();
+        Function<ASTNode, Couple<ASTNode>> reparseNodeFunction = astNode -> {
+            IElementType elementType = astNode.getElementType();
             if (elementType instanceof IReparseableElementTypeBase || elementType instanceof IReparseableLeafElementType) {
-                final TextRange textRange = node.getTextRange();
+                TextRange textRange = astNode.getTextRange();
 
-                if (textRange.getLength() + lengthShift > 0 && (baseLanguage.isKindOf(elementType.getLanguage()) || !TreeUtil.containsOuterLanguageElements(node))) {
-                    final int start = textRange.getStartOffset();
-                    final int end = start + textRange.getLength() + lengthShift;
+                if (textRange.getLength() + lengthShift > 0 &&
+                    (baseLanguage.isKindOf(elementType.getLanguage()) || elementType instanceof IReparseableLeafElementType ||
+                        !TreeUtil.containsOuterLanguageElements(astNode))) {
+                    int start = textRange.getStartOffset();
+                    int end = start + textRange.getLength() + lengthShift;
                     if (end > newFileText.length()) {
-                        reportInconsistentLength(file, newFileText, node, start, end);
-                        break;
+                        reportInconsistentLength(file, newFileText, astNode, start, end);
+                        return Couple.of(null, null);
                     }
 
                     CharSequence newTextStr = newFileText.subSequence(start, end);
 
                     ASTNode newNode;
                     if (elementType instanceof IReparseableElementTypeBase) {
-                        newNode = tryReparseNode((IReparseableElementTypeBase) elementType, node, newTextStr, file.getManager(), baseLanguage, charTable);
+                        newNode =
+                            tryReparseNode((IReparseableElementTypeBase) elementType, astNode, newTextStr, file.getManager(), baseLanguage, charTable);
                     }
                     else {
-                        newNode = tryReparseLeaf((IReparseableLeafElementType) elementType, node, newTextStr);
+                        newNode = tryReparseLeaf((IReparseableLeafElementType) elementType, astNode, newTextStr);
                     }
 
                     if (newNode != null) {
                         if (newNode.getTextLength() != newTextStr.length()) {
-                            String details = ApplicationManager.getApplication().isInternal() ? "text=" + newTextStr + "; treeText=" + newNode.getText() + ";" : "";
+                            String details = ApplicationManager.getApplication().isInternal()
+                                ? "text=" + newTextStr + "; treeText=" + newNode.getText() + ";"
+                                : "";
                             LOG.error("Inconsistent reparse: " + details + " type=" + elementType);
                         }
 
-                        return Couple.of(node, newNode);
+                        return Couple.of(astNode, newNode);
                     }
                 }
+            }
+            return null;
+        };
+
+        TextRange startLeafRange = leafAtStart == null ? null : leafAtStart.getTextRange();
+        TextRange endLeafRange = leafAtEnd == null ? null : leafAtEnd.getTextRange();
+
+        IElementType startLeafType = PsiUtilCore.getElementType(leafAtStart);
+        if (startLeafType instanceof IReparseableLeafElementType &&
+            startLeafRange.getEndOffset() == changedPsiRange.getEndOffset() &&
+            (!isTemplateFile || startLeafType instanceof OuterLanguageElementType)) {
+            Couple<ASTNode> reparseResult = reparseNodeFunction.apply(leafAtStart);
+            if (reparseResult != null && reparseResult.first != null) {
+                return reparseResult;
+            }
+        }
+        IElementType endLeafType = PsiUtilCore.getElementType(leafAtEnd);
+        if (endLeafType instanceof IReparseableLeafElementType &&
+            endLeafRange.getStartOffset() == changedPsiRange.getStartOffset() &&
+            (!isTemplateFile || endLeafType instanceof OuterLanguageElementType)) {
+            Couple<ASTNode> reparseResult = reparseNodeFunction.apply(leafAtEnd);
+            if (reparseResult != null && reparseResult.first != null) {
+                return reparseResult;
+            }
+        }
+
+        while (node != null && !(node instanceof FileElement)) {
+            if (isTemplateFile && !(PsiUtilCore.getElementType(node) instanceof OuterLanguageElementType)) {
+                break;
+            }
+            Couple<ASTNode> couple = reparseNodeFunction.apply(node);
+            if (couple != null) {
+                if (couple.first == null) {
+                    break;
+                }
+                return couple;
             }
             node = node.getTreeParent();
         }
