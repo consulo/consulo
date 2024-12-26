@@ -1,6 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
- *
+ * Copyright 2000-2007 JetBrains s.r.o.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,14 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.controlflow;
+package consulo.language.dataFlow.map;
 
-import consulo.language.psi.PsiElement;
+import consulo.language.dataFlow.Semilattice;
 
-/**
- * @author oleg
- */
-public interface ConditionalInstruction extends Instruction {
-  boolean getResult();
-  PsiElement getCondition();
+public interface MapSemilattice<E> extends Semilattice<DFAMap<E>>{
+  // Invariant: join can return unmodified ins(0) or empty DFAMap
+  // DfaInstance must create new one before modifying
 }

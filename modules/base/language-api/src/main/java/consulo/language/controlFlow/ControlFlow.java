@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.codeInsight.controlflow;
+package consulo.language.controlFlow;
 
 /**
  * @author oleg

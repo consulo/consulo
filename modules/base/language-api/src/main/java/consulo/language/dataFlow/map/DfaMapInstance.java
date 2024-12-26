@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.dataflow;
+package consulo.language.dataFlow.map;
 
-/**
- * @author oleg
- */
-public class DFALimitExceededException extends Exception {
-  public DFALimitExceededException(final String message) {
-    super(message);
-  }
+import consulo.language.dataFlow.DfaInstance;
+
+public interface DfaMapInstance<E> extends DfaInstance<DFAMap<E>> {
 }

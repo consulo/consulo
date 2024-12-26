@@ -15,6 +15,10 @@ module consulo.language.api {
     exports consulo.language.cacheBuilder;
     exports consulo.language.content;
     exports consulo.language.custom;
+    exports consulo.language.controlFlow;
+    exports consulo.language.controlFlow.base;
+    exports consulo.language.dataFlow;
+    exports consulo.language.dataFlow.map;
     exports consulo.language.extension;
     exports consulo.language.file;
     exports consulo.language.findUsage;

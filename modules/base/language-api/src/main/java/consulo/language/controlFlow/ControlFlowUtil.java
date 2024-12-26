@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.controlflow;
+package consulo.language.controlFlow;
 
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;

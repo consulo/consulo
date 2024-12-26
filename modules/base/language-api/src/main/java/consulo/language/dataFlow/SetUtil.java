@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.codeInsight.dataflow;
+package consulo.language.dataFlow;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

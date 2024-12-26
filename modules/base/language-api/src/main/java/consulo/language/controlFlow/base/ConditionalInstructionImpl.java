@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.controlflow.impl;
+package consulo.language.controlFlow.base;
 
-import consulo.ide.impl.idea.codeInsight.controlflow.ControlFlowBuilder;
-import consulo.ide.impl.idea.codeInsight.controlflow.ConditionalInstruction;
+import consulo.language.controlFlow.ControlFlowBuilder;
+import consulo.language.controlFlow.ConditionalInstruction;
 import consulo.language.psi.PsiElement;
 
 /**

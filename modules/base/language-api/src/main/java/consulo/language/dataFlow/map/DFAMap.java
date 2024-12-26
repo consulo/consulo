@@ -1,6 +1,6 @@
-package consulo.ide.impl.idea.codeInsight.dataflow.map;
+package consulo.language.dataFlow.map;
 
-import consulo.ide.impl.idea.codeInsight.dataflow.SetUtil;
+import consulo.language.dataFlow.SetUtil;
 import jakarta.annotation.Nullable;
 
 import java.util.*;

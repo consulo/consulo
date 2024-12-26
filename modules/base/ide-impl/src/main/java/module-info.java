@@ -227,8 +227,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInsight.completion;
   exports consulo.ide.impl.idea.codeInsight.completion.actions;
   exports consulo.ide.impl.idea.codeInsight.completion.impl;
-  exports consulo.ide.impl.idea.codeInsight.controlflow;
-  exports consulo.ide.impl.idea.codeInsight.controlflow.impl;
   exports consulo.ide.impl.idea.codeInsight.daemon;
   exports consulo.ide.impl.idea.codeInsight.daemon.impl;
   exports consulo.ide.impl.idea.codeInsight.daemon.impl.actions;
@@ -236,8 +234,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.encoding;
   exports consulo.ide.impl.idea.codeInsight.daemon.impl.quickfix;
   exports consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips;
-  exports consulo.ide.impl.idea.codeInsight.dataflow;
-  exports consulo.ide.impl.idea.codeInsight.dataflow.map;
   exports consulo.ide.impl.idea.codeInsight.documentation;
   exports consulo.ide.impl.idea.codeInsight.documentation.actions;
   exports consulo.ide.impl.idea.codeInsight.editorActions;

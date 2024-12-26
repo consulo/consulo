@@ -1,6 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
- *
+ * Copyright 2000-2007 JetBrains s.r.o.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,25 +12,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.controlflow;
+package consulo.language.dataFlow;
 
-import consulo.language.psi.PsiElement;
+import consulo.language.controlFlow.Instruction;
+import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
-import java.util.Collection;
+public interface DfaInstance<E> {
+  // Please ensure that E has correctly implemented equals method
 
-/**
- * @author oleg
- */
-public interface Instruction {
-  @Nullable
-  PsiElement getElement();
+  // Invariant: fun must create new instance of DFAMap if modifies it
+  E fun(E e, Instruction instruction);
 
-  Collection<Instruction> allSucc();
+  @Nonnull
+  E initial();
 
-  Collection<Instruction> allPred();
-
-  String getElementPresentation();
-
-  int num();
+  boolean isForward();
 }

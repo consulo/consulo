@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.controlflow.impl;
+package consulo.language.controlFlow;
 
-import consulo.ide.impl.idea.codeInsight.controlflow.ControlFlow;
-import consulo.ide.impl.idea.codeInsight.controlflow.Instruction;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author oleg
  */
-public class ControlFlowImpl  implements ControlFlow {
-  private final Instruction[] myInstructions;
-
-  public ControlFlowImpl(Instruction[] instructions) {
-    myInstructions = instructions;
-  }
-
-  @Override
-  public Instruction[] getInstructions() {
-    return myInstructions;
-  }
+public interface ConditionalInstruction extends Instruction {
+  boolean getResult();
+  PsiElement getCondition();
 }

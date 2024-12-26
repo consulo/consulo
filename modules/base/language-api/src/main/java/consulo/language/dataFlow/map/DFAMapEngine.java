@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.dataflow.map;
+package consulo.language.dataFlow.map;
 
-import consulo.ide.impl.idea.codeInsight.dataflow.DfaInstance;
+import consulo.language.controlFlow.Instruction;
+import consulo.language.dataFlow.DFAEngine;
+import consulo.language.dataFlow.map.DFAMap;
 
-public interface DfaMapInstance<E> extends DfaInstance<DFAMap<E>> {
+public class DFAMapEngine<E> extends DFAEngine<DFAMap<E>>{
+  public DFAMapEngine(final Instruction[] flow, final DfaMapInstance<E> dfa, final MapSemilattice<E> dfaMapSemilattice) {
+    super(flow, dfa, dfaMapSemilattice);
+  }
 }

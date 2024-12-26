@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.dataflow;
+package consulo.language.dataFlow;
 
-import consulo.ide.impl.idea.codeInsight.controlflow.ControlFlowUtil;
-import consulo.ide.impl.idea.codeInsight.controlflow.Instruction;
+import consulo.language.controlFlow.ControlFlowUtil;
+import consulo.language.controlFlow.Instruction;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 

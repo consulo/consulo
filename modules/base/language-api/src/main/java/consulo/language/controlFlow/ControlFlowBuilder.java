@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.controlflow;
+package consulo.language.controlFlow;
 
-import consulo.ide.impl.idea.codeInsight.controlflow.impl.ConditionalInstructionImpl;
-import consulo.ide.impl.idea.codeInsight.controlflow.impl.ControlFlowImpl;
-import consulo.ide.impl.idea.codeInsight.controlflow.impl.InstructionImpl;
-import consulo.util.lang.Pair;
+import consulo.language.controlFlow.base.ConditionalInstructionImpl;
+import consulo.language.controlFlow.base.ControlFlowImpl;
+import consulo.language.controlFlow.base.InstructionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
