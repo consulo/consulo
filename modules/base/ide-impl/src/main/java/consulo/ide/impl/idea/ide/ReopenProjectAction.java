@@ -72,6 +72,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         presentation.setDisabledMnemonic(true);
         presentation.setTextValue(LocalizeValue.of(text));
         presentation.setDescriptionValue(LocalizeValue.of(projectPath));
+        presentation.setIcon(getExtensionIcon());
     }
 
     @RequiredUIAccess
