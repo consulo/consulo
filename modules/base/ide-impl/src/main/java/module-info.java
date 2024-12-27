@@ -650,8 +650,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.refactoring.ui;
   exports consulo.ide.impl.idea.refactoring.util;
   exports consulo.ide.impl.idea.reference;
-  exports consulo.ide.impl.idea.remote;
-  exports consulo.ide.impl.idea.remote.ext;
+
   exports consulo.ide.impl.idea.reporting;
   exports consulo.ide.impl.idea.ssh;
   exports consulo.ide.impl.idea.tasks.actions;
