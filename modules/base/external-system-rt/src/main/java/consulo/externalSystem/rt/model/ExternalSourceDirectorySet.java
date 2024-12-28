@@ -15,8 +15,6 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
@@ -27,20 +25,15 @@ import java.util.Set;
  * @since 7/14/2014
  */
 public interface ExternalSourceDirectorySet extends Serializable {
-  @Nonnull
   String getName();
 
-  @Nonnull
   Set<File> getSrcDirs();
 
-  @Nonnull
   File getOutputDir();
 
-  @Nonnull
   Set<String> getExcludes();
-  @Nonnull
+
   Set<String> getIncludes();
 
-  @Nonnull
   List<ExternalFilter> getFilters();
 }

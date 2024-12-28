@@ -15,8 +15,6 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.Serializable;
 
 /**
@@ -24,15 +22,11 @@ import java.io.Serializable;
  * @since 7/14/2014
  */
 public interface ExternalTask extends Serializable {
-  @Nonnull
   String getName();
 
-  @Nonnull
   String getQName();
 
-  @Nullable
   String getDescription();
 
-  @Nullable
   String getGroup();
 }

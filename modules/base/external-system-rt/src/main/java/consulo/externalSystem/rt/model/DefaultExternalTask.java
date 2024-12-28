@@ -15,72 +15,65 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
  * @author Vladislav.Soroka
  * @since 7/14/2014
  */
 public class DefaultExternalTask implements ExternalTask {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  @Nonnull
-  private String myName;
-  @Nonnull
-  private String myQName;
-  @Nullable
-  private String myDescription;
-  @Nullable
-  private String myGroup;
+    private String myName;
+    private String myQName;
 
-  public DefaultExternalTask() {
-  }
+    private String myDescription;
 
-  public DefaultExternalTask(ExternalTask externalTask) {
-    myName = externalTask.getName();
-    myQName = externalTask.getQName();
-    myDescription = externalTask.getDescription();
-    myGroup = externalTask.getGroup();
-  }
+    private String myGroup;
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return myName;
-  }
+    public DefaultExternalTask() {
+    }
 
-  public void setName(@Nonnull String name) {
-    myName = name;
-  }
+    public DefaultExternalTask(ExternalTask externalTask) {
+        myName = externalTask.getName();
+        myQName = externalTask.getQName();
+        myDescription = externalTask.getDescription();
+        myGroup = externalTask.getGroup();
+    }
 
-  @Nonnull
-  @Override
-  public String getQName() {
-    return myQName;
-  }
+    @Override
+    public String getName() {
+        return myName;
+    }
 
-  public void setQName(@Nonnull String QName) {
-    myQName = QName;
-  }
+    public void setName(String name) {
+        myName = name;
+    }
 
-  @Nullable
-  @Override
-  public String getDescription() {
-    return myDescription;
-  }
+    @Override
+    public String getQName() {
+        return myQName;
+    }
 
-  public void setDescription(@Nullable String description) {
-    myDescription = description;
-  }
+    public void setQName(String QName) {
+        myQName = QName;
+    }
 
-  @Nullable
-  @Override
-  public String getGroup() {
-    return myGroup;
-  }
 
-  public void setGroup(@Nullable String group) {
-    myGroup = group;
-  }
+    @Override
+    public String getDescription() {
+        return myDescription;
+    }
+
+    public void setDescription(String description) {
+        myDescription = description;
+    }
+
+
+    @Override
+    public String getGroup() {
+        return myGroup;
+    }
+
+    public void setGroup(String group) {
+        myGroup = group;
+    }
 }

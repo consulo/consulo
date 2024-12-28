@@ -15,8 +15,6 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author Vladislav.Soroka
  * @since 7/22/2014
@@ -24,9 +22,7 @@ import javax.annotation.Nonnull;
 public class DefaultExternalFilter implements ExternalFilter {
   private static final long serialVersionUID = 1L;
 
-  @Nonnull
   private String myFilterType;
-  @Nonnull
   private String myPropertiesAsJsonMap;
 
   public DefaultExternalFilter() {
@@ -40,23 +36,21 @@ public class DefaultExternalFilter implements ExternalFilter {
     myFilterType = filter.getFilterType();
   }
 
-  @Nonnull
   @Override
   public String getFilterType() {
     return myFilterType;
   }
 
-  public void setFilterType(@Nonnull String filterType) {
+  public void setFilterType(String filterType) {
     myFilterType = filterType;
   }
 
   @Override
-  @Nonnull
   public String getPropertiesAsJsonMap() {
     return myPropertiesAsJsonMap;
   }
 
-  public void setPropertiesAsJsonMap(@Nonnull String propertiesAsJsonMap) {
+  public void setPropertiesAsJsonMap(String propertiesAsJsonMap) {
     myPropertiesAsJsonMap = propertiesAsJsonMap;
   }
 }

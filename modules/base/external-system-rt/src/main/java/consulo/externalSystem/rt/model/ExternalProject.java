@@ -15,9 +15,6 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
@@ -27,61 +24,45 @@ import java.util.Map;
  * @since 7/14/2014
  */
 public interface ExternalProject extends Serializable {
+    String getExternalSystemId();
 
-  @Nonnull
-  String getExternalSystemId();
+    String getName();
 
-  @Nonnull
-  String getName();
+    String getQName();
 
-  @Nonnull
-  String getQName();
+    String getDescription();
 
-  @Nullable
-  String getDescription();
+    String getGroup();
 
-  @Nonnull
-  String getGroup();
+    String getVersion();
 
-  @Nonnull
-  String getVersion();
+    Map<String, ExternalProject> getChildProjects();
 
-  @Nonnull
-  Map<String, ExternalProject> getChildProjects();
+    File getProjectDir();
 
-  @Nonnull
-  File getProjectDir();
+    File getBuildDir();
 
-  @Nonnull
-  File getBuildDir();
+    File getBuildFile();
 
-  @Nullable
-  File getBuildFile();
+    Map<String, ExternalTask> getTasks();
 
-  @Nonnull
-  Map<String, ExternalTask> getTasks();
+    //@NotNull
+    //Map<String, ExternalConfiguration> getConfigurations();
 
-  //@NotNull
-  //Map<String, ExternalConfiguration> getConfigurations();
+    //@NotNull
+    //List<ExternalRepository> getRepositories();
 
-  //@NotNull
-  //List<ExternalRepository> getRepositories();
+    //@NotNull
+    //List<ExternalDependency> getDependencies();
 
-  //@NotNull
-  //List<ExternalDependency> getDependencies();
+    Map<String, ExternalPlugin> getPlugins();
 
-  @Nonnull
-  Map<String, ExternalPlugin> getPlugins();
+    //@NotNull
+    //ExternalProjectBuild getBuild();
 
-  //@NotNull
-  //ExternalProjectBuild getBuild();
+    Map<String, ?> getProperties();
 
-  @Nonnull
-  Map<String, ?> getProperties();
+    Object getProperty(String name);
 
-  @Nullable
-  Object getProperty(String name);
-
-  @Nonnull
-  Map<String, ExternalSourceSet> getSourceSets();
+    Map<String, ExternalSourceSet> getSourceSets();
 }

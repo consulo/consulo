@@ -15,8 +15,6 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
-
 import java.io.Serializable;
 
 /**
@@ -24,8 +22,7 @@ import java.io.Serializable;
  * @since 7/14/2014
  */
 public interface ExternalFilter extends Serializable {
-  @Nonnull
   String getFilterType();
-  @Nonnull
+
   String getPropertiesAsJsonMap();
 }

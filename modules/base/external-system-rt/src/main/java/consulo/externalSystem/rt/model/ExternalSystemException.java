@@ -1,8 +1,5 @@
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -24,22 +21,21 @@ public class ExternalSystemException extends RuntimeException {
 
   private final String myOriginalReason;
 
-  @Nonnull
   private final String[] myQuickFixes;
 
   public ExternalSystemException() {
     this(null, null);
   }
 
-  public ExternalSystemException(@Nullable String message) {
+  public ExternalSystemException(String message) {
     this(message, null);
   }
 
-  public ExternalSystemException(@Nullable Throwable cause) {
+  public ExternalSystemException(Throwable cause) {
     this("", cause);
   }
 
-  public ExternalSystemException(@Nullable String message, @Nullable Throwable cause, @Nonnull String... quickFixes) {
+  public ExternalSystemException(String message, Throwable cause, String... quickFixes) {
     super(extractMessage(message, cause));
     myQuickFixes = quickFixes;
     if (cause == null) {
@@ -60,12 +56,10 @@ public class ExternalSystemException extends RuntimeException {
   /**
    * @return    textual description of the wrapped exception (if any); empty string otherwise
    */
-  @Nonnull
   public String getOriginalReason() {
     return myOriginalReason;
   }
 
-  @Nonnull
   public String[] getQuickFixes() {
     return myQuickFixes;
   }
@@ -82,8 +76,7 @@ public class ExternalSystemException extends RuntimeException {
     s.println(myOriginalReason);
   }
 
-  @Nullable
-  private static String extractMessage(@Nullable String message, @Nullable Throwable cause) {
+  private static String extractMessage(String message, Throwable cause) {
     StringBuilder buffer = new StringBuilder();
     if (message != null) {
       buffer.append(message);

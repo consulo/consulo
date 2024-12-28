@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -24,7 +23,6 @@ import java.util.Map;
  * @since 7/14/2014
  */
 public interface ExternalSourceSet extends Serializable {
-  @Nonnull
   String getName();
   //@NotNull
   //ClasspathContainer getCompileClasspath();
@@ -32,6 +30,5 @@ public interface ExternalSourceSet extends Serializable {
   //@NotNull
   //ClasspathContainer getRuntimeClasspath();
 
-  @Nonnull
   Map<IExternalSystemSourceType, ExternalSourceDirectorySet> getSources();
 }

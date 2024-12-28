@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,97 +26,96 @@ import java.util.Set;
  * @since 7/14/2014
  */
 public class DefaultExternalSourceDirectorySet implements ExternalSourceDirectorySet {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  @Nonnull
-  private String myName;
-  @Nonnull
-  private Set<File> mySrcDirs;
-  @Nonnull
-  private File myOutputDir;
-  @Nonnull
-  private Set<String> myExcludes;
-  @Nonnull
-  private Set<String> myIncludes;
-  @Nonnull
-  private List<ExternalFilter> myFilters;
+    private String myName;
 
-  public DefaultExternalSourceDirectorySet() {
-    mySrcDirs = new HashSet<File>();
-    myExcludes = new HashSet<String>();
-    myIncludes = new HashSet<String>();
-    myFilters = new ArrayList<ExternalFilter>();
-  }
+    private Set<File> mySrcDirs;
 
-  public DefaultExternalSourceDirectorySet(ExternalSourceDirectorySet sourceDirectorySet) {
-    this();
-    myName = sourceDirectorySet.getName();
-    mySrcDirs = new HashSet<File>(sourceDirectorySet.getSrcDirs());
-    myOutputDir = sourceDirectorySet.getOutputDir();
-    myExcludes = new HashSet<String>(sourceDirectorySet.getExcludes());
-    myIncludes = new HashSet<String>(sourceDirectorySet.getIncludes());
-    for (ExternalFilter filter : sourceDirectorySet.getFilters()) {
-      myFilters.add(new DefaultExternalFilter(filter));
+    private File myOutputDir;
+
+    private Set<String> myExcludes;
+
+    private Set<String> myIncludes;
+
+    private List<ExternalFilter> myFilters;
+
+    public DefaultExternalSourceDirectorySet() {
+        mySrcDirs = new HashSet<File>();
+        myExcludes = new HashSet<String>();
+        myIncludes = new HashSet<String>();
+        myFilters = new ArrayList<ExternalFilter>();
     }
-  }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return myName;
-  }
+    public DefaultExternalSourceDirectorySet(ExternalSourceDirectorySet sourceDirectorySet) {
+        this();
+        myName = sourceDirectorySet.getName();
+        mySrcDirs = new HashSet<File>(sourceDirectorySet.getSrcDirs());
+        myOutputDir = sourceDirectorySet.getOutputDir();
+        myExcludes = new HashSet<String>(sourceDirectorySet.getExcludes());
+        myIncludes = new HashSet<String>(sourceDirectorySet.getIncludes());
+        for (ExternalFilter filter : sourceDirectorySet.getFilters()) {
+            myFilters.add(new DefaultExternalFilter(filter));
+        }
+    }
 
-  public void setName(@Nonnull String name) {
-    myName = name;
-  }
 
-  @Nonnull
-  @Override
-  public Set<File> getSrcDirs() {
-    return mySrcDirs;
-  }
+    @Override
+    public String getName() {
+        return myName;
+    }
 
-  public void setSrcDirs(@Nonnull Set<File> srcDirs) {
-    mySrcDirs = srcDirs;
-  }
+    public void setName(String name) {
+        myName = name;
+    }
 
-  @Nonnull
-  @Override
-  public File getOutputDir() {
-    return myOutputDir;
-  }
 
-  @Nonnull
-  @Override
-  public Set<String> getIncludes() {
-    return myIncludes;
-  }
+    @Override
+    public Set<File> getSrcDirs() {
+        return mySrcDirs;
+    }
 
-  public void setIncludes(@Nonnull Set<String> includes) {
-    myIncludes = includes;
-  }
+    public void setSrcDirs(Set<File> srcDirs) {
+        mySrcDirs = srcDirs;
+    }
 
-  @Nonnull
-  @Override
-  public Set<String> getExcludes() {
-    return myExcludes;
-  }
 
-  public void setExcludes(@Nonnull Set<String> excludes) {
-    myExcludes = excludes;
-  }
+    @Override
+    public File getOutputDir() {
+        return myOutputDir;
+    }
 
-  @Nonnull
-  @Override
-  public List<ExternalFilter> getFilters() {
-    return myFilters;
-  }
 
-  public void setFilters(@Nonnull List<ExternalFilter> filters) {
-    myFilters = filters;
-  }
+    @Override
+    public Set<String> getIncludes() {
+        return myIncludes;
+    }
 
-  public void setOutputDir(@Nonnull File outputDir) {
-    myOutputDir = outputDir;
-  }
+    public void setIncludes(Set<String> includes) {
+        myIncludes = includes;
+    }
+
+
+    @Override
+    public Set<String> getExcludes() {
+        return myExcludes;
+    }
+
+    public void setExcludes(Set<String> excludes) {
+        myExcludes = excludes;
+    }
+
+
+    @Override
+    public List<ExternalFilter> getFilters() {
+        return myFilters;
+    }
+
+    public void setFilters(List<ExternalFilter> filters) {
+        myFilters = filters;
+    }
+
+    public void setOutputDir(File outputDir) {
+        myOutputDir = outputDir;
+    }
 }

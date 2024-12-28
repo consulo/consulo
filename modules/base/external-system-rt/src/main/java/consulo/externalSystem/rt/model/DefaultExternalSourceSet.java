@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +40,6 @@ public class DefaultExternalSourceSet implements ExternalSourceSet {
     }
   }
 
-  @Nonnull
   @Override
   public String getName() {
     return myName;
@@ -51,7 +49,6 @@ public class DefaultExternalSourceSet implements ExternalSourceSet {
     myName = name;
   }
 
-  @Nonnull
   @Override
   public Map<IExternalSystemSourceType, ExternalSourceDirectorySet> getSources() {
     return mySources;

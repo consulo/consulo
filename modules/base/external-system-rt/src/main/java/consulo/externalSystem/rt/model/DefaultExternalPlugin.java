@@ -15,8 +15,6 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author Vladislav.Soroka
  * @since 7/16/2014
@@ -24,7 +22,6 @@ import javax.annotation.Nonnull;
 public class DefaultExternalPlugin implements ExternalPlugin {
   private static final long serialVersionUID = 1L;
 
-  @Nonnull
   private String myId;
 
   public DefaultExternalPlugin() {
@@ -34,13 +31,12 @@ public class DefaultExternalPlugin implements ExternalPlugin {
     myId = plugin.getId();
   }
 
-  @Nonnull
   @Override
   public String getId() {
     return myId;
   }
 
-  public void setId(@Nonnull String id) {
+  public void setId(String id) {
     myId = id;
   }
 }

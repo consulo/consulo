@@ -15,9 +15,6 @@
  */
 package consulo.externalSystem.rt.model;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
  * @author Vladislav.Soroka
  * @since 3/26/14
@@ -27,28 +24,28 @@ public class LocationAwareExternalSystemException extends ExternalSystemExceptio
   private final Integer myLine;
   private final Integer myColumn;
 
-  public LocationAwareExternalSystemException(@Nullable String message, String filePath, @Nonnull String... quickFixes) {
+  public LocationAwareExternalSystemException(String message, String filePath, String... quickFixes) {
     this(message, null, filePath, -1, -1, quickFixes);
   }
 
-  public LocationAwareExternalSystemException(@Nullable String message, String filePath, Integer line, @Nonnull String... quickFixes) {
+  public LocationAwareExternalSystemException(String message, String filePath, Integer line, String... quickFixes) {
     this(message, null, filePath, line, -1, quickFixes);
   }
 
-  public LocationAwareExternalSystemException(@Nullable String message, String filePath, Integer line, Integer column, @Nonnull String... quickFixes) {
+  public LocationAwareExternalSystemException(String message, String filePath, Integer line, Integer column, String... quickFixes) {
     this(message, null, filePath, line, column, quickFixes);
   }
 
-  public LocationAwareExternalSystemException(@Nullable Throwable cause, String filePath, Integer line, Integer column, @Nonnull String... quickFixes) {
+  public LocationAwareExternalSystemException(Throwable cause, String filePath, Integer line, Integer column, String... quickFixes) {
     this(null, cause, filePath, line, column, quickFixes);
   }
 
-  public LocationAwareExternalSystemException(@Nullable String message,
-                                              @Nullable Throwable cause,
+  public LocationAwareExternalSystemException(String message,
+                                              Throwable cause,
                                               String filePath,
                                               Integer line,
                                               Integer column,
-                                              @Nonnull String... quickFixes) {
+                                              String... quickFixes) {
     super(message, cause, quickFixes);
     myFilePath = filePath;
     myLine = line;
