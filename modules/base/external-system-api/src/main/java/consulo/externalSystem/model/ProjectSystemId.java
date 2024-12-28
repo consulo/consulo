@@ -43,22 +43,6 @@ public class ProjectSystemId implements Serializable {
     myDisplayName = displayName;
   }
 
-  /**
-   * Historically we prefer to work with third-party api not from ide process but from dedicated slave process (there is a risk
-   * that third-party api has bugs which might make the whole ide process corrupted, e.g. a memory leak at the api might crash
-   * the whole ide process).
-   * <p>
-   * However, we do allow to explicitly configure the ide to work with third-party external system api from the ide process.
-   * <p>
-   * This method allows to check whether the ide is configured to use 'out of process' or 'in process' mode for the system.
-   *
-   * @return <code>true</code> if the ide is configured to work with external system api from the ide process;
-   * <code>false</code> otherwise
-   */
-  public boolean isInProcessMode() {
-    return true;
-  }
-
   @Nonnull
   public String getId() {
     return myId;

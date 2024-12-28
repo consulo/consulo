@@ -859,24 +859,6 @@ public class ExternalSystemApiUtil {
   }
 
   /**
-   * Historically we prefer to work with third-party api not from ide process but from dedicated slave process (there is a risk
-   * that third-party api has bugs which might make the whole ide process corrupted, e.g. a memory leak at the api might crash
-   * the whole ide process).
-   * <p>
-   * However, we do allow to explicitly configure the ide to work with third-party external system api from the ide process.
-   * <p>
-   * This method allows to check whether the ide is configured to use 'out of process' or 'in process' mode for the system.
-   *
-   * @param externalSystemId target external system
-   * @return <code>true</code> if the ide is configured to work with external system api from the ide process;
-   * <code>false</code> otherwise
-   */
-  @Deprecated(forRemoval = true)
-  public static boolean isInProcessMode(ProjectSystemId externalSystemId) {
-    return externalSystemId.isInProcessMode();
-  }
-
-  /**
    * There is a possible case that methods of particular object should be executed with classpath different from the one implied
    * by the current class' class loader. External system offers {@link ParametersEnhancer#enhanceLocalProcessing(List)} method
    * for defining that custom classpath.
