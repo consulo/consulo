@@ -53,10 +53,5 @@
   </build>
 
   <dependencies>
-    <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>jsr305</artifactId>
-      <scope>compile</scope>
-    </dependency>
   </dependencies>
 </project>
