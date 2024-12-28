@@ -18,14 +18,15 @@ package consulo.codeEditor.impl;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Consumer;
 
 /**
@@ -34,131 +35,137 @@ import java.util.function.Consumer;
  * @author max
  */
 public class EmptyMarkupModel implements MarkupModelEx {
-  private final Document myDocument;
+    private final Document myDocument;
 
-  public EmptyMarkupModel(final Document document) {
-    myDocument = document;
-  }
+    public EmptyMarkupModel(final Document document) {
+        myDocument = document;
+    }
 
-  @Override
-  @Nonnull
-  public Document getDocument() {
-    return myDocument;
-  }
+    @Override
+    @Nonnull
+    public Document getDocument() {
+        return myDocument;
+    }
 
-  @Override
-  @Nonnull
-  public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, @Nullable TextAttributes textAttributes, @Nonnull HighlighterTargetArea targetArea) {
-    throw new ProcessCanceledException();
-  }
+    @Override
+    @Nonnull
+    public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, @Nullable TextAttributes textAttributes, @Nonnull HighlighterTargetArea targetArea) {
+        throw new ProcessCanceledException();
+    }
 
-  @Nonnull
-  @Override
-  public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
-                                                                   int endOffset,
-                                                                   int layer,
-                                                                   TextAttributes textAttributes,
-                                                                   @Nonnull HighlighterTargetArea targetArea,
-                                                                   boolean isPersistent,
-                                                                   Consumer<? super RangeHighlighterEx> changeAttributesAction) {
-    throw new ProcessCanceledException();
-  }
+    @Nonnull
+    @Override
+    public RangeHighlighter addRangeHighlighter(@Nullable TextAttributesKey textAttributesKey, int startOffset, int endOffset, int layer, @Nonnull HighlighterTargetArea targetArea) {
+        throw new ProcessCanceledException();
+    }
 
-  @Override
-  public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
-  }
+    @Nonnull
+    @Override
+    public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
+                                                                     int endOffset,
+                                                                     int layer,
+                                                                     TextAttributes textAttributes,
+                                                                     @Nonnull HighlighterTargetArea targetArea,
+                                                                     boolean isPersistent,
+                                                                     Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+        throw new ProcessCanceledException();
+    }
 
-  @Override
-  @Nonnull
-  public RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes) {
-    throw new ProcessCanceledException();
-  }
+    @Override
+    public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+    }
 
-  @Override
-  public void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter) {
-  }
+    @Override
+    @Nonnull
+    public RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes) {
+        throw new ProcessCanceledException();
+    }
 
-  @Override
-  public void removeAllHighlighters() {
-  }
+    @Override
+    public void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter) {
+    }
 
-  @Override
-  @Nonnull
-  public RangeHighlighter[] getAllHighlighters() {
-    return RangeHighlighter.EMPTY_ARRAY;
-  }
+    @Override
+    public void removeAllHighlighters() {
+    }
 
-  @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    return null;
-  }
+    @Override
+    @Nonnull
+    public RangeHighlighter[] getAllHighlighters() {
+        return RangeHighlighter.EMPTY_ARRAY;
+    }
 
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, T value) {
-  }
+    @Override
+    public <T> T getUserData(@Nonnull Key<T> key) {
+        return null;
+    }
 
-  @Override
-  public void dispose() {
-  }
+    @Override
+    public <T> void putUserData(@Nonnull Key<T> key, T value) {
+    }
 
-  @Override
-  public RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
-    return null;
-  }
+    @Override
+    public void dispose() {
+    }
 
-  @Override
-  public boolean containsHighlighter(@Nonnull RangeHighlighter highlighter) {
-    return false;
-  }
+    @Override
+    public RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
+        return null;
+    }
 
-  @Override
-  public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener) {
-  }
+    @Override
+    public boolean containsHighlighter(@Nonnull RangeHighlighter highlighter) {
+        return false;
+    }
 
-  @Override
-  public void setRangeHighlighterAttributes(@Nonnull final RangeHighlighter highlighter, @Nonnull final TextAttributes textAttributes) {
+    @Override
+    public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener) {
+    }
 
-  }
+    @Override
+    public void setRangeHighlighterAttributes(@Nonnull final RangeHighlighter highlighter, @Nonnull final TextAttributes textAttributes) {
 
-  @Override
-  public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
-    return false;
-  }
+    }
 
-  @Override
-  public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
-    return false;
-  }
+    @Override
+    public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
+        return false;
+    }
 
-  @Nonnull
-  @Override
-  public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
-    return MarkupIterator.EMPTY;
-  }
+    @Override
+    public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
+        return false;
+    }
 
-  @Nonnull
-  @Override
-  public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
-    return MarkupIterator.EMPTY;
-  }
+    @Nonnull
+    @Override
+    public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
+        return MarkupIterator.EMPTY;
+    }
 
-  @Override
-  public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged) {
+    @Nonnull
+    @Override
+    public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
+        return MarkupIterator.EMPTY;
+    }
 
-  }
+    @Override
+    public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged) {
 
-  @Override
-  public void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter) {
+    }
 
-  }
+    @Override
+    public void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter) {
 
-  @Override
-  public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
+    }
 
-  }
+    @Override
+    public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
 
-  @Override
-  public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
+    }
 
-  }
+    @Override
+    public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
+
+    }
 }

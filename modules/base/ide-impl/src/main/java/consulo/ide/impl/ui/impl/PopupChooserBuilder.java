@@ -199,12 +199,14 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return this;
     }
 
+    @Override
     @Nonnull
     public PopupChooserBuilder<T> setItemChoosenCallback(@Nonnull Runnable runnable) {
         myItemChosenRunnable = runnable;
         return this;
     }
 
+    @Override
     @Nonnull
     public PopupChooserBuilder<T> setSouthComponent(@Nonnull JComponent cmp) {
         mySouthComponent = cmp;

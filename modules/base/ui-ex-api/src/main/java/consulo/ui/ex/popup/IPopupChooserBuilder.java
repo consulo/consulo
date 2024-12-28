@@ -102,4 +102,9 @@ public interface IPopupChooserBuilder<T> {
     IPopupChooserBuilder<T> setHeaderRightActions(@Nonnull List<? extends AnAction> actions);
 
     ListComponentUpdater<T> getBackgroundUpdater();
+
+    @Nonnull
+    default IPopupChooserBuilder<T> setSouthComponent(@Nonnull JComponent cmp) {
+        return this;
+    }
 }

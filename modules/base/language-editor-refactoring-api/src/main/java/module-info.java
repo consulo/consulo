@@ -26,6 +26,7 @@ module consulo.language.editor.refactoring.api {
   exports consulo.language.editor.refactoring.copy;
   exports consulo.language.editor.refactoring.event;
   exports consulo.language.editor.refactoring.inline;
+  exports consulo.language.editor.refactoring.introduce;
   exports consulo.language.editor.refactoring.introduce.inplace;
   exports consulo.language.editor.refactoring.localize;
   exports consulo.language.editor.refactoring.move;

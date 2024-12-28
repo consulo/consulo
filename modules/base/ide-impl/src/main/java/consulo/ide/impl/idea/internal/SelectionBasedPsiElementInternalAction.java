@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.internal;
 
-import consulo.language.editor.refactoring.IntroduceTargetChooser;
+import consulo.language.editor.refactoring.introduce.IntroduceTargetChooser;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

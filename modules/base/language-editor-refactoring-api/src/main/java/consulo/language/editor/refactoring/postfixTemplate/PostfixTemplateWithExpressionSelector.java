@@ -8,7 +8,7 @@ import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.editor.postfixTemplate.PostfixTemplatesUtils;
-import consulo.language.editor.refactoring.IntroduceTargetChooser;
+import consulo.language.editor.refactoring.introduce.IntroduceTargetChooser;
 import consulo.language.editor.refactoring.unwrap.ScopeHighlighter;
 import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;

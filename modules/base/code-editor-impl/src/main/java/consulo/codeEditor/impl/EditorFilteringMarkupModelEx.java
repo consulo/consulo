@@ -20,175 +20,182 @@ import consulo.application.util.function.Processor;
 import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.function.Consumer;
 
 public class EditorFilteringMarkupModelEx implements MarkupModelEx {
-  @Nonnull
-  private final RealEditor myEditor;
-  @Nonnull
-  private final MarkupModelEx myDelegate;
+    @Nonnull
+    private final RealEditor myEditor;
+    @Nonnull
+    private final MarkupModelEx myDelegate;
 
-  private final Condition<RangeHighlighter> IS_AVAILABLE = this::isAvailable;
+    private final Condition<RangeHighlighter> IS_AVAILABLE = this::isAvailable;
 
-  public EditorFilteringMarkupModelEx(@Nonnull RealEditor editor, @Nonnull MarkupModelEx delegate) {
-    myEditor = editor;
-    myDelegate = delegate;
-  }
+    public EditorFilteringMarkupModelEx(@Nonnull RealEditor editor, @Nonnull MarkupModelEx delegate) {
+        myEditor = editor;
+        myDelegate = delegate;
+    }
 
-  @Nonnull
-  public MarkupModelEx getDelegate() {
-    return myDelegate;
-  }
+    @Nonnull
+    public MarkupModelEx getDelegate() {
+        return myDelegate;
+    }
 
-  private boolean isAvailable(@Nonnull RangeHighlighter highlighter) {
-    return highlighter.getEditorFilter().avaliableIn(myEditor) && myEditor.isHighlighterAvailable(highlighter);
-  }
+    private boolean isAvailable(@Nonnull RangeHighlighter highlighter) {
+        return highlighter.getEditorFilter().avaliableIn(myEditor) && myEditor.isHighlighterAvailable(highlighter);
+    }
 
-  @Override
-  public boolean containsHighlighter(@Nonnull RangeHighlighter highlighter) {
-    return isAvailable(highlighter) && myDelegate.containsHighlighter(highlighter);
-  }
+    @Override
+    public boolean containsHighlighter(@Nonnull RangeHighlighter highlighter) {
+        return isAvailable(highlighter) && myDelegate.containsHighlighter(highlighter);
+    }
 
-  @Override
-  public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
-    //noinspection unchecked
-    FilteringProcessor<? super RangeHighlighterEx> filteringProcessor = new FilteringProcessor(IS_AVAILABLE, processor);
-    return myDelegate.processRangeHighlightersOverlappingWith(start, end, filteringProcessor);
-  }
+    @Override
+    public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
+        //noinspection unchecked
+        FilteringProcessor<? super RangeHighlighterEx> filteringProcessor = new FilteringProcessor(IS_AVAILABLE, processor);
+        return myDelegate.processRangeHighlightersOverlappingWith(start, end, filteringProcessor);
+    }
 
-  @Override
-  public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
-    //noinspection unchecked
-    FilteringProcessor<? super RangeHighlighterEx> filteringProcessor = new FilteringProcessor(IS_AVAILABLE, processor);
-    return myDelegate.processRangeHighlightersOutside(start, end, filteringProcessor);
-  }
+    @Override
+    public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
+        //noinspection unchecked
+        FilteringProcessor<? super RangeHighlighterEx> filteringProcessor = new FilteringProcessor(IS_AVAILABLE, processor);
+        return myDelegate.processRangeHighlightersOutside(start, end, filteringProcessor);
+    }
 
-  @Override
-  @Nonnull
-  public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
-    return new FilteringMarkupIterator<>(myDelegate.overlappingIterator(startOffset, endOffset), this::isAvailable);
-  }
+    @Override
+    @Nonnull
+    public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
+        return new FilteringMarkupIterator<>(myDelegate.overlappingIterator(startOffset, endOffset), this::isAvailable);
+    }
 
-  @Nonnull
-  @Override
-  public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
-    return new FilteringMarkupIterator<>(myDelegate.overlappingIterator(startOffset, endOffset, onlyRenderedInGutter, onlyRenderedInScrollBar), this::isAvailable);
-  }
+    @Nonnull
+    @Override
+    public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
+        return new FilteringMarkupIterator<>(myDelegate.overlappingIterator(startOffset, endOffset, onlyRenderedInGutter, onlyRenderedInScrollBar), this::isAvailable);
+    }
 
-  @Override
-  @Nonnull
-  public RangeHighlighter[] getAllHighlighters() {
-    List<RangeHighlighter> list = ContainerUtil.filter(myDelegate.getAllHighlighters(), IS_AVAILABLE);
-    return list.toArray(RangeHighlighter.EMPTY_ARRAY);
-  }
+    @Override
+    @Nonnull
+    public RangeHighlighter[] getAllHighlighters() {
+        List<RangeHighlighter> list = ContainerUtil.filter(myDelegate.getAllHighlighters(), IS_AVAILABLE);
+        return list.toArray(RangeHighlighter.EMPTY_ARRAY);
+    }
 
-  @Override
-  public void dispose() {
-  }
+    @Override
+    public void dispose() {
+    }
 
-  //
-  // Delegated
-  //
+    //
+    // Delegated
+    //
 
-  @Override
-  @Nonnull
-  public Document getDocument() {
-    return myDelegate.getDocument();
-  }
+    @Override
+    @Nonnull
+    public Document getDocument() {
+        return myDelegate.getDocument();
+    }
 
-  @Override
-  public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener) {
-    myDelegate.addMarkupModelListener(parentDisposable, listener);
-  }
+    @Override
+    public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener) {
+        myDelegate.addMarkupModelListener(parentDisposable, listener);
+    }
 
-  @Override
-  public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleOrColorChanged) {
-    myDelegate.fireAttributesChanged(segmentHighlighter, renderersChanged, fontStyleOrColorChanged);
-  }
+    @Override
+    public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleOrColorChanged) {
+        myDelegate.fireAttributesChanged(segmentHighlighter, renderersChanged, fontStyleOrColorChanged);
+    }
 
-  @Override
-  public void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter) {
-    myDelegate.fireAfterAdded(segmentHighlighter);
-  }
+    @Override
+    public void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter) {
+        myDelegate.fireAfterAdded(segmentHighlighter);
+    }
 
-  @Override
-  public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
-    myDelegate.fireBeforeRemoved(segmentHighlighter);
-  }
+    @Override
+    public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
+        myDelegate.fireBeforeRemoved(segmentHighlighter);
+    }
 
-  @Override
-  @Nullable
-  public RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
-    return myDelegate.addPersistentLineHighlighter(lineNumber, layer, textAttributes);
-  }
+    @Override
+    @Nullable
+    public RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
+        return myDelegate.addPersistentLineHighlighter(lineNumber, layer, textAttributes);
+    }
 
-  @Override
-  public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
-    myDelegate.addRangeHighlighter(marker, start, end, greedyToLeft, greedyToRight, layer);
-  }
+    @Override
+    public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
+        myDelegate.addRangeHighlighter(marker, start, end, greedyToLeft, greedyToRight, layer);
+    }
 
-  @Override
-  @Nonnull
-  public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, @Nullable TextAttributes textAttributes, @Nonnull HighlighterTargetArea targetArea) {
-    return myDelegate.addRangeHighlighter(startOffset, endOffset, layer, textAttributes, targetArea);
-  }
+    @Override
+    @Nonnull
+    public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, @Nullable TextAttributes textAttributes, @Nonnull HighlighterTargetArea targetArea) {
+        return myDelegate.addRangeHighlighter(startOffset, endOffset, layer, textAttributes, targetArea);
+    }
 
-  @Override
-  @Nonnull
-  public RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes) {
-    return myDelegate.addLineHighlighter(line, layer, textAttributes);
-  }
+    @Nonnull
+    @Override
+    public RangeHighlighter addRangeHighlighter(@Nullable TextAttributesKey textAttributesKey, int startOffset, int endOffset, int layer, @Nonnull HighlighterTargetArea targetArea) {
+        return myDelegate.addRangeHighlighter(textAttributesKey, startOffset, endOffset, layer, targetArea);
+    }
 
-  @Override
-  @Nonnull
-  public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
-                                                                   int endOffset,
-                                                                   int layer,
-                                                                   TextAttributes textAttributes,
-                                                                   @Nonnull HighlighterTargetArea targetArea,
-                                                                   boolean isPersistent,
-                                                                   Consumer<? super RangeHighlighterEx> changeAttributesAction) {
-    return myDelegate.addRangeHighlighterAndChangeAttributes(startOffset, endOffset, layer, textAttributes, targetArea, isPersistent, changeAttributesAction);
-  }
+    @Override
+    @Nonnull
+    public RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes) {
+        return myDelegate.addLineHighlighter(line, layer, textAttributes);
+    }
 
-  @Override
-  public void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes) {
-    myDelegate.setRangeHighlighterAttributes(highlighter, textAttributes);
-  }
+    @Override
+    @Nonnull
+    public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
+                                                                     int endOffset,
+                                                                     int layer,
+                                                                     TextAttributes textAttributes,
+                                                                     @Nonnull HighlighterTargetArea targetArea,
+                                                                     boolean isPersistent,
+                                                                     Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+        return myDelegate.addRangeHighlighterAndChangeAttributes(startOffset, endOffset, layer, textAttributes, targetArea, isPersistent, changeAttributesAction);
+    }
 
-  @Override
-  public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
-    myDelegate.changeAttributesInBatch(highlighter, changeAttributesAction);
-  }
+    @Override
+    public void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes) {
+        myDelegate.setRangeHighlighterAttributes(highlighter, textAttributes);
+    }
 
-  @Override
-  public void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter) {
-    myDelegate.removeHighlighter(rangeHighlighter);
-  }
+    @Override
+    public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+        myDelegate.changeAttributesInBatch(highlighter, changeAttributesAction);
+    }
 
-  @Override
-  public void removeAllHighlighters() {
-    myDelegate.removeAllHighlighters();
-  }
+    @Override
+    public void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter) {
+        myDelegate.removeHighlighter(rangeHighlighter);
+    }
 
-  @Override
-  @Nullable
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    return myDelegate.getUserData(key);
-  }
+    @Override
+    public void removeAllHighlighters() {
+        myDelegate.removeAllHighlighters();
+    }
 
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    myDelegate.putUserData(key, value);
-  }
+    @Override
+    @Nullable
+    public <T> T getUserData(@Nonnull Key<T> key) {
+        return myDelegate.getUserData(key);
+    }
+
+    @Override
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        myDelegate.putUserData(key, value);
+    }
 }
