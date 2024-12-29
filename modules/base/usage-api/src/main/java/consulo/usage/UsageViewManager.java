@@ -21,6 +21,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.rule.PsiElementUsage;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -58,6 +59,8 @@ public abstract class UsageViewManager {
 
   public interface UsageViewStateListener {
     void usageViewCreated(@Nonnull UsageView usageView);
+
+    @RequiredUIAccess
     void findingUsagesFinished(UsageView usageView);
   }
 

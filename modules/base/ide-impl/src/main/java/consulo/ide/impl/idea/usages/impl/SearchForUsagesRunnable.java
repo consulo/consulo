@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.usages.impl;
 
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
@@ -367,10 +368,11 @@ class SearchForUsagesRunnable implements Runnable {
   }
 
   private void endSearchForUsages(@Nonnull final AtomicBoolean findStartedBalloonShown) {
-    assert !ApplicationManager.getApplication().isDispatchThread() : Thread.currentThread();
+    Application application = Application.get();
+    assert !application.isDispatchThread() : Thread.currentThread();
     int usageCount = myUsageCountWithoutDefinition.get();
     if (usageCount == 0 && myProcessPresentation.isShowNotFoundMessage()) {
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
+      application.invokeLater(new Runnable() {
         @Override
         public void run() {
           if (myProcessPresentation.isCanceled()) {
@@ -415,10 +417,10 @@ class SearchForUsagesRunnable implements Runnable {
             }
           }
         }
-      }, IdeaModalityState.nonModal(), myProject.getDisposed());
+      }, application.getNoneModalityState(), myProject.getDisposed());
     }
     else if (usageCount == 1 && !myProcessPresentation.isShowPanelIfOnlyOneUsage()) {
-      ApplicationManager.getApplication().invokeLater(() -> {
+      application.invokeLater(() -> {
         Usage usage = myFirstUsage.get();
         if (usage.canNavigate()) {
           usage.navigate(true);
@@ -433,7 +435,7 @@ class SearchForUsagesRunnable implements Runnable {
         lines.add(createOptionsHtml(mySearchFor));
         NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
         notifyByFindBalloon(createGotToOptionsListener(mySearchFor), type, myProcessPresentation, myProject, lines);
-      }, IdeaModalityState.nonModal(), myProject.getDisposed());
+      }, application.getNoneModalityState(), myProject.getDisposed());
     }
     else {
       final UsageViewImpl usageView = myUsageViewRef.get();
@@ -456,15 +458,17 @@ class SearchForUsagesRunnable implements Runnable {
       if (!myProcessPresentation.getLargeFiles().isEmpty() ||
           myOutOfScopeUsages.get() != 0 ||
           myProcessPresentation.searchIncludingProjectFileUsages() != null) {
-        ApplicationManager.getApplication().invokeLater(() -> {
+        application.invokeLater(() -> {
           NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
           notifyByFindBalloon(hyperlinkListener, type, myProcessPresentation, myProject, lines);
-        }, IdeaModalityState.nonModal(), myProject.getDisposed());
+        }, application.getNoneModalityState(), myProject.getDisposed());
       }
     }
 
     if (myListener != null) {
-      myListener.findingUsagesFinished(myUsageViewRef.get());
+      application.invokeLater(() -> {
+        myListener.findingUsagesFinished(myUsageViewRef.get());
+      }, application.getNoneModalityState(), myProject.getDisposed());
     }
   }
 }
