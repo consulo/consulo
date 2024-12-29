@@ -31,4 +31,5 @@ module consulo.execution.debug.api {
   exports consulo.execution.debug.internal.breakpoint to consulo.execution.debug.impl, consulo.desktop.awt.ide.impl;
 
   opens consulo.execution.debug.breakpoint to consulo.util.xml.serializer;
+  opens consulo.execution.debug.memory to consulo.util.xml.serializer;
 }
