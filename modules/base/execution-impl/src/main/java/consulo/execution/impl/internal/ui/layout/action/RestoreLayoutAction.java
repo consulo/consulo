@@ -6,12 +6,14 @@
  */
 package consulo.execution.impl.internal.ui.layout.action;
 
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.internal.layout.RunnerContentUi;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -47,5 +49,11 @@ public final class RestoreLayoutAction extends DumbAwareAction {
             }
         }
         e.getPresentation().setEnabledAndVisible(enabled);
+    }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return ExecutionIconGroup.actionRestorelayout();
     }
 }
