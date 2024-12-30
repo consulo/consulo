@@ -91,7 +91,6 @@ open module consulo.ide.impl {
   requires consulo.diff.impl;
 
   requires consulo.ui.impl;
-  requires consulo.localize.impl;
 
   requires consulo.xcoverage.rt;
   requires consulo.remote.servers.agent.rt;

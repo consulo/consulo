@@ -15,20 +15,27 @@
  */
 package consulo.localize.impl;
 
+import java.util.function.Supplier;
+
 /**
  * @author VISTALL
  * @since 2020-05-20
- *
+ * <p>
  * TODO [VISTALL] condition support
  */
-public class LocalizeKeyText {
-  private final String myText;
+public class LocalizeKeyText implements Supplier<String> {
+    private final String myText;
 
-  public LocalizeKeyText(String text) {
-    myText = text;
-  }
+    public LocalizeKeyText(String text) {
+        myText = text;
+    }
 
-  public String getText() {
-    return myText;
-  }
+    public String getText() {
+        return myText;
+    }
+
+    @Override
+    public String get() {
+        return myText;
+    }
 }

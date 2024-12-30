@@ -44,7 +44,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 2019-04-11
  */
 public class LocalizeManagerImpl extends LocalizeManager implements LocalizeManagerEx {
-    private record PluginFileInfo(PluginDescriptor descriptor, String path) {
+    private record PluginFileInfo(String id, PluginDescriptor descriptor, String path, Set<String> files) {
     }
 
     private static final Logger LOG = Logger.getInstance(LocalizeManagerImpl.class);
@@ -54,6 +54,8 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     private final AtomicBoolean myInitialized = new AtomicBoolean();
 
     public static final String LOCALIZE_DIRECTORY = "LOCALIZE-LIB/";
+
+    private static final String YAML_EXTENSION = ".yaml";
 
     private final Map<Locale, Map<String, LocalizeFileState>> myLocalizes = new HashMap<>();
 
@@ -89,12 +91,38 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
             Map<URL, Set<String>> urlsIndex = pluginClassLoader.getUrlsIndex();
             if (urlsIndex != null) {
+
                 for (Set<String> filePaths : urlsIndex.values()) {
+                    Map<String, PluginFileInfo> loadInfo = new HashMap<>();
+
                     for (String filePath : filePaths) {
-                        if (filePath.startsWith(LOCALIZE_DIRECTORY) && filePath.endsWith(".yaml")) {
-                            forLoad.add(new PluginFileInfo(descriptor, filePath));
+                        if (filePath.startsWith(LOCALIZE_DIRECTORY) && filePath.endsWith(YAML_EXTENSION)) {
+                            String pathId = filePath.substring(0, filePath.length() - YAML_EXTENSION.length());
+
+                            loadInfo.put(pathId, new PluginFileInfo(pathId, descriptor, filePath, new HashSet<>()));
                         }
                     }
+
+                    for (String filePath : filePaths) {
+                        if (filePath.startsWith(LOCALIZE_DIRECTORY) && !filePath.endsWith(YAML_EXTENSION)) {
+                            int index = getIndexOf(filePath, '/', 3);
+                            if (index == -1) {
+                                LOG.warn("Invalid localize path: " + filePath);
+                                continue;
+                            }
+
+                            String yamlIdPath = filePath.substring(0, index);
+                            PluginFileInfo info = loadInfo.get(yamlIdPath);
+                            if (info == null) {
+                                LOG.warn("Localize yaml not loaded. Path: " + yamlIdPath);
+                                continue;
+                            }
+
+                            info.files().add(filePath);
+                        }
+                    }
+
+                    forLoad.addAll(loadInfo.values());
                 }
             }
             else {
@@ -103,6 +131,23 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         });
 
         load(forLoad);
+    }
+
+    private int getIndexOf(String str, char symbol, int atCount) {
+        int visited = 0;
+
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c == symbol) {
+                visited ++;
+
+                if (visited == atCount) {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
     }
 
     private void legacySearch(PluginDescriptor pluginDescriptor, List<PluginFileInfo> forLoad) {
@@ -120,8 +165,9 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
                 }
 
                 String path = urlFileInfo.getSecond();
-                if (path.endsWith(".yaml")) {
-                    forLoad.add(new PluginFileInfo(pluginDescriptor, path));
+                if (path.endsWith(YAML_EXTENSION)) {
+                    String yamlId = path.substring(0, path.length() - YAML_EXTENSION.length());
+                    forLoad.add(new PluginFileInfo(yamlId, pluginDescriptor, path, Set.of()));
                 }
             }
         }
@@ -151,11 +197,31 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         Locale locale = buildLocale(localeStr);
 
         // -5 - its '.yaml' prefix
-        String localizeId = fullFilePath.substring(localeStr.length() + 1, fullFilePath.length() - 5);
+        String localizeId = fullFilePath.substring(localeStr.length() + 1, fullFilePath.length() - YAML_EXTENSION.length());
 
         Map<String, LocalizeFileState> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
 
-        mapByLocalizeId.put(localizeId, new LocalizeFileState(localizeId, fileInfo.descriptor(), zipEntryName));
+        LocalizeFileState state = new LocalizeFileState(localizeId, fileInfo.descriptor(), zipEntryName);
+
+        mapByLocalizeId.put(localizeId, state);
+
+        if (!fileInfo.files().isEmpty()) {
+            for (String subFile : fileInfo.files()) {
+                // zipEntryName = "LOCALIZE-LIB/en_US/consulo.language.LanguageLocalize.yaml"
+                // file = "LOCALIZE-LIB/en_US/consulo.language.LanguageLocalize/inspection/SyntaxError.html"
+                // fileId = "inspection/SyntaxError.html"
+                String fileId = subFile.substring(zipEntryName.length() - YAML_EXTENSION.length() + 1, subFile.length());
+
+                int lastDotIndex = fileId.lastIndexOf('.');
+                if (lastDotIndex != -1) {
+                    fileId = fileId.substring(0, lastDotIndex);
+                }
+
+                String fileLocalizeId = fileId.replace('/', '.').toLowerCase(Locale.ROOT);
+
+                state.putTextFromFile(fileLocalizeId, new LocalizeTextFromFile(localizeId, fileInfo.descriptor(), subFile));
+            }
+        }
     }
 
     @Nonnull

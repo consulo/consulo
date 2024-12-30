@@ -415,11 +415,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-localize-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-http-impl</artifactId>
             <version>${project.version}</version>
         </dependency>

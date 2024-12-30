@@ -16,26 +16,37 @@
 package consulo.language.editor.impl.internal.inspection;
 
 import consulo.annotation.component.ExtensionImpl;
-
+import consulo.language.localize.LanguageLocalize;
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class AnnotatorBasedInspection extends DefaultHighlightVisitorBasedInspection {
-  private static final String ANNOTATOR_SHORT_NAME = "Annotator";
+    private static final String ANNOTATOR_SHORT_NAME = "Annotator";
 
-  public AnnotatorBasedInspection() {
-    super(false, true);
-  }
+    // TODO replace it when localize generator support files
+    private static final LocalizeKey DESCRIPTION_KEY = LocalizeKey.of(LanguageLocalize.ID, "inspectiondescription.annotator");
 
-  @Override
-  @Nonnull
-  public String getDisplayName() {
-    return "Annotator";
-  }
+    public AnnotatorBasedInspection() {
+        super(false, true);
+    }
 
-  @Override
-  @Nonnull
-  public String getShortName() {
-    return ANNOTATOR_SHORT_NAME;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return DESCRIPTION_KEY.getValue();
+    }
+
+    @Override
+    @Nonnull
+    public String getDisplayName() {
+        return "Annotator";
+    }
+
+    @Override
+    @Nonnull
+    public String getShortName() {
+        return ANNOTATOR_SHORT_NAME;
+    }
 }
