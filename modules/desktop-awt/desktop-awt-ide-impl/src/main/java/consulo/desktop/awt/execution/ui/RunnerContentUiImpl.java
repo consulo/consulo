@@ -985,21 +985,28 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     private boolean rebuildMinimizedActions() {
+        int count = myViewActions.getChildrenCount();
+
         for (Map.Entry<GridImpl, Wrapper> entry : myMinimizedButtonsPlaceholder.entrySet()) {
             Wrapper eachPlaceholder = entry.getValue();
-            ActionGroup contentGroup = ActionGroup.newImmutableBuilder().add(myViewActions).build();
-            ActionToolbar tb = myActionManager.createActionToolbar(ActionPlaces.RUNNER_LAYOUT_BUTTON_TOOLBAR, contentGroup, true);
-            tb.setTargetComponent(myComponent);
-            tb.getComponent().setOpaque(false);
-            tb.getComponent().setBorder(null);
-            JComponent minimized = tb.getComponent();
-            eachPlaceholder.setContent(minimized);
+            
+            if (count > 0) {
+                ActionGroup contentGroup = ActionGroup.newImmutableBuilder().add(myViewActions).build();
+                ActionToolbar tb = myActionManager.createActionToolbar(ActionPlaces.RUNNER_LAYOUT_BUTTON_TOOLBAR, contentGroup, true);
+                tb.setTargetComponent(myComponent);
+                tb.getComponent().setOpaque(false);
+                tb.getComponent().setBorder(null);
+                JComponent minimized = tb.getComponent();
+                eachPlaceholder.setContent(minimized);
+            } else {
+                eachPlaceholder.setContent(null);
+            }
         }
 
         myTabs.getComponent().revalidate();
         myTabs.getComponent().repaint();
 
-        return myViewActions.getChildrenCount() > 0;
+        return count > 0;
     }
 
     @Override

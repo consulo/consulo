@@ -97,8 +97,8 @@ class ContentTabLabel extends BaseLabel {
   protected static final int ICONS_GAP = JBUI.scale(3);
 
   private final ImageState<Boolean> myPinImageState = new ImageState<>(Boolean.FALSE);
-  private final Image myActiveCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsCancel());
-  private final Image myRegularCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsCancel());
+  private final Image myActiveCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsClose());
+  private final Image myRegularCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsClose());
 
   private final Content myContent;
   private final TabContentLayout myLayout;
