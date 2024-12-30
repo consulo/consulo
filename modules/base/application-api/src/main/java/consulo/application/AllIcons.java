@@ -37,7 +37,6 @@ public class AllIcons {
         public static final Image CheckMulticaret = PlatformIconGroup.actionsCheckmulticaret(); // 16x16
         public static final Image CheckOut = PlatformIconGroup.actionsCheckout(); // 16x16
         public static final Image Close = PlatformIconGroup.actionsClose(); // 16x16
-        public static final Image CloseHovered = PlatformIconGroup.actionsClosehovered(); // 16x16
         public static final Image Collapseall = PlatformIconGroup.actionsCollapseall(); // 16x16
         public static final Image Commit = PlatformIconGroup.actionsCommit(); // 16x16
         public static final Image Compile = PlatformIconGroup.actionsCompile(); // 16x16

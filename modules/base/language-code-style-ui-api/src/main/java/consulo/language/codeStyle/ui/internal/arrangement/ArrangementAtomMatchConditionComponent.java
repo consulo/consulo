@@ -163,7 +163,6 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
             ImageKey closeIcon = PlatformIconGroup.actionsClose();
             myCloseButton = new JButton(TargetAWT.to(closeIcon));
             myCloseButton.setRolloverEnabled(true);
-            myCloseButton.setRolloverIcon(TargetAWT.to(PlatformIconGroup.actionsClosehovered()));
             myCloseButton.putClientProperty("JButton.buttonType", "borderless");
 
             Dimension preferredSize = myCloseButton.getPreferredSize();

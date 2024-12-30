@@ -17,6 +17,7 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -25,6 +26,11 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ActionToolbarFactory {
+    @Nonnull
+    static ActionToolbarFactory getInstance() {
+        return Application.get().getInstance(ActionToolbarFactory.class);
+    }
+
     /**
      * Factory method that creates an <code>ActionToolbar</code> from the
      * specified group. The specified place is associated with the created toolbar.

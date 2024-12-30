@@ -1,22 +1,21 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl;
 
-import consulo.document.Document;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.EditorMouseMotionListener;
-import consulo.document.FileDocumentManager;
-import consulo.ui.ex.action.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.util.TimerUtil;
 import consulo.desktop.awt.language.editor.DesktopEditorFloatPanel;
 import consulo.desktop.awt.language.editor.DesktopEditorPanelLayer;
 import consulo.disposer.Disposable;
-import consulo.ui.Size;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.util.TimerUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -76,13 +75,11 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
     setOpaque(false);
   }
 
-  private static boolean isInsideActivationArea(JScrollPane container, Point p) {
-    final JViewport viewport = container.getViewport();
-    final Rectangle r = viewport.getBounds();
-    final Point viewPosition = viewport.getViewPosition();
+  private boolean isInsideActivationArea(JScrollPane container, Point p) {
+    final Rectangle r = myEditor.getContentComponent().getBounds();
 
     final Rectangle activationArea = new Rectangle(0, 0, r.width, r.height);
-    return activationArea.contains(p.x, p.y - viewPosition.y);
+    return activationArea.contains(p.x, p.y);
   }
 
   public static boolean mayShowToolbar(@Nullable final Document document) {
