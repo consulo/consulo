@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.fileEditor.FileEditorWindow;
@@ -58,8 +57,8 @@ public class CloseTab extends AnAction implements DumbAware {
   public void update(final AnActionEvent e) {
     boolean pinned = isPinned();
 
-    e.getPresentation().setIcon(pinned ? PlatformIconGroup.actionsPintab() : AllIcons.Actions.Close);
-    e.getPresentation().setHoveredIcon(pinned ? PlatformIconGroup.actionsPintab() : AllIcons.Actions.CloseHovered);
+    e.getPresentation().setIcon(pinned ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsClose());
+    e.getPresentation().setHoveredIcon(pinned ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsClose());
     e.getPresentation().setVisible(UISettings.getInstance().getShowCloseButton() || pinned);
     if (pinned) {
       e.getPresentation().setText(IdeBundle.message("action.unpin.tab"));

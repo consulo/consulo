@@ -20,9 +20,8 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -31,9 +30,9 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedActionToolbarFactoryImpl implements ActionToolbarFactory {
-  @Nonnull
-  @Override
-  public ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal) {
-    return new UnifiedActionToolbarImpl(place, group, horizontal);
-  }
+    @Nonnull
+    @Override
+    public ActionToolbar createActionToolbar(String place, ActionGroup group, @Nonnull ActionToolbar.Style style) {
+        return new UnifiedActionToolbarImpl(place, group, style);
+    }
 }

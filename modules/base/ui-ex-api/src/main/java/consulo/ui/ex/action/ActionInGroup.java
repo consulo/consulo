@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.action;
 
+@Deprecated
 public class ActionInGroup {
 
   private final DefaultActionGroup myGroup;
@@ -25,8 +26,8 @@ public class ActionInGroup {
     myAction = action;
   }
 
+  @Deprecated
   public ActionInGroup setAsSecondary(boolean isSecondary) {
-    myGroup.setAsPrimary(myAction, !isSecondary);
     return this;
   }
 

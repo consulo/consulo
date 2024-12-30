@@ -22,8 +22,6 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionBundle;
-import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.impl.internal.ui.layout.RunnerLayoutImpl;
 import consulo.execution.impl.internal.ui.layout.TabImpl;
 import consulo.execution.impl.internal.ui.layout.ViewContextEx;
@@ -39,7 +37,6 @@ import consulo.ide.impl.idea.execution.ui.layout.impl.JBRunnerTabs;
 import consulo.ide.impl.idea.ide.actions.CloseAction;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
@@ -142,7 +139,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     private int myAttractionCount;
     private ActionGroup myLeftToolbarActions;
 
-    private final DefaultActionGroup myViewActions = new DefaultActionGroup();
+    private final LayoutActionGroup myViewActions = new LayoutActionGroup();
 
     private boolean myContentToolbarBefore = true;
     private boolean myTopLeftActionsVisible = true;
@@ -746,12 +743,12 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
                     CustomContentLayoutSettings layoutOptionsCollection = event.getContent().getUserData(CustomContentLayoutSettings.KEY);
                     if (layoutOptionsCollection != null) {
                         for (AnAction action : layoutOptionsCollection.getActions(RunnerContentUiImpl.this)) {
-                            myViewActions.addAction(action).setAsSecondary(true);
+                            myViewActions.addAction(action);
                         }
                     }
                     else {
                         AnAction viewAction = new RestoreViewAction(RunnerContentUiImpl.this, event.getContent());
-                        myViewActions.addAction(viewAction).setAsSecondary(true);
+                        myViewActions.addAction(viewAction);
                     }
 
                     List<AnAction> toAdd = new ArrayList<>();
@@ -762,7 +759,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
                         }
                     }
                     for (AnAction anAction : toAdd) {
-                        myViewActions.addAction(anAction).setAsSecondary(true);
+                        myViewActions.addAction(anAction);
                     }
                 }
             }
@@ -990,13 +987,11 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     private boolean rebuildMinimizedActions() {
         for (Map.Entry<GridImpl, Wrapper> entry : myMinimizedButtonsPlaceholder.entrySet()) {
             Wrapper eachPlaceholder = entry.getValue();
-            ActionToolbar tb = myActionManager.createActionToolbar(ActionPlaces.RUNNER_LAYOUT_BUTTON_TOOLBAR, myViewActions, true);
-            tb.setSecondaryActionsIcon(ExecutionIconGroup.actionRestorelayout(), true);
-            tb.setSecondaryActionsTooltip(LocalizeValue.localizeTODO(ExecutionBundle.message("runner.content.tooltip.layout.settings")));
+            ActionGroup contentGroup = ActionGroup.newImmutableBuilder().add(myViewActions).build();
+            ActionToolbar tb = myActionManager.createActionToolbar(ActionPlaces.RUNNER_LAYOUT_BUTTON_TOOLBAR, contentGroup, true);
             tb.setTargetComponent(myComponent);
             tb.getComponent().setOpaque(false);
             tb.getComponent().setBorder(null);
-            tb.setReservePlaceAutoPopupIcon(false);
             JComponent minimized = tb.getComponent();
             eachPlaceholder.setContent(minimized);
         }
@@ -1349,14 +1344,14 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
         if (myMinimizeActionEnabled) {
             if (specialActions.isEmpty()) {
-                myViewActions.addAction(new AnSeparator()).setAsSecondary(true);
+                myViewActions.add(new AnSeparator());
                 AnAction separateWatches = actionManager.getAction("XDebugger.SeparateWatches");
                 if (separateWatches != null) {
-                    myViewActions.addAction(separateWatches).setAsSecondary(true);
-                    myViewActions.addAction(new AnSeparator()).setAsSecondary(true);
+                    myViewActions.add(separateWatches);
+                    myViewActions.add(new AnSeparator());
                 }
-                myViewActions.addAction(actionManager.getAction("Runner.ToggleTabLabels")).setAsSecondary(true);
-                myViewActions.addAction(actionManager.getAction("Runner.RestoreLayout")).setAsSecondary(true);
+                myViewActions.add(actionManager.getAction("Runner.ToggleTabLabels"));
+                myViewActions.add(actionManager.getAction("Runner.RestoreLayout"));
             }
         }
         else {

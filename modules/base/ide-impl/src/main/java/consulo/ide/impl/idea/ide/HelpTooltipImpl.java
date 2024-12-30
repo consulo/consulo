@@ -31,6 +31,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -345,7 +346,7 @@ public class HelpTooltipImpl implements HelpTooltip {
         tipPanel.setBackground(BACKGROUND_COLOR);
 
         boolean hasTitle = StringUtil.isNotEmpty(title);
-        boolean hasDescription = StringUtil.isNotEmpty(description);
+        boolean hasDescription = StringUtil.isNotEmpty(description) && !Objects.equals(title, description);
 
         if (hasTitle) {
             tipPanel.add(new Header(hasDescription), VerticalLayout.TOP);

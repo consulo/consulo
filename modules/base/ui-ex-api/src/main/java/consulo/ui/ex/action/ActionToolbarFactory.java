@@ -17,7 +17,6 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -26,17 +25,17 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ActionToolbarFactory {
-  /**
-   * Factory method that creates an <code>ActionToolbar</code> from the
-   * specified group. The specified place is associated with the created toolbar.
-   *
-   * @param place      Determines the place that will be set for {@link AnActionEvent} passed
-   *                   when an action from the group is either performed or updated.
-   *                   See {@link ActionPlaces}
-   * @param group      Group from which the actions for the toolbar are taken.
-   * @param horizontal The orientation of the toolbar (true - horizontal, false - vertical)
-   * @return An instance of <code>ActionToolbar</code>
-   */
-  @Nonnull
-  ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal);
+    /**
+     * Factory method that creates an <code>ActionToolbar</code> from the
+     * specified group. The specified place is associated with the created toolbar.
+     *
+     * @param place Determines the place that will be set for {@link AnActionEvent} passed
+     *              when an action from the group is either performed or updated.
+     *              See {@link ActionPlaces}
+     * @param group Group from which the actions for the toolbar are taken.
+     * @param style Style of toolbar, see documentation of {@link ActionToolbar.Style}
+     * @return An instance of <code>ActionToolbar</code>
+     */
+    @Nonnull
+    ActionToolbar createActionToolbar(String place, ActionGroup group, @Nonnull ActionToolbar.Style style);
 }

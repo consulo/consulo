@@ -15,23 +15,23 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.application.AllIcons;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Component;
+import consulo.ui.Tab;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.localize.LocalizeValue;
-import consulo.ui.Component;
-import consulo.ui.TextItemPresentation;
-import consulo.ui.Tab;
-import consulo.ui.TextAttribute;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 
 /**
@@ -58,9 +58,8 @@ public class DesktopTabImpl implements Tab {
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setIcon(AllIcons.Actions.Close);
-      e.getPresentation().setHoveredIcon(AllIcons.Actions.CloseHovered);
-      e.getPresentation().setText("Close.");
+      e.getPresentation().setIcon(PlatformIconGroup.actionsCancel());
+      e.getPresentation().setText("Close");
     }
   }
 

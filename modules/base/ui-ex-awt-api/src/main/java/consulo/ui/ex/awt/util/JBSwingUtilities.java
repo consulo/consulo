@@ -15,10 +15,8 @@
  */
 package consulo.ui.ex.awt.util;
 
-import consulo.disposer.Disposable;
-import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -63,25 +61,9 @@ public class JBSwingUtilities {
     return SwingUtilities.isRightMouseButton(anEvent);
   }
 
-
-  private static final List<BiFunction<JComponent, Graphics2D, Graphics2D>> ourGlobalTransform = new CopyOnWriteArrayList<>();
-
-  public static Disposable addGlobalCGTransform(final BiFunction<JComponent, Graphics2D, Graphics2D> fun) {
-    ourGlobalTransform.add(fun);
-    return new Disposable() {
-      @Override
-      public void dispose() {
-        ourGlobalTransform.remove(fun);
-      }
-    };
-  }
-
   @Nonnull
+  @Deprecated
   public static Graphics2D runGlobalCGTransform(@Nonnull JComponent c, @Nonnull Graphics g) {
-    Graphics2D gg = (Graphics2D)g;
-    for (BiFunction<JComponent, Graphics2D, Graphics2D> transform : ourGlobalTransform) {
-      gg = ObjectUtil.notNull(transform.apply(c, gg));
-    }
-    return gg;
+    return (Graphics2D) g;
   }
 }

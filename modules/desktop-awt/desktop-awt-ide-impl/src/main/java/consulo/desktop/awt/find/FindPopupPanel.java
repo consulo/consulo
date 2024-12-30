@@ -673,7 +673,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
         myScopeSelectionToolbar = createToolbar(scopeActions.toArray(AnAction.EMPTY_ARRAY));
         myScopeSelectionToolbar.setTargetComponent(mySearchComponent);
-        myScopeSelectionToolbar.setMinimumButtonSize(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
         mySelectedScope = scopeComponents[0].first;
 
         myResultsPreviewTableModel = createTableModel();
@@ -1667,7 +1666,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     public static ActionToolbar createToolbar(AnAction... actions) {
         ActionToolbar toolbar =
             ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, new DefaultActionGroup(actions), true);
-        toolbar.setForceMinimumSize(true);
         toolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
         return toolbar;
     }

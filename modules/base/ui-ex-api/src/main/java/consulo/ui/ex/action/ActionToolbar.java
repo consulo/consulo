@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import org.intellij.lang.annotations.MagicConstant;
 
 import java.util.List;
 
@@ -34,6 +33,32 @@ import java.util.List;
  * @see ActionManager#createActionToolbar(String, ActionGroup, boolean)
  */
 public interface ActionToolbar {
+    enum Style {
+        HORIZONTAL,
+        VERTICAL {
+            @Override
+            public boolean isHorizontal() {
+                return false;
+            }
+        },
+        /**
+         * Inplace toolbar inside some components like {@link consulo.ui.TextBox}
+         *
+         * Always horizontal
+         */
+        INPLACE,
+        /**
+         * Toolbar where all buttons are regulars (not short version without text, and borders) {@link consulo.ui.Button}
+         *
+         * Always horizontal
+         */
+        BUTTON;
+
+        public boolean isHorizontal() {
+            return true;
+        }
+    }
+
     String ACTION_TOOLBAR_PROPERTY_KEY = "ACTION_TOOLBAR";
 
     /**
@@ -53,20 +78,9 @@ public interface ActionToolbar {
     int AUTO_LAYOUT_POLICY = 2;
 
     /**
-     * Horizontal orientation. Used for scrollbars and sliders.
-     */
-    int HORIZONTAL_ORIENTATION = 0;
-    /**
-     * Vertical orientation. Used for scrollbars and sliders.
-     */
-    int VERTICAL_ORIENTATION = 1;
-
-    /**
      * This is default minimum size of the toolbar button, without scaling
      */
     Size DEFAULT_MINIMUM_BUTTON_SIZE = new Size(25, 25);
-
-    Size NAVBAR_MINIMUM_BUTTON_SIZE = new Size(20, 20);
 
     /**
      * Constraint that's passed to <code>Container.add</code> when ActionButton is added to the toolbar.
@@ -86,6 +100,7 @@ public interface ActionToolbar {
     /**
      * Constraint that's passed to <code>Container.add</code> when a secondary action is added to the toolbar.
      */
+    @Deprecated
     String SECONDARY_ACTION_CONSTRAINT = "Constraint.SecondaryAction";
 
     /**
@@ -125,36 +140,6 @@ public interface ActionToolbar {
     void adjustTheSameSize(boolean value);
 
     /**
-     * Sets minimum size of toolbar button. By default all buttons
-     * at toolbar has 25x25 pixels size.
-     *
-     * @throws IllegalArgumentException if <code>size</code>
-     *                                  is <code>null</code>
-     */
-    @Deprecated
-    @DeprecationInfo("Use with Size parameter")
-    default void setMinimumButtonSize(@Nonnull java.awt.Dimension size) {
-        setMinimumButtonSize(new Size(size.width, size.height));
-    }
-
-    /**
-     * Sets minimum size of toolbar button. By default all buttons
-     * at toolbar has 25x25 pixels size.
-     *
-     * @throws IllegalArgumentException if <code>size</code>
-     *                                  is <code>null</code>
-     */
-    void setMinimumButtonSize(@Nonnull Size size);
-
-    /**
-     * Sets toolbar orientation
-     *
-     * @see #HORIZONTAL_ORIENTATION
-     * @see #VERTICAL_ORIENTATION
-     */
-    void setOrientation(@MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION}) int orientation);
-
-    /**
      * @return maximum button height
      */
     int getMaxButtonHeight();
@@ -178,37 +163,15 @@ public interface ActionToolbar {
         setTargetComponent((javax.swing.JComponent) TargetAWT.to(component));
     }
 
-    void setReservePlaceAutoPopupIcon(final boolean reserve);
-
-    void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip);
-
-    void setMiniMode(boolean minimalMode);
-
     DataContext getToolbarDataContext();
 
     @Nonnull
     List<AnAction> getActions();
 
-    default void setSecondaryActionsIcon(Image icon) {
-    }
-
-    default void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
-    }
-
-    default void setSecondaryActionsShortcut(@Nonnull String secondaryActionsShortcut) {
-    }
-
     /**
      * Enables showing titles of separators as labels in the toolbar (off by default).
      */
     default void setShowSeparatorTitles(boolean showSeparatorTitles) {
-    }
-
-    /**
-     * Forces the minimum size of the toolbar to show all buttons, When set to {@code true}. By default ({@code false}) the
-     * toolbar will shrink further and show the auto popup chevron button.
-     */
-    default void setForceMinimumSize(boolean force) {
     }
 
     /**
@@ -220,4 +183,62 @@ public interface ActionToolbar {
 
     default void setContentAreaFilled(boolean b) {
     }
+
+    // region deprecated method
+    /**
+     * Sets minimum size of toolbar button. By default all buttons
+     * at toolbar has 25x25 pixels size.
+     *
+     * @throws IllegalArgumentException if <code>size</code>
+     *                                  is <code>null</code>
+     */
+    @Deprecated
+    @DeprecationInfo("Use with Size parameter")
+    default void setMinimumButtonSize(@Nonnull java.awt.Dimension size) {
+        setMinimumButtonSize(new Size(size.width, size.height));
+    }
+
+    /**
+     * Sets minimum size of toolbar button. By default all buttons
+     * at toolbar has 25x25 pixels size.
+     *
+     * @throws IllegalArgumentException if <code>size</code>
+     *                                  is <code>null</code>
+     */
+    @Deprecated
+    void setMinimumButtonSize(@Nonnull Size size);
+
+    @Deprecated
+    default void setReservePlaceAutoPopupIcon(final boolean reserve) {
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use different style")
+    void setMiniMode(boolean minimalMode);
+
+    @Deprecated
+    default void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip) {
+    }
+
+    @Deprecated
+    default void setSecondaryActionsIcon(Image icon) {
+    }
+
+    @Deprecated
+    default void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
+    }
+
+    @Deprecated
+    default void setSecondaryActionsShortcut(@Nonnull String secondaryActionsShortcut) {
+    }
+
+    /**
+     * Forces the minimum size of the toolbar to show all buttons, When set to {@code true}. By default ({@code false}) the
+     * toolbar will shrink further and show the auto popup chevron button.
+     */
+    @Deprecated
+    default void setForceMinimumSize(boolean force) {
+    }
+    
+    //endregion
 }

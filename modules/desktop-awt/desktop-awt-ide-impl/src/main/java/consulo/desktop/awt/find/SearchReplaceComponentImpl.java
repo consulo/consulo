@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.find;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -18,7 +17,9 @@ import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
 import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -163,16 +164,13 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         myReplaceToolbarWrapper.add(replaceToolbarWrapper1, BorderLayout.WEST);
         myReplaceToolbarWrapper.setBorder(JBUI.Borders.emptyTop(3));
 
-        JLabel closeLabel = new JBLabel(null, AllIcons.Actions.Close, SwingConstants.RIGHT);
-        closeLabel.setBorder(JBUI.Borders.empty(2));
-        closeLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                close();
-            }
-        });
-        closeLabel.setToolTipText(FindLocalize.tooltipCloseSearchBarEscape().get());
-        searchPair.add(new Wrapper(closeLabel), BorderLayout.EAST);
+        SearchCloseAction anCloseAction = new SearchCloseAction(this::close);
+
+        ActionToolbar closeToolbar = ActionManager.getInstance()
+            .createActionToolbar("SearchCloseGroup", ActionGroup.newImmutableBuilder().add(anCloseAction).build(), true);
+        closeToolbar.setTargetComponent(null);
+
+        searchPair.add(closeToolbar.getComponent(), BorderLayout.EAST);
 
         myRightPanel = new NonOpaquePanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
         myRightPanel.add(searchPair);
@@ -634,7 +632,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     @Nonnull
     private ActionToolbar createReplaceToolbar1(@Nonnull DefaultActionGroup group) {
         ActionToolbar toolbar = createToolbar(group);
-        toolbar.setReservePlaceAutoPopupIcon(false);
         return toolbar;
     }
 
@@ -642,7 +639,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     private ActionToolbar createToolbar(@Nonnull ActionGroup group) {
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, group, true);
         toolbar.setTargetComponent(this);
-        toolbar.setMiniMode(true);
         return toolbar;
     }
 

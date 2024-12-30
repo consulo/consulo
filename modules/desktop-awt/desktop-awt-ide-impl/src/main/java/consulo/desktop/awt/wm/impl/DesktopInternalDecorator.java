@@ -38,7 +38,6 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.Gray;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -456,7 +455,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
             }
             group.addSeparator();
         }
-        group.addAction(myToggleToolbarGroup).setAsSecondary(true);
+        group.addAction(myToggleToolbarGroup);
         if (myInfo.isDocked()) {
             group.add(myToggleAutoHideModeAction);
             group.add(myToggleDockModeAction);
@@ -487,23 +486,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
     private static void addSorted(DefaultActionGroup main, ActionGroup group) {
         final AnAction[] children = group.getChildren(null);
-        boolean hadSecondary = false;
-        for (AnAction action : children) {
-            if (group.isPrimary(action)) {
-                main.add(action);
-            }
-            else {
-                hadSecondary = true;
-            }
-        }
-        if (hadSecondary) {
-            main.addSeparator();
-            for (AnAction action : children) {
-                if (!group.isPrimary(action)) {
-                    main.addAction(action).setAsSecondary(true);
-                }
-            }
-        }
+        main.addAll(children);
+
         String separatorText = group.getTemplatePresentation().getText();
         if (children.length > 0 && !StringUtil.isEmpty(separatorText)) {
             main.addAction(new AnSeparator(separatorText), Constraints.FIRST);

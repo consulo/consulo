@@ -1,32 +1,31 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.wm.impl.content;
 
-import consulo.application.AllIcons;
+import consulo.application.ui.UISettings;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.application.ui.UISettings;
-import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
-import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.util.TimedDeadzone;
-import consulo.dataContext.DataContext;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.util.TimedDeadzone;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageState;
-
+import consulo.util.collection.SmartList;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
@@ -98,8 +97,8 @@ class ContentTabLabel extends BaseLabel {
   protected static final int ICONS_GAP = JBUI.scale(3);
 
   private final ImageState<Boolean> myPinImageState = new ImageState<>(Boolean.FALSE);
-  private final Image myActiveCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPintab() : AllIcons.Actions.CloseHovered);
-  private final Image myRegularCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPintab() : AllIcons.Actions.Close);
+  private final Image myActiveCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsCancel());
+  private final Image myRegularCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPintab() : PlatformIconGroup.actionsCancel());
 
   private final Content myContent;
   private final TabContentLayout myLayout;

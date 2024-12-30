@@ -2,16 +2,16 @@
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
 import consulo.ide.impl.idea.find.SearchSession;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 

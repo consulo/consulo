@@ -361,7 +361,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         rightActions.add(new RestoreDefaultSizeAction());
         toolbarActions.add(rightActions);
 
-        myToolBar = new ActionToolbarImpl(ActionPlaces.JAVADOC_TOOLBAR, toolbarActions, true) {
+        myToolBar = new ActionToolbarImpl(ActionPlaces.JAVADOC_TOOLBAR, toolbarActions, ActionToolbar.Style.HORIZONTAL) {
             Point initialClick;
 
             @Override
@@ -383,7 +383,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
                 super.processMouseMotionEvent(e);
             }
         };
-        myToolBar.setSecondaryActionsIcon(AllIcons.Actions.More, true);
 
         JLayeredPane layeredPane = new JBLayeredPane() {
             @Override

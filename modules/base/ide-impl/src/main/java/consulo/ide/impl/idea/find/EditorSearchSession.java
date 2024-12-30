@@ -2,7 +2,6 @@
 
 package consulo.ide.impl.idea.find;
 
-import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.UISettings;
@@ -171,9 +170,6 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
         updateUIWithFindModel();
 
-        if (Application.get().isUnitTestMode()) {
-            initLivePreview();
-        }
         updateMultiLineStateIfNeeded();
 
         EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryListener() {

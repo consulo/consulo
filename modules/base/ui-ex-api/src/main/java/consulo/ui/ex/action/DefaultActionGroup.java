@@ -132,6 +132,7 @@ public class DefaultActionGroup extends ActionGroup {
     }
 
     @Nonnull
+    @Deprecated
     public final ActionInGroup addAction(@Nonnull AnAction action) {
         return addAction(action, Constraints.LAST);
     }
@@ -404,7 +405,6 @@ public class DefaultActionGroup extends ActionGroup {
                 LOG.error("Null child action in group " + this + " of class " + getClass() + ", id=" + stub.getId());
                 return null;
             }
-            replace((AnAction) stub, action);
             return action;
         }
         catch (ProcessCanceledException ex) {

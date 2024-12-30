@@ -16,7 +16,6 @@
 package consulo.ide.impl.actionSystem.impl;
 
 import consulo.dataContext.DataContext;
-import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,7 +26,6 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
-import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -46,18 +44,18 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
 
     private Layout myComponent;
 
-    private int myOrientation;
+    private final Style myStyle;
 
-    public UnifiedActionToolbarImpl(String place, ActionGroup group, boolean horizontal) {
+    public UnifiedActionToolbarImpl(String place, ActionGroup group, Style style) {
         myPlace = place;
         myGroup = group;
-        myOrientation = horizontal ? HORIZONTAL_ORIENTATION : VERTICAL_ORIENTATION;
+        myStyle = style;
 
         rebuildUI();
     }
 
     private void rebuildUI() {
-        myComponent = myOrientation == HORIZONTAL_ORIENTATION ? HorizontalLayout.create() : VerticalLayout.create();
+        myComponent = myStyle.isHorizontal() ? HorizontalLayout.create() : VerticalLayout.create();
     }
 
     public void setTargetComponent(final javax.swing.JComponent component) {
@@ -97,13 +95,6 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
     }
 
     @Override
-    public void setOrientation(@MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION}) int orientation) {
-        myOrientation = orientation;
-
-        rebuildUI();
-    }
-
-    @Override
     public int getMaxButtonHeight() {
         return 0;
     }
@@ -118,17 +109,6 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
     public boolean hasVisibleActions() {
         return false;
     }
-
-    @Override
-    public void setReservePlaceAutoPopupIcon(boolean reserve) {
-
-    }
-
-    @Override
-    public void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip) {
-
-    }
-
 
     @Override
     public void setMiniMode(boolean minimalMode) {

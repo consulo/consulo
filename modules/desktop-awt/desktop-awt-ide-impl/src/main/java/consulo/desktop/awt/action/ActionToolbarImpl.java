@@ -13,6 +13,7 @@ import consulo.desktop.awt.action.toolbar.ActionToggleToolbarButtonImpl;
 import consulo.desktop.awt.action.toolbar.ActionToolbarButtonImpl;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
+import consulo.desktop.awt.ui.plaf2.flat.InplaceComponent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
@@ -20,6 +21,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Size;
@@ -33,7 +35,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
@@ -49,7 +50,6 @@ import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -59,7 +59,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, QuickActionProvider, AlphaAnimated {
@@ -78,6 +77,8 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
      * components layout.
      */
     private final List<Rectangle> myComponentBounds = new ArrayList<>();
+    @Nonnull
+    private final Style myStyle;
 
     private Size myMinimumButtonSize = Size.ZERO;
 
@@ -85,7 +86,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
      * @see ActionToolbar#getLayoutPolicy()
      */
     private int myLayoutPolicy;
-    private int myOrientation;
     private final ActionGroup myActionGroup;
     private Boolean myContentAreaFilled;
     @Nonnull
@@ -105,39 +105,30 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
 
     private Rectangle myAutoPopupRec;
 
-    private final SecondaryActionGroup mySecondaryActions = new SecondaryActionGroup();
     private boolean myForceMinimumSize;
     private boolean myForceShowFirstComponent;
     private boolean mySkipWindowAdjustments;
-    private boolean myMinimalMode;
 
     private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
-
-    @Override
-    public ActionToolbarButtonImpl getSecondaryActionsButton() {
-        return mySecondaryActionsButton;
-    }
-
-    private ActionToolbarButtonImpl mySecondaryActionsButton;
 
     private int myFirstOutsideIndex = -1;
     private JBPopup myPopup;
 
     private JComponent myTargetComponent;
-    private boolean myReservePlaceAutoPopupIcon = true;
     private boolean myShowSeparatorTitles;
-    private boolean myNoGapMode;//if true secondary actions button would be layout side-by-side with other buttons
+
     private final AlphaAnimationContext myAlphaContext = new AlphaAnimationContext(this);
 
-    public ActionToolbarImpl(@Nonnull String place, @Nonnull final ActionGroup actionGroup, boolean horizontal) {
-        this(place, actionGroup, horizontal, false);
+    public ActionToolbarImpl(@Nonnull String place, @Nonnull final ActionGroup actionGroup, @Nonnull Style style) {
+        this(place, actionGroup, style, false);
     }
 
     public ActionToolbarImpl(@Nonnull String place,
                              @Nonnull ActionGroup actionGroup,
-                             final boolean horizontal,
+                             @Nonnull Style style,
                              boolean updateActionsNow) {
         super(null);
+        myStyle = style;
         myAlphaContext.getAnimator().setVisibleImmediately(true);
         myActionManager = ActionManagerEx.getInstanceEx();
         myPlace = place;
@@ -153,7 +144,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             }
         };
 
-        setOrientation(horizontal ? ActionToolbar.HORIZONTAL_ORIENTATION : ActionToolbar.VERTICAL_ORIENTATION);
+        setOrientation(style.isHorizontal() ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL);
 
         myUpdater.updateActions(updateActionsNow, false);
 
@@ -204,14 +195,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         CancellablePromise<List<AnAction>> lastUpdate = myLastUpdate;
         if (lastUpdate != null) {
             lastUpdate.cancel();
-            if (ApplicationManager.getApplication().isUnitTestMode()) {
-                try {
-                    lastUpdate.blockingGet(1, TimeUnit.DAYS);
-                }
-                catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
         }
     }
 
@@ -234,16 +217,12 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         myLayoutPolicy = layoutPolicy;
     }
 
-    @Override
-    protected Graphics getComponentGraphics(Graphics graphics) {
-        return JBSwingUtilities.runGlobalCGTransform(this, super.getComponentGraphics(graphics));
-    }
-
     @Nonnull
     public ActionGroup getActionGroup() {
         return myActionGroup;
     }
 
+    @Nonnull
     @Override
     public AlphaAnimationContext getAlphaContext() {
         return myAlphaContext;
@@ -259,20 +238,22 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         super.paintComponent(g);
 
         if (myLayoutPolicy == AUTO_LAYOUT_POLICY && myAutoPopupRec != null) {
-            if (myOrientation == SwingConstants.HORIZONTAL) {
-                final int dy = myAutoPopupRec.height / 2 - AllIcons.Ide.Link.getHeight() / 2;
-                TargetAWT.to(AllIcons.Ide.Link)
-                    .paintIcon(this, g, (int) myAutoPopupRec.getMaxX() - AllIcons.Ide.Link.getWidth() - 1, myAutoPopupRec.y + dy);
+            Image link = PlatformIconGroup.ideLink();
+            
+            if (getOrientation() == SwingConstants.HORIZONTAL) {
+                final int dy = myAutoPopupRec.height / 2 - link.getHeight() / 2;
+                TargetAWT.to(link)
+                    .paintIcon(this, g, (int) myAutoPopupRec.getMaxX() - link.getWidth() - 1, myAutoPopupRec.y + dy);
             }
             else {
-                final int dx = myAutoPopupRec.width / 2 - AllIcons.Ide.Link.getWidth() / 2;
-                TargetAWT.to(AllIcons.Ide.Link)
-                    .paintIcon(this, g, myAutoPopupRec.x + dx, (int) myAutoPopupRec.getMaxY() - AllIcons.Ide.Link.getWidth() - 1);
+                final int dx = myAutoPopupRec.width / 2 - link.getWidth() / 2;
+                TargetAWT.to(link)
+                    .paintIcon(this, g, myAutoPopupRec.x + dx, (int) myAutoPopupRec.getMaxY() - link.getWidth() - 1);
             }
         }
     }
 
-    private void fillToolBar(@Nonnull final List<? extends AnAction> actions, boolean layoutSecondaries) {
+    private void fillToolBar(@Nonnull final List<? extends AnAction> actions) {
         boolean isLastElementSeparator = false;
         final List<AnAction> rightAligned = new ArrayList<>();
         for (int i = 0; i < actions.size(); i++) {
@@ -280,13 +261,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             if (action instanceof RightAlignedToolbarAction) {
                 rightAligned.add(action);
                 continue;
-            }
-
-            if (layoutSecondaries) {
-                if (!myActionGroup.isPrimary(action)) {
-                    mySecondaryActions.add(action);
-                    continue;
-                }
             }
 
             if (action instanceof AnSeparator separator) {
@@ -309,19 +283,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
                 add(ACTION_BUTTON_CONSTRAINT, createToolbarButton(action).getComponent());
             }
             isLastElementSeparator = false;
-        }
-
-        if (mySecondaryActions.getChildrenCount() > 0) {
-            mySecondaryActionsButton = new ActionToolbarButtonImpl(mySecondaryActions,
-                myPresentationFactory.getPresentation(mySecondaryActions),
-                myPlace,
-                getMinimumButtonSize());
-
-            if (myContentAreaFilled != null) {
-                mySecondaryActionsButton.setContentAreaFilled(myContentAreaFilled);
-            }
-            mySecondaryActionsButton.setNoIconsInPopup(true);
-            add(mySecondaryActionsButton);
         }
 
         for (AnAction action : rightAligned) {
@@ -365,16 +326,18 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             actionComponent.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
             actionComponent.setForeground(ColorUtil.dimmer(JBColor.BLACK));
         }
+
+        if (myStyle == Style.INPLACE && actionComponent instanceof JComponent jComponent) {
+            InplaceComponent.prepareLeadingOrTrailingComponent(jComponent);
+        }
     }
 
-    @Nonnull
-    private Size getMinimumButtonSize() {
-        return isInsideNavBar() ? NAVBAR_MINIMUM_BUTTON_SIZE : DEFAULT_MINIMUM_BUTTON_SIZE;
+    public boolean useDefaultLayout() {
+        return myStyle == Style.INPLACE || myStyle == Style.BUTTON;
     }
 
     @Nonnull
     protected ActionButton createToolbarButton(@Nonnull AnAction action,
-                                               boolean minimalMode,
                                                @Nonnull String place,
                                                @Nonnull Presentation presentation,
                                                @Nonnull Size minimumSize) {
@@ -408,7 +371,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     @Nonnull
     private ActionButton createToolbarButton(@Nonnull AnAction action) {
         return createToolbarButton(action,
-            myMinimalMode,
             myPlace,
             myPresentationFactory.getPresentation(action),
             myMinimumButtonSize);
@@ -416,6 +378,11 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
 
     @Override
     public void doLayout() {
+        if (useDefaultLayout()) {
+            super.doLayout();
+            return;
+        }
+
         if (!isValid()) {
             calculateBounds(getSize(), myComponentBounds);
         }
@@ -429,6 +396,11 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
 
     @Override
     public void validate() {
+        if (useDefaultLayout()) {
+            super.validate();
+            return;
+        }
+
         if (!isValid()) {
             calculateBounds(getSize(), myComponentBounds);
             super.validate();
@@ -479,7 +451,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             final int maxHeight = getMaxButtonHeight();
 
             int offset = 0;
-            if (myOrientation == SwingConstants.HORIZONTAL) {
+            if (getOrientation() == SwingConstants.HORIZONTAL) {
                 for (int i = 0; i < componentCount; i++) {
                     final Rectangle r = bounds.get(i);
                     r.setBounds(insets.left + offset, insets.top + (height - maxHeight) / 2, maxWidth, maxHeight);
@@ -495,7 +467,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             }
         }
         else {
-            if (myOrientation == SwingConstants.HORIZONTAL) {
+            if (getOrientation() == SwingConstants.HORIZONTAL) {
                 final int maxHeight = getMaxButtonHeight();
                 int offset = 0;
                 for (int i = 0; i < componentCount; i++) {
@@ -535,7 +507,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         int widthToFit = sizeToFit.width - insets.left - insets.right;
         int heightToFit = sizeToFit.height - insets.top - insets.bottom;
 
-        if (myOrientation == SwingConstants.HORIZONTAL) {
+        if (getOrientation() == SwingConstants.HORIZONTAL) {
             int eachX = 0;
             int maxHeight = heightToFit;
             for (int i = 0; i < componentCount; i++) {
@@ -549,20 +521,8 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
                     boolean inside = isLast ? eachX + eachBound.width <= widthToFit : eachX + eachBound.width + autoButtonSize <= widthToFit;
 
                     if (inside) {
-                        if (eachComp == mySecondaryActionsButton) {
-                            assert isLast;
-                            if (sizeToFit.width != Integer.MAX_VALUE && !myNoGapMode) {
-                                eachBound.x = sizeToFit.width - insets.right - eachBound.width;
-                                eachX = (int) eachBound.getMaxX() - insets.left;
-                            }
-                            else {
-                                eachBound.x = insets.left + eachX;
-                            }
-                        }
-                        else {
-                            eachBound.x = insets.left + eachX;
-                            eachX += eachBound.width;
-                        }
+                        eachBound.x = insets.left + eachX;
+                        eachX += eachBound.width;
                         eachBound.y = insets.top;
                     }
                     else {
@@ -649,12 +609,13 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         int widthToFit = sizeToFit.width - insets.left - insets.right;
         int heightToFit = sizeToFit.height - insets.top - insets.bottom;
 
+        int orientation = getOrientation();
         if (myAdjustTheSameSize) {
             final int maxWidth = getMaxButtonWidth();
             final int maxHeight = getMaxButtonHeight();
             int xOffset = 0;
             int yOffset = 0;
-            if (myOrientation == SwingConstants.HORIZONTAL) {
+            if (orientation == SwingConstants.HORIZONTAL) {
 
                 // Lay components out
                 int maxRowWidth = getMaxRowWidth(widthToFit, maxWidth);
@@ -689,7 +650,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             }
         }
         else {
-            if (myOrientation == SwingConstants.HORIZONTAL) {
+            if (orientation == SwingConstants.HORIZONTAL) {
                 // Calculate row height
                 int rowHeight = 0;
                 final Dimension[] dims = new Dimension[componentCount]; // we will use this dimensions later
@@ -808,13 +769,18 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     @Override
     @Nonnull
     public Dimension getPreferredSize() {
+        if (useDefaultLayout()) {
+            return super.getPreferredSize();
+        }
+
         final ArrayList<Rectangle> bounds = new ArrayList<>();
         calculateBounds(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE), bounds);//it doesn't take into account wrapping
         if (bounds.isEmpty()) {
             return JBUI.emptySize();
         }
         int forcedHeight = 0;
-        if (getWidth() > 0 && getLayoutPolicy() == ActionToolbar.WRAP_LAYOUT_POLICY && myOrientation == SwingConstants.HORIZONTAL) {
+        int orientation = getOrientation();
+        if (getWidth() > 0 && getLayoutPolicy() == ActionToolbar.WRAP_LAYOUT_POLICY && orientation == SwingConstants.HORIZONTAL) {
             final ArrayList<Rectangle> limitedBounds = new ArrayList<>();
             calculateBounds(new Dimension(getWidth(), Integer.MAX_VALUE), limitedBounds);
             Rectangle union = null;
@@ -839,15 +805,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         }
         final Dimension dimension = new Dimension(xRight - xLeft, Math.max(yBottom - yTop, forcedHeight));
 
-        if (myLayoutPolicy == AUTO_LAYOUT_POLICY && myReservePlaceAutoPopupIcon && !isInsideNavBar()) {
-            if (myOrientation == SwingConstants.HORIZONTAL) {
-                dimension.width += AllIcons.Ide.Link.getWidth();
-            }
-            else {
-                dimension.height += AllIcons.Ide.Link.getHeight();
-            }
-        }
-
         JBInsets.addTo(dimension, getInsets());
 
         return dimension;
@@ -866,6 +823,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
      * By default minimum size is to show chevron only.
      * If this option is {@code true} toolbar shows at least one (the first) component plus chevron (if need)
      */
+    @Override
     public void setForceShowFirstComponent(boolean showFirstComponent) {
         myForceShowFirstComponent = showFirstComponent;
     }
@@ -882,6 +840,10 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
 
     @Override
     public Dimension getMinimumSize() {
+        if (useDefaultLayout()) {
+            return super.getMinimumSize();
+        }
+
         if (myForceMinimumSize) {
             return getPreferredSize();
         }
@@ -892,7 +854,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             if (myForceShowFirstComponent && getComponentCount() > 0) {
                 Component c = getComponent(0);
                 Dimension firstSize = c.getPreferredSize();
-                if (myOrientation == SwingConstants.HORIZONTAL) {
+                if (getOrientation() == SwingConstants.HORIZONTAL) {
                     return new Dimension(firstSize.width + AllIcons.Ide.Link.getWidth() + i.left + i.right,
                         Math.max(firstSize.height, minSize.height) + i.top + i.bottom);
                 }
@@ -924,7 +886,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             int width = gap * 2 + center;
             int height = JBUIScale.scale(24);
 
-            if (myOrientation == SwingConstants.HORIZONTAL) {
+            if (getOrientation() == SwingConstants.HORIZONTAL) {
                 if (myTextValue != LocalizeValue.empty()) {
                     FontMetrics fontMetrics = getFontMetrics(getFont());
 
@@ -950,7 +912,8 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             int gap = JBUIScale.scale(2);
             int center = JBUIScale.scale(3);
             int offset;
-            if (myOrientation == SwingConstants.HORIZONTAL) {
+            int orientation = getOrientation();
+            if (orientation == SwingConstants.HORIZONTAL) {
                 offset = ActionToolbarImpl.this.getHeight() - getMaxButtonHeight() - 1;
             }
             else {
@@ -958,7 +921,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             }
 
             g.setColor(JBColor.border());
-            if (myOrientation == SwingConstants.HORIZONTAL) {
+            if (orientation == SwingConstants.HORIZONTAL) {
                 int y2 = ActionToolbarImpl.this.getHeight() - gap * 2 - offset;
                 LinePainter2D.paint((Graphics2D) g, center, gap, center, y2);
 
@@ -1013,19 +976,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         revalidate();
     }
 
-    @Override
-    public void setOrientation(@MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION}) int orientation) {
-        if (HORIZONTAL_ORIENTATION != orientation && VERTICAL_ORIENTATION != orientation) {
-            throw new IllegalArgumentException("wrong orientation: " + orientation);
-        }
-        myOrientation = orientation;
-    }
-
-    @MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION})
-    public int getOrientation() {
-        return myOrientation;
-    }
-
     @RequiredUIAccess
     @Override
     public void updateActionsImmediately() {
@@ -1071,9 +1021,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             Dimension oldSize = getPreferredSize();
 
             removeAll();
-            mySecondaryActions.removeAll();
-            mySecondaryActionsButton = null;
-            fillToolBar(myVisibleActions, getLayoutPolicy() == AUTO_LAYOUT_POLICY && myOrientation == SwingConstants.HORIZONTAL);
+            fillToolBar(myVisibleActions);
 
             Dimension newSize = getPreferredSize();
 
@@ -1160,7 +1108,8 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         }
 
         final ActionGroup group;
-        if (myOrientation == SwingConstants.HORIZONTAL) {
+        int orientation = getOrientation();
+        if (orientation == SwingConstants.HORIZONTAL) {
             group = myActionGroup;
         }
         else {
@@ -1171,7 +1120,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
             group = outside;
         }
 
-        PopupToolbar popupToolbar = new PopupToolbar(myPlace, group, true, this) {
+        PopupToolbar popupToolbar = new PopupToolbar(myPlace, group, this) {
             @Override
             protected void onOtherActionPerformed() {
                 hidePopup();
@@ -1187,7 +1136,7 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         popupToolbar.updateActionsImmediately();
 
         Point location;
-        if (myOrientation == SwingConstants.HORIZONTAL) {
+        if (orientation == SwingConstants.HORIZONTAL) {
             location = getLocationOnScreen();
         }
         else {
@@ -1281,8 +1230,8 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     abstract static class PopupToolbar extends ActionToolbarImpl implements AnActionListener, DataProvider, Disposable {
         private final JComponent myParent;
 
-        PopupToolbar(@Nonnull String place, @Nonnull ActionGroup actionGroup, final boolean horizontal, @Nonnull JComponent parent) {
-            super(place, actionGroup, horizontal, true);
+        PopupToolbar(@Nonnull String place, @Nonnull ActionGroup actionGroup, @Nonnull JComponent parent) {
+            super(place, actionGroup, Style.HORIZONTAL, true);
             ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.class, this);
             myParent = parent;
             setBorder(myParent.getBorder());
@@ -1314,38 +1263,6 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
         protected abstract void onOtherActionPerformed();
     }
 
-    @Override
-    public void setReservePlaceAutoPopupIcon(final boolean reserve) {
-        myReservePlaceAutoPopupIcon = reserve;
-    }
-
-    @Override
-    public void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip) {
-        mySecondaryActions.getTemplatePresentation().setDescriptionValue(secondaryActionsTooltip);
-    }
-
-    @Override
-    public void setSecondaryActionsIcon(Image icon) {
-        setSecondaryActionsIcon(icon, false);
-    }
-
-    @Override
-    public void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
-        Presentation presentation = mySecondaryActions.getTemplatePresentation();
-        presentation.setIcon(icon);
-        mySecondaryActions.setShowArrowBelow(!hideDropdownIcon);
-    }
-
-    @Override
-    public void setSecondaryActionsShortcut(@Nonnull String secondaryActionsShortcut) {
-        mySecondaryActions.getTemplatePresentation().putClientProperty(SECONDARY_SHORTCUT, secondaryActionsShortcut);
-    }
-
-    @Override
-    public void setNoGapMode() {
-        myNoGapMode = true;
-    }
-
     @Nonnull
     @Override
     public List<AnAction> getActions(boolean originalProvider) {
@@ -1355,30 +1272,13 @@ public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, Quic
     @Nonnull
     @Override
     public List<AnAction> getActions() {
-        ArrayList<AnAction> result = new ArrayList<>();
-
-        ArrayList<AnAction> secondary = new ArrayList<>();
         AnAction[] kids = myActionGroup.getChildren(null);
-        for (AnAction each : kids) {
-            if (myActionGroup.isPrimary(each)) {
-                result.add(each);
-            }
-            else {
-                secondary.add(each);
-            }
-        }
-        result.add(new AnSeparator());
-        result.addAll(secondary);
-
-        return result;
+        return List.of(kids);
     }
 
     @Override
     public void setMiniMode(boolean minimalMode) {
-        //if (myMinimalMode == minimalMode) return;
-
-        myMinimalMode = minimalMode;
-        if (myMinimalMode) {
+        if (minimalMode) {
             setMinimumButtonSize(Size.ZERO);
             setLayoutPolicy(NOWRAP_LAYOUT_POLICY);
             setBorder(JBUI.Borders.empty());

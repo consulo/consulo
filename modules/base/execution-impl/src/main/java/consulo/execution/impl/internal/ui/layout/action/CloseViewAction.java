@@ -16,8 +16,8 @@
 
 package consulo.execution.impl.internal.ui.layout.action;
 
-import consulo.application.AllIcons;
 import consulo.execution.internal.layout.ViewContext;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.content.Content;
 
@@ -26,8 +26,7 @@ public class CloseViewAction extends BaseViewAction {
   @Override
   protected void update(final AnActionEvent e, final ViewContext context, final Content[] content) {
     setEnabled(e, isEnabled(content));
-    e.getPresentation().setIcon(AllIcons.Actions.Close);
-    e.getPresentation().setHoveredIcon(AllIcons.Actions.CloseHovered);
+    e.getPresentation().setIcon(PlatformIconGroup.actionsClose());
   }
 
   @Override

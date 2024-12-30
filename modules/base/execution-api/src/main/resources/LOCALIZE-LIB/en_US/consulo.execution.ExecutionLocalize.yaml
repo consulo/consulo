@@ -883,3 +883,5 @@ open.message.view:
   text: Open Message View
 action.Runner.ToggleTabLabels.text:
   text: Show Tab Labels
+runner.content.tooltip.layout.settings:
+  text: Layout Settings

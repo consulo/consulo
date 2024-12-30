@@ -353,18 +353,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         result.add(AnSeparator.getInstance());
 
         if (myActionGroup != null) {
-            List<AnAction> secondary = new ArrayList<>();
-            for (AnAction each : myActionGroup.getChildren(null)) {
-                if (myActionGroup.isPrimary(each)) {
-                    result.add(each);
-                }
-                else {
-                    secondary.add(each);
-                }
-            }
-
-            result.add(AnSeparator.getInstance());
-            result.addAll(secondary);
+            Collections.addAll(result, myActionGroup.getChildren(null));
         }
 
         return result;

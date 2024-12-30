@@ -81,7 +81,7 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
   @Override
   public void addToolbarActions(@Nonnull ProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup) {
     if (pane instanceof ProjectViewPaneImpl) {
-      actionGroup.addAction(new ShowExcludedFilesAction(pane)).setAsSecondary(true);
+      actionGroup.addAction(new ShowExcludedFilesAction(pane));
     }
   }
 }

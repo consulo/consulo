@@ -124,8 +124,6 @@ public abstract class ActionGroup extends AnAction {
         }
     };
 
-    private Set<AnAction> mySecondaryActions;
-
     /**
      * The actual value is a Boolean.
      */
@@ -236,34 +234,6 @@ public abstract class ActionGroup extends AnAction {
     @Nonnull
     public AnAction[] getChildren(@Nullable AnActionEvent e, @Nonnull ActionManager actionManager) {
         return getChildren(null);
-    }
-
-    public final void setAsPrimary(@Nonnull AnAction action, boolean isPrimary) {
-        if (isPrimary) {
-            if (mySecondaryActions != null) {
-                mySecondaryActions.remove(action);
-            }
-        }
-        else {
-            if (mySecondaryActions == null) {
-                mySecondaryActions = new HashSet<>();
-            }
-
-            mySecondaryActions.add(action);
-        }
-    }
-
-    public final boolean isPrimary(@Nonnull AnAction action) {
-        return mySecondaryActions == null || !mySecondaryActions.contains(action);
-    }
-
-    protected final void replace(@Nonnull AnAction originalAction, @Nonnull AnAction newAction) {
-        if (mySecondaryActions != null) {
-            if (mySecondaryActions.contains(originalAction)) {
-                mySecondaryActions.remove(originalAction);
-                mySecondaryActions.add(newAction);
-            }
-        }
     }
 
     @Override

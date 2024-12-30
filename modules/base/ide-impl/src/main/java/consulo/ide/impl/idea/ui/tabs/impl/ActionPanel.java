@@ -15,12 +15,10 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.execution.ui.layout.impl.JBRunnerTabs;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.tab.TabInfo;
@@ -36,19 +34,19 @@ public class ActionPanel extends NonOpaquePanel {
     public ActionPanel(JBTabsImpl tabs, TabInfo tabInfo) {
         ActionGroup group = tabInfo.getTabLabelActions() != null ? tabInfo.getTabLabelActions() : new DefaultActionGroup();
 
-        myActionToolbar = ActionManager.getInstance().createActionToolbar("RunToolbar", group, true);
+        myActionToolbar = Application.get().getInstance(ActionToolbarFactory.class).createActionToolbar("ActionPanel", group, ActionToolbar.Style.INPLACE);
         myActionToolbar.setTargetComponent(tabs);
-        myActionToolbar.setMiniMode(true);
-        myActionToolbar.setContentAreaFilled(false);
 
         int topPadding = 1;
-        int leftPadding = 2;
+        int leftPadding = 2;                                                                                      
         if (tabs instanceof JBRunnerTabs) {
             topPadding = 4;
         }
 
         JComponent component = myActionToolbar.getComponent();
         component.setBorder(JBUI.Borders.empty(topPadding, leftPadding, 0, 0));
+        component.setOpaque(false);
+        
         add(component);
     }
 

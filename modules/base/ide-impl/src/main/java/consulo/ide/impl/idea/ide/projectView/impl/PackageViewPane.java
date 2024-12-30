@@ -195,13 +195,13 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
   @Override
   public void addToolbarActions(DefaultActionGroup actionGroup) {
-    actionGroup.addAction(new ShowModulesAction(myProject) {
+    actionGroup.add(new ShowModulesAction(myProject) {
       @Override
       protected String getId() {
         return PackageViewPane.this.getId();
       }
-    }).setAsSecondary(true);
-    actionGroup.addAction(new ShowLibraryContentsAction()).setAsSecondary(true);
+    });
+    actionGroup.add(new ShowLibraryContentsAction());
   }
 
   @Override

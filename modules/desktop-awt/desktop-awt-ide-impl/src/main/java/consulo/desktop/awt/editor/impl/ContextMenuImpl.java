@@ -200,8 +200,6 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
   private JComponent createComponent() {
     myActionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.CONTEXT_TOOLBAR, myActionGroup, true);
     myActionToolbar.setTargetComponent(myEditor.getContentComponent());
-    myActionToolbar.setMinimumButtonSize(new Size(22, 22));
-    myActionToolbar.setReservePlaceAutoPopupIcon(false);
 
     ContextMenuPanel contextMenuPanel = new ContextMenuPanel(this);
     JComponent toolbarComponent = myActionToolbar.getComponent();

@@ -29,9 +29,9 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class DesktopActionToolbarFactory implements ActionToolbarFactory {
-  @Nonnull
-  @Override
-  public ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal) {
-    return new ActionToolbarImpl(place, group, horizontal);
-  }
+    @Nonnull
+    @Override
+    public ActionToolbar createActionToolbar(String place, ActionGroup group, @Nonnull ActionToolbar.Style style) {
+        return new ActionToolbarImpl(place, group, style);
+    }
 }

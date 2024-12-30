@@ -4,9 +4,6 @@ package consulo.desktop.awt.find;
 import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.EditorCopyPasteHelper;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
-import consulo.desktop.awt.action.toolbar.ActionToggleToolbarButtonImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.find.FindInProjectSettings;
 import consulo.find.localize.FindLocalize;
@@ -15,6 +12,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -262,8 +260,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
 
     private class ClearAction extends DumbAwareAction {
         ClearAction() {
-            super(AllIcons.Actions.Close);
-            getTemplatePresentation().setHoveredIcon(AllIcons.Actions.CloseHovered);
+            super(PlatformIconGroup.actionsCancel());
         }
 
         @RequiredUIAccess

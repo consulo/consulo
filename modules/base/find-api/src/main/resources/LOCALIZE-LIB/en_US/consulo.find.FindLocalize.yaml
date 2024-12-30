@@ -316,7 +316,7 @@ find.replace.accessible.name:
 find.popup.found.element.accesible.name:
   text: '{0} in {1}'
 tooltip.close.search.bar.escape:
-  text: Close search bar (Escape)
+  text: Close
 button.exclude:
   text: Exclude
 button.include:
