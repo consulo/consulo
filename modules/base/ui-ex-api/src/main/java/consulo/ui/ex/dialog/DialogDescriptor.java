@@ -80,6 +80,9 @@ public abstract class DialogDescriptor {
         return true;
     }
 
+    public void onHandleValue(@Nonnull AnAction action, @Nullable DialogValue value) {
+    }
+
     public boolean hasDefaultContentBorder() {
         return true;
     }

@@ -39,6 +39,8 @@ public class DialogOkAction extends DumbAwareAction {
 
         DialogDescriptor descriptor = data.getDescriptor();
         if (descriptor.canHandle(this, descriptor.getOkValue())) {
+            descriptor.onHandleValue(this, descriptor.getOkValue());
+            
             data.doOkAction(descriptor.getOkValue());
         }
     }

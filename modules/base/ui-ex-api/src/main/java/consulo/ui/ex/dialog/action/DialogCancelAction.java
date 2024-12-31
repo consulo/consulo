@@ -40,6 +40,8 @@ public class DialogCancelAction extends DumbAwareAction {
 
         DialogDescriptor descriptor = data.getDescriptor();
         if (descriptor.canHandle(this, null)) {
+            descriptor.onHandleValue(this, null);
+            
             data.doCancelAction();
         }
     }

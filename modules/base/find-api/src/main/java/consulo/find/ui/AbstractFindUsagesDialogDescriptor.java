@@ -41,6 +41,8 @@ import consulo.usage.UsageViewContentManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * @author VISTALL
  * @since 2024-11-16
@@ -204,17 +206,19 @@ public abstract class AbstractFindUsagesDialogDescriptor extends DialogDescripto
         return getPreferredFocusedControl();
     }
 
+    protected void buildElementComponent(@Nonnull Consumer<Component> consumer, @Nonnull Disposable uiDisposable) {
+        AdvancedLabel label = AdvancedLabel.create();
+        label.updatePresentation(presentation -> configureLabelComponent(presentation, uiDisposable));
+        consumer.accept(label);
+    }
+
     @RequiredUIAccess
     @Nonnull
     @Override
     public Component createCenterComponent(@Nonnull Disposable uiDisposable) {
         VerticalLayout layout = VerticalLayout.create();
 
-        AdvancedLabel label = AdvancedLabel.create();
-
-        label.updatePresentation(presentation -> configureLabelComponent(presentation, uiDisposable));
-
-        layout.add(label);
+        buildElementComponent(layout::add, uiDisposable);
 
         layout.add(LabeledLayout.create(FindLocalize.findWhatGroup(), myOptionsLayout));
 
