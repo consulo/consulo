@@ -40,6 +40,7 @@ import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.OccurenceNavigator;
@@ -1651,29 +1652,10 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     @Override
-    @RequiredUIAccess
-    public void addButtonToLowerPane(@Nonnull Action action) {
-        Application.get().assertIsDispatchThread();
-        int index = myButtonPanel.getComponentCount();
-        if (!Platform.current().os().isMac() && index > 0 && myPresentation.isShowCancelButton()) {
-            index--;
-        }
-        myButtonPanel.addButtonAction(index, action);
-        Object o = action.getValue(Action.ACCELERATOR_KEY);
-        if (o instanceof KeyStroke keyStroke) {
-            myTree.registerKeyboardAction(action, keyStroke, JComponent.WHEN_FOCUSED);
-        }
-    }
+    public void addButtonToLowerPane(@Nonnull AnAction action) {
+        UIAccess.assertIsUIThread();
 
-    @Override
-    @RequiredUIAccess
-    public void addButtonToLowerPane(@Nonnull Runnable runnable, @Nonnull String text) {
-        addButtonToLowerPane(new AbstractAction(UIUtil.replaceMnemonicAmpersand(text)) {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                runnable.run();
-            }
-        });
+        myButtonPanel.addButtonAction(action);
     }
 
     @Override
@@ -1690,13 +1672,6 @@ public class UsageViewImpl implements UsageViewEx {
             myAdditionalComponent.add(comp, BorderLayout.CENTER);
         }
         myAdditionalComponent.revalidate();
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void addButtonToLowerPane(@Nonnull final Runnable runnable, @Nonnull String text, char mnemonic) {
-        // implemented method is deprecated, so, it just calls non-deprecated overloading one
-        addButtonToLowerPane(runnable, text);
     }
 
     @Override
@@ -2146,8 +2121,12 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     private final class ButtonPanel extends JPanel {
+        private ActionToolbar myActionToolbar;
+        private DefaultActionGroup myActionGroup;
+
         private ButtonPanel() {
-            setLayout(new FlowLayout(FlowLayout.LEFT, 6, 0));
+            super(new FlowLayout(FlowLayout.LEFT, 6, 0));
+
             getProject().getMessageBus().connect(UsageViewImpl.this).subscribe(DumbModeListener.class, new DumbModeListener() {
                 @Override
                 public void enteredDumbMode() {
@@ -2161,54 +2140,23 @@ public class UsageViewImpl implements UsageViewEx {
             });
         }
 
-        //Here we use
-        // Action.LONG_DESCRIPTION as hint label for button
-        // Action.SHORT_DESCRIPTION as a tooltip for button
-        private void addButtonAction(int index, @Nonnull Action action) {
-            JButton button = new JButton(action);
-            add(button, index);
-            DialogUtil.registerMnemonic(button);
+        @RequiredUIAccess
+        private void addButtonAction(AnAction action) {
+            if (myActionToolbar == null) {
+                myActionGroup = new DefaultActionGroup();
+                myActionToolbar = ActionToolbarFactory.getInstance().createActionToolbar("UsageViewToolbar", myActionGroup, ActionToolbar.Style.BUTTON);
+                myActionToolbar.setTargetComponent(this);
 
-            if (getBorder() == null) {
-                setBorder(IdeBorderFactory.createBorder(SideBorder.TOP));
+                add(myActionToolbar.getComponent());
             }
-            update();
-            Object s = action.getValue(Action.LONG_DESCRIPTION);
-            if (s instanceof String description) {
-                JBLabel label = new JBLabel(description);
-                label.setEnabled(false);
-                label.setFont(JBUI.Fonts.smallFont());
-                add(JBUI.Borders.emptyLeft(-1).wrap(label));
-            }
-            s = action.getValue(Action.SHORT_DESCRIPTION);
-            if (s instanceof String tooltip) {
-                button.setToolTipText(tooltip);
-            }
-            invalidate();
-            if (getParent() != null) {
-                getParent().validate();
-            }
+
+            myActionGroup.add(action);
+
+            myActionToolbar.updateActionsImmediately();
         }
 
         void update() {
-            boolean globallyEnabled = !isSearchInProgress() && !DumbService.isDumb(myProject);
-            for (int i = 0; i < getComponentCount(); ++i) {
-                Component component = getComponent(i);
-                if (component instanceof JButton button) {
-                    Action action = button.getAction();
-                    if (action != null) {
-                        if (myNeedUpdateButtons) {
-                            button.setEnabled(globallyEnabled && action.isEnabled());
-                        }
-                        if (action.getValue(Action.NAME) instanceof String name) {
-                            DialogUtil.setTextWithMnemonic(button, name);
-                        }
-                    }
-                    else {
-                        button.setEnabled(globallyEnabled);
-                    }
-                }
-            }
+            myActionToolbar.updateActionsImmediately();
             myNeedUpdateButtons = false;
         }
     }

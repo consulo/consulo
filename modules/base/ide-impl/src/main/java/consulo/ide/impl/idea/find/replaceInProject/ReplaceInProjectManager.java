@@ -13,14 +13,16 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
-import consulo.find.*;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
+import consulo.find.FindResult;
+import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.find.actions.FindInPathAction;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.ide.impl.idea.util.AdapterProcessor;
 import consulo.language.psi.PsiDocumentManager;
@@ -32,8 +34,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -304,16 +305,14 @@ public class ReplaceInProjectManager {
     }
 
     private void addReplaceActions(final ReplaceContext replaceContext) {
-        final AbstractAction replaceAllAction = new AbstractAction(FindLocalize.findReplaceAllAction().get()) {
+        replaceContext.getUsageView().addButtonToLowerPane(new DumbAwareAction(FindLocalize.findReplaceAllAction()) {
             {
-                KeyStroke altShiftEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK);
-                putValue(ACCELERATOR_KEY, altShiftEnter);
-                putValue(SHORT_DESCRIPTION, KeymapUtil.getKeystrokeText(altShiftEnter));
+                setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)));
             }
 
-            @Override
             @RequiredUIAccess
-            public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 Set<Usage> usages = replaceContext.getUsageView().getUsages();
                 if (usages.isEmpty()) {
                     return;
@@ -330,113 +329,32 @@ public class ReplaceInProjectManager {
                 }
             }
 
-            @Override
-            public boolean isEnabled() {
-                return !replaceContext.getUsageView().getUsages().isEmpty();
-            }
-        };
-        replaceContext.getUsageView().addButtonToLowerPane(replaceAllAction);
-
-        final AbstractAction replaceSelectedAction = new AbstractAction() {
-            {
-                KeyStroke altEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK);
-                putValue(ACCELERATOR_KEY, altEnter);
-                putValue(LONG_DESCRIPTION, KeymapUtil.getKeystrokeText(altEnter));
-                putValue(SHORT_DESCRIPTION, KeymapUtil.getKeystrokeText(altEnter));
-            }
-
-            @Override
             @RequiredUIAccess
-            public void actionPerformed(ActionEvent e) {
+            @Override
+            public void update(@Nonnull AnActionEvent e) {
+                e.getPresentation().setEnabled(!replaceContext.getUsageView().getUsages().isEmpty());
+            }
+        });
+
+        replaceContext.getUsageView().addButtonToLowerPane(new AnAction() {
+            {
+                setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK)));
+            }
+
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 replaceUsagesUnderCommand(replaceContext, replaceContext.getUsageView().getSelectedUsages());
             }
 
-            @Override
-            public Object getValue(String key) {
-                return Action.NAME.equals(key)
-                    ? FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()).get()
-                    : super.getValue(key);
-            }
-
-            @Override
-            public boolean isEnabled() {
-                return !replaceContext.getUsageView().getSelectedUsages().isEmpty();
-            }
-        };
-
-        replaceContext.getUsageView().addButtonToLowerPane(replaceSelectedAction);
-
-        final AbstractAction replaceAllInThisFileAction = new AbstractAction() {
-            {
-                putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
-            }
-
-            @Override
             @RequiredUIAccess
-            public void actionPerformed(ActionEvent e) {
-                Set<VirtualFile> files = getFiles(replaceContext, true);
-                if (files.size() == 1) {
-                    replaceUsagesUnderCommand(replaceContext, getAllUsagesForFile(replaceContext, files.iterator().next()));
-                }
-            }
-
             @Override
-            public Object getValue(String key) {
-                return Action.NAME.equals(key)
-                    ? FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()).get()
-                    : super.getValue(key);
+            public void update(@Nonnull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                presentation.setTextValue(FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()));
+                presentation.setEnabled(!replaceContext.getUsageView().getSelectedUsages().isEmpty());
             }
-
-            @Override
-            public boolean isEnabled() {
-                return getFiles(replaceContext, true).size() == 1;
-            }
-        };
-
-        //replaceContext.getUsageView().addButtonToLowerPane(replaceAllInThisFileAction);
-
-        final AbstractAction skipThisFileAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Set<VirtualFile> files = getFiles(replaceContext, true);
-                if (files.size() != 1) {
-                    return;
-                }
-                VirtualFile selectedFile = files.iterator().next();
-                Set<Usage> toSkip = getAllUsagesForFile(replaceContext, selectedFile);
-                Usage usageToSelect = ((UsageViewImpl)replaceContext.getUsageView()).getNextToSelect(toSkip);
-                replaceContext.getUsageView().excludeUsages(toSkip.toArray(Usage.EMPTY_ARRAY));
-                if (usageToSelect != null) {
-                    replaceContext.getUsageView().selectUsages(new Usage[]{usageToSelect});
-                }
-                else {
-                    replaceContext.getUsageView().selectUsages(Usage.EMPTY_ARRAY);
-                }
-            }
-
-            @Override
-            public Object getValue(String key) {
-                return Action.NAME.equals(key)
-                    ? FindBundle.message(
-                    "find.replace.skip.this.file.action",
-                    replaceContext.getUsageView().getSelectedUsages().size()
-                )
-                    : super.getValue(key);
-            }
-
-            @Override
-            public boolean isEnabled() {
-                Set<VirtualFile> files = getFiles(replaceContext, true);
-                if (files.size() != 1) {
-                    return false;
-                }
-                VirtualFile selectedFile = files.iterator().next();
-                Set<Usage> toSkip = getAllUsagesForFile(replaceContext, selectedFile);
-                return ((UsageViewImpl)replaceContext.getUsageView()).getNextToSelect(toSkip) != null;
-            }
-        };
-
-        //replaceContext.getUsageView().addButtonToLowerPane(skipThisFileAction);
+        });
     }
 
     @RequiredUIAccess
