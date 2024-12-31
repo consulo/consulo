@@ -19,7 +19,7 @@ import consulo.colorScheme.FontSize;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.desktop.awt.action.ActionToolbarImpl;
+import consulo.desktop.awt.action.toolbar.AdvancedActionToolbarImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
@@ -136,7 +136,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private final Stack<Context> myBackStack = new Stack<>();
     private final Stack<Context> myForwardStack = new Stack<>();
-    private final ActionToolbarImpl myToolBar;
+    private final AdvancedActionToolbarImpl myToolBar;
     private volatile boolean myIsEmpty;
     private boolean mySizeTrackerRegistered;
     private JSlider myFontSizeSlider;
@@ -361,7 +361,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         rightActions.add(new RestoreDefaultSizeAction());
         toolbarActions.add(rightActions);
 
-        myToolBar = new ActionToolbarImpl(ActionPlaces.JAVADOC_TOOLBAR, toolbarActions, ActionToolbar.Style.HORIZONTAL) {
+        myToolBar = new AdvancedActionToolbarImpl(ActionPlaces.JAVADOC_TOOLBAR, toolbarActions, ActionToolbar.Style.HORIZONTAL) {
             Point initialClick;
 
             @Override

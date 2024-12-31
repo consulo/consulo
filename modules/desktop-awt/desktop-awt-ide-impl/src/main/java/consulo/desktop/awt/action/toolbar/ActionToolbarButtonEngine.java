@@ -58,17 +58,22 @@ public class ActionToolbarButtonEngine {
     private final String myPlace;
     private final Supplier<DataContext> myGetDataContext;
 
-    private boolean myDisplayText;
+    private final boolean myDisplayText;
 
     private boolean myNoIconsInPopup = false;
 
-    public ActionToolbarButtonEngine(AbstractButton button, AnAction ideAction, Presentation presentation, String place, Supplier<DataContext> getDataContext) {
+    public ActionToolbarButtonEngine(AbstractButton button,
+                                     AnAction ideAction,
+                                     Presentation presentation,
+                                     String place,
+                                     boolean alwaysDisplayText,
+                                     Supplier<DataContext> getDataContext) {
         myButton = button;
         myIdeAction = ideAction;
         myPresentation = presentation;
         myPlace = place;
         myGetDataContext = getDataContext;
-        myDisplayText = ideAction.displayTextInToolbar();
+        myDisplayText = alwaysDisplayText || ideAction.displayTextInToolbar();
     }
 
     public Presentation getPresentation() {

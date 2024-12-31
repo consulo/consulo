@@ -18,13 +18,11 @@ package consulo.desktop.awt.action.toolbar;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.Component;
-import consulo.ui.Size;
 import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -36,10 +34,8 @@ import javax.swing.*;
 public class ActionToolbarButtonImpl extends JButton implements ActionButton {
     private final ActionToolbarButtonEngine myEngine;
 
-    public ActionToolbarButtonImpl(AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
-        myEngine = new ActionToolbarButtonEngine(this, action, presentation, place, this::getDataContext);
-
-        setMinimumSize(TargetAWT.to(minimumSize));
+    public ActionToolbarButtonImpl(AnAction action, Presentation presentation, String place, boolean alwaysDisplayText) {
+        myEngine = new ActionToolbarButtonEngine(this, action, presentation, place, alwaysDisplayText, this::getDataContext);
 
         putClientProperty(UIUtil.CENTER_TOOLTIP_DEFAULT, Boolean.TRUE);
 
@@ -81,11 +77,6 @@ public class ActionToolbarButtonImpl extends JButton implements ActionButton {
     @Override
     public void click() {
         myEngine.click();
-    }
-
-    @Override
-    public void setNoIconsInPopup(boolean value) {
-        myEngine.setNoIconsInPopup(value);
     }
 
     @Override

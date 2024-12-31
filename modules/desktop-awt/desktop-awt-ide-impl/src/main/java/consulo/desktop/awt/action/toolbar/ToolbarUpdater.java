@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.desktop.awt.action;
+package consulo.desktop.awt.action.toolbar;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -7,16 +7,17 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
-import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import consulo.util.lang.Comparing;
 import consulo.ui.ex.action.ActionButton;
+import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.TimerListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ui.ex.update.Activatable;
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -28,7 +29,7 @@ import java.lang.ref.WeakReference;
  */
 public abstract class ToolbarUpdater implements Activatable {
   private final ActionManagerEx myActionManager;
-  private final KeymapManagerEx myKeymapManager;
+  private final KeymapManager myKeymapManager;
   private final JComponent myComponent;
 
   private final KeymapManagerListener myKeymapManagerListener = new MyKeymapManagerListener();
@@ -37,12 +38,10 @@ public abstract class ToolbarUpdater implements Activatable {
 
   private boolean myListenersArmed;
 
-  public ToolbarUpdater(@Nonnull JComponent component) {
-    this(KeymapManagerEx.getInstanceEx(), component);
-  }
-
-  public ToolbarUpdater(@Nonnull KeymapManagerEx keymapManager, @Nonnull JComponent component) {
-    myActionManager = ActionManagerEx.getInstanceEx();
+  public ToolbarUpdater(@Nonnull KeymapManager keymapManager,
+                        @Nonnull ActionManager actionManager,
+                        @Nonnull JComponent component) {
+    myActionManager = (ActionManagerEx) actionManager;
     myKeymapManager = keymapManager;
     myComponent = component;
     myWeakTimerListener = new WeakTimerListener(myTimerListener);
@@ -69,7 +68,7 @@ public abstract class ToolbarUpdater implements Activatable {
   }
 
   @Nonnull
-  public KeymapManagerEx getKeymapManager() {
+  public KeymapManager getKeymapManager() {
     return myKeymapManager;
   }
 

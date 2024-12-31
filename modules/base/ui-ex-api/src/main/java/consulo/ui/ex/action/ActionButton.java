@@ -38,13 +38,9 @@ public interface ActionButton extends AnActionHolder, ActionButtonComponent {
 
     void click();
 
-    void setNoIconsInPopup(boolean value);
-
     void setBorder(Border border);
 
     void setOpaque(boolean value);
 
     void updateIcon();
-
-    void setContentAreaFilled(boolean filled);
 }

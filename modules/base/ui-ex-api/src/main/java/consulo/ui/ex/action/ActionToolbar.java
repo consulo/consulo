@@ -133,18 +133,6 @@ public interface ActionToolbar {
     void setLayoutPolicy(int layoutPolicy);
 
     /**
-     * If the valus is <code>true</code> then the all button on toolbar are
-     * the same size. It very useful when you create "Outlook" like toolbar.
-     * Currently this method can be considered as hot fix.
-     */
-    void adjustTheSameSize(boolean value);
-
-    /**
-     * @return maximum button height
-     */
-    int getMaxButtonHeight();
-
-    /**
      * Forces update of the all actions in the toolbars. Actions, however, normally updated automatially every 500msec.
      */
     @RequiredUIAccess
@@ -178,10 +166,8 @@ public interface ActionToolbar {
      * By default minimum size is to show chevron only.
      * If this option is {@code true} toolbar shows at least one (the first) component plus chevron (if need)
      */
+    @Deprecated
     default void setForceShowFirstComponent(boolean showFirstComponent) {
-    }
-
-    default void setContentAreaFilled(boolean b) {
     }
 
     // region deprecated method
@@ -193,7 +179,6 @@ public interface ActionToolbar {
      *                                  is <code>null</code>
      */
     @Deprecated
-    @DeprecationInfo("Use with Size parameter")
     default void setMinimumButtonSize(@Nonnull java.awt.Dimension size) {
         setMinimumButtonSize(new Size(size.width, size.height));
     }
@@ -206,7 +191,8 @@ public interface ActionToolbar {
      *                                  is <code>null</code>
      */
     @Deprecated
-    void setMinimumButtonSize(@Nonnull Size size);
+    default void setMinimumButtonSize(@Nonnull Size size) {
+    }
 
     @Deprecated
     default void setReservePlaceAutoPopupIcon(final boolean reserve) {
@@ -214,7 +200,8 @@ public interface ActionToolbar {
 
     @Deprecated
     @DeprecationInfo("Use different style")
-    void setMiniMode(boolean minimalMode);
+    default void setMiniMode(boolean minimalMode) {
+    }
 
     @Deprecated
     default void setSecondaryActionsTooltip(@Nonnull LocalizeValue secondaryActionsTooltip) {

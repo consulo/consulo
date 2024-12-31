@@ -2568,8 +2568,7 @@
             <add-to-group group-id="Other.KeymapGroup"/>
         </group>
 
-        <action id="ShowFilterPopup" class="consulo.ide.impl.idea.find.editorHeaderActions.ShowMoreOptions" text="Show Filter Popup"/>
-        <action id="ShowSearchHistory" class="consulo.ide.impl.idea.find.actions.ShowSearchHistoryAction" text="Show Search History"/>
+        <action id="ShowSearchHistory" class="consulo.ui.ex.action.EmptyAction" text="Show Search History"/>
 
         <action id="SelectInProjectView" icon="consulo.platform.base.PlatformIconGroup@general.locate"
                 class="consulo.ide.impl.idea.ide.projectView.impl.SelectFileAction"/>

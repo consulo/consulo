@@ -16,8 +16,9 @@
 package consulo.desktop.awt.ui.dialog;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.action.ButtonToolbarImpl;
+import consulo.desktop.awt.action.toolbar.ActionButtonToolbarImpl;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -26,6 +27,8 @@ import consulo.ui.Size;
 import consulo.ui.WindowOwner;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.awt.CustomLineBorder;
@@ -36,6 +39,7 @@ import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.dialog.DialogValue;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -106,8 +110,6 @@ public class DesktopAwtDialogService implements DialogService {
     }
 
     private static class DialogWrapperImpl extends DialogWrapper {
-        private JButton myDefaultButton;
-
         private final DialogDescriptor myDescriptor;
         private final Dialog myDialog;
 
@@ -192,19 +194,27 @@ public class DesktopAwtDialogService implements DialogService {
                 panel.add(helpButton, BorderLayout.WEST);
             }
 
-            ButtonToolbarImpl buttonToolbar = new ButtonToolbarImpl("DialogRightButtons", group) {
+            ActionToolbar toolbar = new ActionButtonToolbarImpl("DialogRightButtons",
+                group,
+                Application.get(),
+                KeymapManager.getInstance(),
+                ActionManager.getInstance(),
+                DataManager.getInstance()) {
                 @Override
-                protected JButton createButton(AnAction action) {
-                    JButton button = super.createButton(action);
+                protected void tweakActionComponentUI(@Nonnull AnAction action, java.awt.Component component) {
+                    super.tweakActionComponentUI(action, component);
 
                     if (myDescriptor.isDefaultAction(action)) {
-                        myDefaultButton = button;
+                        getPeer().getRootPane().setDefaultButton((JButton) component);
                     }
-                    return button;
                 }
             };
 
-            panel.add(buttonToolbar.getComponent(), BorderLayout.EAST);
+            toolbar.setTargetComponent(panel);
+
+            toolbar.updateActionsImmediately();
+
+            panel.add(toolbar.getComponent(), BorderLayout.EAST);
 
             panel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
 
@@ -222,14 +232,6 @@ public class DesktopAwtDialogService implements DialogService {
         @Override
         public String getHelpId() {
             return myHelpId;
-        }
-
-        @RequiredUIAccess
-        @Nonnull
-        @Override
-        public AsyncResult<Void> showAsync() {
-            getPeer().getRootPane().setDefaultButton(myDefaultButton);
-            return super.showAsync();
         }
 
         @Nullable

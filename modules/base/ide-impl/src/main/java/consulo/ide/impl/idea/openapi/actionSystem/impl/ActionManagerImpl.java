@@ -65,6 +65,7 @@ import gnu.trove.TObjectIntHashMap;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import javax.swing.Timer;
@@ -144,7 +145,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     private int myAnonymousGroupIdCounter;
 
     private final Application myApplication;
-    private final ActionToolbarFactory myToolbarFactory;
+    private final Provider<ActionToolbarFactory> myToolbarFactory;
     private final ActionPopupMenuFactory myPopupMenuFactory;
     private final ComponentBinding myComponentBinding;
     private final KeymapManagerEx myKeymapManager;
@@ -154,7 +155,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Inject
     ActionManagerImpl(Application application,
-                      ActionToolbarFactory toolbarFactory,
+                      Provider<ActionToolbarFactory> toolbarFactory,
                       ActionPopupMenuFactory popupMenuFactory,
                       ComponentBinding componentBinding,
                       KeymapManager keymapManager) {
@@ -573,7 +574,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     @Nonnull
     @Override
     public ActionToolbar createActionToolbar(@Nonnull final String place, @Nonnull final ActionGroup group, final boolean horizontal) {
-        return myToolbarFactory.createActionToolbar(place, group, horizontal ? ActionToolbar.Style.HORIZONTAL : ActionToolbar.Style.VERTICAL);
+        return myToolbarFactory.get().createActionToolbar(place, group, horizontal ? ActionToolbar.Style.HORIZONTAL : ActionToolbar.Style.VERTICAL);
     }
 
     public void registerPluginActions(@Nonnull PluginDescriptor plugin, LocalizeHelper localizeHelper) {
@@ -1357,6 +1358,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     @Override
     public KeyboardShortcut getKeyboardShortcut(@Nonnull String actionId) {
         AnAction action = ActionManager.getInstance().getAction(actionId);
+        if (action == null) {
+            return null;
+        }
+        
         final ShortcutSet shortcutSet = action.getShortcutSet();
         final Shortcut[] shortcuts = shortcutSet.getShortcuts();
         for (final Shortcut shortcut : shortcuts) {

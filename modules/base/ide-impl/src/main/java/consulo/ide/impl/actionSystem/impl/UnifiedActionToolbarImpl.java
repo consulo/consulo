@@ -17,7 +17,6 @@ package consulo.ide.impl.actionSystem.impl;
 
 import consulo.dataContext.DataContext;
 import consulo.ui.Component;
-import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
@@ -84,21 +83,6 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
         myLayoutPolicy = layoutPolicy;
     }
 
-    @Override
-    public void adjustTheSameSize(boolean value) {
-
-    }
-
-    @Override
-    public void setMinimumButtonSize(@Nonnull Size size) {
-
-    }
-
-    @Override
-    public int getMaxButtonHeight() {
-        return 0;
-    }
-
     @RequiredUIAccess
     @Override
     public void updateActionsImmediately() {
@@ -108,11 +92,6 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
     @Override
     public boolean hasVisibleActions() {
         return false;
-    }
-
-    @Override
-    public void setMiniMode(boolean minimalMode) {
-
     }
 
     @Override

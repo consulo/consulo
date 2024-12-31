@@ -25,10 +25,6 @@ import java.util.function.Consumer;
  * @since 15/01/2023
  */
 public interface ActionToolbarEx extends ActionToolbar {
-    default ActionButton getSecondaryActionsButton() {
-        return null;
-    }
-
     void forEachButton(Consumer<ActionButton> buttonConsumer);
 
     void reset();

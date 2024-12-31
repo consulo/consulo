@@ -18,10 +18,8 @@ package consulo.desktop.awt.action.toolbar;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.Component;
-import consulo.ui.Size;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -33,8 +31,8 @@ import javax.swing.*;
 public class ActionToggleToolbarButtonImpl extends JToggleButton implements ActionButton {
     private final ActionToolbarButtonEngine myEngine;
 
-    public ActionToggleToolbarButtonImpl(AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
-        myEngine = new ActionToolbarButtonEngine(this, action, presentation, place, this::getDataContext);
+    public ActionToggleToolbarButtonImpl(AnAction action, Presentation presentation, String place, boolean alwaysDisplayText) {
+        myEngine = new ActionToolbarButtonEngine(this, action, presentation, place, alwaysDisplayText, this::getDataContext);
 
         setModel(new DefaultButtonModel() {
             @Override
@@ -46,8 +44,6 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
             public void setSelected(boolean b) {
             }
         });
-
-        setMinimumSize(TargetAWT.to(minimumSize));
 
         putClientProperty(UIUtil.CENTER_TOOLTIP_DEFAULT, Boolean.TRUE);
 
@@ -80,7 +76,7 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
     public JComponent getComponent() {
         return this;
     }
-    
+
     @Nonnull
     @Override
     public Presentation getPresentation() {
@@ -95,11 +91,6 @@ public class ActionToggleToolbarButtonImpl extends JToggleButton implements Acti
     @Override
     public void click() {
         myEngine.click();
-    }
-
-    @Override
-    public void setNoIconsInPopup(boolean value) {
-        myEngine.setNoIconsInPopup(value);
     }
 
     @Override
