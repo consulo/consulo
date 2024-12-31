@@ -21,11 +21,12 @@ import java.util.function.Predicate;
  * @author mike
  */
 @FunctionalInterface
+@Deprecated
 public interface BooleanFunction<S> extends Predicate<S> {
-  boolean fun(S s);
+    boolean fun(S s);
 
-  @Override
-  default boolean test(S s) {
-    return fun(s);
-  }
+    @Override
+    default boolean test(S s) {
+        return fun(s);
+    }
 }

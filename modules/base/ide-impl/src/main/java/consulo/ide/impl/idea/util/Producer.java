@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 /**
  * @author pegov
  */
+@Deprecated
 public interface Producer<T> extends Supplier<T> {
   
   @Nullable
