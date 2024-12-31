@@ -1,37 +1,63 @@
-/*
- * Copyright 2000-2010 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.controlFlow;
 
 import consulo.language.psi.PsiElement;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.Collection;
 
-/**
- * @author oleg
- */
 public interface Instruction {
-  @Nullable
-  PsiElement getElement();
 
-  Collection<Instruction> allSucc();
+    Instruction[] EMPTY_ARRAY = new Instruction[0];
 
-  Collection<Instruction> allPred();
+    /**
+     * @return related psi elements. Can be null for fake instructions e.g. entry and exit points
+     */
+    @Nullable
+    PsiElement getElement();
 
-  String getElementPresentation();
+    /**
+     * Outgoing edges
+     */
+    @Nonnull
+    Collection<Instruction> allSucc();
 
-  int num();
+    /**
+     * Incoming edges
+     */
+    @Nonnull
+    Collection<Instruction> allPred();
+
+    int num();
+
+    /**
+     * element presentation is used in toString() for dumping the graph
+     */
+    @Nonnull
+    @NonNls
+    String getElementPresentation();
+
+    default void addSucc(@Nonnull Instruction endInstruction) {
+        if (!allSucc().contains(endInstruction)) {
+            allSucc().add(endInstruction);
+        }
+    }
+
+    default void addPred(@Nonnull Instruction beginInstruction) {
+        if (!allPred().contains(beginInstruction)) {
+            allPred().add(beginInstruction);
+        }
+    }
+
+    default void replacePred(@Nonnull Instruction oldInstruction, @Nonnull Collection<? extends Instruction> newInstructions) {
+        newInstructions.forEach(el -> addPred(el));
+        allPred().remove(oldInstruction);
+    }
+
+    default void replaceSucc(@Nonnull Instruction oldInstruction, @Nonnull Collection<? extends Instruction> newInstructions) {
+        newInstructions.forEach(el -> addSucc(el));
+        allSucc().remove(oldInstruction);
+    }
 }

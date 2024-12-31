@@ -51,6 +51,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-application-content-api</artifactId>
             <version>${project.version}</version>

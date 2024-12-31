@@ -21,6 +21,7 @@ import consulo.language.psi.PsiElement;
  * @author oleg
  */
 public interface ConditionalInstruction extends Instruction {
-  boolean getResult();
-  PsiElement getCondition();
+    boolean getResult();
+
+    PsiElement getCondition();
 }

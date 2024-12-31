@@ -10,6 +10,8 @@ module consulo.language.api {
     requires transitive consulo.project.content.api;
     requires consulo.ui.ex.api;
 
+    requires static it.unimi.dsi.fastutil;
+
     exports consulo.language;
     exports consulo.language.ast;
     exports consulo.language.cacheBuilder;
