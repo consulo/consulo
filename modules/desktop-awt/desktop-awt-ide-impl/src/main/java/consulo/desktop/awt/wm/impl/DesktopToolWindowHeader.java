@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.util.NotNullProducer;
-import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -168,19 +167,10 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
             }
         });
 
-        boolean fillAsPanel = UIManager.getBoolean(toolWindow.getId() + ".ToolWindow.fillAsPanel");
-        if (fillAsPanel) {
-            Border topBorder = JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 0, 0);
-            Border bottomBorder = JBUI.Borders.customLine(MorphColor.of(UIUtil::getPanelBackground), 0, 0, 1, 0);
+        Border topBorder = JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 0, 0);
+        Border bottomBorder = JBUI.Borders.customLine(MorphColor.of(UIUtil::getPanelBackground), 0, 0, 1, 0);
 
-            setBorder(JBUI.Borders.merge(topBorder, bottomBorder, false));
-        } else {
-            setBackground(MorphColor.ofWithoutCache(() -> {
-                return !isActive() ? UIUtil.getPanelBackground() : ToolwindowPaintUtil.getActiveToolWindowHeaderColor();
-            }));
-
-            setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 1, 0));
-        }
+        setBorder(JBUI.Borders.merge(topBorder, bottomBorder, false));
 
         new DoubleClickListener() {
             @Override

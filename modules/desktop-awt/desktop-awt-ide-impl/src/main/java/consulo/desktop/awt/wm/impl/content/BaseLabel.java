@@ -17,124 +17,118 @@ package consulo.desktop.awt.wm.impl.content;
 
 import consulo.dataContext.DataManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.content.Content;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.ImageEffects;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.toolWindow.ToolWindow;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.*;
 
 public class BaseLabel extends JLabel {
-  protected DesktopToolWindowContentUi myUi;
+    protected DesktopToolWindowContentUi myUi;
 
-  private Color myActiveFg;
-  private Color myPassiveFg;
-  private boolean myBold;
+    private Color myActiveFg;
+    private Color myPassiveFg;
+    private boolean myBold;
 
-  public BaseLabel(DesktopToolWindowContentUi ui, boolean bold) {
-    myUi = ui;
-    setOpaque(false);
-    myBold = bold;
+    public BaseLabel(DesktopToolWindowContentUi ui, boolean bold) {
+        myUi = ui;
+        setOpaque(false);
+        myBold = bold;
 
-    DataManager.registerDataProvider(this, dataId -> {
-      if (dataId == Content.KEY) {
-        return getContent();
-      }
+        DataManager.registerDataProvider(this, dataId -> {
+            if (dataId == Content.KEY) {
+                return getContent();
+            }
 
-      return null;
-    });
-  }
-
-  @Override
-  public void updateUI() {
-    setActiveFg(JBColor.foreground());
-    setPassiveFg(JBColor.foreground());
-    super.updateUI();
-  }
-
-  @Override
-  public Font getFont() {
-    Font f = UIUtil.getLabelFont();
-    if (myBold) {
-      f = f.deriveFont(Font.BOLD);
+            return null;
+        });
     }
 
-    return f;
-  }
-
-  public void setActiveFg(final Color fg) {
-    myActiveFg = fg;
-  }
-
-  public void setPassiveFg(final Color passiveFg) {
-    myPassiveFg = passiveFg;
-  }
-
-  @Override
-  @RequiredUIAccess
-  protected void paintComponent(final Graphics g) {
-    final Color fore = myUi.myWindow.isActive() ? myActiveFg : myPassiveFg;
-    setForeground(fore);
-    super.paintComponent(_getGraphics((Graphics2D)g));
-  }
-
-  protected Graphics _getGraphics(Graphics2D g) {
-    return g;
-  }
-
-  protected Color getActiveFg(boolean selected) {
-    return myActiveFg;
-  }
-
-  protected Color getPassiveFg(boolean selected) {
-    return myPassiveFg;
-  }
-
-  protected void updateTextAndIcon(Content content, boolean isSelected) {
-    if (content == null) {
-      setText(null);
-      setIcon(null);
+    @Override
+    public void updateUI() {
+        setActiveFg(JBColor.foreground());
+        setPassiveFg(JBColor.foreground());
+        super.updateUI();
     }
-    else {
-      setText(content.getDisplayName());
-      setActiveFg(getActiveFg(isSelected));
-      setPassiveFg(getPassiveFg(isSelected));
 
-      setToolTipText(content.getDescription());
+    @Override
+    public Font getFont() {
+        Font f = UIUtil.getLabelFont();
+        if (myBold) {
+            f = f.deriveFont(Font.BOLD);
+        }
 
-      final boolean show = Boolean.TRUE.equals(content.getUserData(ToolWindow.SHOW_CONTENT_ICON));
-      if (show) {
-        if (isSelected) {
-          setIcon(TargetAWT.to(content.getIcon()));
+        return f;
+    }
+
+    public void setActiveFg(final Color fg) {
+        myActiveFg = fg;
+    }
+
+    public void setPassiveFg(final Color passiveFg) {
+        myPassiveFg = passiveFg;
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void paintComponent(final Graphics g) {
+        final Color fore = myUi.myWindow.isActive() ? myActiveFg : myPassiveFg;
+        setForeground(fore);
+        super.paintComponent(_getGraphics((Graphics2D) g));
+    }
+
+    protected Graphics _getGraphics(Graphics2D g) {
+        return g;
+    }
+
+    protected Color getActiveFg(boolean selected) {
+        return myActiveFg;
+    }
+
+    protected Color getPassiveFg(boolean selected) {
+        return myPassiveFg;
+    }
+
+    protected void updateTextAndIcon(Content content, boolean isSelected) {
+        if (content == null) {
+            setText(null);
+            setIcon(null);
         }
         else {
-          setIcon(content.getIcon() != null ? TargetAWT.to(ImageEffects.transparent(content.getIcon(), .5f)) : null);
+            setText(content.getDisplayName());
+            setActiveFg(getActiveFg(isSelected));
+            setPassiveFg(getPassiveFg(isSelected));
+
+            setToolTipText(content.getDescription());
+
+            final boolean show = Boolean.TRUE.equals(content.getUserData(ToolWindow.SHOW_CONTENT_ICON));
+            if (show) {
+                setIcon(TargetAWT.to(content.getIcon()));
+            }
+            else {
+                setIcon(null);
+            }
+
+            myBold = false; //isSelected;
         }
-      }
-      else {
-        setIcon(null);
-      }
-
-      myBold = false; //isSelected;
     }
-  }
 
-  public Content getContent() {
-    return null;
-  }
-
-  @Override
-  public AccessibleContext getAccessibleContext() {
-    if (accessibleContext == null) {
-      accessibleContext = new AccessibleBaseLabel();
+    public Content getContent() {
+        return null;
     }
-    return accessibleContext;
-  }
 
-  protected class AccessibleBaseLabel extends AccessibleJLabel {
-  }
+    @Override
+    public AccessibleContext getAccessibleContext() {
+        if (accessibleContext == null) {
+            accessibleContext = new AccessibleBaseLabel();
+        }
+        return accessibleContext;
+    }
+
+    protected class AccessibleBaseLabel extends AccessibleJLabel {
+    }
 }
