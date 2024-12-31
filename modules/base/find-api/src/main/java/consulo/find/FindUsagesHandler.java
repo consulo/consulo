@@ -62,7 +62,7 @@ public abstract class FindUsagesHandler {
     }
 
     public boolean supportConsuloUI() {
-        return false;  // TODO replace !!!
+        return false;
     }
 
     @Nonnull
