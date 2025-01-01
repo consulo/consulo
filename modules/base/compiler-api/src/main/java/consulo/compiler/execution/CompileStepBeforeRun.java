@@ -186,6 +186,8 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
         }
       }
 
+      scope.putUserData(RunConfiguration.KEY, configuration);
+
       uiAccess.give(() -> compilerManager.make(scope, callback));
     }
     catch (Exception e) {

@@ -86,7 +86,7 @@ public class ConfigurationContext {
 
   @RequiredUIAccess
   private ConfigurationContext(final DataContext dataContext) {
-    myRuntimeConfiguration = dataContext.getData(RunConfiguration.DATA_KEY);
+    myRuntimeConfiguration = dataContext.getData(RunConfiguration.KEY);
     myContextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     myModule = dataContext.getData(Module.KEY);
     @SuppressWarnings({"unchecked"}) final Location<PsiElement> location = (Location<PsiElement>)dataContext.getData(Location.DATA_KEY);

@@ -70,7 +70,7 @@ public class TestsUIUtil {
       }
     }
     if (Location.DATA_KEY == dataId) return (T)testProxy.getLocation(project, properties.getScope());
-    if (RunConfiguration.DATA_KEY == dataId) {
+    if (RunConfiguration.KEY == dataId) {
       final RunProfile configuration = properties.getConfiguration();
       if (configuration instanceof RunConfiguration) {
         return (T)configuration;

@@ -33,7 +33,9 @@ import jakarta.annotation.Nullable;
  * @see RefactoringListenerProvider
  */
 public interface RunConfiguration extends RunProfile, JDOMExternalizable, Cloneable {
-  Key<RunConfiguration> DATA_KEY = Key.create("runtimeConfiguration");
+  Key<RunConfiguration> KEY = Key.of(RunConfiguration.class);
+  @Deprecated
+  Key<RunConfiguration> DATA_KEY = KEY;
 
   /**
    * Returns the type of the run configuration.
