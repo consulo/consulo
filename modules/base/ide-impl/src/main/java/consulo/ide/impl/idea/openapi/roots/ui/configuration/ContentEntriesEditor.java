@@ -148,16 +148,13 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     splitter.setFirstComponent(component);
     splitter.setSecondComponent(entriesPanel);
-    JPanel contentPanel = new JPanel(new GridBagLayout());
+    JPanel contentPanel = new JPanel(new BorderLayout());
 
-    final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, myRootTreeEditor.getEditingActionsGroup(), true);
+    ActionToolbar actionToolbar = ActionManager.getInstance()
+        .createActionToolbar(ActionPlaces.UNKNOWN, myRootTreeEditor.getEditingActionsGroup(), true);
     actionToolbar.setTargetComponent(contentPanel);
-    contentPanel.add(actionToolbar.getComponent(),
-                     new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                                            new JBInsets(0, 0, 0, 0), 0, 0));
-    contentPanel.add(splitter,
-                     new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                                            new JBInsets(0, 0, 0, 0), 0, 0));
+    contentPanel.add(actionToolbar.getComponent(), BorderLayout.NORTH);
+    contentPanel.add(splitter, BorderLayout.CENTER);
 
     mainPanel.add(contentPanel, BorderLayout.CENTER);
 
