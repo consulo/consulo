@@ -2156,7 +2156,9 @@ public class UsageViewImpl implements UsageViewEx {
         }
 
         void update() {
-            myActionToolbar.updateActionsImmediately();
+            if (myActionToolbar != null) {
+                myActionToolbar.updateActionsImmediately();
+            }
             myNeedUpdateButtons = false;
         }
     }
