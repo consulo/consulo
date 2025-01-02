@@ -18,12 +18,14 @@ package consulo.desktop.awt.welcomeScreen;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.welcomeScreen.WelcomeScreenSlider;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ui.ex.awt.JBCardLayout;
-import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -80,18 +82,29 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
 
     @RequiredUIAccess
     private JComponent createActionPanel(FlatWelcomePanel welcomePanel) {
-        JPanel actionHolder = new NonOpaquePanel(new HorizontalLayout(0, SwingConstants.CENTER));
+        VerticalLayout layout = VerticalLayout.create();
+
         ActionManager actionManager = ActionManager.getInstance();
         ActionGroup quickStart = (ActionGroup) actionManager.getAction(IdeActions.GROUP_WELCOME_SCREEN_QUICKSTART);
         List<AnAction> group = new ArrayList<>();
         collectAllActions(group, quickStart);
 
-        ActionToolbar toolbar = actionManager.createActionToolbar("Welcome", ActionGroup.newImmutableBuilder().addAll(group).build(), false);
-        toolbar.setTargetComponent(welcomePanel);
+        DataManager manager = DataManager.getInstance();
 
-        actionHolder.add(toolbar.getComponent(), BorderLayout.CENTER);
-        
-        return actionHolder;
+        for (AnAction action : group) {
+            AnActionEvent e = AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, manager.getDataContext(welcomePanel));
+
+            action.update(e);
+
+            Button button = Button.create(e.getPresentation().getTextValue());
+            button.setIcon(e.getPresentation().getIcon());
+            button.addStyle(ButtonStyle.BORDERLESS);
+            button.addClickListener(event -> action.actionPerformed(e));
+
+            layout.add(button);
+        }
+
+        return (JComponent) TargetAWT.to(layout);
     }
 
     public static void collectAllActions(List<AnAction> group, ActionGroup actionGroup) {
