@@ -45,6 +45,23 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         myExpression = expression;
     }
 
+    WatchNodeImpl(@Nonnull XDebuggerTree tree,
+                  @Nonnull WatchesRootNode parent,
+                  @Nonnull XExpression expression,
+                  @Nullable XStackFrame stackFrame,
+                  @Nonnull String name) {
+        this(tree, parent, expression, name, new XWatchValue(expression, tree, stackFrame));
+    }
+
+    WatchNodeImpl(@Nonnull XDebuggerTree tree,
+                  @Nonnull WatchesRootNode parent,
+                  @Nonnull XExpression expression,
+                  @Nonnull String name,
+                  @Nonnull XValue value) {
+        super(tree, parent, name, value);
+        myExpression = expression;
+    }
+
     @Override
     @Nonnull
     public XExpression getExpression() {
@@ -55,14 +72,22 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
     @Override
     public XValue getValueContainer() {
         XValue container = super.getValueContainer();
-        XValue value = ((XWatchValue) container).myValue;
-        return value != null ? value : container;
+        if (container instanceof XWatchValue) {
+            XValue value = ((XWatchValue) container).myValue;
+            if (value != null) {
+                return value;
+            }
+        }
+        return container;
     }
 
     void computePresentationIfNeeded() {
         if (getValuePresentation() == null) {
             getValueContainer().computePresentation(this, XValuePlace.TREE);
         }
+    }
+
+    protected void evaluated() {
     }
 
     private static class XWatchValue extends XNamedValue {
@@ -119,6 +144,11 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
             @Override
             public void evaluated(@Nonnull XValue result) {
                 myValue = result;
+
+                if (myNode instanceof WatchNodeImpl watchNode) {
+                    watchNode.evaluated();
+                }
+
                 result.computePresentation(myNode, myPlace);
             }
 

@@ -1963,8 +1963,6 @@
                     icon="consulo.platform.base.PlatformIconGroup@actions.copy" text="Copy Watch"/>
             <action id="XDebugger.RemoveWatch" class="consulo.execution.debug.impl.internal.frame.action.XRemoveWatchAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
-            <action id="XDebugger.SwitchWatchesInVariables"
-                    class="consulo.execution.debug.impl.internal.frame.action.XSwitchWatchesInVariables"/>
             <action id="XDebugger.RemoveAllWatches" class="consulo.execution.debug.impl.internal.frame.action.XRemoveAllWatchesAction"/>
             <action id="XDebugger.MuteBreakpoints" class="consulo.execution.debug.impl.internal.action.MuteBreakpointAction"/>
             <action id="XDebugger.ToggleSortValues" class="consulo.execution.debug.impl.internal.ui.tree.action.SortValuesToggleAction"
@@ -2034,11 +2032,6 @@
             <reference ref="XDebugger.RemoveAllWatches"/>
             <reference ref="XDebugger.EditWatch"/>
             <reference ref="XDebugger.ValueGroup"/>
-        </group>
-
-        <group id="XDebugger.Watches.Tree.Toolbar">
-            <reference ref="XDebugger.NewWatch"/>
-            <reference ref="XDebugger.RemoveWatch"/>
         </group>
 
         <group id="XDebugger.Inspect.Tree.Popup">

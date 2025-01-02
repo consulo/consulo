@@ -501,6 +501,9 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
   @Override
   public TextAttributes getPlaceholderAttributes() {
+    if (myFoldTextAttributes == null) {
+        refreshSettings();
+    }
     return myFoldTextAttributes;
   }
 

@@ -40,7 +40,7 @@ public class EditorComboBoxRenderer extends BasicComboBoxRenderer {
 
     final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     component.setFont(editorFont);
-    component.setSize(editorComponent.getSize());
+    //component.setSize(editorComponent.getSize());
     return component;
   }
 }

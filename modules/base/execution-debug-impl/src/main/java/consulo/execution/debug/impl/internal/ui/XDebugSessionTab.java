@@ -16,7 +16,6 @@
 package consulo.execution.debug.impl.internal.ui;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.execution.ExecutionManager;
@@ -30,8 +29,8 @@ import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.DebuggerContentInfo;
 import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.execution.debug.ui.XDebugTabLayouter;
-import consulo.execution.internal.layout.RunnerContentUi;
 import consulo.execution.impl.internal.ui.layout.ViewImpl;
+import consulo.execution.internal.layout.RunnerContentUi;
 import consulo.execution.internal.layout.RunnerLayoutUiImpl;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.RunContentBuilder;
@@ -67,7 +66,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     public static final Key<XDebugSessionTab> TAB_KEY = Key.create("XDebugSessionTab");
 
     private XWatchesViewImpl myWatchesView;
-    private boolean myWatchesInVariables = Registry.is("debugger.watches.in.variables");
+
     private final Map<String, XDebugView> myViews = new LinkedHashMap<>();
 
     @Nullable
@@ -135,9 +134,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
     private void addVariablesAndWatches(@Nonnull XDebugSessionImpl session) {
         myUi.addContent(createVariablesContent(session), 0, PlaceInGrid.center, false);
-        if (!myWatchesInVariables) {
-            myUi.addContent(createWatchesContent(session), 0, PlaceInGrid.right, false);
-        }
     }
 
     private void setSession(@Nonnull XDebugSessionImpl session, @Nullable ExecutionEnvironment environment, @Nullable Image icon) {
@@ -188,13 +184,9 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
     private Content createVariablesContent(@Nonnull XDebugSessionImpl session) {
         XVariablesView variablesView;
-        if (myWatchesInVariables) {
-            variablesView = myWatchesView = new XWatchesViewImpl(session, myWatchesInVariables);
-        }
-        else {
-            variablesView = new XVariablesView(session);
-        }
+        variablesView = myWatchesView = new XWatchesViewImpl(session, true);
         registerView(DebuggerContentInfo.VARIABLES_CONTENT, variablesView);
+
         Content result = myUi.createContent(
             DebuggerContentInfo.VARIABLES_CONTENT,
             variablesView.getPanel(),
@@ -207,20 +199,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         ActionGroup group = DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.VARIABLES_TREE_TOOLBAR_GROUP);
         result.setActions(group, ActionPlaces.DEBUGGER_TOOLBAR, variablesView.getTree());
         return result;
-    }
-
-    private Content createWatchesContent(@Nonnull XDebugSessionImpl session) {
-        myWatchesView = new XWatchesViewImpl(session, myWatchesInVariables);
-        registerView(DebuggerContentInfo.WATCHES_CONTENT, myWatchesView);
-        Content watchesContent = myUi.createContent(
-            DebuggerContentInfo.WATCHES_CONTENT,
-            myWatchesView.getPanel(),
-            XDebuggerLocalize.debuggerSessionTabWatchesTitle().get(),
-            ExecutionDebugIconGroup.nodeWatch(),
-            null
-        );
-        watchesContent.setCloseable(false);
-        return watchesContent;
     }
 
     @Nonnull
@@ -323,26 +301,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         return myRunContentDescriptor;
     }
 
-    public boolean isWatchesInVariables() {
-        return myWatchesInVariables;
-    }
-
-    public void setWatchesInVariables(boolean watchesInVariables) {
-        if (myWatchesInVariables != watchesInVariables) {
-            myWatchesInVariables = watchesInVariables;
-            Registry.get("debugger.watches.in.variables").setValue(watchesInVariables);
-            if (mySession != null) {
-                removeContent(DebuggerContentInfo.VARIABLES_CONTENT);
-                removeContent(DebuggerContentInfo.WATCHES_CONTENT);
-                addVariablesAndWatches(mySession);
-                attachViewToSession(mySession, myViews.get(DebuggerContentInfo.VARIABLES_CONTENT));
-                attachViewToSession(mySession, myViews.get(DebuggerContentInfo.WATCHES_CONTENT));
-                myUi.selectAndFocus(myUi.findContent(DebuggerContentInfo.VARIABLES_CONTENT), true, false);
-                rebuildViews();
-            }
-        }
-    }
-
     public static void showWatchesView(@Nonnull XDebugSessionImpl session) {
         XDebugSessionTab tab = session.getSessionTab();
         if (tab != null) {
@@ -398,7 +356,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
     @Nonnull
     private String getWatchesContentId() {
-        return myWatchesInVariables ? DebuggerContentInfo.VARIABLES_CONTENT : DebuggerContentInfo.WATCHES_CONTENT;
+        return DebuggerContentInfo.VARIABLES_CONTENT;
     }
 
     private void registerView(String contentId, @Nonnull XDebugView view) {

@@ -343,6 +343,15 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         mySession.rebuildViews();
     }
 
+    private static int getAddWatchModifiers() {
+        //can not use new SHIFT_DOWN_MASK etc because in this case ActionEvent modifiers do not match
+        return (Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK;
+    }
+
+    public static KeyStroke getAddWatchKeystroke() {
+        return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, getAddWatchModifiers());
+    }
+
     @RequiredUIAccess
     @Override
     public JComponent getPreferredFocusedComponent() {

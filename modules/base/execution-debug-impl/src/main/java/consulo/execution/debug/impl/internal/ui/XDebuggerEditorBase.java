@@ -20,7 +20,6 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.FoldingModelEx;
 import consulo.codeEditor.util.SoftWrapUtil;
@@ -507,7 +506,6 @@ public abstract class XDebuggerEditorBase {
     }
 
     protected static void foldNewLines(EditorEx editor) {
-        editor.getColorsScheme().setAttributes(EditorColors.FOLDED_TEXT_ATTRIBUTES, null);
         editor.reinitSettings();
         FoldingModelEx foldingModel = editor.getFoldingModel();
         CharSequence text = editor.getDocument().getCharsSequence();

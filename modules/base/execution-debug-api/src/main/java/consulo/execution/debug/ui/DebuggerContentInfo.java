@@ -22,5 +22,4 @@ public interface DebuggerContentInfo {
   String THREADS_CONTENT = "ThreadsContent";
   String VARIABLES_CONTENT = "VariablesContent";
   String FRAME_CONTENT = "FrameContent";
-  String WATCHES_CONTENT = "WatchesContent";
 }

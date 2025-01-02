@@ -25,6 +25,7 @@ import consulo.execution.debug.frame.XStackFrameContainerEx;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.execution.debug.impl.internal.action.XFrameThreadsComboBoxGroup;
+import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
@@ -105,12 +106,13 @@ public class XFramesView extends XDebugView {
         myMainPanel.add(ScrollPaneFactory.createScrollPane(myFramesList), BorderLayout.CENTER);
 
         myThreadComboBox = new ComboBox<>();
-        myThreadComboBox.putClientProperty("FlatLaf.style", "borderColor: #0000; disabledBorderColor: #0000; borderWidth: 0; focusWidth: 0; innerFocusWidth: 1; innerOutlineWidth: 1; arc: 0");
+        myThreadComboBox.setFont(AWTLanguageEditorUtil.getEditorFont());
+        makeBorderInline(myThreadComboBox);
         myThreadComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(@Nonnull JList list, XExecutionStack value, int index, boolean selected, boolean hasFocus) {
-                setBorder(JBCurrentTheme.listCellBorderFull());
-
+                setBorder(JBUI.Borders.empty(4));
+                setFont(AWTLanguageEditorUtil.getEditorFont());
                 if (value != null) {
                     append(value.getDisplayName());
                     setIcon(value.getIcon());
@@ -186,6 +188,10 @@ public class XFramesView extends XDebugView {
         myThreadsPanel = new Wrapper();
         myThreadsPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), 0, 0, 1, 0));
         myMainPanel.add(myThreadsPanel, BorderLayout.NORTH);
+    }
+
+    public static void makeBorderInline(JComboBox<?> comboBox) {
+        comboBox.putClientProperty("FlatLaf.style", "borderColor: #0000; disabledBorderColor: #0000; borderWidth: 0; focusWidth: 0; innerFocusWidth: 1; innerOutlineWidth: 1; arc: 0");
     }
 
     public void selectFrame(XExecutionStack stack, XStackFrame frame) {
