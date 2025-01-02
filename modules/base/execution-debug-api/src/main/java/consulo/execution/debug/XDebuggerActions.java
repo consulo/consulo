@@ -50,7 +50,6 @@ public interface XDebuggerActions {
   String WATCHES_TREE_POPUP_GROUP = "XDebugger.Watches.Tree.Popup";
   String WATCHES_TREE_TOOLBAR_GROUP = "XDebugger.Watches.Tree.Toolbar";
   String FRAMES_TREE_POPUP_GROUP = "XDebugger.Frames.Tree.Popup";
-  String FRAMES_TOP_TOOLBAR_GROUP = "XDebugger.Frames.TopToolbar";
 
   String ADD_TO_WATCH = "Debugger.AddToWatch";
 

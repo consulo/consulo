@@ -15,13 +15,15 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
-import consulo.application.AllIcons;
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerUtil;
-import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
+import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
@@ -32,7 +34,8 @@ import jakarta.inject.Provider;
 /**
  * @author egor
  */
-final class ShowLibraryFramesAction extends ToggleAction {
+@ActionImpl(id = "Debugger.ShowLibraryFrames")
+public final class ShowLibraryFramesAction extends ToggleAction {
   // we should remember initial answer "isLibraryFrameFilterSupported" because on stop no debugger process, but UI is still shown
   // - we should avoid "jumping" (visible (start) - invisible (stop) - visible (start again))
   private static final String IS_LIBRARY_FRAME_FILTER_SUPPORTED = "isLibraryFrameFilterSupported";
@@ -44,10 +47,11 @@ final class ShowLibraryFramesAction extends ToggleAction {
 
   @Inject
   public ShowLibraryFramesAction(Provider<XDebuggerSettingsManager> provider) {
-    super(LocalizeValue.empty(), LocalizeValue.empty(), AllIcons.General.Filter);
+    super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.generalFilter());
     myXDebuggerSettingsManagerProvider = provider;
   }
 
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent e) {
     super.update(e);

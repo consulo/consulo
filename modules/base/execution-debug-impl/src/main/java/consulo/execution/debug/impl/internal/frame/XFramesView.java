@@ -24,11 +24,10 @@ import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XStackFrameContainerEx;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
+import consulo.execution.debug.impl.internal.action.XFrameThreadsComboBoxGroup;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
 import consulo.util.dataholder.Key;
@@ -111,14 +110,24 @@ public class XFramesView extends XDebugView {
             @Override
             protected void customizeCellRenderer(@Nonnull JList list, XExecutionStack value, int index, boolean selected, boolean hasFocus) {
                 setBorder(JBCurrentTheme.listCellBorderFull());
-                
+
                 if (value != null) {
                     append(value.getDisplayName());
                     setIcon(value.getIcon());
                 }
             }
         });
-        
+
+        ActionGroup tailGroup = (ActionGroup) ActionManager.getInstance().getAction(XFrameThreadsComboBoxGroup.ID);
+
+        ActionToolbar toolbar = ActionToolbarFactory.getInstance()
+            .createActionToolbar(XFrameThreadsComboBoxGroup.ID, tailGroup, ActionToolbar.Style.INPLACE);
+
+        toolbar.setTargetComponent(myMainPanel);
+        toolbar.updateActionsImmediately();
+
+        myThreadComboBox.putClientProperty("JComboBox.trailingComponent", toolbar.getComponent());
+
         myThreadComboBox.addItemListener(e -> {
             if (!myListenersEnabled) {
                 return;
