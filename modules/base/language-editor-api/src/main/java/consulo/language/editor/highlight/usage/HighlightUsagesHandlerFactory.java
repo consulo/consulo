@@ -16,13 +16,12 @@
 
 package consulo.language.editor.highlight.usage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -30,8 +29,7 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface HighlightUsagesHandlerFactory<T extends PsiElement> {
-  ExtensionPointName<HighlightUsagesHandlerFactory> EP_NAME = ExtensionPointName.create(HighlightUsagesHandlerFactory.class);
-
-  @Nullable
-  HighlightUsagesHandlerBase<T> createHighlightUsagesHandler(Editor editor, PsiFile file);
+    @Nullable
+    @RequiredReadAction
+    HighlightUsagesHandlerBase<T> createHighlightUsagesHandler(Editor editor, PsiFile file);
 }

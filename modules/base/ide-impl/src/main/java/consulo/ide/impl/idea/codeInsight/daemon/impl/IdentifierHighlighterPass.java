@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
@@ -25,20 +26,18 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.find.FindManager;
 import consulo.find.FindUsagesHandler;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightHandlerBase;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
-import consulo.language.editor.impl.highlight.UpdateHighlightersUtil;
-import consulo.util.lang.Couple;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
 import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.UpdateHighlightersUtil;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -47,8 +46,10 @@ import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.ReferencesSearch;
 import consulo.logging.Logger;
 import consulo.project.Project;
-
+import consulo.util.lang.Couple;
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 
 /**
@@ -62,32 +63,32 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   private final Collection<TextRange> myReadAccessRanges = Collections.synchronizedList(new ArrayList<TextRange>());
   private final Collection<TextRange> myWriteAccessRanges = Collections.synchronizedList(new ArrayList<TextRange>());
   private final int myCaretOffset;
-  private final HighlightUsagesHandlerBase<PsiElement> myHighlightUsagesHandler;
 
   IdentifierHighlighterPass(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull Editor editor) {
     super(project, editor.getDocument(), false);
     myFile = file;
     myEditor = editor;
     myCaretOffset = myEditor.getCaretModel().getOffset();
-    myHighlightUsagesHandler = HighlightUsagesHandler.createCustomHandler(myEditor, myFile);
   }
 
   @Override
+  @RequiredReadAction
   public void doCollectInformation(@Nonnull final ProgressIndicator progress) {
-    if (myHighlightUsagesHandler != null) {
-      List<PsiElement> targets = myHighlightUsagesHandler.getTargets();
-      myHighlightUsagesHandler.computeUsages(targets);
-      final List<TextRange> readUsages = myHighlightUsagesHandler.getReadUsages();
+    HighlightUsagesHandlerBase<PsiElement> highlightUsagesHandler = HighlightUsagesHandler.createCustomHandler(myEditor, myFile);
+    if (highlightUsagesHandler != null) {
+      List<PsiElement> targets = highlightUsagesHandler.getTargets();
+      highlightUsagesHandler.computeUsages(targets);
+      final List<TextRange> readUsages = highlightUsagesHandler.getReadUsages();
       for (TextRange readUsage : readUsages) {
-        LOG.assertTrue(readUsage != null, "null text range from " + myHighlightUsagesHandler);
+        LOG.assertTrue(readUsage != null, "null text range from " + highlightUsagesHandler);
       }
       myReadAccessRanges.addAll(readUsages);
-      final List<TextRange> writeUsages = myHighlightUsagesHandler.getWriteUsages();
+      final List<TextRange> writeUsages = highlightUsagesHandler.getWriteUsages();
       for (TextRange writeUsage : writeUsages) {
-        LOG.assertTrue(writeUsage != null, "null text range from " + myHighlightUsagesHandler);
+        LOG.assertTrue(writeUsage != null, "null text range from " + highlightUsagesHandler);
       }
       myWriteAccessRanges.addAll(writeUsages);
-      if (!myHighlightUsagesHandler.highlightReferences()) return;
+      if (!highlightUsagesHandler.highlightReferences()) return;
     }
 
     Set<String> flags = ContainerUtil.newHashSet(TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED, TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED);

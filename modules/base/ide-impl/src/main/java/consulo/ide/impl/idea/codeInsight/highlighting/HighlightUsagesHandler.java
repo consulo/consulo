@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.highlighting;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.language.editor.IdentifierUtil;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.highlight.HighlightUsagesDescriptionLocation;
@@ -187,14 +189,13 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
   }
 
   @Nullable
-  public static HighlightUsagesHandlerBase createCustomHandler(@Nonnull Editor editor, @Nonnull PsiFile file) {
-    for (HighlightUsagesHandlerFactory factory : HighlightUsagesHandlerFactory.EP_NAME.getExtensionList()) {
-      final HighlightUsagesHandlerBase handler = factory.createHighlightUsagesHandler(editor, file);
-      if (handler != null) {
-        return handler;
-      }
-    }
-    return null;
+  @RequiredReadAction
+  @SuppressWarnings("unchecked")
+  public static HighlightUsagesHandlerBase<PsiElement> createCustomHandler(@Nonnull Editor editor, @Nonnull PsiFile file) {
+    Application application = file.getApplication();
+    return application
+        .getExtensionPoint(HighlightUsagesHandlerFactory.class)
+        .computeSafeIfAny(it -> it.createHighlightUsagesHandler(editor, file));
   }
 
   @Nullable
