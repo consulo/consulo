@@ -20,10 +20,7 @@ import com.formdev.flatlaf.ui.FlatUIUtils;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.editor.ui.internal.BasicEditorTextFieldUI;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.Wrapper;
+import consulo.ui.ex.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -77,8 +74,8 @@ public class FlatEditorTextFieldUI extends BasicEditorTextFieldUI {
     @Override
     public void suffixChanged(EditorTextField field, JComponent component) {
         InplaceComponent.prepareLeadingOrTrailingComponent(component);
-
         component.setOpaque(false);
+        component.setBorder(JBCurrentTheme.textFieldSubBorder(false));
     }
 
     @Override

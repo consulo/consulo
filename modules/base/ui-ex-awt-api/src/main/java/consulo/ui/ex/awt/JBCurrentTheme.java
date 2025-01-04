@@ -598,4 +598,12 @@ public class JBCurrentTheme {
     public static Border listCellBorderFull() {
         return JBUI.Borders.empty(4);
     }
+
+    public static Border textFieldSubBorder(boolean left) {
+        if (left) {
+            return JBUI.Borders.emptyLeft(4);
+        } else {
+            return JBUI.Borders.emptyRight(4);
+        }
+    }
 }

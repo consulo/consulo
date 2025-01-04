@@ -8,6 +8,7 @@ import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.JBUI;
@@ -19,9 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -84,15 +83,17 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
             }
         }
 
-        setUIExtensions(left, "JTextField.leadingComponent");
-        setUIExtensions(right, "JTextField.trailingComponent");
+        setUIExtensions(left, "JTextField.leadingComponent").ifPresent(it -> it.setBorder(JBCurrentTheme.textFieldSubBorder(true)));
+
+        setUIExtensions(right, "JTextField.trailingComponent").ifPresent(it -> it.setBorder(JBCurrentTheme.textFieldSubBorder(false)));
 
         this.extensions = Collections.unmodifiableList(extensions);
     }
 
-    private void setUIExtensions(List<? extends Extension> extensions, String clientPropertyName) {
+    private Optional<JToolBar> setUIExtensions(List<? extends Extension> extensions, String clientPropertyName) {
         if (extensions.isEmpty()) {
             putClientProperty(clientPropertyName, null);
+            return Optional.empty();
         }
         else {
             JToolBar toolBar = new JToolBar();
@@ -115,6 +116,7 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
                 toolBar.add(component);
             }
             putClientProperty(clientPropertyName, toolBar);
+            return Optional.of(toolBar);
         }
     }
 
