@@ -56,7 +56,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -197,52 +196,51 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         Ref<AnAction> addToWatchesActionRef = new Ref<>();
         XDebuggerEditorsProvider provider = tree.getEditorsProvider();
 
-        myEvaluateComboBox =
-            new XDebuggerExpressionComboBox(tree.getProject(), provider, "evaluateExpression", null, false) {
-                {
-                    AnAction addToWatchesAction =
-                        new DumbAwareAction(ActionsBundle.actionText(XDebuggerActions.ADD_TO_WATCH), null, ExecutionDebugIconGroup.actionAddtowatch()) {
-                            @RequiredUIAccess
-                            @Override
-                            public void actionPerformed(@Nonnull AnActionEvent e) {
-                                myEvaluateComboBox.saveTextInHistory();
-                                addWatchExpression(getExpression(), -1, false);
-                            }
+        myEvaluateComboBox = new XDebuggerExpressionComboBox(tree.getProject(), provider, "evaluateExpression", null, false) {
+            @Override
+            protected void addActions(ActionGroup.Builder builder, boolean showMultiline) {
+                AnAction addToWatchesAction =
+                    new DumbAwareAction(ActionsBundle.actionText(XDebuggerActions.ADD_TO_WATCH), null, ExecutionDebugIconGroup.actionAddtowatch()) {
+                        @RequiredUIAccess
+                        @Override
+                        public void actionPerformed(@Nonnull AnActionEvent e) {
+                            myEvaluateComboBox.saveTextInHistory();
+                            addWatchExpression(getExpression(), -1, false);
+                        }
 
-                            @RequiredUIAccess
-                            @Override
-                            public void update(@Nonnull AnActionEvent e) {
-                                XExpression expression = getExpression();
-                                e.getPresentation().setEnabled(expression != null && !StringUtil.isEmptyOrSpaces(expression.getExpression()));
-                            }
+                        @RequiredUIAccess
+                        @Override
+                        public void update(@Nonnull AnActionEvent e) {
+                            XExpression expression = getExpression();
+                            e.getPresentation().setEnabled(expression != null && !StringUtil.isEmptyOrSpaces(expression.getExpression()));
+                        }
 
-                            @Override
-                            @Nonnull
-                            public ActionUpdateThread getActionUpdateThread() {
-                                return ActionUpdateThread.BGT;
-                            }
-                        };
+                        @Override
+                        @Nonnull
+                        public ActionUpdateThread getActionUpdateThread() {
+                            return ActionUpdateThread.BGT;
+                        }
+                    };
 
-                    ActionToolbar toolbar = ActionToolbarFactory.getInstance()
-                        .createActionToolbar("DebuggerVariablesEvaluate", new DefaultActionGroup(addToWatchesAction), ActionToolbar.Style.INPLACE);
-                    addToWatchesActionRef.set(addToWatchesAction);
-                    toolbar.setTargetComponent(tree);
-                    
-                    getComboBox().putClientProperty("JComboBox.trailingComponent", toolbar.getComponent());
+                super.addActions(builder, showMultiline);
 
-                    XFramesView.makeBorderInline(getComboBox());
-                }
+                builder.add(addToWatchesAction);
 
-                @Override
-                protected void prepareEditor(EditorEx editor) {
-                    super.prepareEditor(editor);
-                    editor.setPlaceholder(XDebuggerBundle.message(
-                        "debugger.evaluate.expression.or.add.a.watch.hint",
-                        KeymapUtil.getShortcutText(new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), null)),
-                        KeymapUtil.getShortcutText(new KeyboardShortcut(XDebuggerEvaluationDialog.getAddWatchKeystroke(), null))
-                    ));
-                }
-            };
+                addToWatchesActionRef.set(addToWatchesAction);
+            }
+
+            @Override
+            protected void prepareEditor(EditorEx editor) {
+                super.prepareEditor(editor);
+                editor.setPlaceholder(XDebuggerBundle.message(
+                    "debugger.evaluate.expression.or.add.a.watch.hint",
+                    KeymapUtil.getShortcutText(new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), null)),
+                    KeymapUtil.getShortcutText(new KeyboardShortcut(XDebuggerEvaluationDialog.getAddWatchKeystroke(), null))
+                ));
+            }
+        };
+        XFramesView.makeBorderInline(myEvaluateComboBox.getComboBox());
+
         final JComponent editorComponent = myEvaluateComboBox.getEditorComponent();
         editorComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
             .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enterStroke");

@@ -47,7 +47,7 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
                                     Disposable parentDisposable) {
     super(XDebuggerBundle.message("dialog.title.evaluate.code.fragment"));
     myMultilineEditor = new XDebuggerExpressionEditorImpl(project, editorsProvider, "evaluateCodeFragment", sourcePosition,
-                                                      statements != null ? statements : XExpression.EMPTY_CODE_FRAGMENT, true, true, false);
+                                                      statements != null ? statements : XExpression.EMPTY_CODE_FRAGMENT, false, true);
     myMainPanel = new JPanel(new BorderLayout());
     JPanel editorPanel = new JPanel(new BorderLayout());
     editorPanel.add(myMultilineEditor.getComponent(), BorderLayout.CENTER);

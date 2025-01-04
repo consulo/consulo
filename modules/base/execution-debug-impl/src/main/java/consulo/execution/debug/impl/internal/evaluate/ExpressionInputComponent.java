@@ -71,8 +71,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
             sourcePosition,
             expression != null ? expression : XExpression.EMPTY_EXPRESSION,
             false,
-            true,
-            false
+            true
         );
         myMainPanel.add(myExpressionEditor.getComponent(), BorderLayout.CENTER);
         JButton historyButton = new FixedSizeButton(myExpressionEditor.getComponent());

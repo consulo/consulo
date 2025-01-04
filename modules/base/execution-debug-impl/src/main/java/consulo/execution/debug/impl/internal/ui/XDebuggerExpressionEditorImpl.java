@@ -29,7 +29,10 @@ import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -40,10 +43,10 @@ import javax.swing.*;
  * @author nik
  */
 public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implements XDebuggerExpressionEditor {
-    private final JComponent myComponent;
     private final EditorTextField myEditorTextField;
     private XExpression myExpression;
 
+    @RequiredUIAccess
     public XDebuggerExpressionEditorImpl(
         Project project,
         @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
@@ -51,8 +54,7 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
         @Nullable XSourcePosition sourcePosition,
         @Nonnull XExpression text,
         final boolean multiline,
-        boolean editorFont,
-        boolean showEditor
+        boolean editorFont
     ) {
         super(project, debuggerEditorsProvider, multiline ? EvaluationMode.CODE_FRAGMENT : EvaluationMode.EXPRESSION, historyId, sourcePosition);
         myExpression = XExpression.changeMode(text, getMode());
@@ -82,12 +84,23 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
             myEditorTextField.setFontInheritedFromLAF(false);
             myEditorTextField.setFont(AWTLanguageEditorUtil.getEditorFont());
         }
-        myComponent = decorate(myEditorTextField, multiline, showEditor);
+
+        ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
+        addActions(builder, multiline);
+
+        if (!builder.isEmpty()) {
+            ActionToolbar toolbar = ActionToolbarFactory.getInstance()
+                .createActionToolbar("XDebuggerExpressionEditor", builder.build(), ActionToolbar.Style.INPLACE);
+            toolbar.setTargetComponent(myEditorTextField);
+            toolbar.updateActionsImmediately();
+
+            myEditorTextField.setSuffixComponent(toolbar.getComponent());
+        }
     }
 
     @Override
     public JComponent getComponent() {
-        return myComponent;
+        return myEditorTextField;
     }
 
     @Override
@@ -113,11 +126,9 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
         return editor != null ? editor.getContentComponent() : null;
     }
 
+    @Override
     public void setEnabled(boolean enable) {
-        if (enable == myComponent.isEnabled()) {
-            return;
-        }
-        UIUtil.setEnabled(myComponent, enable, true);
+        myEditorTextField.setEnabled(enable);
     }
 
     @Nullable

@@ -28,6 +28,10 @@ import consulo.language.editor.ui.awt.EditorComboBoxEditor;
 import consulo.language.editor.ui.awt.EditorComboBoxRenderer;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
@@ -136,7 +140,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
 
     @Override
     public XExpression getExpression() {
-        XExpression item = myEditor.getItem();
+        XExpression item = myEditor == null ? null : myEditor.getItem();
         return item != null ? item : myExpression;
     }
 
@@ -160,27 +164,33 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
         private final JComponent myPanel;
         private final EditorComboBoxEditor myDelegate;
 
+        @RequiredUIAccess
         public XDebuggerComboBoxEditor(boolean showMultiline) {
             myDelegate = new EditorComboBoxEditor(getProject(), getEditorsProvider().getFileType()) {
                 @Override
                 protected void onEditorCreate(EditorEx editor) {
                     editor.putUserData(DebuggerCopyPastePreprocessor.REMOVE_NEWLINES_ON_PASTE, true);
                     prepareEditor(editor);
-                    if (showMultiline) {
-                        setExpandable(editor);
-                    }
                     XDebuggerEditorBase.foldNewLines(editor);
                     editor.getColorsScheme().setEditorFontSize(myComboBox.getFont().getSize());
                 }
             };
             myDelegate.getEditorComponent().setFontInheritedFromLAF(false);
 
-            JComponent comp = myDelegate.getEditorComponent();
-            comp = addChooser(comp);
-            if (showMultiline) {
-                comp = addExpand(comp, true);
+            ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
+
+            addActions(builder, showMultiline);
+
+            if (!builder.isEmpty()) {
+                ActionToolbar toolbar = ActionToolbarFactory.getInstance()
+                    .createActionToolbar("XDebuggerExpressionComboBox", builder.build(), ActionToolbar.Style.INPLACE);
+                toolbar.setTargetComponent(null);
+                toolbar.updateActionsImmediately();
+
+                myDelegate.getEditorComponent().setSuffixComponent(toolbar.getComponent());
             }
-            myPanel = comp;
+
+            myPanel = myDelegate.getEditorComponent();
         }
 
         public EditorTextField getEditorTextField() {

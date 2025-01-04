@@ -44,6 +44,6 @@ public class XDebuggerExpressionEditorFactoryImpl implements XDebuggerExpression
     @Nonnull
     @Override
     public XDebuggerExpressionEditor create(@Nonnull XDebuggerEditorsProvider debuggerEditorsProvider, @Nullable String historyId, @Nullable XSourcePosition sourcePosition, @Nonnull XExpression text, boolean multiline, boolean editorFont, boolean showEditor) {
-        return new XDebuggerExpressionEditorImpl(myProject, debuggerEditorsProvider, historyId, sourcePosition, text, multiline, editorFont, showEditor);
+        return new XDebuggerExpressionEditorImpl(myProject, debuggerEditorsProvider, historyId, sourcePosition, text, multiline, editorFont);
     }
 }
