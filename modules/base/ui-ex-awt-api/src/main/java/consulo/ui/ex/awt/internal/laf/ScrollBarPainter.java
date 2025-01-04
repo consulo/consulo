@@ -8,9 +8,7 @@ import consulo.colorScheme.EditorColorKey;
 import consulo.platform.Platform;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.EditorColorsUtil;
-import consulo.ui.ex.awt.MixedColorProducer;
 import consulo.ui.ex.awt.RegionPainter;
-import consulo.ui.ex.awt.paint.RectanglePainter;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
@@ -166,56 +164,25 @@ public abstract class ScrollBarPainter implements RegionPainter<Float> {
   }
 
   public static final class Track extends ScrollBarPainter {
-    private final MixedColorProducer fillProducer;
 
     public Track(@Nonnull Supplier<? extends Component> supplier) {
       super(supplier);
-      fillProducer = new MixedColorProducer(getColor(supplier, TRACK_BACKGROUND, TRACK_OPAQUE_BACKGROUND), getColor(supplier, TRACK_HOVERED_BACKGROUND, TRACK_OPAQUE_HOVERED_BACKGROUND));
     }
 
     @Override
     public void paint(@Nonnull Graphics2D g, int x, int y, int width, int height, @Nullable Float value) {
-      double mixer = value == null ? 0 : value.doubleValue();
-      Color fill = fillProducer.produce(mixer);
-      if (0 >= fill.getAlpha()) return; // optimization
-
-      g.setPaint(fill);
-      RectanglePainter.FILL.paint(g, x, y, width, height, null);
     }
   }
 
   public static final class Thumb extends ScrollBarPainter {
-    private final MixedColorProducer fillProducer;
-    private final MixedColorProducer drawProducer;
-
     public Thumb(@Nonnull Supplier<? extends Component> supplier, boolean opaque) {
       super(supplier);
-      fillProducer = new MixedColorProducer(
-        opaque ? getColor(supplier, THUMB_OPAQUE_BACKGROUND)
-          : getColor(supplier, THUMB_BACKGROUND, THUMB_OPAQUE_BACKGROUND),
-        opaque ? getColor(supplier, THUMB_OPAQUE_HOVERED_BACKGROUND)
-          : getColor(supplier, THUMB_HOVERED_BACKGROUND, THUMB_OPAQUE_HOVERED_BACKGROUND)
-      );
-      drawProducer = new MixedColorProducer(
-        opaque ? getColor(supplier, THUMB_OPAQUE_FOREGROUND) : getColor(supplier, THUMB_FOREGROUND, THUMB_OPAQUE_FOREGROUND),
-        opaque ? getColor(supplier, THUMB_OPAQUE_HOVERED_FOREGROUND)
-          : getColor(supplier, THUMB_HOVERED_FOREGROUND, THUMB_OPAQUE_HOVERED_FOREGROUND)
-      );
+
     }
 
     @Override
     public void paint(@Nonnull Graphics2D g, int x, int y, int width, int height, @Nullable Float value) {
-      double mixer = value == null ? 0 : value.doubleValue();
-      Color fill = fillProducer.produce(mixer);
 
-      int arc = 8;
-      int margin = 2;
-      x += margin;
-      y += margin;
-      width -= margin + margin;
-      height -= margin + margin;
-
-      RectanglePainter.paint(g, x, y, width, height, arc, fill, null);
     }
   }
 }

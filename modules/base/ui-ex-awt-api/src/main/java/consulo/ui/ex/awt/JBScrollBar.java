@@ -1,14 +1,9 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.application.Application;
-import consulo.platform.Platform;
-import consulo.platform.PlatformOperatingSystem;
 import consulo.ui.ex.IdeGlassPane.TopComponent;
 import consulo.ui.ex.awt.internal.ScrollSettings;
 import consulo.ui.ex.awt.internal.laf.DefaultScrollBarUI;
-import consulo.ui.ex.awt.internal.laf.MacScrollBarUI;
-import consulo.ui.ex.awt.internal.laf.WindowsScrollBarUI;
 import consulo.ui.ex.awt.scroll.TouchScrollUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.dataholder.Key;
@@ -16,10 +11,6 @@ import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ScrollBarUI;
-import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -53,12 +44,6 @@ public class JBScrollBar extends JScrollBar implements TopComponent, Interpolabl
    */
   public static final String TRAILING = "JB_SCROLL_BAR_TRAILING_COMPONENT";
 
-  private final Interpolator myInterpolator = new Interpolator(this::getValue, this::setCurrentValue);
-  private double myFractionalRemainder;
-  private boolean wasPositiveDelta;
-  private boolean isUnitIncrementSet;
-  private boolean isBlockIncrementSet;
-
   public JBScrollBar() {
     this(VERTICAL);
   }
@@ -84,63 +69,6 @@ public class JBScrollBar extends JScrollBar implements TopComponent, Interpolabl
     super.addImpl(component, name, index);
   }
 
-
-  /**
-   * Computes the unit increment for scrolling if the viewport's view.
-   * Otherwise returns {@code super.getUnitIncrement}.
-   *
-   * @param direction less than zero to scroll up/left, greater than zero for down/right
-   * @return an integer, in pixels, containing the unit increment
-   * @see Scrollable#getScrollableUnitIncrement
-   */
-  @Override
-  public int getUnitIncrement(int direction) {
-    JViewport viewport = getViewport();
-    if (viewport != null) {
-      Scrollable scrollable = getScrollableViewToCalculateIncrement(viewport.getView());
-      if (scrollable != null) return scrollable.getScrollableUnitIncrement(viewport.getViewRect(), orientation, direction);
-      if (!isUnitIncrementSet) {
-        Font font = getViewFont(viewport);
-        if (font != null) return font.getSize(); // increase default unit increment for fast scrolling
-      }
-    }
-    return super.getUnitIncrement(direction);
-  }
-
-  @Override
-  public void setUnitIncrement(int increment) {
-    isUnitIncrementSet = true;
-    super.setUnitIncrement(increment);
-  }
-
-  /**
-   * Computes the block increment for scrolling if the viewport's view.
-   * Otherwise returns {@code super.getBlockIncrement}.
-   *
-   * @param direction less than zero to scroll up/left, greater than zero for down/right
-   * @return an integer, in pixels, containing the block increment
-   * @see Scrollable#getScrollableBlockIncrement
-   */
-  @Override
-  public int getBlockIncrement(int direction) {
-    JViewport viewport = getViewport();
-    if (viewport != null) {
-      Scrollable scrollable = getScrollableViewToCalculateIncrement(viewport.getView());
-      if (scrollable != null) return scrollable.getScrollableBlockIncrement(viewport.getViewRect(), orientation, direction);
-      if (!isBlockIncrementSet) {
-        Dimension size = viewport.getExtentSize();
-        return orientation == HORIZONTAL ? size.width : size.height;
-      }
-    }
-    return super.getBlockIncrement(direction);
-  }
-
-  @Override
-  public void setBlockIncrement(int increment) {
-    isBlockIncrementSet = true;
-    super.setBlockIncrement(increment);
-  }
-
   /**
    * Notifies glass pane that it should not process mouse event above the scrollbar's thumb.
    *
@@ -153,77 +81,8 @@ public class JBScrollBar extends JScrollBar implements TopComponent, Interpolabl
   }
 
   @Override
-  public void setValue(int value) {
-    int delay = 0;
-    Component parent = getParent();
-    if (parent instanceof JBScrollPane) {
-      JBScrollPane pane = (JBScrollPane)parent;
-      JViewport viewport = pane.getViewport();
-      if (viewport != null && ScrollSettings.isEligibleFor(viewport.getView()) && ScrollSettings.isInterpolationEligibleFor(this)) {
-        delay = pane.getInitialDelay(getValueIsAdjusting());
-      }
-    }
-    if (delay > 0) {
-      myInterpolator.setTarget(value, delay);
-    }
-    else {
-      super.setValue(value);
-    }
-  }
-
-  @Override
   public void setCurrentValue(int value) {
     super.setValue(value);
-    myFractionalRemainder = 0.0;
-  }
-
-  @Override
-  public int getTargetValue() {
-    return myInterpolator.getTarget();
-  }
-
-  /**
-   * Handles the mouse wheel events to scroll the scrollbar.
-   *
-   * @param event the mouse wheel event
-   * @return {@code true} if the specified event is handled and consumed, {@code false} otherwise
-   */
-  public boolean handleMouseWheelEvent(MouseWheelEvent event) {
-    if (!isSupportedScrollType(event)) return false;
-    if (event.isShiftDown() == (orientation == VERTICAL)) return false;
-    if (!ScrollSettings.isEligibleFor(this)) return false;
-
-    double delta = getPreciseDelta(event);
-    if (!Double.isFinite(delta)) return false;
-
-    int value = getTargetValue();
-    double deltaAdjusted = getDeltaAdjusted(value, delta);
-    if (deltaAdjusted != 0.0) {
-      boolean isPositiveDelta = deltaAdjusted > 0.0;
-      if (wasPositiveDelta != isPositiveDelta) {
-        // reset accumulator if scrolling direction is changed
-        wasPositiveDelta = isPositiveDelta;
-        myFractionalRemainder = 0.0;
-      }
-      deltaAdjusted += myFractionalRemainder;
-      int valueAdjusted = (int)deltaAdjusted;
-      if (valueAdjusted == 0) {
-        myFractionalRemainder = deltaAdjusted;
-      }
-      else {
-        myFractionalRemainder = deltaAdjusted - (double)valueAdjusted;
-        setValue(value + valueAdjusted);
-      }
-    }
-    else if (delta != 0.0) {
-      return true; // do not consume event if it can be processed by parent component
-    }
-    event.consume();
-    return true;
-  }
-
-  private static boolean isSupportedScrollType(MouseWheelEvent e) {
-    return e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL || TouchScrollUtil.isUpdate(e);
   }
 
   private JViewport getViewport() {
@@ -245,94 +104,10 @@ public class JBScrollBar extends JScrollBar implements TopComponent, Interpolabl
     return view instanceof JTable || (view instanceof Scrollable && orientation == VERTICAL) ? (Scrollable)view : null;
   }
 
-  private static double boundDelta(double minDelta, double maxDelta, double delta) {
-    return Math.max(minDelta, Math.min(maxDelta, delta));
-  }
-
-  protected double getDeltaAdjusted(MouseWheelEvent event) {
-    int value = getTargetValue();
-    double delta = getPreciseDelta(event);
-    return getDeltaAdjusted(value, delta);
-  }
-
-  /**
-   * Calculates adjusted delta for the bar.
-   *
-   * @param value the target value for the bar
-   * @param delta the supposed delta
-   * @return the delta itself or an adjusted delta
-   */
-  private double getDeltaAdjusted(int value, double delta) {
-    double minDelta = getMinimum() - value;
-    double maxDelta = getMaximum() - getVisibleAmount() - value;
-    return Math.max(minDelta, Math.min(maxDelta, delta));
-  }
-
-  /**
-   * Calculates a scrolling delta from the specified event.
-   *
-   * @param event the mouse wheel event
-   * @return a scrolling delta for this scrollbar
-   */
-  private double getPreciseDelta(MouseWheelEvent event) {
-    if (TouchScrollUtil.isTouchScroll(event)) {
-      return TouchScrollUtil.getDelta(event);
-    }
-    double rotation = event.getPreciseWheelRotation();
-    if (ScrollSettings.isPixelPerfectEnabled()) {
-      // calculate an absolute delta if possible
-      if (Platform.current().os().isMac()) {
-        // Native code in our JDK for Mac uses 0.1 to convert pixels to units,
-        // so we use 10 to restore amount of pixels to scroll.
-        return 10 * rotation;
-      }
-      JViewport viewport = getViewport();
-      Font font = viewport == null ? null : getViewFont(viewport);
-      int size = font == null ? JBUIScale.scale(10) : font.getSize(); // assume an unit size
-      return size * rotation * event.getScrollAmount();
-    }
-    if (ScrollSettings.isHighPrecisionEnabled()) {
-      // calculate a relative delta if possible
-      int direction = rotation < 0 ? -1 : 1;
-      int unitIncrement = getUnitIncrement(direction);
-      double delta = unitIncrement * rotation * event.getScrollAmount();
-      // When the scrolling speed is set to maximum, it's possible to scroll by more units than will fit in the visible area.
-      // To make for more accurate low-speed scrolling, we limit scrolling to the block increment
-      // if the wheel was only rotated one click.
-      double blockIncrement = getBlockIncrement(direction);
-      return boundDelta(-blockIncrement, blockIncrement, delta);
-    }
-    return Double.NaN;
-  }
 
   private static final class Model extends DefaultBoundedRangeModel {
     private Model(int value, int extent, int min, int max) {
       super(value, extent, min, max);
-    }
-
-    /**
-     * Implementation of {@link DefaultBoundedRangeModel#fireStateChanged()} with optional filtering.
-     * It doesn't notify its scrollbar UI listener on value changes
-     * while the scrollbar value is adjusted by dragging the scrollbar's thumb.
-     */
-    @Override
-    protected void fireStateChanged() {
-      if (getValueIsAdjusting() && ScrollSource.SCROLLBAR.isInterpolationEnabled()) {
-        Object[] listeners = listenerList.getListenerList();
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-          if (listeners[i] == ChangeListener.class) {
-            ChangeListener listener = (ChangeListener)listeners[i + 1];
-            // ignore listeners declared in different implementations of ScrollBarUI
-            if (!listener.getClass().getName().contains("ScrollBarUI")) {
-              if (changeEvent == null) changeEvent = new ChangeEvent(this);
-              listener.stateChanged(changeEvent);
-            }
-          }
-        }
-      }
-      else {
-        super.fireStateChanged();
-      }
     }
   }
 }

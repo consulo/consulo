@@ -4,7 +4,6 @@ package consulo.ui.ex.awt.internal.laf;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.JBScrollPane.Alignment;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
-import consulo.ui.ex.awt.internal.ScrollSettings;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.util.TimerUtil;
 import consulo.util.dataholder.Key;
@@ -21,6 +20,7 @@ import java.beans.PropertyChangeListener;
 
 import static java.awt.Adjustable.VERTICAL;
 
+@Deprecated
 public class DefaultScrollBarUI extends ScrollBarUI {
   public static final Key<Component> LEADING = Key.create("JB_SCROLL_BAR_LEADING_COMPONENT");
   public static final Key<Component> TRAILING = Key.create("JB_SCROLL_BAR_TRAILING_COMPONENT");
@@ -99,7 +99,7 @@ public class DefaultScrollBarUI extends ScrollBarUI {
   }
 
   void paintThumb(Graphics2D g, JComponent c) {
-    paint(myThumb, g, c, ScrollSettings.isThumbSmallIfOpaque() && isOpaque(c));
+    paint(myThumb, g, c, false);
   }
 
   void onThumbMove() {

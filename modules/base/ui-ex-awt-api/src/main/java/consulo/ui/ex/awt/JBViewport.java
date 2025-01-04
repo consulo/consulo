@@ -2,15 +2,12 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.util.registry.Registry;
-import consulo.awt.hacking.JBViewportHacking;
-import consulo.platform.Platform;
 import consulo.ui.ex.TypingTarget;
 import consulo.ui.ex.awt.JBScrollPane.Alignment;
 import consulo.ui.ex.awt.internal.ScrollSettings;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
-import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -64,8 +61,6 @@ public class JBViewport extends JViewport implements ZoomableViewport {
 
   private ZoomingDelegate myZoomer;
 
-  private volatile boolean myBackgroundRequested; // avoid cyclic references
-
   public JBViewport() {
     addContainerListener(new ContainerListener() {
       @Override
@@ -90,49 +85,7 @@ public class JBViewport extends JViewport implements ZoomableViewport {
 
   @Override
   public void setViewPosition(Point p) {
-    if (ScrollSettings.isDebugEnabled() && !p.equals(getViewPosition()) && !isInsideLogToolWindow()) {
-      checkScrollingCapabilities();
-    }
     super.setViewPosition(p);
-  }
-
-  // A heuristic to detect whether this viewport belongs to the "Event Log" tool window (which we use for output)
-  private boolean isInsideLogToolWindow() {
-    Container parent1 = getParent();
-    if (parent1 instanceof JScrollPane) {
-      Container parent2 = parent1.getParent();
-      if (parent2 instanceof JPanel) {
-        Container parent3 = parent2.getParent();
-        if (parent3 instanceof JPanel) {
-          return parent3.getClass().getName().startsWith("consulo.ide.impl.idea.notification.EventLogToolWindowFactory");
-        }
-      }
-    }
-
-    return false;
-  }
-
-  // Checks whether blit-accelerated scrolling is feasible, and if so, checks whether true double buffering is available.
-  private void checkScrollingCapabilities() {
-    //if (myPreviousNotification == null || myPreviousNotification.isExpired()) {
-    //  if (!Boolean.TRUE.equals(isWindowBlitterAvailableFor(this))) {
-    //    myPreviousNotification = notify("Scrolling: cannot use window blitter");
-    //  }
-    //  else {
-    //    if (!Boolean.TRUE.equals(isTrueDoubleBufferingAvailableFor(this))) {
-    //      myPreviousNotification = notify("Scrolling: cannot use true double buffering");
-    //    }
-    //  }
-    //}
-  }
-
-  /* Blit-acceleration copies as much of the rendered area as possible and then repaints only newly exposed region.
-     This helps to improve scrolling performance and to reduce CPU usage (especially if drawing is compute-intensive).
-
-     Generally, this requires that viewport must not be obscured by its ancestors and must be showing. */
-  @Nullable
-  private static Boolean isWindowBlitterAvailableFor(JViewport viewport) {
-    return JBViewportHacking.isWindowBlitterAvailableFor(viewport);
   }
 
   @Override
@@ -141,52 +94,9 @@ public class JBViewport extends JViewport implements ZoomableViewport {
     updateBorder(view);
   }
 
-  /* True double buffering is needed to eliminate tearing on blit-accelerated scrolling and to restore
-     frame buffer content without the usual repainting, even when the EDT is blocked.
-
-     Generally, this requires default RepaintManager, swing.bufferPerWindow = true and
-     no prior direct invocations of JComponent.getGraphics() within JRootPane.
-
-     Use a breakpoint in JRootPane.disableTrueDoubleBuffering() to detect direct getGraphics() calls.
-
-     See GraphicsUtil.safelyGetGraphics() for more info. */
-  @Nullable
-  private static Boolean isTrueDoubleBufferingAvailableFor(JComponent component) {
-    return JBViewportHacking.isTrueDoubleBufferingAvailableFor(component);
-  }
-
-  //private static Notification notify(String message) {
-  //  return null; // FIXME [VISTALL] stub
-  //}
-
-  @Override
-  public Color getBackground() {
-    Color color = super.getBackground();
-    if (!myBackgroundRequested && EventQueue.isDispatchThread() && ScrollSettings.isBackgroundFromView()) {
-      if (!isBackgroundSet() || color instanceof UIResource) {
-        Component child = getView();
-        if (child != null) {
-          try {
-            myBackgroundRequested = true;
-            return child.getBackground();
-          }
-          finally {
-            myBackgroundRequested = false;
-          }
-        }
-      }
-    }
-    return color;
-  }
-
   @Override
   protected LayoutManager createLayoutManager() {
     return ourLayoutManager;
-  }
-
-  @Override
-  protected Graphics getComponentGraphics(Graphics graphics) {
-    return JBSwingUtilities.runGlobalCGTransform(this, super.getComponentGraphics(graphics));
   }
 
   @Override
@@ -278,8 +188,7 @@ public class JBViewport extends JViewport implements ZoomableViewport {
   }
 
   private static boolean isAlignmentNeeded(JComponent view, boolean horizontal) {
-    return (!Platform.current().os().isMac() || horizontal && ScrollSettings.isHorizontalGapNeededOnMac()) &&
-           (view instanceof JList || view instanceof JTree || (!Platform.current().os().isMac() && ScrollSettings.isGapNeededForAnyComponent()));
+    return false;
   }
 
   private static Insets getInnerInsets(JComponent view) {

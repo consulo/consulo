@@ -305,8 +305,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     }
 
     private static int getOffset(JScrollBar scrollBar) {
-        return scrollBar == null ? 0 :
-            scrollBar instanceof Interpolable ? ((Interpolable)scrollBar).getTargetValue() : scrollBar.getValue();
+        return scrollBar == null ? 0 : scrollBar.getValue();
     }
 
     private static int getExtent(JScrollBar scrollBar) {

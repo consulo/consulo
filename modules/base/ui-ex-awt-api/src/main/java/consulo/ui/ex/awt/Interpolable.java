@@ -38,13 +38,6 @@ public interface Interpolable {
   void setCurrentValue(int value);
 
   /**
-   * Gets the target value.
-   *
-   * @return the target value.
-   */
-  int getTargetValue();
-
-  /**
    * Sets the target value.
    * <p>
    * Technically, it's "setTargetValue", but we need to match the name in Swing classes.

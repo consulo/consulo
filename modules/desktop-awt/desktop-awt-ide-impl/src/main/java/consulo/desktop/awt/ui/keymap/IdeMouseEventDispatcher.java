@@ -16,14 +16,11 @@
 package consulo.desktop.awt.ui.keymap;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.FocusManagerImpl;
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.MouseShortcutPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
@@ -45,11 +42,9 @@ import org.intellij.lang.annotations.JdkConstants;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 import java.util.List;
 import java.util.*;
 
-import static consulo.ui.ex.awt.JBScrollPane.isScrollEvent;
 import static java.awt.event.MouseEvent.*;
 
 /**
@@ -63,7 +58,6 @@ public final class IdeMouseEventDispatcher {
   private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
   private final ArrayList<AnAction> myActions = new ArrayList<>(1);
   private final Map<Container, BlockState> myRootPane2BlockedId = new HashMap<>();
-  private int myLastHorScrolledComponentHash;
   private boolean myPressedModifiersStored;
   @JdkConstants.InputEventMask
   private int myModifiers;
@@ -239,10 +233,6 @@ public final class IdeMouseEventDispatcher {
       return false; // forward mouse processing to the special shortcut panel
     }
 
-    if (isHorizontalScrolling(c, e)) {
-      boolean done = doHorizontalScrolling(c, (MouseWheelEvent)e);
-      if (done) return true;
-    }
 
     if (ignore) return false;
 
@@ -294,50 +284,6 @@ public final class IdeMouseEventDispatcher {
       return true;
     }
     return false;
-  }
-
-  private boolean doHorizontalScrolling(Component c, MouseWheelEvent me) {
-    final JScrollBar scrollBar = findHorizontalScrollBar(c);
-    if (scrollBar != null) {
-      if (scrollBar.hashCode() != myLastHorScrolledComponentHash) {
-        FeatureUsageTracker.getInstance().triggerFeatureUsed("ui.horizontal.scrolling");
-        myLastHorScrolledComponentHash = scrollBar.hashCode();
-      }
-      scrollBar.setValue(scrollBar.getValue() + getScrollAmount(c, me, scrollBar));
-      return true;
-    }
-    return false;
-  }
-
-  public void resetHorScrollingTracker() {
-    myLastHorScrolledComponentHash = 0;
-  }
-
-  private static int getScrollAmount(Component c, MouseWheelEvent me, JScrollBar scrollBar) {
-    final int scrollBarWidth = scrollBar.getWidth();
-    final int ratio = Registry.is("ide.smart.horizontal.scrolling") && scrollBarWidth > 0
-                      ? Math.max((int)Math.pow(c.getWidth() / scrollBarWidth, 2), 10)
-                      : 10; // do annoying scrolling faster if smart scrolling is on
-    return me.getUnitsToScroll() * scrollBar.getUnitIncrement() * ratio;
-  }
-
-  private static boolean isHorizontalScrolling(Component c, MouseEvent e) {
-    if (c != null && e instanceof MouseWheelEvent && (!Platform.current().os().isMac() || false)) {
-      final MouseWheelEvent mwe = (MouseWheelEvent)e;
-      return mwe.isShiftDown() && mwe.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && isScrollEvent(mwe) && findHorizontalScrollBar(c) != null;
-    }
-    return false;
-  }
-
-  @Nullable
-  private static JScrollBar findHorizontalScrollBar(Component c) {
-    if (c == null) return null;
-    if (c instanceof JScrollPane) {
-      JScrollBar scrollBar = ((JScrollPane)c).getHorizontalScrollBar();
-      return scrollBar != null && scrollBar.isVisible() ? scrollBar : null;
-    }
-
-    return findHorizontalScrollBar(c.getParent());
   }
 
   public void blockNextEvents(final MouseEvent e, IdeEventQueue.BlockMode blockMode) {

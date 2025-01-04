@@ -601,12 +601,6 @@ public class IdeEventQueue extends EventQueue {
 
     myKeyboardBusy = e instanceof KeyEvent || myKeyboardEventsPosted.get() > myKeyboardEventsDispatched.get();
 
-    if (e instanceof KeyEvent) {
-      if (e.getID() == KeyEvent.KEY_RELEASED && ((KeyEvent)e).getKeyCode() == KeyEvent.VK_SHIFT) {
-        myMouseEventDispatcher.resetHorScrollingTracker();
-      }
-    }
-
     if (e instanceof MouseWheelEvent) {
       final MenuElement[] selectedPath = MenuSelectionManager.defaultManager().getSelectedPath();
       if (selectedPath.length > 0 && !(selectedPath[0] instanceof ComboPopup)) {
