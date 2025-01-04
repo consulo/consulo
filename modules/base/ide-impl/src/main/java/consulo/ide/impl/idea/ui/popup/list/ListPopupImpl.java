@@ -696,19 +696,6 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     public boolean isModalContext() {
         return true;
     }
-    //
-    //@Override
-    //public void showInBestPositionFor(@Nonnull Editor editor) {
-    //  if (ApplicationManager.getApplication().isUnitTestMode()) {
-    //    handleSelect(true);
-    //    if (!Disposer.isDisposed(this)) {
-    //      Disposer.dispose(this);
-    //    }
-    //  }
-    //  else {
-    //    super.showInBestPositionFor(editor);
-    //  }
-    //}
 
     private void replacePasteAction() {
         if (myStep.isSpeedSearchEnabled()) {
