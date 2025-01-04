@@ -17,14 +17,15 @@
 package consulo.execution.impl.internal.action;
 
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.dataContext.DataManager;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationType;
-import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.impl.internal.ExecutionManagerImpl;
+import consulo.execution.internal.RunCurrentFileExecutor;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.RunContentDescriptor;
@@ -52,14 +53,14 @@ import java.util.Map;
 import java.util.Set;
 
 public class RunConfigurationsComboBoxAction extends ComboBoxAction implements DumbAware {
+    private final Application myApplication;
+
     private final RunCurrentFileService myRunCurrentFileService;
 
-    private final List<Executor> myDefaultCheckExecutors;
-
     @Inject
-    public RunConfigurationsComboBoxAction(RunCurrentFileService runCurrentFileService) {
+    public RunConfigurationsComboBoxAction(Application application, RunCurrentFileService runCurrentFileService) {
+        myApplication = application;
         myRunCurrentFileService = runCurrentFileService;
-        myDefaultCheckExecutors = List.of(DefaultRunExecutor.getRunExecutorInstance());
     }
 
     @RequiredUIAccess
@@ -81,7 +82,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
                 updatePresentation(activeTarget, selectedConfiguration, project, presentation, e.getPlace());
                 if (selectedConfiguration == null) {
                     Set<Image> defaultRunImages = new SmartHashSet<>();
-                    for (Executor executor : myDefaultCheckExecutors) {
+                    
+                    for (Executor executor : myApplication.getExtensionPoint(Executor.class).getOrBuildCache(RunCurrentFileExecutor.CACHE_KEY)) {
                         RunCurrentFileActionStatus status =
                             myRunCurrentFileService.getRunCurrentFileActionStatus(executor, e, false);
 

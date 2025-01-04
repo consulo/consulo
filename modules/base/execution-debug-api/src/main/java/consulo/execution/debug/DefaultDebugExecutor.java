@@ -20,6 +20,7 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.internal.RunCurrentFileExecutor;
 import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.localize.UILocalize;
@@ -30,7 +31,7 @@ import jakarta.annotation.Nonnull;
  * @author spleaner
  */
 @ExtensionImpl(id = "debug", order = "after run")
-public class DefaultDebugExecutor extends Executor {
+public class DefaultDebugExecutor extends Executor implements RunCurrentFileExecutor {
     public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
 
     @Nonnull

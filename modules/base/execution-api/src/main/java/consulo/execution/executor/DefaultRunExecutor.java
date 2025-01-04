@@ -17,6 +17,7 @@
 package consulo.execution.executor;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.execution.internal.RunCurrentFileExecutor;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -28,7 +29,7 @@ import jakarta.annotation.Nonnull;
  * @author spleaner
  */
 @ExtensionImpl(id = "run", order = "first")
-public class DefaultRunExecutor extends Executor {
+public class DefaultRunExecutor extends Executor implements RunCurrentFileExecutor {
     public static final String EXECUTOR_ID = ToolWindowId.RUN;
 
     @Nonnull
