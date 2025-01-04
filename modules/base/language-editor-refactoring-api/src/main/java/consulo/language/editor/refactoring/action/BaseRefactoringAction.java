@@ -37,10 +37,7 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.UpdateInBackground;
+import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
@@ -51,7 +48,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class BaseRefactoringAction extends AnAction implements UpdateInBackground {
+public abstract class BaseRefactoringAction extends AnAction {
     private final Predicate<Language> myLanguageCondition = this::isAvailableForLanguage;
 
     protected abstract boolean isAvailableInEditorOnly();
@@ -65,6 +62,12 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
         @Nonnull DataContext context
     ) {
         return true;
+    }
+
+    @Nonnull
+    @Override
+    public ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     public boolean hasAvailableHandler(@Nonnull DataContext dataContext) {

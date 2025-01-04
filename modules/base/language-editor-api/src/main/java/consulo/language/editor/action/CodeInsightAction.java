@@ -13,10 +13,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.UpdateInBackground;
+import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -24,7 +21,7 @@ import jakarta.annotation.Nullable;
 /**
  * @author Dmitry Avdeev
  */
-public abstract class CodeInsightAction extends AnAction implements UpdateInBackground {
+public abstract class CodeInsightAction extends AnAction {
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -33,6 +30,12 @@ public abstract class CodeInsightAction extends AnAction implements UpdateInBack
             Editor editor = getEditor(e.getDataContext(), project, false);
             actionPerformedImpl(project, editor);
         }
+    }
+
+    @Nonnull
+    @Override
+    public ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     @Nullable

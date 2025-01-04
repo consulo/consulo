@@ -42,7 +42,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.List;
 
-public class ExecutorAction extends AnAction implements DumbAware, UpdateInBackground {
+public class ExecutorAction extends AnAction implements DumbAware {
     private final Executor myExecutor;
     @Nonnull
     private final ExecutorRegistry myExecutorRegistry;

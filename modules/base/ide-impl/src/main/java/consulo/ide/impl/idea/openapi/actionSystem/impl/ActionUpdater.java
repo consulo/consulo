@@ -121,8 +121,13 @@ public class ActionUpdater {
         });
     }
 
+    @SuppressWarnings("deprecation")
+    private static boolean isUpdateInBackground(AnAction action) {
+        return action instanceof UpdateInBackground || action.getActionUpdateThread() == ActionUpdateThread.BGT;
+    }
+
     private static <T> T callAction(AnAction action, String operation, Supplier<T> call) {
-        if (action instanceof UpdateInBackground || ApplicationManager.getApplication().isDispatchThread()) {
+        if (isUpdateInBackground(action) || ApplicationManager.getApplication().isDispatchThread()) {
             return call.get();
         }
 

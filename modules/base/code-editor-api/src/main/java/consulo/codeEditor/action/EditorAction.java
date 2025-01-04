@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public abstract class EditorAction extends AnAction implements DumbAware, UpdateInBackground {
+public abstract class EditorAction extends AnAction implements DumbAware {
     private EditorActionHandler myHandler;
     private boolean myHandlersLoaded;
 
@@ -88,6 +88,12 @@ public abstract class EditorAction extends AnAction implements DumbAware, Update
         DataContext dataContext = e.getDataContext();
         Editor editor = getEditor(dataContext);
         actionPerformed(editor, dataContext);
+    }
+
+    @Nonnull
+    @Override
+    public ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     @Nullable

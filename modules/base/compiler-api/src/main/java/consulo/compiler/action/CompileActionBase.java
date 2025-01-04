@@ -24,41 +24,47 @@ import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.UpdateInBackground;
 import jakarta.annotation.Nonnull;
 
-public abstract class CompileActionBase extends AnAction implements DumbAware, UpdateInBackground {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+public abstract class CompileActionBase extends AnAction implements DumbAware {
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final DataContext dataContext = e.getDataContext();
+        final Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        Editor editor = e.getData(Editor.KEY);
+        PsiFile file = e.getData(PsiFile.KEY);
+        if (file != null && editor != null && !DumbService.getInstance(project).isDumb()) {
+            DaemonCodeAnalyzer.getInstance(project).autoImportReferenceAtCursor(editor, file); //let autoimport complete
+        }
+        doAction(dataContext, project);
     }
-    Editor editor = e.getData(Editor.KEY);
-    PsiFile file = e.getData(PsiFile.KEY);
-    if (file != null && editor != null && !DumbService.getInstance(project).isDumb()) {
-      DaemonCodeAnalyzer.getInstance(project).autoImportReferenceAtCursor(editor, file); //let autoimport complete
-    }
-    doAction(dataContext, project);
-  }
 
-  @RequiredUIAccess
-  protected abstract void doAction(final DataContext dataContext, final Project project);
+    @Nonnull
+    @Override
+    public ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull final AnActionEvent e) {
-    super.update(e);
-    final Project project = e.getData(Project.KEY);
-    if (project == null || !project.isInitialized()) {
-      e.getPresentation().setEnabled(false);
+    @RequiredUIAccess
+    protected abstract void doAction(final DataContext dataContext, final Project project);
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull final AnActionEvent e) {
+        super.update(e);
+        final Project project = e.getData(Project.KEY);
+        if (project == null || !project.isInitialized()) {
+            e.getPresentation().setEnabled(false);
+        }
+        else {
+            e.getPresentation().setEnabled(!CompilerManager.getInstance(project).isCompilationActive());
+        }
     }
-    else {
-      e.getPresentation().setEnabled(!CompilerManager.getInstance(project).isCompilationActive());
-    }
-  }
 }

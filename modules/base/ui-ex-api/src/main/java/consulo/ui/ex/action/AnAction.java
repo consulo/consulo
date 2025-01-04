@@ -393,10 +393,6 @@ public abstract class AnAction implements PossiblyDumbAware {
      */
     @Nonnull
     public ActionUpdateThread getActionUpdateThread() {
-        if (this instanceof UpdateInBackground) {
-            return ActionUpdateThread.BGT;
-        }
-
         return ActionUpdateThread.EDT;
     }
 
