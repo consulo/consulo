@@ -16,39 +16,24 @@
 package consulo.execution.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
-import consulo.execution.*;
 import consulo.execution.event.ExecutionListener;
-import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
+import consulo.execution.impl.internal.action.ExecutorAction;
 import consulo.execution.impl.internal.action.RunContextAction;
-import consulo.execution.internal.ExecutionActionValue;
+import consulo.execution.impl.internal.action.RunCurrentFileService;
 import consulo.execution.internal.ExecutorRegistryEx;
-import consulo.execution.internal.RunManagerEx;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.runner.ExecutionEnvironmentBuilder;
-import consulo.execution.runner.ProgramRunner;
-import consulo.execution.runner.RunnerRegistry;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ProcessHandler;
-import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Trinity;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -64,6 +49,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
 
     private List<Executor> myExecutors = new ArrayList<>();
     private ActionManager myActionManager;
+    private final RunCurrentFileService myRunCurrentFileService;
     private final Map<String, Executor> myId2Executor = new HashMap<>();
     private final Set<String> myContextActionIdSet = new HashSet<>();
     private final Map<String, AnAction> myId2Action = new HashMap<>();
@@ -73,8 +59,9 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
     private final Set<Trinity<Project, String, String>> myInProgress = Collections.synchronizedSet(new HashSet<Trinity<Project, String, String>>());
 
     @Inject
-    public ExecutorRegistryImpl(Application application, ActionManager actionManager) {
+    public ExecutorRegistryImpl(Application application, ActionManager actionManager, RunCurrentFileService runCurrentFileService) {
         myActionManager = actionManager;
+        myRunCurrentFileService = runCurrentFileService;
 
         MessageBusConnection connection = application.getMessageBus().connect(this);
         connection.subscribe(ExecutionListener.class, new ExecutionListener() {
@@ -128,7 +115,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         myId2Executor.put(executor.getId(), executor);
         myContextActionIdSet.add(executor.getContextActionId());
 
-        registerAction(executor.getId(), new ExecutorAction(executor), RUNNERS_GROUP, myId2Action);
+        registerAction(executor.getId(), new ExecutorAction(this, executor, myRunCurrentFileService), RUNNERS_GROUP, myId2Action);
         registerAction(executor.getContextActionId(), new RunContextAction(executor), RUN_CONTEXT_GROUP, myContextActionId2Action);
     }
 
@@ -201,107 +188,4 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         myActionManager = null;
     }
 
-    private class ExecutorAction extends AnAction implements DumbAware, UpdateInBackground {
-        private final Executor myExecutor;
-
-        private ExecutorAction(@Nonnull final Executor executor) {
-            super(executor.getStartActionText(), executor.getDescription(), executor.getIcon());
-            getTemplatePresentation().setVisible(false);
-            myExecutor = executor;
-        }
-
-        @RequiredUIAccess
-        @Override
-        public void update(@Nonnull final AnActionEvent e) {
-            final Presentation presentation = e.getPresentation();
-            final Project project = e.getData(Project.KEY);
-
-            if (project == null || project.isDisposed()) {
-                presentation.setEnabledAndVisible(false);
-                return;
-            }
-
-            presentation.setVisible(myExecutor.isApplicable(project));
-            if (!presentation.isVisible()) {
-                return;
-            }
-
-            if (DumbService.getInstance(project).isDumb() || !project.isInitialized()) {
-                presentation.setEnabled(false);
-                return;
-            }
-
-            final RunnerAndConfigurationSettings selectedConfiguration = getConfiguration(project);
-            boolean enabled = false;
-
-            LocalizeValue text;
-            LocalizeValue templateText = getTemplatePresentation().getTextValue();
-            if (selectedConfiguration != null) {
-                presentation.setIcon(getInformativeIcon(project, selectedConfiguration));
-
-                final ProgramRunner runner = RunnerRegistry.getInstance().getRunner(myExecutor.getId(), selectedConfiguration.getConfiguration());
-
-                ExecutionTarget target = ExecutionTargetManager.getActiveTarget(project);
-                enabled = ExecutionTargetManager.canRun(selectedConfiguration, target)
-                    && runner != null && !isStarting(project, myExecutor.getId(), runner.getRunnerId());
-
-                if (enabled) {
-                    presentation.setDescriptionValue(myExecutor.getDescription());
-                }
-                text = ExecutionActionValue.buildWithConfiguration(myExecutor::getStartActiveText, selectedConfiguration.getName());
-            }
-            else {
-                text = templateText;
-            }
-
-            presentation.setEnabled(enabled);
-            presentation.setTextValue(text);
-        }
-
-        @Nonnull
-        private Image getInformativeIcon(Project project, final RunnerAndConfigurationSettings selectedConfiguration) {
-            final ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
-
-            List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(s -> s == selectedConfiguration);
-            runningDescriptors = ContainerUtil.filter(runningDescriptors, descriptor -> {
-                RunContentDescriptor contentDescriptor = executionManager.getContentManager().findContentDescriptor(myExecutor, descriptor.getProcessHandler());
-                return contentDescriptor != null && executionManager.getExecutors(contentDescriptor).contains(myExecutor);
-            });
-
-            if (!runningDescriptors.isEmpty() && DefaultRunExecutor.EXECUTOR_ID.equals(myExecutor.getId()) && selectedConfiguration.isSingleton()) {
-                return AllIcons.Actions.Restart;
-            }
-            if (runningDescriptors.isEmpty()) {
-                return myExecutor.getIcon();
-            }
-
-            if (runningDescriptors.size() == 1) {
-                return ExecutionUtil.getIconWithLiveIndicator(myExecutor.getIcon());
-            }
-            else {
-                return ImageEffects.withText(myExecutor.getIcon(), String.valueOf(runningDescriptors.size()));
-            }
-        }
-
-        @Nullable
-        private RunnerAndConfigurationSettings getConfiguration(@Nonnull final Project project) {
-            return RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
-        }
-
-        @RequiredUIAccess
-        @Override
-        public void actionPerformed(@Nonnull final AnActionEvent e) {
-            final Project project = e.getData(Project.KEY);
-            if (project == null || project.isDisposed()) {
-                return;
-            }
-
-            RunnerAndConfigurationSettings configuration = getConfiguration(project);
-            ExecutionEnvironmentBuilder builder = configuration == null ? null : ExecutionEnvironmentBuilder.createOrNull(myExecutor, configuration);
-            if (builder == null) {
-                return;
-            }
-            ExecutionManager.getInstance(project).restartRunProfile(builder.activeTarget().dataContext(e.getDataContext()).build());
-        }
-    }
 }

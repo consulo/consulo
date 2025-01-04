@@ -21,115 +21,127 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.*;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 public class PreferredProducerFind {
-  private static final Logger LOG = Logger.getInstance(PreferredProducerFind.class);
+    private static final Logger LOG = Logger.getInstance(PreferredProducerFind.class);
 
-  private PreferredProducerFind() {}
-
-  @Nullable
-  public static RunnerAndConfigurationSettings createConfiguration(@Nonnull Location location, final ConfigurationContext context) {
-    final ConfigurationFromContext fromContext = findConfigurationFromContext(location, context);
-    return fromContext != null ? fromContext.getConfigurationSettings() : null;
-  }
-
-  @Nullable
-  @Deprecated
-  @SuppressWarnings("deprecation")
-  public static List<RuntimeConfigurationProducer> findPreferredProducers(final Location location, final ConfigurationContext context, final boolean strict) {
-    if (location == null) {
-      return null;
+    private PreferredProducerFind() {
     }
-    final List<RuntimeConfigurationProducer> producers = findAllProducers(location, context);
-    if (producers.isEmpty()) return null;
-    Collections.sort(producers, RuntimeConfigurationProducer.COMPARATOR);
 
-    if(strict) {
-      final RuntimeConfigurationProducer first = producers.get(0);
-      for (Iterator<RuntimeConfigurationProducer> it = producers.iterator(); it.hasNext();) {
-        RuntimeConfigurationProducer producer = it.next();
-        if (producer != first && RuntimeConfigurationProducer.COMPARATOR.compare(producer, first) >= 0) {
-          it.remove();
+    @Nullable
+    public static RunnerAndConfigurationSettings createConfiguration(@Nonnull Location location, final ConfigurationContext context) {
+        final ConfigurationFromContext fromContext = findConfigurationFromContext(location, context);
+        return fromContext != null ? fromContext.getConfigurationSettings() : null;
+    }
+
+    @Nullable
+    @Deprecated
+    @SuppressWarnings("deprecation")
+    public static List<RuntimeConfigurationProducer> findPreferredProducers(final Location location, final ConfigurationContext context, final boolean strict) {
+        if (location == null) {
+            return null;
         }
-      }
-    }
-
-    return producers;
-  }
-
-  @Deprecated
-  @SuppressWarnings("deprecation")
-  private static List<RuntimeConfigurationProducer> findAllProducers(Location location, ConfigurationContext context) {
-    //todo load configuration types if not already loaded
-    ConfigurationType.EP_NAME.getExtensionList();
-    final List<RuntimeConfigurationProducer> configurationProducers = RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER.getExtensionList();
-    final ArrayList<RuntimeConfigurationProducer> producers = new ArrayList<>();
-    for (final RuntimeConfigurationProducer prototype : configurationProducers) {
-      final RuntimeConfigurationProducer producer;
-      try {
-        producer = prototype.createProducer(location, context);
-      }
-      catch (AbstractMethodError e) {
-        LOG.error(new ExtensionException(prototype.getClass()));
-        continue;
-      }
-      if (producer.getConfiguration() != null) {
-        LOG.assertTrue(producer.getSourceElement() != null, producer);
-        producers.add(producer);
-      }
-    }
-    return producers;
-  }
-
-  public static List<ConfigurationFromContext> getConfigurationsFromContext(final Location location,
-                                                                            final ConfigurationContext context,
-                                                                            final boolean strict) {
-    if (location == null) {
-      return null;
-    }
-
-    final ArrayList<ConfigurationFromContext> configurationsFromContext = new ArrayList<>();
-    for (RuntimeConfigurationProducer producer : findAllProducers(location, context)) {
-      configurationsFromContext.add(new ConfigurationFromContextWrapper(producer));
-    }
-
-    for (RunConfigurationProducer producer : RunConfigurationProducer.EP_NAME.getExtensionList()) {
-      ConfigurationFromContext fromContext = producer.findOrCreateConfigurationFromContext(context);
-      if (fromContext != null) {
-        configurationsFromContext.add(fromContext);
-      }
-    }
-
-    if (configurationsFromContext.isEmpty()) return null;
-    Collections.sort(configurationsFromContext, ConfigurationFromContext.COMPARATOR);
-
-    if(strict) {
-      final ConfigurationFromContext first = configurationsFromContext.get(0);
-      for (Iterator<ConfigurationFromContext> it = configurationsFromContext.iterator(); it.hasNext();) {
-        ConfigurationFromContext producer = it.next();
-        if (producer != first && ConfigurationFromContext.COMPARATOR.compare(producer, first) > 0) {
-          it.remove();
+        final List<RuntimeConfigurationProducer> producers = findAllProducers(location, context);
+        if (producers.isEmpty()) {
+            return null;
         }
-      }
+        Collections.sort(producers, RuntimeConfigurationProducer.COMPARATOR);
+
+        if (strict) {
+            final RuntimeConfigurationProducer first = producers.get(0);
+            for (Iterator<RuntimeConfigurationProducer> it = producers.iterator(); it.hasNext(); ) {
+                RuntimeConfigurationProducer producer = it.next();
+                if (producer != first && RuntimeConfigurationProducer.COMPARATOR.compare(producer, first) >= 0) {
+                    it.remove();
+                }
+            }
+        }
+
+        return producers;
     }
 
-    return configurationsFromContext;
-  }
-
-
-  @Nullable
-  private static ConfigurationFromContext findConfigurationFromContext(final Location location, final ConfigurationContext context) {
-    final List<ConfigurationFromContext> producers = getConfigurationsFromContext(location, context, true);
-    if (producers != null){
-      return producers.get(0);
+    @Deprecated
+    @SuppressWarnings("deprecation")
+    private static List<RuntimeConfigurationProducer> findAllProducers(Location location, ConfigurationContext context) {
+        //todo load configuration types if not already loaded
+        ConfigurationType.EP_NAME.getExtensionList();
+        final List<RuntimeConfigurationProducer> configurationProducers = RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER.getExtensionList();
+        final ArrayList<RuntimeConfigurationProducer> producers = new ArrayList<>();
+        for (final RuntimeConfigurationProducer prototype : configurationProducers) {
+            final RuntimeConfigurationProducer producer;
+            try {
+                producer = prototype.createProducer(location, context);
+            }
+            catch (AbstractMethodError e) {
+                LOG.error(new ExtensionException(prototype.getClass()));
+                continue;
+            }
+            if (producer.getConfiguration() != null) {
+                LOG.assertTrue(producer.getSourceElement() != null, producer);
+                producers.add(producer);
+            }
+        }
+        return producers;
     }
-    return null;
-  }
+
+    public static List<ConfigurationFromContext> getConfigurationsFromContext(final Location location,
+                                                                              final ConfigurationContext context,
+                                                                              final boolean strict) {
+        return getConfigurationsFromContext(location, context, strict, true);
+
+    }
+
+    public static List<ConfigurationFromContext> getConfigurationsFromContext(final Location location,
+                                                                              final ConfigurationContext context,
+                                                                              final boolean strict,
+                                                                              boolean preferExisting) {
+        if (location == null) {
+            return null;
+        }
+
+        final ArrayList<ConfigurationFromContext> configurationsFromContext = new ArrayList<>();
+        for (RuntimeConfigurationProducer producer : findAllProducers(location, context)) {
+            configurationsFromContext.add(new ConfigurationFromContextWrapper(producer));
+        }
+
+        for (RunConfigurationProducer producer : RunConfigurationProducer.EP_NAME.getExtensionList()) {
+            ConfigurationFromContext fromContext = producer.findOrCreateConfigurationFromContext(context, preferExisting);
+            if (fromContext != null) {
+                configurationsFromContext.add(fromContext);
+            }
+        }
+
+        if (configurationsFromContext.isEmpty()) {
+            return null;
+        }
+        Collections.sort(configurationsFromContext, ConfigurationFromContext.COMPARATOR);
+
+        if (strict) {
+            final ConfigurationFromContext first = configurationsFromContext.get(0);
+            for (Iterator<ConfigurationFromContext> it = configurationsFromContext.iterator(); it.hasNext(); ) {
+                ConfigurationFromContext producer = it.next();
+                if (producer != first && ConfigurationFromContext.COMPARATOR.compare(producer, first) > 0) {
+                    it.remove();
+                }
+            }
+        }
+
+        return configurationsFromContext;
+    }
+
+    @Nullable
+    private static ConfigurationFromContext findConfigurationFromContext(final Location location, final ConfigurationContext context) {
+        final List<ConfigurationFromContext> producers = getConfigurationsFromContext(location, context, true);
+        if (producers != null) {
+            return producers.get(0);
+        }
+        return null;
+    }
 }

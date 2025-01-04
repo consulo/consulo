@@ -885,3 +885,19 @@ action.Runner.ToggleTabLabels.text:
   text: Show Tab Labels
 runner.content.tooltip.layout.settings:
   text: Layout Settings
+run.configurations.combo.run.current.file.selected:
+  text: Current File
+run.configurations.combo.run.current.file.item.in.dropdown:
+  text: Current File
+run.configurations.combo.run.current.file.description:
+  text: Run the file that is opened in the focused editor
+run.configurations.popup.edit.run.config.and.run.current.file:
+  text: Run with Parameters…
+run.configurations.popup.edit.run.config.and.run.current.file.description:
+  text: Edit runner parameters and run the file that is opened in the focused editor
+run.configurations.popup.existing.configurations.separator.text:
+  text: Run Configurations
+run.button.on.toolbar.tooltip.current.file.no.focused.editor:
+  text: 'Cannot run the current file: the editor is not in focus'
+run.button.on.toolbar.tooltip.current.file.not.runnable:
+  text: The file in the editor is not runnable
