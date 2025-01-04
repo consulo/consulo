@@ -49,7 +49,7 @@ public class JBCurrentTheme {
 
         @Nonnull
         public static Insets cellPadding() {
-            return JBUI.insets("ActionsList.cellBorderInsets", JBUI.insets(1, 12, 1, 12));
+            return JBUI.insets("ActionsList.cellBorderInsets", JBUI.insets(3, 12, 4, 12));
         }
     }
 
