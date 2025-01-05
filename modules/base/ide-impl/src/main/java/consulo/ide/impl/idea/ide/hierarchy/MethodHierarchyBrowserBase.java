@@ -100,7 +100,7 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
 
   private final class ShowImplementationsOnlyAction extends ToggleAction {
     private ShowImplementationsOnlyAction() {
-      super(IdeBundle.message("action.hide.non.implementations"), null, PlatformIconGroup.gutterImplementedmethod());!
+      super(IdeBundle.message("action.hide.non.implementations"), null, PlatformIconGroup.gutterImplementedmethod());
     }
 
     @Override
