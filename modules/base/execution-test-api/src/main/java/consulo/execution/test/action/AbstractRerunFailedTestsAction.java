@@ -65,7 +65,7 @@ import java.util.function.Supplier;
  * @author anna
  * @since 24-Dec-2008
  */
-public class AbstractRerunFailedTestsAction extends AnAction implements AnAction.TransparentUpdate {
+public class AbstractRerunFailedTestsAction extends AnAction {
   private static final Logger LOG = Logger.getInstance(AbstractRerunFailedTestsAction.class);
 
   private TestFrameworkRunningModel myModel;

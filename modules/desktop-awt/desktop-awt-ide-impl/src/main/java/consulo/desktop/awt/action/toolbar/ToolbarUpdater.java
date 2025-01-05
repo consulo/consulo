@@ -77,12 +77,8 @@ public abstract class ToolbarUpdater implements Activatable {
     return myActionManager;
   }
 
-  public void updateActions(boolean now, boolean forced) {
-    updateActions(now, false, forced);
-  }
-
-  private void updateActions(boolean now, final boolean transparentOnly, final boolean forced) {
-    final Runnable updateRunnable = new MyUpdateRunnable(this, transparentOnly, forced);
+  public void updateActions(boolean now, final boolean forced) {
+    final Runnable updateRunnable = new MyUpdateRunnable(this, forced);
     final Application app = ApplicationManager.getApplication();
 
     if (now || (app.isUnitTestMode() && app.isDispatchThread())) {
@@ -102,7 +98,7 @@ public abstract class ToolbarUpdater implements Activatable {
     }
   }
 
-  protected abstract void updateActionsImpl(boolean transparentOnly, boolean forced);
+  protected abstract void updateActionsImpl(boolean forced);
 
   protected void updateActionTooltips() {
     for (ActionButton actionButton : UIUtil.uiTraverser(myComponent).preOrderDfsTraversal().filter(ActionButton.class)) {
@@ -143,20 +139,18 @@ public abstract class ToolbarUpdater implements Activatable {
         return;
       }
 
-      updateActions(false, myActionManager.isTransparentOnlyActionsUpdateNow(), false);
+      updateActions(false, false);
     }
   }
 
   private static class MyUpdateRunnable implements Runnable {
-    private final boolean myTransparentOnly;
     private final boolean myForced;
 
     @Nonnull
     private final WeakReference<ToolbarUpdater> myUpdaterRef;
     private final int myHash;
 
-    MyUpdateRunnable(@Nonnull ToolbarUpdater updater, boolean transparentOnly, boolean forced) {
-      myTransparentOnly = transparentOnly;
+    MyUpdateRunnable(@Nonnull ToolbarUpdater updater, boolean forced) {
       myForced = forced;
       myHash = updater.hashCode();
 
@@ -172,7 +166,7 @@ public abstract class ToolbarUpdater implements Activatable {
         return;
       }
 
-      updater.updateActionsImpl(myTransparentOnly, myForced);
+      updater.updateActionsImpl(myForced);
     }
 
     @Override

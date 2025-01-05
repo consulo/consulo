@@ -134,11 +134,6 @@ public final class EmptyAction extends AnAction {
     }
 
     @Override
-    public boolean isTransparentUpdate() {
-      return myDelegate.isTransparentUpdate();
-    }
-
-    @Override
     public boolean isInInjectedContext() {
       return myDelegate.isInInjectedContext();
     }
@@ -188,11 +183,6 @@ public final class EmptyAction extends AnAction {
     @Override
     public boolean isDumbAware() {
       return myDelegate.isDumbAware();
-    }
-
-    @Override
-    public boolean isTransparentUpdate() {
-      return myDelegate.isTransparentUpdate();
     }
 
     @Override

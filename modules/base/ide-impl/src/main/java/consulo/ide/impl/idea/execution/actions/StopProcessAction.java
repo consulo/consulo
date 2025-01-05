@@ -21,7 +21,6 @@ import consulo.process.KillableProcessHandler;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessHandlerStopper;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
@@ -32,7 +31,7 @@ import jakarta.annotation.Nullable;
 /**
  * @author Sergey Simonchik
  */
-public class StopProcessAction extends DumbAwareAction implements AnAction.TransparentUpdate {
+public class StopProcessAction extends DumbAwareAction {
 
   private final ProcessHandler myProcessHandler;
 

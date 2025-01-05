@@ -16,6 +16,7 @@
 package consulo.remoteServer.impl.internal.runtime.deployment;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ReadAction;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
@@ -38,7 +39,7 @@ public class ModuleDeploymentSourceType extends DeploymentSourceType<ModuleDeplo
   @Nonnull
   @Override
   public ModuleDeploymentSource load(@Nonnull Element tag, @Nonnull Project project) {
-    return new ModuleDeploymentSourceImpl(ModuleUtilCore.createPointer(project, tag.getAttributeValue(NAME_ATTRIBUTE)));
+    return new ModuleDeploymentSourceImpl(ReadAction.compute(() -> ModuleUtilCore.createPointer(project, tag.getAttributeValue(NAME_ATTRIBUTE))));
   }
 
   @Override

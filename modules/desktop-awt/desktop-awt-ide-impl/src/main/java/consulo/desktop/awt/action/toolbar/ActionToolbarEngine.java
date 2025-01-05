@@ -57,6 +57,8 @@ public abstract class ActionToolbarEngine {
 
     private List<? extends AnAction> myVisibleActions = List.of();
 
+    private CancellablePromise<java.util.List<AnAction>> myLastUpdate;
+
     public ActionToolbarEngine(@Nonnull String place,
                                @Nonnull ActionGroup actionGroup,
                                @Nonnull ActionToolbar actionToolbar,
@@ -71,14 +73,12 @@ public abstract class ActionToolbarEngine {
 
         myUpdater = new ToolbarUpdater(keymapManager, actionManager, component) {
             @Override
-            protected void updateActionsImpl(boolean transparentOnly, boolean forced) {
+            protected void updateActionsImpl(boolean forced) {
                 if (!application.isDisposedOrDisposeInProgress()) {
-                    ActionToolbarEngine.this.updateActionsImpl(transparentOnly, forced);
+                    ActionToolbarEngine.this.updateActionsImpl(forced);
                 }
             }
         };
-
-        myUpdater.updateActions(false, false);
     }
 
     protected abstract DataContext getDataContext();
@@ -94,7 +94,7 @@ public abstract class ActionToolbarEngine {
         return myPlace;
     }
 
-    private void updateActionsImpl(boolean transparentOnly, boolean forced) {
+    private void updateActionsImpl(boolean forced) {
         DataContext dataContext = getDataContext();
         boolean async =
             myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
@@ -119,8 +119,6 @@ public abstract class ActionToolbarEngine {
             myAlreadyUpdated = true;
         }
     }
-
-    private CancellablePromise<java.util.List<AnAction>> myLastUpdate;
 
     private void actionsUpdated(boolean forced, @Nonnull List<? extends AnAction> newVisibleActions) {
         if (forced || !newVisibleActions.equals(myVisibleActions)) {
@@ -164,12 +162,41 @@ public abstract class ActionToolbarEngine {
         return CompletableFuture.completedFuture(null);
     }
 
+    @RequiredUIAccess
+    public void addNotify() {
+        ActionToolbarsHolder.add(myActionToolbar);
+
+        // should update action right on the showing, otherwise toolbar may not be displayed at all,
+        // since by default all updates are postponed until frame gets focused.
+        updateActionsImmediately();
+    }
+
+    @RequiredUIAccess
+    public void removeNotify() {
+        ActionToolbarsHolder.remove(myActionToolbar);
+
+        CancellablePromise<List<AnAction>> lastUpdate = myLastUpdate;
+        if (lastUpdate != null) {
+            lastUpdate.cancel();
+        }
+    }
+
     private void cancelCurrentUpdate() {
         CancellablePromise<List<AnAction>> lastUpdate = myLastUpdate;
         myLastUpdate = null;
         if (lastUpdate != null) {
             lastUpdate.cancel();
         }
+    }
+
+    @Nonnull
+    public ActionGroup getActionGroup() {
+        return myActionGroup;
+    }
+
+    @Nonnull
+    public List<? extends AnAction> getVisibleActions() {
+        return myVisibleActions;
     }
 
     @Nonnull

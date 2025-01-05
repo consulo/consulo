@@ -61,6 +61,6 @@ public class DesktopAWTActionToolbarFactory implements ActionToolbarFactory {
             return new ActionButtonToolbarImpl(place, group, myApplication, myKeymapManager, myActionManager, myDataManager);
         }
 
-        return new AdvancedActionToolbarImpl(place, group, style);
+        return new AdvancedActionToolbarImpl(place, group, style, myActionManager);
     }
 }

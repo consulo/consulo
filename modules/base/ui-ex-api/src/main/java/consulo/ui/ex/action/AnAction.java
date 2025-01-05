@@ -372,10 +372,6 @@ public abstract class AnAction implements PossiblyDumbAware {
         return myWorksInInjected;
     }
 
-    public boolean isTransparentUpdate() {
-        return this instanceof TransparentUpdate;
-    }
-
     @Override
     public boolean isDumbAware() {
         return this instanceof DumbAware;

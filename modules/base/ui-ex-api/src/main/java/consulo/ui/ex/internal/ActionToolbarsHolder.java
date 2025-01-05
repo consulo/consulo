@@ -20,21 +20,22 @@ import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionToolbar;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
  * @since 15/01/2023
  */
 public class ActionToolbarsHolder {
-    private static final Set<ActionToolbarEx> ourToolbars = new LinkedHashSet<>();
+    private static final Set<ActionToolbar> ourToolbars = ConcurrentHashMap.newKeySet();
 
     @RequiredUIAccess
     public static void updateAllToolbarsImmediately() {
-        for (ActionToolbarEx toolbar : new ArrayList<>(ourToolbars)) {
+        for (ActionToolbar toolbar : new ArrayList<>(ourToolbars)) {
             toolbar.updateActionsImmediately();
-            toolbar.forEachButton(b -> {
+
+            ((ActionToolbarEx) toolbar).forEachButton(b -> {
                 if (b instanceof ActionButton button) {
                     button.updateToolTipText();
                     button.updateIcon();
@@ -44,12 +45,12 @@ public class ActionToolbarsHolder {
     }
 
     @RequiredUIAccess
-    public static void add(ActionToolbarEx toolbarEx) {
+    public static void add(ActionToolbar toolbarEx) {
         ourToolbars.add(toolbarEx);
     }
 
     @RequiredUIAccess
-    public static void remove(ActionToolbarEx toolbarEx) {
+    public static void remove(ActionToolbar toolbarEx) {
         ourToolbars.remove(toolbarEx);
     }
 

@@ -32,7 +32,7 @@ import java.io.OutputStream;
 /**
  * @author egor
  */
-public class EOFAction extends DumbAwareAction implements AnAction.TransparentUpdate {
+public class EOFAction extends DumbAwareAction {
   public static final String ACTION_ID = "SendEOF";
 
   @RequiredUIAccess

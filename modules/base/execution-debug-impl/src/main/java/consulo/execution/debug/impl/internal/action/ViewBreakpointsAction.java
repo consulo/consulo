@@ -34,7 +34,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
-public class ViewBreakpointsAction extends AnAction implements AnAction.TransparentUpdate, DumbAware {
+public class ViewBreakpointsAction extends AnAction implements DumbAware {
     private Object myInitialBreakpoint;
 
     public ViewBreakpointsAction() {

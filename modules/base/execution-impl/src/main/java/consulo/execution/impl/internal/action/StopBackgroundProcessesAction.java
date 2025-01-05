@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class StopBackgroundProcessesAction extends DumbAwareAction implements AnAction.TransparentUpdate {
+public class StopBackgroundProcessesAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {

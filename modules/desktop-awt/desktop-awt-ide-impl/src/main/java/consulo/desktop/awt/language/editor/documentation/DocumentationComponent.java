@@ -361,7 +361,10 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         rightActions.add(new RestoreDefaultSizeAction());
         toolbarActions.add(rightActions);
 
-        myToolBar = new AdvancedActionToolbarImpl(ActionPlaces.JAVADOC_TOOLBAR, toolbarActions, ActionToolbar.Style.HORIZONTAL) {
+        myToolBar = new AdvancedActionToolbarImpl(ActionPlaces.JAVADOC_TOOLBAR,
+            toolbarActions,
+            ActionToolbar.Style.HORIZONTAL,
+            ActionManager.getInstance()) {
             Point initialClick;
 
             @Override

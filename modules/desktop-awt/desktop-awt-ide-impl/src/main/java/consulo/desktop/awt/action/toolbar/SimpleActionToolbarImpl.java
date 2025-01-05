@@ -1,22 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.action.toolbar;
 
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.util.registry.Registry;
+import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
 import consulo.desktop.awt.ui.plaf2.flat.InplaceComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
-import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -24,11 +19,8 @@ import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.internal.ActionToolbarsHolder;
-import consulo.util.concurrent.CancellablePromise;
+import consulo.ui.ex.keymap.KeymapManager;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,24 +33,8 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
 
     protected static final String RIGHT_ALIGN_KEY = "RIGHT_ALIGN";
 
-    private static final String SUPPRESS_ACTION_COMPONENT_WARNING = "ActionToolbarImpl.suppressCustomComponentWarning";
-
     @Nonnull
     private final Style myStyle;
-
-    protected final ActionGroup myActionGroup;
-
-    @Nonnull
-    protected final String myPlace;
-
-    List<? extends AnAction> myVisibleActions;
-
-    private final PresentationFactory myPresentationFactory = new BasePresentationFactory();
-
-    protected final ToolbarUpdater myUpdater;
-
-    private final DataManager myDataManager;
-    protected final ActionManagerEx myActionManager;
 
     private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
 
@@ -68,39 +44,46 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
 
     private final AlphaAnimationContext myAlphaContext = new AlphaAnimationContext(this);
 
-    public SimpleActionToolbarImpl(@Nonnull String place, @Nonnull final ActionGroup actionGroup, @Nonnull Style style) {
-        this(place, actionGroup, style, false);
-    }
+    protected final ActionToolbarEngine myEngine;
+
+    private final DataManager myDataManager;
 
     public SimpleActionToolbarImpl(@Nonnull String place,
                                    @Nonnull ActionGroup actionGroup,
-                                   @Nonnull Style style,
-                                   boolean updateActionsNow) {
+                                   @Nonnull Style style) {
         super(null);
         myStyle = style;
         myAlphaContext.getAnimator().setVisibleImmediately(true);
-        myActionManager = ActionManagerEx.getInstanceEx();
-        myPlace = place;
-        myActionGroup = actionGroup;
-        myVisibleActions = new ArrayList<>();
         myDataManager = DataManager.getInstance();
-        myUpdater = new ToolbarUpdater(KeymapManagerEx.getInstanceEx(), ActionManager.getInstance(), this) {
+        myEngine = new ActionToolbarEngine(place, actionGroup, this, Application.get(), KeymapManager.getInstance(), ActionManager.getInstance(), this) {
             @Override
-            protected void updateActionsImpl(boolean transparentOnly, boolean forced) {
-                if (!ApplicationManager.getApplication().isDisposedOrDisposeInProgress()) {
-                    SimpleActionToolbarImpl.this.updateActionsImpl(transparentOnly, forced);
-                }
+            protected DataContext getDataContext() {
+                return SimpleActionToolbarImpl.this.getDataContext();
+            }
+
+            @Override
+            protected void fillToolBar(List<? extends AnAction> visibleActions, boolean shouldRebuildUI) {
+                SimpleActionToolbarImpl.this.actionsUpdated(visibleActions, shouldRebuildUI);
+            }
+
+            @Override
+            protected boolean isShowing() {
+                return SimpleActionToolbarImpl.this.isShowing();
+            }
+
+            @Override
+            protected void removeAll() {
+                SimpleActionToolbarImpl.this.removeAll();
             }
         };
 
         setOrientation(style.isHorizontal() ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL);
 
-        myUpdater.updateActions(updateActionsNow, false);
-
         // If the panel doesn't handle mouse event then it will be passed to its parent.
         // It means that if the panel is in sliding mode then the focus goes to the editor
         // and panel will be automatically hidden.
         enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK | AWTEvent.COMPONENT_EVENT_MASK | AWTEvent.CONTAINER_EVENT_MASK);
+        
         setMiniMode(false);
     }
 
@@ -120,32 +103,25 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
 
     @Nonnull
     public String getPlace() {
-        return myPlace;
+        return myEngine.getPlace();
     }
 
     @Override
+    @RequiredUIAccess
     public void addNotify() {
         super.addNotify();
-        ActionToolbarsHolder.add(this);
+        myEngine.addNotify();
+    }
 
-        // should update action right on the showing, otherwise toolbar may not be displayed at all,
-        // since by default all updates are postponed until frame gets focused.
-        updateActionsImmediately();
+    @Override
+    @RequiredUIAccess
+    public void removeNotify() {
+        super.removeNotify();
+        myEngine.removeNotify();
     }
 
     private boolean isInsideNavBar() {
-        return ActionPlaces.NAVIGATION_BAR_TOOLBAR.equals(myPlace);
-    }
-
-    @Override
-    public void removeNotify() {
-        super.removeNotify();
-        ActionToolbarsHolder.remove(this);
-
-        CancellablePromise<List<AnAction>> lastUpdate = myLastUpdate;
-        if (lastUpdate != null) {
-            lastUpdate.cancel();
-        }
+        return ActionPlaces.NAVIGATION_BAR_TOOLBAR.equals(myEngine.getPlace());
     }
 
     @Nonnull
@@ -165,11 +141,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     }
 
     @Nonnull
-    public ActionGroup getActionGroup() {
-        return myActionGroup;
-    }
-
-    @Nonnull
     @Override
     public AlphaAnimationContext getAlphaContext() {
         return myAlphaContext;
@@ -180,7 +151,34 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         myAlphaContext.paint(g, () -> super.paint(g));
     }
 
+    private void actionsUpdated(@Nonnull List<? extends AnAction> visibleActions, boolean shouldRebuildUI) {
+        Dimension oldSize = getPreferredSize();
+
+        removeAll();
+
+        fillToolBar(visibleActions);
+
+        Dimension newSize = getPreferredSize();
+
+        ((WindowManagerEx) WindowManager.getInstance()).adjustContainerWindow(this, oldSize, newSize);
+
+        if (shouldRebuildUI) {
+            revalidate();
+        }
+        else {
+            Container parent = getParent();
+            if (parent != null) {
+                parent.invalidate();
+                parent.validate();
+            }
+        }
+
+        repaint();
+    }
+
     private void fillToolBar(@Nonnull final List<? extends AnAction> actions) {
+        removeAll();
+
         boolean isLastElementSeparator = false;
         final List<AnAction> rightAligned = new ArrayList<>();
         for (int i = 0; i < actions.size(); i++) {
@@ -223,10 +221,10 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
 
     @Nonnull
     private JComponent getCustomComponent(@Nonnull AnAction action) {
-        Presentation presentation = myPresentationFactory.getPresentation(action);
+        Presentation presentation = myEngine.getPresentation(action);
         JComponent customComponent = presentation.getClientProperty(CustomComponentAction.COMPONENT_KEY);
         if (customComponent == null) {
-            customComponent = ((CustomComponentAction) action).createCustomComponent(presentation, myPlace);
+            customComponent = ((CustomComponentAction) action).createCustomComponent(presentation, getPlace());
             presentation.putClientProperty(CustomComponentAction.COMPONENT_KEY, customComponent);
             UIUtil.putClientProperty(customComponent, CustomComponentAction.ACTION_KEY, action);
         }
@@ -236,7 +234,7 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     }
 
     protected void tweakActionComponentUI(@Nonnull Component actionComponent) {
-        if (ActionPlaces.EDITOR_TOOLBAR.equals(myPlace)) {
+        if (ActionPlaces.EDITOR_TOOLBAR.equals(getPlace())) {
             // tweak font & color for editor toolbar to match editor tabs style
             actionComponent.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
             actionComponent.setForeground(ColorUtil.dimmer(JBColor.BLACK));
@@ -276,90 +274,25 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
 
     @Nonnull
     private ActionButton createToolbarButton(@Nonnull AnAction action) {
-        return createToolbarButton(action,
-            myPlace,
-            myPresentationFactory.getPresentation(action)
-        );
+        return createToolbarButton(action, getPlace(), myEngine.getPresentation(action));
     }
 
     @RequiredUIAccess
     @Override
     public void updateActionsImmediately() {
-        UIAccess.assertIsUIThread();
-        myUpdater.updateActions(true, false);
+        myEngine.updateActionsImmediately();
     }
 
     @RequiredUIAccess
     @Nonnull
     @Override
     public CompletableFuture<?> updateActionsAsync() {
-        updateActionsImmediately();
-        return CompletableFuture.completedFuture(null);
+        return myEngine.updateActionsAsync();
     }
-
-    private boolean myAlreadyUpdated;
-
-    private void updateActionsImpl(boolean transparentOnly, boolean forced) {
-        DataContext dataContext = getDataContext();
-        boolean async =
-            myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(this) && isShowing();
-        ActionUpdater updater =
-            new ActionUpdater(myActionManager,
-                LaterInvocator.isInModalContext(),
-                myPresentationFactory,
-                async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext,
-                myPlace,
-                false,
-                true);
-        if (async) {
-            if (myLastUpdate != null) {
-                myLastUpdate.cancel();
-            }
-
-            myLastUpdate = updater.expandActionGroupAsync(myActionGroup, false);
-            myLastUpdate.onSuccess(actions -> actionsUpdated(forced, actions)).onProcessed(__ -> myLastUpdate = null);
-        }
-        else {
-            actionsUpdated(forced, updater.expandActionGroupWithTimeout(myActionGroup, false));
-            myAlreadyUpdated = true;
-        }
-    }
-
-    private CancellablePromise<List<AnAction>> myLastUpdate;
-
-    private void actionsUpdated(boolean forced, @Nonnull List<? extends AnAction> newVisibleActions) {
-        if (forced || !newVisibleActions.equals(myVisibleActions)) {
-            boolean shouldRebuildUI = newVisibleActions.isEmpty() || myVisibleActions.isEmpty();
-            myVisibleActions = newVisibleActions;
-
-            Dimension oldSize = getPreferredSize();
-
-            removeAll();
-            fillToolBar(myVisibleActions);
-
-            Dimension newSize = getPreferredSize();
-
-            ((WindowManagerEx) WindowManager.getInstance()).adjustContainerWindow(this, oldSize, newSize);
-
-            if (shouldRebuildUI) {
-                revalidate();
-            }
-            else {
-                Container parent = getParent();
-                if (parent != null) {
-                    parent.invalidate();
-                    parent.validate();
-                }
-            }
-
-            repaint();
-        }
-    }
-
 
     @Override
     public boolean hasVisibleActions() {
-        return !myVisibleActions.isEmpty();
+        return myEngine.hasVisibleActions();
     }
 
     @Override
@@ -393,7 +326,7 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     protected DataContext getDataContext() {
         if (myTargetComponent == null && getClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING) == null) {
             putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
-            LOG.warn("'" + myPlace + "' toolbar by default uses any focused component to update its actions. " +
+            LOG.warn("'" + getPlace() + "' toolbar by default uses any focused component to update its actions. " +
                 "Toolbar actions that need local UI context would be incorrectly disabled. " +
                 "Please call toolbar.setTargetComponent() explicitly.", myCreationTrace);
         }
@@ -410,13 +343,11 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     @Nonnull
     @Override
     public List<AnAction> getActions() {
-        AnAction[] kids = myActionGroup.getChildren(null);
-        return List.of(kids);
+        return myEngine.getActions();
     }
 
-    @TestOnly
     public Presentation getPresentation(AnAction action) {
-        return myPresentationFactory.getPresentation(action);
+        return myEngine.getPresentation(action);
     }
 
     /**
@@ -428,18 +359,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     @Override
     @RequiredUIAccess
     public void reset() {
-        cancelCurrentUpdate();
-
-        myPresentationFactory.reset();
-        myVisibleActions.clear();
-        removeAll();
-    }
-
-    private void cancelCurrentUpdate() {
-        CancellablePromise<List<AnAction>> lastUpdate = myLastUpdate;
-        myLastUpdate = null;
-        if (lastUpdate != null) {
-            lastUpdate.cancel();
-        }
+        myEngine.reset();
     }
 }

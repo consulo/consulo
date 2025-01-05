@@ -188,6 +188,22 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
     }
 
     @Override
+    @RequiredUIAccess
+    public void addNotify() {
+        super.addNotify();
+
+        myEngine.addNotify();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void removeNotify() {
+        super.removeNotify();
+
+        myEngine.removeNotify();
+    }
+
+    @Override
     public void reset() {
         myEngine.reset();
     }

@@ -25,6 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
@@ -32,6 +33,7 @@ import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -79,32 +81,30 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
 
     private JBPopup myPopup;
 
-    public AdvancedActionToolbarImpl(@Nonnull String place, @Nonnull ActionGroup actionGroup, @Nonnull Style style) {
-        super(place, actionGroup, style);
-    }
+    private final ActionManagerEx myActionManager;
 
-    public AdvancedActionToolbarImpl(@Nonnull String place, @Nonnull ActionGroup actionGroup, @Nonnull Style style, boolean updateActionsNow) {
-        super(place, actionGroup, style, updateActionsNow);
+    public AdvancedActionToolbarImpl(@Nonnull String place,
+                                     @Nonnull ActionGroup actionGroup,
+                                     @Nonnull Style style,
+                                     @Nonnull ActionManager actionManager) {
+        super(place, actionGroup, style);
+        myActionManager = (ActionManagerEx) actionManager;
     }
 
     @Override
     public void setMiniMode(boolean minimalMode) {
         if (minimalMode) {
-            setMinimumButtonSize(Size.ZERO);
             setLayoutPolicy(NOWRAP_LAYOUT_POLICY);
             setBorder(JBUI.Borders.empty());
             setOpaque(false);
         }
         else {
             setBorder(JBUI.Borders.empty(2));
-            setMinimumButtonSize(DEFAULT_MINIMUM_BUTTON_SIZE);
             setOpaque(true);
             setLayoutPolicy(AUTO_LAYOUT_POLICY);
         }
-
-        myUpdater.updateActions(false, true);
     }
-    
+
     @Override
     protected void tweakActionComponentUI(@Nonnull Component actionComponent) {
         super.tweakActionComponentUI(actionComponent);
@@ -157,17 +157,19 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         final ActionGroup group;
         int orientation = getOrientation();
         if (orientation == SwingConstants.HORIZONTAL) {
-            group = myActionGroup;
+            group = myEngine.getActionGroup();
         }
         else {
+            List<? extends AnAction> visibleActions = myEngine.getVisibleActions();
+
             final DefaultActionGroup outside = new DefaultActionGroup();
-            for (int i = myFirstOutsideIndex; i < myVisibleActions.size(); i++) {
-                outside.add(myVisibleActions.get(i));
+            for (int i = myFirstOutsideIndex; i < visibleActions.size(); i++) {
+                outside.add(visibleActions.get(i), myActionManager);
             }
             group = outside;
         }
 
-        PopupToolbar popupToolbar = new PopupToolbar(myPlace, group, this) {
+        PopupToolbar popupToolbar = new PopupToolbar(myEngine.getPlace(), group, this, myActionManager) {
             @Override
             protected void onOtherActionPerformed() {
                 hidePopup();
@@ -202,7 +204,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             .setCancelCallback(() -> {
                 final boolean toClose = myActionManager.isActionPopupStackEmpty();
                 if (toClose) {
-                    myUpdater.updateActions(false, true);
+                    myEngine.updateActionsAsync();
                 }
                 return toClose;
             })
@@ -271,14 +273,17 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
         // cancel() already called Disposer.dispose()
         myPopup = null;
-        myUpdater.updateActions(false, false);
+        myEngine.updateActionsAsync();
     }
 
     abstract static class PopupToolbar extends AdvancedActionToolbarImpl implements AnActionListener, DataProvider, Disposable {
         private final JComponent myParent;
 
-        PopupToolbar(@Nonnull String place, @Nonnull ActionGroup actionGroup, @Nonnull JComponent parent) {
-            super(place, actionGroup, Style.HORIZONTAL, true);
+        PopupToolbar(@Nonnull String place,
+                     @Nonnull ActionGroup actionGroup,
+                     @Nonnull JComponent parent,
+                     @Nonnull ActionManager actionManager) {
+            super(place, actionGroup, Style.HORIZONTAL, actionManager);
             ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.class, this);
             myParent = parent;
             setBorder(myParent.getBorder());
@@ -302,7 +307,9 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
 
         @Override
         public void afterActionPerformed(@Nonnull final AnAction action, @Nonnull final DataContext dataContext, @Nonnull AnActionEvent event) {
-            if (!myVisibleActions.contains(action)) {
+            List<? extends AnAction> visibleActions = myEngine.getVisibleActions();
+
+            if (!visibleActions.contains(action)) {
                 onOtherActionPerformed();
             }
         }
@@ -351,6 +358,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
     }
 
+    @RequiredUIAccess
     @Override
     public void removeNotify() {
         super.removeNotify();

@@ -52,11 +52,6 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         return tmp;
     }
 
-    @Override
-    public boolean isTransparentUpdate() {
-        return false;
-    }
-
     private void ensureHandlersLoaded() {
         if (!myHandlersLoaded) {
             myHandlersLoaded = true;
