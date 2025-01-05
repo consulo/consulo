@@ -244,7 +244,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
   private class NewScriptAction extends AnAction {
     private NewScriptAction() {
-      super("New Script", "", AllIcons.Actions.New);
+      super("New Script", "", PlatformIconGroup.actionsAddfile());
     }
 
     @Override

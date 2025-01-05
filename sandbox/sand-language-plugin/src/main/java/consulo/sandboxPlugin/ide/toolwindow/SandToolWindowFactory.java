@@ -96,7 +96,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
   @Nonnull
   @Override
   public Image getIcon() {
-    return PlatformIconGroup.toolwindowsToolwindowcommander();
+    return PlatformIconGroup.toolwindowsToolwindowpalette();
   }
 
   @Nonnull

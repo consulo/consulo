@@ -1,20 +1,19 @@
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.application.AllIcons;
+import consulo.application.util.matcher.Matcher;
+import consulo.application.util.matcher.MatcherHolder;
+import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.Task;
 import consulo.task.TaskManager;
-import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
-import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
-import consulo.application.util.matcher.Matcher;
-import consulo.application.util.matcher.MatcherHolder;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.task.TasksIcons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +59,7 @@ public class TaskCellRenderer extends DefaultListCellRenderer implements Matcher
     }
     else if (GotoTaskAction.CREATE_NEW_TASK_ACTION == value) {
       final SimpleColoredComponent c = new SimpleColoredComponent();
-      c.setIcon(ImageEffects.layered(TasksIcons.Unknown, AllIcons.Actions.New));
+      c.setIcon(PlatformIconGroup.generalAdd());
       c.append(GotoTaskAction.CREATE_NEW_TASK_ACTION.getActionText());
       panel.add(c, BorderLayout.CENTER);
     }

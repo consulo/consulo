@@ -173,7 +173,6 @@ public class PlatformOrPluginDialog extends DialogWrapper {
                             status = FileStatus.UNKNOWN;
                         }
 
-                        myRating.setVisible(false);
                         myDownloads.setVisible(false);
 
                         if (!isSelected) {

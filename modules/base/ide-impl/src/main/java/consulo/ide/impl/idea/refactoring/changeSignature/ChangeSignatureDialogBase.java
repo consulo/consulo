@@ -42,6 +42,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -346,7 +347,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
       new AnActionButton(
         RefactoringLocalize.changesignaturePropagateParametersTitle(),
         LocalizeValue.empty(),
-        ImageEffects.layered(AllIcons.Nodes.Parameter, AllIcons.Actions.New)
+        PlatformIconGroup.nodesParameter()
       ) {
         @Override
         @RequiredUIAccess

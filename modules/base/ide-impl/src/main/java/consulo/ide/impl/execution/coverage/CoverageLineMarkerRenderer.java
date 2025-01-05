@@ -42,6 +42,7 @@ import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -468,7 +469,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         private final int myLineNumber;
 
         private EditCoverageColorsAction(Editor editor, int lineNumber) {
-            super("Edit coverage colors", "Edit coverage colors", AllIcons.General.EditColors);
+            super("Edit coverage colors", "Edit coverage colors", PlatformIconGroup.generalGearplain());
             myEditor = editor;
             myLineNumber = lineNumber;
         }

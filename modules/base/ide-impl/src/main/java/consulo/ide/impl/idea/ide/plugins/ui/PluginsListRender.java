@@ -49,7 +49,6 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
     private final PluginsPanel myPluginsPanel;
     protected SimpleColoredComponent myName;
     private JBLabel myIcon;
-    protected RatesPanel myRating;
     protected JLabel myDownloads;
     private JLabel myLastUpdated;
     private BorderLayoutPanel myPanel;
@@ -85,10 +84,6 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
         myLastUpdated.setOpaque(false);
 
         myDownloads = new JBLabel();
-        myRating = new RatesPanel();
-        myRating.setVisible(PluginDescriptionPanel.ENABLED_STARS);
-
-        rightPanel.addToTop(myRating);
 
         myName.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));
         myName.setIpad(JBUI.emptyInsets());
@@ -156,7 +151,6 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
             }
             myDownloads.setText(downloads);
 
-            myRating.setRate(pluginNode.getRating());
             myLastUpdated.setText(DateFormatUtil.formatBetweenDates(pluginNode.getDate(), System.currentTimeMillis()));
         }
 

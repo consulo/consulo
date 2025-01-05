@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actionMacro.actions;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacroManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -59,7 +59,7 @@ public class StartStopMacroRecordingAction extends AnAction implements DumbAware
                                 : IdeBundle.message("action.start.macro.recording"));
 
     if (ActionPlaces.STATUS_BAR_PLACE.equals(e.getPlace())) {
-      e.getPresentation().setIcon(AllIcons.Ide.Macro.Recording_stop);
+      e.getPresentation().setIcon(PlatformIconGroup.actionsSuspend());
     }
     else {
       e.getPresentation().setIcon(null);

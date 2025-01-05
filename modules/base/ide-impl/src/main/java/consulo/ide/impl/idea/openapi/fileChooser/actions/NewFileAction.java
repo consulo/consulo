@@ -16,17 +16,16 @@
 
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
-import consulo.application.AllIcons;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.UIBundle;
-import consulo.ui.image.ImageEffects;
+import consulo.virtualFileSystem.fileType.FileType;
 
 public class NewFileAction extends FileChooserAction {
   protected void update(FileSystemTree fileSystemTree, AnActionEvent e) {
@@ -36,7 +35,7 @@ public class NewFileAction extends FileChooserAction {
       presentation.setVisible(true);
       VirtualFile selectedFile = fileSystemTree.getNewFileParent();
       presentation.setEnabled(selectedFile != null && selectedFile.isDirectory());
-      presentation.setIcon(ImageEffects.layered(fileType.getIcon(), AllIcons.Actions.New));
+      presentation.setIcon(PlatformIconGroup.actionsAddfile());
     }
     else {
       presentation.setVisible(false);

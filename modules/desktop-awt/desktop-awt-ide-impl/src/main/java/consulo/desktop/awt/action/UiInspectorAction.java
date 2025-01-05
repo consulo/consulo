@@ -16,7 +16,6 @@
 package consulo.desktop.awt.action;
 
 import com.google.common.base.MoreObjects;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
@@ -26,6 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.ui.ColorIcon;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
@@ -387,7 +387,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       }
       if (value instanceof HierarchyTree.ClickInfoNode) {
         append(value.toString());
-        setIcon(AllIcons.Ide.Rating);
+        setIcon(PlatformIconGroup.nodesTarget());
       }
 
       setForeground(foreground);

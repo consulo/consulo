@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
@@ -27,6 +27,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nonnull;
@@ -40,7 +41,7 @@ import java.util.function.Consumer;
 class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPresentation {
   private StatusBar myStatusBar;
 
-  private Image myCurrentIcon = AllIcons.Ide.IncomingChangesOff;
+  private Image myCurrentIcon = ImageEffects.grayed(PlatformIconGroup.ideIncomingchangeson());
   private String myToolTipText;
   private final StatusBarWidgetFactory myFactory;
   private final IncomingChangesIndicator myIncomingChangesIndicator;
@@ -61,11 +62,11 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
   }
 
   void clear() {
-    update(AllIcons.Ide.IncomingChangesOff, "No incoming changelists available");
+    update(ImageEffects.grayed(PlatformIconGroup.ideIncomingchangeson()), "No incoming changelists available");
   }
 
   void setChangesAvailable(@Nonnull final String toolTipText) {
-    update(AllIcons.Ide.IncomingChangesOn, toolTipText);
+    update(PlatformIconGroup.ideIncomingchangeson(), toolTipText);
   }
 
   private void update(@Nonnull final Image icon, @Nullable final String toolTipText) {

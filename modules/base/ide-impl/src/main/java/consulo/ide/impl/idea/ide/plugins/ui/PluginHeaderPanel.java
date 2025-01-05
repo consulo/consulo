@@ -43,7 +43,6 @@ public class PluginHeaderPanel {
 
     private JTextArea myName;
     private JBLabel myDownloads;
-    private RatesPanel myRating;
     private JBLabel myUpdated;
     private JButton myInstallButton;
     private JPanel myRoot;
@@ -79,7 +78,6 @@ public class PluginHeaderPanel {
         if (plugin instanceof PluginNode) {
             final PluginNode node = (PluginNode) plugin;
 
-            myRating.setRate(node.getRating());
             myDownloads.setText(node.getDownloads() + " downloads");
             myUpdated.setText("Updated " + DateFormatUtil.formatDate(node.getDate()));
             switch (node.getInstallStatus()) {
@@ -219,8 +217,6 @@ public class PluginHeaderPanel {
         myDownloadsPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
         myDownloadsPanel.setOpaque(false);
         myDownloadsPanel.add(myDownloads = new JBLabel());
-        myDownloadsPanel.add(myRating = new RatesPanel());
-        myRating.setVisible(PluginDescriptionPanel.ENABLED_STARS);
         myRoot.add(new BorderLayoutPanel().andTransparent().addToRight(myDownloadsPanel));
 
         myUpdated = new JBLabel();

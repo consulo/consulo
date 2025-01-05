@@ -251,7 +251,6 @@ public class AllIcons {
         public static final Image CollapseAll = PlatformIconGroup.actionsCollapseall(); // 11x16
         public static final Image ContextHelp = PlatformIconGroup.generalContexthelp();
         public static final Image Dropdown = PlatformIconGroup.generalDropdown(); // 16x16
-        public static final Image EditColors = PlatformIconGroup.generalEditcolors(); // 16x16
         public static final Image Ellipsis = PlatformIconGroup.generalEllipsis(); // 9x9
         public static final Image Error = PlatformIconGroup.generalError(); // 16x16
         public static final Image ErrorDialog = PlatformIconGroup.generalErrordialog(); // 32x32
@@ -262,10 +261,11 @@ public class AllIcons {
         public static final Image Filter = PlatformIconGroup.generalFilter(); // 16x16
         public static final Image GearPlain = PlatformIconGroup.generalGearplain(); // 16x16
         public static final Image HideToolWindow = PlatformIconGroup.generalHidetoolwindow(); // 16x16
-        public static final Image ImplementingMethod = PlatformIconGroup.generalImplementingmethod(); // 10x14
+        public static final Image ImplementingMethod = PlatformIconGroup.gutterImplementingmethod(); // 10x14
         public static final Image Information = PlatformIconGroup.generalInformation(); // 16x16
         public static final Image InformationDialog = PlatformIconGroup.generalInformationdialog(); // 32x32
-        public static final Image InheritedMethod = PlatformIconGroup.generalInheritedmethod(); // 11x14
+        @Deprecated
+        public static final Image InheritedMethod = PlatformIconGroup.hierarchySubtypes(); // 11x14
         public static final Image InspectionsError = PlatformIconGroup.generalInspectionserror(); // 14x14
         public static final Image InspectionsEye = PlatformIconGroup.generalInspectionseye(); // 14x14
         public static final Image InspectionsOK = PlatformIconGroup.generalInspectionsok(); // 14x14
@@ -282,8 +282,10 @@ public class AllIcons {
         public static final Image NotificationError = PlatformIconGroup.generalNotificationerror(); // 24x24
         public static final Image NotificationInfo = PlatformIconGroup.generalNotificationinfo(); // 24x24
         public static final Image NotificationWarning = PlatformIconGroup.generalNotificationwarning(); // 24x24
-        public static final Image OverridenMethod = PlatformIconGroup.generalOverridenmethod(); // 10x14
-        public static final Image OverridingMethod = PlatformIconGroup.generalOverridingmethod(); // 10x14
+        @Deprecated
+        public static final Image OverridenMethod = PlatformIconGroup.gutterOverridenmethod(); // 10x14
+        @Deprecated
+        public static final Image OverridingMethod = PlatformIconGroup.gutterOverridingmethod(); // 10x14
         public static final Image Pin_tab = PlatformIconGroup.generalPin_tab(); // 16x16
         public static final Image ProjectConfigurable = PlatformIconGroup.generalProjectconfigurable(); // 9x9
         public static final Image ProjectStructure = PlatformIconGroup.generalProjectstructure(); // 16x16
@@ -292,11 +294,9 @@ public class AllIcons {
         public static final Image Remove = PlatformIconGroup.generalRemove(); // 16x16
         public static final Image Reset = PlatformIconGroup.generalReset(); // 16x16
         public static final Image RunWithCoverage = PlatformIconGroup.generalRunwithcoverage(); // 16x16
-        public static final Image SafeMode = PlatformIconGroup.generalSafemode(); // 13x13
         public static final Image SeparatorH = PlatformIconGroup.generalSeparatorh(); // 17x11
         public static final Image Settings = PlatformIconGroup.generalSettings(); // 16x16
-        public static final Image Show_to_implement = PlatformIconGroup.generalShow_to_implement(); // 16x16
-        public static final Image Show_to_override = PlatformIconGroup.generalShow_to_override(); // 16x16
+        public static final Image Show_to_implement = PlatformIconGroup.generalShowtoimplement(); // 16x16
         public static final Image TbHidden = PlatformIconGroup.generalTbhidden(); // 16x16
         public static final Image TbShown = PlatformIconGroup.generalTbshown(); // 16x16
         public static final Image Tip = PlatformIconGroup.generalTip(); // 32x32
@@ -338,9 +338,11 @@ public class AllIcons {
 
     public static class Hierarchy {
         public static final Image Base = PlatformIconGroup.hierarchyBase(); // 16x16
-        public static final Image Callee = PlatformIconGroup.hierarchyCallee(); // 16x16
-        public static final Image Caller = PlatformIconGroup.hierarchyCaller(); // 16x16
-        public static final Image Class = PlatformIconGroup.hierarchyClass(); // 16x16
+        @Deprecated
+        public static final Image Callee = PlatformIconGroup.hierarchySubtypes(); // 16x16
+        @Deprecated
+        public static final Image Caller = PlatformIconGroup.hierarchySupertypes(); // 16x16
+        public static final Image Class = PlatformIconGroup.hierarchyClasshierarchy(); // 16x16
         public static final Image MethodDefined = PlatformIconGroup.hierarchyMethoddefined(); // 9x9
         public static final Image MethodNotDefined = PlatformIconGroup.hierarchyMethodnotdefined(); // 8x8
         public static final Image ShouldDefineMethod = PlatformIconGroup.hierarchyShoulddefinemethod(); // 9x9
@@ -365,11 +367,9 @@ public class AllIcons {
         public static final Image ErrorPoint = PlatformIconGroup.ideErrorpoint(); // 6x6
         public static final Image FatalError_read = PlatformIconGroup.ideFatalerror_read(); // 16x16
         public static final Image FatalError = PlatformIconGroup.ideFatalerror(); // 16x16
-        public static final Image HectorNo = PlatformIconGroup.ideHectorno(); // 16x16
         public static final Image HectorOff = PlatformIconGroup.ideHectoroff(); // 16x16
         public static final Image HectorOn = PlatformIconGroup.ideHectoron(); // 16x16
         public static final Image HectorSyntax = PlatformIconGroup.ideHectorsyntax(); // 16x16
-        public static final Image IncomingChangesOff = PlatformIconGroup.ideIncomingchangesoff(); // 16x16
         public static final Image IncomingChangesOn = PlatformIconGroup.ideIncomingchangeson(); // 16x16
         public static final Image Link = PlatformIconGroup.ideLink(); // 12x12
         public static final Image LocalScope = PlatformIconGroup.ideLocalscope(); // 16x16
@@ -379,7 +379,6 @@ public class AllIcons {
             public static final Image Recording_2 = PlatformIconGroup.ideMacroRecording_2(); // 16x16
             public static final Image Recording_3 = PlatformIconGroup.ideMacroRecording_3(); // 16x16
             public static final Image Recording_4 = PlatformIconGroup.ideMacroRecording_4(); // 16x16
-            public static final Image Recording_stop = PlatformIconGroup.ideMacroRecording_stop(); // 16x16
 
         }
 
@@ -398,11 +397,6 @@ public class AllIcons {
         public static final Image OutgoingChangesOn = PlatformIconGroup.ideOutgoingchangeson(); // 16x16
         public static final Image Pipette = PlatformIconGroup.idePipette(); // 16x16
         public static final Image Pipette_rollover = PlatformIconGroup.idePipette_rollover(); // 16x16
-        public static final Image Rating = PlatformIconGroup.ideRating(); // 11x11
-        public static final Image Rating1 = PlatformIconGroup.ideRating1(); // 11x11
-        public static final Image Rating2 = PlatformIconGroup.ideRating2(); // 11x11
-        public static final Image Rating3 = PlatformIconGroup.ideRating3(); // 11x11
-        public static final Image Rating4 = PlatformIconGroup.ideRating4(); // 11x11
         public static final Image Readonly = PlatformIconGroup.ideReadonly(); // 16x16
         public static final Image Readwrite = PlatformIconGroup.ideReadwrite(); // 16x16
 
@@ -613,7 +607,6 @@ public class AllIcons {
     public static class Toolwindows {
         public static final Image Documentation = PlatformIconGroup.toolwindowsDocumentation(); // 13x13
         public static final Image ToolWindowChanges = PlatformIconGroup.toolwindowsToolwindowchanges(); // 13x13
-        public static final Image ToolWindowCommander = PlatformIconGroup.toolwindowsToolwindowcommander(); // 13x13
         public static final Image ToolWindowCoverage = PlatformIconGroup.toolwindowsToolwindowcoverage(); // 13x13
         public static final Image ToolWindowFind = PlatformIconGroup.toolwindowsToolwindowfind(); // 13x13
         public static final Image ToolWindowHierarchy = PlatformIconGroup.toolwindowsToolwindowhierarchy(); // 13x13

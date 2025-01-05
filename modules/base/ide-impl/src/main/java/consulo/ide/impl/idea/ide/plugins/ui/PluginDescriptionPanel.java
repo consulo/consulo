@@ -51,7 +51,8 @@ import static consulo.util.lang.StringUtil.isEmptyOrSpaces;
  */
 public class PluginDescriptionPanel {
     // repository not support rating. disable stars for now
-    public static final boolean ENABLED_STARS = false;
+    public static final boolean ENABLED_STARS = true;
+    
     private static final float mgByte = 1024.0f * 1024.0f;
     private static final float kByte = 1024.0f;
 
