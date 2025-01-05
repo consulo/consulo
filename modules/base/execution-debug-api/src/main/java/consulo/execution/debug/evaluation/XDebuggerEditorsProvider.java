@@ -15,17 +15,18 @@
  */
 package consulo.execution.debug.evaluation;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.document.Document;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
-import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.Collections;
 
@@ -34,12 +35,14 @@ public abstract class XDebuggerEditorsProvider {
   public abstract FileType getFileType();
 
   @Nonnull
+  @RequiredReadAction
   public abstract Document createDocument(@Nonnull Project project,
                                           @Nonnull String text,
                                           @Nullable XSourcePosition sourcePosition,
                                           @Nonnull EvaluationMode mode);
 
   @Nonnull
+  @RequiredReadAction
   public Document createDocument(@Nonnull Project project,
                                  @Nonnull XExpression expression,
                                  @Nullable XSourcePosition sourcePosition,

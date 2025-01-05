@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.evaluation;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
@@ -32,6 +33,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvider {
+  @RequiredReadAction
   @Nonnull
   @Override
   public final Document createDocument(@Nonnull Project project, @Nonnull String text, @Nullable XSourcePosition sourcePosition, @Nonnull EvaluationMode mode) {
@@ -48,9 +50,10 @@ public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvi
 
   @Nonnull
   @Override
+  @RequiredReadAction
   public Document createDocument(@Nonnull Project project,
                                  @Nonnull XExpression expression,
-                                 @jakarta.annotation.Nullable XSourcePosition sourcePosition,
+                                 @Nullable XSourcePosition sourcePosition,
                                  @Nonnull EvaluationMode mode) {
     PsiElement context = null;
     if (sourcePosition != null) {
@@ -85,6 +88,7 @@ public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvi
   }
 
   @Nullable
+  @RequiredReadAction
   protected PsiElement getContextElement(@Nonnull VirtualFile virtualFile, int offset, @Nonnull Project project) {
     return XDebuggerUtil.getInstance().findContextElement(virtualFile, offset, project);
   }
