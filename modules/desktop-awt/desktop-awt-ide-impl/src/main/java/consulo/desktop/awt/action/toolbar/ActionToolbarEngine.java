@@ -31,6 +31,7 @@ import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -154,6 +155,13 @@ public abstract class ActionToolbarEngine {
     public void updateActionsImmediately() {
         UIAccess.assertIsUIThread();
         myUpdater.updateActions(true, false);
+    }
+
+    @RequiredUIAccess
+    public CompletableFuture<?> updateActionsAsync() {
+        updateActionsImmediately();
+
+        return CompletableFuture.completedFuture(null);
     }
 
     private void cancelCurrentUpdate() {

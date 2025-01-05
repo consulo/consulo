@@ -26,6 +26,7 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Represents a toolbar with a visual presentation.
@@ -134,9 +135,15 @@ public interface ActionToolbar {
 
     /**
      * Forces update of the all actions in the toolbars. Actions, however, normally updated automatially every 500msec.
+     *
+     * @see #updateActionsAsync()
      */
     @RequiredUIAccess
     void updateActionsImmediately();
+
+    @RequiredUIAccess
+    @Nonnull
+    CompletableFuture<?> updateActionsAsync();
 
     boolean hasVisibleActions();
 

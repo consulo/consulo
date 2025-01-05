@@ -34,6 +34,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActionToolbar, QuickActionProvider, AlphaAnimated {
     private static final Logger LOG = Logger.getInstance(SimpleActionToolbarImpl.class);
@@ -286,6 +287,14 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     public void updateActionsImmediately() {
         UIAccess.assertIsUIThread();
         myUpdater.updateActions(true, false);
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public CompletableFuture<?> updateActionsAsync() {
+        updateActionsImmediately();
+        return CompletableFuture.completedFuture(null);
     }
 
     private boolean myAlreadyUpdated;

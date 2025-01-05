@@ -29,6 +29,7 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -87,6 +88,13 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
     @Override
     public void updateActionsImmediately() {
 
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public CompletableFuture<?> updateActionsAsync() {
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override

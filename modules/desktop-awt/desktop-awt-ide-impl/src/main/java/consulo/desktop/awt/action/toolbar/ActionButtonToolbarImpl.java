@@ -34,6 +34,7 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -205,6 +206,13 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
     @Override
     public void updateActionsImmediately() {
         myEngine.updateActionsImmediately();
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public CompletableFuture<?> updateActionsAsync() {
+        return myEngine.updateActionsAsync();
     }
 
     @Override
