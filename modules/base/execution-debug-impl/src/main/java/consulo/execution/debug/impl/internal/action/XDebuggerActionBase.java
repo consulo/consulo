@@ -56,8 +56,7 @@ public abstract class XDebuggerActionBase extends AnAction implements AnAction.T
         Presentation presentation = event.getPresentation();
         boolean hidden = isHidden(event);
         if (hidden) {
-            presentation.setEnabled(false);
-            presentation.setVisible(false);
+            presentation.setEnabledAndVisible(false);
             return;
         }
 

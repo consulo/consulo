@@ -23,6 +23,7 @@ import consulo.execution.debug.frame.XDropFrameHandler;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.frame.XValueMarkerProvider;
+import consulo.execution.debug.internal.UnsupportedDebuggerEditorsProvider;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.ui.XDebugTabLayouter;
 import consulo.execution.runner.ProgramRunner;
@@ -73,11 +74,13 @@ public abstract class XDebugProcess {
      * @return editor provider which will be used to produce editors for "Evaluate" and "Set Value" actions
      */
     @Nonnull
-    public abstract XDebuggerEditorsProvider getEditorsProvider();
+    public XDebuggerEditorsProvider getEditorsProvider() {
+        return UnsupportedDebuggerEditorsProvider.INSTANCE;
+    }
 
     /**
      * Called when {@link XDebugSession} is initialized and breakpoints are registered in
-     * {@link consulo.ide.impl.idea.xdebugger.breakpoints.XBreakpointHandler}
+     * {@link XBreakpointHandler}
      */
     public void sessionInitialized() {
     }

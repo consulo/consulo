@@ -31,41 +31,45 @@ import java.util.Collection;
 import java.util.Collections;
 
 public abstract class XDebuggerEditorsProvider {
-  @Nonnull
-  public abstract FileType getFileType();
+    @Nonnull
+    public abstract FileType getFileType();
 
-  @Nonnull
-  @RequiredReadAction
-  public abstract Document createDocument(@Nonnull Project project,
-                                          @Nonnull String text,
-                                          @Nullable XSourcePosition sourcePosition,
-                                          @Nonnull EvaluationMode mode);
+    @Nonnull
+    @RequiredReadAction
+    public abstract Document createDocument(@Nonnull Project project,
+                                            @Nonnull String text,
+                                            @Nullable XSourcePosition sourcePosition,
+                                            @Nonnull EvaluationMode mode);
 
-  @Nonnull
-  @RequiredReadAction
-  public Document createDocument(@Nonnull Project project,
-                                 @Nonnull XExpression expression,
-                                 @Nullable XSourcePosition sourcePosition,
-                                 @Nonnull EvaluationMode mode) {
-    return createDocument(project, expression.getExpression(), sourcePosition, mode);
-  }
-
-  @Nonnull
-  public Collection<Language> getSupportedLanguages(@Nonnull Project project, @Nullable XSourcePosition sourcePosition) {
-    FileType type = getFileType();
-    if (type instanceof LanguageFileType) {
-      return Collections.singleton(((LanguageFileType)type).getLanguage());
+    @Nonnull
+    @RequiredReadAction
+    public Document createDocument(@Nonnull Project project,
+                                   @Nonnull XExpression expression,
+                                   @Nullable XSourcePosition sourcePosition,
+                                   @Nonnull EvaluationMode mode) {
+        return createDocument(project, expression.getExpression(), sourcePosition, mode);
     }
-    return Collections.emptyList();
-  }
 
-  @Nonnull
-  public XExpression createExpression(@Nonnull Project project, @Nonnull Document document, @Nullable Language language, @Nonnull EvaluationMode mode) {
-    return XDebuggerUtil.getInstance().createExpression(document.getText(), language, null, mode);
-  }
+    @Nonnull
+    public Collection<Language> getSupportedLanguages(@Nonnull Project project, @Nullable XSourcePosition sourcePosition) {
+        FileType type = getFileType();
+        if (type instanceof LanguageFileType) {
+            return Collections.singleton(((LanguageFileType) type).getLanguage());
+        }
+        return Collections.emptyList();
+    }
 
-  @Nonnull
-  public InlineDebuggerHelper getInlineDebuggerHelper() {
-    return InlineDebuggerHelper.DEFAULT;
-  }
+    @Nonnull
+    public XExpression createExpression(@Nonnull Project project, @Nonnull Document document, @Nullable Language language, @Nonnull EvaluationMode mode) {
+        return XDebuggerUtil.getInstance().createExpression(document.getText(), language, null, mode);
+    }
+
+    @Nonnull
+    public InlineDebuggerHelper getInlineDebuggerHelper() {
+        return InlineDebuggerHelper.DEFAULT;
+    }
+
+    public boolean isEvaluateExpressionFieldEnabled() {
+        return true;
+    }
 }
