@@ -21,6 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.ide.IdeBundle;
 import consulo.language.editor.hierarchy.MethodHierarchyProvider;
 import consulo.language.psi.PsiElement;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBLabel;
@@ -99,7 +100,7 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
 
   private final class ShowImplementationsOnlyAction extends ToggleAction {
     private ShowImplementationsOnlyAction() {
-      super(IdeBundle.message("action.hide.non.implementations"), null, AllIcons.General.Filter); // TODO[anton] use own icon!!!
+      super(IdeBundle.message("action.hide.non.implementations"), null, PlatformIconGroup.gutterImplementedmethod());!
     }
 
     @Override
