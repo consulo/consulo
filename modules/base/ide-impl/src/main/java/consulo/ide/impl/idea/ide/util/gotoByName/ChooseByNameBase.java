@@ -27,6 +27,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.dataContext.*;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ide.impl.idea.ide.actions.CopyReferenceAction;
 import consulo.ide.impl.idea.ide.actions.GotoFileAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
@@ -43,6 +44,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -50,14 +52,15 @@ import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.impl.internal.psi.AstLoadingFilter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.CheckBox;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -74,7 +77,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.style.StyleManager;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
@@ -115,7 +117,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
   protected final MyTextField myTextField = new MyTextField();
   private final CardLayout myCard = new CardLayout();
   private final JPanel myCardContainer = new JPanel(myCard);
-  protected final JCheckBox myCheckBox = new JCheckBox();
+  protected final CheckBox myCheckBox = CheckBox.create(LocalizeValue.of());
   /**
    * the tool area of the popup, it is just after card box
    */
@@ -137,13 +139,9 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
   private volatile CalcElementsThread myCalcElementsThread;
   private int myListSizeIncreasing = 30;
   private int myMaximumListSizeLimit = 30;
-  @NonNls
   private static final String NOT_FOUND_IN_PROJECT_CARD = "syslib";
-  @NonNls
   private static final String NOT_FOUND_CARD = "nfound";
-  @NonNls
   private static final String CHECK_BOX_CARD = "chkbox";
-  @NonNls
   private static final String SEARCHING_CARD = "searching";
   private final int myRebuildDelay;
 
@@ -367,6 +365,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
   /**
    * @param modalityState - if not null rebuilds list in given {@link ModalityState}
    */
+  @RequiredUIAccess
   protected void initUI(final ChooseByNamePopupComponent.Callback callback,
                         final ModalityState modalityState,
                         final boolean allowMultipleSelection) {
@@ -388,29 +387,24 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
     caption2Tools.add(hBox, BorderLayout.EAST);
 
-    String checkBoxName = myModel.getCheckBoxName();
-    Color fg = UIUtil.getLabelDisabledForeground();
-    Color color = StyleManager.get().getCurrentStyle().isDark() ? ColorUtil.shift(fg, 1.2) : ColorUtil.shift(fg, 0.7);
-    String text = checkBoxName == null
-      ? ""
-      : "<html>" + checkBoxName +
-      (myCheckBoxShortcut != null && myCheckBoxShortcut.getShortcuts().length > 0 ? " <b color='" +
-        ColorUtil.toHex(color) +
-        "'>" +
-        KeymapUtil.getShortcutsText(myCheckBoxShortcut.getShortcuts()) +
-        "</b>" : "") +
-      "</html>";
-    myCheckBox.setText(text);
-    myCheckBox.setAlignmentX(SwingConstants.RIGHT);
-    myCheckBox.setBorder(null);
+    LocalizeValue checkBoxText = myModel.getCheckBoxName();
+    Color color = HelpTooltipImpl.SHORTCUT_COLOR;
+    if (checkBoxText == LocalizeValue.of()) {
+        myCheckBox.setLabelText(LocalizeValue.of());
+    } else if (myCheckBoxShortcut != null) {
+        String text = "<html>" + checkBoxText.get() + (myCheckBoxShortcut.getShortcuts().length > 0 ? " <b color='" + ColorUtil.toHex(color) + "'>" + KeymapUtil.getShortcutsText(myCheckBoxShortcut.getShortcuts()) + "</b>" : "") + "</html>";
+        myCheckBox.setLabelText(LocalizeValue.localizeTODO(text));
+    } else {
+        myCheckBox.setLabelText(checkBoxText);
+    }
 
-    myCheckBox.setSelected(myModel.loadInitialCheckBoxState());
+    myCheckBox.setValue(myModel.loadInitialCheckBoxState());
 
-    if (checkBoxName == null) {
+    if (checkBoxText == LocalizeValue.of()) {
       myCheckBox.setVisible(false);
     }
 
-    addCard(myCheckBox, CHECK_BOX_CARD);
+    addCard((JComponent) TargetAWT.to(myCheckBox), CHECK_BOX_CARD);
 
     addCard(new HintLabel(myModel.getNotInMessage()), NOT_FOUND_IN_PROJECT_CARD);
     addCard(new HintLabel(IdeLocalize.labelChoosebynameNoMatchesFound().get()), NOT_FOUND_CARD);
@@ -468,13 +462,13 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     myTextField.setFont(editorFont);
     myTextField.putClientProperty("caretWidth", JBUIScale.scale(EditorUtil.getDefaultCaretWidth()));
 
-    if (checkBoxName != null) {
+    if (checkBoxText != LocalizeValue.of()) {
       if (myCheckBoxShortcut != null) {
         new DumbAwareAction("change goto check box", null, null) {
           @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
-            myCheckBox.setSelected(!myCheckBox.isSelected());
+            myCheckBox.setValue(!myCheckBox.getValueOrError());
           }
         }.registerCustomShortcutSet(myCheckBoxShortcut, myTextField);
       }
@@ -539,7 +533,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       });
     }
 
-    myCheckBox.addItemListener(__ -> rebuildList(false));
+    myCheckBox.addValueListener(e -> rebuildList(false));
     myCheckBox.setFocusable(false);
 
     myTextField.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -929,7 +923,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     }
     MatcherHolder.associateMatcher(myList, matcher);
 
-    scheduleCalcElements(text, myCheckBox.isSelected(), modalityState, pos, elements -> {
+    scheduleCalcElements(text, myCheckBox.getValueOrError(), modalityState, pos, elements -> {
       ApplicationManager.getApplication().assertIsDispatchThread();
 
       if (postRunnable != null) {
@@ -1040,7 +1034,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
   @Nonnull
   @NonNls
   String statisticsContext() {
-    return "choose_by_name#" + myModel.getPromptText() + "#" + myCheckBox.isSelected() + "#" + getTrimmedText();
+    return "choose_by_name#" + myModel.getPromptText() + "#" + myCheckBox.getValueOrError() + "#" + getTrimmedText();
   }
 
   private void appendToModel(@Nonnull List<? extends ModelDiff.Cmd> commands, @Nonnull SelectionPolicy selection) {
@@ -1200,7 +1194,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     }
 
     private void fillInCommonPrefix(@Nonnull final String pattern) {
-      final List<String> list = myProvider.filterNames(ChooseByNameBase.this, getNames(myCheckBox.isSelected()), pattern);
+      final List<String> list = myProvider.filterNames(ChooseByNameBase.this, getNames(myCheckBox.getValueOrError()), pattern);
       if (list.isEmpty()) return;
 
       if (isComplexPattern(pattern)) return; //TODO: support '*'
@@ -1553,7 +1547,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       final Set<Usage> usages = new LinkedHashSet<>();
       fillUsages(Arrays.asList(elements), usages, targets);
       if (myListModel.contains(EXTRA_ELEM)) { //start searching for the rest
-        final boolean everywhere = myCheckBox.isSelected();
+        final boolean everywhere = myCheckBox.getValueOrError();
         hideHint();
         final Set<Object> collected = new LinkedHashSet<>();
         ProgressManager.getInstance().run(new Task.Modal(myProject, prefixPattern, true) {

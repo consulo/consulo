@@ -38,6 +38,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.search.FilenameIndex;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.view.tree.ProjectViewNode;
@@ -383,13 +384,8 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
     }
 
     @Override
-    public String getCheckBoxName() {
-      return null;
-    }
-
-    @Override
-    public char getCheckBoxMnemonic() {
-      return 0;
+    public LocalizeValue getCheckBoxName() {
+      return LocalizeValue.of();
     }
 
     @Override

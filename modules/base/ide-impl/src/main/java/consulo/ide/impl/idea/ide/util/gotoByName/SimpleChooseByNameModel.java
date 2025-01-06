@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -60,13 +61,8 @@ public abstract class SimpleChooseByNameModel implements ChooseByNameModel {
   }
 
   @Override
-  public String getCheckBoxName() {
-    return null;
-  }
-
-  @Override
-  public char getCheckBoxMnemonic() {
-    return 0;
+  public LocalizeValue getCheckBoxName() {
+    return LocalizeValue.of();
   }
 
   @Override

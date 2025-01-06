@@ -17,6 +17,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.Task;
@@ -202,8 +203,8 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
     }
 
     @Override
-    public String getCheckBoxName() {
-      return "Include closed tasks";
+    public LocalizeValue getCheckBoxName() {
+      return LocalizeValue.localizeTODO("Include closed tasks");
     }
 
     @Override

@@ -9,6 +9,7 @@ import consulo.application.util.matcher.NameUtil;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoFileItemProvider;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.localize.LocalizeValue;
 import consulo.util.io.FileUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.util.lang.StringUtil;
@@ -83,10 +84,9 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
   }
 
   @Override
-  public String getCheckBoxName() {
-    return IdeBundle.message("checkbox.include.non.project.files", IdeUICustomization.getInstance().getProjectConceptName());
+  public LocalizeValue getCheckBoxName() {
+    return IdeLocalize.checkboxIncludeNonProjectFiles();
   }
-
 
   @Nonnull
   @Override

@@ -21,6 +21,7 @@ import consulo.ide.navigation.GotoSymbolContributor;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.SymbolPresentationUtil;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.NavigationItem;
 import consulo.platform.Platform;
 import consulo.ide.localize.IdeLocalize;
@@ -61,8 +62,8 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   }
 
   @Override
-  public String getCheckBoxName() {
-    return IdeLocalize.checkboxIncludeNonProjectSymbols().get();
+  public LocalizeValue getCheckBoxName() {
+    return IdeLocalize.checkboxIncludeNonProjectSymbols();
   }
 
   @Override
@@ -73,13 +74,6 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   @Override
   public String getNotFoundMessage() {
     return IdeLocalize.labelNoMatchesFound().get();
-  }
-
-  @Override
-  public char getCheckBoxMnemonic() {
-    // Some combination like Alt+N, Ant+O, etc are a dead sysmbols, therefore
-    // we have to change mnemonics for Mac users.
-    return Platform.current().os().isMac() ? 'P' : 'n';
   }
 
   @Override

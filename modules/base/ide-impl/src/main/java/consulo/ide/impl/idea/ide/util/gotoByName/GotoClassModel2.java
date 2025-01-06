@@ -17,14 +17,15 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.NavigationItem;
 import consulo.platform.Platform;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -64,8 +65,8 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
   }
 
   @Override
-  public String getCheckBoxName() {
-    return IdeLocalize.checkboxIncludeNonProjectClasses().get();
+  public LocalizeValue getCheckBoxName() {
+    return IdeLocalize.checkboxIncludeNonProjectClasses();
   }
 
   @Override
@@ -76,13 +77,6 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
   @Override
   public String getNotFoundMessage() {
     return IdeLocalize.labelNoMatchesFound().get();
-  }
-
-  @Override
-  public char getCheckBoxMnemonic() {
-    // Some combination like Alt+N, Ant+O, etc are a dead symbols, therefore
-    // we have to change mnemonics for Mac users.
-    return Platform.current().os().isMac() ? 'P' : 'n';
   }
 
   @Override

@@ -31,6 +31,7 @@ import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ide.localize.IdeLocalize;
@@ -138,8 +139,8 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
 
   @Nullable
   @Override
-  public String getCheckBoxName() {
-    return IdeLocalize.checkboxDisabledIncluded().get();
+  public LocalizeValue getCheckBoxName() {
+    return IdeLocalize.checkboxDisabledIncluded();
   }
 
 

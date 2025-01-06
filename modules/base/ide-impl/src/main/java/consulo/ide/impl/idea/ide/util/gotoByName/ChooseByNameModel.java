@@ -15,55 +15,56 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 
 public interface ChooseByNameModel {
-  String getPromptText();
+    String getPromptText();
 
-  String getNotInMessage();
-  String getNotFoundMessage();
-  /** return null to hide checkbox panel */
-  @Nullable String getCheckBoxName();
+    String getNotInMessage();
 
-  /**
-   * @deprecated Mark mnemonic char with '&' ('&&' for mac if mnemonic char is 'N') in checkbox name instead
-   */
-  default char getCheckBoxMnemonic() {
-    return 0;
-  }
+    String getNotFoundMessage();
 
-  boolean loadInitialCheckBoxState();
-  void saveInitialCheckBoxState(boolean state);
+    /**
+     * @return consulo.localize.LocalizeValue#of() for disable
+     */
+    @Nonnull
+    LocalizeValue getCheckBoxName();
 
-  ListCellRenderer getListCellRenderer();
+    boolean loadInitialCheckBoxState();
 
-  /**
-   * Returns the list of names to show in the chooser.
-   *
-   * @param checkBoxState the current state of the chooser checkbox (for example, [x] Include non-project classes for Ctrl-N)
-   * @return the names to show. All items in the returned array must be non-null.
-   *
-   */
-  @Nonnull
-  String[] getNames(boolean checkBoxState);
-  @Nonnull
-  Object[] getElementsByName(String name, boolean checkBoxState, final String pattern);
-  @Nullable
-  String getElementName(Object element);
+    void saveInitialCheckBoxState(boolean state);
 
-  @Nonnull
-  String[] getSeparators();
+    ListCellRenderer getListCellRenderer();
 
-  @Nullable
-  String getFullName(Object element);
+    /**
+     * Returns the list of names to show in the chooser.
+     *
+     * @param checkBoxState the current state of the chooser checkbox (for example, [x] Include non-project classes for Ctrl-N)
+     * @return the names to show. All items in the returned array must be non-null.
+     */
+    @Nonnull
+    String[] getNames(boolean checkBoxState);
 
-  @Nullable
-  String getHelpId();
+    @Nonnull
+    Object[] getElementsByName(String name, boolean checkBoxState, final String pattern);
 
-  boolean willOpenEditor();
+    @Nullable
+    String getElementName(Object element);
 
-  boolean useMiddleMatching();
+    @Nonnull
+    String[] getSeparators();
+
+    @Nullable
+    String getFullName(Object element);
+
+    @Nullable
+    String getHelpId();
+
+    boolean willOpenEditor();
+
+    boolean useMiddleMatching();
 }
