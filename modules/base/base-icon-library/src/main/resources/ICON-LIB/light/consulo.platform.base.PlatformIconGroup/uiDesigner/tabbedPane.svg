@@ -1,3 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <path fill="#9AA7B0" fill-opacity=".8" fill-rule="evenodd" d="M7,6 L7,3 L3,3 L3,13 L5,13 L13,13 L13,6 L7,6 Z M2,2 L14,2 L14,14 L2,14 L2,2 Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <line x1="5" y1="3.5" x2="14" y2="3.5" stroke="#6C707E" stroke-linecap="round"/>
+    <line x1="1" y1="4" x2="1" y2="14" stroke="#6C707E" stroke-linecap="round"/>
+    <line x1="1" y1="14" x2="14" y2="14" stroke="#6C707E" stroke-linecap="round"/>
+    <line x1="14" y1="3.5" x2="14" y2="14" stroke="#6C707E" stroke-linecap="round"/>
+    <clipPath id="tabClip">
+        <rect x="0" y="0" width="16" height="4"/>
+    </clipPath>
+    <rect x="1" y="1.5" width="4" height="4" stroke="#6C707E" stroke-linecap="round" rx="1" clip-path="url(#tabClip)"/>
+    <rect x="5" y="1.5" width="4" height="4" stroke="#6C707E" stroke-linecap="round" rx="1" clip-path="url(#tabClip)"/>
 </svg>
