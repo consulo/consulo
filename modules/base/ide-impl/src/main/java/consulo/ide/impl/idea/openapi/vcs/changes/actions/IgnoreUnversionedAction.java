@@ -46,7 +46,7 @@ public class IgnoreUnversionedAction extends AnAction {
     @Nullable
     @Override
     protected Image getTemplateIcon() {
-        return PlatformIconGroup.filetypesAny_type();
+        return PlatformIconGroup.filetypesIgnored();
     }
 
     @Override

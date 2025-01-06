@@ -33,7 +33,7 @@ public class IgnoredSettingsAction extends AnAction implements DumbAware {
     super(
       "Configure Ignored Files...",
       "Specify file paths and masks which are ignored",
-       PlatformIconGroup.filetypesAny_type()
+       PlatformIconGroup.filetypesIgnored()
     );
   }
 
