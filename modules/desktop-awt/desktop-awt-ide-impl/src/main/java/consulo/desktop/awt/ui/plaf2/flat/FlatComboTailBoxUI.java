@@ -49,7 +49,7 @@ public class FlatComboTailBoxUI extends FlatComboBoxUI {
     }
 
     public FlatComboTailBoxUI() {
-        myTailPanel.setBorder(new EmptyBorder(0, 0, 0, 12));
+        myTailPanel.setBorder(new EmptyBorder(0, 0, 0, 8));
         myTailPanel.setOpaque(false);
     }
 

@@ -89,6 +89,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
             JToolBar toolBar = new JToolBar();
             toolBar.add(myBrowseButton);
 
+            toolBar.setBorder(JBCurrentTheme.textFieldSubBorder(false));
+
             HasSuffixComponent.setSuffixComponent(myComponent, toolBar);
         }
         else {
