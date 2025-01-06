@@ -57,7 +57,6 @@ public class AllIcons {
         public static final Image FindAndShowPrevMatchesSmall = PlatformIconGroup.actionsFindandshowprevmatchessmall();
         public static final Image Find = PlatformIconGroup.actionsFind(); // 16x16
         public static final Image FindPlain = Find; // 16x16
-        public static final Image ForceRefresh = PlatformIconGroup.actionsForcerefresh(); // 16x16
         public static final Image Forward = PlatformIconGroup.actionsForward(); // 16x16
         public static final Image GC = PlatformIconGroup.actionsGc(); // 16x16
         public static final Image Get = PlatformIconGroup.actionsGet(); // 16x16
