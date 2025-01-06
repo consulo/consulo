@@ -609,7 +609,6 @@ public class AllIcons {
         public static final Image ToolWindowCoverage = PlatformIconGroup.toolwindowsToolwindowcoverage(); // 13x13
         public static final Image ToolWindowFind = PlatformIconGroup.toolwindowsToolwindowfind(); // 13x13
         public static final Image ToolWindowHierarchy = PlatformIconGroup.toolwindowsToolwindowhierarchy(); // 13x13
-        public static final Image ToolWindowInspection = PlatformIconGroup.toolwindowsToolwindowinspection(); // 13x13
         public static final Image ToolWindowMessages = PlatformIconGroup.toolwindowsToolwindowmessages(); // 13x13
         public static final Image ToolWindowModuleDependencies = PlatformIconGroup.toolwindowsToolwindowmoduledependencies(); // 13x13
         public static final Image ToolWindowPalette = PlatformIconGroup.toolwindowsToolwindowpalette(); // 13x13

@@ -23,7 +23,6 @@
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.NotNullLazyValue;
@@ -35,6 +34,7 @@ import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolReg
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.SuppressIntentionAction;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -74,7 +74,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
                 ToolWindow toolWindow =
                     toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
                 ContentManager contentManager = toolWindow.getContentManager();
-                toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowInspection);
+                toolWindow.setIcon(PlatformIconGroup.toolwindowsProblems());
                 ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
                 return contentManager;
             }

@@ -20,6 +20,7 @@ import consulo.application.AllIcons;
 import consulo.execution.executor.Executor;
 import consulo.localize.LocalizeValue;
 import consulo.module.extension.ModuleExtensionHelper;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
@@ -38,7 +39,7 @@ public class SandExecutor extends Executor {
 
     @Override
     public Image getToolWindowIcon() {
-        return AllIcons.Toolwindows.ToolWindowInspection;
+        return PlatformIconGroup.ideHectoroff();
     }
 
     @Nonnull

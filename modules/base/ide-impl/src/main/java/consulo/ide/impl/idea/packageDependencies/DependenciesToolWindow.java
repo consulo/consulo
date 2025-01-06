@@ -18,18 +18,17 @@ package consulo.ide.impl.idea.packageDependencies;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ide.ServiceManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -58,7 +57,7 @@ public class DependenciesToolWindow {
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.DEPENDENCIES, true, ToolWindowAnchor.BOTTOM, project);
         myContentManager = toolWindow.getContentManager();
 
-        toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowInspection);
+        toolWindow.setIcon(PlatformIconGroup.toolwindowsToolwindowmoduledependencies());
         new ContentManagerWatcher(toolWindow, myContentManager);
       }
     });

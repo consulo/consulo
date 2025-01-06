@@ -191,7 +191,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     group.add(new AnAction(
       analyzeDepsAction.getTemplatePresentation().getTextValue(),
       analyzeDepsAction.getTemplatePresentation().getDescriptionValue(),
-      AllIcons.Toolwindows.ToolWindowInspection
+      PlatformIconGroup.toolwindowsToolwindowmoduledependencies()
     ) {
 
       @Override

@@ -17,18 +17,15 @@
 package consulo.ide.impl.idea.codeInspection.ui;
 
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.application.AllIcons;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Enumeration;
 
 /**
  * @author max
  */
 public class InspectionNode extends InspectionTreeNode {
-  public static final Image TOOL = ImageEffects.resize(AllIcons.Toolwindows.ToolWindowInspection, Image.DEFAULT_ICON_SIZE);
   private boolean myTooBigForOnlineRefresh = false;
 
   public InspectionNode(@Nonnull InspectionToolWrapper toolWrapper) {
@@ -46,7 +43,7 @@ public class InspectionNode extends InspectionTreeNode {
 
   @Override
   public Image getIcon() {
-    return TOOL;
+    return null;
   }
 
   public boolean isTooBigForOnlineRefresh() {
