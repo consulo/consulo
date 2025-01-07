@@ -160,10 +160,11 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     final ModifiableRootModel model = getModel();
     if (model != null) {
+      boolean onlySingleFile = model.getModule().getModuleDirPath() != null;
       final ContentEntry[] contentEntries = model.getContentEntries();
       if (contentEntries.length > 0) {
         for (final ContentEntry contentEntry : contentEntries) {
-          addContentEntryPanel(contentEntry);
+          addContentEntryPanel(contentEntry, onlySingleFile);
         }
         selectContentEntry(contentEntries[0]);
       }
@@ -176,8 +177,8 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     return myModulesProvider.getModule(myModuleName);
   }
 
-  protected void addContentEntryPanel(final ContentEntry contentEntry) {
-    final ContentEntryEditor contentEntryEditor = createContentEntryEditor(contentEntry);
+  protected void addContentEntryPanel(final ContentEntry contentEntry, boolean onlySingleFile) {
+    final ContentEntryEditor contentEntryEditor = createContentEntryEditor(contentEntry, onlySingleFile);
     contentEntryEditor.initUI();
     contentEntryEditor.addContentEntryEditorListener(myContentEntryEditorListener);
     registerDisposable(() -> contentEntryEditor.removeContentEntryEditorListener(myContentEntryEditorListener));
@@ -188,7 +189,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     myEditorsPanel.add(component);
   }
 
-  protected ContentEntryEditor createContentEntryEditor(ContentEntry contentEntry) {
+  private ContentEntryEditor createContentEntryEditor(ContentEntry contentEntry, boolean onlySingleFile) {
     return new ContentEntryEditor(contentEntry) {
       @Override
       protected ModifiableRootModel getModel() {
@@ -240,8 +241,9 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     if (model != null) {
       final ContentEntry[] contentEntries = model.getContentEntries();
       if (contentEntries.length > 0) {
+        boolean onlySingleFile = model.getModule().getModuleDirPath() != null;
         for (final ContentEntry contentEntry : contentEntries) {
-          addContentEntryPanel(contentEntry);
+          addContentEntryPanel(contentEntry, onlySingleFile);
         }
         selectContentEntry(contentEntries[0]);
       }
