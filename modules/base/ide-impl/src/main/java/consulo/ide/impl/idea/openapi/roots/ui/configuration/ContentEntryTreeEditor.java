@@ -42,7 +42,6 @@ import consulo.module.content.layer.ContentFolder;
 import consulo.module.extension.ModuleExtension;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -60,7 +59,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 import java.util.Arrays;
@@ -77,9 +75,8 @@ public class ContentEntryTreeEditor {
     protected final Tree myTree;
     private FileSystemTreeImpl myFileSystemTree;
     private final JPanel myTreePanel;
-    private final DefaultMutableTreeNode EMPTY_TREE_ROOT = new DefaultMutableTreeNode(ProjectLocalize.modulePathsEmptyNode().get());
     protected final DefaultActionGroup myEditingActionsGroup;
-    private ContentEntryEditor myContentEntryEditor;
+    private FolderContentEntryEditor myContentEntryEditor;
     private final MyContentEntryEditorListener myContentEntryEditorListener = new MyContentEntryEditorListener();
     private final FileChooserDescriptor myDescriptor;
 
@@ -131,7 +128,7 @@ public class ContentEntryTreeEditor {
     /**
      * @param contentEntryEditor : null means to clear the editor
      */
-    public void setContentEntryEditor(@Nullable final ContentEntryEditor contentEntryEditor) {
+    public void setContentEntryEditor(@Nullable final FolderContentEntryEditor contentEntryEditor) {
         if (myContentEntryEditor != null && myContentEntryEditor.equals(contentEntryEditor)) {
             return;
         }
@@ -174,7 +171,7 @@ public class ContentEntryTreeEditor {
                     protected void customize(SimpleColoredComponent renderer, Object value, boolean selected, boolean focused) {
                         super.customize(renderer, value, selected, focused);
 
-                        ContentEntryEditor contentEntryEditor = getContentEntryEditor();
+                        FolderContentEntryEditor contentEntryEditor = getContentEntryEditor();
                         if (contentEntryEditor == null) {
                             return;
                         }
@@ -237,7 +234,7 @@ public class ContentEntryTreeEditor {
         return icon;
     }
 
-    public ContentEntryEditor getContentEntryEditor() {
+    public FolderContentEntryEditor getContentEntryEditor() {
         return myContentEntryEditor;
     }
 
@@ -274,14 +271,14 @@ public class ContentEntryTreeEditor {
 //    }
     }
 
-    private class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
+    private class MyContentEntryEditorListener implements FolderContentEntryEditor.ContentEntryEditorListener {
         @Override
-        public void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder folder) {
+        public void folderAdded(@Nonnull FolderContentEntryEditor editor, ContentFolder folder) {
             update();
         }
 
         @Override
-        public void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder file) {
+        public void folderRemoved(@Nonnull FolderContentEntryEditor editor, ContentFolder file) {
             update();
         }
     }

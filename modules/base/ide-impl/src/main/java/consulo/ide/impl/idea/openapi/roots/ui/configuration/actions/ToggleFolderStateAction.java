@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.module.content.layer.ContentFolder;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ContentEntryEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.FolderContentEntryEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ContentEntryTreeEditor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.ContentFolderTypeProvider;
@@ -48,7 +48,7 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
     final VirtualFile[] selectedFiles = getSelectedFiles();
     if (selectedFiles.length == 0) return false;
 
-    final ContentEntryEditor editor = myEntryTreeEditor.getContentEntryEditor();
+    final FolderContentEntryEditor editor = myEntryTreeEditor.getContentEntryEditor();
     final ContentFolder folder = editor.getFolder(selectedFiles[0]);
     return folder != null && folder.getType() == myContentFolderType;
   }
@@ -58,7 +58,7 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
     final VirtualFile[] selectedFiles = getSelectedFiles();
     assert selectedFiles.length != 0;
 
-    final ContentEntryEditor contentEntryEditor = myEntryTreeEditor.getContentEntryEditor();
+    final FolderContentEntryEditor contentEntryEditor = myEntryTreeEditor.getContentEntryEditor();
     for (VirtualFile selectedFile : selectedFiles) {
       final ContentFolder contentFolder = contentEntryEditor.getFolder(selectedFile);
       if (isSelected) {

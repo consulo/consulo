@@ -64,7 +64,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     protected ContentEntryTreeEditor myRootTreeEditor;
     private MyContentEntryEditorListener myContentEntryEditorListener;
     protected JPanel myEditorsPanel;
-    private final Map<ContentEntry, ContentEntryEditor> myEntryToEditorMap = new HashMap<>();
+    private final Map<ContentEntry, FolderContentEntryEditor> myEntryToEditorMap = new HashMap<>();
     private ContentEntry mySelectedEntry;
 
     private VirtualFile myLastSelectedDir = null;
@@ -87,7 +87,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
                 if (module == null || module.isDisposed()) {
                     return;
                 }
-                for (final ContentEntryEditor editor : myEntryToEditorMap.values()) {
+                for (final FolderContentEntryEditor editor : myEntryToEditorMap.values()) {
                     editor.update();
                 }
             }
@@ -180,7 +180,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     }
 
     protected void addContentEntryPanel(final ContentEntry contentEntry, boolean onlySingleFile) {
-        final ContentEntryEditor contentEntryEditor = createContentEntryEditor(contentEntry, onlySingleFile);
+        final FolderContentEntryEditor contentEntryEditor = createContentEntryEditor(contentEntry, onlySingleFile);
         contentEntryEditor.initUI();
         contentEntryEditor.addContentEntryEditorListener(myContentEntryEditorListener);
         registerDisposable(() -> contentEntryEditor.removeContentEntryEditorListener(myContentEntryEditorListener));
@@ -191,8 +191,8 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         myEditorsPanel.add(component);
     }
 
-    private ContentEntryEditor createContentEntryEditor(ContentEntry contentEntry, boolean onlySingleFile) {
-        return new ContentEntryEditor(contentEntry) {
+    private FolderContentEntryEditor createContentEntryEditor(ContentEntry contentEntry, boolean onlySingleFile) {
+        return new FolderContentEntryEditor(contentEntry) {
             @Override
             protected ModifiableRootModel getModel() {
                 return ContentEntriesEditor.this.getModel();
@@ -206,14 +206,14 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         }
         try {
             if (mySelectedEntry != null) {
-                ContentEntryEditor editor = myEntryToEditorMap.get(mySelectedEntry);
+                FolderContentEntryEditor editor = myEntryToEditorMap.get(mySelectedEntry);
                 if (editor != null) {
                     editor.setSelected(false);
                 }
             }
 
             if (contentEntryUrl != null) {
-                ContentEntryEditor editor = myEntryToEditorMap.get(contentEntryUrl);
+                FolderContentEntryEditor editor = myEntryToEditorMap.get(contentEntryUrl);
                 if (editor != null) {
                     editor.setSelected(true);
                     final JComponent component = editor.getComponent();
@@ -307,14 +307,14 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     public void saveData() {
     }
 
-    private final class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
+    private final class MyContentEntryEditorListener implements FolderContentEntryEditor.ContentEntryEditorListener {
         @Override
-        public void editingStarted(@Nonnull ContentEntryEditor editor) {
+        public void editingStarted(@Nonnull FolderContentEntryEditor editor) {
             selectContentEntry(editor.getContentEntry());
         }
 
         @Override
-        public void beforeEntryDeleted(@Nonnull ContentEntryEditor editor) {
+        public void beforeEntryDeleted(@Nonnull FolderContentEntryEditor editor) {
             final ContentEntry entryUrl = editor.getContentEntry();
             if (mySelectedEntry != null && mySelectedEntry.equals(entryUrl)) {
                 myRootTreeEditor.setContentEntryEditor(null);
@@ -326,7 +326,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         }
 
         @Override
-        public void navigationRequested(@Nonnull ContentEntryEditor editor, VirtualFile file) {
+        public void navigationRequested(@Nonnull FolderContentEntryEditor editor, VirtualFile file) {
             if (mySelectedEntry != null && mySelectedEntry.equals(editor.getContentEntry())) {
                 myRootTreeEditor.requestFocus();
                 myRootTreeEditor.select(file);
@@ -339,7 +339,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         }
 
         private void removeContentEntryPanel(final ContentEntry contentEntry) {
-            ContentEntryEditor editor = myEntryToEditorMap.get(contentEntry);
+            FolderContentEntryEditor editor = myEntryToEditorMap.get(contentEntry);
             if (editor != null) {
                 myEditorsPanel.remove(editor.getComponent());
                 myEntryToEditorMap.remove(contentEntry);
