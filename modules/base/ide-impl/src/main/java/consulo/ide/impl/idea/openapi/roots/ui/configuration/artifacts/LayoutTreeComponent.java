@@ -105,7 +105,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     });
     createPropertiesPanel();
     myTreePanel = new JPanel(new BorderLayout());
-    myTreePanel.add(ScrollPaneFactory.createScrollPane(myTree), BorderLayout.CENTER);
+    myTreePanel.add(ScrollPaneFactory.createScrollPane(myTree, true), BorderLayout.CENTER);
     myTreePanel.add(myPropertiesPanelWrapper, BorderLayout.SOUTH);
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       DnDManager.getInstance().registerTarget(this, myTree);

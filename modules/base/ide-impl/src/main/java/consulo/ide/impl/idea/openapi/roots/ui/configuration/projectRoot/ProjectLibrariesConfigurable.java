@@ -20,68 +20,79 @@ import consulo.configurable.NonDefaultProjectConfigurable;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.internal.ConfigurableWeight;
+import consulo.configurable.internal.FullContentConfigurable;
 import consulo.content.library.LibraryTablePresentation;
 import consulo.content.library.LibraryTablesRegistrar;
 import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import javax.swing.*;
+import java.awt.*;
 
 @ExtensionImpl
-public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable implements ConfigurableWeight, ProjectConfigurable, NonDefaultProjectConfigurable {
-  public static final String ID = "project.libraries";
+public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable implements ConfigurableWeight,
+    ProjectConfigurable,
+    NonDefaultProjectConfigurable,
+    FullContentConfigurable {
+    public static final String ID = "project.libraries";
 
-  @Inject
-  public ProjectLibrariesConfigurable(final Project project) {
-    super(project);
-    myLevel = LibraryTablesRegistrar.PROJECT_LEVEL;
-  }
+    @Inject
+    public ProjectLibrariesConfigurable(final Project project) {
+        super(project);
+        myLevel = LibraryTablesRegistrar.PROJECT_LEVEL;
+    }
 
-  @Override
-  protected String getComponentStateKey() {
-    return "ProjectLibrariesConfigurable.UI";
-  }
+    @Override
+    public void setBannerComponent(JComponent bannerComponent) {
+        myNorthPanel.add(bannerComponent, BorderLayout.NORTH);
+    }
 
-  @Override
-  @Nls
-  public String getDisplayName() {
-    return "Libraries";
-  }
+    @Override
+    protected String getComponentStateKey() {
+        return "ProjectLibrariesConfigurable.UI";
+    }
 
-  @Nullable
-  @Override
-  public String getParentId() {
-    return StandardConfigurableIds.PROJECT_GROUP;
-  }
+    @Override
+    @Nls
+    public String getDisplayName() {
+        return "Libraries";
+    }
 
-  @Override
-  @Nonnull
-  public String getId() {
-    return ID;
-  }
+    @Nullable
+    @Override
+    public String getParentId() {
+        return StandardConfigurableIds.PROJECT_GROUP;
+    }
 
-  @Override
-  public LibraryTableModifiableModelProvider getModelProvider() {
-    return getLibrariesConfigurator().getProjectLibrariesProvider();
-  }
+    @Override
+    @Nonnull
+    public String getId() {
+        return ID;
+    }
 
-  @Override
-  public LibraryTablePresentation getLibraryTablePresentation() {
-    return LibraryTablesRegistrar.getInstance().getLibraryTable(myProject).getPresentation();
-  }
+    @Override
+    public LibraryTableModifiableModelProvider getModelProvider() {
+        return getLibrariesConfigurator().getProjectLibrariesProvider();
+    }
 
-  @Override
-  protected String getAddText() {
-    return ProjectBundle.message("add.new.project.library.text");
-  }
+    @Override
+    public LibraryTablePresentation getLibraryTablePresentation() {
+        return LibraryTablesRegistrar.getInstance().getLibraryTable(myProject).getPresentation();
+    }
 
-  @Override
-  public int getConfigurableWeight() {
-    return ProjectConfigurableWeights.LIBRARIES;
-  }
+    @Override
+    protected String getAddText() {
+        return ProjectBundle.message("add.new.project.library.text");
+    }
+
+    @Override
+    public int getConfigurableWeight() {
+        return ProjectConfigurableWeights.LIBRARIES;
+    }
 }

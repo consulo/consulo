@@ -99,7 +99,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
     private final DetailsComponent myDetails = new DetailsComponent(false, false);
     protected JPanel myWholePanel;
-    public JPanel myNorthPanel = new JPanel(new BorderLayout());
+    protected JPanel myNorthPanel = new JPanel(new BorderLayout());
 
     private final List<ItemsChangeListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
@@ -259,7 +259,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
             toolbar.setTargetComponent(myTree);
 
             final JComponent component = toolbar.getComponent();
-            myNorthPanel.add(component, BorderLayout.NORTH);
+            myNorthPanel.add(component, BorderLayout.CENTER);
         }
     }
 

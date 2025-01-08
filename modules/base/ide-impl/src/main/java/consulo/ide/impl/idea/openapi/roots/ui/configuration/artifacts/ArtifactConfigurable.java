@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactType;
 import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.util.lang.Comparing;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactType;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -56,8 +59,9 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
     }
   }
 
+  @RequiredUIAccess
   @Override
-  public JComponent createOptionsPanel() {
+  public JComponent createOptionsPanel(@Nonnull Disposable parentDisposable) {
     return getEditor().createMainComponent();
   }
 

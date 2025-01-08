@@ -37,7 +37,7 @@ import java.awt.*;
  */
 public abstract class NamedConfigurable<T> implements Configurable, MasterDetailsConfigurable<T> {
   private JTextField myNameField;
-  private JPanel myNamePanel;
+  protected JPanel myNamePanel;
   private JPanel myWholePanel;
   private JPanel myOptionsPanel;
   private JPanel myTopRightPanel;
@@ -62,6 +62,11 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
         }
       });
     }
+    
+    setBorder();
+  }
+
+  protected void setBorder() {
     myNamePanel.setBorder(JBUI.Borders.empty(10, 10, 6, 10));
   }
 

@@ -17,27 +17,32 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
 public abstract class ProjectStructureElementConfigurable<T> extends NamedConfigurable<T> {
-  protected ProjectStructureElementConfigurable() {
-  }
+    protected ProjectStructureElementConfigurable() {
+    }
 
-  protected ProjectStructureElementConfigurable(boolean isNameEditable, @Nullable Runnable updateTree) {
-    super(isNameEditable, updateTree);
-  }
+    protected ProjectStructureElementConfigurable(boolean isNameEditable, @Nullable Runnable updateTree) {
+        super(isNameEditable, updateTree);
+    }
 
-  @Nullable
-  public abstract ProjectStructureElement getProjectStructureElement();
+    @Nullable
+    public abstract ProjectStructureElement getProjectStructureElement();
 
-  @Override
-  @Nullable
-  public Image getIcon(boolean open) {
-    return null;
-  }
+    @Override
+    protected void setBorder() {
+        myNamePanel.setBorder(JBUI.Borders.empty(0, 10, 6, 10));
+    }
+
+    @Override
+    @Nullable
+    public Image getIcon(boolean open) {
+        return null;
+    }
 }
