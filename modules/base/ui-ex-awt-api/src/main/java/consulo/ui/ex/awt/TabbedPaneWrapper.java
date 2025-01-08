@@ -65,7 +65,7 @@ public class TabbedPaneWrapper {
   public TabbedPaneWrapper(int tabPlacement, PrevNextActionsDescriptor installKeyboardNavigation, @Nonnull Disposable parentDisposable) {
     final TabFactoryBuilder.TabFactory factory;
     if (SwingConstants.BOTTOM == tabPlacement || SwingConstants.TOP == tabPlacement) {
-      factory = TabFactoryBuilder.getInstance().createEditorTabPanel(this, null, parentDisposable);
+      factory = TabFactoryBuilder.getInstance().createJTabbedPanel(this);
     }
     else {
       factory = TabFactoryBuilder.getInstance().createJTabbedPanel(this);

@@ -20,12 +20,12 @@ import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.*;
 import consulo.ui.ex.awt.Splitter;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.ui.ex.awt.tree.CheckboxTreeNoPolicy;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
@@ -154,7 +154,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
     mySplitter.setFirstComponent(myTree);
 
-    rootPane.add(ScrollPaneFactory.createScrollPane(mySplitter), BorderLayout.CENTER);
+    rootPane.add(ScrollPaneFactory.createScrollPane(mySplitter, true), BorderLayout.CENTER);
 
     return rootPane;
   }

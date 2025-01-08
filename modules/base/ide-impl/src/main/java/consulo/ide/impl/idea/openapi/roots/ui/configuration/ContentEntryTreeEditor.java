@@ -93,7 +93,7 @@ public class ContentEntryTreeEditor {
         new TreeSpeedSearch(myTree);
 
         myTreePanel = new MyPanel(new BorderLayout());
-        final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree);
+        final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
         myTreePanel.add(scrollPane, BorderLayout.CENTER);
 
         myTreePanel.setVisible(false);

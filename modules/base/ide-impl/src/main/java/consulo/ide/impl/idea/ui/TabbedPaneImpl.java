@@ -22,6 +22,7 @@ import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.TabbedPane;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import org.intellij.lang.annotations.JdkConstants;
@@ -49,6 +50,7 @@ public class TabbedPaneImpl extends JBTabbedPane implements TabbedPane {
   public TabbedPaneImpl(@JdkConstants.TabPlacement int tabPlacement) {
     super(tabPlacement);
     setFocusable(false);
+    setTabComponentInsets(JBUI.emptyInsets());
     addMouseListener(new MouseAdapter() {
       @Override
       public void mousePressed(final MouseEvent e) {

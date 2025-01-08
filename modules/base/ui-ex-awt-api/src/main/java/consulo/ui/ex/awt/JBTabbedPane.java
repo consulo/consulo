@@ -18,10 +18,9 @@ package consulo.ui.ex.awt;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -97,15 +96,6 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
     if (component instanceof JComponent && myTabComponentInsets != null) {
       UIUtil.addInsets((JComponent)component, getTabComponentInsets());
     }
-  }
-
-  /**
-   * @deprecated Use {@link JBTabbedPane#setTabComponentInsets(Insets)} instead of overriding
-   */
-  @Deprecated
-  @Nonnull
-  protected Insets getInsetsForTabComponent() {
-    return myTabComponentInsets;
   }
 
   @Nullable
