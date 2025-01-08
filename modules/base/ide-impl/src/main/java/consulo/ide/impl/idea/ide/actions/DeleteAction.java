@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.language.editor.refactoring.TitledHandler;
 import consulo.logging.Logger;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;

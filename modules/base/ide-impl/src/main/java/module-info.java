@@ -631,7 +631,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.profile.codeInspection.ui.header;
   exports consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
   exports consulo.ide.impl.idea.profile.codeInspection.ui.table;
-  exports consulo.ide.impl.idea.refactoring;
   exports consulo.ide.impl.idea.refactoring.actions;
   exports consulo.ide.impl.idea.refactoring.changeSignature;
   exports consulo.ide.impl.idea.refactoring.changeSignature.inplace;
@@ -640,12 +639,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.refactoring.inline;
   exports consulo.ide.impl.idea.refactoring.introduce.inplace;
   exports consulo.ide.impl.idea.refactoring.lang;
-  exports consulo.ide.impl.idea.refactoring.listeners.impl;
-  exports consulo.ide.impl.idea.refactoring.listeners.impl.impl;
-  exports consulo.ide.impl.idea.refactoring.memberPullUp;
-  exports consulo.ide.impl.idea.refactoring.openapi.impl;
   exports consulo.ide.impl.idea.refactoring.rename;
-  exports consulo.ide.impl.idea.refactoring.rename.inplace;
   exports consulo.ide.impl.idea.refactoring.ui;
   exports consulo.ide.impl.idea.refactoring.util;
   exports consulo.ide.impl.idea.reference;

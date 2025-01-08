@@ -15,35 +15,40 @@
  */
 package consulo.language.editor.refactoring;
 
+import consulo.language.editor.refactoring.rename.AutomaticRenamerFactory;
 import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
 
 /**
  * @author dsl
- *
  * @see RefactoringFactory#createRename(PsiElement, String)
  */
 public interface RenameRefactoring extends Refactoring {
 
-  /**
-   * Add element to be renamed.
-   *
-   * @param element element to be renamed.
-   * @param newName new name for the element.
-   */
-  void addElement(PsiElement element, String newName);
+    /**
+     * Add element to be renamed.
+     *
+     * @param element element to be renamed.
+     * @param newName new name for the element.
+     */
+    void addElement(PsiElement element, String newName);
 
-  Set<PsiElement> getElements();
+    Set<PsiElement> getElements();
 
-  Collection<String> getNewNames();
+    Collection<String> getNewNames();
 
-  void setSearchInComments(boolean value);
+    void setSearchInComments(boolean value);
 
-  void setSearchInNonJavaFiles(boolean value);
+    void setSearchInNonJavaFiles(boolean value);
 
-  boolean isSearchInComments();
+    boolean isSearchInComments();
 
-  boolean isSearchInNonJavaFiles();
+    boolean isSearchInNonJavaFiles();
+
+    void addRenamerFactory(@Nonnull AutomaticRenamerFactory factory);
+
+    void removeRenamerFactory(@Nonnull AutomaticRenamerFactory factory);
 }

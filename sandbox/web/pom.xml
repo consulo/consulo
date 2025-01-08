@@ -201,7 +201,12 @@
             <artifactId>consulo-web-browser-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-editor-refactoring-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <!--TODO [VISTALL] temp dependency-->
         <dependency>
             <groupId>${project.groupId}</groupId>

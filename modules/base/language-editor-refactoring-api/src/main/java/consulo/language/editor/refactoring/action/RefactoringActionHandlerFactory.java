@@ -21,30 +21,35 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 
 /**
  * Use this project component to create {@link RefactoringActionHandler}s for various
  * IntelliJ IDEA refactorings.
+ *
  * @author dsl
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class RefactoringActionHandlerFactory {
-  public static RefactoringActionHandlerFactory getInstance() {
-    return Application.get().getInstance(RefactoringActionHandlerFactory.class);
-  }
+public interface RefactoringActionHandlerFactory {
+    public static RefactoringActionHandlerFactory getInstance() {
+        return Application.get().getInstance(RefactoringActionHandlerFactory.class);
+    }
 
+    /**
+     * Creates handler for Safe Delete refactoring.<p>
+     * <p>
+     * {@link RefactoringActionHandler#invoke(Project, PsiElement[], DataContext)}
+     * accepts a list of {@link PsiElement}s to delete.
+     */
+    @Nonnull
+    RefactoringActionHandler createSafeDeleteHandler();
 
-  /**
-   * Creates handler for Safe Delete refactoring.<p>
-   *
-   * {@link RefactoringActionHandler#invoke(Project, PsiElement[], DataContext)}
-   * accepts a list of {@link PsiElement}s to delete.
-   * @return
-   */
-  public abstract RefactoringActionHandler createSafeDeleteHandler();
+    @Nonnull
+    RefactoringActionHandler createMoveHandler();
 
+    @Nonnull
+    RefactoringActionHandler createRenameHandler();
 
-  public abstract RefactoringActionHandler createMoveHandler();
-
-  public abstract RefactoringActionHandler createRenameHandler();
+    @Nonnull
+    RefactoringActionHandler createInlineHandler();
 }

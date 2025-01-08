@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.content.library.Library;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.language.editor.refactoring.TitledHandler;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.language.psi.PsiElement;

@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.language.editor.refactoring.TitledHandler;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;

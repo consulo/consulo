@@ -151,7 +151,7 @@
         <!-- HighlightManagerActions -->
         <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.highlighting.EscapeHandler"-->
         <!--order="after hide-hints"/>-->
-        <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.EscapeHandler"-->
+        <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.language.editor.refactoring.impl.internal.rename.EscapeHandler"-->
         <!--order="before hide-hints"/>-->
 
         <!--<editorTypedHandler implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupTypedHandler" id="lookup"/>-->
@@ -166,7 +166,7 @@
 
 
         <!--<completion.contributor language="any"-->
-        <!--implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.CompletionContributorForInplaceRename"-->
+        <!--implementationClass="consulo.language.editor.refactoring.impl.internal.rename.CompletionContributorForInplaceRename"-->
         <!--order="first"/>-->
 
 
@@ -1515,32 +1515,32 @@
                     class="consulo.ide.impl.idea.refactoring.actions.RefactoringQuickListPopupAction"
                     text="Refactor This..." description="Context aware popup with list of refactoring actions"/>
             <action id="RenameElement" class="consulo.language.editor.refactoring.rename.RenameElementAction"/>
-            <action id="ChangeSignature" class="consulo.ide.impl.idea.refactoring.actions.ChangeSignatureAction"/>
+            <action id="ChangeSignature" class="consulo.language.editor.refactoring.impl.internal.action.ChangeSignatureAction"/>
             <separator/>
-            <action id="Move" class="consulo.ide.impl.idea.refactoring.actions.MoveAction"/>
+            <action id="Move" class="consulo.language.editor.refactoring.impl.internal.action.MoveAction"/>
             <action id="CopyElement" class="consulo.ide.impl.idea.ide.actions.CopyElementAction"/>
             <action id="CloneElement" class="consulo.ide.impl.idea.ide.actions.CloneElementAction"/>
-            <action id="SafeDelete" class="consulo.ide.impl.idea.refactoring.actions.SafeDeleteAction"/>
+            <action id="SafeDelete" class="consulo.language.editor.refactoring.impl.internal.action.SafeDeleteAction"/>
             <separator/>
             <group id="IntroduceActionsGroup" popup="true">
-                <action id="IntroduceVariable" class="consulo.ide.impl.idea.refactoring.actions.IntroduceVariableAction"/>
-                <action id="IntroduceConstant" class="consulo.ide.impl.idea.refactoring.actions.IntroduceConstantAction"/>
-                <action id="IntroduceField" class="consulo.ide.impl.idea.refactoring.actions.IntroduceFieldAction"/>
-                <action id="IntroduceParameter" class="consulo.ide.impl.idea.refactoring.actions.IntroduceParameterAction"/>
+                <action id="IntroduceVariable" class="consulo.language.editor.refactoring.impl.internal.action.IntroduceVariableAction"/>
+                <action id="IntroduceConstant" class="consulo.language.editor.refactoring.impl.internal.action.IntroduceConstantAction"/>
+                <action id="IntroduceField" class="consulo.language.editor.refactoring.impl.internal.action.IntroduceFieldAction"/>
+                <action id="IntroduceParameter" class="consulo.language.editor.refactoring.impl.internal.action.IntroduceParameterAction"/>
                 <separator/>
-                <action id="ExtractMethod" class="consulo.ide.impl.idea.refactoring.actions.ExtractMethodAction"/>
+                <action id="ExtractMethod" class="consulo.language.editor.refactoring.impl.internal.action.ExtractMethodAction"/>
                 <separator/>
-                <action id="ExtractClass" class="consulo.ide.impl.idea.refactoring.actions.ExtractClassAction"/>
-                <action id="ExtractInclude" class="consulo.ide.impl.idea.refactoring.actions.ExtractIncludeAction"/>
-                <action id="ExtractInterface" class="consulo.ide.impl.idea.refactoring.actions.ExtractInterfaceAction"/>
-                <action id="ExtractSuperclass" class="consulo.ide.impl.idea.refactoring.actions.ExtractSuperclassAction"/>
-                <action id="ExtractModule" class="consulo.ide.impl.idea.refactoring.actions.ExtractModuleAction"/>
+                <action id="ExtractClass" class="consulo.language.editor.refactoring.impl.internal.action.ExtractClassAction"/>
+                <action id="ExtractInclude" class="consulo.language.editor.refactoring.impl.internal.action.ExtractIncludeAction"/>
+                <action id="ExtractInterface" class="consulo.language.editor.refactoring.impl.internal.action.ExtractInterfaceAction"/>
+                <action id="ExtractSuperclass" class="consulo.language.editor.refactoring.impl.internal.action.ExtractSuperclassAction"/>
+                <action id="ExtractModule" class="consulo.language.editor.refactoring.impl.internal.action.ExtractModuleAction"/>
             </group>
 
-            <action id="Inline" class="consulo.ide.impl.idea.refactoring.actions.InlineAction"/>
+            <action id="Inline" class="consulo.language.editor.refactoring.impl.internal.action.InlineAction"/>
             <separator/>
-            <action id="MembersPullUp" class="consulo.ide.impl.idea.refactoring.actions.PullUpAction"/>
-            <action id="MemberPushDown" class="consulo.ide.impl.idea.refactoring.actions.PushDownAction"/>
+            <action id="MembersPullUp" class="consulo.language.editor.refactoring.impl.internal.action.PullUpAction"/>
+            <action id="MemberPushDown" class="consulo.language.editor.refactoring.impl.internal.action.PushDownAction"/>
             <add-to-group group-id="MainMenu" anchor="after" relative-to-action="CodeMenu"/>
         </group>
 

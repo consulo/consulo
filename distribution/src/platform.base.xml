@@ -108,6 +108,7 @@
                 <include>consulo:consulo-usage-api</include>
                 <include>consulo:consulo-language-editor-ui-api</include>
                 <include>consulo:consulo-language-editor-refactoring-api</include>
+                <include>consulo:consulo-language-editor-refactoring-impl</include>
                 <include>consulo:consulo-diff-api</include>
                 <include>consulo:consulo-diff-impl</include>
                 <include>consulo:consulo-local-history-api</include>

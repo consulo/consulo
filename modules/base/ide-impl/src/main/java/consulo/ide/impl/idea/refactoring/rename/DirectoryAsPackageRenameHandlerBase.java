@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.refactoring.rename;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.language.editor.refactoring.TitledHandler;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;

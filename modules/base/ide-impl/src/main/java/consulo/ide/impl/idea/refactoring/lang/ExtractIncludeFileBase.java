@@ -27,7 +27,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.find.FindManager;
-import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.language.editor.refactoring.TitledHandler;
 import consulo.ide.impl.idea.ui.ReplacePromptDialog;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleManager;

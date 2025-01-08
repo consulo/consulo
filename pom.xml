@@ -142,6 +142,7 @@
     <module>modules/base/path-macro-impl</module>
     <module>modules/base/module-ui-api</module>
     <module>modules/base/language-editor-refactoring-api</module>
+    <module>modules/base/language-editor-refactoring-impl</module>
     <module>modules/base/language-copyright-api</module>
     <module>modules/base/web-browser-api</module>
     <module>modules/base/web-browser-impl</module>
