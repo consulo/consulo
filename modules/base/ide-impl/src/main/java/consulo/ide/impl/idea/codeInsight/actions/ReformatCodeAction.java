@@ -32,12 +32,14 @@ import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.image.Image;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
@@ -157,6 +159,11 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     new FileInEditorProcessor(file, editor, currentRunOptions).processCode();
   }
 
+  @Nullable
+  @Override
+  protected Image getTemplateIcon() {
+    return PlatformIconGroup.actionsReformatcode();
+  }
 
   @Nullable
   private static DirectoryFormattingOptions getDirectoryFormattingOptions(
