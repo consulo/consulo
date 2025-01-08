@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.InternalEditorKeys;
 import consulo.dataContext.DataProvider;
@@ -24,6 +25,7 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
+@ExtensionImpl
 public class FileEditorRule implements GetDataRule<FileEditor> {
   @Nonnull
   @Override

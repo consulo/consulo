@@ -17,6 +17,7 @@ package consulo.desktop.awt.data.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
+import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -112,8 +113,8 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Inject
-  public DesktopDataManagerImpl(Provider<WindowManager> windowManagerProvider) {
-    super(windowManagerProvider);
+  public DesktopDataManagerImpl(Application application, Provider<WindowManager> windowManagerProvider) {
+    super(application, windowManagerProvider);
   }
 
   private WindowManagerEx windowManager() {

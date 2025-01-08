@@ -17,6 +17,7 @@ package consulo.ide.impl;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.wm.WindowManager;
@@ -36,8 +37,8 @@ import java.awt.*;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedDataManagerImpl extends BaseDataManager {
   @Inject
-  public UnifiedDataManagerImpl(Provider<WindowManager> windowManagerProvider) {
-    super(windowManagerProvider);
+  public UnifiedDataManagerImpl(Application application, Provider<WindowManager> windowManagerProvider) {
+    super(application, windowManagerProvider);
   }
 
   @Nonnull

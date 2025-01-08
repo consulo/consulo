@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.CutProvider;
 import consulo.dataContext.DataProvider;
 import consulo.codeEditor.Editor;
@@ -23,6 +24,7 @@ import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
+@ExtensionImpl
 public class CutProviderRule implements GetDataRule<CutProvider> {
   @Nonnull
   @Override

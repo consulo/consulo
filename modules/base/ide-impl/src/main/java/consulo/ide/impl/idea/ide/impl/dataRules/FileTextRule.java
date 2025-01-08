@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.GetDataRule;
@@ -30,6 +31,7 @@ import jakarta.annotation.Nonnull;
 /**
  * @author mike
  */
+@ExtensionImpl
 public class FileTextRule implements GetDataRule<String> {
   @Nonnull
   @Override

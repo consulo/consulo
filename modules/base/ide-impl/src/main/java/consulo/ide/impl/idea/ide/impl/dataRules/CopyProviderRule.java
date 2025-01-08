@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataProvider;
@@ -23,6 +24,7 @@ import consulo.ui.ex.CopyProvider;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
+@ExtensionImpl
 public class CopyProviderRule implements GetDataRule<CopyProvider> {
   @Nonnull
   @Override
