@@ -1029,7 +1029,7 @@ action.MoveLineUp.text:
 action.MoveLineUp.description:
   text: Move selected lines one line up
 group.AnalyzeMenu.text:
-  text: Analy_ze
+  text: Analy_ze Code…
 action.InspectCode.text:
   text: _Inspect Code…
 action.InspectCode.description:

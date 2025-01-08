@@ -1440,6 +1440,26 @@
             <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="GoToPreviousError"/>
         </group>
 
+        <group id="AnalyzeActions">
+        </group>
+
+        <group id="AnalyzeMenu" popup="true">
+            <separator/>
+            <action id="RunInspection" class="consulo.ide.impl.idea.codeInspection.actions.RunInspectionAction"/>
+            <action id="PopupHector" class="consulo.ide.impl.idea.codeInsight.daemon.impl.PopupHectorAction"/>
+            <action id="ViewOfflineInspection" class="consulo.ide.impl.idea.codeInspection.actions.ViewOfflineResultsAction"/>
+            <separator/>
+            <reference ref="AnalyzeActions"/>
+        </group>
+
+        <group id="CodeCompletionGroup" class="consulo.ide.impl.idea.codeInsight.completion.actions.CodeCompletionGroup" popup="true">
+            <action id="CodeCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.CodeCompletionAction"/>
+            <action id="SmartTypeCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.SmartCodeCompletionAction"/>
+            <separator/>
+            <action id="HippieCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.HippieCompletionAction"/>
+            <action id="HippieBackwardCompletion"
+                    class="consulo.ide.impl.idea.codeInsight.completion.actions.HippieBackwardCompletionAction"/>
+        </group>
 
         <!-- Code -->
         <group id="CodeMenu" popup="true">
@@ -1451,14 +1471,15 @@
             <action id="Unwrap" class="consulo.ide.impl.idea.codeInsight.unwrap.UnwrapAction"/>
             <separator/>
 
-            <group id="CodeCompletionGroup" class="consulo.ide.impl.idea.codeInsight.completion.actions.CodeCompletionGroup" popup="true">
-                <action id="CodeCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.CodeCompletionAction"/>
-                <action id="SmartTypeCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.SmartCodeCompletionAction"/>
-                <separator/>
-                <action id="HippieCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.HippieCompletionAction"/>
-                <action id="HippieBackwardCompletion"
-                        class="consulo.ide.impl.idea.codeInsight.completion.actions.HippieBackwardCompletionAction"/>
-            </group>
+            <reference ref="CodeCompletionGroup" />
+
+            <separator/>
+
+            <action id="InspectCode" class="consulo.ide.impl.idea.codeInspection.actions.CodeInspectionAction"/>
+
+            <reference ref="AnalyzeMenu" />
+
+            <separator/>
 
             <group id="FoldingGroup" popup="true">
                 <action id="ExpandRegion" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.ExpandRegionAction"/>
@@ -2220,24 +2241,6 @@
         <reference ref="DelegateMethods">
             <add-to-group group-id="CodeMenu" anchor="after" relative-to-action="ImplementMethods"/>
         </reference>
-
-        <!-- Analyze -->
-        <group id="AnalyzeActions">
-        </group>
-
-        <group id="AnalyzeMenu" popup="true">
-            <separator/>
-            <reference ref="AnalyzeActions"/>
-            <add-to-group group-id="MainMenu" anchor="after" relative-to-action="CodeMenu"/>
-        </group>
-
-        <group id="InspectCodeGroup" text="Inspect Code Actions">
-            <action id="InspectCode" class="consulo.ide.impl.idea.codeInspection.actions.CodeInspectionAction"/>
-            <action id="RunInspection" class="consulo.ide.impl.idea.codeInspection.actions.RunInspectionAction"/>
-            <action id="PopupHector" class="consulo.ide.impl.idea.codeInsight.daemon.impl.PopupHectorAction"/>
-            <action id="ViewOfflineInspection" class="consulo.ide.impl.idea.codeInspection.actions.ViewOfflineResultsAction"/>
-            <add-to-group group-id="AnalyzeMenu" anchor="first"/>
-        </group>
 
         <group id="CompilerErrorViewPopupMenu">
         </group>
