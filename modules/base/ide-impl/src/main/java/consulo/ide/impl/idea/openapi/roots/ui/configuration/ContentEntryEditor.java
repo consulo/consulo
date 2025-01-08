@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.content.ContentFolderTypeProvider;
@@ -39,37 +38,38 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.EventListener;
+import java.util.function.Supplier;
 
-/**
- * @author Eugene Zhuravlev
- * @since Oct 8, 2003
- */
-public abstract class FolderContentEntryEditor implements ContentRootPanel.ActionCallback {
+public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
     private boolean myIsSelected;
     private ContentRootPanel myContentRootPanel;
     private JPanel myMainPanel;
     protected EventDispatcher<ContentEntryEditorListener> myEventDispatcher;
     private final ContentEntry myContentEntry;
+    private final boolean myOnlySingleFile;
+    private final Supplier<ModifiableRootModel> myModelSupplier;
 
     public interface ContentEntryEditorListener extends EventListener {
-        default void editingStarted(@Nonnull FolderContentEntryEditor editor) {
+        default void editingStarted(@Nonnull ContentEntryEditor editor) {
         }
 
-        default void beforeEntryDeleted(@Nonnull FolderContentEntryEditor editor) {
+        default void beforeEntryDeleted(@Nonnull ContentEntryEditor editor) {
         }
 
-        default void folderAdded(@Nonnull FolderContentEntryEditor editor, ContentFolder contentFolder) {
+        default void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder) {
         }
 
-        default void folderRemoved(@Nonnull FolderContentEntryEditor editor, ContentFolder contentFolder) {
+        default void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder) {
         }
 
-        default void navigationRequested(@Nonnull FolderContentEntryEditor editor, VirtualFile file) {
+        default void navigationRequested(@Nonnull ContentEntryEditor editor, VirtualFile file) {
         }
     }
 
-    public FolderContentEntryEditor(final ContentEntry contentEntry) {
+    public ContentEntryEditor(ContentEntry contentEntry, boolean onlySingleFile, Supplier<ModifiableRootModel> modelSupplier) {
         myContentEntry = contentEntry;
+        myOnlySingleFile = onlySingleFile;
+        myModelSupplier = modelSupplier;
     }
 
     public void initUI() {
@@ -78,7 +78,7 @@ public abstract class FolderContentEntryEditor implements ContentRootPanel.Actio
         myMainPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                myEventDispatcher.getMulticaster().editingStarted(FolderContentEntryEditor.this);
+                myEventDispatcher.getMulticaster().editingStarted(ContentEntryEditor.this);
             }
 
             @Override
@@ -105,7 +105,10 @@ public abstract class FolderContentEntryEditor implements ContentRootPanel.Actio
         return myContentEntry;
     }
 
-    protected abstract ModifiableRootModel getModel();
+    @Nonnull
+    protected ModifiableRootModel getModel() {
+        return myModelSupplier.get();
+    }
 
     @Override
     @RequiredUIAccess
@@ -121,9 +124,7 @@ public abstract class FolderContentEntryEditor implements ContentRootPanel.Actio
         }
         myEventDispatcher.getMulticaster().beforeEntryDeleted(this);
         final ContentEntry entry = getContentEntry();
-        if (entry != null) {
-            getModel().removeContentEntry(entry);
-        }
+        getModel().removeContentEntry(entry);
     }
 
     @Override
@@ -186,32 +187,24 @@ public abstract class FolderContentEntryEditor implements ContentRootPanel.Actio
     }
 
     protected ContentRootPanel createContentRootPane() {
-        return new ContentRootPanel(this) {
-            @Nonnull
-            @Override
-            protected ContentEntry getContentEntry() {
-                return FolderContentEntryEditor.this.getContentEntry();
-            }
-        };
+        if (myOnlySingleFile) {
+            return new ContentRootPanel(this, getContentEntry());
+        }
+        return new FolderContentRootPanel(this, getContentEntry());
     }
 
     @Nullable
     public ContentFolder addFolder(@Nonnull final VirtualFile file, ContentFolderTypeProvider contentFolderType) {
         final ContentEntry contentEntry = getContentEntry();
-        if (contentEntry != null) {
-            final ContentFolder contentFolder = contentEntry.addFolder(file, contentFolderType);
-            try {
-                return contentFolder;
-            }
-            finally {
-                myEventDispatcher.getMulticaster().folderAdded(this, contentFolder);
-                update();
-            }
+        final ContentFolder contentFolder = contentEntry.addFolder(file, contentFolderType);
+        try {
+            return contentFolder;
         }
-
-        return null;
+        finally {
+            myEventDispatcher.getMulticaster().folderAdded(this, contentFolder);
+            update();
+        }
     }
-
 
     public void removeFolder(@Nonnull final ContentFolder contentFolder) {
         try {
@@ -219,9 +212,7 @@ public abstract class FolderContentEntryEditor implements ContentRootPanel.Actio
                 return;
             }
             final ContentEntry contentEntry = getContentEntry();
-            if (contentEntry != null) {
-                contentEntry.removeFolder(contentFolder);
-            }
+            contentEntry.removeFolder(contentFolder);
         }
         finally {
             myEventDispatcher.getMulticaster().folderRemoved(this, contentFolder);
@@ -232,9 +223,6 @@ public abstract class FolderContentEntryEditor implements ContentRootPanel.Actio
     @Nullable
     public ContentFolder getFolder(@Nonnull final VirtualFile file) {
         final ContentEntry contentEntry = getContentEntry();
-        if (contentEntry == null) {
-            return null;
-        }
         for (ContentFolder contentFolder : contentEntry.getFolders(LanguageContentFolderScopes.all())) {
             final VirtualFile f = contentFolder.getFile();
             if (f != null && f.equals(file)) {

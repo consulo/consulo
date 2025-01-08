@@ -76,7 +76,7 @@ public class ContentEntryTreeEditor {
     private FileSystemTreeImpl myFileSystemTree;
     private final JPanel myTreePanel;
     protected final DefaultActionGroup myEditingActionsGroup;
-    private FolderContentEntryEditor myContentEntryEditor;
+    private ContentEntryEditor myContentEntryEditor;
     private final MyContentEntryEditorListener myContentEntryEditorListener = new MyContentEntryEditorListener();
     private final FileChooserDescriptor myDescriptor;
 
@@ -128,7 +128,7 @@ public class ContentEntryTreeEditor {
     /**
      * @param contentEntryEditor : null means to clear the editor
      */
-    public void setContentEntryEditor(@Nullable final FolderContentEntryEditor contentEntryEditor) {
+    public void setContentEntryEditor(@Nullable final ContentEntryEditor contentEntryEditor) {
         if (myContentEntryEditor != null && myContentEntryEditor.equals(contentEntryEditor)) {
             return;
         }
@@ -171,7 +171,7 @@ public class ContentEntryTreeEditor {
                     protected void customize(SimpleColoredComponent renderer, Object value, boolean selected, boolean focused) {
                         super.customize(renderer, value, selected, focused);
 
-                        FolderContentEntryEditor contentEntryEditor = getContentEntryEditor();
+                        ContentEntryEditor contentEntryEditor = getContentEntryEditor();
                         if (contentEntryEditor == null) {
                             return;
                         }
@@ -234,7 +234,7 @@ public class ContentEntryTreeEditor {
         return icon;
     }
 
-    public FolderContentEntryEditor getContentEntryEditor() {
+    public ContentEntryEditor getContentEntryEditor() {
         return myContentEntryEditor;
     }
 
@@ -271,14 +271,14 @@ public class ContentEntryTreeEditor {
 //    }
     }
 
-    private class MyContentEntryEditorListener implements FolderContentEntryEditor.ContentEntryEditorListener {
+    private class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
         @Override
-        public void folderAdded(@Nonnull FolderContentEntryEditor editor, ContentFolder folder) {
+        public void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder folder) {
             update();
         }
 
         @Override
-        public void folderRemoved(@Nonnull FolderContentEntryEditor editor, ContentFolder file) {
+        public void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder file) {
             update();
         }
     }
