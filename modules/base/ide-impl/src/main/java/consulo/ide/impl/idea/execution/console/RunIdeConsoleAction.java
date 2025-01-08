@@ -73,9 +73,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    IdeScriptEngineManager manager = IdeScriptEngineManager.getInstance();
-    e.getPresentation().setVisible(e.getData(Project.KEY) != null);
-    e.getPresentation().setEnabled(manager.isInitialized() && !manager.getLanguages().isEmpty());
+    e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
   }
 
   @Override
