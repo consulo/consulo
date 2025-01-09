@@ -181,8 +181,6 @@ public interface EditorEx extends Editor {
 
   void setEmbeddedIntoDialogWrapper(boolean b);
 
-  VirtualFile getVirtualFile();
-
   TextDrawingCallback getTextDrawingCallback();
 
   @Nonnull
