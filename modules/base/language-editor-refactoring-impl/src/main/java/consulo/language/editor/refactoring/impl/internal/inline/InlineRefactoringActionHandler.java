@@ -94,7 +94,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
     public static boolean invokeInliner(@Nullable Editor editor, PsiElement element) {
         final List<InlineHandler> handlers = InlineHandler.forLanguage(element.getLanguage());
         for (InlineHandler handler : handlers) {
-            if (GenericInlineHandler.invoke(element, editor, handler)) {
+            if (GenericInlineHandlerImpl.invoke(element, editor, handler)) {
                 return true;
             }
         }
