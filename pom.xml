@@ -65,6 +65,8 @@
     <module>modules/base/bookmark-api</module>
     <module>modules/base/bookmark-ui-view-api</module>
     <module>modules/base/configurable-api</module>
+    <module>modules/base/configuration-editor-api</module>
+    <module>modules/base/configuration-editor-impl</module>
     <module>modules/base/disposer-api</module>
     <module>modules/base/disposer-impl</module>
     <module>modules/base/platform-api</module>

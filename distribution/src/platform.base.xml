@@ -144,6 +144,8 @@
                 <include>consulo:consulo-remote-server-impl</include>
                 <include>consulo:consulo-credential-storage-api</include>
                 <include>consulo:consulo-credential-storage-impl</include>
+                <include>consulo:consulo-configuration-editor-api</include>
+                <include>consulo:consulo-configuration-editor-impl</include>
 
                 <include>consulo:consulo-base-localize-library</include>
                 <include>consulo:consulo-base-icon-library</include>

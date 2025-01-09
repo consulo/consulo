@@ -17,11 +17,11 @@ package consulo.ide.impl.execution.editor;
 
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.configurable.ConfigurationException;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
+import consulo.configuration.editor.ConfigurationFileEditor;
 import consulo.execution.impl.internal.ui.RunConfigurable;
+import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
+import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.project.Project;
 import consulo.project.internal.ProjectExListener;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,142 +31,128 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import kava.beans.PropertyChangeListener;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 19/12/2021
  */
-public class RunConfigurationFileEditor extends UserDataHolderBase implements FileEditor, FileEditorWithModifiedIcon {
-  private final Alarm myUpdateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
+public class RunConfigurationFileEditor extends ConfigurationFileEditor implements FileEditorWithModifiedIcon {
+    private final Alarm myUpdateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
-  private boolean myDisposed;
+    private boolean myDisposed;
 
-  private final Project myProject;
-  private final VirtualFile myFile;
-  private RunConfigurable myRunConfigurable;
+    private RunConfigurable myRunConfigurable;
 
-  private JComponent myComponent;
+    private JComponent myComponent;
 
-  public RunConfigurationFileEditor(Project project, VirtualFile file) {
-    myProject = project;
-    myFile = file;
-    myRunConfigurable = new RunConfigurable(project);
-    myRunConfigurable.setEditorMode();
+    public RunConfigurationFileEditor(Project project, VirtualFile file) {
+        super(project, file);
 
-    project.getApplication().getMessageBus().connect(this).subscribe(ProjectExListener.class, targetProject -> {
-      if (project == targetProject) {
-        project.getApplication().getLastUIAccess().give(this::save);
-      }
-    });
-  }
+        myRunConfigurable = new RunConfigurable(project);
+        myRunConfigurable.setEditorMode();
 
-  @RequiredUIAccess
-  private void save() {
-    if (myRunConfigurable.isModified()) {
-      try {
-        myRunConfigurable.apply();
-
-        myRunConfigurable.updateActiveConfigurationFromSelected();
-      }
-      catch (ConfigurationException e) {
-        if (e.getMessage() != null) {
-          Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
-        }
-      }
-    }
-  }
-
-  @Nonnull
-  @Override
-  @RequiredUIAccess
-  public JComponent getComponent() {
-    if (myComponent != null) {
-      return myComponent;
+        project.getApplication().getMessageBus().connect(this).subscribe(ProjectExListener.class, targetProject -> {
+            if (project == targetProject) {
+                project.getApplication().getLastUIAccess().give(this::save);
+            }
+        });
     }
 
-    JComponent component = myRunConfigurable.createComponent(this);
-    assert component != null;
+    @RequiredUIAccess
+    private void save() {
+        if (myRunConfigurable.isModified()) {
+            try {
+                myRunConfigurable.apply();
 
-    // fix borders
-    Splitter splitter = myRunConfigurable.getSplitter();
-    JComponent secondComponent = splitter.getSecondComponent();
-    secondComponent.setBorder(JBUI.Borders.empty(DialogWrapper.ourDefaultBorderInsets));
-
-    UiNotifyConnector.doWhenFirstShown(component, () -> {
-      final Runnable updateRequest = new Runnable() {
-        @Override
-        public void run() {
-          if (myDisposed) {
-            return;
-          }
-
-          FileEditorManagerImpl fileEditorManager = (FileEditorManagerImpl)FileEditorManager.getInstance(myProject);
-          fileEditorManager.updateFilePresentation(myFile);
-          addUpdateRequest(this);
+                myRunConfigurable.updateActiveConfigurationFromSelected();
+            }
+            catch (ConfigurationException e) {
+                if (e.getMessage() != null) {
+                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+                }
+            }
         }
-      };
+    }
 
-      addUpdateRequest(updateRequest);
-    });
-    return myComponent = component;
-  }
+    @Nonnull
+    @Override
+    @RequiredUIAccess
+    public JComponent getComponent() {
+        if (myComponent != null) {
+            return myComponent;
+        }
 
-  private void addUpdateRequest(final Runnable updateRequest) {
-    myUpdateAlarm.addRequest(updateRequest, 500, IdeaModalityState.any());
-  }
+        JComponent component = myRunConfigurable.createComponent(this);
+        assert component != null;
 
-  @Nullable
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myRunConfigurable.getPreferredFocusedComponent();
-  }
+        // fix borders
+        Splitter splitter = myRunConfigurable.getSplitter();
+        JComponent secondComponent = splitter.getSecondComponent();
+        secondComponent.setBorder(JBUI.Borders.empty(DialogWrapper.ourDefaultBorderInsets));
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return "run_configurations";
-  }
+        UiNotifyConnector.doWhenFirstShown(component, () -> {
+            final Runnable updateRequest = new Runnable() {
+                @Override
+                public void run() {
+                    if (myDisposed) {
+                        return;
+                    }
 
-  @Override
-  public boolean isModified() {
-    return myRunConfigurable.isModified();
-  }
+                    FileEditorManagerImpl fileEditorManager = (FileEditorManagerImpl) FileEditorManager.getInstance(myProject);
+                    fileEditorManager.updateFilePresentation(myVirtualFile);
+                    addUpdateRequest(this);
+                }
+            };
 
-  @Override
-  public void selectNotify() {
-    save();
-  }
+            addUpdateRequest(updateRequest);
+        });
+        return myComponent = component;
+    }
 
-  @Override
-  public void deselectNotify() {
-    save();
-  }
+    private void addUpdateRequest(final Runnable updateRequest) {
+        myUpdateAlarm.addRequest(updateRequest, 500, IdeaModalityState.any());
+    }
 
-  @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    @Nullable
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return myRunConfigurable.getPreferredFocusedComponent();
+    }
 
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return "run_configurations";
+    }
 
-  @Override
-  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    @Override
+    public boolean isModified() {
+        return myRunConfigurable.isModified();
+    }
 
-  }
+    @Override
+    public void selectNotify() {
+        save();
+    }
 
-  @Override
-  public void dispose() {
-    myDisposed = true;
+    @Override
+    public void deselectNotify() {
+        save();
+    }
 
-    save();
+    @Override
+    public void dispose() {
+        myDisposed = true;
 
-    myRunConfigurable.disposeUIResources();
+        save();
 
-    myComponent = null;
-  }
+        myRunConfigurable.disposeUIResources();
+
+        myComponent = null;
+    }
 }

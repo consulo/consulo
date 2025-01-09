@@ -17,13 +17,13 @@ package consulo.ide.impl.execution;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.eap.EarlyAccessProgramManager;
+import consulo.configuration.editor.ConfigurationFileEditorManager;
 import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.executor.Executor;
 import consulo.execution.impl.internal.ui.EditConfigurationsDialog;
-import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.execution.editor.RunConfigurationEditorProvider;
 import consulo.ide.impl.execution.editor.RunConfigurationFileEditorEarlyAccessDescriptor;
-import consulo.ide.impl.execution.editor.RunConfigurationVirtualFile;
 import consulo.ide.impl.idea.execution.impl.RunDialog;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -50,7 +50,12 @@ public class RunConfigurationEditorImpl implements RunConfigurationEditor {
     @Override
     public void editAll() {
         if (EarlyAccessProgramManager.is(RunConfigurationFileEditorEarlyAccessDescriptor.class)) {
-            UIAccess.current().give(() -> FileEditorManager.getInstance(myProject).openFile(new RunConfigurationVirtualFile(), true));
+            UIAccess.current().give(() -> {
+                myProject
+                    .getApplication()
+                    .getInstance(ConfigurationFileEditorManager.class)
+                    .open(myProject, RunConfigurationEditorProvider.class);
+            });
         }
         else {
             new EditConfigurationsDialog(myProject).showAsync();

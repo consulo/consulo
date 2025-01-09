@@ -31,7 +31,7 @@ import jakarta.annotation.Nullable;
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
- * @see consulo.ide.impl.idea.openapi.fileEditor.TextEditor
+ * @see TextEditor
  */
 public interface FileEditor extends UserDataHolder, Disposable {
   Key<FileEditor> KEY = Key.create(FileEditor.class);
