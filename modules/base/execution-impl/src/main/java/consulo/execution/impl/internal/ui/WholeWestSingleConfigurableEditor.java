@@ -271,6 +271,10 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     @RequiredUIAccess
     @Override
     public JComponent getPreferredFocusedComponent() {
+        if (myConfigurable == null) {
+            return null;
+        }
+        
         JComponent preferred = ConfigurableUIMigrationUtil.getPreferredFocusedComponent(myConfigurable);
         if (preferred != null) {
             return preferred;

@@ -26,6 +26,8 @@ import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -77,9 +79,29 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
 
         myContentPanel = new JPanel(new BorderLayout());
         myContentPanel.add(component, BorderLayout.CENTER);
+
+        DumbAwareAction.create(anActionEvent -> {
+            doSave();
+        }).registerCustomShortcutSet(CommonShortcuts.getSaveAll(), myContentPanel, this);
     }
 
     protected void onApply(U configurable) {
+    }
+
+    @RequiredUIAccess
+    private void doSave() {
+        if (myConfigurable.isModified()) {
+            try {
+                myConfigurable.apply();
+
+                onApply(myConfigurable);
+            }
+            catch (ConfigurationException e) {
+                if (e.getMessage() != null) {
+                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+                }
+            }
+        }
     }
 
     @RequiredUIAccess
@@ -99,20 +121,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
             HorizontalLayout buttonsPanel = HorizontalLayout.create();
             buttonsPanel.addBorders(BorderStyle.EMPTY, null, 5);
 
-            Button applyButton = Button.create(CommonLocalize.buttonApply(), event -> {
-                if (myConfigurable.isModified()) {
-                    try {
-                        myConfigurable.apply();
-
-                        onApply(myConfigurable);
-                    }
-                    catch (ConfigurationException e) {
-                        if (e.getMessage() != null) {
-                            Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
-                        }
-                    }
-                }
-            });
+            Button applyButton = Button.create(CommonLocalize.buttonApply(), event -> doSave());
             applyButton.addStyle(ButtonStyle.PRIMARY);
             buttonsPanel.add(applyButton);
 

@@ -97,6 +97,10 @@ public class CommonShortcuts {
         return shortcutsById(IdeActions.ACTION_EDIT_SOURCE);
     }
 
+    public static ShortcutSet getSaveAll() {
+        return shortcutsById(IdeActions.ACTION_SAVEALL);
+    }
+
     public static ShortcutSet getViewSource() {
         return shortcutsById(IdeActions.ACTION_VIEW_SOURCE);
     }
