@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.encoding;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -27,8 +26,13 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationEncodingManager extends EncodingManager {
-  @Nonnull
-  public static ApplicationEncodingManager getInstance() {
-    return Application.get().getInstance(ApplicationEncodingManager.class);
-  }
+    @Nonnull
+    public static ApplicationEncodingManager getInstance() {
+        return Application.get().getInstance(ApplicationEncodingManager.class);
+    }
+
+    void setDefaultConsoleEncodingReference(@Nonnull EncodingReference encodingReference);
+
+    @Nonnull
+    EncodingReference getDefaultConsoleEncodingReference();
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.execution.actions;
+package consulo.execution.impl.internal.action;
 
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -24,7 +24,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.internal.action.BaseRunConfigurationAction;
 import consulo.execution.localize.ExecutionLocalize;
-import consulo.ide.impl.idea.execution.impl.RunDialog;
+import consulo.execution.impl.internal.ui.RunDialog;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;

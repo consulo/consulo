@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.execution.impl;
+package consulo.execution.impl.internal.ui;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.HelpManager;
@@ -22,11 +22,8 @@ import consulo.configurable.ConfigurationException;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.executor.Executor;
-import consulo.execution.impl.internal.ui.RunConfigurable;
-import consulo.execution.impl.internal.ui.SingleConfigurationConfigurable;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -80,7 +77,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
 
     @Override
     protected String getDimensionServiceKey() {
-        return "#consulo.ide.impl.idea.execution.impl.RunDialog";
+        return "#consulo.execution.impl.internal.ui.RunDialog";
     }
 
     @Override

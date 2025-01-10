@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.console;
+package consulo.execution.impl.internal.console;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingReference;
+import consulo.execution.ExecutionBundle;
 import consulo.localize.LocalizeManager;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingReference;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -55,7 +55,7 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
             
             Charset charset = myReference.getCharset();
             if (charset == null) {
-                return IdeBundle.message("encoding.name.system.default", CharsetToolkit.getDefaultSystemCharset().displayName(locale));
+                return ExecutionBundle.message("encoding.name.system.default", CharsetToolkit.getDefaultSystemCharset().displayName(locale));
             } else {
                 return charset.displayName(locale);
             }
@@ -102,8 +102,8 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
         }
     }
 
-    private static final SeparatorItem FAVORITES = new SeparatorItem(IdeBundle.message("combobox.console.favorites.separator.label"));
-    private static final SeparatorItem MORE = new SeparatorItem(IdeBundle.message("combobox.console.more.separator.label"));
+    private static final SeparatorItem FAVORITES = new SeparatorItem(ExecutionBundle.message("combobox.console.favorites.separator.label"));
+    private static final SeparatorItem MORE = new SeparatorItem(ExecutionBundle.message("combobox.console.more.separator.label"));
 
     private static final CharsetItem DEFAULT = new CharsetItem(EncodingReference.DEFAULT);
 

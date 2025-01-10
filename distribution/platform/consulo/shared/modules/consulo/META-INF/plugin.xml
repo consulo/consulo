@@ -2200,11 +2200,6 @@
         </group>
 
 
-        <!--<action id="EditorLookupUp" class="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$UpAction"/>-->
-        <!--<action id="EditorLookupDown" class="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$DownAction"/>-->
-
-        <action id="RerunFailedTests" class="consulo.ide.impl.idea.execution.testframework.actions.RerunFailedTestsAction"
-                icon="consulo.platform.base.PlatformIconGroup@runconfigurations.rerunfailedtests"/>
 
         <action id="FileChooser.GotoModule" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoModuleDirectory"
                 icon="consulo.platform.base.PlatformIconGroup@nodes.module">
@@ -2246,7 +2241,7 @@
         </group>
 
         <!-- Tools -->
-        <action id="ConsoleView.FoldLinesLikeThis" class="consulo.ide.impl.idea.execution.console.FoldLinesLikeThis"
+        <action id="ConsoleView.FoldLinesLikeThis" class="consulo.execution.impl.internal.console.FoldLinesLikeThis"
                 text="Fold Lines Like This">
             <add-to-group group-id="ConsoleEditorPopupMenu" anchor="after" relative-to-action="$SearchWeb"/>
         </action>

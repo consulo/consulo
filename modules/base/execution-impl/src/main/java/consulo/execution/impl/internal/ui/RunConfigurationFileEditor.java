@@ -13,29 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.execution.editor;
+package consulo.execution.impl.internal.ui;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.application.eap.EarlyAccessProgramDescriptor;
-
+import consulo.configuration.editor.ConfigurableFileEditor;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 19/12/2021
  */
-@ExtensionImpl
-public class RunConfigurationFileEditorEarlyAccessDescriptor extends EarlyAccessProgramDescriptor {
-  @Nonnull
-  @Override
-  public String getName() {
-    return "Run Configuration editor";
-  }
+public class RunConfigurationFileEditor extends ConfigurableFileEditor<RunConfigurable> {
+    public RunConfigurationFileEditor(Project project, VirtualFile file) {
+        super(project, file);
+    }
 
-  @Nullable
-  @Override
-  public String getDescription() {
-    return "Replace run configuration dialog with run configuration editor";
-  }
+    @Nonnull
+    @Override
+    protected RunConfigurable createConfigurable() {
+        return new RunConfigurable(myProject);
+    }
+
+    @Override
+    protected void onApply(RunConfigurable configurable) {
+        configurable.updateActiveConfigurationFromSelected();
+    }
 }

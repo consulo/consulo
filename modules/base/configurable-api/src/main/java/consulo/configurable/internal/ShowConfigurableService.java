@@ -36,13 +36,13 @@ import java.util.function.Consumer;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ShowConfigurableService {
     @RequiredUIAccess
-    default <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect) {
-        showAndSelect(project, toSelect, o -> {
+    default <T extends UnnamedConfigurable> CompletableFuture<?> showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect) {
+        return showAndSelect(project, toSelect, o -> {
         });
     }
 
     @RequiredUIAccess
-    <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project,
+    <T extends UnnamedConfigurable> CompletableFuture<?> showAndSelect(@Nullable Project project,
                                                        @Nonnull Class<T> toSelect,
                                                        @Nonnull Consumer<T> afterSelect);
 
@@ -52,4 +52,8 @@ public interface ShowConfigurableService {
     @RequiredUIAccess
     @Deprecated
     AsyncResult<Void> editConfigurable(Component parent, Configurable configurable);
+
+    @RequiredUIAccess
+    @Deprecated
+    AsyncResult<Void> editConfigurable(Project project, Configurable configurable);
 }

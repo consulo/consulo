@@ -9,6 +9,7 @@ module consulo.builtin.web.server.impl {
   requires consulo.external.service.api;
   requires consulo.util.netty;
   requires com.google.common;
+  requires consulo.execution.debug.api;
 
   requires xmlrpc.client;
   requires xmlrpc.common;

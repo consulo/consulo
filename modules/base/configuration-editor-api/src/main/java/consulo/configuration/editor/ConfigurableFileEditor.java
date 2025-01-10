@@ -15,15 +15,18 @@
  */
 package consulo.configuration.editor;
 
+import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
@@ -42,10 +45,10 @@ import java.util.concurrent.TimeUnit;
  * @author VISTALL
  * @since 2025-01-09
  */
-public abstract class ConfigurableFileEditor extends ConfigurationFileEditor implements FileEditorWithModifiedIcon {
+public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> extends ConfigurationFileEditor implements FileEditorWithModifiedIcon {
     private Future<?> myUpdateFuture = CompletableFuture.completedFuture(null);
 
-    protected UnnamedConfigurable myConfigurable;
+    protected U myConfigurable;
 
     private JComponent myPreferedFocusedComponent;
 
@@ -56,7 +59,7 @@ public abstract class ConfigurableFileEditor extends ConfigurationFileEditor imp
     }
 
     @Nonnull
-    protected abstract UnnamedConfigurable createConfigurable();
+    protected abstract U createConfigurable();
 
     @RequiredUIAccess
     protected void init() {
@@ -68,12 +71,15 @@ public abstract class ConfigurableFileEditor extends ConfigurationFileEditor imp
         JComponent component = ConfigurableUIMigrationUtil.createComponent(myConfigurable, this);
         assert component != null;
         UiNotifyConnector.doWhenFirstShown(component, () -> {
-            myUpdateFuture = myProject.getUIAccess().getScheduler().scheduleWithFixedDelay(this::checkModified, 1, 1, TimeUnit.SECONDS);
+            myUpdateFuture = myProject.getUIAccess().getScheduler().scheduleWithFixedDelay(this::checkModified, 500, 500, TimeUnit.MILLISECONDS);
         });
         myPreferedFocusedComponent = ConfigurableUIMigrationUtil.getPreferredFocusedComponent(myConfigurable);
 
         myContentPanel = new JPanel(new BorderLayout());
         myContentPanel.add(component, BorderLayout.CENTER);
+    }
+
+    protected void onApply(U configurable) {
     }
 
     @RequiredUIAccess
@@ -93,24 +99,31 @@ public abstract class ConfigurableFileEditor extends ConfigurationFileEditor imp
             HorizontalLayout buttonsPanel = HorizontalLayout.create();
             buttonsPanel.addBorders(BorderStyle.EMPTY, null, 5);
 
-            buttonsPanel.add(Button.create(CommonLocalize.buttonReset(), event -> {
-                myConfigurable.reset();
-            }));
+            Button applyButton = Button.create(CommonLocalize.buttonApply(), event -> {
+                if (myConfigurable.isModified()) {
+                    try {
+                        myConfigurable.apply();
 
-            buttonsPanel.add(Button.create(CommonLocalize.buttonApply(), event -> {
-
-            }));
+                        onApply(myConfigurable);
+                    }
+                    catch (ConfigurationException e) {
+                        if (e.getMessage() != null) {
+                            Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+                        }
+                    }
+                }
+            });
+            applyButton.addStyle(ButtonStyle.PRIMARY);
+            buttonsPanel.add(applyButton);
 
             panel.right(buttonsPanel);
 
             myContentPanel.add(TargetAWT.to(panel), BorderLayout.SOUTH);
 
-            myProject.getUIAccess().give(() -> {
-                panel.forceRepaint();
-                
-                myContentPanel.invalidate();
-                myContentPanel.repaint();
-            });
+            panel.forceRepaint();
+
+            myContentPanel.validate();
+            myContentPanel.repaint();
         }
         else {
             if (layoutComponent != null) {

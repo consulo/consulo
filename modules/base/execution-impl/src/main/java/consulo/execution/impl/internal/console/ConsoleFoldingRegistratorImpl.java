@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.execution.ui.console;
+package consulo.execution.impl.internal.console;
 
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;

@@ -484,6 +484,8 @@ public interface IdeActions {
     String ACTION_KEYMAP_REFERENCE = "Help.KeymapReference";
 
     String ACTION_MOVE = "Move";
+    
+    String ACTION_SAVEALL = "SaveAll";
 
     String ACTION_RENAME = "RenameElement";
 

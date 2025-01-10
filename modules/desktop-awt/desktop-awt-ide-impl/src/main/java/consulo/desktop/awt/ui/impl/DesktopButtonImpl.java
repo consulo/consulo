@@ -36,15 +36,26 @@ import javax.swing.*;
  * @author VISTALL
  * @since 13-Sep-17
  */
-class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Button {
+class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButton> implements Button {
     class MyButton extends JButton implements FromSwingComponentWrapper {
         private LocalizeValue myTextValue = LocalizeValue.empty();
+
+        private Boolean myDefaultButton;
 
         MyButton(LocalizeValue textValue) {
             super("");
             myTextValue = textValue;
 
             updateText();
+        }
+
+        @Override
+        public boolean isDefaultButton() {
+            if (Boolean.TRUE == myDefaultButton) {
+                return true;
+            }
+
+            return super.isDefaultButton();
         }
 
         @Override
@@ -85,6 +96,9 @@ class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Butto
         switch (style) {
             case BORDERLESS:
                 toAWTComponent().putClientProperty("JButton.buttonType", "borderless");
+                break;
+            case PRIMARY:
+                toAWTComponent().myDefaultButton = true;
                 break;
         }
     }

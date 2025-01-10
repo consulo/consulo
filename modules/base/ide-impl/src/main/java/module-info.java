@@ -187,7 +187,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.eap.plugins;
   exports consulo.ide.impl.execution;
   exports consulo.ide.impl.execution.coverage;
-  exports consulo.ide.impl.execution.editor;
   exports consulo.ide.impl.external.api;
   exports consulo.ide.impl.externalService;
   exports consulo.ide.impl.externalService.impl;
@@ -318,7 +317,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.execution.lineMarker;
   exports consulo.ide.impl.idea.execution.process;
   exports consulo.ide.impl.idea.execution.rmi;
-  exports consulo.ide.impl.idea.execution.testframework.actions;
   exports consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
   exports consulo.ide.impl.idea.execution.ui;
   exports consulo.ide.impl.idea.execution.ui.layout.impl;

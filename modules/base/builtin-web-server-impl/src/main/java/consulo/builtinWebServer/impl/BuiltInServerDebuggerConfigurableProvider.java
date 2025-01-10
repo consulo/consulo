@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.execution.debugger;
+package consulo.builtinWebServer.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.builtinWebServer.impl.BuiltInServerConfigurable;
 import consulo.configurable.Configurable;
 import consulo.execution.debug.setting.DebuggerSettingsCategory;
 import consulo.execution.debug.setting.XDebuggerSettings;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 

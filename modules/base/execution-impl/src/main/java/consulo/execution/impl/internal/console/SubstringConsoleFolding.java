@@ -1,11 +1,11 @@
-package consulo.ide.impl.idea.execution.console;
+package consulo.execution.impl.internal.console;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.ConsoleFolding;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

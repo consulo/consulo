@@ -4,6 +4,7 @@
  */
 module consulo.execution.impl {
     requires consulo.execution.api;
+    requires consulo.configuration.editor.api;
 
     requires com.google.common;
 
@@ -13,8 +14,9 @@ module consulo.execution.impl {
     requires forms.rt;
 
     exports consulo.execution.impl.internal to consulo.ide.impl;
-    exports consulo.execution.impl.internal.action to consulo.ide.impl
-        , consulo.execution.debug.impl;
+    exports consulo.execution.impl.internal.action to
+        consulo.ide.impl,
+        consulo.execution.debug.impl;
 
     exports consulo.execution.impl.internal.configuration to
         consulo.ide.impl;
@@ -48,4 +50,6 @@ module consulo.execution.impl {
     opens consulo.execution.impl.internal.dashboard to consulo.util.xml.serializer;
 
     opens consulo.execution.impl.internal.ui.layout to consulo.util.xml.serializer;
+
+    opens consulo.execution.impl.internal.console to consulo.util.xml.serializer, consulo.component.impl;
 }

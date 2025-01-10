@@ -1,10 +1,9 @@
-package consulo.ide.impl.idea.execution.console;
+package consulo.execution.impl.internal.console;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingManagerImpl;
+import consulo.execution.ExecutionBundle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.AddEditDeleteListPanel;
@@ -40,7 +39,7 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         public Panel() {
             myMainComponent = new JPanel(new BorderLayout());
             myEncodingBox = new ConsoleEncodingComboBox();
-            myMainComponent.add(LabeledComponent.sided(myEncodingBox, IdeBundle.message("combobox.console.default.encoding.label")), BorderLayout.NORTH);
+            myMainComponent.add(LabeledComponent.sided(myEncodingBox, ExecutionBundle.message("combobox.console.default.encoding.label")), BorderLayout.NORTH);
 
             Splitter splitter = new Splitter(true);
             myMainComponent.add(splitter, BorderLayout.CENTER);
@@ -120,14 +119,14 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
     }
 
     private final Provider<ConsoleFoldingSettings> mySettings;
-    private final EncodingManagerImpl myApplicationEncodingManager;
+    private final ApplicationEncodingManager myApplicationEncodingManager;
 
     private Panel myPanel;
 
     @Inject
     public ConsoleConfigurable(Provider<ConsoleFoldingSettings> settings, ApplicationEncodingManager applicationEncodingManager) {
         mySettings = settings;
-        myApplicationEncodingManager = (EncodingManagerImpl) applicationEncodingManager;
+        myApplicationEncodingManager = applicationEncodingManager;
     }
 
     @RequiredUIAccess

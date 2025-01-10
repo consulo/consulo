@@ -19,6 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -81,5 +82,9 @@ public interface ConsoleView extends ExecutionConsole {
     @Nullable
     default Editor getEditor() {
         return null;
+    }
+
+    @RequiredUIAccess
+    default void foldImmediately() {
     }
 }

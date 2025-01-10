@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.console;
+package consulo.execution.impl.internal.console;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -23,7 +23,6 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.impl.execution.ui.console.ConsoleFoldingRegistratorImpl;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;

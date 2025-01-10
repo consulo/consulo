@@ -48,10 +48,12 @@ public class ShowConfigurableServiceImpl implements ShowConfigurableService {
 
     @RequiredUIAccess
     @Override
-    public <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project,
-                                                              @Nonnull Class<T> toSelect,
-                                                              @Nonnull Consumer<T> afterSelect) {
-        myShowSettingsUtil.showAndSelect(project, toSelect, afterSelect);
+    public <T extends UnnamedConfigurable> CompletableFuture<?> showAndSelect(@Nullable Project project,
+                                                                              @Nonnull Class<T> toSelect,
+                                                                              @Nonnull Consumer<T> afterSelect) {
+        CompletableFuture<?> future = new CompletableFuture<>();
+        myShowSettingsUtil.showAndSelect(project, toSelect, afterSelect).doWhenDone(() -> future.complete(null));
+        return future;
     }
 
     @RequiredUIAccess
@@ -66,5 +68,11 @@ public class ShowConfigurableServiceImpl implements ShowConfigurableService {
     @Override
     public AsyncResult<Void> editConfigurable(Component parent, Configurable configurable) {
         return myShowSettingsUtil.editConfigurable(parent, configurable);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public AsyncResult<Void> editConfigurable(Project project, Configurable configurable) {
+        return myShowSettingsUtil.editConfigurable(project, configurable);
     }
 }

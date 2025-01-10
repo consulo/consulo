@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.execution;
+package consulo.execution.impl.internal.ui;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.eap.EarlyAccessProgramManager;
@@ -21,10 +21,6 @@ import consulo.configuration.editor.ConfigurationFileEditorManager;
 import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.executor.Executor;
-import consulo.execution.impl.internal.ui.EditConfigurationsDialog;
-import consulo.ide.impl.execution.editor.RunConfigurationEditorProvider;
-import consulo.ide.impl.execution.editor.RunConfigurationFileEditorEarlyAccessDescriptor;
-import consulo.ide.impl.idea.execution.impl.RunDialog;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
