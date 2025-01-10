@@ -16,6 +16,7 @@
 package consulo.configuration.editor.impl.internal.file;
 
 import consulo.configuration.editor.ConfigurationFileEditorProvider;
+import consulo.configuration.editor.internal.ConfigurationEditorVirtualFile;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
@@ -25,18 +26,32 @@ import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.Objects;
 
 /**
  * @author VISTALL
  * @since 2025-01-09
  */
-public class ConfigurationEditorFile extends LightVirtualFileBase implements VirtualFileWithoutContent {
+public class ConfigurationEditorFileImpl extends LightVirtualFileBase implements VirtualFileWithoutContent, ConfigurationEditorVirtualFile {
+    private final String myPath;
     private final ConfigurationEditorFileSystemImpl myFileSystem;
+    private final Map<String, String> myRequestedParams;
 
-    public ConfigurationEditorFile(ConfigurationEditorFileType type, ConfigurationEditorFileSystemImpl fileSystem) {
+    public ConfigurationEditorFileImpl(String path,
+                                       ConfigurationEditorFileType type,
+                                       ConfigurationEditorFileSystemImpl fileSystem,
+                                       Map<String, String> requestedParams) {
         super(type.getId(), type, 0);
+        myPath = path;
         myFileSystem = fileSystem;
+        myRequestedParams = requestedParams;
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, String> getRequestedParams() {
+        return myRequestedParams;
     }
 
     @Nonnull
@@ -48,7 +63,7 @@ public class ConfigurationEditorFile extends LightVirtualFileBase implements Vir
     @Nonnull
     @Override
     public String getPath() {
-        return "/" + getProvider().getId();
+        return myPath;
     }
 
     @Nonnull
@@ -57,6 +72,7 @@ public class ConfigurationEditorFile extends LightVirtualFileBase implements Vir
         return getProvider().getName().map(Presentation.NO_MNEMONIC).get();
     }
 
+    @Override
     @Nonnull
     public ConfigurationFileEditorProvider getProvider() {
         return ((ConfigurationEditorFileType) getFileType()).getProvider();
@@ -81,14 +97,14 @@ public class ConfigurationEditorFile extends LightVirtualFileBase implements Vir
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ConfigurationEditorFile cef) {
-            return Objects.equals(getUrl(), cef.getUrl());
+        if (obj instanceof ConfigurationEditorFileImpl cef) {
+            return Objects.equals(getProvider().getId(), cef.getProvider().getId());
         }
         return super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return getUrl().hashCode();
+        return getProvider().getId().hashCode();
     }
 }

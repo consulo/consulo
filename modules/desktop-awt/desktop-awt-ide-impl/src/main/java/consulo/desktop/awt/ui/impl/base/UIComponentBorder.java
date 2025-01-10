@@ -15,11 +15,13 @@
  */
 package consulo.desktop.awt.ui.impl.base;
 
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.impl.BorderInfo;
+import consulo.ui.style.ComponentColors;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -31,59 +33,63 @@ import java.util.function.IntConsumer;
  * @since 19/12/2021
  */
 class UIComponentBorder implements Border {
-  private final Map<BorderPosition, BorderInfo> myBorders;
+    private final Map<BorderPosition, BorderInfo> myBorders;
 
-  UIComponentBorder(Map<BorderPosition, BorderInfo> borders) {
-    myBorders = borders;
-  }
-
-  @Override
-  public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-    Color oldColor = g.getColor();
-    paintBorder(BorderPosition.LEFT, g, (thickness) -> g.fillRect(x, y, thickness, height));
-    paintBorder(BorderPosition.TOP, g, (thickness) -> g.fillRect(x, y, width, thickness));
-    paintBorder(BorderPosition.RIGHT, g, (thickness) -> g.fillRect(x + width - thickness, y, thickness, height));
-    paintBorder(BorderPosition.BOTTOM, g, (thickness) -> g.fillRect(x, y + height - thickness, width, thickness));
-    g.setColor(oldColor);
-  }
-
-  private void paintBorder(BorderPosition position, Graphics g, IntConsumer consumer) {
-    BorderInfo borderInfo = myBorders.get(position);
-    if (borderInfo == null) {
-      return;
+    UIComponentBorder(Map<BorderPosition, BorderInfo> borders) {
+        myBorders = borders;
     }
 
-    BorderStyle borderStyle = borderInfo.getBorderStyle();
-    if (borderStyle != BorderStyle.LINE) {
-      return;
+    @Override
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        Color oldColor = g.getColor();
+        paintBorder(BorderPosition.LEFT, g, (thickness) -> g.fillRect(x, y, thickness, height));
+        paintBorder(BorderPosition.TOP, g, (thickness) -> g.fillRect(x, y, width, thickness));
+        paintBorder(BorderPosition.RIGHT, g, (thickness) -> g.fillRect(x + width - thickness, y, thickness, height));
+        paintBorder(BorderPosition.BOTTOM, g, (thickness) -> g.fillRect(x, y + height - thickness, width, thickness));
+        g.setColor(oldColor);
     }
 
-    g.setColor(TargetAWT.to(borderInfo.getColorValue()));
+    private void paintBorder(BorderPosition position, Graphics g, IntConsumer consumer) {
+        BorderInfo borderInfo = myBorders.get(position);
+        if (borderInfo == null) {
+            return;
+        }
 
-    consumer.accept(JBUI.scale(borderInfo.getWidth()));
-  }
+        BorderStyle borderStyle = borderInfo.getBorderStyle();
+        if (borderStyle != BorderStyle.LINE) {
+            return;
+        }
 
-  @Override
-  public Insets getBorderInsets(Component component) {
-    //noinspection UseDPIAwareInsets
-    Insets insets = new Insets(0, 0, 0, 0);
-    insets.top = getBorderSize(myBorders, BorderPosition.TOP);
-    insets.left = getBorderSize(myBorders, BorderPosition.LEFT);
-    insets.bottom = getBorderSize(myBorders, BorderPosition.BOTTOM);
-    insets.right = getBorderSize(myBorders, BorderPosition.RIGHT);
-    return insets;
-  }
+        ColorValue colorValue = borderInfo.getColorValue();
+        if (colorValue == null) {
+            colorValue = ComponentColors.BORDER;
+        }
+        g.setColor(TargetAWT.to(colorValue));
 
-  static int getBorderSize(Map<BorderPosition, BorderInfo> map, BorderPosition position) {
-    BorderInfo borderInfo = map.get(position);
-    if (borderInfo == null) {
-      return 0;
+        consumer.accept(JBUI.scale(borderInfo.getWidth()));
     }
-    return JBUI.scale(borderInfo.getWidth());
-  }
 
-  @Override
-  public boolean isBorderOpaque() {
-    return false;
-  }
+    @Override
+    public Insets getBorderInsets(Component component) {
+        //noinspection UseDPIAwareInsets
+        Insets insets = new Insets(0, 0, 0, 0);
+        insets.top = getBorderSize(myBorders, BorderPosition.TOP);
+        insets.left = getBorderSize(myBorders, BorderPosition.LEFT);
+        insets.bottom = getBorderSize(myBorders, BorderPosition.BOTTOM);
+        insets.right = getBorderSize(myBorders, BorderPosition.RIGHT);
+        return insets;
+    }
+
+    static int getBorderSize(Map<BorderPosition, BorderInfo> map, BorderPosition position) {
+        BorderInfo borderInfo = map.get(position);
+        if (borderInfo == null) {
+            return 0;
+        }
+        return JBUI.scale(borderInfo.getWidth());
+    }
+
+    @Override
+    public boolean isBorderOpaque() {
+        return false;
+    }
 }

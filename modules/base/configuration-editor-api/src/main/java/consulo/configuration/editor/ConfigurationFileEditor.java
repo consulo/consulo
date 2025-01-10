@@ -15,13 +15,15 @@
  */
 package consulo.configuration.editor;
 
-import consulo.configuration.editor.internal.ConfigurationEditorFileReference;
+import consulo.configuration.editor.internal.ConfigurationEditorVirtualFile;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeListener;
+
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -37,10 +39,16 @@ public abstract class ConfigurationFileEditor extends UserDataHolderBase impleme
     }
 
     @Nonnull
+    protected Map<String, String> getRequestedParams() {
+        ConfigurationEditorVirtualFile virtualFile = (ConfigurationEditorVirtualFile) myVirtualFile;
+        return virtualFile.getRequestedParams();
+    }
+
+    @Nonnull
     @Override
-    public String getName() {
-        ConfigurationEditorFileReference ref = (ConfigurationEditorFileReference) myVirtualFile.getFileType();
-        return ref.getProvider().getName().get();
+    public final String getName() {
+        ConfigurationEditorVirtualFile virtualFile = (ConfigurationEditorVirtualFile) myVirtualFile;
+        return virtualFile.getProvider().getName().get();
     }
 
     @Override

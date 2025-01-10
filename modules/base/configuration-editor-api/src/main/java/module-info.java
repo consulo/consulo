@@ -9,4 +9,8 @@ module consulo.configuration.editor.api {
     exports consulo.configuration.editor;
 
     exports consulo.configuration.editor.internal to consulo.configuration.editor.impl;
+
+    // TODO remove in future
+    requires java.desktop;
+    requires consulo.ui.ex.awt.api;
 }

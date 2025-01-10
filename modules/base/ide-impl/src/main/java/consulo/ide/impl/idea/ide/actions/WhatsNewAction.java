@@ -31,6 +31,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
+import java.util.Map;
+
 /**
  * @author max
  */
@@ -55,7 +57,7 @@ public class WhatsNewAction extends AnAction implements DumbAware {
             return;
         }
 
-        myConfigurationFileEditorManager.open(project, WhatsNewConfigurationFileEditorProvider.class);
+        myConfigurationFileEditorManager.open(project, WhatsNewConfigurationFileEditorProvider.class, Map.of());
     }
 
     @RequiredUIAccess

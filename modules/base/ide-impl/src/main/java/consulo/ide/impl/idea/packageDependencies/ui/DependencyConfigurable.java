@@ -42,7 +42,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class DependencyConfigurable implements Configurable, Configurable.HoldPreferredFocusedComponent {
+public class DependencyConfigurable implements Configurable {
   private final Project myProject;
   private MyTableModel myDenyRulesModel;
   private MyTableModel myAllowRulesModel;

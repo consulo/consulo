@@ -294,10 +294,8 @@ public class SingleConfigurableEditor extends DialogWrapper {
   @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
-    if (myConfigurable instanceof Configurable.HoldPreferredFocusedComponent preferredFocusedComponent) {
-      JComponent preferred = ConfigurableUIMigrationUtil.getPreferredFocusedComponent(preferredFocusedComponent);
-      if (preferred != null) return preferred;
-    }
+    JComponent preferred = ConfigurableUIMigrationUtil.getPreferredFocusedComponent(myConfigurable);
+    if (preferred != null) return preferred;
     return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myCenterPanel);
   }
 

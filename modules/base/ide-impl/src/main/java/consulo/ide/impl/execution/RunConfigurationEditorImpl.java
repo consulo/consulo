@@ -32,6 +32,8 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.util.Map;
+
 /**
  * @author VISTALL
  * @since 05-Apr-22
@@ -54,7 +56,7 @@ public class RunConfigurationEditorImpl implements RunConfigurationEditor {
                 myProject
                     .getApplication()
                     .getInstance(ConfigurationFileEditorManager.class)
-                    .open(myProject, RunConfigurationEditorProvider.class);
+                    .open(myProject, RunConfigurationEditorProvider.class, Map.of());
             });
         }
         else {

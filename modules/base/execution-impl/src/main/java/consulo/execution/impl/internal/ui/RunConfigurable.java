@@ -138,8 +138,6 @@ public class RunConfigurable extends BaseConfigurable {
     private boolean isFolderCreating;
     private RunConfigurable.MyToolbarAddAction myAddAction = new MyToolbarAddAction();
 
-    private boolean myEditorMode;
-
     public RunConfigurable(final Project project) {
         this(project, null, TitlelessDecorator.NOTHING);
     }
@@ -148,10 +146,6 @@ public class RunConfigurable extends BaseConfigurable {
         myProject = project;
         myRunDialog = runDialog;
         myTitlelessDecorator = titlelessDecorator;
-    }
-
-    public void setEditorMode() {
-        myEditorMode = true;
     }
 
     @Override
@@ -663,6 +657,8 @@ public class RunConfigurable extends BaseConfigurable {
         myTitlelessDecorator.makeLeftComponentLower(leftPanel);
 
         mySplitter.setFirstComponent(leftPanel);
+        
+        myRightPanel.setBorder(JBUI.Borders.empty(8));
         mySplitter.setSecondComponent(myTitlelessDecorator.modifyRightComponent(myWholePanel, myRightPanel));
         myWholePanel.add(mySplitter, BorderLayout.CENTER);
 

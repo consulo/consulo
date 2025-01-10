@@ -60,5 +60,12 @@
             <artifactId>consulo-file-editor-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!--TODO remove in future-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-ui-ex-awt-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

@@ -18,11 +18,16 @@ package consulo.configuration.editor.internal;
 import consulo.configuration.editor.ConfigurationFileEditorProvider;
 import jakarta.annotation.Nonnull;
 
+import java.util.Map;
+
 /**
  * @author VISTALL
  * @since 2025-01-09
  */
-public interface ConfigurationEditorFileReference {
+public interface ConfigurationEditorVirtualFile {
     @Nonnull
     ConfigurationFileEditorProvider getProvider();
+
+    @Nonnull
+    Map<String, String> getRequestedParams();
 }

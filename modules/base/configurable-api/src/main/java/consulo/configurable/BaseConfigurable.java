@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 
 @Deprecated
 @DeprecationInfo("Use own impl for #isModified()")
-public abstract class BaseConfigurable implements Configurable, Configurable.HoldPreferredFocusedComponent {
+public abstract class BaseConfigurable implements Configurable {
   protected boolean myModified;
 
   @Override

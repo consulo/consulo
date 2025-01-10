@@ -15,12 +15,10 @@
  */
 package consulo.configurable.internal;
 
-import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -46,7 +44,7 @@ public class ConfigurableUIMigrationUtil {
   }
 
   @RequiredUIAccess
-  public static JComponent getPreferredFocusedComponent(@Nonnull Configurable.HoldPreferredFocusedComponent component) {
+  public static JComponent getPreferredFocusedComponent(@Nonnull UnnamedConfigurable component) {
     JComponent preferredFocusedComponent = component.getPreferredFocusedComponent();
     if(preferredFocusedComponent != null) {
       return preferredFocusedComponent;

@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 @ExtensionImpl
-public class IntentionSettingsConfigurable implements ApplicationConfigurable, SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent {
+public class IntentionSettingsConfigurable implements ApplicationConfigurable, SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll {
   private IntentionSettingsPanel myPanel;
 
   @RequiredUIAccess

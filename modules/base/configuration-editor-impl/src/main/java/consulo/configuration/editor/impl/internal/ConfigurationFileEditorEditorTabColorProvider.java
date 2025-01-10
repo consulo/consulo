@@ -18,7 +18,7 @@ package consulo.configuration.editor.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.configuration.editor.ConfigurationFileEditorProvider;
-import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFile;
+import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFileImpl;
 import consulo.fileEditor.EditorTabColorProvider;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
@@ -37,7 +37,7 @@ public class ConfigurationFileEditorEditorTabColorProvider implements EditorTabC
     @Nullable
     @Override
     public Color getEditorTabColor(Project project, VirtualFile file) {
-        if (file instanceof ConfigurationEditorFile configurationEditorFile) {
+        if (file instanceof ConfigurationEditorFileImpl configurationEditorFile) {
             ConfigurationFileEditorProvider provider = configurationEditorFile.getProvider();
 
             ColorValue color = provider.getColor();

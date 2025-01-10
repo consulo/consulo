@@ -19,7 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.configuration.editor.ConfigurationFileEditorManager;
 import consulo.configuration.editor.ConfigurationFileEditorProvider;
-import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFile;
+import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFileImpl;
 import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFileSystemImpl;
 import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
@@ -30,6 +30,10 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -49,20 +53,41 @@ public class ConfigurationFileEditorManagerImpl implements ConfigurationFileEdit
 
     @RequiredUIAccess
     @Override
-    public void open(@Nonnull Project project, @Nonnull Class<? extends ConfigurationFileEditorProvider> providerClass) {
-        open(project, myApplication.getExtensionPoint(ConfigurationFileEditorProvider.class).findExtensionOrFail(providerClass));
+    public void open(@Nonnull Project project,
+                     @Nonnull Class<? extends ConfigurationFileEditorProvider> providerClass,
+                     @Nonnull Map<String, String> params) {
+        open(project, myApplication.getExtensionPoint(ConfigurationFileEditorProvider.class).findExtensionOrFail(providerClass), params);
     }
 
     @RequiredUIAccess
     @Override
-    public void open(@Nonnull Project project, @Nonnull ConfigurationFileEditorProvider provider) {
+    public void open(@Nonnull Project project, @Nonnull ConfigurationFileEditorProvider provider, @Nonnull Map<String, String> params) {
         VirtualFileSystem fileSystem = myVirtualFileManager.getFileSystem(ConfigurationEditorFileSystemImpl.PROTOCOL);
         if (!(fileSystem instanceof ConfigurationEditorFileSystemImpl fs)) {
             return;
         }
 
-        VirtualFile file = fs.findFileByPath("/" + provider.getId());
-        if (file instanceof ConfigurationEditorFile configurationEditorFile) {
+        String path = "/" + provider.getId();
+        if (!params.isEmpty()) {
+            StringBuilder builder = new StringBuilder("?");
+
+            boolean first = true;
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                if (!first) {
+                    builder.append("&");
+                } else {
+                    first = false;
+                }
+
+                builder.append(entry.getKey()).append("=").append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+            }
+
+            path += builder.toString();
+        }
+
+        VirtualFile file = fs.findFileByPath(path);
+
+        if (file instanceof ConfigurationEditorFileImpl configurationEditorFile) {
             FileEditorManager.getInstance(project).openFile(configurationEditorFile, true);
         }
     }

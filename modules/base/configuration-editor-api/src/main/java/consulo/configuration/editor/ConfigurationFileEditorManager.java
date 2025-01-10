@@ -21,6 +21,8 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
+import java.util.Map;
+
 /**
  * @author VISTALL
  * @since 2025-01-09
@@ -28,8 +30,12 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ConfigurationFileEditorManager {
     @RequiredUIAccess
-    void open(@Nonnull Project project, @Nonnull Class<? extends ConfigurationFileEditorProvider> providerClass);
+    void open(@Nonnull Project project,
+              @Nonnull Class<? extends ConfigurationFileEditorProvider> providerClass,
+              @Nonnull Map<String, String> params);
 
     @RequiredUIAccess
-    void open(@Nonnull Project project, @Nonnull ConfigurationFileEditorProvider provider);
+    void open(@Nonnull Project project,
+              @Nonnull ConfigurationFileEditorProvider provider,
+              @Nonnull Map<String, String> params);
 }

@@ -16,7 +16,6 @@
 package consulo.configuration.editor.impl.internal.file;
 
 import consulo.configuration.editor.ConfigurationFileEditorProvider;
-import consulo.configuration.editor.internal.ConfigurationEditorFileReference;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -26,15 +25,13 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2025-01-09
  */
-public class ConfigurationEditorFileType implements FileType, ConfigurationEditorFileReference {
+public class ConfigurationEditorFileType implements FileType {
     private final ConfigurationFileEditorProvider myProvider;
 
     public ConfigurationEditorFileType(ConfigurationFileEditorProvider provider) {
         myProvider = provider;
     }
 
-    @Nonnull
-    @Override
     public ConfigurationFileEditorProvider getProvider() {
         return myProvider;
     }

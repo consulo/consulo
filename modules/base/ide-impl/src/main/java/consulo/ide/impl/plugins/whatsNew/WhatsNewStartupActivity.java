@@ -26,6 +26,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -56,7 +57,7 @@ public class WhatsNewStartupActivity implements PostStartupActivity, DumbAware {
 
                 ConfigurationFileEditorManager manager = myConfigurationFileEditorManagerProvider.get();
 
-                uiAccess.give(() -> manager.open(project, WhatsNewConfigurationFileEditorProvider.class));
+                uiAccess.give(() -> manager.open(project, WhatsNewConfigurationFileEditorProvider.class, Map.of()));
             }
         }
     }

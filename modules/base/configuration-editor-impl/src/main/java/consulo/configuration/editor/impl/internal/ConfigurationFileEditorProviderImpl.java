@@ -18,7 +18,7 @@ package consulo.configuration.editor.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.configuration.editor.ConfigurationFileEditorProvider;
-import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFile;
+import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFileImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.project.Project;
@@ -34,14 +34,14 @@ import jakarta.annotation.Nonnull;
 public class ConfigurationFileEditorProviderImpl implements FileEditorProvider, DumbAware {
     @Override
     public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
-        return file instanceof ConfigurationEditorFile;
+        return file instanceof ConfigurationEditorFileImpl;
     }
 
     @RequiredUIAccess
     @Nonnull
     @Override
     public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
-        ConfigurationEditorFile configurationEditorFile = (ConfigurationEditorFile) file;
+        ConfigurationEditorFileImpl configurationEditorFile = (ConfigurationEditorFileImpl) file;
         ConfigurationFileEditorProvider provider = configurationEditorFile.getProvider();
         return provider.createEditor(project, file);
     }
