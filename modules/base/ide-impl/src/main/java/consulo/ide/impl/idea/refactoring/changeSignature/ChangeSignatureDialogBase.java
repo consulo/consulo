@@ -15,26 +15,27 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature;
 
-import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.ide.impl.idea.refactoring.ui.*;
+import consulo.ide.impl.idea.refactoring.ui.CodeFragmentTableCellEditorBase;
+import consulo.ide.impl.idea.refactoring.ui.ComboBoxVisibilityPanel;
+import consulo.ide.impl.idea.refactoring.ui.MethodSignatureComponent;
+import consulo.ide.impl.idea.refactoring.ui.VisibilityPanelBase;
 import consulo.ide.impl.idea.util.ui.table.JBListTable;
 import consulo.ide.impl.idea.util.ui.table.JBTableRowEditor;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
 import consulo.language.editor.refactoring.changeSignature.ParameterInfo;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
+import consulo.language.editor.refactoring.ui.DelegationPanel;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
 import consulo.language.editor.refactoring.ui.StringTableCellEditor;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.language.editor.refactoring.ui.DelegationPanel;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiCodeFragment;
@@ -55,7 +56,6 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
@@ -395,7 +395,6 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     return false;
   }
 
-
   protected JPanel createParametersPanel(boolean hasTabsInDialog) {
     myParametersTable = new TableView<>(myParametersTableModel) {
 
@@ -456,7 +455,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     myParametersTable.setSurrendersFocusOnKeystroke(true);
     myPropagateParamChangesButton.setShortcut(CustomShortcutSet.fromString("alt G"));
 
-    if (isListTableViewSupported() && Registry.is("change.signature.awesome.mode")) {
+    if (isListTableViewSupported()) {
       myParametersList = new JBListTable(myParametersTable) {
         @Override
         protected JComponent getRowRenderer(JTable table, int row, boolean selected, boolean focused) {
@@ -498,7 +497,6 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
 
       myPropagateParamChangesButton.setEnabled(false);
       myPropagateParamChangesButton.setVisible(false);
-      myParametersTable.setStriped(true);
 
       myParametersTableModel.addTableModelListener(mySignatureUpdater);
 

@@ -24,15 +24,15 @@ import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.TableCell;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.update.Activatable;
+import jakarta.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -64,7 +64,6 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
   private boolean myUiUpdating = true;
 
   private Integer myMinRowHeight;
-  private boolean myStriped;
 
   protected AsyncProcessIcon myBusyIcon;
   private boolean myBusy;
@@ -405,16 +404,11 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
   }
 
   public boolean isStriped() {
-    return myStriped;
+    return false;
   }
 
+  @Deprecated
   public void setStriped(boolean striped) {
-    myStriped = striped;
-    if (striped) {
-      getColumnModel().setColumnMargin(0);
-      setIntercellSpacing(new Dimension(getIntercellSpacing().width, 0));
-      setShowGrid(false);
-    }
   }
 
   @Override
@@ -483,28 +477,10 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     return super.getSurrendersFocusOnKeystroke();
   }
 
-  @Deprecated
-  private static boolean isTableDecorationSupported() {
-    return true;
-  }
-
   @Nonnull
   @Override
   public Component prepareRenderer(@Nonnull TableCellRenderer renderer, int row, int column) {
     Component result = super.prepareRenderer(renderer, row, column);
-
-    if (isTableDecorationSupported() && isStriped() && result instanceof JComponent) {
-      final Color bg = row % 2 == 1 ? getBackground() : UIUtil.getDecoratedRowColor();
-      final JComponent c = (JComponent)result;
-      final boolean cellSelected = isCellSelected(row, column);
-      if (!cellSelected) {
-        c.setOpaque(true);
-        c.setBackground(bg);
-        for (Component child : c.getComponents()) {
-          child.setBackground(bg);
-        }
-      }
-    }
 
     if (myExpandableItemsHandler.getExpandedItems().contains(new TableCell(row, column))) {
       result = ExpandedItemRendererComponentWrapper.wrap(result);
@@ -512,7 +488,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     return result;
   }
 
-  private final class MyCellEditorRemover extends Activatable.Adapter implements PropertyChangeListener {
+  private final class MyCellEditorRemover implements Activatable, PropertyChangeListener {
     private boolean myIsActive = false;
 
     public MyCellEditorRemover() {

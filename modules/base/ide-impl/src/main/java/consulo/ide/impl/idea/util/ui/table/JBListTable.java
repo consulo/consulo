@@ -227,7 +227,8 @@ public abstract class JBListTable extends JPanel {
         return editor.getTableCellEditorComponent(this, value, isSelected, row, column);
       }
     };
-    mainTable.setStriped(true);
+    mainTable.setTableHeader(null);
+    mainTable.setRowHeight(28);
   }
 
   public void stopEditing() {
@@ -268,8 +269,8 @@ public abstract class JBListTable extends JPanel {
   }
 
   public static JComponent createEditorTextFieldPresentation(final Project project, final FileType type, final String text, boolean selected, boolean focused) {
-    final JPanel panel = new JPanel(new BorderLayout());
     final EditorTextField field = new EditorTextField(text, project, type);
+    field.putClientProperty("JComboBox.isTableCellEditor", true);
     field.setBorder(JBUI.Borders.empty());
 
     Font font = EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN);
@@ -278,17 +279,10 @@ public abstract class JBListTable extends JPanel {
     field.addSettingsProvider(EditorSettingsProvider.NO_WHITESPACE);
 
     if (selected && focused) {
-      panel.setBackground(UIUtil.getTableSelectionBackground());
       field.setAsRendererWithSelection(UIUtil.getTableSelectionBackground(), UIUtil.getTableSelectionForeground());
     }
-    else {
-      panel.setBackground(UIUtil.getTableBackground());
-      if (selected) {
-        panel.setBorder(new DottedBorder(UIUtil.getTableForeground()));
-      }
-    }
-    panel.add(field, BorderLayout.WEST);
-    return panel;
+
+    return field;
   }
 
   private static class RowResizeAnimator extends Thread {
