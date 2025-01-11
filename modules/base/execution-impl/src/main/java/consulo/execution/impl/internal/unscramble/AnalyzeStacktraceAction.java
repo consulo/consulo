@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.unscramble;
+package consulo.execution.impl.internal.unscramble;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.unscramble.UnscrambleService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,23 +32,29 @@ import consulo.ui.ex.action.IdeActions;
 /**
  * @author yole
  */
-@ActionImpl(id = "AnalyzeStacktrace", parents = @ActionParentRef(@ActionRef(id = IdeActions.GROUP_ANALYZE)))
+@ActionImpl(id = "AnalyzeStacktrace", parents =
+    @ActionParentRef(value = @ActionRef(id = IdeActions.ACTION_CODE_MENU), relatedToAction = @ActionRef(id = "AnalyzeMenu"), anchor = ActionRefAnchor.AFTER)
+)
 public class AnalyzeStacktraceAction extends AnAction implements DumbAware {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public AnalyzeStacktraceAction() {
+        super(ExecutionLocalize.actionAnalyzestacktraceText());
     }
 
-    UnscrambleService unscrambleService = project.getInstance(UnscrambleService.class);
-    unscrambleService.showAsync();
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
-  }
+        UnscrambleService unscrambleService = project.getInstance(UnscrambleService.class);
+        unscrambleService.showAsync();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+    }
 }

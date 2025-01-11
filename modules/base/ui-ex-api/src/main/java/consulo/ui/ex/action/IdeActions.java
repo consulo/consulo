@@ -250,6 +250,7 @@ public interface IdeActions {
 
     String ACTION_INSPECT_CODE = "InspectCode";
 
+    String ACTION_CODE_MENU = "CodeMenu";
 
     String ACTION_FIND_USAGES = "FindUsages";
 

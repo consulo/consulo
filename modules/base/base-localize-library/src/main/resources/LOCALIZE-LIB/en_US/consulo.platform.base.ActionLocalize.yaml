@@ -2764,8 +2764,6 @@ group.OverrideFileTypeAction.fromNamedPlugin:
   text: from ''{0}'' plugin
 action.ChangeToThisFileTypeAction.description:
   text: Override File Type to ''{0}''
-action.AnalyzeStacktrace.text:
-  text: _Stack Trace or Thread Dump…
 action.RunDashboard.AddType.text:
   text: Run Configuration Type…
 group.ServiceView.AddService.text:

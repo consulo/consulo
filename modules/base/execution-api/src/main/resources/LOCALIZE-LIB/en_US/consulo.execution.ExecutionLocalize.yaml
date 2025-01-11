@@ -901,3 +901,5 @@ run.button.on.toolbar.tooltip.current.file.no.focused.editor:
   text: 'Cannot run the current file: the editor is not in focus'
 run.button.on.toolbar.tooltip.current.file.not.runnable:
   text: The file in the editor is not runnable
+action.AnalyzeStacktrace.text:
+  text: Analyze _Stack Trace or Thread Dump…
