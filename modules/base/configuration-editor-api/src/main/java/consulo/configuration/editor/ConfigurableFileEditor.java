@@ -56,6 +56,8 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
 
     private JPanel myContentPanel;
 
+    private boolean myDisposed;
+
     public ConfigurableFileEditor(Project project, VirtualFile virtualFile) {
         super(project, virtualFile);
     }
@@ -65,7 +67,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
 
     @RequiredUIAccess
     protected void init() {
-        if (myConfigurable != null) {
+        if (myConfigurable != null || myDisposed) {
             return;
         }
 
@@ -153,6 +155,10 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
     @Override
     @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
+        if (myDisposed) {
+            return null;
+        }
+        
         init();
         return myPreferedFocusedComponent;
     }
@@ -160,6 +166,8 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
     @Override
     @RequiredUIAccess
     public void dispose() {
+        myDisposed = true;
+
         myUpdateFuture.cancel(false);
 
         if (myConfigurable != null) {
