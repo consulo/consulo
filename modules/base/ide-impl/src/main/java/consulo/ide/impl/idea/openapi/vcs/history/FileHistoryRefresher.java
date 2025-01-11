@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.history;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
-import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
+import consulo.versionControlSystem.history.VcsHistoryProviderEx;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 

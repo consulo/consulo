@@ -18,6 +18,7 @@ package consulo.configuration.editor;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -57,6 +58,8 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
     private JPanel myContentPanel;
 
     private boolean myDisposed;
+
+    private boolean myModified;
 
     public ConfigurableFileEditor(Project project, VirtualFile virtualFile) {
         super(project, virtualFile);
@@ -112,6 +115,8 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         Component layoutComponent = layout.getLayoutComponent(BorderLayout.SOUTH);
 
         if (myConfigurable != null && myConfigurable.isModified()) {
+            myModified = true;
+
             if (layoutComponent != null) {
                 return;
             }
@@ -135,12 +140,23 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
 
             myContentPanel.validate();
             myContentPanel.repaint();
+
+            FileEditorManager.getInstance(myProject).refreshIconsAsync();
         }
         else {
+            myModified = false;
+
             if (layoutComponent != null) {
                 myContentPanel.remove(layoutComponent);
+
+                FileEditorManager.getInstance(myProject).refreshIconsAsync();
             }
         }
+    }
+
+    @Override
+    public boolean isModified() {
+        return myModified;
     }
 
     @Nonnull

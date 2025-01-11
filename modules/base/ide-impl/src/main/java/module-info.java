@@ -723,7 +723,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.ui.update;
   exports consulo.ide.impl.idea.vcs;
   exports consulo.ide.impl.idea.vcs.changes;
-  exports consulo.ide.impl.idea.vcs.history;
   exports consulo.ide.impl.idea.vcs.log;
   exports consulo.ide.impl.idea.vcs.log.data;
   exports consulo.ide.impl.idea.vcs.log.data.index;

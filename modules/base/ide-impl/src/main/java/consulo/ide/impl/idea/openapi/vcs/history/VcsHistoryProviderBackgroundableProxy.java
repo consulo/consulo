@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionEnabledHandler
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableComputable;
-import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
+import consulo.versionControlSystem.history.VcsHistoryProviderEx;
 import consulo.project.Project;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.diff.DiffProvider;

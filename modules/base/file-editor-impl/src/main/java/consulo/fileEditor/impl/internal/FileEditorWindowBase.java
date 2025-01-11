@@ -116,7 +116,7 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
     }
 
     if (wantModifiedIcon) {
-      return ImageEffects.appendRight(PlatformIconGroup.generalModified(), baseIcon);
+      return ImageEffects.layered(baseIcon, PlatformIconGroup.generalModified());
     }
 
     return baseIcon;

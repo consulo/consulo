@@ -47,7 +47,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
+import consulo.versionControlSystem.history.VcsHistoryProviderEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;

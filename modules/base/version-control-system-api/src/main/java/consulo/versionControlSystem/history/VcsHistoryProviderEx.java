@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs.history;
+package consulo.versionControlSystem.history;
 
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.history.VcsAppendableHistorySessionPartner;
-import consulo.versionControlSystem.history.VcsFileRevision;
-import consulo.versionControlSystem.history.VcsHistoryProvider;
-import consulo.versionControlSystem.history.VcsRevisionNumber;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public interface VcsHistoryProviderEx extends VcsHistoryProvider {
-  @jakarta.annotation.Nullable
+  @Nullable
   VcsFileRevision getLastRevision(FilePath filePath) throws VcsException;
 
   void reportAppendableHistory(@Nonnull FilePath path,
