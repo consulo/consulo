@@ -767,8 +767,6 @@ public class AbstractTreeUi {
   }
 
   private boolean isAutoExpand(@Nonnull NodeDescriptor descriptor, boolean validate) {
-    if (isAlwaysExpandedTree()) return false;
-
     boolean autoExpand = getBuilder().isAutoExpandNode(descriptor);
 
     Object element = getElementFromDescriptor(descriptor);
@@ -836,10 +834,6 @@ public class AbstractTreeUi {
   private boolean isAutoExpand(@Nonnull DefaultMutableTreeNode node) {
     NodeDescriptor descriptor = getDescriptorFrom(node);
     return descriptor != null && isAutoExpand(descriptor);
-  }
-
-  private boolean isAlwaysExpandedTree() {
-    return myTree instanceof AlwaysExpandedTree && ((AlwaysExpandedTree)myTree).isAlwaysExpanded();
   }
 
   @Nonnull
