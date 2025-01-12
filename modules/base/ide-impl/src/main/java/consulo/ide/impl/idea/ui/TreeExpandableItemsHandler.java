@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Pair;
 
 import javax.swing.*;
@@ -156,9 +158,9 @@ public class TreeExpandableItemsHandler extends AbstractExpandableItemsHandler<I
     } else {
       Color bg = UIUtil.getTreeTextBackground();
       if (myComponent instanceof Tree && ((Tree)myComponent).isFileColorsEnabled()) {
-        final Color color = ((Tree)myComponent).getFileColorForPath(myComponent.getPathForRow(key));
+        final ColorValue color = ((Tree)myComponent).getFileColorForPath(myComponent.getPathForRow(key));
         if (color != null) {
-          bg = color;
+          bg = TargetAWT.to(color);
         }
       }
       rComponent.setBackground(bg);

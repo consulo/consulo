@@ -17,15 +17,14 @@
 package consulo.ide.impl.idea.ui.tabs;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.fileEditor.EditorTabColorProvider;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileEditor.EditorTabColorProvider;
 import consulo.language.editor.FileColorManager;
-
+import consulo.project.Project;
+import consulo.ui.color.ColorValue;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.awt.*;
 
 /**
  * @author spleaner
@@ -34,15 +33,15 @@ import java.awt.*;
 public class EditorTabColorProviderImpl implements EditorTabColorProvider, DumbAware {
   @Override
   @Nullable
-  public Color getEditorTabColor(Project project, VirtualFile file) {
+  public ColorValue getEditorTabColor(Project project, VirtualFile file) {
     FileColorManager colorManager = FileColorManager.getInstance(project);
-    return colorManager.isEnabledForTabs() ? colorManager.getFileColor(file) : null;
+    return colorManager.isEnabledForTabs() ? colorManager.getFileColorValue(file) : null;
   }
 
   @Nullable
   @Override
-  public Color getProjectViewColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public ColorValue getProjectViewColor(@Nonnull Project project, @Nonnull VirtualFile file) {
     FileColorManager colorManager = FileColorManager.getInstance(project);
-    return colorManager.isEnabledForProjectView() ? colorManager.getFileColor(file) : null;
+    return colorManager.isEnabledForProjectView() ? colorManager.getFileColorValue(file) : null;
   }
 }

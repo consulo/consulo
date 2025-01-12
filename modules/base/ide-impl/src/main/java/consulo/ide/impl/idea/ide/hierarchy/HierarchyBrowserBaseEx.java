@@ -41,6 +41,7 @@ import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
@@ -241,7 +242,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
 
         @Override
-        public Color getFileColorFor(Object object) {
+        public ColorValue getFileColorFor(Object object) {
           return ProjectViewTree.getColorForElement(toPsiConverter.apply(object));
         }
       };
@@ -302,7 +303,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
 
         @Override
-        public Color getFileColorFor(Object object) {
+        public ColorValue getFileColorFor(Object object) {
           return ProjectViewTree.getColorForElement(toPsiConverter.apply(object));
         }
       };

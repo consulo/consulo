@@ -2,12 +2,11 @@
 package consulo.fileEditor;
 
 import consulo.project.Project;
+import consulo.ui.color.ColorValue;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.awt.*;
 
 /**
  * @author gregsh
@@ -30,12 +29,12 @@ public class VfsPresentationUtil {
   }
 
   @Nullable
-  public static Color getFileTabBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public static ColorValue getFileTabBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file) {
     return EditorTabPresentationUtil.getEditorTabBackgroundColor(project, file, null);
   }
 
   @Nullable
-  public static Color getFileBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public static ColorValue getFileBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file) {
     return EditorTabPresentationUtil.getFileBackgroundColor(project, file);
   }
 }

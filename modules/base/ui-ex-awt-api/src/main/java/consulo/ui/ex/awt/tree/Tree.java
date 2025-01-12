@@ -18,30 +18,31 @@ package consulo.ui.ex.awt.tree;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ReadAction;
 import consulo.application.util.Queryable;
-import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposer;
 import consulo.platform.Platform;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ComponentWithExpandableItems;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.internal.DarkThemeCalculator;
 import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.text.Position;
-import javax.swing.tree.*;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.dnd.Autoscroll;
 import java.awt.event.*;
@@ -49,7 +50,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Tree extends JTree implements ComponentWithEmptyText, ComponentWithExpandableItems<Integer>, Autoscroll, Queryable, ComponentWithFileColors, TreePathBackgroundSupplier {
+public class Tree extends JTree implements ComponentWithEmptyText, ComponentWithExpandableItems<Integer>, Autoscroll, Queryable, ComponentWithFileColors {
   private final StatusText myEmptyText;
   private final ExpandableItemsHandler<Integer> myExpandableItemsHandler;
 
@@ -329,9 +330,9 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
           component = pathObjects[pathObjects.length - 2];
         }
 
-        Color color = getFileColorFor(TreeUtil.getUserObject(component));
+        ColorValue color = getFileColorFor(TreeUtil.getUserObject(component));
         if (color != null) {
-          g.setColor(color);
+          g.setColor(TargetAWT.to(color));
           g.fillRect(0, bounds.y, getWidth(), bounds.height);
         }
       }
@@ -339,14 +340,8 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     config.restore();
   }
 
-  @Override
   @Nullable
-  public Color getPathBackground(@Nonnull TreePath path, int row) {
-    return isFileColorsEnabled() ? getFileColorForPath(path) : null;
-  }
-
-  @Nullable
-  public Color getFileColorForPath(@Nullable TreePath path) {
+  public ColorValue getFileColorForPath(@Nullable TreePath path) {
     if (path != null) {
       final Object node = path.getLastPathComponent();
       if (node instanceof DefaultMutableTreeNode) {
@@ -357,12 +352,12 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
   }
 
   @Nullable
-  public Color getFileColorFor(Object object) {
+  public ColorValue getFileColorFor(Object object) {
     return null;
   }
 
   @Nullable
-  public Color getFileColorFor(DefaultMutableTreeNode node) {
+  public ColorValue getFileColorFor(DefaultMutableTreeNode node) {
     return getFileColorFor(node.getUserObject());
   }
 

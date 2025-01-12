@@ -23,6 +23,8 @@ import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
@@ -77,8 +79,8 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
   protected void updateFileBackgroundColor(@Nonnull VirtualFile file) {
     final int index = findEditorIndex(findFileComposite(file));
     if (index != -1) {
-      final Color color = EditorTabPresentationUtil.getEditorTabBackgroundColor(getManager().getProject(), file, this);
-      setBackgroundColorAt(index, color);
+      final ColorValue color = EditorTabPresentationUtil.getEditorTabBackgroundColor(getManager().getProject(), file, this);
+      setBackgroundColorAt(index, TargetAWT.to(color));
     }
   }
 

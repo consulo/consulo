@@ -20,6 +20,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
@@ -54,7 +56,13 @@ public abstract class FileColorManager {
   @Nullable
   public abstract Color getFileColor(@Nonnull final PsiFile file);
 
+  @Deprecated
   public abstract Color getFileColor(@Nonnull final VirtualFile file);
+
+  @Nullable
+  public ColorValue getFileColorValue(@Nonnull final VirtualFile file) {
+    return TargetAWT.from(getFileColor(file));
+  }
 
   @Nullable
   public abstract Color getScopeColor(@Nonnull String scopeName);

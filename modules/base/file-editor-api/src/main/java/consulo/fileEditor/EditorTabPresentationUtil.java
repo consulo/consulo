@@ -3,12 +3,11 @@ package consulo.fileEditor;
 
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.color.ColorValue;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.awt.*;
 
 public class EditorTabPresentationUtil {
   @Nonnull
@@ -33,9 +32,9 @@ public class EditorTabPresentationUtil {
   }
 
   @Nullable
-  public static Color getEditorTabBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
+  public static ColorValue getEditorTabBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
     for (EditorTabColorProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabColorProvider.EP_NAME)) {
-      Color result = provider.getEditorTabColor(project, file, editorWindow);
+        ColorValue result = provider.getEditorTabColor(project, file, editorWindow);
       if (result != null) {
         return result;
       }
@@ -44,9 +43,9 @@ public class EditorTabPresentationUtil {
   }
 
   @Nullable
-  public static Color getFileBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public static ColorValue getFileBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file) {
     for (EditorTabColorProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabColorProvider.EP_NAME)) {
-      Color result = provider.getProjectViewColor(project, file);
+      ColorValue result = provider.getProjectViewColor(project, file);
       if (result != null) {
         return result;
       }

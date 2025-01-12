@@ -28,6 +28,7 @@ import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.ide.impl.idea.find.impl.*;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -1892,7 +1893,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             setBackground(myUsageRenderer.getBackground());
             if (!isSelected && value instanceof UsageInfo2UsageAdapter usageAdapter) {
                 Project project = usageAdapter.getUsageInfo().getProject();
-                Color color = VfsPresentationUtil.getFileBackgroundColor(project, usageAdapter.getFile());
+                Color color = TargetAWT.to(VfsPresentationUtil.getFileBackgroundColor(project, usageAdapter.getFile()));
                 setBackground(color);
                 myUsageRenderer.setBackground(color);
                 myFileAndLineNumber.setBackground(color);

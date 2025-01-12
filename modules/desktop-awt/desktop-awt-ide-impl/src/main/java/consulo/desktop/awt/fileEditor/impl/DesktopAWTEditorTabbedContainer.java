@@ -392,7 +392,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             .setIcon(icon)
             .setTooltipText(tooltip)
             .setObject(file)
-            .setTabColor(EditorTabPresentationUtil.getEditorTabBackgroundColor(myProject, file, window))
+            .setTabColor(TargetAWT.to(EditorTabPresentationUtil.getEditorTabBackgroundColor(myProject, file, window)))
             .setDragOutDelegate(myDragOutDelegate);
         tab.setTestableUi(new MyQueryable(tab));
 
@@ -432,33 +432,6 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         public void putInfo(@Nonnull Map<String, String> info) {
             info.put("editorTab", myTab.getText());
         }
-    }
-
-    /**
-     * @deprecated Use {@link EditorTabPresentationUtil#getEditorTabTitle(Project, VirtualFile)}
-     */
-    @Deprecated
-    @Nonnull
-    public static String calcTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
-        return EditorTabPresentationUtil.getEditorTabTitle(project, file);
-    }
-
-    /**
-     * @deprecated Use {@link EditorTabPresentationUtil#getUniqueEditorTabTitle(Project, VirtualFile)}
-     */
-    @Deprecated
-    @Nonnull
-    public static String calcFileName(@Nonnull Project project, @Nonnull VirtualFile file) {
-        return EditorTabPresentationUtil.getUniqueEditorTabTitle(project, file);
-    }
-
-    /**
-     * @deprecated Use {@link EditorTabPresentationUtil#getEditorTabBackgroundColor(Project, VirtualFile, FileEditorWindow)}
-     */
-    @Deprecated
-    @Nullable
-    public static Color calcTabColor(@Nonnull Project project, @Nonnull VirtualFile file) {
-        return EditorTabPresentationUtil.getEditorTabBackgroundColor(project, file, null);
     }
 
     public Component getComponentAt(final int i) {

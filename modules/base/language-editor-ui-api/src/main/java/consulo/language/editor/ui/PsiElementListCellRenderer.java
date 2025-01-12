@@ -19,6 +19,7 @@ import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ColoredItemPresentation;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -77,11 +78,11 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
     }
 
     @Nullable
-    protected static Color getBackgroundColor(@Nullable Object value) {
+    protected static ColorValue getBackgroundColor(@Nullable Object value) {
         PsiElement psiElement = NavigationItemListCellRenderer.getPsiElement(value);
         VirtualFile virtualFile = PsiUtilCore.getVirtualFile(psiElement);
-        Color fileColor = virtualFile == null ? null : VfsPresentationUtil.getFileBackgroundColor(psiElement.getProject(), virtualFile);
-        return fileColor != null ? fileColor : UIUtil.getListBackground();
+        ColorValue fileColor = virtualFile == null ? null : VfsPresentationUtil.getFileBackgroundColor(psiElement.getProject(), virtualFile);
+        return fileColor != null ? fileColor : null;
     }
 
     public static class ItemMatchers {
@@ -119,8 +120,8 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
                 FileStatus status = FileStatusManager.getInstance(project).getStatus(vFile);
                 color = TargetAWT.to(status.getColor());
 
-                Color fileBgColor = VfsPresentationUtil.getFileBackgroundColor(project, vFile);
-                bgColor = fileBgColor == null ? bgColor : fileBgColor;
+                ColorValue fileBgColor = VfsPresentationUtil.getFileBackgroundColor(project, vFile);
+                bgColor = fileBgColor == null ? bgColor : TargetAWT.to(fileBgColor);
             }
 
             if (value instanceof PsiElement) {

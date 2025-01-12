@@ -43,6 +43,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -52,6 +53,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchObjectWithWeight;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupUpdateProcessorBase;
@@ -1451,10 +1453,10 @@ public class Switcher extends AnAction implements DumbAware {
             append(renderedName, TextAttributesUtil.fromTextAttributes(attributes));
 
             // calc color the same way editor tabs do this, i.e. including EPs
-            Color color = EditorTabPresentationUtil.getFileBackgroundColor(project, virtualFile);
+            ColorValue color = EditorTabPresentationUtil.getFileBackgroundColor(project, virtualFile);
 
             if (!selected && color != null) {
-                setBackground(color);
+                setBackground(TargetAWT.to(color));
             }
             SpeedSearchUtil.applySpeedSearchHighlighting(mySwitcherPanel, this, false, selected);
 

@@ -2,12 +2,12 @@
 package consulo.language.editor.ui.navigation;
 
 import consulo.application.ui.UISettings;
-import consulo.colorScheme.EffectType;
-import consulo.colorScheme.TextAttributes;
 import consulo.application.util.matcher.Matcher;
 import consulo.application.util.matcher.MatcherHolder;
+import consulo.colorScheme.EffectType;
+import consulo.colorScheme.TextAttributes;
+import consulo.fileEditor.VfsPresentationUtil;
 import consulo.language.editor.ui.PsiElementModuleRenderer;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.language.editor.util.NavigationItemFileStatus;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiElement;
@@ -23,6 +23,7 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.OpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.util.TextAttributesUtil;
@@ -30,12 +31,10 @@ import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
-
-import static consulo.fileEditor.VfsPresentationUtil.getFileBackgroundColor;
 
 public class NavigationItemListCellRenderer extends OpaquePanel implements ListCellRenderer<Object> {
 
@@ -117,9 +116,9 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
           VirtualFile virtualFile = PsiUtilCore.getVirtualFile(psiElement);
           isProblemFile = WolfTheProblemSolver.getInstance(project).isProblemFile(virtualFile);
 
-          Color fileColor = virtualFile == null ? null : getFileBackgroundColor(project, virtualFile);
+          ColorValue fileColor = virtualFile == null ? null : VfsPresentationUtil.getFileBackgroundColor(project, virtualFile);
           if (fileColor != null) {
-            bgColor = fileColor;
+            bgColor = TargetAWT.to(fileColor);
           }
         }
 

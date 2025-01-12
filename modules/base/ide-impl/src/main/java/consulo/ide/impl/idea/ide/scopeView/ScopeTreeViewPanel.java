@@ -68,6 +68,7 @@ import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.*;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
@@ -126,7 +127,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
     @Nullable
     @Override
-    public Color getFileColorFor(DefaultMutableTreeNode node) {
+    public ColorValue getFileColorFor(DefaultMutableTreeNode node) {
       if (!(node instanceof PackageDependenciesNode)) {
         return null;
       }

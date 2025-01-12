@@ -16,6 +16,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ApplicationFileColorManager;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
@@ -135,7 +136,7 @@ public class ProjectViewTree extends DnDAwareTree {
 
   @Nullable
   @Override
-  public Color getFileColorFor(Object object) {
+  public ColorValue getFileColorFor(Object object) {
     if (object instanceof DefaultMutableTreeNode) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)object;
       object = node.getUserObject();
@@ -153,7 +154,7 @@ public class ProjectViewTree extends DnDAwareTree {
       if (file != null) {
         Project project = node.getProject();
         if (project != null && !project.isDisposed()) {
-          Color color = ReadAction.compute(() -> VfsPresentationUtil.getFileBackgroundColor(project, file));
+          ColorValue color = ReadAction.compute(() -> VfsPresentationUtil.getFileBackgroundColor(project, file));
           if (color != null) return color;
         }
       }
@@ -162,8 +163,8 @@ public class ProjectViewTree extends DnDAwareTree {
   }
 
   @Nullable
-  public static Color getColorForElement(@Nullable PsiElement psi) {
-    Color color = null;
+  public static ColorValue getColorForElement(@Nullable PsiElement psi) {
+    ColorValue color = null;
     if (psi != null) {
       if (!psi.isValid()) return null;
 
@@ -179,7 +180,7 @@ public class ProjectViewTree extends DnDAwareTree {
       else if (psi instanceof PsiDirectoryContainer) {
         final PsiDirectory[] dirs = ((PsiDirectoryContainer)psi).getDirectories();
         for (PsiDirectory dir : dirs) {
-          Color c = VfsPresentationUtil.getFileBackgroundColor(project, dir.getVirtualFile());
+            ColorValue c = VfsPresentationUtil.getFileBackgroundColor(project, dir.getVirtualFile());
           if (c != null && color == null) {
             color = c;
           }

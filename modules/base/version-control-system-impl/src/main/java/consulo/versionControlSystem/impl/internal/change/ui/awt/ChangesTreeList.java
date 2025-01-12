@@ -26,13 +26,13 @@ import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.view.tree.ApplicationFileColorManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.tree.action.CollapseAllAction;
@@ -677,7 +677,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
   }
 
   @Override
-  public Color getFileColorFor(Object object) {
+  public ColorValue getFileColorFor(Object object) {
     VirtualFile file;
     if (object instanceof FilePath filePath) {
       file = filePath.getVirtualFile();
@@ -690,7 +690,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
     }
 
     if (file != null) {
-      return FileColorManager.getInstance(myProject).getFileColor(file);
+      return FileColorManager.getInstance(myProject).getFileColorValue(file);
     }
     return super.getFileColorFor(object);
   }

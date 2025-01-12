@@ -28,6 +28,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -35,6 +36,7 @@ import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.popup.GroupedItemsListRenderer;
 import consulo.ui.ex.awt.popup.ListItemDescriptorAdapter;
 import consulo.ui.ex.awt.transferable.TextTransferable;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -53,7 +55,7 @@ import java.util.Map;
  */
 public class XDebuggerFramesList extends DebuggerFramesList {
     private final Project myProject;
-    private final Map<VirtualFile, Color> myFileColors = new HashMap<>();
+    private final Map<VirtualFile, ColorValue> myFileColors = new HashMap<>();
     private final Map<VirtualFile, Image> myFileIcons = new HashMap<>();
 
     private static final TransferHandler DEFAULT_TRANSFER_HANDLER = new TransferHandler() {
@@ -226,9 +228,9 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
             XStackFrame stackFrame = (XStackFrame) value;
             if (!selected) {
-                Color c = getFrameBgColor(stackFrame);
+                ColorValue c = getFrameBgColor(stackFrame);
                 if (c != null) {
-                    setBackground(c);
+                    setBackground(TargetAWT.to(c));
                 }
             }
             stackFrame.customizePresentation(this);
@@ -247,7 +249,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
             return myFileIcons.computeIfAbsent(virtualFile, vf -> internal.getContentRootIcon(myProject, vf));
         }
 
-        Color getFrameBgColor(XStackFrame stackFrame) {
+        ColorValue getFrameBgColor(XStackFrame stackFrame) {
             VirtualFile virtualFile = getFile(stackFrame);
             if (virtualFile != null) {
                 // handle null value
@@ -255,13 +257,13 @@ public class XDebuggerFramesList extends DebuggerFramesList {
                     return myFileColors.get(virtualFile);
                 }
                 else if (virtualFile.isValid()) {
-                    Color color = myColorsManager.getFileColor(virtualFile);
+                    ColorValue color = myColorsManager.getFileColorValue(virtualFile);
                     myFileColors.put(virtualFile, color);
                     return color;
                 }
             }
             else {
-                return myColorsManager.getScopeColor(NonProjectFilesScope.NAME);
+                return TargetAWT.from(myColorsManager.getScopeColor(NonProjectFilesScope.NAME));
             }
             return null;
         }

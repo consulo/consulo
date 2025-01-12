@@ -22,11 +22,8 @@ import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFileIm
 import consulo.fileEditor.EditorTabColorProvider;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
-
-import java.awt.*;
 
 /**
  * @author VISTALL
@@ -36,13 +33,13 @@ import java.awt.*;
 public class ConfigurationFileEditorEditorTabColorProvider implements EditorTabColorProvider, DumbAware {
     @Nullable
     @Override
-    public Color getEditorTabColor(Project project, VirtualFile file) {
+    public ColorValue getEditorTabColor(Project project, VirtualFile file) {
         if (file instanceof ConfigurationEditorFileImpl configurationEditorFile) {
             ConfigurationFileEditorProvider provider = configurationEditorFile.getProvider();
 
             ColorValue color = provider.getColor();
             if (color != null) {
-                return TargetAWT.to(color);
+                return color;
             }
         }
         return null;
