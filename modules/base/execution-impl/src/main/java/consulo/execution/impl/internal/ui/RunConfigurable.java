@@ -188,6 +188,8 @@ public class RunConfigurable extends BaseConfigurable {
                 int row,
                 boolean hasFocus
             ) {
+                setBorder(JBCurrentTheme.listCellBorderFull());
+
                 if (value instanceof DefaultMutableTreeNode node) {
                     final DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
                     final Object userObject = node.getUserObject();
