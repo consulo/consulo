@@ -20,6 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.TopicAPI;
 import consulo.component.ComponentManager;
+import consulo.component.ComponentManagerDisposedException;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.impl.internal.extension.NewExtensionAreaImpl;
@@ -315,7 +316,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     public MessageBus getMessageBus() {
         if (myDisposeState == ThreeState.YES) {
             checkCanceled();
-            throw new AssertionError("Already disposed");
+            throw new ComponentManagerDisposedException("Already disposed: " + this);
         }
         assert myMessageBus != null : "Not initialized yet";
         return myMessageBus;
@@ -326,7 +327,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     public <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
         if (myDisposeState == ThreeState.YES) {
             checkCanceled();
-            throw new AssertionError("Already disposed: " + this);
+            throw new ComponentManagerDisposedException("Already disposed: " + this);
         }
         return getInjectingContainer().getInstanceIfCreated(clazz);
     }
@@ -336,7 +337,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     public <T> T getInstance(@Nonnull Class<T> clazz) {
         if (myDisposeState == ThreeState.YES) {
             checkCanceled();
-            throw new AssertionError("Already disposed: " + this);
+            throw new ComponentManagerDisposedException("Already disposed: " + this);
         }
         return getInjectingContainer().getInstance(clazz);
     }
@@ -347,7 +348,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         InjectingContainer container = myInjectingContainer;
         if (container == null || myDisposeState == ThreeState.YES) {
             checkCanceled();
-            throw new AssertionError("Already disposed: " + toString());
+            throw new ComponentManagerDisposedException("Already disposed: " + toString());
         }
         return container;
     }

@@ -784,7 +784,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         @Nonnull ModalityState modal,
         @Nonnull BooleanSupplier expired
     ) {
-        Runnable r = wrapLaterInvocation(action, (IdeaModalityState)modal);
+        Runnable r = wrapLaterInvocation(action, modal);
         // EDT == Write Thread in legacy mode
         LaterInvocator.invokeLaterWithCallback(
             () -> runIntendedWriteActionOnCurrentThread(r),
@@ -795,7 +795,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Nonnull
-    protected Runnable wrapLaterInvocation(Runnable action, IdeaModalityState state) {
+    protected Runnable wrapLaterInvocation(Runnable action, ModalityState state) {
         return action;
     }
 
@@ -822,7 +822,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public void invokeLaterOnWriteThread(@Nonnull Runnable action) {
-        invokeLaterOnWriteThread(action, IdeaModalityState.defaultModalityState());
+        invokeLaterOnWriteThread(action, getDefaultModalityState());
     }
 
     @Override
