@@ -28,7 +28,7 @@ import javax.swing.*;
  * Component which provides a configuration user interface.
  *
  * @author lesya
- * @see consulo.ide.impl.options.SimpleConfigurable
+ * @see SimpleConfigurable
  */
 public interface UnnamedConfigurable {
   /**

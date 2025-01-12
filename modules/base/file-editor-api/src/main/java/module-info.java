@@ -25,6 +25,7 @@ module consulo.file.editor.api {
     exports consulo.fileEditor.statusBar;
     exports consulo.fileEditor.history;
     exports consulo.fileEditor.localize;
+    exports consulo.fileEditor.util;
 
     exports consulo.fileEditor.internal to
         consulo.ide.impl,

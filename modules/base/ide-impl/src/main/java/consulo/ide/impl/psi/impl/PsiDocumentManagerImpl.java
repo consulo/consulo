@@ -17,7 +17,7 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.FileContentUtil;
+import consulo.fileEditor.util.FileContentUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.ast.ASTNode;

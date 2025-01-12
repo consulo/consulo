@@ -19,14 +19,11 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
-import consulo.codeEditor.event.EditorFactoryAdapter;
 import consulo.codeEditor.event.EditorFactoryEvent;
+import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.document.Document;
-import consulo.document.RangeMarker;
-import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.document.ReadonlyFragmentModificationHandler;
+import consulo.document.*;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.internal.DocumentEx;
@@ -45,9 +42,7 @@ import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.impl.intention.QuickEditAction;
 import consulo.language.editor.template.TemplateManager;
-import consulo.document.DocumentWindow;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.language.psi.FileContextUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.inject.impl.internal.PlaceImpl;
@@ -72,10 +67,10 @@ import consulo.util.lang.*;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -149,7 +144,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     myNewDocument.addDocumentListener(this, this);
     EditorFactory editorFactory = ObjectUtil.assertNotNull(EditorFactory.getInstance());
     // not FileEditorManager listener because of RegExp checker and alike
-    editorFactory.addEditorFactoryListener(new EditorFactoryAdapter() {
+    editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
 
       int myEditorCount;
 

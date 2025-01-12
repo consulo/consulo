@@ -14,7 +14,8 @@ module consulo.language.inject.impl {
   exports consulo.language.inject.impl.internal to consulo.ide.impl,
     consulo.desktop.awt.ide.impl,
     consulo.language.editor.impl,
-    consulo.language.editor.refactoring.api;
+    consulo.language.editor.refactoring.api,
+    consulo.language.inject.advanced.impl;
 
   opens consulo.language.inject.impl.internal to consulo.language.impl, consulo.application.impl;
 }

@@ -34,7 +34,6 @@ module consulo.language.api {
     exports consulo.language.navigation;
     exports consulo.language.parser;
     exports consulo.language.pattern;
-    exports consulo.language.pattern.compiler;
     exports consulo.language.plain;
     exports consulo.language.plain.ast;
     exports consulo.language.plain.psi;

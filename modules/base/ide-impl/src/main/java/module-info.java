@@ -755,13 +755,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.webcore.packaging;
   exports consulo.ide.impl.idea.xml;
   exports consulo.ide.impl.idea.xml.util;
-  exports consulo.ide.impl.intelliLang;
-  exports consulo.ide.impl.intelliLang.inject;
-  exports consulo.ide.impl.intelliLang.inject.config;
-  exports consulo.ide.impl.intelliLang.inject.config.ui;
-  exports consulo.ide.impl.intelliLang.inject.config.ui.configurables;
-  exports consulo.ide.impl.intelliLang.references;
-  exports consulo.ide.impl.intelliLang.util;
   exports consulo.ide.impl.language;
   exports consulo.ide.impl.language.codeStyle;
   exports consulo.ide.impl.language.codeStyle.arrangement;
@@ -804,8 +797,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators;
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
   exports consulo.ide.impl.psi.impl.source.tree;
-  exports consulo.ide.impl.psi.injection;
-  exports consulo.ide.impl.psi.injection.impl;
   exports consulo.ide.impl.psi.meta;
   exports consulo.ide.impl.psi.search;
   exports consulo.ide.impl.psi.search.scope;

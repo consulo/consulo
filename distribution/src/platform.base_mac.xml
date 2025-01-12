@@ -146,7 +146,9 @@
                 <include>consulo:consulo-credential-storage-impl</include>
                 <include>consulo:consulo-configuration-editor-api</include>
                 <include>consulo:consulo-configuration-editor-impl</include>
-
+                <include>consulo:consulo-language-inject-advanced-api</include>
+                <include>consulo:consulo-language-inject-advanced-impl</include>
+                
                 <include>consulo:consulo-base-localize-library</include>
                 <include>consulo:consulo-base-icon-library</include>
 
