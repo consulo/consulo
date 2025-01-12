@@ -17,6 +17,7 @@ package consulo.configuration.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.configuration.editor.internal.ConfigurationEditorColor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
@@ -42,7 +43,7 @@ public interface ConfigurationFileEditorProvider {
 
     @Nullable
     default ColorValue getColor() {
-        return null;
+        return ConfigurationEditorColor.DEFAULT_COLOR;
     }
 
     @Nonnull

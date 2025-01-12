@@ -23,14 +23,10 @@ import consulo.ide.impl.updateSettings.impl.UpdateHistory;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.LightColors;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -47,12 +43,6 @@ public class WhatsNewConfigurationFileEditorProvider implements ConfigurationFil
     public WhatsNewConfigurationFileEditorProvider(Application application, Provider<UpdateHistory> updateHistoryProvider) {
         myApplication = application;
         myUpdateHistoryProvider = updateHistoryProvider;
-    }
-
-    @Nullable
-    @Override
-    public ColorValue getColor() {
-        return TargetAWT.from(LightColors.BLUE);
     }
 
     @Nonnull

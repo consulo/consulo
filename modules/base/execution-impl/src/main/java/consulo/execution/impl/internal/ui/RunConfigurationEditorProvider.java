@@ -41,12 +41,6 @@ public class RunConfigurationEditorProvider implements ConfigurationFileEditorPr
         return "run_configuration";
     }
 
-    @Nullable
-    @Override
-    public ColorValue getColor() {
-        return TargetAWT.from(LightColors.BLUE);
-    }
-
     @Nonnull
     @Override
     public Image getIcon() {
