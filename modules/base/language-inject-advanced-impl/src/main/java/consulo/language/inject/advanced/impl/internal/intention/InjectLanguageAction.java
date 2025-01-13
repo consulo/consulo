@@ -18,14 +18,12 @@ package consulo.language.inject.advanced.impl.internal.intention;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.WriteAction;
-import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.util.FileContentUtil;
 import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.hint.QuestionAction;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionMetaData;
@@ -48,7 +46,6 @@ import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -65,7 +62,6 @@ import java.util.function.Predicate;
 @IntentionMetaData(ignoreId = "platform.inject.language", fileExtensions = "txt", categories = "Language Injection")
 public class InjectLanguageAction implements IntentionAction {
     public static final String LAST_INJECTED_LANGUAGE = "LAST_INJECTED_LANGUAGE";
-    public static final Key<Processor<PsiLanguageInjectionHost>> FIX_KEY = Key.create("inject fix key");
 
     public static List<Injectable> getAllInjectables() {
         Language[] languages = InjectedLanguage.getAvailableLanguages();
@@ -133,7 +129,7 @@ public class InjectLanguageAction implements IntentionAction {
         }
 
         try {
-            host.putUserData(FIX_KEY, null);
+            host.putUserData(LanguageInjectionSupport.FIX_KEY, null);
             Language language = injectable.toLanguage();
             for (LanguageInjectionSupport support : InjectorUtils.getActiveInjectionSupports()) {
                 if (support.isApplicableTo(host) && support.addInjectionInPlace(language, host)) {
@@ -141,7 +137,7 @@ public class InjectLanguageAction implements IntentionAction {
                 }
             }
             if (TemporaryPlacesRegistry.getInstance(project).getLanguageInjectionSupport().addInjectionInPlace(language, host)) {
-                final Processor<PsiLanguageInjectionHost> data = host.getUserData(FIX_KEY);
+                final Predicate<PsiLanguageInjectionHost> data = host.getUserData(LanguageInjectionSupport.FIX_KEY);
                 String text = StringUtil.escapeXml(language.getDisplayName()) + " was temporarily injected.";
                 if (data != null) {
                     final SmartPsiElementPointer<PsiLanguageInjectionHost> pointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(host);
@@ -149,12 +145,7 @@ public class InjectLanguageAction implements IntentionAction {
                     HintManager.getInstance().showQuestionHint(editor, text +
                             "<br>Do you want to insert annotation? " +
                             KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS)),
-                        range.getStartOffset(), range.getEndOffset(), new QuestionAction() {
-                            @Override
-                            public boolean execute() {
-                                return data.process(pointer.getElement());
-                            }
-                        });
+                        range.getStartOffset(), range.getEndOffset(), () -> data.test(pointer.getElement()));
                 }
                 else {
                     HintManager.getInstance().showInformationHint(editor, text);

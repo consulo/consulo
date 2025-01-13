@@ -31,6 +31,7 @@ import jakarta.annotation.Nullable;
 import org.jdom.Element;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -38,40 +39,49 @@ import java.util.function.Supplier;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LanguageInjectionSupport {
-  public static Key<InjectedLanguage> TEMPORARY_INJECTED_LANGUAGE = Key.create("TEMPORARY_INJECTED_LANGUAGE");
-  public static Key<LanguageInjectionSupport> INJECTOR_SUPPORT = Key.create("INJECTOR_SUPPORT");
-  public static Key<LanguageInjectionSupport> SETTINGS_EDITOR = Key.create("SETTINGS_EDITOR");
+    public static Key<InjectedLanguage> TEMPORARY_INJECTED_LANGUAGE = Key.create("TEMPORARY_INJECTED_LANGUAGE");
+    public static Key<LanguageInjectionSupport> INJECTOR_SUPPORT = Key.create("INJECTOR_SUPPORT");
+    public static Key<LanguageInjectionSupport> SETTINGS_EDITOR = Key.create("SETTINGS_EDITOR");
 
-  @Nonnull
-  public abstract String getId();
+    /**
+     * Special hack to {@link PsiLanguageInjectionHost} after
+     * calling {@link #addInjectionInPlace(Language, PsiLanguageInjectionHost)} for hidding information hint
+     */
+    public static final Key<Predicate<PsiLanguageInjectionHost>> FIX_KEY = Key.create("inject fix key");
 
-  @Nonnull
-  public abstract Class[] getPatternClasses();
+    @Nonnull
+    public abstract String getId();
 
-  public abstract boolean isApplicableTo(PsiLanguageInjectionHost host);
+    @Nonnull
+    public abstract Class[] getPatternClasses();
 
-  public abstract boolean useDefaultInjector(PsiLanguageInjectionHost host);
+    public abstract boolean isApplicableTo(PsiLanguageInjectionHost host);
 
-  @Nullable
-  public abstract BaseInjection findCommentInjection(@Nonnull PsiElement host, @Nullable Ref<PsiElement> commentRef);
+    public abstract boolean useDefaultInjector(PsiLanguageInjectionHost host);
 
-  public abstract boolean addInjectionInPlace(final Language language, final PsiLanguageInjectionHost psiElement);
+    @Nullable
+    public abstract BaseInjection findCommentInjection(@Nonnull PsiElement host, @Nullable Ref<PsiElement> commentRef);
 
-  public abstract boolean removeInjectionInPlace(final PsiLanguageInjectionHost psiElement);
+    /**
+     * @see #FIX_KEY
+     */
+    public abstract boolean addInjectionInPlace(final Language language, final PsiLanguageInjectionHost psiElement);
 
-  public boolean removeInjection(final PsiElement psiElement) {
-    return psiElement instanceof PsiLanguageInjectionHost && removeInjectionInPlace((PsiLanguageInjectionHost)psiElement);
-  }
+    public abstract boolean removeInjectionInPlace(final PsiLanguageInjectionHost psiElement);
 
-  public abstract boolean editInjectionInPlace(final PsiLanguageInjectionHost psiElement);
+    public boolean removeInjection(final PsiElement psiElement) {
+        return psiElement instanceof PsiLanguageInjectionHost && removeInjectionInPlace((PsiLanguageInjectionHost) psiElement);
+    }
 
-  public abstract BaseInjection createInjection(final Element element);
+    public abstract boolean editInjectionInPlace(final PsiLanguageInjectionHost psiElement);
 
-  public abstract void setupPresentation(final BaseInjection injection, final SimpleColoredText presentation, final boolean isSelected);
+    public abstract BaseInjection createInjection(final Element element);
 
-  public abstract Configurable[] createSettings(final Project project, final Configuration configuration);
+    public abstract void setupPresentation(final BaseInjection injection, final SimpleColoredText presentation, final boolean isSelected);
 
-  public abstract AnAction[] createAddActions(final Project project, final Consumer<BaseInjection> consumer);
+    public abstract Configurable[] createSettings(final Project project, final Configuration configuration);
 
-  public abstract AnAction createEditAction(final Project project, final Supplier<BaseInjection> producer);
+    public abstract AnAction[] createAddActions(final Project project, final Consumer<BaseInjection> consumer);
+
+    public abstract AnAction createEditAction(final Project project, final Supplier<BaseInjection> producer);
 }
