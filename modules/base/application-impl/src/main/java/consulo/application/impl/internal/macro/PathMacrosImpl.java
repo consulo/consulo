@@ -15,6 +15,7 @@
  */
 package consulo.application.impl.internal.macro;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.macro.PathMacros;
 import consulo.component.macro.ExpandMacroToPathMap;
@@ -42,7 +43,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 @State(name = "PathMacrosImpl", storages = @Storage(value = PathMacrosImpl.STORE_FILE, roamingType = RoamingType.DISABLED))
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(PathMacrosImpl.class);
   public static final String STORE_FILE = "path.macros.xml";

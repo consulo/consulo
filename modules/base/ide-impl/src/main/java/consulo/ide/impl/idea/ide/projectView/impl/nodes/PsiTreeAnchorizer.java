@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.application.ApplicationManager;
@@ -33,7 +34,7 @@ import jakarta.annotation.Nullable;
  * @author peter
  */
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public class PsiTreeAnchorizer extends TreeAnchorizer {
   @Nonnull
   @Override

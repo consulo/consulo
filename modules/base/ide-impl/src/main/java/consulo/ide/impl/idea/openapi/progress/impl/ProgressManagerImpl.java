@@ -3,6 +3,7 @@
  */
 package consulo.ide.impl.idea.openapi.progress.impl;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.progress.CoreProgressManager;
@@ -32,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public class ProgressManagerImpl extends CoreProgressManager implements Disposable {
   private static final Key<Boolean> SAFE_PROGRESS_INDICATOR = Key.create("SAFE_PROGRESS_INDICATOR");
   private final Set<CheckCanceledHook> myHooks = ConcurrentHashMap.newKeySet();

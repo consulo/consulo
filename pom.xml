@@ -75,6 +75,7 @@
     <module>modules/base/localize-impl</module>
     <module>modules/base/remote-servers-agent-rt</module>
     <module>modules/base/test-impl</module>
+    <module>modules/base/test-junit-impl</module>
     <module>modules/base/virtual-file-system-api</module>
     <module>modules/base/document-api</module>
     <module>modules/base/project-api</module>

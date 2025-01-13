@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.internal.JobScheduler;
@@ -39,7 +40,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-@ExtensionImpl
+@ExtensionImpl(profiles = ComponentProfiles.PRODUCTION)
 public final class LocalFileSystemImpl extends LocalFileSystemBase implements RefreshableFileSystem, VirtualFilePointerCapableFileSystem {
   private static final String FS_ROOT = "/";
   private static final int STATUS_UPDATE_PERIOD = 1000;

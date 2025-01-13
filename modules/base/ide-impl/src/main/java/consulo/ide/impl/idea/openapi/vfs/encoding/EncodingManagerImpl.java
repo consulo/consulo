@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
@@ -50,7 +51,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 @State(name = "Encoding", storages = @Storage("encoding.xml"))
 public class EncodingManagerImpl implements PersistentStateComponent<EncodingManagerImpl.State>, ApplicationEncodingManager, Disposable {
     private static final Logger LOG = Logger.getInstance(EncodingManagerImpl.class);

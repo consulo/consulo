@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.impl.internal;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.util.io.FileTooBigException;
 import consulo.util.io.FileUtil;
@@ -32,7 +33,7 @@ import java.io.InputStream;
  * @since 15-Feb-22
  */
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public class RawFileLoaderImpl implements RawFileLoader {
   private static final int KILOBYTE = 1024;
 
