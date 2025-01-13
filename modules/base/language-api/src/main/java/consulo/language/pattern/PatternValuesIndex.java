@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util;
-
-import consulo.language.pattern.*;
-import consulo.util.lang.function.PairProcessor;
+package consulo.language.pattern;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 /**
  * @author Gregory.Shrago
@@ -29,7 +27,7 @@ import java.util.Set;
 public class PatternValuesIndex {
 
   public static Set<String> buildStringIndex(Collection<ElementPattern<?>> patterns) {
-    final Set<String> result = new HashSet<String>();
+    final Set<String> result = new HashSet<>();
     processStringValues(patterns, (elementPattern, value) -> {
       for (Object o : value) {
         if (o instanceof String) {
@@ -41,8 +39,8 @@ public class PatternValuesIndex {
     return result;
   }
 
-  public static boolean processStringValues(Collection<ElementPattern<?>> patterns, final PairProcessor<ElementPattern<?>, Collection<Object>> valueProcessor) {
-    final LinkedList<ElementPattern<?>> stack = new LinkedList<ElementPattern<?>>();
+  public static boolean processStringValues(Collection<ElementPattern<?>> patterns, final BiPredicate<ElementPattern<?>, Collection<Object>> valueProcessor) {
+    final LinkedList<ElementPattern<?>> stack = new LinkedList<>();
     for (final ElementPattern<?> next : patterns) {
       stack.add(next);
       while (!stack.isEmpty()) {
@@ -57,7 +55,7 @@ public class PatternValuesIndex {
             stack.add(((PatternConditionPlus)condition).getValuePattern());
           }
           else if (condition instanceof ValuePatternCondition) {
-            if (!valueProcessor.process(next, ((ValuePatternCondition)condition).getValues())) return false;
+            if (!valueProcessor.test(next, ((ValuePatternCondition)condition).getValues())) return false;
           }
         }
       }
