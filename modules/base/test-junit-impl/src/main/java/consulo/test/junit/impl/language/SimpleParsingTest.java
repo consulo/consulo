@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.test.junit.impl;
+package consulo.test.junit.impl.language;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.LanguageFileType;
@@ -30,16 +27,20 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
-import consulo.project.Project;
-import consulo.test.light.LightApplicationBuilder;
-import consulo.test.light.LightProjectBuilder;
+import consulo.test.junit.impl.extension.ConsuloProjectLoader;
+import consulo.test.junit.impl.extension.InjectingRecord;
+import consulo.test.junit.impl.extension.NoParamDisplayNameGenerator;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
 import jakarta.annotation.Nonnull;
-import org.junit.jupiter.api.*;
+import jakarta.annotation.Nullable;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.InputStream;
 import java.util.Set;
@@ -49,15 +50,13 @@ import java.util.Set;
  * @since 2025-01-13
  */
 @DisplayNameGeneration(NoParamDisplayNameGenerator.class)
-public abstract class SimpleParsingTest {
+@ExtendWith(ConsuloProjectLoader.class)
+public abstract class SimpleParsingTest<TestContext> {
+    public record Context(TestInfo testInfo, PsiFileFactory psiFileFactory) implements InjectingRecord {
+    }
+
     private final String myDataPath;
     private final String myExtension;
-
-    private static Disposable ourGlobalDisposable;
-
-    private static Application ourApplication;
-
-    private static Project ourProject;
 
     public SimpleParsingTest(@Nonnull String dataPath, @Nonnull String ext) {
         myDataPath = dataPath;
@@ -65,65 +64,54 @@ public abstract class SimpleParsingTest {
     }
 
     @Nonnull
-    protected abstract LanguageFileType getFileType();
+    protected abstract LanguageFileType getFileType(@Nonnull Context context, @Nullable TestContext testContext);
 
     @Nonnull
     @RequiredReadAction
-    protected PsiFile createFile(@Nonnull TestInfo testInfo,
+    protected PsiFile createFile(@Nonnull Context context,
+                                 @Nullable TestContext testContext,
                                  @Nonnull String fileName,
                                  @Nonnull FileType fileType,
                                  @Nonnull String text) {
-        LanguageVersion languageVersion = resolveLanguageVersion(testInfo, fileType);
+        LanguageVersion languageVersion = resolveLanguageVersion(context, testContext, fileType);
 
-        PsiFileFactory fileFactory = PsiFileFactory.getInstance(ourProject);
-        return fileFactory.createFileFromText(fileName, languageVersion.getLanguage(), languageVersion, text);
+        return context.psiFileFactory().createFileFromText(fileName, languageVersion.getLanguage(), languageVersion, text);
     }
 
-    @BeforeAll
-    public static void beforeAll() {
-        if (ourGlobalDisposable != null) {
-            throw new IllegalArgumentException("Duplicate Start");
-        }
-
-        ourGlobalDisposable = Disposable.newDisposable("App Disposable");
-
-        LightApplicationBuilder builder = LightApplicationBuilder.create(ourGlobalDisposable);
-
-        ourApplication = builder.build();
-
-        LightProjectBuilder projectBuilder = LightProjectBuilder.create(ourApplication);
-
-        ourProject = projectBuilder.build();
-    }
-
-    @AfterAll
-    public static void afterAll() {
-        if (ourGlobalDisposable == null) {
-            throw new IllegalArgumentException("Duplicate Start");
-        }
-
-        Disposer.dispose(ourGlobalDisposable);
-        ourGlobalDisposable = null;
-        Disposer.assertIsEmpty();
-
-        ourProject = null;
-        ourApplication = null;
-    }
-
-    protected void doTest(TestInfo testInfo) throws Exception {
+    protected void doTest(@Nonnull Context context, @Nullable TestContext testContext) throws Exception {
         //noinspection RequiredXAction
-        doTestImpl(testInfo);
+        doTestImpl(context, testContext);
+    }
+
+    @Nonnull
+    protected String getFileName(@Nonnull Context context, @Nullable TestContext testContext) {
+        TestInfo testInfo = context.testInfo();
+
+        String testName = testInfo.getTestMethod().get().getName();
+
+        return NoParamDisplayNameGenerator.getName(testName, false);
     }
 
     @RequiredReadAction
-    protected void doTestImpl(TestInfo testInfo) throws Exception {
-        String testName = testInfo.getTestMethod().get().getName();
+    protected final void doTestImpl(@Nonnull Context context, @Nullable TestContext testContext) throws Exception {
+        PsiFile file = loadPsiFile(context, testContext);
 
-        String fileName = NoParamDisplayNameGenerator.getName(testName, false);
+        checkResult(context, testContext, file);
+    }
 
-        String sourceText = loadText(testInfo, myExtension);
+    @Nonnull
+    @RequiredReadAction
+    protected PsiFile loadPsiFile(@Nonnull Context context, @Nullable TestContext testContext) throws  Exception {
+        String fileName = getFileName(context, testContext);
 
-        PsiFile file = createFile(testInfo, fileName + "." + myExtension, getFileType(), sourceText);
+        String sourceText = loadText(context, testContext, myExtension);
+
+        PsiFile file = createFile(context,
+            testContext,
+            fileName + "." + myExtension,
+            getFileType(context, testContext),
+            sourceText
+        );
 
         ensureParsed(file);
 
@@ -137,14 +125,15 @@ public abstract class SimpleParsingTest {
         Assertions.assertEquals(sourceText, viewProvider.getDocument().getText(), "doc text mismatch");
         Assertions.assertEquals(sourceText, file.getText(), "psi text mismatch");
 
-        checkResult(testInfo, file);
+        return file;
     }
 
-    protected void checkResult(TestInfo testInfo, final PsiFile file) throws Exception {
-        doCheckResult(testInfo, file, checkAllPsiRoots(), skipSpaces(), includeRanges());
+    protected void checkResult(@Nonnull Context context, @Nullable TestContext testContext, final PsiFile file) throws Exception {
+        doCheckResult(context, testContext, file, checkAllPsiRoots(), skipSpaces(), includeRanges());
     }
 
-    private void doCheckResult(TestInfo testInfo,
+    private void doCheckResult(Context context,
+                               TestContext testContext,
                                PsiFile file,
                                boolean checkAllPsiRoots,
                                boolean skipSpaces,
@@ -153,7 +142,7 @@ public abstract class SimpleParsingTest {
         Set<Language> languages = provider.getLanguages();
 
         if (!checkAllPsiRoots || languages.size() == 1) {
-            String resultText = loadText(testInfo, "txt");
+            String resultText = loadText(context, testContext, "txt");
             Assertions.assertEquals(resultText, toParseTreeText(file, skipSpaces, printRanges).trim());
             return;
         }
@@ -161,14 +150,16 @@ public abstract class SimpleParsingTest {
         for (Language language : languages) {
             PsiFile root = provider.getPsi(language);
 
-            String resultText = loadText(testInfo, language.getID() + ".txt");
+            String resultText = loadText(context, testContext, language.getID() + ".txt");
 
             Assertions.assertEquals(resultText, toParseTreeText(root, skipSpaces, printRanges).trim());
         }
     }
 
     @Nonnull
-    private String loadText(TestInfo testInfo, String extension) throws Exception {
+    protected String loadText(Context context, TestContext testContext, String extension) throws Exception {
+        TestInfo testInfo = context.testInfo();
+        
         String testName = testInfo.getTestMethod().get().getName();
 
         String fileName = NoParamDisplayNameGenerator.getName(testName, false);
@@ -177,7 +168,7 @@ public abstract class SimpleParsingTest {
 
         InputStream sourceStream = getClass().getResourceAsStream(path);
         if (sourceStream == null) {
-            throw new IllegalArgumentException("There no data for test path: " + path);
+            return "";
         }
 
         return FileUtil.loadTextAndClose(sourceStream, true);
@@ -194,7 +185,9 @@ public abstract class SimpleParsingTest {
 
     @Nonnull
     @RequiredReadAction
-    protected LanguageVersion resolveLanguageVersion(@Nonnull TestInfo testInfo, @Nonnull FileType fileType) {
+    protected LanguageVersion resolveLanguageVersion(@Nonnull Context context,
+                                                     @Nullable TestContext testContext,
+                                                     @Nonnull FileType fileType) {
         if (fileType instanceof LanguageFileType) {
             return LanguageVersionUtil.findDefaultVersion(((LanguageFileType) fileType).getLanguage());
         }

@@ -1,0 +1,2 @@
+PsiFile(plain text):FirstTest.log
+  PsiElement(PLAIN_TEXT)('WARN - test')

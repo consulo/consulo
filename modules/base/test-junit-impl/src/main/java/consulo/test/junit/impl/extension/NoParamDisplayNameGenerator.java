@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.test.junit.impl;
+package consulo.test.junit.impl.extension;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
 

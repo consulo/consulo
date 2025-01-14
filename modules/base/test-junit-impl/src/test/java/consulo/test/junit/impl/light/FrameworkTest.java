@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.test.light;
+package consulo.test.junit.impl.light;
 
 import consulo.application.Application;
 import consulo.disposer.AutoDisposable;
@@ -26,6 +26,8 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.search.ReferencesSearch;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.test.light.LightApplicationBuilder;
+import consulo.test.light.LightProjectBuilder;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
