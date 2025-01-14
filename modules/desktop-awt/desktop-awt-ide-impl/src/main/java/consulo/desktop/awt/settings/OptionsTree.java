@@ -46,8 +46,6 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
-import javax.swing.plaf.TreeUI;
-import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
@@ -525,7 +523,9 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         myRoot.cleanUpCache();
 
         FilteringTreeStructure treeStructure = (FilteringTreeStructure) myBuilder.getTreeStructure();
-        treeStructure.rebuild();
+        if (treeStructure != null) {
+            treeStructure.rebuild();
+        }
 
         myBuilder.queueUpdate().doWhenProcessed(after);
     }
