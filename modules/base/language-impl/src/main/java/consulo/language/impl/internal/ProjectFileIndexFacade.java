@@ -16,6 +16,7 @@
 
 package consulo.language.impl.internal;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.module.Module;
 import consulo.module.content.DirectoryIndex;
@@ -36,7 +37,7 @@ import jakarta.annotation.Nullable;
  * @author yole
  */
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public class ProjectFileIndexFacade extends FileIndexFacade {
   private final ProjectFileIndex myFileIndex;
   private final Provider<DirectoryIndex> myDirectoryIndexProvider;
