@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.roots.impl;
+package consulo.language.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.module.Module;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.impl;
+package consulo.module.content.impl.internal.root;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
@@ -23,9 +23,6 @@ import consulo.application.util.query.Query;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.DirectoryIndex;
@@ -37,10 +34,13 @@ import consulo.module.event.ModuleListener;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.project.Project;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.fileType.FileTypeEvent;
+import consulo.virtualFileSystem.fileType.FileTypeListener;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -159,7 +159,7 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
     protected RootIndexImpl.InfoCache createRootInfoCache() {
         return new RootIndexImpl.InfoCache() {
             // Upsource can't use int-mapping because different files may have the same id there
-            private final ConcurrentIntObjectMap<DirectoryInfo> myInfoCache = ContainerUtil.createConcurrentIntObjectMap();
+            private final ConcurrentIntObjectMap<DirectoryInfo> myInfoCache = IntMaps.newConcurrentIntObjectHashMap();
 
             @Override
             public void cacheInfo(@Nonnull VirtualFile dir, @Nonnull DirectoryInfo info) {

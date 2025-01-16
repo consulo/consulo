@@ -216,6 +216,11 @@
             <artifactId>consulo-language-inject-advanced-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-module-content-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <!--TODO [VISTALL] temp dependency-->
         <dependency>

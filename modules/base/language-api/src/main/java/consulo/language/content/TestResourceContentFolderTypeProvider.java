@@ -16,10 +16,11 @@
 package consulo.language.content;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.content.ResourceLikeContentFolderTypeProvider;
 import consulo.content.TestLikeContentFolderTypeProvider;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectBundle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -33,39 +34,39 @@ import java.util.function.Supplier;
  * @since 22:44/31.10.13
  */
 @ExtensionImpl
-public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProvider implements TestLikeContentFolderTypeProvider {
-  private static final Supplier<TestResourceContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
-  );
+public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProvider implements TestLikeContentFolderTypeProvider, ResourceLikeContentFolderTypeProvider {
+    private static final Supplier<TestResourceContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
+    );
 
-  @Nonnull
-  public static TestResourceContentFolderTypeProvider getInstance() {
-    return INSTANCE.get();
-  }
+    @Nonnull
+    public static TestResourceContentFolderTypeProvider getInstance() {
+        return INSTANCE.get();
+    }
 
-  public TestResourceContentFolderTypeProvider() {
-    super("TEST_RESOURCE");
-  }
+    public TestResourceContentFolderTypeProvider() {
+        super("TEST_RESOURCE");
+    }
 
-  @Override
-  public int getWeight() {
-    return 200;
-  }
+    @Override
+    public int getWeight() {
+        return 200;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Modules.TestResourcesRoot;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.modulesTestresourcesroot();
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return ProjectBundle.message("module.toggle.test.resources.action");
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return ProjectBundle.message("module.toggle.test.resources.action");
+    }
 
-  @Nonnull
-  @Override
-  public ColorValue getGroupColor() {
-    return new RGBColor(115, 149, 3);
-  }
+    @Nonnull
+    @Override
+    public ColorValue getGroupColor() {
+        return new RGBColor(115, 149, 3);
+    }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.file.event;
+package consulo.virtualFileSystem.fileType;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;

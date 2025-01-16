@@ -6,7 +6,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.PerApplicationInstance;
 import consulo.component.ComponentManager;
 import consulo.language.Language;
-import consulo.language.file.event.FileTypeListener;
+import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.*;

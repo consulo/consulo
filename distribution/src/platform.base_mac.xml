@@ -16,6 +16,7 @@
 <component>
     <!--FIXME [VISTALL] if you update this file - update _mac file too-->
     <dependencySets>
+    <dependencySets>
         <dependencySet>
             <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo/lib</outputDirectory>
             <unpack>false</unpack>
@@ -55,6 +56,7 @@
                 <include>consulo:consulo-application-content-api</include>
                 <include>consulo:consulo-project-content-api</include>
                 <include>consulo:consulo-module-content-api</include>
+                <include>consulo:consulo-module-content-impl</include>
                 <include>consulo:consulo-project-ui-api</include>
                 <include>consulo:consulo-project-ui-impl</include>
                 <include>consulo:consulo-application-ui-api</include>

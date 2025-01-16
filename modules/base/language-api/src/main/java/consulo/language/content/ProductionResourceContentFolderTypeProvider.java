@@ -19,12 +19,13 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.content.ResourceLikeContentFolderTypeProvider;
 import consulo.project.ProjectBundle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
@@ -32,40 +33,40 @@ import java.util.function.Supplier;
  * @since 22:37/31.10.13
  */
 @ExtensionImpl
-public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Supplier<ProductionResourceContentFolderTypeProvider> INSTANCE =
-    ExtensionInstance.from(ContentFolderTypeProvider.class
-    );
+public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider implements ResourceLikeContentFolderTypeProvider {
+    private static final Supplier<ProductionResourceContentFolderTypeProvider> INSTANCE =
+        ExtensionInstance.from(ContentFolderTypeProvider.class
+        );
 
-  @Nonnull
-  public static ProductionResourceContentFolderTypeProvider getInstance() {
-    return INSTANCE.get();
-  }
+    @Nonnull
+    public static ProductionResourceContentFolderTypeProvider getInstance() {
+        return INSTANCE.get();
+    }
 
-  public ProductionResourceContentFolderTypeProvider() {
-    super("PRODUCTION_RESOURCE");
-  }
+    public ProductionResourceContentFolderTypeProvider() {
+        super("PRODUCTION_RESOURCE");
+    }
 
-  @Override
-  public int getWeight() {
-    return 100;
-  }
+    @Override
+    public int getWeight() {
+        return 100;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Modules.ResourcesRoot;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return AllIcons.Modules.ResourcesRoot;
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return ProjectBundle.message("module.toggle.resources.action");
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return ProjectBundle.message("module.toggle.resources.action");
+    }
 
-  @Nonnull
-  @Override
-  public ColorValue getGroupColor() {
-    return new RGBColor(129, 45, 243);
-  }
+    @Nonnull
+    @Override
+    public ColorValue getGroupColor() {
+        return new RGBColor(129, 45, 243);
+    }
 }

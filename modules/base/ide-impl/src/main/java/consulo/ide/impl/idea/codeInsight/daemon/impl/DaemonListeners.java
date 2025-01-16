@@ -44,8 +44,8 @@ import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarChang
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import consulo.language.editor.scratch.ScratchUtil;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
+import consulo.virtualFileSystem.fileType.FileTypeEvent;
+import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
