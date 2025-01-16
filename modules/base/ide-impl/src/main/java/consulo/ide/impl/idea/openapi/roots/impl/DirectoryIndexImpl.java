@@ -34,6 +34,7 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.event.ModuleListener;
+import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.project.Project;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.virtualFileSystem.NewVirtualFile;
@@ -75,25 +76,29 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
             }
         });
 
+        myConnection.subscribe(ModuleExtensionChangeListener.class, (oldExtension, newExtension) -> {
+            myRootIndex = null;
+        });
+
         myConnection.subscribe(ModuleListener.class, new ModuleListener() {
             @Override
             public void moduleAdded(Project project, Module module) {
-
+                myRootIndex = null;
             }
 
             @Override
             public void beforeModuleRemoved(Project project, Module module) {
-
+                myRootIndex = null;
             }
 
             @Override
             public void moduleRemoved(Project project, Module module) {
-
+                myRootIndex = null;
             }
 
             @Override
             public void modulesRenamed(Project project, List<Module> modules) {
-
+                myRootIndex = null;
             }
         });
 
