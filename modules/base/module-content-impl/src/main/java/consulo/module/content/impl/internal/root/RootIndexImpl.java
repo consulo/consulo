@@ -500,6 +500,14 @@ public class RootIndexImpl implements RootIndex {
         @Nullable
         private VirtualFile findModuleRootInfo(@Nonnull List<VirtualFile> hierarchy) {
             for (VirtualFile root : hierarchy) {
+                ContentFolder contentFolder = contentFolders.get(root);
+                // if we found content folder - try search content root
+                if (contentFolder != null) {
+                    return findNearestContentRootForExcluded(hierarchy);
+                }
+            }
+
+            for (VirtualFile root : hierarchy) {
                 Module module = contentRootOf.get(root);
                 Module excludedFrom = excludedFromModule.get(root);
                 if (module != null && excludedFrom != module) {

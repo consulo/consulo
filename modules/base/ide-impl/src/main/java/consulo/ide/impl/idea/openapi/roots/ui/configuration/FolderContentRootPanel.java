@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.HoverHyperlinkLabel;
 import consulo.ide.impl.idea.ui.roots.FilePathClipper;
 import consulo.ide.impl.idea.ui.roots.ResizingWrapper;
-import consulo.language.content.LanguageContentFolderScopes;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
@@ -34,7 +34,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -42,8 +41,8 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -56,17 +55,17 @@ public class FolderContentRootPanel extends ContentRootPanel {
 
     @Override
     protected void addBottomComponents() {
-        final ContentFolder[] contentFolders = getContentEntry().getFolders(LanguageContentFolderScopes.all());
-        MultiMap<ContentFolderTypeProvider, ContentFolder> folderByType = new MultiMap<>();
+        final ContentFolder[] contentFolders = getContentEntry().getFolders(t -> true);
+
+        ExtensionPoint<ContentFolderTypeProvider> point = Application.get().getExtensionPoint(ContentFolderTypeProvider.class);
+
+        Map<ContentFolderTypeProvider, List<ContentFolder>> folderByType = new HashMap<>();
         for (ContentFolder folder : contentFolders) {
             if (folder.isSynthetic()) {
                 continue;
             }
-            final VirtualFile folderFile = folder.getFile();
-            if (folderFile != null && isExcludedOrUnderExcludedDirectory(folderFile)) {
-                continue;
-            }
-            folderByType.putValue(folder.getType(), folder);
+
+            folderByType.computeIfAbsent(folder.getType(), t -> new ArrayList<>()).add(folder);
         }
 
         Insets insets = JBUI.insetsBottom(10);
@@ -83,23 +82,22 @@ public class FolderContentRootPanel extends ContentRootPanel {
             0,
             0
         );
-        for (Map.Entry<ContentFolderTypeProvider, Collection<ContentFolder>> entry : folderByType.entrySet()) {
-            Collection<ContentFolder> folders = entry.getValue();
-            if (folders.isEmpty()) {
-                continue;
+
+        // use extension point order
+        point.forEachExtensionSafe(provider -> {
+            List<ContentFolder> folders = folderByType.get(provider);
+            if (folders == null || folders.isEmpty()) {
+                return;
             }
 
-            ContentFolderTypeProvider contentFolderTypeProvider = entry.getKey();
-
-            ContentFolder[] foldersArray = folders.toArray(new ContentFolder[folders.size()]);
-            final JComponent sourcesComponent = createFolderGroupComponent(
-                contentFolderTypeProvider.getName(),
-                foldersArray,
-                TargetAWT.to(contentFolderTypeProvider.getGroupColor()),
-                contentFolderTypeProvider
+            JComponent sourcesComponent = createFolderGroupComponent(
+                provider.getName(),
+                folders,
+                TargetAWT.to(provider.getGroupColor()),
+                provider
             );
             add(sourcesComponent, constraints);
-        }
+        });
 
         JComponent bottom = new JPanel(new BorderLayout());
         bottom.add(Box.createVerticalStrut(3), BorderLayout.NORTH);
@@ -117,19 +115,9 @@ public class FolderContentRootPanel extends ContentRootPanel {
                 0));
     }
 
-    public boolean isExcludedOrUnderExcludedDirectory(final VirtualFile file) {
-        final ContentEntry contentEntry = getContentEntry();
-        for (VirtualFile excludedDir : contentEntry.getFolderFiles(LanguageContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance()))) {
-            if (VfsUtilCore.isAncestor(excludedDir, file, false)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     protected JComponent createFolderGroupComponent(
         String title,
-        ContentFolder[] folders,
+        List<ContentFolder> folders,
         Color foregroundColor,
         @Nonnull ContentFolderTypeProvider editor
     ) {

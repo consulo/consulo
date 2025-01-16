@@ -33,7 +33,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 22:46/31.10.13
  */
-@ExtensionImpl
+@ExtensionImpl(order = "last")
 public final class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider implements BuiltInGeneratedIconOwner {
     private static final Supplier<ExcludedContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 

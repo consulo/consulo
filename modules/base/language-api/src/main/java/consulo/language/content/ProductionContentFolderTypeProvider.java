@@ -35,7 +35,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 22:37/31.10.13
  */
-@ExtensionImpl
+@ExtensionImpl(order = "first", id = "production")
 public class ProductionContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider implements BuiltInGeneratedIconOwner {
     private static final ColorValue SOURCES_COLOR = new LightDarkColorValue(new RGBColor(10, 80, 161), StandardColors.BLUE);
     private static final Supplier<ProductionContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class

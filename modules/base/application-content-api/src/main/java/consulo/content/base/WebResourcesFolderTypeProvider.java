@@ -35,7 +35,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 07.11.13
  */
-@ExtensionImpl
+@ExtensionImpl(id = "web-resource", order = "after production-resource")
 public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
   private static final Supplier<WebResourcesFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 

@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 22:37/31.10.13
  */
-@ExtensionImpl
+@ExtensionImpl(id = "production-resource", order = "after production")
 public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider implements ResourceLikeContentFolderTypeProvider {
     private static final Supplier<ProductionResourceContentFolderTypeProvider> INSTANCE =
         ExtensionInstance.from(ContentFolderTypeProvider.class

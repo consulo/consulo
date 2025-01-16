@@ -35,7 +35,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 22:44/31.10.13
  */
-@ExtensionImpl
+@ExtensionImpl(id = "test")
 public class TestContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider implements TestLikeContentFolderTypeProvider, BuiltInGeneratedIconOwner {
     private static final ColorValue TESTS_COLOR = new LightDarkColorValue(new RGBColor(0, 140, 46), new RGBColor(73, 140, 101));
     private static final Supplier<TestContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
