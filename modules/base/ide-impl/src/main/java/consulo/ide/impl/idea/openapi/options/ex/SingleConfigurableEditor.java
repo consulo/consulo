@@ -94,6 +94,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
 
     myParentComponent = parent;
     myConfigurable = configurable;
+    myConfigurable.initialize();
     init();
     myConfigurable.reset();
   }
