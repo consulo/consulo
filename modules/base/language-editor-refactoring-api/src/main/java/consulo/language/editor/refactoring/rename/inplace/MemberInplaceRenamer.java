@@ -98,8 +98,8 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
     @RequiredReadAction
     protected boolean acceptReference(PsiReference reference) {
         final PsiElement element = reference.getElement();
-        final TextRange textRange = reference.getRangeInElement();
-        final String referenceText = element.getText().substring(textRange.getStartOffset(), textRange.getEndOffset());
+        final TextRange textRange = getRangeToRename(reference);
+        final String referenceText = textRange.substring(element.getText());
         return Comparing.strEqual(referenceText, myElementToRename.getName());
     }
 

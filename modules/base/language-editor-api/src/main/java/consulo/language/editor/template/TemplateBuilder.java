@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -53,6 +52,8 @@ public interface TemplateBuilder {
   void replaceElement(PsiReference ref, String varName, String dependantVariableName, boolean alwaysStopAt);
 
   void replaceElement(PsiElement element, TextRange textRange, String primaryVariableName, String otherVariableName, boolean alwaysStopAt);
+
+  void replaceElement(@Nonnull PsiElement element, @Nonnull TextRange textRange, String varName, Expression expression, boolean alwaysStopAt);
 
   /**
    * Creates a replacement box for the specified element with the specified expression.

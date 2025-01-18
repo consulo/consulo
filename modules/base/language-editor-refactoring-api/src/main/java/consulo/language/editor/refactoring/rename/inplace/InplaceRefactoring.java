@@ -83,7 +83,6 @@ import consulo.util.collection.Stack;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
@@ -273,6 +272,16 @@ public abstract class InplaceRefactoring {
         );
     }
 
+    @Nonnull
+    @RequiredReadAction
+    protected Expression createTemplateExpression(PsiElement selectedElement) {
+        return createLookupExpression(selectedElement);
+    }
+
+    protected boolean shouldStopAtLookupExpression(Expression expression) {
+        return expression instanceof MyLookupExpression;
+    }
+
     protected boolean acceptReference(PsiReference reference) {
         return true;
     }
@@ -310,7 +319,9 @@ public abstract class InplaceRefactoring {
         boolean hasReferenceOnNameIdentifier = false;
         for (PsiReference ref : refs) {
             if (isReferenceAtCaret(selectedElement, ref)) {
-                builder.replaceElement(ref, PRIMARY_VARIABLE_NAME, createLookupExpression(selectedElement), true);
+                Expression expression = createTemplateExpression(selectedElement);
+                builder.replaceElement(ref.getElement(), getRangeToRename(ref), PRIMARY_VARIABLE_NAME, expression,
+                    shouldStopAtLookupExpression(expression));
                 subrefOnPrimaryElement = true;
                 continue;
             }
@@ -731,12 +742,14 @@ public abstract class InplaceRefactoring {
 
     @RequiredReadAction
     private void addVariable(final PsiReference reference, final PsiElement selectedElement, final TemplateBuilder builder, int offset) {
-        final PsiElement element = reference.getElement();
+        PsiElement element = reference.getElement();
         if (element == selectedElement && checkRangeContainsOffset(offset, reference.getRangeInElement(), element)) {
-            builder.replaceElement(reference, PRIMARY_VARIABLE_NAME, createLookupExpression(selectedElement), true);
+            Expression expression = createTemplateExpression(selectedElement);
+            builder.replaceElement(reference.getElement(), getRangeToRename(reference), PRIMARY_VARIABLE_NAME, expression,
+                shouldStopAtLookupExpression(expression));
         }
         else {
-            builder.replaceElement(reference, OTHER_VARIABLE_NAME, PRIMARY_VARIABLE_NAME, false);
+            builder.replaceElement(reference.getElement(), getRangeToRename(reference), OTHER_VARIABLE_NAME, PRIMARY_VARIABLE_NAME, false);
         }
     }
 
@@ -753,16 +766,26 @@ public abstract class InplaceRefactoring {
         final TemplateBuilder builder
     ) {
         if (element == selectedElement) {
-            builder.replaceElement(element, PRIMARY_VARIABLE_NAME, createLookupExpression(myElementToRename), true);
-        }
-        else if (textRange != null) {
-            builder.replaceElement(element, textRange, OTHER_VARIABLE_NAME, PRIMARY_VARIABLE_NAME, false);
+            Expression expression = createTemplateExpression(myElementToRename);
+            builder.replaceElement(element, getRangeToRename(element), PRIMARY_VARIABLE_NAME, expression, shouldStopAtLookupExpression(expression));
         }
         else {
-            builder.replaceElement(element, OTHER_VARIABLE_NAME, PRIMARY_VARIABLE_NAME, false);
+            builder.replaceElement(element, Objects.requireNonNullElseGet(textRange, () -> getRangeToRename(element)), OTHER_VARIABLE_NAME,
+                PRIMARY_VARIABLE_NAME, false);
         }
     }
 
+    @Nonnull
+    @RequiredReadAction
+    protected TextRange getRangeToRename(@Nonnull PsiElement element) {
+        return new TextRange(0, element.getTextLength());
+    }
+
+    @Nonnull
+    @RequiredReadAction
+    protected TextRange getRangeToRename(@Nonnull PsiReference reference) {
+        return reference.getRangeInElement();
+    }
 
     public void setElementToRename(PsiNamedElement elementToRename) {
         myElementToRename = elementToRename;
