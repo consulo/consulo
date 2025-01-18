@@ -56,7 +56,7 @@ public abstract class TemplateLanguageFormattingModelBuilder implements Delegati
     if (viewProvider instanceof TemplateLanguageFileViewProvider) {
       final Language dataLanguage = ((TemplateLanguageFileViewProvider)viewProvider).getTemplateDataLanguage();
       final FormattingModelBuilder builder = ContainerUtil.getFirstItem(FormattingModelBuilder.forLanguage(dataLanguage));
-      if (builder instanceof DelegatingFormattingModelBuilder && ((DelegatingFormattingModelBuilder)builder).dontFormatMyModel()) {
+      if (builder instanceof DelegatingFormattingModelBuilder delegate && delegate.dontFormatMyModel(element)) {
         return createDummyBlock(node);
       }
       if (builder != null) {
