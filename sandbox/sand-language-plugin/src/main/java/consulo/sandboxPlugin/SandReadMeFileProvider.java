@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileEditor;
+package consulo.sandboxPlugin;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.fileEditor.ReadMeFileProvider;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
- * @since 2024-09-13
+ * @since 2025-01-21
  */
-public interface TextEditorWithPreview extends FileEditor {
-    @Nonnull
-    TextEditor getTextEditor();
-
-    @Nonnull
-    FileEditor getPreviewEditor();
-
-    void switchToPreview();
+@ExtensionImpl
+public class SandReadMeFileProvider implements ReadMeFileProvider {
+    @Nullable
+    @Override
+    public Path resolveFile(@Nonnull Path projectPath) {
+        return projectPath.resolve("SAND.md");
+    }
 }

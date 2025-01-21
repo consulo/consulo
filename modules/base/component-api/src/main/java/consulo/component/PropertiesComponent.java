@@ -17,9 +17,9 @@ package consulo.component;
 
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.reflect.Field;
 
 /**
@@ -27,205 +27,217 @@ import java.lang.reflect.Field;
  * @author Konstantin Bulenkov
  */
 public interface PropertiesComponent {
-  void unsetValue(String name);
+    void unsetValue(String name);
 
-  boolean isValueSet(String name);
+    boolean isValueSet(String name);
 
-  @Nullable
-  String getValue(String name);
+    @Nullable
+    String getValue(String name);
 
-  /**
-   * Consider to use {@link #setValue(String, String, String)} to avoid write defaults.
-   */
-  void setValue(@Nonnull String name, @Nullable String value);
+    /**
+     * Consider to use {@link #setValue(String, String, String)} to avoid write defaults.
+     */
+    void setValue(@Nonnull String name, @Nullable String value);
 
-  /**
-   * Set value or unset if equals to default value
-   */
-  void setValue(@Nonnull String name, @Nullable String value, @Nullable String defaultValue);
+    /**
+     * Set value or unset if equals to default value
+     */
+    void setValue(@Nonnull String name, @Nullable String value, @Nullable String defaultValue);
 
-  /**
-   * Set value or unset if equals to default value
-   */
-  void setValue(@Nonnull String name, float value, float defaultValue);
+    /**
+     * Set value or unset if equals to default value
+     */
+    void setValue(@Nonnull String name, float value, float defaultValue);
 
-  /**
-   * Set value or unset if equals to default value
-   */
-  void setValue(@Nonnull String name, int value, int defaultValue);
+    /**
+     * Set value or unset if equals to default value
+     */
+    void setValue(@Nonnull String name, long value, long defaultValue);
 
-  /**
-   * Set value or unset if equals to false
-   */
-  default void setValue(@Nonnull String name, boolean value) {
-    setValue(name, value, false);
-  }
+    /**
+     * Set value or unset if equals to default value
+     */
+    void setValue(@Nonnull String name, int value, int defaultValue);
 
-  /**
-   * Set value or unset if equals to default
-   */
-  void setValue(@Nonnull String name, boolean value, boolean defaultValue);
-
-  @Nullable
-  String[] getValues(String name);
-
-  void setValues(String name, String[] values);
-
-  default boolean isTrueValue(String name) {
-    return Boolean.valueOf(getValue(name));
-  }
-
-  default boolean getBoolean(@Nonnull String name, boolean defaultValue) {
-    return isValueSet(name) ? isTrueValue(name) : defaultValue;
-  }
-
-  default boolean getBoolean(@Nonnull String name) {
-    return getBoolean(name, false);
-  }
-
-  @Nonnull
-  default String getValue(String name, @Nonnull String defaultValue) {
-    if (!isValueSet(name)) {
-      return defaultValue;
+    /**
+     * Set value or unset if equals to false
+     */
+    default void setValue(@Nonnull String name, boolean value) {
+        setValue(name, value, false);
     }
-    return ObjectUtil.notNull(getValue(name), defaultValue);
-  }
 
-  @SuppressWarnings("unused")
-  @Deprecated
-  /**
-   * @deprecated Use {@link #getInt(String, int)}
-   * Init was never performed and in any case is not recommended.
-   */ default int getOrInitInt(@Nonnull String name, int defaultValue) {
-    return getInt(name, defaultValue);
-  }
+    /**
+     * Set value or unset if equals to default
+     */
+    void setValue(@Nonnull String name, boolean value, boolean defaultValue);
 
-  default int getInt(@Nonnull String name, int defaultValue) {
-    return StringUtil.parseInt(getValue(name), defaultValue);
-  }
+    @Nullable
+    String[] getValues(String name);
 
-  default long getOrInitLong(String name, long defaultValue) {
-    try {
-      String value = getValue(name);
-      return value == null ? defaultValue : Long.parseLong(value);
+    void setValues(String name, String[] values);
+
+    default boolean isTrueValue(String name) {
+        return Boolean.valueOf(getValue(name));
     }
-    catch (NumberFormatException e) {
-      return defaultValue;
-    }
-  }
 
-  @Deprecated
-  /**
-   * @deprecated Use {@link #getValue(String, String)}
-   */ default String getOrInit(String name, String defaultValue) {
-    if (!isValueSet(name)) {
-      setValue(name, defaultValue);
-      return defaultValue;
+    default boolean getBoolean(@Nonnull String name, boolean defaultValue) {
+        return isValueSet(name) ? isTrueValue(name) : defaultValue;
     }
-    return getValue(name);
-  }
 
-  default boolean saveFields(@Nonnull Object object) {
-    try {
-      for (Field field : object.getClass().getDeclaredFields()) {
-        field.setAccessible(true);
-        PropertyName annotation = field.getAnnotation(PropertyName.class);
-        if (annotation != null) {
-          final String name = annotation.value();
-          setValue(name, String.valueOf(field.get(object)));
+    default boolean getBoolean(@Nonnull String name) {
+        return getBoolean(name, false);
+    }
+
+    @Nonnull
+    default String getValue(String name, @Nonnull String defaultValue) {
+        if (!isValueSet(name)) {
+            return defaultValue;
         }
-      }
-      return true;
+        return ObjectUtil.notNull(getValue(name), defaultValue);
     }
-    catch (IllegalAccessException e) {
-      return false;
+
+    default int getInt(@Nonnull String name, int defaultValue) {
+        return StringUtil.parseInt(getValue(name), defaultValue);
     }
-  }
 
-  default boolean loadFields(@Nonnull Object object) {
-    try {
-      for (Field field : object.getClass().getDeclaredFields()) {
-        field.setAccessible(true);
-        final PropertyName annotation = field.getAnnotation(PropertyName.class);
-        if (annotation != null) {
-          final Class<?> type = field.getType();
+    default long getLong(@Nonnull String name, int defaultValue) {
+        return StringUtil.parseLong(getValue(name), defaultValue);
+    }
 
-          String defaultValue = annotation.defaultValue();
-          if (PropertyName.NOT_SET.equals(defaultValue)) {
-            if (type.equals(boolean.class)) {
-              defaultValue = String.valueOf(field.getBoolean(object));
+    default float getFloat(String name, float defaultValue) {
+        if (isValueSet(name)) {
+            try {
+                return Float.parseFloat(getValue(name));
             }
-            else if (type.equals(long.class)) {
-              defaultValue = String.valueOf(field.getLong(object));
+            catch (NumberFormatException ignore) {
             }
-            else if (type.equals(int.class)) {
-              defaultValue = String.valueOf(field.getInt(object));
-            }
-            else if (type.equals(short.class)) {
-              defaultValue = String.valueOf(field.getShort(object));
-            }
-            else if (type.equals(byte.class)) {
-              defaultValue = String.valueOf(field.getByte(object));
-            }
-            else if (type.equals(double.class)) {
-              defaultValue = String.valueOf(field.getDouble(object));
-            }
-            else if (type.equals(float.class)) {
-              defaultValue = String.valueOf(field.getFloat(object));
-            }
-            else if (type.equals(String.class)) {
-              defaultValue = String.valueOf(field.get(object));
-            }
-
-          }
-          final String stringValue = getValue(annotation.value(), defaultValue);
-          Object value = null;
-
-          if (type.equals(boolean.class)) {
-            value = Boolean.valueOf(stringValue);
-          }
-          else if (type.equals(long.class)) {
-            value = Long.parseLong(stringValue);
-          }
-          else if (type.equals(int.class)) {
-            value = Integer.parseInt(stringValue);
-          }
-          else if (type.equals(short.class)) {
-            value = Short.parseShort(stringValue);
-          }
-          else if (type.equals(byte.class)) {
-            value = Byte.parseByte(stringValue);
-          }
-          else if (type.equals(double.class)) {
-            value = Double.parseDouble(stringValue);
-          }
-          else if (type.equals(float.class)) {
-            value = Float.parseFloat(stringValue);
-          }
-          else if (type.equals(String.class)) {
-            value = stringValue;
-          }
-
-          if (value != null) {
-            field.set(object, value);
-          }
         }
-      }
-      return true;
+        return defaultValue;
     }
-    catch (IllegalAccessException e) {
-      return false;
-    }
-  }
 
-  default float getFloat(String name, float defaultValue) {
-    if (isValueSet(name)) {
-      try {
-        return Float.parseFloat(getValue(name));
-      }
-      catch (NumberFormatException ignore) {
-      }
+    @Deprecated
+    default long getOrInitLong(String name, long defaultValue) {
+        try {
+            String value = getValue(name);
+            return value == null ? defaultValue : Long.parseLong(value);
+        }
+        catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
-    return defaultValue;
-  }
+
+    @SuppressWarnings("unused")
+    /**
+     * @deprecated Use {@link #getInt(String, int)}
+     * Init was never performed and in any case is not recommended.
+     */
+    @Deprecated
+    default int getOrInitInt(@Nonnull String name, int defaultValue) {
+        return getInt(name, defaultValue);
+    }
+
+    @Deprecated
+    /**
+     * @deprecated Use {@link #getValue(String, String)}
+     */
+    default String getOrInit(String name, String defaultValue) {
+        if (!isValueSet(name)) {
+            setValue(name, defaultValue);
+            return defaultValue;
+        }
+        return getValue(name);
+    }
+
+    default boolean saveFields(@Nonnull Object object) {
+        try {
+            for (Field field : object.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                PropertyName annotation = field.getAnnotation(PropertyName.class);
+                if (annotation != null) {
+                    final String name = annotation.value();
+                    setValue(name, String.valueOf(field.get(object)));
+                }
+            }
+            return true;
+        }
+        catch (IllegalAccessException e) {
+            return false;
+        }
+    }
+
+    default boolean loadFields(@Nonnull Object object) {
+        try {
+            for (Field field : object.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                final PropertyName annotation = field.getAnnotation(PropertyName.class);
+                if (annotation != null) {
+                    final Class<?> type = field.getType();
+
+                    String defaultValue = annotation.defaultValue();
+                    if (PropertyName.NOT_SET.equals(defaultValue)) {
+                        if (type.equals(boolean.class)) {
+                            defaultValue = String.valueOf(field.getBoolean(object));
+                        }
+                        else if (type.equals(long.class)) {
+                            defaultValue = String.valueOf(field.getLong(object));
+                        }
+                        else if (type.equals(int.class)) {
+                            defaultValue = String.valueOf(field.getInt(object));
+                        }
+                        else if (type.equals(short.class)) {
+                            defaultValue = String.valueOf(field.getShort(object));
+                        }
+                        else if (type.equals(byte.class)) {
+                            defaultValue = String.valueOf(field.getByte(object));
+                        }
+                        else if (type.equals(double.class)) {
+                            defaultValue = String.valueOf(field.getDouble(object));
+                        }
+                        else if (type.equals(float.class)) {
+                            defaultValue = String.valueOf(field.getFloat(object));
+                        }
+                        else if (type.equals(String.class)) {
+                            defaultValue = String.valueOf(field.get(object));
+                        }
+
+                    }
+                    final String stringValue = getValue(annotation.value(), defaultValue);
+                    Object value = null;
+
+                    if (type.equals(boolean.class)) {
+                        value = Boolean.valueOf(stringValue);
+                    }
+                    else if (type.equals(long.class)) {
+                        value = Long.parseLong(stringValue);
+                    }
+                    else if (type.equals(int.class)) {
+                        value = Integer.parseInt(stringValue);
+                    }
+                    else if (type.equals(short.class)) {
+                        value = Short.parseShort(stringValue);
+                    }
+                    else if (type.equals(byte.class)) {
+                        value = Byte.parseByte(stringValue);
+                    }
+                    else if (type.equals(double.class)) {
+                        value = Double.parseDouble(stringValue);
+                    }
+                    else if (type.equals(float.class)) {
+                        value = Float.parseFloat(stringValue);
+                    }
+                    else if (type.equals(String.class)) {
+                        value = stringValue;
+                    }
+
+                    if (value != null) {
+                        field.set(object, value);
+                    }
+                }
+            }
+            return true;
+        }
+        catch (IllegalAccessException e) {
+            return false;
+        }
+    }
 }

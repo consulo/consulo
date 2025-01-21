@@ -18,131 +18,141 @@ package consulo.component.impl.internal;
 import consulo.component.PropertiesComponent;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class BasePropertiesComponent implements PropertiesComponent, PersistentStateComponent<Element> {
-  private final Map<String, String> myMap = new LinkedHashMap<>();
-  private static final String ELEMENT_PROPERTY = "property";
-  private static final String ATTRIBUTE_NAME = "name";
-  private static final String ATTRIBUTE_VALUE = "value";
+    private final Map<String, String> myMap = new LinkedHashMap<>();
+    private static final String ELEMENT_PROPERTY = "property";
+    private static final String ATTRIBUTE_NAME = "name";
+    private static final String ATTRIBUTE_VALUE = "value";
 
-  @TestOnly
-  @Deprecated
-  public static BasePropertiesComponent create() {
-    return new BasePropertiesComponent();
-  }
+    @TestOnly
+    @Deprecated
+    public static BasePropertiesComponent create() {
+        return new BasePropertiesComponent();
+    }
 
-  @Override
-  public Element getState() {
-    Element parentNode = new Element("state");
-    for (final String key : myMap.keySet()) {
-      String value = myMap.get(key);
-      if (value != null) {
-        Element element = new Element(ELEMENT_PROPERTY);
-        element.setAttribute(ATTRIBUTE_NAME, key);
-        element.setAttribute(ATTRIBUTE_VALUE, value);
-        parentNode.addContent(element);
-      }
+    @Override
+    public Element getState() {
+        Element parentNode = new Element("state");
+        for (final String key : myMap.keySet()) {
+            String value = myMap.get(key);
+            if (value != null) {
+                Element element = new Element(ELEMENT_PROPERTY);
+                element.setAttribute(ATTRIBUTE_NAME, key);
+                element.setAttribute(ATTRIBUTE_VALUE, value);
+                parentNode.addContent(element);
+            }
+        }
+        return parentNode;
     }
-    return parentNode;
-  }
 
-  @Override
-  public void loadState(final Element parentNode) {
-    myMap.clear();
-    for (Element e : parentNode.getChildren(ELEMENT_PROPERTY)) {
-      String name = e.getAttributeValue(ATTRIBUTE_NAME);
-      if (name != null) {
-        myMap.put(name, e.getAttributeValue(ATTRIBUTE_VALUE));
-      }
+    @Override
+    public void loadState(final Element parentNode) {
+        myMap.clear();
+        for (Element e : parentNode.getChildren(ELEMENT_PROPERTY)) {
+            String name = e.getAttributeValue(ATTRIBUTE_NAME);
+            if (name != null) {
+                myMap.put(name, e.getAttributeValue(ATTRIBUTE_VALUE));
+            }
+        }
     }
-  }
 
-  @Override
-  public String getValue(String name) {
-    return myMap.get(name);
-  }
+    @Override
+    public String getValue(String name) {
+        return myMap.get(name);
+    }
 
-  @Override
-  public void setValue(@Nonnull String name, @Nullable String value) {
-    if (value == null) {
-      myMap.remove(name);
+    @Override
+    public void setValue(@Nonnull String name, @Nullable String value) {
+        if (value == null) {
+            myMap.remove(name);
+        }
+        else {
+            myMap.put(name, value);
+        }
     }
-    else {
-      myMap.put(name, value);
-    }
-  }
 
-  @Override
-  public void setValue(@Nonnull String name, @Nullable String value, @Nullable String defaultValue) {
-    if (value == null || value.equals(defaultValue)) {
-      myMap.remove(name);
+    @Override
+    public void setValue(@Nonnull String name, @Nullable String value, @Nullable String defaultValue) {
+        if (value == null || value.equals(defaultValue)) {
+            myMap.remove(name);
+        }
+        else {
+            myMap.put(name, value);
+        }
     }
-    else {
-      myMap.put(name, value);
-    }
-  }
 
-  @Override
-  public void setValue(@Nonnull String name, float value, float defaultValue) {
-    if (value == defaultValue) {
-      myMap.remove(name);
+    @Override
+    public void setValue(@Nonnull String name, float value, float defaultValue) {
+        if (value == defaultValue) {
+            myMap.remove(name);
+        }
+        else {
+            myMap.put(name, String.valueOf(value));
+        }
     }
-    else {
-      myMap.put(name, String.valueOf(value));
-    }
-  }
 
-  @Override
-  public void setValue(@Nonnull String name, int value, int defaultValue) {
-    if (value == defaultValue) {
-      myMap.remove(name);
+    @Override
+    public void setValue(@Nonnull String name, long value, long defaultValue) {
+        if (value == defaultValue) {
+            myMap.remove(name);
+        }
+        else {
+            myMap.put(name, String.valueOf(value));
+        }
     }
-    else {
-      myMap.put(name, String.valueOf(value));
-    }
-  }
 
-  @Override
-  public void setValue(@Nonnull String name, boolean value, boolean defaultValue) {
-    if (value == defaultValue) {
-      myMap.remove(name);
+    @Override
+    public void setValue(@Nonnull String name, int value, int defaultValue) {
+        if (value == defaultValue) {
+            myMap.remove(name);
+        }
+        else {
+            myMap.put(name, String.valueOf(value));
+        }
     }
-    else {
-      setValue(name, String.valueOf(value));
+
+    @Override
+    public void setValue(@Nonnull String name, boolean value, boolean defaultValue) {
+        if (value == defaultValue) {
+            myMap.remove(name);
+        }
+        else {
+            setValue(name, String.valueOf(value));
+        }
     }
-  }
 
-  @Override
-  public void unsetValue(String name) {
-    myMap.remove(name);
-  }
-
-  @Override
-  public boolean isValueSet(String name) {
-    return myMap.containsKey(name);
-  }
-
-  @Nullable
-  @Override
-  public String[] getValues(String name) {
-    final String value = getValue(name);
-    return value != null ? value.split("\n") : null;
-  }
-
-  @Override
-  public void setValues(String name, String[] values) {
-    if (values == null) {
-      setValue(name, null);
+    @Override
+    public void unsetValue(String name) {
+        myMap.remove(name);
     }
-    else {
-      setValue(name, StringUtil.join(values, "\n"));
+
+    @Override
+    public boolean isValueSet(String name) {
+        return myMap.containsKey(name);
     }
-  }
+
+    @Nullable
+    @Override
+    public String[] getValues(String name) {
+        final String value = getValue(name);
+        return value != null ? value.split("\n") : null;
+    }
+
+    @Override
+    public void setValues(String name, String[] values) {
+        if (values == null) {
+            setValue(name, null);
+        }
+        else {
+            setValue(name, StringUtil.join(values, "\n"));
+        }
+    }
 }

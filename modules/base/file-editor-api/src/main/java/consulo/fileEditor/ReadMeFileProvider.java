@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,21 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import java.nio.file.Path;
 
 /**
+ * This extension provide file which will be opened at first project init. In case editor with preview - preview will be forced
+ *
  * @author VISTALL
- * @since 2024-09-13
+ * @since 2025-01-21
  */
-public interface TextEditorWithPreview extends FileEditor {
-    @Nonnull
-    TextEditor getTextEditor();
-
-    @Nonnull
-    FileEditor getPreviewEditor();
-
-    void switchToPreview();
+@ExtensionAPI(ComponentScope.PROJECT)
+public interface ReadMeFileProvider {
+    @Nullable
+    Path resolveFile(@Nonnull Path projectPath);
 }

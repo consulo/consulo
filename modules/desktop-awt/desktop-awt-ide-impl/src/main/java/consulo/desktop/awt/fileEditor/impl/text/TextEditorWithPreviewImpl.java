@@ -73,6 +73,13 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         return myPreview;
     }
 
+    @Override
+    public void switchToPreview() {
+        myLayout = Layout.SHOW_PREVIEW;
+        
+        adjustEditorsVisibility();
+    }
+
     @Nullable
     @Override
     public BackgroundEditorHighlighter getBackgroundHighlighter() {
