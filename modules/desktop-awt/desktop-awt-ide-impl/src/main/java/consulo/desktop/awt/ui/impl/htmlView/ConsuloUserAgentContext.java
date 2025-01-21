@@ -1,5 +1,6 @@
 package consulo.desktop.awt.ui.impl.htmlView;
 
+import consulo.application.Application;
 import org.cobraparser.ua.NetworkRequest;
 import org.cobraparser.ua.UserAgentContext;
 
@@ -15,6 +16,10 @@ class ConsuloUserAgentContext implements UserAgentContext {
 
     @Override
     public NetworkRequest createHttpRequest() {
+        if (ConsuloHtmlRendererContext.ENABLE_IMAGE_LOADING) {
+            return new ConsuloNetworkRequest();
+        }
+        
         return null;
     }
 
@@ -25,7 +30,7 @@ class ConsuloUserAgentContext implements UserAgentContext {
 
     @Override
     public String getAppName() {
-        return "";
+        return Application.get().getName().get();
     }
 
     @Override

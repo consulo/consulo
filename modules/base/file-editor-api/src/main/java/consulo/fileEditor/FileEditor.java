@@ -55,7 +55,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
    */
   @Nullable
   default Component getPreferredFocusedUIComponent() {
-    throw new AbstractMethodError();
+    return null;
   }
 
   /**
@@ -165,7 +165,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
     if (uiComponent != null) {
       return (javax.swing.JComponent)TargetAWT.to(uiComponent);
     }
-    throw new AbstractMethodError();
+    throw new AbstractMethodError(getClass().getName());
   }
 
   /**
@@ -173,7 +173,11 @@ public interface FileEditor extends UserDataHolder, Disposable {
    */
   @Nullable
   default javax.swing.JComponent getPreferredFocusedComponent() {
-    throw new AbstractMethodError();
+    Component component = getPreferredFocusedUIComponent();
+    if (component != null) {
+      return (javax.swing.JComponent) TargetAWT.to(component);
+    }
+    return null;
   }
 
   // endregion

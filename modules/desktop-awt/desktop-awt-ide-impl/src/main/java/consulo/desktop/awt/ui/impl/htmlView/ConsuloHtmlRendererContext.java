@@ -15,6 +15,8 @@ import java.net.URL;
 import java.util.Optional;
 
 class ConsuloHtmlRendererContext extends AbstractHtmlRendererContext {
+    public static final boolean ENABLE_IMAGE_LOADING = false;
+
     private final HtmlPanel myHtmlPanel;
 
     private final UserAgentContext myUserAgentContext;
@@ -62,7 +64,7 @@ class ConsuloHtmlRendererContext extends AbstractHtmlRendererContext {
 
     @Override
     public boolean isImageLoadingEnabled() {
-        return false;
+        return ENABLE_IMAGE_LOADING;
     }
 
     @Override
