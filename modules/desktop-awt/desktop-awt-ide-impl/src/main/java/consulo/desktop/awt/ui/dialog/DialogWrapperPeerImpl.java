@@ -94,6 +94,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     private final List<Runnable> myDisposeActions = new ArrayList<>();
     private Project myProject;
 
+    private final boolean myPerProjectModality;
+
     protected DialogWrapperPeerImpl(
         @Nonnull DialogWrapper wrapper,
         @Nullable Project project,
@@ -106,6 +108,9 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         Application application = ApplicationManager.getApplication();
         if (application != null) {
             myWindowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
+            myPerProjectModality = ModalityPerProjectEAPDescriptor.is();
+        } else {
+            myPerProjectModality = false;
         }
 
         consulo.ui.Window window = null;
@@ -196,6 +201,10 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         Application application = ApplicationManager.getApplication();
         if (application != null) {
             myWindowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
+            myPerProjectModality = ModalityPerProjectEAPDescriptor.is();
+        }
+        else {
+            myPerProjectModality = false;
         }
 
         OwnerOptional ownerOptional = OwnerOptional.fromComponent(parent);
@@ -214,6 +223,10 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         Application application = ApplicationManager.getApplication();
         if (application != null) {
             myWindowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
+            myPerProjectModality = ModalityPerProjectEAPDescriptor.is();
+        }
+        else {
+            myPerProjectModality = false;
         }
 
         myDialog = createDialog(owner, ideModalityType);
@@ -276,7 +289,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             if (!isHeadless()) {
                 if (ideModalityType != DialogWrapper.IdeModalityType.MODELESS) {
                     modalityType = DialogWrapper.IdeModalityType.IDE.toAwtModality();
-                    if (ModalityPerProjectEAPDescriptor.is()) {
+                    if (myPerProjectModality) {
                         modalityType = ideModalityType.toAwtModality();
                     }
                 }
@@ -472,7 +485,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         if (changeModalityState) {
             commandProcessor.enterModal();
-            if (ModalityPerProjectEAPDescriptor.is()) {
+            if (myPerProjectModality) {
                 LaterInvocator.enterModal(project, myDialog.getWindow());
             }
             else {
@@ -490,7 +503,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         finally {
             if (changeModalityState) {
                 commandProcessor.leaveModal();
-                if (ModalityPerProjectEAPDescriptor.is()) {
+                if (myPerProjectModality) {
                     LaterInvocator.leaveModal(project, myDialog.getWindow());
                 }
                 else {
@@ -535,7 +548,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             if (changeModalityState) {
                 commandProcessor.enterModal();
 
-                if (ModalityPerProjectEAPDescriptor.is()) {
+                if (myPerProjectModality) {
                     LaterInvocator.enterModal(project, myDialog.getWindow());
                 }
                 else {
@@ -554,7 +567,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                 if (changeModalityState) {
                     commandProcessor.leaveModal();
 
-                    if (ModalityPerProjectEAPDescriptor.is()) {
+                    if (myPerProjectModality) {
                         LaterInvocator.leaveModal(project, myDialog.getWindow());
                     }
                     else {
