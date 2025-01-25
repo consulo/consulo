@@ -38,10 +38,7 @@ public abstract class ConfigurationFileEditor extends UserDataHolderBase impleme
         myProject = project;
     }
 
-    @Nonnull
-    protected Map<String, String> getRequestedParams() {
-        ConfigurationEditorVirtualFile virtualFile = (ConfigurationEditorVirtualFile) myVirtualFile;
-        return virtualFile.getRequestedParams();
+    public void onUpdateRequestParams(@Nonnull Map<String, String> params) {
     }
 
     @Nonnull

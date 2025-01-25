@@ -17,10 +17,12 @@ package consulo.configuration.editor.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.configuration.editor.ConfigurationFileEditor;
 import consulo.configuration.editor.ConfigurationFileEditorManager;
 import consulo.configuration.editor.ConfigurationFileEditorProvider;
 import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFileImpl;
 import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFileSystemImpl;
+import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -88,7 +90,13 @@ public class ConfigurationFileEditorManagerImpl implements ConfigurationFileEdit
         VirtualFile file = fs.findFileByPath(path);
 
         if (file instanceof ConfigurationEditorFileImpl configurationEditorFile) {
-            FileEditorManager.getInstance(project).openFile(configurationEditorFile, true);
+            FileEditor[] fileEditors = FileEditorManager.getInstance(project).openFile(configurationEditorFile, true);
+
+            for (FileEditor fileEditor : fileEditors) {
+                if (fileEditor instanceof ConfigurationFileEditor configurationFileEditor) {
+                    configurationFileEditor.onUpdateRequestParams(configurationEditorFile.getRequestedParams());
+                }
+            }
         }
     }
 }
