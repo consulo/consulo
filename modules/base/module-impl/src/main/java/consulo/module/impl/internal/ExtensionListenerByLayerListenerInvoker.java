@@ -18,8 +18,6 @@ package consulo.module.impl.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.module.Module;
 import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.module.content.layer.ModuleRootLayer;
@@ -28,9 +26,9 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.util.lang.Couple;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,40 +38,40 @@ import java.util.List;
  */
 @TopicImpl(ComponentScope.PROJECT)
 public class ExtensionListenerByLayerListenerInvoker implements ModuleRootLayerListener {
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public ExtensionListenerByLayerListenerInvoker(Application application) {
-    myApplication = application;
-  }
-
-  @Override
-  public void currentLayerChanged(@Nonnull final Module module,
-                                  @Nonnull final String oldName,
-                                  @Nonnull final ModuleRootLayer oldLayer,
-                                  @Nonnull final String newName,
-                                  @Nonnull final ModuleRootLayer newLayer) {
-
-    final List<Couple<ModuleExtension>> list = new ArrayList<>();
-    for (ModuleExtensionProvider providerEP : myApplication.getExtensionPoint(ModuleExtensionProvider.class).getExtensionList()) {
-      MutableModuleExtension oldExtension = oldLayer.getExtensionWithoutCheck(providerEP.getId());
-      MutableModuleExtension newExtension = newLayer.getExtensionWithoutCheck(providerEP.getId());
-
-      if (oldExtension == null || newExtension == null) {
-        continue;
-      }
-
-      if (oldExtension.isModified(newExtension)) {
-        list.add(Couple.<ModuleExtension>of(oldExtension, newExtension));
-      }
+    @Inject
+    public ExtensionListenerByLayerListenerInvoker(Application application) {
+        myApplication = application;
     }
 
-    ApplicationManager.getApplication().invokeLater(() -> {
-      ModuleExtensionChangeListener moduleExtensionChangeListener = module.getProject().getMessageBus().syncPublisher(ModuleExtensionChangeListener.class);
+    @Override
+    public void currentLayerChanged(@Nonnull final Module module,
+                                    @Nonnull final String oldName,
+                                    @Nonnull final ModuleRootLayer oldLayer,
+                                    @Nonnull final String newName,
+                                    @Nonnull final ModuleRootLayer newLayer) {
 
-      for (Couple<ModuleExtension> couple : list) {
-        moduleExtensionChangeListener.beforeExtensionChanged(couple.getFirst(), couple.getSecond());
-      }
-    }, IdeaModalityState.nonModal());
-  }
+        final List<Couple<ModuleExtension>> list = new ArrayList<>();
+        for (ModuleExtensionProvider providerEP : myApplication.getExtensionPoint(ModuleExtensionProvider.class).getExtensionList()) {
+            MutableModuleExtension oldExtension = oldLayer.getExtensionWithoutCheck(providerEP.getId());
+            MutableModuleExtension newExtension = newLayer.getExtensionWithoutCheck(providerEP.getId());
+
+            if (oldExtension == null || newExtension == null) {
+                continue;
+            }
+
+            if (oldExtension.isModified(newExtension)) {
+                list.add(Couple.<ModuleExtension>of(oldExtension, newExtension));
+            }
+        }
+
+        myApplication.invokeLater(() -> {
+            ModuleExtensionChangeListener moduleExtensionChangeListener = module.getProject().getMessageBus().syncPublisher(ModuleExtensionChangeListener.class);
+
+            for (Couple<ModuleExtension> couple : list) {
+                moduleExtensionChangeListener.beforeExtensionChanged(couple.getFirst(), couple.getSecond());
+            }
+        }, myApplication.getNoneModalityState());
+    }
 }
