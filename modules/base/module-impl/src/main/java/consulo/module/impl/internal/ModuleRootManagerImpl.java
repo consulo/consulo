@@ -390,7 +390,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
       final RootModelImpl newModel = new RootModelImpl(element, indicator, this, throwEvent);
 
       if (throwEvent) {
-        makeRootsChange(() -> newModel.doCommitAndDispose(false));
+        makeRootsChange(() -> newModel.doCommitAndDispose());
       }
       else {
         myRootModel = newModel;

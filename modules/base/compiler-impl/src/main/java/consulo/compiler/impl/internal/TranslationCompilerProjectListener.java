@@ -20,13 +20,11 @@ import consulo.annotation.component.TopicImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.compiler.CompilerBundle;
-import consulo.compiler.TranslatingCompilerFilesMonitorHelper;
-import consulo.component.messagebus.MessageBusConnection;
 import consulo.compiler.TranslatingCompilerFilesMonitor;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.ModalityState;
@@ -34,10 +32,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -66,15 +64,6 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
     final int projectId = monitor.getProjectId(project);
 
     monitor.watchProject(project);
-
-    conn.subscribe(ModuleExtensionChangeListener.class, (oldExtension, newExtension) -> {
-      for (TranslatingCompilerFilesMonitorHelper helper : TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensionList()) {
-        if (helper.isModuleExtensionAffectToCompilation(newExtension)) {
-          monitor.myForceCompiling = true;
-          break;
-        }
-      }
-    });
 
     conn.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       private VirtualFile[] myRootsBefore;

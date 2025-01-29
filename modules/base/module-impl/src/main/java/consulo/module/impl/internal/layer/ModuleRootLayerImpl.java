@@ -34,7 +34,6 @@ import consulo.module.content.layer.orderEntry.*;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleExtension;
-import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.module.impl.internal.layer.library.ModuleLibraryTable;
 import consulo.module.impl.internal.layer.orderEntry.*;
@@ -310,9 +309,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
     @SuppressWarnings("unchecked")
     @RequiredReadAction
-    public boolean copy(@Nonnull ModuleRootLayerImpl toSet, boolean notifyExtensionListener) {
-        boolean changed = false;
-        ModuleExtensionChangeListener moduleExtensionChangeListener = getModule().getProject().getMessageBus().syncPublisher(ModuleExtensionChangeListener.class);
+    public void copy(@Nonnull ModuleRootLayerImpl toSet) {
 
         for (ModuleExtension extension : myExtensions.values()) {
             MutableModuleExtension mutableExtension = (MutableModuleExtension) extension;
@@ -320,29 +317,19 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
             ModuleExtension originalExtension = toSet.getExtensionWithoutCheck(extension.getId());
             assert originalExtension != null;
             if (mutableExtension.isModified(originalExtension)) {
-
-                if (notifyExtensionListener) {
-                    moduleExtensionChangeListener.beforeExtensionChanged(originalExtension, mutableExtension);
-                }
-
                 originalExtension.commit(mutableExtension);
-
-                changed = true;
             }
         }
 
         if (areOrderEntriesChanged(toSet)) {
             toSet.setOrderEntriesFrom(this);
-            changed = true;
         }
 
         if (areContentEntriesChanged(toSet)) {
             toSet.setContentEntriesFrom(this);
-            changed = true;
         }
 
         toSet.myUnknownModuleExtensions.addAll(myUnknownModuleExtensions);
-        return changed;
     }
 
     @SuppressWarnings("unchecked")

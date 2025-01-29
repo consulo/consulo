@@ -31,7 +31,6 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.event.ModuleListener;
-import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.project.Project;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
@@ -74,10 +73,6 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
             public void fileTypesChanged(@Nonnull FileTypeEvent event) {
                 myRootIndex = null;
             }
-        });
-
-        myConnection.subscribe(ModuleExtensionChangeListener.class, (oldExtension, newExtension) -> {
-            myRootIndex = null;
         });
 
         myConnection.subscribe(ModuleListener.class, new ModuleListener() {

@@ -26,6 +26,7 @@ import java.awt.*;
  * This class represents non resizable, nonfocusable button with the
  * same height and length.
  */
+@Deprecated
 public class FixedSizeButton extends JButton {
   private int mySize;
   private JComponent myComponent;

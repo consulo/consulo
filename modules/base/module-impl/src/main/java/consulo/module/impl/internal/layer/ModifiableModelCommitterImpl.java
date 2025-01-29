@@ -55,7 +55,7 @@ public class ModifiableModelCommitterImpl implements ModifiableModelCommitter {
       @Override
       public void run() {
         for (RootModelImpl rootModel : modelsToCommit) {
-          rootModel.doCommitAndDispose(true);
+          rootModel.doCommitAndDispose();
         }
 
         for (ModifiableRootModel model : modelsToDispose) {

@@ -201,7 +201,6 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
         Disposer.register(parentDisposable, () -> myAsyncFileListeners.remove(listener));
     }
 
-    //@ApiStatus.Internal
     public List<AsyncFileListener> getAsyncFileListeners() {
         return Collections.unmodifiableList(myAsyncFileListeners);
     }
