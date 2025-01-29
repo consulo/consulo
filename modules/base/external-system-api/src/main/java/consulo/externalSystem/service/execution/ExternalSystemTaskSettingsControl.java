@@ -31,14 +31,13 @@ import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.project.Project;
-import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 import static consulo.externalSystem.util.ExternalSystemApiUtil.normalizePath;
@@ -104,9 +103,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
     myTasksLabel = new JBLabel(ExternalSystemBundle.message("run.configuration.settings.label.tasks"));
     myTasksTextField = new JBTextField(ExternalSystemConstants.TEXT_FIELD_WIDTH_IN_COLUMNS);
     canvas.add(myTasksLabel, ExternalSystemUiUtil.getLabelConstraints(0));
-    GridBag c = ExternalSystemUiUtil.getFillLineConstraints(0);
-    c.insets.right = myProjectPathField.getButton().getPreferredSize().width + 8 /* street magic, sorry */;
-    canvas.add(myTasksTextField, c);
+    canvas.add(myTasksTextField, ExternalSystemUiUtil.getFillLineConstraints(0));
 
     myVmOptionsLabel = new JBLabel(ExternalSystemBundle.message("run.configuration.settings.label.vmoptions"));
     myVmOptionsEditor = new RawCommandLineEditor();

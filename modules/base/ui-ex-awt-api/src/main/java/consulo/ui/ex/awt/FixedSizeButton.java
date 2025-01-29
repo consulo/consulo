@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
@@ -27,6 +28,7 @@ import java.awt.*;
  * same height and length.
  */
 @Deprecated
+@DeprecationInfo("Use buttons inside toolbars")
 public class FixedSizeButton extends JButton {
   private int mySize;
   private JComponent myComponent;

@@ -1,6 +1,8 @@
 package consulo.externalSystem.model;
 
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
@@ -12,85 +14,103 @@ import java.util.Locale;
  * terms over than IntelliJ (e.g. maven, gradle, eclipse etc).
  * <p/>
  * This class serves as an id of a system which defines project structure, i.e. it might be any external system or the ide itself.
- * 
+ *
  * @author Denis Zhdanov
  * @since 2/14/12 12:59 PM
  */
 public class ProjectSystemId implements Serializable {
 
-  private static final long serialVersionUID = 1L;
-  
-  @Nonnull
-  public static final ProjectSystemId IDE = new ProjectSystemId("IDE", LocalizeValue.localizeTODO("IDE"));
+    private static final long serialVersionUID = 1L;
 
-  @Nonnull
-  private final String myId;
+    @Nonnull
+    public static final ProjectSystemId IDE = new ProjectSystemId("IDE", LocalizeValue.localizeTODO("IDE"));
 
-  @Nonnull
-  private final String myCaptalizeId;
+    @Nonnull
+    private final String myId;
 
-  @Nonnull
-  private final LocalizeValue myDisplayName;
+    @Nonnull
+    private final String myCaptalizeId;
 
-  @Deprecated
-  public ProjectSystemId(@Nonnull String id) {
-    this(id, LocalizeValue.of(StringUtil.capitalize(id.toLowerCase(Locale.ROOT))));
-  }
+    @Nonnull
+    private final LocalizeValue myDisplayName;
 
-  public ProjectSystemId(@Nonnull String id, @Nonnull LocalizeValue displayName) {
-    myId = id;
-    myCaptalizeId = StringUtil.capitalize(id.toLowerCase(Locale.ROOT));
-    myDisplayName = displayName;
-  }
+    @Nonnull
+    private final Image myIcon;
 
-  @Nonnull
-  public String getId() {
-    return myId;
-  }
+    @Deprecated
+    public ProjectSystemId(@Nonnull String id) {
+        this(id, LocalizeValue.of(StringUtil.capitalize(id.toLowerCase(Locale.ROOT))));
+    }
 
-  @Nonnull
-  @Deprecated
-  public LocalizeValue getReadableName() {
-    return getDisplayName();
-  }
+    @Deprecated
+    public ProjectSystemId(@Nonnull String id, @Nonnull LocalizeValue displayName) {
+        this(id, displayName, PlatformIconGroup.actionsHelp());
+    }
 
-  @Nonnull
-  public LocalizeValue getDisplayName() {
-    return myDisplayName;
-  }
+    public ProjectSystemId(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Image icon) {
+        myId = id;
+        myCaptalizeId = StringUtil.capitalize(id.toLowerCase(Locale.ROOT));
+        myDisplayName = displayName;
+        myIcon = icon;
+    }
 
-  @Nonnull
-  public String getToolWindowId() {
-    return myId;
-  }
+    @Nonnull
+    public String getId() {
+        return myId;
+    }
 
-  @Nonnull
-  public String getLibraryPrefix() {
-    return myCaptalizeId;
-  }
+    @Nonnull
+    public Image getIcon() {
+        return myIcon;
+    }
 
-  @Nonnull
-  public String getRunConfigurationId() {
-    return myCaptalizeId + "RunConfiguration";
-  }
+    @Nonnull
+    @Deprecated
+    public LocalizeValue getReadableName() {
+        return getDisplayName();
+    }
 
-  @Override
-  public String toString() {
-    return myId;
-  }
+    @Nonnull
+    public LocalizeValue getDisplayName() {
+        return myDisplayName;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Nonnull
+    public String getToolWindowId() {
+        return myId;
+    }
 
-    ProjectSystemId owner = (ProjectSystemId)o;
+    @Nonnull
+    public String getLibraryPrefix() {
+        return myCaptalizeId;
+    }
 
-    return myId.equals(owner.myId);
-  }
+    @Nonnull
+    public String getRunConfigurationId() {
+        return myCaptalizeId + "RunConfiguration";
+    }
 
-  @Override
-  public int hashCode() {
-    return myId.hashCode();
-  }
+    @Override
+    public String toString() {
+        return myId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ProjectSystemId owner = (ProjectSystemId) o;
+
+        return myId.equals(owner.myId);
+    }
+
+    @Override
+    public int hashCode() {
+        return myId.hashCode();
+    }
 }
