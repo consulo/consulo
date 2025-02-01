@@ -21,6 +21,7 @@ import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomFileHighlighter;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomHighlighterColors;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.internal.custom.SyntaxTable;
@@ -115,19 +116,7 @@ public class CustomColorsPage implements ColorSettingsPage {
   @Override
   @Nonnull
   public String getDemoText() {
-    return "# Line comment\n"
-           + "aKeyword1 variable = 123;\n"
-           + "anotherKeyword1 someString = \"SomeString\";\n"
-           + "aKeyword2 variable = 123;\n"
-           + "anotherKeyword2 someString = \"SomeString\";\n"
-           + "aKeyword3 variable = 123;\n"
-           + "anotherKeyword3 someString = \"SomeString\";\n"
-           + "aKeyword4 variable = 123;\n"
-           + "anotherKeyword4 someString = \"SomeString\\n\\x\";\n"
-           + "/* \n"
-           + " * Block comment\n"
-           + " */\n"
-           + "\n";
+    return IdeLocalize.colorCustom().get();
   }
 
   @Override

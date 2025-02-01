@@ -1,0 +1,19 @@
+<stdsys>C:\command.com</stdsys>
+-<stdout> C:></stdout>
+-<stdin> help</stdin>
+<stderr>Bad command or file name</stderr>
+
+<logError>Log error</logError>
+<logWarning>Log warning</logWarning>
+<logExpired>An expired log entry</logExpired>
+
+# Process output highlighted using ANSI colors codes
+<red>ANSI: red</red>
+<green>ANSI: green</green>
+<yellow>ANSI: yellow</yellow>
+<blue>ANSI: blue</blue>
+<magenta>ANSI: magenta</magenta>
+<cyan>ANSI: cyan</cyan>
+<gray>ANSI: gray</gray>
+
+<stdsys>Process finished with exit code 1</stdsys>

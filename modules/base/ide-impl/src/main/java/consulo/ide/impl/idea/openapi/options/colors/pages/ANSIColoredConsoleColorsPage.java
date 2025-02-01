@@ -8,6 +8,7 @@ import consulo.configurable.internal.ConfigurableWeight;
 import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.execution.process.ConsoleHighlighter;
 import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
@@ -22,28 +23,6 @@ import java.util.Map;
  */
 @ExtensionImpl(id = "ansi")
 public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, ConfigurableWeight {
-
-  private static final String DEMO_TEXT =
-    "<stdsys>C:\\command.com</stdsys>\n" +
-    "-<stdout> C:></stdout>\n" +
-    "-<stdin> help</stdin>\n" +
-    "<stderr>Bad command or file name</stderr>\n" +
-    "\n" +
-    "<logError>Log error</logError>\n" +
-    "<logWarning>Log warning</logWarning>\n" +
-    "<logExpired>An expired log entry</logExpired>\n" +
-    "\n" +
-    "# Process output highlighted using ANSI colors codes\n" +
-    "<red>ANSI: red</red>\n" +
-    "<green>ANSI: green</green>\n" +
-    "<yellow>ANSI: yellow</yellow>\n" +
-    "<blue>ANSI: blue</blue>\n" +
-    "<magenta>ANSI: magenta</magenta>\n" +
-    "<cyan>ANSI: cyan</cyan>\n" +
-    "<gray>ANSI: gray</gray>\n" +
-    "\n" +
-    "<stdsys>Process finished with exit code 1</stdsys>\n";
-
   private static final AttributesDescriptor[] ATTRS = {
     new AttributesDescriptor(
       ConfigurableLocalize.optionsGeneralColorDescriptorConsoleStdout(),
@@ -144,7 +123,7 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, Configur
   @Override
   @Nonnull
   public String getDemoText() {
-    return DEMO_TEXT;
+    return IdeLocalize.colorAnsiconsole().get();
   }
 
   @Override

@@ -25,6 +25,7 @@ import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.configurable.localize.ConfigurableLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
@@ -32,13 +33,10 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.SeveritiesProvider;
 import consulo.language.editor.template.TemplateColors;
 import consulo.localize.LocalizeValue;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -386,13 +384,7 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
   @Override
   @Nonnull
   public String getDemoText() {
-    try {
-      InputStream stream = getClass().getResourceAsStream("/colorSettingPage/general.txt");
-      return FileUtil.loadTextAndClose(stream, true) + getCustomSeveritiesDemoText();
-    }
-    catch (IOException e) {
-      return "demo text not found";
-    }
+    return IdeLocalize.colorGeneral().get() + getCustomSeveritiesDemoText();
   }
 
   @Override
