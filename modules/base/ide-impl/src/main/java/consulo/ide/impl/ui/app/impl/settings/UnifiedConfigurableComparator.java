@@ -17,7 +17,7 @@ package consulo.ide.impl.ui.app.impl.settings;
 
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
+import consulo.configurable.internal.ConfigurableWrapper;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.ui.TreeNode;
 

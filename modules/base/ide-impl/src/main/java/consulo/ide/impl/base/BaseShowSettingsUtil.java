@@ -19,8 +19,8 @@ import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableExtensionPointUtil;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
+import consulo.configurable.internal.ConfigurableExtensionPointUtil;
+import consulo.configurable.internal.ConfigurableWrapper;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -75,15 +75,5 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
     List<Configurable> result = ConfigurableExtensionPointUtil.buildConfigurablesList(mergedConfigurables, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));
 
     return ContainerUtil.toArray(result, Configurable.ARRAY_FACTORY);
-  }
-
-  @Override
-  public <T extends Configurable> T findApplicationConfigurable(final Class<T> confClass) {
-    return ConfigurableExtensionPointUtil.findApplicationConfigurable(confClass);
-  }
-
-  @Override
-  public <T extends Configurable> T findProjectConfigurable(final Project project, final Class<T> confClass) {
-    return ConfigurableExtensionPointUtil.findProjectConfigurable(project, confClass);
   }
 }

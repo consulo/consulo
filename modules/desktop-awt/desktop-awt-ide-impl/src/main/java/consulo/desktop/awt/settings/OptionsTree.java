@@ -20,7 +20,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
+import consulo.configurable.internal.ConfigurableWrapper;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeBuilder;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.ui.app.impl.settings.UnifiedConfigurableComparator;

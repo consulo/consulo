@@ -22,7 +22,7 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
+import consulo.configurable.internal.ConfigurableWrapper;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ClasspathEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectConfigurableGroup;

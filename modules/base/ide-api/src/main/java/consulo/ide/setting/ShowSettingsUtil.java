@@ -21,13 +21,12 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.function.Consumer;
 
@@ -134,20 +133,5 @@ public abstract class ShowSettingsUtil implements ProjectStructureSettingsUtil {
   @DeprecationInfo("Show #showAndSelect()")
   public abstract AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable);
 
-  /**
-   * @deprecated create a new instance of configurable instead
-   */
-  public abstract <T extends Configurable> T findProjectConfigurable(Project project, Class<T> confClass);
-
-  /**
-   * @deprecated create a new instance of configurable instead
-   */
-  public abstract <T extends Configurable> T findApplicationConfigurable(Class<T> confClass);
-
   public abstract boolean isAlreadyShown(Project project);
-
-  @Nonnull
-  public static String getSettingsMenuName() {
-    return Platform.current().os().isMac() ? "Preferences" : "Settings";
-  }
 }
