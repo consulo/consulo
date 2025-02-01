@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import consulo.fileEditor.history.PlaceInfo;
 import consulo.fileEditor.history.RecentPlacesListener;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
@@ -39,13 +38,11 @@ import consulo.codeEditor.EditorSettings;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
-import consulo.application.util.NotNullLazyValue;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.ui.components.breadcrumbs.Crumb;
 import consulo.document.util.DocumentUtil;
 import consulo.ide.impl.idea.util.concurrency.SynchronizedClearableLazy;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -71,9 +68,6 @@ public class RecentLocationsDataModel {
 
   private final SynchronizedClearableLazy<List<RecentLocationItem>> navigationPlaces;
   private final SynchronizedClearableLazy<List<RecentLocationItem>> changedPlaces;
-
-  private NotNullLazyValue<Map<PlaceInfo, String>> changedPlacedBreadcrumbsMap;
-  private NotNullLazyValue<Map<PlaceInfo, String>> navigationPlacesBreadcrumbsMap;
 
   public RecentLocationsDataModel(Project project, List<Editor> editorsToRelease) {
     this.project = project;
@@ -104,9 +98,6 @@ public class RecentLocationsDataModel {
 
     navigationPlaces = calculateItems(project, false);
     changedPlaces = calculateItems(project, true);
-
-    navigationPlacesBreadcrumbsMap = NotNullLazyValue.createValue(() -> collectBreadcrumbs(project, navigationPlaces.getValue()));
-    changedPlacedBreadcrumbsMap = NotNullLazyValue.createValue(() -> collectBreadcrumbs(project, changedPlaces.getValue()));
   }
 
   private SynchronizedClearableLazy<List<RecentLocationItem>> calculateItems(Project project, boolean changed) {
@@ -329,37 +320,5 @@ public class RecentLocationsDataModel {
 
   public MessageBusConnection getProjectConnection() {
     return projectConnection;
-  }
-
-  @Nonnull
-  private Map<PlaceInfo, String> collectBreadcrumbs(Project project, List<RecentLocationItem> items) {
-    return items.stream().map(RecentLocationItem::getInfo).collect(Collectors.toMap(it -> it, it -> getBreadcrumbs(project, it)));
-  }
-
-  private String getBreadcrumbs(Project project, PlaceInfo placeInfo) {
-    RangeMarker rangeMarker = placeInfo.getCaretPosition();
-    String fileName = placeInfo.getFile().getName();
-    if (rangeMarker == null) {
-      return fileName;
-    }
-
-    FileBreadcrumbsCollector collector = FileBreadcrumbsCollector.findBreadcrumbsCollector(project, placeInfo.getFile());
-    if (collector == null) {
-      return fileName;
-    }
-
-    Iterable<? extends Crumb> crumbs =
-      collector.computeCrumbs(placeInfo.getFile(), rangeMarker.getDocument(), rangeMarker.getStartOffset(), true);
-
-    if (!crumbs.iterator().hasNext()) {
-      return fileName;
-    }
-
-    String breadcrumbsText = StringUtil.join(crumbs, o -> o.getText(), " > ");
-    return StringUtil.shortenTextWithEllipsis(breadcrumbsText, 50, 0);
-  }
-
-  public Map<PlaceInfo, String> getBreadcrumbsMap(boolean changed) {
-    return changed ? changedPlacedBreadcrumbsMap.getValue() : navigationPlacesBreadcrumbsMap.getValue();
   }
 }

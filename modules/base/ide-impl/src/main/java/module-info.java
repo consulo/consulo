@@ -209,7 +209,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeEditor.printing;
   exports consulo.ide.impl.idea.codeInsight;
   exports consulo.ide.impl.idea.codeInsight.actions;
-  exports consulo.ide.impl.idea.codeInsight.breadcrumbs;
   exports consulo.ide.impl.idea.codeInsight.codeFragment;
   exports consulo.ide.impl.idea.codeInsight.completion;
   exports consulo.ide.impl.idea.codeInsight.completion.actions;
@@ -633,9 +632,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.testIntegration;
   exports consulo.ide.impl.idea.tools;
   exports consulo.ide.impl.idea.ui;
-  exports consulo.ide.impl.idea.ui.breadcrumbs;
   exports consulo.ide.impl.idea.ui.components;
-  exports consulo.ide.impl.idea.ui.components.breadcrumbs;
   exports consulo.ide.impl.idea.ui.components.labels;
   exports consulo.ide.impl.idea.ui.components.panels;
   exports consulo.ide.impl.idea.ui.content;

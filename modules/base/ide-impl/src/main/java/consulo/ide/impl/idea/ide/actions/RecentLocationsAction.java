@@ -303,10 +303,8 @@ public class RecentLocationsAction extends DumbAwareAction {
     @Nonnull JBCheckBox checkBox
   ) {
     return value -> {
-      String breadcrumb = data.getBreadcrumbsMap(checkBox.isSelected()).get(value.getInfo());
       EditorEx editor = value.getEditor();
-
-      return breadcrumb + " " + value.getInfo().getFile().getName() + " " + editor.getDocument().getText();
+      return value.getInfo().getFile().getName() + " " + editor.getDocument().getText();
     };
   }
 
