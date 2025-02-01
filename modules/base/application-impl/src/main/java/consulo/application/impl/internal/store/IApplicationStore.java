@@ -17,7 +17,7 @@ package consulo.application.impl.internal.store;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.component.store.impl.internal.IComponentStore;
+import consulo.component.store.internal.IComponentStore;
 
 import jakarta.annotation.Nonnull;
 

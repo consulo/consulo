@@ -29,7 +29,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

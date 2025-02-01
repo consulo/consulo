@@ -7,7 +7,7 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
 import consulo.desktop.awt.ui.plaf2.flat.InplaceComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
+import consulo.ui.ex.action.RightAlignedToolbarAction;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.ui.internal.WindowManagerEx;

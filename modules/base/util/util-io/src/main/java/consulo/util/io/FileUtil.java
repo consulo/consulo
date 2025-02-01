@@ -1616,4 +1616,33 @@ public class FileUtil {
 
         return false;
     }
+
+    public static boolean createIfNotExists(@Nonnull File file) {
+        if (file.exists()) {
+            return true;
+        }
+        try {
+            if (!createParentDirs(file)) {
+                return false;
+            }
+
+            OutputStream s = new FileOutputStream(file);
+            s.close();
+            return true;
+        }
+        catch (IOException e) {
+            LOG.warn(file.getPath(), e);
+            return false;
+        }
+    }
+
+    public static boolean ensureCanCreateFile(@Nonnull File file) {
+        if (file.exists()) {
+            return file.canWrite();
+        }
+        if (!createIfNotExists(file)) {
+            return false;
+        }
+        return delete(file);
+    }
 }

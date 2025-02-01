@@ -96,11 +96,13 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
     return isToBeShown(featureId, project, HOUR);
   }
 
+  @Override
   @Nonnull
   public CompletionStatistics getCompletionStatistics() {
     return myCompletionStats;
   }
 
+  @Override
   public CumulativeStatistics getFixesStats() {
     return myFixesStats;
   }

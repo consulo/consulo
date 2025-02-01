@@ -2,7 +2,7 @@
 package consulo.desktop.awt.internal.notification;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.diagnostic.MessagePool;
+import consulo.application.internal.MessagePool;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;

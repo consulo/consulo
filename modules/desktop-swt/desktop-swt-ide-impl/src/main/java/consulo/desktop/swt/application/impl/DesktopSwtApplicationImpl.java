@@ -16,7 +16,7 @@
 package consulo.desktop.swt.application.impl;
 
 import consulo.application.impl.internal.UnifiedApplication;
-import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.internal.StartupProgress;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.desktop.swt.ui.impl.DesktopSwtUIAccess;
 import consulo.ui.UIAccess;

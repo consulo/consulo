@@ -21,13 +21,13 @@ import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.start.ApplicationStarter;
-import consulo.application.util.logging.IdeaLoggingEvent;
-import consulo.ide.impl.idea.diagnostic.DefaultIdeaErrorLogger;
-import consulo.ide.impl.idea.diagnostic.LogEventException;
-import consulo.ide.impl.idea.diagnostic.LogMessageEx;
+import consulo.application.internal.ApplicationStarterCore;
 import consulo.logger.internal.impl.logback.LoggingEventWithIdeaEvent;
 import consulo.logging.attachment.ExceptionWithAttachments;
+import consulo.logging.internal.FatalErrorReporter;
+import consulo.logging.internal.IdeaLoggingEvent;
+import consulo.logging.internal.LogEventException;
+import consulo.logging.internal.LogMessageEx;
 import consulo.util.lang.ExceptionUtil;
 import jakarta.annotation.Nonnull;
 
@@ -49,7 +49,7 @@ public class DialogAppender<E> extends UnsynchronizedAppenderBase<E> {
             return;
         }
 
-        if (!ApplicationStarter.isLoaded()) {
+        if (!ApplicationStarterCore.isLoaded()) {
             return;
         }
 
@@ -86,18 +86,18 @@ public class DialogAppender<E> extends UnsynchronizedAppenderBase<E> {
         }
     }
 
-    void appendToLoggers(@Nonnull IdeaLoggingEvent ideaEvent) {
+    void appendToLoggers(@Nonnull IdeaLoggingEvent e) {
         if (myDialogRunnable != null) {
             return;
         }
 
-        final DefaultIdeaErrorLogger logger = DefaultIdeaErrorLogger.INSTANCE;
-        if (!logger.canHandle(ideaEvent)) {
+        final FatalErrorReporter logger = FatalErrorReporter.INSTANCE;
+        if (!logger.canHandle(e)) {
             return;
         }
         myDialogRunnable = () -> {
             try {
-                logger.handle(ideaEvent);
+                logger.handle(e);
             }
             finally {
                 myDialogRunnable = null;

@@ -11,7 +11,6 @@ module consulo.component.impl {
   requires transitive consulo.virtual.file.system.api;
   requires transitive jakarta.inject;
 
-  requires consulo.container.impl;
   requires consulo.util.nodep;
 
   exports consulo.component.impl.internal to

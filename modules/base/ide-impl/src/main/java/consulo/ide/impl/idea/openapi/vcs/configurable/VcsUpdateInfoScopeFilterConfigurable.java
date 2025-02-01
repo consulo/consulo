@@ -21,7 +21,7 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.LinkLabel;

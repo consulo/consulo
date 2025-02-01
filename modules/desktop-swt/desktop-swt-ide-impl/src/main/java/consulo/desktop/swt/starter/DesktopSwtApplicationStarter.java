@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
-import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.internal.StartupProgress;
 import consulo.application.internal.ApplicationEx;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.container.util.StatCollector;

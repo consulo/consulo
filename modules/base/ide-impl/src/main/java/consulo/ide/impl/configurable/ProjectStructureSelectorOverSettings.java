@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleSt
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import consulo.ide.setting.ProjectStructureSelector;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;

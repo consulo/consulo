@@ -33,16 +33,16 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.configurable.ConfigurablePreselectStrategy;
 import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
-import consulo.ide.impl.idea.ide.ui.search.ConfigurableHit;
+import consulo.configurable.ConfigurableHit;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
+import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
 import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
-import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
+import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.roots.ui.configuration.session.internal.ConfigurableSessionImpl;
 import consulo.ide.setting.ProjectStructureSelector;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
@@ -474,7 +474,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             }
             else {
                 myContext.setHoldingFilter(true);
-                myHits = myIndex.getConfigurables(myBuildConfigurables, type, myFiltered, text, myProject);
+                myHits = myIndex.getConfigurables(myBuildConfigurables, type == DocumentEvent.EventType.CHANGE, myFiltered, text, myProject);
                 myFiltered = myHits.getAll();
             }
 

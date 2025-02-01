@@ -15,16 +15,12 @@
  */
 package consulo.application.impl.internal.plugin;
 
-import consulo.container.impl.securityManager.impl.ConsuloSecurityManager;
-
 /**
  * @author VISTALL
  * @since 24/10/2021
  */
 public class ConsuloSecurityManagerEnabler {
-  public static void enableSecurityManager() {
-    ConsuloSecurityManager securityManager = (ConsuloSecurityManager)System.getSecurityManager();
-
-    securityManager.setEnabled(true);
-  }
+    public static void enableSecurityManager() {
+        // TODO !
+    }
 }

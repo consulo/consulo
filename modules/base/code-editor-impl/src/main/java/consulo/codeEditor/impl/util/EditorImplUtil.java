@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor.impl.util;
 
-import consulo.application.util.logging.LoggerUtil;
+import consulo.logging.util.LoggerUtil;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;

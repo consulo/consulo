@@ -23,7 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.IdeBundle;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;

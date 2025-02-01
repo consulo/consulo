@@ -20,7 +20,7 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.desktop.application.util.Restarter;
-import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
+import consulo.externalService.impl.internal.update.PluginDownloader;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;

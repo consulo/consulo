@@ -16,14 +16,14 @@
 package consulo.component.store.impl.internal.storage;
 
 import consulo.component.store.impl.internal.DefaultStateSerializer;
-import consulo.component.store.impl.internal.PathMacrosService;
-import consulo.component.store.impl.internal.StateStorageException;
-import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.internal.PathMacrosService;
+import consulo.component.store.internal.StateStorage;
+import consulo.component.store.internal.StateStorageException;
+import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.logging.Logger;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 public abstract class StateStorageBase<T extends StorageDataBase> implements StateStorage {
   protected static final Logger LOG = Logger.getInstance(StateStorageBase.class);

@@ -33,6 +33,13 @@ module consulo.application.api {
     exports consulo.application.presentation;
     exports consulo.application.json;
     exports consulo.application.localize;
+    exports consulo.application.plugin;
+
+    exports consulo.application.internal.start to
+        consulo.ide.impl,
+        consulo.external.service.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.swt.ide.impl;
 
     exports consulo.application.internal to
         consulo.ide.impl,
@@ -54,7 +61,15 @@ module consulo.application.api {
         consulo.virtual.file.system.impl,
         consulo.version.control.system.impl,
         consulo.execution.impl,
-        consulo.diff.impl;
+        consulo.diff.impl,
+        consulo.external.service.impl;
+
+    exports consulo.application.internal.plugin to
+        consulo.application.impl,
+        consulo.external.service.impl,
+        consulo.ide.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.swt.ide.impl;
 
     exports consulo.application.internal.util to
         consulo.language.api,
@@ -77,7 +92,6 @@ module consulo.application.api {
     exports consulo.application.util.registry;
     exports consulo.application.util.diff;
     exports consulo.application.util.query;
-    exports consulo.application.util.logging;
     exports consulo.application.util.matcher;
     exports consulo.application.util.graph;
 

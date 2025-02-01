@@ -51,7 +51,8 @@ module consulo.ui.ex.api {
         consulo.execution.api,
         consulo.execution.impl,
         consulo.project.ui.api,
-        consulo.execution.debug.impl;
+        consulo.execution.debug.impl,
+        consulo.external.service.impl;
 
     exports consulo.ui.ex.awtUnsafe.internal to consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
 

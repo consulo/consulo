@@ -16,8 +16,8 @@
 package consulo.component.store.impl.internal.storage;
 
 import consulo.component.macro.PathMacroSubstitutor;
-import consulo.component.store.impl.internal.PathMacrosService;
-import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.internal.PathMacrosService;
+import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartHashSet;
@@ -25,11 +25,11 @@ import consulo.util.interner.Interner;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.jdom.interner.JDOMInterner;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 public class StorageData extends StorageDataBase {

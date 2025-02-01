@@ -15,7 +15,7 @@
  */
 package consulo.desktop.util.windows.defender;
 
-import consulo.ide.impl.idea.ide.SystemHealthMonitor;
+import consulo.ide.impl.idea.ide.SystemHealthMonitorImpl;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.internal.NotificationFullContent;
@@ -31,7 +31,7 @@ public class WindowsDefenderNotification extends Notification implements Notific
   private final Collection<Path> myPaths;
 
   public WindowsDefenderNotification(String text, Collection<Path> paths) {
-     super(SystemHealthMonitor.GROUP, "", text, NotificationType.WARNING);
+     super(SystemHealthMonitorImpl.GROUP, "", text, NotificationType.WARNING);
     myPaths = paths;
   }
 

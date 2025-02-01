@@ -10,7 +10,7 @@ import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
+import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.UIAccess;

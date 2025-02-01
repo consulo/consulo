@@ -23,21 +23,19 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.macro.PathMacroSubstitutor;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.*;
-import consulo.component.store.impl.internal.StateStorageManager.ExternalizationSession;
-import consulo.component.store.impl.internal.storage.StateStorage;
-import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;
 import consulo.component.store.impl.internal.storage.StorageUtil;
+import consulo.component.store.internal.*;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Provider;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -88,8 +86,8 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Override
-  public final void save(boolean force, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
-    ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
+  public final void save(boolean force, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+    StateStorageManager.ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtil.toStringArray(myComponents.keySet());
       Arrays.sort(names);
@@ -114,10 +112,10 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
   @RequiredWriteAction
   @Override
-  public void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
+  public void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
     boolean force = false;
 
-    ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
+    StateStorageManager.ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtil.toStringArray(myComponents.keySet());
       Arrays.sort(names);
@@ -140,15 +138,15 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     doSave(force, externalizationSession == null ? null : externalizationSession.createSaveSessions(force), readonlyFiles);
   }
 
-  protected void doSave(boolean force, @Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
+  protected void doSave(boolean force, @Nullable List<StateStorage.SaveSession> saveSessions, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
     if (saveSessions != null) {
-      for (SaveSession session : saveSessions) {
+      for (StateStorage.SaveSession session : saveSessions) {
         executeSave(session, force, readonlyFiles);
       }
     }
   }
 
-  protected static void executeSave(@Nonnull SaveSession session, boolean force, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
+  protected static void executeSave(@Nonnull StateStorage.SaveSession session, boolean force, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
     try {
       session.save(force);
     }
@@ -158,7 +156,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @SuppressWarnings({"unchecked", "RequiredXAction"})
-  private <T> void commitComponentInsideSingleUIWriteThread(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull ExternalizationSession session, boolean force) {
+  private <T> void commitComponentInsideSingleUIWriteThread(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull StateStorageManager.ExternalizationSession session, boolean force) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
 
     long countToSet = -1;

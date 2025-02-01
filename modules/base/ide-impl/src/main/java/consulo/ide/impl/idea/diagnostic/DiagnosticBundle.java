@@ -18,15 +18,15 @@ package consulo.ide.impl.idea.diagnostic;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
-import consulo.ide.impl.internal.localize.DiagnosticLocalize;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author yole
  */
 @Deprecated(forRemoval = true)
-@DeprecationInfo("Use DiagnosticLocalize")
-@MigratedExtensionsTo(DiagnosticLocalize.class)
+@DeprecationInfo("Use ExternalServiceLocalize")
+@MigratedExtensionsTo(ExternalServiceLocalize.class)
 public class DiagnosticBundle extends AbstractBundle {
   private static final DiagnosticBundle ourInstance = new DiagnosticBundle();
 

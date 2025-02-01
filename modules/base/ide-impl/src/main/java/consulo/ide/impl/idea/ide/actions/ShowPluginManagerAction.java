@@ -19,7 +19,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.plugins.ui.PluginsConfigurable;
+import consulo.externalService.plugin.PluginContants;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -39,6 +39,6 @@ public class ShowPluginManagerAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    myShowSettingsUtilProvider.get().showSettingsDialog(e.getData(Project.KEY), PluginsConfigurable.ID, null);
+    myShowSettingsUtilProvider.get().showSettingsDialog(e.getData(Project.KEY), PluginContants.CONFIGURABLE_ID, null);
   }
 }

@@ -18,6 +18,7 @@ package consulo.component.store.impl.internal.storage;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
+import consulo.component.store.internal.StateStorage;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 
 import jakarta.annotation.Nonnull;

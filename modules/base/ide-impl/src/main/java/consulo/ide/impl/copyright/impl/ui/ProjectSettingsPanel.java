@@ -26,7 +26,7 @@ import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.content.internal.scope.CustomScopesProviderEx;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
 import consulo.project.Project;

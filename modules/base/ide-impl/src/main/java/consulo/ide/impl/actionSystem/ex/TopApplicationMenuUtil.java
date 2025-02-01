@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.actionSystem.ex;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.platform.Platform;
 
 /**
@@ -22,5 +23,7 @@ import consulo.platform.Platform;
  * @since 8/1/19
  */
 public class TopApplicationMenuUtil {
-  public static final boolean isMacSystemMenu = Platform.current().os().isMac() && "true".equals(System.getProperty("apple.laf.useScreenMenuBar"));
+    @Deprecated
+    @DeprecationInfo("Platform.current().os().isEnabledTopMenu()")
+    public static final boolean isMacSystemMenu = Platform.current().os().isMac() && "true".equals(System.getProperty("apple.laf.useScreenMenuBar"));
 }

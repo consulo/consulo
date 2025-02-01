@@ -73,4 +73,8 @@ public interface PlatformOperatingSystem {
         String environmentVariable = getEnvironmentVariable(key);
         return environmentVariable == null ? defaultValue : environmentVariable;
     }
+
+    default boolean isEnabledTopMenu() {
+        return false;
+    }
 }

@@ -17,6 +17,7 @@ package consulo.component.store.impl.internal;
 
 import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.macro.PathMacroManager;
+import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.platform.Platform;
 import consulo.util.collection.FactoryMap;
 import jakarta.inject.Provider;

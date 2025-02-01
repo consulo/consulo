@@ -17,7 +17,7 @@ package consulo.project.impl.internal.store;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
-import consulo.component.store.impl.internal.storage.StateStorage;
+import consulo.component.store.internal.StateStorage;
 import consulo.component.store.impl.internal.storage.StateStorageListener;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;

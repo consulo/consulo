@@ -16,13 +16,12 @@
 package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.impl.internal.plugin.PluginsLoader;
-import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.internal.plugin.PluginsLoader;
+import consulo.application.internal.StartupProgress;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
-import consulo.container.impl.PluginDescriptorImpl;
-import consulo.container.impl.PluginDescriptorLoader;
-import consulo.container.impl.PluginValidator;
+import consulo.container.internal.plugin.PluginDescriptorImpl;
+import consulo.container.internal.plugin.PluginDescriptorLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
@@ -140,9 +139,5 @@ public class PluginManagerCore {
             }
         }
         return 0;
-    }
-
-    public static boolean isIncompatible(final PluginDescriptor descriptor) {
-        return PluginValidator.isIncompatible(descriptor);
     }
 }

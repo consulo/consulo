@@ -15,7 +15,7 @@
  */
 package consulo.web.internal;
 
-import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.internal.StartupProgress;
 import consulo.util.collection.SmartList;
 import jakarta.annotation.Nonnull;
 

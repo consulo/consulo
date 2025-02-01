@@ -17,9 +17,9 @@ package consulo.desktop.swt.boot.main;
 
 import consulo.container.ExitCodes;
 import consulo.container.boot.ContainerStartup;
-import consulo.container.impl.ShowErrorCaller;
-import consulo.container.impl.SystemContainerLogger;
-import consulo.container.impl.classloader.BootstrapClassLoaderUtil;
+import consulo.container.internal.ShowErrorCaller;
+import consulo.container.internal.SystemContainerLogger;
+import consulo.container.internal.plugin.classloader.BootstrapClassLoaderUtil;
 import consulo.container.internal.ShowError;
 import consulo.container.util.StatCollector;
 import org.eclipse.swt.SWT;

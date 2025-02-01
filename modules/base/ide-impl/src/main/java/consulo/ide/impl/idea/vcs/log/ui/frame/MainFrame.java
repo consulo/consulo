@@ -18,7 +18,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.committed.RepositoryChangesBrow
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
+import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.table.ComponentsListFocusTraversalPolicy;

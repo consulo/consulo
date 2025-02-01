@@ -780,7 +780,7 @@
                 <separator/>
                 <reference id="HelpTopics"/>
                 <reference id="ShowTips"/>
-                <action id="ProductivityGude" class="consulo.ide.impl.idea.featureStatistics.actions.ShowFeatureUsageStatisticsAction"/>
+                <reference id="ProductivityGude"/>
                 <separator/>
                 <action id="ShowLog" class="consulo.ide.impl.idea.ide.actions.ShowLogAction"/>
                 <separator/>
@@ -1045,7 +1045,7 @@
             <action id="ChangesView.AddUnversioned" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForAdditionAction">
                 <keyboard-shortcut first-keystroke="control alt A" keymap="$default"/>
             </action>
-            <action id="ChangesView.Ignore" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoreUnversionedAction" />
+            <action id="ChangesView.Ignore" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoreUnversionedAction"/>
             <action id="ChangesView.RemoveDeleted" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForRemovalAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
             <action id="ChangesView.Edit" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.EditAction"/>
@@ -1125,7 +1125,7 @@
         </group>
 
         <group id="Vcs.History">
-            <action id="VcsHistory.ShowAllAffected" class="consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction" />
+            <action id="VcsHistory.ShowAllAffected" class="consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction"/>
         </group>
 
         <action id="ChangesView.Browse" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.BrowseChangesAction"/>
@@ -1222,8 +1222,8 @@
         <group id="SendToFavoritesGroup" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.SendToFavoritesGroup" popup="true"/>
 
         <action id="RunConfiguration" class="consulo.execution.impl.internal.action.RunConfigurationsComboBoxAction"/>
-        <action id="ChooseRunConfiguration" class="consulo.execution.impl.internal.action.ChooseRunConfigurationPopupAction"  />
-        <action id="ChooseDebugConfiguration" class="consulo.execution.debug.impl.internal.action.ChooseDebugConfigurationPopupAction" />
+        <action id="ChooseRunConfiguration" class="consulo.execution.impl.internal.action.ChooseRunConfigurationPopupAction"/>
+        <action id="ChooseDebugConfiguration" class="consulo.execution.debug.impl.internal.action.ChooseDebugConfigurationPopupAction"/>
 
         <group id="RunContextGroup" popup="false">
             <!-- A dynamic group filled with executor actions -->
@@ -1471,13 +1471,13 @@
             <action id="Unwrap" class="consulo.ide.impl.idea.codeInsight.unwrap.UnwrapAction"/>
             <separator/>
 
-            <reference ref="CodeCompletionGroup" />
+            <reference ref="CodeCompletionGroup"/>
 
             <separator/>
 
             <action id="InspectCode" class="consulo.ide.impl.idea.codeInspection.actions.CodeInspectionAction"/>
 
-            <reference ref="AnalyzeMenu" />
+            <reference ref="AnalyzeMenu"/>
 
             <separator/>
 
@@ -1590,7 +1590,7 @@
         </group>
 
         <action id="IdeScriptingConsole" class="consulo.ide.impl.idea.execution.console.RunIdeConsoleAction">
-            <add-to-group group-id="Internal" anchor="last" />
+            <add-to-group group-id="Internal" anchor="last"/>
         </action>
 
         <action id="NewScratchBuffer" class="consulo.ide.impl.idea.ide.scratch.ScratchFileActions$NewBufferAction"/>
@@ -2198,7 +2198,6 @@
             <reference ref="Arrangement.Rule.Group.Condition.Move.Up"/>
             <reference ref="Arrangement.Rule.Group.Condition.Move.Down"/>
         </group>
-
 
 
         <action id="FileChooser.GotoModule" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoModuleDirectory"

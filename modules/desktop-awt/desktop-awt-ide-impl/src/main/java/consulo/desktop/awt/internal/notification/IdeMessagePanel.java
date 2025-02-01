@@ -3,10 +3,14 @@ package consulo.desktop.awt.internal.notification;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.desktop.awt.internal.errorDialog.IdeErrorsDialog;
+import consulo.application.internal.MessagePool;
+import consulo.application.internal.MessagePoolListener;
 import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.diagnostic.*;
+import consulo.externalService.impl.internal.errorReport.IdeErrorsDialog;
+import consulo.externalService.impl.internal.errorReport.ReportMessages;
+import consulo.externalService.localize.ExternalServiceLocalize;
+import consulo.logging.internal.LogMessage;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
@@ -185,8 +189,8 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
   }
 
   private void showErrorNotification(@Nonnull Project project) {
-    String title = DiagnosticBundle.message("error.new.notification.title");
-    String linkText = DiagnosticBundle.message("error.new.notification.link");
+    String title = ExternalServiceLocalize.errorNewNotificationTitle().get();
+    String linkText = ExternalServiceLocalize.errorNewNotificationLink().get();
     Notification notification = new Notification(ReportMessages.GROUP, AllIcons.Ide.FatalError, title, null, null, NotificationType.ERROR, null);
     notification.addAction(new NotificationAction(linkText) {
       @Override

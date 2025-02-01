@@ -23,6 +23,7 @@ import consulo.application.internal.AppSemVer;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
+import consulo.component.util.BuildNumber;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
@@ -31,7 +32,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
-
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -505,6 +505,11 @@ public interface Application extends ComponentManager {
     @Nonnull
     default SemVer getVersion() {
         return AppSemVer.STUB_VER;
+    }
+
+    @Nonnull
+    default BuildNumber getBuildNumber() {
+        return BuildNumber.fallback();
     }
 
     /**

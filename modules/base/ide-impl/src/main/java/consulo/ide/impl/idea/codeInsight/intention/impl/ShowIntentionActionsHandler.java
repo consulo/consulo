@@ -9,7 +9,6 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.externalService.impl.internal.statistic.FeatureUsageTrackerImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI;
@@ -69,7 +68,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
             return;
         }
 
-        final DaemonCodeAnalyzerImpl codeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(project);
+        final DaemonCodeAnalyzerImpl codeAnalyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
         letAutoImportComplete(editor, file, codeAnalyzer);
 
         ShowIntentionsPass.IntentionsInfo intentions = ShowIntentionsPass.getActionsToShow(editor, file, true);
@@ -208,7 +207,8 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         @Nonnull final Project project
     ) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.quickFix");
-        ((FeatureUsageTrackerImpl)FeatureUsageTracker.getInstance()).getFixesStats().registerInvocation();
+        
+        FeatureUsageTracker.getInstance().getFixesStats().registerInvocation();
 
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 

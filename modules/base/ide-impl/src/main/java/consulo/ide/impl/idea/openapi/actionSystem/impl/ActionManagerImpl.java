@@ -24,7 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.actionSystem.impl.LastActionTracker;
+import consulo.application.internal.LastActionTracker;
 import consulo.ide.impl.actionSystem.impl.UnifiedActionPopupMenuImpl;
 import consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persistence.ActionIdProvider;
 import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;

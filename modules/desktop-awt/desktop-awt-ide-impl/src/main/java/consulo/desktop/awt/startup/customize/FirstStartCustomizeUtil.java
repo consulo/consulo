@@ -22,7 +22,7 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.desktop.awt.ui.plaf.LafManagerImpl;
 import consulo.externalService.update.UpdateSettings;
-import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
+import consulo.externalService.impl.internal.repository.RepositoryHelper;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.util.DownloadUtil;
 import consulo.logging.Logger;

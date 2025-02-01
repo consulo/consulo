@@ -21,7 +21,7 @@ import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
-import consulo.component.store.impl.internal.IComponentStore;
+import consulo.component.store.internal.IComponentStore;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.extension.ModuleExtension;
@@ -58,7 +58,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @Nullable
   @Override
-  protected IComponentStore getStateStore() {
+  public IComponentStore getStateStore() {
     return null;
   }
 

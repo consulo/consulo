@@ -15,39 +15,42 @@
  */
 package consulo.externalService.impl.internal.statistic;
 
+import consulo.externalService.statistic.InvocationCounter;
+
 import java.util.Calendar;
 
 /**
  * User: anna
  * Date: 7/5/12
  */
-public class CumulativeStatistics {
-  public int invocations = 0;
-  public long startDate = 0;
-  public int dayCount = 0;
-  public long lastDate = 0;
+public class CumulativeStatistics implements InvocationCounter {
+    public int invocations = 0;
+    public long startDate = 0;
+    public int dayCount = 0;
+    public long lastDate = 0;
 
-  public void registerInvocation() {
-    invocations++;
+    @Override
+    public void registerInvocation() {
+        invocations++;
 
-    Calendar cal = Calendar.getInstance();
-    cal.set(Calendar.HOUR_OF_DAY, 0);
-    cal.set(Calendar.MINUTE, 0);
-    cal.set(Calendar.SECOND, 0);
-    cal.set(Calendar.MILLISECOND, 0);
-    long today = cal.getTimeInMillis();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        long today = cal.getTimeInMillis();
 
-    if (startDate == 0) {
-      startDate = today;
+        if (startDate == 0) {
+            startDate = today;
+        }
+        if (lastDate == 0) {
+            lastDate = today;
+            dayCount = 1;
+        }
+        else if (today != lastDate) {
+            lastDate = today;
+            dayCount++;
+        }
     }
-    if (lastDate == 0) {
-      lastDate = today;
-      dayCount = 1;
-    }
-    else if (today != lastDate) {
-      lastDate = today;
-      dayCount++;
-    }
-  }
-  
+
 }

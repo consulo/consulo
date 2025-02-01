@@ -39,9 +39,15 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-container-impl</artifactId>
+            <artifactId>consulo-container-api</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-application-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -52,14 +58,19 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-platform-api</artifactId>
+            <artifactId>consulo-undo-redo-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-ide-impl</artifactId>
+            <artifactId>consulo-platform-api</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>

@@ -18,7 +18,7 @@ package consulo.application.impl.internal.start;
 import consulo.application.internal.ApplicationInfo;
 import consulo.container.ExitCodes;
 import consulo.container.boot.ContainerPathManager;
-import consulo.container.impl.ShowErrorCaller;
+import consulo.container.internal.ShowErrorCaller;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;

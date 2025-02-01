@@ -26,7 +26,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.NotNullLazyValue;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
+import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 import consulo.language.Language;
 import consulo.language.editor.impl.internal.inspection.InspectionManagerBase;

@@ -30,7 +30,7 @@ import consulo.disposer.Disposer;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.diff.DiffRequestFactory;
 import consulo.desktop.awt.internal.diff.dir.action.popup.WarnOnDeletion;
-import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
+import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;

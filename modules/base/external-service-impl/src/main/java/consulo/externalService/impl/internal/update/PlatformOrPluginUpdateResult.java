@@ -15,6 +15,7 @@
  */
 package consulo.externalService.impl.internal.update;
 
+import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
@@ -24,30 +25,20 @@ import java.util.List;
  * @since 10-Oct-16
  */
 public class PlatformOrPluginUpdateResult {
-  public static PlatformOrPluginUpdateResult CANCELED = new PlatformOrPluginUpdateResult(Type.CANCELED, Collections.emptyList());
-  public static PlatformOrPluginUpdateResult NO_UPDATE = new PlatformOrPluginUpdateResult(Type.NO_UPDATE, Collections.emptyList());
-  public static PlatformOrPluginUpdateResult RESTART_REQUIRED = new PlatformOrPluginUpdateResult(Type.RESTART_REQUIRED, Collections.emptyList());
+  public static PlatformOrPluginUpdateResult CANCELED = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.CANCELED, Collections.emptyList());
+  public static PlatformOrPluginUpdateResult NO_UPDATE = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.NO_UPDATE, Collections.emptyList());
+  public static PlatformOrPluginUpdateResult RESTART_REQUIRED = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED, Collections.emptyList());
 
-  public enum Type {
-    PLATFORM_UPDATE,
-    PLUGIN_UPDATE,
-    RESTART_REQUIRED,
-    NO_UPDATE,
-    CANCELED,
-    // special case when user install plugins
-    PLUGIN_INSTALL
-  }
-
-  private final Type myType;
+    private final PlatformOrPluginUpdateResultType myType;
   private final List<PlatformOrPluginNode> myPlugins;
 
-  public PlatformOrPluginUpdateResult(@Nonnull Type type, @Nonnull List<PlatformOrPluginNode> plugins) {
+  public PlatformOrPluginUpdateResult(@Nonnull PlatformOrPluginUpdateResultType type, @Nonnull List<PlatformOrPluginNode> plugins) {
     myType = type;
     myPlugins = plugins;
   }
 
   @Nonnull
-  public Type getType() {
+  public PlatformOrPluginUpdateResultType getType() {
     return myType;
   }
 

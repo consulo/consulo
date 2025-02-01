@@ -17,7 +17,7 @@ package consulo.desktop.awt.language.editor.documentation;
 
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
+import consulo.ui.ex.action.RightAlignedToolbarAction;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.image.Image;

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.diagnostic;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.internal.LogMessageEx;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 

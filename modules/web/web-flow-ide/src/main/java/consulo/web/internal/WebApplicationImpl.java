@@ -1,7 +1,7 @@
 package consulo.web.internal;
 
 import consulo.application.impl.internal.UnifiedApplication;
-import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.internal.StartupProgress;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;

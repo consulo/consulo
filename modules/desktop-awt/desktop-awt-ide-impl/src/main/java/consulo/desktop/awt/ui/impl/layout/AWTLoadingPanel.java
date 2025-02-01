@@ -18,10 +18,7 @@ package consulo.desktop.awt.ui.impl.layout;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
-import consulo.ui.ex.awt.AsyncProcessIcon;
-import consulo.ui.ex.awt.LoadingDecorator;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 
 import jakarta.annotation.Nonnull;
@@ -30,7 +27,7 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @see consulo.ide.impl.idea.ui.components.JBLoadingPanel
+ * @see JBLoadingPanel
  * @since 23/04/2023
  */
 public class AWTLoadingPanel extends JPanel implements FromSwingComponentWrapper {

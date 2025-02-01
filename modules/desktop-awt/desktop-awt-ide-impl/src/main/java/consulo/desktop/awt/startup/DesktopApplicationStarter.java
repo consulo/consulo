@@ -21,11 +21,11 @@ import com.formdev.flatlaf.util.HiDPIUtils;
 import com.google.gson.Gson;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
-import consulo.application.impl.internal.plugin.CompositeMessage;
-import consulo.application.impl.internal.plugin.PluginsInitializeInfo;
+import consulo.application.internal.plugin.CompositeMessage;
+import consulo.application.internal.plugin.PluginsInitializeInfo;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
-import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.internal.StartupProgress;
 import consulo.application.internal.ApplicationEx;
 import consulo.awt.hacking.X11Hacking;
 import consulo.builtinWebServer.http.HttpRequestHandler;
@@ -33,8 +33,6 @@ import consulo.builtinWebServer.json.JsonBaseRequestHandler;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.builtinWebServer.json.JsonPostRequestHandler;
 import consulo.component.impl.internal.ComponentBinding;
-import consulo.container.plugin.PluginId;
-import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.desktop.application.jna.windows.WindowsAutoRestartManager;
 import consulo.desktop.awt.application.impl.AWTExceptionHandler;
@@ -47,17 +45,18 @@ import consulo.desktop.awt.uiOld.DesktopAWTFontRegistry;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
+import consulo.externalService.impl.internal.PlatformOrPluginsNotificationGroupContributor;
+import consulo.externalService.plugin.PluginContants;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
-import consulo.ide.impl.idea.ide.plugins.PlatformOrPluginsNotificationGroupContributor;
-import consulo.ide.impl.idea.ide.plugins.PluginContants;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.logging.internal.FatalErrorReporter;
 import consulo.platform.Platform;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;
@@ -84,7 +83,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
 /**
@@ -96,6 +94,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     public DesktopApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
         super(args, stat);
+
+        FatalErrorReporter.INSTANCE = new DefaultIdeaErrorLogger();
     }
 
     @Override
@@ -167,7 +167,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         if (myPlatform.os().isMac()) {
             if (Boolean.getBoolean("consulo.mac.disable.use.rounded.border")) {
                 System.setProperty("flatlaf.useRoundedPopupBorder", "false");
-            } else {
+            }
+            else {
                 System.setProperty("flatlaf.useRoundedPopupBorder", "true");
             }
         }
@@ -240,10 +241,10 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             // Event queue should not be changed during initialization of application components.
             // It also cannot be changed before initialization of application components because IdeEventQueue uses other
             // application components. So it is proper to perform replacement only here.
-            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
+            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl) WindowManager.getInstance();
             IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl)RecentProjectsManager.getInstance();
+            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl) RecentProjectsManager.getInstance();
 
             if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
                 SwingUtilities.invokeLater(windowManager::showFrame);

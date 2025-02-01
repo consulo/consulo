@@ -15,7 +15,7 @@
  */
 package consulo.proxy.advanced.internal.impl.bytebuddy;
 
-import consulo.container.impl.classloader.proxy.ProxyFactory;
+import consulo.container.internal.plugin.classloader.ProxyFactory;
 
 import java.lang.reflect.Field;
 

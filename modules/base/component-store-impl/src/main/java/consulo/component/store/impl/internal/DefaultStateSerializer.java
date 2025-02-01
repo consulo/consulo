@@ -16,6 +16,7 @@
 package consulo.component.store.impl.internal;
 
 import consulo.component.persist.Storage;
+import consulo.component.store.internal.StateStorageException;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.xml.serializer.*;
 import org.jdom.Element;

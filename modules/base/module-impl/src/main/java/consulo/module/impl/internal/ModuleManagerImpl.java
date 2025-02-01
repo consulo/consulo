@@ -26,7 +26,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.macro.PathMacroManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponentWithModificationTracker;
-import consulo.component.store.impl.internal.StateStorageException;
+import consulo.component.store.internal.StateStorageException;
 import consulo.component.util.ModificationTracker;
 import consulo.component.util.graph.*;
 import consulo.disposer.Disposable;

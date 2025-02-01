@@ -17,16 +17,18 @@
 package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurableHit;
 import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.container.plugin.PluginManager;
+import consulo.externalService.plugin.PluginContants;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.ide.plugins.ui.PluginsConfigurable;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.logging.Logger;
-import consulo.application.localize.ApplicationLocalize;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.util.interner.Interner;
 import consulo.util.io.ResourceUtil;
@@ -40,7 +42,6 @@ import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import javax.swing.event.DocumentEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -60,7 +61,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   private final Map<Pair<String, String>, Set<String>> myHighlightOption2Synonym = Collections.synchronizedMap(new HashMap<Pair<String, String>, Set<String>>());
   private volatile boolean allTheseHugeFilesAreLoaded;
 
-  private final consulo.util.interner.Interner<String> myIdentifierTable = Interner.createStringInterner();
+  private final Interner<String> myIdentifierTable = Interner.createStringInterner();
 
   private static final Logger LOG = Logger.getInstance(SearchableOptionsRegistrarImpl.class);
   public static final int LOAD_FACTOR = 20;
@@ -165,7 +166,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
         words.addAll(getProcessedWordsWithoutStemming(description));
       }
       for (String word : words) {
-        addOption(word, null, plugin.getName(), PluginsConfigurable.ID, IdeLocalize.titlePlugins().get());
+        addOption(word, null, plugin.getName(), PluginContants.CONFIGURABLE_ID, IdeLocalize.titlePlugins().get());
       }
     });
 
@@ -212,7 +213,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
   @Override
   @Nonnull
-  public ConfigurableHit getConfigurables(Configurable[] allConfigurables, final DocumentEvent.EventType type, Set<Configurable> configurables, String option, Project project) {
+  public ConfigurableHit getConfigurables(Configurable[] allConfigurables, boolean changed, Set<Configurable> configurables, String option, Project project) {
 
     final ConfigurableHit hits = new ConfigurableHit();
     final Set<Configurable> contentHits = hits.getContentHits();
@@ -281,8 +282,8 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
         }
       }
     }
-    if (currentConfigurables.equals(contentHits) && !(configurables == null && type == DocumentEvent.EventType.CHANGE)) {
-      return getConfigurables(allConfigurables, DocumentEvent.EventType.CHANGE, null, option, project);
+    if (currentConfigurables.equals(contentHits) && !(configurables == null && changed)) {
+      return getConfigurables(allConfigurables, true, null, option, project);
     }
     return hits;
   }

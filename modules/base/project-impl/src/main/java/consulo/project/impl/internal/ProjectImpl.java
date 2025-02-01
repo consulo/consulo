@@ -25,8 +25,9 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.TimedReference;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
-import consulo.component.store.impl.internal.IComponentStore;
-import consulo.component.store.impl.internal.StoreUtil;
+import consulo.component.store.internal.IComponentStore;
+import consulo.component.store.internal.StorableComponent;
+import consulo.component.store.internal.StoreUtil;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
 import consulo.module.impl.internal.ModuleManagerImpl;
@@ -58,7 +59,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
+public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx, StorableComponent {
   public static final int NORMAL_PROJECT_PROFILE = 1 << 30;
   public static final int DEFAULT_PROJECT_PROFILE = 1 << 31;
 

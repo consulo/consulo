@@ -22,22 +22,22 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.component.store.impl.internal.PathMacrosService;
-import consulo.component.store.impl.internal.StateStorageManager;
-import consulo.component.store.impl.internal.StreamProvider;
-import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
-import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;
+import consulo.component.store.internal.PathMacrosService;
 import consulo.component.store.impl.internal.storage.vfs.VfsFileBasedStorage;
+import consulo.component.store.internal.StateStorage;
+import consulo.component.store.internal.StateStorageManager;
+import consulo.component.store.internal.StreamProvider;
+import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -321,15 +321,15 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
     @Nonnull
     @Override
-    public List<SaveSession> createSaveSessions(boolean force) {
+    public List<StateStorage.SaveSession> createSaveSessions(boolean force) {
       if (mySessions.isEmpty()) {
         return Collections.emptyList();
       }
 
-      List<SaveSession> saveSessions = null;
+      List<StateStorage.SaveSession> saveSessions = null;
       Collection<StateStorage.ExternalizationSession> externalizationSessions = mySessions.values();
       for (StateStorage.ExternalizationSession session : externalizationSessions) {
-        SaveSession saveSession = session.createSaveSession(force);
+        StateStorage.SaveSession saveSession = session.createSaveSession(force);
         if (saveSession != null) {
           if (saveSessions == null) {
             if (externalizationSessions.size() == 1) {

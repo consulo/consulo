@@ -17,15 +17,19 @@ package consulo.component.store.impl.internal.storage;
 
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.Storage;
-import consulo.component.store.impl.internal.*;
+import consulo.component.store.impl.internal.DefaultStateSerializer;
+import consulo.component.store.internal.PathMacrosService;
+import consulo.component.store.internal.StateStorageException;
+import consulo.component.store.internal.StreamProvider;
+import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

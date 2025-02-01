@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: anna
@@ -27,16 +28,21 @@ import consulo.component.ComponentManager;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FeatureUsageTracker {
 
-  public static FeatureUsageTracker getInstance() {
-    return Application.get().getInstance(FeatureUsageTracker.class);
-  }
+    public static FeatureUsageTracker getInstance() {
+        return Application.get().getInstance(FeatureUsageTracker.class);
+    }
 
-  public abstract void triggerFeatureUsed(String featureId);
+    public abstract void triggerFeatureUsed(String featureId);
 
-  public abstract void triggerFeatureShown(String featureId);
+    public abstract void triggerFeatureShown(String featureId);
 
-  public abstract boolean isToBeShown(String featureId, ComponentManager project);
+    public abstract boolean isToBeShown(String featureId, ComponentManager project);
 
-  public abstract boolean isToBeAdvertisedInLookup(String featureId, ComponentManager project);
+    public abstract boolean isToBeAdvertisedInLookup(String featureId, ComponentManager project);
 
+    @Nonnull
+    public abstract InvocationCounter getCompletionStatistics();
+
+    @Nonnull
+    public abstract InvocationCounter getFixesStats();
 }

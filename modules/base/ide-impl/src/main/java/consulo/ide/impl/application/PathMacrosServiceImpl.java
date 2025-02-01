@@ -19,7 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.application.options.PathMacrosCollectorImpl;
 import consulo.component.macro.PathMacroFilter;
 import consulo.application.macro.PathMacros;
-import consulo.component.store.impl.internal.PathMacrosService;
+import consulo.component.store.internal.PathMacrosService;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import jakarta.annotation.Nonnull;

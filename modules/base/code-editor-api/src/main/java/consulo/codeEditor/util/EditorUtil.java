@@ -16,7 +16,7 @@
 package consulo.codeEditor.util;
 
 import consulo.application.util.Dumpable;
-import consulo.application.util.logging.LoggerUtil;
+import consulo.logging.util.LoggerUtil;
 import consulo.codeEditor.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;

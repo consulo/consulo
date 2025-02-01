@@ -22,7 +22,7 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;

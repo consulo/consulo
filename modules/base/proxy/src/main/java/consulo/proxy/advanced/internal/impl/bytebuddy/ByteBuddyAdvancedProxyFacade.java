@@ -15,8 +15,8 @@
  */
 package consulo.proxy.advanced.internal.impl.bytebuddy;
 
-import consulo.container.impl.classloader.proxy.ProxyDescription;
-import consulo.container.impl.classloader.proxy.ProxyHolderClassLoader;
+import consulo.container.internal.plugin.classloader.ProxyDescription;
+import consulo.container.internal.plugin.classloader.ProxyHolderClassLoader;
 import consulo.proxy.advanced.ProxyHelper;
 import consulo.proxy.advanced.internal.AdvancedProxyFacade;
 import consulo.proxy.advanced.internal.impl.AdvancedProxyTesting;

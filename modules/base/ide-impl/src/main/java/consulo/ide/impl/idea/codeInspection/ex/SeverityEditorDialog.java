@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
 import consulo.ide.impl.idea.application.options.colors.TextAttributesDescription;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityUtil;
 import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;

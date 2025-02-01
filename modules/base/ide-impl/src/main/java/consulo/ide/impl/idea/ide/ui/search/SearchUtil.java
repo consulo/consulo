@@ -18,10 +18,10 @@ package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.idea.application.options.SkipSelfSearchComponent;
 import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;
@@ -30,11 +30,11 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.util.lang.function.Condition;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -381,7 +381,7 @@ public class SearchUtil {
   }
 
   private static String markup(@NonNls String textToMarkup, final Pattern insideHtmlTagPattern, final String option) {
-    @NonNls String result = "";
+    String result = "";
     final int styleIdx = textToMarkup.indexOf("<style");
     final int styleEndIdx = textToMarkup.indexOf("</style>");
     if (styleIdx < 0 || styleEndIdx < 0) {
@@ -716,12 +716,7 @@ public class SearchUtil {
       addChildren(each, result);
     }
     
-    result = ContainerUtil.filter(result, new Condition<Configurable>() {
-      @Override
-      public boolean value(Configurable configurable) {
-        return !(configurable instanceof SearchableConfigurable.Parent) || ((SearchableConfigurable.Parent)configurable).isVisible();
-      }
-    });
+    result = ContainerUtil.filter(result, configurable -> !(configurable instanceof SearchableConfigurable.Parent) || ((SearchableConfigurable.Parent)configurable).isVisible());
    
     return result;
   }

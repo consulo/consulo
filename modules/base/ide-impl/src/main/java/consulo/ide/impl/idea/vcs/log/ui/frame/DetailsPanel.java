@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.roots.ui.componentsList.components.ScrollablePanel;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryUtil;
 import consulo.ide.impl.idea.ui.SeparatorComponent;
-import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
+import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;

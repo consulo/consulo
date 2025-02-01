@@ -21,12 +21,12 @@ import consulo.application.impl.internal.start.StartupUtil;
 import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
-import consulo.container.impl.ShowErrorCaller;
+import consulo.container.internal.ShowErrorCaller;
 import consulo.container.util.StatCollector;
 import consulo.desktop.container.impl.DesktopContainerPathManager;
 import consulo.desktop.startup.DesktopImportantFolderLocker;
 import consulo.desktop.swt.starter.DesktopSwtApplicationStarter;
-import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
+import consulo.application.internal.start.StartupActionScriptManager;
 import consulo.logging.Logger;
 import jakarta.annotation.Nonnull;
 

@@ -19,12 +19,13 @@ package consulo.externalService.impl.internal.statistic;
  * @author peter
  */
 public class CompletionStatistics extends CumulativeStatistics {
-  public int sparedCharacters = 0;
+    public int sparedCharacters = 0;
 
-  public void registerInvocation(int spared) {
-    registerInvocation();
-    if (spared > 0) {
-      sparedCharacters += spared;
+    @Override
+    public void registerInvocation(int spared) {
+        registerInvocation();
+        if (spared > 0) {
+            sparedCharacters += spared;
+        }
     }
-  }
 }

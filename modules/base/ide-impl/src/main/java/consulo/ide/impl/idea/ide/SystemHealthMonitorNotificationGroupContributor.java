@@ -30,6 +30,6 @@ import java.util.function.Consumer;
 public class SystemHealthMonitorNotificationGroupContributor implements NotificationGroupContributor {
   @Override
   public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
-    registrator.accept(SystemHealthMonitor.GROUP);
+    registrator.accept(SystemHealthMonitorImpl.GROUP);
   }
 }

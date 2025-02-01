@@ -24,7 +24,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.configurable.ConfigurablePreselectStrategy;
 import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
 import consulo.ide.setting.ProjectStructureSelector;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;

@@ -18,7 +18,7 @@ package consulo.application.impl.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.internal.StartupProgress;
 import consulo.component.ComponentManager;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;

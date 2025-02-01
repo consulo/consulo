@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide;
 import consulo.application.Application;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.container.impl.ShowErrorCaller;
+import consulo.container.internal.ShowErrorCaller;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.module.content.ProjectRootManager;
 import consulo.navigation.OpenFileDescriptorFactory;

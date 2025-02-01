@@ -2291,10 +2291,6 @@ scripting.lib.usageScope.override.title:
   text: Override Library Settings
 open.url.in.browser.tooltip:
   text: Open in browser
-whatsnew.action.custom.text:
-  text: What''s _New in {0}
-whatsnew.action.custom.description:
-  text: Find out about the new features in this version of {0}
 diff.dialog.title:
   text: Diff Between ''{0}'' and ''{1}''
 goto.custom.region.menu.item:

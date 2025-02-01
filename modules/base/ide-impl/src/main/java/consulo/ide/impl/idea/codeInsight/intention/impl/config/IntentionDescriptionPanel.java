@@ -25,10 +25,10 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
-import consulo.ide.impl.idea.ide.plugins.ui.PluginsConfigurable;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.language.editor.internal.intention.ResourceTextDescriptor;
@@ -39,8 +39,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;

@@ -43,7 +43,7 @@ import consulo.ide.impl.idea.openapi.editor.colors.impl.EditorColorsSchemeImpl;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.ReadOnlyColorsScheme;
 import consulo.language.editor.internal.ColorSettingsPages;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;

@@ -28,7 +28,7 @@ import consulo.ide.impl.configurable.DefaultConfigurablePreselectStrategy;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.ide.setting.ProjectStructureSelector;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.ide.setting.bundle.SettingsSdksModel;
 import consulo.logging.Logger;
 import consulo.project.Project;

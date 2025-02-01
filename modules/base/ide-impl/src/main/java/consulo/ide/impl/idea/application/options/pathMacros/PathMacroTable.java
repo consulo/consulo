@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.component.store.impl.internal.PathMacrosService;
+import consulo.component.store.internal.PathMacrosService;
 import consulo.logging.Logger;
 
 import javax.swing.*;

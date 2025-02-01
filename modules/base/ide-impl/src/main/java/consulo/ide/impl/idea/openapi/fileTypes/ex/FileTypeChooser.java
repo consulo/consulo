@@ -15,19 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.ex;
 
-import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement.PluginAdvertiserImpl;
-import consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement.PluginAdvertiserRequester;
+import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.ide.impl.idea.openapi.fileTypes.FileTypesBundle;
 import consulo.ide.impl.idea.openapi.fileTypes.NativeFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeRenderer;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.language.file.FileTypeManager;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.plain.PlainTextFileType;
@@ -46,7 +43,10 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class FileTypeChooser extends DialogWrapper {
     private JList<FileType> myList;
@@ -116,8 +116,9 @@ public class FileTypeChooser extends DialogWrapper {
         myPattern.setModel(new CollectionComboBoxModel<>(ContainerUtil.map(patterns, FunctionUtil.<String>id()), patterns.get(0)));
 
         ExtensionPreview fileFeatureForChecking = ExtensionPreview.of(FileTypeFactory.class, fileName);
-        myAllPlugins = Application.get().getInstance(PluginAdvertiserRequester.class).getLoadedPluginDescriptors();
-        myFeaturePlugins = PluginAdvertiserImpl.findImpl(myAllPlugins, fileFeatureForChecking);
+        PluginAdvertiserHelper.PluginsInfo info = PluginAdvertiserHelper.getInstance().getLoadedPlugins(fileFeatureForChecking);
+        myAllPlugins = info.allPlugins();
+        myFeaturePlugins = info.featurePlugins();
 
         ItemListener listener = e -> {
             boolean selected = myOpenInIdea.isSelected();
@@ -221,8 +222,7 @@ public class FileTypeChooser extends DialogWrapper {
         }
         final FileType type = chooser.getSelectedType();
         if (type == null) {
-            final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, chooser.myAllPlugins, new ArrayList<>(chooser.myFeaturePlugins));
-            advertiserDialog.show();
+            PluginAdvertiserHelper.getInstance().showDialog(new PluginAdvertiserHelper.PluginsInfo(chooser.myAllPlugins, chooser.myFeaturePlugins));
             return null;
         }
 

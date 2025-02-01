@@ -23,8 +23,8 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
 import consulo.component.impl.internal.BaseComponentManager;
 import consulo.component.impl.internal.ComponentBinding;
-import consulo.component.store.impl.internal.IComponentStore;
-import consulo.component.store.impl.internal.StateComponentInfo;
+import consulo.component.store.internal.IComponentStore;
+import consulo.component.store.internal.StateComponentInfo;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
@@ -142,7 +142,7 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
   }
 
   @Nullable
-  protected IComponentStore getStateStore() {
+  public IComponentStore getStateStore() {
     if (myComponentStore == null) {
       myComponentStore = getStateStoreImpl();
     }

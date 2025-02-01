@@ -43,7 +43,9 @@ module consulo.component.api {
         consulo.ide.impl,
         consulo.application.api,
         consulo.datacontext.api,
-        consulo.virtual.file.system.api;
+        consulo.virtual.file.system.api,
+        consulo.external.service.impl,
+        consulo.component.store.api;
 
     exports consulo.component.internal.inject to consulo.component.impl,
         consulo.application.impl,

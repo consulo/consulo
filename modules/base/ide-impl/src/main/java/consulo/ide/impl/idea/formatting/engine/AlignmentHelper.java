@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.formatting.engine;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.idea.diagnostic.LogMessageEx;
+import consulo.logging.internal.LogMessageEx;
 import consulo.ide.impl.idea.formatting.*;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;

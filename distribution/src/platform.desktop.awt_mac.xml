@@ -41,7 +41,6 @@
             <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
             <includes>
                 <include>consulo:consulo-container-api</include>
-                <include>consulo:consulo-container-impl</include>
                 <include>consulo:consulo-desktop-awt-bootstrap</include>
                 <include>consulo:consulo-desktop-bootstrap</include>
                 <include>consulo:consulo-bootstrap</include>

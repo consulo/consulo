@@ -26,9 +26,6 @@
             <action id="NotificationTestAction" internal="true"
                     class="consulo.ide.impl.idea.notification.impl.actions.NotificationTestAction"
                     text="Add Test Notification"/>
-            <action id="TestMessageBoxAction" internal="true" class="consulo.ide.impl.idea.diagnostic.TestMessageBoxAction"
-                    text="Show Test Dialog"/>
-            <separator/>
 
             <action id="UiInspector" internal="true" class="consulo.desktop.awt.action.UiInspectorAction" text="UI Inspector"/>
             <action id="ShowSplash" internal="true" class="consulo.desktop.awt.uiOld.ShowSplashAction" text="Show Splash"/>
@@ -77,7 +74,7 @@
             <separator/>
             <reference ref="MaintenanceGroup"/>
 
-            <action internal="true" id="SendStatistics" class="consulo.ide.impl.idea.internal.statistic.tmp.SendStatisticsAction"
+            <action internal="true" id="SendStatistics" class="consulo.externalService.impl.internal.statistic.SendStatisticsAction"
                     text="Send statistics"/>
 
             <add-to-group group-id="Internal"/>

@@ -6,7 +6,7 @@ import consulo.ide.impl.idea.ide.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ide.impl.idea.ide.ui.search.ActionFromOptionDescriptorProvider;
 import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
+import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrarImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.*;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;

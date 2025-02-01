@@ -31,5 +31,6 @@ module consulo.project.api {
         consulo.project.impl,
         consulo.project.ui.impl,
         consulo.execution.impl,
-        consulo.language.impl;
+        consulo.language.impl,
+        consulo.external.service.impl;
 }

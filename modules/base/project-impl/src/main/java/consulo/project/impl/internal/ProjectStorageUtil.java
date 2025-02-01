@@ -17,7 +17,7 @@ package consulo.project.impl.internal;
 
 import consulo.application.ApplicationManager;
 import consulo.application.macro.PathMacros;
-import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectEx;

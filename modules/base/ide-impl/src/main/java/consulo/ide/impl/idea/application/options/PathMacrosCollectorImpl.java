@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.application.options;
 import consulo.application.macro.PathMacros;
 import consulo.component.macro.PathMacroFilter;
 import consulo.component.macro.PathMacroMap;
-import consulo.component.store.impl.internal.PathMacrosService;
+import consulo.component.store.internal.PathMacrosService;
 import consulo.pathMacro.Macro;
 import consulo.pathMacro.MacroManager;
 import org.jdom.Element;

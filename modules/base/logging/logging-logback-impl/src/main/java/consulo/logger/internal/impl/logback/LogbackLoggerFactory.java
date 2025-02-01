@@ -21,12 +21,11 @@ import ch.qos.logback.classic.util.LogbackMDCAdapter;
 import ch.qos.logback.core.CoreConstants;
 import consulo.application.Application;
 import consulo.container.boot.ContainerPathManager;
-import consulo.container.impl.ShowErrorCaller;
+import consulo.container.internal.ShowErrorCaller;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import io.netty.util.internal.logging.Log4J2LoggerFactory;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -76,7 +75,7 @@ public class LogbackLoggerFactory implements LoggerFactory {
             //String fileRef = Boolean.getBoolean(CONSULO_MAVEN_CONSOLE_LOG) ? "/logback-info.xml" : "/logback-warn.xml";
             String fileRef = "/logback-info.xml";
 
-            String text = FileUtil.loadTextAndClose(Log4J2LoggerFactory.class.getResourceAsStream(fileRef));
+            String text = FileUtil.loadTextAndClose(LogbackLoggerFactory.class.getResourceAsStream(fileRef));
             text = StringUtil.replace(text, SYSTEM_MACRO, StringUtil.replace(ContainerPathManager.get().getSystemPath(), "\\", "\\\\"));
             text = StringUtil.replace(text, APPLICATION_MACRO, StringUtil.replace(ContainerPathManager.get().getHomePath(), "\\", "\\\\"));
             text = StringUtil.replace(text, LOG_DIR_MACRO, StringUtil.replace(ContainerPathManager.get().getLogPath().getAbsolutePath(), "\\", "\\\\"));

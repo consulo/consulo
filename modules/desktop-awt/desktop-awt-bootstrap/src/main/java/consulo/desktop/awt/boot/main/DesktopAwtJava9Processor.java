@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.boot.main;
 
-import consulo.container.impl.classloader.Java9ModuleProcessor;
+import consulo.container.internal.plugin.classloader.Java9ModuleProcessor;
 
 import java.util.List;
 import java.util.Locale;

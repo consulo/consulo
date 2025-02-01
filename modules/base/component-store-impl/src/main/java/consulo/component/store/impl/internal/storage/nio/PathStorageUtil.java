@@ -15,7 +15,7 @@
  */
 package consulo.component.store.impl.internal.storage.nio;
 
-import consulo.component.store.impl.internal.ReadOnlyModificationException;
+import consulo.component.store.internal.ReadOnlyModificationException;
 import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.platform.LineSeparator;
 import jakarta.annotation.Nonnull;

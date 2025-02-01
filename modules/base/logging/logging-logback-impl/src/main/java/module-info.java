@@ -3,9 +3,12 @@
  * @since 2024-09-05
  */
 module consulo.logging.logback.impl {
-    requires consulo.ide.impl;
     requires consulo.logging.api;
-    requires consulo.container.impl;
+    requires consulo.container.api;
+    requires consulo.application.api;
+    requires consulo.undo.redo.api;
+
+    requires org.slf4j;
 
     requires ch.qos.logback.core;
 

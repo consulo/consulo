@@ -31,102 +31,109 @@ import java.util.function.Supplier;
  * @since 15-Sep-17
  */
 public abstract class PlatformBase extends UserDataHolderBase implements Platform {
-  private final PlatformFileSystem myFileSystem;
-  private final PlatformOperatingSystem myOperatingSystem;
-  private final PlatformJvm myJvm;
-  private final PlatformUser myUser;
-  private final String myId;
-  private final String myName;
+    private final PlatformFileSystem myFileSystem;
+    private final PlatformOperatingSystem myOperatingSystem;
+    private final PlatformJvm myJvm;
+    private final PlatformUser myUser;
+    private final String myId;
+    private final String myName;
 
-  protected PlatformBase(@Nonnull String id, @Nonnull String name, @Nonnull Map<String, String> jvmProperties) {
-    myId = id;
-    myName = name;
-    myOperatingSystem = createOS(jvmProperties);
-    myFileSystem = createFS(jvmProperties);
-    myJvm = createJVM(jvmProperties);
-    myUser = createUser(jvmProperties);
-  }
-
-  protected static Map<String, String> getSystemJvmProperties() {
-    Properties properties = System.getProperties();
-    Map<String, String> map = new LinkedHashMap<>();
-    for (Object key : properties.keySet()) {
-      if (key instanceof String keyString) {
-        map.put(keyString, properties.getProperty(keyString, ""));
-      }
-    }
-    return map;
-  }
-
-  @Nonnull
-  protected PlatformFileSystem createFS(Map<String, String> jvmProperties) {
-    return new PlatformFileSystemImpl(this, jvmProperties);
-  }
-
-  @Nonnull
-  protected PlatformOperatingSystem createOS(Map<String, String> jvmProperties) {
-    String osNameLowered = jvmProperties.get("os.name").toLowerCase(Locale.ROOT);
-    if (osNameLowered.startsWith("windows")) {
-      return createWindowsOperatingSystem(jvmProperties, System::getenv, System::getenv);
+    protected PlatformBase(@Nonnull String id, @Nonnull String name, @Nonnull Map<String, String> jvmProperties) {
+        myId = id;
+        myName = name;
+        myOperatingSystem = createOS(jvmProperties);
+        myFileSystem = createFS(jvmProperties);
+        myJvm = createJVM(jvmProperties);
+        myUser = createUser(jvmProperties);
     }
 
-    if (osNameLowered.startsWith("mac")) {
-      return new MacOperatingSystemImpl(jvmProperties, System::getenv, System::getenv);
+    protected static Map<String, String> getSystemJvmProperties() {
+        Properties properties = System.getProperties();
+        Map<String, String> map = new LinkedHashMap<>();
+        for (Object key : properties.keySet()) {
+            if (key instanceof String keyString) {
+                map.put(keyString, properties.getProperty(keyString, ""));
+            }
+        }
+        return map;
     }
 
-    return new UnixOperationSystemImpl(jvmProperties, System::getenv, System::getenv);
-  }
+    @Nonnull
+    protected PlatformFileSystem createFS(Map<String, String> jvmProperties) {
+        return new PlatformFileSystemImpl(this, jvmProperties);
+    }
 
-  @Nonnull
-  protected WindowsOperatingSystemImpl createWindowsOperatingSystem(Map<String, String> jvmProperties,
-                                                                    Function<String, String> getEnvFunc,
-                                                                    Supplier<Map<String, String>> getEnvsSup) {
-      return new LocalWindowsOperationSystemImpl(jvmProperties, getEnvFunc, getEnvsSup);
-  }
+    @Nonnull
+    protected PlatformOperatingSystem createOS(Map<String, String> jvmProperties) {
+        String osNameLowered = jvmProperties.get("os.name").toLowerCase(Locale.ROOT);
+        if (osNameLowered.startsWith("windows")) {
+            return createWindowsOperatingSystem(jvmProperties, System::getenv, System::getenv);
+        }
 
-  @Nonnull
-  protected PlatformJvm createJVM(@Nonnull Map<String, String> jvmProperties) {
-    return new PlatformJvmImpl(jvmProperties);
-  }
+        if (osNameLowered.startsWith("mac")) {
+            return createMacOperatingSystem(jvmProperties, System::getenv, System::getenv);
+        }
 
-  @Nonnull
-  protected PlatformUser createUser(Map<String, String> jvmProperties) {
-    return new PlatformUserImpl(jvmProperties);
-  }
+        return new UnixOperationSystemImpl(jvmProperties, System::getenv, System::getenv);
+    }
 
-  @Nonnull
-  @Override
-  public String getId() {
-    return myId;
-  }
+    @Nonnull
+    protected MacOperatingSystemImpl createMacOperatingSystem(Map<String, String> jvmProperties,
+                                                                      Function<String, String> getEnvFunc,
+                                                                      Supplier<Map<String, String>> getEnvsSup) {
+        return new LocalMacOperatingSystemImpl(jvmProperties, getEnvFunc, getEnvsSup);
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return myName;
-  }
+    @Nonnull
+    protected WindowsOperatingSystemImpl createWindowsOperatingSystem(Map<String, String> jvmProperties,
+                                                                      Function<String, String> getEnvFunc,
+                                                                      Supplier<Map<String, String>> getEnvsSup) {
+        return new LocalWindowsOperationSystemImpl(jvmProperties, getEnvFunc, getEnvsSup);
+    }
 
-  @Nonnull
-  @Override
-  public PlatformJvm jvm() {
-    return myJvm;
-  }
+    @Nonnull
+    protected PlatformJvm createJVM(@Nonnull Map<String, String> jvmProperties) {
+        return new PlatformJvmImpl(jvmProperties);
+    }
 
-  @Nonnull
-  @Override
-  public PlatformFileSystem fs() {
-    return myFileSystem;
-  }
+    @Nonnull
+    protected PlatformUser createUser(Map<String, String> jvmProperties) {
+        return new PlatformUserImpl(jvmProperties);
+    }
 
-  @Nonnull
-  @Override
-  public PlatformOperatingSystem os() {
-    return myOperatingSystem;
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return myId;
+    }
 
-  @Nonnull
-  @Override
-  public PlatformUser user() {
-    return myUser;
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return myName;
+    }
+
+    @Nonnull
+    @Override
+    public PlatformJvm jvm() {
+        return myJvm;
+    }
+
+    @Nonnull
+    @Override
+    public PlatformFileSystem fs() {
+        return myFileSystem;
+    }
+
+    @Nonnull
+    @Override
+    public PlatformOperatingSystem os() {
+        return myOperatingSystem;
+    }
+
+    @Nonnull
+    @Override
+    public PlatformUser user() {
+        return myUser;
+    }
 }

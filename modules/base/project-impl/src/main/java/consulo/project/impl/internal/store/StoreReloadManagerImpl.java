@@ -18,7 +18,7 @@ package consulo.project.impl.internal.store;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.component.store.impl.internal.storage.StateStorage;
+import consulo.component.store.internal.StateStorage;
 import consulo.component.store.impl.internal.storage.StateStorageBase;
 import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.disposer.Disposable;

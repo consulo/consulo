@@ -6,6 +6,7 @@ module consulo.component.store.impl {
   requires transitive consulo.component.impl;
   requires transitive consulo.virtual.file.system.api;
   requires transitive consulo.util.io;
+  requires transitive consulo.component.store.api;
 
   requires org.lz4.java;
 

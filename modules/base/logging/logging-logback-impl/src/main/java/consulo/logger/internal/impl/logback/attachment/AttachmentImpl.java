@@ -15,8 +15,8 @@
  */
 package consulo.logger.internal.impl.logback.attachment;
 
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.logging.attachment.Attachment;
+import consulo.util.io.PathUtil;
 import consulo.util.lang.ExceptionUtil;
 import jakarta.annotation.Nonnull;
 

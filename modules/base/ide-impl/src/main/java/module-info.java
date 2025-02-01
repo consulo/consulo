@@ -8,10 +8,10 @@ open module consulo.ide.impl {
   requires java.rmi;
   requires java.management;
   requires java.prefs;
+  requires java.scripting;
   requires jdk.unsupported;
 
   requires consulo.container.api;
-  requires consulo.container.impl;
   requires consulo.util.nodep;
 
   requires consulo.bootstrap;
@@ -77,7 +77,6 @@ open module consulo.ide.impl {
   requires transitive consulo.language.copyright.api;
   requires consulo.project.impl;
   requires consulo.project.ui.impl;
-  requires consulo.external.service.impl;
   requires consulo.language.code.style.ui.api;
   requires consulo.http.impl;
   requires consulo.http.adapter.httpclient4;
@@ -184,19 +183,8 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.diagram.provider;
   exports consulo.ide.impl.diff;
   exports consulo.ide.impl.eap;
-  exports consulo.ide.impl.eap.plugins;
   exports consulo.ide.impl.execution;
   exports consulo.ide.impl.execution.coverage;
-  exports consulo.ide.impl.external.api;
-  exports consulo.ide.impl.externalService;
-  exports consulo.ide.impl.externalService.impl;
-  exports consulo.ide.impl.externalService.impl.action;
-  exports consulo.ide.impl.externalService.impl.repository.history;
-  exports consulo.ide.impl.externalService.impl.statistics;
-  exports consulo.ide.impl.externalService.impl.ui;
-  exports consulo.ide.impl.externalStorage;
-  exports consulo.ide.impl.externalStorage.plugin;
-  exports consulo.ide.impl.externalStorage.storage;
   exports consulo.ide.impl.externalSystem.module.extension.impl;
   exports consulo.ide.impl.externalSystem.service.module.wizard;
   exports consulo.ide.impl.fileChooser;
@@ -306,7 +294,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.dvcs.push;
   exports consulo.ide.impl.idea.dvcs.push.ui;
   exports consulo.ide.impl.idea.dvcs.ui;
-  exports consulo.ide.impl.idea.errorreport;
   exports consulo.ide.impl.idea.execution.actions;
   exports consulo.ide.impl.idea.execution.configurations;
   exports consulo.ide.impl.idea.execution.console;
@@ -323,8 +310,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.execution.util;
   exports consulo.ide.impl.idea.execution.wsl;
   exports consulo.ide.impl.idea.extapi.psi;
-  exports consulo.ide.impl.idea.featureStatistics;
-  exports consulo.ide.impl.idea.featureStatistics.actions;
   exports consulo.ide.impl.idea.find;
   exports consulo.ide.impl.idea.find.actions;
   exports consulo.ide.impl.idea.find.editorHeaderActions;
@@ -388,7 +373,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.macro;
   exports consulo.ide.impl.idea.ide.navigationToolbar;
   exports consulo.ide.impl.idea.ide.plugins;
-  exports consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
   exports consulo.ide.impl.idea.ide.projectView;
   exports consulo.ide.impl.idea.ide.projectView.actions;
   exports consulo.ide.impl.idea.ide.projectView.impl;
@@ -397,7 +381,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.scopeView.nodes;
   exports consulo.ide.impl.idea.ide.scratch;
   exports consulo.ide.impl.idea.ide.script;
-  exports consulo.ide.impl.idea.ide.startup;
   exports consulo.ide.impl.idea.ide.structureView.impl;
   exports consulo.ide.impl.idea.ide.structureView.newStructureView;
   exports consulo.ide.impl.idea.ide.todo;
@@ -421,11 +404,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.internal.psiView.formattingblocks;
   exports consulo.ide.impl.idea.internal.statistic;
   exports consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persistence;
-  exports consulo.ide.impl.idea.internal.statistic.configurable;
-  exports consulo.ide.impl.idea.internal.statistic.ideSettings;
-  exports consulo.ide.impl.idea.internal.statistic.persistence;
-  exports consulo.ide.impl.idea.internal.statistic.tmp;
-  exports consulo.ide.impl.idea.internal.statistic.updater;
   exports consulo.ide.impl.idea.internal.tree;
   exports consulo.ide.impl.idea.internal.validation;
   exports consulo.ide.impl.idea.lang;
@@ -561,7 +539,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.ui.playback;
   exports consulo.ide.impl.idea.openapi.ui.playback.commands;
   exports consulo.ide.impl.idea.openapi.ui.popup.util;
-  exports consulo.ide.impl.idea.openapi.updateSettings.impl;
   exports consulo.ide.impl.idea.openapi.util;
   exports consulo.ide.impl.idea.openapi.util.io;
   exports consulo.ide.impl.idea.openapi.util.process;
@@ -767,9 +744,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.newProject.ui;
   exports consulo.ide.impl.packageDependencies;
   exports consulo.ide.impl.packaging.impl.run;
-  exports consulo.ide.impl.plugins;
-  exports consulo.ide.impl.plugins.pluginsAdvertisement;
-  exports consulo.ide.impl.plugins.whatsNew;
   exports consulo.ide.impl.progress.util;
   exports consulo.ide.impl.progress.util.impl;
   exports consulo.ide.impl.project;
@@ -834,8 +808,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.ui.laf;
   exports consulo.ide.impl.ui.popup;
   exports consulo.ide.impl.ui.tree.impl;
-  exports consulo.ide.impl.updateSettings;
-  exports consulo.ide.impl.updateSettings.impl;
   exports consulo.ide.impl.usage;
   exports consulo.ide.impl.util;
   exports consulo.ide.impl.vcs;
@@ -848,15 +820,10 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.wm.impl.status;
   exports consulo.ide.impl.wm.impl.welcomeScreen;
 
-  exports consulo.ide.impl.internal.localize to
-    consulo.desktop.ide.impl,
-    consulo.desktop.awt.ide.impl;
-
   exports consulo.ide.impl.project.ui.impl to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.configurable to consulo.sand.language.plugin, consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.idea.diff.actions.impl to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.idea.diff.requests to consulo.desktop.awt.ide.impl;
-  exports consulo.ide.impl.idea.openapi.diagnostic to consulo.desktop.awt.ide.impl;
 }

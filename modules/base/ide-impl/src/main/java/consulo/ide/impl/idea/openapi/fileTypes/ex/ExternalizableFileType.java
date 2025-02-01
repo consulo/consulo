@@ -21,6 +21,7 @@ import consulo.util.xml.serializer.JDOMExternalizable;
  * @author yole
  */
 public interface ExternalizableFileType extends JDOMExternalizable {
-  void markDefaultSettings();
-  boolean isModified();
+    void markDefaultSettings();
+
+    boolean isModified();
 }

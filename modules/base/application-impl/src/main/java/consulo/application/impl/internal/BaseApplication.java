@@ -27,7 +27,7 @@ import consulo.application.event.ApplicationLoadListener;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
-import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.internal.StartupProgress;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationInfo;
@@ -43,9 +43,11 @@ import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
-import consulo.component.store.impl.internal.IComponentStore;
-import consulo.component.store.impl.internal.StateStorageException;
-import consulo.component.store.impl.internal.StoreUtil;
+import consulo.component.store.internal.IComponentStore;
+import consulo.component.store.internal.StateStorageException;
+import consulo.component.store.internal.StorableComponent;
+import consulo.component.store.internal.StoreUtil;
+import consulo.component.util.BuildNumber;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -92,7 +94,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2018-05-12
  */
-public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx, ApplicationWithIntentWriteLock {
+public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx, ApplicationWithIntentWriteLock, StorableComponent {
     private class ReadAccessToken extends AccessToken {
         private final ReadMostlyRWLock.Reader myReader;
 
@@ -466,9 +468,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    protected IApplicationStore getStateStore() {
+    public IApplicationStore getStateStore() {
         return (IApplicationStore)super.getStateStore();
     }
 
@@ -494,6 +496,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     @Override
     public SemVer getVersion() {
         return myVersionValue.get();
+    }
+
+    @Nonnull
+    @Override
+    public BuildNumber getBuildNumber() {
+        return ApplicationInfo.getInstance().getBuild();
     }
 
     @Nonnull

@@ -15,7 +15,7 @@
  */
 package consulo.component.store.impl.internal.storage;
 
-import consulo.component.store.impl.internal.StateStorageException;
+import consulo.component.store.internal.StateStorageException;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.BufferExposingByteArrayOutputStream;

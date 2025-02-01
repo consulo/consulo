@@ -2,8 +2,8 @@
 package consulo.desktop.awt.internal.notification;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
-import consulo.ide.impl.idea.diagnostic.MessagePool;
+import consulo.application.internal.MessagePool;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.ui.ex.awt.AnimatedIcon.Blinking;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
@@ -23,7 +23,7 @@ class IdeErrorsIcon extends JLabel {
     Icon myUnreadIcon = !myEnableBlink ? TargetAWT.to(AllIcons.Ide.FatalError) : new Blinking(AllIcons.Ide.FatalError);
     if (state != null && state != MessagePool.State.NoErrors) {
       setIcon(state == MessagePool.State.ReadErrors ? TargetAWT.to(AllIcons.Ide.FatalError_read): myUnreadIcon);
-      setToolTipText(DiagnosticBundle.message("error.notification.tooltip"));
+      setToolTipText(ExternalServiceLocalize.errorNotificationTooltip().get());
       if (!myEnableBlink) {
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       }

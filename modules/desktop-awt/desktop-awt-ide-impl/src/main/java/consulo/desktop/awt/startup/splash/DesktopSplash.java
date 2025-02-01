@@ -15,8 +15,7 @@
  */
 package consulo.desktop.awt.startup.splash;
 
-import consulo.application.impl.internal.start.StartupProgress;
-import consulo.application.util.SystemInfo;
+import consulo.application.internal.StartupProgress;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.ScreenUtil;

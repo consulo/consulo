@@ -16,7 +16,7 @@
 package consulo.proxy.advanced;
 
 import consulo.container.classloader.PluginClassLoader;
-import consulo.container.impl.PluginHolderModificator;
+import consulo.container.internal.plugin.PluginHolderModificator;
 import consulo.util.collection.ArrayUtil;
 
 import jakarta.annotation.Nonnull;

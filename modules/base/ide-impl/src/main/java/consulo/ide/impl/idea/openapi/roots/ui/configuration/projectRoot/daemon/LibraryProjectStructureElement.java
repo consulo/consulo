@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibraryC
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.localize.LocalizeValue;

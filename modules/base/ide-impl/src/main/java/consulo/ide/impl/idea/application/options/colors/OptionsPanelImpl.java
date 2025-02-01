@@ -20,7 +20,7 @@ import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.SearchableConfigurable;
-import consulo.ide.setting.Settings;
+import consulo.configurable.Settings;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Wrapper;

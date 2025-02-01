@@ -18,7 +18,7 @@ package consulo.logger.internal.impl.logback;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.LoggingEvent;
-import consulo.application.util.logging.IdeaLoggingEvent;
+import consulo.logging.internal.IdeaLoggingEvent;
 
 /**
  * @author VISTALL

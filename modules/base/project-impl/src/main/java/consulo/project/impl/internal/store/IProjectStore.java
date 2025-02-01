@@ -17,8 +17,8 @@ package consulo.project.impl.internal.store;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.component.store.impl.internal.IComponentStore;
-import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.internal.IComponentStore;
+import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.virtualFileSystem.VirtualFile;
 

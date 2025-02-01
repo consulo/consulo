@@ -15,7 +15,7 @@
  */
 package consulo.application.impl.internal;
 
-import consulo.container.impl.securityManager.impl.ConsuloSecurityManager;
+import consulo.container.internal.ConsuloSecurityManager;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
