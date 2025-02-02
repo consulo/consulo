@@ -57,12 +57,6 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
 
   @Nonnull
   @Override
-  public Image getIcon() {
-    return AllIcons.General.ProjectTab;
-  }
-
-  @Nonnull
-  @Override
   public SelectInTarget createSelectInTarget() {
     return new ProjectPaneSelectInTarget(myProject);
   }

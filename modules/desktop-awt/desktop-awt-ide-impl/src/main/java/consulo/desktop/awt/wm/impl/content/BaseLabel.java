@@ -32,12 +32,10 @@ public class BaseLabel extends JLabel {
 
     private Color myActiveFg;
     private Color myPassiveFg;
-    private boolean myBold;
 
-    public BaseLabel(DesktopToolWindowContentUi ui, boolean bold) {
+    public BaseLabel(DesktopToolWindowContentUi ui) {
         myUi = ui;
         setOpaque(false);
-        myBold = bold;
 
         DataManager.registerDataProvider(this, dataId -> {
             if (dataId == Content.KEY) {
@@ -57,12 +55,7 @@ public class BaseLabel extends JLabel {
 
     @Override
     public Font getFont() {
-        Font f = UIUtil.getLabelFont();
-        if (myBold) {
-            f = f.deriveFont(Font.BOLD);
-        }
-
-        return f;
+        return UIUtil.getLabelFont();
     }
 
     public void setActiveFg(final Color fg) {
@@ -78,30 +71,18 @@ public class BaseLabel extends JLabel {
     protected void paintComponent(final Graphics g) {
         final Color fore = myUi.myWindow.isActive() ? myActiveFg : myPassiveFg;
         setForeground(fore);
-        super.paintComponent(_getGraphics((Graphics2D) g));
+        super.paintComponent(g);
     }
 
-    protected Graphics _getGraphics(Graphics2D g) {
-        return g;
-    }
-
-    protected Color getActiveFg(boolean selected) {
-        return myActiveFg;
-    }
-
-    protected Color getPassiveFg(boolean selected) {
-        return myPassiveFg;
-    }
-
-    protected void updateTextAndIcon(Content content, boolean isSelected) {
+    protected void updateTextAndIcon(Content content) {
         if (content == null) {
             setText(null);
             setIcon(null);
         }
         else {
             setText(content.getDisplayName());
-            setActiveFg(getActiveFg(isSelected));
-            setPassiveFg(getPassiveFg(isSelected));
+            setActiveFg(myActiveFg);
+            setPassiveFg(myPassiveFg);
 
             setToolTipText(content.getDescription());
 
@@ -112,8 +93,6 @@ public class BaseLabel extends JLabel {
             else {
                 setIcon(null);
             }
-
-            myBold = false; //isSelected;
         }
     }
 

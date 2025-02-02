@@ -79,7 +79,7 @@ public class ContentComboLabel extends BaseLabel {
   private final ComboContentLayout myLayout;
 
   public ContentComboLabel(ComboContentLayout layout) {
-    super(layout.myUi, true);
+    super(layout.myUi);
     myLayout = layout;
     addMouseListener(new MouseAdapter(){});
 
@@ -114,7 +114,7 @@ public class ContentComboLabel extends BaseLabel {
       setBorder(null);
     }
 
-    updateTextAndIcon(myUi.myManager.getSelectedContent(), true);
+    updateTextAndIcon(myUi.myManager.getSelectedContent());
   }
 
   @Override

@@ -44,10 +44,4 @@ public class ResourcesScope extends NamedScope {
       }
     });
   }
-
-  @Nonnull
-  @Override
-  public Image getIconForProjectView() {
-    return createOffsetIcon();
-  }
 }

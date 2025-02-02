@@ -11,6 +11,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -215,7 +216,7 @@ class ContentTabLabel extends BaseLabel {
     }
 
     ContentTabLabel(@Nonnull Content content, @Nonnull TabContentLayout layout) {
-        super(layout.myUi, false);
+        super(layout.myUi);
         myLayout = layout;
         myContent = content;
 
@@ -288,7 +289,7 @@ class ContentTabLabel extends BaseLabel {
             setBorder(null);
         }
 
-        updateTextAndIcon(myContent, isSelected());
+        updateTextAndIcon(myContent);
     }
 
     @Override
@@ -340,6 +341,7 @@ class ContentTabLabel extends BaseLabel {
         }
     }
 
+    @RequiredUIAccess
     @Override
     protected void paintComponent(final Graphics g) {
         super.paintComponent(g);

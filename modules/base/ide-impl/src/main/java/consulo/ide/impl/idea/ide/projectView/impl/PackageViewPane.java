@@ -78,12 +78,6 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     return IdeLocalize.titlePackages().get();
   }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.CopyOfFolder;
-  }
-
   @Override
   @Nonnull
   public String getId() {

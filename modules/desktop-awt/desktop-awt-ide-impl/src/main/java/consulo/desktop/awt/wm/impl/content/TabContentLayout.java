@@ -69,7 +69,7 @@ class TabContentLayout extends ContentLayout {
     public void init() {
         reset();
 
-        myIdLabel = new BaseLabel(myUi, false);
+        myIdLabel = new BaseLabel(myUi);
 
         for (int i = 0; i < myUi.myManager.getContentCount(); i++) {
             contentAdded(new ContentManagerEvent(this, myUi.myManager.getContent(i), i));

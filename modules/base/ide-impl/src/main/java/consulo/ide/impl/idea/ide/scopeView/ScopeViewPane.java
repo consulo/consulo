@@ -135,12 +135,6 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     return IdeBundle.message("scope.view.title");
   }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Ide.LocalScope;
-  }
-
   @Override
   @Nonnull
   public String getId() {
@@ -182,19 +176,6 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   public String getPresentableSubIdName(@Nonnull String subId) {
     NamedScopeFilter filter = getFilter(subId);
     return filter == null ? getTitle() : filter.getScope().getPresentableName().getValue();
-  }
-
-  @Nonnull
-  @Override
-  public Image getPresentableSubIdIcon(@Nonnull String subId) {
-    NamedScopeFilter filter = getFilter(subId);
-    if (filter != null) {
-      NamedScope scope = filter.getScope();
-      return scope.getIconForProjectView();
-    }
-    else {
-      return getIcon();
-    }
   }
 
   @Override

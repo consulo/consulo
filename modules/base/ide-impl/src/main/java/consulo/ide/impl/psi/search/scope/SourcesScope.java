@@ -23,10 +23,7 @@ import consulo.ide.IdeBundle;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
-import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -43,11 +40,5 @@ public class SourcesScope extends NamedScope {
         return file != null && index.isInSource(file);
       }
     });
-  }
-
-  @Nonnull
-  @Override
-  public Image getIconForProjectView() {
-    return createOffsetIcon();
   }
 }

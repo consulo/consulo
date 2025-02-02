@@ -36,7 +36,7 @@ class ComboContentLayout extends ContentLayout {
   public void init() {
     reset();
 
-    myIdLabel = new BaseLabel(myUi, false);
+    myIdLabel = new BaseLabel(myUi);
     myComboLabel = new ContentComboLabel(this);
   }
 

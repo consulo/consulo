@@ -44,10 +44,4 @@ public class TestResourcesScope extends NamedScope {
       }
     });
   }
-
-  @Nonnull
-  @Override
-  public Image getIconForProjectView() {
-    return createOffsetIcon();
-  }
 }

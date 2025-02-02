@@ -18,8 +18,6 @@ package consulo.content.scope;
 import consulo.application.AllIcons;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -55,16 +53,6 @@ public class NamedScope {
   @Nonnull
   public Image getIcon() {
     return myIcon;
-  }
-
-  @Nonnull
-  public Image getIconForProjectView() {
-    return myIcon;
-  }
-
-  @Nonnull
-  protected Image createOffsetIcon() {
-    return ImageEffects.appendRight(Image.empty(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE), myIcon);
   }
 
   @Nonnull

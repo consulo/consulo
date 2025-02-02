@@ -130,9 +130,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   public abstract String getTitle();
 
   @Nonnull
-  public abstract consulo.ui.image.Image getIcon();
-
-  @Nonnull
   public abstract String getId();
 
   @Nullable
@@ -175,11 +172,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   @Nonnull
   public String getPresentableSubIdName(@Nonnull final String subId) {
     throw new IllegalStateException("should not call");
-  }
-
-  @Nonnull
-  public consulo.ui.image.Image getPresentableSubIdIcon(@Nonnull String subId) {
-    return getIcon();
   }
 
   @Nonnull

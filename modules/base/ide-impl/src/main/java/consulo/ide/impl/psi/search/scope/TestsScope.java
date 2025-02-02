@@ -22,10 +22,7 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.ide.IdeBundle;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
-import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -44,11 +41,5 @@ public class TestsScope extends NamedScope {
   @Override
   public String getDefaultColorName() {
     return "Green";
-  }
-
-  @Nonnull
-  @Override
-  public Image getIconForProjectView() {
-    return createOffsetIcon();
   }
 }

@@ -51,6 +51,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.projectView.ProjectViewEx;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.LangDataKeys;
@@ -72,7 +73,6 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
@@ -122,7 +122,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -191,39 +190,22 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     private DefaultActionGroup myActionGroup;
     private String mySavedPaneId = ProjectViewPaneImpl.ID;
     private String mySavedPaneSubId;
-    //private static final Icon COMPACT_EMPTY_MIDDLE_PACKAGES_ICON = IconLoader.getIcon("/objectBrowser/compactEmptyPackages.png");
-    //private static final Icon HIDE_EMPTY_MIDDLE_PACKAGES_ICON = IconLoader.getIcon("/objectBrowser/hideEmptyPackages.png");
-    @NonNls
+
     private static final String ELEMENT_NAVIGATOR = "navigator";
-    @NonNls
     private static final String ELEMENT_PANES = "panes";
-    @NonNls
     private static final String ELEMENT_PANE = "pane";
-    @NonNls
     private static final String ATTRIBUTE_CURRENT_VIEW = "currentView";
-    @NonNls
     private static final String ATTRIBUTE_CURRENT_SUBVIEW = "currentSubView";
-    @NonNls
     private static final String ELEMENT_FLATTEN_PACKAGES = "flattenPackages";
-    @NonNls
     private static final String ELEMENT_SHOW_MEMBERS = "showMembers";
-    @NonNls
     private static final String ELEMENT_SHOW_MODULES = "showModules";
-    @NonNls
     private static final String ELEMENT_SHOW_LIBRARY_CONTENTS = "showLibraryContents";
-    @NonNls
     private static final String ELEMENT_HIDE_EMPTY_PACKAGES = "hideEmptyPackages";
-    @NonNls
     private static final String ELEMENT_ABBREVIATE_PACKAGE_NAMES = "abbreviatePackageNames";
-    @NonNls
     private static final String ELEMENT_AUTOSCROLL_TO_SOURCE = "autoscrollToSource";
-    @NonNls
     private static final String ELEMENT_AUTOSCROLL_FROM_SOURCE = "autoscrollFromSource";
-    @NonNls
     private static final String ELEMENT_SORT_BY_TYPE = "sortByType";
-    @NonNls
     private static final String ELEMENT_FOLDERS_ALWAYS_ON_TOP = "foldersAlwaysOnTop";
-    @NonNls
     private static final String ELEMENT_MANUAL_ORDER = "manualOrder";
 
     private static final String ATTRIBUTE_ID = "id";
@@ -375,7 +357,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         public void update(@Nonnull AnActionEvent e) {
             AbstractProjectViewPane pane = getProjectViewPaneById(myId);
             e.getPresentation().setText(mySubId != null ? pane.getPresentableSubIdName(mySubId) : pane.getTitle());
-            e.getPresentation().setIcon(mySubId != null ? pane.getPresentableSubIdIcon(mySubId) : pane.getIcon());
         }
 
         @RequiredUIAccess
@@ -496,9 +477,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             content.putUserData(ID_KEY, id);
             content.putUserData(SUB_ID_KEY, subId);
             content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
-            Image icon = subId != null ? newPane.getPresentableSubIdIcon(subId) : newPane.getIcon();
-            content.setIcon(icon);
-            content.setPopupIcon(subId != null ? AllIcons.General.Bullet : newPane.getIcon());
             content.setPreferredFocusedComponent(() -> {
                 final AbstractProjectViewPane current = getCurrentProjectViewPane();
                 return current != null ? current.getComponentToFocus() : null;
