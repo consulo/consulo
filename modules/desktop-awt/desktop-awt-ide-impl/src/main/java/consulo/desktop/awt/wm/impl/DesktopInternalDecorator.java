@@ -52,7 +52,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.*;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -179,7 +178,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
      */
     @Override
     public void apply(@Nonnull WindowInfo info) {
-        if (Comparing.equal(myInfo, info) || myProject == null || myProject.isDisposed()) {
+        if (myProject == null || myProject.isDisposed()) {
             return;
         }
         myInfo = (WindowInfoImpl) info;
