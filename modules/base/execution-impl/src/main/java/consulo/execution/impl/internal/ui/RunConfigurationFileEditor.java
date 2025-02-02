@@ -20,6 +20,8 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
+import java.util.Map;
+
 /**
  * @author VISTALL
  * @since 19/12/2021
@@ -27,6 +29,13 @@ import jakarta.annotation.Nonnull;
 public class RunConfigurationFileEditor extends ConfigurableFileEditor<RunConfigurable> {
     public RunConfigurationFileEditor(Project project, VirtualFile file) {
         super(project, file);
+    }
+
+    @Override
+    public void onUpdateRequestParams(@Nonnull Map<String, String> params) {
+        if (myConfigurable != null) {
+            myProject.getUIAccess().give(() -> myConfigurable.selectFromManager());
+        }
     }
 
     @Nonnull

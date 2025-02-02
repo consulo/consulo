@@ -137,6 +137,7 @@ public class RunConfigurable extends BaseConfigurable {
     private ToolbarDecorator myToolbarDecorator;
     private boolean isFolderCreating;
     private RunConfigurable.MyToolbarAddAction myAddAction = new MyToolbarAddAction();
+    private RunManagerImpl myRunManager;
 
     public RunConfigurable(final Project project) {
         this(project, null, TitlelessDecorator.NOTHING);
@@ -146,6 +147,7 @@ public class RunConfigurable extends BaseConfigurable {
         myProject = project;
         myRunDialog = runDialog;
         myTitlelessDecorator = titlelessDecorator;
+        myRunManager = (RunManagerImpl) RunManager.getInstance(myProject);
     }
 
     @Override
@@ -214,7 +216,7 @@ public class RunConfigurable extends BaseConfigurable {
                         setIcon(configFactory.getIcon());
                     }
                     else {
-                        final RunManagerImpl runManager = getRunManager();
+                        final RunManagerImpl runManager = myRunManager;
                         RunnerAndConfigurationSettings configuration = null;
                         String name = null;
                         if (userObject instanceof SingleConfigurationConfigurable) {
@@ -255,7 +257,7 @@ public class RunConfigurable extends BaseConfigurable {
                 }
             }
         });
-        final RunManagerEx manager = getRunManager();
+        final RunManagerEx manager = myRunManager;
         final List<ConfigurationType> factories = manager.getConfigurationFactories();
         for (ConfigurationType type : factories) {
             final List<RunnerAndConfigurationSettings> configurations = manager.getConfigurationSettingsList(type);
@@ -351,32 +353,37 @@ public class RunConfigurable extends BaseConfigurable {
                 return;
             }
 
-            myTree.requestFocusInWindow();
-            final RunnerAndConfigurationSettings settings = manager.getSelectedConfiguration();
-            if (settings != null) {
-                final Enumeration enumeration = myRoot.breadthFirstEnumeration();
-                while (enumeration.hasMoreElements()) {
-                    final DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
-                    final Object userObject = node.getUserObject();
-                    if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigurationSettings) {
-                        final ConfigurationType configurationType = settings.getType();
-                        if (configurationType != null &&
-                            Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getType().getId(), configurationType.getId()) &&
-                            Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getName(), settings.getName())) {
-                            TreeUtil.selectInTree(node, true, myTree);
-                            return;
-                        }
-                    }
-                }
-            }
-            else {
-                mySelectedConfigurable = null;
-            }
-            //TreeUtil.selectInTree(defaults, true, myTree);
+            selectFromManager();
+
             drawPressAddButtonMessage(null);
         });
         sortTopLevelBranches();
         ((DefaultTreeModel) myTree.getModel()).reload();
+    }
+
+    @RequiredUIAccess
+    public void selectFromManager() {
+        myTree.requestFocusInWindow();
+        final RunnerAndConfigurationSettings settings = myRunManager.getSelectedConfiguration();
+        if (settings != null) {
+            final Enumeration enumeration = myRoot.breadthFirstEnumeration();
+            while (enumeration.hasMoreElements()) {
+                final DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
+                final Object userObject = node.getUserObject();
+                if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigurationSettings) {
+                    final ConfigurationType configurationType = settings.getType();
+                    if (configurationType != null &&
+                        Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getType().getId(), configurationType.getId()) &&
+                        Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getName(), settings.getName())) {
+                        TreeUtil.selectInTree(node, true, myTree);
+                        return;
+                    }
+                }
+            }
+        }
+        else {
+            mySelectedConfigurable = null;
+        }
     }
 
     private boolean selectConfiguration(@Nonnull RunConfiguration configuration) {
@@ -683,8 +690,7 @@ public class RunConfigurable extends BaseConfigurable {
     @RequiredUIAccess
     @Override
     public void reset() {
-        final RunManagerEx manager = getRunManager();
-        final RunManagerConfig config = manager.getConfig();
+        final RunManagerConfig config = myRunManager.getConfig();
         myRecentsLimit.setText(Integer.toString(config.getRecentsLimit()));
         myConfirmation.setSelected(config.isRestartRequiresConfirmation());
 
@@ -704,7 +710,7 @@ public class RunConfigurable extends BaseConfigurable {
     public void apply() throws ConfigurationException {
         updateActiveConfigurationFromSelected();
 
-        final RunManagerImpl manager = getRunManager();
+        final RunManagerImpl manager = myRunManager;
         try {
             manager.fireBeginUpdate();
 
@@ -763,7 +769,7 @@ public class RunConfigurable extends BaseConfigurable {
         if (mySelectedConfigurable != null && mySelectedConfigurable instanceof SingleConfigurationConfigurable singleConfigConfigurable) {
             RunnerAndConfigurationSettings settings = (RunnerAndConfigurationSettings) singleConfigConfigurable.getSettings();
 
-            getRunManager().setSelectedConfiguration(settings);
+            myRunManager.setSelectedConfiguration(settings);
         }
     }
 
@@ -772,7 +778,7 @@ public class RunConfigurable extends BaseConfigurable {
         int indexToMove = -1;
 
         DefaultMutableTreeNode typeNode = getConfigurationTypeNode(type);
-        final RunManagerImpl manager = getRunManager();
+        final RunManagerImpl manager = myRunManager;
         final ArrayList<RunConfigurationBean> stableConfigurations = new ArrayList<RunConfigurationBean>();
         if (typeNode != null) {
             final Set<String> names = new HashSet<String>();
@@ -902,7 +908,7 @@ public class RunConfigurable extends BaseConfigurable {
         if (super.isModified()) {
             return true;
         }
-        final RunManagerImpl runManager = getRunManager();
+        final RunManagerImpl runManager = myRunManager;
         final List<RunConfiguration> allConfigurations = runManager.getAllConfigurationsList();
         final List<RunConfiguration> currentConfigurations = new ArrayList<RunConfiguration>();
         for (int i = 0; i < myRoot.getChildCount(); i++) {
@@ -1028,10 +1034,6 @@ public class RunConfigurable extends BaseConfigurable {
         catch (ConfigurationException e) {
             return false;
         }
-    }
-
-    RunManagerImpl getRunManager() {
-        return RunManagerImpl.getInstanceImpl(myProject);
     }
 
     @Override
@@ -1175,7 +1177,7 @@ public class RunConfigurable extends BaseConfigurable {
                 node = (DefaultMutableTreeNode) node.getParent();
             }
         }
-        final RunnerAndConfigurationSettings settings = getRunManager().createConfiguration(createUniqueName(typeNode, null, CONFIGURATION, TEMPORARY_CONFIGURATION), factory);
+        final RunnerAndConfigurationSettings settings = myRunManager.createConfiguration(createUniqueName(typeNode, null, CONFIGURATION, TEMPORARY_CONFIGURATION), factory);
         factory.onNewConfigurationCreated(settings.getConfiguration());
         createNewConfiguration(settings, node);
     }
@@ -1202,7 +1204,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
         private void showAddPopup(final boolean showApplicableTypesOnly) {
-            List<ConfigurationType> allTypes = getRunManager().getConfigurationFactories(false);
+            List<ConfigurationType> allTypes = myRunManager.getConfigurationFactories(false);
             final List<ConfigurationType> configurationTypes = ConfigurationTypeSelector.getTypesToShow(myProject, showApplicableTypesOnly, allTypes);
             Collections.sort(configurationTypes, (type1, type2) -> type1.getDisplayName().compareIgnoreCase(type2.getDisplayName()));
             final int hiddenCount = allTypes.size() - configurationTypes.size();
@@ -1505,7 +1507,7 @@ public class RunConfigurable extends BaseConfigurable {
             }
             final RunnerAndConfigurationSettings originalConfiguration = configurationConfigurable.getSettings();
             if (originalConfiguration.isTemporary()) {
-                getRunManager().makeStable(originalConfiguration);
+                myRunManager.makeStable(originalConfiguration);
                 adjustOrder();
             }
             myTree.repaint();
