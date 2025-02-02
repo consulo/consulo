@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.ui.plaf2.flat.InplaceComponent;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
@@ -96,6 +97,9 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
         switch (style) {
             case BORDERLESS:
                 toAWTComponent().putClientProperty("JButton.buttonType", "borderless");
+                break;
+            case INPLACE:
+                InplaceComponent.prepareLeadingOrTrailingComponent(toAWTComponent());
                 break;
             case PRIMARY:
                 toAWTComponent().myDefaultButton = true;

@@ -21,5 +21,6 @@ package consulo.ui;
  */
 public enum ButtonStyle implements ComponentStyle {
     PRIMARY,
-    BORDERLESS
+    BORDERLESS,
+    INPLACE
 }
