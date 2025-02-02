@@ -26,7 +26,9 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.logging.LoggerLevel;
+import consulo.logging.attachment.Attachment;
 import consulo.logging.internal.IdeaLoggingEvent;
+import consulo.logging.internal.LogMessageEx;
 import consulo.platform.Platform;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
@@ -70,6 +72,11 @@ public class LogbackLogger implements Logger {
             return logger;
         }
         return myLogger;
+    }
+
+    @Override
+    public void error(String message, String details, Attachment[] attachments) {
+        error(LogMessageEx.createEvent(message, details, attachments));
     }
 
     @Override

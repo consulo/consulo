@@ -18,7 +18,6 @@ package consulo.logging;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.internal.LoggerFactoryInitializer;
 import consulo.util.nodep.ArrayUtilRt;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -27,119 +26,125 @@ import jakarta.annotation.Nullable;
  * @since 2019-08-10
  */
 public interface Logger {
-  @Nonnull
-  public static Logger getInstance(@Nonnull String category) {
-    return LoggerFactoryInitializer.getFactory().getLoggerInstance(category);
-  }
-
-  @Nonnull
-  public static Logger getInstance(@Nonnull Class clazz) {
-    return LoggerFactoryInitializer.getFactory().getLoggerInstance(clazz);
-  }
-
-  default boolean isTraceEnabled() {
-    return isDebugEnabled();
-  }
-
-  /**
-   * Log a message with 'trace' level which finer-grained than 'debug' level. Use this method instead of {@link #debug(String)} for internal
-   * events of a subsystem to avoid overwhelming the log if 'debug' level is enabled.
-   */
-  default void trace(String message) {
-    debug(message);
-  }
-
-  default void trace(Throwable message) {
-    debug(message);
-  }
-
-  public abstract boolean isDebugEnabled();
-
-  public abstract void debug(String message);
-
-  public abstract void debug(@Nullable Throwable t);
-
-  public abstract void debug(String message, @Nullable Throwable t);
-
-  default void debug(@Nonnull String message, Object... details) {
-    if (isDebugEnabled()) {
-      StringBuilder sb = new StringBuilder();
-      sb.append(message);
-      for (Object detail : details) {
-        sb.append(String.valueOf(detail));
-      }
-      debug(sb.toString());
-    }
-  }
-
-  default void info(@Nonnull Throwable t) {
-    info(t.getMessage(), t);
-  }
-
-  public abstract void info(String message);
-
-  public abstract void info(String message, @Nullable Throwable t);
-
-  default void warn(String message) {
-    warn(message, null);
-  }
-
-  default void warn(@Nonnull Throwable t) {
-    warn(t.getMessage(), t);
-  }
-
-  public abstract void warn(String message, @Nullable Throwable t);
-
-  default void error(String message) {
-    error(message, new Throwable(), ArrayUtilRt.EMPTY_STRING_ARRAY);
-  }
-
-  default void error(Object message) {
-    error(String.valueOf(message));
-  }
-
-  default void error(String message, Attachment... attachments) {
-    error(message);
-  }
-
-  default void error(String message, @Nullable Throwable throwable,  Attachment... attachments) {
-    error(message);
-  }
-
-  default void error(String message, String... details) {
-    error(message, new Throwable(), details);
-  }
-
-  default void error(String message, @Nullable Throwable e) {
-    error(message, e, ArrayUtilRt.EMPTY_STRING_ARRAY);
-  }
-
-  default void error(@Nonnull Throwable t) {
-    error(t.getMessage(), t, ArrayUtilRt.EMPTY_STRING_ARRAY);
-  }
-
-  public abstract void error(String message, @Nullable Throwable t, @Nonnull String... details);
-
-  default boolean assertTrue(boolean value, @Nullable Object message) {
-    if (!value) {
-      String resultMessage = "Assertion failed";
-      if (message != null) resultMessage += ": " + message;
-      error(resultMessage, new Throwable());
+    @Nonnull
+    public static Logger getInstance(@Nonnull String category) {
+        return LoggerFactoryInitializer.getFactory().getLoggerInstance(category);
     }
 
-    return value;
-  }
+    @Nonnull
+    public static Logger getInstance(@Nonnull Class clazz) {
+        return LoggerFactoryInitializer.getFactory().getLoggerInstance(clazz);
+    }
 
-  default boolean assertTrue(boolean value) {
-    return value || assertTrue(false, null);
-  }
+    default boolean isTraceEnabled() {
+        return isDebugEnabled();
+    }
 
-  /**
-   * Set level to logger. Not guaranteed action - some loggers can ignore method invoke
-   *
-   * WARNING: Can be called only from platform - or will throw error
-   */
-  default void setLevel(@Nonnull LoggerLevel level) throws IllegalAccessException {
-    // nothing by default
-  }
+    /**
+     * Log a message with 'trace' level which finer-grained than 'debug' level. Use this method instead of {@link #debug(String)} for internal
+     * events of a subsystem to avoid overwhelming the log if 'debug' level is enabled.
+     */
+    default void trace(String message) {
+        debug(message);
+    }
+
+    default void trace(Throwable message) {
+        debug(message);
+    }
+
+    public abstract boolean isDebugEnabled();
+
+    public abstract void debug(String message);
+
+    public abstract void debug(@Nullable Throwable t);
+
+    public abstract void debug(String message, @Nullable Throwable t);
+
+    default void debug(@Nonnull String message, Object... details) {
+        if (isDebugEnabled()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(message);
+            for (Object detail : details) {
+                sb.append(String.valueOf(detail));
+            }
+            debug(sb.toString());
+        }
+    }
+
+    default void info(@Nonnull Throwable t) {
+        info(t.getMessage(), t);
+    }
+
+    public abstract void info(String message);
+
+    public abstract void info(String message, @Nullable Throwable t);
+
+    default void warn(String message) {
+        warn(message, null);
+    }
+
+    default void warn(@Nonnull Throwable t) {
+        warn(t.getMessage(), t);
+    }
+
+    public abstract void warn(String message, @Nullable Throwable t);
+
+    default void error(String message) {
+        error(message, new Throwable(), ArrayUtilRt.EMPTY_STRING_ARRAY);
+    }
+
+    default void error(Object message) {
+        error(String.valueOf(message));
+    }
+
+    default void error(String message, final String details, final Attachment... attachments) {
+        error(message);
+    }
+
+    default void error(String message, Attachment... attachments) {
+        error(message);
+    }
+
+    default void error(String message, @Nullable Throwable throwable, Attachment... attachments) {
+        error(message);
+    }
+
+    default void error(String message, String... details) {
+        error(message, new Throwable(), details);
+    }
+
+    default void error(String message, @Nullable Throwable e) {
+        error(message, e, ArrayUtilRt.EMPTY_STRING_ARRAY);
+    }
+
+    default void error(@Nonnull Throwable t) {
+        error(t.getMessage(), t, ArrayUtilRt.EMPTY_STRING_ARRAY);
+    }
+
+    public abstract void error(String message, @Nullable Throwable t, @Nonnull String... details);
+
+    default boolean assertTrue(boolean value, @Nullable Object message) {
+        if (!value) {
+            String resultMessage = "Assertion failed";
+            if (message != null) {
+                resultMessage += ": " + message;
+            }
+            error(resultMessage, new Throwable());
+        }
+
+        return value;
+    }
+
+    default boolean assertTrue(boolean value) {
+        return value || assertTrue(false, null);
+    }
+
+    /**
+     * Set level to logger. Not guaranteed action - some loggers can ignore method invoke
+     * <p>
+     * WARNING: Can be called only from platform - or will throw error
+     */
+    default void setLevel(@Nonnull LoggerLevel level) throws IllegalAccessException {
+        // nothing by default
+    }
 }
