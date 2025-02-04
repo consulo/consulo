@@ -353,17 +353,31 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         return container;
     }
 
+    @Nonnull
+    private RuntimeException throwDisposed() {
+        checkCanceled();
+        throw new ComponentManagerDisposedException("Already disposed: " + this);
+    }
+
     protected void checkCanceled() {
     }
 
     @Nonnull
     public Collection<? extends ExtensionPoint> getExtensionPoints() {
+        if (myNewExtensionArea == null) {
+            throw throwDisposed();
+        }
+
         return myNewExtensionArea.getExtensionPoints();
     }
 
     @Nonnull
     @Override
     public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
+        if (myNewExtensionArea == null) {
+            throw throwDisposed();
+        }
+        
         return myNewExtensionArea.getExtensionPoint(extensionClass);
     }
 
