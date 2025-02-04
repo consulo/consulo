@@ -25,6 +25,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FactoryMap;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.ControlFlowException;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
@@ -45,6 +46,9 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
                 contributor.registerReferenceProviders(registrar);
             }
             catch (Throwable e) {
+                if (e instanceof ControlFlowException) {
+                    ControlFlowException.rethrow(e);
+                }
                 LOG.error(e);
             }
         }
@@ -62,6 +66,10 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
                 });
             }
             catch (Throwable e) {
+                if (e instanceof ControlFlowException) {
+                    ControlFlowException.rethrow(e);
+                }
+
                 LOG.error(e);
             }
         }
@@ -69,7 +77,7 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
     });
 
     @Override
-    public synchronized PsiReferenceRegistrarImpl getRegistrar(Language language) {
+    public PsiReferenceRegistrarImpl getRegistrar(Language language) {
         return myRegistrars.get(language);
     }
 
