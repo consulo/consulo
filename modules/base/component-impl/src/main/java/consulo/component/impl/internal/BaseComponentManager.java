@@ -314,20 +314,17 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     @Nonnull
     @Override
     public MessageBus getMessageBus() {
-        if (myDisposeState == ThreeState.YES) {
-            checkCanceled();
-            throw new ComponentManagerDisposedException("Already disposed: " + this);
+        if (myMessageBus == null) {
+            throw throwDisposed();
         }
-        assert myMessageBus != null : "Not initialized yet";
         return myMessageBus;
     }
 
     @Nullable
     @Override
     public <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
-        if (myDisposeState == ThreeState.YES) {
-            checkCanceled();
-            throw new ComponentManagerDisposedException("Already disposed: " + this);
+        if (myInjectingContainer == null) {
+            throw throwDisposed();
         }
         return getInjectingContainer().getInstanceIfCreated(clazz);
     }
@@ -335,9 +332,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     @Nonnull
     @Override
     public <T> T getInstance(@Nonnull Class<T> clazz) {
-        if (myDisposeState == ThreeState.YES) {
-            checkCanceled();
-            throw new ComponentManagerDisposedException("Already disposed: " + this);
+        if (myInjectingContainer == null) {
+            throw throwDisposed();
         }
         return getInjectingContainer().getInstance(clazz);
     }
@@ -347,8 +343,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     public InjectingContainer getInjectingContainer() {
         InjectingContainer container = myInjectingContainer;
         if (container == null || myDisposeState == ThreeState.YES) {
-            checkCanceled();
-            throw new ComponentManagerDisposedException("Already disposed: " + toString());
+            throw throwDisposed();
         }
         return container;
     }
@@ -356,7 +351,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     @Nonnull
     private RuntimeException throwDisposed() {
         checkCanceled();
-        throw new ComponentManagerDisposedException("Already disposed: " + this);
+        return new ComponentManagerDisposedException("Already disposed: " + this);
     }
 
     protected void checkCanceled() {
