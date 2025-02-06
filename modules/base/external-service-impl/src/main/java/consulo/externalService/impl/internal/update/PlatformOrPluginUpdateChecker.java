@@ -37,9 +37,6 @@ import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateChannel;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.platform.CpuArchitecture;
-import consulo.platform.Platform;
-import consulo.platform.PlatformOperatingSystem;
 import consulo.project.Project;
 import consulo.project.ui.notification.*;
 import consulo.ui.Alert;
@@ -47,7 +44,6 @@ import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
@@ -67,116 +63,12 @@ public class PlatformOrPluginUpdateChecker {
     public static final NotificationGroup ourGroup =
         new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
 
-    // windows ids
-    private static final PluginId ourWinNoJre = PluginId.getId("consulo.dist.windows.no.jre");
-    private static final PluginId ourWin = PluginId.getId("consulo.dist.windows");
-    private static final PluginId ourWin64 = PluginId.getId("consulo.dist.windows64");
-    private static final PluginId ourWinA64 = PluginId.getId("consulo.dist.windowsA64");
-
-    private static final PluginId ourWinNoJreZip = PluginId.getId("consulo.dist.windows.no.jre.zip");
-    private static final PluginId ourWinZip = PluginId.getId("consulo.dist.windows.zip");
-    private static final PluginId ourWin64Zip = PluginId.getId("consulo.dist.windows64.zip");
-    private static final PluginId ourWinA64Zip = PluginId.getId("consulo.dist.windowsA64.zip");
-
-    // windows installers
-    private static final PluginId ourWin64Installer = PluginId.getId("consulo.dist.windows64.installer");
-
-    // linux ids
-    private static final PluginId ourLinuxNoJre = PluginId.getId("consulo.dist.linux.no.jre");
-    private static final PluginId ourLinux = PluginId.getId("consulo.dist.linux");
-    private static final PluginId ourLinux64 = PluginId.getId("consulo.dist.linux64");
-    private static final PluginId ourLinuxA64 = PluginId.getId("consulo.dist.linuxA64");
-
-    // mac ids
-    private static final PluginId ourMac64NoJre = PluginId.getId("consulo.dist.mac64.no.jre");
-    private static final PluginId ourMacA64NoJre = PluginId.getId("consulo.dist.macA64.no.jre");
-    private static final PluginId ourMac64 = PluginId.getId("consulo.dist.mac64");
-    private static final PluginId ourMacA64 = PluginId.getId("consulo.dist.macA64");
-
-    private static final PluginId[] ourPlatformIds = {
-        // win no jre (tar)
-        ourWinNoJre,
-        // win x32 (tar)
-        ourWin,
-        // win x64 (tar)
-        ourWin64,
-        // win ARM64 (tar)
-        ourWinA64,
-        // linux no jre (tar)
-        ourLinuxNoJre,
-        // linux x32 (tar)
-        ourLinux,
-        // linux x64 (tar)
-        ourLinux64,
-        // linux ARM64
-        ourLinuxA64,
-        // mac x64 no jre (tar)
-        ourMac64NoJre,
-        // mac x64 with jre (tar)
-        ourMac64,
-        // win no jre (zip)
-        ourWinNoJreZip,
-        // win x32 (zip)
-        ourWinZip,
-        // win x64 (zip)
-        ourWin64Zip,
-        // win ARM64 (zip)
-        ourWinA64Zip,
-        // mac ARM64 no jre (tar)
-        ourMacA64NoJre,
-        // mac ARM64 with jre (tar)
-        ourMacA64,
-        // win 64 installer
-        ourWin64Installer
-    };
-
     private static final String ourForceJREBuild = "force.jre.build.on.update";
     private static final String ourForceJREBuildVersion = "force.jre.build.on.update.version";
 
     @Nonnull
     public static PluginId getPlatformPluginId() {
-        boolean isJreBuild = isJreBuild();
-
-        Platform platform = Platform.current();
-        PlatformOperatingSystem os = platform.os();
-        CpuArchitecture arch = platform.jvm().arch();
-
-        if (os.isWindows()) {
-            if (isJreBuild) {
-                if (arch == CpuArchitecture.AARCH64) {
-                    return ourWinA64;
-                }
-                else if (arch == CpuArchitecture.X86_64) {
-                    return ourWin64;
-                }
-                else if (arch == CpuArchitecture.X86) {
-                    return ourWin;
-                }
-            }
-
-            return ourWinNoJre;
-        }
-        else if (os.isMac()) {
-            if (arch == CpuArchitecture.AARCH64) {
-                return isJreBuild ? ourMacA64 : ourMacA64NoJre;
-            }
-            return isJreBuild ? ourMac64 : ourMac64NoJre;
-        }
-        else {
-            if (isJreBuild) {
-                if (arch == CpuArchitecture.AARCH64) {
-                    return ourLinuxA64;
-                }
-                else if (arch == CpuArchitecture.X86_64) {
-                    return ourLinux64;
-                }
-                else if (arch == CpuArchitecture.X86) {
-                    return ourLinux;
-                }
-            }
-
-            return ourLinuxNoJre;
-        }
+        return PlatformPluginId.find().getPluginId();
     }
 
     public static boolean isJreBuild() {
@@ -207,7 +99,7 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     public static boolean isPlatform(@Nonnull PluginId pluginId) {
-        return ArrayUtil.contains(pluginId, ourPlatformIds);
+        return pluginId.toString().startsWith("consulo.dist.");
     }
 
     public static boolean checkNeeded() {

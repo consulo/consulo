@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.1)
+project(LinuxFsNotifier C)
+
+set(CMAKE_C_COMPILER /usr/bin/clang)
+set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+
+if(TARGET_X64)
+    set(FILE_NAME "fsnotifier64")
+    set(CMAKE_C_COMPILER_TARGET "x86_64")
+    set(CMAKE_CXX_COMPILER_TARGET "x86_64")
+elseif(TARGET_ARM64)
+    set(FILE_NAME "fsnotifier-aarch64")
+    set(CMAKE_C_COMPILER_TARGET "arm64")
+    set(CMAKE_CXX_COMPILER_TARGET "arm64")
+elseif(TARGET_LOONG64)
+    set(FILE_NAME "fsnotifier-loong64")
+    set(CMAKE_C_COMPILER_TARGET "loongarch64")
+    set(CMAKE_CXX_COMPILER_TARGET "loongarch64")
+else()
+    message(FATAL_ERROR "Unsupported platform")
+endif()
+
+add_compile_options("-O2" "-Wall" "-Wextra" "-Wpedantic" "-std=c11" "-D_DEFAULT_SOURCE")
+
+add_executable(${FILE_NAME} fsnotifier.h inotify.c main.c util.c)
