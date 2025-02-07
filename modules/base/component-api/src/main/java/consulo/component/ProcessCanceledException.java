@@ -15,9 +15,7 @@
  */
 package consulo.component;
 
-import consulo.component.extension.ExtensionPointName;
 import consulo.util.lang.ControlFlowException;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -25,20 +23,24 @@ import jakarta.annotation.Nullable;
  * Normally this exception should not be caught, swallowed, logged or handled in any way.
  * It should be rethrown so that the infrastructure could handle it correctly.
  * This exception can happen during almost any IDE activity, e.g. any PSI query,
- * {@link ExtensionPointName#getExtensions},
- * {@link consulo.ide.impl.idea.openapi.actionSystem.AnAction#update}, etc.<p></p>
+ * {@link AnAction#update}, etc.<p></p>
  *
- * @see consulo.ide.impl.idea.openapi.progress.ProgressIndicator#checkCanceled()
+ * @see ProgressIndicator#checkCanceled()
  * @see <a href="https://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html">General Threading Rules</a>
  */
 public class ProcessCanceledException extends RuntimeException implements ControlFlowException {
-  public ProcessCanceledException() {
-  }
-
-  public ProcessCanceledException(@Nullable Throwable cause) {
-    super(cause);
-    if (cause instanceof ProcessCanceledException) {
-      throw new IllegalArgumentException("Must not self-wrap ProcessCanceledException: ", cause);
+    public ProcessCanceledException() {
     }
-  }
+
+    protected ProcessCanceledException(String message) {
+        super(message);
+    }
+
+    public ProcessCanceledException(@Nullable Throwable cause) {
+        super(cause);
+
+        if (cause instanceof ProcessCanceledException) {
+            throw new IllegalArgumentException("Must not self-wrap ProcessCanceledException: ", cause);
+        }
+    }
 }

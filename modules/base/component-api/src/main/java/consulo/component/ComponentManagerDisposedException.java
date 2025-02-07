@@ -15,13 +15,11 @@
  */
 package consulo.component;
 
-import consulo.util.lang.ControlFlowException;
-
 /**
  * @author VISTALL
  * @since 2025-01-13
  */
-public class ComponentManagerDisposedException extends RuntimeException implements ControlFlowException {
+public class ComponentManagerDisposedException extends ProcessCanceledException {
     public ComponentManagerDisposedException(String message) {
         super(message);
     }
