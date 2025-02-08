@@ -109,7 +109,7 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
     @RequiredReadAction
     private void checkInit() {
         if (myExtensions == null) {
-            myExtensions = new MultiMap<>();
+            myExtensions = MultiMap.createConcurrentSet();
             for (Module o : ModuleManager.getInstance(myProject).getModules()) {
                 for (ModuleExtension moduleExtension : ModuleRootManager.getInstance(o).getExtensions()) {
                     myExtensions.putValue(moduleExtension.getClass(), moduleExtension);
