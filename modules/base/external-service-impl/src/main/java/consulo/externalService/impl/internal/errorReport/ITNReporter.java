@@ -185,7 +185,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                 );
                 notification.setTitle(ExternalServiceLocalize.errorReportTitle().get());
                 notification.setImportant(false);
-                notification.addAction(new NotificationAction(ActionLocalize.actionCheckforupdateText().get()) {
+                notification.addAction(new NotificationAction(ActionLocalize.actionCheckforupdateText()) {
                     @RequiredUIAccess
                     @Override
                     public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {

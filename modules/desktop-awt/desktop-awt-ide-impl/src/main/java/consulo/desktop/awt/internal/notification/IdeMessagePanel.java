@@ -17,6 +17,7 @@ import consulo.project.ui.notification.NotificationAction;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.*;
 import consulo.ui.UIAccessScheduler;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.JBCurrentTheme;
@@ -190,9 +191,9 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
 
   private void showErrorNotification(@Nonnull Project project) {
     String title = ExternalServiceLocalize.errorNewNotificationTitle().get();
-    String linkText = ExternalServiceLocalize.errorNewNotificationLink().get();
     Notification notification = new Notification(ReportMessages.GROUP, AllIcons.Ide.FatalError, title, null, null, NotificationType.ERROR, null);
-    notification.addAction(new NotificationAction(linkText) {
+    notification.addAction(new NotificationAction(ExternalServiceLocalize.errorNewNotificationLink()) {
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
         notification.expire();

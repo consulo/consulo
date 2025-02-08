@@ -18,6 +18,7 @@ package consulo.desktop.util.windows.defender;
 import consulo.application.Application;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.ide.impl.idea.ide.SystemHealthMonitorImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
@@ -41,7 +42,7 @@ public class WindowsDefenderFixAction extends NotificationAction {
     private final Collection<Path> myPaths;
 
     public WindowsDefenderFixAction(Collection<Path> paths) {
-        super("Fix...");
+        super(LocalizeValue.localizeTODO("Fix..."));
         myPaths = paths;
     }
 

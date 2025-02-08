@@ -7,6 +7,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.internal.ApplicationInfo;
 import consulo.container.boot.ContainerPathManager;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.NativeFileWatcherImpl;
@@ -20,6 +21,7 @@ import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -345,21 +347,22 @@ public class WindowsDefenderChecker {
   public void configureActions(Project project, WindowsDefenderNotification notification) {
     notification.addAction(new WindowsDefenderFixAction(notification.getPaths()));
 
-    notification.addAction(new NotificationAction(DiagnosticBundle.message("virus.scanning.dont.show.again")) {
+    notification.addAction(new NotificationAction(ExternalServiceLocalize.virusScanningDontShowAgain()) {
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
         notification.expire();
         ApplicationPropertiesComponent.getInstance().setValue(IGNORE_VIRUS_CHECK, "true");
       }
     });
-    notification.addAction(new NotificationAction(DiagnosticBundle.message("virus.scanning.dont.show.again.this.project")) {
+    notification.addAction(new NotificationAction(ExternalServiceLocalize.virusScanningDontShowAgainThisProject()) {
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
         notification.expire();
         ProjectPropertiesComponent.getInstance(project).setValue(IGNORE_VIRUS_CHECK, "true");
       }
     });
-
   }
 
   public String getConfigurationInstructionsUrl() {

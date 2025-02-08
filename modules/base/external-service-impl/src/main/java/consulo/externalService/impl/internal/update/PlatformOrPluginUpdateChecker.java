@@ -176,7 +176,7 @@ public class PlatformOrPluginUpdateChecker {
                         ExternalServiceLocalize.updateAvailable().get(),
                         NotificationType.INFORMATION,
                         null);
-                    notification.addAction(new NotificationAction(ExternalServiceLocalize.updateViewUpdates().get()) {
+                    notification.addAction(new NotificationAction(ExternalServiceLocalize.updateViewUpdates()) {
                         @RequiredUIAccess
                         @Override
                         public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {

@@ -30,6 +30,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.localHistory.Label;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
@@ -577,7 +578,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                     cache.processUpdatedFiles(myUpdatedFiles, tree::setChangeLists);
 
                     Notification notification = prepareNotification(tree, someSessionWasCancelled);
-                    notification.addAction(new ViewUpdateInfoNotification(myProject, tree, "View", notification));
+                    notification.addAction(new ViewUpdateInfoNotification(myProject, tree, LocalizeValue.localizeTODO("View"), notification));
                     VcsNotifier.getInstance(myProject).notify(notification);
                 }
 

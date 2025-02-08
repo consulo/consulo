@@ -18,8 +18,8 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.VcsIgnoreManager;
 import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -132,8 +132,8 @@ public final class VcsRootProblemNotifier {
       description = makeDescription(importantUnregisteredRoots, invalidRoots);
 
       NotificationAction enableIntegration = NotificationAction
-              .create(VcsBundle.message("action.NotificationAction.VcsRootProblemNotifier.text.enable.integration"), (event, notification) -> addMappings(importantUnregisteredRoots));
-      NotificationAction ignoreAction = NotificationAction.create(VcsBundle.message("action.NotificationAction.VcsRootProblemNotifier.text.ignore"), (event, notification) -> {
+              .create(VcsLocalize.actionNotificationactionVcsrootproblemnotifierTextEnableIntegration(), (event, notification) -> addMappings(importantUnregisteredRoots));
+      NotificationAction ignoreAction = NotificationAction.create(VcsLocalize.actionNotificationactionVcsrootproblemnotifierTextIgnore(), (event, notification) -> {
         mySettings.addIgnoredUnregisteredRoots(map(importantUnregisteredRoots, rootError -> rootError.getMapping().getDirectory()));
         notification.expire();
       });
@@ -152,7 +152,7 @@ public final class VcsRootProblemNotifier {
 
   @Nonnull
   private NotificationAction getConfigureNotificationAction() {
-    return NotificationAction.create(VcsBundle.message("action.NotificationAction.VcsRootProblemNotifier.text.configure"), (event, notification) -> {
+    return NotificationAction.create(VcsLocalize.actionNotificationactionVcsrootproblemnotifierTextConfigure(), (event, notification) -> {
       if (!myProject.isDisposed()) {
         ShowSettingsUtil.getInstance().showSettingsDialog(myProject, ActionLocalize.groupVcsgroupText().get());
 

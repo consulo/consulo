@@ -24,6 +24,7 @@ import consulo.component.extension.preview.ExtensionPreviewAcceptor;
 import consulo.component.internal.PluginDescritorWithExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.fileEditor.EditorNotifications;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.PluginAdvertiser;
 import consulo.project.PluginAdvertiserExtension;
@@ -121,7 +122,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
 
         Notification notification =
             ourGroup.createNotification("Features covered by non-installed plugins are detected.", NotificationType.INFORMATION);
-        notification.addAction(new NotificationAction("Install plugins...") {
+        notification.addAction(new NotificationAction(LocalizeValue.localizeTODO("Install plugins...")) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
@@ -130,7 +131,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
                 new PluginsAdvertiserDialog(myProject, allDescriptors, new ArrayList<>(ids)).showAsync();
             }
         });
-        notification.addAction(new NotificationAction("Ignore") {
+        notification.addAction(new NotificationAction(LocalizeValue.localizeTODO("Ignore")) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {

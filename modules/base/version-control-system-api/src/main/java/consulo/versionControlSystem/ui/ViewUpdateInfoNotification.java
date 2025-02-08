@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.ui;
 
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
@@ -36,9 +37,9 @@ public class ViewUpdateInfoNotification extends NotificationAction {
 
   public ViewUpdateInfoNotification(@Nonnull Project project,
                                     @Nonnull UpdateInfoTree updateInfoTree,
-                                    @Nonnull String actionName,
+                                    @Nonnull LocalizeValue actionText,
                                     @Nonnull Notification notification) {
-    super(actionName);
+    super(actionText);
     myProject = project;
     myTree = updateInfoTree;
     Disposer.register(updateInfoTree, notification::expire);

@@ -15,39 +15,40 @@
  */
 package consulo.project.ui.notification;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 
 /**
  * @author Alexander Lobas
  */
 public abstract class NotificationAction extends DumbAwareAction {
-  @Nonnull
-  public static NotificationAction create(@Nullable String text, @RequiredUIAccess @Nonnull BiConsumer<? super AnActionEvent, ? super Notification> actionPerformed) {
-    return new NotificationAction(text) {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-        actionPerformed.accept(e, notification);
-      }
-    };
-  }
+    @Nonnull
+    public static NotificationAction create(@Nonnull LocalizeValue textValue,
+                                            @RequiredUIAccess @Nonnull BiConsumer<? super AnActionEvent, ? super Notification> consumer) {
+        return new NotificationAction(textValue) {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+                consumer.accept(e, notification);
+            }
+        };
+    }
 
-  public NotificationAction(@Nullable String text) {
-    super(text);
-  }
+    public NotificationAction(@Nonnull LocalizeValue textValue) {
+        super(textValue);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    actionPerformed(e, Notification.get(e));
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        actionPerformed(e, Notification.get(e));
+    }
 
-  @RequiredUIAccess
-  public abstract void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification);
+    @RequiredUIAccess
+    public abstract void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification);
 }
