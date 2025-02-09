@@ -15,27 +15,25 @@
  */
 package consulo.desktop.awt.startup.customize;
 
-import com.formdev.flatlaf.FlatLaf;
 import consulo.application.Application;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.desktop.awt.ui.plaf.LafManagerImpl;
-import consulo.externalService.update.UpdateSettings;
 import consulo.externalService.impl.internal.repository.RepositoryHelper;
+import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.util.DownloadUtil;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.MultiMap;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
-import consulo.util.lang.Couple;
 import jakarta.annotation.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -61,10 +59,8 @@ public class FirstStartCustomizeUtil {
     private static final int IMAGE_SIZE = 100;
 
     @RequiredUIAccess
-    public static void showDialog(boolean initLaf, boolean isDark) {
-        if (initLaf) {
-            initLaf(isDark);
-        }
+    public static void showDialog(Application application) {
+        UIAccess uiAccess = UIAccess.current();
 
         DialogWrapper downloadDialog = new DialogWrapper(false) {
             {
@@ -86,7 +82,7 @@ public class FirstStartCustomizeUtil {
             }
         };
 
-        Application.get().executeOnPooledThread(() -> {
+        application.executeOnPooledThread(() -> {
             MultiMap<String, PluginDescriptor> pluginDescriptors = new MultiMap<>();
             Map<String, PluginTemplate> predefinedTemplateSets = new TreeMap<>();
             try {
@@ -111,9 +107,12 @@ public class FirstStartCustomizeUtil {
                 LOG.warn(e);
             }
 
-            UIUtil.invokeLaterIfNeeded(() -> {
+            uiAccess.give(() -> {
                 downloadDialog.close(DialogWrapper.OK_EXIT_CODE);
-                new CustomizeIDEWizardDialog(isDark, pluginDescriptors, predefinedTemplateSets).show();
+
+                boolean dark = StyleManager.get().getCurrentStyle().isDark();
+
+                new CustomizeIDEWizardDialog(dark, pluginDescriptors, predefinedTemplateSets).showAsync();
             });
         });
         downloadDialog.showAsync();
@@ -208,16 +207,5 @@ public class FirstStartCustomizeUtil {
         int col = Integer.parseInt(rootElement.getAttributeValue("col", "0"));
         PluginTemplate template = new PluginTemplate(pluginIds, description, image, row, col);
         map.put(setName, template);
-    }
-
-    @SuppressWarnings("deprecation")
-    private static void initLaf(boolean isDark) {
-        try {
-            Couple<Class<? extends FlatLaf>> defaultLafs = LafManagerImpl.getDefaultLafs();
-            Class<? extends FlatLaf> themeClass = isDark ? defaultLafs.getSecond() : defaultLafs.getFirst();
-            UIManager.setLookAndFeel(themeClass.newInstance());
-        }
-        catch (Exception ignored) {
-        }
     }
 }

@@ -15,18 +15,19 @@
  */
 package consulo.desktop.awt.startup;
 
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.ui.FlatNativeMacLibrary;
 import com.formdev.flatlaf.ui.FlatNativeWindowsLibrary;
 import com.formdev.flatlaf.util.HiDPIUtils;
 import com.google.gson.Gson;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
-import consulo.application.internal.plugin.CompositeMessage;
-import consulo.application.internal.plugin.PluginsInitializeInfo;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
-import consulo.application.internal.StartupProgress;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.StartupProgress;
+import consulo.application.internal.plugin.CompositeMessage;
+import consulo.application.internal.plugin.PluginsInitializeInfo;
 import consulo.awt.hacking.X11Hacking;
 import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.json.JsonBaseRequestHandler;
@@ -40,6 +41,7 @@ import consulo.desktop.awt.application.impl.DesktopApplicationImpl;
 import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.plaf.LafManagerImpl;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.desktop.awt.uiOld.DesktopAWTFontRegistry;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
@@ -57,7 +59,6 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.internal.FatalErrorReporter;
-import consulo.platform.Platform;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;
 import consulo.project.internal.RecentProjectsManager;
@@ -71,6 +72,7 @@ import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -233,7 +235,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         }
 
         if (Boolean.getBoolean("consulo.first.start.testing") || newConfigFolder && !ApplicationProperties.isInSandbox()) {
-            SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(true, Platform.current().user().darkTheme()));
+            SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(app));
         }
         else {
             SystemDock.getInstance().updateMenu();
@@ -277,6 +279,17 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             );
 
             stat.dump("Startup statistics", LOG::info);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void initLaf(boolean isDark) {
+        try {
+            Couple<Class<? extends FlatLaf>> defaultLafs = LafManagerImpl.getDefaultLafs();
+            Class<? extends FlatLaf> themeClass = isDark ? defaultLafs.getSecond() : defaultLafs.getFirst();
+            UIManager.setLookAndFeel(themeClass.newInstance());
+        }
+        catch (Exception ignored) {
         }
     }
 

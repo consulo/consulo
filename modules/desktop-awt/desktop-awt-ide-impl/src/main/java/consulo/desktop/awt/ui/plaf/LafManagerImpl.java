@@ -369,7 +369,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     @RequiredUIAccess
-    private static void fireUpdate() {
+    private void fireUpdate() {
         UISettings.getInstance().fireUISettingsChanged();
 
         EditorFactory.getInstance().refreshAllEditors();
@@ -379,6 +379,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
             FileStatusManager.getInstance(openProject).fileStatusesChanged();
             DaemonCodeAnalyzer.getInstance(openProject).restart();
         }
+
         for (IdeFrame frame : WindowManagerEx.getInstanceEx().getAllProjectFrames()) {
             if (frame instanceof IdeFrameEx) {
                 ((IdeFrameEx) frame).updateView();
@@ -400,6 +401,10 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
         for (Frame frame : Frame.getFrames()) {
             updateUI(frame);
+        }
+
+        for (Window window : Window.getWindows()) {
+            updateUI(window);
         }
 
         SmoothScrollingListener.set(UISettings.getInstance());
@@ -445,7 +450,9 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         if (!window.isDisplayable()) {
             return;
         }
+
         IJSwingUtilities.updateComponentTreeUI(window);
+
         Window[] children = window.getOwnedWindows();
         for (Window aChildren : children) {
             updateUI(aChildren);

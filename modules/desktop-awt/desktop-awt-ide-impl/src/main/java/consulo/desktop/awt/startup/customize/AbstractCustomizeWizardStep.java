@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.startup.customize;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.UIUtil;
@@ -46,7 +47,7 @@ public abstract class AbstractCustomizeWizardStep extends JPanel {
         );
     }
 
-    protected static JPanel createBigButtonPanel(LayoutManager layout, final JToggleButton anchorButton, final Runnable action) {
+    protected static JPanel createBigButtonPanel(LayoutManager layout, final JToggleButton anchorButton, @RequiredUIAccess Runnable action) {
         return createBigButtonPanel(layout, anchorButton, false, action);
     }
 

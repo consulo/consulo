@@ -17,6 +17,8 @@ package consulo.desktop.awt.startup.customize;
 
 import consulo.application.CommonBundle;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.style.Style;
@@ -103,8 +105,14 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
         return "UI theme can be changed later in " + CommonBundle.settingsTitle() + " | Appearance";
     }
 
+    @RequiredUIAccess
     private void applyStyle(Style style) {
         StyleManager styleManager = StyleManager.get();
+
+        UIAccess uiAccess = UIAccess.current();
+
         styleManager.setCurrentStyle(style);
+
+        uiAccess.give(styleManager::refreshUI);
     }
 }
