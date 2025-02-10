@@ -766,10 +766,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
   @Override
   public boolean isFilePinned(final VirtualFile file) {
     final FileEditorComposite editorComposite = findFileComposite(file);
-    if (editorComposite == null) {
-      throw new IllegalArgumentException("file is not open: " + file.getPath());
-    }
-    return editorComposite.isPinned();
+    return editorComposite != null && editorComposite.isPinned();
   }
 
   @Override
