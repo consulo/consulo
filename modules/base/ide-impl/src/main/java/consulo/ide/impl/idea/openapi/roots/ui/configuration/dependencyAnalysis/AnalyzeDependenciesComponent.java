@@ -92,6 +92,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
    * @param module the module to analyze
    */
   public AnalyzeDependenciesComponent(Module module) {
+    super(() -> null);
     myModule = module;
     mySettings = AnalyzeDependenciesSettings.getInstance(myModule.getProject());
     initTree();

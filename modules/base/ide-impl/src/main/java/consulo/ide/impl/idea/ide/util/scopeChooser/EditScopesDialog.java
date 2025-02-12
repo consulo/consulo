@@ -21,6 +21,7 @@ import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.content.scope.NamedScope;
@@ -91,7 +92,7 @@ public class EditScopesDialog extends SingleConfigurableEditor {
   @DeprecationInfo("Use ShowSettingsUtil")
 
   public static EditScopesDialog showDialog(final Project project, @Nullable final String scopeToSelect, final boolean checkShared) {
-    final ScopeChooserConfigurable configurable = new ScopeChooserConfigurable(project);
+    final ScopeChooserConfigurable configurable = new ScopeChooserConfigurable(project, () -> MasterDetailsStateService.getInstance(project));
     final EditScopesDialog dialog = new EditScopesDialog(project, configurable, checkShared);
     if (scopeToSelect != null) {
       configurable.selectNodeInTree(scopeToSelect);

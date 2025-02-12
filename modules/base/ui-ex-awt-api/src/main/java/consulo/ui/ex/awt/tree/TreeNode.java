@@ -113,9 +113,13 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
     return myParent;
   }
 
+  @SuppressWarnings("unchecked")
   public final T getValue() {
     Object value = getEqualityObject();
-    return value == null ? null : (T)TreeAnchorizer.getService().retrieveElement(value);
+    if (value instanceof TreeAnchorizerValue treeAnchorizerValue) {
+        return (T) treeAnchorizerValue.extractValue();
+    }
+    return (T) value;
   }
 
   public final void setValue(T value) {
@@ -135,7 +139,7 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
    */
   private boolean setInternalValue(@Nonnull T value) {
     if (value == TREE_WRAPPER_VALUE) return true;
-    myValue = TreeAnchorizer.getService().createAnchor(value);
+    myValue = TreeAnchorizer.getService().createAnchorValue(value);
     return false;
   }
 

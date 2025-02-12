@@ -27,9 +27,11 @@ import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
+import consulo.ui.ex.awt.MasterDetailsStateService;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
@@ -43,8 +45,8 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
     public static final String ID = "project.libraries";
 
     @Inject
-    public ProjectLibrariesConfigurable(final Project project) {
-        super(project);
+    public ProjectLibrariesConfigurable(final Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
+        super(project, masterDetailsStateService);
         myLevel = LibraryTablesRegistrar.PROJECT_LEVEL;
     }
 

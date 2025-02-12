@@ -45,6 +45,7 @@ import consulo.util.lang.function.Conditions;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Provider;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
@@ -61,7 +62,8 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
 
   private Runnable myUpdate;
 
-  public CopyrightProfilesPanel(Project project) {
+  public CopyrightProfilesPanel(Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
+    super(masterDetailsStateService);
     myProject = project;
     myManager = CopyrightManager.getInstance(project);
     initTree();
@@ -69,11 +71,6 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
 
   public void setUpdate(Runnable update) {
     myUpdate = update;
-  }
-
-  @Override
-  protected MasterDetailsStateService getStateService() {
-    return MasterDetailsStateService.getInstance(myProject);
   }
 
   @Override

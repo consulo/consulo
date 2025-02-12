@@ -204,6 +204,8 @@ public class AbstractTreeUi {
   @NonNls
   private UiActivity myActivityId;
 
+  private TreeAnchorizer myTreeAnchorizer;
+
   @Override
   public String toString() {
     return "AbstractTreeUi: builder = " + myBuilder;
@@ -219,6 +221,7 @@ public class AbstractTreeUi {
     myTree = tree;
     myTreeModel = treeModel;
     myActivityMonitor = UiActivityMonitor.getInstance();
+    myTreeAnchorizer = TreeAnchorizer.getService();
     myActivityId = new UiActivity.AsyncBgOperation("TreeUi " + this);
     addModelListenerToDiagnoseAccessOutsideEdt();
     TREE_NODE_WRAPPER = AbstractTreeBuilder.createSearchingTreeNodeWrapper();
@@ -3991,9 +3994,9 @@ public class AbstractTreeUi {
       return -1;
     }
 
-    Object anchor = TreeAnchorizer.getService().createAnchor(element);
+    Object anchor = myTreeAnchorizer.createAnchor(element);
     Object o = isNodeNull(anchor) ? null : myElementToNodeMap.get(anchor);
-    TreeAnchorizer.getService().freeAnchor(anchor);
+    myTreeAnchorizer.freeAnchor(anchor);
 
     if (o instanceof List) {
       final TreePath[] paths = getTree().getSelectionPaths();
@@ -4412,7 +4415,7 @@ public class AbstractTreeUi {
   }
 
   private void createMapping(@Nonnull Object element, DefaultMutableTreeNode node) {
-    element = TreeAnchorizer.getService().createAnchor(element);
+    element = myTreeAnchorizer.createAnchor(element);
     warnMap("myElementToNodeMap: createMapping: ", myElementToNodeMap);
     if (!myElementToNodeMap.containsKey(element)) {
       myElementToNodeMap.put(element, node);
@@ -4433,7 +4436,7 @@ public class AbstractTreeUi {
   }
 
   private void removeMapping(@Nonnull Object element, DefaultMutableTreeNode node, @Nullable Object elementToPutNodeActionsFor) {
-    element = TreeAnchorizer.getService().createAnchor(element);
+    element = myTreeAnchorizer.createAnchor(element);
     warnMap("myElementToNodeMap: removeMapping: ", myElementToNodeMap);
     final Object value = myElementToNodeMap.get(element);
     if (value != null) {
@@ -4454,7 +4457,7 @@ public class AbstractTreeUi {
     }
 
     remapNodeActions(element, elementToPutNodeActionsFor);
-    TreeAnchorizer.getService().freeAnchor(element);
+    myTreeAnchorizer.freeAnchor(element);
   }
 
   private void remapNodeActions(Object element, Object elementToPutNodeActionsFor) {
@@ -4492,7 +4495,7 @@ public class AbstractTreeUi {
   }
 
   Object findNodeByElement(Object element) {
-    element = TreeAnchorizer.getService().createAnchor(element);
+    element = myTreeAnchorizer.createAnchor(element);
     try {
       if (isNodeNull(element)) return null;
       if (myElementToNodeMap.containsKey(element)) {
@@ -4504,15 +4507,15 @@ public class AbstractTreeUi {
     }
     finally {
       TREE_NODE_WRAPPER.setValue(null);
-      TreeAnchorizer.getService().freeAnchor(element);
+      myTreeAnchorizer.freeAnchor(element);
     }
   }
 
   @Nullable
   private DefaultMutableTreeNode findNodeForChildElement(@Nonnull DefaultMutableTreeNode parentNode, Object element) {
-    Object anchor = TreeAnchorizer.getService().createAnchor(element);
+    Object anchor = myTreeAnchorizer.createAnchor(element);
     final Object value = isNodeNull(anchor) ? null : myElementToNodeMap.get(anchor);
-    TreeAnchorizer.getService().freeAnchor(anchor);
+    myTreeAnchorizer.freeAnchor(anchor);
     if (value == null) {
       return null;
     }

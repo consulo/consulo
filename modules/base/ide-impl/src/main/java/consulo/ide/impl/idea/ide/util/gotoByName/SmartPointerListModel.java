@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.ui.ex.tree.TreeAnchorizer;
-import consulo.application.ApplicationManager;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.CollectionListModel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.util.collection.ContainerUtil;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -30,8 +30,10 @@ import java.util.List;
  */
 class SmartPointerListModel<T> extends AbstractListModel<T> implements ModelDiff.Model<T> {
   private final CollectionListModel<Object> myDelegate = new CollectionListModel<>();
+  private TreeAnchorizer myTreeAnchorizer;
 
   SmartPointerListModel() {
+    myTreeAnchorizer = TreeAnchorizer.getService();
     myDelegate.addListDataListener(new ListDataListener() {
       @Override
       public void intervalAdded(ListDataEvent e) {
@@ -57,34 +59,34 @@ class SmartPointerListModel<T> extends AbstractListModel<T> implements ModelDiff
 
   @Override
   public T getElementAt(int index) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     return unwrap(myDelegate.getElementAt(index));
   }
 
   private Object wrap(T element) {
-    return TreeAnchorizer.getService().createAnchor(element);
+    return myTreeAnchorizer.createAnchor(element);
   }
 
+  @SuppressWarnings("unchecked")
   private T unwrap(Object at) {
-    //noinspection unchecked
-    return (T)TreeAnchorizer.getService().retrieveElement(at);
+    return (T) myTreeAnchorizer.retrieveElement(at);
   }
 
   @Override
   public void addToModel(int idx, T element) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myDelegate.add(Math.min(idx, getSize()), wrap(element));
   }
 
   @Override
   public void addAllToModel(int index, List<? extends T> elements) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myDelegate.addAll(Math.min(index, getSize()), ContainerUtil.map(elements, this::wrap));
   }
 
   @Override
   public void removeRangeFromModel(int start, int end) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (start < getSize() && !isEmpty()) {
       myDelegate.removeRange(start, Math.min(end, getSize() - 1));
     }

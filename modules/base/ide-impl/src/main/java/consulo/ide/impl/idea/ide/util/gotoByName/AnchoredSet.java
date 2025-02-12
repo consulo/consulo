@@ -11,14 +11,16 @@ import java.util.Set;
  * @author peter
  */
 class AnchoredSet {
-  private final Set<Object> myAnchors;
+    private final Set<Object> myAnchors;
+    private final TreeAnchorizer myTreeAnchorizer;
 
-  AnchoredSet(@Nonnull Set<Object> elements) {
-    myAnchors = new LinkedHashSet<>(TreeAnchorizer.anchorizeList(elements));
-  }
+    AnchoredSet(@Nonnull Set<Object> elements) {
+        myTreeAnchorizer = TreeAnchorizer.getService();
+        myAnchors = new LinkedHashSet<>(TreeAnchorizer.anchorizeList(myTreeAnchorizer, elements));
+    }
 
-  @Nonnull
-  Set<Object> getElements() {
-    return new LinkedHashSet<>(TreeAnchorizer.retrieveList(myAnchors));
-  }
+    @Nonnull
+    Set<Object> getElements() {
+        return new LinkedHashSet<>(TreeAnchorizer.retrieveList(myTreeAnchorizer, myAnchors));
+    }
 }

@@ -44,6 +44,8 @@ public class NavBarModel {
     private boolean updated = false;
     private boolean isFixedComponent = false;
 
+    private final TreeAnchorizer myTreeAnchorizer;
+
     public NavBarModel(final Project project) {
         this(project, project.getMessageBus().syncPublisher(NavBarModelListener.class), NavBarModelBuilder.getInstance());
     }
@@ -52,6 +54,7 @@ public class NavBarModel {
         myProject = project;
         myNotificator = notificator;
         myBuilder = builder;
+        myTreeAnchorizer = TreeAnchorizer.getService();
     }
 
     public int getSelectedIndex() {
@@ -197,7 +200,7 @@ public class NavBarModel {
         final List<Object> objects = new ArrayList<>();
         boolean update = false;
         for (Object o : myModel) {
-            if (isValid(TreeAnchorizer.getService().retrieveElement(o))) {
+            if (isValid(myTreeAnchorizer.retrieveElement(o))) {
                 objects.add(o);
             }
             else {
@@ -215,15 +218,15 @@ public class NavBarModel {
     }
 
     protected void setModel(List<Object> model, boolean force) {
-        if (!model.equals(TreeAnchorizer.retrieveList(myModel))) {
-            myModel = TreeAnchorizer.anchorizeList(model);
+        if (!model.equals(TreeAnchorizer.retrieveList(myTreeAnchorizer, myModel))) {
+            myModel = TreeAnchorizer.anchorizeList(myTreeAnchorizer, model);
             myNotificator.modelChanged();
 
             mySelectedIndex = myModel.size() - 1;
             myNotificator.selectionChanged();
         }
         else if (force) {
-            myModel = TreeAnchorizer.anchorizeList(model);
+            myModel = TreeAnchorizer.anchorizeList(myTreeAnchorizer, model);
             myNotificator.modelChanged();
         }
     }
@@ -303,13 +306,13 @@ public class NavBarModel {
     }
 
     public Object get(final int index) {
-        return TreeAnchorizer.getService().retrieveElement(myModel.get(index));
+        return myTreeAnchorizer.retrieveElement(myModel.get(index));
     }
 
     public int indexOf(Object value) {
         for (int i = 0; i < myModel.size(); i++) {
             Object o = myModel.get(i);
-            if (Objects.equals(TreeAnchorizer.getService().retrieveElement(o), value)) {
+            if (Objects.equals(myTreeAnchorizer.retrieveElement(o), value)) {
                 return i;
             }
         }

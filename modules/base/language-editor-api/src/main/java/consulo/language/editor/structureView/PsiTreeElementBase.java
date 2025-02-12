@@ -10,6 +10,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.tree.NodeDescriptorProvidingKey;
 import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.ui.ex.tree.TreeAnchorizerValue;
 import consulo.ui.ex.tree.TreeHelper;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
@@ -19,10 +20,10 @@ import jakarta.annotation.Nullable;
 import java.util.*;
 
 public abstract class PsiTreeElementBase<T extends PsiElement> implements StructureViewTreeElement, ItemPresentation, NodeDescriptorProvidingKey {
-  private final Object myValue;
+  private final TreeAnchorizerValue<?> myValue;
 
   protected PsiTreeElementBase(T psiElement) {
-    myValue = psiElement == null ? null : TreeAnchorizer.getService().createAnchor(psiElement);
+    myValue = psiElement == null ? null : TreeAnchorizer.getService().createAnchorValue(psiElement);
   }
 
   @Override
@@ -38,9 +39,12 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
   }
 
   @Nullable
+  @SuppressWarnings("unchecked")
   public final T getElement() {
-    //noinspection unchecked
-    return myValue == null ? null : (T)TreeAnchorizer.getService().retrieveElement(myValue);
+     if (myValue != null) {
+         return (T) myValue.extractValue();
+     }
+    return null;
   }
 
   @Override

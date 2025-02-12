@@ -12,6 +12,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.ui.ex.tree.TreeAnchorizerValue;
 import consulo.ui.image.Image;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
@@ -38,7 +39,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
   private final int myIndex;
   private final Image myIcon;
   private final NavBarPanel myPanel;
-  private final Object myObject;
+  private final TreeAnchorizerValue<?> myObject;
   private final boolean isPopupElement;
   private final NavBarUI myUI;
 
@@ -49,7 +50,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
   public NavBarItem(NavBarPanel panel, Object object, int idx, Disposable parent, boolean inPopup) {
     myPanel = panel;
     myUI = panel.getNavBarUI();
-    myObject = object == null ? null : TreeAnchorizer.getService().createAnchor(object);
+    myObject = object == null ? null : TreeAnchorizer.getService().createAnchorValue(object);
     myIndex = idx;
     isPopupElement = idx == -1;
 
@@ -97,7 +98,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
   }
 
   public Object getObject() {
-    return myObject == null ? null : TreeAnchorizer.getService().retrieveElement(myObject);
+    return myObject == null ? null : myObject.extractValue();
   }
 
   public SimpleTextAttributes getAttributes() {

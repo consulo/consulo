@@ -54,6 +54,7 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
@@ -86,8 +87,12 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable im
     private final ArtifactEditorSettings myDefaultSettings;
 
     @Inject
-    public ArtifactsStructureConfigurable(@Nonnull Project project, @Nonnull ArtifactManager artifactManager, @Nonnull ArtifactPointerManager artifactPointerManager, ShowSettingsUtil showSettingsUtil) {
-        super(new ArtifactStructureConfigurableState());
+    public ArtifactsStructureConfigurable(@Nonnull Project project,
+                                          @Nonnull ArtifactManager artifactManager,
+                                          @Nonnull ArtifactPointerManager artifactPointerManager,
+                                          @Nonnull ShowSettingsUtil showSettingsUtil,
+                                          @Nonnull Provider<MasterDetailsStateService> masterDetailsStateService) {
+        super(masterDetailsStateService, new ArtifactStructureConfigurableState());
         myProject = project;
         myArtifactManager = artifactManager;
         myArtifactPointerManager = artifactPointerManager;
@@ -104,12 +109,6 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable im
     @Override
     public String getParentId() {
         return StandardConfigurableIds.PROJECT_GROUP;
-    }
-
-    @Nullable
-    @Override
-    protected MasterDetailsStateService getStateService() {
-        return MasterDetailsStateService.getInstance(myProject);
     }
 
     @Override

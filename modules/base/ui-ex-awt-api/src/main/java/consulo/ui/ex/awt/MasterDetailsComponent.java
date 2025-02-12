@@ -48,6 +48,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Provider;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -68,6 +69,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
     private JScrollPane myMaster;
 
+    @Nonnull
+    private final Provider<MasterDetailsStateService> myMasterDetailsStateService;
     protected final MasterDetailsState myState;
 
     protected Runnable TREE_UPDATER;
@@ -112,11 +115,12 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
     private Disposable myDisposable;
 
-    protected MasterDetailsComponent() {
-        this(new MasterDetailsState());
+    protected MasterDetailsComponent(Provider<MasterDetailsStateService> masterDetailsStateService) {
+        this(masterDetailsStateService, new MasterDetailsState());
     }
 
-    protected MasterDetailsComponent(MasterDetailsState state) {
+    protected MasterDetailsComponent(Provider<MasterDetailsStateService> masterDetailsStateService, MasterDetailsState state) {
+        myMasterDetailsStateService = masterDetailsStateService;
         myState = state;
 
         mySplitter = new OnePixelSplitter(false, .2f);
@@ -428,8 +432,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
 
     @Nullable
-    protected MasterDetailsStateService getStateService() {
-        return null;
+    protected final MasterDetailsStateService getStateService() {
+        return myMasterDetailsStateService.get();
     }
 
     protected MasterDetailsState getState() {

@@ -25,13 +25,14 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.module.Module;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.awt.MasterDetailsState;
+import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.keymap.Keymap;
@@ -40,6 +41,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Provider;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -54,11 +56,12 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
 
   protected boolean myAutoScrollEnabled = true;
 
-  protected BaseStructureConfigurable(MasterDetailsState state) {
-    super(state);
+  protected BaseStructureConfigurable(Provider<MasterDetailsStateService> masterDetailsStateService, MasterDetailsState state) {
+    super(masterDetailsStateService, state);
   }
 
-  protected BaseStructureConfigurable() {
+  protected BaseStructureConfigurable(Provider<MasterDetailsStateService> masterDetailsStateService) {
+      super(masterDetailsStateService);
   }
 
   @Override

@@ -57,6 +57,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     protected RemoteServerListConfigurable(@Nonnull RemoteServersManager manager,
                                            @Nonnull List<ServerType> displayedServerTypes,
                                            @Nullable String initialSelectedName) {
+        super(() -> null);
         myServersManager = manager;
         myDisplayedServerTypes = displayedServerTypes;
         myToReInitWholePanel = true;

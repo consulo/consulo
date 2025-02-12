@@ -28,6 +28,7 @@ import consulo.project.ui.view.ProjectViewPane;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.MasterDetailsStateService;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -49,7 +50,7 @@ public class EditScopesAction extends AnAction implements DumbAware {
     LOG.assertTrue(project != null);
     final String scopeName = ProjectView.getInstance(project).getCurrentProjectViewPane().getSubId();
     LOG.assertTrue(scopeName != null);
-    final ScopeChooserConfigurable scopeChooserConfigurable = new ScopeChooserConfigurable(project);
+    final ScopeChooserConfigurable scopeChooserConfigurable = new ScopeChooserConfigurable(project, () -> MasterDetailsStateService.getInstance(project));
     ShowSettingsUtil.getInstance()
       .editConfigurable(project, scopeChooserConfigurable, () -> scopeChooserConfigurable.selectNodeInTree(scopeName));
   }

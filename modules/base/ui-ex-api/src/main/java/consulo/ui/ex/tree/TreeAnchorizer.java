@@ -15,14 +15,14 @@
  */
 package consulo.ui.ex.tree;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.util.PerApplicationInstance;
+import consulo.application.Application;
 import consulo.util.collection.ContainerUtil;
-import jakarta.inject.Provider;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -35,32 +35,45 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public class TreeAnchorizer {
-  private static final Provider<TreeAnchorizer> ourInstance = PerApplicationInstance.of(TreeAnchorizer.class);
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Prefer injection")
+    public static TreeAnchorizer getService() {
+        return Application.get().getInstance(TreeAnchorizer.class);
+    }
 
-  @Nonnull
-  public static TreeAnchorizer getService() {
-    return ourInstance.get();
-  }
+    @Deprecated
+    @DeprecationInfo("Prefer #createAnchorValue()")
+    public Object createAnchor(Object element) {
+        return element;
+    }
 
-  public Object createAnchor(Object element) {
-    return element;
-  }
+    @Nonnull
+    public TreeAnchorizerValue<?> createAnchorValue(Object element) {
+        return new SimpleTreeAnchorizerValue(element);
+    }
 
-  @Nullable
-  public Object retrieveElement(Object anchor) {
-    return anchor;
-  }
+    @Nullable
+    public Object retrieveElement(Object anchor) {
+        if (anchor instanceof TreeAnchorizerValue treeAnchorizerValue) {
+            return treeAnchorizerValue.extractValue();
+        }
+        return anchor;
+    }
 
-  public void freeAnchor(Object element) {
-  }
+    public void freeAnchor(Object element) {
+        if (element instanceof TreeAnchorizerValue treeAnchorizerValue) {
+            treeAnchorizerValue.dispose();
+        }
+    }
 
-  @Nonnull
-  public static List<Object> anchorizeList(@Nonnull Collection<Object> elements) {
-    return ContainerUtil.map(elements, getService()::createAnchor);
-  }
+    @Nonnull
+    public static List<Object> anchorizeList(@Nonnull TreeAnchorizer treeAnchorizer, @Nonnull Collection<Object> elements) {
+        return ContainerUtil.map(elements, treeAnchorizer::createAnchor);
+    }
 
-  @Nonnull
-  public static List<Object> retrieveList(Collection<Object> anchors) {
-    return ContainerUtil.mapNotNull(anchors, getService()::retrieveElement);
-  }
+    @Nonnull
+    public static List<Object> retrieveList(@Nonnull TreeAnchorizer treeAnchorizer, Collection<Object> anchors) {
+        return ContainerUtil.mapNotNull(anchors, treeAnchorizer::retrieveElement);
+    }
 }

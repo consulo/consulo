@@ -60,6 +60,7 @@ import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -121,8 +122,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     private final ModuleManager myModuleManager;
 
     @Inject
-    public ModuleStructureConfigurable(Project project, ModuleManager manager) {
-        super();
+    public ModuleStructureConfigurable(Project project, ModuleManager manager, Provider<MasterDetailsStateService> masterDetailsStateService) {
+        super(masterDetailsStateService);
         myProject = project;
         myModuleManager = manager;
     }
@@ -133,11 +134,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         return StandardConfigurableIds.PROJECT_GROUP;
     }
 
-    @Nullable
-    @Override
-    protected MasterDetailsStateService getStateService() {
-        return MasterDetailsStateService.getInstance(myProject);
-    }
 
     @Override
     protected String getComponentStateKey() {

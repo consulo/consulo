@@ -79,7 +79,7 @@ public class ArrangementRuleAliasesListEditor extends NamedItemsListEditor<StdAr
                                              @Nonnull ArrangementColorsProvider colorsProvider,
                                              @Nonnull List<StdArrangementRuleAliasToken> items,
                                              @Nonnull Set<String> usedTokenIds) {
-    super(NAMER, FACTORY, CLONER, COMPARER, items, false);
+    super(NAMER, FACTORY, CLONER, COMPARER, items, false, () -> null);
     mySettingsManager = settingsManager;
     myColorsProvider = colorsProvider;
     myUsedTokenIds = usedTokenIds;

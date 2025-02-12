@@ -29,11 +29,13 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
 import jakarta.annotation.Nullable;
 
@@ -71,6 +73,7 @@ public class GenerateCopyrightAction extends AnAction {
     return file;
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent event) {
     DataContext context = event.getDataContext();
@@ -79,13 +82,12 @@ public class GenerateCopyrightAction extends AnAction {
     Module module = context.getData(Module.KEY);
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-
     PsiFile file = getFile(context, project);
     assert file != null;
     if (CopyrightManager.getInstance(project).getCopyrightOptions(file) == null) {
       if (Messages.showOkCancelDialog(project, "No copyright configured for current file. Would you like to edit copyright settings?", "No Copyright Available", Messages.getQuestionIcon()) ==
           DialogWrapper.OK_EXIT_CODE) {
-        ShowSettingsUtil.getInstance().showSettingsDialog(project, new CopyrightProjectConfigurable(project).getDisplayName());
+        ShowSettingsUtil.getInstance().showSettingsDialog(project, new CopyrightProjectConfigurable(project, () -> MasterDetailsStateService.getInstance(project)).getDisplayName());
       }
       else {
         return;

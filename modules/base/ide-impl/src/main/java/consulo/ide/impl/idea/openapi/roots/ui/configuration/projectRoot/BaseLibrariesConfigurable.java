@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.application.ApplicationManager;
+import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.MasterDetailsConfigurable;
-import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
@@ -46,6 +46,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Provider;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -57,7 +58,8 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
   @Nonnull
   protected String myLevel;
 
-  protected BaseLibrariesConfigurable(final @Nonnull Project project) {
+  protected BaseLibrariesConfigurable(final @Nonnull Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
+    super(masterDetailsStateService);
     myProject = project;
   }
 
@@ -77,12 +79,6 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
 
       }
     });
-  }
-
-  @Nullable
-  @Override
-  protected MasterDetailsStateService getStateService() {
-    return MasterDetailsStateService.getInstance(myProject);
   }
 
   public abstract LibraryTablePresentation getLibraryTablePresentation();

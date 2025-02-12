@@ -38,6 +38,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Provider;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -73,11 +74,23 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
   private final List<T> myOriginalItems;
   private boolean myShowIcons;
 
-  protected NamedItemsListEditor(Namer<T> namer, Supplier<T> factory, Cloner<T> cloner, HashingStrategy<T> comparer, List<T> items) {
-    this(namer, factory, cloner, comparer, items, true);
+  protected NamedItemsListEditor(Namer<T> namer,
+                                 Supplier<T> factory,
+                                 Cloner<T> cloner,
+                                 HashingStrategy<T> comparer,
+                                 List<T> items,
+                                 Provider<MasterDetailsStateService> masterDetailsStateService) {
+    this(namer, factory, cloner, comparer, items, true, masterDetailsStateService);
   }
 
-  protected NamedItemsListEditor(Namer<T> namer, Supplier<T> factory, Cloner<T> cloner, HashingStrategy<T> comparer, List<T> items, boolean initInConstructor) {
+  protected NamedItemsListEditor(Namer<T> namer,
+                                 Supplier<T> factory,
+                                 Cloner<T> cloner,
+                                 HashingStrategy<T> comparer,
+                                 List<T> items,
+                                 boolean initInConstructor,
+                                 Provider<MasterDetailsStateService> masterDetailsStateService) {
+    super(masterDetailsStateService);
     myNamer = namer;
     myFactory = factory;
     myCloner = cloner;

@@ -145,6 +145,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
 
     @Inject
     public SdkListConfigurable(ShowSettingsUtil showSettingsUtil) {
+        super(() -> null);
         myShowSettingsUtil = showSettingsUtil;
     }
 

@@ -46,6 +46,7 @@ import consulo.util.xml.serializer.annotation.Tag;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -71,8 +72,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   private final Project myProject;
 
   @Inject
-  public ScopeChooserConfigurable(final Project project) {
-    super(new ScopeChooserConfigurableState());
+  public ScopeChooserConfigurable(final Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
+    super(masterDetailsStateService, new ScopeChooserConfigurableState());
     myLocalScopesManager = NamedScopeManager.getInstance(project);
     mySharedScopesManager = DependencyValidationManager.getInstance(project);
     myProject = project;
@@ -88,11 +89,6 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   @Override
   protected Dimension getPanelPreferredSize() {
     return new Dimension(-1, -1);
-  }
-
-  @Override
-  protected MasterDetailsStateService getStateService() {
-    return MasterDetailsStateService.getInstance(myProject);
   }
 
   @Override

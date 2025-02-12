@@ -20,10 +20,12 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Inject;
-
+import consulo.ui.ex.awt.MasterDetailsStateService;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
 import javax.swing.*;
 
 @ExtensionImpl
@@ -33,9 +35,9 @@ public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.
   private final CopyrightProfilesPanel myProfilesPanel;
 
   @Inject
-  public CopyrightProjectConfigurable(Project project) {
+  public CopyrightProjectConfigurable(Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
     this.project = project;
-    myProfilesPanel = new CopyrightProfilesPanel(project);
+    myProfilesPanel = new CopyrightProfilesPanel(project, masterDetailsStateService);
   }
 
   @Nonnull
@@ -54,12 +56,7 @@ public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.
   @Override
   public JComponent createComponent() {
     myOptionsPanel = new ProjectSettingsPanel(project, myProfilesPanel);
-    myProfilesPanel.setUpdate(new Runnable() {
-      @Override
-      public void run() {
-        reloadProfiles();
-      }
-    });
+    myProfilesPanel.setUpdate(() -> reloadProfiles());
     return myOptionsPanel.getMainComponent();
   }
 

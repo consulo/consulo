@@ -15,20 +15,23 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ui.ex.tree.TreeAnchorizer;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
-import consulo.project.Project;
+import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.project.Project;
+import consulo.ui.ex.tree.SimpleTreeAnchorizerValue;
+import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.ui.ex.tree.TreeAnchorizerValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-
-import jakarta.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author peter
@@ -36,39 +39,70 @@ import jakarta.annotation.Nullable;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public class PsiTreeAnchorizer extends TreeAnchorizer {
-  @Nonnull
-  @Override
-  public Object createAnchor(@Nonnull Object element) {
-    if (element instanceof PsiElement) {
-      PsiElement psi = (PsiElement)element;
-      return ReadAction.compute(() -> {
-        if (!psi.isValid()) return psi;
-        return SmartPointerManager.getInstance(psi.getProject()).createSmartPsiElementPointer(psi);
-      });
-    }
-    return super.createAnchor(element);
-  }
+    private final Application myApplication;
 
-  @Override
-  @Nullable
-  public Object retrieveElement(@Nonnull final Object pointer) {
-    if (pointer instanceof SmartPsiElementPointer) {
-      return ReadAction.compute(() -> ((SmartPsiElementPointer)pointer).getElement());
+    @Inject
+    public PsiTreeAnchorizer(Application application) {
+        myApplication = application;
     }
 
-    return super.retrieveElement(pointer);
-  }
+    @Nonnull
+    @Override
+    public TreeAnchorizerValue<?> createAnchorValue(Object element) {
+        if (element instanceof PsiElement psiElement) {
+            return myApplication.runReadAction((Supplier<TreeAnchorizerValue<?>>) () -> {
+                if (!psiElement.isValid()) {
+                    return new SimpleTreeAnchorizerValue(psiElement);
+                }
 
-  @Override
-  public void freeAnchor(final Object element) {
-    if (element instanceof SmartPsiElementPointer) {
-      ApplicationManager.getApplication().runReadAction(() -> {
-        SmartPsiElementPointer pointer = (SmartPsiElementPointer)element;
-        Project project = pointer.getProject();
-        if (!project.isDisposed()) {
-          SmartPointerManager.getInstance(project).removePointer(pointer);
+                SmartPsiElementPointer<PsiElement> pointer = SmartPointerManager
+                    .getInstance(psiElement.getProject())
+                    .createSmartPsiElementPointer(psiElement);
+
+                return new PsiTreeAnchorizerValue(myApplication, pointer);
+            });
         }
-      });
+        return super.createAnchorValue(element);
     }
-  }
+
+    @Nonnull
+    @Override
+    public Object createAnchor(@Nonnull Object element) {
+        if (element instanceof PsiElement) {
+            PsiElement psi = (PsiElement) element;
+
+            return myApplication.runReadAction((Supplier<Object>) () -> {
+                if (!psi.isValid()) {
+                    return psi;
+                }
+                return SmartPointerManager.getInstance(psi.getProject()).createSmartPsiElementPointer(psi);
+            });
+        }
+        return super.createAnchor(element);
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nullable
+    public Object retrieveElement(@Nonnull final Object pointer) {
+        if (pointer instanceof SmartPsiElementPointer) {
+            return myApplication.runReadAction((Supplier<Object>)() -> ((SmartPsiElementPointer) pointer).getElement());
+        }
+
+        return super.retrieveElement(pointer);
+    }
+
+    @Override
+    public void freeAnchor(final Object element) {
+        if (element instanceof SmartPsiElementPointer pointer) {
+            myApplication.runReadAction(() -> {
+                Project project = pointer.getProject();
+                if (!project.isDisposed()) {
+                    SmartPointerManager.getInstance(project).removePointer(pointer);
+                }
+            });
+        } else {
+            super.freeAnchor(element);
+        }
+    }
 }
