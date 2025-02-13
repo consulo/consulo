@@ -53,6 +53,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     private final AsyncTreeModel myAsyncTreeModel;
 
     private final List<Listener> myListeners = Lists.newLockFreeCopyOnWriteList();
+    private AbstractTreeModel myFileTreeModel;
 
     public FileSystemTreeImpl(@Nullable final Project project, final FileChooserDescriptor descriptor) {
         this(project, descriptor, new Tree(), null, null, null);
@@ -70,22 +71,21 @@ public class FileSystemTreeImpl implements FileSystemTree {
     ) {
         myProject = project;
 
-        AbstractTreeModel fileTreeModel;
         if (renderer == null) {
             renderer = createFileRender();
-            fileTreeModel = new FileTreeModel(
+            myFileTreeModel = new FileTreeModel(
                 descriptor,
                 new FileRefresher(true, 3, () -> IdeaModalityState.stateForComponent(tree))
             );
         }
         else {
             FileTreeStructure treeStructure = new FileTreeStructure(project, descriptor);
-            fileTreeModel = new StructureTreeModel<>(treeStructure, this);
+            myFileTreeModel = new StructureTreeModel<>(treeStructure, this);
         }
 
         myDescriptor = descriptor;
         myTree = tree;
-        myAsyncTreeModel = new AsyncTreeModel(fileTreeModel, false, this);
+        myAsyncTreeModel = new AsyncTreeModel(myFileTreeModel, false, this);
         myTree.setModel(myAsyncTreeModel);
         myTreeBuilder = null;
 
@@ -196,6 +196,8 @@ public class FileSystemTreeImpl implements FileSystemTree {
     public void updateTree() {
         if (myTreeBuilder != null) {
             myTreeBuilder.queueUpdate();
+        } else if (myFileTreeModel instanceof FileTreeModel fileTreeModel) {
+            fileTreeModel.invalidate();
         }
     }
 
