@@ -49,7 +49,7 @@ public enum PlatformPluginId {
     LINUX_JRE_X86("consulo.dist.linux", PlatformOperatingSystem::isUnix, CpuArchitecture.X86, true),
     LINUX_JRE_X64("consulo.dist.linux64", PlatformOperatingSystem::isUnix, CpuArchitecture.X86_64, true),
     LINUX_JRE_AARCH64("consulo.dist.linux.aarch64", PlatformOperatingSystem::isUnix, CpuArchitecture.AARCH64, true),
-    LINUX_JRE_LOONGARCH64("consulo.dist.linux.loongarch64", PlatformOperatingSystem::isUnix, CpuArchitecture.LOONGARCH64, true),
+    LINUX_JRE_LOONGARCH64("consulo.dist.linux.loong64", PlatformOperatingSystem::isUnix, CpuArchitecture.LOONG64, true),
     LINUX_JRE_RISCV64("consulo.dist.linux.riscv64", PlatformOperatingSystem::isUnix, CpuArchitecture.RISCV64, true);
 
     private final PluginId myPluginId;

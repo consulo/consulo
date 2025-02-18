@@ -46,6 +46,7 @@ class PlatformJvmImpl implements PlatformJvm {
     String osArch = jvmProperties.getOrDefault("os.arch", "");
     switch (osArch) {
       case "x86_64":
+      case "x86-64":
       case "amd64":
         myCpuArchitecture = CpuArchitecture.X86_64;
         break;
@@ -58,7 +59,7 @@ class PlatformJvmImpl implements PlatformJvm {
         myCpuArchitecture = CpuArchitecture.AARCH64;
         break;
       case "loongarch64":
-        myCpuArchitecture = CpuArchitecture.LOONGARCH64;
+        myCpuArchitecture = CpuArchitecture.LOONG64;
         break;
       default:
         String name = osArch.toUpperCase(Locale.ROOT);
