@@ -11,6 +11,7 @@ import consulo.ide.impl.idea.openapi.fileChooser.tree.*;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
@@ -117,7 +118,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
                     boolean hasFocus
                 ) {
                     super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
-                    final Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
+                    final Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
                     if (userObject instanceof FileNodeDescriptor fileNodeDescriptor) {
                         String comment = fileNodeDescriptor.getComment();
                         if (comment != null) {
@@ -189,7 +190,13 @@ public class FileSystemTreeImpl implements FileSystemTree {
     @Override
     public void showHiddens(boolean showHidden) {
         myDescriptor.withShowHiddenFiles(showHidden);
-        updateTree();
+
+        UIAccess uiAccess = UIAccess.current();
+
+        if (myFileTreeModel instanceof FileTreeModel fileTreeModel) {
+            VirtualFile[] selectedFiles = getSelectedFiles();
+            fileTreeModel.invalidate().onSuccess(o -> uiAccess.give(() -> select(selectedFiles, null)));
+        }
     }
 
     @Override

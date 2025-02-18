@@ -17,23 +17,23 @@ package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.*;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
-import consulo.ui.ex.awt.tree.Identifiable;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree.Entry;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree.UpdateResult;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
-import consulo.ui.ex.util.InvokerSupplier;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.tree.AbstractTreeModel;
+import consulo.ui.ex.awt.tree.Identifiable;
+import consulo.ui.ex.util.InvokerSupplier;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.CancellablePromise;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-
+import consulo.virtualFileSystem.event.*;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
@@ -47,8 +47,8 @@ import java.util.List;
 import static consulo.application.ApplicationManager.getApplication;
 import static consulo.disposer.Disposer.register;
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemIndependentName;
-import static consulo.util.lang.StringUtil.naturalCompare;
 import static consulo.ide.impl.idea.util.ReflectionUtil.getDeclaredMethod;
+import static consulo.util.lang.StringUtil.naturalCompare;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
@@ -75,8 +75,8 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
     });
   }
 
-  public void invalidate() {
-    invoker.invoke(() -> {
+  public CancellablePromise<?> invalidate() {
+    return invoker.invoke(() -> {
       if (roots != null) {
         for (Root root : roots) {
           root.tree.invalidate();
