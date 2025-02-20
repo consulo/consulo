@@ -46,13 +46,14 @@ import java.util.List;
  */
 public class RepositoryHelper {
     @Nonnull
-    public static String buildUrlForList(@Nonnull UpdateChannel channel, @Nonnull String platformVersion) {
+    private static String buildUrlForList(@Nonnull UpdateChannel channel, @Nonnull String platformVersion, boolean addObsoletePlatformsV2) {
         return new StringBuilder().append(WebServiceApi.REPOSITORY_API.buildUrl("list"))
             .append("?platformVersion=")
             .append(platformVersion)
             .append("&channel=")
             .append(channel)
-            .append("&addObsoletePlatforms=false")
+            .append("&addObsoletePlatforms=")
+            .append(addObsoletePlatformsV2)
             .toString();
     }
 
@@ -115,19 +116,20 @@ public class RepositoryHelper {
     @Nonnull
     public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
                                                                    @Nonnull UpdateChannel channel) throws Exception {
-        return loadPluginsFromRepository(indicator, channel, null);
+        return loadPluginsFromRepository(indicator, channel, null, false);
     }
 
     @Nonnull
     public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
                                                                    @Nonnull UpdateChannel channel,
-                                                                   @Nullable String buildNumber) throws Exception {
+                                                                   @Nullable String buildNumber,
+                                                                   boolean withObsoletePlatforms) throws Exception {
         if (buildNumber == null) {
             ApplicationInfo appInfo = ApplicationInfo.getInstance();
             buildNumber = appInfo.getBuild().asString();
         }
 
-        String url = buildUrlForList(channel, buildNumber);
+        String url = buildUrlForList(channel, buildNumber, withObsoletePlatforms);
 
         if (indicator != null) {
             indicator.setText2Value(ExternalServiceLocalize.progressConnectingToPluginManager(WebServiceApi.REPOSITORY_API.buildUrl()));
