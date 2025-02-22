@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.util;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
+import consulo.application.ui.NonFocusableSetting;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.ide.impl.idea.util.containers.Convertor;
@@ -29,6 +30,7 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -38,6 +40,7 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.image.Image;
 import consulo.util.collection.FactoryMap;
@@ -63,8 +66,8 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
   protected Tree myTree;
   private DefaultTreeModel myTreeModel;
   protected JComponent[] myOptionControls;
-  private JCheckBox myCopyJavadocCheckbox;
-  private JCheckBox myInsertOverrideAnnotationCheckbox;
+  private CheckBox myCopyJavadocCheckbox;
+  private CheckBox myInsertOverrideAnnotationCheckbox;
   private final ArrayList<MemberNode> mySelectedNodes = new ArrayList<>();
 
   private final SortEmAction mySortAction;
@@ -171,13 +174,18 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     defaultExpandTree();
 
     if (myOptionControls == null) {
-      myCopyJavadocCheckbox = new NonFocusableCheckBox(IdeLocalize.checkboxCopyJavadoc().get());
+      myCopyJavadocCheckbox = CheckBox.create(IdeLocalize.checkboxCopyJavadoc());
+      NonFocusableSetting.initFocusability(myCopyJavadocCheckbox);
       if (myIsInsertOverrideVisible) {
-        myInsertOverrideAnnotationCheckbox = new NonFocusableCheckBox(IdeLocalize.checkboxInsertAtOverride().get());
-        myOptionControls = new JCheckBox[]{myCopyJavadocCheckbox, myInsertOverrideAnnotationCheckbox};
+        myInsertOverrideAnnotationCheckbox = CheckBox.create(IdeLocalize.checkboxInsertAtOverride());
+        NonFocusableSetting.initFocusability(myInsertOverrideAnnotationCheckbox);
+        myOptionControls = new JComponent[]{
+            (JComponent) TargetAWT.to(myCopyJavadocCheckbox),
+            (JComponent) TargetAWT.to(myInsertOverrideAnnotationCheckbox)}
+        ;
       }
       else {
-        myOptionControls = new JCheckBox[]{myCopyJavadocCheckbox};
+        myOptionControls = new JComponent[]{(JComponent)TargetAWT.to(myCopyJavadocCheckbox)};
       }
     }
 
@@ -275,19 +283,21 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     return actions.toArray(new Action[actions.size()]);
   }
 
+  @RequiredUIAccess
   @Override
   protected void doHelpAction() {
     if (getHelpId() == null) return;
     super.doHelpAction();
   }
 
+  @RequiredUIAccess
   protected void customizeOptionsPanel() {
     if (myInsertOverrideAnnotationCheckbox != null && myIsInsertOverrideVisible) {
       CodeStyleSettings styleSettings = CodeStyleSettingsManager.getInstance(myProject).getCurrentSettings();
-      myInsertOverrideAnnotationCheckbox.setSelected(styleSettings.INSERT_OVERRIDE_ANNOTATION);
+      myInsertOverrideAnnotationCheckbox.setValue(styleSettings.INSERT_OVERRIDE_ANNOTATION);
     }
     if (myCopyJavadocCheckbox != null) {
-      myCopyJavadocCheckbox.setSelected(PropertiesComponent.getInstance().isTrueValue(PROP_COPYJAVADOC));
+      myCopyJavadocCheckbox.setValue(PropertiesComponent.getInstance().isTrueValue(PROP_COPYJAVADOC));
     }
   }
 
@@ -488,6 +498,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     return "#consulo.ide.impl.idea.ide.util.MemberChooser";
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myTree;
@@ -524,11 +535,11 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
   }
 
   public boolean isCopyJavadoc() {
-    return myCopyJavadocCheckbox.isSelected();
+    return myCopyJavadocCheckbox.getValueOrError();
   }
 
   public boolean isInsertOverrideAnnotation() {
-    return myIsInsertOverrideVisible && myInsertOverrideAnnotationCheckbox.isSelected();
+    return myIsInsertOverrideVisible && myInsertOverrideAnnotationCheckbox.getValueOrError();
   }
 
   private boolean isAlphabeticallySorted() {
@@ -690,7 +701,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     instance.setValue(PROP_SHOWCLASSES, Boolean.toString(myShowClasses));
 
     if (myCopyJavadocCheckbox != null) {
-      instance.setValue(PROP_COPYJAVADOC, Boolean.toString(myCopyJavadocCheckbox.isSelected()));
+      instance.setValue(PROP_COPYJAVADOC, Boolean.toString(myCopyJavadocCheckbox.getValueOrError()));
     }
 
     final Container contentPane = getContentPane();
@@ -879,6 +890,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
       setShowClasses(flag);
     }
 
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
