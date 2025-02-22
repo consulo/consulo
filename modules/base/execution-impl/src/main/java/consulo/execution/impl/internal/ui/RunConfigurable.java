@@ -353,9 +353,9 @@ public class RunConfigurable extends BaseConfigurable {
                 return;
             }
 
-            selectFromManager();
-
             drawPressAddButtonMessage(null);
+
+            selectFromManager();
         });
         sortTopLevelBranches();
         ((DefaultTreeModel) myTree.getModel()).reload();
@@ -366,20 +366,7 @@ public class RunConfigurable extends BaseConfigurable {
         myTree.requestFocusInWindow();
         final RunnerAndConfigurationSettings settings = myRunManager.getSelectedConfiguration();
         if (settings != null) {
-            final Enumeration enumeration = myRoot.breadthFirstEnumeration();
-            while (enumeration.hasMoreElements()) {
-                final DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
-                final Object userObject = node.getUserObject();
-                if (userObject instanceof RunnerAndConfigurationSettingsImpl runnerAndConfigurationSettings) {
-                    final ConfigurationType configurationType = settings.getType();
-                    if (configurationType != null &&
-                        Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getType().getId(), configurationType.getId()) &&
-                        Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getName(), settings.getName())) {
-                        TreeUtil.selectInTree(node, true, myTree);
-                        return;
-                    }
-                }
-            }
+            selectConfiguration(settings.getConfiguration());
         }
         else {
             mySelectedConfigurable = null;
@@ -387,9 +374,7 @@ public class RunConfigurable extends BaseConfigurable {
     }
 
     private boolean selectConfiguration(@Nonnull RunConfiguration configuration) {
-        final Enumeration enumeration = myRoot.breadthFirstEnumeration();
-        while (enumeration.hasMoreElements()) {
-            final DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
+        DefaultMutableTreeNode child = TreeUtil.findNode(myRoot, node -> {
             Object userObject = node.getUserObject();
             if (userObject instanceof SettingsEditorConfigurable settingsEditorConfigurable) {
                 userObject = settingsEditorConfigurable.getSettings();
@@ -398,10 +383,15 @@ public class RunConfigurable extends BaseConfigurable {
                 final ConfigurationType configurationType = configuration.getType();
                 if (Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getType().getId(), configurationType.getId()) &&
                     Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getName(), configuration.getName())) {
-                    TreeUtil.selectInTree(node, true, myTree);
                     return true;
                 }
             }
+            return false;
+        });
+
+        if (child != null) {
+            TreeUtil.selectInTree(child, true, myTree);
+            return true;
         }
         return false;
     }
