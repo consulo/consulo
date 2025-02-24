@@ -305,19 +305,33 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
 
     @Override
     protected String findLibrary(String libName) {
-        if (myLibDirectory.exists()) {
-            String libFileName = System.mapLibraryName(libName);
-
-            File libFile = new File(myLibDirectory, libFileName);
-            if (libFile.exists()) {
-                return libFile.getAbsolutePath();
-            }
+        String libraryInPath = findLibraryInPath(myLibDirectory, libName);
+        if (libraryInPath != null) {
+            return libraryInPath;
         }
 
-        if (myNativeDirectory.exists()) {
-            String libFileName = System.mapLibraryName(libName);
+        libraryInPath = findLibraryInPath(myNativeDirectory, libName);
+        if (libraryInPath != null) {
+            return libraryInPath;
+        }
 
-            File libFile = new File(myNativeDirectory, libFileName);
+        return null;
+    }
+
+    private String findLibraryInPath(File path, String libName) {
+        if (!path.exists()) {
+            return null;
+        }
+
+        String libFileName = System.mapLibraryName(libName);
+
+        File libFile = new File(path, libFileName);
+        if (libFile.exists()) {
+            return libFile.getAbsolutePath();
+        }
+
+        if (libFileName.startsWith("lib")) {
+            libFile = new File(path, libFileName.substring(3));
             if (libFile.exists()) {
                 return libFile.getAbsolutePath();
             }

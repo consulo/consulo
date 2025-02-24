@@ -98,9 +98,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.formdev</groupId>
-            <artifactId>flatlaf</artifactId>
-            <classifier>no-natives</classifier>
+            <groupId>consulo.internal</groupId>
+            <artifactId>flatlaf-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.formdev</groupId>

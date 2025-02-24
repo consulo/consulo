@@ -903,6 +903,11 @@
                 <classifier>no-natives</classifier>
             </dependency>
             <dependency>
+                <groupId>consulo.internal</groupId>
+                <artifactId>flatlaf-core</artifactId>
+                <version>1.3.6</version>
+            </dependency>
+            <dependency>
                 <groupId>com.formdev</groupId>
                 <artifactId>flatlaf-intellij-themes</artifactId>
                 <version>${flatlaf.version}</version>
