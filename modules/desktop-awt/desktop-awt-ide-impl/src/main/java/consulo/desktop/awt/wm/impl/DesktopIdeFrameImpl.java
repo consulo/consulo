@@ -255,6 +255,9 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
         myJFrame.setTitle(FrameTitleUtil.buildTitle());
         myRootPane = createRootPane(actionManager, dataManager, application);
+        JRootPane rootPane = myJFrame.getRootPane();
+        // we need cpy decorate style from original root, in case frame is decorated by laf
+        myRootPane.setWindowDecorationStyle(rootPane.getWindowDecorationStyle());
         myJFrame.setRootPane(myRootPane);
         myTitlelessDecorator = TitlelessDecorator.of(myRootPane, TitlelessDecorator.MAIN_WINDOW);
         myJFrame.setBackground(UIUtil.getPanelBackground());

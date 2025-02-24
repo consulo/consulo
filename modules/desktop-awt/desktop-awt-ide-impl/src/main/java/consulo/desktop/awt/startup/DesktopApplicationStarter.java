@@ -191,8 +191,14 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         // endregion
 
         SwingUtilities.invokeLater(() -> {
-            if (myPlatform.os() instanceof UnixOperationSystem os && os.isXWindow()) {
-                X11Hacking.updateFrameClass(ApplicationStarter.getFrameClass());
+            if (myPlatform.os() instanceof UnixOperationSystem os) {
+                if (os.isXWindow()) {
+                    X11Hacking.updateFrameClass(ApplicationStarter.getFrameClass());
+                }
+
+                // enable by default since we use FlatLaf always
+                JFrame.setDefaultLookAndFeelDecorated(true);
+                JDialog.setDefaultLookAndFeelDecorated(true);
             }
         });
 
