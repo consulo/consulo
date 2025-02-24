@@ -87,7 +87,7 @@ public interface TitlelessDecorator {
 
             placeholder.putClientProperty("FlatLaf.fullWindowContent.buttonsPlaceholder", "win");
 
-            rootPanel.putClientProperty("JComponent.titleBarCaption", (Function<Point, Boolean>)  pt -> {
+            rootPanel.putClientProperty("JComponent.titleBarCaption", (Function<Point, Boolean>) pt -> {
                 return contains(placeholder, pt.x, pt.y);
             });
 
@@ -123,11 +123,12 @@ public interface TitlelessDecorator {
             myRootPane.putClientProperty("apple.awt.fullWindowContent", true);
             myRootPane.putClientProperty("apple.awt.transparentTitleBar", true);
             myRootPane.putClientProperty("apple.awt.windowTitleVisible", false);
+            myRootPane.putClientProperty("FlatLaf.macOS.windowButtonsSpacing", "medium");
         }
 
         @Override
         public void makeLeftComponentLower(JComponent component) {
-            component.setBorder(JBUI.Borders.empty(26, 0, 0, 0));
+            component.setBorder(JBUI.Borders.empty(34, 0, 0, 0));
         }
 
         @Override
