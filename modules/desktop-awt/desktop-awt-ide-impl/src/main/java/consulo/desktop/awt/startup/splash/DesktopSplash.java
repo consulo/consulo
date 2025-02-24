@@ -44,10 +44,10 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
         super(null, false);
 
         setUndecorated(true);
-        if (!Platform.current().os().isLinux()) {
-            setResizable(false);
-        }
+        setResizable(false);
         setFocusableWindowState(false);
+
+        getRootPane().setBorder(JBUI.Borders.empty());
 
         Color foreground = ApplicationProperties.isInSandbox() ? Color.WHITE : Color.BLACK;
         myLabel = new AnimatedLogoLabel(14, foreground, true, unstableScaling);

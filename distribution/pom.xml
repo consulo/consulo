@@ -309,12 +309,14 @@
         <dependency>
             <groupId>consulo.internal.sound</groupId>
             <artifactId>javazoom.jlayer</artifactId>
-            <version>3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>consulo.internal.sound</groupId>
             <artifactId>javazoom.mp3</artifactId>
-            <version>3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>flatlaf-core</artifactId>
         </dependency>
 
         <!--optional dependency-->
