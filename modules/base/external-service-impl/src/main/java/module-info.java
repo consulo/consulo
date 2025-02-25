@@ -57,4 +57,7 @@ module consulo.external.service.impl {
 
     opens consulo.externalService.impl.internal.pluginHistory to
         consulo.util.xml.serializer;
+
+    opens consulo.externalService.impl.internal.repository.api to
+        com.google.gson;
 }
