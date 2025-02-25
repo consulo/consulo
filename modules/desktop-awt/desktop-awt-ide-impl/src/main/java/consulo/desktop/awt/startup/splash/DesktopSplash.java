@@ -25,6 +25,8 @@ import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 
 import jakarta.annotation.Nullable;
 
+import javax.swing.*;
+import javax.swing.plaf.RootPaneUI;
 import java.awt.*;
 
 /**
@@ -43,11 +45,17 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
     public DesktopSplash(boolean unstableScaling) {
         super(null, false);
 
+        setRootPane(new JRootPane() {
+            @Override
+            public void updateUI() {
+                setUI(new RootPaneUI() {
+                });
+            }
+        });
+
         setUndecorated(true);
         setResizable(false);
         setFocusableWindowState(false);
-
-        getRootPane().setBorder(JBUI.Borders.empty());
 
         Color foreground = ApplicationProperties.isInSandbox() ? Color.WHITE : Color.BLACK;
         myLabel = new AnimatedLogoLabel(14, foreground, true, unstableScaling);
