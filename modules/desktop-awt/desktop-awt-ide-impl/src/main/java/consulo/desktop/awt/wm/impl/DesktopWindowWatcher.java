@@ -92,7 +92,9 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
         return;
       }
       if (!myWindow2Info.containsKey(window)) {
-        LOG.warn("Added watcher for window " + e.getNewValue());
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Added watcher for window " + e.getNewValue());
+        }
         myWindow2Info.put(window, new WindowInfo(window, true));
       }
       myFocusedWindow = window;
