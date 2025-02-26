@@ -18,6 +18,7 @@ package consulo.web.internal.ui;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
@@ -29,26 +30,30 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-19
  */
 public class WebHorizontalLayoutImpl extends VaadinComponentDelegate<WebHorizontalLayoutImpl.Vaadin> implements HorizontalLayout {
-  public class Vaadin extends com.vaadin.flow.component.orderedlayout.HorizontalLayout implements FromVaadinComponentWrapper {
+    public class Vaadin extends com.vaadin.flow.component.orderedlayout.HorizontalLayout implements FromVaadinComponentWrapper {
 
-    @Nullable
-    @Override
-    public Component toUIComponent() {
-      return WebHorizontalLayoutImpl.this;
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebHorizontalLayoutImpl.this;
+        }
     }
-  }
 
-  @Override
-  @Nonnull
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Override
+    public void addStyle(LayoutStyle style) {
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public HorizontalLayout add(@Nonnull consulo.ui.Component component) {
-    getVaadinComponent().add(TargetVaddin.to(component));
-    return this;
-  }
+    @Override
+    @Nonnull
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public HorizontalLayout add(@Nonnull consulo.ui.Component component) {
+        getVaadinComponent().add(TargetVaddin.to(component));
+        return this;
+    }
 }

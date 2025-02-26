@@ -32,7 +32,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 12/12/2021
  */
-public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutComponent implements ThreeComponentSplitLayout {
+public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutComponent<Object> implements ThreeComponentSplitLayout {
   private final SplitLayoutPosition myPosition;
 
   public DesktopSwtThreeComponentSplitLayoutImpl(SplitLayoutPosition position) {

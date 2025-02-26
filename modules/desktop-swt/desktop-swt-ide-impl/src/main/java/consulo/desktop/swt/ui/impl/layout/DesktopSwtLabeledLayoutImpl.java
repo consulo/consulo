@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtLabeledLayoutImpl extends DesktopSwtLayoutComponent implements LabeledLayout {
+public class DesktopSwtLabeledLayoutImpl extends DesktopSwtLayoutComponent<Object> implements LabeledLayout {
   private final LocalizeValue myLabel;
 
   public DesktopSwtLabeledLayoutImpl(LocalizeValue label) {

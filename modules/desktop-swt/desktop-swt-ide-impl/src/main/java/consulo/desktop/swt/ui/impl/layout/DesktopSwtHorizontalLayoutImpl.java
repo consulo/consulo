@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtHorizontalLayoutImpl extends DesktopSwtLayoutComponent implements HorizontalLayout {
+public class DesktopSwtHorizontalLayoutImpl extends DesktopSwtLayoutComponent<Object> implements HorizontalLayout {
   public DesktopSwtHorizontalLayoutImpl(int gapInPixels) {
   }
 

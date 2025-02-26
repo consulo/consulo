@@ -15,16 +15,17 @@
  */
 package consulo.desktop.swt.ui.impl.layout;
 
-import consulo.util.collection.MultiMap;
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutStyle;
+import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -34,115 +35,119 @@ import java.util.List;
  * @since 29/04/2021
  */
 public abstract class DesktopSwtLayoutComponent<LayoutData> extends SWTComponentDelegate<Composite> implements Layout {
-  private static final String ourNullMapper = "____null____";
+    private static final String ourNullMapper = "____null____";
 
-  private List<Pair<SWTComponentDelegate<?>, Object>> myComponents = new ArrayList<>();
+    private List<Pair<SWTComponentDelegate<?>, Object>> myComponents = new ArrayList<>();
 
-  private MultiMap<String, Pair<SWTComponentDelegate<?>, Object>> myMappedComponents = new MultiMap<>();
+    private MultiMap<String, Pair<SWTComponentDelegate<?>, Object>> myMappedComponents = new MultiMap<>();
 
-  @Override
-  protected Composite createSWT(Composite parent) {
-    return new Composite(parent, SWT.NONE);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void removeAll() {
-    Composite composite = toSWTComponent();
-    if (composite != null) {
-      for (Pair<SWTComponentDelegate<?>, Object> pair : myComponents) {
-        pair.getFirst().disposeSWT();
-      }
-
-      myComponents.clear();
-
-      for (Pair<SWTComponentDelegate<?>, Object> pair : myMappedComponents.values()) {
-        pair.getFirst().disposeSWT();
-      }
-
-      myMappedComponents.clear();
-    }
-  }
-
-  @Override
-  protected void initialize(Composite component) {
-    org.eclipse.swt.widgets.Layout layout = createLayout();
-    if (layout != null) {
-      component.setLayout(layout);
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 
-    for (Pair<SWTComponentDelegate<?>, Object> pair : myComponents) {
-      SWTComponentDelegate<?> comp = pair.getFirst();
-      Object value = pair.getSecond();
-
-      ((SWTComponentDelegate)comp).bind(getComposite(), convertLayoutData(value));
-
-      String k = value == null ? ourNullMapper : value.toString();
-
-      myMappedComponents.putValue(k, pair);
+    @Override
+    protected Composite createSWT(Composite parent) {
+        return new Composite(parent, SWT.NONE);
     }
 
-    myComponents.clear();
-  }
+    @RequiredUIAccess
+    @Override
+    public void removeAll() {
+        Composite composite = toSWTComponent();
+        if (composite != null) {
+            for (Pair<SWTComponentDelegate<?>, Object> pair : myComponents) {
+                pair.getFirst().disposeSWT();
+            }
 
-  @Override
-  public void setParent(@Nullable Component component) {
-    super.setParent(component);
+            myComponents.clear();
 
-    if (component != null) {
-      initialize(((SWTComponentDelegate)component).getComposite());
-    }
-  }
+            for (Pair<SWTComponentDelegate<?>, Object> pair : myMappedComponents.values()) {
+                pair.getFirst().disposeSWT();
+            }
 
-  @Override
-  public void disposeSWT() {
-    super.disposeSWT();
-
-    myComponents.addAll(myMappedComponents.values());
-
-    for (Pair<SWTComponentDelegate<?>, Object> pair : myMappedComponents.values()) {
-      pair.getFirst().disposeSWT();
-    }
-
-    myMappedComponents.clear();
-
-    for (Pair<SWTComponentDelegate<?>, Object> pair : myComponents) {
-      pair.getFirst().disposeSWT();
-    }
-  }
-
-  protected Object convertLayoutData(Object layoutData) {
-    return layoutData;
-  }
-
-  @Nullable
-  protected abstract org.eclipse.swt.widgets.Layout createLayout();
-
-  protected void add(Component component, LayoutData layoutLayoutData) {
-    add((SWTComponentDelegate<?>)component, layoutLayoutData);
-  }
-
-  protected void add(SWTComponentDelegate<?> component, LayoutData layoutData) {
-    if (myComponent != null) {
-      if (layoutData != null) {
-        Collection<Pair<SWTComponentDelegate<?>, Object>> components = myMappedComponents.remove(layoutData.toString());
-        if (components != null) {
-          for (Pair<SWTComponentDelegate<?>, Object> oldPair : components) {
-            SWTComponentDelegate<?> first = oldPair.getFirst();
-
-            ((SWTComponentDelegate)first).setParent(null);
-          }
+            myMappedComponents.clear();
         }
-      }
-
-      myMappedComponents.putValue(layoutData == null ? ourNullMapper : layoutData.toString(), Pair.create(component, layoutData));
-
-      ((SWTComponentDelegate)component).bind(getComposite(), convertLayoutData(layoutData));
-
-      myComponent.layout(true, true);
     }
-    else {
-      myComponents.add(Pair.create(component, layoutData));
+
+    @Override
+    protected void initialize(Composite component) {
+        org.eclipse.swt.widgets.Layout layout = createLayout();
+        if (layout != null) {
+            component.setLayout(layout);
+        }
+
+        for (Pair<SWTComponentDelegate<?>, Object> pair : myComponents) {
+            SWTComponentDelegate<?> comp = pair.getFirst();
+            Object value = pair.getSecond();
+
+            ((SWTComponentDelegate) comp).bind(getComposite(), convertLayoutData(value));
+
+            String k = value == null ? ourNullMapper : value.toString();
+
+            myMappedComponents.putValue(k, pair);
+        }
+
+        myComponents.clear();
     }
-  }
+
+    @Override
+    public void setParent(@Nullable Component component) {
+        super.setParent(component);
+
+        if (component != null) {
+            initialize(((SWTComponentDelegate) component).getComposite());
+        }
+    }
+
+    @Override
+    public void disposeSWT() {
+        super.disposeSWT();
+
+        myComponents.addAll(myMappedComponents.values());
+
+        for (Pair<SWTComponentDelegate<?>, Object> pair : myMappedComponents.values()) {
+            pair.getFirst().disposeSWT();
+        }
+
+        myMappedComponents.clear();
+
+        for (Pair<SWTComponentDelegate<?>, Object> pair : myComponents) {
+            pair.getFirst().disposeSWT();
+        }
+    }
+
+    protected Object convertLayoutData(Object layoutData) {
+        return layoutData;
+    }
+
+    @Nullable
+    protected abstract org.eclipse.swt.widgets.Layout createLayout();
+
+    protected void add(Component component, LayoutData layoutLayoutData) {
+        add((SWTComponentDelegate<?>) component, layoutLayoutData);
+    }
+
+    protected void add(SWTComponentDelegate<?> component, LayoutData layoutData) {
+        if (myComponent != null) {
+            if (layoutData != null) {
+                Collection<Pair<SWTComponentDelegate<?>, Object>> components = myMappedComponents.remove(layoutData.toString());
+                if (components != null) {
+                    for (Pair<SWTComponentDelegate<?>, Object> oldPair : components) {
+                        SWTComponentDelegate<?> first = oldPair.getFirst();
+
+                        ((SWTComponentDelegate) first).setParent(null);
+                    }
+                }
+            }
+
+            myMappedComponents.putValue(layoutData == null ? ourNullMapper : layoutData.toString(), Pair.create(component, layoutData));
+
+            ((SWTComponentDelegate) component).bind(getComposite(), convertLayoutData(layoutData));
+
+            myComponent.layout(true, true);
+        }
+        else {
+            myComponents.add(Pair.create(component, layoutData));
+        }
+    }
 }

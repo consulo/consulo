@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Layout;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtScrollableLayoutImpl extends DesktopSwtLayoutComponent implements ScrollableLayout {
+public class DesktopSwtScrollableLayoutImpl extends DesktopSwtLayoutComponent<Object> implements ScrollableLayout {
   public DesktopSwtScrollableLayoutImpl(Component component) {
     add(component, null);
   }

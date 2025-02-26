@@ -20,6 +20,7 @@ import com.vaadin.flow.component.HasSize;
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TableLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
@@ -40,60 +41,65 @@ import java.util.Map;
  */
 public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutImpl.Vaadin> implements TableLayout {
 
-  public class Vaadin extends Table implements FromVaadinComponentWrapper {
-    private final Map<Component, TableCell> myChildren = new LinkedHashMap<>();
+    public class Vaadin extends Table implements FromVaadinComponentWrapper {
+        private final Map<Component, TableCell> myChildren = new LinkedHashMap<>();
 
-    public void add(@Nonnull Component component, TableCell cell) {
-      myChildren.put(component, cell);
+        public void add(@Nonnull Component component, TableCell cell) {
+            myChildren.put(component, cell);
 
-      com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
-      ((HasSize)vComponent).setSizeFull();
-      validate(cell).add(vComponent);
+            com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+            ((HasSize) vComponent).setSizeFull();
+            validate(cell).add(vComponent);
+        }
+
+        private TableDataCell validate(TableCell tableCell) {
+            int rowIndex = tableCell.getRow();
+            int columnIndex = tableCell.getColumn();
+
+            int rowSize = rowIndex + 1;
+            int columnSize = columnIndex + 1;
+
+            List<TableRow> rows = getRows();
+            if (rows.size() < rowSize) {
+                addRows(rowSize - rows.size());
+            }
+
+            TableRow row = getRow(rowIndex).get();
+
+            List<TableDataCell> dataCells = row.getDataCells();
+            if (dataCells.size() < columnSize) {
+                row.addDataCells(columnSize - dataCells.size());
+            }
+
+            return row.getDataCell(columnIndex).get();
+        }
+
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebTableLayoutImpl.this;
+        }
     }
 
-    private TableDataCell validate(TableCell tableCell) {
-      int rowIndex = tableCell.getRow();
-      int columnIndex = tableCell.getColumn();
-
-      int rowSize = rowIndex + 1;
-      int columnSize = columnIndex + 1;
-
-      List<TableRow> rows = getRows();
-      if (rows.size() < rowSize) {
-        addRows(rowSize - rows.size());
-      }
-
-      TableRow row = getRow(rowIndex).get();
-
-      List<TableDataCell> dataCells = row.getDataCells();
-      if (dataCells.size() < columnSize) {
-        row.addDataCells(columnSize - dataCells.size());
-      }
-
-      return row.getDataCell(columnIndex).get();
+    public WebTableLayoutImpl(StaticPosition fillOption) {
     }
 
-    @Nullable
+
     @Override
-    public Component toUIComponent() {
-      return WebTableLayoutImpl.this;
+    public void addStyle(LayoutStyle style) {
     }
-  }
 
-  public WebTableLayoutImpl(StaticPosition fillOption) {
-  }
+    @Nonnull
+    @Override
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
 
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public TableLayout add(@Nonnull consulo.ui.Component component, @Nonnull TableCell tableCell) {
-    toVaadinComponent().add(component, tableCell);
-    return this;
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public TableLayout add(@Nonnull consulo.ui.Component component, @Nonnull TableCell tableCell) {
+        toVaadinComponent().add(component, tableCell);
+        return this;
+    }
 }

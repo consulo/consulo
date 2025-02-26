@@ -19,6 +19,7 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TabbedLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
@@ -31,51 +32,55 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-19
  */
 public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayoutImpl.Vaadin> implements TabbedLayout {
-  public class Vaadin extends TabSheet implements FromVaadinComponentWrapper {
+    public class Vaadin extends TabSheet implements FromVaadinComponentWrapper {
 
-    @Nullable
-    @Override
-    public Component toUIComponent() {
-      return WebTabbedLayoutImpl.this;
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebTabbedLayoutImpl.this;
+        }
     }
-  }
 
-  @Override
-  @Nonnull
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Override
+    @Nonnull
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
 
-  @Nonnull
-  @Override
-  public Tab createTab() {
-    return new WebTabImpl(this);
-  }
+    @Nonnull
+    @Override
+    public Tab createTab() {
+        return new WebTabImpl(this);
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
-    WebTabImpl webTab = (WebTabImpl)tab;
+    @Override
+    public void addStyle(LayoutStyle style) {
+    }
 
-    com.vaadin.flow.component.tabs.Tab vaadinTab = new com.vaadin.flow.component.tabs.Tab();
-    webTab.setVaadinTab(vaadinTab);
-    webTab.update();
-    toVaadinComponent().add(vaadinTab, TargetVaddin.to(component));
-    return tab;
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
+        WebTabImpl webTab = (WebTabImpl) tab;
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
-    WebTabImpl tab = new WebTabImpl(this);
-    tab.setRender((t, p) -> p.append(tabName));
-    return addTab(tab, component);
-  }
+        com.vaadin.flow.component.tabs.Tab vaadinTab = new com.vaadin.flow.component.tabs.Tab();
+        webTab.setVaadinTab(vaadinTab);
+        webTab.update();
+        toVaadinComponent().add(vaadinTab, TargetVaddin.to(component));
+        return tab;
+    }
 
-  @Override
-  public void removeTab(@Nonnull Tab tab) {
-    // todo
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
+        WebTabImpl tab = new WebTabImpl(this);
+        tab.setRender((t, p) -> p.append(tabName));
+        return addTab(tab, component);
+    }
+
+    @Override
+    public void removeTab(@Nonnull Tab tab) {
+        // todo
+    }
 }

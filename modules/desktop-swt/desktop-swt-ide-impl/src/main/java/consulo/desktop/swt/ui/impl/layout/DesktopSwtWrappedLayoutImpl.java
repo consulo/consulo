@@ -29,7 +29,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 11/12/2021
  */
-public class DesktopSwtWrappedLayoutImpl extends DesktopSwtLayoutComponent implements WrappedLayout {
+public class DesktopSwtWrappedLayoutImpl extends DesktopSwtLayoutComponent<Object> implements WrappedLayout {
   @Nullable
   @Override
   protected Layout createLayout() {

@@ -19,6 +19,7 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
@@ -32,81 +33,85 @@ import jakarta.annotation.Nullable;
  * @since 29/05/2023
  */
 public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<WebThreeComponentSplitLayoutImpl.Vaadin> implements ThreeComponentSplitLayout {
-  public class Vaadin extends CompositeComponent implements FromVaadinComponentWrapper {
-    private SplitLayout myFirstLayout;
-    private SplitLayout mySecondLayout;
+    public class Vaadin extends CompositeComponent implements FromVaadinComponentWrapper {
+        private SplitLayout myFirstLayout;
+        private SplitLayout mySecondLayout;
 
-    public Vaadin() {
-      myFirstLayout = new SplitLayout(SplitLayout.Orientation.HORIZONTAL);
-      mySecondLayout = new SplitLayout(SplitLayout.Orientation.HORIZONTAL);
+        public Vaadin() {
+            myFirstLayout = new SplitLayout(SplitLayout.Orientation.HORIZONTAL);
+            mySecondLayout = new SplitLayout(SplitLayout.Orientation.HORIZONTAL);
 
-      myFirstLayout.addToSecondary(mySecondLayout);
+            myFirstLayout.addToSecondary(mySecondLayout);
 
-      myFirstLayout.setSizeFull();
-      add(myFirstLayout);
+            myFirstLayout.setSizeFull();
+            add(myFirstLayout);
 
-      myFirstLayout.setSplitterPosition(25);
-      mySecondLayout.setSplitterPosition(50);
+            myFirstLayout.setSplitterPosition(25);
+            mySecondLayout.setSplitterPosition(50);
+        }
+
+        public void addFirst(com.vaadin.flow.component.Component component) {
+            myFirstLayout.addToPrimary(component);
+        }
+
+        public void addCenter(com.vaadin.flow.component.Component component) {
+            mySecondLayout.addToPrimary(component);
+        }
+
+        public void addSecond(com.vaadin.flow.component.Component component) {
+            mySecondLayout.addToSecondary(component);
+        }
+
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebThreeComponentSplitLayoutImpl.this;
+        }
     }
 
-    public void addFirst(com.vaadin.flow.component.Component component) {
-      myFirstLayout.addToPrimary(component);
-    }
-
-    public void addCenter(com.vaadin.flow.component.Component component) {
-      mySecondLayout.addToPrimary(component);
-    }
-
-    public void addSecond(com.vaadin.flow.component.Component component) {
-      mySecondLayout.addToSecondary(component);
-    }
-
-    @Nullable
     @Override
-    public Component toUIComponent() {
-      return WebThreeComponentSplitLayoutImpl.this;
+    public void addStyle(LayoutStyle style) {
     }
-  }
 
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
-    if (component != null) {
-      com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
-      ((HasSize)vComponent).setSizeFull();
-      toVaadinComponent().addFirst(vComponent);
+    @Nonnull
+    @Override
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
-    return this;
-  }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
-    if (component != null) {
-      com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
-      ((HasSize)vComponent).setSizeFull();
-      toVaadinComponent().addCenter(vComponent);
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
+        if (component != null) {
+            com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+            ((HasSize) vComponent).setSizeFull();
+            toVaadinComponent().addFirst(vComponent);
+        }
+        return this;
     }
-    return this;
-  }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
-    if (component != null) {
-      com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
-      ((HasSize)vComponent).setSizeFull();
-      toVaadinComponent().addSecond(vComponent);
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
+        if (component != null) {
+            com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+            ((HasSize) vComponent).setSizeFull();
+            toVaadinComponent().addCenter(vComponent);
+        }
+        return this;
     }
-    return this;
-  }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
+        if (component != null) {
+            com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+            ((HasSize) vComponent).setSizeFull();
+            toVaadinComponent().addSecond(vComponent);
+        }
+        return this;
+    }
 }

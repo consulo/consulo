@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtVerticalLayoutImpl extends DesktopSwtLayoutComponent implements VerticalLayout {
+public class DesktopSwtVerticalLayoutImpl extends DesktopSwtLayoutComponent<Object> implements VerticalLayout {
   private final int myVGap;
 
   public DesktopSwtVerticalLayoutImpl(int vGap) {

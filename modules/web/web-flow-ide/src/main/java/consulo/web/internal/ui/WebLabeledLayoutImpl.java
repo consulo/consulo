@@ -23,6 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
@@ -34,78 +35,83 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-18
  */
 public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayoutImpl.Vaadin> implements LabeledLayout {
-  public class Vaadin extends VerticalLayout implements FromVaadinComponentWrapper {
-    private LocalizeValue myLabelValue = LocalizeValue.empty();
+    public class Vaadin extends VerticalLayout implements FromVaadinComponentWrapper {
+        private LocalizeValue myLabelValue = LocalizeValue.empty();
 
-    private final Span myCaption;
+        private final Span myCaption;
 
-    public Vaadin() {
-      setMargin(false);
-      myCaption = new Span("");
-      myCaption.addClassName(LumoUtility.FontWeight.BOLD);
-      myCaption.setWidthFull();
-      add(myCaption);
+        public Vaadin() {
+            setMargin(false);
+            myCaption = new Span("");
+            myCaption.addClassName(LumoUtility.FontWeight.BOLD);
+            myCaption.setWidthFull();
+            add(myCaption);
 
-      addClassName(LumoUtility.Border.ALL);
-      addClassName(LumoUtility.BorderRadius.SMALL);
-      addClassName(LumoUtility.BorderColor.CONTRAST_10);
-    }
-
-    public void setLabelValue(LocalizeValue labelValue) {
-      myLabelValue = labelValue;
-
-      myCaption.setText(myLabelValue.getValue());
-    }
-
-    public void setContent(com.vaadin.flow.component.Component content) {
-      removeAll();
-
-      add(myCaption);
-      if (content != null) {
-        if (content instanceof ThemableLayout themableLayout) {
-          themableLayout.setMargin(false);
-          themableLayout.setPadding(false);
+            addClassName(LumoUtility.Border.ALL);
+            addClassName(LumoUtility.BorderRadius.SMALL);
+            addClassName(LumoUtility.BorderColor.CONTRAST_10);
         }
 
-        add(content);
-      }
+        public void setLabelValue(LocalizeValue labelValue) {
+            myLabelValue = labelValue;
+
+            myCaption.setText(myLabelValue.getValue());
+        }
+
+        public void setContent(com.vaadin.flow.component.Component content) {
+            removeAll();
+
+            add(myCaption);
+            if (content != null) {
+                if (content instanceof ThemableLayout themableLayout) {
+                    themableLayout.setMargin(false);
+                    themableLayout.setPadding(false);
+                }
+
+                add(content);
+            }
+        }
+
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebLabeledLayoutImpl.this;
+        }
     }
 
-    @Nullable
+    public WebLabeledLayoutImpl(LocalizeValue label) {
+        getVaadinComponent().setLabelValue(label);
+    }
+
     @Override
-    public Component toUIComponent() {
-      return WebLabeledLayoutImpl.this;
+    public void addStyle(LayoutStyle style) {
+
     }
-  }
 
-  public WebLabeledLayoutImpl(LocalizeValue label) {
-    getVaadinComponent().setLabelValue(label);
-  }
-
-  @Override
-  public void remove(@Nonnull Component component) {
-    if (component.getParent() == this) {
-      toVaadinComponent().setContent(null);
+    @Override
+    public void remove(@Nonnull Component component) {
+        if (component.getParent() == this) {
+            toVaadinComponent().setContent(null);
+        }
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void removeAll() {
-    getVaadinComponent().setContent(null);
-  }
+    @RequiredUIAccess
+    @Override
+    public void removeAll() {
+        getVaadinComponent().setContent(null);
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public LabeledLayout set(@Nonnull Component component) {
-    getVaadinComponent().setContent(TargetVaddin.to(component));
-    return this;
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public LabeledLayout set(@Nonnull Component component) {
+        getVaadinComponent().setContent(TargetVaddin.to(component));
+        return this;
+    }
 
-  @Nonnull
-  @Override
-  public WebLabeledLayoutImpl.Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Nonnull
+    @Override
+    public WebLabeledLayoutImpl.Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
 }

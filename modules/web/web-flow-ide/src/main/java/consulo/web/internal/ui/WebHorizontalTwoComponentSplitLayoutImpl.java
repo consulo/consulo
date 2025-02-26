@@ -19,6 +19,7 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
@@ -31,46 +32,52 @@ import jakarta.annotation.Nullable;
  * @since 28/05/2023
  */
 public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDelegate<WebHorizontalTwoComponentSplitLayoutImpl.Vaadin> implements TwoComponentSplitLayout {
-  public class Vaadin extends SplitLayout implements FromVaadinComponentWrapper {
-    public Vaadin() {
-      setOrientation(Orientation.HORIZONTAL);
-    }
+    public class Vaadin extends SplitLayout implements FromVaadinComponentWrapper {
 
-    @Nullable
+        public Vaadin() {
+            setOrientation(Orientation.HORIZONTAL);
+        }
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebHorizontalTwoComponentSplitLayoutImpl.this;
+        }
+
+    }
+    
     @Override
-    public Component toUIComponent() {
-      return WebHorizontalTwoComponentSplitLayoutImpl.this;
+    public void setProportion(int percent) {
+        toVaadinComponent().setSplitterPosition(percent);
     }
-  }
 
-  @Override
-  public void setProportion(int percent) {
-    toVaadinComponent().setSplitterPosition(percent);
-  }
+    @Override
+    public void addStyle(LayoutStyle style) {
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public TwoComponentSplitLayout setFirstComponent(@Nonnull Component component) {
-    com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
-    ((HasSize)vComponent).setSizeFull();
-    toVaadinComponent().addToPrimary(vComponent);
-    return this;
-  }
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public TwoComponentSplitLayout setSecondComponent(@Nonnull Component component) {
-    com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
-    ((HasSize)vComponent).setSizeFull();
-    toVaadinComponent().addToSecondary(vComponent);
-    return this;
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public TwoComponentSplitLayout setFirstComponent(@Nonnull Component component) {
+        com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+        ((HasSize) vComponent).setSizeFull();
+        toVaadinComponent().addToPrimary(vComponent);
+        return this;
+    }
 
-  @Nonnull
-  @Override
-  public WebHorizontalTwoComponentSplitLayoutImpl.Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public TwoComponentSplitLayout setSecondComponent(@Nonnull Component component) {
+        com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+        ((HasSize) vComponent).setSizeFull();
+        toVaadinComponent().addToSecondary(vComponent);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public WebHorizontalTwoComponentSplitLayoutImpl.Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
 }

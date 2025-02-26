@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 10/07/2021
  */
-public class DesktopSwtTableLayoutImpl extends DesktopSwtLayoutComponent implements TableLayout {
+public class DesktopSwtTableLayoutImpl extends DesktopSwtLayoutComponent<Object> implements TableLayout {
   private final StaticPosition myFillOption;
 
   public DesktopSwtTableLayoutImpl(StaticPosition fillOption) {

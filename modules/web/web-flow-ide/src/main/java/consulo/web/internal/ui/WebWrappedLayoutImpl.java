@@ -17,6 +17,7 @@ package consulo.web.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.WrappedLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
@@ -31,39 +32,43 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-17
  */
 public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayoutImpl.Vaadin> implements WrappedLayout {
-  public class Vaadin extends SingleComponentLayout implements FromVaadinComponentWrapper {
-    @Nullable
+    public class Vaadin extends SingleComponentLayout implements FromVaadinComponentWrapper {
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebWrappedLayoutImpl.this;
+        }
+    }
+
+    @Nonnull
     @Override
-    public Component toUIComponent() {
-      return WebWrappedLayoutImpl.this;
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
-  }
 
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void removeAll() {
-    getVaadinComponent().setContent(null);
-  }
-
-  @Override
-  public void remove(@Nonnull Component component) {
-    getVaadinComponent().removeIfContent(TargetVaddin.to(component));
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public WrappedLayout set(@Nullable Component component) {
-    if (component != null) {
-      VaadinSizeUtil.setSizeFull(component);
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
-    getVaadinComponent().setContent(TargetVaddin.to(component));
-    return this;
-  }
+
+    @RequiredUIAccess
+    @Override
+    public void removeAll() {
+        getVaadinComponent().setContent(null);
+    }
+
+    @Override
+    public void remove(@Nonnull Component component) {
+        getVaadinComponent().removeIfContent(TargetVaddin.to(component));
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public WrappedLayout set(@Nullable Component component) {
+        if (component != null) {
+            VaadinSizeUtil.setSizeFull(component);
+        }
+        getVaadinComponent().setContent(TargetVaddin.to(component));
+        return this;
+    }
 }

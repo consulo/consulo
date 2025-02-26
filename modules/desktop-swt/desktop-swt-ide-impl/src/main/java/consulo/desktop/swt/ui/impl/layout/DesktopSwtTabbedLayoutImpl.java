@@ -19,12 +19,13 @@ import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TabbedLayout;
+import jakarta.annotation.Nonnull;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,70 +34,74 @@ import java.util.List;
  * @since 18/12/2021
  */
 public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder> implements TabbedLayout {
-  private final List<DesktopSwtTabImpl> myTabs = new ArrayList<>();
+    private final List<DesktopSwtTabImpl> myTabs = new ArrayList<>();
 
-  @Override
-  protected CTabFolder createSWT(Composite parent) {
-    return new CTabFolder(parent, SWT.TOP | SWT.FLAT);
-  }
-
-  @Override
-  protected void initialize(CTabFolder component) {
-    super.initialize(component);
-
-    for (DesktopSwtTabImpl tab : myTabs) {
-      tab.initialize(component);
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 
-    component.setSelection(myTabs.size() - 1);
-  }
-
-  private void init(DesktopSwtTabImpl tab) {
-    CTabFolder tabFolder = toSWTComponent();
-
-    if (tabFolder != null) {
-      tab.initialize(tabFolder);
-
-      tabFolder.setSelection(tab.getTabItem());
+    @Override
+    protected CTabFolder createSWT(Composite parent) {
+        return new CTabFolder(parent, SWT.TOP | SWT.FLAT);
     }
-  }
 
-  @Nonnull
-  @Override
-  public Tab createTab() {
-    return new DesktopSwtTabImpl();
-  }
+    @Override
+    protected void initialize(CTabFolder component) {
+        super.initialize(component);
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
-    DesktopSwtTabImpl swtTab = (DesktopSwtTabImpl)tab;
+        for (DesktopSwtTabImpl tab : myTabs) {
+            tab.initialize(component);
+        }
 
-    myTabs.add(swtTab);
-    swtTab.setComponent(component);
+        component.setSelection(myTabs.size() - 1);
+    }
 
-    init(swtTab);
-    return tab;
-  }
+    private void init(DesktopSwtTabImpl tab) {
+        CTabFolder tabFolder = toSWTComponent();
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
-    DesktopSwtTabImpl tab = new DesktopSwtTabImpl();
-    tab.setRender((t, p) -> p.append(tabName));
+        if (tabFolder != null) {
+            tab.initialize(tabFolder);
 
-    myTabs.add(tab);
-    tab.setComponent(component);
-    tab.update();
+            tabFolder.setSelection(tab.getTabItem());
+        }
+    }
 
-    init(tab);
-    return tab;
-  }
+    @Nonnull
+    @Override
+    public Tab createTab() {
+        return new DesktopSwtTabImpl();
+    }
 
-  @Override
-  public void removeTab(@Nonnull Tab tab) {
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
+        DesktopSwtTabImpl swtTab = (DesktopSwtTabImpl) tab;
 
-  }
+        myTabs.add(swtTab);
+        swtTab.setComponent(component);
+
+        init(swtTab);
+        return tab;
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
+        DesktopSwtTabImpl tab = new DesktopSwtTabImpl();
+        tab.setRender((t, p) -> p.append(tabName));
+
+        myTabs.add(tab);
+        tab.setComponent(component);
+        tab.update();
+
+        init(tab);
+        return tab;
+    }
+
+    @Override
+    public void removeTab(@Nonnull Tab tab) {
+
+    }
 }

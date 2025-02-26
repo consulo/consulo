@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutComponent implements TwoComponentSplitLayout {
+public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutComponent<Object> implements TwoComponentSplitLayout {
   private final SplitLayoutPosition myPosition;
 
   public DesktopSwtTwoComponentSplitLayoutImpl(SplitLayoutPosition position) {
