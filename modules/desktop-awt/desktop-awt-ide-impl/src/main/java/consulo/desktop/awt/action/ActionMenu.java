@@ -38,6 +38,7 @@ import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.util.TextWithMnemonic;
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
@@ -48,6 +49,8 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class ActionMenu extends JMenu {
     private final String myPlace;
@@ -67,18 +70,21 @@ public final class ActionMenu extends JMenu {
     private boolean myComponentMnemonicEnabled;
     private boolean myPresentationMnemonicDisabled;
 
+    private final boolean myEnableIcons;
+
     public ActionMenu(final DataContext context,
                       @Nonnull final String place,
                       final ActionGroup group,
                       final PresentationFactory presentationFactory,
                       final boolean enableMnemonics,
-                      final boolean topLevel) {
+                      final boolean enableIcons) {
         myContext = context;
         myPlace = place;
         myGroup = ActionRef.fromAction(group);
         myPresentationFactory = presentationFactory;
         myPresentation = myPresentationFactory.getPresentation(group);
         myComponentMnemonicEnabled = enableMnemonics;
+        myEnableIcons = enableIcons;
 
         updateUI();
 
@@ -156,7 +162,7 @@ public final class ActionMenu extends JMenu {
     }
 
     private void init() {
-        myStubItem = isTopMenuBar() ? null : new StubItem();
+        myStubItem = new StubItem();
         addStubItem();
         addMenuListener(new MenuListenerImpl());
 
@@ -330,7 +336,7 @@ public final class ActionMenu extends JMenu {
             mayContextBeInvalid = true;
         }
 
-        Utils.fillMenu(myGroup.getAction(), menu, isMnemonicEnabled(), myPresentationFactory, context, myPlace, true, mayContextBeInvalid, LaterInvocator.isInModalContext());
+        Utils.fillMenu(myGroup.getAction(), menu, isMnemonicEnabled(), myPresentationFactory, context, myPlace, mayContextBeInvalid, LaterInvocator.isInModalContext(), myEnableIcons);
     }
 
     private class MenuItemSynchronizer implements PropertyChangeListener {

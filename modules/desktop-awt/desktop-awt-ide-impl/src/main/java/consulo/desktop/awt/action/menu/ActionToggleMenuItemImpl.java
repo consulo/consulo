@@ -36,8 +36,8 @@ public class ActionToggleMenuItemImpl extends JCheckBoxMenuItem implements Actio
                                     boolean enableMnemonics,
                                     boolean prepareNow,
                                     boolean insideCheckedGroup,
-                                    boolean useDarkIcons) {
-        myEngine = new ActionMenuItemEngine(this, action, presentation, place, context, enableMnemonics, prepareNow, insideCheckedGroup, useDarkIcons);
+                                    boolean enableIcons) {
+        myEngine = new ActionMenuItemEngine(this, action, presentation, place, context, enableMnemonics, prepareNow, insideCheckedGroup, enableIcons);
     }
 
     @Override

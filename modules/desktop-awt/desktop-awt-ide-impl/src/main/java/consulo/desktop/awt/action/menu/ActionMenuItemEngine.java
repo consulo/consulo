@@ -167,11 +167,11 @@ public class ActionMenuItemEngine {
     private final String myPlace;
     private final boolean myInsideCheckedGroup;
     private final AbstractButton myButton;
-    private final boolean myUseDarkIcons;
     private DataContext myContext;
     private AnActionEvent myEvent;
     private MenuItemSynchronizer myMenuItemSynchronizer;
     private final boolean myEnableMnemonics;
+    private final boolean myEnableIcons;
 
     private LocalizeValue myTextValue = LocalizeValue.empty();
 
@@ -183,9 +183,9 @@ public class ActionMenuItemEngine {
                                 boolean enableMnemonics,
                                 boolean prepareNow,
                                 boolean insideCheckedGroup,
-                                boolean useDarkIcons) {
+                                boolean enableIcons) {
         myButton = button;
-        myUseDarkIcons = useDarkIcons;
+        myEnableIcons = enableIcons;
         myAction = ActionRef.fromAction(action);
         myPresentation = presentation;
         myPlace = place;
@@ -292,7 +292,7 @@ public class ActionMenuItemEngine {
             ((JCheckBoxMenuItem) myButton).setState(Toggleable.isSelected(myEvent.getPresentation()));
         }
         else {
-            if (UISettings.getInstance().SHOW_ICONS_IN_MENUS) {
+            if (UISettings.getInstance().SHOW_ICONS_IN_MENUS && myEnableIcons) {
                 Image icon = myPresentation.getIcon();
 
                 Style currentStyle = StyleManager.get().getCurrentStyle();
@@ -300,13 +300,13 @@ public class ActionMenuItemEngine {
 
                 Image selectedIcon = null;
 
-                if (icon != null && myUseDarkIcons && !currentStyle.isDark()) {
-                    icon = iconLibraryManager.inverseIcon(icon);
-                }
-
-                if (icon != null && !myUseDarkIcons && shouldConvertIconToDarkVariant(currentStyle)) {
-                    selectedIcon = iconLibraryManager.inverseIcon(icon);
-                }
+//                if (icon != null && myUseDarkIcons && !currentStyle.isDark()) {
+//                    icon = iconLibraryManager.inverseIcon(icon);
+//                }
+//
+//                if (icon != null && !myUseDarkIcons && shouldConvertIconToDarkVariant(currentStyle)) {
+//                    selectedIcon = iconLibraryManager.inverseIcon(icon);
+//                }
 
                 myButton.setIcon(TargetAWT.to(icon));
 
