@@ -39,7 +39,7 @@ public class Utils {
                                 String place,
                                 boolean isWindowMenu,
                                 boolean isInModalContext,
-                                boolean useDarkIcons) {
+                                boolean enableIcons) {
         boolean checked = group instanceof CheckedActionGroup;
 
         ActionUpdater updater =
@@ -99,12 +99,12 @@ public class Utils {
                 }
             }
             else if (action instanceof ActionGroup && !Boolean.TRUE.equals(presentation.getClientProperty("actionGroup.perform.only"))) {
-                ActionMenu menu = new ActionMenu(context, place, (ActionGroup) action, presentationFactory, enableMnemonics, useDarkIcons);
+                ActionMenu menu = new ActionMenu(context, place, (ActionGroup) action, presentationFactory, enableMnemonics, enableIcons);
                 component.add(menu);
                 children.add(menu);
             }
             else {
-                MenuElement each = createItem(action, presentation, place, context, enableMnemonics, !fixMacScreenMenu, checked, useDarkIcons);
+                MenuElement each = createItem(action, presentation, place, context, enableMnemonics, !fixMacScreenMenu, checked, enableIcons);
                 component.add((Component) each);
                 children.add((Component) each);
             }
@@ -118,7 +118,7 @@ public class Utils {
                 enableMnemonics,
                 !fixMacScreenMenu,
                 checked,
-                useDarkIcons);
+                enableIcons);
             component.add((Component) each);
             children.add((Component) each);
         }
@@ -142,11 +142,11 @@ public class Utils {
                                              boolean enableMnemonics,
                                              boolean prepareNow,
                                              boolean insideCheckedGroup,
-                                             boolean useDarkIcons) {
+                                             boolean enableIcons) {
         if (action instanceof Toggleable || insideCheckedGroup) {
-            return new ActionToggleMenuItemImpl(action, presentation, place, context, enableMnemonics, prepareNow, insideCheckedGroup, useDarkIcons);
+            return new ActionToggleMenuItemImpl(action, presentation, place, context, enableMnemonics, prepareNow, insideCheckedGroup, enableIcons);
         }
 
-        return new ActionMenuItemImpl(action, presentation, place, context, enableMnemonics, prepareNow, insideCheckedGroup, useDarkIcons);
+        return new ActionMenuItemImpl(action, presentation, place, context, enableMnemonics, prepareNow, insideCheckedGroup, enableIcons);
     }
 }

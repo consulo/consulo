@@ -26,10 +26,12 @@ import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.impl.status.ClockPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
+import consulo.platform.Platform;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
@@ -101,6 +103,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   private State myState = State.EXPANDED;
   private double myProgress = 0;
   private boolean myActivated = false;
+  private final boolean myEnableIcons;
 
   public IdeMenuBar(ActionManager actionManager, DataManager dataManager) {
     myActionManager = actionManager;
@@ -109,6 +112,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     myNewVisibleActions = new ArrayList<>();
     myPresentationFactory = new MenuItemPresentationFactory();
     myDataManager = dataManager;
+    myEnableIcons = !Platform.current().os().isEnabledTopMenu();
 
     if (WindowManagerEx.getInstanceEx().isFloatingMenuBarSupported()) {
       myAnimator = new MyAnimator();
@@ -359,7 +363,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
       removeAll();
       final boolean enableMnemonics = !UISettings.getInstance().DISABLE_MNEMONICS;
       for (final AnAction action : myVisibleActions) {
-        add(new ActionMenu(null, ActionPlaces.MAIN_MENU, (ActionGroup)action, myPresentationFactory, enableMnemonics, true));
+        add(new ActionMenu(null, ActionPlaces.MAIN_MENU, (ActionGroup)action, myPresentationFactory, enableMnemonics, myEnableIcons));
       }
 
       updateMnemonicsVisibility();

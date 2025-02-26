@@ -136,7 +136,7 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
       int y2 = Math.max(0, Math.min(y, component.getHeight() - 1)); // fit y into [0, height-1]
 
       myContext = myDataContextProvider != null ? myDataContextProvider.get() : DataManager.getInstance().getDataContext(component, x2, y2);
-      Utils.fillMenu(myGroup, this, true, myPresentationFactory, myContext, myPlace, false, false, LaterInvocator.isInModalContext());
+      Utils.fillMenu(myGroup, this, true, myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true);
       if (getComponentCount() == 0) {
         return;
       }
@@ -183,7 +183,7 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
       @Override
       public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
         removeAll();
-        Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().getDisableMnemonics(), myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), false);
+        Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().getDisableMnemonics(), myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true);
         myManager.addActionPopup(DesktopActionPopupMenuImpl.this);
       }
     }
