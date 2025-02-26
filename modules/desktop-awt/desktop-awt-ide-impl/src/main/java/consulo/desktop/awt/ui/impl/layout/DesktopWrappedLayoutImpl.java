@@ -16,15 +16,16 @@
 package consulo.desktop.awt.ui.impl.layout;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.WrappedLayout;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -33,75 +34,80 @@ import java.awt.*;
  * @since 25-Oct-17
  */
 public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> implements WrappedLayout {
-  class MyJPanel extends JPanel implements FromSwingComponentWrapper {
-    MyJPanel(LayoutManager layout) {
-      super(layout);
+    class MyJPanel extends JPanel implements FromSwingComponentWrapper {
+        MyJPanel(LayoutManager layout) {
+            super(layout);
+        }
+
+        @Override
+        public void requestFocus() {
+            if (getTargetComponent() == this) {
+                IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(super::requestFocus);
+                return;
+            }
+            IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getTargetComponent());
+        }
+
+        @Override
+        public boolean requestFocusInWindow() {
+            if (getTargetComponent() == this) {
+                return super.requestFocusInWindow();
+            }
+            return getTargetComponent().requestFocusInWindow();
+        }
+
+        @Override
+        public final boolean requestFocus(boolean temporary) {
+            if (getTargetComponent() == this) {
+                return super.requestFocus(temporary);
+            }
+            return getTargetComponent().requestFocus(temporary);
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopWrappedLayoutImpl.this;
+        }
+    }
+
+    public DesktopWrappedLayoutImpl() {
+        myComponent = new MyJPanel(new BorderLayout());
+        myComponent.setOpaque(false);
     }
 
     @Override
-    public void requestFocus() {
-      if (getTargetComponent() == this) {
-        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(super::requestFocus);
-        return;
-      }
-      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getTargetComponent());
+    public void addStyle(LayoutStyle style) {
+        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
     }
 
-    @Override
-    public boolean requestFocusInWindow() {
-      if (getTargetComponent() == this) {
-        return super.requestFocusInWindow();
-      }
-      return getTargetComponent().requestFocusInWindow();
-    }
-
-    @Override
-    public final boolean requestFocus(boolean temporary) {
-      if (getTargetComponent() == this) {
-        return super.requestFocus(temporary);
-      }
-      return getTargetComponent().requestFocus(temporary);
-    }
-
+    @RequiredUIAccess
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopWrappedLayoutImpl.this;
-    }
-  }
-
-  public DesktopWrappedLayoutImpl() {
-    myComponent = new MyJPanel(new BorderLayout());
-    myComponent.setOpaque(false);
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public WrappedLayout set(@Nullable Component component) {
-    setContent(component == null ? null : (JComponent)TargetAWT.to(component));
-    return this;
-  }
-
-  public void setContent(JComponent wrapped) {
-    if (wrapped == getTargetComponent()) {
-      return;
+    public WrappedLayout set(@Nullable Component component) {
+        setContent(component == null ? null : (JComponent) TargetAWT.to(component));
+        return this;
     }
 
-    myComponent.removeAll();
-    myComponent.setLayout(new BorderLayout());
-    if (wrapped != null) {
-      myComponent.add(wrapped, BorderLayout.CENTER);
-    }
-    myComponent.validate();
-  }
+    public void setContent(JComponent wrapped) {
+        if (wrapped == getTargetComponent()) {
+            return;
+        }
 
-  public JComponent getTargetComponent() {
-    if (myComponent.getComponentCount() == 1) {
-      return (JComponent)myComponent.getComponent(0);
+        myComponent.removeAll();
+        myComponent.setLayout(new BorderLayout());
+        if (wrapped != null) {
+            myComponent.add(wrapped, BorderLayout.CENTER);
+        }
+        myComponent.validate();
     }
-    else {
-      return myComponent;
+
+    public JComponent getTargetComponent() {
+        if (myComponent.getComponentCount() == 1) {
+            return (JComponent) myComponent.getComponent(0);
+        }
+        else {
+            return myComponent;
+        }
     }
-  }
 }

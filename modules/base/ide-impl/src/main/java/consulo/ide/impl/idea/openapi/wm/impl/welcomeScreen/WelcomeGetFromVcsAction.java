@@ -16,12 +16,14 @@
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutAction;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 import jakarta.annotation.Nonnull;
@@ -52,14 +54,10 @@ public class WelcomeGetFromVcsAction extends WelcomePopupAction {
         return true;
     }
 
+    @Nonnull
     @Override
-    protected String getCaption() {
-        return null;
-    }
-
-    @Override
-    protected String getTextForEmpty() {
-        return UIBundle.message("welcome.screen.get.from.vcs.action.no.vcs.plugins.with.check.out.action.installed.action.name");
+    protected LocalizeValue getTextForEmpty() {
+        return UILocalize.welcomeScreenGetFromVcsActionNoVcsPluginsWithCheckOutActionInstalledActionName();
     }
 
     @Override
@@ -71,8 +69,6 @@ public class WelcomeGetFromVcsAction extends WelcomePopupAction {
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(CheckoutProvider.EXTENSION_POINT_NAME.hasAnyExtensions());
-        if (WelcomeFrameManager.isFromWelcomeFrame(e)) {
-            e.getPresentation().setIcon(PlatformIconGroup.welcomeFromvcs());
-        }
+        e.getPresentation().setIcon(PlatformIconGroup.welcomeFromvcs());
     }
 }

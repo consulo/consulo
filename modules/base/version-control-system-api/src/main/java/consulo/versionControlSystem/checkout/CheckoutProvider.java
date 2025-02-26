@@ -18,13 +18,14 @@ package consulo.versionControlSystem.checkout;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.versionControlSystem.VcsKey;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.io.File;
 import java.util.Comparator;
 
@@ -33,23 +34,31 @@ import java.util.Comparator;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CheckoutProvider {
-  ExtensionPointName<CheckoutProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(CheckoutProvider.class);
+    ExtensionPointName<CheckoutProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(CheckoutProvider.class);
 
-  void doCheckout(@Nonnull final Project project, @Nullable Listener listener);
+    void doCheckout(@Nonnull final Project project, @Nullable Listener listener);
 
-  @NonNls
-  String getVcsName();
-
-  interface Listener {
-    void directoryCheckedOut(File directory, VcsKey vcs);
-
-    void checkoutCompleted();
-  }
-
-  class CheckoutProviderComparator implements Comparator<CheckoutProvider> {
-    @Override
-    public int compare(final CheckoutProvider o1, final CheckoutProvider o2) {
-      return TextWithMnemonic.parse(o1.getVcsName()).getText().compareTo(TextWithMnemonic.parse(o2.getVcsName()).getText());
+    @Nonnull
+    @Deprecated
+    default String getVcsName() {
+        return getClass().getSimpleName();
     }
-  }
+
+    @Nonnull
+    default LocalizeValue getName() {
+        return LocalizeValue.localizeTODO(TextWithMnemonic.parse(getVcsName()).getText());
+    }
+
+    interface Listener {
+        void directoryCheckedOut(File directory, VcsKey vcs);
+
+        void checkoutCompleted();
+    }
+
+    class CheckoutProviderComparator implements Comparator<CheckoutProvider> {
+        @Override
+        public int compare(final CheckoutProvider o1, final CheckoutProvider o2) {
+            return TextWithMnemonic.parse(o1.getVcsName()).getText().compareTo(TextWithMnemonic.parse(o2.getVcsName()).getText());
+        }
+    }
 }

@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.application.ui.ApplicationWindowStateService;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
-import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.application.FrameTitleUtil;
@@ -50,19 +49,18 @@ import java.awt.event.WindowEvent;
  */
 public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, AccessibleContextAccessor {
     private final Runnable myClearInstance;
-    private BalloonLayout myBalloonLayout;
+    
+    private WelcomeDesktopBalloonLayoutImpl myBalloonLayout;
     private boolean myDisposed;
-
-    private final TitlelessDecorator myTitlelessDecorator;
 
     @RequiredUIAccess
     public FlatWelcomeFrame(Application application, Runnable clearInstance) {
         myClearInstance = clearInstance;
         final JRootPane rootPane = getRootPane();
 
-        myTitlelessDecorator = TitlelessDecorator.of(getRootPane(), TitlelessDecorator.WELCOME_WINDOW);
+        TitlelessDecorator titlelessDecorator = TitlelessDecorator.of(getRootPane(), TitlelessDecorator.WELCOME_WINDOW);
 
-        FlatWelcomeScreen screen = new FlatWelcomeScreen(this, myTitlelessDecorator);
+        FlatWelcomeScreen screen = new FlatWelcomeScreen(this, titlelessDecorator);
 
         final IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
 
@@ -77,13 +75,19 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
         setLocation(new Point(screenBounds.x + (screenBounds.width - getWidth()) / 2, screenBounds.y + (screenBounds.height - getHeight()) / 3));
 
-        myBalloonLayout = new WelcomeDesktopBalloonLayoutImpl(rootPane, JBUI.insets(8), screen.getMainWelcomePanel().myEventListener, screen.getMainWelcomePanel().myEventLocation);
+        myBalloonLayout = new WelcomeDesktopBalloonLayoutImpl(rootPane,
+            JBUI.insets(8),
+            screen.getEventListener(),
+            screen.getEventLocation()
+        );
+
+        screen.setWelcomeDesktopBalloonLayout(myBalloonLayout);
 
         setupCloseAction(this);
         MnemonicHelper.init(this);
         Disposer.register(application, this);
 
-        myTitlelessDecorator.install(this);
+        titlelessDecorator.install(this);
     }
 
     static void setupCloseAction(final JFrame frame) {
@@ -134,7 +138,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         super.dispose();
 
         if (myBalloonLayout != null) {
-            ((DesktopBalloonLayoutImpl) myBalloonLayout).dispose();
+            myBalloonLayout.dispose();
             myBalloonLayout = null;
         }
 

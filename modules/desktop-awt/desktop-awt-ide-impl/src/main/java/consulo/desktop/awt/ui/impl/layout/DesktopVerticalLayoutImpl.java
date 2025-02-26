@@ -22,11 +22,13 @@ import consulo.ui.layout.VerticalLayout;
 
 import jakarta.annotation.Nonnull;
 
+import javax.swing.*;
+
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class DesktopVerticalLayoutImpl extends DesktopLayoutBase implements VerticalLayout {
+public class DesktopVerticalLayoutImpl extends DesktopLayoutBase<JPanel> implements VerticalLayout {
   public DesktopVerticalLayoutImpl(int vGap) {
     initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(JBUI.scale(vGap)));
   }

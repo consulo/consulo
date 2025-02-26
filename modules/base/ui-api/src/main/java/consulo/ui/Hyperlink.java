@@ -47,10 +47,10 @@ public interface Hyperlink extends Component {
   @RequiredUIAccess
   void setText(@Nonnull String text);
 
-  void setImage(@Nullable Image icon);
+  void setIcon(@Nullable Image icon);
 
   @Nullable
-  Image getImage();
+  Image getIcon();
 
   @Nonnull
   default Disposable addHyperlinkListener(@Nonnull ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {

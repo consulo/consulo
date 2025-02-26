@@ -17,14 +17,22 @@ package consulo.desktop.awt.welcomeScreen;
 
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.welcomeScreen.WelcomeScreenSlider;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ui.internal.NotificationIconBuilder;
+import consulo.project.ui.notification.NotificationType;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
 
@@ -33,6 +41,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -45,6 +56,11 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
     private final FlatWelcomeFrame myWelcomeFrame;
     private final TitlelessDecorator myTitlelessDecorator;
 
+    private Consumer<List<NotificationType>> myEventListener;
+    private Supplier<Point> myEventLocation;
+
+    private WelcomeDesktopBalloonLayoutImpl myWelcomeDesktopBalloonLayout;
+
     @RequiredUIAccess
     public FlatWelcomeScreen(FlatWelcomeFrame welcomeFrame, TitlelessDecorator titlelessDecorator) {
         super(new JBCardLayout());
@@ -55,7 +71,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
             }
             return null;
         });
-        
+
         myWelcomeFrame = welcomeFrame;
         myMainWelcomePanel = new FlatWelcomePanel(welcomeFrame, titlelessDecorator) {
             @Override
@@ -76,10 +92,6 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
-    public FlatWelcomePanel getMainWelcomePanel() {
-        return myMainWelcomePanel;
-    }
-
     @RequiredUIAccess
     private JComponent createActionPanel(FlatWelcomePanel welcomePanel) {
         VerticalLayout layout = VerticalLayout.create();
@@ -92,19 +104,78 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
         DataManager manager = DataManager.getInstance();
 
         for (AnAction action : group) {
-            AnActionEvent e = AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, manager.getDataContext(welcomePanel));
+            AnActionEvent e = AnActionEvent.createFromAnAction(action,
+                null,
+                ActionPlaces.WELCOME_SCREEN,
+                manager.getDataContext(welcomePanel)
+            );
 
             action.update(e);
 
             Button button = Button.create(e.getPresentation().getTextValue());
             button.setIcon(e.getPresentation().getIcon());
             button.addStyle(ButtonStyle.BORDERLESS);
-            button.addClickListener(event -> action.actionPerformed(e));
+            button.addClickListener(event -> {
+                AnActionEvent in = AnActionEvent.createFromAnAction(action,
+                    null,
+                    ActionPlaces.WELCOME_SCREEN,
+                    manager.getDataContext(event.getComponent()),
+                    event.getInputDetails()
+                );
+                
+                action.actionPerformed(in);
+            });
 
             layout.add(button);
         }
 
+        layout.add(createActionComponent(LocalizeValue.localizeTODO("Configure"),
+            IdeActions.GROUP_WELCOME_SCREEN_CONFIGURE,
+            PlatformIconGroup.welcomePreferences())
+        );
+
+        layout.add(createEventsLink());
+
+        layout.add(createActionComponent(LocalizeValue.localizeTODO("Get Help"),
+            IdeActions.GROUP_WELCOME_SCREEN_DOC,
+            PlatformIconGroup.welcomeHelp())
+        );
+
         return (JComponent) TargetAWT.to(layout);
+    }
+
+    public Consumer<List<NotificationType>> getEventListener() {
+        return myEventListener;
+    }
+
+    public Supplier<Point> getEventLocation() {
+        return myEventLocation;
+    }
+
+    public void setWelcomeDesktopBalloonLayout(WelcomeDesktopBalloonLayoutImpl welcomeDesktopBalloonLayout) {
+        myWelcomeDesktopBalloonLayout = welcomeDesktopBalloonLayout;
+    }
+
+    @RequiredUIAccess
+    private consulo.ui.Component createEventsLink() {
+        Button eventsButton = createActionComponent(LocalizeValue.localizeTODO("Notifications"),
+            PlatformIconGroup.toolwindowsNotifications(),
+            (e) -> myWelcomeDesktopBalloonLayout.showPopup()
+        );
+
+        eventsButton.setVisible(false);
+
+        myEventListener = types -> {
+            eventsButton.setIcon(NotificationIconBuilder.getIcon(types));
+            eventsButton.setVisible(true);
+        };
+
+        myEventLocation = () -> {
+            Point location = SwingUtilities.convertPoint(TargetAWT.to(eventsButton), 0, 0, getRootPane().getLayeredPane());
+            return new Point(location.x, location.y + 5);
+        };
+
+        return eventsButton;
     }
 
     public static void collectAllActions(List<AnAction> group, ActionGroup actionGroup) {
@@ -118,6 +189,29 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
         }
     }
 
+    @RequiredUIAccess
+    private consulo.ui.Component createActionComponent(final LocalizeValue text, final String groupId, Image icon) {
+        Consumer<ClickEvent> runnable = (e) -> {
+            consulo.ui.Component component = e.getComponent();
+            InputDetails inputDetails = Objects.requireNonNull(e.getInputDetails());
+
+            ActionGroup configureGroup = (ActionGroup) ActionManager.getInstance().getAction(groupId);
+            ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu("WelcomeActions", configureGroup);
+            menu.show(component, inputDetails.getX(), inputDetails.getY());
+            UsageTrigger.trigger("welcome.screen." + groupId);
+        };
+
+        return createActionComponent(text, icon, runnable);
+    }
+
+    @RequiredUIAccess
+    public static Button createActionComponent(LocalizeValue text, consulo.ui.image.Image icon, Consumer<ClickEvent> runnable) {
+        Button button = Button.create(text, runnable::accept);
+        button.addStyle(ButtonStyle.BORDERLESS);
+        button.setIcon(icon);
+        return button;
+    }
+
     @Override
     public void setTitle(@Nonnull String title) {
         myWelcomeFrame.setTitle(title);
@@ -129,8 +223,8 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
 
         layout.swipe(this, MAIN, JBCardLayout.SwipeDirection.BACKWARD, () -> remove(target));
 
-        if (target instanceof Disposable) {
-            ((Disposable) target).dispose();
+        if (target instanceof Disposable disposable) {
+            disposable.disposeWithTree();
         }
 
         myWelcomeFrame.setDefaultTitle();

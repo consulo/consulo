@@ -15,16 +15,17 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -32,31 +33,36 @@ import javax.swing.*;
  * @since 2019-02-18
  */
 public class DesktopThreeComponentSplitLayoutImpl extends SwingComponentDelegate<ThreeComponentsSplitter> implements ThreeComponentSplitLayout {
-  public DesktopThreeComponentSplitLayoutImpl(SplitLayoutPosition position) {
-    initialize(new ThreeComponentsSplitter(position == SplitLayoutPosition.VERTICAL));
-  }
+    public DesktopThreeComponentSplitLayoutImpl(SplitLayoutPosition position) {
+        initialize(new ThreeComponentsSplitter(position == SplitLayoutPosition.VERTICAL));
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
-    toAWTComponent().setFirstComponent((JComponent)TargetAWT.to(component));
-    return this;
-  }
+    @Override
+    public void addStyle(LayoutStyle style) {
+        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
-    toAWTComponent().setInnerComponent((JComponent)TargetAWT.to(component));
-    return this;
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
+        toAWTComponent().setFirstComponent((JComponent) TargetAWT.to(component));
+        return this;
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
-    toAWTComponent().setLastComponent((JComponent)TargetAWT.to(component));
-    return this;
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
+        toAWTComponent().setInnerComponent((JComponent) TargetAWT.to(component));
+        return this;
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
+        toAWTComponent().setLastComponent((JComponent) TargetAWT.to(component));
+        return this;
+    }
 }

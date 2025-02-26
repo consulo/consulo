@@ -21,6 +21,7 @@ import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
@@ -33,6 +34,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.popup.*;
 import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.ui.util.TextWithMnemonic;
@@ -324,7 +326,12 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
                                                             @Nullable String actionPlace,
                                                             @Nullable BasePresentationFactory presentationFactory,
                                                             boolean autoSelection) {
-            final Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+            Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+            consulo.ui.Component uiCompoment = dataContext.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
+            if (component == null && uiCompoment != null) {
+                component = TargetAWT.to(uiCompoment);
+            }
+
             LOG.assertTrue(component != null, "dataContext has no component for new ListPopupStep");
 
             List<ActionItem> items = ActionPopupStep.createActionItems(actionGroup,

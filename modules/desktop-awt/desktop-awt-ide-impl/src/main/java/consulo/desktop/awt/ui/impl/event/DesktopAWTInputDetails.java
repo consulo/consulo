@@ -37,10 +37,9 @@ public class DesktopAWTInputDetails {
         Set<ModifiedInputDetails.Modifier> modifiers = new HashSet<>();
 
         if (event instanceof ActionEvent actionEvent) {
-            Point point = awtComponent.getLocationOnScreen();
+            AWTEvent awtEvent = EventQueue.getCurrentEvent();
 
-            Position2D relative = new Position2D(awtComponent.getX(), awtComponent.getY());
-            Position2D absolete = new Position2D(point.x, point.y);
+            InputDetails details = convert(awtComponent, awtEvent);
 
             if (BitUtil.isSet(actionEvent.getModifiers(), ActionEvent.CTRL_MASK)) {
                 modifiers.add(ModifiedInputDetails.Modifier.CTRL);
@@ -55,7 +54,7 @@ public class DesktopAWTInputDetails {
             }
 
             EnumSet<MouseInputDetails.Modifier> enumModifiers = modifiers.isEmpty() ? EnumSet.noneOf(ModifiedInputDetails.Modifier.class) : EnumSet.copyOf(modifiers);
-            return new MouseInputDetails(relative, absolete, enumModifiers, MouseInputDetails.MouseButton.LEFT);
+            return new MouseInputDetails(details.getPosition(), details.getPositionOnScreen(), enumModifiers, MouseInputDetails.MouseButton.LEFT);
         } else {
             if (event instanceof InputEvent inputEvent) {
                 if (BitUtil.isSet(inputEvent.getModifiersEx(), MouseEvent.CTRL_DOWN_MASK)) {

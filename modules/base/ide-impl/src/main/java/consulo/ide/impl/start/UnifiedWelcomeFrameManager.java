@@ -123,7 +123,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
                 Hyperlink component = Hyperlink.create(text, (event) -> action.actionPerformed(e));
 
-                component.setImage(presentation.getIcon());
+                component.setIcon(presentation.getIcon());
 
                 projectActionLayout.add(component);
             }

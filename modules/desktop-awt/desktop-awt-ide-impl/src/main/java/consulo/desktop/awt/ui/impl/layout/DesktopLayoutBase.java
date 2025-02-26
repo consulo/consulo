@@ -15,14 +15,15 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
+import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
-import consulo.ui.Component;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.layout.Layout;
-
+import consulo.ui.layout.LayoutStyle;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
@@ -32,51 +33,57 @@ import java.util.function.Consumer;
  * @since 2019-02-16
  */
 abstract class DesktopLayoutBase<T extends JPanel> extends SwingComponentDelegate<T> implements Layout {
-  class MyJPanel extends JPanel implements FromSwingComponentWrapper {
-    MyJPanel(LayoutManager layout) {
-      super(layout);
+    class MyJPanel extends JPanel implements FromSwingComponentWrapper {
+        MyJPanel(LayoutManager layout) {
+            super(layout);
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopLayoutBase.this;
+        }
     }
 
     @Override
-    public void updateUI() {
-      super.updateUI();
+    public void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
+        T component = toAWTComponent();
+
+        for (int i = 0; i < component.getComponentCount(); i++) {
+            java.awt.Component child = component.getComponent(i);
+
+            if (child instanceof FromSwingComponentWrapper fromSwingComponentWrapper) {
+                consumer.accept(fromSwingComponentWrapper.toUIComponent());
+            }
+        }
     }
 
-    @Nonnull
+    @SuppressWarnings("unchecked")
+    protected void initDefaultPanel(LayoutManager layoutManager) {
+        initialize((T) new MyJPanel(layoutManager));
+    }
+
+    protected void add(Component component, Object constraints) {
+        T panel = toAWTComponent();
+        panel.add(TargetAWT.to(component), constraints);
+        panel.validate();
+        panel.repaint();
+    }
+
+
     @Override
-    public Component toUIComponent() {
-      return DesktopLayoutBase.this;
+    public void addStyle(LayoutStyle style) {
+        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
     }
-  }
 
-  @Override
-  public void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
-    T component = toAWTComponent();
-
-    for (int i = 0; i < component.getComponentCount(); i++) {
-      java.awt.Component child = component.getComponent(i);
-
-      if (child instanceof FromSwingComponentWrapper fromSwingComponentWrapper) {
-        consumer.accept(fromSwingComponentWrapper.toUIComponent());
-      }
+    @RequiredUIAccess
+    @Override
+    public void removeAll() {
+        toAWTComponent().removeAll();
     }
-  }
-
-  @SuppressWarnings("unchecked")
-  protected void initDefaultPanel(LayoutManager layoutManager) {
-    initialize((T)new MyJPanel(layoutManager));
-  }
-
-  protected void add(Component component, Object constraints) {
-    T panel = toAWTComponent();
-    panel.add(TargetAWT.to(component), constraints);
-    panel.validate();
-    panel.repaint();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void removeAll() {
-    toAWTComponent().removeAll();
-  }
 }

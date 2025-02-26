@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.plaf2.flat.InplaceComponent;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
@@ -83,7 +84,11 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
     public DesktopButtonImpl(LocalizeValue text) {
         initialize(new MyButton(text));
 
-        toAWTComponent().addActionListener(e -> getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this)));
+        toAWTComponent().addActionListener(e -> {
+            ComponentEventListener<Component, ClickEvent> listener = getListenerDispatcher(ClickEvent.class);
+
+            listener.onEvent(new ClickEvent(this, DesktopAWTInputDetails.convert(toAWTComponent(), e)));
+        });
     }
 
     @Nonnull

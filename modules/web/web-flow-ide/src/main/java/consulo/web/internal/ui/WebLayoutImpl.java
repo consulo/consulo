@@ -19,6 +19,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.util.lang.ObjectUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
@@ -33,27 +34,32 @@ import java.util.function.Consumer;
  * @since 28/05/2023
  */
 public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVaadinComponentWrapper> extends VaadinComponentDelegate<C> implements Layout {
-  @RequiredUIAccess
-  @Override
-  public void removeAll() {
-    toVaadinComponent().removeAll();
-  }
-
-  @Override
-  public void remove(@Nonnull consulo.ui.Component component) {
-    if (component.getParent() == this) {
-      toVaadinComponent().remove(TargetVaddin.to(component));
+    @Override
+    public void addStyle(LayoutStyle style) {
+        // TODO
     }
-  }
 
-  @Override
-  public void forEachChild(@Nonnull Consumer<consulo.ui.Component> consumer) {
-    C c = toVaadinComponent();
+    @RequiredUIAccess
+    @Override
+    public void removeAll() {
+        toVaadinComponent().removeAll();
+    }
 
-    c.getChildren()
-     .map(component -> ObjectUtil.tryCast(component, FromVaadinComponentWrapper.class))
-     .filter(Objects::nonNull)
-     .map(FromVaadinComponentWrapper::toUIComponent)
-     .forEach(consumer::accept);
-  }
+    @Override
+    public void remove(@Nonnull consulo.ui.Component component) {
+        if (component.getParent() == this) {
+            toVaadinComponent().remove(TargetVaddin.to(component));
+        }
+    }
+
+    @Override
+    public void forEachChild(@Nonnull Consumer<consulo.ui.Component> consumer) {
+        C c = toVaadinComponent();
+
+        c.getChildren()
+            .map(component -> ObjectUtil.tryCast(component, FromVaadinComponentWrapper.class))
+            .filter(Objects::nonNull)
+            .map(FromVaadinComponentWrapper::toUIComponent)
+            .forEach(consumer::accept);
+    }
 }

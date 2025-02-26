@@ -45,7 +45,10 @@ import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -55,6 +58,7 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -526,14 +530,18 @@ public class RunConfigurable extends BaseConfigurable {
         });
     }
 
+    @RequiredUIAccess
     private void drawPressAddButtonMessage(final ConfigurationType configurationType) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         panel.setBorder(new EmptyBorder(7, 10, 0, 0));
         panel.add(new JLabel("Press the"));
 
-        ActionLink addIcon = new ActionLink("", PlatformIconGroup.generalAdd(), myAddAction);
-        addIcon.setBorder(new EmptyBorder(0, 5, 0, 5));
-        panel.add(addIcon);
+        Hyperlink hyperlink = Hyperlink.create("", event -> myAddAction.showAddPopup(true));
+        hyperlink.setIcon(PlatformIconGroup.generalAdd());
+        hyperlink.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, 5);
+        hyperlink.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
+
+        panel.add(TargetAWT.to(hyperlink));
 
         final LocalizeValue configurationTypeDescription = configurationType != null
             ? configurationType.getConfigurationTypeDescription()

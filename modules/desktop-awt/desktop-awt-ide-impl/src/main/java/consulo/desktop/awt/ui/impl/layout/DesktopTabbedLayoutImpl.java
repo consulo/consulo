@@ -15,15 +15,15 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.ui.ex.action.ActionManager;
-import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TabbedLayout;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -31,67 +31,72 @@ import jakarta.annotation.Nonnull;
  * @since 14-Jun-16
  */
 public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs> implements TabbedLayout {
-  class MyJTabbedPane extends JBEditorTabs implements FromSwingComponentWrapper {
-    public MyJTabbedPane() {
-      super(null, ActionManager.getInstance(), null, null);
+    class MyJTabbedPane extends JBEditorTabs implements FromSwingComponentWrapper {
+        public MyJTabbedPane() {
+            super(null, ActionManager.getInstance(), null, null);
 
-      setFirstTabOffset(10);
+            setFirstTabOffset(10);
+        }
+
+        @Override
+        public boolean isAlphabeticalMode() {
+            return false;
+        }
+
+        @Override
+        public boolean supportsCompression() {
+            return false;
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopTabbedLayoutImpl.this;
+        }
+    }
+
+    public DesktopTabbedLayoutImpl() {
+        initialize(new MyJTabbedPane());
     }
 
     @Override
-    public boolean isAlphabeticalMode() {
-      return false;
-    }
-
-    @Override
-    public boolean supportsCompression() {
-      return false;
+    public void addStyle(LayoutStyle style) {
+        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
     }
 
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopTabbedLayoutImpl.this;
+    public Tab createTab() {
+        return new DesktopTabImpl(this);
     }
-  }
 
-  public DesktopTabbedLayoutImpl() {
-    initialize(new MyJTabbedPane());
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
+        DesktopTabImpl desktopTab = (DesktopTabImpl) tab;
 
-  @Nonnull
-  @Override
-  public Tab createTab() {
-    return new DesktopTabImpl(this);
-  }
+        desktopTab.setComponent(component);
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
-    DesktopTabImpl desktopTab = (DesktopTabImpl)tab;
+        desktopTab.update();
 
-    desktopTab.setComponent(component);
+        toAWTComponent().addTab(desktopTab.getTabInfo());
 
-    desktopTab.update();
-    
-    toAWTComponent().addTab(desktopTab.getTabInfo());
+        return tab;
+    }
 
-    return tab;
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
+        Tab tab = createTab();
+        tab.setRender((t, p) -> p.append(tabName));
+        return addTab(tab, component);
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
-    Tab tab = createTab();
-    tab.setRender((t, p) -> p.append(tabName));
-    return addTab(tab, component);
-  }
-
-  @Override
-  public void removeTab(@Nonnull Tab tab) {
-    DesktopTabImpl desktopTab = (DesktopTabImpl)tab;
-    toAWTComponent().removeTab(desktopTab.getTabInfo());
-  }
+    @Override
+    public void removeTab(@Nonnull Tab tab) {
+        DesktopTabImpl desktopTab = (DesktopTabImpl) tab;
+        toAWTComponent().removeTab(desktopTab.getTabInfo());
+    }
 }

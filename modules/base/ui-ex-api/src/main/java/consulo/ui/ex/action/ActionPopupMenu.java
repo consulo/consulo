@@ -17,8 +17,8 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.Component;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -27,41 +27,41 @@ import javax.swing.*;
  * @see ActionManager#createActionPopupMenu(String, ActionGroup)
  */
 public interface ActionPopupMenu {
-  /**
-   * Returns the visual presentation of the popup menu.
-   */
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Desktop only")
-  default JPopupMenu getComponent() {
-    throw new UnsupportedOperationException("unsupported platform");
-  }
+    /**
+     * Returns the visual presentation of the popup menu.
+     */
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Desktop only")
+    default JPopupMenu getComponent() {
+        throw new UnsupportedOperationException("unsupported platform");
+    }
 
-  /**
-   * Returns the place where the action group is displayed (the first parameter of {@link ActionManager#createActionPopupMenu(String, ActionGroup)}.
-   */
-  @Nonnull
-  String getPlace();
+    /**
+     * Returns the place where the action group is displayed (the first parameter of {@link ActionManager#createActionPopupMenu(String, ActionGroup)}.
+     */
+    @Nonnull
+    String getPlace();
 
-  /**
-   * Returns the action group from which the menu was created.
-   */
-  @Nonnull
-  ActionGroup getActionGroup();
+    /**
+     * Returns the action group from which the menu was created.
+     */
+    @Nonnull
+    ActionGroup getActionGroup();
 
-  /**
-   * Will be used for data-context retrieval.
-   */
-  @Deprecated
-  @DeprecationInfo("Desktop only")
-  default void setTargetComponent(@Nonnull JComponent component) {
-    throw new UnsupportedOperationException("unsupported platform");
-  }
+    /**
+     * Will be used for data-context retrieval.
+     */
+    @Deprecated
+    @DeprecationInfo("Desktop only")
+    default void setTargetComponent(@Nonnull JComponent component) {
+        throw new UnsupportedOperationException("unsupported platform");
+    }
 
-  /**
-   * Will be used for data-context retrieval.
-   */
-  void setTargetComponent(@Nonnull Component component);
+    /**
+     * Will be used for data-context retrieval.
+     */
+    void setTargetComponent(@Nonnull Component component);
 
-  void show(Component component, int x, int y);
+    void show(Component component, int x, int y);
 }

@@ -74,13 +74,13 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
   }
 
   @Override
-  public void setImage(@Nullable Image icon) {
+  public void setIcon(@Nullable Image icon) {
     toAWTComponent().setIcon(TargetAWT.to(icon));
   }
 
   @Nullable
   @Override
-  public Image getImage() {
+  public Image getIcon() {
     return TargetAWT.from(toAWTComponent().getIcon());
   }
 }

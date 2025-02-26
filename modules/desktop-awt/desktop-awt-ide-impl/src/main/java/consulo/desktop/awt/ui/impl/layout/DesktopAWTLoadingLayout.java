@@ -23,9 +23,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.LoadingLayout;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
@@ -37,60 +38,65 @@ import java.util.function.Supplier;
  * @since 23/04/2023
  */
 public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDelegate<AWTLoadingPanel> implements LoadingLayout<L> {
-  private final L myInnerLayout;
+    private final L myInnerLayout;
 
-  public DesktopAWTLoadingLayout(L inner, Disposable parent) {
-    myInnerLayout = inner;
-    initialize(new AWTLoadingPanel(this, (JComponent)TargetAWT.to(inner), parent));
-  }
+    public DesktopAWTLoadingLayout(L inner, Disposable parent) {
+        myInnerLayout = inner;
+        initialize(new AWTLoadingPanel(this, (JComponent) TargetAWT.to(inner), parent));
+    }
 
-  @RequiredUIAccess
-  @Override
-  public <Value> Future<Value> startLoading(@Nonnull Supplier<Value> valueGetter, @Nonnull BiConsumer<L, Value> uiSetter) {
-    UIAccess uiAccess = UIAccess.current();
+    @Override
+    public void addStyle(LayoutStyle style) {
+        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
+    }
 
-    startLoading();
-    
-    return AppExecutorUtil.getAppScheduledExecutorService().submit(() -> {
-      Value value = valueGetter.get();
+    @RequiredUIAccess
+    @Override
+    public <Value> Future<Value> startLoading(@Nonnull Supplier<Value> valueGetter, @Nonnull BiConsumer<L, Value> uiSetter) {
+        UIAccess uiAccess = UIAccess.current();
 
-      uiAccess.give(() -> stopLoading(l -> uiSetter.accept(l, value)));
-      return value;
-    });
-  }
+        startLoading();
 
-  @RequiredUIAccess
-  @Override
-  public void startLoading() {
-    myInnerLayout.removeAll();
-    toAWTComponent().startLoading();
-    forceUpdate();
-  }
+        return AppExecutorUtil.getAppScheduledExecutorService().submit(() -> {
+            Value value = valueGetter.get();
 
-  @RequiredUIAccess
-  @Override
-  public void startLoading(@Nonnull LocalizeValue loadingText) {
-    myInnerLayout.removeAll();
-    toAWTComponent().setLoadingText(loadingText.getValue());
-    forceUpdate();
-  }
+            uiAccess.give(() -> stopLoading(l -> uiSetter.accept(l, value)));
+            return value;
+        });
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void stopLoading(@Nonnull Consumer<L> consumer) {
-    consumer.accept(myInnerLayout);
-    toAWTComponent().stopLoading();
-    forceUpdate();
-  }
+    @RequiredUIAccess
+    @Override
+    public void startLoading() {
+        myInnerLayout.removeAll();
+        toAWTComponent().startLoading();
+        forceUpdate();
+    }
 
-  private void forceUpdate() {
-    toAWTComponent().invalidate();
-    toAWTComponent().repaint();
-  }
+    @RequiredUIAccess
+    @Override
+    public void startLoading(@Nonnull LocalizeValue loadingText) {
+        myInnerLayout.removeAll();
+        toAWTComponent().setLoadingText(loadingText.getValue());
+        forceUpdate();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setLoadingText(@Nonnull LocalizeValue loadingText) {
-    toAWTComponent().setLoadingText(loadingText.getValue());
-  }
+    @RequiredUIAccess
+    @Override
+    public void stopLoading(@Nonnull Consumer<L> consumer) {
+        consumer.accept(myInnerLayout);
+        toAWTComponent().stopLoading();
+        forceUpdate();
+    }
+
+    private void forceUpdate() {
+        toAWTComponent().invalidate();
+        toAWTComponent().repaint();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setLoadingText(@Nonnull LocalizeValue loadingText) {
+        toAWTComponent().setLoadingText(loadingText.getValue());
+    }
 }

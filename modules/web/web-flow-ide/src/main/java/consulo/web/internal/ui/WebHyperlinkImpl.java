@@ -68,13 +68,13 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
   }
 
   @Override
-  public void setImage(@Nullable Image icon) {
+  public void setIcon(@Nullable Image icon) {
     // TODO getVaadinComponent().setImage(icon);
   }
 
   @Nullable
   @Override
-  public Image getImage() {
+  public Image getIcon() {
     return null;
     // TODO return getVaadinComponent().myImage;
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,20 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LayoutStyle;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2025-02-25
  */
-public class DesktopHorizontalLayoutImpl extends DesktopLayoutBase<JPanel> implements HorizontalLayout {
-    public DesktopHorizontalLayoutImpl(int gapInPixesl) {
-        initDefaultPanel(new consulo.ui.ex.awt.HorizontalLayout(JBUI.scale(gapInPixesl)));
-    }
-
-    @RequiredUIAccess
-    @Nonnull
-    @Override
-    public HorizontalLayout add(@Nonnull Component component) {
-        add(component, null);
-        return this;
+public class DesktopAWTLayoutStyleHandler {
+    public static void addStyle(LayoutStyle style, JComponent component) {
+        switch (style) {
+            case TRANSPARENT:
+                component.setOpaque(false);
+                break;
+        }
     }
 }

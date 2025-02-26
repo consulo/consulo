@@ -58,7 +58,10 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
   private final BalloonPanel myBalloonPanel = new BalloonPanel();
   private boolean myVisible;
 
-  public WelcomeDesktopBalloonLayoutImpl(@Nonnull JRootPane parent, @Nonnull Insets insets, @Nonnull Consumer<List<NotificationType>> listener, @Nonnull Supplier<Point> buttonLocation) {
+  public WelcomeDesktopBalloonLayoutImpl(@Nonnull JRootPane parent,
+                                         @Nonnull Insets insets,
+                                         @Nonnull Consumer<List<NotificationType>> listener,
+                                         @Nonnull Supplier<Point> buttonLocation) {
     super(parent, insets);
     myListener = listener;
     myButtonLocation = buttonLocation;

@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
+import consulo.ui.HasComponentStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
@@ -25,7 +26,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface Layout extends Component {
+public interface Layout extends Component, HasComponentStyle<LayoutStyle> {
   @RequiredUIAccess
   default void removeAll() {
     throw new AbstractMethodError(getClass().getName());

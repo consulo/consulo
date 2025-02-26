@@ -6,6 +6,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.LightweightWindow;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.event.JBPopupListener;
@@ -17,6 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 
 /**
  * Base interface for popup windows.
@@ -90,7 +92,11 @@ public interface JBPopup extends Disposable, LightweightWindow {
     /**
      * Shows popup inside position by event
      */
-    void showBy(@Nonnull ComponentEvent<? extends consulo.ui.Component> uiEvent);
+    default void showBy(@Nonnull ComponentEvent<? extends consulo.ui.Component> uiEvent) {
+        showBy(uiEvent.getComponent(), Objects.requireNonNull(uiEvent.getInputDetails()));
+    }
+
+    void showBy(@Nonnull consulo.ui.Component component, @Nonnull InputDetails inputDetails);
 
     /**
      * Shows the popup in the center of the active window in the IDE frame for the specified project.

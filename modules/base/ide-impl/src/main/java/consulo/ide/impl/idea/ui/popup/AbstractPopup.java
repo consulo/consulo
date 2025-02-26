@@ -873,9 +873,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
-    public void showBy(@Nonnull ComponentEvent<? extends consulo.ui.Component> uiEvent) {
-        consulo.ui.Component component = uiEvent.getComponent();
-        InputDetails inputDetails = uiEvent.getInputDetails();
+    public void showBy(@Nonnull consulo.ui.Component component, @Nonnull InputDetails inputDetails) {
         if (inputDetails != null) {
             Position2D positionOnScreen = inputDetails.getPositionOnScreen();
             show(TargetAWT.to(component), positionOnScreen.getX(), positionOnScreen.getY(), true);

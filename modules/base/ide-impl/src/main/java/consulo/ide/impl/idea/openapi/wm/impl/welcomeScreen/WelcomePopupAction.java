@@ -15,106 +15,85 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.project.ui.internal.WindowManagerEx;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 /**
  * @author Vladislav.Kaznacheev
  */
 public abstract class WelcomePopupAction extends AnAction implements DumbAware {
 
-  protected abstract void fillActions(DefaultActionGroup group);
+    protected abstract void fillActions(DefaultActionGroup group);
 
-  protected abstract String getTextForEmpty();
+    @Nonnull
+    protected abstract LocalizeValue getTextForEmpty();
 
-  protected abstract String getCaption();
+    /**
+     * When there is only one option to choose from, this method is called to determine whether
+     * the popup should still be shown or that the option should be chosen silently.
+     *
+     * @return true to choose single option silently
+     * false otherwise
+     */
+    protected abstract boolean isSilentlyChooseSingleOption();
 
-  /**
-   * When there is only one option to choose from, this method is called to determine whether
-   * the popup should still be shown or that the option should be chosen silently.
-   *
-   * @return true to choose single option silently
-   *         false otherwise
-   */
-  protected abstract boolean isSilentlyChooseSingleOption();
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull final AnActionEvent e) {
+        final DefaultActionGroup group = new DefaultActionGroup();
+        fillActions(group);
 
-  public void actionPerformed(final AnActionEvent e) {
-    showPopup(e);
-  }
-
-  private void showPopup(final AnActionEvent e) {
-    final DefaultActionGroup group = new DefaultActionGroup();
-    fillActions(group);
-
-    if (group.getChildrenCount() == 1 && isSilentlyChooseSingleOption()) {
-      final AnAction[] children = group.getChildren(null);
-      children[0].actionPerformed(e);
-      return;
-    }
-
-
-    if (group.getChildrenCount() == 0) {
-      group.add(new AnAction(getTextForEmpty()) {
-        public void actionPerformed(AnActionEvent e) {
-          group.setPopup(false);
+        if (group.getChildrenCount() == 1 && isSilentlyChooseSingleOption()) {
+            final AnAction[] children = group.getChildren(null);
+            children[0].actionPerformed(e);
+            return;
         }
-      } );
+
+
+        if (group.getChildrenCount() == 0) {
+            group.add(new AnAction(getTextForEmpty()) {
+                @RequiredUIAccess
+                @Override
+                public void actionPerformed(@Nonnull AnActionEvent e) {
+                    group.setPopup(false);
+                }
+            });
+        }
+
+        final DataContext context = e.getDataContext();
+        final ListPopup popup = JBPopupFactory.getInstance()
+            .createActionGroupPopup(null,
+                group,
+                context,
+                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                true);
+
+        InputDetails inputDetails = Objects.requireNonNull(e.getInputDetails());
+
+        Component component = e.getRequiredData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
+
+        popup.showBy(component, inputDetails);
     }
-
-    final DataContext context = e.getDataContext();
-    final ListPopup popup = JBPopupFactory.getInstance()
-            .createActionGroupPopup(getCaption(),
-                                    group,
-                                    context,
-                                    JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                                    true);
-
-    JComponent contextComponent = null;
-    InputEvent inputEvent = e.getInputEvent();
-    if (inputEvent instanceof MouseEvent) {
-      if (inputEvent.getSource() instanceof JComponent) {
-        contextComponent = (JComponent)inputEvent.getSource();
-      }
-    }
-
-    showPopup(context, popup, contextComponent);
-  }
-
-  protected void showPopup(DataContext context, ListPopup popup, JComponent contextComponent) {
-    Component focusedComponent = contextComponent != null ? contextComponent : context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (focusedComponent != null) {
-      if (popup instanceof PopupFactoryImpl.ActionGroupPopup && focusedComponent instanceof JLabel) {
-        ((PopupFactoryImpl.ActionGroupPopup)popup).showUnderneathOfLabel((JLabel)focusedComponent);
-      } else {
-        popup.showUnderneathOf(focusedComponent);
-      }
-    }
-    else {
-      Rectangle r;
-      int x;
-      int y;
-      focusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent((Project)null);
-      r = WindowManagerEx.getInstanceEx().getScreenBounds();
-      x = r.x + r.width / 2;
-      y = r.y + r.height / 2;
-      Point point = new Point(x, y);
-      SwingUtilities.convertPointToScreen(point, focusedComponent.getParent());
-
-      popup.showInScreenCoordinates(focusedComponent.getParent(), point);
-    }
-  }
 }

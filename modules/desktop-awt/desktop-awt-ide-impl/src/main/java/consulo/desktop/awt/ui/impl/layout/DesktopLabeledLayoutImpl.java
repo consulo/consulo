@@ -15,54 +15,56 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.layout.LabeledLayout;
-
+import consulo.ui.layout.LayoutStyle;
 import jakarta.annotation.Nonnull;
+
+import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 15-Jun-16
  */
-public class DesktopLabeledLayoutImpl extends DesktopLayoutBase implements LabeledLayout {
-  class LabelJPanel extends MyJPanel {
-    private final LocalizeValue myLabelValue;
+public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel> implements LabeledLayout {
+    class LabelJPanel extends MyJPanel {
+        private final LocalizeValue myLabelValue;
 
-    private LabelJPanel(LayoutManager layout, LocalizeValue labelValue) {
-      super(layout);
-      myLabelValue = labelValue;
+        private LabelJPanel(LayoutManager layout, LocalizeValue labelValue) {
+            super(layout);
+            myLabelValue = labelValue;
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+
+            updateBorder();
+        }
+
+        public void updateBorder() {
+            // first component create
+            if (myLabelValue != null) {
+                setBorder(IdeBorderFactory.createTitledBorder(myLabelValue.getValue()));
+            }
+        }
     }
 
+    public DesktopLabeledLayoutImpl(LocalizeValue label) {
+        LabelJPanel component = new LabelJPanel(new BorderLayout(), label);
+        component.updateBorder();
+        initialize(component);
+    }
+
+    @RequiredUIAccess
+    @Nonnull
     @Override
-    public void updateUI() {
-      super.updateUI();
-
-      updateBorder();
+    public LabeledLayout set(@Nonnull Component component) {
+        add(component, BorderLayout.CENTER);
+        return this;
     }
-
-    public void updateBorder() {
-      // first component create
-      if (myLabelValue != null) {
-        setBorder(IdeBorderFactory.createTitledBorder(myLabelValue.getValue()));
-      }
-    }
-  }
-
-  public DesktopLabeledLayoutImpl(LocalizeValue label) {
-    LabelJPanel component = new LabelJPanel(new BorderLayout(), label);
-    component.updateBorder();
-    initialize(component);
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public LabeledLayout set(@Nonnull Component component) {
-    add(component, BorderLayout.CENTER);
-    return this;
-  }
 }
