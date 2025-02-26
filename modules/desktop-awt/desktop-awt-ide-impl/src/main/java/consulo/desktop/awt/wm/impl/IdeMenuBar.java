@@ -104,9 +104,11 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   private double myProgress = 0;
   private boolean myActivated = false;
   private final boolean myEnableIcons;
+  private final DesktopIdeFrameImpl myFrame;
 
-  public IdeMenuBar(ActionManager actionManager, DataManager dataManager) {
+  public IdeMenuBar(@Nullable DesktopIdeFrameImpl frame,  ActionManager actionManager, DataManager dataManager) {
     myActionManager = actionManager;
+    myFrame = frame;
     myTimerListener = new MyTimerListener();
     myVisibleActions = new ArrayList<>();
     myNewVisibleActions = new ArrayList<>();
@@ -121,7 +123,6 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
       myButton = new MyExitFullScreenButton();
       add(myClockPanel);
       add(myButton);
-      addPropertyChangeListener(WindowManagerEx.FULL_SCREEN, evt -> updateState());
       addMouseListener(new MyMouseListener());
     }
     else {
@@ -278,6 +279,10 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     super.addNotify();
 
     updateMenuActions();
+
+    if (myFrame != null) {
+      myFrame.addFullScreenListener((v) -> updateState(), myDisposable);
+    }
 
     // Add updater for menus
     myActionManager.addTimerListener(1000, new WeakTimerListener(myTimerListener));

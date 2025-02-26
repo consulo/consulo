@@ -23,15 +23,18 @@ import consulo.ui.ex.awt.TitlelessDecorator;
 
 import javax.swing.border.Border;
 import java.awt.*;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class NavBarBorder implements Border {
     private final TitlelessDecorator myTitlelessDecorator;
+    private BooleanSupplier myFullScreenGetter;
 
-    public NavBarBorder(TitlelessDecorator titlelessDecorator) {
+    public NavBarBorder(TitlelessDecorator titlelessDecorator, BooleanSupplier fullScreenGetter) {
         myTitlelessDecorator = titlelessDecorator;
+        myFullScreenGetter = fullScreenGetter;
     }
 
     @Override
@@ -44,12 +47,13 @@ public class NavBarBorder implements Border {
 
     @Override
     public Insets getBorderInsets(final Component c) {
+        boolean fullScreen = myFullScreenGetter.getAsBoolean();
         if (!UISettings.getInstance().SHOW_MAIN_TOOLBAR) {
             if (NavBarRootPaneExtensionImpl.runToolbarExists()) {
-                return new JBInsets(1 + myTitlelessDecorator.getExtraTopTopPadding(), myTitlelessDecorator.getExtraTopLeftPadding(), 1, 4);
+                return new JBInsets(1 + myTitlelessDecorator.getExtraTopTopPadding(), myTitlelessDecorator.getExtraTopLeftPadding(fullScreen), 1, 4);
             }
 
-            return new JBInsets(myTitlelessDecorator.getExtraTopTopPadding(), myTitlelessDecorator.getExtraTopLeftPadding(), 0, 4);
+            return new JBInsets(myTitlelessDecorator.getExtraTopTopPadding(), myTitlelessDecorator.getExtraTopLeftPadding(fullScreen), 0, 4);
         }
 
         return new JBInsets(1, 0, 0, 4);

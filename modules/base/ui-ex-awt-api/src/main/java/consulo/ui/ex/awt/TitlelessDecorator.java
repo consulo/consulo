@@ -17,7 +17,9 @@ package consulo.ui.ex.awt;
 
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
+import consulo.project.ui.wm.IdeFrameState;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -101,7 +103,7 @@ public interface TitlelessDecorator {
         }
 
         @Override
-        public int getExtraTopLeftPadding() {
+        public int getExtraTopLeftPadding(boolean fullScreen) {
             return 0;
         }
 
@@ -132,13 +134,17 @@ public interface TitlelessDecorator {
         }
 
         @Override
-        public int getExtraTopLeftPadding() {
-            return 64;
+        public int getExtraTopLeftPadding(boolean fullScreen) {
+            if (fullScreen) {
+                return 0;
+            }
+
+            return 70;
         }
 
         @Override
         public int getExtraTopTopPadding() {
-            return 1;
+            return 4;
         }
     }
 
@@ -152,7 +158,7 @@ public interface TitlelessDecorator {
         }
 
         @Override
-        public int getExtraTopLeftPadding() {
+        public int getExtraTopLeftPadding(boolean fullScreen) {
             return 0;
         }
 
@@ -171,7 +177,7 @@ public interface TitlelessDecorator {
         return rightComponent;
     }
 
-    int getExtraTopLeftPadding();
+    int getExtraTopLeftPadding(boolean fullScreen);
 
     int getExtraTopTopPadding();
 }

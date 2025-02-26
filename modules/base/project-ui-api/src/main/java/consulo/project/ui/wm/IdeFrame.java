@@ -16,6 +16,7 @@
 package consulo.project.ui.wm;
 
 import consulo.application.ui.wm.FocusableFrame;
+import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.ui.Rectangle2D;
 import consulo.util.dataholder.Key;
@@ -57,5 +58,8 @@ public interface IdeFrame extends FocusableFrame {
 
     default boolean isInFullScreen() {
         return false;
+    }
+
+    default void addFullScreenListener(FullScreenListener listener, Disposable disposable) {
     }
 }

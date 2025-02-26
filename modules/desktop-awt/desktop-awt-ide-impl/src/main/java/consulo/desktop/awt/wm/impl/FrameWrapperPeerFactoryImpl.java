@@ -76,7 +76,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       boolean setMenuOnFrame = Platform.current().os().isMac();
 
       if (setMenuOnFrame) {
-        setJMenuBar(new IdeMenuBar(ActionManagerEx.getInstanceEx(), DataManager.getInstance()));
+        setJMenuBar(new IdeMenuBar(null, ActionManagerEx.getInstanceEx(), DataManager.getInstance()));
       }
 
       MouseGestureManager.getInstance().add(this);

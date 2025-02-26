@@ -60,6 +60,8 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
 
     private TitlelessDecorator myTitlelessDecorator = TitlelessDecorator.NOTHING;
 
+    private boolean myFullScreen;
+
     @Inject
     public NavBarRootPaneExtensionImpl(Project project) {
         myProject = project;
@@ -74,6 +76,16 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
     @Override
     public void setTitlelessDecorator(TitlelessDecorator titlelessDecorator) {
         myTitlelessDecorator = titlelessDecorator;
+    }
+
+    @Override
+    public void handleFullScreen(boolean fullScreen) {
+        myFullScreen = fullScreen;
+
+        if (myScrollPane != null) {
+            myScrollPane.invalidate();
+            myScrollPane.repaint();
+        }
     }
 
     @Override
@@ -253,7 +265,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
 
                 myScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
                 myScrollPane.setHorizontalScrollBar(null);
-                myScrollPane.setBorder(new NavBarBorder(myTitlelessDecorator));
+                myScrollPane.setBorder(new NavBarBorder(myTitlelessDecorator, () -> myFullScreen));
                 myScrollPane.setOpaque(false);
                 myScrollPane.getViewport().setOpaque(false);
                 myScrollPane.setViewportBorder(null);

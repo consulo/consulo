@@ -44,6 +44,7 @@ public class WindowHacking {
       LOG.error(e);
     }
 
+
   }
 
   public static boolean isModalBlocked(final Window window) {

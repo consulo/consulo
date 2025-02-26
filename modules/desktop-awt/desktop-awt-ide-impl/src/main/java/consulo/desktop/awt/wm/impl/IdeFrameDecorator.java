@@ -78,16 +78,6 @@ public abstract class IdeFrameDecorator implements Disposable {
     myIdeFrame = null;
   }
 
-  protected void notifyFrameComponents(boolean state) {
-    JFrame jFrame = getJFrame();
-    if (jFrame == null) {
-      return;
-    }
-
-    jFrame.getRootPane().putClientProperty(WindowManagerEx.FULL_SCREEN, state);
-    jFrame.getJMenuBar().putClientProperty(WindowManagerEx.FULL_SCREEN, state);
-  }
-
   // AWT-based decorator
   private static class AWTFrameDecorator extends IdeFrameDecorator {
     private AWTFrameDecorator(@Nonnull IdeFrameEx frame) {
@@ -128,18 +118,17 @@ public abstract class IdeFrameDecorator implements Disposable {
       finally {
         if (state) {
           jFrame.setBounds(device.getDefaultConfiguration().getBounds());
-        }
-        else {
+        } else {
           Object o = jFrame.getRootPane().getClientProperty("oldBounds");
           if (o instanceof Rectangle) {
-            jFrame.setBounds((Rectangle)o);
+            jFrame.setBounds((Rectangle) o);
           }
         }
         jFrame.setVisible(true);
         jFrame.getRootPane().putClientProperty(ScreenUtil.DISPOSE_TEMPORARY, null);
-
-        notifyFrameComponents(state);
       }
+
+      myIdeFrame.storeFullScreenStateIfNeeded(state);
       return ActionCallback.DONE;
     }
   }
@@ -156,7 +145,7 @@ public abstract class IdeFrameDecorator implements Disposable {
         @Override
         public void componentResized(ComponentEvent e) {
           if (myRequestedState != null) {
-            notifyFrameComponents(myRequestedState);
+            frame.storeFullScreenStateIfNeeded(myRequestedState);
             myRequestedState = null;
           }
         }

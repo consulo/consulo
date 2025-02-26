@@ -31,10 +31,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.IdePanePanel;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.project.ui.wm.BalloonLayout;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.IdeRootPaneNorthExtension;
-import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -91,15 +88,23 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
 
         myContentPane.add(myStatusBar, BorderLayout.SOUTH);
 
+        frame.addFullScreenListener((v) -> {
+            myFullScreen = frame.isInFullScreen();
+
+            updateToolbar();
+
+            for (IdeRootPaneNorthExtension extension : myNorthComponents.values()) {
+                extension.handleFullScreen(myFullScreen);
+            }
+        }, this);
+
         if (WindowManagerEx.getInstanceEx().isFloatingMenuBarSupported()) {
-            menuBar = new IdeMenuBar(actionManager, dataManager);
+            menuBar = new IdeMenuBar(frame, actionManager, dataManager);
             
             getLayeredPane().add(menuBar, Integer.valueOf(JLayeredPane.DEFAULT_LAYER - 1));
-
-            addPropertyChangeListener(WindowManagerEx.FULL_SCREEN, __ -> myFullScreen = frame.isInFullScreen());
         }
         else {
-            setJMenuBar(new IdeMenuBar(actionManager, dataManager));
+            setJMenuBar(new IdeMenuBar(null, actionManager, dataManager));
         }
 
         IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(this);
@@ -188,7 +193,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
             @Override
             public Insets getBorderInsets(Component c) {
                 TitlelessDecorator decorator = myFrame.getTitlelessDecorator();
-                return JBUI.insets(decorator.getExtraTopTopPadding(), decorator.getExtraTopLeftPadding(), 0, 0);
+                return JBUI.insets(decorator.getExtraTopTopPadding(), decorator.getExtraTopLeftPadding(myFullScreen), 0, 0);
             }
 
             @Override

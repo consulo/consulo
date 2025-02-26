@@ -46,6 +46,5 @@ public interface IdeFrameEx extends IdeFrame {
 
   @RequiredUIAccess
   default void initialize() {
-
   }
 }

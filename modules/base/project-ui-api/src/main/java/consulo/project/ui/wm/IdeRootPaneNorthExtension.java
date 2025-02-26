@@ -37,6 +37,9 @@ public interface IdeRootPaneNorthExtension extends Disposable {
 
     IdeRootPaneNorthExtension copy();
 
+    default void handleFullScreen(boolean fullScreen) {
+    }
+
     default void revalidate() {
     }
 }

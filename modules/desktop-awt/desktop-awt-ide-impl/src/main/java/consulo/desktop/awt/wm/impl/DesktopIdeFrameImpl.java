@@ -17,14 +17,14 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.progress.Task;
 import consulo.application.util.SystemInfo;
 import consulo.awt.hacking.AWTAccessorHacking;
+import consulo.awt.hacking.WindowHacking;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.application.FrameTitleUtil;
@@ -39,8 +39,9 @@ import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.*;
+import consulo.proxy.EventDispatcher;
+import consulo.ui.ModalityState;
 import consulo.ui.Rectangle2D;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
@@ -66,7 +67,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
@@ -244,6 +244,8 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     private PropertyChangeListener myWindowsBorderUpdater;
     private boolean myRestoreFullScreen;
 
+    private final EventDispatcher<FullScreenListener> myFullScreenListenerDispatcher = EventDispatcher.create(FullScreenListener.class);
+
     private MyFrame myJFrame;
 
     private final TitlelessDecorator myTitlelessDecorator;
@@ -254,7 +256,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myJFrame.toUIWindow().addUserDataProvider(key -> getData(key));
 
         myJFrame.setTitle(FrameTitleUtil.buildTitle());
-        myRootPane = createRootPane(actionManager, dataManager, application);
+        myRootPane = new IdeRootPane(actionManager, dataManager, application, this);
         JRootPane rootPane = myJFrame.getRootPane();
         // we need cpy decorate style from original root, in case frame is decorated by laf
         myRootPane.setWindowDecorationStyle(rootPane.getWindowDecorationStyle());
@@ -360,10 +362,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
                 }
             }
         }
-    }
-
-    protected IdeRootPane createRootPane(ActionManager actionManager, DataManager dataManager, Application application) {
-        return new IdeRootPane(actionManager, dataManager, application, this);
     }
 
     public TitlelessDecorator getTitlelessDecorator() {
@@ -558,6 +556,8 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
             return;
         }
 
+        myFullScreenListenerDispatcher.getMulticaster().fullScreenModeChanged(state);
+
         if (myProject != null) {
             PropertiesComponent.getInstance(myProject).setValue(FULL_SCREEN, state);
             myJFrame.doLayout();
@@ -610,10 +610,14 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return myFrameDecorator != null && myFrameDecorator.isInFullScreen();
     }
 
+    @Override
+    public void addFullScreenListener(FullScreenListener listener, Disposable disposable) {
+        myFullScreenListenerDispatcher.addListener(listener, disposable);
+    }
+
     @Nonnull
     @Override
     public ActionCallback toggleFullScreen(boolean state) {
-
         if (temporaryFixForIdea156004(state)) {
             return ActionCallback.DONE;
         }
@@ -655,17 +659,10 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
     private boolean temporaryFixForIdea156004(final boolean state) {
         if (Platform.current().os().isMac()) {
-            try {
-                Field modalBlockerField = Window.class.getDeclaredField("modalBlocker");
-                modalBlockerField.setAccessible(true);
-                final Window modalBlocker = (Window) modalBlockerField.get(myJFrame);
-                if (modalBlocker != null) {
-                    ApplicationManager.getApplication().invokeLater(() -> toggleFullScreen(state), IdeaModalityState.nonModal());
-                    return true;
-                }
-            }
-            catch (NoSuchFieldException | IllegalAccessException e) {
-                LOG.error(e);
+            JDialog modalBlocker = WindowHacking.getModalBlockerFor(myJFrame);
+            if (modalBlocker != null) {
+                ApplicationManager.getApplication().invokeLater(() -> toggleFullScreen(state), ModalityState.nonModal());
+                return true;
             }
         }
         return false;

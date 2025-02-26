@@ -213,77 +213,50 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
     assert jFrame != null;
 
     try {
-      if (Platform.current().os().isMac()) {
-        FullScreenUtilitiesWrapper.setWindowCanFullScreen(jFrame, true);
-        // Native fullscreen listener can be set only once
-        FullScreenUtilitiesWrapper.addFullScreenListenerTo(jFrame, new FullScreenListenerWrapper() {
-          @Override
-          public void windowEnteringFullScreen(AppFullScreenEventWrapper event) {
-            myDispatcher.getMulticaster().windowEnteringFullScreen();
-          }
+      FullScreenUtilitiesWrapper.setWindowCanFullScreen(jFrame, true);
+      // Native fullscreen listener can be set only once
+      FullScreenUtilitiesWrapper.addFullScreenListenerTo(jFrame, new FullScreenListenerWrapper() {
+        @Override
+        public void windowEnteringFullScreen(AppFullScreenEventWrapper event) {
+          myDispatcher.getMulticaster().windowEnteringFullScreen();
+        }
 
-          @Override
-          public void windowEnteredFullScreen(AppFullScreenEventWrapper event) {
-            myDispatcher.getMulticaster().windowEnteredFullScreen();
-          }
+        @Override
+        public void windowEnteredFullScreen(AppFullScreenEventWrapper event) {
+          myDispatcher.getMulticaster().windowEnteredFullScreen();
+        }
 
-          @Override
-          public void windowExitingFullScreen(AppFullScreenEventWrapper event) {
-            myDispatcher.getMulticaster().windowExitingFullScreen();
-          }
+        @Override
+        public void windowExitingFullScreen(AppFullScreenEventWrapper event) {
+          myDispatcher.getMulticaster().windowExitingFullScreen();
+        }
 
-          @Override
-          public void windowExitedFullScreen(AppFullScreenEventWrapper event) {
-            myDispatcher.getMulticaster().windowExitedFullScreen();
-          }
-        });
-        myDispatcher.addListener(new FSListener() {
-          @Override
-          public void windowEnteredFullScreen() {
-            JFrame temp = getJFrame();
+        @Override
+        public void windowExitedFullScreen(AppFullScreenEventWrapper event) {
+          myDispatcher.getMulticaster().windowExitedFullScreen();
+        }
+      });
+      myDispatcher.addListener(new FSListener() {
+        @Override
+        public void windowEnteredFullScreen() {
+          JFrame temp = getJFrame();
 
-            // We can get the notification when the frame has been disposed
-            JRootPane rootPane = temp.getRootPane();
-            if (rootPane != null) rootPane.putClientProperty(FULL_SCREEN, Boolean.TRUE);
-            enterFullscreen();
-            temp.validate();
-          }
+          // We can get the notification when the frame has been disposed
+          JRootPane rootPane = temp.getRootPane();
+          if (rootPane != null) rootPane.putClientProperty(FULL_SCREEN, Boolean.TRUE);
+          enterFullscreen();
+          temp.validate();
+        }
 
-          @Override
-          public void windowExitedFullScreen() {
-            // We can get the notification when the frame has been disposed
-            JFrame temp = getJFrame();
-            if (temp == null/* || ORACLE_BUG_ID_8003173*/) return;
-            exitFullscreen();
-            temp.validate();
-          }
-        });
-      }
-      else {
-        final ID window = MacUtil.findWindowForTitle(jFrame.getTitle());
-        if (window == null) return;
-
-        // toggle toolbar
-        String className = "IdeaToolbar" + v;
-        final ID ownToolbar = Foundation.allocateObjcClassPair(Foundation.getObjcClass("NSToolbar"), className);
-        Foundation.registerObjcClassPair(ownToolbar);
-
-        final ID toolbar = invoke(invoke(className, "alloc"), "initWithIdentifier:", Foundation.nsString(className));
-        Foundation.cfRetain(toolbar);
-
-        invoke(toolbar, "setVisible:", 0); // hide native toolbar by default
-
-        Foundation.addMethod(ownToolbar, Foundation.createSelector("setVisible:"), SET_VISIBLE_CALLBACK, "v*");
-        Foundation.addMethod(ownToolbar, Foundation.createSelector("isVisible"), IS_VISIBLE, "B*");
-
-        Foundation.executeOnMainThread(true, true, new Runnable() {
-          @Override
-          public void run() {
-            invoke(window, "setToolbar:", toolbar);
-            invoke(window, "setShowsToolbarButton:", 1);
-          }
-        });
-      }
+        @Override
+        public void windowExitedFullScreen() {
+          // We can get the notification when the frame has been disposed
+          JFrame temp = getJFrame();
+          if (temp == null/* || ORACLE_BUG_ID_8003173*/) return;
+          exitFullscreen();
+          temp.validate();
+        }
+      });
     }
     finally {
       invoke(pool, "release");
