@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf2.flat;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.ui.FlatComboBoxUI;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;
@@ -133,5 +134,9 @@ public class FlatComboBoxButtonUI extends FlatComboBoxUI implements ComboBoxButt
         ComboBoxButtonImpl boxButton = (ComboBoxButtonImpl) c;
 
         updateArrowState(boxButton.getOnClickListener() == null);
+
+        c.putClientProperty(FlatClientProperties.STYLE, "background: #0000; buttonBackground: #0000; buttonArrowColor: $Component.borderColor");
+
+        c.setOpaque(false);
     }
 }
