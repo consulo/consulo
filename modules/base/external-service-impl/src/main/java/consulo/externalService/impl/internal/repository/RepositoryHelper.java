@@ -52,7 +52,7 @@ public class RepositoryHelper {
             .append(platformVersion)
             .append("&channel=")
             .append(channel)
-            .append("&addObsoletePlatforms=")
+            .append("&addObsoletePlatformsV2=")
             .append(addObsoletePlatformsV2)
             .toString();
     }
