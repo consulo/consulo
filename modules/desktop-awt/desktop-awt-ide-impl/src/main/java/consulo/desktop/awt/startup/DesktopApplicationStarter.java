@@ -165,15 +165,6 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         System.setProperty("flatlaf.useSubMenuSafeTriangle", "false");
         // remap native file path
         System.setProperty("flatlaf.nativeLibraryPath", "system");
-        // hack for disabling mac rounded borders
-        if (myPlatform.os().isMac()) {
-            if (Boolean.getBoolean("consulo.mac.disable.use.rounded.border")) {
-                System.setProperty("flatlaf.useRoundedPopupBorder", "false");
-            }
-            else {
-                System.setProperty("flatlaf.useRoundedPopupBorder", "true");
-            }
-        }
 
         // preload all flat native libraries
         pool.execute(() -> {

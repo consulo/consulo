@@ -61,6 +61,7 @@ public class DesktopAWTUIFontManagerImpl extends UIFontManagerImpl {
   @Nonnull
   @Override
   protected Pair<String, Integer> resolveSystemFontData() {
-    return JBUIScale.getSystemFontData();
+    return Pair.create("Inter-Regular", 13);
+    // return JBUIScale.getSystemFontData();
   }
 }

@@ -24,48 +24,62 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class DesktopAWTFontRegistry {
-  public static void registerBundledFonts() {
-    registerFont("/fonts/Inconsolata.ttf");
-    registerFont("/fonts/SourceCodePro-Regular.ttf");
-    registerFont("/fonts/SourceCodePro-Bold.ttf");
-    registerFont("/fonts/FiraCode-Bold.ttf");
-    registerFont("/fonts/FiraCode-Light.ttf");
-    registerFont("/fonts/FiraCode-Medium.ttf");
-    registerFont("/fonts/FiraCode-Regular.ttf");
-    registerFont("/fonts/FiraCode-Retina.ttf");
-    registerFont("/fonts/FiraCode-SemiBold.ttf");
-    registerFont("/fonts/JetBrainsMono-Bold.ttf");
-    registerFont("/fonts/JetBrainsMono-BoldItalic.ttf");
-    registerFont("/fonts/JetBrainsMono-ExtraBold.ttf");
-    registerFont("/fonts/JetBrainsMono-ExtraBoldItalic.ttf");
-    registerFont("/fonts/JetBrainsMono-ExtraLight.ttf");
-    registerFont("/fonts/JetBrainsMono-ExtraLightItalic.ttf");
-    registerFont("/fonts/JetBrainsMono-Italic.ttf");
-    registerFont("/fonts/JetBrainsMono-Light.ttf");
-    registerFont("/fonts/JetBrainsMono-LightItalic.ttf");
-    registerFont("/fonts/JetBrainsMono-Medium.ttf");
-    registerFont("/fonts/JetBrainsMono-MediumItalic.ttf");
-    registerFont("/fonts/JetBrainsMono-Regular.ttf");
-    registerFont("/fonts/JetBrainsMono-SemiBold.ttf");
-    registerFont("/fonts/JetBrainsMono-SemiBoldItalic.ttf");
-    registerFont("/fonts/JetBrainsMono-Thin.ttf");
-    registerFont("/fonts/JetBrainsMono-ThinItalic.ttf");
-  }
-
-  private static void registerFont(String name) {
-    try {
-      URL url = AppUIUtil.class.getResource(name);
-      if (url == null) {
-        throw new IOException("Resource missing: " + name);
-      }
-
-      try (InputStream is = url.openStream()) {
-        Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
-      }
+    public static void registerBundledFonts() {
+        registerFont("/fonts/Inconsolata.ttf");
+        registerFont("/fonts/SourceCodePro-Regular.ttf");
+        registerFont("/fonts/SourceCodePro-Bold.ttf");
+        registerFont("/fonts/FiraCode-Bold.ttf");
+        registerFont("/fonts/FiraCode-Light.ttf");
+        registerFont("/fonts/FiraCode-Medium.ttf");
+        registerFont("/fonts/FiraCode-Regular.ttf");
+        registerFont("/fonts/FiraCode-Retina.ttf");
+        registerFont("/fonts/FiraCode-SemiBold.ttf");
+        registerFont("/fonts/JetBrainsMono-Bold.ttf");
+        registerFont("/fonts/JetBrainsMono-BoldItalic.ttf");
+        registerFont("/fonts/JetBrainsMono-ExtraBold.ttf");
+        registerFont("/fonts/JetBrainsMono-ExtraBoldItalic.ttf");
+        registerFont("/fonts/JetBrainsMono-ExtraLight.ttf");
+        registerFont("/fonts/JetBrainsMono-ExtraLightItalic.ttf");
+        registerFont("/fonts/JetBrainsMono-Italic.ttf");
+        registerFont("/fonts/JetBrainsMono-Light.ttf");
+        registerFont("/fonts/JetBrainsMono-LightItalic.ttf");
+        registerFont("/fonts/JetBrainsMono-Medium.ttf");
+        registerFont("/fonts/JetBrainsMono-MediumItalic.ttf");
+        registerFont("/fonts/JetBrainsMono-Regular.ttf");
+        registerFont("/fonts/JetBrainsMono-SemiBold.ttf");
+        registerFont("/fonts/JetBrainsMono-SemiBoldItalic.ttf");
+        registerFont("/fonts/JetBrainsMono-Thin.ttf");
+        registerFont("/fonts/JetBrainsMono-ThinItalic.ttf");
+        registerFont("/fonts/Inter-Black.ttf");
+        registerFont("/fonts/Inter-BlackItalic.ttf");
+        registerFont("/fonts/Inter-Bold.ttf");
+        registerFont("/fonts/Inter-BoldItalic.ttf");
+        registerFont("/fonts/Inter-Italic.ttf");
+        registerFont("/fonts/Inter-Light.ttf");
+        registerFont("/fonts/Inter-LightItalic.ttf");
+        registerFont("/fonts/Inter-Medium.ttf");
+        registerFont("/fonts/Inter-MediumItalic.ttf");
+        registerFont("/fonts/Inter-Regular.ttf");
+        registerFont("/fonts/Inter-SemiBold.ttf");
+        registerFont("/fonts/Inter-SemiBoldItalic.ttf");
+        registerFont("/fonts/Inter-Thin.ttf");
+        registerFont("/fonts/Inter-ThinItalic.ttf");
     }
-    catch (Exception e) {
-      Logger.getInstance(AppUIUtil.class).error("Cannot register font: " + name, e);
+
+    private static void registerFont(String name) {
+        try {
+            URL url = AppUIUtil.class.getResource(name);
+            if (url == null) {
+                throw new IOException("Resource missing: " + name);
+            }
+
+            try (InputStream is = url.openStream()) {
+                Font font = Font.createFont(Font.TRUETYPE_FONT, is);
+                GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
+            }
+        }
+        catch (Exception e) {
+            Logger.getInstance(AppUIUtil.class).error("Cannot register font: " + name, e);
+        }
     }
-  }
 }

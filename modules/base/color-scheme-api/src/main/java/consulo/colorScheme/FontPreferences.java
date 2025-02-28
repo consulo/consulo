@@ -15,10 +15,6 @@
  */
 package consulo.colorScheme;
 
-import consulo.application.ApplicationManager;
-import consulo.platform.Platform;
-import consulo.platform.PlatformOperatingSystem;
-import consulo.platform.os.UnixOperationSystem;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -27,14 +23,10 @@ import java.util.List;
 
 public interface FontPreferences {
     @Nonnull
-    String DEFAULT_FONT_NAME = getDefaultFontName();
-    int DEFAULT_FONT_SIZE = Platform.current().os().isWindows() ? 13 : FontSize.SMALL.getSize();
+    String DEFAULT_FONT_NAME = "Jetbrains Mono";
+    int DEFAULT_FONT_SIZE = 13;
 
     float DEFAULT_LINE_SPACING = 1.2f;
-    String FALLBACK_FONT_FAMILY = "Monospaced";
-    String MAC_OS_DEFAULT_FONT_FAMILY = "Menlo";
-    String LINUX_DEFAULT_FONT_FAMILY = "DejaVu Sans Mono";
-    String WINDOWS_DEFAULT_FONT_FAMILY = "Consolas";
 
     @Nonnull
     List<String> getEffectiveFontFamilies();
@@ -77,24 +69,5 @@ public interface FontPreferences {
             return fallbackScheme == null ? DEFAULT_FONT_NAME : fallbackScheme.getEditorFontName();
         }
         return null;
-    }
-
-    static String getDefaultFontName() {
-        PlatformOperatingSystem os = Platform.current().os();
-        if (os.isWindows()) {
-            return WINDOWS_DEFAULT_FONT_FAMILY;
-        }
-        if (os.isMac()) {
-            return MAC_OS_DEFAULT_FONT_FAMILY;
-        }
-
-        if (os instanceof UnixOperationSystem unix && unix.isXWindow()) {
-            for (Font font : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
-                if (LINUX_DEFAULT_FONT_FAMILY.equals(font.getName())) {
-                    return font.getFontName();
-                }
-            }
-        }
-        return FALLBACK_FONT_FAMILY;
     }
 }

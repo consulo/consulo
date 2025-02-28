@@ -78,16 +78,6 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
   protected ProjectViewTree createTree(@Nonnull DefaultTreeModel treeModel) {
     return new ProjectViewTree(treeModel) {
       @Override
-      public void updateUI() {
-        super.updateUI();
-
-        if (Registry.is("bigger.font.in.project.view")) {
-          Font font = getFont();
-          setFont(new FontUIResource(font.deriveFont(font.getSize() + 1f)));
-        }
-      }
-
-      @Override
       public String toString() {
         return getTitle() + " " + super.toString();
       }

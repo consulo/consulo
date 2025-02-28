@@ -370,9 +370,6 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     public void updateUI() {
         super.updateUI();
 
-        Font font = UIUtil.getLabelFont(UIUtil.FontSize.SMALL);
-        setFont(font);
-
         // update text if localize was changed
         updateText();
     }

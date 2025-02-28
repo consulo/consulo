@@ -108,16 +108,11 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
   public void updateUI() {
     myBufferedImage = null;
     super.updateUI();
-    setFont(getWidgetFont());
   }
 
   @Override
   public void uiSettingsChanged(UISettings uiSettings) {
     myBufferedImage = null;
-  }
-
-  private static Font getWidgetFont() {
-    return JBUI.Fonts.label(11);
   }
 
   @Override
@@ -179,7 +174,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
 
   @Override
   public Dimension getPreferredSize() {
-    FontMetrics metrics = getFontMetrics(getWidgetFont());
+    FontMetrics metrics = getFontMetrics(getFont());
     Insets insets = getInsets();
     int width = metrics.stringWidth(mySample) + insets.left + insets.right + JBUIScale.scale(2) + INDENT;
     int height = metrics.getHeight() + insets.top + insets.bottom + JBUIScale.scale(2);

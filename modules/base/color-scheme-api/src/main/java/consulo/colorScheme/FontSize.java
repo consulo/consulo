@@ -30,13 +30,13 @@ import javax.swing.text.html.StyleSheet;
  * @since 1/26/11 10:22 AM
  */
 public enum FontSize {
-    XX_SMALL(8),
-    X_SMALL(10),
-    SMALL(12),
+    XX_SMALL(10),
+    X_SMALL(12),
+    SMALL(13),
     MEDIUM(14),
-    LARGE(18),
-    X_LARGE(24),
-    XX_LARGE(36);
+    LARGE(16),
+    X_LARGE(18),
+    XX_LARGE(24);
 
     private final int mySize;
 

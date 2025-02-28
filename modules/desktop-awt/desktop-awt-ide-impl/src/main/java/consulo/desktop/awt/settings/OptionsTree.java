@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.settings;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
@@ -46,6 +47,8 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.plaf.TreeUI;
+import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
@@ -71,13 +74,15 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
             add(BorderLayout.CENTER, myTextLabel);
             add(BorderLayout.WEST, myNodeIcon);
             add(BorderLayout.EAST, myProjectIcon);
-            setBorder(JBUI.Borders.empty(1, 0, 3, 10));
         }
 
         @Override
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+            setFont(tree.getFont());
+
             myTextLabel.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
             myTextLabel.setFont(tree.getFont());
+
             myProjectIcon.setIcon(null);
 
             Base baseNode = extractNode(value);
@@ -122,19 +127,11 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
             public boolean isEmpty() {
                 return false; // tree always not empty - loading decorator
             }
-
-            @Override
-            public void updateUI() {
-                super.updateUI();
-
-                setFont(JBUI.Fonts.biggerFont());
-            }
         };
 
         TreeUtil.installActions(myTree);
         myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         myTree.setRootVisible(false);
-        myTree.setRowHeight(JBUI.scale(24));
         myTree.setShowsRootHandles(true);
         myTree.setCellRenderer(new MyRenderer());
         myBuilder = new MyBuilder(structure);

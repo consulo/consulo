@@ -433,17 +433,13 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     private void patchLafFonts() {
         UIFontManager uiSettings = UIFontManager.getInstance();
-        if (uiSettings.isOverrideFont()) {
-            Font font = StyleContext.getDefaultStyleContext().getFont(uiSettings.getFontName(), Font.PLAIN, uiSettings.getFontSize());
-            if (font instanceof UIResource) {
-                font = font.deriveFont(Font.PLAIN);
-            }
 
-            UIManager.put("defaultFont", font);
+        Font font = StyleContext.getDefaultStyleContext().getFont(uiSettings.getFontName(), Font.PLAIN, uiSettings.getFontSize());
+        if (font instanceof UIResource) {
+            font = font.deriveFont(Font.PLAIN);
         }
-        else {
-            UIManager.put("defaultFont", null);
-        }
+
+        UIManager.put("defaultFont", font);
     }
 
     private static void updateUI(Window window) {
