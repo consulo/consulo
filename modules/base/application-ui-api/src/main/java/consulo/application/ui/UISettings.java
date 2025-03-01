@@ -141,7 +141,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean SHOW_ICONS_IN_MENUS = true;
   public boolean DISABLE_MNEMONICS = Platform.current().os().isMac(); // IDEADEV-33409, should be disabled by default on MacOS
   public boolean DISABLE_MNEMONICS_IN_CONTROLS = false;
-  public boolean USE_SMALL_LABELS_ON_TABS = Platform.current().os().isMac();
+  public boolean USE_SMALL_LABELS_ON_TABS = false;
   public boolean SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY = false;
   public int MAX_LOOKUP_WIDTH2 = 500;
   public int MAX_LOOKUP_LIST_HEIGHT = 11;
