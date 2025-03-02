@@ -49,7 +49,7 @@ public abstract class ActionToolbarEngine {
     @Nonnull
     private final ActionManager myActionManager;
 
-    private final ToolbarUpdater myUpdater;
+    private final ToolbarNotifier myUpdater;
 
     private final PresentationFactory myPresentationFactory = new BasePresentationFactory();
 
@@ -71,14 +71,7 @@ public abstract class ActionToolbarEngine {
         myActionToolbar = actionToolbar;
         myActionManager = actionManager;
 
-        myUpdater = new ToolbarUpdater(keymapManager, actionManager, component) {
-            @Override
-            protected void updateActionsImpl(boolean forced) {
-                if (!application.isDisposedOrDisposeInProgress()) {
-                    ActionToolbarEngine.this.updateActionsImpl(forced);
-                }
-            }
-        };
+        myUpdater = new ToolbarNotifier(application, keymapManager, actionManager, component, this::updateActionsImpl);
     }
 
     protected abstract DataContext getDataContext();
