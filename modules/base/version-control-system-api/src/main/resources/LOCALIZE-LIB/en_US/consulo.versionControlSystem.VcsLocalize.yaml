@@ -1192,3 +1192,13 @@ patch.apply.somehow.diff.name:
   text: Apply patch somehow
 patch.apply.changes.in.patch.resolve:
   text: '{0} in patch resolve'
+push.dialog.push.commits.title:
+  text: "Push Commits"
+action.push:
+  text: "&Push"
+action.force.push:
+  text: "&Force Push"
+action.force.push.is.prohibited.description:
+  text: "Force push to <b>{0}</b> is prohibited"
+action.force.push.can.be.enabled.description:
+  text: "<b>Force Push</b> can be enabled in the Settings"
