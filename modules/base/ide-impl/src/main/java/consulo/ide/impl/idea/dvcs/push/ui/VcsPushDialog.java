@@ -28,6 +28,7 @@ import consulo.versionControlSystem.distributed.push.PushTarget;
 import consulo.versionControlSystem.distributed.push.VcsPushOptionValue;
 import consulo.versionControlSystem.distributed.push.VcsPushOptionsPanel;
 import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import net.miginfocom.swing.MigLayout;
@@ -62,8 +63,8 @@ public class VcsPushDialog extends DialogWrapper {
 
         init();
         updateOkActions();
-        setOKButtonText(LocalizeValue.localizeTODO("&Push"));
-        setTitle("Push Commits");
+        setOKButtonText(VcsLocalize.actionPush());
+        setTitle(VcsLocalize.pushDialogPushCommitsTitle());
     }
 
     @Override
@@ -141,14 +142,13 @@ public class VcsPushDialog extends DialogWrapper {
         if (myForcePushAction != null) {
             boolean canForcePush = canForcePush();
             myForcePushAction.setEnabled(canForcePush);
-            String tooltip = null;
             if (!canForcePush) {
                 PushTarget target = myController.getProhibitedTarget();
-                tooltip = myController.isForcePushEnabled() && target != null
-                    ? "Force push to <b>" + target.getPresentation() + "</b> is prohibited"
-                    : "<b>Force Push</b> can be enabled in the Settings";
+                LocalizeValue tooltip = myController.isForcePushEnabled() && target != null
+                    ? VcsLocalize.actionForcePushIsProhibitedDescription(target.getPresentation())
+                    : VcsLocalize.actionForcePushCanBeEnabledDescription();
+                myForcePushAction.putValue(Action.SHORT_DESCRIPTION, tooltip.get());
             }
-            myForcePushAction.putValue(Action.SHORT_DESCRIPTION, tooltip);
         }
     }
 
@@ -162,9 +162,9 @@ public class VcsPushDialog extends DialogWrapper {
         return panel == null ? null : panel.getValue();
     }
 
-    private class ForcePushAction extends AbstractAction {
+    private class ForcePushAction extends LocalizeAction {
         ForcePushAction() {
-            super("&Force Push");
+            super(VcsLocalize.actionForcePush());
         }
 
         @Override
@@ -181,7 +181,7 @@ public class VcsPushDialog extends DialogWrapper {
         private final Action[] myOptions;
 
         private ComplexPushAction(Action additionalAction) {
-            super("&Push");
+            super(VcsLocalize.actionPush());
             myOptions = new Action[]{additionalAction};
         }
 
