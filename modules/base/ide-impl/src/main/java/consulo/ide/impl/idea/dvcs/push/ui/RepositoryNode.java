@@ -125,7 +125,7 @@ public class RepositoryNode extends CheckedTreeNode implements EditableTreeNode,
     }
 
     @Override
-    public void startLoading(@Nonnull final JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial) {
+    public void startLoading(@Nonnull JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial) {
         myFuture = future;
         myLoading.set(true);
     }

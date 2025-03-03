@@ -32,7 +32,7 @@ public class VcsBranchEditorListener extends LinkMouseListenerBase {
     private final CheckboxTree.CheckboxTreeCellRenderer myRenderer;
     private VcsLinkedTextComponent myUnderlined;
 
-    public VcsBranchEditorListener(final CheckboxTree.CheckboxTreeCellRenderer renderer) {
+    public VcsBranchEditorListener(CheckboxTree.CheckboxTreeCellRenderer renderer) {
         myRenderer = renderer;
     }
 
@@ -46,9 +46,8 @@ public class VcsBranchEditorListener extends LinkMouseListenerBase {
             myUnderlined = null;
             shouldRepaint = true;
         }
-        if (tag instanceof VcsLinkedTextComponent) {
+        if (tag instanceof VcsLinkedTextComponent linkedText) {
             component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            VcsLinkedTextComponent linkedText = (VcsLinkedTextComponent)tag;
             linkedText.setUnderlined(true);
             myUnderlined = linkedText;
             shouldRepaint = true;
@@ -63,14 +62,14 @@ public class VcsBranchEditorListener extends LinkMouseListenerBase {
 
     @Nullable
     @Override
-    protected Object getTagAt(@Nonnull final MouseEvent e) {
+    protected Object getTagAt(@Nonnull MouseEvent e) {
         return PushLogTreeUtil.getTagAtForRenderer(myRenderer, e);
     }
 
-    protected void handleTagClick(@Nullable final Object tag, @Nonnull MouseEvent event) {
-        if (tag instanceof VcsLinkedTextComponent) {
-            VcsLinkedTextComponent textWithLink = (VcsLinkedTextComponent)tag;
-            final TreePath path = myRenderer.getTextRenderer().getTree().getPathForLocation(event.getX(), event.getY());
+    @Override
+    protected void handleTagClick(@Nullable Object tag, @Nonnull MouseEvent event) {
+        if (tag instanceof VcsLinkedTextComponent linkedText) {
+            TreePath path = myRenderer.getTextRenderer().getTree().getPathForLocation(event.getX(), event.getY());
             if (path == null) {
                 return; //path could not be null if tag not null; see consulo.ide.impl.idea.dvcs.push.ui.PushLogTreeUtil.getTagAtForRenderer
             }
@@ -79,10 +78,10 @@ public class VcsBranchEditorListener extends LinkMouseListenerBase {
                 LOG.warn("Incorrect last path component: " + node);
                 return;
             }
-            textWithLink.fireOnClick((DefaultMutableTreeNode)node, event);
+            linkedText.fireOnClick((DefaultMutableTreeNode)node, event);
         }
-        if (tag instanceof Runnable) {
-            ((Runnable)tag).run();
+        if (tag instanceof Runnable runnable) {
+            runnable.run();
         }
     }
 }

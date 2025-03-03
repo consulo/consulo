@@ -44,7 +44,7 @@ public class PushTargetTextField extends TextFieldWithCompletion {
     }
 
     @Nonnull
-    private static TextCompletionProvider getCompletionProvider(@Nonnull final List<String> targetVariants) {
+    private static TextCompletionProvider getCompletionProvider(@Nonnull List<String> targetVariants) {
         return new ValuesCompletionProviderDumbAware<>(
             new DefaultTextCompletionValueDescriptor.StringValueDescriptor() {
                 @Override

@@ -49,10 +49,12 @@ public class CommitNode extends DefaultMutableTreeNode implements CustomRendered
             getUserObject().getSubject(),
             PushLogTreeUtil.addTransparencyIfNeeded(
                 SimpleTextAttributes.REGULAR_ATTRIBUTES,
-                !(parent instanceof RepositoryNode) || ((RepositoryNode)parent).isChecked()
-            ));
+                !(parent instanceof RepositoryNode repositoryNode && !repositoryNode.isChecked())
+            )
+        );
     }
 
+    @Override
     public String getTooltip() {
         String hash = DvcsUtil.getShortHash(getUserObject().getId().toString());
         String date = DvcsUtil.getDateString(getUserObject());

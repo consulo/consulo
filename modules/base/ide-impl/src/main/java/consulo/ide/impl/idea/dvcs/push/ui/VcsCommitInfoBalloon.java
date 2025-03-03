@@ -68,7 +68,10 @@ public class VcsCommitInfoBalloon {
         });
         myWrapper = new Wrapper(myEditorPane);
         myPopupBuilder = JBPopupFactory.getInstance().createComponentPopupBuilder(myWrapper, null);
-        myPopupBuilder.setCancelOnClickOutside(true).setResizable(true).setMovable(true).setRequestFocus(false)
+        myPopupBuilder.setCancelOnClickOutside(true)
+            .setResizable(true)
+            .setMovable(true)
+            .setRequestFocus(false)
             .setMinSize(new Dimension(80, 30));
     }
 
@@ -81,8 +84,8 @@ public class VcsCommitInfoBalloon {
             else {
                 Object node = selectionPaths[0].getLastPathComponent();
                 myEditorPane.setText(XmlStringUtil.wrapInHtml(
-                    node instanceof TooltipNode
-                        ? ((TooltipNode)node).getTooltip().replaceAll("\n", "<br>")
+                    node instanceof TooltipNode tooltipNode
+                        ? tooltipNode.getTooltip().replaceAll("\n", "<br>")
                         : EMPTY_COMMIT_INFO
                 ));
                 //workaround: fix initial size for JEditorPane

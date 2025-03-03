@@ -98,6 +98,7 @@ public class VcsLinkedTextComponent extends JLabel {
     }
 
     @Nonnull
+    @Override
     public String getText() {
         return myTextBefore + myHandledLink + myTextAfter;
     }

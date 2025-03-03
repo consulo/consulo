@@ -43,7 +43,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     private final List<RepositoryNodeListener<T>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
     public RepositoryWithBranchPanel(
-        @Nonnull final Project project,
+        @Nonnull Project project,
         @Nonnull String repoName,
         @Nonnull String sourceName,
         @Nonnull PushTargetPanel<T> destPushTargetPanelComponent

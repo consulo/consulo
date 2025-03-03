@@ -34,16 +34,15 @@ public class PushLogTreeUtil {
     public static Object getTagAtForRenderer(CheckboxTree.CheckboxTreeCellRenderer renderer, MouseEvent e) {
         JTree tree = (JTree)e.getSource();
         Object tag = null;
-        final TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+        TreePath path = tree.getPathForLocation(e.getX(), e.getY());
         if (path != null) {
-            final Rectangle rectangle = tree.getPathBounds(path);
+            Rectangle rectangle = tree.getPathBounds(path);
             assert rectangle != null;
             int dx = e.getX() - rectangle.x;
-            final TreeNode treeNode = (TreeNode)path.getLastPathComponent();
-            final int row = tree.getRowForLocation(e.getX(), e.getY());
+            TreeNode treeNode = (TreeNode)path.getLastPathComponent();
+            int row = tree.getRowForLocation(e.getX(), e.getY());
             tree.getCellRenderer().getTreeCellRendererComponent(tree, treeNode, false, false, true, row, true);
-            if (treeNode instanceof RepositoryNode) {
-                RepositoryNode repositoryNode = (RepositoryNode)treeNode;
+            if (treeNode instanceof RepositoryNode repositoryNode) {
                 int checkBoxWidth = repositoryNode.isCheckboxVisible() ? renderer.getCheckbox().getWidth() : 0;
                 tag = renderer.getTextRenderer().getFragmentTagAt(dx - checkBoxWidth);
             }
@@ -54,7 +53,7 @@ public class PushLogTreeUtil {
         return tag;
     }
 
-    public static SimpleTextAttributes addTransparencyIfNeeded(@Nonnull final SimpleTextAttributes baseStyle, boolean isActive) {
+    public static SimpleTextAttributes addTransparencyIfNeeded(@Nonnull SimpleTextAttributes baseStyle, boolean isActive) {
         if (isActive) {
             return baseStyle;
         }

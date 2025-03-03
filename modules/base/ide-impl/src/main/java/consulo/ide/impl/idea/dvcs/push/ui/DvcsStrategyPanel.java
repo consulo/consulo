@@ -22,12 +22,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DvcsStrategyPanel extends JPanel {
-    private ComboBox myReferenceStrategyCombobox;
+    private ComboBox<VcsPushReferenceStrategy> myReferenceStrategyCombobox;
 
     public DvcsStrategyPanel() {
         setLayout(new BorderLayout());
-        myReferenceStrategyCombobox = new ComboBox();
-        DefaultComboBoxModel comboModel = new DefaultComboBoxModel(VcsPushReferenceStrategy.values());
+        myReferenceStrategyCombobox = new ComboBox<>();
+        DefaultComboBoxModel<VcsPushReferenceStrategy> comboModel = new DefaultComboBoxModel<>(VcsPushReferenceStrategy.values());
         myReferenceStrategyCombobox.setModel(comboModel);
         JPanel bottomPanel = new JPanel(new FlowLayout());
         JLabel referenceStrategyLabel = new JLabel("Push Reference Strategy: ");

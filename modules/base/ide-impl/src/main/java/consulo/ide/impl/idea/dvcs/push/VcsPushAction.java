@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.HashSet;
 
 public class VcsPushAction extends DumbAwareAction {
-
     @Nonnull
     private static Collection<Repository> collectRepositories(
         @Nonnull VcsRepositoryManager vcsRepositoryManager,

@@ -36,8 +36,8 @@ public class TextWithLinkNode extends DefaultMutableTreeNode implements CustomRe
         renderer.append("   ");
         myLinkedText.setSelected(renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)));
         TreeNode parent = getParent();
-        if (parent instanceof RepositoryNode) {
-            myLinkedText.setTransparent(!((RepositoryNode)parent).isChecked());
+        if (parent instanceof RepositoryNode repositoryNode) {
+            myLinkedText.setTransparent(!repositoryNode.isChecked());
         }
         myLinkedText.render(renderer);
     }

@@ -19,26 +19,25 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.dvcs.push.ui.*;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.push.*;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryManager;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -47,9 +46,6 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -82,7 +78,7 @@ public class PushController implements Disposable {
     private static final int DEFAULT_CHILDREN_PRESENTATION_NUMBER = 20;
     private final ExecutorService myExecutorService = Executors.newSingleThreadExecutor(ConcurrencyUtil.newNamedThreadFactory("DVCS Push"));
 
-    private final Map<RepositoryNode, MyRepoModel<?, ?, ?>> myView2Model = new TreeMap<RepositoryNode, MyRepoModel<?, ?, ?>>();
+    private final Map<RepositoryNode, MyRepoModel<Repository, PushSource, PushTarget>> myView2Model = new TreeMap<>();
 
     public PushController(
         @Nonnull Project project,
@@ -91,9 +87,9 @@ public class PushController implements Disposable {
         @Nullable Repository currentRepo
     ) {
         myProject = project;
-        myPushSettings = ServiceManager.getService(project, PushSettings.class);
+        myPushSettings = project.getInstance(PushSettings.class);
         myGlobalRepositoryManager = VcsRepositoryManager.getInstance(project);
-        myExcludedRepositoryRoots = ContainerUtil.newHashSet(myPushSettings.getExcludedRepoRoots());
+        myExcludedRepositoryRoots = new LinkedHashSet<>(myPushSettings.getExcludedRepoRoots());
         myPreselectedRepositories = preselectedRepositories;
         myCurrentlyOpenedRepository = currentRepo;
         myPushSupports = getAffectedSupports();
@@ -102,9 +98,9 @@ public class PushController implements Disposable {
         CheckedTreeNode rootNode = new CheckedTreeNode(null);
         createTreeModel(rootNode);
         myPushLog = new PushLog(myProject, rootNode, isSyncStrategiesAllowed());
-        myPushLog.getTree().addPropertyChangeListener(PushLogTreeUtil.EDIT_MODE_PROP, new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
+        myPushLog.getTree().addPropertyChangeListener(
+            PushLogTreeUtil.EDIT_MODE_PROP,
+            evt -> {
                 // when user starts edit we need to force disable ok actions, because tree.isEditing() still false;
                 // after editing completed okActions will be enabled automatically by dialog validation
                 Boolean isEditMode = (Boolean)evt.getNewValue();
@@ -112,21 +108,13 @@ public class PushController implements Disposable {
                     myDialog.disableOkActions();
                 }
             }
-        });
+        );
         startLoadingCommits();
         Disposer.register(dialog.getDisposable(), this);
     }
 
     private boolean isSyncStrategiesAllowed() {
-        return !mySingleRepoProject && ContainerUtil.and(
-            getAffectedSupports(),
-            new Condition<PushSupport<Repository, PushSource, PushTarget>>() {
-                @Override
-                public boolean value(PushSupport<Repository, PushSource, PushTarget> support) {
-                    return support.mayChangeTargetsSync();
-                }
-            }
-        );
+        return !mySingleRepoProject && ContainerUtil.and(getAffectedSupports(), PushSupport::mayChangeTargetsSync);
     }
 
     private boolean isSingleRepoProject() {
@@ -136,11 +124,9 @@ public class PushController implements Disposable {
     @Nonnull
     private <R extends Repository, S extends PushSource, T extends PushTarget> List<PushSupport<R, S, T>> getAffectedSupports() {
         Collection<Repository> repositories = myGlobalRepositoryManager.getRepositories();
-        Collection<AbstractVcs> vcss = ContainerUtil.map2Set(repositories, repository -> repository.getVcs());
-        return ContainerUtil.map(vcss, (Function<AbstractVcs, PushSupport<R, S, T>>)vcs -> {
-            //noinspection unchecked
-            return DvcsUtil.getPushSupport(vcs);
-        });
+        Collection<AbstractVcs> vcss = ContainerUtil.map2Set(repositories, Repository::getVcs);
+        //noinspection unchecked
+        return ContainerUtil.map(vcss, (Function<AbstractVcs, PushSupport<R, S, T>>)DvcsUtil::getPushSupport);
     }
 
     public boolean isForcePushEnabled() {
@@ -149,22 +135,23 @@ public class PushController implements Disposable {
 
     @Nullable
     public PushTarget getProhibitedTarget() {
-        MyRepoModel model = ContainerUtil.find(myView2Model.values(), new Condition<MyRepoModel>() {
-            @Override
-            public boolean value(MyRepoModel model) {
-                PushTarget target = model.getTarget();
-                return model.isSelected() && target != null && !model.getSupport().isForcePushAllowed(model.getRepository(), target);
+        MyRepoModel model = ContainerUtil.find(
+            myView2Model.values(),
+            model1 -> {
+                PushTarget target = model1.getTarget();
+                return model1.isSelected() && target != null
+                    && !model1.getSupport().isForcePushAllowed(model1.getRepository(), target);
             }
-        });
+        );
         return model != null ? model.getTarget() : null;
     }
 
     private void startLoadingCommits() {
-        Map<RepositoryNode, MyRepoModel> priorityLoading = new LinkedHashMap<>();
-        Map<RepositoryNode, MyRepoModel> others = new LinkedHashMap<>();
+        Map<RepositoryNode, MyRepoModel<Repository, PushSource, PushTarget>> priorityLoading = new LinkedHashMap<>();
+        Map<RepositoryNode, MyRepoModel<Repository, PushSource, PushTarget>> others = new LinkedHashMap<>();
         RepositoryNode nodeForCurrentEditor = findNodeByRepo(myCurrentlyOpenedRepository);
-        for (Map.Entry<RepositoryNode, MyRepoModel<?, ?, ?>> entry : myView2Model.entrySet()) {
-            MyRepoModel model = entry.getValue();
+        for (Map.Entry<RepositoryNode, MyRepoModel<Repository, PushSource, PushTarget>> entry : myView2Model.entrySet()) {
+            MyRepoModel<Repository, PushSource, PushTarget> model = entry.getValue();
             Repository repository = model.getRepository();
             RepositoryNode repoNode = entry.getKey();
             if (preselectByUser(repository)) {
@@ -191,19 +178,22 @@ public class PushController implements Disposable {
             .shouldRequestIncomingChangesForNotCheckedRepositories());
     }
 
-    private RepositoryNode findNodeByRepo(@Nullable final Repository repository) {
+    private RepositoryNode findNodeByRepo(@Nullable Repository repository) {
         if (repository == null) {
             return null;
         }
-        Map.Entry<RepositoryNode, MyRepoModel<?, ?, ?>> entry = ContainerUtil.find(myView2Model.entrySet(), entry1 -> {
-            MyRepoModel model = entry1.getValue();
-            return model.getRepository().getRoot().equals(repository.getRoot());
-        });
+        Map.Entry<RepositoryNode, MyRepoModel<Repository, PushSource, PushTarget>> entry = ContainerUtil.find(
+            myView2Model.entrySet(),
+            entry1 -> {
+                MyRepoModel<Repository, PushSource, PushTarget> model = entry1.getValue();
+                return model.getRepository().getRoot().equals(repository.getRoot());
+            }
+        );
         return entry != null ? entry.getKey() : null;
     }
 
-    private void loadCommitsFromMap(@Nonnull Map<RepositoryNode, MyRepoModel> items) {
-        for (Map.Entry<RepositoryNode, MyRepoModel> entry : items.entrySet()) {
+    private void loadCommitsFromMap(@Nonnull Map<RepositoryNode, MyRepoModel<Repository, PushSource, PushTarget>> items) {
+        for (Map.Entry<RepositoryNode, MyRepoModel<Repository, PushSource, PushTarget>> entry : items.entrySet()) {
             RepositoryNode node = entry.getKey();
             loadCommits(entry.getValue(), node, true);
         }
@@ -216,35 +206,35 @@ public class PushController implements Disposable {
     }
 
     @Nullable
-    private <R extends Repository, S extends PushSource, T extends PushTarget> PushSupport<R, S, T>
-    getPushSupportByRepository(@Nonnull final R repository) {
+    private PushSupport<Repository, PushSource, PushTarget>
+    getPushSupportByRepository(@Nonnull Repository repository) {
         //noinspection unchecked
-        return (PushSupport<R, S, T>)ContainerUtil.find(myPushSupports, support -> support.getVcs().equals(repository.getVcs()));
+        return ContainerUtil.find(myPushSupports, support -> support.getVcs().equals(repository.getVcs()));
     }
 
-    private <R extends Repository, S extends PushSource, T extends PushTarget> void createRepoNode(
-        @Nonnull final R repository,
-        @Nonnull final CheckedTreeNode rootNode
+    private void createRepoNode(
+        @Nonnull Repository repository,
+        @Nonnull CheckedTreeNode rootNode
     ) {
-
-        PushSupport<R, S, T> support = getPushSupportByRepository(repository);
+        PushSupport<Repository, PushSource, PushTarget> support = getPushSupportByRepository(repository);
         if (support == null) {
             return;
         }
 
-        T target = support.getDefaultTarget(repository);
+        PushTarget target = support.getDefaultTarget(repository);
         String repoName = getDisplayedRepoName(repository);
-        S source = support.getSource(repository);
-        final MyRepoModel<R, S, T> model = new MyRepoModel<>(repository, support, mySingleRepoProject, source, target);
+        PushSource source = support.getSource(repository);
+        MyRepoModel<Repository, PushSource, PushTarget> model =
+            new MyRepoModel<>(repository, support, mySingleRepoProject, source, target);
         if (target == null) {
             model.setError(VcsError.createEmptyTargetError(repoName));
         }
 
-        final PushTargetPanel<T> pushTargetPanel = support.createTargetPanel(repository, target);
-        final RepositoryWithBranchPanel<T> repoPanel =
+        PushTargetPanel<PushTarget> pushTargetPanel = support.createTargetPanel(repository, target);
+        RepositoryWithBranchPanel<PushTarget> repoPanel =
             new RepositoryWithBranchPanel<>(myProject, repoName, source.getPresentation(), pushTargetPanel);
         CheckBoxModel checkBoxModel = model.getCheckBoxModel();
-        final RepositoryNode repoNode = mySingleRepoProject
+        RepositoryNode repoNode = mySingleRepoProject
             ? new SingleRepositoryNode(repoPanel, checkBoxModel)
             : new RepositoryNode(repoPanel, checkBoxModel, target != null);
         pushTargetPanel.setFireOnChangeAction(() -> {
@@ -254,7 +244,7 @@ public class PushController implements Disposable {
         myView2Model.put(repoNode, model);
         repoPanel.addRepoNodeListener(new RepositoryNodeListener<>() {
             @Override
-            public void onTargetChanged(T newTarget) {
+            public void onTargetChanged(PushTarget newTarget) {
                 repoNode.setChecked(true);
                 myExcludedRepositoryRoots.remove(model.getRepository().getRoot().getPath());
                 if (!newTarget.equals(model.getTarget()) || model.hasError() || !model.hasCommitInfo()) {
@@ -299,14 +289,14 @@ public class PushController implements Disposable {
         return !containedInOtherNames(repository, candidate) ? candidate : name;
     }
 
-    private boolean containedInOtherNames(@Nonnull final Repository except, final String candidate) {
+    private boolean containedInOtherNames(@Nonnull Repository except, String candidate) {
         return ContainerUtil.exists(
             myGlobalRepositoryManager.getRepositories(),
             repository -> !repository.equals(except) && repository.getRoot().getName().equals(candidate)
         );
     }
 
-    public boolean isPushAllowed(final boolean force) {
+    public boolean isPushAllowed(boolean force) {
         JTree tree = myPushLog.getTree();
         return !tree.isEditing() && ContainerUtil.exists(myPushSupports, support -> isPushAllowed(support, force));
     }
@@ -330,12 +320,12 @@ public class PushController implements Disposable {
         });
     }
 
-    private boolean hasCheckedNodesWithContent(@Nonnull Collection<RepositoryNode> nodes, final boolean withRefs) {
+    private boolean hasCheckedNodesWithContent(@Nonnull Collection<RepositoryNode> nodes, boolean withRefs) {
         return ContainerUtil.exists(nodes, node -> node.isChecked() && (withRefs || !myView2Model.get(node).getLoadedCommits().isEmpty()));
     }
 
     @Nonnull
-    private Collection<RepositoryNode> getNodesForSupport(final PushSupport<?, ?, ?> support) {
+    private Collection<RepositoryNode> getNodesForSupport(PushSupport<?, ?, ?> support) {
         return ContainerUtil.mapNotNull(
             myView2Model.entrySet(),
             entry -> support.equals(entry.getValue().getSupport()) ? entry.getKey() : null
@@ -347,21 +337,21 @@ public class PushController implements Disposable {
     }
 
     private <R extends Repository, S extends PushSource, T extends PushTarget> void loadCommits(
-        @Nonnull final MyRepoModel<R, S, T> model,
-        @Nonnull final RepositoryNode node,
-        final boolean initial
+        @Nonnull MyRepoModel<R, S, T> model,
+        @Nonnull RepositoryNode node,
+        boolean initial
     ) {
         node.cancelLoading();
-        final T target = model.getTarget();
+        T target = model.getTarget();
         if (target == null) {
             node.stopLoading();
             return;
         }
         node.setEnabled(true);
-        final PushSupport<R, S, T> support = model.getSupport();
-        final AtomicReference<OutgoingResult> result = new AtomicReference<>();
+        PushSupport<R, S, T> support = model.getSupport();
+        AtomicReference<OutgoingResult> result = new AtomicReference<>();
         Runnable task = () -> {
-            final R repository = model.getRepository();
+            R repository = model.getRepository();
             OutgoingResult outgoing = support.getOutgoingCommitsProvider()
                 .getOutgoingCommits(repository, new PushSpec<>(model.getSource(), model.getTarget()), initial);
             result.compareAndSet(null, outgoing);
@@ -371,7 +361,7 @@ public class PushController implements Disposable {
                 boolean shouldBeSelected;
                 if (!errors.isEmpty()) {
                     shouldBeSelected = false;
-                    model.setLoadedCommits(ContainerUtil.<VcsFullCommitDetails>emptyList());
+                    model.setLoadedCommits(List.of());
                     myPushLog.setChildren(node, ContainerUtil.map(errors, (Function<VcsError, DefaultMutableTreeNode>)error -> {
                         VcsLinkedTextComponent errorLinkText = new VcsLinkedTextComponent(
                             error.getText(),
@@ -442,12 +432,12 @@ public class PushController implements Disposable {
         return myPushLog;
     }
 
-    public void push(final boolean force) {
-        Task.Backgroundable task = new Task.Backgroundable(myProject, "Pushing...", true) {
+    public void push(boolean force) {
+        Task.Backgroundable task = new Task.Backgroundable(myProject, VcsLocalize.pushProcessPushing(), true) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 myPushSettings.saveExcludedRepoRoots(myExcludedRepositoryRoots);
-                for (PushSupport support : myPushSupports) {
+                for (PushSupport<Repository, PushSource, PushTarget> support : myPushSupports) {
                     doPush(support, force);
                 }
             }
@@ -471,9 +461,9 @@ public class PushController implements Disposable {
     @SuppressWarnings("unchecked")
     private <R extends Repository, S extends PushSource, T extends PushTarget> Map<R, PushSpec<S, T>>
     collectPushSpecsForVcs(@Nonnull PushSupport<R, S, T> pushSupport) {
-        Map<R, PushSpec<S, T>> pushSpecs = new HashMap<>();
-        Collection<MyRepoModel<?, ?, ?>> repositoriesInformation = getSelectedRepoNode();
-        for (MyRepoModel<?, ?, ?> repoModel : repositoriesInformation) {
+        Map<R, PushSpec<S, T>> pushSpecs = new LinkedHashMap<>();
+        Collection<MyRepoModel<Repository, PushSource, PushTarget>> repositoriesInformation = getSelectedRepoNode();
+        for (MyRepoModel<Repository, PushSource, PushTarget> repoModel : repositoriesInformation) {
             if (pushSupport.equals(repoModel.getSupport())) {
                 //todo improve generics: unchecked casts
                 T target = (T)repoModel.getTarget();
@@ -485,15 +475,15 @@ public class PushController implements Disposable {
         return pushSpecs;
     }
 
-    private Collection<MyRepoModel<?, ?, ?>> getSelectedRepoNode() {
+    private Collection<MyRepoModel<Repository, PushSource, PushTarget>> getSelectedRepoNode() {
         if (mySingleRepoProject) {
             return myView2Model.values();
         }
         //return all selected despite a loading state;
         return ContainerUtil.mapNotNull(
             myView2Model.entrySet(),
-            (Function<Map.Entry<RepositoryNode, MyRepoModel<?, ?, ?>>, MyRepoModel<?, ?, ?>>)entry -> {
-                MyRepoModel<?, ?, ?> model = entry.getValue();
+            entry -> {
+                MyRepoModel<Repository, PushSource, PushTarget> model = entry.getValue();
                 return model.isSelected() && model.getTarget() != null ? model : null;
             }
         );
@@ -521,7 +511,7 @@ public class PushController implements Disposable {
 
     @Nonnull
     private List<DefaultMutableTreeNode> getPresentationForCommits(
-        @Nonnull final Project project,
+        @Nonnull Project project,
         @Nonnull List<? extends VcsFullCommitDetails> commits,
         int commitsNum
     ) {
@@ -529,7 +519,7 @@ public class PushController implements Disposable {
         List<DefaultMutableTreeNode> childrenToShown = new ArrayList<>();
         for (int i = 0; i < commits.size(); ++i) {
             if (i >= commitsNum) {
-                final VcsLinkedTextComponent moreCommitsLink = new VcsLinkedTextComponent(
+                VcsLinkedTextComponent moreCommitsLink = new VcsLinkedTextComponent(
                     "<a href='loadMore'>...</a>",
                     (sourceNode, event) -> {
                         TreeNode parent = sourceNode.getParent();
@@ -550,20 +540,23 @@ public class PushController implements Disposable {
     public Map<PushSupport, VcsPushOptionsPanel> createAdditionalPanels() {
         Map<PushSupport, VcsPushOptionsPanel> result = new LinkedHashMap<>();
         for (PushSupport support : myPushSupports) {
-            ContainerUtil.putIfNotNull(support, support.createOptionsPanel(), result);
+            VcsPushOptionsPanel value = support.createOptionsPanel();
+            if (value != null) {
+                result.put(support, value);
+            }
         }
         return result;
     }
 
     @RequiredUIAccess
     public boolean ensureForcePushIsNeeded() {
-        Collection<MyRepoModel<?, ?, ?>> selectedNodes = getSelectedRepoNode();
-        MyRepoModel<?, ?, ?> selectedModel = ContainerUtil.getFirstItem(selectedNodes);
+        Collection<MyRepoModel<Repository, PushSource, PushTarget>> selectedNodes = getSelectedRepoNode();
+        MyRepoModel<Repository, PushSource, PushTarget> selectedModel = ContainerUtil.getFirstItem(selectedNodes);
         if (selectedModel == null) {
             return false;
         }
-        final PushSupport activePushSupport = selectedModel.getSupport();
-        final PushTarget commonTarget = getCommonTarget(selectedNodes);
+        PushSupport<Repository, PushSource, PushTarget> activePushSupport = selectedModel.getSupport();
+        PushTarget commonTarget = getCommonTarget(selectedNodes);
         if (commonTarget != null && activePushSupport.isSilentForcePushAllowed(commonTarget)) {
             return true;
         }
@@ -571,13 +564,12 @@ public class PushController implements Disposable {
         return Messages.showOkCancelDialog(
             myProject,
             XmlStringUtil.wrapInHtml(
-                DvcsBundle.message(
-                    "push.force.confirmation.text",
-                    commonTarget != null ? " to <b>" + commonTarget.getPresentation() + "</b>" : ""
-                )
+                commonTarget != null
+                    ? VcsLocalize.actionForcePushToConfirmationText(commonTarget.getPresentation()).get()
+                    : VcsLocalize.actionForcePushConfirmationText().get()
             ),
-            "Force Push",
-            "&Force Push",
+            VcsLocalize.actionForcePush().map(Presentation.NO_MNEMONIC).get(),
+            VcsLocalize.actionForcePush().get(),
             CommonLocalize.buttonCancel().get(),
             UIUtil.getWarningIcon(),
             commonTarget != null ? new MyDoNotAskOptionForPush(activePushSupport, commonTarget) : null
@@ -585,8 +577,8 @@ public class PushController implements Disposable {
     }
 
     @Nullable
-    private static PushTarget getCommonTarget(@Nonnull Collection<MyRepoModel<?, ?, ?>> selectedNodes) {
-        final PushTarget commonTarget = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(selectedNodes)).getTarget();
+    private static PushTarget getCommonTarget(@Nonnull Collection<MyRepoModel<Repository, PushSource, PushTarget>> selectedNodes) {
+        PushTarget commonTarget = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(selectedNodes)).getTarget();
         return commonTarget != null
             && !ContainerUtil.exists(selectedNodes, model -> !commonTarget.equals(model.getTarget())) ? commonTarget : null;
     }
@@ -601,11 +593,11 @@ public class PushController implements Disposable {
         @Nullable
         private T myTarget;
         @Nullable
-        VcsError myTargetError;
+        private VcsError myTargetError;
 
-        int myNumberOfShownCommits;
+        private int myNumberOfShownCommits;
         @Nonnull
-        List<? extends VcsFullCommitDetails> myLoadedCommits = Collections.emptyList();
+        private List<? extends VcsFullCommitDetails> myLoadedCommits = List.of();
         @Nonnull
         private final CheckBoxModel myCheckBoxModel;
 
@@ -696,13 +688,12 @@ public class PushController implements Disposable {
     }
 
     private static class MyDoNotAskOptionForPush implements DialogWrapper.DoNotAskOption {
-
         @Nonnull
-        private final PushSupport myActivePushSupport;
+        private final PushSupport<?, ?, PushTarget> myActivePushSupport;
         @Nonnull
         private final PushTarget myCommonTarget;
 
-        public MyDoNotAskOptionForPush(@Nonnull PushSupport support, @Nonnull PushTarget target) {
+        public MyDoNotAskOptionForPush(@Nonnull PushSupport<?, ?, PushTarget> support, @Nonnull PushTarget target) {
             myActivePushSupport = support;
             myCommonTarget = target;
         }

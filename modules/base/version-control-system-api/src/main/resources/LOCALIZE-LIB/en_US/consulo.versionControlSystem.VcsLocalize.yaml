@@ -1202,3 +1202,9 @@ action.force.push.is.prohibited.description:
   text: "Force push to <b>{0}</b> is prohibited"
 action.force.push.can.be.enabled.description:
   text: "<b>Force Push</b> can be enabled in the Settings"
+push.process.pushing:
+  text: "Pushing…"
+action.force.push.confirmation.text:
+  text: "You're going to force push. It may overwrite commits at the remote. Are you sure you want to proceed?"
+action.force.push.to.confirmation.text:
+  text: "You''re going to force push to {0}. It may overwrite commits at the remote. Are you sure you want to proceed?"
