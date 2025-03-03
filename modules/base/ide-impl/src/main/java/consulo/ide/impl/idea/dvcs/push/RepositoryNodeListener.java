@@ -20,10 +20,9 @@ import consulo.versionControlSystem.distributed.push.PushTarget;
 import jakarta.annotation.Nonnull;
 
 public interface RepositoryNodeListener<T extends PushTarget> {
+    void onTargetChanged(T newTarget);
 
-  void onTargetChanged(T newTarget);
+    void onSelectionChanged(boolean isSelected);
 
-  void onSelectionChanged(boolean isSelected);
-
-  void onTargetInEditMode(@Nonnull String currentValue);
+    void onTargetInEditMode(@Nonnull String currentValue);
 }

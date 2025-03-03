@@ -32,115 +32,121 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RepositoryNode extends CheckedTreeNode implements EditableTreeNode, Comparable<RepositoryNode> {
+    @Nonnull
+    protected final AtomicBoolean myLoading = new AtomicBoolean();
+    @Nonnull
+    private final CheckBoxModel myCheckBoxModel;
 
-  @Nonnull
-  protected final AtomicBoolean myLoading = new AtomicBoolean();
-  @Nonnull
-  private final CheckBoxModel myCheckBoxModel;
+    @Nonnull
+    private final RepositoryWithBranchPanel myRepositoryPanel;
+    @Nullable
+    private Future<AtomicReference<OutgoingResult>> myFuture;
 
-  @Nonnull
-  private final RepositoryWithBranchPanel myRepositoryPanel;
-  @Nullable private Future<AtomicReference<OutgoingResult>> myFuture;
+    public RepositoryNode(@Nonnull RepositoryWithBranchPanel repositoryPanel, @Nonnull CheckBoxModel model, boolean enabled) {
+        super(repositoryPanel);
+        myCheckBoxModel = model;
+        setChecked(false);
+        setEnabled(enabled);
+        myRepositoryPanel = repositoryPanel;
+    }
 
-  public RepositoryNode(@Nonnull RepositoryWithBranchPanel repositoryPanel, @Nonnull CheckBoxModel model, boolean enabled) {
-    super(repositoryPanel);
-    myCheckBoxModel = model;
-    setChecked(false);
-    setEnabled(enabled);
-    myRepositoryPanel = repositoryPanel;
-  }
+    @Override
+    public boolean isChecked() {
+        return myCheckBoxModel.isChecked();
+    }
 
-  @Override
-  public boolean isChecked() {
-    return myCheckBoxModel.isChecked();
-  }
+    @Override
+    public void setChecked(boolean checked) {
+        myCheckBoxModel.setChecked(checked);
+    }
 
-  @Override
-  public void setChecked(boolean checked) {
-    myCheckBoxModel.setChecked(checked);
-  }
+    public boolean isCheckboxVisible() {
+        return true;
+    }
 
-  public boolean isCheckboxVisible() {
-    return true;
-  }
+    public void forceUpdateUiModelWithTypedText(@Nonnull String forceText) {
+        myRepositoryPanel.getTargetPanel().forceUpdateEditableUiModel(forceText);
+    }
 
-  public void forceUpdateUiModelWithTypedText(@Nonnull String forceText) {
-    myRepositoryPanel.getTargetPanel().forceUpdateEditableUiModel(forceText);
-  }
+    @Override
+    public void render(@Nonnull ColoredTreeCellRenderer renderer) {
+        render(renderer, null);
+    }
 
-  @Override
-  public void render(@Nonnull ColoredTreeCellRenderer renderer) {
-    render(renderer, null);
-  }
-
-  public void render(@Nonnull ColoredTreeCellRenderer renderer, @jakarta.annotation.Nullable String syncEditingText) {
-    int repoFixedWidth = 120;
-    SimpleTextAttributes repositoryDetailsTextAttributes = PushLogTreeUtil
+    public void render(@Nonnull ColoredTreeCellRenderer renderer, @Nullable String syncEditingText) {
+        int repoFixedWidth = 120;
+        SimpleTextAttributes repositoryDetailsTextAttributes = PushLogTreeUtil
             .addTransparencyIfNeeded(SimpleTextAttributes.REGULAR_ATTRIBUTES, isChecked());
 
-    renderer.append(getRepoName(renderer, repoFixedWidth), repositoryDetailsTextAttributes);
-    renderer.appendTextPadding(repoFixedWidth);
-    renderer.append(myRepositoryPanel.getSourceName(), repositoryDetailsTextAttributes);
-    renderer.append(myRepositoryPanel.getArrow(), repositoryDetailsTextAttributes);
-    PushTargetPanel pushTargetPanel = myRepositoryPanel.getTargetPanel();
-    pushTargetPanel.render(renderer, renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)), isChecked(), syncEditingText);
-  }
-
-  @Nonnull
-  private String getRepoName(@Nonnull ColoredTreeCellRenderer renderer, int maxWidth) {
-    String name = myRepositoryPanel.getRepositoryName();
-    return GraphicsUtil.stringWidth(name, renderer.getFont()) > maxWidth - UIUtil.DEFAULT_HGAP ? name + "  " : name;
-  }
-
-  @Override
-  public Object getUserObject() {
-    return myRepositoryPanel;
-  }
-
-  @Override
-  public void fireOnChange() {
-    myRepositoryPanel.fireOnChange();
-  }
-
-  @Override
-  public void fireOnCancel() {
-    myRepositoryPanel.fireOnCancel();
-  }
-
-  @Override
-  public void fireOnSelectionChange(boolean isSelected) {
-    myRepositoryPanel.fireOnSelectionChange(isSelected);
-  }
-
-  @Override
-  public void cancelLoading() {
-    if (myFuture != null && !myFuture.isDone()) {
-      myFuture.cancel(true);
+        renderer.append(getRepoName(renderer, repoFixedWidth), repositoryDetailsTextAttributes);
+        renderer.appendTextPadding(repoFixedWidth);
+        renderer.append(myRepositoryPanel.getSourceName(), repositoryDetailsTextAttributes);
+        renderer.append(myRepositoryPanel.getArrow(), repositoryDetailsTextAttributes);
+        PushTargetPanel pushTargetPanel = myRepositoryPanel.getTargetPanel();
+        pushTargetPanel.render(
+            renderer,
+            renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)),
+            isChecked(),
+            syncEditingText
+        );
     }
-  }
 
-  @Override
-  public void startLoading(@Nonnull final JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial) {
-    myFuture = future;
-    myLoading.set(true);
-  }
+    @Nonnull
+    private String getRepoName(@Nonnull ColoredTreeCellRenderer renderer, int maxWidth) {
+        String name = myRepositoryPanel.getRepositoryName();
+        return GraphicsUtil.stringWidth(name, renderer.getFont()) > maxWidth - UIUtil.DEFAULT_HGAP ? name + "  " : name;
+    }
 
-  @Override
-  public boolean isEditableNow() {
-    return myRepositoryPanel.isEditable();
-  }
+    @Override
+    public Object getUserObject() {
+        return myRepositoryPanel;
+    }
 
-  public int compareTo(@Nonnull RepositoryNode repositoryNode) {
-    String name = myRepositoryPanel.getRepositoryName();
-    RepositoryWithBranchPanel panel = (RepositoryWithBranchPanel)repositoryNode.getUserObject();
-    return name.compareTo(panel.getRepositoryName());
-  }
+    @Override
+    public void fireOnChange() {
+        myRepositoryPanel.fireOnChange();
+    }
 
-  public void stopLoading() {
-    myLoading.set(false);
-  }
+    @Override
+    public void fireOnCancel() {
+        myRepositoryPanel.fireOnCancel();
+    }
 
-  public boolean isLoading() {
-    return myLoading.get();
-  }
+    @Override
+    public void fireOnSelectionChange(boolean isSelected) {
+        myRepositoryPanel.fireOnSelectionChange(isSelected);
+    }
+
+    @Override
+    public void cancelLoading() {
+        if (myFuture != null && !myFuture.isDone()) {
+            myFuture.cancel(true);
+        }
+    }
+
+    @Override
+    public void startLoading(@Nonnull final JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial) {
+        myFuture = future;
+        myLoading.set(true);
+    }
+
+    @Override
+    public boolean isEditableNow() {
+        return myRepositoryPanel.isEditable();
+    }
+
+    @Override
+    public int compareTo(@Nonnull RepositoryNode repositoryNode) {
+        String name = myRepositoryPanel.getRepositoryName();
+        RepositoryWithBranchPanel panel = (RepositoryWithBranchPanel)repositoryNode.getUserObject();
+        return name.compareTo(panel.getRepositoryName());
+    }
+
+    public void stopLoading() {
+        myLoading.set(false);
+    }
+
+    public boolean isLoading() {
+        return myLoading.get();
+    }
 }

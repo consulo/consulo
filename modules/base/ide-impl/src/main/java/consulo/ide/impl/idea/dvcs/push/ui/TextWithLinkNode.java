@@ -24,22 +24,21 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 public class TextWithLinkNode extends DefaultMutableTreeNode implements CustomRenderedTreeNode {
+    @Nonnull
+    protected VcsLinkedTextComponent myLinkedText;
 
-  @Nonnull
-  protected VcsLinkedTextComponent myLinkedText;
-
-  public TextWithLinkNode(@Nonnull VcsLinkedTextComponent linkedText) {
-    myLinkedText = linkedText;
-  }
-
-  @Override
-  public void render(@Nonnull ColoredTreeCellRenderer renderer) {
-    renderer.append("   ");
-    myLinkedText.setSelected(renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)));
-    TreeNode parent = getParent();
-    if (parent instanceof RepositoryNode) {
-      myLinkedText.setTransparent(!((RepositoryNode)parent).isChecked());
+    public TextWithLinkNode(@Nonnull VcsLinkedTextComponent linkedText) {
+        myLinkedText = linkedText;
     }
-    myLinkedText.render(renderer);
-  }
+
+    @Override
+    public void render(@Nonnull ColoredTreeCellRenderer renderer) {
+        renderer.append("   ");
+        myLinkedText.setSelected(renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)));
+        TreeNode parent = getParent();
+        if (parent instanceof RepositoryNode) {
+            myLinkedText.setTransparent(!((RepositoryNode)parent).isChecked());
+        }
+        myLinkedText.render(renderer);
+    }
 }

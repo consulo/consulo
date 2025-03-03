@@ -21,5 +21,5 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.MouseEvent;
 
 public interface VcsLinkListener {
-  void hyperlinkActivated(@Nonnull DefaultMutableTreeNode sourceNode, @Nonnull MouseEvent event);
+    void hyperlinkActivated(@Nonnull DefaultMutableTreeNode sourceNode, @Nonnull MouseEvent event);
 }

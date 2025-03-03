@@ -18,9 +18,8 @@ package consulo.ide.impl.idea.dvcs.push;
 /**
  * Specify which references(tags) should be pushed
  */
-
 public enum VcsPushReferenceStrategy {
-  none,  // do not push references/tags
-  follow, // push references only for selected sources
-  all    // push all references for all repositories
+    none,   // do not push references/tags
+    follow, // push references only for selected sources
+    all     // push all references for all repositories
 }

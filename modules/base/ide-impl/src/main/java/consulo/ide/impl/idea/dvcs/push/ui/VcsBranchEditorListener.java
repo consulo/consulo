@@ -20,6 +20,7 @@ import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.logging.Logger;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -27,60 +28,61 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class VcsBranchEditorListener extends LinkMouseListenerBase {
+    private static final Logger LOG = Logger.getInstance(VcsBranchEditorListener.class);
+    private final CheckboxTree.CheckboxTreeCellRenderer myRenderer;
+    private VcsLinkedTextComponent myUnderlined;
 
-  private static final Logger LOG = Logger.getInstance(VcsBranchEditorListener.class);
-  private final CheckboxTree.CheckboxTreeCellRenderer myRenderer;
-  private VcsLinkedTextComponent myUnderlined;
+    public VcsBranchEditorListener(final CheckboxTree.CheckboxTreeCellRenderer renderer) {
+        myRenderer = renderer;
+    }
 
-  public VcsBranchEditorListener(final CheckboxTree.CheckboxTreeCellRenderer renderer) {
-    myRenderer = renderer;
-  }
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        Component component = (Component)e.getSource();
+        Object tag = getTagAt(e);
+        boolean shouldRepaint = false;
+        if (myUnderlined != null) {
+            myUnderlined.setUnderlined(false);
+            myUnderlined = null;
+            shouldRepaint = true;
+        }
+        if (tag instanceof VcsLinkedTextComponent) {
+            component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            VcsLinkedTextComponent linkedText = (VcsLinkedTextComponent)tag;
+            linkedText.setUnderlined(true);
+            myUnderlined = linkedText;
+            shouldRepaint = true;
+        }
+        else {
+            super.mouseMoved(e);
+        }
+        if (shouldRepaint) {
+            myRenderer.getTextRenderer().getTree().repaint();
+        }
+    }
 
-  @Override
-  public void mouseMoved(MouseEvent e) {
-    Component component = (Component)e.getSource();
-    Object tag = getTagAt(e);
-    boolean shouldRepaint = false;
-    if (myUnderlined != null) {
-      myUnderlined.setUnderlined(false);
-      myUnderlined = null;
-      shouldRepaint = true;
+    @Nullable
+    @Override
+    protected Object getTagAt(@Nonnull final MouseEvent e) {
+        return PushLogTreeUtil.getTagAtForRenderer(myRenderer, e);
     }
-    if (tag instanceof VcsLinkedTextComponent) {
-      component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      VcsLinkedTextComponent linkedText = (VcsLinkedTextComponent)tag;
-      linkedText.setUnderlined(true);
-      myUnderlined = linkedText;
-      shouldRepaint = true;
-    }
-    else {
-      super.mouseMoved(e);
-    }
-    if (shouldRepaint) {
-      myRenderer.getTextRenderer().getTree().repaint();
-    }
-  }
 
-  @jakarta.annotation.Nullable
-  @Override
-  protected Object getTagAt(@Nonnull final MouseEvent e) {
-    return PushLogTreeUtil.getTagAtForRenderer(myRenderer, e);
-  }
-
-  protected void handleTagClick(@jakarta.annotation.Nullable final Object tag, @Nonnull MouseEvent event) {
-    if (tag instanceof VcsLinkedTextComponent) {
-      VcsLinkedTextComponent textWithLink = (VcsLinkedTextComponent)tag;
-      final TreePath path = myRenderer.getTextRenderer().getTree().getPathForLocation(event.getX(), event.getY());
-      if (path == null) return; //path could not be null if tag not null; see consulo.ide.impl.idea.dvcs.push.ui.PushLogTreeUtil.getTagAtForRenderer
-      Object node = path.getLastPathComponent();
-      if (node == null || (!(node instanceof DefaultMutableTreeNode))) {
-        LOG.warn("Incorrect last path component: " + node);
-        return;
-      }
-      textWithLink.fireOnClick((DefaultMutableTreeNode)node, event);
+    protected void handleTagClick(@Nullable final Object tag, @Nonnull MouseEvent event) {
+        if (tag instanceof VcsLinkedTextComponent) {
+            VcsLinkedTextComponent textWithLink = (VcsLinkedTextComponent)tag;
+            final TreePath path = myRenderer.getTextRenderer().getTree().getPathForLocation(event.getX(), event.getY());
+            if (path == null) {
+                return; //path could not be null if tag not null; see consulo.ide.impl.idea.dvcs.push.ui.PushLogTreeUtil.getTagAtForRenderer
+            }
+            Object node = path.getLastPathComponent();
+            if (node == null || (!(node instanceof DefaultMutableTreeNode))) {
+                LOG.warn("Incorrect last path component: " + node);
+                return;
+            }
+            textWithLink.fireOnClick((DefaultMutableTreeNode)node, event);
+        }
+        if (tag instanceof Runnable) {
+            ((Runnable)tag).run();
+        }
     }
-    if (tag instanceof Runnable) {
-      ((Runnable)tag).run();
-    }
-  }
 }
