@@ -15,6 +15,13 @@
   - limitations under the License.
   -->
 <scheme name="Consulo Light" version="1" parent_scheme="Default">
+  <option name="LINE_SPACING" value="1.2"/>
+  <option name="CONSOLE_FONT_NAME" value="JetBrains Mono"/>
+  <option name="CONSOLE_FONT_SIZE" value="13"/>
+  <option name="EDITOR_LIGATURES" value="true"/>
+  <option name="EDITOR_FONT_NAME" value="JetBrains Mono"/>
+  <option name="EDITOR_FONT_SIZE" value="13"/>
+  <option name="EDITOR_LIGATURES" value="true"/>
   <attributes>
     <option name="DEBUGGER_INLINED_VALUES">
       <value>
