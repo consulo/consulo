@@ -1727,9 +1727,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         private final FindPopupScopeUI.ScopeType myScope;
 
         MySelectScopeToggleAction(FindPopupScopeUI.ScopeType scope) {
-            super(scope.text, LocalizeValue.empty(), scope.icon);
-            getTemplatePresentation().setHoveredIcon(scope.icon);
-            getTemplatePresentation().setDisabledIcon(scope.icon);
+            super(scope.text, LocalizeValue.empty(), null);
             myScope = scope;
         }
 

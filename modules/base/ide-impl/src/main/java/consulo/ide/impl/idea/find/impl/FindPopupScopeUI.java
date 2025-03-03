@@ -50,12 +50,10 @@ public interface FindPopupScopeUI {
   class ScopeType {
     public final String name;
     public final LocalizeValue text;
-    public final Image icon;
 
-    public ScopeType(@Nonnull String name, @Nonnull LocalizeValue text, @Nullable Image icon) {
+    public ScopeType(@Nonnull String name, @Nonnull LocalizeValue text) {
       this.name = name;
       this.text = text;
-      this.icon = icon;
     }
   }
 }

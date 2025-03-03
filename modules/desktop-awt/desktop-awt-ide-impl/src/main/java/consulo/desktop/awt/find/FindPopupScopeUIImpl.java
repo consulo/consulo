@@ -37,10 +37,10 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 
 class FindPopupScopeUIImpl implements FindPopupScopeUI {
-  static final ScopeType PROJECT = new ScopeType("Project", FindLocalize.findPopupScopeProject(), Image.empty(0));
-  static final ScopeType MODULE = new ScopeType("Module", FindLocalize.findPopupScopeModule(), Image.empty(0));
-  static final ScopeType DIRECTORY = new ScopeType("Directory", FindLocalize.findPopupScopeDirectory(), Image.empty(0));
-  static final ScopeType SCOPE = new ScopeType("Scope", FindLocalize.findPopupScopeScope(), Image.empty(0));
+  static final ScopeType PROJECT = new ScopeType("Project", FindLocalize.findPopupScopeProject());
+  static final ScopeType MODULE = new ScopeType("Module", FindLocalize.findPopupScopeModule());
+  static final ScopeType DIRECTORY = new ScopeType("Directory", FindLocalize.findPopupScopeDirectory());
+  static final ScopeType SCOPE = new ScopeType("Scope", FindLocalize.findPopupScopeScope());
 
   @Nonnull
   private final FindUIHelper myHelper;
