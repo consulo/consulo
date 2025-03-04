@@ -44,6 +44,9 @@ public class ToolbarNotifier implements Activatable {
     @Nonnull
     private final Consumer<Boolean> myUpdateActionsNotifier;
 
+    @SuppressWarnings("FieldCanBeLocal") // do not inline creating - it will removed from memory due WeakTimerListener
+    private MyTimerListener myTimerListener = new MyTimerListener();
+
     private boolean myListenersArmed;
 
     public ToolbarNotifier(@Nonnull Application application,
@@ -56,7 +59,7 @@ public class ToolbarNotifier implements Activatable {
         myActionManager = (ActionManagerEx) actionManager;
         myKeymapManager = keymapManager;
         myComponent = component;
-        myWeakTimerListener = new WeakTimerListener(new MyTimerListener());
+        myWeakTimerListener = new WeakTimerListener(myTimerListener);
 
         new UiNotifyConnector(component, this);
     }
