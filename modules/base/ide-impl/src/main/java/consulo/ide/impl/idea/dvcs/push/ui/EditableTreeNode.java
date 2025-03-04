@@ -23,16 +23,15 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 public interface EditableTreeNode extends CustomRenderedTreeNode {
+    void fireOnChange();
 
-  void fireOnChange();
+    void fireOnCancel();
 
-  void fireOnCancel();
+    void fireOnSelectionChange(boolean isSelected);
 
-  void fireOnSelectionChange(boolean isSelected);
+    void cancelLoading();
 
-  void cancelLoading();
+    void startLoading(@Nonnull JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial);
 
-  void startLoading(@Nonnull JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial);
-
-  boolean isEditableNow();
+    boolean isEditableNow();
 }

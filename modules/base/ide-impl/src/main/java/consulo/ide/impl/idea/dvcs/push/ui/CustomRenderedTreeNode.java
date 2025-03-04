@@ -19,6 +19,5 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import jakarta.annotation.Nonnull;
 
 interface CustomRenderedTreeNode {
-
-  void render(@Nonnull ColoredTreeCellRenderer renderer);
+    void render(@Nonnull ColoredTreeCellRenderer renderer);
 }

@@ -28,28 +28,32 @@ import java.awt.event.FocusEvent;
 import java.util.List;
 
 public class PushTargetTextField extends TextFieldWithCompletion {
-  public PushTargetTextField(@Nonnull Project project, @Nonnull List<String> targetVariants, @Nonnull String defaultTargetName) {
-    super(project, getCompletionProvider(targetVariants), defaultTargetName, true, true, true);
-    addFocusListener(new FocusAdapter() {
-      @Override
-      public void focusGained(FocusEvent e) {
-        selectAll();
-      }
+    public PushTargetTextField(@Nonnull Project project, @Nonnull List<String> targetVariants, @Nonnull String defaultTargetName) {
+        super(project, getCompletionProvider(targetVariants), defaultTargetName, true, true, true);
+        addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                selectAll();
+            }
 
-      @Override
-      public void focusLost(FocusEvent e) {
-        removeSelection();
-      }
-    });
-  }
+            @Override
+            public void focusLost(FocusEvent e) {
+                removeSelection();
+            }
+        });
+    }
 
-  @Nonnull
-  private static TextCompletionProvider getCompletionProvider(@Nonnull final List<String> targetVariants) {
-    return new ValuesCompletionProviderDumbAware<>(new DefaultTextCompletionValueDescriptor.StringValueDescriptor() {
-      @Override
-      public int compare(String item1, String item2) {
-        return Integer.valueOf(ContainerUtil.indexOf(targetVariants, item1)).compareTo(ContainerUtil.indexOf(targetVariants, item2));
-      }
-    }, targetVariants);
-  }
+    @Nonnull
+    private static TextCompletionProvider getCompletionProvider(@Nonnull List<String> targetVariants) {
+        return new ValuesCompletionProviderDumbAware<>(
+            new DefaultTextCompletionValueDescriptor.StringValueDescriptor() {
+                @Override
+                public int compare(String item1, String item2) {
+                    return Integer.valueOf(ContainerUtil.indexOf(targetVariants, item1))
+                        .compareTo(ContainerUtil.indexOf(targetVariants, item2));
+                }
+            },
+            targetVariants
+        );
+    }
 }

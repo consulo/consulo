@@ -22,34 +22,33 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import jakarta.annotation.Nonnull;
 
 public class SingleRepositoryNode extends RepositoryNode {
+    @Nonnull
+    private final RepositoryWithBranchPanel myRepositoryPanel;
 
-  @Nonnull
-  private final RepositoryWithBranchPanel myRepositoryPanel;
+    public SingleRepositoryNode(@Nonnull RepositoryWithBranchPanel repositoryPanel, @Nonnull CheckBoxModel model) {
+        super(repositoryPanel, model, true);
+        myRepositoryPanel = repositoryPanel;
+    }
 
-  public SingleRepositoryNode(@Nonnull RepositoryWithBranchPanel repositoryPanel, @Nonnull CheckBoxModel model) {
-    super(repositoryPanel, model, true);
-    myRepositoryPanel = repositoryPanel;
-  }
+    @Override
+    public boolean isCheckboxVisible() {
+        return false;
+    }
 
-  @Override
-  public boolean isCheckboxVisible() {
-    return false;
-  }
+    @Override
+    public void setChecked(boolean checked) {
+    }
 
-  @Override
-  public void setChecked(boolean checked) {
-  }
+    @Override
+    public void fireOnSelectionChange(boolean isSelected) {
+    }
 
-  @Override
-  public void fireOnSelectionChange(boolean isSelected) {
-  }
-
-  @Override
-  public void render(@Nonnull ColoredTreeCellRenderer renderer) {
-    renderer.append(" ");
-    renderer.append(myRepositoryPanel.getSourceName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    renderer.append(myRepositoryPanel.getArrow(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    PushTargetPanel pushTargetPanel = myRepositoryPanel.getTargetPanel();
-    pushTargetPanel.render(renderer, renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)), true, null);
-  }
+    @Override
+    public void render(@Nonnull ColoredTreeCellRenderer renderer) {
+        renderer.append(" ");
+        renderer.append(myRepositoryPanel.getSourceName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        renderer.append(myRepositoryPanel.getArrow(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        PushTargetPanel pushTargetPanel = myRepositoryPanel.getTargetPanel();
+        pushTargetPanel.render(renderer, renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)), true, null);
+    }
 }
