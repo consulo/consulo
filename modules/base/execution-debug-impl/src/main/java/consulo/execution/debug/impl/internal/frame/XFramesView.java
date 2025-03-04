@@ -31,6 +31,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
+import consulo.ui.ex.awt.internal.ComboBoxStyle;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -107,7 +108,7 @@ public class XFramesView extends XDebugView {
 
         myThreadComboBox = new ComboBox<>();
         myThreadComboBox.setFont(AWTLanguageEditorUtil.getEditorFont());
-        makeBorderInline(myThreadComboBox);
+        ComboBoxStyle.makeBorderInline(myThreadComboBox);
         myThreadComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(@Nonnull JList list, XExecutionStack value, int index, boolean selected, boolean hasFocus) {
@@ -188,10 +189,6 @@ public class XFramesView extends XDebugView {
         myThreadsPanel = new Wrapper();
         myThreadsPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), 0, 0, 1, 0));
         myMainPanel.add(myThreadsPanel, BorderLayout.NORTH);
-    }
-
-    public static void makeBorderInline(JComboBox<?> comboBox) {
-        comboBox.putClientProperty("FlatLaf.style", "borderColor: #0000; disabledBorderColor: #0000; borderWidth: 0; focusWidth: 0; innerFocusWidth: 1; innerOutlineWidth: 1; arc: 0");
     }
 
     public void selectFrame(XExecutionStack stack, XStackFrame frame) {

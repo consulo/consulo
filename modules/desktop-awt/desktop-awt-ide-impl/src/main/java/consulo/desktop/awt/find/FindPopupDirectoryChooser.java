@@ -38,6 +38,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ValidationInfo;
+import consulo.ui.ex.awt.internal.ComboBoxStyle;
 import consulo.ui.ex.awt.internal.HasSuffixComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -51,7 +52,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
 
-public class FindPopupDirectoryChooser extends JPanel {
+public class FindPopupDirectoryChooser {
     @Nonnull
     private final FindUIHelper myHelper;
     @Nonnull
@@ -63,12 +64,11 @@ public class FindPopupDirectoryChooser extends JPanel {
 
     @RequiredUIAccess
     public FindPopupDirectoryChooser(@Nonnull FindPopupPanel panel) {
-        super(new BorderLayout());
-
         myHelper = panel.getHelper();
         myProject = panel.getProject();
         myFindPopupPanel = panel;
         myDirectoryComboBox = new ComboBox<>(200);
+        ComboBoxStyle.makeBorderInline(myDirectoryComboBox);
 
         Component editorComponent = myDirectoryComboBox.getEditor().getEditorComponent();
         if (editorComponent instanceof JTextField) {
@@ -131,15 +131,13 @@ public class FindPopupDirectoryChooser extends JPanel {
         ActionToolbar toolbar = ActionToolbarFactory.getInstance()
             .createActionToolbar("FindPopupDirectoryBox", builder.build(), ActionToolbar.Style.INPLACE);
 
-        toolbar.setTargetComponent(this);
+        toolbar.setTargetComponent(myDirectoryComboBox);
 
         toolbar.updateActionsAsync();
 
         toolbar.getComponent().setBorder(JBCurrentTheme.comboBoxSubBorder(true));
 
         HasSuffixComponent.setSuffixComponent(myDirectoryComboBox, toolbar.getComponent());
-
-        add(myDirectoryComboBox, BorderLayout.CENTER);
     }
 
     public void initByModel(@Nonnull FindModel findModel) {

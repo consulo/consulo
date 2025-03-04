@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.find.impl;
+package consulo.desktop.awt.find;
 
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.util.lang.Pair;
 import consulo.localize.LocalizeValue;
-import consulo.ui.image.Image;
 
 import jakarta.annotation.*;
 import javax.swing.*;
+import java.util.List;
 
 public interface FindPopupScopeUI {
   @Nonnull
-  Pair<ScopeType, JComponent>[] getComponents();
+  List<Pair<ScopeType, JComponent>> getComponents();
 
   @Nonnull
   ScopeType initByModel(@Nonnull FindModel findModel);

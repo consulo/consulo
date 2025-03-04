@@ -52,7 +52,7 @@ public class WindowResizeListener extends WindowMouseListener {
   }
 
   /**
-   * @param view the component to resize
+   * @param view the component to resize   X
    * @return an insets indicating inactive outer area
    */
   protected Insets getResizeOffset(Component view) {

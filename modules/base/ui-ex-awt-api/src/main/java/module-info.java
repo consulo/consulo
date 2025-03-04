@@ -49,11 +49,11 @@ module consulo.ui.ex.awt.api {
   exports consulo.ui.ex.awt.internal to
     consulo.ide.impl,
     consulo.desktop.awt.ide.impl,
-    consulo.desktop.awt.diff.impl,
     consulo.language.editor.refactoring.api,
     consulo.external.system.api,
     consulo.language.editor.ui.api,
-    consulo.ide.api;
+    consulo.ide.api,
+    consulo.execution.debug.impl;
 
   exports consulo.ui.ex.awt.internal.laf;
 

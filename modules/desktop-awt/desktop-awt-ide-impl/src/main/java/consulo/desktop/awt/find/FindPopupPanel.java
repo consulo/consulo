@@ -100,7 +100,6 @@ import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -659,12 +658,12 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         );
         myReplaceTextArea.setSuffixActions(List.of(preserveCaseAction));
         myExtraActions.addAll(Arrays.asList(caseSensitiveAction, wholeWordsAction, regexAction, preserveCaseAction));
-        Pair<FindPopupScopeUI.ScopeType, JComponent>[] scopeComponents = myScopeUI.getComponents();
+        List<Pair<FindPopupScopeUI.ScopeType, JComponent>> scopeComponents = myScopeUI.getComponents();
 
         myScopeDetailsPanel = new JPanel(new CardLayout());
-        myScopeDetailsPanel.setBorder(JBUI.Borders.empty());
+        myScopeDetailsPanel.setBorder(JBUI.Borders.customLine(0, 1, 0, 0));
 
-        List<AnAction> scopeActions = new ArrayList<>(scopeComponents.length);
+        List<AnAction> scopeActions = new ArrayList<>(scopeComponents.size());
         for (Pair<FindPopupScopeUI.ScopeType, JComponent> scopeComponent : scopeComponents) {
             FindPopupScopeUI.ScopeType scopeType = scopeComponent.first;
             scopeActions.add(new MySelectScopeToggleAction(scopeType));
@@ -672,7 +671,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
         myScopeSelectionToolbar = createToolbar(scopeActions.toArray(AnAction.EMPTY_ARRAY));
         myScopeSelectionToolbar.setTargetComponent(mySearchComponent);
-        mySelectedScope = scopeComponents[0].first;
+        mySelectedScope = scopeComponents.get(0).first;
 
         myResultsPreviewTableModel = createTableModel();
         myResultsPreviewTable = new JBTable(myResultsPreviewTableModel) {
@@ -851,39 +850,40 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         previewPanel.add(myCodePreviewComponent, BorderLayout.CENTER);
         splitter.setSecondComponent(previewPanel);
         JPanel scopesPanel = new JPanel(new MigLayout("flowx, gap 26, ins 0"));
-        scopesPanel.setBorder(JBUI.Borders.empty(0, 0, 4, 0));
+        scopesPanel.setBorder(JBUI.Borders.empty());
         
         scopesPanel.add(myScopeSelectionToolbar.getComponent());
         scopesPanel.add(myScopeDetailsPanel, "growx, pushx");
-        setLayout(new MigLayout("flowx, ins 4, gap 0, fillx, hidemode 3"));
+        setLayout(new MigLayout("flowx, ins 0, gap 0, fillx, hidemode 3"));
         myTitlePanel = new JPanel(new MigLayout("flowx, ins 0, gap 0, fillx, filly"));
         myTitlePanel.add(myTitleLabel, "gapright 4");
         myTitlePanel.add(myInfoLabel);
         myTitlePanel.add(myLoadingDecorator.getComponent(), "w 24, wmin 24");
         myTitlePanel.add(Box.createHorizontalGlue(), "growx, pushx");
+        myTitlePanel.setBorder(JBUI.Borders.empty(8, 4, 4, 4));
 
         add(myTitlePanel, "sx 2, growx, growx, growy");
         add(TargetAWT.to(myCbFileFilter.getComponent()));
-        add(myFileMaskField, "gapleft 4, gapright 16");
+        add(myFileMaskField, "gapleft 4, gapright 16, gaptop 4");
         myIsPinned.set(UISettings.getInstance().getPinFindInPath());
 
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("FindInFilesTopMenu", topActionGroup.build(), true);
         toolbar.setTargetComponent(this);
 
         JComponent component = toolbar.getComponent();
-        component.setBorder(JBUI.Borders.empty());
+        component.setBorder(JBUI.Borders.emptyRight(4));
         component.setOpaque(false);
 
-        add(component, "wrap");
+        add(component, "gaptop 4, wrap");
 
-        add(mySearchTextArea, "pushx, growx, sx 10, pad 0 -4 0 4, gaptop 4, wrap");
+        add(mySearchTextArea, "pushx, growx, sx 10, pad 0 0 0 4, gaptop 4, wrap");
         mySearchTextArea.setBorder(JBUI.Borders.customLine(1, 0, 1, 0));
 
         myReplaceTextArea.setBorder(JBUI.Borders.customLine(0, 0, 1, 0));
 
-        add(myReplaceTextArea, "pushx, growx, sx 10, pad 0 -4 0 4, wrap");
-        add(scopesPanel, "sx 10, pushx, growx, ax left, wrap, gaptop 4, gapbottom 4");
-        add(splitter, "pushx, growx, growy, pushy, sx 10, wrap, pad -4 -4 4 4");
+        add(myReplaceTextArea, "pushx, growx, sx 10, pad 0 0 0 0, wrap");
+        add(scopesPanel, "sx 10, pushx, growx, ax left, wrap, gaptop 0, gapbottom 0");
+        add(splitter, "pushx, growx, growy, pushy, sx 10, wrap, pad 0");
 
         DockLayout borderWrapper = DockLayout.create();
         borderWrapper.center(bottomLayout);

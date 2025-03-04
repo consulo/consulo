@@ -8,10 +8,8 @@ import consulo.find.FindModel;
 import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.find.ui.ScopeChooserCombo;
-import consulo.ide.impl.idea.find.impl.FindPopupScopeUI;
 import consulo.ide.impl.idea.find.impl.FindUIHelper;
 import consulo.ide.impl.idea.util.Functions;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiBundle;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
@@ -21,7 +19,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.SimpleListCellRenderer;
 import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ui.image.Image;
+import consulo.ui.ex.awt.internal.ComboBoxStyle;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -35,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.List;
 
 class FindPopupScopeUIImpl implements FindPopupScopeUI {
   static final ScopeType PROJECT = new ScopeType("Project", FindLocalize.findPopupScopeProject());
@@ -49,7 +48,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
   @Nonnull
   private final FindPopupPanel myFindPopupPanel;
   @Nonnull
-  private final Pair<ScopeType, JComponent>[] myComponents;
+  private final List<Pair<ScopeType, JComponent>> myComponents;
 
   private ComboBox<String> myModuleComboBox;
   private FindPopupDirectoryChooser myDirectoryChooser;
@@ -61,10 +60,12 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
     myFindPopupPanel = panel;
     initComponents();
 
-    boolean fullVersion = true;
-    myComponents = fullVersion
-                   ? ContainerUtil.ar(new Pair<>(PROJECT, new JLabel()), new Pair<>(MODULE, shrink(myModuleComboBox)), new Pair<>(DIRECTORY, myDirectoryChooser), new Pair<>(SCOPE, shrink(myScopeCombo)))
-                   : ContainerUtil.ar(new Pair<>(SCOPE, shrink(myScopeCombo)), new Pair<>(DIRECTORY, myDirectoryChooser));
+    myComponents = List.of(
+        Pair.create(PROJECT, new JLabel()),
+        Pair.create(MODULE, myModuleComboBox),
+        Pair.create(DIRECTORY, myDirectoryChooser.getComboBox()),
+        Pair.create(SCOPE, myScopeCombo)
+    );
   }
 
   public void initComponents() {
@@ -76,6 +77,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
 
     Arrays.sort(names, String.CASE_INSENSITIVE_ORDER);
     myModuleComboBox = new ComboBox<>(names);
+    ComboBoxStyle.makeBorderInline(myModuleComboBox);
     myModuleComboBox.setMinimumAndPreferredWidth(JBUIScale.scale(300)); // as ScopeChooser
     myModuleComboBox.setRenderer(SimpleListCellRenderer.create("", Functions.id()));
 
@@ -85,6 +87,8 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
     myDirectoryChooser = new FindPopupDirectoryChooser(myFindPopupPanel);
 
     myScopeCombo = new ScopeChooserCombo();
+    ComboBoxStyle.makeBorderInline(myScopeCombo.getComboBox());
+
     Object selection = ObjectUtil.coalesce(myHelper.getModel().getCustomScope(), myHelper.getModel().getCustomScopeName(), FindSettings.getInstance().getDefaultScopeName());
     myScopeCombo.init(myProject, true, true, selection, new Condition<ScopeDescriptor>() {
       //final String projectFilesScopeName = PsiBundle.message("psi.search.scope.project");
@@ -138,7 +142,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
 
   @Nonnull
   @Override
-  public Pair<ScopeType, JComponent>[] getComponents() {
+  public List<Pair<ScopeType, JComponent>> getComponents() {
     return myComponents;
   }
 
@@ -206,18 +210,11 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
     }
 
     ScopeType scope = getScope(findModel);
-    ScopeType selectedScope = Arrays.stream(myComponents).filter(o -> o.first == scope).findFirst().orElse(null) == null ? myComponents[0].first : scope;
+    ScopeType selectedScope = myComponents.stream().filter(o -> o.first == scope).findFirst().orElse(null) == null ? myComponents.get(0).first : scope;
     if (selectedScope == MODULE) {
       myModuleComboBox.setSelectedItem(findModel.getModuleName());
     }
     return selectedScope;
-  }
-
-  private static JComponent shrink(JComponent toShrink) {
-    JPanel wrapper = new JPanel(new BorderLayout());
-    wrapper.add(toShrink, BorderLayout.WEST);
-    wrapper.add(Box.createHorizontalGlue(), BorderLayout.CENTER);
-    return wrapper;
   }
 
   private void scheduleResultsUpdate() {
