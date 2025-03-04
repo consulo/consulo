@@ -599,6 +599,13 @@ public class JBCurrentTheme {
         return JBUI.Borders.empty(4);
     }
 
+    public static Border comboBoxSubBorder(boolean editable) {
+        if (editable) {
+            return JBUI.Borders.emptyRight(8);
+        }
+        return textFieldSubBorder(false);
+    }
+
     public static Border textFieldSubBorder(boolean left) {
         if (left) {
             return JBUI.Borders.emptyLeft(4);

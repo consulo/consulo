@@ -29,13 +29,16 @@ import consulo.ide.impl.idea.find.impl.FindUIHelper;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.action.ToggleAction;
-import consulo.ui.ex.awt.*;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.ValidationInfo;
+import consulo.ui.ex.awt.internal.HasSuffixComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -58,6 +61,7 @@ public class FindPopupDirectoryChooser extends JPanel {
     @Nonnull
     private final ComboBox<String> myDirectoryComboBox;
 
+    @RequiredUIAccess
     public FindPopupDirectoryChooser(@Nonnull FindPopupPanel panel) {
         super(new BorderLayout());
 
@@ -68,7 +72,7 @@ public class FindPopupDirectoryChooser extends JPanel {
 
         Component editorComponent = myDirectoryComboBox.getEditor().getEditorComponent();
         if (editorComponent instanceof JTextField) {
-            JTextField field = (JTextField)editorComponent;
+            JTextField field = (JTextField) editorComponent;
             field.setColumns(40);
         }
         myDirectoryComboBox.setEditable(true);
@@ -77,11 +81,7 @@ public class FindPopupDirectoryChooser extends JPanel {
         ActionListener restartSearchListener = e -> myFindPopupPanel.scheduleResultsUpdate();
         myDirectoryComboBox.addActionListener(restartSearchListener);
 
-        FixedSizeButton mySelectDirectoryButton = new FixedSizeButton(myDirectoryComboBox);
-        TextFieldWithBrowseButton.MyDoClickAction.addTo(mySelectDirectoryButton, myDirectoryComboBox);
-        mySelectDirectoryButton.setMargin(JBUI.emptyInsets());
-
-        mySelectDirectoryButton.addActionListener(e -> {
+        DumbAwareAction selectPathAction = DumbAwareAction.create("Select Path", PlatformIconGroup.nodesFolder(), e -> {
             FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
             descriptor.setUseApplicationDialog();
             myFindPopupPanel.getCanClose().set(false);
@@ -114,21 +114,32 @@ public class FindPopupDirectoryChooser extends JPanel {
             );
         });
 
+        selectPathAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)),
+            myFindPopupPanel);
+
         MyRecursiveDirectoryAction recursiveDirectoryAction = new MyRecursiveDirectoryAction();
         int mnemonicModifiers =
             Platform.current().os().isMac() ? InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK : InputEvent.ALT_DOWN_MASK;
+
         recursiveDirectoryAction.registerCustomShortcutSet(
             new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mnemonicModifiers)),
             myFindPopupPanel
         );
 
-        add(myDirectoryComboBox, BorderLayout.CENTER);
-        JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
-        buttonsPanel.add(mySelectDirectoryButton);
-        ActionToolbar toolbar = FindPopupPanel.createToolbar(recursiveDirectoryAction);
+        ActionGroup.Builder builder = ActionGroup.newImmutableBuilder().add(selectPathAction).add(recursiveDirectoryAction);
+
+        ActionToolbar toolbar = ActionToolbarFactory.getInstance()
+            .createActionToolbar("FindPopupDirectoryBox", builder.build(), ActionToolbar.Style.INPLACE);
+
+        toolbar.updateActionsAsync();
+
         toolbar.setTargetComponent(this);
-        buttonsPanel.add(toolbar.getComponent()); //check if toolbar updates the button with no delays
-        add(buttonsPanel, BorderLayout.EAST);
+
+        toolbar.getComponent().setBorder(JBCurrentTheme.comboBoxSubBorder(true));
+
+        HasSuffixComponent.setSuffixComponent(myDirectoryComboBox, toolbar.getComponent());
+
+        add(myDirectoryComboBox, BorderLayout.CENTER);
     }
 
     public void initByModel(@Nonnull FindModel findModel) {
@@ -159,7 +170,7 @@ public class FindPopupDirectoryChooser extends JPanel {
 
     @Nonnull
     public String getDirectory() {
-        return (String)myDirectoryComboBox.getSelectedItem();
+        return (String) myDirectoryComboBox.getSelectedItem();
     }
 
     @Nullable
