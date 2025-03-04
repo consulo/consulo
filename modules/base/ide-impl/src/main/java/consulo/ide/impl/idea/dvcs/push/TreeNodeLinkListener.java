@@ -20,5 +20,5 @@ import jakarta.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public interface TreeNodeLinkListener {
-  void onClick(@Nonnull DefaultMutableTreeNode source);
+    void onClick(@Nonnull DefaultMutableTreeNode source);
 }

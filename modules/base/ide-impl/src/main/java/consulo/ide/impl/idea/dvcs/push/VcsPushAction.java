@@ -35,39 +35,48 @@ import java.util.Collections;
 import java.util.HashSet;
 
 public class VcsPushAction extends DumbAwareAction {
-
-  @Nonnull
-  private static Collection<Repository> collectRepositories(@Nonnull VcsRepositoryManager vcsRepositoryManager, @Nullable VirtualFile[] files) {
-    if (files == null) return Collections.emptyList();
-    Collection<Repository> repositories = new HashSet<>();
-    for (VirtualFile file : files) {
-      Repository repo = vcsRepositoryManager.getRepositoryForFile(file);
-      if (repo != null) {
-        repositories.add(repo);
-      }
+    @Nonnull
+    private static Collection<Repository> collectRepositories(
+        @Nonnull VcsRepositoryManager vcsRepositoryManager,
+        @Nullable VirtualFile[] files
+    ) {
+        if (files == null) {
+            return Collections.emptyList();
+        }
+        Collection<Repository> repositories = new HashSet<>();
+        for (VirtualFile file : files) {
+            Repository repo = vcsRepositoryManager.getRepositoryForFile(file);
+            if (repo != null) {
+                repositories.add(repo);
+            }
+        }
+        return repositories;
     }
-    return repositories;
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    VcsRepositoryManager manager = ServiceManager.getService(project, VcsRepositoryManager.class);
-    Collection<Repository> repositories = e.getData(Editor.KEY) != null
-      ? ContainerUtil.<Repository>emptyList()
-      : collectRepositories(manager, e.getData(VirtualFile.KEY_OF_ARRAY));
-    VirtualFile selectedFile = DvcsUtil.getSelectedFile(project);
-    new VcsPushDialog(project, DvcsUtil.sortRepositories(repositories), selectedFile != null ? manager.getRepositoryForFile(selectedFile) : null)
-      .show();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        VcsRepositoryManager manager = ServiceManager.getService(project, VcsRepositoryManager.class);
+        Collection<Repository> repositories = e.getData(Editor.KEY) != null
+            ? ContainerUtil.<Repository>emptyList()
+            : collectRepositories(manager, e.getData(VirtualFile.KEY_OF_ARRAY));
+        VirtualFile selectedFile = DvcsUtil.getSelectedFile(project);
+        new VcsPushDialog(
+            project,
+            DvcsUtil.sortRepositories(repositories),
+            selectedFile != null ? manager.getRepositoryForFile(selectedFile) : null
+        ).show();
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    Project project = e.getData(Project.KEY);
-    e.getPresentation()
-      .setEnabledAndVisible(project != null && !ServiceManager.getService(project, VcsRepositoryManager.class).getRepositories().isEmpty());
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        Project project = e.getData(Project.KEY);
+        e.getPresentation().setEnabledAndVisible(
+            project != null
+                && !ServiceManager.getService(project, VcsRepositoryManager.class).getRepositories().isEmpty()
+        );
+    }
 }

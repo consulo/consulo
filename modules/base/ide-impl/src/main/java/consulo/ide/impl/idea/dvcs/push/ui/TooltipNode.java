@@ -16,6 +16,5 @@
 package consulo.ide.impl.idea.dvcs.push.ui;
 
 public interface TooltipNode {
-
-  String getTooltip();
+    String getTooltip();
 }

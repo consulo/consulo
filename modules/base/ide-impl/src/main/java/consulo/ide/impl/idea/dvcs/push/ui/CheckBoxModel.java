@@ -16,17 +16,17 @@
 package consulo.ide.impl.idea.dvcs.push.ui;
 
 public class CheckBoxModel {
-  private boolean myIsChecked;
+    private boolean myIsChecked;
 
-  public CheckBoxModel(boolean isChecked) {
-    myIsChecked = isChecked;
-  }
+    public CheckBoxModel(boolean isChecked) {
+        myIsChecked = isChecked;
+    }
 
-  public boolean isChecked() {
-    return myIsChecked;
-  }
+    public boolean isChecked() {
+        return myIsChecked;
+    }
 
-  public void setChecked(boolean selected) {
-    myIsChecked = selected;
-  }
+    public void setChecked(boolean selected) {
+        myIsChecked = selected;
+    }
 }

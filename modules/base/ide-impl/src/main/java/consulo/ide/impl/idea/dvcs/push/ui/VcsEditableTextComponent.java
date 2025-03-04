@@ -19,8 +19,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class VcsEditableTextComponent extends VcsLinkedTextComponent implements VcsEditableComponent {
-
-  public VcsEditableTextComponent(@Nonnull String text, @Nullable VcsLinkListener listener) {
-    super(text, listener);
-  }
+    public VcsEditableTextComponent(@Nonnull String text, @Nullable VcsLinkListener listener) {
+        super(text, listener);
+    }
 }

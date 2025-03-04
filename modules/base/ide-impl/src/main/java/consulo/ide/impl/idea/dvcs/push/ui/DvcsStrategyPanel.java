@@ -22,22 +22,21 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DvcsStrategyPanel extends JPanel {
+    private ComboBox<VcsPushReferenceStrategy> myReferenceStrategyCombobox;
 
-  private ComboBox myReferenceStrategyCombobox;
+    public DvcsStrategyPanel() {
+        setLayout(new BorderLayout());
+        myReferenceStrategyCombobox = new ComboBox<>();
+        DefaultComboBoxModel<VcsPushReferenceStrategy> comboModel = new DefaultComboBoxModel<>(VcsPushReferenceStrategy.values());
+        myReferenceStrategyCombobox.setModel(comboModel);
+        JPanel bottomPanel = new JPanel(new FlowLayout());
+        JLabel referenceStrategyLabel = new JLabel("Push Reference Strategy: ");
+        bottomPanel.add(referenceStrategyLabel, FlowLayout.LEFT);
+        bottomPanel.add(myReferenceStrategyCombobox);
+        add(bottomPanel, BorderLayout.WEST);
+    }
 
-  public DvcsStrategyPanel() {
-    setLayout(new BorderLayout());
-    myReferenceStrategyCombobox = new ComboBox();
-    DefaultComboBoxModel comboModel = new DefaultComboBoxModel(VcsPushReferenceStrategy.values());
-    myReferenceStrategyCombobox.setModel(comboModel);
-    JPanel bottomPanel = new JPanel(new FlowLayout());
-    JLabel referenceStrategyLabel = new JLabel("Push Reference Strategy: ");
-    bottomPanel.add(referenceStrategyLabel, FlowLayout.LEFT);
-    bottomPanel.add(myReferenceStrategyCombobox);
-    add(bottomPanel, BorderLayout.WEST);
-  }
-
-  public VcsPushReferenceStrategy getStrategy() {
-    return (VcsPushReferenceStrategy)myReferenceStrategyCombobox.getSelectedItem();
-  }
+    public VcsPushReferenceStrategy getStrategy() {
+        return (VcsPushReferenceStrategy)myReferenceStrategyCombobox.getSelectedItem();
+    }
 }
