@@ -131,9 +131,9 @@ public class FindPopupDirectoryChooser extends JPanel {
         ActionToolbar toolbar = ActionToolbarFactory.getInstance()
             .createActionToolbar("FindPopupDirectoryBox", builder.build(), ActionToolbar.Style.INPLACE);
 
-        toolbar.updateActionsAsync();
-
         toolbar.setTargetComponent(this);
+
+        toolbar.updateActionsAsync();
 
         toolbar.getComponent().setBorder(JBCurrentTheme.comboBoxSubBorder(true));
 
