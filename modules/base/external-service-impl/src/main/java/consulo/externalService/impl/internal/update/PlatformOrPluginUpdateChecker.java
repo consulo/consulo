@@ -228,7 +228,7 @@ public class PlatformOrPluginUpdateChecker {
         ApplicationInfo appInfo = ApplicationInfo.getInstance();
         String currentBuildNumber = appInfo.getBuild().asString();
 
-        List<PluginDescriptor> remotePlugins = Collections.emptyList();
+        List<PluginDescriptor> remotePlugins;
         UpdateChannel channel = UpdateSettingsImpl.getInstance().getChannel();
         try {
             remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel, null, true);
@@ -264,7 +264,7 @@ public class PlatformOrPluginUpdateChecker {
             }
         }
 
-        final List<PlatformOrPluginNode> targets = new ArrayList<>();
+        final Map<PluginId, PlatformOrPluginNode> targets = new LinkedHashMap<>();
         if (newPlatformPlugin != null) {
             PluginNode thisPlatform = new PluginNode(platformPluginId);
             thisPlatform.setVersion(appInfo.getBuild().asString());
@@ -272,7 +272,7 @@ public class PlatformOrPluginUpdateChecker {
 
             PluginIconHolder.put(newPlatformPlugin, Application.get().getBigIcon());
 
-            targets.add(new PlatformOrPluginNode(platformPluginId, thisPlatform, newPlatformPlugin));
+            targets.put(platformPluginId, new PlatformOrPluginNode(platformPluginId, thisPlatform, newPlatformPlugin));
 
             // load new plugins with new app build
             try {
@@ -306,7 +306,7 @@ public class PlatformOrPluginUpdateChecker {
                     if (filtered == null) {
                         // if platform updated - but we not found new plugin in new remote list, notify user about it
                         if (newPlatformPlugin != null) {
-                            targets.add(new PlatformOrPluginNode(pluginId, entry.getValue(), null));
+                            targets.put(pluginId, new PlatformOrPluginNode(pluginId, entry.getValue(), null));
                         }
                         continue;
                     }
@@ -321,7 +321,7 @@ public class PlatformOrPluginUpdateChecker {
 
                         processDependencies(filtered, targets, remotePlugins);
 
-                        targets.add(new PlatformOrPluginNode(pluginId, entry.getValue(), filtered));
+                        targets.put(pluginId, new PlatformOrPluginNode(pluginId, entry.getValue(), filtered));
                     }
                 }
             }
@@ -335,28 +335,39 @@ public class PlatformOrPluginUpdateChecker {
         }
 
         if (newPlatformPlugin != null) {
-            return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.PLATFORM_UPDATE, targets);
+            return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.PLATFORM_UPDATE, new ArrayList<>(targets.values()));
         }
 
         if (alreadyVisited && targets.isEmpty()) {
             return PlatformOrPluginUpdateResult.RESTART_REQUIRED;
         }
-        return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.PLUGIN_UPDATE,
-            targets);
+        if (targets.isEmpty()) {
+            return PlatformOrPluginUpdateResult.NO_UPDATE;
+        }
+        else {
+            return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.PLUGIN_UPDATE, new ArrayList<>(targets.values()));
+        }
     }
 
     private static void processDependencies(@Nonnull PluginDescriptor target,
-                                            List<PlatformOrPluginNode> targets,
+                                            Map<PluginId, PlatformOrPluginNode> targets,
                                             List<PluginDescriptor> remotePlugins) {
         PluginId[] dependentPluginIds = target.getDependentPluginIds();
         for (PluginId pluginId : dependentPluginIds) {
+            if (targets.containsKey(pluginId)) {
+                // plugin already marked as new for download
+                continue;
+            }
+
             PluginDescriptor depPlugin = PluginManager.findPlugin(pluginId);
             // if plugin is not installed
             if (depPlugin == null) {
                 PluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
 
                 if (filtered != null) {
-                    targets.add(new PlatformOrPluginNode(filtered.getPluginId(), null, filtered));
+                    targets.put(filtered.getPluginId(), new PlatformOrPluginNode(filtered.getPluginId(), null, filtered));
+
+                    processDependencies(filtered, targets, remotePlugins);
                 }
             }
         }
