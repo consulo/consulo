@@ -909,17 +909,6 @@
             </dependency>
             <dependency>
                 <groupId>com.formdev</groupId>
-                <artifactId>flatlaf-intellij-themes</artifactId>
-                <version>${flatlaf.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.formdev</groupId>
-                        <artifactId>flatlaf</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.formdev</groupId>
                 <artifactId>flatlaf-swingx</artifactId>
                 <version>${flatlaf.version}</version>
                 <exclusions>

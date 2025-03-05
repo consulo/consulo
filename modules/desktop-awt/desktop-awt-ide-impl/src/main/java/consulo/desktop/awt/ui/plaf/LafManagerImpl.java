@@ -15,8 +15,6 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import com.formdev.flatlaf.*;
-import com.formdev.flatlaf.intellijthemes.FlatAllIJThemes;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.application.ui.UIFontManager;
@@ -29,10 +27,7 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.desktop.awt.ui.impl.style.DesktopStyleImpl;
-import consulo.desktop.awt.ui.plaf2.ConsuloDarkLaf;
-import consulo.desktop.awt.ui.plaf2.ConsuloLightLaf;
-import consulo.desktop.awt.ui.plaf2.IdeLookAndFeelInfo;
-import consulo.desktop.awt.ui.plaf2.SmoothScrollingListener;
+import consulo.desktop.awt.ui.plaf2.*;
 import consulo.disposer.Disposable;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.ui.LafManager;
@@ -103,7 +98,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     private static Map<String, String> ourOldMapping = Map.of(
         "consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf", Style.LIGHT_ID,
-        "consulo.desktop.awt.ui.plaf.darcula.DarculaLaf", Style.DARK_ID
+        "consulo.desktop.awt.ui.plaf.darcula.DarculaLaf", Style.SEMI_DARK
     );
 
     @Inject
@@ -113,20 +108,9 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
         List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
 
-        Couple<Class<? extends FlatLaf>> defaultLafs = getDefaultLafs();
-
-        lafList.add(new IdeLookAndFeelInfo(Style.LIGHT_ID, "Default Light", defaultLafs.getFirst().getName(), false));
-        lafList.add(new IdeLookAndFeelInfo(Style.DARK_ID, "Default Dark", defaultLafs.getSecond().getName(), true));
-
-        lafList.add(new IdeLookAndFeelInfo("Flat Light", FlatLightLaf.class.getName(), false));
-        lafList.add(new IdeLookAndFeelInfo("Flat Dark", FlatDarkLaf.class.getName(), true));
-
-        lafList.add(new IdeLookAndFeelInfo("IntelliJ", "IntelliJ", FlatIntelliJLaf.class.getName(), false));
-        lafList.add(new IdeLookAndFeelInfo("Darcula", "Darcula", FlatDarculaLaf.class.getName(), true));
-
-        for (FlatAllIJThemes.FlatIJLookAndFeelInfo info : FlatAllIJThemes.INFOS) {
-            lafList.add(new IdeLookAndFeelInfo(info.getName(), info.getClassName(), info.isDark()));
-        }
+        lafList.add(new IdeLookAndFeelInfo(Style.LIGHT_ID, "Light", ConsuloLightLaf.class.getName(), false));
+        lafList.add(new IdeLookAndFeelInfo(Style.SEMI_DARK, "Dark Grey", ConsuloDarkGreyLaf.class.getName(), true));
+        lafList.add(new IdeLookAndFeelInfo(Style.DARK_ID, "Dark", ConsuloDarkLaf.class.getName(), true));
 
         for (UIManager.LookAndFeelInfo lookAndFeelInfo : lafList) {
             DesktopStyleImpl style = new DesktopStyleImpl(lookAndFeelInfo);
@@ -135,10 +119,6 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         }
 
         myCurrentStyle = getDefaultStyle();
-    }
-
-    public static Couple<Class<? extends FlatLaf>> getDefaultLafs() {
-        return Couple.of(ConsuloLightLaf.class, ConsuloDarkLaf.class);
     }
 
     @Override

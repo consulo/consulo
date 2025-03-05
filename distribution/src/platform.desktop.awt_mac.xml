@@ -28,7 +28,6 @@
                 <include>net.sf.cssbox:jstyleparser</include>
                 <include>xml-apis:xml-apis-ext</include>
                 <include>consulo.internal:flatlaf-core</include>
-                <include>com.formdev:flatlaf-intellij-themes</include>
                 <include>com.formdev:flatlaf-swingx</include>
                 <include>org.swinglabs.swingx:swingx-all</include>
             </includes>

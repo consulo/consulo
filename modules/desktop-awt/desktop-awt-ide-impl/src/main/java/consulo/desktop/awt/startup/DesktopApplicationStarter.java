@@ -279,17 +279,6 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    private static void initLaf(boolean isDark) {
-        try {
-            Couple<Class<? extends FlatLaf>> defaultLafs = LafManagerImpl.getDefaultLafs();
-            Class<? extends FlatLaf> themeClass = isDark ? defaultLafs.getSecond() : defaultLafs.getFirst();
-            UIManager.setLookAndFeel(themeClass.newInstance());
-        }
-        catch (Exception ignored) {
-        }
-    }
-
     @SuppressWarnings("unchecked")
     private void runJsonRequest(String jsonFile) {
         CommandLineJsonValue jsonValue = null;

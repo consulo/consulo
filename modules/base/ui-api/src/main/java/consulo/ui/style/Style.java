@@ -26,6 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 public interface Style {
     static String LIGHT_ID = "light";
+    static String SEMI_DARK = "semi_dark";
     static String DARK_ID = "dark";
 
     @Nonnull
