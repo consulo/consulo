@@ -74,6 +74,8 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
             add(BorderLayout.CENTER, myTextLabel);
             add(BorderLayout.WEST, myNodeIcon);
             add(BorderLayout.EAST, myProjectIcon);
+
+            myProjectIcon.setBorder(JBUI.Borders.emptyRight(6));
         }
 
         @Override
