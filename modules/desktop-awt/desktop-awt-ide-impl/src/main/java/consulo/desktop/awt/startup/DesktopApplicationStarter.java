@@ -168,16 +168,13 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         // preload all flat native libraries
         pool.execute(() -> {
-            if (myPlatform.os().isWindows()) {
-                FlatNativeWindowsLibrary.isLoaded();
+            FlatLaf.setPreferredFontFamily("Inter");
+            FlatLaf.setPreferredLightFontFamily("Inter Light");
+            FlatLaf.setPreferredSemiboldFontFamily("Inter SemiBold");
 
-                // replace hidpi repaint manager for fixing windows issues
-                SwingUtilities.invokeLater(HiDPIUtils::installHiDPIRepaintManager);
-            }
+            FlatLaf.setPreferredMonospacedFontFamily("JetBrains Mono");
 
-            if (myPlatform.os().isMac()) {
-                FlatNativeMacLibrary.isLoaded();
-            }
+            HiDPIUtils.installHiDPIRepaintManager();
         });
         // endregion
 
