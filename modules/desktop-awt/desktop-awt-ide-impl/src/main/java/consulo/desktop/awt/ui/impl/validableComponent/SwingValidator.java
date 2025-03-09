@@ -19,6 +19,7 @@ import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.util.collection.Lists;
 import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ui.ex.RelativePoint;
@@ -42,7 +43,7 @@ import java.util.Optional;
  * @since 2019-11-04
  */
 public class SwingValidator<V> {
-  private List<ValidableComponent.Validator<V>> myValidators = ContainerUtil.createLockFreeCopyOnWriteList();
+  private List<ValidableComponent.Validator<V>> myValidators = Lists.newLockFreeCopyOnWriteList();
 
   private WeakReference<JBPopup> myLastPopup;
 
