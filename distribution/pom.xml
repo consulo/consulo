@@ -315,8 +315,9 @@
             <artifactId>javazoom.mp3</artifactId>
         </dependency>
         <dependency>
-            <groupId>consulo.internal</groupId>
-            <artifactId>flatlaf-core</artifactId>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <classifier>no-natives</classifier>
         </dependency>
 
         <!--optional dependency-->
