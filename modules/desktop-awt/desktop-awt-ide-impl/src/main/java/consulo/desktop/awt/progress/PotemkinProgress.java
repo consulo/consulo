@@ -10,12 +10,11 @@ import consulo.awt.hacking.SunToolkitHacking;
 import consulo.component.ProcessCanceledException;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.progress.util.PingProgress;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;

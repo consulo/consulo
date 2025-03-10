@@ -19,18 +19,15 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.StartupProgress;
-import consulo.component.ComponentManager;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
-import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.function.BooleanSupplier;
 
@@ -39,158 +36,160 @@ import java.util.function.BooleanSupplier;
  * @since 12-Jul-22
  */
 public abstract class UnifiedApplication extends BaseApplication {
-  public UnifiedApplication(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
-    super(componentBinding, splashRef);
+    protected static final Logger LOG = Logger.getInstance(BaseApplication.class);
 
-    myLock = new ReadMostlyRWLock(null);
+    public UnifiedApplication(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+        super(componentBinding, splashRef);
 
-    ApplicationManager.setApplication(this);
-  }
+        myLock = new UnifiedRWLock();
 
-  @Override
-  public int getProfiles() {
-    return super.getProfiles() | ComponentProfiles.UNIFIED;
-  }
-
-  @Override
-  protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
-    super.bootstrapInjectingContainer(builder);
-  }
-
-  @Override
-  public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
-    UIAccess uiAccess = getLastUIAccess();
-    uiAccess.give(() -> runIntendedWriteActionOnCurrentThread(action));
-  }
-
-  @Override
-  public void exit(boolean force, boolean exitConfirmed) {
-
-  }
-
-  @RequiredReadAction
-  @Override
-  public void assertReadAccessAllowed() {
-    if (!isReadAccessAllowed()) {
-      throw new IllegalArgumentException();
+        ApplicationManager.setApplication(this);
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void assertIsDispatchThread() {
-    if (!isDispatchThread()) {
-      throw new IllegalArgumentException();
+    @Override
+    public int getProfiles() {
+        return super.getProfiles() | ComponentProfiles.UNIFIED;
     }
-  }
 
-  @Override
-  public void exit() {
+    @Override
+    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+        super.bootstrapInjectingContainer(builder);
+    }
 
-  }
+    @Override
+    public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
+        UIAccess uiAccess = getLastUIAccess();
+        uiAccess.give(() -> runIntendedWriteActionOnCurrentThread(action));
+    }
 
-  @Override
-  public void invokeLater(@Nonnull Runnable runnable) {
-    UIAccess lastUIAccess = getLastUIAccess();
+    @Override
+    public void exit(boolean force, boolean exitConfirmed) {
 
-    lastUIAccess.give(runnable);
-  }
+    }
 
-  @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
-    UIAccess lastUIAccess = getLastUIAccess();
+    @RequiredReadAction
+    @Override
+    public void assertReadAccessAllowed() {
+        if (!isReadAccessAllowed()) {
+            throw new IllegalArgumentException();
+        }
+    }
 
-    lastUIAccess.give(runnable);
-  }
+    @RequiredUIAccess
+    @Override
+    public void assertIsDispatchThread() {
+        if (!isDispatchThread()) {
+            throw new IllegalArgumentException();
+        }
+    }
 
-  @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
-    UIAccess lastUIAccess = getLastUIAccess();
+    @Override
+    public void exit() {
 
-    lastUIAccess.give(runnable);
-  }
+    }
 
-  @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state, @Nonnull BooleanSupplier expired) {
-    UIAccess lastUIAccess = getLastUIAccess();
+    @Override
+    public void invokeLater(@Nonnull Runnable runnable) {
+        UIAccess lastUIAccess = getLastUIAccess();
 
-    lastUIAccess.give(runnable);
-  }
+        lastUIAccess.give(runnable);
+    }
 
-  @Override
-  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
-    UIAccess lastUIAccess = getLastUIAccess();
+    @Override
+    public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
+        UIAccess lastUIAccess = getLastUIAccess();
 
-    lastUIAccess.giveAndWait(runnable);
-  }
+        lastUIAccess.give(runnable);
+    }
 
-  @Nonnull
-  @Override
-  public ModalityState getCurrentModalityState() {
-    return ModalityState.nonModal();
-  }
+    @Override
+    public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
+        UIAccess lastUIAccess = getLastUIAccess();
 
-  @Nonnull
-  @Override
-  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
-    return ModalityState.nonModal();
-  }
+        lastUIAccess.give(runnable);
+    }
 
-  @Nonnull
-  @Override
-  public ModalityState getDefaultModalityState() {
-    return ModalityState.nonModal();
-  }
+    @Override
+    public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state, @Nonnull BooleanSupplier expired) {
+        UIAccess lastUIAccess = getLastUIAccess();
 
-  @RequiredUIAccess
-  @Override
-  public long getIdleTime() {
-    return 0;
-  }
+        lastUIAccess.give(runnable);
+    }
 
-  @Override
-  public boolean isHeadlessEnvironment() {
-    return false;
-  }
+    @Override
+    public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
+        if (isDispatchThread()) {
+            runnable.run();
+            return;
+        }
+        if (UIAccess.isUIThread()) {
+            runIntendedWriteActionOnCurrentThread(runnable);
+            return;
+        }
 
-  @Override
-  public boolean isDisposeInProgress() {
-    return false;
-  }
+        if (holdsReadLock()) {
+            throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
+        }
 
-  @Override
-  public void restart(boolean exitConfirmed) {
+        runIntendedWriteActionOnCurrentThread(runnable);
+    }
 
-  }
+    @Nonnull
+    @Override
+    public ModalityState getCurrentModalityState() {
+        return ModalityState.nonModal();
+    }
 
-  @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
-                                                     @Nonnull String progressTitle,
-                                                     boolean canBeCanceled,
-                                                     boolean shouldShowModalWindow,
-                                                     @Nullable ComponentManager project,
-                                                     @Nullable JComponent parentComponent,
-                                                     @Nonnull LocalizeValue cancelText) {
-    return true;
-  }
+    @Nonnull
+    @Override
+    public ModalityState getModalityStateForComponent(@Nonnull Component c) {
+        return ModalityState.nonModal();
+    }
 
-  @Override
-  public boolean isActive() {
-    return true;
-  }
+    @Nonnull
+    @Override
+    public ModalityState getDefaultModalityState() {
+        return ModalityState.nonModal();
+    }
 
-  @Override
-  public void assertTimeConsuming() {
+    @RequiredUIAccess
+    @Override
+    public long getIdleTime() {
+        return 0;
+    }
 
-  }
+    @Override
+    public boolean isHeadlessEnvironment() {
+        return false;
+    }
 
-  @Override
-  public boolean isInternal() {
-    return true;
-  }
+    @Override
+    public boolean isDisposeInProgress() {
+        return false;
+    }
 
-  @Override
-  public boolean isUnifiedApplication() {
-    return true;
-  }
+    @Override
+    public void restart(boolean exitConfirmed) {
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
+    }
+
+    @Override
+    public void assertTimeConsuming() {
+
+    }
+
+    @Override
+    public boolean isInternal() {
+        return true;
+    }
+
+    @Override
+    public boolean isUnifiedApplication() {
+        return true;
+    }
 }

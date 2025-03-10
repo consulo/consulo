@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindowListener;
+import consulo.application.impl.internal.progress.ProgressWindowListener;
 import consulo.util.lang.StringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;

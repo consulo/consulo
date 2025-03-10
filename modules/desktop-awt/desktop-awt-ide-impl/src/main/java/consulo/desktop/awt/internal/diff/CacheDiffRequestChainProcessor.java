@@ -27,7 +27,7 @@ import consulo.diff.impl.internal.util.SoftHardCacheMap;
 import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.request.*;
 import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;

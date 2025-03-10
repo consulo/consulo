@@ -27,15 +27,15 @@ import consulo.application.event.ApplicationLoadListener;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
+import consulo.application.impl.internal.progress.ProgressResult;
+import consulo.application.impl.internal.progress.ProgressRunner;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.internal.StartupProgress;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
+import consulo.application.progress.*;
 import consulo.application.util.ApplicationUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.function.ThrowableComputable;
@@ -53,6 +53,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.language.file.FileTypeManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -66,10 +67,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.DeprecatedMethodException;
-import consulo.util.lang.SemVer;
-import consulo.util.lang.ShutDownTracker;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.*;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.SimpleReference;
@@ -80,10 +78,12 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -96,7 +96,7 @@ import java.util.function.Supplier;
  */
 public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx, ApplicationWithIntentWriteLock, StorableComponent {
     private class ReadAccessToken extends AccessToken {
-        private final ReadMostlyRWLock.Reader myReader;
+        private final RWLock.ReadToken myReader;
 
         private ReadAccessToken() {
             myReader = myLock.startRead();
@@ -176,7 +176,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     private final long myStartTime;
 
-    protected ReadMostlyRWLock myLock;
+    protected RWLock myLock;
 
     protected boolean myDoNotSave;
     private boolean myLoaded;
@@ -515,7 +515,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public void runReadAction(@Nonnull final Runnable action) {
-        ReadMostlyRWLock.Reader status = myLock.startRead();
+        RWLock.ReadToken status = myLock.startRead();
         try {
             action.run();
         }
@@ -528,7 +528,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public <T> T runReadAction(@Nonnull final Supplier<T> computation) {
-        ReadMostlyRWLock.Reader status = myLock.startRead();
+        RWLock.ReadToken status = myLock.startRead();
         try {
             return computation.get();
         }
@@ -541,7 +541,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
-        ReadMostlyRWLock.Reader status = myLock.startRead();
+        RWLock.ReadToken status = myLock.startRead();
         try {
             return computation.get();
         }
@@ -555,8 +555,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     @Override
     public boolean tryRunReadAction(@Nonnull Runnable action) {
         //if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
-        ReadMostlyRWLock.Reader status = myLock.startTryRead();
-        if (status != null && !status.readRequested) {
+        RWLock.ReadToken status = myLock.startTryRead();
+        if (status != null && !status.readRequested()) {
             return false;
         }
         try {
@@ -647,6 +647,105 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     @Override
     public boolean isWriteActionInProgress() {
         return myLock.isWriteLocked();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean runProcessWithProgressSynchronously(
+        @Nonnull final Runnable process,
+        @Nonnull final String progressTitle,
+        final boolean canBeCanceled,
+        boolean shouldShowModalWindow,
+        @Nullable final ComponentManager project,
+        final JComponent parentComponent,
+        @Nonnull LocalizeValue cancelText
+    ) {
+        if (isDispatchThread() && isWriteAccessAllowed()
+            // Disallow running process in separate thread from under write action.
+            // The thread will deadlock trying to get read action otherwise.
+        ) {
+            LOG.debug("Starting process with progress from within write action makes no sense");
+            try {
+                ProgressManager.getInstance().runProcess(process, new EmptyProgressIndicator());
+            }
+            catch (ProcessCanceledException e) {
+                // ok to ignore.
+                return false;
+            }
+            return true;
+        }
+
+        CompletableFuture<ProgressWindow> progress = createProgressWindowAsyncIfNeeded(
+            progressTitle,
+            canBeCanceled,
+            shouldShowModalWindow,
+            project,
+            parentComponent,
+            cancelText
+        );
+
+        ProgressRunner<?> progressRunner = new ProgressRunner<>(process)
+            .sync()
+            .onThread(ProgressRunner.ThreadToUse.POOLED)
+            .modal()
+            .withProgress(progress);
+
+        ProgressResult<?> result = progressRunner.submitAndGet();
+
+        Throwable exception = result.getThrowable();
+        if (!(exception instanceof ProcessCanceledException)) {
+            ExceptionUtil.rethrowUnchecked(exception);
+        }
+        return !result.isCanceled();
+    }
+
+    @Nonnull
+    public final CompletableFuture<ProgressWindow> createProgressWindowAsyncIfNeeded(
+        @Nonnull String progressTitle,
+        boolean canBeCanceled,
+        boolean shouldShowModalWindow,
+        @Nullable ComponentManager project,
+        @Nullable JComponent parentComponent,
+        @Nonnull LocalizeValue cancelText
+    ) {
+        if (UIAccess.isUIThread()) {
+            return CompletableFuture.completedFuture(createProgressWindow(
+                progressTitle,
+                canBeCanceled,
+                shouldShowModalWindow,
+                project,
+                parentComponent,
+                cancelText
+            ));
+        }
+        return CompletableFuture.supplyAsync(
+            () -> createProgressWindow(
+                progressTitle,
+                canBeCanceled,
+                shouldShowModalWindow,
+                project,
+                parentComponent,
+                cancelText
+            ),
+            this::invokeLater
+        );
+    }
+
+    @Nonnull
+    private ProgressWindow createProgressWindow(
+        @Nonnull String progressTitle,
+        boolean canBeCanceled,
+        boolean shouldShowModalWindow,
+        @Nullable ComponentManager project,
+        @Nullable JComponent parentComponent,
+        @Nonnull LocalizeValue cancelText
+    ) {
+        ProgressWindow progress = new ProgressWindow(canBeCanceled, !shouldShowModalWindow, (Project) project, parentComponent, cancelText);
+        // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
+        // does not have a chance to run, and as a result the progress won't be disposed
+        Disposer.register(this, progress);
+        progress.setTitle(progressTitle);
+        return progress;
     }
 
     protected void startWrite(@Nonnull Class clazz) {

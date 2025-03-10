@@ -20,7 +20,7 @@ import consulo.application.progress.DumbModeAction;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.Task;
 import consulo.application.progress.TaskInfo;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;

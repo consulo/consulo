@@ -25,7 +25,7 @@ import consulo.diff.impl.internal.util.DiffTaskQueue;
 import consulo.diff.impl.internal.util.SoftHardCacheMap;
 import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.request.*;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.ide.impl.idea.openapi.vcs.CacheChangeProcessorBridge;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.CalledInBackground;

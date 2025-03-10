@@ -32,6 +32,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.cache.enabled>false</maven.build.cache.enabled>
     </properties>
 
     <repositories>
@@ -219,6 +220,16 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-module-content-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-external-service-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-editor-ui-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         

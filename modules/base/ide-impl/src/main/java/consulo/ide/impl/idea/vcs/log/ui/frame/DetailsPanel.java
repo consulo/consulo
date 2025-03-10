@@ -20,7 +20,7 @@ import consulo.application.Application;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.ide.impl.idea.openapi.roots.ui.componentsList.components.ScrollablePanel;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryUtil;
 import consulo.ide.impl.idea.ui.SeparatorComponent;

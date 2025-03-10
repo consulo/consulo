@@ -16,6 +16,8 @@
 package consulo.project.ui.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.Project;
 import consulo.project.internal.ProjectWindowFocuser;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -34,29 +36,35 @@ import javax.swing.*;
 @ServiceImpl
 @Singleton
 public class ProjectWindowFocuserImpl implements ProjectWindowFocuser {
-    private final Project myProject;
+    private final Application myApplication;
 
     @Inject
-    public ProjectWindowFocuserImpl(Project project) {
-        myProject = project;
+    public ProjectWindowFocuserImpl(Application application) {
+        myApplication = application;
     }
 
     @Override
-    public void focusProjectWindow(boolean executeIfAppInactive) {
-        JFrame f = WindowManager.getInstance().getFrame(myProject);
+    public void requestDefaultFocus(Project project) {
+        final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(project);
+        focusManager.doWhenFocusSettlesDown(() -> focusManager.requestDefaultFocus(true), myApplication.getDefaultModalityState());
+    }
+
+    @Override
+    public void focusProjectWindow(Project project, boolean executeIfAppInactive) {
+        JFrame f = WindowManager.getInstance().getFrame(project);
         if (f == null) {
             return;
         }
 
         if (executeIfAppInactive) {
-            IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
+            IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(project);
             if (ideFrame != null) {
                 AppIcon.getInstance().requestFocus(ideFrame.getWindow());
             }
             f.toFront();
         }
         else {
-            ProjectIdeFocusManager.getInstance(myProject).requestFocus(f, true);
+            ProjectIdeFocusManager.getInstance(project).requestFocus(f, true);
         }
     }
 }

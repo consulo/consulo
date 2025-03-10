@@ -741,8 +741,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.newProject.ui;
   exports consulo.ide.impl.packageDependencies;
   exports consulo.ide.impl.packaging.impl.run;
-  exports consulo.ide.impl.progress.util;
-  exports consulo.ide.impl.progress.util.impl;
   exports consulo.ide.impl.project;
   exports consulo.ide.impl.projectView;
   exports consulo.ide.impl.psi;

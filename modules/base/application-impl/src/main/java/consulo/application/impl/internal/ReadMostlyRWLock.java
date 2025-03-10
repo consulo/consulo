@@ -38,7 +38,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * <p>Write lock: sets global {@link #writeRequested} bit and waits for all readers (in global {@link #readers} list) to release their locks by checking {@link Reader#readRequested} for all readers.</p>
  */
-public final class ReadMostlyRWLock {
+public final class ReadMostlyRWLock implements RWLock {
     public volatile Thread writeThread;
     private volatile Thread writeIntendedThread;
 
@@ -55,10 +55,11 @@ public final class ReadMostlyRWLock {
     private volatile long deadReadersGCStamp;
 
     public ReadMostlyRWLock(@Nullable Thread writeThread) {
+        this.writeThread = writeThread;
     }
 
     // Each reader thread has instance of this struct in its thread local. it's also added to global "readers" list.
-    public static class Reader {
+    public static class Reader implements ReadToken {
         @Nonnull
         private final Thread thread;   // its thread
         public volatile boolean readRequested;
@@ -80,6 +81,11 @@ public final class ReadMostlyRWLock {
                 ", impatientReads=" + impatientReads +
                 '}';
         }
+
+        @Override
+        public boolean readRequested() {
+            return readRequested;
+        }
     }
 
     private final ThreadLocal<Reader> R = ThreadLocal.withInitial(() -> {
@@ -89,10 +95,12 @@ public final class ReadMostlyRWLock {
         return status;
     });
 
+    @Override
     public boolean isWriteThread() {
         return Thread.currentThread() == writeThread;
     }
 
+    @Override
     public boolean isReadLockedByThisThread() {
         checkReadThreadAccess();
         Reader status = R.get();
@@ -100,6 +108,7 @@ public final class ReadMostlyRWLock {
     }
 
     // null means lock already acquired, Reader means lock acquired successfully
+    @Override
     public Reader startRead() {
         if (Thread.currentThread() == writeThread) {
             return null;
@@ -127,6 +136,7 @@ public final class ReadMostlyRWLock {
     }
 
     // return tristate: null means lock already acquired, Reader with readRequested==true means lock was successfully acquired, Reader with readRequested==false means lock was not acquired
+    @Override
     public Reader startTryRead() {
         if (Thread.currentThread() == writeThread) {
             return null;
@@ -141,9 +151,12 @@ public final class ReadMostlyRWLock {
         return status;
     }
 
-    public void endRead(Reader status) {
+    @Override
+    public void endRead(RWLock.ReadToken status) {
         checkReadThreadAccess();
-        status.readRequested = false;
+
+        ((Reader) status).readRequested = false;
+
         if (writeRequested) {
             LockSupport.unpark(writeThread);  // parked by writeLock()
         }
@@ -173,6 +186,7 @@ public final class ReadMostlyRWLock {
         }
     }
 
+    @Override
     public boolean isInImpatientReader() {
         return R.get().impatientReads;
     }
@@ -183,6 +197,7 @@ public final class ReadMostlyRWLock {
      * will fail (i.e. throw {@link ApplicationUtil.CannotRunReadActionException})
      * if there is a pending write lock request.
      */
+    @Override
     public void executeByImpatientReader(@RequiredReadAction @Nonnull Runnable runnable)
         throws ApplicationUtil.CannotRunReadActionException {
         checkReadThreadAccess();
@@ -211,6 +226,7 @@ public final class ReadMostlyRWLock {
 
     private static final int SPIN_TO_WAIT_FOR_LOCK = 100;
 
+    @Override
     public void writeIntentLock() {
         //checkWriteThreadAccess();
         writeIntendedThread = Thread.currentThread();
@@ -232,6 +248,7 @@ public final class ReadMostlyRWLock {
         }
     }
 
+    @Override
     public void writeIntentUnlock() {
         checkWriteThreadAccess();
 
@@ -243,6 +260,7 @@ public final class ReadMostlyRWLock {
         LockSupport.unpark(writeIntendedThread);
     }
 
+    @Override
     public void writeLock() {
         checkWriteThreadAccess();
         assert !writeRequested;
@@ -264,6 +282,7 @@ public final class ReadMostlyRWLock {
         }
     }
 
+    @Override
     public AccessToken writeSuspend() {
         boolean prev = writeSuspended;
         writeSuspended = true;
@@ -278,6 +297,7 @@ public final class ReadMostlyRWLock {
         };
     }
 
+    @Override
     public void writeUnlock() {
         checkWriteThreadAccess();
         writeAcquired = false;
@@ -326,6 +346,7 @@ public final class ReadMostlyRWLock {
         return true;
     }
 
+    @Override
     public boolean isWriteLocked() {
         return writeAcquired;
     }

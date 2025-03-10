@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.progress.util.impl;
+package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.project.Project;
 import consulo.localize.LocalizeValue;
-import consulo.ide.impl.progress.util.ProgressDialog;
+import consulo.project.Project;
 import consulo.ui.Label;
 import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;

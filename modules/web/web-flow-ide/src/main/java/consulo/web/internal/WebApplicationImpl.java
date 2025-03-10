@@ -55,12 +55,6 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
     if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
-  @Override
-  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
-    WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().giveAndWaitIfNeed(runnable);
-  }
-
   @Nonnull
   @Override
   public UIAccess getLastUIAccess() {

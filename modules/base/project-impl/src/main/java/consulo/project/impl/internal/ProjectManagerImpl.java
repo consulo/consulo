@@ -452,7 +452,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     public AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context) {
         for (Project project : getOpenProjects()) {
             if (ProjectUtil.isSameProject(file.getPath(), project)) {
-                uiAccess.give(() -> ProjectWindowFocuser.getInstance(project).focusProjectWindow(false));
+                uiAccess.give(() -> ProjectWindowFocuser.getInstance().focusProjectWindow(project, false));
                 return AsyncResult.rejected("Already Opened Project");
             }
         }

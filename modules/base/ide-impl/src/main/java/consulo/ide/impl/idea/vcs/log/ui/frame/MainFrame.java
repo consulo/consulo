@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.vcs.log.ui.frame;
 
 import com.google.common.primitives.Ints;
 import consulo.application.HelpManager;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.ui.ex.awt.*;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;

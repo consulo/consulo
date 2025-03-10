@@ -17,7 +17,7 @@ package consulo.desktop.awt.progress;
 
 import consulo.application.ApplicationManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;

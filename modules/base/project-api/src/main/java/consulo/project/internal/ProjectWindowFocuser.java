@@ -17,17 +17,20 @@ package consulo.project.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
 import consulo.project.Project;
 
 /**
  * @author VISTALL
  * @since 2024-08-04
  */
-@ServiceAPI(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ProjectWindowFocuser {
-    static ProjectWindowFocuser getInstance(Project project) {
-        return project.getInstance(ProjectWindowFocuser.class);
+    static ProjectWindowFocuser getInstance() {
+        return Application.get().getInstance(ProjectWindowFocuser.class);
     }
 
-    void focusProjectWindow(boolean executeIfAppInactive);
+    void requestDefaultFocus(Project project);
+
+    void focusProjectWindow(Project project, boolean executeIfAppInactive);
 }

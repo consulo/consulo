@@ -20,19 +20,13 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
-import consulo.application.impl.internal.BaseApplication;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.ReadMostlyRWLock;
+import consulo.application.impl.internal.*;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.impl.internal.progress.ProgressResult;
-import consulo.application.impl.internal.progress.ProgressRunner;
 import consulo.application.impl.internal.start.CommandLineArgs;
-import consulo.application.internal.StartupProgress;
 import consulo.application.impl.internal.start.StartupUtil;
+import consulo.application.internal.StartupProgress;
 import consulo.application.localize.ApplicationLocalize;
-import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -40,7 +34,6 @@ import consulo.application.util.concurrent.ThreadDumper;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.component.ComponentManager;
-import consulo.component.ProcessCanceledException;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.desktop.application.util.Restarter;
@@ -50,17 +43,16 @@ import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.logging.internal.LogEventException;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.internal.LogEventException;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -78,7 +70,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.EDT;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -91,7 +82,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
@@ -253,87 +243,6 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @RequiredUIAccess
-    @Override
-    public boolean runProcessWithProgressSynchronously(
-        @Nonnull final Runnable process,
-        @Nonnull final String progressTitle,
-        final boolean canBeCanceled,
-        boolean shouldShowModalWindow,
-        @Nullable final ComponentManager project,
-        final JComponent parentComponent,
-        @Nonnull LocalizeValue cancelText
-        ) {
-        if (isDispatchThread() && isWriteAccessAllowed()
-            // Disallow running process in separate thread from under write action.
-            // The thread will deadlock trying to get read action otherwise.
-        ) {
-            LOG.debug("Starting process with progress from within write action makes no sense");
-            try {
-                ProgressManager.getInstance().runProcess(process, new EmptyProgressIndicator());
-            }
-            catch (ProcessCanceledException e) {
-                // ok to ignore.
-                return false;
-            }
-            return true;
-        }
-
-        CompletableFuture<ProgressWindow> progress = createProgressWindowAsyncIfNeeded(
-            progressTitle,
-            canBeCanceled,
-            shouldShowModalWindow,
-            project,
-            parentComponent,
-            cancelText
-        );
-
-        ProgressRunner<?> progressRunner = new ProgressRunner<>(process)
-            .sync()
-            .onThread(ProgressRunner.ThreadToUse.POOLED)
-            .modal()
-            .withProgress(progress);
-
-        ProgressResult<?> result = progressRunner.submitAndGet();
-
-        Throwable exception = result.getThrowable();
-        if (!(exception instanceof ProcessCanceledException)) {
-            ExceptionUtil.rethrowUnchecked(exception);
-        }
-        return !result.isCanceled();
-    }
-
-    @Nonnull
-    public final CompletableFuture<ProgressWindow> createProgressWindowAsyncIfNeeded(
-        @Nonnull String progressTitle,
-        boolean canBeCanceled,
-        boolean shouldShowModalWindow,
-        @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
-        @Nonnull LocalizeValue cancelText
-    ) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            return CompletableFuture.completedFuture(createProgressWindow(
-                progressTitle,
-                canBeCanceled,
-                shouldShowModalWindow,
-                project,
-                parentComponent,
-                cancelText
-            ));
-        }
-        return CompletableFuture.supplyAsync(
-            () -> createProgressWindow(
-                progressTitle,
-                canBeCanceled,
-                shouldShowModalWindow,
-                project,
-                parentComponent,
-                cancelText
-            ),
-            this::invokeLater
-        );
-    }
-
     @Override
     public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
         if (isDispatchThread()) {
@@ -568,23 +477,6 @@ public class DesktopApplicationImpl extends BaseApplication {
         });
     }
 
-    @Nonnull
-    private ProgressWindow createProgressWindow(
-        @Nonnull String progressTitle,
-        boolean canBeCanceled,
-        boolean shouldShowModalWindow,
-        @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
-        @Nonnull LocalizeValue cancelText
-    ) {
-        ProgressWindow progress = new ProgressWindow(canBeCanceled, !shouldShowModalWindow, (Project)project, parentComponent, cancelText);
-        // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
-        // does not have a chance to run, and as a result the progress won't be disposed
-        Disposer.register(this, progress);
-        progress.setTitle(progressTitle);
-        return progress;
-    }
-
     @RequiredReadAction
     @Override
     public void assertReadAccessAllowed() {
@@ -660,7 +552,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             " EventQueue.isDispatchThread()=" + EventQueue.isDispatchThread() +
                 " isDispatchThread()=" + isDispatchThread() +
                 " Toolkit.getEventQueue()=" + Toolkit.getDefaultToolkit().getSystemEventQueue() +
-                " Write Thread=" + myLock.writeThread +
+                " Write Thread=" + ((ReadMostlyRWLock) myLock).writeThread +
                 " Current thread: " + describe(Thread.currentThread()) +
                 " SystemEventQueueThread: " + describe(getEventQueueThread()),
             dump
@@ -709,7 +601,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     @Override
     public boolean isCurrentWriteOnUIThread() {
-        return EDT.isEdt(myLock.writeThread);
+        return EDT.isEdt(((ReadMostlyRWLock) myLock).writeThread);
     }
 
     @TestOnly

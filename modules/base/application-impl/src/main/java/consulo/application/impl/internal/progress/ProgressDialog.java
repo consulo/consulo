@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.progress.util;
+package consulo.application.impl.internal.progress;
 
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;

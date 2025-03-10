@@ -17,11 +17,11 @@ package consulo.desktop.awt.progress;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ide.impl.progress.util.ProgressDialog;
-import consulo.ide.impl.progress.util.ProgressDialogFactory;
+import consulo.application.impl.internal.progress.ProgressDialog;
+import consulo.application.impl.internal.progress.ProgressDialogFactory;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

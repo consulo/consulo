@@ -13,30 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.progress.util.impl;
+package consulo.application.impl.internal.progress;
 
-import consulo.annotation.component.ComponentProfiles;
-import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ide.impl.progress.util.ProgressDialog;
-import consulo.ide.impl.progress.util.ProgressDialogFactory;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 2020-05-11
  */
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
-@Singleton
-public class UnifiedProgressDialogFactory implements ProgressDialogFactory {
-  @Nonnull
-  @Override
-  public ProgressDialog create(ProgressWindow progressWindow, boolean shouldShowBackground, JComponent parent, Project project, LocalizeValue cancelText) {
-    return new UnifiedProgressDialog(project, progressWindow);
-  }
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface ProgressDialogFactory {
+    static ProgressDialogFactory getInstance() {
+        return Application.get().getInstance(ProgressDialogFactory.class);
+    }
+
+    @Nonnull
+    ProgressDialog create(ProgressWindow progressWindow,
+                          boolean shouldShowBackground,
+                          JComponent parent,
+                          Project project,
+                          @Nonnull LocalizeValue cancelText);
 }

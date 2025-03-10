@@ -25,7 +25,7 @@ import consulo.diff.FrameDiffTool;
 import consulo.diff.FrameDiffTool.DiffViewer;
 import consulo.diff.DiffDataKeys;
 import consulo.diff.impl.internal.util.DiffTaskQueue;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.ide.impl.idea.openapi.vcs.CalledInBackground;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;

@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.progress.util;
+package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
-import consulo.application.impl.internal.progress.BlockingProgressIndicator;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.TaskInfo;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.progress.util.ProgressDialog;
-import consulo.ide.impl.progress.util.ProgressDialogFactory;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.project.internal.ProjectWindowFocuser;
+import consulo.ui.UIAccess;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.EmptyRunnable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -107,6 +100,10 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
         }
     }
 
+    public Project getProject() {
+        return myProject;
+    }
+
     @Override
     public synchronized void start() {
         LOG.assertTrue(!isRunning());
@@ -143,8 +140,14 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
         // executed in a small amount of time. Problem: UI blinks and looks ugly if we show progress dialog that disappears shortly
         // for each of them. Solution is to postpone the tasks of showing progress dialog. Hence, it will not be shown at all
         // if the task is already finished when the time comes.
-        Application application = Application.get();
-        application.getLastUIAccess().getScheduler().schedule(() -> {
+        UIAccess uiAccess;
+        if (myProject != null) {
+            uiAccess = myProject.getUIAccess();
+        } else {
+            uiAccess = Application.get().getLastUIAccess();
+        }
+
+        uiAccess.getScheduler().schedule(() -> {
             if (isRunning()) {
                 if (myDialog != null) {
                     myDialog.copyPopupStateToWindow();
@@ -153,8 +156,8 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
             }
             else {
                 Disposer.dispose(this);
-                final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
-                focusManager.doWhenFocusSettlesDown(() -> focusManager.requestDefaultFocus(true), application.getDefaultModalityState());
+
+                ProjectWindowFocuser.getInstance().requestDefaultFocus(myProject);
             }
         }, getModalityState(), myDelayInMillis, TimeUnit.MILLISECONDS);
     }
@@ -172,19 +175,6 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
             LaterInvocator.leaveModal(this);
         }
     }
-
-    /**
-     * @deprecated Do not use, it's too low level and dangerous. Instead, consider using run* methods in {@link ProgressManager}
-     */
-    //@ApiStatus.ScheduledForRemoval(inVersion = "2022.1")
-    @Deprecated
-    public void startBlocking(@Nonnull Runnable init) {
-        DeprecatedMethodException.report("Use ProgressManager.run*() instead");
-        CompletableFuture<Object> future = new CompletableFuture<>();
-        Disposer.register(this, () -> future.complete(null));
-        startBlocking(init, future);
-    }
-
 
     @Override
     public void startBlocking(@Nonnull Runnable init, @Nonnull CompletableFuture<?> stopCondition) {
@@ -249,7 +239,15 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
 
         super.stop();
 
-        UIUtil.invokeLaterIfNeeded(() -> {
+        UIAccess uiAccess;
+        if (myProject != null) {
+            uiAccess = myProject.getUIAccess();
+        }
+        else {
+            uiAccess = Application.get().getLastUIAccess();
+        }
+
+        uiAccess.give(() -> {
             if (myDialog != null) {
                 myDialog.hide();
             }
@@ -331,10 +329,6 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
         else {
             myCancelText = text;
         }
-    }
-
-    public IdeFocusManager getFocusManager() {
-        return ProjectIdeFocusManager.getInstance(myProject);
     }
 
     @Override
