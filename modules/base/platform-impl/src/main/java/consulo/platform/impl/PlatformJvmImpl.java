@@ -61,6 +61,9 @@ class PlatformJvmImpl implements PlatformJvm {
       case "loongarch64":
         myCpuArchitecture = CpuArchitecture.LOONG64;
         break;
+      case "riscv64":
+        myCpuArchitecture = CpuArchitecture.RISCV64;
+        break;
       default:
         String name = osArch.toUpperCase(Locale.ROOT);
         int width = 0;
