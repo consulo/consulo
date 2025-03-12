@@ -40,6 +40,7 @@ import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
 import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.process.ExecutionException;
@@ -505,12 +506,6 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
       public boolean shouldSaveOptionsOnCancel() {
         return false;
       }
-
-      @Nonnull
-      @Override
-      public String getDoNotShowMessage() {
-        return CommonLocalize.dialogOptionsDoNotShow().get();
-      }
     };
     return Messages.showOkCancelDialog(
       project,
@@ -554,8 +549,8 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
 
       @Nonnull
       @Override
-      public String getDoNotShowMessage() {
-        return CommonLocalize.dialogOptionsDoNotShow().get();
+      public LocalizeValue getDoNotShowMessage() {
+        return CommonLocalize.dialogOptionsDoNotShow();
       }
     };
 

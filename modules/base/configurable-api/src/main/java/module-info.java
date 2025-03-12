@@ -27,5 +27,6 @@ module consulo.configurable.api {
         consulo.web.browser.impl,
         consulo.configuration.editor.api,
         consulo.language.inject.advanced.impl,
-        consulo.external.service.impl;
+        consulo.external.service.impl,
+        consulo.version.control.system.api;
 }

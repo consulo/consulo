@@ -20,8 +20,9 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.util.TipUIUtil;
-import consulo.ide.tipOfDay.TipOfDayProvider;
 import consulo.ide.localize.IdeLocalize;
+import consulo.ide.tipOfDay.TipOfDayProvider;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBDimension;
@@ -139,7 +140,7 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
   }
 
   @Override
-  public String getDoNotShowMessage() {
-    return IdeLocalize.checkboxShowTipsOnStartup().get();
+  public LocalizeValue getDoNotShowMessage() {
+    return IdeLocalize.checkboxShowTipsOnStartup();
   }
 }

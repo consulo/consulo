@@ -125,4 +125,14 @@ public interface UnnamedConfigurable {
   @RequiredUIAccess
   default void disposeUIResources() {
   }
+
+  /**
+   * Returns alternative id for help (not id of configurable)
+   *
+   * @return the help id
+   */
+  @Nullable
+  default String getHelpTopic() {
+    return null;
+  }
 }

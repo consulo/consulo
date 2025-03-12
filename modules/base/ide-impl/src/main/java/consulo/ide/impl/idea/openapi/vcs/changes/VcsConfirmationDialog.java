@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBLabel;
@@ -81,8 +82,8 @@ class VcsConfirmationDialog extends OptionsDialog {
 
   @Nonnull
   @Override
-  protected String getDoNotShowMessage() {
-    return myDoNotShowMessage;
+  protected LocalizeValue getDoNotShowMessage() {
+    return myDoNotShowMessage == null ? LocalizeValue.of() : LocalizeValue.localizeTODO(myDoNotShowMessage);
   }
 
   @Nonnull

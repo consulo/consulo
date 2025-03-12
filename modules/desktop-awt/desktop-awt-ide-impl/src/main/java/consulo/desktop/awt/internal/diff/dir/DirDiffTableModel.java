@@ -21,6 +21,8 @@ import consulo.application.WriteAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.desktop.awt.internal.diff.dir.action.popup.WarnOnDeletion;
+import consulo.diff.DiffRequestFactory;
 import consulo.diff.DiffType;
 import consulo.diff.dir.*;
 import consulo.diff.impl.internal.dir.DTree;
@@ -28,20 +30,15 @@ import consulo.diff.impl.internal.dir.DirDiffElementImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.UsageTrigger;
-import consulo.diff.DiffRequestFactory;
-import consulo.desktop.awt.internal.diff.dir.action.popup.WarnOnDeletion;
-import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.MessageDialogBuilder;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.StatusText;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.popup.Balloon;
@@ -824,8 +821,8 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
 
         @Nonnull
         @Override
-        public String getDoNotShowMessage() {
-          return "Do not ask me again";
+        public LocalizeValue getDoNotShowMessage() {
+          return LocalizeValue.localizeTODO("Do not ask me again");
         }
       }).show() == Messages.YES;
   }

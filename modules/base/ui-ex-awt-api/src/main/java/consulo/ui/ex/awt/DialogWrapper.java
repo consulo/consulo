@@ -31,6 +31,7 @@ import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Alerts;
+import consulo.ui.CheckBox;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.IdeGlassPane;
@@ -161,7 +162,7 @@ public abstract class DialogWrapper {
     private Action myYesAction = null;
     private Action myNoAction = null;
 
-    protected JCheckBox myCheckBoxDoNotShowDialog;
+    protected CheckBox myCheckBoxDoNotShowDialog;
     @Nullable
     private DoNotAskOption myDoNotAsk;
 
@@ -187,8 +188,8 @@ public abstract class DialogWrapper {
     private boolean myResizeInProgress = false;
     private ComponentAdapter myResizeListener;
 
-    protected String getDoNotShowMessage() {
-        return CommonLocalize.dialogOptionsDoNotShow().get();
+    protected LocalizeValue getDoNotShowMessage() {
+        return CommonLocalize.dialogOptionsDoNotShow();
     }
 
     public void setDoNotAskOption(@Nullable DoNotAskOption doNotAsk) {
@@ -470,7 +471,7 @@ public abstract class DialogWrapper {
     @Nullable
     protected JComponent createDoNotAskCheckbox() {
         return myCheckBoxDoNotShowDialog != null && myCheckBoxDoNotShowDialog.isVisible()
-            ? myCheckBoxDoNotShowDialog
+            ? (JComponent) TargetAWT.to(myCheckBoxDoNotShowDialog)
             : null;
     }
 
@@ -482,6 +483,7 @@ public abstract class DialogWrapper {
      * @return south panel
      */
     @Nullable
+    @RequiredUIAccess
     protected JComponent createSouthPanel() {
         Action[] actions = createActions();
         Action[] leftSideActions = createLeftSideActions();
@@ -493,7 +495,8 @@ public abstract class DialogWrapper {
             actions = ArrayUtil.remove(actions, getHelpAction());
         }
 
-        if (Platform.current().os().isMac()) {
+        boolean mac = Platform.current().os().isMac();
+        if (mac) {
             for (Action action : actions) {
                 if (action instanceof MacOtherAction) {
                     leftSideActions = ArrayUtil.append(leftSideActions, action);
@@ -504,27 +507,17 @@ public abstract class DialogWrapper {
         }
 
         JPanel panel = new JPanel(new BorderLayout());
-        final JPanel lrButtonsPanel = new JPanel(new GridBagLayout());
-        final Insets insets = Platform.current().os().isMac() ? JBUI.emptyInsets() : JBUI.insetsTop(8);
+
+        JPanel buttonsPanel = null;
 
         if (actions.length > 0 || leftSideActions.length > 0) {
             int gridX = 0;
             if (leftSideActions.length > 0) {
-                JPanel buttonsPanel = createButtons(leftSideActions, buttonMap);
-                if (actions.length > 0) {
-                    buttonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));  // leave some space between button groups
-                }
-                lrButtonsPanel.add(
-                    buttonsPanel,
-                    new GridBagConstraints(gridX++, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0)
-                );
+                buttonsPanel = createButtons(leftSideActions, buttonMap);
             }
-            lrButtonsPanel.add(
-                Box.createHorizontalGlue(),    // left strut
-                new GridBagConstraints(gridX++, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0)
-            );
+
             if (actions.length > 0) {
-                if (Platform.current().os().isMac()) {
+                if (mac) {
                     // move ok action to the right
                     int okNdx = ArrayUtil.indexOf(actions, getOKAction());
                     if (okNdx >= 0 && okNdx != actions.length - 1) {
@@ -545,39 +538,41 @@ public abstract class DialogWrapper {
                     }*/
                 }
 
-                JPanel buttonsPanel = createButtons(actions, buttonMap);
-                lrButtonsPanel.add(
-                    buttonsPanel,
-                    new GridBagConstraints(gridX++, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0)
-                );
+                buttonsPanel = createButtons(actions, buttonMap);
             }
-            if (SwingConstants.CENTER == myButtonAlignment) {
-                lrButtonsPanel.add(
-                    Box.createHorizontalGlue(),    // right strut
-                    new GridBagConstraints(gridX, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0)
-                );
-            }
+
             myButtonMap.clear();
             myButtonMap.putAll(buttonMap);
         }
 
+        JButton helpButton = null;
         if (hasHelpToMoveToLeftSide) {
-            JButton helpButton = new JButton(getHelpAction());
+            helpButton = new JButton(getHelpAction());
             helpButton.putClientProperty("JButton.buttonType", "help");
             helpButton.setText("");
-            helpButton.setMargin(insets);
             helpButton.setToolTipText(ActionLocalize.actionHelptopicsDescription().get());
             panel.add(helpButton, BorderLayout.WEST);
         }
 
-        panel.add(lrButtonsPanel, BorderLayout.CENTER);
+        String targetButtonPosition = BorderLayout.EAST;
+        switch (myButtonAlignment) {
+            case SwingConstants.CENTER:
+                targetButtonPosition = BorderLayout.CENTER;
+                break;
+            case SwingConstants.RIGHT:
+                targetButtonPosition = BorderLayout.EAST;
+                break;
+        }
+
+        if (buttonsPanel != null) {
+            panel.add(buttonsPanel, targetButtonPosition);
+        }
 
         final DoNotAskOption askOption = myDoNotAsk;
         if (askOption != null) {
-            myCheckBoxDoNotShowDialog = new JCheckBox(askOption.getDoNotShowMessage());
+            myCheckBoxDoNotShowDialog = CheckBox.create(askOption.getDoNotShowMessage());
             myCheckBoxDoNotShowDialog.setVisible(askOption.canBeHidden());
-            myCheckBoxDoNotShowDialog.setSelected(!askOption.isToBeShown());
-            DialogUtil.registerMnemonic(myCheckBoxDoNotShowDialog, '&');
+            myCheckBoxDoNotShowDialog.setValue(!askOption.isToBeShown());
 
             JComponent southPanel = panel;
 
@@ -585,9 +580,15 @@ public abstract class DialogWrapper {
                 return southPanel;
             }
 
-            final JPanel withCB = addDoNotShowCheckBox(southPanel, createDoNotAskCheckbox());
+            JComponent doNotAskCheckbox = createDoNotAskCheckbox();
+            if (helpButton != null) {
+                panel.remove(helpButton);
 
-            panel = withCB;
+                panel.add(new BorderLayoutPanel().addToLeft(helpButton).addToCenter(doNotAskCheckbox), BorderLayout.WEST);
+            } else {
+                final JPanel withCB = addDoNotShowCheckBox(southPanel, doNotAskCheckbox);
+                panel = withCB;
+            }
         }
 
         panel.setBorder(IdeBorderFactory.createEmptyBorder(JBUI.insetsTop(8)));
@@ -611,7 +612,7 @@ public abstract class DialogWrapper {
     }
 
     protected boolean toBeShown() {
-        return !myCheckBoxDoNotShowDialog.isSelected();
+        return !myCheckBoxDoNotShowDialog.getValueOrError();
     }
 
     @Nonnull
@@ -654,8 +655,7 @@ public abstract class DialogWrapper {
             }
         }
 
-        JPanel buttonsPanel =
-            new JPanel(new GridLayout(1, actions.length, Platform.current().os().isMac() ? 0 : 5, 0));
+        JPanel buttonsPanel = new JPanel(new HorizontalLayout(8, SwingConstants.CENTER));
         for (final Action action : actions) {
             JButton button = createJButtonForAction(action);
             final Object value = action.getValue(Action.MNEMONIC_KEY);
@@ -2507,8 +2507,8 @@ public abstract class DialogWrapper {
 
             @Nonnull
             @Override
-            public String getDoNotShowMessage() {
-                return CommonLocalize.dialogOptionsDoNotAsk().get();
+            public LocalizeValue getDoNotShowMessage() {
+                return CommonLocalize.dialogOptionsDoNotAsk();
             }
 
             @Override
@@ -2538,7 +2538,10 @@ public abstract class DialogWrapper {
 
         boolean shouldSaveOptionsOnCancel();
 
-        String getDoNotShowMessage();
+        @Nonnull
+        default LocalizeValue getDoNotShowMessage() {
+            return CommonLocalize.dialogOptionsDoNotShow();
+        }
     }
 
     public static class PropertyDoNotAskOption implements DoNotAskOption {
@@ -2569,9 +2572,10 @@ public abstract class DialogWrapper {
             return false;
         }
 
+        @Nonnull
         @Override
-        public String getDoNotShowMessage() {
-            return CommonLocalize.dialogOptionsDoNotAsk().get();
+        public LocalizeValue getDoNotShowMessage() {
+            return CommonLocalize.dialogOptionsDoNotAsk();
         }
     }
 

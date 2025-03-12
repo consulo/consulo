@@ -26,6 +26,7 @@ import consulo.application.util.*;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.dataContext.DataManager;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.PlatformFileSystem;
@@ -436,8 +437,8 @@ public class ShowFilePathAction extends AnAction {
 
             @Nonnull
             @Override
-            public String getDoNotShowMessage() {
-                return CommonLocalize.dialogOptionsDoNotAsk().get();
+            public LocalizeValue getDoNotShowMessage() {
+                return CommonLocalize.dialogOptionsDoNotAsk();
             }
         };
         showDialog(project, message, title, file, option);

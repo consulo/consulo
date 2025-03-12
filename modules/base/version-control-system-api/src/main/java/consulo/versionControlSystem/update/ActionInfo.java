@@ -15,8 +15,9 @@
  */
 package consulo.versionControlSystem.update;
 
-import consulo.configurable.Configurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
@@ -42,9 +43,10 @@ public interface ActionInfo {
       return VcsBundle.message("action.name.update");
     }
 
+    @RequiredUIAccess
     @Override
     public UpdateOrStatusOptionsDialog createOptionsDialog(final Project project,
-                                                           LinkedHashMap<Configurable, AbstractVcs> envToConfMap,
+                                                           LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
                                                            final String scopeName) {
       return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
         @Override
@@ -103,9 +105,10 @@ public interface ActionInfo {
       return vcs.getStatusEnvironment();
     }
 
+    @RequiredUIAccess
     @Override
     public UpdateOrStatusOptionsDialog createOptionsDialog(final Project project,
-                                                           LinkedHashMap<Configurable, AbstractVcs> envToConfMap, final String scopeName) {
+                                                           LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap, final String scopeName) {
       return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
         @Override
         protected String getRealTitle() {
@@ -168,8 +171,10 @@ public interface ActionInfo {
       return vcs.getIntegrateEnvironment();
     }
 
+    @RequiredUIAccess
     @Override
-    public UpdateOrStatusOptionsDialog createOptionsDialog(final Project project, LinkedHashMap<Configurable, AbstractVcs> envToConfMap,
+    public UpdateOrStatusOptionsDialog createOptionsDialog(final Project project,
+                                                           LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
                                                            final String scopeName) {
       return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
         @Override
@@ -229,8 +234,10 @@ public interface ActionInfo {
 
   UpdateEnvironment getEnvironment(AbstractVcs vcs);
 
-  UpdateOrStatusOptionsDialog createOptionsDialog(Project project, LinkedHashMap<Configurable, AbstractVcs> envToConfMap,
-                                                  final String scopeName);
+  @RequiredUIAccess
+  UpdateOrStatusOptionsDialog createOptionsDialog(Project project,
+                                                  LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
+                                                  String scopeName);
 
   String getActionName(String scopeName);
 

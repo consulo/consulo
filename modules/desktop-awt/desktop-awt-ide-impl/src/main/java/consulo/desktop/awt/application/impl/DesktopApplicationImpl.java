@@ -419,8 +419,8 @@ public class DesktopApplicationImpl extends BaseApplication {
             @Nonnull
             @Override
             @NonNls
-            public String getDoNotShowMessage() {
-                return "Do not ask me again";
+            public LocalizeValue getDoNotShowMessage() {
+                return LocalizeValue.localizeTODO("Do not ask me again");
             }
         };
 

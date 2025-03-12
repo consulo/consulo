@@ -170,7 +170,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
 
     public void setDoNotShowAgainMessage(@Nonnull LocalizeValue doNotShowAgainMessage) {
         myDoNotShowAgainMessage = doNotShowAgainMessage;
-        myCheckBoxDoNotShowDialog.setText(doNotShowAgainMessage.get());
+        myCheckBoxDoNotShowDialog.setLabelText(doNotShowAgainMessage);
     }
 
     @Deprecated
@@ -179,18 +179,12 @@ public class ConfirmationDialog extends OptionsMessageDialog {
         setDoNotShowAgainMessage(LocalizeValue.ofNullable(doNotShowAgainMessage));
     }
 
-    @Nonnull
-    //TODO: rename to getDoNotShowMessage() after deprecation removal
-    protected LocalizeValue getDoNotShowMessageValue() {
-        return myDoNotShowAgainMessage;
-    }
-
     @Deprecated
     @DeprecationInfo("Use #getDoNotShowMessageValue()")
     @Nonnull
     @Override
-    protected String getDoNotShowMessage() {
-        return myDoNotShowAgainMessage == LocalizeValue.empty() ? super.getDoNotShowMessage() : myDoNotShowAgainMessage.get();
+    protected LocalizeValue getDoNotShowMessage() {
+        return myDoNotShowAgainMessage == LocalizeValue.of() ? super.getDoNotShowMessage() : myDoNotShowAgainMessage;
     }
 
     @Nonnull

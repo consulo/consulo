@@ -17,14 +17,14 @@ package consulo.versionControlSystem.update;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
-import consulo.configurable.Configurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsProviderMarker;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 /**
@@ -69,7 +69,7 @@ public interface UpdateEnvironment extends VcsProviderMarker {
    * @return the settings dialog instance, or null if the VCS doesn't provide a settings dialog for this operation.
    */
   @Nullable
-  Configurable createConfigurable(Collection<FilePath> files);
+  UnnamedConfigurable createConfigurable(Collection<FilePath> files);
 
   boolean validateOptions(final Collection<FilePath> roots);
 }

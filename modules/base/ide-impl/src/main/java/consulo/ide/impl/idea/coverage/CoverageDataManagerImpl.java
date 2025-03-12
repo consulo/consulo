@@ -314,8 +314,8 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
           @Nonnull
           @Override
-          public String getDoNotShowMessage() {
-            return CommonLocalize.dialogOptionsDoNotShow().get();
+          public LocalizeValue getDoNotShowMessage() {
+            return CommonLocalize.dialogOptionsDoNotShow();
           }
         };
         final String[] options = myCurrentSuitesBundle.getCoverageEngine() == suite.getCoverageEngine()

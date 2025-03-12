@@ -21,7 +21,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
-import consulo.configurable.Configurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.content.scope.NamedScope;
 import consulo.ide.impl.idea.openapi.vcs.actions.AbstractVcsAction;
 import consulo.ide.impl.idea.openapi.vcs.actions.DescindingFilesFilter;
@@ -175,7 +175,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
 
     private void showOptionsDialog(final Map<AbstractVcs, Collection<FilePath>> updateEnvToVirtualFiles, final Project project,
                                    final VcsContext dataContext) {
-        LinkedHashMap<Configurable, AbstractVcs> envToConfMap = createConfigurableToEnvMap(updateEnvToVirtualFiles);
+        LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap = createConfigurableToEnvMap(updateEnvToVirtualFiles);
         LOG.debug("configurables map: " + envToConfMap);
         if (!envToConfMap.isEmpty()) {
             UpdateOrStatusOptionsDialog dialogOrStatus = myActionInfo.createOptionsDialog(
@@ -189,10 +189,10 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         }
     }
 
-    private LinkedHashMap<Configurable, AbstractVcs> createConfigurableToEnvMap(Map<AbstractVcs, Collection<FilePath>> updateEnvToVirtualFiles) {
-        LinkedHashMap<Configurable, AbstractVcs> envToConfMap = new LinkedHashMap<>();
+    private LinkedHashMap<UnnamedConfigurable, AbstractVcs> createConfigurableToEnvMap(Map<AbstractVcs, Collection<FilePath>> updateEnvToVirtualFiles) {
+        LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap = new LinkedHashMap<>();
         for (AbstractVcs vcs : updateEnvToVirtualFiles.keySet()) {
-            Configurable configurable = myActionInfo.getEnvironment(vcs).createConfigurable(updateEnvToVirtualFiles.get(vcs));
+            UnnamedConfigurable configurable = myActionInfo.getEnvironment(vcs).createConfigurable(updateEnvToVirtualFiles.get(vcs));
             if (configurable != null) {
                 envToConfMap.put(configurable, vcs);
             }

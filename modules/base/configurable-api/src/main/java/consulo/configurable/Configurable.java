@@ -80,6 +80,7 @@ public interface Configurable extends UnnamedConfigurable {
    *
    * @return the help id
    */
+  @Override
   @Nullable
   default String getHelpTopic() {
     return null;

@@ -427,7 +427,7 @@ public class SheetController {
   }
 
   private void layoutDoNotAskCheckbox(JPanel sheetPanel) {
-    doNotAskCheckBox.setText(myDoNotAskOption.getDoNotShowMessage());
+    doNotAskCheckBox.setText(myDoNotAskOption.getDoNotShowMessage().get());
     doNotAskCheckBox.setSelected(!myDoNotAskOption.isToBeShown());
     doNotAskCheckBox.setOpaque(false);
     doNotAskCheckBox.addItemListener(e -> myDoNotAskResult = (e.getStateChange() == ItemEvent.SELECTED));

@@ -21,6 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.dvcs.push.ui.*;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -722,8 +723,8 @@ public class PushController implements Disposable {
 
         @Nonnull
         @Override
-        public String getDoNotShowMessage() {
-            return "Don't warn about this target";
+        public LocalizeValue getDoNotShowMessage() {
+            return LocalizeValue.localizeTODO("Don't warn about this target");
         }
     }
 }

@@ -4,6 +4,8 @@ button.no:
   text: '&No'
 dialog.options.do.not.show:
   text: Do not show this dialog in the future
+dialog.options.do.not.show.short:
+  text: Don't show again
 dialog.options.do.not.ask:
   text: Remember, don't ask again
 dialog.title.choose.date:

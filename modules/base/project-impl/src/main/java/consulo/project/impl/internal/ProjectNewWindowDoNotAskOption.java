@@ -15,6 +15,7 @@
  */
 package consulo.project.impl.internal;
 
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.internal.ProjectOpenSetting;
 import consulo.ui.Alert;
@@ -47,9 +48,10 @@ public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOpt
         return false;
     }
 
+    @Nonnull
     @Override
-    public String getDoNotShowMessage() {
-        return CommonLocalize.dialogOptionsDoNotAsk().get();
+    public LocalizeValue getDoNotShowMessage() {
+        return CommonLocalize.dialogOptionsDoNotAsk();
     }
 
     @Override
