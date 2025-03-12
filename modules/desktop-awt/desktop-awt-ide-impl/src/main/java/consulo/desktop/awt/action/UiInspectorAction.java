@@ -1137,7 +1137,11 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       }
 
       if (myComponent instanceof Container container) {
-        addLayoutProperties(container);
+        try {
+          addLayoutProperties(container);
+        }
+        catch (Exception ignored) {
+        }
       }
     }
 
