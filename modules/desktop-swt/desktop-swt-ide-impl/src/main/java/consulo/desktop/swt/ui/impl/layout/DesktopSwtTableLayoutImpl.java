@@ -19,18 +19,17 @@ import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TableLayout;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Layout;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 10/07/2021
  */
-public class DesktopSwtTableLayoutImpl extends DesktopSwtLayoutComponent<Object> implements TableLayout {
+public class DesktopSwtTableLayoutImpl extends DesktopSwtLayoutComponent<TableLayout.TableCell, Object> implements TableLayout {
   private final StaticPosition myFillOption;
 
   public DesktopSwtTableLayoutImpl(StaticPosition fillOption) {
@@ -48,7 +47,7 @@ public class DesktopSwtTableLayoutImpl extends DesktopSwtLayoutComponent<Object>
   @Override
   public TableLayout add(@Nonnull Component component, @Nonnull TableCell tableCell) {
     GridData gridData = new GridData();
-    add(component, gridData);
+    addImpl(component, gridData);
     return this;
   }
 }

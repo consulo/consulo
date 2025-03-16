@@ -17,6 +17,7 @@ package consulo.desktop.swt.ui.impl.layout;
 
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import org.eclipse.swt.SWT;
@@ -32,7 +33,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 12/12/2021
  */
-public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutComponent<Object> implements ThreeComponentSplitLayout {
+public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements ThreeComponentSplitLayout {
   private final SplitLayoutPosition myPosition;
 
   public DesktopSwtThreeComponentSplitLayoutImpl(SplitLayoutPosition position) {
@@ -60,7 +61,7 @@ public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutCom
   @Nonnull
   @Override
   public ThreeComponentSplitLayout setFirstComponent(@Nonnull Component component) {
-    add(component, "first");
+    addImpl(component, "first");
     return this;
   }
 
@@ -68,7 +69,7 @@ public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutCom
   @Nonnull
   @Override
   public ThreeComponentSplitLayout setSecondComponent(@Nonnull Component component) {
-    add(component, "second");
+    addImpl(component, "second");
     return this;
   }
 
@@ -76,7 +77,7 @@ public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutCom
   @Nonnull
   @Override
   public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
-    add(component, "center");
+    addImpl(component, "center");
     return this;
   }
 

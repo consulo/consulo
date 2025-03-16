@@ -17,50 +17,52 @@ package consulo.ui.layout;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15-Jun-16
  */
-public interface LabeledLayout extends Layout {
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use with LocalizeValue parameter")
-  static LabeledLayout create(@Nonnull String label) {
-    return create(LocalizeValue.of(label));
-  }
+public interface LabeledLayout extends Layout<LayoutConstraint> {
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue parameter")
+    static LabeledLayout create(@Nonnull String label) {
+        return create(LocalizeValue.of(label));
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  @Deprecated
-  @DeprecationInfo("Use with LocalizeValue parameter")
-  static LabeledLayout create(@Nonnull String label, @Nonnull Component component) {
-    return create(LocalizeValue.of(label), component);
-  }
+    @Nonnull
+    @RequiredUIAccess
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue parameter")
+    static LabeledLayout create(@Nonnull String label, @Nonnull Component component) {
+        return create(LocalizeValue.of(label), component);
+    }
 
-  @Nonnull
-  static LabeledLayout create(@Nonnull LocalizeValue label) {
-    return UIInternal.get()._Layouts_labeled(label);
-  }
+    @Nonnull
+    static LabeledLayout create(@Nonnull LocalizeValue label) {
+        return UIInternal.get()._Layouts_labeled(label);
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  static LabeledLayout create(@Nonnull LocalizeValue label, @Nonnull Component component) {
-    return UIInternal.get()._Layouts_labeled(label).set(component);
-  }
+    @Nonnull
+    @RequiredUIAccess
+    static LabeledLayout create(@Nonnull LocalizeValue label, @Nonnull Component component) {
+        return UIInternal.get()._Layouts_labeled(label).set(component);
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  default LabeledLayout set(@Nonnull PseudoComponent component) {
-    return set(component.getComponent());
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default LabeledLayout set(@Nonnull PseudoComponent component) {
+        return set(component.getComponent());
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  LabeledLayout set(@Nonnull Component component);
+    @Nonnull
+    @RequiredUIAccess
+    default LabeledLayout set(@Nonnull Component component) {
+        return (LabeledLayout) add(component, LayoutConstraint.NONE);
+    }
 }

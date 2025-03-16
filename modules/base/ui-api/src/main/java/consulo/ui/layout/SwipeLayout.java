@@ -15,41 +15,41 @@
  */
 package consulo.ui.layout;
 
-import consulo.ui.internal.UIInternal;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.internal.UIInternal;
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2018-07-01
  */
-public interface SwipeLayout extends Layout {
-  @Nonnull
-  static SwipeLayout create() {
-    return UIInternal.get()._Layouts_swipe();
-  }
+public interface SwipeLayout extends Layout<LayoutConstraint> {
+    @Nonnull
+    static SwipeLayout create() {
+        return UIInternal.get()._Layouts_swipe();
+    }
 
-  @Nonnull
-  default SwipeLayout register(@Nonnull String id, @Nonnull Layout layout) {
-    return register(id, () -> layout);
-  }
+    @Nonnull
+    default SwipeLayout register(@Nonnull String id, @Nonnull Layout layout) {
+        return register(id, () -> layout);
+    }
 
-  @Nonnull
-  SwipeLayout register(@Nonnull String id, @Nonnull @RequiredUIAccess Supplier<Layout> layoutSupplier);
+    @Nonnull
+    SwipeLayout register(@Nonnull String id, @Nonnull @RequiredUIAccess Supplier<Layout> layoutSupplier);
 
-  /**
-   * @param id of child
-   * @return child layout which will be showed
-   */
-  @Nonnull
-  Layout swipeLeftTo(@Nonnull String id);
+    /**
+     * @param id of child
+     * @return child layout which will be showed
+     */
+    @Nonnull
+    Layout swipeLeftTo(@Nonnull String id);
 
-  /**
-   * @param id of child
-   * @return child layout which will be showed
-   */
-  @Nonnull
-  Layout swipeRightTo(@Nonnull String id);
+    /**
+     * @param id of child
+     * @return child layout which will be showed
+     */
+    @Nonnull
+    Layout swipeRightTo(@Nonnull String id);
 }

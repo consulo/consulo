@@ -17,10 +17,9 @@ package consulo.desktop.awt.ui.impl.layout;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.layout.LabeledLayout;
-import consulo.ui.layout.LayoutStyle;
+import consulo.ui.layout.LayoutConstraint;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -30,7 +29,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 15-Jun-16
  */
-public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel> implements LabeledLayout {
+public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel, LayoutConstraint> implements LabeledLayout {
     class LabelJPanel extends MyJPanel {
         private final LocalizeValue myLabelValue;
 
@@ -60,11 +59,10 @@ public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel> implemen
         initialize(component);
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
-    public LabeledLayout set(@Nonnull Component component) {
-        add(component, BorderLayout.CENTER);
+    public LabeledLayout add(@Nonnull Component component, @Nonnull LayoutConstraint constraint) {
+        addImpl(component, BorderLayout.CENTER);
         return this;
     }
 }

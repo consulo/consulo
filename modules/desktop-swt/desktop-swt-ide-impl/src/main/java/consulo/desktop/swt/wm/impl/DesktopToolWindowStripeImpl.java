@@ -46,7 +46,7 @@ public class DesktopToolWindowStripeImpl extends DesktopSwtLayoutComponent {
   }
 
   public void addButton(ToolWindowStripeButton button, Comparator<ToolWindowStripeButton> comparator) {
-    add((SWTComponentDelegate<?>)button, null);
+    addImpl((SWTComponentDelegate<?>)button, null);
   }
 
   @Nullable

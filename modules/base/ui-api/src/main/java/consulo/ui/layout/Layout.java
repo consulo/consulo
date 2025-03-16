@@ -18,33 +18,38 @@ package consulo.ui.layout;
 import consulo.ui.Component;
 import consulo.ui.HasComponentStyle;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface Layout extends Component, HasComponentStyle<LayoutStyle> {
-  @RequiredUIAccess
-  default void removeAll() {
-    throw new AbstractMethodError(getClass().getName());
-  }
+public interface Layout<C extends LayoutConstraint> extends Component, HasComponentStyle<LayoutStyle> {
+    @Nonnull
+    default Layout<C> add(@Nonnull Component component, @Nonnull C constraint) {
+        throw new UnsupportedOperationException("Adding not supported");
+    }
 
-  default void remove(@Nonnull Component component) {
-    throw new AbstractMethodError(getClass().getName());
-  }
+    @RequiredUIAccess
+    default void removeAll() {
+        throw new AbstractMethodError(getClass().getName());
+    }
 
-  @RequiredUIAccess
-  @Override
-  default void setEnabledRecursive(boolean value) {
-    setEnabled(value);
+    default void remove(@Nonnull Component component) {
+        throw new AbstractMethodError(getClass().getName());
+    }
 
-    forEachChild(component -> component.setEnabledRecursive(value));
-  }
+    @RequiredUIAccess
+    @Override
+    default void setEnabledRecursive(boolean value) {
+        setEnabled(value);
 
-  default void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
-    throw new AbstractMethodError(getClass().getName());
-  }
+        forEachChild(component -> component.setEnabledRecursive(value));
+    }
+
+    default void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
+        throw new AbstractMethodError(getClass().getName());
+    }
 }

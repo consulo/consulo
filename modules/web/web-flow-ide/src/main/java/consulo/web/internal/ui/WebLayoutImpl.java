@@ -19,6 +19,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.LayoutStyle;
 import consulo.util.lang.ObjectUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
@@ -33,7 +34,8 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 28/05/2023
  */
-public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVaadinComponentWrapper> extends VaadinComponentDelegate<C> implements Layout {
+public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVaadinComponentWrapper, LC extends LayoutConstraint>
+    extends VaadinComponentDelegate<C> implements Layout<LC> {
     @Override
     public void addStyle(LayoutStyle style) {
         // TODO

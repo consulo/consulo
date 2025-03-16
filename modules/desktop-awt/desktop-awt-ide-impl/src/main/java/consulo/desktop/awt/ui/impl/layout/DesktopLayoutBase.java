@@ -21,6 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.LayoutStyle;
 import jakarta.annotation.Nonnull;
 
@@ -32,7 +33,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2019-02-16
  */
-abstract class DesktopLayoutBase<T extends JPanel> extends SwingComponentDelegate<T> implements Layout {
+abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> extends SwingComponentDelegate<T> implements Layout<C> {
     class MyJPanel extends JPanel implements FromSwingComponentWrapper {
         MyJPanel(LayoutManager layout) {
             super(layout);
@@ -68,13 +69,23 @@ abstract class DesktopLayoutBase<T extends JPanel> extends SwingComponentDelegat
         initialize((T) new MyJPanel(layoutManager));
     }
 
-    protected void add(Component component, Object constraints) {
+    @Nonnull
+    @Override
+    public Layout<C> add(@Nonnull Component component, @Nonnull C constraint) {
+        addImpl(component, convertConstraints(constraint));
+        return this;
+    }
+
+    protected Object convertConstraints(C constraint) {
+        return null;
+    }
+
+    protected void addImpl(Component component, Object constraints) {
         T panel = toAWTComponent();
         panel.add(TargetAWT.to(component), constraints);
         panel.validate();
         panel.repaint();
     }
-
 
     @Override
     public void addStyle(LayoutStyle style) {

@@ -17,62 +17,64 @@ package consulo.ui.layout;
 
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
+import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-import consulo.ui.StaticPosition;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public interface TableLayout extends Layout {
-  static class TableCell {
-    private int myRow;
-    private int myColumn;
+public interface TableLayout extends Layout<TableLayout.TableCell> {
+    static class TableCell implements LayoutConstraint {
+        private int myRow;
+        private int myColumn;
 
-    private boolean myFill;
+        private boolean myFill;
 
-    private TableCell(int row, int column) {
-      myRow = row;
-      myColumn = column;
+        private TableCell(int row, int column) {
+            myRow = row;
+            myColumn = column;
+        }
+
+        public boolean isFill() {
+            return myFill;
+        }
+
+        public int getRow() {
+            return myRow;
+        }
+
+        public int getColumn() {
+            return myColumn;
+        }
+
+        @Nonnull
+        public TableCell fill() {
+            myFill = true;
+            return this;
+        }
     }
 
-    public boolean isFill() {
-      return myFill;
-    }
-
-    public int getRow() {
-      return myRow;
-    }
-
-    public int getColumn() {
-      return myColumn;
+    static TableLayout create(@Nonnull StaticPosition fillOption) {
+        return UIInternal.get()._Layouts_table(fillOption);
     }
 
     @Nonnull
-    public TableCell fill() {
-      myFill = true;
-      return this;
+    static TableCell cell(int row, int column) {
+        return new TableCell(row, column);
     }
-  }
 
-  static TableLayout create(@Nonnull StaticPosition fillOption) {
-    return UIInternal.get()._Layouts_table(fillOption);
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default TableLayout add(@Nonnull PseudoComponent pseudoComponent, @Nonnull TableCell tableCell) {
+        return add(pseudoComponent.getComponent(), tableCell);
+    }
 
-  @Nonnull
-  static TableCell cell(int row, int column) {
-    return new TableCell(row, column);
-  }
-
-  @Nonnull
-  @RequiredUIAccess
-  default TableLayout add(@Nonnull PseudoComponent pseudoComponent, @Nonnull TableCell tableCell) {
-    return add(pseudoComponent.getComponent(), tableCell);
-  }
-
-  @Nonnull
-  @RequiredUIAccess
-  TableLayout add(@Nonnull Component component, @Nonnull TableCell tableCell);
+    @Nonnull
+    @Override
+    default TableLayout add(@Nonnull Component component, @Nonnull TableCell constraint) {
+        return (TableLayout) Layout.super.add(component, constraint);
+    }
 }

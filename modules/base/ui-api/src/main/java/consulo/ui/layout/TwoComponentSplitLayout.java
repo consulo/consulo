@@ -15,44 +15,44 @@
  */
 package consulo.ui.layout;
 
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public interface TwoComponentSplitLayout extends Layout {
-  @Nonnull
-  static TwoComponentSplitLayout create(@Nonnull SplitLayoutPosition position) {
-    return UIInternal.get()._TwoComponentSplitLayout_create(position);
-  }
+public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
+    @Nonnull
+    static TwoComponentSplitLayout create(@Nonnull SplitLayoutPosition position) {
+        return UIInternal.get()._TwoComponentSplitLayout_create(position);
+    }
 
-  /**
-   * @param percent from 0 to 100
-   */
-  void setProportion(int percent);
+    /**
+     * @param percent from 0 to 100
+     */
+    void setProportion(int percent);
 
-  @RequiredUIAccess
-  @Nonnull
-  default TwoComponentSplitLayout setFirstComponent(@Nonnull PseudoComponent component) {
-    return setFirstComponent(component.getComponent());
-  }
+    @RequiredUIAccess
+    @Nonnull
+    default TwoComponentSplitLayout setFirstComponent(@Nonnull PseudoComponent component) {
+        return setFirstComponent(component.getComponent());
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  TwoComponentSplitLayout setFirstComponent(@Nonnull Component component);
+    @RequiredUIAccess
+    @Nonnull
+    TwoComponentSplitLayout setFirstComponent(@Nonnull Component component);
 
-  @RequiredUIAccess
-  @Nonnull
-  default TwoComponentSplitLayout setSecondComponent(@Nonnull PseudoComponent component) {
-    return setSecondComponent(component.getComponent());
-  }
+    @RequiredUIAccess
+    @Nonnull
+    default TwoComponentSplitLayout setSecondComponent(@Nonnull PseudoComponent component) {
+        return setSecondComponent(component.getComponent());
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  TwoComponentSplitLayout setSecondComponent(@Nonnull Component component);
+    @RequiredUIAccess
+    @Nonnull
+    TwoComponentSplitLayout setSecondComponent(@Nonnull Component component);
 }

@@ -16,12 +16,13 @@
 package consulo.desktop.awt.ui.impl.layout;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
-import consulo.ui.ex.awt.HideableDecorator;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.HideableDecorator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.FoldoutLayout;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.event.FoldoutLayoutOpenedEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -33,97 +34,97 @@ import java.awt.*;
  * @author VISTALL
  * @since 2020-05-29
  */
-public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLayoutImpl.HideableTitledPanel> implements FoldoutLayout {
-  public static class HideableTitledPanel extends JPanel implements FromSwingComponentWrapper {
-    private final HideableDecorator myDecorator;
-    private final DesktopFoldoutLayoutImpl myFoldoutLayout;
+public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLayoutImpl.HideableTitledPanel, LayoutConstraint> implements FoldoutLayout {
+    public static class HideableTitledPanel extends JPanel implements FromSwingComponentWrapper {
+        private final HideableDecorator myDecorator;
+        private final DesktopFoldoutLayoutImpl myFoldoutLayout;
 
-    public HideableTitledPanel(String title, JComponent content, DesktopFoldoutLayoutImpl foldoutLayout) {
-      super(new BorderLayout());
-      myFoldoutLayout = foldoutLayout;
-      myDecorator = new HideableDecorator(this, title, false) {
-        @Override
-        protected void on() {
-          super.on();
+        public HideableTitledPanel(String title, JComponent content, DesktopFoldoutLayoutImpl foldoutLayout) {
+            super(new BorderLayout());
+            myFoldoutLayout = foldoutLayout;
+            myDecorator = new HideableDecorator(this, title, false) {
+                @Override
+                protected void on() {
+                    super.on();
 
-          myFoldoutLayout.fireStateListeners(true);
+                    myFoldoutLayout.fireStateListeners(true);
+                }
+
+                @Override
+                protected void off() {
+                    super.off();
+
+                    myFoldoutLayout.fireStateListeners(false);
+                }
+            };
+
+            setContentComponent(content);
         }
 
         @Override
-        protected void off() {
-          super.off();
+        public void updateUI() {
+            super.updateUI();
 
-          myFoldoutLayout.fireStateListeners(false);
+            updateTitle();
         }
-      };
 
-      setContentComponent(content);
-    }
+        public void updateTitle() {
+            // first component initialize
+            if (myFoldoutLayout == null) {
+                return;
+            }
 
-    @Override
-    public void updateUI() {
-      super.updateUI();
+            myDecorator.setTitle(myFoldoutLayout.myTitleValue.getValue());
+        }
 
-      updateTitle();
-    }
+        public void setContentComponent(@Nullable JComponent content) {
+            myDecorator.setContentComponent(content);
+        }
 
-    public void updateTitle() {
-      // first component initialize
-      if (myFoldoutLayout == null) {
-        return;
-      }
+        public void setOn(boolean on) {
+            myDecorator.setOn(on);
+        }
 
-      myDecorator.setTitle(myFoldoutLayout.myTitleValue.getValue());
-    }
+        @Override
+        public void setEnabled(boolean enabled) {
+            myDecorator.setEnabled(enabled);
+        }
 
-    public void setContentComponent(@Nullable JComponent content) {
-      myDecorator.setContentComponent(content);
-    }
-
-    public void setOn(boolean on) {
-      myDecorator.setOn(on);
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-      myDecorator.setEnabled(enabled);
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return myFoldoutLayout;
+        }
     }
 
     @Nonnull
-    @Override
-    public Component toUIComponent() {
-      return myFoldoutLayout;
+    private LocalizeValue myTitleValue = LocalizeValue.empty();
+
+    public DesktopFoldoutLayoutImpl(LocalizeValue titleValue, Component component, boolean state) {
+        myTitleValue = titleValue;
+        initialize(new HideableTitledPanel(titleValue.getValue(), (JComponent) TargetAWT.to(component), this));
+        toAWTComponent().setOn(state);
     }
-  }
 
-  @Nonnull
-  private LocalizeValue myTitleValue = LocalizeValue.empty();
+    @RequiredUIAccess
+    private void fireStateListeners(boolean state) {
+        getListenerDispatcher(FoldoutLayoutOpenedEvent.class).onEvent(new FoldoutLayoutOpenedEvent(this, state));
+    }
 
-  public DesktopFoldoutLayoutImpl(LocalizeValue titleValue, Component component, boolean state) {
-    myTitleValue = titleValue;
-    initialize(new HideableTitledPanel(titleValue.getValue(), (JComponent)TargetAWT.to(component), this));
-    toAWTComponent().setOn(state);
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public FoldoutLayout setState(boolean showing) {
+        toAWTComponent().setOn(showing);
+        return this;
+    }
 
-  @RequiredUIAccess
-  private void fireStateListeners(boolean state) {
-    getListenerDispatcher(FoldoutLayoutOpenedEvent.class).onEvent(new FoldoutLayoutOpenedEvent(this, state));
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public FoldoutLayout setState(boolean showing) {
-    toAWTComponent().setOn(showing);
-    return this;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public FoldoutLayout setTitle(@Nonnull LocalizeValue title) {
-    myTitleValue = title;
-    toAWTComponent().updateTitle();
-    return this;
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public FoldoutLayout setTitle(@Nonnull LocalizeValue title) {
+        myTitleValue = title;
+        toAWTComponent().updateTitle();
+        return this;
+    }
 }

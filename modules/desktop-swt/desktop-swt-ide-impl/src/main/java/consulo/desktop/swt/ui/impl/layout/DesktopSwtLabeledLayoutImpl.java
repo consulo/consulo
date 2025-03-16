@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.LayoutConstraint;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -31,7 +32,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtLabeledLayoutImpl extends DesktopSwtLayoutComponent<Object> implements LabeledLayout {
+public class DesktopSwtLabeledLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements LabeledLayout {
   private final LocalizeValue myLabel;
 
   public DesktopSwtLabeledLayoutImpl(LocalizeValue label) {
@@ -59,7 +60,7 @@ public class DesktopSwtLabeledLayoutImpl extends DesktopSwtLayoutComponent<Objec
   @Nonnull
   @Override
   public LabeledLayout set(@Nonnull Component component) {
-    add(component, null);
+    addImpl(component, null);
     return this;
   }
 }

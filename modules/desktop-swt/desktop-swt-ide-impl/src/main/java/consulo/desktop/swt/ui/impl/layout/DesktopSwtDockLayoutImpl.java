@@ -15,69 +15,41 @@
  */
 package consulo.desktop.swt.ui.impl.layout;
 
-import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
-import consulo.desktop.swt.ui.impl.TargetSWT;
-import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.StaticPosition;
 import consulo.ui.layout.DockLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.eclipse.swt.widgets.Layout;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtDockLayoutImpl extends DesktopSwtLayoutComponent<BorderLayout.BorderData> implements DockLayout {
-  public DesktopSwtDockLayoutImpl(int gapInPixels) {
-  }
+public class DesktopSwtDockLayoutImpl extends DesktopSwtLayoutComponent<StaticPosition, BorderLayout.BorderData> implements DockLayout {
+    public DesktopSwtDockLayoutImpl(int gapInPixels) {
+    }
 
-  @Nullable
-  @Override
-  protected Layout createLayout() {
-    return new BorderLayout();
-  }
+    @Nullable
+    @Override
+    protected Layout createLayout() {
+        return new BorderLayout();
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout top(@Nonnull Component component) {
-    add(component, new BorderLayout.BorderData(BorderLayout.NORTH));
-    return this;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout bottom(@Nonnull Component component) {
-    add(component, new BorderLayout.BorderData(BorderLayout.SOUTH));
-    return this;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout center(@Nonnull Component component) {
-    add(component, new BorderLayout.BorderData(BorderLayout.CENTER));
-    return this;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout left(@Nonnull Component component) {
-    add(component, new BorderLayout.BorderData(BorderLayout.WEST));
-    return this;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout right(@Nonnull Component component) {
-    add(component, new BorderLayout.BorderData(BorderLayout.EAST));
-    return this;
-  }
+    @Override
+    public BorderLayout.BorderData convertConstraintsToLayoutData(@Nonnull StaticPosition constraint) {
+        switch (constraint) {
+            case TOP:
+                return new BorderLayout.BorderData(BorderLayout.NORTH);
+            case BOTTOM:
+                return new BorderLayout.BorderData(BorderLayout.SOUTH);
+            case LEFT:
+                return new BorderLayout.BorderData(BorderLayout.WEST);
+            case RIGHT:
+                return new BorderLayout.BorderData(BorderLayout.EAST);
+            case CENTER:
+                return new BorderLayout.BorderData(BorderLayout.CENTER);
+            default:
+                throw new IllegalArgumentException(constraint.name());
+        }
+    }
 }

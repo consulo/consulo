@@ -20,10 +20,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.SwipeLayout;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2018-07-01
  */
-public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel> implements SwipeLayout {
+public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel, LayoutConstraint> implements SwipeLayout {
   static class LayoutInfo {
     private String myId;
     private Supplier<Layout> myLayoutSupplier;

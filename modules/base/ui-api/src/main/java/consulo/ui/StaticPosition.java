@@ -15,14 +15,16 @@
  */
 package consulo.ui;
 
+import consulo.ui.layout.LayoutConstraint;
+
 /**
  * @author VISTALL
  * @since 25-Sep-17
  */
-public enum StaticPosition {
-  TOP,
-  BOTTOM,
-  LEFT,
-  RIGHT,
-  CENTER
+public enum StaticPosition implements LayoutConstraint {
+    TOP,
+    BOTTOM,
+    LEFT,
+    RIGHT,
+    CENTER
 }

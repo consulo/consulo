@@ -15,48 +15,50 @@
  */
 package consulo.ui.layout;
 
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.PseudoComponent;
+import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public interface TabbedLayout extends Layout {
-  @Nonnull
-  static TabbedLayout create() {
-    return UIInternal.get()._Layouts_tabbed();
-  }
+public interface TabbedLayout extends Layout<LayoutConstraint> {
+    @Nonnull
+    static TabbedLayout create() {
+        return UIInternal.get()._Layouts_tabbed();
+    }
 
-  /**
-   * Create tab without adding to view
-   * @return new tab
-   */
-  @Nonnull
-  Tab createTab();
+    /**
+     * Create tab without adding to view
+     *
+     * @return new tab
+     */
+    @Nonnull
+    Tab createTab();
 
-  @Nonnull
-  @RequiredUIAccess
-  default Tab addTab(@Nonnull Tab tab, @Nonnull PseudoComponent component) {
-    return addTab(tab, component.getComponent());
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default Tab addTab(@Nonnull Tab tab, @Nonnull PseudoComponent component) {
+        return addTab(tab, component.getComponent());
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  default Tab addTab(@Nonnull String tabName, @Nonnull PseudoComponent component) {
-    return addTab(tabName, component.getComponent());
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default Tab addTab(@Nonnull String tabName, @Nonnull PseudoComponent component) {
+        return addTab(tabName, component.getComponent());
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  Tab addTab(@Nonnull Tab tab, @Nonnull Component component);
+    @Nonnull
+    @RequiredUIAccess
+    Tab addTab(@Nonnull Tab tab, @Nonnull Component component);
 
-  @Nonnull
-  @RequiredUIAccess
-  Tab addTab(@Nonnull String tabName, @Nonnull Component component);
+    @Nonnull
+    @RequiredUIAccess
+    Tab addTab(@Nonnull String tabName, @Nonnull Component component);
 
-  void removeTab(@Nonnull Tab tab);
+    void removeTab(@Nonnull Tab tab);
 }

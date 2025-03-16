@@ -19,9 +19,11 @@ import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.LayoutStyle;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -34,7 +36,7 @@ import java.util.List;
  * @author VISTALL
  * @since 29/04/2021
  */
-public abstract class DesktopSwtLayoutComponent<LayoutData> extends SWTComponentDelegate<Composite> implements Layout {
+public abstract class DesktopSwtLayoutComponent<C extends LayoutConstraint, LayoutData> extends SWTComponentDelegate<Composite> implements Layout<C> {
     private static final String ourNullMapper = "____null____";
 
     private List<Pair<SWTComponentDelegate<?>, Object>> myComponents = new ArrayList<>();
@@ -123,11 +125,22 @@ public abstract class DesktopSwtLayoutComponent<LayoutData> extends SWTComponent
     @Nullable
     protected abstract org.eclipse.swt.widgets.Layout createLayout();
 
-    protected void add(Component component, LayoutData layoutLayoutData) {
-        add((SWTComponentDelegate<?>) component, layoutLayoutData);
+    public LayoutData convertConstraintsToLayoutData(@Nonnull C constraint) {
+        return null;
     }
 
-    protected void add(SWTComponentDelegate<?> component, LayoutData layoutData) {
+    @Nonnull
+    @Override
+    public Layout<C> add(@Nonnull Component component, @Nonnull C constraint) {
+        addImpl(component, convertConstraintsToLayoutData(constraint));
+        return this;
+    }
+
+    protected void addImpl(Component component, LayoutData layoutLayoutData) {
+        addImpl((SWTComponentDelegate<?>) component, layoutLayoutData);
+    }
+
+    protected void addImpl(SWTComponentDelegate<?> component, LayoutData layoutData) {
         if (myComponent != null) {
             if (layoutData != null) {
                 Collection<Pair<SWTComponentDelegate<?>, Object>> components = myMappedComponents.remove(layoutData.toString());

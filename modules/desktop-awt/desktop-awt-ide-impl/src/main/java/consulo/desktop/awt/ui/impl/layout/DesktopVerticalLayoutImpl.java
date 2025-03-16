@@ -15,11 +15,11 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.layout.Layout;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -28,16 +28,15 @@ import javax.swing.*;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class DesktopVerticalLayoutImpl extends DesktopLayoutBase<JPanel> implements VerticalLayout {
-  public DesktopVerticalLayoutImpl(int vGap) {
-    initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(JBUI.scale(vGap)));
-  }
+public class DesktopVerticalLayoutImpl extends DesktopLayoutBase<JPanel, LayoutConstraint> implements VerticalLayout {
+    public DesktopVerticalLayoutImpl(int vGap) {
+        initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(JBUI.scale(vGap)));
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public VerticalLayout add(@Nonnull Component component) {
-    add(component, null);
-    return this;
-  }
+    @Nonnull
+    @Override
+    public Layout<LayoutConstraint> add(@Nonnull Component component, @Nonnull LayoutConstraint constraint) {
+        addImpl(component, null);
+        return this;
+    }
 }

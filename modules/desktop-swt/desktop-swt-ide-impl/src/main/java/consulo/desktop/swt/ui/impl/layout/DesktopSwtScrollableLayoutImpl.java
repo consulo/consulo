@@ -16,6 +16,7 @@
 package consulo.desktop.swt.ui.impl.layout;
 
 import consulo.ui.Component;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.ScrollableLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -26,9 +27,9 @@ import org.eclipse.swt.widgets.Layout;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtScrollableLayoutImpl extends DesktopSwtLayoutComponent<Object> implements ScrollableLayout {
+public class DesktopSwtScrollableLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements ScrollableLayout {
   public DesktopSwtScrollableLayoutImpl(Component component) {
-    add(component, null);
+    addImpl(component, null);
   }
 
   @Override

@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-05-29
  */
-public interface FoldoutLayout extends Layout {
+public interface FoldoutLayout extends Layout<LayoutConstraint> {
   @Nonnull
   static FoldoutLayout create(@Nonnull LocalizeValue titleValue, @Nonnull Component component) {
     return create(titleValue, component, true);

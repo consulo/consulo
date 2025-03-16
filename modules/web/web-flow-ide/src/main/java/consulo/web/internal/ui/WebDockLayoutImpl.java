@@ -16,8 +16,9 @@
 package consulo.web.internal.ui;
 
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.StaticPosition;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.Layout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.vaadin.BorderLayoutEx;
@@ -29,67 +30,60 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 27/05/2023
  */
-public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin> implements DockLayout {
-  public WebDockLayoutImpl(int gapInPixels) {
-  }
+public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, StaticPosition> implements DockLayout {
+    public WebDockLayoutImpl(int gapInPixels) {
+    }
 
-  public class Vaadin extends BorderLayoutEx implements FromVaadinComponentWrapper {
-    @Nullable
+    public class Vaadin extends BorderLayoutEx implements FromVaadinComponentWrapper {
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebDockLayoutImpl.this;
+        }
+    }
+
+    @Nonnull
     @Override
-    public Component toUIComponent() {
-      return WebDockLayoutImpl.this;
-    }
-  }
-
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout top(@Nonnull Component component) {
-    return replace(component, BorderLayoutEx.Constraint.NORTH);
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout bottom(@Nonnull Component component) {
-    return replace(component, BorderLayoutEx.Constraint.SOUTH);
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout center(@Nonnull Component component) {
-    VaadinSizeUtil.setSizeFull(component);
-    return replace(component, BorderLayoutEx.Constraint.CENTER);
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout left(@Nonnull Component component) {
-    return replace(component, BorderLayoutEx.Constraint.WEST);
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout right(@Nonnull Component component) {
-    return replace(component, BorderLayoutEx.Constraint.EAST);
-  }
-
-  private DockLayout replace(Component child, BorderLayoutEx.Constraint constraint) {
-   toVaadinComponent().setComponent(null, constraint);
-
-    if (child != null) {
-      toVaadinComponent().addComponent(TargetVaddin.to(child), constraint);
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
 
-    return this;
-  }
+    @Nonnull
+    @Override
+    public Layout<StaticPosition> add(@Nonnull Component component, @Nonnull StaticPosition constraint) {
+        BorderLayoutEx.Constraint constraintEx;
+        switch (constraint) {
+            case TOP:
+                constraintEx = BorderLayoutEx.Constraint.NORTH;
+                break;
+            case BOTTOM:
+                constraintEx = BorderLayoutEx.Constraint.SOUTH;
+                break;
+            case LEFT:
+                constraintEx = BorderLayoutEx.Constraint.WEST;
+                break;
+            case RIGHT:
+                constraintEx = BorderLayoutEx.Constraint.EAST;
+                break;
+            case CENTER:
+                VaadinSizeUtil.setSizeFull(component);
+
+                constraintEx = BorderLayoutEx.Constraint.CENTER;
+                break;
+            default:
+                throw new IllegalArgumentException(constraint.name());
+        }
+
+        return replace(component, constraintEx);
+    }
+
+    private DockLayout replace(Component child, BorderLayoutEx.Constraint constraint) {
+        toVaadinComponent().setComponent(null, constraint);
+
+        if (child != null) {
+            toVaadinComponent().addComponent(TargetVaddin.to(child), constraint);
+        }
+
+        return this;
+    }
 }

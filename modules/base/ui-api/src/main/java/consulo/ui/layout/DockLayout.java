@@ -15,75 +15,86 @@
  */
 package consulo.ui.layout;
 
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.PseudoComponent;
+import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIConstant;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface DockLayout extends Layout {
-  @Nonnull
-  static DockLayout create() {
-    return create(UIConstant.DEFAULT_SPACING_PX);
-  }
+public interface DockLayout extends Layout<StaticPosition> {
+    @Nonnull
+    static DockLayout create() {
+        return create(UIConstant.DEFAULT_SPACING_PX);
+    }
 
-  @Nonnull
-  static DockLayout create(int gapInPixels) {
-    return UIInternal.get()._Layouts_dock(gapInPixels);
-  }
+    @Nonnull
+    static DockLayout create(int gapInPixels) {
+        return UIInternal.get()._Layouts_dock(gapInPixels);
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  default DockLayout top(@Nonnull PseudoComponent component) {
-    return top(component.getComponent());
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default DockLayout top(@Nonnull PseudoComponent component) {
+        return top(component.getComponent());
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  default DockLayout bottom(@Nonnull PseudoComponent component) {
-    return bottom(component.getComponent());
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default DockLayout bottom(@Nonnull PseudoComponent component) {
+        return bottom(component.getComponent());
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  default DockLayout center(@Nonnull PseudoComponent component) {
-    return center(component.getComponent());
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default DockLayout center(@Nonnull PseudoComponent component) {
+        return center(component.getComponent());
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  default DockLayout left(@Nonnull PseudoComponent component) {
-    return left(component.getComponent());
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default DockLayout left(@Nonnull PseudoComponent component) {
+        return left(component.getComponent());
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  default DockLayout right(@Nonnull PseudoComponent component) {
-    return right(component.getComponent());
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default DockLayout right(@Nonnull PseudoComponent component) {
+        return right(component.getComponent());
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  DockLayout top(@Nonnull Component component);
+    @Nonnull
+    @RequiredUIAccess
+    default DockLayout top(@Nonnull Component component) {
+        return (DockLayout) add(component, StaticPosition.TOP);
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  DockLayout bottom(@Nonnull Component component);
+    @Nonnull
+    @RequiredUIAccess
+    default DockLayout bottom(@Nonnull Component component) {
+        return (DockLayout) add(component, StaticPosition.BOTTOM);
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  DockLayout center(@Nonnull Component component);
+    @Nonnull
+    @RequiredUIAccess
+    default DockLayout center(@Nonnull Component component) {
+        return (DockLayout) add(component, StaticPosition.CENTER);
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  DockLayout left(@Nonnull Component component);
+    @Nonnull
+    @RequiredUIAccess
+    default DockLayout left(@Nonnull Component component) {
+        return (DockLayout) add(component, StaticPosition.LEFT);
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  DockLayout right(@Nonnull Component component);
+    @Nonnull
+    @RequiredUIAccess
+    default DockLayout right(@Nonnull Component component) {
+        return (DockLayout) add(component, StaticPosition.RIGHT);
+    }
 }

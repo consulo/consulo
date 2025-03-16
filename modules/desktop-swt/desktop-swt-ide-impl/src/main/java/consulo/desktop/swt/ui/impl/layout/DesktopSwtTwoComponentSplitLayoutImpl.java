@@ -17,6 +17,7 @@ package consulo.desktop.swt.ui.impl.layout;
 
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import org.eclipse.swt.SWT;
@@ -31,7 +32,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutComponent<Object> implements TwoComponentSplitLayout {
+public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements TwoComponentSplitLayout {
   private final SplitLayoutPosition myPosition;
 
   public DesktopSwtTwoComponentSplitLayoutImpl(SplitLayoutPosition position) {
@@ -64,7 +65,7 @@ public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutCompo
   @Nonnull
   @Override
   public TwoComponentSplitLayout setFirstComponent(@Nonnull Component component) {
-    add(component, "first");
+    addImpl(component, "first");
     return this;
   }
 
@@ -72,7 +73,7 @@ public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutCompo
   @Nonnull
   @Override
   public TwoComponentSplitLayout setSecondComponent(@Nonnull Component component) {
-    add(component, "second");
+    addImpl(component, "second");
     return this;
   }
 

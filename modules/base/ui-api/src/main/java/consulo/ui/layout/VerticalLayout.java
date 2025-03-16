@@ -15,35 +15,37 @@
  */
 package consulo.ui.layout;
 
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIConstant;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface VerticalLayout extends Layout {
-  @Nonnull
-  static VerticalLayout create() {
-    return create(UIConstant.DEFAULT_SPACING_PX);
-  }
+public interface VerticalLayout extends Layout<LayoutConstraint> {
+    @Nonnull
+    static VerticalLayout create() {
+        return create(UIConstant.DEFAULT_SPACING_PX);
+    }
 
-  @Nonnull
-  static VerticalLayout create(int vGap) {
-    return UIInternal.get()._Layouts_vertical(vGap);
-  }
+    @Nonnull
+    static VerticalLayout create(int vGap) {
+        return UIInternal.get()._Layouts_vertical(vGap);
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  default VerticalLayout add(@Nonnull PseudoComponent component) {
-    return add(component.getComponent());
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default VerticalLayout add(@Nonnull PseudoComponent component) {
+        return add(component.getComponent());
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  VerticalLayout add(@Nonnull Component component);
+    @Nonnull
+    @RequiredUIAccess
+    default VerticalLayout add(@Nonnull Component component) {
+        return (VerticalLayout) add(component, LayoutConstraint.NONE);
+    }
 }

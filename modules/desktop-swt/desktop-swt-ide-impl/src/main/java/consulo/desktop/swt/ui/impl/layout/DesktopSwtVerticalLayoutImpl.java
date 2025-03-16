@@ -16,39 +16,30 @@
 package consulo.desktop.swt.ui.impl.layout;
 
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
+import jakarta.annotation.Nonnull;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Layout;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtVerticalLayoutImpl extends DesktopSwtLayoutComponent<Object> implements VerticalLayout {
-  private final int myVGap;
+public class DesktopSwtVerticalLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements VerticalLayout {
+    private final int myVGap;
 
-  public DesktopSwtVerticalLayoutImpl(int vGap) {
-    myVGap = vGap;
-  }
+    public DesktopSwtVerticalLayoutImpl(int vGap) {
+        myVGap = vGap;
+    }
 
-  @Override
-  protected Layout createLayout() {
-    RowLayout layout = new RowLayout(SWT.VERTICAL);
-    layout.spacing = myVGap;
-    layout.wrap = false;
-    layout.fill = true;
-    return layout;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public VerticalLayout add(@Nonnull Component component) {
-    add(component, null);
-    return this;
-  }
+    @Override
+    protected Layout createLayout() {
+        RowLayout layout = new RowLayout(SWT.VERTICAL);
+        layout.spacing = myVGap;
+        layout.wrap = false;
+        layout.fill = true;
+        return layout;
+    }
 }

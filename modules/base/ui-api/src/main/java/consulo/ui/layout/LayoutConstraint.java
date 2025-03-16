@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,15 @@
  */
 package consulo.ui.layout;
 
-import consulo.ui.Component;
-import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
- * @since 2018-07-03
+ * @since 2025-03-16
  */
-public interface ScrollableLayout extends Layout<LayoutConstraint> {
-    @Nonnull
-    static ScrollableLayout create(@Nonnull Component component) {
-        return create(component, ScrollableLayoutOptions.builder().build());
-    }
-
-    @Nonnull
-    static ScrollableLayout create(@Nonnull Component component, @Nonnull ScrollableLayoutOptions options) {
-        return UIInternal.get()._ScrollLayout_create(component, options);
-    }
+public interface LayoutConstraint {
+    LayoutConstraint NONE = new LayoutConstraint() {
+        @Override
+        public String toString() {
+            return "NONE";
+        }
+    };
 }

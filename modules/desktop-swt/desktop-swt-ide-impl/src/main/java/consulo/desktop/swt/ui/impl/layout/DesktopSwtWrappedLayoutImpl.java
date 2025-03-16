@@ -17,6 +17,7 @@ package consulo.desktop.swt.ui.impl.layout;
 
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.WrappedLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -29,7 +30,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 11/12/2021
  */
-public class DesktopSwtWrappedLayoutImpl extends DesktopSwtLayoutComponent<Object> implements WrappedLayout {
+public class DesktopSwtWrappedLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements WrappedLayout {
   @Nullable
   @Override
   protected Layout createLayout() {
@@ -40,7 +41,7 @@ public class DesktopSwtWrappedLayoutImpl extends DesktopSwtLayoutComponent<Objec
   @Nonnull
   @Override
   public WrappedLayout set(@Nullable Component component) {
-    add(component, null);
+    addImpl(component, null);
     return this;
   }
 }

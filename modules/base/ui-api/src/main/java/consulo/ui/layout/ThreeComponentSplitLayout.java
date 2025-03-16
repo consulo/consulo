@@ -18,7 +18,6 @@ package consulo.ui.layout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -26,21 +25,21 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-18
  */
-public interface ThreeComponentSplitLayout extends Layout {
-  @Nonnull
-  static ThreeComponentSplitLayout create(@Nonnull SplitLayoutPosition position) {
-    return UIInternal.get()._ThreeComponentSplitLayout_create(position);
-  }
+public interface ThreeComponentSplitLayout extends Layout<LayoutConstraint> {
+    @Nonnull
+    static ThreeComponentSplitLayout create(@Nonnull SplitLayoutPosition position) {
+        return UIInternal.get()._ThreeComponentSplitLayout_create(position);
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  ThreeComponentSplitLayout setFirstComponent(@Nullable Component component);
+    @RequiredUIAccess
+    @Nonnull
+    ThreeComponentSplitLayout setFirstComponent(@Nullable Component component);
 
-  @RequiredUIAccess
-  @Nonnull
-  ThreeComponentSplitLayout setCenterComponent(@Nullable Component component);
+    @RequiredUIAccess
+    @Nonnull
+    ThreeComponentSplitLayout setCenterComponent(@Nullable Component component);
 
-  @RequiredUIAccess
-  @Nonnull
-  ThreeComponentSplitLayout setSecondComponent(@Nullable Component component);
+    @RequiredUIAccess
+    @Nonnull
+    ThreeComponentSplitLayout setSecondComponent(@Nullable Component component);
 }
