@@ -20,7 +20,6 @@
 package consulo.ide.impl.idea.openapi.editor.colors.impl;
 
 import consulo.application.ui.UISettings;
-import consulo.application.util.SystemInfo;
 import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.*;
 import consulo.colorScheme.impl.FontPreferencesImpl;
@@ -40,8 +39,6 @@ import java.util.List;
 import java.util.*;
 
 public abstract class AbstractColorsScheme implements EditorColorsScheme {
-  private static final String OS_VALUE_PREFIX =
-    Platform.current().os().isWindows() ? "windows" : Platform.current().os().isMac() ? "mac" : "linux";
   private static final int CURR_VERSION = 124;
 
   private static final FontSize DEFAULT_FONT_SIZE = FontSize.SMALL;
@@ -455,7 +452,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   }
 
   private static String getValue(Element e) {
-    final String value = e.getAttributeValue(OS_VALUE_PREFIX);
+    final String value = e.getAttributeValue(Platform.current().os().fileNamePrefix());
     return value == null ? e.getAttributeValue(VALUE_ELEMENT) : value;
   }
 
