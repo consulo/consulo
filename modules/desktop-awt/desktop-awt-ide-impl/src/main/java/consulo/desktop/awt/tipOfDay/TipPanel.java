@@ -16,12 +16,13 @@
 package consulo.desktop.awt.tipOfDay;
 
 import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.util.TipUIUtil;
 import consulo.ide.localize.IdeLocalize;
-import consulo.ide.tipOfDay.TipOfDayProvider;
+import consulo.ide.tipOfDay.TipOfDayContributor;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -29,6 +30,7 @@ import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,111 +38,112 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
-  private static final int DEFAULT_WIDTH = 400;
-  private static final int DEFAULT_HEIGHT = 200;
+    private static final int DEFAULT_WIDTH = 400;
+    private static final int DEFAULT_HEIGHT = 200;
 
-  private final JEditorPane myBrowser;
-  private final JLabel myPoweredByLabel;
-  private final List<Pair<String, PluginDescriptor>> myTips = new ArrayList<>();
+    private final JEditorPane myBrowser;
+    private final JLabel myPoweredByLabel;
 
-  public TipPanel() {
-    setLayout(new BorderLayout());
-    myBrowser = TipUIUtil.createTipBrowser();
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myBrowser, true);
-    add(scrollPane, BorderLayout.CENTER);
+    private final List<Pair<LocalizeValue, PluginDescriptor>> myTips = new ArrayList<>();
 
-    JPanel southPanel = new JPanel(new BorderLayout());
+    public TipPanel() {
+        setLayout(new BorderLayout());
+        myBrowser = TipUIUtil.createTipBrowser();
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myBrowser, true);
+        add(scrollPane, BorderLayout.CENTER);
 
-    myPoweredByLabel = new JBLabel();
-    myPoweredByLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-    myPoweredByLabel.setForeground(SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES.getFgColor());
+        JPanel southPanel = new JPanel(new BorderLayout());
 
-    southPanel.add(myPoweredByLabel, BorderLayout.EAST);
-    add(southPanel, BorderLayout.SOUTH);
+        myPoweredByLabel = new JBLabel();
+        myPoweredByLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        myPoweredByLabel.setForeground(SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES.getFgColor());
 
-    for (TipOfDayProvider provider : Application.get().getExtensionList(TipOfDayProvider.class)) {
-      PluginDescriptor plugin = PluginManager.getPlugin(provider.getClass());
-      
-      for (String tipFile : provider.getTipFiles()) {
-        myTips.add(Pair.create(tipFile, plugin));
-      }
-    }
-  }
+        southPanel.add(myPoweredByLabel, BorderLayout.EAST);
+        add(southPanel, BorderLayout.SOUTH);
 
-  @Override
-  public Dimension getPreferredSize() {
-    return new JBDimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-  }
+        ExtensionPoint<TipOfDayContributor> contributors = Application.get().getExtensionPoint(TipOfDayContributor.class);
 
-  public void prevTip() {
-    if (myTips.size() == 0) {
-      myBrowser.setText(IdeLocalize.errorTipsNotFound(Application.get().getName().toString()).get());
-      return;
-    }
-    final GeneralSettings settings = GeneralSettings.getInstance();
-    int lastTip = settings.getLastTip();
-
-    final Pair<String, PluginDescriptor> tip;
-    lastTip--;
-    if (lastTip <= 0) {
-      tip = myTips.get(myTips.size() - 1);
-      lastTip = myTips.size();
-    }
-    else {
-      tip = myTips.get(lastTip - 1);
+        contributors.forEachExtensionSafe(tipOfDayContributor -> {
+            PluginDescriptor plugin = PluginManager.getPlugin(tipOfDayContributor.getClass());
+            tipOfDayContributor.contribute(it -> myTips.add(Pair.create(it, plugin)));
+        });
     }
 
-    setTip(tip, lastTip, myBrowser, settings);
-  }
-
-  private void setTip(Pair<String, PluginDescriptor> tip, int lastTip, JEditorPane browser, GeneralSettings settings) {
-    TipUIUtil.openTipInBrowser(tip, browser);
-    myPoweredByLabel.setText(TipUIUtil.getPoweredByText(tip));
-    settings.setLastTip(lastTip);
-  }
-
-  public void nextTip() {
-    if (myTips.size() == 0) {
-      myBrowser.setText(IdeLocalize.errorTipsNotFound(Application.get().getName()).get());
-      return;
-    }
-    GeneralSettings settings = GeneralSettings.getInstance();
-    int lastTip = settings.getLastTip();
-    Pair<String, PluginDescriptor> tip;
-    lastTip++;
-    if (lastTip - 1 >= myTips.size()) {
-      tip = myTips.get(0);
-      lastTip = 1;
-    }
-    else {
-      tip = myTips.get(lastTip - 1);
+    @Override
+    public Dimension getPreferredSize() {
+        return new JBDimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
-    setTip(tip, lastTip, myBrowser, settings);
-  }
+    public void prevTip() {
+        if (myTips.size() == 0) {
+            myBrowser.setText(IdeLocalize.errorTipsNotFound(Application.get().getName().toString()).get());
+            return;
+        }
+        final GeneralSettings settings = GeneralSettings.getInstance();
+        int lastTip = settings.getLastTip();
 
-  @Override
-  public boolean isToBeShown() {
-    return !GeneralSettings.getInstance().isShowTipsOnStartup();
-  }
+        final Pair<LocalizeValue, PluginDescriptor> tip;
+        lastTip--;
+        if (lastTip <= 0) {
+            tip = myTips.get(myTips.size() - 1);
+            lastTip = myTips.size();
+        }
+        else {
+            tip = myTips.get(lastTip - 1);
+        }
 
-  @Override
-  public void setToBeShown(boolean toBeShown, int exitCode) {
-    GeneralSettings.getInstance().setShowTipsOnStartup(!toBeShown);
-  }
+        setTip(tip, lastTip, myBrowser, settings);
+    }
 
-  @Override
-  public boolean canBeHidden() {
-    return true;
-  }
+    private void setTip(Pair<LocalizeValue, PluginDescriptor> tip, int lastTip, JEditorPane browser, GeneralSettings settings) {
+        TipUIUtil.openTipInBrowserByLocalize(tip, browser);
+        myPoweredByLabel.setText(TipUIUtil.getPoweredByTextByLocalize(tip));
+        settings.setLastTip(lastTip);
+    }
 
-  @Override
-  public boolean shouldSaveOptionsOnCancel() {
-    return true;
-  }
+    public void nextTip() {
+        if (myTips.size() == 0) {
+            myBrowser.setText(IdeLocalize.errorTipsNotFound(Application.get().getName()).get());
+            return;
+        }
+        GeneralSettings settings = GeneralSettings.getInstance();
+        int lastTip = settings.getLastTip();
+        Pair<LocalizeValue, PluginDescriptor> tip;
+        lastTip++;
+        if (lastTip - 1 >= myTips.size()) {
+            tip = myTips.get(0);
+            lastTip = 1;
+        }
+        else {
+            tip = myTips.get(lastTip - 1);
+        }
 
-  @Override
-  public LocalizeValue getDoNotShowMessage() {
-    return IdeLocalize.checkboxShowTipsOnStartup();
-  }
+        setTip(tip, lastTip, myBrowser, settings);
+    }
+
+    @Override
+    public boolean isToBeShown() {
+        return !GeneralSettings.getInstance().isShowTipsOnStartup();
+    }
+
+    @Override
+    public void setToBeShown(boolean toBeShown, int exitCode) {
+        GeneralSettings.getInstance().setShowTipsOnStartup(!toBeShown);
+    }
+
+    @Override
+    public boolean canBeHidden() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldSaveOptionsOnCancel() {
+        return true;
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getDoNotShowMessage() {
+        return IdeLocalize.checkboxShowTipsOnStartup();
+    }
 }

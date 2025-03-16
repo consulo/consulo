@@ -148,6 +148,7 @@ public class FeatureDescriptor {
     return myUsageCount < myMinUsageCount;
   }
 
+  @Override
   public String toString() {
     StringBuilder buffer = new StringBuilder();
 

@@ -22,6 +22,8 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.internal.ExternalServiceHelper;
 import consulo.externalService.statistic.*;
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -30,6 +32,7 @@ import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -41,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     private static final Logger LOG = Logger.getInstance(ShowFeatureUsageStatisticsDialog.class);
@@ -198,8 +202,14 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
                         pluginDescriptor = PluginManager.getPlugin(Application.class);
                     }
 
+                    LocalizeValue tipRef = LocalizeValue.empty();
+                    List<String> values = StringUtil.split(tipFileName, "@");
+                    if (values.size() == 2) {
+                        tipRef = LocalizeKey.of(values.get(0), values.get(1)).getValue();
+                    }
+
                     ExternalServiceHelper helper = Application.get().getInstance(ExternalServiceHelper.class);
-                    helper.openTipInBrowser(Pair.create("/tips/" + tipFileName, pluginDescriptor), browser);
+                    helper.openTipInBrowser(Pair.create(tipRef, pluginDescriptor), browser);
                 }
             }
             catch (IOException ex) {

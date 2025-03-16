@@ -46,7 +46,6 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
 
   private static final String TAG_GROUP = "group";
   private static final String TAG_FEATURE = "feature";
-  private static final String TODO_HTML_MARKER = "todo.html";
 
   public ProductivityFeaturesRegistryImpl() {
     reloadFromXml();
@@ -115,9 +114,7 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
       Element featureElement = (Element)feature;
       FeatureDescriptor featureDescriptor = new FeatureDescriptor(groupDescriptor);
       featureDescriptor.readExternal(featureElement);
-      if (!TODO_HTML_MARKER.equals(featureDescriptor.getTipFileName())) {
-        myFeatures.put(featureDescriptor.getId(), featureDescriptor);
-      }
+      myFeatures.put(featureDescriptor.getId(), featureDescriptor);
     }
   }
 
@@ -136,7 +133,7 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
 
   public FeatureDescriptor getFeatureDescriptorEx(@Nonnull String id) {
     if (WELCOME.equals(id)) {
-      return new FeatureDescriptor(WELCOME, "AdaptiveWelcome.html", FeatureStatisticsBundle.message("feature.statistics.welcome.tip.name"));
+      return new FeatureDescriptor(WELCOME, "consulo.ide.tipOfDay.impl.TipOfDayLocalize@adaptivewelcome", FeatureStatisticsBundle.message("feature.statistics.welcome.tip.name"));
     }
     return myFeatures.get(id);
   }

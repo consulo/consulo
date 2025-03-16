@@ -288,7 +288,7 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
 
         @Override
         public void paint(Graphics g, Shape allocation) {
-            TargetAWT.to(myViewIcon).paintIcon(null, g, allocation.getBounds().x, allocation.getBounds().y - 4);
+            TargetAWT.to(myViewIcon).paintIcon(null, g, allocation.getBounds().x, allocation.getBounds().y);
         }
 
         @Override

@@ -170,6 +170,7 @@
     <module>modules/base/remote-server-impl</module>
     <module>modules/base/credential-storage-api</module>
     <module>modules/base/credential-storage-impl</module>
+    <module>modules/base/tips-of-day-impl</module>
 
     <module>modules/base/version-control-system-api</module>
     <module>modules/base/version-control-system-impl</module>
