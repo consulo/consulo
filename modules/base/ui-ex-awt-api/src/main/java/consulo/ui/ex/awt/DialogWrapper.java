@@ -676,7 +676,7 @@ public abstract class DialogWrapper {
             }
 
             buttons.put(action, button);
-            buttonsPanel.add(button);
+            buttonsPanel.add(button, HorizontalLayout.CENTER);
         }
         return buttonsPanel;
     }
