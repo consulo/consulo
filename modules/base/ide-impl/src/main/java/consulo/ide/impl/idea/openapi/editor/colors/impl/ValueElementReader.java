@@ -35,10 +35,7 @@ import java.awt.*;
  */
 class ValueElementReader {
   private static final String VALUE = "value";
-  private static final String MAC = "mac";
-  private static final String LINUX = "linux";
-  private static final String WINDOWS = "windows";
-  private static final String OS = Platform.current().os().isWindows() ? WINDOWS : Platform.current().os().isMac() ? MAC : LINUX;
+
   private static final Logger LOG = Logger.getInstance(ValueElementReader.class);
 
   private String myAttribute;
@@ -68,7 +65,7 @@ class ValueElementReader {
         value = read(type, element, myAttribute);
       }
       if (value == null) {
-        value = read(type, element, OS);
+        value = read(type, element, Platform.current().os().fileNamePrefix());
         if (value == null) {
           value = read(type, element, VALUE);
         }
