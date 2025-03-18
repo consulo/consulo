@@ -30,6 +30,8 @@ public interface EditorColorSchemeExtender {
         void add(@Nonnull EditorColorKey key, @Nonnull ColorValue colorValue);
 
         void add(@Nonnull TextAttributesKey key, @Nonnull AttributesFlyweight attributes);
+
+        void add(@Nonnull TextAttributesKey key, @Nonnull TextAttributesKey baseAttributes, @Nonnull AttributesFlyweight attributes);
     }
 
     void extend(Builder builder);

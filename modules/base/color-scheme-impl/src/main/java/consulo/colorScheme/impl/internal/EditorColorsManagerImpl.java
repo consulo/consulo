@@ -180,6 +180,21 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
                         LOG.error("Failed to override text attributes by key " + key + ". Plugin: " + pluginId + ", Class: " + providerClass);
                     }
                 }
+
+                @Override
+                public void add(@Nonnull TextAttributesKey key, @Nonnull TextAttributesKey baseAttributes, @Nonnull AttributesFlyweight attributes) {
+                    if (finished) {
+                        throw new IllegalArgumentException("Can't add new keys. Builder closed");
+                    }
+
+                    TextAttributes textAttributes = TextAttributes.fromFlyweight(attributes);
+
+                    TextAttributes baseTextAttributes = scheme.getAttributes(baseAttributes);
+
+                    if (!scheme.setTextAttributesIfNew(key, TextAttributes.merge(baseTextAttributes, textAttributes))) {
+                        LOG.error("Failed to override text attributes by key " + key + ". Plugin: " + pluginId + ", Class: " + providerClass);
+                    }
+                }
             };
 
             it.extend(builder);
