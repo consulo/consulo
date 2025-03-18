@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.find.impl;
+package consulo.colorScheme.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.colorScheme.AdditionalTextAttributesProvider;
-import consulo.colorScheme.EditorColorsScheme;
-
+import consulo.colorScheme.BundledColorSchemeProvider;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 23-Jun-22
+ * @since 18-Jun-22
  */
 @ExtensionImpl
-public class FindDarculaAdditionalTextAttributesProvider implements AdditionalTextAttributesProvider {
-  @Nonnull
-  @Override
-  public String getColorSchemeName() {
-    return EditorColorsScheme.DARCULA_SCHEME_NAME;
-  }
-
-  @Nonnull
-  @Override
-  public String getColorSchemeFile() {
-    return "/colorSchemes/ext/FindViewColorsScheme.xml";
-  }
+public class DefaultBundledColorSchemeProvider implements BundledColorSchemeProvider {
+    @Nonnull
+    @Override
+    public String[] getColorSchemeFiles() {
+        return new String[]{
+            "Default.xml",
+            "IDEA.xml",
+            "Consulo Light.xml",
+            "Darcula.xml"
+        };
+    }
 }

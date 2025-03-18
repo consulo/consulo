@@ -369,7 +369,7 @@
         <option name="FOREGROUND" value="9876aa" />
       </value>
     </option>
-    <option name="DEFAULT_INVALID_STRING_ESCAPE">
+    <option name="DEFAULT_INVALID_FSTRING_ESCAPE">
       <value>
         <option name="FOREGROUND" value="a5c25c" />
         <option name="EFFECT_COLOR" value="ff0000" />

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.colors.impl;
+package consulo.colorScheme.impl.internal;
 
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;

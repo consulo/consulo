@@ -15,15 +15,10 @@
  */
 package consulo.colorScheme;
 
-import jakarta.annotation.Nonnull;
-
 import java.util.Map;
 
 public interface TextAttributesScheme {
     TextAttributes getAttributes(TextAttributesKey key);
-
-    default void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
-    }
 
     default Map<String, Object> getMetaProperties() {
         return Map.of();

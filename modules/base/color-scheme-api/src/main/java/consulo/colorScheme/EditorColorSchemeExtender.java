@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.find.impl;
+package consulo.colorScheme;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.colorScheme.AdditionalTextAttributesProvider;
-import consulo.colorScheme.EditorColorsScheme;
-
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.ui.color.ColorValue;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 23-Jun-22
+ * @since 2025-03-17
  */
-@ExtensionImpl
-public class FindDefaultAdditionalTextAttributesProvider implements AdditionalTextAttributesProvider {
-  @Nonnull
-  @Override
-  public String getColorSchemeName() {
-    return EditorColorsScheme.DEFAULT_SCHEME_NAME;
-  }
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface EditorColorSchemeExtender {
+    interface Builder {
+        void add(@Nonnull EditorColorKey key, @Nonnull ColorValue colorValue);
 
-  @Nonnull
-  @Override
-  public String getColorSchemeFile() {
-    return "/colorSchemes/ext/FindViewColorsScheme.xml";
-  }
+        void add(@Nonnull TextAttributesKey key, @Nonnull AttributesFlyweight attributes);
+    }
+
+    void extend(Builder builder);
+
+    @Nonnull
+    String getColorSchemeId();
 }

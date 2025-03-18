@@ -17,16 +17,16 @@
 /**
  * @author Yura Cangea
  */
-package consulo.ide.impl.idea.openapi.editor.colors.impl;
+package consulo.colorScheme.impl.internal;
 
 import consulo.colorScheme.*;
+import consulo.colorScheme.internal.ReadOnlyColorsScheme;
 import consulo.ui.color.ColorValue;
-import org.jdom.Element;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 import java.awt.*;
-import java.util.Map;
 
 public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnlyColorsScheme {
   private String myName;
@@ -68,24 +68,6 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
       }
     }
     return null;
-  }
-
-  @Override
-  public void fillColors(Map<EditorColorKey, ColorValue> colors) {
-    if(myParentScheme != null) {
-      myParentScheme.fillColors(colors);
-    }
-
-    colors.putAll(myColorsMap);
-  }
-
-  @Override
-  public void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
-    if(myParentScheme != null) {
-      myParentScheme.fillAttributes(map);
-    }
-
-    map.putAll(myAttributesMap);
   }
 
   @Override

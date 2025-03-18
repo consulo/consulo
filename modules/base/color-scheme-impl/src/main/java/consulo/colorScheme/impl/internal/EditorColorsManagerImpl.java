@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.colors.impl;
+package consulo.colorScheme.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.*;
 import consulo.colorScheme.event.EditorColorsListener;
+import consulo.colorScheme.internal.ReadOnlyColorsScheme;
 import consulo.component.persist.*;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.ComponentTreeEventDispatcher;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
-import consulo.util.io.URLUtil;
-import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.annotation.OptionTag;
@@ -43,7 +42,6 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -126,9 +124,14 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
         addDefaultSchemes();
 
         // Load default schemes from providers
-        application.getExtensionPoint(BundledColorSchemeProvider.class).forEachExtensionSafe(bundledColorSchemeProvider -> {
-            for (String colorSchemeFile : bundledColorSchemeProvider.getColorSchemeFiles()) {
-                mySchemeManager.loadBundledScheme(colorSchemeFile, bundledColorSchemeProvider, element -> {
+        application.getExtensionPoint(BundledColorSchemeProvider.class).forEachExtensionSafe(provider -> {
+            for (String colorSchemeFile : provider.getColorSchemeFiles()) {
+                URL resource = provider.getClass().getResource(colorSchemeFile);
+                if (resource == null) {
+                    throw new IllegalArgumentException("Can't find resource: " + colorSchemeFile);
+                }
+                
+                mySchemeManager.loadBundledScheme(resource, element -> {
                     DefaultColorsScheme defaultColorsScheme = new DefaultColorsScheme(EditorColorsManagerImpl.this);
                     defaultColorsScheme.readExternal(element);
 
@@ -140,7 +143,49 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
 
         mySchemeManager.loadSchemes();
 
-        loadAdditionalTextAttributes(application);
+        application.getExtensionPoint(EditorColorSchemeExtender.class).forEachExtensionSafe(it -> {
+            EditorColorsScheme editorColorsScheme = mySchemeManager.findSchemeByName(it.getColorSchemeId());
+            Class<? extends EditorColorSchemeExtender> providerClass = it.getClass();
+            PluginId pluginId = PluginManager.getPlugin(providerClass).getPluginId();
+
+            if (editorColorsScheme == null) {
+                LOG.warn("Cannot find scheme: " + it.getColorSchemeId() + " from plugin: " + pluginId);
+                return;
+            }
+
+            AbstractColorsScheme scheme = (AbstractColorsScheme) editorColorsScheme;
+
+            var builder = new EditorColorSchemeExtender.Builder() {
+                boolean finished;
+
+                @Override
+                public void add(@Nonnull EditorColorKey key, @Nonnull ColorValue colorValue) {
+                    if (finished) {
+                        throw new IllegalArgumentException("Can't add new keys. Builder closed");
+                    }
+
+                    if (!scheme.setColorValueIfNew(key, colorValue)) {
+                        LOG.error("Failed to override color by key " + key + ". Plugin: " + pluginId + ", Class: " + providerClass);
+                    }
+                }
+
+                @Override
+                public void add(@Nonnull TextAttributesKey key, @Nonnull AttributesFlyweight attributes) {
+                    if (finished) {
+                        throw new IllegalArgumentException("Can't add new keys. Builder closed");
+                    }
+
+                    TextAttributes textAttributes = TextAttributes.fromFlyweight(attributes);
+                    if (!scheme.setTextAttributesIfNew(key, textAttributes)) {
+                        LOG.error("Failed to override text attributes by key " + key + ". Plugin: " + pluginId + ", Class: " + providerClass);
+                    }
+                }
+            };
+
+            it.extend(builder);
+
+            builder.finished = true;
+        });
 
         setGlobalSchemeInner(getDefaultSchemeFromStyle());
     }
@@ -152,52 +197,11 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
         public String colorScheme;
     }
 
-    private static boolean isUnitTestOrHeadlessMode() {
-        return ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isHeadlessEnvironment();
-    }
-
     public TextAttributes getDefaultAttributes(TextAttributesKey key) {
         // It is reasonable to fetch attributes from Default color scheme. Otherwise if we launch IDE and then
         // try switch from custom colors scheme (e.g. with dark background) to default one. Editor will show
         // incorrect highlighting with "traces" of color scheme which was active during IDE startup.
         return getDefaultSchemeFromStyle().getAttributes(key);
-    }
-
-    private void loadAdditionalTextAttributes(@Nonnull Application application) {
-        application.getExtensionPoint(AdditionalTextAttributesProvider.class).forEachExtensionSafe(provider -> {
-            EditorColorsScheme editorColorsScheme = mySchemeManager.findSchemeByName(provider.getColorSchemeName());
-            Class<? extends AdditionalTextAttributesProvider> providerClass = provider.getClass();
-            if (editorColorsScheme == null) {
-                if (!isUnitTestOrHeadlessMode()) {
-                    LOG.warn(
-                        "Cannot find scheme: " + provider.getColorSchemeName() +
-                            " from plugin: " + PluginManager.getPlugin(providerClass).getPluginId()
-                    );
-                }
-                return;
-            }
-            String colorSchemeFile = provider.getColorSchemeFile();
-
-            String resourceName;
-            URL resource;
-            if (AdditionalTextAttributesProvider.THIS_CLASS_NAME.equals(colorSchemeFile)) {
-                resource = providerClass.getResource(resourceName = providerClass.getSimpleName() + ".xml");
-            }
-            else {
-                resource = providerClass.getResource(resourceName = colorSchemeFile);
-            }
-
-            if (resource == null) {
-                throw new IllegalArgumentException("Resource " + resourceName + " not resolved.");
-            }
-
-            try (InputStream stream = URLUtil.openStream(resource)) {
-                ((AbstractColorsScheme) editorColorsScheme).readExternalAttributes(JDOMUtil.load(stream));
-            }
-            catch (Exception e) {
-                LOG.error(e);
-            }
-        });
     }
 
     @Override
@@ -252,8 +256,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     public void setGlobalScheme(@Nullable EditorColorsScheme scheme) {
         setGlobalSchemeInner(scheme);
 
-        LafManager.getInstance().updateUI();
-        EditorFactory.getInstance().refreshAllEditors();
+        StyleManager.get().refreshUI();
 
         fireChanges(scheme);
     }

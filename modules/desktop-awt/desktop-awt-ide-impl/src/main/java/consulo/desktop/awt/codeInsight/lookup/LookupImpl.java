@@ -10,7 +10,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.event.*;
 import consulo.colorScheme.FontPreferences;
-import consulo.colorScheme.impl.FontPreferencesImpl;
+import consulo.colorScheme.impl.internal.FontPreferencesImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.disposer.util.DisposerUtil;

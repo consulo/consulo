@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.editor.impl;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.colorScheme.FontPreferences;
-import consulo.colorScheme.impl.FontPreferencesImpl;
+import consulo.colorScheme.impl.internal.FontPreferencesImpl;
 import consulo.ide.impl.idea.util.text.CharArrayIterator;
 import consulo.ide.impl.idea.util.text.CharSequenceIterator;
 import org.intellij.lang.annotations.JdkConstants;

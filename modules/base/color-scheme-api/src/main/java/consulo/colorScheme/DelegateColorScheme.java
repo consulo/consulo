@@ -75,16 +75,6 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
     }
 
     @Override
-    public void fillColors(Map<EditorColorKey, ColorValue> colors) {
-        myDelegate.fillColors(colors);
-    }
-
-    @Override
-    public void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
-        myDelegate.fillAttributes(map);
-    }
-
-    @Override
     public void setColor(EditorColorKey key, @Nullable ColorValue color) {
         myDelegate.setColor(key, color);
     }

@@ -17,7 +17,7 @@ import consulo.codeEditor.markup.MarkupModelListener;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.*;
-import consulo.colorScheme.impl.FontPreferencesImpl;
+import consulo.colorScheme.impl.internal.FontPreferencesImpl;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

@@ -17,13 +17,11 @@ package consulo.colorScheme;
 
 import consulo.component.util.pointer.Named;
 import consulo.ui.color.ColorValue;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 import java.awt.*;
-import java.util.Map;
 
 public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Named {
     String DEFAULT_SCHEME_NAME = "Default";
@@ -43,8 +41,6 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
     ColorValue getColor(EditorColorKey key);
 
     void setColor(EditorColorKey key, ColorValue color);
-
-    void fillColors(Map<EditorColorKey, ColorValue> colors);
 
     /**
      * The IDE has allowed to configure only a single font family for a while. However, that doesn't handle a situation when

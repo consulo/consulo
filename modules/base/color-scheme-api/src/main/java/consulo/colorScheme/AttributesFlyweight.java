@@ -142,7 +142,6 @@ public class AttributesFlyweight {
         return create(foreground, background, fontType, effectColor, effectType, Collections.emptyMap(), errorStripeColor);
     }
 
-    //@ApiStatus.Experimental
     @Nonnull
     public static AttributesFlyweight create(
         ColorValue foreground,
@@ -327,7 +326,6 @@ public class AttributesFlyweight {
     /**
      * @return true iff there are effects to draw in this attributes
      */
-    //@ApiStatus.Experimental
     public boolean hasEffects() {
         return myEffectColor != null && myEffectType != null || !myAdditionalEffects.isEmpty();
     }

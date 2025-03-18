@@ -191,7 +191,6 @@ public class TextAttributes implements Cloneable {
     /**
      * @return true iff there are effects to draw in this attributes
      */
-    //@ApiStatus.Experimental
     public boolean hasEffects() {
         return myAttrs.hasEffects();
     }
@@ -201,7 +200,6 @@ public class TextAttributes implements Cloneable {
      *
      * @param effectsMap map of effect types and colors to use.
      */
-    //@ApiStatus.Experimental
     public void setAdditionalEffects(@Nonnull Map<EffectType, ColorValue> effectsMap) {
         myAttrs = myAttrs.withAdditionalEffects(effectsMap);
     }
@@ -211,7 +209,6 @@ public class TextAttributes implements Cloneable {
      *
      * @see TextAttributes#setAdditionalEffects(Map)
      */
-    //@ApiStatus.Experimental
     public void withAdditionalEffect(@Nonnull EffectType effectType, @Nonnull ColorValue color) {
         withAdditionalEffects(Collections.singletonMap(effectType, color));
     }
@@ -222,7 +219,6 @@ public class TextAttributes implements Cloneable {
      * @see TextAttributes#setAdditionalEffects(Map)
      * @see TextAttributesEffectsBuilder
      */
-    //@ApiStatus.Experimental
     public void withAdditionalEffects(@Nonnull Map<EffectType, ColorValue> effectsMap) {
         if (effectsMap.isEmpty()) {
             return;
@@ -236,12 +232,10 @@ public class TextAttributes implements Cloneable {
         return myAttrs.getEffectType();
     }
 
-    //@ApiStatus.Experimental
     public void forEachAdditionalEffect(@Nonnull BiConsumer<? super EffectType, ? super ColorValue> consumer) {
         myAttrs.getAdditionalEffects().forEach(consumer);
     }
 
-    //@ApiStatus.Experimental
     public void forEachEffect(@Nonnull BiConsumer<? super EffectType, ? super ColorValue> consumer) {
         myAttrs.getAllEffects().forEach(consumer);
     }

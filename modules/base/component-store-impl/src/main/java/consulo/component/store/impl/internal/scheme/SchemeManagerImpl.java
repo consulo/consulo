@@ -171,18 +171,12 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
   }
 
   @Override
-  public void loadBundledScheme(@Nonnull String resourceName, @Nonnull Object requestor, @Nonnull ThrowableFunction<Element, T, Throwable> convertor) {
+  public void loadBundledScheme(@Nonnull URL url, @Nonnull ThrowableFunction<Element, T, Throwable> convertor) {
     try {
-      URL url = requestor.getClass().getResource(resourceName);
-      if (url == null) {
-        // Error shouldn't occur during this operation thus we report error instead of info
-        LOG.error("Cannot read scheme from " + resourceName);
-        return;
-      }
       addNewScheme(convertor.apply(JDOMUtil.load(URLUtil.openStream(url))), false);
     }
     catch (Throwable e) {
-      LOG.error("Cannot read scheme from " + resourceName, e);
+      LOG.error("Cannot read scheme from " + url, e);
     }
   }
 

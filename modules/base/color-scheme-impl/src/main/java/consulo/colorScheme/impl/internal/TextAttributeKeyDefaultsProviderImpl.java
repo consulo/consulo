@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.colors.impl;
+package consulo.colorScheme.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributeKeyDefaultsProvider;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
-
+import consulo.colorScheme.TextAttributesKey;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

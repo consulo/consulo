@@ -13,7 +13,7 @@ import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
 import consulo.codeEditor.util.EditorUtil;
-import consulo.colorScheme.impl.FontPreferencesImpl;
+import consulo.colorScheme.impl.internal.FontPreferencesImpl;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;

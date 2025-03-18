@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.sandboxPlugin.colorScheme;
-
-import consulo.annotation.component.ExtensionImpl;
-import consulo.colorScheme.AdditionalTextAttributesProvider;
-import consulo.colorScheme.EditorColorsScheme;
-import jakarta.annotation.Nonnull;
+package consulo.colorScheme;
 
 /**
  * @author VISTALL
- * @since 06/06/2024
+ * @since 2025-03-17
  */
-@ExtensionImpl
-public class SandAdditionalTextAttributesProvider implements AdditionalTextAttributesProvider {
-  @Nonnull
-  @Override
-  public String getColorSchemeName() {
-    return EditorColorsScheme.DEFAULT_SCHEME_NAME;
-  }
+public interface StandardTextAttributesKeys {
+    TextAttributesKey NO_HIGHLIGHTING = TextAttributesKey.of("DEFAULT");
+    TextAttributesKey TEXT = TextAttributesKey.of("TEXT");
+    TextAttributesKey BAD_CHARACTER = TextAttributesKey.of("BAD_CHARACTER");
 }

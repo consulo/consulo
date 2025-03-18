@@ -16,42 +16,43 @@
 package consulo.component.persist.scheme;
 
 import consulo.util.lang.function.ThrowableFunction;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.io.File;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
 public abstract class SchemeManager<T, E extends ExternalizableScheme> {
-  @Nonnull
-  public abstract Collection<E> loadSchemes();
+    @Nonnull
+    public abstract Collection<E> loadSchemes();
 
-  public abstract void addNewScheme(@Nonnull T scheme, final boolean replaceExisting);
+    public abstract void addNewScheme(@Nonnull T scheme, final boolean replaceExisting);
 
-  public abstract void clearAllSchemes();
+    public abstract void clearAllSchemes();
 
-  @Nonnull
-  public abstract List<T> getAllSchemes();
+    @Nonnull
+    public abstract List<T> getAllSchemes();
 
-  @Nullable
-  public abstract T findSchemeByName(@Nonnull String schemeName);
+    @Nullable
+    public abstract T findSchemeByName(@Nonnull String schemeName);
 
-  public abstract void save();
+    public abstract void save();
 
-  public abstract void setCurrentSchemeName(@Nullable String schemeName);
+    public abstract void setCurrentSchemeName(@Nullable String schemeName);
 
-  @Nullable
-  public abstract T getCurrentScheme();
+    @Nullable
+    public abstract T getCurrentScheme();
 
-  public abstract void removeScheme(@Nonnull T scheme);
+    public abstract void removeScheme(@Nonnull T scheme);
 
-  @Nonnull
-  public abstract Collection<String> getAllSchemeNames();
+    @Nonnull
+    public abstract Collection<String> getAllSchemeNames();
 
-  public abstract File getRootDirectory();
+    public abstract File getRootDirectory();
 
-  public void loadBundledScheme(@Nonnull String resourceName, @Nonnull Object requestor, @Nonnull ThrowableFunction<Element, T, Throwable> convertor) {
-  }
+    public void loadBundledScheme(@Nonnull URL requestor, @Nonnull ThrowableFunction<Element, T, Throwable> convertor) {
+    }
 }

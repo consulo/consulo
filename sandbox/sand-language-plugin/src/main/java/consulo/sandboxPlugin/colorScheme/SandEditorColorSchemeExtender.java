@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.colors.impl;
+package consulo.sandboxPlugin.colorScheme;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.colorScheme.BundledColorSchemeProvider;
-
+import consulo.colorScheme.EditorColorSchemeExtender;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.ui.color.RGBColor;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 18-Jun-22
+ * @since 06/06/2024
  */
 @ExtensionImpl
-public class DefaultBundledColorSchemeProvider implements BundledColorSchemeProvider {
-  @Nonnull
-  @Override
-  public String[] getColorSchemeFiles() {
-    return new String[] {
-      "/colorSchemes/Default.xml",
-      "/colorSchemes/IDEA.xml",
-      "/colorSchemes/Consulo Light.xml",
-      "/colorSchemes/Darcula.xml"
-    };
-  }
+public class SandEditorColorSchemeExtender implements EditorColorSchemeExtender {
+    @Override
+    public void extend(Builder builder) {
+        builder.add(SandEditorColors.SAND_COLOR, new RGBColor(204, 164, 123));
+    }
+
+    @Nonnull
+    @Override
+    public String getColorSchemeId() {
+        return EditorColorsScheme.DEFAULT_SCHEME_NAME;
+    }
 }

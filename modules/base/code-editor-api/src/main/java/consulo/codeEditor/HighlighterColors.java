@@ -15,10 +15,11 @@
  */
 package consulo.codeEditor;
 
+import consulo.colorScheme.StandardTextAttributesKeys;
 import consulo.colorScheme.TextAttributesKey;
 
 public interface HighlighterColors {
-  TextAttributesKey NO_HIGHLIGHTING = TextAttributesKey.createTextAttributesKey("DEFAULT");
-  TextAttributesKey TEXT = TextAttributesKey.createTextAttributesKey("TEXT");
-  TextAttributesKey BAD_CHARACTER = TextAttributesKey.createTextAttributesKey("BAD_CHARACTER");
+    TextAttributesKey NO_HIGHLIGHTING = StandardTextAttributesKeys.NO_HIGHLIGHTING;
+    TextAttributesKey TEXT = StandardTextAttributesKeys.TEXT;
+    TextAttributesKey BAD_CHARACTER = StandardTextAttributesKeys.BAD_CHARACTER;
 }

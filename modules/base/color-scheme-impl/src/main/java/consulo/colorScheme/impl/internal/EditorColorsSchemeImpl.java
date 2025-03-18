@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.colors.impl;
+package consulo.colorScheme.impl.internal;
 
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsManager;
@@ -70,10 +70,6 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
     return myParentScheme.getAttributes(key);
   }
 
-  public boolean containsKey(TextAttributesKey key) {
-    return myAttributesMap.containsKey(key);
-  }
-
   @Nullable
   @Override
   public ColorValue getColor(EditorColorKey key) {
@@ -83,24 +79,6 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
     else {
       return myParentScheme.getColor(key);
     }
-  }
-
-  @Override
-  public void fillColors(Map<EditorColorKey, ColorValue> colors) {
-    if (myParentScheme != null) {
-      myParentScheme.fillColors(colors);
-    }
-
-    colors.putAll(myColorsMap);
-  }
-
-  @Override
-  public void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
-    if (myParentScheme != null) {
-      myParentScheme.fillAttributes(map);
-    }
-
-    map.putAll(myAttributesMap);
   }
 
   @Override
