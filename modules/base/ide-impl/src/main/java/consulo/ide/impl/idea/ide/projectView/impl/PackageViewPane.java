@@ -32,6 +32,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -51,7 +52,6 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -74,8 +74,8 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
   @Nonnull
   @Override
-  public String getTitle() {
-    return IdeLocalize.titlePackages().get();
+  public LocalizeValue getTitle() {
+    return IdeLocalize.titlePackages();
   }
 
   @Override

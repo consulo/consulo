@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class WebBrowserService {
+public interface WebBrowserService {
     public static WebBrowserService getInstance() {
         return Application.get().getInstance(WebBrowserService.class);
     }
@@ -40,8 +40,11 @@ public abstract class WebBrowserService {
     @Nullable
     public abstract WebBrowserUrlProvider getProvider(@Nonnull OpenInBrowserRequest request);
 
+    @Nullable
+    public abstract Url getUrlForContext(@Nonnull PsiElement sourceElement);
+
     @Nonnull
-    public Collection<Url> getUrlsToOpen(@Nonnull final PsiElement element, boolean preferLocalUrl)
+    default Collection<Url> getUrlsToOpen(@Nonnull final PsiElement element, boolean preferLocalUrl)
         throws WebBrowserUrlProvider.BrowserException {
         OpenInBrowserRequest request = OpenInBrowserRequest.create(element);
         return request == null ? Collections.<Url>emptyList() : getUrlsToOpen(request, preferLocalUrl);

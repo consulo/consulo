@@ -20,10 +20,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import consulo.util.io.BufferExposingByteArrayInputStream;
-import consulo.util.io.CharsetToolkit;
-import consulo.util.io.FileUtil;
-import consulo.util.io.URLUtil;
+import consulo.util.io.*;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
@@ -1023,5 +1020,16 @@ public final class VirtualFileUtil {
             components[i] = componentsList.get(size - i - 1);
         }
         return components;
+    }
+
+    @Nonnull
+    public static Url newFromVirtualFile(@Nonnull VirtualFile file) {
+        if (file.isInLocalFileSystem()) {
+            return Urls.newUri(file.getFileSystem().getProtocol(), file.getPath());
+        }
+        else {
+            Url url = Urls.parseUrlUnsafe(file.getUrl());
+            return url == null ? Urls.newPathUrl(file.getPath()) : url;
+        }
     }
 }

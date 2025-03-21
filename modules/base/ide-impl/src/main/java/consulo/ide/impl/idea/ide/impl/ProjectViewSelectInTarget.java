@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
+import consulo.project.ui.view.CompositeSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.ObjectUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
@@ -103,7 +104,7 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
     return true;
   }
 
-  public String getSubIdPresentableName(String subId) {
+  public LocalizeValue getSubIdPresentableName(String subId) {
     ProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
     return pane.getPresentableSubIdName(subId);
   }

@@ -17,41 +17,50 @@
 package consulo.ide.impl.idea.ide.impl;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
-import consulo.project.ui.view.SelectInManager;
+import consulo.project.ui.view.StandardTargetWeights;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 public class ProjectPaneSelectInTarget extends ProjectViewSelectInTarget implements DumbAware {
   public ProjectPaneSelectInTarget(Project project) {
     super(project);
   }
 
-  public String toString() {
-    return SelectInManager.PROJECT;
+  @Nonnull
+  @Override
+  public LocalizeValue getActionText() {
+    return ProjectUIViewLocalize.selectInProject();
   }
 
+  @Override
   public boolean canSelect(PsiFileSystemItem file) {
     if (!super.canSelect(file)) return false;
     final VirtualFile vFile = file.getVirtualFile();
     return vFile != null && ProjectViewPaneImpl.canBeSelectedInProjectView(myProject, vFile);
   }
 
+  @Override
   public boolean isSubIdSelectable(String subId, SelectInContext context) {
     return canSelect(context);
   }
 
+  @Override
   public String getMinorViewId() {
     return ProjectViewPaneImpl.ID;
   }
 
+  @Override
   public float getWeight() {
     return StandardTargetWeights.PROJECT_WEIGHT;
   }
 
+  @Override
   protected boolean canWorkWithCustomObjects() {
     return false;
   }

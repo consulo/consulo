@@ -19,15 +19,18 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.impl.SelectInTargetPsiWrapper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInManager;
+import consulo.project.ui.view.StandardTargetWeights;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.NavBarRootPaneExtension;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -91,7 +94,9 @@ public class SelectInNavBarTarget extends SelectInTargetPsiWrapper implements Du
         return false;
     }
 
-    public String toString() {
-        return SelectInManager.NAV_BAR;
+    @Nonnull
+    @Override
+    public LocalizeValue getActionText() {
+        return ProjectUIViewLocalize.selectInNavBar();
     }
 }

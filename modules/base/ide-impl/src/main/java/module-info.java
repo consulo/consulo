@@ -806,7 +806,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.vcs;
   exports consulo.ide.impl.vfs.newvfs;
   exports consulo.ide.impl.vfs.newvfs.persistent;
-  exports consulo.ide.impl.webBrowser;
   exports consulo.ide.impl.welcomeScreen;
   exports consulo.ide.impl.wm.impl;
   exports consulo.ide.impl.wm.impl.layout;

@@ -13,37 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.webBrowser;
+package consulo.webBrowser.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.project.DumbService;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.Url;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.webBrowser.OpenInBrowserRequest;
 import consulo.webBrowser.WebBrowserService;
 import consulo.webBrowser.WebBrowserUrlProvider;
 import consulo.webBrowser.WebFileFilter;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.util.Collection;
 import java.util.Collections;
 
 @Singleton
 @ServiceImpl
-public class WebBrowserServiceImpl extends WebBrowserService {
+public class WebBrowserServiceImpl implements WebBrowserService {
   @Nonnull
   @Override
   public Collection<Url> getUrlsToOpen(@Nonnull OpenInBrowserRequest request, boolean preferLocalUrl) throws WebBrowserUrlProvider.BrowserException {
     VirtualFile virtualFile = request.getVirtualFile();
     if (virtualFile instanceof HttpVirtualFile) {
-      return Collections.singleton(VfsUtil.newFromVirtualFile(virtualFile));
+      return Collections.singleton(VirtualFileUtil.newFromVirtualFile(virtualFile));
     }
 
     if (!preferLocalUrl || !WebFileFilter.isFileAllowed(request.getFile())) {
@@ -66,7 +66,7 @@ public class WebBrowserServiceImpl extends WebBrowserService {
         }
       }
     }
-    return virtualFile instanceof LightVirtualFileBase || !request.getFile().getViewProvider().isPhysical() ? Collections.<Url>emptySet() : Collections.singleton(VfsUtil.newFromVirtualFile(virtualFile));
+    return virtualFile instanceof LightVirtualFileBase || !request.getFile().getViewProvider().isPhysical() ? Collections.<Url>emptySet() : Collections.singleton(VirtualFileUtil.newFromVirtualFile(virtualFile));
   }
 
   @Override
@@ -81,8 +81,9 @@ public class WebBrowserServiceImpl extends WebBrowserService {
     return null;
   }
 
+  @Override
   @Nullable
-  public static Url getUrlForContext(@Nonnull PsiElement sourceElement) {
+  public Url getUrlForContext(@Nonnull PsiElement sourceElement) {
     Url url;
     try {
       Collection<Url> urls = WebBrowserService.getInstance().getUrlsToOpen(sourceElement, false);

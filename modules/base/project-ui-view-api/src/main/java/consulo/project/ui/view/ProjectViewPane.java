@@ -17,15 +17,14 @@ package consulo.project.ui.view;
 
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.image.Image;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -65,7 +64,7 @@ public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposabl
   String[] getSubIds();
 
   @Nonnull
-  String getPresentableSubIdName(@Nonnull final String subId);
+  LocalizeValue getPresentableSubIdName(@Nonnull final String subId);
 
   default void queueUpdate() {
   }

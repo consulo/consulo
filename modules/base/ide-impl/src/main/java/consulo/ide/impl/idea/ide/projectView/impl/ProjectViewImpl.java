@@ -47,7 +47,6 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElementNode;
 import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.projectView.ProjectViewEx;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
@@ -106,6 +105,7 @@ import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -356,7 +356,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         @Override
         public void update(@Nonnull AnActionEvent e) {
             AbstractProjectViewPane pane = getProjectViewPaneById(myId);
-            e.getPresentation().setText(mySubId != null ? pane.getPresentableSubIdName(mySubId) : pane.getTitle());
+            e.getPresentation().setTextValue(mySubId != null ? pane.getPresentableSubIdName(mySubId) : pane.getTitle());
         }
 
         @RequiredUIAccess
@@ -471,9 +471,9 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         subIds = subIds.length == 0 ? new String[]{null} : subIds;
         boolean first = true;
         for (String subId : subIds) {
-            final String title = subId != null ? newPane.getPresentableSubIdName(subId) : newPane.getTitle();
-            final Content content = getContentManager().getFactory().createContent(getComponent(), title, false);
-            content.setTabName(title);
+            final LocalizeValue title = subId != null ? newPane.getPresentableSubIdName(subId) : newPane.getTitle();
+            final Content content = getContentManager().getFactory().createContent(getComponent(), title.get(), false);
+            content.setTabName(title.get());
             content.putUserData(ID_KEY, id);
             content.putUserData(SUB_ID_KEY, subId);
             content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
@@ -483,7 +483,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             });
             content.setBusyObject(this);
             if (first && subId != null) {
-                content.setSeparator(newPane.getTitle());
+                content.setSeparator(newPane.getTitle().get());
             }
             manager.addContent(content, index++);
             first = false;
@@ -921,7 +921,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 AbstractProjectViewPane pane = (AbstractProjectViewPane)value;
-                setText(pane.getTitle());
+                setText(pane.getTitle().get());
                 return this;
             }
         });

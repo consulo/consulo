@@ -19,78 +19,75 @@ package consulo.ide.impl.idea.ide.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.structureView.StructureViewWrapper;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.StandardTargetWeights;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.structureView.StructureViewFactoryEx;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.project.ui.view.StandardTargetWeights;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ExtensionImpl
 public class StructureViewSelectInTarget implements SelectInTarget {
-  private final Project myProject;
+    private final Project myProject;
 
-  @Inject
-  public StructureViewSelectInTarget(Project project) {
-    myProject = project;
-  }
-
-  @Override
-  public String toString() {
-    return IdeBundle.message("select.in.file.structure");
-  }
-
-  @Override
-  public boolean canSelect(SelectInContext context) {
-    return context.getFileEditorProvider() != null;
-  }
-
-  @Override
-  public void selectIn(final SelectInContext context, final boolean requestFocus) {
-    final FileEditor fileEditor = context.getFileEditorProvider().get();
-
-    ToolWindowManager windowManager = ToolWindowManager.getInstance(context.getProject());
-    final Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        StructureViewFactoryEx.getInstanceEx(myProject).runWhenInitialized(new Runnable() {
-          @Override
-          public void run() {
-            final StructureViewWrapper structureView = getStructureViewWrapper();
-            structureView.selectCurrentElement(fileEditor, context.getVirtualFile(), requestFocus);
-          }
-        });
-      }
-    };
-    if (requestFocus) {
-      windowManager.getToolWindow(ToolWindowId.STRUCTURE_VIEW).activate(runnable);
-    }
-    else {
-      runnable.run();
+    @Inject
+    public StructureViewSelectInTarget(Project project) {
+        myProject = project;
     }
 
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getActionText() {
+        return IdeLocalize.selectInFileStructure();
+    }
 
-  private StructureViewWrapper getStructureViewWrapper() {
-    return StructureViewFactoryEx.getInstanceEx(myProject).getStructureViewWrapper();
-  }
+    @Override
+    public boolean canSelect(SelectInContext context) {
+        return context.getFileEditorProvider() != null;
+    }
 
-  @Override
-  public String getToolWindowId() {
-    return ToolWindowId.STRUCTURE_VIEW;
-  }
+    @Override
+    public void selectIn(final SelectInContext context, final boolean requestFocus) {
+        final FileEditor fileEditor = context.getFileEditorProvider().get();
 
-  @Override
-  public String getMinorViewId() {
-    return null;
-  }
+        ToolWindowManager windowManager = ToolWindowManager.getInstance(context.getProject());
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                StructureViewFactoryEx.getInstanceEx(myProject).runWhenInitialized(new Runnable() {
+                    @Override
+                    public void run() {
+                        final StructureViewWrapper structureView = getStructureViewWrapper();
+                        structureView.selectCurrentElement(fileEditor, context.getVirtualFile(), requestFocus);
+                    }
+                });
+            }
+        };
+        if (requestFocus) {
+            windowManager.getToolWindow(ToolWindowId.STRUCTURE_VIEW).activate(runnable);
+        }
+        else {
+            runnable.run();
+        }
 
-  @Override
-  public float getWeight() {
-    return StandardTargetWeights.STRUCTURE_WEIGHT;
-  }
+    }
 
+    private StructureViewWrapper getStructureViewWrapper() {
+        return StructureViewFactoryEx.getInstanceEx(myProject).getStructureViewWrapper();
+    }
+
+    @Override
+    public String getToolWindowId() {
+        return ToolWindowId.STRUCTURE_VIEW;
+    }
+
+    @Override
+    public float getWeight() {
+        return StandardTargetWeights.STRUCTURE_WEIGHT;
+    }
 }

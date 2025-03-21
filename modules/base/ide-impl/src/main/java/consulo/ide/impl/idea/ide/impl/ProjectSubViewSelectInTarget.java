@@ -16,8 +16,10 @@
 
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -59,8 +61,9 @@ public class ProjectSubViewSelectInTarget implements SelectInTarget {
     return myWeight;
   }
 
+  @Nonnull
   @Override
-  public String toString() {
+  public LocalizeValue getActionText() {
     return myBaseTarget.getSubIdPresentableName(mySubId);
   }
 }

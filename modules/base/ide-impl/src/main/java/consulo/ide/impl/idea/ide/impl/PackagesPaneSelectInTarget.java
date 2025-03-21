@@ -15,15 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.projectView.impl.PackageViewPane;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
-import consulo.project.ui.view.SelectInManager;
+import consulo.project.ui.view.StandardTargetWeights;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
 public class PackagesPaneSelectInTarget extends ProjectViewSelectInTarget {
@@ -32,8 +33,8 @@ public class PackagesPaneSelectInTarget extends ProjectViewSelectInTarget {
   }
 
   @Override
-  public String toString() {
-    return SelectInManager.PACKAGES;
+  public LocalizeValue getActionText() {
+    return ProjectUIViewLocalize.selectInPackages();
   }
 
   @Override

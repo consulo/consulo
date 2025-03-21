@@ -3,36 +3,33 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.impl.ProjectPaneSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
-import consulo.project.ui.view.tree.BaseProjectViewDirectoryHelper;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewProjectNode;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.psi.PsiDirectory;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.BaseProjectViewDirectoryHelper;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
-import consulo.ui.image.Image;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.*;
 
 @ExtensionImpl
 public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
@@ -45,8 +42,8 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
 
   @Nonnull
   @Override
-  public String getTitle() {
-    return IdeBundle.message("title.project");
+  public LocalizeValue getTitle() {
+    return IdeLocalize.titleProject();
   }
 
   @Override

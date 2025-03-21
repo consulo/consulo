@@ -1,0 +1,14 @@
+select.in.packages:
+  text: Packages
+select.in.project:
+  text: Project
+select.in.nav.bar:
+  text: Navigation Bar
+select.in.aspects:
+  text: Aspects
+select.in.commander:
+  text: Commander
+select.in.favorites:
+  text: Favorites
+select.in.scope:
+  text: Scope

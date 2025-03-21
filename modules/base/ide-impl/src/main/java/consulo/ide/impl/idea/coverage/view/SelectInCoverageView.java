@@ -5,11 +5,13 @@ import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
 import consulo.execution.coverage.view.CoverageView;
-import consulo.ide.impl.idea.ide.StandardTargetWeights;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.project.ui.view.StandardTargetWeights;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -18,48 +20,55 @@ import jakarta.inject.Inject;
  */
 @ExtensionImpl
 public class SelectInCoverageView implements SelectInTarget {
-  private final Project myProject;
+    private final Project myProject;
 
-  @Inject
-  public SelectInCoverageView(Project project) {
-    myProject = project;
-  }
-
-  public String toString() {
-    return CoverageViewManager.TOOLWINDOW_ID;
-  }
-
-  public boolean canSelect(final SelectInContext context) {
-    final CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(myProject).getCurrentSuitesBundle();
-    if (suitesBundle != null) {
-      final CoverageView coverageView = CoverageViewManager.getInstance(myProject).getToolwindow(suitesBundle);
-      if (coverageView != null) {
-        final VirtualFile file = context.getVirtualFile();
-        return !file.isDirectory() && coverageView.canSelect(file);
-      }
+    @Inject
+    public SelectInCoverageView(Project project) {
+        myProject = project;
     }
-    return false;
-  }
 
-  public void selectIn(final SelectInContext context, final boolean requestFocus) {
-    final CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(myProject).getCurrentSuitesBundle();
-    if (suitesBundle != null) {
-      final CoverageViewManager coverageViewManager = CoverageViewManager.getInstance(myProject);
-      final CoverageView coverageView = coverageViewManager.getToolwindow(suitesBundle);
-      coverageView.select(context.getVirtualFile());
-      coverageViewManager.activateToolwindow(coverageView, requestFocus);
+    @Nonnull
+    @Override
+    public LocalizeValue getActionText() {
+        return LocalizeValue.localizeTODO("Coverage");
     }
-  }
 
-  public String getToolWindowId() {
-    return CoverageViewManager.TOOLWINDOW_ID;
-  }
+    @Override
+    public boolean canSelect(final SelectInContext context) {
+        final CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(myProject).getCurrentSuitesBundle();
+        if (suitesBundle != null) {
+            final CoverageView coverageView = CoverageViewManager.getInstance(myProject).getToolwindow(suitesBundle);
+            if (coverageView != null) {
+                final VirtualFile file = context.getVirtualFile();
+                return !file.isDirectory() && coverageView.canSelect(file);
+            }
+        }
+        return false;
+    }
 
-  public String getMinorViewId() {
-    return null;
-  }
+    @Override
+    public void selectIn(final SelectInContext context, final boolean requestFocus) {
+        final CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(myProject).getCurrentSuitesBundle();
+        if (suitesBundle != null) {
+            final CoverageViewManager coverageViewManager = CoverageViewManager.getInstance(myProject);
+            final CoverageView coverageView = coverageViewManager.getToolwindow(suitesBundle);
+            coverageView.select(context.getVirtualFile());
+            coverageViewManager.activateToolwindow(coverageView, requestFocus);
+        }
+    }
 
-  public float getWeight() {
-    return StandardTargetWeights.STRUCTURE_WEIGHT + 0.5f;
-  }
+    @Override
+    public String getToolWindowId() {
+        return CoverageViewManager.TOOLWINDOW_ID;
+    }
+
+    @Override
+    public String getMinorViewId() {
+        return null;
+    }
+
+    @Override
+    public float getWeight() {
+        return StandardTargetWeights.STRUCTURE_WEIGHT + 0.5f;
+    }
 }

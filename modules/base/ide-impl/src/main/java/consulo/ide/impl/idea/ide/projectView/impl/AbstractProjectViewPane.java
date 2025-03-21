@@ -29,6 +29,7 @@ import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.*;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
@@ -127,11 +128,13 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   }
 
   @Nonnull
-  public abstract String getTitle();
+  public abstract LocalizeValue getTitle();
 
+  @Override
   @Nonnull
   public abstract String getId();
 
+  @Override
   @Nullable
   public final String getSubId() {
     return mySubId;
@@ -164,13 +167,15 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
    * @return all supported sub views IDs.
    * should return empty array if there is no subViews as in Project/Packages view.
    */
+  @Override
   @Nonnull
   public String[] getSubIds() {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
+  @Override
   @Nonnull
-  public String getPresentableSubIdName(@Nonnull final String subId) {
+  public LocalizeValue getPresentableSubIdName(@Nonnull final String subId) {
     throw new IllegalStateException("should not call");
   }
 
@@ -252,6 +257,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     myTreeStructure = null;
   }
 
+  @Override
   @Nonnull
   public abstract ActionCallback updateFromRoot(boolean restoreExpandedPaths);
 
@@ -266,8 +272,10 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
   }
 
+  @Override
   public abstract void select(Object element, VirtualFile file, boolean requestFocus);
 
+  @Override
   public void selectModule(@Nonnull Module module, final boolean requestFocus) {
     doSelectModuleOrGroup(module, requestFocus);
   }
@@ -298,6 +306,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
   }
 
+  @Override
   public void selectModuleGroup(@Nonnull ModuleGroup moduleGroup, boolean requestFocus) {
     doSelectModuleOrGroup(moduleGroup, requestFocus);
   }
@@ -361,6 +370,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   // used for sorting tabs in the tabbed pane
   public abstract int getWeight();
 
+  @Override
   @Nonnull
   public abstract SelectInTarget createSelectInTarget();
 
@@ -368,6 +378,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     return myTree == null ? null : TreeUtil.getSelectedPathIfOne(myTree);
   }
 
+  @Override
   public final NodeDescriptor getSelectedDescriptor() {
     return TreeUtil.getLastUserObject(NodeDescriptor.class, getSelectedPath());
   }

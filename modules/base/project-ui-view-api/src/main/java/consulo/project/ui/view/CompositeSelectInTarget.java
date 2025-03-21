@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+
+package consulo.project.ui.view;
+
+import jakarta.annotation.Nonnull;
+
+import java.util.Collection;
 
 /**
- * @author max
+ * @author Gregory.Shrago
  */
-public interface StandardTargetWeights {
-  float PROJECT_WEIGHT = 1;
-  float FAVORITES_WEIGHT = 1.01f;
-  float PACKAGES_WEIGHT = 2;
-  float J2EE_WEIGHT = 3;
-  float STRUCTURE_WEIGHT = 4;
-  float COMMANDER_WEIGHT = 5;
-  float SCOPE_WEIGHT = 6.5f;
-  float NAV_BAR_WEIGHT = 8;
-  float CHANGES_VIEW = 9;
-  float OS_FILE_MANAGER = 9.5f;
-  float PROJECT_SETTINGS_WEIGHT = 10;
+public interface CompositeSelectInTarget extends SelectInTarget {
+  @Nonnull
+  Collection<SelectInTarget> getSubTargets(SelectInContext context);
 }

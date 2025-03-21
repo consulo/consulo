@@ -17,12 +17,14 @@ package consulo.ide.impl.idea.ide.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.actions.RevealFileAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.project.ui.view.StandardTargetWeights;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -31,37 +33,38 @@ import java.io.File;
  */
 @ExtensionImpl
 public class ProjectViewSelectInExplorerTarget implements SelectInTarget, DumbAware {
-  @Override
-  public boolean canSelect(SelectInContext context) {
-    VirtualFile file = ShowFilePathAction.findLocalFile(context.getVirtualFile());
-    return file != null;
-  }
-
-  @Override
-  public void selectIn(SelectInContext context, boolean requestFocus) {
-    VirtualFile file = ShowFilePathAction.findLocalFile(context.getVirtualFile());
-    if (file != null) {
-      ShowFilePathAction.openFile(new File(file.getPresentableUrl()));
+    @Override
+    public boolean canSelect(SelectInContext context) {
+        VirtualFile file = ShowFilePathAction.findLocalFile(context.getVirtualFile());
+        return file != null;
     }
-  }
 
-  @Override
-  public String getToolWindowId() {
-    return null;
-  }
+    @Override
+    public void selectIn(SelectInContext context, boolean requestFocus) {
+        VirtualFile file = ShowFilePathAction.findLocalFile(context.getVirtualFile());
+        if (file != null) {
+            ShowFilePathAction.openFile(new File(file.getPresentableUrl()));
+        }
+    }
 
-  @Override
-  public String getMinorViewId() {
-    return null;
-  }
+    @Override
+    public String getToolWindowId() {
+        return null;
+    }
 
-  @Override
-  public String toString() {
-    return RevealFileAction.getActionName();
-  }
+    @Override
+    public String getMinorViewId() {
+        return null;
+    }
 
-  @Override
-  public float getWeight() {
-    return StandardTargetWeights.OS_FILE_MANAGER;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getActionText() {
+        return LocalizeValue.of(RevealFileAction.getActionName());
+    }
+
+    @Override
+    public float getWeight() {
+        return StandardTargetWeights.OS_FILE_MANAGER;
+    }
 }

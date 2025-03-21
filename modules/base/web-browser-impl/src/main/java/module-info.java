@@ -6,6 +6,8 @@ module consulo.web.browser.impl {
     requires consulo.web.browser.api;
     requires consulo.process.api;
     requires consulo.configurable.api;
+    requires consulo.language.api;
+    requires consulo.project.ui.view.api;
 
     // TODO remove in future
     requires java.desktop;

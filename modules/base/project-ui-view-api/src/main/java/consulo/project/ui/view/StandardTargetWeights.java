@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.project.ui.view;
 
-import consulo.project.ui.view.SelectInTarget;
-
-public abstract class SelectInTargetBase implements SelectInTarget {
-  @Override
-  public String getToolWindowId() {
-    return null;
-  }
-
-  @Override
-  public String getMinorViewId() {
-    return null;
-  }
-
-  @Override
-  public float getWeight() {
-    return 0;
-  }
+/**
+ * @author max
+ */
+public interface StandardTargetWeights {
+  float PROJECT_WEIGHT = 1;
+  float FAVORITES_WEIGHT = 1.01f;
+  float PACKAGES_WEIGHT = 2;
+  float J2EE_WEIGHT = 3;
+  float STRUCTURE_WEIGHT = 4;
+  float COMMANDER_WEIGHT = 5;
+  float SCOPE_WEIGHT = 6.5f;
+  float NAV_BAR_WEIGHT = 8;
+  float CHANGES_VIEW = 9;
+  float OS_FILE_MANAGER = 9.5f;
+  float PROJECT_SETTINGS_WEIGHT = 10;
 }

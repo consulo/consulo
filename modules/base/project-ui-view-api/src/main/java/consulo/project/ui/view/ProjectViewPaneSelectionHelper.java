@@ -1,16 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.projectView.impl;
+package consulo.project.ui.view;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.component.extension.ExtensionPointName;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.tree.TreePath;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public interface ProjectViewPaneSelectionHelper {
     public SelectionDescriptor(@Nullable PsiElement targetPsiElement, @Nullable VirtualFile targetVirtualFile, @Nonnull List<TreePath> originalTreePaths) {
       this.targetPsiElement = targetPsiElement;
       this.targetVirtualFile = targetVirtualFile;
-      this.originalTreePaths = ContainerUtil.immutableList(originalTreePaths);
+      this.originalTreePaths = List.copyOf(originalTreePaths);
     }
   }
 }

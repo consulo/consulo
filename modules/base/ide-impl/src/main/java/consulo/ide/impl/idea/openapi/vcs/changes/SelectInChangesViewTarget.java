@@ -18,67 +18,77 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.inject.Inject;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 /**
  * @author yole
  */
 @ExtensionImpl
 public class SelectInChangesViewTarget implements SelectInTarget, DumbAware {
-  private final Project myProject;
+    private final Project myProject;
 
-  @Inject
-  public SelectInChangesViewTarget(final Project project) {
-    myProject = project;
-  }
-
-  public String toString() {
-    return VcsBundle.message("changes.toolwindow.name");
-  }
-
-  public boolean canSelect(final SelectInContext context) {
-    final VirtualFile file = context.getVirtualFile();
-    FileStatus fileStatus = FileStatusManager.getInstance(myProject).getStatus(file);
-    return ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss().length != 0 &&
-           !fileStatus.equals(FileStatus.NOT_CHANGED);
-  }
-
-  public void selectIn(final SelectInContext context, final boolean requestFocus) {
-    final VirtualFile file = context.getVirtualFile();
-    Runnable runnable = new Runnable() {
-      public void run() {
-        ChangesViewContentManager.getInstance(myProject).selectContent("Local");
-        ChangesViewManager.getInstance(myProject).selectFile(file);
-      }
-    };
-    if (requestFocus) {
-      ToolWindowManager.getInstance(myProject).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID).activate(runnable);
+    @Inject
+    public SelectInChangesViewTarget(final Project project) {
+        myProject = project;
     }
-    else {
-      runnable.run();
+
+    @Nonnull
+    @Override
+    public LocalizeValue getActionText() {
+        return VcsLocalize.changesToolwindowName();
     }
-  }
 
-  public String getToolWindowId() {
-    return ChangesViewContentManager.TOOLWINDOW_ID;
-  }
+    @Override
+    public boolean canSelect(final SelectInContext context) {
+        final VirtualFile file = context.getVirtualFile();
+        FileStatus fileStatus = FileStatusManager.getInstance(myProject).getStatus(file);
+        return ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss().length != 0 &&
+            !fileStatus.equals(FileStatus.NOT_CHANGED);
+    }
 
-  @Nullable public String getMinorViewId() {
-    return null;
-  }
+    @Override
+    public void selectIn(final SelectInContext context, final boolean requestFocus) {
+        final VirtualFile file = context.getVirtualFile();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                ChangesViewContentManager.getInstance(myProject).selectContent("Local");
+                ChangesViewManager.getInstance(myProject).selectFile(file);
+            }
+        };
+        if (requestFocus) {
+            ToolWindowManager.getInstance(myProject).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID).activate(runnable);
+        }
+        else {
+            runnable.run();
+        }
+    }
 
-  public float getWeight() {
-    return 9;
-  }
+    @Override
+    public String getToolWindowId() {
+        return ChangesViewContentManager.TOOLWINDOW_ID;
+    }
+
+    @Override
+    @Nullable
+    public String getMinorViewId() {
+        return null;
+    }
+
+    @Override
+    public float getWeight() {
+        return 9;
+    }
 }

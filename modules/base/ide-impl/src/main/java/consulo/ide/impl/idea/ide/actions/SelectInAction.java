@@ -19,8 +19,9 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
+import consulo.project.ui.view.CompositeSelectInTarget;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInManager;
@@ -100,9 +101,9 @@ public class SelectInAction extends AnAction implements DumbAware {
     @Override
     @Nonnull
     public String getTextFor(final SelectInTarget value) {
-      String text = value.toString();
+      LocalizeValue text = value.getActionText();
       int n = myVisibleTargets.indexOf(value);
-      return numberingText(n, text);
+      return numberingText(n, text.get());
     }
 
     @Override

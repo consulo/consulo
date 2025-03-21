@@ -18,14 +18,15 @@ package consulo.ide.impl.idea.ide.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
+import consulo.project.ui.view.CompositeSelectInTarget;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.view.ProjectView;
-import consulo.util.lang.Comparing;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.wm.ToolWindowId;
-
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
@@ -34,57 +35,62 @@ import java.util.LinkedHashSet;
  */
 @ExtensionImpl
 public class ProjectViewSelectInGroupTarget implements CompositeSelectInTarget, DumbAware {
-  @Override
-  @Nonnull
-  public Collection<SelectInTarget> getSubTargets(SelectInContext context) {
-    return ProjectView.getInstance(context.getProject()).getSelectInTargets();
-  }
-
-  @Override
-  public boolean canSelect(SelectInContext context) {
-    ProjectView projectView = ProjectView.getInstance(context.getProject());
-    Collection<SelectInTarget> targets = projectView.getSelectInTargets();
-    for (SelectInTarget projectViewTarget : targets) {
-      if (projectViewTarget.canSelect(context)) return true;
+    @Override
+    @Nonnull
+    public Collection<SelectInTarget> getSubTargets(SelectInContext context) {
+        return ProjectView.getInstance(context.getProject()).getSelectInTargets();
     }
-    return false;
-  }
 
-  @Override
-  public void selectIn(final SelectInContext context, final boolean requestFocus) {
-    ProjectView projectView = ProjectView.getInstance(context.getProject());
-    Collection<SelectInTarget> targets = projectView.getSelectInTargets();
-    Collection<SelectInTarget> targetsToCheck = new LinkedHashSet<>();
-    String currentId = projectView.getCurrentViewId();
-    for (SelectInTarget projectViewTarget : targets) {
-      if (Comparing.equal(currentId, projectViewTarget.getMinorViewId())) {
-        targetsToCheck.add(projectViewTarget);
-        break;
-      }
+    @Override
+    public boolean canSelect(SelectInContext context) {
+        ProjectView projectView = ProjectView.getInstance(context.getProject());
+        Collection<SelectInTarget> targets = projectView.getSelectInTargets();
+        for (SelectInTarget projectViewTarget : targets) {
+            if (projectViewTarget.canSelect(context)) {
+                return true;
+            }
+        }
+        return false;
     }
-    targetsToCheck.addAll(targets);
-    for (SelectInTarget target : targetsToCheck) {
-      if (context.selectIn(target, requestFocus)) break;
+
+    @Override
+    public void selectIn(final SelectInContext context, final boolean requestFocus) {
+        ProjectView projectView = ProjectView.getInstance(context.getProject());
+        Collection<SelectInTarget> targets = projectView.getSelectInTargets();
+        Collection<SelectInTarget> targetsToCheck = new LinkedHashSet<>();
+        String currentId = projectView.getCurrentViewId();
+        for (SelectInTarget projectViewTarget : targets) {
+            if (Comparing.equal(currentId, projectViewTarget.getMinorViewId())) {
+                targetsToCheck.add(projectViewTarget);
+                break;
+            }
+        }
+        targetsToCheck.addAll(targets);
+        for (SelectInTarget target : targetsToCheck) {
+            if (context.selectIn(target, requestFocus)) {
+                break;
+            }
+        }
     }
-  }
 
-  @Override
-  public String getToolWindowId() {
-    return ToolWindowId.PROJECT_VIEW;
-  }
+    @Override
+    public String getToolWindowId() {
+        return ToolWindowId.PROJECT_VIEW;
+    }
 
-  @Override
-  public String getMinorViewId() {
-    return null;
-  }
+    @Override
+    public String getMinorViewId() {
+        return null;
+    }
 
-  @Override
-  public float getWeight() {
-    return 0;
-  }
+    @Override
+    public float getWeight() {
+        return 0;
+    }
 
-  @Override
-  public String toString() {
-    return "Project View";
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getActionText() {
+        return LocalizeValue.localizeTODO("Project View");
+    }
 }

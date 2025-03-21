@@ -18,6 +18,7 @@ module consulo.project.ui.view.api {
   exports consulo.project.ui.view;
   exports consulo.project.ui.view.tree;
   exports consulo.project.ui.view.commander;
+  exports consulo.project.ui.view.localize;
 
   exports consulo.project.ui.view.internal to
     consulo.ide.impl,

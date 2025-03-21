@@ -42,3 +42,5 @@ action.open.in.browser.action.group.description:
   text: Open selected file in browser
 action.open.in.browser.action.group.short.text:
   text: _Browser
+browser.select.in.default.name:
+  text: Web Browser
