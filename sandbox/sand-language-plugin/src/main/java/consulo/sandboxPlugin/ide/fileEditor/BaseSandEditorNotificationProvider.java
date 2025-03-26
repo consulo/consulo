@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,54 +13,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.sandboxPlugin.ide.fileEditor;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.component.ExtensionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.EditorNotificationProvider;
 import consulo.fileEditor.FileEditor;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
-import consulo.project.content.GeneratedSourcesFilter;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.sandboxPlugin.lang.SandFileType;
+import consulo.ui.Alerts;
 import consulo.ui.NotificationType;
+import consulo.ui.ex.popup.IPopupChooserBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import jakarta.inject.Inject;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 2025-03-26
  */
-@ExtensionImpl
-public class GeneratedFileEditingNotificationProvider implements EditorNotificationProvider, DumbAware {
-    private final Project myProject;
+public abstract class BaseSandEditorNotificationProvider implements EditorNotificationProvider {
+    private final NotificationType myType;
 
-    @Inject
-    public GeneratedFileEditingNotificationProvider(Project project) {
-        myProject = project;
+    public BaseSandEditorNotificationProvider(NotificationType notificationType) {
+        myType = notificationType;
     }
 
     @Nonnull
     @Override
     public String getId() {
-        return "file-is-generated";
+        return "sand-" + myType;
     }
 
     @RequiredReadAction
     @Nullable
     @Override
     public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
-        if (!GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, myProject)) {
+        if (file.getFileType() != SandFileType.INSTANCE) {
             return null;
         }
 
         EditorNotificationBuilder builder = builderFactory.get();
-        builder.withType(NotificationType.WARNING);
-        builder.withText(LocalizeValue.localizeTODO("Generated source files should not be edited. The changes will be lost when sources are regenerated."));
+        builder.withText(LocalizeValue.localizeTODO("Sand text: " + myType));
+        builder.withType(myType);
+        builder.withIcon(PlatformIconGroup.nodesStatic());
+        builder.withAction(LocalizeValue.localizeTODO("Hello World"), (e) -> {
+            IPopupChooserBuilder<Object> chooserBuilder = JBPopupFactory.getInstance().createPopupChooserBuilder(List.of("Value 1", "Value 2"));
+            chooserBuilder.createPopup().showBy(e);
+        });
+        builder.withGearAction((e) -> Alerts.okInfo(LocalizeValue.localizeTODO("Hello World")).showAsync());
         return builder;
     }
 }

@@ -19,8 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.intention.*;
@@ -29,7 +27,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
@@ -38,14 +35,13 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -104,12 +100,11 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
   }
 
   @Override
-  public final Color getBackground() {
+  public Color getBackground() {
     if (myBackgroundColor != null) {
       return myBackgroundColor;
     }
-    ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.NOTIFICATION_BACKGROUND);
-    return color == null ? UIUtil.getToolTipBackground() : TargetAWT.to(color);
+    return super.getBackground();
   }
 
   public HyperlinkLabel createActionLabel(final String text, final String actionId) {

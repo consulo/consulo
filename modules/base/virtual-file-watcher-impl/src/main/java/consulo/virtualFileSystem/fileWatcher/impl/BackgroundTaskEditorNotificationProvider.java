@@ -65,7 +65,6 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
     }
 
     EditorNotificationBuilder builder = builderFactory.get();
-    builder.withBackgroundColor(new RGBColor(220, 220, 220));
 
     List<BackgroundTaskByVfsChangeTask> tasks = BackgroundTaskByVfsChangeManager.getInstance(myProject).findTasks(file);
     if (!tasks.isEmpty()) {

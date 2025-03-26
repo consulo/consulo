@@ -15,9 +15,11 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
+import consulo.ui.NotificationType;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
@@ -36,7 +38,7 @@ public interface EditorNotificationBuilder {
     EditorNotificationBuilder withIcon(@Nonnull Image image);
 
     @Nonnull
-    EditorNotificationBuilder withBackgroundColor(@Nonnull ColorValue color);
+    EditorNotificationBuilder withType(@Nonnull NotificationType notificationType);
 
     @Nonnull
     default EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText,

@@ -9,6 +9,9 @@
   <option name="EDITOR_LIGATURES" value="true"/>
 
   <colors>
+    <option name="NOTIFICATION_WARNING_BACKGROUND" value="5c5c42"/>
+    <option name="NOTIFICATION_ERROR_BACKGROUND" value="743A3A"/>
+
     <option name="ADDED_LINES_COLOR" value="384C38" />
     <option name="ANNOTATIONS_COLOR" value="8b999f" />
     <option name="CARET_COLOR" value="bbbbbb" />
@@ -37,7 +40,6 @@
     <option name="LINE_NUMBER_ON_CARET_ROW_COLOR" value="a1a3ab"/>
     <option name="METHOD_SEPARATORS_COLOR" value="4d4d4d" />
     <option name="MODIFIED_LINES_COLOR" value="415f69" />
-    <option name="NOTIFICATION_BACKGROUND" value="5c5c42" />
     <option name="READONLY_FRAGMENT_BACKGROUND" value="" />
     <option name="RECURSIVE_CALL_ATTRIBUTES" value="574300" />
     <option name="RIGHT_MARGIN_COLOR" value="323232" />

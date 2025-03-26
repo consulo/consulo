@@ -16,8 +16,10 @@
 package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.impl.internal.EditorNotificationBuilderFactory;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -27,8 +29,15 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class DesktopAWTEditorNotificationBuilderFactory implements EditorNotificationBuilderFactory {
-  @Override
-  public EditorNotificationBuilder newBuilder() {
-    return new DesktopAWTNotificationPanel();
-  }
+    private final EditorColorsManager myEditorColorsManager;
+
+    @Inject
+    public DesktopAWTEditorNotificationBuilderFactory(EditorColorsManager editorColorsManager) {
+        myEditorColorsManager = editorColorsManager;
+    }
+
+    @Override
+    public EditorNotificationBuilder newBuilder() {
+        return new DesktopAWTNotificationPanel(myEditorColorsManager);
+    }
 }

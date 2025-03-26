@@ -15,6 +15,9 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
+import consulo.codeEditor.EditorColors;
+import consulo.colorScheme.EditorColorKey;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.internal.EditorNotificationBuilderEx;
@@ -22,6 +25,7 @@ import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import consulo.language.editor.intention.IntentionActionWithOptions;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ClickEvent;
@@ -39,6 +43,7 @@ import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
@@ -46,6 +51,28 @@ import java.awt.event.MouseEvent;
  * @since 18-Jul-22
  */
 public class DesktopAWTNotificationPanel extends EditorNotificationPanel implements EditorNotificationBuilderEx {
+    private final EditorColorsManager myEditorColorsManager;
+
+    private EditorColorKey myBackgroundKey = EditorColors.NOTIFICATION_INFORMATION_BACKGROUND;
+
+    public DesktopAWTNotificationPanel(EditorColorsManager editorColorsManager) {
+        myEditorColorsManager = editorColorsManager;
+    }
+
+    @Override
+    public Color getBackground() {
+        if (myEditorColorsManager == null) {
+            // init fix
+            return super.getBackground();
+        }
+        
+        ColorValue backColor = myEditorColorsManager.getGlobalScheme().getColor(myBackgroundKey);
+        if (backColor != null) {
+            return TargetAWT.to(backColor);
+        }
+        return super.getBackground();
+    }
+
     @Nonnull
     @Override
     public EditorNotificationBuilder withText(@Nonnull LocalizeValue text) {
@@ -62,8 +89,20 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
 
     @Nonnull
     @Override
-    public EditorNotificationBuilder withBackgroundColor(@Nonnull ColorValue color) {
-        myBackgroundColor = TargetAWT.to(color);
+    public EditorNotificationBuilder withType(@Nonnull NotificationType notificationType) {
+        switch (notificationType) {
+            case INFO:
+                myBackgroundKey = EditorColors.NOTIFICATION_INFORMATION_BACKGROUND;
+                break;
+            case WARNING:
+                myBackgroundKey = EditorColors.NOTIFICATION_WARNING_BACKGROUND;
+                break;
+            case ERROR:
+                myBackgroundKey = EditorColors.NOTIFICATION_ERROR_BACKGROUND;
+                break;
+            default:
+                throw new IllegalArgumentException("Can't set " + notificationType);
+        }
         return this;
     }
 
