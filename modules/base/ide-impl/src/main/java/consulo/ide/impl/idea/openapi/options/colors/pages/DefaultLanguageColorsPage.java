@@ -26,6 +26,7 @@ import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.internal.ColorPageWeights;
 import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -339,6 +340,6 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Configurabl
 
   @Override
   public int getConfigurableWeight() {
-    return Integer.MAX_VALUE - 1;
+    return ColorPageWeights.DEFAULT_COLORS;
   }
 }

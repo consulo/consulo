@@ -23,6 +23,7 @@ import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.configurable.Settings;
+import consulo.language.editor.internal.ColorPageWeights;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -99,6 +100,6 @@ class ScopeColorsPageFactory implements ColorAndFontPanelFactory, ConfigurableWe
 
   @Override
   public int getConfigurableWeight() {
-    return Integer.MAX_VALUE - 1;
+    return ColorPageWeights.SCOPES;
   }
 }

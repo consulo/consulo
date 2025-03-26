@@ -12,6 +12,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.internal.ColorPageWeights;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -128,6 +129,6 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, Configur
 
   @Override
   public int getConfigurableWeight() {
-    return Integer.MAX_VALUE - 1;
+    return ColorPageWeights.CONSOLE_COLORS;
   }
 }

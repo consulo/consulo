@@ -67,7 +67,8 @@ module consulo.language.editor.api {
     consulo.ide.impl,
     consulo.language.editor.impl,
     consulo.language.editor.ui.api,
-    consulo.desktop.awt.ide.impl;
+    consulo.desktop.awt.ide.impl,
+    consulo.execution.debug.impl;
   exports consulo.language.editor.internal.inspection to
     consulo.ide.impl,
     consulo.language.editor.impl;

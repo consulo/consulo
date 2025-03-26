@@ -248,8 +248,12 @@ options.general.color.descriptor.readonly.fragment.background:
   text: Text//Readonly fragment background
 options.general.color.descriptor.gutter.background:
   text: Editor//Gutter background
-options.general.color.descriptor.notification.background:
-  text: Editor//Notification background
+options.general.color.descriptor.notification.information.background:
+  text: Editor//Notification//Information background
+options.general.color.descriptor.notification.warning.background:
+  text: Editor//Notification//Warning background
+options.general.color.descriptor.notification.error.background:
+  text: Editor//Notification//Error background
 options.general.color.descriptor.selection.background:
   text: Editor//Selection background
 options.general.color.descriptor.selection.foreground:

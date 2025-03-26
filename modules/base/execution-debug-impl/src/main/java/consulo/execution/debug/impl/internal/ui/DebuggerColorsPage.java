@@ -16,7 +16,6 @@
 package consulo.execution.debug.impl.internal.ui;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.configurable.internal.ConfigurableWeight;
@@ -26,10 +25,8 @@ import consulo.execution.debug.ui.DebuggerColors;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.internal.ColorPageWeights;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
-import java.util.Map;
 
 /**
  * @author max
@@ -98,13 +95,7 @@ public class DebuggerColorsPage implements ColorSettingsPage, ConfigurableWeight
   }
 
   @Override
-  @Nullable
-  public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
-    return null;
-  }
-
-  @Override
   public int getConfigurableWeight() {
-    return Integer.MAX_VALUE - 1;
+    return ColorPageWeights.DEBUGGER;
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package consulo.ide.impl.idea.application.options.colors;
-
-import consulo.component.util.Weighted;
+package consulo.language.editor.internal;
 
 /**
- * @author Rustam Vishnyakov
+ * @author VISTALL
+ * @since 2025-03-26
  */
-public interface ColorAndFontPanelFactoryEx extends ColorAndFontPanelFactory, Weighted {
-
+public interface ColorPageWeights {
+    int GENERAL = Integer.MAX_VALUE;
+    int FONT = Integer.MAX_VALUE - 1;
+    int DEFAULT_COLORS = Integer.MAX_VALUE - 2;
+    int CONSOLE_FONT = Integer.MAX_VALUE - 3;
+    int CONSOLE_COLORS = Integer.MAX_VALUE - 4;
+    int DEBUGGER = Integer.MAX_VALUE - 5;
+    int SCOPES = Integer.MAX_VALUE - 6;
 }

@@ -19,9 +19,13 @@ package consulo.ide.impl.idea.application.options.colors;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.bookmark.BookmarkManager;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.*;
+import consulo.colorScheme.impl.internal.DefaultColorsScheme;
+import consulo.colorScheme.impl.internal.EditorColorsSchemeImpl;
+import consulo.colorScheme.internal.ReadOnlyColorsScheme;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
@@ -38,20 +42,16 @@ import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
-import consulo.colorScheme.impl.internal.DefaultColorsScheme;
-import consulo.colorScheme.impl.internal.EditorColorsSchemeImpl;
-import consulo.colorScheme.internal.ReadOnlyColorsScheme;
-import consulo.language.editor.internal.ColorSettingsPages;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
-import consulo.configurable.Settings;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.internal.ColorPageWeights;
+import consulo.language.editor.internal.ColorSettingsPages;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.ScopeAttributesUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.application.localize.ApplicationLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -60,6 +60,7 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.lang.Comparing;
@@ -79,6 +80,8 @@ import java.util.function.Function;
 
 @ExtensionImpl
 public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract implements Configurable.NoMargin, ApplicationConfigurable {
+  public interface ColorAndFontPanelFactoryEx extends ColorAndFontPanelFactory, ConfigurableWeight {
+  }
   /**
    * Shows a requested page to edit a color settings.
    * If current data context represents a setting dialog that can open a requested page,
@@ -421,7 +424,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     application.getExtensionPoint(ColorSettingsPage.class).forEachExtensionSafe(page -> {
       extensions.add(new ColorAndFontPanelFactoryEx() {
         @Override
-        public double getWeight() {
+        public int getConfigurableWeight() {
           if (page instanceof ConfigurableWeight) {
             return ((ConfigurableWeight)page).getConfigurableWeight();
           }
@@ -449,6 +452,12 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     result.add(new FileStatusColorsPageFactory());
     result.add(new ScopeColorsPageFactory());
 
+    ContainerUtil.weightSort(extensions, colorAndFontPanelFactory -> {
+        if (colorAndFontPanelFactory instanceof ConfigurableWeight configurableWeight) {
+            return configurableWeight.getConfigurableWeight();
+        }
+        return 0;
+    });
     return result;
   }
 
@@ -473,7 +482,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     @Override
     public int getConfigurableWeight() {
-      return Integer.MAX_VALUE - 1;
+      return ColorPageWeights.FONT;
     }
   }
 
@@ -503,7 +512,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     @Override
     public int getConfigurableWeight() {
-      return Integer.MAX_VALUE - 1;
+      return ColorPageWeights.CONSOLE_FONT;
     }
   }
 

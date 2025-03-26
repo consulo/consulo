@@ -139,7 +139,7 @@ public class ShowBaseRevisionAction extends AbstractVcsAction {
 
     @Override
     public Color getBackground() {
-      Color color = TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.NOTIFICATION_BACKGROUND));
+      Color color = TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.NOTIFICATION_INFORMATION_BACKGROUND));
       return color == null ? new Color(0xffffcc) : color;
     }
   }
