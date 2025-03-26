@@ -28,11 +28,9 @@ import consulo.ui.Component;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -44,7 +42,6 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
 /**
  * @author VISTALL
@@ -145,16 +142,10 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
     public EditorNotificationBuilder withGearAction(@Nonnull LocalizeValue tooltipText,
                                                     @Nonnull Image image,
                                                     @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
-        myGearLabel.setIcon(TargetAWT.to(image));
-        myGearLabel.setToolTipText(StringUtil.nullize(tooltipText.getValue()));
-        new ClickListener() {
-            @Override
-            @RequiredUIAccess
-            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-                action.onEvent(new ClickEvent(TargetAWT.wrap(myGearLabel), DesktopAWTInputDetails.convert(myGearLabel, e)));
-                return true;
-            }
-        }.installOn(myGearLabel);
+        myGearButton.setIcon(image);
+        myGearButton.setVisible(true);
+        myGearButton.setToolTipText(tooltipText);
+        myGearButton.addClickListener(action::onEvent);
         return this;
     }
 

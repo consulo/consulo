@@ -15,12 +15,11 @@
  */
 package consulo.fileEditor;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.NotificationType;
-import consulo.ui.color.ColorValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.image.Image;

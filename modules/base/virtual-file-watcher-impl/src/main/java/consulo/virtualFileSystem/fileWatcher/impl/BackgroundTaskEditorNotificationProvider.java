@@ -23,16 +23,15 @@ import consulo.fileEditor.EditorNotificationProvider;
 import consulo.fileEditor.FileEditor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.color.RGBColor;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -76,7 +75,7 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
       builder.withText(LocalizeValue.localizeTODO("Background task(s) on file change is available"));
     }
 
-    builder.withAction(LocalizeValue.localizeTODO("Manage"), (i) -> BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(file));
+    builder.withGearAction(LocalizeValue.localizeTODO("Manage"), (i) -> BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(file));
     return builder;
   }
 }

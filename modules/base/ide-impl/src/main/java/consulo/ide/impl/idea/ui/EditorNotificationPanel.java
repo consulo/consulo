@@ -16,16 +16,20 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.intention.*;
 import consulo.language.editor.internal.intention.IntentionActionProvider;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
@@ -55,203 +59,208 @@ import java.util.List;
 @Deprecated
 @DeprecationInfo("Just AWT implementation")
 public class EditorNotificationPanel extends JPanel implements IntentionActionProvider {
-  protected final JLabel myLabel = new JLabel();
-  protected final JLabel myGearLabel = new JLabel();
-  protected final JPanel myLinksPanel;
-  protected Color myBackgroundColor;
+    protected final JLabel myLabel = new JLabel();
+    protected final Button myGearButton;
+    protected final JPanel myLinksPanel;
+    protected Color myBackgroundColor;
 
-  public EditorNotificationPanel() {
-    this(null);
-  }
-
-  public EditorNotificationPanel(@Nullable Color backgroundColor) {
-    super(new BorderLayout());
-    myBackgroundColor = backgroundColor;
-    setBorder(JBUI.Borders.empty(1, 10, 1, 10));
-
-    setPreferredSize(JBUI.size(-1, 24));
-
-    add(myLabel, BorderLayout.CENTER);
-
-    myLinksPanel = new JPanel(new FlowLayout());
-    myLinksPanel.setOpaque(false);
-
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.setOpaque(false);
-
-    myGearLabel.setBorder(JBUI.Borders.empty(0, 3, 0, 0));
-    panel.add(myLinksPanel, BorderLayout.WEST);
-    panel.add(myGearLabel, BorderLayout.EAST);
-    add(panel, BorderLayout.EAST);
-  }
-
-  public void setText(String text) {
-    myLabel.setText(text);
-  }
-
-  public EditorNotificationPanel text(@Nonnull String text) {
-    myLabel.setText(text);
-    return this;
-  }
-
-  public EditorNotificationPanel icon(@Nonnull Icon icon) {
-    myLabel.setIcon(icon);
-    return this;
-  }
-
-  @Override
-  public Color getBackground() {
-    if (myBackgroundColor != null) {
-      return myBackgroundColor;
+    @RequiredUIAccess
+    public EditorNotificationPanel() {
+        this(null);
     }
-    return super.getBackground();
-  }
 
-  public HyperlinkLabel createActionLabel(final String text, final String actionId) {
-    return createActionLabel(text, () -> executeAction(actionId));
-  }
+    @RequiredUIAccess
+    public EditorNotificationPanel(@Nullable Color backgroundColor) {
+        super(new BorderLayout());
+        myBackgroundColor = backgroundColor;
+        setBorder(JBUI.Borders.empty(1, 10, 1, 10));
 
-  public HyperlinkLabel createActionLabel(final String text, final Runnable action) {
-    HyperlinkLabel label = new HyperlinkLabel(text, JBColor.BLUE, getBackground(), JBColor.BLUE);
-    label.setOpaque(false);
+        setPreferredSize(JBUI.size(-1, 24));
 
-    label.addHyperlinkListener(new HyperlinkAdapter() {
-      @Override
-      protected void hyperlinkActivated(HyperlinkEvent e) {
-        action.run();
-      }
-    });
-    myLinksPanel.add(label);
-    return label;
-  }
+        add(myLabel, BorderLayout.CENTER);
 
-  @RequiredUIAccess
-  protected void executeAction(final String actionId) {
-    final AnAction action = ActionManager.getInstance().getAction(actionId);
-    final AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN, action.getTemplatePresentation(), ActionManager.getInstance(), 0);
-    action.beforeActionPerformedUpdate(event);
-    action.update(event);
+        myLinksPanel = new JPanel(new FlowLayout());
+        myLinksPanel.setOpaque(false);
 
-    if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
-      action.actionPerformed(event);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+
+        myGearButton = Button.create(LocalizeValue.of());
+        myGearButton.addStyle(ButtonStyle.INPLACE);
+        myGearButton.setVisible(false);
+
+        panel.add(myLinksPanel, BorderLayout.WEST);
+        panel.add(TargetAWT.to(myGearButton), BorderLayout.EAST);
+
+        add(panel, BorderLayout.EAST);
     }
-  }
 
-  @Override
-  public Dimension getMinimumSize() {
-    return new Dimension(0, 0);
-  }
+    public void setText(String text) {
+        myLabel.setText(text);
+    }
 
-  @Nullable
-  @Override
-  public IntentionActionWithOptions getIntentionAction() {
-    MyIntentionAction action = new MyIntentionAction();
-    return action.getOptions().isEmpty() ? null : action;
-  }
+    public EditorNotificationPanel text(@Nonnull String text) {
+        myLabel.setText(text);
+        return this;
+    }
 
-  private class MyIntentionAction extends AbstractEmptyIntentionAction implements IntentionActionWithOptions, Iconable, SyntheticIntentionAction {
-    private final List<IntentionAction> myOptions = new ArrayList<>();
+    public EditorNotificationPanel icon(@Nonnull Icon icon) {
+        myLabel.setIcon(icon);
+        return this;
+    }
 
-    private MyIntentionAction() {
-      for (Component component : myLinksPanel.getComponents()) {
-        if (component instanceof HyperlinkLabel) {
-          myOptions.add(new MyLinkOption(((HyperlinkLabel)component)));
+    @Override
+    public Color getBackground() {
+        if (myBackgroundColor != null) {
+            return myBackgroundColor;
         }
-      }
-      if (myGearLabel.getIcon() != null) {
-        myOptions.add(new MySettingsOption(myGearLabel));
-      }
+        return super.getBackground();
     }
 
-    @Nonnull
+    public HyperlinkLabel createActionLabel(final String text, final String actionId) {
+        return createActionLabel(text, () -> executeAction(actionId));
+    }
+
+    public HyperlinkLabel createActionLabel(final String text, final Runnable action) {
+        HyperlinkLabel label = new HyperlinkLabel(text, JBColor.BLUE, getBackground(), JBColor.BLUE);
+        label.setOpaque(false);
+
+        label.addHyperlinkListener(new HyperlinkAdapter() {
+            @Override
+            protected void hyperlinkActivated(HyperlinkEvent e) {
+                action.run();
+            }
+        });
+        myLinksPanel.add(label);
+        return label;
+    }
+
+    @RequiredUIAccess
+    protected void executeAction(final String actionId) {
+        final AnAction action = ActionManager.getInstance().getAction(actionId);
+        final AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN, action.getTemplatePresentation(), ActionManager.getInstance(), 0);
+        action.beforeActionPerformedUpdate(event);
+        action.update(event);
+
+        if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
+            action.actionPerformed(event);
+        }
+    }
+
+    @Nullable
     @Override
-    public List<IntentionAction> getOptions() {
-      return myOptions;
+    public IntentionActionWithOptions getIntentionAction() {
+        MyIntentionAction action = new MyIntentionAction();
+        return action.getOptions().isEmpty() ? null : action;
     }
 
-    @Nls
-    @Nonnull
-    @Override
-    public String getText() {
-      String text = myLabel.getText();
-      return StringUtil.isEmpty(text) ? EditorBundle.message("editor.notification.default.action.name") : StringUtil.shortenTextWithEllipsis(text, 50, 0);
+    private class MyIntentionAction extends AbstractEmptyIntentionAction implements IntentionActionWithOptions, Iconable, SyntheticIntentionAction {
+        private final List<IntentionAction> myOptions = new ArrayList<>();
+
+        private MyIntentionAction() {
+            for (Component component : myLinksPanel.getComponents()) {
+                if (component instanceof HyperlinkLabel) {
+                    myOptions.add(new MyLinkOption(((HyperlinkLabel) component)));
+                }
+            }
+
+            Image icon = myGearButton.getIcon();
+            if (icon != null) {
+                myOptions.add(new MySettingsOption(myGearButton));
+            }
+        }
+
+        @Nonnull
+        @Override
+        public List<IntentionAction> getOptions() {
+            return myOptions;
+        }
+
+        @Nls
+        @Nonnull
+        @Override
+        public String getText() {
+            String text = myLabel.getText();
+            return StringUtil.isEmpty(text) ? EditorBundle.message("editor.notification.default.action.name") : StringUtil.shortenTextWithEllipsis(text, 50, 0);
+        }
+
+        @Override
+        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+            return true;
+        }
+
+        @Override
+        public Image getIcon(@IconFlags int flags) {
+            return PlatformIconGroup.actionsIntentionbulb();
+        }
     }
 
-    @Override
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-      return true;
+    private static class MyLinkOption implements IntentionAction, SyntheticIntentionAction {
+        private final HyperlinkLabel myLabel;
+
+        private MyLinkOption(HyperlinkLabel label) {
+            myLabel = label;
+        }
+
+        @Nls
+        @Nonnull
+        @Override
+        public String getText() {
+            return myLabel.getText();
+        }
+
+        @Override
+        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+            return true;
+        }
+
+        @Override
+        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+            myLabel.doClick();
+        }
+
+        @Override
+        public boolean startInWriteAction() {
+            return false;
+        }
     }
 
-    @Override
-    public Image getIcon(@IconFlags int flags) {
-      return AllIcons.Actions.IntentionBulb;
+    private static class MySettingsOption implements IntentionAction, Iconable, LowPriorityAction {
+        private final Button myButton;
+
+        private MySettingsOption(Button button) {
+            myButton = button;
+        }
+
+        @Nls
+        @Nonnull
+        @Override
+        public String getText() {
+            return CodeEditorLocalize.editorNotificationSettingsOptionName().get();
+        }
+
+        @Override
+        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+            return true;
+        }
+
+        @Override
+        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+            JComponent component = (JComponent) TargetAWT.to(myButton);
+
+            component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, 0, 0, 1, false));
+            component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, 0, 0, 1, false));
+            component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false));
+        }
+
+        @Override
+        public boolean startInWriteAction() {
+            return false;
+        }
+
+        @Override
+        public Image getIcon(@IconFlags int flags) {
+            return myButton.getIcon();
+        }
     }
-  }
-
-  private static class MyLinkOption implements IntentionAction, SyntheticIntentionAction {
-    private final HyperlinkLabel myLabel;
-
-    private MyLinkOption(HyperlinkLabel label) {
-      myLabel = label;
-    }
-
-    @Nls
-    @Nonnull
-    @Override
-    public String getText() {
-      return myLabel.getText();
-    }
-
-    @Override
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-      return true;
-    }
-
-    @Override
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-      myLabel.doClick();
-    }
-
-    @Override
-    public boolean startInWriteAction() {
-      return false;
-    }
-  }
-
-  private static class MySettingsOption implements IntentionAction, Iconable, LowPriorityAction {
-    private final JLabel myLabel;
-
-    private MySettingsOption(JLabel label) {
-      myLabel = label;
-    }
-
-    @Nls
-    @Nonnull
-    @Override
-    public String getText() {
-      return EditorBundle.message("editor.notification.settings.option.name");
-    }
-
-    @Override
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-      return true;
-    }
-
-    @Override
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-      myLabel.dispatchEvent(new MouseEvent(myLabel, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, 0, 0, 1, false));
-      myLabel.dispatchEvent(new MouseEvent(myLabel, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, 0, 0, 1, false));
-      myLabel.dispatchEvent(new MouseEvent(myLabel, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false));
-    }
-
-    @Override
-    public boolean startInWriteAction() {
-      return false;
-    }
-
-    @Override
-    public Image getIcon(@IconFlags int flags) {
-      return TargetAWT.from(myLabel.getIcon());
-    }
-  }
 }
