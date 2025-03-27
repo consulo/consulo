@@ -2668,3 +2668,5 @@ warning.text.0.do.you.want.to.overwrite.these.files:
     Would you like to overwrite {1,choice,1#it|2#these files}?
 web.search.label.layout:
   text: Web Search
+options.locale.auto.locale:
+  text: <auto - {0}>

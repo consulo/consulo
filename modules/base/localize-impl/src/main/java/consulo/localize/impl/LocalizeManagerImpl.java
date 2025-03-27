@@ -30,6 +30,7 @@ import consulo.proxy.EventDispatcher;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.lazy.ClearableLazyValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -59,11 +60,33 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
     private final Map<Locale, Map<String, LocalizeFileState>> myLocalizes = new HashMap<>();
 
-    private Locale myCurrentLocale = ourDefaultLocale;
+    private Locale myCurrentLocale;
 
     private final EventDispatcher<LocalizeManagerListener> myEventDispatcher = EventDispatcher.create(LocalizeManagerListener.class);
 
     private final AtomicLong myModificationCount = new AtomicLong();
+
+    private ClearableLazyValue<Locale> myAutoDetectedLocale = ClearableLazyValue.atomicNotNull(() -> {
+        Locale locale = Locale.getDefault();
+
+        if (myLocalizes.containsKey(locale)) {
+            return locale;
+        }
+
+        locale = Locale.of(locale.getLanguage(), locale.getCountry());
+
+        if (myLocalizes.containsKey(locale)) {
+            return locale;
+        }
+
+        locale = Locale.of(locale.getLanguage());
+
+        if (myLocalizes.containsKey(locale)) {
+            return locale;
+        }
+
+        return ourDefaultLocale;
+    });
 
     @Override
     public void initialize() {
@@ -131,6 +154,8 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         });
 
         load(forLoad);
+
+        myAutoDetectedLocale.clear();
     }
 
     private int getIndexOf(String str, char symbol, int atCount) {
@@ -241,7 +266,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     }
 
     @Override
-    public void setLocale(@Nonnull Locale locale, boolean fireEvents) {
+    public void setLocale(@Nullable Locale locale, boolean fireEvents) {
         Locale oldLocale = myCurrentLocale;
 
         myCurrentLocale = locale;
@@ -256,12 +281,22 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     @Nonnull
     @Override
     public Locale getLocale() {
-        return myCurrentLocale;
+        if (myCurrentLocale != null) {
+            return myCurrentLocale;
+        }
+
+        return myAutoDetectedLocale.get();
+    }
+
+    @Nonnull
+    @Override
+    public Locale getAutoDetectedLocale() {
+        return myAutoDetectedLocale.get();
     }
 
     @Override
     public boolean isDefaultLocale() {
-        return ourDefaultLocale.equals(myCurrentLocale);
+        return myCurrentLocale == null;
     }
 
     @Override
@@ -305,13 +340,15 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
             throw new IllegalArgumentException("not initialized");
         }
 
+        Locale locale = getLocale();
+
         if (StringUtil.isEmptyOrSpaces(key.getKey())) {
-            return Map.entry(myCurrentLocale, "");
+            return Map.entry(locale, "");
         }
 
-        String value = getValue(key, myCurrentLocale);
+        String value = getValue(key, locale);
         if (value != null) {
-            return Map.entry(myCurrentLocale, value);
+            return Map.entry(locale, value);
         }
 
         value = getValue(key, ourDefaultLocale);
@@ -319,7 +356,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
             return Map.entry(ourDefaultLocale, value);
         }
 
-        LOG.warn("Can't find localize value: " + key + ", current locale: " + myCurrentLocale);
+        LOG.warn("Can't find localize value: " + key + ", current locale: " + locale);
         return Map.entry(ourDefaultLocale, key.toString());
     }
 

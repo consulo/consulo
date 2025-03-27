@@ -19,6 +19,7 @@ import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.disposer.Disposable;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
@@ -57,14 +58,17 @@ public abstract class LocalizeManager {
     @Nonnull
     public abstract Locale parseLocale(@Nonnull String localeText);
 
-    public void setLocale(@Nonnull Locale locale) {
+    public void setLocale(@Nullable Locale locale) {
         setLocale(locale, true);
     }
 
-    public abstract void setLocale(@Nonnull Locale locale, boolean fireEvents);
+    public abstract void setLocale(@Nullable Locale locale, boolean fireEvents);
 
     @Nonnull
     public abstract Locale getLocale();
+
+    @Nonnull
+    public abstract Locale getAutoDetectedLocale();
 
     public abstract boolean isDefaultLocale();
 
