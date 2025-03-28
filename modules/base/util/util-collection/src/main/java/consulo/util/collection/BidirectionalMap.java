@@ -17,119 +17,139 @@ package consulo.util.collection;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 public class BidirectionalMap<K, V> implements Map<K, V> {
-  private final Map<K, V> myKeyToValueMap = new HashMap<K, V>();
-  private final Map<V, List<K>> myValueToKeysMap = new HashMap<V, List<K>>();
+    private final Map<K, V> myKeyToValueMap = new HashMap<>();
+    private final Map<V, List<K>> myValueToKeysMap = new HashMap<>();
 
-  @Override
-  public V put(K key, V value) {
-    V oldValue = myKeyToValueMap.put(key, value);
-    if (oldValue != null) {
-      if (oldValue.equals(value)) return oldValue;
-      List<K> array = myValueToKeysMap.get(oldValue);
-      array.remove(key);
+    @Override
+    public V put(K key, V value) {
+        V oldValue = myKeyToValueMap.put(key, value);
+        if (oldValue != null) {
+            if (oldValue.equals(value)) {
+                return oldValue;
+            }
+            List<K> array = myValueToKeysMap.get(oldValue);
+            array.remove(key);
+        }
+
+        List<K> array = myValueToKeysMap.get(value);
+        if (array == null) {
+            array = new ArrayList<>();
+            myValueToKeysMap.put(value, array);
+        }
+        array.add(key);
+        return oldValue;
     }
 
-    List<K> array = myValueToKeysMap.get(value);
-    if (array == null) {
-      array = new ArrayList<K>();
-      myValueToKeysMap.put(value, array);
+    @Override
+    public void clear() {
+        myKeyToValueMap.clear();
+        myValueToKeysMap.clear();
     }
-    array.add(key);
-    return oldValue;
-  }
 
-  @Override
-  public void clear() {
-    myKeyToValueMap.clear();
-    myValueToKeysMap.clear();
-  }
-
-  @Nullable
-  public List<K> getKeysByValue(V value) {
-    return myValueToKeysMap.get(value);
-  }
-
-  @Nonnull
-  @Override
-  public Set<K> keySet() {
-    return myKeyToValueMap.keySet();
-  }
-
-  @Override
-  public int size() {
-    return myKeyToValueMap.size();
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return myKeyToValueMap.isEmpty();
-  }
-
-  @Override
-  public boolean containsKey(Object key) {
-    return myKeyToValueMap.containsKey(key);
-  }
-
-  @Override
-  @SuppressWarnings({"SuspiciousMethodCalls"})
-  public boolean containsValue(Object value) {
-    return myValueToKeysMap.containsKey(value);
-  }
-
-  @Override
-  public V get(Object key) {
-    return myKeyToValueMap.get(key);
-  }
-
-  public void removeValue(V v) {
-    List<K> ks = myValueToKeysMap.remove(v);
-    if (ks != null) {
-      for (K k : ks) {
-        myKeyToValueMap.remove(k);
-      }
+    @Nullable
+    public List<K> getKeysByValue(V value) {
+        return myValueToKeysMap.get(value);
     }
-  }
 
-  @Override
-  @SuppressWarnings({"SuspiciousMethodCalls"})
-  public V remove(Object key) {
-    final V value = myKeyToValueMap.remove(key);
-    final List<K> ks = myValueToKeysMap.get(value);
-    if (ks != null) {
-      if (ks.size() > 1) {
-        ks.remove(key);
-      }
-      else {
-        myValueToKeysMap.remove(value);
-      }
+    @Nonnull
+    @Override
+    public Set<K> keySet() {
+        return myKeyToValueMap.keySet();
     }
-    return value;
-  }
 
-  @Override
-  public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
-    for (final K k1 : t.keySet()) {
-      put(k1, t.get(k1));
+    @Override
+    public int size() {
+        return myKeyToValueMap.size();
     }
-  }
 
-  @Nonnull
-  @Override
-  public Collection<V> values() {
-    return myValueToKeysMap.keySet();
-  }
+    @Override
+    public boolean isEmpty() {
+        return myKeyToValueMap.isEmpty();
+    }
 
-  @Nonnull
-  @Override
-  public Set<Entry<K, V>> entrySet() {
-    return myKeyToValueMap.entrySet();
-  }
+    @Override
+    public boolean containsKey(Object key) {
+        return myKeyToValueMap.containsKey(key);
+    }
 
-  @Override
-  public String toString() {
-    return new HashMap<K, V>(myKeyToValueMap).toString();
-  }
+    @Override
+    @SuppressWarnings({"SuspiciousMethodCalls"})
+    public boolean containsValue(Object value) {
+        return myValueToKeysMap.containsKey(value);
+    }
+
+    @Override
+    public V get(Object key) {
+        return myKeyToValueMap.get(key);
+    }
+
+    public void removeValue(V v) {
+        List<K> ks = myValueToKeysMap.remove(v);
+        if (ks != null) {
+            for (K k : ks) {
+                myKeyToValueMap.remove(k);
+            }
+        }
+    }
+
+    @Override
+    @SuppressWarnings({"SuspiciousMethodCalls"})
+    public V remove(Object key) {
+        final V value = myKeyToValueMap.remove(key);
+        final List<K> ks = myValueToKeysMap.get(value);
+        if (ks != null) {
+            if (ks.size() > 1) {
+                ks.remove(key);
+            }
+            else {
+                myValueToKeysMap.remove(value);
+            }
+        }
+        return value;
+    }
+
+    @Override
+    public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
+        for (final K k1 : t.keySet()) {
+            put(k1, t.get(k1));
+        }
+    }
+
+    @Nonnull
+    @Override
+    public Collection<V> values() {
+        return myValueToKeysMap.keySet();
+    }
+
+    @Nonnull
+    @Override
+    public Set<Entry<K, V>> entrySet() {
+        return myKeyToValueMap.entrySet();
+    }
+
+    @Override
+    public String toString() {
+        return myKeyToValueMap.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BidirectionalMap<?, ?> that = (BidirectionalMap<?, ?>) o;
+        return myKeyToValueMap.equals(that.myKeyToValueMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return myKeyToValueMap.hashCode();
+    }
 }
