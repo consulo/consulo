@@ -27,18 +27,6 @@ import java.util.List;
  * @since 4/17/13 11:32 AM
  */
 public interface ParametersEnhancer {
-
-  /**
-   * Our recommended practice is to work with third-party api from external process in order to avoid potential problems with
-   * the whole ide process. For example, the api might contain a memory leak which crashed the whole process etc.
-   * <p/>
-   * This method is a callback which allows particular external system integration to adjust that external process
-   * settings. Most of the time that means classpath adjusting.
-   *
-   * @param parameters  parameters to be applied to the slave process which will be used for external system communication
-   */
-  void enhanceRemoteProcessing(@Nonnull SimpleJavaParameters parameters) throws ExecutionException;
-
   /**
    * Allows to define custom classpath to be used at the in-process mode.
    * <p/>
