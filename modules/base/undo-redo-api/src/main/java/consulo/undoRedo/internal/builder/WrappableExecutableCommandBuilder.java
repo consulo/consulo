@@ -82,10 +82,11 @@ interface WrappableExecutableCommandBuilder<R, THIS extends WrappableExecutableC
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
             SimpleReference<ExecutionResult<R>> result = SimpleReference.create();
             myRunner.accept(() -> result.set(mySubBuilder.execute(executable)));
-            return result.get();
+            return result.isNull() ? new ExecutionResult((R)null) : result.get();
         }
     }
 
