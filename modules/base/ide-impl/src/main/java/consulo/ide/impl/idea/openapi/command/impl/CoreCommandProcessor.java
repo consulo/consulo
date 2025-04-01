@@ -53,10 +53,11 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
         @Override
         @RequiredUIAccess
+        @SuppressWarnings("unchecked")
         public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
             SimpleReference<ExecutionResult<R>> result = SimpleReference.create();
             executeCommand(build(() -> result.set(super.execute(executable))));
-            return result.get();
+            return result.isNull() ? new ExecutionResult((R)null) : result.get();
         }
     }
 
