@@ -19,10 +19,10 @@ import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 24.01.15
+ * @since 2015-01-24
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
 public @interface RequiredWriteAction {
 }
