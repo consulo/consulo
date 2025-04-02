@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.codeStyle;
 
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.ide.impl.idea.util.LineSeparator;
 
 /**
  * @author Nikolai Matveev
  */
 public class ConvertToMacLineSeparatorsAction extends AbstractConvertLineSeparatorsAction {
-  public ConvertToMacLineSeparatorsAction() {
-    super(ApplicationBundle.message("combobox.crlf.mac"), LineSeparator.CR);
-  }
+    public ConvertToMacLineSeparatorsAction() {
+        super(ApplicationLocalize.comboboxCrlfMac(), LineSeparator.CR);
+    }
 }
