@@ -15,15 +15,14 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.ex.awt.JBRadioButton;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-
+import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.ex.awt.JBRadioButton;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -31,78 +30,86 @@ import jakarta.annotation.Nonnull;
  * @since 14-Jun-16
  */
 class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonImpl.MyJBRadioButton> implements RadioButton {
-  class MyJBRadioButton extends JBRadioButton implements FromSwingComponentWrapper {
-    private LocalizeValue myLabelText = LocalizeValue.empty();
+    class MyJBRadioButton extends JBRadioButton implements FromSwingComponentWrapper {
+        private LocalizeValue myLabelText = LocalizeValue.empty();
 
-    @Override
-    public void updateUI() {
-      super.updateUI();
+        public MyJBRadioButton() {
 
-      // null if called from parent object before field initialize
-      if (myLabelText != null) {
-        updateLabelText();
-      }
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+
+            // null if called from parent object before field initialize
+            if (myLabelText != null) {
+                updateLabelText();
+            }
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopRadioButtonImpl.this;
+        }
+
+        public void setLabelText(LocalizeValue labelText) {
+            myLabelText = labelText;
+        }
+
+        public LocalizeValue getLabelText() {
+            return myLabelText;
+        }
+
+        private void updateLabelText() {
+            updateTextForButton(this, myLabelText);
+        }
+    }
+
+    public DesktopRadioButtonImpl(LocalizeValue textValue, boolean selected) {
+        MyJBRadioButton component = new MyJBRadioButton();
+
+        component.setSelected(selected);
+
+        initialize(component);
+
+        setLabelText(textValue);
+
+        component.addChangeListener(e -> fireListeners());
     }
 
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopRadioButtonImpl.this;
+    public Boolean getValue() {
+        return toAWTComponent().isSelected();
     }
 
-    public void setLabelText(LocalizeValue labelText) {
-      myLabelText = labelText;
+    @RequiredUIAccess
+    @Override
+    public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+        toAWTComponent().setSelected(value);
+
+        if (fireListeners) {
+            fireListeners();
+        }
     }
 
+    @SuppressWarnings("unchecked")
+    @RequiredUIAccess
+    private void fireListeners() {
+        getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, toAWTComponent().isSelected()));
+    }
+
+    @Nonnull
+    @Override
     public LocalizeValue getLabelText() {
-      return myLabelText;
+        return toAWTComponent().getLabelText();
     }
 
-    private void updateLabelText() {
-      updateTextForButton(this, myLabelText);
+    @RequiredUIAccess
+    @Override
+    public void setLabelText(@Nonnull LocalizeValue labelText) {
+        toAWTComponent().setLabelText(labelText);
+        toAWTComponent().updateLabelText();
     }
-  }
-
-  public DesktopRadioButtonImpl(LocalizeValue textValue, boolean selected) {
-    MyJBRadioButton component = new MyJBRadioButton();
-    component.setSelected(selected);
-    initialize(component);
-    setLabelText(textValue);
-    component.addActionListener(e -> fireListeners());
-  }
-
-  @Nonnull
-  @Override
-  public Boolean getValue() {
-    return toAWTComponent().isSelected();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(@Nonnull Boolean value, boolean fireListeners) {
-    toAWTComponent().setSelected(value);
-
-    if (fireListeners) {
-      fireListeners();
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  @RequiredUIAccess
-  private void fireListeners() {
-    getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, toAWTComponent().isSelected()));
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getLabelText() {
-    return toAWTComponent().getLabelText();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setLabelText(@Nonnull LocalizeValue labelText) {
-    toAWTComponent().setLabelText(labelText);
-    toAWTComponent().updateLabelText();
-  }
 }
