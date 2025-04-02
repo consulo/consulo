@@ -23,9 +23,9 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.ToggleAction;
+import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -38,7 +38,7 @@ import java.io.IOException;
 /**
  * @author Nikolai Matveev
  */
-public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
+public abstract class AbstractConvertLineSeparatorsAction extends ToggleAction {
     private static final Logger LOG = Logger.getInstance(AbstractConvertLineSeparatorsAction.class);
 
     @Nonnull
@@ -53,50 +53,39 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
         mySeparator = separator;
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        if (project != null) {
-            final VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
-            final Presentation presentation = e.getPresentation();
-            if (virtualFiles != null) {
-                if (virtualFiles.length == 1) {
-                    presentation.setEnabled(!mySeparator.equals(LoadTextUtil.detectLineSeparator(virtualFiles[0], false)));
-                }
-                else {
-                    presentation.setEnabled(true);
-                }
-            }
-            else {
-                presentation.setEnabled(false);
-            }
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return false;
         }
+
+        VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
+        return virtualFiles != null && virtualFiles.length == 1
+            && mySeparator.equals(LoadTextUtil.detectLineSeparator(virtualFiles[0], false));
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent event) {
-        final Project project = event.getData(Project.KEY);
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        if (!state) {
+            return;
+        }
+
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
 
-        final VirtualFile[] virtualFiles = event.getData(VirtualFile.KEY_OF_ARRAY);
+        VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
         if (virtualFiles == null) {
             return;
         }
 
-        final VirtualFile projectVirtualDirectory;
         VirtualFile projectBaseDir = project.getBaseDir();
-        if (projectBaseDir != null && projectBaseDir.isDirectory()) {
-            projectVirtualDirectory = projectBaseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
-        }
-        else {
-            projectVirtualDirectory = null;
-        }
+        VirtualFile projectVirtualDirectory =
+            projectBaseDir != null && projectBaseDir.isDirectory() ? projectBaseDir.findChild(Project.DIRECTORY_STORE_FOLDER) : null;
 
-        final FileTypeRegistry fileTypeManager = FileTypeRegistry.getInstance();
+        FileTypeRegistry fileTypeManager = FileTypeRegistry.getInstance();
         for (VirtualFile file : virtualFiles) {
             VfsUtilCore.processFilesRecursively(
                 file,
@@ -106,10 +95,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
                     }
                     return true;
                 },
-                dir -> {
-                    return !dir.equals(projectVirtualDirectory) &&
-                        !fileTypeManager.isFileIgnored(dir); // Exclude files like '.git'
-                }
+                dir -> !dir.equals(projectVirtualDirectory) && !fileTypeManager.isFileIgnored(dir) // Exclude files like '.git'
             );
         }
     }
@@ -124,11 +110,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
     }
 
     @RequiredUIAccess
-    public static void changeLineSeparators(
-        @Nonnull final Project project,
-        @Nonnull final VirtualFile virtualFile,
-        @Nonnull final String newSeparator
-    ) {
+    public static void changeLineSeparators(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull String newSeparator) {
         FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
         Document document = fileDocumentManager.getCachedDocument(virtualFile);
         if (document != null) {
@@ -136,7 +118,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
         }
 
         String currentSeparator = LoadTextUtil.detectLineSeparator(virtualFile, false);
-        final String commandText;
+        String commandText;
         if (StringUtil.isEmpty(currentSeparator)) {
             commandText = "Changed line separators to " + LineSeparator.fromString(newSeparator);
         }
