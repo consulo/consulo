@@ -45,8 +45,8 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
     @Nonnull
     private final String mySeparator;
 
-    protected AbstractConvertLineSeparatorsAction(@Nullable String text, @Nonnull LineSeparator separator) {
-        this(LocalizeValue.localizeTODO(separator + " - " + text), separator.getSeparatorString());
+    protected AbstractConvertLineSeparatorsAction(@Nullable LocalizeValue text, @Nonnull LineSeparator separator) {
+        this(text, separator.getSeparatorString());
     }
 
     protected AbstractConvertLineSeparatorsAction(@Nonnull LocalizeValue text, @Nonnull String separator) {

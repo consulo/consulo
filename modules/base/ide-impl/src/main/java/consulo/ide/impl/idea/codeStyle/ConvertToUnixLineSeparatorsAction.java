@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeStyle;
 
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.ide.impl.idea.util.LineSeparator;
 
 /**
@@ -23,6 +23,6 @@ import consulo.ide.impl.idea.util.LineSeparator;
  */
 public class ConvertToUnixLineSeparatorsAction extends AbstractConvertLineSeparatorsAction {
     public ConvertToUnixLineSeparatorsAction() {
-        super(ApplicationBundle.message("combobox.crlf.unix"), LineSeparator.LF);
+        super(ApplicationLocalize.comboboxCrlfUnix(), LineSeparator.LF);
     }
 }

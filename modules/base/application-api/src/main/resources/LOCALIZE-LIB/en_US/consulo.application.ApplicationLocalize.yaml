@@ -559,13 +559,13 @@ combobox.autocomplete.case.sensitive.none:
 combobox.case.sensitive.completion:
   text: 'Case sensitive completion:'
 combobox.crlf.mac:
-  text: Classic Mac (\r)
+  text: "CR - Classic Mac (\\r)"
 combobox.crlf.system.dependent:
-  text: System-Dependent
+  text: "System-Dependent"
 combobox.crlf.unix:
-  text: Unix and OS X (\n)
+  text: "LF - Unix and OS X (\\n)"
 combobox.crlf.windows:
-  text: Windows (\r\n)
+  text: "CRLF - Windows (\\r\\n)"
 combobox.editor.tab.placement:
   text: 'Placement:'
 combobox.effect.bold.dottedline:
