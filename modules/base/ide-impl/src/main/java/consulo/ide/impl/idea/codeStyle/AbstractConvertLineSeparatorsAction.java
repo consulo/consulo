@@ -19,8 +19,6 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.LineSeparator;
-import consulo.undoRedo.CommandProcessor;
-import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -28,11 +26,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -45,7 +44,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
     @Nonnull
     private final String mySeparator;
 
-    protected AbstractConvertLineSeparatorsAction(@Nullable LocalizeValue text, @Nonnull LineSeparator separator) {
+    protected AbstractConvertLineSeparatorsAction(@Nonnull LocalizeValue text, @Nonnull LineSeparator separator) {
         this(text, separator.getSeparatorString());
     }
 
