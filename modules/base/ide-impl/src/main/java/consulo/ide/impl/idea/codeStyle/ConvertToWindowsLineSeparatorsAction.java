@@ -22,8 +22,7 @@ import consulo.ide.impl.idea.util.LineSeparator;
  * @author Nikolai Matveev
  */
 public class ConvertToWindowsLineSeparatorsAction extends AbstractConvertLineSeparatorsAction {
-
-  public ConvertToWindowsLineSeparatorsAction() {
-    super(ApplicationBundle.message("combobox.crlf.windows"), LineSeparator.CRLF);
-  }
+    public ConvertToWindowsLineSeparatorsAction() {
+        super(ApplicationBundle.message("combobox.crlf.windows"), LineSeparator.CRLF);
+    }
 }

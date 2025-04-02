@@ -22,8 +22,7 @@ import consulo.ide.impl.idea.util.LineSeparator;
  * @author Nikolai Matveev
  */
 public class ConvertToUnixLineSeparatorsAction extends AbstractConvertLineSeparatorsAction {
-
-  public ConvertToUnixLineSeparatorsAction() {
-    super(ApplicationBundle.message("combobox.crlf.unix"), LineSeparator.LF);
-  }
+    public ConvertToUnixLineSeparatorsAction() {
+        super(ApplicationBundle.message("combobox.crlf.unix"), LineSeparator.LF);
+    }
 }
