@@ -20,8 +20,8 @@ import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.logging.Logger;
 import consulo.ide.localize.IdeLocalize;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ElementsChooser;
@@ -36,7 +36,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +50,6 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
 
     private final ElementsChooser<ComponentElementProperties> myChooser;
     private final FieldPanel myPathPanel;
-    @NonNls
     public static final String DEFAULT_PATH =
         FileUtil.toSystemDependentName(ContainerPathManager.get().getConfigPath() + "/" + "settings.zip");
     private final boolean myShowFilePath;
@@ -60,7 +58,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
     public ChooseComponentsToExportDialog(
         MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents,
         boolean showFilePath,
-        final String title,
+        String title,
         String description
     ) {
         super(false);
@@ -76,16 +74,17 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
                 componentToContainingListElement.put(component, componentElementProperties);
             }
         }
-        final Set<ComponentElementProperties> componentElementProperties = new LinkedHashSet<>(componentToContainingListElement.values());
+        Set<ComponentElementProperties> componentElementProperties = new LinkedHashSet<>(componentToContainingListElement.values());
         myChooser = new ElementsChooser<>(true);
         myChooser.setColorUnmarkedElements(false);
-        for (final ComponentElementProperties componentElementProperty : componentElementProperties) {
+        for (ComponentElementProperties componentElementProperty : componentElementProperties) {
             myChooser.addElement(componentElementProperty, true, componentElementProperty);
         }
         myChooser.sort((o1, o2) -> o1.toString().compareTo(o2.toString()));
 
-        final ActionListener browseAction = new ActionListener() {
+        ActionListener browseAction = new ActionListener() {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(ActionEvent e) {
                 chooseSettingsFile(
                     myPathPanel.getText(),
@@ -151,7 +150,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
         Map<ExportSettingsAction.ExportableItem, ComponentElementProperties> componentToContainingListElement,
         MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents
     ) {
-        final File[] exportFiles = component.getExportFiles();
+        File[] exportFiles = component.getExportFiles();
         File file = null;
         for (File exportFile : exportFiles) {
             Collection<ExportSettingsAction.ExportableItem> tiedComponents = fileToComponents.get(exportFile);
@@ -160,7 +159,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
                 if (tiedComponent == component) {
                     continue;
                 }
-                final ComponentElementProperties elementProperties = componentToContainingListElement.get(tiedComponent);
+                ComponentElementProperties elementProperties = componentToContainingListElement.get(tiedComponent);
                 if (elementProperties != null && !FileUtil.filesEqual(exportFile, file)) {
                     LOG.assertTrue(file == null, "Component " + component + " serialize itself into " + file + " and " + exportFile);
                     // found
@@ -175,7 +174,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
 
     @Nonnull
     @RequiredUIAccess
-    public static AsyncResult<String> chooseSettingsFile(String oldPath, Component parent, final String title, final String description) {
+    public static AsyncResult<String> chooseSettingsFile(String oldPath, Component parent, String title, String description) {
         FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
         chooserDescriptor.setDescription(description);
         chooserDescriptor.setHideIgnored(false);
@@ -183,7 +182,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
 
         VirtualFile initialDir;
         if (oldPath != null) {
-            final File oldFile = new File(oldPath);
+            File oldFile = new File(oldPath);
             initialDir = LocalFileSystem.getInstance().findFileByIoFile(oldFile);
             if (initialDir == null && oldFile.getParentFile() != null) {
                 initialDir = LocalFileSystem.getInstance().findFileByIoFile(oldFile.getParentFile());
@@ -192,7 +191,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
         else {
             initialDir = null;
         }
-        final AsyncResult<String> result = AsyncResult.undefined();
+        AsyncResult<String> result = AsyncResult.undefined();
         AsyncResult<VirtualFile[]> fileAsyncResult = FileChooser.chooseFiles(chooserDescriptor, null, parent, initialDir);
         fileAsyncResult.doWhenDone(files -> {
             VirtualFile file = files[0];
@@ -224,20 +223,21 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected JComponent createSouthPanel() {
-        final JComponent buttons = super.createSouthPanel();
+        JComponent buttons = super.createSouthPanel();
         if (!myShowFilePath) {
             return buttons;
         }
-        final JPanel panel = new JPanel(new VerticalFlowLayout());
+        JPanel panel = new JPanel(new VerticalFlowLayout());
         panel.add(myPathPanel);
         panel.add(buttons);
         return panel;
     }
 
     Set<ExportSettingsAction.ExportableItem> getExportableComponents() {
-        final List<ComponentElementProperties> markedElements = myChooser.getMarkedElements();
-        final Set<ExportSettingsAction.ExportableItem> components = new HashSet<>();
+        List<ComponentElementProperties> markedElements = myChooser.getMarkedElements();
+        Set<ExportSettingsAction.ExportableItem> components = new HashSet<>();
         for (ComponentElementProperties elementProperties : markedElements) {
             components.addAll(elementProperties.myComponents);
         }

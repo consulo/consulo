@@ -49,7 +49,7 @@ public class ShowContentAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final ToolWindow window = getWindow(e);
+        ToolWindow window = getWindow(e);
         e.getPresentation().setEnabled(window != null && window.getContentManager().getContentCount() > 1);
         e.getPresentation().setText(
             window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED ? "Show List of Tabs" : "Show List of Views"
@@ -76,12 +76,12 @@ public class ShowContentAction extends AnAction implements DumbAware {
 
         ToolWindowManager manager = ToolWindowManager.getInstance(project);
 
-        final ToolWindow window = manager.getToolWindow(manager.getActiveToolWindowId());
+        ToolWindow window = manager.getToolWindow(manager.getActiveToolWindowId());
         if (window == null) {
             return null;
         }
 
-        final Component context = event.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        Component context = event.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         if (context == null) {
             return null;
         }

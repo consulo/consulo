@@ -30,10 +30,10 @@ public class CustomizeUIAction extends AnAction {
         super("Customize Menus and Toolbars...");
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         ShowSettingsUtil.getInstance().showAndSelect(project, CustomizationConfigurable.class);
     }
 }

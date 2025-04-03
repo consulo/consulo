@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
@@ -49,7 +50,8 @@ public final class CopyReferenceUtil {
     }
 
     @Nonnull
-    static List<PsiElement> getElementsToCopy(@Nullable final Editor editor, final DataContext dataContext) {
+    @RequiredReadAction
+    static List<PsiElement> getElementsToCopy(@Nullable Editor editor, DataContext dataContext) {
         List<PsiElement> elements = new ArrayList<>();
         if (editor != null) {
             PsiReference reference = TargetElementUtil.findReference(editor);
@@ -70,7 +72,7 @@ public final class CopyReferenceUtil {
         }
 
         if (elements.isEmpty() && editor == null) {
-            final Project project = dataContext.getData(Project.KEY);
+            Project project = dataContext.getData(Project.KEY);
             VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
             if (project != null && files != null) {
                 for (VirtualFile file : files) {
@@ -92,7 +94,7 @@ public final class CopyReferenceUtil {
 
     static void setStatusBarText(Project project, String message) {
         if (project != null) {
-            final StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(project);
+            StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(project);
             if (statusBar != null) {
                 statusBar.setInfo(message);
             }
@@ -123,7 +125,7 @@ public final class CopyReferenceUtil {
     }
 
     @Nullable
-    static String elementToFqn(@Nullable final PsiElement element, @Nullable Editor editor) {
+    static String elementToFqn(@Nullable PsiElement element, @Nullable Editor editor) {
         return QualifiedNameProviderUtil.elementToFqn(element, editor);
     }
 }

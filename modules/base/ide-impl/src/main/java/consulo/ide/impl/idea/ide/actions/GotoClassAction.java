@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.matcher.MinusculeMatcher;
@@ -89,7 +90,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
     @Override
     public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
@@ -98,7 +99,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-        final GotoClassModel2 model = new GotoClassModel2(project);
+        GotoClassModel2 model = new GotoClassModel2(project);
         String pluralKinds =
             StringUtil.capitalize(StringUtil.join(GotoClassPresentationUpdater.getElementKinds(), StringUtil::pluralize, "/"));
         LocalizeValue title = IdeLocalize.goToClassToolwindowTitle(pluralKinds);
@@ -122,8 +123,8 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     }
 
     static void handleSubMemberNavigation(ChooseByNamePopup popup, Object element) {
-        if (element instanceof PsiElement && ((PsiElement)element).isValid()) {
-            PsiElement psiElement = getElement(((PsiElement)element), popup);
+        if (element instanceof PsiElement psiElement0 && psiElement0.isValid()) {
+            PsiElement psiElement = getElement(psiElement0, popup);
             psiElement = psiElement.getNavigationElement();
             VirtualFile file = PsiUtilCore.getVirtualFile(psiElement);
 
@@ -153,16 +154,17 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     }
 
     @Nullable
+    @RequiredReadAction
     public static Navigatable findMember(String memberPattern, String fullPattern, PsiElement psiElement, VirtualFile file) {
-        final StructureViewBuilder builder = PsiStructureViewFactory.createBuilderForFile(psiElement.getContainingFile());
-        final FileEditor[] editors = FileEditorManager.getInstance(psiElement.getProject()).getEditors(file);
+        StructureViewBuilder builder = PsiStructureViewFactory.createBuilderForFile(psiElement.getContainingFile());
+        FileEditor[] editors = FileEditorManager.getInstance(psiElement.getProject()).getEditors(file);
         if (builder == null || editors.length == 0) {
             return null;
         }
 
-        final StructureView view = builder.createStructureView(editors[0], psiElement.getProject());
+        StructureView view = builder.createStructureView(editors[0], psiElement.getProject());
         try {
-            final StructureViewTreeElement element = findElement(view.getTreeModel().getRoot(), psiElement, 4);
+            StructureViewTreeElement element = findElement(view.getTreeModel().getRoot(), psiElement, 4);
             if (element == null) {
                 return null;
             }
@@ -171,15 +173,16 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
             int max = Integer.MIN_VALUE;
             Object target = null;
             for (TreeElement treeElement : element.getChildren()) {
-                if (treeElement instanceof StructureViewTreeElement) {
-                    Object value = ((StructureViewTreeElement)treeElement).getValue();
-                    if (value instanceof PsiElement && value instanceof Navigatable && fullPattern.equals(CopyReferenceAction.elementToFqn((PsiElement)value))) {
-                        return (Navigatable)value;
+                if (treeElement instanceof StructureViewTreeElement structureViewTreeElement) {
+                    Object value = structureViewTreeElement.getValue();
+                    if (value instanceof PsiElement valueElement && value instanceof Navigatable valueNavigatable
+                        && fullPattern.equals(CopyReferenceAction.elementToFqn(valueElement))) {
+                        return valueNavigatable;
                     }
 
                     String presentableText = treeElement.getPresentation().getPresentableText();
                     if (presentableText != null) {
-                        final int degree = matcher.matchingDegree(presentableText);
+                        int degree = matcher.matchingDegree(presentableText);
                         if (degree > max) {
                             max = degree;
                             target = ((StructureViewTreeElement)treeElement).getValue();
@@ -187,7 +190,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
                     }
                 }
             }
-            return target instanceof Navigatable ? (Navigatable)target : null;
+            return target instanceof Navigatable navigatable ? navigatable : null;
         }
         finally {
             Disposer.dispose(view);
@@ -196,15 +199,15 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
     @Nullable
     private static StructureViewTreeElement findElement(StructureViewTreeElement node, PsiElement element, int hopes) {
-        final Object value = node.getValue();
-        if (value instanceof PsiElement) {
-            if (((PsiElement)value).isEquivalentTo(element)) {
+        Object value = node.getValue();
+        if (value instanceof PsiElement psiElement) {
+            if (psiElement.isEquivalentTo(element)) {
                 return node;
             }
             if (hopes != 0) {
                 for (TreeElement child : node.getChildren()) {
-                    if (child instanceof StructureViewTreeElement) {
-                        final StructureViewTreeElement e = findElement((StructureViewTreeElement)child, element, hopes - 1);
+                    if (child instanceof StructureViewTreeElement treeElement) {
+                        StructureViewTreeElement e = findElement(treeElement, element, hopes - 1);
                         if (e != null) {
                             return e;
                         }
@@ -217,7 +220,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
     @Nonnull
     private static PsiElement getElement(@Nonnull PsiElement element, ChooseByNamePopup popup) {
-        final String path = popup.getPathToAnonymous();
+        String path = popup.getPathToAnonymous();
         if (path != null) {
             return getElement(element, path);
         }
@@ -226,7 +229,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
     @Nonnull
     public static PsiElement getElement(@Nonnull PsiElement element, @Nonnull String path) {
-        final String[] classes = path.split("\\$");
+        String[] classes = path.split("\\$");
         List<Integer> indexes = new ArrayList<>();
         for (String cls : classes) {
             if (cls.isEmpty()) {
@@ -241,7 +244,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         }
         PsiElement current = element;
         for (int index : indexes) {
-            final PsiElement[] anonymousClasses = getAnonymousClasses(current);
+            PsiElement[] anonymousClasses = getAnonymousClasses(current);
             if (index >= 0 && index < anonymousClasses.length) {
                 current = anonymousClasses[index];
             }
@@ -255,7 +258,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     @Nonnull
     private static PsiElement[] getAnonymousClasses(@Nonnull PsiElement element) {
         for (AnonymousElementProvider provider : AnonymousElementProvider.EP_NAME.getExtensionList()) {
-            final PsiElement[] elements = provider.getAnonymousElements(element);
+            PsiElement[] elements = provider.getAnonymousElements(element);
             if (elements.length > 0) {
                 return elements;
             }

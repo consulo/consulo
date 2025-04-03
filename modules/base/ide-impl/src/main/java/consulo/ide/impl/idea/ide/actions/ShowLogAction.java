@@ -34,7 +34,7 @@ public class ShowLogAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final File logFile = new File(ContainerPathManager.get().getLogPath(), "consulo.log");
+        File logFile = new File(ContainerPathManager.get().getLogPath(), "consulo.log");
         ShowFilePathAction.openFile(logFile);
     }
 

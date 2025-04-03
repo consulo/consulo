@@ -45,6 +45,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
@@ -103,13 +104,13 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
             ContainerUtil.addAll(exportFiles, markedComponent.getExportFiles());
         }
 
-        final File saveFile = dialog.getExportFile();
+        File saveFile = dialog.getExportFile();
         try {
             if (saveFile.exists()) {
                 final int ret = Messages.showOkCancelDialog(
                     IdeLocalize.promptOverwriteSettingsFile(FileUtil.toSystemDependentName(saveFile.getPath())).get(),
                     IdeLocalize.titleFileAlreadyExists().get(),
-                    Messages.getWarningIcon()
+                    UIUtil.getWarningIcon()
                 );
                 if (ret != Messages.OK) {
                     return;

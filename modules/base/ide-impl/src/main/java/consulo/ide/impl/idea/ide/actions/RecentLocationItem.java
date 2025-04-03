@@ -59,7 +59,7 @@ public final class RecentLocationItem {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("RecentLocationItem{");
+        StringBuilder sb = new StringBuilder("RecentLocationItem{");
         sb.append("myEditor=").append(myEditor);
         sb.append(", myInfo=").append(myInfo);
         sb.append('}');

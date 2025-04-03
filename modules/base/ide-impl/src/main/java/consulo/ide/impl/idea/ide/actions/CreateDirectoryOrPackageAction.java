@@ -152,7 +152,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
             return;
         }
 
-        final PsiDirectory[] directories = view.getDirectories();
+        PsiDirectory[] directories = view.getDirectories();
         if (directories.length == 0) {
             presentation.setVisible(false);
             presentation.setEnabled(false);

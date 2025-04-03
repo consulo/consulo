@@ -44,7 +44,7 @@ public abstract class WindowAction extends AnAction implements DumbAware {
         if (uiWindow != null && uiWindow.getUserData(IdeFrame.KEY) != null) {
             return false;
         }
-        if (window instanceof Dialog && !((Dialog)window).isResizable()) {
+        if (window instanceof Dialog dialog && !dialog.isResizable()) {
             return false;
         }
         JRootPane root = getRootPane(window);
@@ -56,11 +56,7 @@ public abstract class WindowAction extends AnAction implements DumbAware {
     }
 
     private static JRootPane getRootPane(Window window) {
-        if (window instanceof RootPaneContainer) {
-            RootPaneContainer container = (RootPaneContainer)window;
-            return container.getRootPane();
-        }
-        return null;
+        return window instanceof RootPaneContainer container ? container.getRootPane() : null;
     }
 
     public static final String NO_WINDOW_ACTIONS = "no.window.actions";
@@ -73,6 +69,7 @@ public abstract class WindowAction extends AnAction implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public final void update(@Nonnull AnActionEvent event) {
         Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
         boolean enabled = isEnabledFor(window);
@@ -85,7 +82,6 @@ public abstract class WindowAction extends AnAction implements DumbAware {
     }
 
     public abstract static class BaseSizeAction extends WindowAction {
-
         private final boolean myHorizontal;
         private final boolean myPositive;
 

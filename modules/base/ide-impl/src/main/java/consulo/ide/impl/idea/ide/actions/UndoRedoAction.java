@@ -50,7 +50,7 @@ public abstract class UndoRedoAction extends DumbAwareAction {
 
         // do not allow global undo in dialogs
         if (editor == null) {
-            final Boolean isModalContext = event.getData(PlatformDataKeys.IS_MODAL_CONTEXT);
+            Boolean isModalContext = event.getData(PlatformDataKeys.IS_MODAL_CONTEXT);
             if (isModalContext != null && isModalContext) {
                 presentation.setEnabled(false);
                 return;

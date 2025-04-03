@@ -104,8 +104,8 @@ public class CopyPathProvider extends DumbAwareAction {
         }
         else {
             List<VirtualFile> files = ContainerUtil.mapNotNull(elements, it -> {
-                if (it instanceof PsiFileSystemItem) {
-                    return ((PsiFileSystemItem)it).getVirtualFile();
+                if (it instanceof PsiFileSystemItem psiFileSystemItem) {
+                    return psiFileSystemItem.getVirtualFile();
                 }
                 else {
                     PsiFile containingFile = it.getContainingFile();

@@ -26,9 +26,9 @@ import consulo.ui.ex.action.AnActionEvent;
 public class UnsplitAction extends SplitterActionBase {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(final AnActionEvent event) {
-        final Project project = event.getData(Project.KEY);
-        final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+    public void actionPerformed(AnActionEvent event) {
+        Project project = event.getData(Project.KEY);
+        FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         //VirtualFile file = fileEditorManager.getSelectedFiles()[0];
         fileEditorManager.unsplitWindow();
     }

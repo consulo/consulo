@@ -29,6 +29,7 @@ public class PreviousOccurenceToolbarAction extends PreviousOccurenceAction {
         copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_PREVIOUS_OCCURENCE));
     }
 
+    @Override
     protected OccurenceNavigator getNavigator(DataContext dataContext) {
         return myNavigator;
     }

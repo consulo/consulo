@@ -38,7 +38,7 @@ import jakarta.annotation.Nullable;
 public class NewElementAction extends AnAction implements DumbAware, PopupAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(final AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         showPopup(event.getDataContext());
     }
 
@@ -93,9 +93,9 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
     @Override
     @RequiredUIAccess
     public void update(AnActionEvent e) {
-        final Presentation presentation = e.getPresentation();
-        final DataContext context = e.getDataContext();
-        final Project project = context.getData(Project.KEY);
+        Presentation presentation = e.getPresentation();
+        DataContext context = e.getDataContext();
+        Project project = context.getData(Project.KEY);
         if (project == null) {
             presentation.setEnabled(false);
             return;
@@ -104,7 +104,7 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
             presentation.setEnabled(false);
             return;
         }
-        final IdeView ideView = context.getData(IdeView.KEY);
+        IdeView ideView = context.getData(IdeView.KEY);
         if (ideView == null) {
             presentation.setEnabled(false);
             return;

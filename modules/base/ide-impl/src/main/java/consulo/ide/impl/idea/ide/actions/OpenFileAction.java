@@ -38,33 +38,33 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
-    @NonNls
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        @Nullable final Project project = e.getData(Project.KEY);
-        final boolean showFiles = project != null;
+        @Nullable Project project = e.getData(Project.KEY);
+        boolean showFiles = project != null;
 
-        final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
-            @RequiredUIAccess
+        FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
             @Override
+            @RequiredUIAccess
             public boolean isFileSelectable(VirtualFile file) {
                 return super.isFileSelectable(file) || (!file.isDirectory() && showFiles && !FileElement.isArchive(file));
             }
 
             @Override
+            @RequiredUIAccess
             public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
                 if (!file.isDirectory() && isFileSelectable(file)) {
                     return showHiddenFiles || !FileElement.isFileHidden(file);
@@ -108,8 +108,8 @@ public class OpenFileAction extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    private static void doOpenFile(@Nullable final Project project, @Nonnull final VirtualFile[] result) {
-        for (final VirtualFile file : result) {
+    private static void doOpenFile(@Nullable Project project, @Nonnull VirtualFile[] result) {
+        for (VirtualFile file : result) {
             if (file.isDirectory()) {
                 ProjectImplUtil.openAsync(file.getPath(), project, false, UIAccess.current())
                     .doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
@@ -121,7 +121,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
                     project,
                     IdeLocalize.messageOpenFileIsProject(file.getName()).get(),
                     IdeLocalize.titleOpenProject().get(),
-                    Messages.getQuestionIcon()
+                    UIUtil.getQuestionIcon()
                 );
                 if (answer == 0) {
                     ProjectImplUtil.openAsync(
@@ -145,21 +145,23 @@ public class OpenFileAction extends AnAction implements DumbAware {
         }
     }
 
-    public static void openFile(final String filePath, final Project project) {
-        final VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
+    @RequiredUIAccess
+    public static void openFile(String filePath, Project project) {
+        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
         if (file != null && file.isValid()) {
             openFile(file, project);
         }
     }
 
-    public static void openFile(final VirtualFile virtualFile, final Project project) {
+    @RequiredUIAccess
+    public static void openFile(VirtualFile virtualFile, Project project) {
         FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
         if (editorProviderManager.getProviders(project, virtualFile).length == 0) {
             Messages.showMessageDialog(
                 project,
                 IdeLocalize.errorFilesOfThisTypeCannotBeOpened(Application.get().getName()).get(),
                 IdeLocalize.titleCannotOpenFile().get(),
-                Messages.getErrorIcon()
+                UIUtil.getErrorIcon()
             );
             return;
         }

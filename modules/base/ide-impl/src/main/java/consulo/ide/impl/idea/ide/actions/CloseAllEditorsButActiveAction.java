@@ -35,14 +35,14 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
         Project project = e.getData(Project.KEY);
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         VirtualFile selectedFile;
-        final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
+        FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
         if (window != null) {
             window.closeAllExcept(e.getData(VirtualFile.KEY));
             return;
         }
         selectedFile = fileEditorManager.getSelectedFiles()[0];
-        final VirtualFile[] siblings = fileEditorManager.getSiblings(selectedFile);
-        for (final VirtualFile sibling : siblings) {
+        VirtualFile[] siblings = fileEditorManager.getSiblings(selectedFile);
+        for (VirtualFile sibling : siblings) {
             if (!Comparing.equal(selectedFile, sibling)) {
                 fileEditorManager.closeFile(sibling);
             }
@@ -60,7 +60,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
         }
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         VirtualFile selectedFile;
-        final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
+        FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
         if (window != null) {
             presentation.setEnabled(window.getFiles().length > 1);
             return;

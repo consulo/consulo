@@ -16,16 +16,17 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.documentation.ExternalDocumentationHandler;
@@ -34,8 +35,8 @@ import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -46,6 +47,7 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.util.lang.StringUtil;
+import consulo.webBrowser.BrowserUtil;
 import jakarta.annotation.Nullable;
 
 import java.awt.*;
@@ -58,6 +60,7 @@ public class ExternalJavaDocAction extends AnAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = dataContext.getData(Project.KEY);
@@ -97,8 +100,8 @@ public class ExternalJavaDocAction extends AnAction {
             return;
         }
         Project project = dataContext.getData(Project.KEY);
-        final Component contextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+        Component contextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        Application.get().executeOnPooledThread(() -> {
             List<String> urls;
             if (StringUtil.isEmptyOrSpaces(docUrl)) {
                 ThrowableComputable<List<String>, RuntimeException> action = () -> provider.getUrlFor(element, originalElement);
@@ -117,54 +120,58 @@ public class ExternalJavaDocAction extends AnAction {
                     }
                 }
             }
-            final List<String> finalUrls = urls;
-            ApplicationManager.getApplication().invokeLater(() -> {
-                if (ContainerUtil.isEmpty(finalUrls)) {
-                    if (element != null && provider instanceof ExternalDocumentationProvider externalDocumentationProvider) {
-                        if (externalDocumentationProvider.canPromptToConfigureDocumentation(element)) {
+            List<String> finalUrls = urls;
+            Application.get().invokeLater(
+                () -> {
+                    if (ContainerUtil.isEmpty(finalUrls)) {
+                        if (element != null && provider instanceof ExternalDocumentationProvider externalDocumentationProvider
+                            && externalDocumentationProvider.canPromptToConfigureDocumentation(element)) {
                             externalDocumentationProvider.promptToConfigureDocumentation(element);
                         }
                     }
-                }
-                else if (finalUrls.size() == 1) {
-                    BrowserUtil.browse(finalUrls.get(0));
-                }
-                else {
-                    JBPopupFactory.getInstance().createListPopup(
-                        new BaseListPopupStep<String>("Choose external documentation root", ArrayUtil.toStringArray(finalUrls)) {
-                            @Override
-                            public PopupStep onChosen(final String selectedValue, final boolean finalChoice) {
-                                BrowserUtil.browse(selectedValue);
-                                return FINAL_CHOICE;
+                    else if (finalUrls.size() == 1) {
+                        BrowserUtil.browse(finalUrls.get(0));
+                    }
+                    else {
+                        JBPopupFactory.getInstance().createListPopup(
+                            new BaseListPopupStep<String>("Choose external documentation root", ArrayUtil.toStringArray(finalUrls)) {
+                                @Override
+                                public PopupStep onChosen(String selectedValue, boolean finalChoice) {
+                                    BrowserUtil.browse(selectedValue);
+                                    return FINAL_CHOICE;
+                                }
                             }
-                        }
-                    ).showInBestPositionFor(DataManager.getInstance().getDataContext(contextComponent));
-                }
-            }, IdeaModalityState.nonModal());
+                        ).showInBestPositionFor(DataManager.getInstance().getDataContext(contextComponent));
+                    }
+                },
+                IdeaModalityState.nonModal()
+            );
         });
 
     }
 
     @Nullable
-    private static PsiElement getOriginalElement(final PsiFile context, final Editor editor) {
+    @RequiredReadAction
+    private static PsiElement getOriginalElement(PsiFile context, Editor editor) {
         return (context != null && editor != null) ? context.findElementAt(editor.getCaretModel().getOffset()) : null;
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext dataContext = event.getDataContext();
         Editor editor = dataContext.getData(Editor.KEY);
         PsiElement element = getElement(dataContext, editor);
-        final PsiElement originalElement = getOriginalElement(dataContext.getData(PsiFile.KEY), editor);
+        PsiElement originalElement = getOriginalElement(dataContext.getData(PsiFile.KEY), editor);
         DocumentationManagerHelper.storeOriginalElement(dataContext.getData(Project.KEY), originalElement, element);
-        final DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
+        DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
         boolean enabled;
         if (provider instanceof ExternalDocumentationProvider edProvider) {
             enabled = edProvider.hasDocumentationFor(element, originalElement) || edProvider.canPromptToConfigureDocumentation(element);
         }
         else {
-            final List<String> urls = provider.getUrlFor(element, originalElement);
+            List<String> urls = provider.getUrlFor(element, originalElement);
             enabled = urls != null && !urls.isEmpty();
         }
         if (editor != null) {
@@ -182,6 +189,7 @@ public class ExternalJavaDocAction extends AnAction {
         }
     }
 
+    @RequiredReadAction
     private static PsiElement getElement(DataContext dataContext, Editor editor) {
         PsiElement element = dataContext.getData(PsiElement.KEY);
         if (element == null && editor != null) {

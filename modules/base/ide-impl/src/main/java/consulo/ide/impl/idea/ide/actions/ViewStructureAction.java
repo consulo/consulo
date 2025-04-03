@@ -65,7 +65,7 @@ public class ViewStructureAction extends DumbAwareAction {
         }
 
         VirtualFile virtualFile = fileEditor.getFile();
-        Editor editor = fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : e.getData(Editor.KEY);
+        Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : e.getData(Editor.KEY);
         if (editor != null) {
             PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
         }
@@ -92,17 +92,17 @@ public class ViewStructureAction extends DumbAwareAction {
         }
         StructureView structureView;
         StructureViewModel treeModel;
-        if (builder instanceof TreeBasedStructureViewBuilder) {
+        if (builder instanceof TreeBasedStructureViewBuilder treeBasedStructureViewBuilder) {
             structureView = null;
-            treeModel = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel(EditorUtil.getEditorEx(fileEditor));
+            treeModel = treeBasedStructureViewBuilder.createStructureViewModel(EditorUtil.getEditorEx(fileEditor));
         }
         else {
             structureView = builder.createStructureView(fileEditor, project);
             treeModel = createStructureViewModel(project, fileEditor, structureView);
         }
-        if (treeModel instanceof PlaceHolder) {
+        if (treeModel instanceof PlaceHolder placeHolder) {
             //noinspection unchecked
-            ((PlaceHolder)treeModel).setPlace(TreeStructureUtil.PLACE);
+            placeHolder.setPlace(TreeStructureUtil.PLACE);
         }
         FileStructurePopup popup = new FileStructurePopup(project, fileEditor, treeModel);
         if (structureView != null) {
@@ -137,11 +137,11 @@ public class ViewStructureAction extends DumbAwareAction {
     ) {
         StructureViewModel treeModel;
         VirtualFile virtualFile = fileEditor.getFile();
-        if (structureView instanceof StructureViewComposite && virtualFile != null) {
-            StructureViewComposite.StructureViewDescriptor[] views = ((StructureViewComposite)structureView).getStructureViews();
+        if (structureView instanceof StructureViewComposite structureViewComposite && virtualFile != null) {
+            StructureViewComposite.StructureViewDescriptor[] views = structureViewComposite.getStructureViews();
             PsiFile psiFile = ObjectUtil.notNull(PsiManager.getInstance(project).findFile(virtualFile));
             treeModel = new StructureViewCompositeModel(psiFile, EditorUtil.getEditorEx(fileEditor), Arrays.asList(views));
-            Disposer.register(structureView, treeModel);
+            Disposer.register(structureViewComposite, treeModel);
         }
         else {
             treeModel = structureView.getTreeModel();

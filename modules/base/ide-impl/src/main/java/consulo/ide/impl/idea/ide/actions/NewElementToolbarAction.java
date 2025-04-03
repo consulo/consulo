@@ -24,6 +24,7 @@ import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
@@ -32,10 +33,11 @@ import consulo.ui.ex.toolWindow.ToolWindow;
  */
 public class NewElementToolbarAction extends NewElementAction {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         if (e.getData(IdeView.KEY) == null) {
-            final Project project = e.getData(Project.KEY);
-            final PsiFileSystemItem psiFile = e.getData(PsiFile.KEY).getParent();
+            Project project = e.getData(Project.KEY);
+            PsiFileSystemItem psiFile = e.getData(PsiFile.KEY).getParent();
             ProjectView.getInstance(project).selectCB(psiFile, psiFile.getVirtualFile(), true)
                 .doWhenDone(() -> showPopup(DataManager.getInstance().getDataContext()));
         }
@@ -45,13 +47,14 @@ public class NewElementToolbarAction extends NewElementAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent event) {
         super.update(event);
         if (event.getData(IdeView.KEY) == null) {
             Project project = event.getData(Project.KEY);
             PsiFile psiFile = event.getData(PsiFile.KEY);
             if (project != null && psiFile != null) {
-                final ToolWindow projectViewWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
+                ToolWindow projectViewWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
                 if (projectViewWindow.isVisible()) {
                     event.getPresentation().setEnabled(true);
                 }

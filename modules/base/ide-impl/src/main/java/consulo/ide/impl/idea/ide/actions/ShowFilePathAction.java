@@ -47,6 +47,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -56,7 +57,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.annotation.Nonnull;
@@ -104,7 +104,7 @@ public class ShowFilePathAction extends AnAction {
         }
     };
 
-    private static final NullableLazyValue<String> fileManagerApp = new AtomicNullableLazyValue<String>() {
+    private static final NullableLazyValue<String> fileManagerApp = new AtomicNullableLazyValue<>() {
         @Override
         protected String compute() {
             return readDesktopEntryKey("Exec").map(line -> line.split(" ")[0])
@@ -113,7 +113,7 @@ public class ShowFilePathAction extends AnAction {
         }
     };
 
-    private static final NotNullLazyValue<String> fileManagerName = new AtomicNotNullLazyValue<String>() {
+    private static final NotNullLazyValue<String> fileManagerName = new AtomicNotNullLazyValue<>() {
         @Nonnull
         @Override
         protected String compute() {
@@ -181,7 +181,7 @@ public class ShowFilePathAction extends AnAction {
             .doWhenDone(popup::showInBestPositionFor));
     }
 
-    public static void show(final VirtualFile file, final MouseEvent e) {
+    public static void show(VirtualFile file, MouseEvent e) {
         show(file, popup -> {
             if (e.getComponent().isShowing()) {
                 popup.show(new RelativePoint(e));
@@ -189,7 +189,7 @@ public class ShowFilePathAction extends AnAction {
         });
     }
 
-    public static void show(final VirtualFile file, final Consumer<ListPopup> action) {
+    public static void show(VirtualFile file, Consumer<ListPopup> action) {
         if (!isSupported()) {
             return;
         }
@@ -222,7 +222,7 @@ public class ShowFilePathAction extends AnAction {
         });
     }
 
-    private static String getPresentableUrl(final VirtualFile eachParent) {
+    private static String getPresentableUrl(VirtualFile eachParent) {
         String url = eachParent.getPresentableUrl();
         if (eachParent.getParent() == null && Platform.current().os().isWindows()) {
             url += "\\";
@@ -231,16 +231,16 @@ public class ShowFilePathAction extends AnAction {
     }
 
     private static ListPopup createPopup(List<VirtualFile> files, List<Image> icons) {
-        final BaseListPopupStep<VirtualFile> step = new BaseListPopupStep<VirtualFile>("File Path", files, icons) {
+        BaseListPopupStep<VirtualFile> step = new BaseListPopupStep<VirtualFile>("File Path", files, icons) {
             @Nonnull
             @Override
-            public String getTextFor(final VirtualFile value) {
+            public String getTextFor(VirtualFile value) {
                 return value.getPresentableName();
             }
 
             @Override
-            public PopupStep onChosen(final VirtualFile selectedValue, final boolean finalChoice) {
-                final File selectedFile = new File(getPresentableUrl(selectedValue));
+            public PopupStep onChosen(VirtualFile selectedValue, boolean finalChoice) {
+                File selectedFile = new File(getPresentableUrl(selectedValue));
                 if (selectedFile.exists()) {
                     Application.get().executeOnPooledThread((Runnable)() -> openFile(selectedFile));
                 }
@@ -269,6 +269,7 @@ public class ShowFilePathAction extends AnAction {
      *
      * @param file a file or directory to show and highlight in a file manager.
      */
+    @RequiredUIAccess
     public static void openFile(@Nonnull File file) {
         if (!file.exists()) {
             return;
@@ -291,8 +292,9 @@ public class ShowFilePathAction extends AnAction {
      *
      * @param directory a directory to show in a file manager.
      */
+    @RequiredUIAccess
     @SuppressWarnings("UnusedDeclaration")
-    public static void openDirectory(@Nonnull final File directory) {
+    public static void openDirectory(@Nonnull File directory) {
         if (!directory.isDirectory()) {
             return;
         }
@@ -412,13 +414,14 @@ public class ShowFilePathAction extends AnAction {
     }
 
     @Nullable
-    private static VirtualFile getFile(final AnActionEvent e) {
+    private static VirtualFile getFile(AnActionEvent e) {
         return e.getData(VirtualFile.KEY);
     }
 
+    @RequiredUIAccess
     public static Boolean showDialog(Project project, String message, String title, File file) {
-        final Boolean[] ref = new Boolean[1];
-        final DialogWrapper.DoNotAskOption option = new DialogWrapper.DoNotAskOption() {
+        Boolean[] ref = new Boolean[1];
+        DialogWrapper.DoNotAskOption option = new DialogWrapper.DoNotAskOption() {
             @Override
             public boolean isToBeShown() {
                 return true;
@@ -451,6 +454,7 @@ public class ShowFilePathAction extends AnAction {
         return ref[0];
     }
 
+    @RequiredUIAccess
     public static void showDialog(Project project, String message, String title, File file, DialogWrapper.DoNotAskOption option) {
         if (Messages.showOkCancelDialog(
             project,
@@ -458,7 +462,8 @@ public class ShowFilePathAction extends AnAction {
             title,
             RevealFileAction.getActionName(),
             IdeLocalize.actionClose().get(),
-            Messages.getInformationIcon(), option
+            UIUtil.getInformationIcon(),
+            option
         ) == Messages.OK) {
             openFile(file);
         }
@@ -474,11 +479,8 @@ public class ShowFilePathAction extends AnAction {
             return file;
         }
 
-        VirtualFileSystem fs = file.getFileSystem();
-        if (fs instanceof ArchiveFileSystem && file.getParent() == null) {
-            return ((ArchiveFileSystem)fs).getLocalVirtualFileFor(file);
-        }
-
-        return null;
+        return file.getFileSystem() instanceof ArchiveFileSystem archiveFileSystem && file.getParent() == null
+            ? archiveFileSystem.getLocalVirtualFileFor(file)
+            : null;
     }
 }

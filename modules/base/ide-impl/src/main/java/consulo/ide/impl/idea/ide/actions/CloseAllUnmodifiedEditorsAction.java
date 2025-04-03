@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.fileEditor.action.CloseEditorsActionBase;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -25,22 +25,22 @@ import consulo.fileEditor.FileEditorWindow;
 
 public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
     @Override
-    protected boolean isFileToClose(FileEditorComposite editor, final FileEditorWindow window) {
+    protected boolean isFileToClose(FileEditorComposite editor, FileEditorWindow window) {
         return !window.getManager().isChanged(editor);
     }
 
     @Override
-    protected boolean isActionEnabled(final Project project, final AnActionEvent event) {
+    protected boolean isActionEnabled(Project project, AnActionEvent event) {
         return super.isActionEnabled(project, event) && ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length > 0;
     }
 
     @Override
-    protected String getPresentationText(final boolean inSplitter) {
+    protected String getPresentationText(boolean inSplitter) {
         if (inSplitter) {
-            return IdeBundle.message("action.close.all.unmodified.editors.in.tab.group");
+            return IdeLocalize.actionCloseAllUnmodifiedEditorsInTabGroup().get();
         }
         else {
-            return IdeBundle.message("action.close.all.unmodified.editors");
+            return IdeLocalize.actionCloseAllUnmodifiedEditors().get();
         }
     }
 }

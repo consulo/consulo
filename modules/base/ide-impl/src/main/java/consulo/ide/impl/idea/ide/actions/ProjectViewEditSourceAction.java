@@ -49,7 +49,7 @@ public class ProjectViewEditSourceAction extends BaseNavigateToSourceAction {
         }
 
         boolean find = Arrays.stream(navigatables)
-            .map(it -> it instanceof NavigatableWithText ? ((NavigatableWithText)it).getNavigateActionText(true) : null)
+            .map(it -> it instanceof NavigatableWithText navWithText ? navWithText.getNavigateActionText(true) : null)
             .filter(Objects::nonNull)
             .findAny()
             .isPresent();

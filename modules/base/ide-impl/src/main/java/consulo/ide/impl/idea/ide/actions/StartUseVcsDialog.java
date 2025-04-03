@@ -59,11 +59,11 @@ class StartUseVcsDialog extends DialogWrapper {
 
     @Override
     protected JComponent createCenterPanel() {
-        final JLabel selectText = new JLabel(VcsLocalize.dialogEnableVersionControlIntegrationSelectVcsLabelText().get());
+        JLabel selectText = new JLabel(VcsLocalize.dialogEnableVersionControlIntegrationSelectVcsLabelText().get());
         selectText.setUI(new MultiLineLabelUI());
 
-        final JPanel mainPanel = new JPanel(new GridBagLayout());
-        final GridBagConstraints gb =
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gb =
             new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0);
 
         mainPanel.add(selectText, gb);
@@ -96,7 +96,7 @@ class StartUseVcsDialog extends DialogWrapper {
         myVcsComboBox.addActionListener(e -> validateVcs());
         validateVcs();
 
-        final JLabel helpText = new JLabel(VcsLocalize.dialogEnableVersionControlIntegrationHintText().get());
+        JLabel helpText = new JLabel(VcsLocalize.dialogEnableVersionControlIntegrationHintText().get());
         helpText.setUI(new MultiLineLabelUI());
         helpText.setForeground(UIUtil.getInactiveTextColor());
 
@@ -106,7 +106,7 @@ class StartUseVcsDialog extends DialogWrapper {
         gb.gridwidth = 2;
         mainPanel.add(helpText, gb);
 
-        final JPanel wrapper = new JPanel(new GridBagLayout());
+        JPanel wrapper = new JPanel(new GridBagLayout());
         wrapper.add(
             mainPanel,
             new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, JBUI.emptyInsets(), 0, 0)

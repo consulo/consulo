@@ -61,7 +61,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
     @Override
     @Nonnull
     public VirtualFile getVirtualFile() {
-        final VirtualFile vFile = myPsiFile.getVirtualFile();
+        VirtualFile vFile = myPsiFile.getVirtualFile();
         assert vFile != null;
         return vFile;
     }
@@ -92,9 +92,8 @@ public abstract class SelectInContextImpl implements SelectInContext {
         }
 
         if (selectInContext == null) {
-            Navigatable descriptor = dataContext.getData(Navigatable.KEY);
-            if (descriptor instanceof OpenFileDescriptorImpl openFileDescriptor) {
-                final VirtualFile file = openFileDescriptor.getFile();
+            if (dataContext.getData(Navigatable.KEY) instanceof OpenFileDescriptorImpl openFileDescriptor) {
+                VirtualFile file = openFileDescriptor.getFile();
                 if (file.isValid()) {
                     Project project = dataContext.getData(Project.KEY);
                     selectInContext = OpenFileDescriptorContext.create(project, file);
@@ -116,8 +115,8 @@ public abstract class SelectInContextImpl implements SelectInContext {
     @Nullable
     @RequiredReadAction
     private static SelectInContext createEditorContext(DataContext dataContext) {
-        final Project project = dataContext.getData(Project.KEY);
-        final FileEditor editor = dataContext.getData(FileEditor.KEY);
+        Project project = dataContext.getData(Project.KEY);
+        FileEditor editor = dataContext.getData(FileEditor.KEY);
         return createEditorContext(project, editor);
     }
 
@@ -130,12 +129,12 @@ public abstract class SelectInContextImpl implements SelectInContext {
         if (file == null) {
             return null;
         }
-        final PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
+        PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
         if (psiFile == null) {
             return null;
         }
-        if (editor instanceof TextEditor) {
-            return new TextEditorContext((TextEditor)editor, psiFile);
+        if (editor instanceof TextEditor textEditor) {
+            return new TextEditorContext(textEditor, psiFile);
         }
         else {
             return new SimpleSelectInContext(psiFile);
@@ -144,7 +143,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
 
     @Nullable
     private static SelectInContext createPsiContext(AnActionEvent event) {
-        final DataContext dataContext = event.getDataContext();
+        DataContext dataContext = event.getDataContext();
         PsiElement psiElement = dataContext.getData(PsiElement.KEY);
         if (psiElement == null || !psiElement.isValid()) {
             return null;
@@ -159,9 +158,8 @@ public abstract class SelectInContextImpl implements SelectInContext {
     @Nullable
     private static JComponent getEventComponent(AnActionEvent event) {
         InputEvent inputEvent = event.getInputEvent();
-        Object source;
-        if (inputEvent != null && (source = inputEvent.getSource()) instanceof JComponent) {
-            return (JComponent)source;
+        if (inputEvent != null && inputEvent.getSource() instanceof JComponent jComponent) {
+            return jComponent;
         }
         else {
             return safeCast(event.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT), JComponent.class);
@@ -170,7 +168,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
 
     @Nullable
     @SuppressWarnings({"unchecked"})
-    private static <T> T safeCast(final Object obj, final Class<T> expectedClass) {
+    private static <T> T safeCast(Object obj, Class<T> expectedClass) {
         if (expectedClass.isInstance(obj)) {
             return (T)obj;
         }
@@ -196,7 +194,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
             if (myPsiFile.getViewProvider() instanceof TemplateLanguageFileViewProvider) {
                 return super.getSelectorInFile();
             }
-            final int offset = myEditor.getEditor().getCaretModel().getOffset();
+            int offset = myEditor.getEditor().getCaretModel().getOffset();
 
             if (offset >= 0 && offset < myPsiFile.getTextLength()) {
                 return myPsiFile.findElementAt(offset);
@@ -218,11 +216,11 @@ public abstract class SelectInContextImpl implements SelectInContext {
 
         @Nullable
         public static SelectInContext create(Project project, VirtualFile file) {
-            final Document document = FileDocumentManager.getInstance().getDocument(file);
+            Document document = FileDocumentManager.getInstance().getDocument(file);
             if (document == null) {
                 return null;
             }
-            final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+            PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
             if (psiFile == null) {
                 return null;
             }
@@ -240,7 +238,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
         @Override
         public Supplier<FileEditor> getFileEditorProvider() {
             return () -> {
-                final VirtualFile file = myElementToSelect.getContainingFile().getVirtualFile();
+                VirtualFile file = myElementToSelect.getContainingFile().getVirtualFile();
                 if (file == null) {
                     return null;
                 }
@@ -258,7 +256,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
         private final Project myProject;
         private final VirtualFile myVirtualFile;
 
-        public VirtualFileSelectInContext(final Project project, final VirtualFile virtualFile) {
+        public VirtualFileSelectInContext(Project project, VirtualFile virtualFile) {
             myProject = project;
             myVirtualFile = virtualFile;
         }

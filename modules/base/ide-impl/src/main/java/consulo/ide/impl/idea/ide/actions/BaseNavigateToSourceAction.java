@@ -71,14 +71,14 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
 
         for (Navigatable navigatable : navigatables) {
             if (navigatable.canNavigate()) {
-                return navigatable instanceof PomTargetPsiElement ? ((PomTargetPsiElement)navigatable).getTarget() : navigatable;
+                return navigatable instanceof PomTargetPsiElement targetPsiElement ? targetPsiElement.getTarget() : navigatable;
             }
         }
         return null;
     }
 
     @Nullable
-    protected Navigatable[] getNavigatables(final DataContext dataContext) {
+    protected Navigatable[] getNavigatables(DataContext dataContext) {
         return dataContext.getData(Navigatable.KEY_OF_ARRAY);
     }
 }

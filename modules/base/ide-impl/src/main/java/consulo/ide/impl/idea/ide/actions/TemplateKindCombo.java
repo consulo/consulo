@@ -37,9 +37,9 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
         getComboBox().setRenderer(new ColoredListCellRenderer() {
             @Override
             protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                if (value instanceof Trinity) {
-                    append((String)((Trinity)value).first);
-                    setIcon((Image)((Trinity)value).second);
+                if (value instanceof Trinity trinity) {
+                    append((String)trinity.first);
+                    setIcon((Image)trinity.second);
                 }
             }
         });
@@ -47,10 +47,7 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
         new ComboboxSpeedSearch(getComboBox()) {
             @Override
             protected String getElementText(Object element) {
-                if (element instanceof Trinity) {
-                    return (String)((Trinity)element).first;
-                }
-                return null;
+                return element instanceof Trinity trinity ? (String)trinity.first : null;
             }
         };
         setButtonListener(null);
@@ -62,7 +59,7 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
 
     public String getSelectedName() {
         //noinspection unchecked
-        final Trinity<String, Image, String> trinity = (Trinity<String, Image, String>)getComboBox().getSelectedItem();
+        Trinity<String, Image, String> trinity = (Trinity<String, Image, String>)getComboBox().getSelectedItem();
         if (trinity == null) {
             // design time
             return null;
@@ -88,8 +85,8 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
         new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent e) {
-                if (e.getInputEvent() instanceof KeyEvent) {
-                    final int code = ((KeyEvent)e.getInputEvent()).getKeyCode();
+                if (e.getInputEvent() instanceof KeyEvent keyEvent) {
+                    int code = keyEvent.getKeyCode();
                     scrollBy(code == KeyEvent.VK_DOWN ? 1 : code == KeyEvent.VK_UP ? -1 : 0);
                 }
             }
@@ -100,7 +97,7 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
         if (delta == 0) {
             return;
         }
-        final int size = getComboBox().getModel().getSize();
+        int size = getComboBox().getModel().getSize();
         int next = getComboBox().getSelectedIndex() + delta;
         if (next < 0 || next >= size) {
             if (!UISettings.getInstance().CYCLE_SCROLLING) {

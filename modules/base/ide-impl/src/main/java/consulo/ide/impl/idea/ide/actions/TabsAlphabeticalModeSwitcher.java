@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.ui.UISettings;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 
@@ -38,6 +39,7 @@ public class TabsAlphabeticalModeSwitcher extends ToggleAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         final int place = UISettings.getInstance().EDITOR_TAB_PLACEMENT;

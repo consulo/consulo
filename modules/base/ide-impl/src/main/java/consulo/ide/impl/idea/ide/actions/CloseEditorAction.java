@@ -32,7 +32,7 @@ public class CloseEditorAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
 
         FileEditorManager editorManager = getEditorManager(project);
         FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
@@ -57,9 +57,9 @@ public class CloseEditorAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void update(final AnActionEvent event) {
-        final Presentation presentation = event.getPresentation();
-        final Project project = event.getData(Project.KEY);
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
         if (project == null) {
             presentation.setEnabled(false);
             return;

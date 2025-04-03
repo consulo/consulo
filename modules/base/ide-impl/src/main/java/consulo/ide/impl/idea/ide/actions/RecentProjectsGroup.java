@@ -27,7 +27,7 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
     public RecentProjectsGroup() {
         super();
 
-        final Presentation templatePresentation = getTemplatePresentation();
+        Presentation templatePresentation = getTemplatePresentation();
         // Let's make title more macish
         templatePresentation.setTextValue(
             Platform.current().os().isMac() ? ActionLocalize.groupReopenMacText() : ActionLocalize.groupReopenWinText()
@@ -35,10 +35,12 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
     }
 
     @Nonnull
+    @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         return RecentProjectsManagerImpl.getInstance().getRecentProjectsActions(true);
     }
 
+    @Override
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         presentation.setEnabled(RecentProjectsManagerImpl.getInstance().getRecentProjectsActions(true).length > 0);

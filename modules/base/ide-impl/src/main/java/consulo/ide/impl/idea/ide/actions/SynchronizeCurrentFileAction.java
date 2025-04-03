@@ -45,9 +45,9 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
             if (file.isDirectory()) {
                 file.getChildren();
             }
-            if (file instanceof NewVirtualFile) {
-                ((NewVirtualFile)file).markClean();
-                ((NewVirtualFile)file).markDirtyRecursively();
+            if (file instanceof NewVirtualFile newVirtualFile) {
+                newVirtualFile.markClean();
+                newVirtualFile.markDirtyRecursively();
             }
         }
 
@@ -55,7 +55,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
     }
 
     private static void postRefresh(Project project, List<? extends VirtualFile> files) {
-        final VcsDirtyScopeManager dirtyScopeManager = VcsDirtyScopeManager.getInstance(project);
+        VcsDirtyScopeManager dirtyScopeManager = VcsDirtyScopeManager.getInstance(project);
         for (VirtualFile f : files) {
             if (f.isDirectory()) {
                 dirtyScopeManager.dirDirtyRecursively(f);

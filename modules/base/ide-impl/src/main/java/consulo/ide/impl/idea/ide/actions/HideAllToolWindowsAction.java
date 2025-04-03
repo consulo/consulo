@@ -39,7 +39,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    public static void performAction(final Project project) {
+    public static void performAction(Project project) {
         ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
 
         ToolWindowLayout layout = new ToolWindowLayout();
@@ -65,7 +65,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
             toolWindowManager.activateEditorComponent();
         }
         else {
-            final ToolWindowLayout restoredLayout = toolWindowManager.getLayoutToRestoreLater();
+            ToolWindowLayout restoredLayout = toolWindowManager.getLayoutToRestoreLater();
             if (restoredLayout != null) {
                 toolWindowManager.setLayoutToRestoreLater(null);
                 toolWindowManager.setLayout(restoredLayout);
@@ -93,7 +93,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
             }
         }
 
-        final ToolWindowLayout layout = toolWindowManager.getLayoutToRestoreLater();
+        ToolWindowLayout layout = toolWindowManager.getLayoutToRestoreLater();
         if (layout != null) {
             presentation.setEnabled(true);
             presentation.setTextValue(IdeLocalize.actionRestoreWindows());

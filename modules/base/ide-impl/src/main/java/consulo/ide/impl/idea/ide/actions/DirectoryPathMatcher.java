@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -73,6 +74,7 @@ class DirectoryPathMatcher {
     }
 
     @Nullable
+    @RequiredReadAction
     DirectoryPathMatcher appendChar(char c) {
         String nextPattern = dirPattern + c;
         if (c == '*' || c == '/' || c == ' ') {
@@ -119,6 +121,7 @@ class DirectoryPathMatcher {
      * return null if not cheap
      */
     @Nullable
+    @RequiredReadAction
     Set<String> findFileNamesMatchingIfCheap(char nextLetter, MinusculeMatcher matcher) {
         List<Pair<VirtualFile, String>> files = getMatchingRoots();
         Set<String> names = new HashSet<>();
@@ -149,6 +152,7 @@ class DirectoryPathMatcher {
     }
 
     @Nonnull
+    @RequiredReadAction
     private List<Pair<VirtualFile, String>> getMatchingRoots() {
         return myFiles != null ? myFiles : getProjectRoots(myModel);
     }
@@ -188,6 +192,7 @@ class DirectoryPathMatcher {
     }
 
     @Nonnull
+    @RequiredReadAction
     private static List<Pair<VirtualFile, String>> getProjectRoots(GotoFileModel model) {
         Set<VirtualFile> roots = new HashSet<>();
         for (Module module : ModuleManager.getInstance(model.getProject()).getModules()) {

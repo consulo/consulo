@@ -30,6 +30,7 @@ import consulo.language.psi.PsiFile;
 import consulo.navigation.Navigatable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
@@ -52,20 +53,21 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
     public static final String ID = "GotoFile";
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         showInSearchEverywherePopup(FileSearchEverywhereContributor.class.getSimpleName(), e, true, true);
     }
 
     @Override
     public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
 
         FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.file");
 
-        final GotoFileModel gotoFileModel = new GotoFileModel(project);
+        GotoFileModel gotoFileModel = new GotoFileModel(project);
         GotoActionCallback<FileType> callback = new GotoActionCallback<>() {
             @Override
             protected ChooseByNameFilter<FileType> createFilter(@Nonnull ChooseByNamePopup popup) {
@@ -73,20 +75,20 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
             }
 
             @Override
-            public void elementChosen(final ChooseByNamePopup popup, final Object element) {
+            public void elementChosen(ChooseByNamePopup popup, Object element) {
                 if (element == null) {
                     return;
                 }
                 ApplicationManager.getApplication().assertIsDispatchThread();
                 Navigatable n = (Navigatable)element;
                 //this is for better cursor position
-                if (element instanceof PsiFile) {
-                    VirtualFile file = ((PsiFile)element).getVirtualFile();
-                    if (file == null) {
+                if (element instanceof PsiFile file) {
+                    VirtualFile virtualFile = file.getVirtualFile();
+                    if (virtualFile == null) {
                         return;
                     }
                     OpenFileDescriptorImpl descriptor =
-                        new OpenFileDescriptorImpl(project, file, popup.getLinePosition(), popup.getColumnPosition());
+                        new OpenFileDescriptorImpl(project, virtualFile, popup.getLinePosition(), popup.getColumnPosition());
                     n = descriptor.setUseCurrentWindow(popup.isOpenInCurrentWindowRequested());
                 }
 
@@ -106,7 +108,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
     }
 
     protected static class GotoFileFilter extends ChooseByNameFilter<FileType> {
-        GotoFileFilter(final ChooseByNamePopup popup, GotoFileModel model, final Project project) {
+        GotoFileFilter(ChooseByNamePopup popup, GotoFileModel model, Project project) {
             super(popup, model, GotoFileConfiguration.getInstance(project), project);
         }
 
@@ -148,7 +150,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
          * {@inheritDoc}
          */
         @Override
-        public int compare(final FileType o1, final FileType o2) {
+        public int compare(FileType o1, FileType o2) {
             if (o1 == o2) {
                 return 0;
             }

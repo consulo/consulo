@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
@@ -39,15 +40,16 @@ public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
     }
 
     private static void addKeymapAction(
-        final DefaultActionGroup group,
-        final KeymapManagerEx manager,
-        final Keymap current,
-        final Keymap keymap,
-        final boolean addScheme
+        DefaultActionGroup group,
+        KeymapManagerEx manager,
+        Keymap current,
+        Keymap keymap,
+        boolean addScheme
     ) {
         group.add(new AnAction(keymap.getPresentableName(), "", keymap == current ? ourCurrentAction : ourNotCurrentAction) {
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 if (addScheme) {
                     manager.getSchemeManager().addNewScheme(keymap, false);
                 }
@@ -58,6 +60,6 @@ public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
 
     @Override
     protected boolean isEnabled() {
-        return ((KeymapManagerEx)KeymapManager.getInstance()).getAllKeymaps().length > 1;
+        return KeymapManager.getInstance().getAllKeymaps().length > 1;
     }
 }

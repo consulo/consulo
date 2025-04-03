@@ -28,19 +28,22 @@ import jakarta.annotation.Nonnull;
  * @author max
  */
 public class QuickChangeSchemesAction extends QuickSwitchSchemeAction implements DumbAware {
+    @Override
     protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
-        final AnAction[] actions = getGroup().getChildren(null);
+        AnAction[] actions = getGroup().getChildren(null);
         for (AnAction action : actions) {
             group.add(action);
         }
     }
 
+    @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
         FeatureUsageTracker.getInstance().triggerFeatureUsed("ui.scheme.quickswitch");
     }
 
+    @Override
     protected boolean isEnabled() {
         return true;
     }

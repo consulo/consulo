@@ -60,11 +60,8 @@ public class NewActionGroup extends ActionGroup {
         }
 
         AnAction newProjectOrModuleGroup = ActionManager.getInstance().getAction(PROJECT_OR_MODULE_GROUP_ID);
-        if (newProjectOrModuleGroup instanceof ActionGroup && ActionUtil.anyActionFromGroupMatches(
-            (ActionGroup)newProjectOrModuleGroup,
-            false,
-            Predicate.isEqual(action)
-        )) {
+        if (newProjectOrModuleGroup instanceof ActionGroup actionGroup
+            && ActionUtil.anyActionFromGroupMatches(actionGroup, false, Predicate.isEqual(action))) {
             return true;
         }
 

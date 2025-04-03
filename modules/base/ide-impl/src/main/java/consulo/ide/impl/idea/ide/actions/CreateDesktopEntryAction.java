@@ -61,44 +61,40 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
 
     @RequiredUIAccess
     @Override
-    public void update(@Nonnull final AnActionEvent event) {
-        final boolean enabled = isAvailable();
-        final Presentation presentation = event.getPresentation();
+    public void update(@Nonnull AnActionEvent event) {
+        boolean enabled = isAvailable();
+        Presentation presentation = event.getPresentation();
         presentation.setEnabled(enabled);
         presentation.setVisible(enabled);
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull final AnActionEvent event) {
+    public void actionPerformed(@Nonnull AnActionEvent event) {
         if (!isAvailable()) {
             return;
         }
 
-        final Project project = event.getData(Project.KEY);
-        final CreateDesktopEntryDialog dialog = new CreateDesktopEntryDialog(project);
+        Project project = event.getData(Project.KEY);
+        CreateDesktopEntryDialog dialog = new CreateDesktopEntryDialog(project);
         if (!dialog.showAndGet()) {
             return;
         }
 
-        final boolean globalEntry = dialog.myGlobalEntryCheckBox.isSelected();
+        boolean globalEntry = dialog.myGlobalEntryCheckBox.isSelected();
         ProgressManager.getInstance().run(new Task.Backgroundable(project, event.getPresentation().getText()) {
             @Override
-            public void run(@Nonnull final ProgressIndicator indicator) {
+            public void run(@Nonnull ProgressIndicator indicator) {
                 createDesktopEntry((Project)getProject(), indicator, globalEntry);
             }
         });
     }
 
-    public static void createDesktopEntry(
-        @Nullable final Project project,
-        @Nonnull final ProgressIndicator indicator,
-        final boolean globalEntry
-    ) {
+    public static void createDesktopEntry(@Nullable Project project, @Nonnull ProgressIndicator indicator, boolean globalEntry) {
         if (!isAvailable()) {
             return;
         }
-        final double step = (1.0 - indicator.getFraction()) / 3.0;
+        double step = (1.0 - indicator.getFraction()) / 3.0;
 
         try {
             indicator.setTextValue(ApplicationLocalize.desktopEntryChecking());
@@ -106,19 +102,19 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
             indicator.setFraction(indicator.getFraction() + step);
 
             indicator.setTextValue(ApplicationLocalize.desktopEntryPreparing());
-            final File entry = prepare();
+            File entry = prepare();
             indicator.setFraction(indicator.getFraction() + step);
 
             indicator.setTextValue(ApplicationLocalize.desktopEntryInstalling());
             install(entry, globalEntry);
             indicator.setFraction(indicator.getFraction() + step);
 
-            final String message = ApplicationLocalize.desktopEntrySuccess(Application.get().getName()).get();
-            if (ApplicationManager.getApplication() != null) {
+            LocalizeValue message = ApplicationLocalize.desktopEntrySuccess(Application.get().getName());
+            if (Application.get() != null) {
                 Notifications.Bus.notify(new Notification(
                     Notifications.SYSTEM_MESSAGES_GROUP,
                     "Desktop entry created",
-                    message,
+                    message.get(),
                     NotificationType.INFORMATION
                 ));
             }
@@ -127,19 +123,18 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
             if (ApplicationManager.getApplication() == null) {
                 throw new RuntimeException(e);
             }
-            final String message = e.getMessage();
+            String message = e.getMessage();
             if (!StringUtil.isEmptyOrSpaces(message)) {
                 LOG.warn(e);
-                Notifications.Bus
-                    .notify(
-                        new Notification(
-                            Notifications.SYSTEM_MESSAGES_GROUP,
-                            "Failed to create desktop entry",
-                            message,
-                            NotificationType.ERROR
-                        ),
-                        project
-                    );
+                Notifications.Bus.notify(
+                    new Notification(
+                        Notifications.SYSTEM_MESSAGES_GROUP,
+                        "Failed to create desktop entry",
+                        message,
+                        NotificationType.ERROR
+                    ),
+                    project
+                );
             }
             else {
                 LOG.error(e);
@@ -158,19 +153,19 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         File distributionDirectory = ContainerPathManager.get().getAppHomeDirectory();
         String name = Application.get().getName().toString();
 
-        final Path iconPath = ContainerPathManager.get().findIconInAppHomeDirectory();
+        Path iconPath = ContainerPathManager.get().findIconInAppHomeDirectory();
         if (iconPath == null) {
             throw new RuntimeException(ApplicationLocalize.desktopEntryIconMissing(distributionDirectory.getPath()).get());
         }
 
-        final File execPath = new File(distributionDirectory, "consulo.sh");
+        File execPath = new File(distributionDirectory, "consulo.sh");
         if (!execPath.exists()) {
             throw new RuntimeException(ApplicationLocalize.desktopEntryScriptMissing(distributionDirectory.getPath()).get());
         }
 
-        final String wmClass = ApplicationStarter.getFrameClass();
+        String wmClass = ApplicationStarter.getFrameClass();
 
-        final String content = ExecUtil.loadTemplate(
+        String content = ExecUtil.loadTemplate(
             CreateDesktopEntryAction.class.getClassLoader(),
             "entry.desktop",
             ContainerUtil.newHashMap(
@@ -179,8 +174,8 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
             )
         );
 
-        final String entryName = wmClass + ".desktop";
-        final File entryFile = new File(FileUtil.getTempDirectory(), entryName);
+        String entryName = wmClass + ".desktop";
+        File entryFile = new File(FileUtil.getTempDirectory(), entryName);
         FileUtil.writeToFile(entryFile, content);
         entryFile.deleteOnExit();
         return entryFile;
@@ -230,7 +225,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         private JLabel myLabel;
         private JCheckBox myGlobalEntryCheckBox;
 
-        public CreateDesktopEntryDialog(final Project project) {
+        public CreateDesktopEntryDialog(Project project) {
             super(project);
             init();
             setTitle("Create Desktop Entry");

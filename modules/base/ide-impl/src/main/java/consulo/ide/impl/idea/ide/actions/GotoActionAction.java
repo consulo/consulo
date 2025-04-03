@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.application.impl.internal.progress.ProgressWindowListener;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
@@ -124,19 +125,17 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
                         @Nullable
                         private String getText(@Nullable Object o) {
-                            if (o instanceof GotoActionModel.MatchedValue) {
-                                GotoActionModel.MatchedValue mv = (GotoActionModel.MatchedValue)o;
-
-                                if (UISettings.getInstance().getShowInplaceCommentsInternal()) {
-                                    if (mv.value instanceof GotoActionModel.ActionWrapper) {
-                                        AnAction action = ((GotoActionModel.ActionWrapper)mv.value).getAction();
-                                        String actionId = ActionManager.getInstance().getId(action);
-                                        return StringUtil.notNullize(actionId, "class: " + action.getClass().getName());
-                                    }
+                            if (o instanceof GotoActionModel.MatchedValue mv) {
+                                if (UISettings.getInstance().getShowInplaceCommentsInternal()
+                                    && mv.value instanceof GotoActionModel.ActionWrapper actionWrapper) {
+                                    AnAction action = actionWrapper.getAction();
+                                    String actionId = ActionManager.getInstance().getId(action);
+                                    return StringUtil.notNullize(actionId, "class: " + action.getClass().getName());
                                 }
 
                                 if (mv.value instanceof BooleanOptionDescription
-                                    || mv.value instanceof GotoActionModel.ActionWrapper && ((GotoActionModel.ActionWrapper)mv.value).getAction() instanceof ToggleAction) {
+                                    || mv.value instanceof GotoActionModel.ActionWrapper actionWrapper
+                                    && actionWrapper.getAction() instanceof ToggleAction) {
                                     return "Press " + KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(
                                         KeyEvent.VK_ENTER,
                                         0
@@ -144,9 +143,8 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                                 }
 
                                 if (altEnterShortcutSet.getShortcuts().length > 0
-                                    && mv.value instanceof GotoActionModel.ActionWrapper
+                                    && mv.value instanceof GotoActionModel.ActionWrapper aw
                                     && activeKeymap != null) {
-                                    GotoActionModel.ActionWrapper aw = (GotoActionModel.ActionWrapper)mv.value;
                                     if (aw.isAvailable()) {
                                         String actionId = ActionManager.getInstance().getId(aw.getAction());
                                         boolean actionWithoutShortcuts = activeKeymap.getShortcuts(actionId).length == 0;
@@ -176,12 +174,10 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
                 @Nullable
                 private String getValueDescription(@Nullable Object value) {
-                    if (value instanceof GotoActionModel.MatchedValue) {
-                        GotoActionModel.MatchedValue mv = (GotoActionModel.MatchedValue)value;
-                        if (mv.value instanceof GotoActionModel.ActionWrapper) {
-                            AnAction action = ((GotoActionModel.ActionWrapper)mv.value).getAction();
-                            return action.getTemplatePresentation().getDescription();
-                        }
+                    if (value instanceof GotoActionModel.MatchedValue mv
+                        && mv.value instanceof GotoActionModel.ActionWrapper actionWrapper) {
+                        AnAction action = actionWrapper.getAction();
+                        return action.getTemplatePresentation().getDescription();
                     }
                     return null;
                 }
@@ -198,8 +194,8 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                         return false;
                     }
                     Object element = getChosenElement();
-                    return element instanceof GotoActionModel.MatchedValue
-                        && processOptionInplace(((GotoActionModel.MatchedValue)element).value, this, component, event)
+                    return element instanceof GotoActionModel.MatchedValue mv
+                        && processOptionInplace(mv.value, this, component, event)
                         || super.closeForbidden(true);
                 }
 
@@ -237,8 +233,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
             @Override
             public void mouseClicked(@Nonnull MouseEvent me) {
                 Object element = popup.getSelectionByPoint(me.getPoint());
-                if (element instanceof GotoActionModel.MatchedValue
-                    && processOptionInplace(((GotoActionModel.MatchedValue)element).value, popup, component, event)) {
+                if (element instanceof GotoActionModel.MatchedValue mv && processOptionInplace(mv.value, popup, component, event)) {
                     me.consume();
                 }
             }
@@ -246,17 +241,15 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
         DumbAwareAction.create(e -> {
             Object o = popup.getChosenElement();
-            if (o instanceof GotoActionModel.MatchedValue matchedValue && activeKeymap != null) {
-                Object value = matchedValue.value;
-                if (value instanceof GotoActionModel.ActionWrapper aw && aw.isAvailable()) {
-                    String id = ActionManager.getInstance().getId(aw.getAction());
-                    KeymapPanel.addKeyboardShortcut(
-                        id,
-                        ActionShortcutRestrictions.getInstance().getForActionId(id),
-                        activeKeymap,
-                        component
-                    );
-                }
+            if (o instanceof GotoActionModel.MatchedValue mv && activeKeymap != null
+                && mv.value instanceof GotoActionModel.ActionWrapper aw && aw.isAvailable()) {
+                String id = ActionManager.getInstance().getId(aw.getAction());
+                KeymapPanel.addKeyboardShortcut(
+                    id,
+                    ActionShortcutRestrictions.getInstance().getForActionId(id),
+                    activeKeymap,
+                    component
+                );
             }
         }).registerCustomShortcutSet(altEnterShortcutSet, popup.getTextField(), disposable);
 
@@ -264,18 +257,15 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
     }
 
     private static boolean processOptionInplace(Object value, ChooseByNamePopup popup, Component component, AnActionEvent e) {
-        if (value instanceof BooleanOptionDescription) {
-            BooleanOptionDescription option = (BooleanOptionDescription)value;
+        if (value instanceof BooleanOptionDescription option) {
             option.setOptionState(!option.isOptionEnabled());
             repaint(popup);
             return true;
         }
-        else if (value instanceof GotoActionModel.ActionWrapper) {
-            AnAction action = ((GotoActionModel.ActionWrapper)value).getAction();
-            if (action instanceof ToggleAction) {
-                performAction(action, component, e, 0, () -> repaint(popup));
-                return true;
-            }
+        else if (value instanceof GotoActionModel.ActionWrapper aw
+            && aw.getAction() instanceof ToggleAction toggleAction) {
+            performAction(toggleAction, component, e, 0, () -> repaint(popup));
+            return true;
         }
         return false;
     }
@@ -286,6 +276,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
         }
     }
 
+    @RequiredUIAccess
     public static void openOptionOrPerformAction(
         @Nonnull Object element,
         String enteredText,
@@ -295,6 +286,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
         openOptionOrPerformAction(element, enteredText, project, component, 0);
     }
 
+    @RequiredUIAccess
     private static void openOptionOrPerformAction(
         Object element,
         String enteredText,
@@ -302,8 +294,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
         Component component,
         @JdkConstants.InputEventMask int modifiers
     ) {
-        if (element instanceof OptionDescription) {
-            OptionDescription optionDescription = (OptionDescription)element;
+        if (element instanceof OptionDescription optionDescription) {
             String configurableId = optionDescription.getConfigurableId();
             if (optionDescription.hasExternalEditor()) {
                 optionDescription.invokeInternalEditor();
@@ -335,7 +326,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
         if (component == null) {
             return;
         }
-        AnAction action = element instanceof AnAction ? (AnAction)element : ((GotoActionModel.ActionWrapper)element).getAction();
+        AnAction action = element instanceof AnAction anAction ? anAction : ((GotoActionModel.ActionWrapper)element).getAction();
         Application.get().invokeLater(() -> {
             DataManager instance = DataManager.getInstance();
             DataContext context = instance != null ? instance.getDataContext(component) : DataContext.EMPTY_CONTEXT;
@@ -353,9 +344,9 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
             }
 
             if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
-                if (action instanceof ActionGroup && !((ActionGroup)action).canBePerformed(context)) {
+                if (action instanceof ActionGroup actionGroup && !actionGroup.canBePerformed(context)) {
                     ListPopup popup = JBPopupFactory.getInstance()
-                        .createActionGroupPopup(event.getPresentation().getText(), (ActionGroup)action, context, false, callback, -1);
+                        .createActionGroupPopup(event.getPresentation().getText(), actionGroup, context, false, callback, -1);
                     Window window = SwingUtilities.getWindowAncestor(component);
                     if (window != null) {
                         popup.showInCenterOf(window);

@@ -56,7 +56,7 @@ public class PruneEmptyDirectoriesAction extends AnAction {
         }
     }
 
-    private static void pruneEmptiesIn(VirtualFile file, final FileTypeManager ftManager) throws IOException {
+    private static void pruneEmptiesIn(VirtualFile file, FileTypeManager ftManager) throws IOException {
         VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
             @Override
             @RequiredUIAccess
@@ -84,7 +84,7 @@ public class PruneEmptyDirectoriesAction extends AnAction {
     }
 
     @RequiredUIAccess
-    private static void delete(final VirtualFile file) {
+    private static void delete(VirtualFile file) {
         Application.get().runWriteAction(() -> {
             try {
                 file.delete(PruneEmptyDirectoriesAction.class);

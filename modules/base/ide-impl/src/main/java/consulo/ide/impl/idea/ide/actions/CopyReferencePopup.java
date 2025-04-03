@@ -101,8 +101,8 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
                         Editor editor = dataContext.getData(Editor.KEY);
                         java.util.List<PsiElement> elements = CopyReferenceUtil.getElementsToCopy(editor, dataContext);
                         String qualifiedName = null;
-                        if (action instanceof CopyPathProvider) {
-                            qualifiedName = ((CopyPathProvider)action).getQualifiedName(getProject(), elements, editor, dataContext);
+                        if (action instanceof CopyPathProvider copyPathProvider) {
+                            qualifiedName = copyPathProvider.getQualifiedName(getProject(), elements, editor, dataContext);
                         }
 
                         myInfoLabel.setText("");

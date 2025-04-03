@@ -37,7 +37,7 @@ public class FixLineSeparatorsAction extends AnAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        final VirtualFile[] vFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
+        VirtualFile[] vFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
         if (project == null || vFiles == null) {
             return;
         }

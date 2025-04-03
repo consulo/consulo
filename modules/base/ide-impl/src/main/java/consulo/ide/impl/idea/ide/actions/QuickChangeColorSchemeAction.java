@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -38,13 +39,14 @@ public class QuickChangeColorSchemeAction extends QuickSwitchSchemeAction {
     }
 
     private static void addScheme(
-        final DefaultActionGroup group,
-        final EditorColorsScheme current,
-        final EditorColorsScheme scheme,
-        final boolean addScheme
+        DefaultActionGroup group,
+        EditorColorsScheme current,
+        EditorColorsScheme scheme,
+        boolean addScheme
     ) {
         group.add(new DumbAwareAction(scheme.getName(), "", scheme == current ? ourCurrentAction : ourNotCurrentAction) {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nullable AnActionEvent e) {
                 if (addScheme) {
                     EditorColorsManager.getInstance().addColorsScheme(scheme);

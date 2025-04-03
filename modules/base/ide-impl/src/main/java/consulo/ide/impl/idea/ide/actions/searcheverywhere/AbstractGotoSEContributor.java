@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressIndicator;
@@ -25,6 +26,7 @@ import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
@@ -46,7 +48,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -90,12 +92,12 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         }
         else {
             // just get the second scope, i.e. Attached Directories in DataGrip
-            Ref<GlobalSearchScope> result = Ref.create();
+            SimpleReference<GlobalSearchScope> result = SimpleReference.create();
             processScopes(SimpleDataContext.getProjectContext(myProject), o -> {
                 if (o.scopeEquals(myEverywhereScope) || o.scopeEquals(null)) {
                     return true;
                 }
-                result.set((GlobalSearchScope) o.getScope());
+                result.set((GlobalSearchScope)o.getScope());
                 return false;
             });
             myProjectScope = ObjectUtil.notNull(result.get(), myEverywhereScope);
@@ -116,13 +118,20 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
     private static void processScopes(@Nonnull DataContext dataContext, @Nonnull Processor<? super ScopeDescriptor> processor) {
         Project project = ObjectUtil.notNull(dataContext.getData(Project.KEY));
-        ScopeChooserCombo.processScopes(project, dataContext, ScopeChooserCombo.OPT_LIBRARIES | ScopeChooserCombo.OPT_EMPTY_SCOPES, processor);
+        ScopeChooserCombo.processScopes(
+            project,
+            dataContext,
+            ScopeChooserCombo.OPT_LIBRARIES | ScopeChooserCombo.OPT_EMPTY_SCOPES,
+            processor
+        );
     }
 
     @Nonnull
-    protected List<AnAction> doGetActions(@Nonnull LocalizeValue everywhereText,
-                                          @Nullable PersistentSearchEverywhereContributorFilter<?> filter,
-                                          @Nonnull Runnable onChanged) {
+    protected List<AnAction> doGetActions(
+        @Nonnull LocalizeValue everywhereText,
+        @Nullable PersistentSearchEverywhereContributorFilter<?> filter,
+        @Nonnull Runnable onChanged
+    ) {
         if (myProject == null || filter == null) {
             return Collections.emptyList();
         }
@@ -155,7 +164,8 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
             @Override
             public boolean canToggleEverywhere() {
-                return canToggleEverywhere && (myScopeDescriptor.scopeEquals(myEverywhereScope) || myScopeDescriptor.scopeEquals(myProjectScope));
+                return canToggleEverywhere && (myScopeDescriptor.scopeEquals(myEverywhereScope) || myScopeDescriptor.scopeEquals(
+                    myProjectScope));
             }
         });
         result.add(new SearchEverywhereUI.FiltersAction(filter, onChanged));
@@ -166,7 +176,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     private ScopeDescriptor getInitialSelectedScope() {
         String selectedScope = myProject == null ? null : getSelectedScopes(myProject).get(getClass().getSimpleName());
         if (StringUtil.isNotEmpty(selectedScope)) {
-            Ref<ScopeDescriptor> result = Ref.create();
+            SimpleReference<ScopeDescriptor> result = SimpleReference.create();
             processScopes(SimpleDataContext.getProjectContext(myProject), o -> {
                 if (!selectedScope.equals(o.getDisplayName()) || o.scopeEquals(null)) {
                     return true;
@@ -183,7 +193,10 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
     private void setSelectedScope(@Nonnull ScopeDescriptor o) {
         myScopeDescriptor = o;
-        getSelectedScopes(myProject).put(getClass().getSimpleName(), o.scopeEquals(myEverywhereScope) || o.scopeEquals(myProjectScope) ? null : o.getDisplayName());
+        getSelectedScopes(myProject).put(
+            getClass().getSimpleName(),
+            o.scopeEquals(myEverywhereScope) || o.scopeEquals(myProjectScope) ? null : o.getDisplayName()
+        );
     }
 
     @Nonnull
@@ -223,7 +236,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             ChooseByNamePopup popup = ChooseByNamePopup.createPopup(myProject, model, context);
             try {
                 ChooseByNameItemProvider provider = popup.getProvider();
-                GlobalSearchScope scope = (GlobalSearchScope) ObjectUtil.notNull(myScopeDescriptor.getScope());
+                GlobalSearchScope scope = (GlobalSearchScope)ObjectUtil.notNull(myScopeDescriptor.getScope());
 
                 boolean everywhere = scope.isSearchInLibraries();
                 if (provider instanceof ChooseByNameInScopeItemProvider chooseByNameInScopeItemProvider) {
@@ -285,7 +298,8 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     @Nonnull
     @Override
     public String filterControlSymbols(@Nonnull String pattern) {
-        if (StringUtil.containsAnyChar(pattern, ":,;@[( #") || pattern.contains(" line ") || pattern.contains("?l=")) { // quick test if reg exp should be used
+        if (StringUtil.containsAnyChar(pattern, ":,;@[( #") || pattern.contains(" line ") || pattern.contains("?l=")) {
+            // quick test if reg exp should be used
             return applyPatternFilter(pattern, ourPatternToDetectLinesAndColumns);
         }
 
@@ -324,7 +338,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             PopupNavigationUtil.activateFileWithPsiElement(psiElement, openInCurrentWindow(modifiers));
         }
         else {
-            EditSourceUtil.navigate(((NavigationItem) selected), true, openInCurrentWindow(modifiers));
+            EditSourceUtil.navigate(((NavigationItem)selected), true, openInCurrentWindow(modifiers));
         }
 
         return true;
@@ -362,7 +376,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     @Override
     @SuppressWarnings("unchecked")
     public ListCellRenderer<Object> getElementsRenderer() {
-        return (ListCellRenderer) new SERenderer();
+        return (ListCellRenderer)new SERenderer();
     }
 
     @Override
@@ -399,11 +413,11 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     private static int getLineAndColumnRegexpGroup(String text, int groupNumber) {
-        final Matcher matcher = ourPatternToDetectLinesAndColumns.matcher(text);
+        Matcher matcher = ourPatternToDetectLinesAndColumns.matcher(text);
         if (matcher.matches()) {
             try {
                 if (groupNumber <= matcher.groupCount()) {
-                    final String group = matcher.group(groupNumber);
+                    String group = matcher.group(groupNumber);
                     if (group != null) {
                         return Integer.parseInt(group) - 1;
                     }
@@ -422,11 +436,11 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
     protected static class SERenderer extends SearchEverywherePsiRenderer {
         @Override
+        @RequiredReadAction
         public String getElementText(PsiElement element) {
             if (element instanceof NavigationItem navigationItem) {
-                return Optional.ofNullable(
-                        navigationItem.getPresentation())
-                    .map(presentation -> presentation.getPresentableText())
+                return Optional.ofNullable(navigationItem.getPresentation())
+                    .map(ItemPresentation::getPresentableText)
                     .orElse(super.getElementText(element));
             }
             return super.getElementText(element);
@@ -434,7 +448,6 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     abstract static class ScopeChooserAction extends ComboBoxAction implements DumbAware, SearchEverywhereToggleAction {
-
         static final char CHOOSE = 'O';
         static final char TOGGLE = 'P';
 
@@ -446,7 +459,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         @Nonnull
         @Override
         protected ComboBoxButton createComboBoxButton(Presentation presentation) {
-            ComboBoxButtonImpl button = (ComboBoxButtonImpl) super.createComboBoxButton(presentation);
+            ComboBoxButtonImpl button = (ComboBoxButtonImpl)super.createComboBoxButton(presentation);
             button.setBorder(JBUI.Borders.empty());
             button.setOpaque(false);
             return button;
@@ -465,8 +478,10 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             String text = StringUtil.escapeMnemonics(name).replaceFirst("(?i)([" + TOGGLE + CHOOSE + "])", "_$1");
             e.getPresentation().setTextValue(LocalizeValue.of(text));
             e.getPresentation().setIcon(selection.getIcon());
-            String shortcutText = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(CHOOSE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));
-            String shortcutText2 = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(TOGGLE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));
+            String shortcutText =
+                KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(CHOOSE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));
+            String shortcutText2 =
+                KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(TOGGLE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));
             e.getPresentation().setDescription("Choose scope (" + shortcutText + ")\n" + "Toggle scope (" + shortcutText2 + ")");
             JComponent button = e.getPresentation().getClientProperty(CustomComponentAction.COMPONENT_KEY);
             if (button != null) {
@@ -476,13 +491,24 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
         @Nonnull
         @Override
-        public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Presentation presentation, @Nonnull Runnable onDispose) {
+        public JBPopup createPopup(
+            @Nonnull JComponent component,
+            @Nonnull DataContext context,
+            @Nonnull Presentation presentation,
+            @Nonnull Runnable onDispose
+        ) {
             JList<ScopeDescriptor> fakeList = new JBList<>();
             ListCellRenderer<ScopeDescriptor> renderer = new ListCellRenderer<>() {
                 final ListCellRenderer<ScopeDescriptor> delegate = ScopeChooserCombo.createDefaultRenderer();
 
                 @Override
-                public Component getListCellRendererComponent(JList<? extends ScopeDescriptor> list, ScopeDescriptor value, int index, boolean isSelected, boolean cellHasFocus) {
+                public Component getListCellRendererComponent(
+                    JList<? extends ScopeDescriptor> list,
+                    ScopeDescriptor value,
+                    int index,
+                    boolean isSelected,
+                    boolean cellHasFocus
+                ) {
                     // copied from DarculaJBPopupComboPopup.customizeListRendererComponent()
                     Component component = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                     if (component instanceof JComponent jComponent

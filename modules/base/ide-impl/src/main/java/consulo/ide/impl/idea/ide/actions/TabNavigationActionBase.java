@@ -24,6 +24,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -36,11 +37,13 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
 
     private final int myDir;
 
-    TabNavigationActionBase(final int dir) {
+    TabNavigationActionBase(int dir) {
         LOG.assertTrue(dir == 1 || dir == -1);
         myDir = dir;
     }
 
+    @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
@@ -70,15 +73,15 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
         if (project == null) {
             return;
         }
-        final ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
+        ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
         if (windowManager.isEditorComponentActive()) {
-            final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
+            FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
             FileEditorWindow currentWindow = event.getData(FileEditorWindow.DATA_KEY);
             if (currentWindow == null) {
                 editorManager.getCurrentWindow();
             }
             if (currentWindow != null) {
-                final VirtualFile[] files = currentWindow.getFiles();
+                VirtualFile[] files = currentWindow.getFiles();
                 presentation.setEnabled(files.length > 1);
             }
             return;
@@ -102,14 +105,14 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
         navigateImpl(dataContext, project, selectedFile, myDir);
     }
 
-    public static void navigateImpl(final DataContext dataContext, Project project, VirtualFile selectedFile, final int dir) {
+    public static void navigateImpl(DataContext dataContext, Project project, VirtualFile selectedFile, int dir) {
         LOG.assertTrue(dir == 1 || dir == -1);
-        final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
+        FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
         FileEditorWindow currentWindow = dataContext.getData(FileEditorWindow.DATA_KEY);
         if (currentWindow == null) {
             currentWindow = editorManager.getCurrentWindow();
         }
-        final VirtualFile[] files = currentWindow.getFiles();
+        VirtualFile[] files = currentWindow.getFiles();
         int index = ArrayUtil.find(files, selectedFile);
         LOG.assertTrue(index != -1);
         editorManager.openFile(files[(index + files.length + dir) % files.length], true);

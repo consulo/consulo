@@ -119,11 +119,11 @@ public class CopyReferenceAction extends DumbAwareAction {
         return CopyReferenceUtil.doCopy(elements, editor);
     }
 
-    public static boolean doCopy(final PsiElement element, final Project project) {
+    public static boolean doCopy(PsiElement element, Project project) {
         return doCopy(Collections.singletonList(element), project);
     }
 
-    private static boolean doCopy(List<? extends PsiElement> elements, @Nullable final Project project) {
+    private static boolean doCopy(List<? extends PsiElement> elements, @Nullable Project project) {
         String toCopy = CopyReferenceUtil.doCopy(elements, null);
         CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(toCopy));
         setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(toCopy).get());
@@ -132,7 +132,7 @@ public class CopyReferenceAction extends DumbAwareAction {
     }
 
     @Nullable
-    public static String elementToFqn(@Nullable final PsiElement element) {
+    public static String elementToFqn(@Nullable PsiElement element) {
         return CopyReferenceUtil.elementToFqn(element, null);
     }
 }

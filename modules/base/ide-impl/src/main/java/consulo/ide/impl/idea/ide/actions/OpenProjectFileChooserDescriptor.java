@@ -29,34 +29,28 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nullable;
 
 public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
-    public OpenProjectFileChooserDescriptor(final boolean chooseFiles) {
+    public OpenProjectFileChooserDescriptor(boolean chooseFiles) {
         super(chooseFiles, true, chooseFiles, chooseFiles, false, false);
     }
 
     @RequiredUIAccess
     @Override
-    public boolean isFileSelectable(final VirtualFile file) {
-        if (file == null) {
-            return false;
-        }
-        return isProjectDirectory(file) || canOpen(file);
+    public boolean isFileSelectable(VirtualFile file) {
+        return file != null && (isProjectDirectory(file) || canOpen(file));
     }
 
     @Override
-    public Image getIcon(final VirtualFile file) {
+    public Image getIcon(VirtualFile file) {
         if (isProjectDirectory(file)) {
             return dressIcon(file, Application.get().getIcon());
         }
-        final Image icon = getProcessorIcon(file);
-        if (icon != null) {
-            return dressIcon(file, icon);
-        }
-        return super.getIcon(file);
+        Image icon = getProcessorIcon(file);
+        return icon != null ? dressIcon(file, icon) : super.getIcon(file);
     }
 
     @Nullable
-    private Image getProcessorIcon(final VirtualFile virtualFile) {
-        final ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
+    private Image getProcessorIcon(VirtualFile virtualFile) {
+        ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
         if (provider != null) {
             return provider.getIcon(virtualFile);
         }
@@ -64,26 +58,23 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     }
 
     @Override
-    public boolean isFileVisible(final VirtualFile file, final boolean showHiddenFiles) {
+    public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
         if (!showHiddenFiles && FileElement.isFileHidden(file)) {
             return false;
         }
         return canOpen(file) || super.isFileVisible(file, showHiddenFiles) && file.isDirectory();
     }
 
-    public static boolean canOpen(final VirtualFile file) {
+    public static boolean canOpen(VirtualFile file) {
         return ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(file)) != null;
     }
 
-    private static boolean isProjectDirectory(final VirtualFile virtualFile) {
+    private static boolean isProjectDirectory(VirtualFile virtualFile) {
         // the root directory of any drive is never an Consulo project
         if (virtualFile.getParent() == null) {
             return false;
         }
         // NOTE: For performance reasons, it's very important not to iterate through all of the children here.
-        if (virtualFile.isDirectory() && virtualFile.isValid() && virtualFile.findChild(Project.DIRECTORY_STORE_FOLDER) != null) {
-            return true;
-        }
-        return false;
+        return virtualFile.isDirectory() && virtualFile.isValid() && virtualFile.findChild(Project.DIRECTORY_STORE_FOLDER) != null;
     }
 }

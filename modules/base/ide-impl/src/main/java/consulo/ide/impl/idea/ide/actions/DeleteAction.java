@@ -91,8 +91,8 @@ public class DeleteAction extends AnAction implements DumbAware {
             }
             if (keyEvent.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                 // Do not override text deletion in speed search
-                if (component instanceof JComponent) {
-                    SpeedSearchSupply searchSupply = SpeedSearchSupply.getSupply((JComponent)component);
+                if (component instanceof JComponent jComponent) {
+                    SpeedSearchSupply searchSupply = SpeedSearchSupply.getSupply(jComponent);
                     if (searchSupply != null) {
                         provider = null;
                     }
@@ -107,7 +107,7 @@ public class DeleteAction extends AnAction implements DumbAware {
         if (provider instanceof TitledHandler titledHandler) {
             presentation.setTextValue(titledHandler.getActionTitleValue());
         }
-        final boolean canDelete = provider != null && provider.canDeleteElement(dataContext);
+        boolean canDelete = provider != null && provider.canDeleteElement(dataContext);
         if (ActionPlaces.isPopupPlace(event.getPlace())) {
             presentation.setVisible(canDelete);
         }

@@ -61,7 +61,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         ChooseComponentsToExportDialog.chooseSettingsFile(
             ContainerPathManager.get().getConfigPath(),
             component,
@@ -72,7 +72,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     private void doImport(String path) {
-        final File saveFile = new File(path);
+        File saveFile = new File(path);
         try {
             if (!saveFile.exists()) {
                 Messages.showErrorDialog(
@@ -100,7 +100,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
                 ExportSettingsAction.getExportableComponentsMap(myApplication, myApplicationStore, false);
             List<ExportSettingsAction.ExportableItem> components = getComponentsStored(saveFile, fileToComponents.values());
             fileToComponents.values().retainAll(components);
-            final ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(
+            ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(
                 fileToComponents,
                 false,
                 IdeLocalize.titleSelectComponentsToImport().get(),
@@ -110,25 +110,25 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
                 return;
             }
 
-            final Set<ExportSettingsAction.ExportableItem> chosenComponents = dialog.getExportableComponents();
+            Set<ExportSettingsAction.ExportableItem> chosenComponents = dialog.getExportableComponents();
             Set<String> relativeNamesToExtract = new HashSet<>();
             for (ExportSettingsAction.ExportableItem chosenComponent : chosenComponents) {
-                final File[] exportFiles = chosenComponent.getExportFiles();
+                File[] exportFiles = chosenComponent.getExportFiles();
                 for (File exportFile : exportFiles) {
-                    final File configPath = new File(ContainerPathManager.get().getConfigPath());
-                    final String rPath = FileUtil.getRelativePath(configPath, exportFile);
+                    File configPath = new File(ContainerPathManager.get().getConfigPath());
+                    String rPath = FileUtil.getRelativePath(configPath, exportFile);
                     assert rPath != null;
-                    final String relativePath = FileUtil.toSystemIndependentName(rPath);
+                    String relativePath = FileUtil.toSystemIndependentName(rPath);
                     relativeNamesToExtract.add(relativePath);
                 }
             }
 
             relativeNamesToExtract.add(ExportSettingsAction.INSTALLED_TXT);
 
-            final File tempFile = new File(ContainerPathManager.get().getPluginTempPath() + "/" + saveFile.getName());
+            File tempFile = new File(ContainerPathManager.get().getPluginTempPath() + "/" + saveFile.getName());
             consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(saveFile, tempFile);
             File outDir = new File(ContainerPathManager.get().getConfigPath());
-            final ImportSettingsFilenameFilter filenameFilter = new ImportSettingsFilenameFilter(relativeNamesToExtract);
+            ImportSettingsFilenameFilter filenameFilter = new ImportSettingsFilenameFilter(relativeNamesToExtract);
             StartupActionScriptManager.ActionCommand unzip = new StartupActionScriptManager.UnzipCommand(tempFile, outDir, filenameFilter);
 
             StartupActionScriptManager.addActionCommand(unzip);
@@ -144,7 +144,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
             LocalizeValue message = application.isRestartCapable()
                 ? IdeLocalize.messageSettingsImportedSuccessfullyRestart(applicationName, applicationName)
                 : IdeLocalize.messageSettingsImportedSuccessfully(applicationName, applicationName);
-            final int ret = Messages.showOkCancelDialog(
+            int ret = Messages.showOkCancelDialog(
                 message.get(),
                 IdeLocalize.titleRestartNeeded().get(),
                 UIUtil.getQuestionIcon()
@@ -168,7 +168,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         }
     }
 
-    private static String presentableFileName(final File file) {
+    private static String presentableFileName(File file) {
         return "'" + FileUtil.toSystemDependentName(file.getPath()) + "'";
     }
 

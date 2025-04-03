@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -39,7 +40,8 @@ public class ExcludingActionGroup extends ActionGroup {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
         myDelegate.update(e);
     }
 
@@ -51,13 +53,13 @@ public class ExcludingActionGroup extends ActionGroup {
     @Override
     @Nonnull
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        List<AnAction> result = new ArrayList<AnAction>();
+        List<AnAction> result = new ArrayList<>();
         for (AnAction action : myDelegate.getChildren(e)) {
             if (myExcludes.contains(action)) {
                 continue;
             }
-            if (action instanceof ActionGroup) {
-                result.add(new ExcludingActionGroup((ActionGroup)action, myExcludes));
+            if (action instanceof ActionGroup group) {
+                result.add(new ExcludingActionGroup(group, myExcludes));
             }
             else {
                 result.add(action);

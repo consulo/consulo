@@ -39,29 +39,28 @@ public class ShowPopupMenuAction extends AnAction implements DumbAware, PopupAct
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final RelativePoint relPoint = JBPopupFactory.getInstance().guessBestPopupLocation(e.getDataContext());
+        RelativePoint relPoint = JBPopupFactory.getInstance().guessBestPopupLocation(e.getDataContext());
 
         KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         Component focusOwner = focusManager.getFocusOwner();
 
         Point popupMenuPoint = relPoint.getPoint(focusOwner);
 
-        final Editor editor = e.getData(Editor.KEY);
+        Editor editor = e.getData(Editor.KEY);
         int coord = editor != null
             ? Math.max(0, popupMenuPoint.y - 1) //To avoid cursor jump to the line below. http://www.jetbrains.net/jira/browse/IDEADEV-10644
             : popupMenuPoint.y;
 
-        focusOwner.dispatchEvent(
-            new MouseEvent(
-                focusOwner,
-                MouseEvent.MOUSE_PRESSED,
-                System.currentTimeMillis(), 0,
-                popupMenuPoint.x,
-                coord,
-                1,
-                true
-            )
-        );
+        focusOwner.dispatchEvent(new MouseEvent(
+            focusOwner,
+            MouseEvent.MOUSE_PRESSED,
+            System.currentTimeMillis(),
+            0,
+            popupMenuPoint.x,
+            coord,
+            1,
+            true
+        ));
     }
 
     @Override

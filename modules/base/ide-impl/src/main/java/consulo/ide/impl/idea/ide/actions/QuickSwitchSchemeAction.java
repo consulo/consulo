@@ -64,7 +64,7 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
         if (!myShowPopupWithNoActions && group.getChildrenCount() == 0) {
             return;
         }
-        final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+        ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
             getPopupTitle(e),
             group,
             e.getDataContext(),

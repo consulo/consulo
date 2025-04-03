@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -27,8 +28,9 @@ public class MaintenanceAction extends AnAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction("MaintenanceGroup");
+        ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction("MaintenanceGroup");
         JBPopupFactory.getInstance()
             .createActionGroupPopup("Maintenance", group, e.getDataContext(), JBPopupFactory.ActionSelectionAid.NUMBERING, true)
             .showInFocusCenter();

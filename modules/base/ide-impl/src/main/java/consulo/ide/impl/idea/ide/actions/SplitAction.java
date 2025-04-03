@@ -33,25 +33,25 @@ import javax.swing.*;
 public abstract class SplitAction extends AnAction implements DumbAware {
     private final int myOrientation;
 
-    protected SplitAction(final int orientation) {
+    protected SplitAction(int orientation) {
         myOrientation = orientation;
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(final AnActionEvent event) {
-        final Project project = event.getData(Project.KEY);
-        final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-        final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
+    public void actionPerformed(AnActionEvent event) {
+        Project project = event.getData(Project.KEY);
+        FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+        FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
 
         fileEditorManager.createSplitter(myOrientation, window);
     }
 
     @Override
     @RequiredUIAccess
-    public void update(final AnActionEvent event) {
-        final Project project = event.getData(Project.KEY);
-        final Presentation presentation = event.getPresentation();
+    public void update(AnActionEvent event) {
+        Project project = event.getData(Project.KEY);
+        Presentation presentation = event.getPresentation();
         presentation.setTextValue(
             myOrientation == SwingConstants.VERTICAL
                 ? IdeLocalize.actionSplitVertically()
@@ -61,7 +61,7 @@ public abstract class SplitAction extends AnAction implements DumbAware {
             presentation.setEnabled(false);
             return;
         }
-        final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+        FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         presentation.setEnabled(fileEditorManager.hasOpenedFile());
     }
 }

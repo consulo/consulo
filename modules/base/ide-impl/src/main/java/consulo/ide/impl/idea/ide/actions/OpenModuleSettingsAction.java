@@ -51,10 +51,10 @@ public class OpenModuleSettingsAction extends EditSourceAction {
     }
 
     public static boolean isModuleInContext(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        final Module module = e.getData(Module.KEY);
+        Project project = e.getData(Project.KEY);
+        Module module = e.getData(Module.KEY);
         if (project != null && module != null) {
-            final VirtualFile moduleFolder = e.getData(VirtualFile.KEY);
+            VirtualFile moduleFolder = e.getData(VirtualFile.KEY);
             if (moduleFolder == null) {
                 return false;
             }

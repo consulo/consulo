@@ -94,13 +94,10 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
             return createHandler(content);
         }
 
-        final FileEditorWindow window =
+        FileEditorWindow window =
             currentWindow != null ? currentWindow : project != null ? FileEditorManager.getInstance(project).getCurrentWindow() : null;
         VirtualFile selectedFile = window == null ? null : getFileFromEvent(e, window);
-        if (selectedFile != null) {
-            return createHandler(window, selectedFile);
-        }
-        return null;
+        return selectedFile != null ? createHandler(window, selectedFile) : null;
     }
 
     @Nullable
@@ -118,7 +115,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     }
 
     @Nonnull
-    private static Handler createHandler(final Content content) {
+    private static Handler createHandler(Content content) {
         return new Handler(content.isPinned(), content.getManager().getSelectedContent() == content) {
             @Override
             void setPinned(boolean value) {
@@ -128,7 +125,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     }
 
     @Nonnull
-    private static Handler createHandler(final FileEditorWindow window, final VirtualFile selectedFile) {
+    private static Handler createHandler(FileEditorWindow window, VirtualFile selectedFile) {
         return new Handler(window.isFilePinned(selectedFile), selectedFile.equals(window.getSelectedFile())) {
             @Override
             void setPinned(boolean value) {

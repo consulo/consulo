@@ -49,7 +49,7 @@ public class WeighingNewActionGroup extends WeighingActionGroup {
 
     @Override
     protected boolean shouldBeChosenAnyway(AnAction action) {
-        final Class<? extends AnAction> aClass = action.getClass();
+        Class<? extends AnAction> aClass = action.getClass();
         return aClass == CreateFileAction.class || aClass == CreateDirectoryOrPackageAction.class ||
             "NewModuleInGroupAction".equals(aClass.getSimpleName()); //todo why is it in idea module?
     }

@@ -77,10 +77,10 @@ public class GotoRelatedFileAction extends AnAction {
         createPopup(items, "Go to Related Files").showInBestPositionFor(context);
     }
 
-    public static JBPopup createPopup(final List<? extends GotoRelatedItem> items, final String title) {
+    public static JBPopup createPopup(List<? extends GotoRelatedItem> items, String title) {
         Object[] elements = new Object[items.size()];
         //todo[nik] move presentation logic to GotoRelatedItem class
-        final Map<PsiElement, GotoRelatedItem> itemsMap = new HashMap<>();
+        Map<PsiElement, GotoRelatedItem> itemsMap = new HashMap<>();
         for (int i = 0; i < items.size(); i++) {
             GotoRelatedItem item = items.get(i);
             elements[i] = item.getElement() != null ? item.getElement() : item;
@@ -105,15 +105,15 @@ public class GotoRelatedFileAction extends AnAction {
     }
 
     private static JBPopup getPsiElementPopup(
-        final Object[] elements,
-        final Map<PsiElement, GotoRelatedItem> itemsMap,
-        final String title,
-        final Processor<Object> processor
+        Object[] elements,
+        Map<PsiElement, GotoRelatedItem> itemsMap,
+        String title,
+        Processor<Object> processor
     ) {
-        final Ref<Boolean> hasMnemonic = Ref.create(false);
-        final Ref<ListCellRenderer> rendererRef = Ref.create(null);
+        Ref<Boolean> hasMnemonic = Ref.create(false);
+        Ref<ListCellRenderer> rendererRef = Ref.create(null);
 
-        final DefaultPsiElementCellRenderer renderer = new DefaultPsiElementCellRenderer() {
+        DefaultPsiElementCellRenderer renderer = new DefaultPsiElementCellRenderer() {
             @Override
             public String getElementText(PsiElement element) {
                 String customName = itemsMap.get(element).getCustomName();
@@ -153,10 +153,10 @@ public class GotoRelatedFileAction extends AnAction {
                 boolean selected,
                 boolean hasFocus
             ) {
-                final GotoRelatedItem item = (GotoRelatedItem)value;
+                GotoRelatedItem item = (GotoRelatedItem)value;
                 Color color = list.getForeground();
-                final SimpleTextAttributes nameAttributes = new SimpleTextAttributes(Font.PLAIN, color);
-                final String name = item.getCustomName();
+                SimpleTextAttributes nameAttributes = new SimpleTextAttributes(Font.PLAIN, color);
+                String name = item.getCustomName();
                 if (name == null) {
                     return false;
                 }
@@ -173,21 +173,21 @@ public class GotoRelatedFileAction extends AnAction {
                 boolean isSelected,
                 boolean cellHasFocus
             ) {
-                final JPanel component = (JPanel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                JPanel component = (JPanel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (!hasMnemonic.get()) {
                     return component;
                 }
 
-                final JPanel panelWithMnemonic = new JPanel(new BorderLayout());
-                final int mnemonic = getMnemonic(value, itemsMap);
-                final JLabel label = new JLabel("");
+                JPanel panelWithMnemonic = new JPanel(new BorderLayout());
+                int mnemonic = getMnemonic(value, itemsMap);
+                JLabel label = new JLabel("");
                 if (mnemonic != -1) {
                     label.setText(mnemonic + ".");
                     label.setDisplayedMnemonicIndex(0);
                 }
                 label.setPreferredSize(new JLabel("8.").getPreferredSize());
 
-                final JComponent leftRenderer = (JComponent)component.getComponents()[0];
+                JComponent leftRenderer = (JComponent)component.getComponents()[0];
                 component.remove(leftRenderer);
                 panelWithMnemonic.setBorder(BorderFactory.createEmptyBorder(0, 7, 0, 0));
                 panelWithMnemonic.setBackground(leftRenderer.getBackground());
@@ -198,7 +198,7 @@ public class GotoRelatedFileAction extends AnAction {
                 return component;
             }
         };
-        final ListPopupImpl popup = new ListPopupImpl(new BaseListPopupStep<Object>(title, Arrays.asList(elements)) {
+        ListPopupImpl popup = new ListPopupImpl(new BaseListPopupStep<Object>(title, Arrays.asList(elements)) {
             @Override
             public boolean isSpeedSearchEnabled() {
                 return true;
@@ -206,11 +206,10 @@ public class GotoRelatedFileAction extends AnAction {
 
             @Override
             public String getIndexedString(Object value) {
-                if (value instanceof GotoRelatedItem) {
-                    //noinspection ConstantConditions
-                    return ((GotoRelatedItem)value).getCustomName();
+                if (value instanceof GotoRelatedItem gotoRelatedItem) {
+                    return gotoRelatedItem.getCustomName();
                 }
-                final PsiElement element = (PsiElement)value;
+                PsiElement element = (PsiElement)value;
                 return renderer.getElementText(element) + " " + renderer.getContainerText(element, null);
             }
 
@@ -224,12 +223,12 @@ public class GotoRelatedFileAction extends AnAction {
         popup.getList().setCellRenderer(new PopupListElementRenderer<PsiElement>(popup) {
             Map<Object, String> separators = new HashMap<>();
             {
-                final ListModel model = popup.getList().getModel();
+                ListModel model = popup.getList().getModel();
                 String current = null;
                 boolean hasTitle = false;
                 for (int i = 0; i < model.getSize(); i++) {
-                    final Object element = model.getElementAt(i);
-                    final GotoRelatedItem item = itemsMap.get(element);
+                    Object element = model.getElementAt(i);
+                    GotoRelatedItem item = itemsMap.get(element);
                     if (item != null && !StringUtil.equals(current, item.getGroup())) {
                         current = item.getGroup();
                         separators.put(element, current);
@@ -252,13 +251,13 @@ public class GotoRelatedFileAction extends AnAction {
                 boolean isSelected,
                 boolean cellHasFocus
             ) {
-                final Component component = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                final String separator = separators.get(value);
+                Component component = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                String separator = separators.get(value);
 
                 if (separator != null) {
                     JPanel panel = new JPanel(new BorderLayout());
                     panel.add(component, BorderLayout.CENTER);
-                    final SeparatorWithText sep = new SeparatorWithText() {
+                    SeparatorWithText sep = new SeparatorWithText() {
                         @Override
                         protected void paintComponent(Graphics g) {
                             g.setColor(new JBColor(Color.WHITE, UIUtil.getSeparatorColor()));
@@ -277,9 +276,9 @@ public class GotoRelatedFileAction extends AnAction {
         popup.setMinimumSize(new Dimension(200, -1));
 
         for (Object item : elements) {
-            final int mnemonic = getMnemonic(item, itemsMap);
+            int mnemonic = getMnemonic(item, itemsMap);
             if (mnemonic != -1) {
-                final Action action = createNumberAction(mnemonic, popup, itemsMap, processor);
+                Action action = createNumberAction(mnemonic, popup, itemsMap, processor);
                 popup.registerAction(mnemonic + "Action", KeyStroke.getKeyStroke(String.valueOf(mnemonic)), action);
                 popup.registerAction(mnemonic + "Action", KeyStroke.getKeyStroke("NUMPAD" + String.valueOf(mnemonic)), action);
                 hasMnemonic.set(true);
@@ -300,7 +299,7 @@ public class GotoRelatedFileAction extends AnAction {
 
         Set<GotoRelatedItem> items = new LinkedHashSet<>();
 
-        final PsiElement finalContextElement = contextElement;
+        PsiElement finalContextElement = contextElement;
         GotoRelatedProvider.EP_NAME.forEachExtensionSafe(provider -> {
             items.addAll(provider.getItems(finalContextElement));
             if (dataContext != null) {
@@ -314,13 +313,13 @@ public class GotoRelatedFileAction extends AnAction {
     private static void sortByGroupNames(Set<GotoRelatedItem> items) {
         Map<String, List<GotoRelatedItem>> map = new HashMap<>();
         for (GotoRelatedItem item : items) {
-            final String key = item.getGroup();
+            String key = item.getGroup();
             if (!map.containsKey(key)) {
                 map.put(key, new ArrayList<>());
             }
             map.get(key).add(item);
         }
-        final List<String> keys = new ArrayList<>(map.keySet());
+        List<String> keys = new ArrayList<>(map.keySet());
         Collections.sort(keys, (o1, o2) -> StringUtil.isEmpty(o1) ? 1 : StringUtil.isEmpty(o2) ? -1 : o1.compareTo(o2));
         items.clear();
         for (String key : keys) {
@@ -334,15 +333,15 @@ public class GotoRelatedFileAction extends AnAction {
     }
 
     private static Action createNumberAction(
-        final int mnemonic,
-        final ListPopupImpl listPopup,
-        final Map<PsiElement, GotoRelatedItem> itemsMap,
-        final Processor<Object> processor
+        int mnemonic,
+        ListPopupImpl listPopup,
+        Map<PsiElement, GotoRelatedItem> itemsMap,
+        Processor<Object> processor
     ) {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (final Object item : listPopup.getListStep().getValues()) {
+                for (Object item : listPopup.getListStep().getValues()) {
                     if (getMnemonic(item, itemsMap) == mnemonic) {
                         listPopup.setFinalRunnable(() -> processor.process(item));
                         listPopup.closeOk(null);

@@ -66,10 +66,10 @@ abstract class WeighingActionGroup extends ActionGroup {
             return visibleActions;
         }
 
-        final ActionGroup.Builder chosen = ActionGroup.newImmutableBuilder();
+        ActionGroup.Builder chosen = ActionGroup.newImmutableBuilder();
         boolean prevSeparator = true;
         for (AnAction action : visibleActions) {
-            final boolean separator = action instanceof AnSeparator;
+            boolean separator = action instanceof AnSeparator;
             if (separator && !prevSeparator) {
                 chosen.add(action);
             }

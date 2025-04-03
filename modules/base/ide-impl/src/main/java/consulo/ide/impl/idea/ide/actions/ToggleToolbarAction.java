@@ -143,7 +143,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
                 return EMPTY_ARRAY;
             }
             List<AnAction> result = new SmartList<>();
-            for (final ActionToolbar toolbar : iterateToolbars(contentComponent)) {
+            for (ActionToolbar toolbar : iterateToolbars(contentComponent)) {
                 JComponent c = toolbar.getComponent();
                 if (c.isVisible() || !c.isValid()) {
                     continue;

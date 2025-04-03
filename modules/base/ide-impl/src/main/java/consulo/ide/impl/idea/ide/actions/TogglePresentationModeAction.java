@@ -72,11 +72,11 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     }
 
     @RequiredUIAccess
-    public static void setPresentationMode(final Project project, final boolean inPresentation) {
-        final UISettings settings = UISettings.getInstance();
+    public static void setPresentationMode(Project project, boolean inPresentation) {
+        UISettings settings = UISettings.getInstance();
         settings.PRESENTATION_MODE = inPresentation;
 
-        final boolean layoutStored = storeToolWindows(project);
+        boolean layoutStored = storeToolWindows(project);
 
         tweakUIDefaults(settings, inPresentation);
 
@@ -99,7 +99,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
             }
             else {
                 if (frame.isInFullScreen()) {
-                    final String value = propertiesComponent.getValue("full.screen.before.presentation.mode");
+                    String value = propertiesComponent.getValue("full.screen.before.presentation.mode");
                     return frame.toggleFullScreen("true".equalsIgnoreCase(value));
                 }
             }
@@ -132,14 +132,13 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
         Enumeration<Object> keys = defaults.keys();
         if (inPresentation) {
             while (keys.hasMoreElements()) {
-                Object key = keys.nextElement();
-                if (key instanceof String name) {
+                if (keys.nextElement() instanceof String name) {
                     if (name.endsWith(".font")) {
-                        Font font = defaults.getFont(key);
-                        ourSavedValues.put(key, font);
+                        Font font = defaults.getFont(name);
+                        ourSavedValues.put(name, font);
                     }
                     else if (name.endsWith(".rowHeight")) {
-                        ourSavedValues.put(key, defaults.getInt(key));
+                        ourSavedValues.put(name, defaults.getInt(name));
                     }
                 }
             }
@@ -173,7 +172,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
         String[] ids = manager.getToolWindowIds();
         boolean hasVisible = false;
         for (String id : ids) {
-            final ToolWindow toolWindow = manager.getToolWindow(id);
+            ToolWindow toolWindow = manager.getToolWindow(id);
             if (toolWindow.isVisible()) {
                 toolWindow.hide(null);
                 hasVisible = true;

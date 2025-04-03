@@ -36,8 +36,8 @@ public class CopyElementAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final DataContext dataContext = e.getDataContext();
-        final Project project = dataContext.getData(Project.KEY);
+        DataContext dataContext = e.getDataContext();
+        Project project = dataContext.getData(Project.KEY);
         if (project == null) {
             return;
         }
@@ -45,7 +45,7 @@ public class CopyElementAction extends AnAction {
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .run(() -> PsiDocumentManager.getInstance(project).commitAllDocuments());
-        final Editor editor = dataContext.getData(Editor.KEY);
+        Editor editor = dataContext.getData(Editor.KEY);
         PsiElement[] elements;
 
         PsiDirectory defaultTargetDirectory;
@@ -125,7 +125,7 @@ public class CopyElementAction extends AnAction {
     }
 
     @RequiredUIAccess
-    private static PsiElement getTargetElement(final Editor editor, final Project project) {
+    private static PsiElement getTargetElement(Editor editor, Project project) {
         int offset = editor.getCaretModel().getOffset();
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
         if (file == null) {

@@ -34,7 +34,7 @@ import jakarta.annotation.Nonnull;
 public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     @Override
     protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
-        final CodeStyleSettingsManager manager = CodeStyleSettingsManager.getInstance(project);
+        CodeStyleSettingsManager manager = CodeStyleSettingsManager.getInstance(project);
         if (manager.PER_PROJECT_SETTINGS != null) {
             //noinspection HardCodedStringLiteral
             group.add(new AnAction(
@@ -57,11 +57,11 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     }
 
     private static void addScheme(
-        final DefaultActionGroup group,
-        final CodeStyleSettingsManager manager,
-        final CodeStyleScheme currentScheme,
-        final CodeStyleScheme scheme,
-        final boolean addScheme
+        DefaultActionGroup group,
+        CodeStyleSettingsManager manager,
+        CodeStyleScheme currentScheme,
+        CodeStyleScheme scheme,
+        boolean addScheme
     ) {
         group.add(new AnAction(
             scheme.getName(),

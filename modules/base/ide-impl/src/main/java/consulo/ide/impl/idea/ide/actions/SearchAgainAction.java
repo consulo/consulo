@@ -38,9 +38,9 @@ public class SearchAgainAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(final AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        final FileEditor editor = e.getData(FileEditor.KEY);
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        FileEditor editor = e.getData(FileEditor.KEY);
         if (editor == null || project == null) {
             return;
         }

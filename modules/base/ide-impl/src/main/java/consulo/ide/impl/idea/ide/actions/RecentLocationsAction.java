@@ -78,7 +78,7 @@ public class RecentLocationsAction extends DumbAwareAction {
     public static void showPopup(@Nonnull Project project, boolean showChanged) {
         RecentLocationsDataModel model = new RecentLocationsDataModel(project, new ArrayList<>());
         JBList<RecentLocationItem> list = new JBList<>(JBList.createDefaultListModel(model.getPlaces(showChanged)));
-        final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(
             list,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
@@ -94,7 +94,7 @@ public class RecentLocationsAction extends DumbAwareAction {
         listWithFilter.setAutoPackHeight(false);
         listWithFilter.setBorder(BorderFactory.createEmptyBorder());
 
-        final SpeedSearch speedSearch = listWithFilter.getSpeedSearch();
+        SpeedSearch speedSearch = listWithFilter.getSpeedSearch();
         speedSearch.addChangeListener(evt -> {
             if (evt.getPropertyName().equals(ENTERED_PREFIX_PROPERTY_NAME)) {
                 if (StringUtil.isEmpty(speedSearch.getFilter())) {
@@ -151,7 +151,7 @@ public class RecentLocationsAction extends DumbAwareAction {
                 int clickCount = event.getClickCount();
                 if (clickCount > 1 && clickCount % 2 == 0) {
                     event.consume();
-                    final int i = list.locationToIndex(event.getPoint());
+                    int i = list.locationToIndex(event.getPoint());
                     if (i != -1) {
                         list.setSelectedIndex(i);
                         navigateToSelected(project, list, popup, navigationRef);

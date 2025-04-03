@@ -52,8 +52,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
         setBorder(JBCurrentTheme.listCellBorderFull());
 
         String nameToMatch = "";
-        if (value instanceof ToolWindow) {
-            ToolWindow tw = ((ToolWindow)value);
+        if (value instanceof ToolWindow tw) {
             hide = false;
             setIcon(getIcon(tw));
 

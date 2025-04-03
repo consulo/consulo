@@ -323,7 +323,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         if (myHint == null || !myHint.isVisible()) {
             return;
         }
-        final PopupUpdateProcessor updateProcessor = myHint.getUserData(PopupUpdateProcessor.class);
+        PopupUpdateProcessor updateProcessor = myHint.getUserData(PopupUpdateProcessor.class);
         if (updateProcessor != null) {
             updateProcessor.updatePopup(element);
         }
@@ -420,7 +420,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             if (contributor == null) {
                 LocalizeValue text = IdeLocalize.checkboxIncludeNonProjectItems(IdeUICustomization.getInstance().getProjectConceptName());
                 CheckBoxSearchEverywhereToggleAction checkBox = new CheckBoxSearchEverywhereToggleAction(text) {
-                    final SearchEverywhereManagerImpl seManager = (SearchEverywhereManagerImpl) SearchEverywhereManager.getInstance(myProject);
+                    SearchEverywhereManagerImpl seManager = (SearchEverywhereManagerImpl) SearchEverywhereManager.getInstance(myProject);
 
                     @Override
                     public boolean isEverywhere() {
@@ -684,8 +684,8 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         if (index >= 0 && !myListModel.isMoreElement(index)) {
             SearchEverywhereContributor<Object> contributor = myListModel.getContributorForIndex(index);
             Object data = contributor.getDataForItem(myListModel.getElementAt(index), SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION);
-            if (data instanceof String) {
-                ActionMenuUtil.showDescriptionInStatusBar(true, myResultsList, (String) data);
+            if (data instanceof String stringData) {
+                ActionMenuUtil.showDescriptionInStatusBar(true, myResultsList, stringData);
             }
         }
     }
@@ -810,7 +810,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         boolean multiSelectMode = e.isShiftDown() || UIUtil.isControlKeyDown(e);
         if (e.getButton() == MouseEvent.BUTTON1 && !multiSelectMode) {
             e.consume();
-            final int i = myResultsList.locationToIndex(e.getPoint());
+            int i = myResultsList.locationToIndex(e.getPoint());
             if (i > -1) {
                 myResultsList.setSelectedIndex(i);
                 elementsSelected(new int[]{i}, e.getModifiers());
@@ -977,8 +977,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     private final GroupTitleRenderer myGroupTitleRenderer = new GroupTitleRenderer();
 
     private static class GroupTitleRenderer extends CellRendererPanel {
-
-        final SimpleColoredComponent titleLabel = new SimpleColoredComponent();
+        SimpleColoredComponent titleLabel = new SimpleColoredComponent();
 
         GroupTitleRenderer() {
             setLayout(new BorderLayout());
@@ -1009,7 +1008,6 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     }
 
     public static class SearchListModel extends AbstractListModel<Object> {
-
         static final Object MORE_ELEMENT = new Object();
 
         private final List<SearchEverywhereFoundElementInfo> listElements = new ArrayList<>();
@@ -1563,9 +1561,9 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             if (wasEmpty && !myListModel.listElements.isEmpty()) {
                 Object prevSelection = ((SearchEverywhereManagerImpl) SearchEverywhereManager.getInstance(myProject))
                     .getPrevSelection(getSelectedContributorID());
-                if (prevSelection instanceof Integer) {
+                if (prevSelection instanceof Integer intPrevSelection) {
                     for (SearchEverywhereFoundElementInfo info : myListModel.listElements) {
-                        if (Objects.hashCode(info.element) == (Integer) prevSelection) {
+                        if (Objects.hashCode(info.element) == intPrevSelection) {
                             myResultsList.setSelectedValue(info.element, true);
                             break;
                         }

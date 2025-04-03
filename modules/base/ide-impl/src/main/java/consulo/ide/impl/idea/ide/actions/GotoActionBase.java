@@ -85,10 +85,10 @@ public abstract class GotoActionBase extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull final AnActionEvent event) {
-        final Presentation presentation = event.getPresentation();
-        final DataContext dataContext = event.getDataContext();
-        final Project project = dataContext.getData(Project.KEY);
+    public void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        DataContext dataContext = event.getDataContext();
+        Project project = dataContext.getData(Project.KEY);
         presentation.setEnabled(
             !getClass().equals(myInAction)
                 && (!requiresProject() || project != null)
@@ -97,7 +97,7 @@ public abstract class GotoActionBase extends AnAction {
         presentation.setVisible(hasContributors(dataContext));
     }
 
-    protected boolean hasContributors(final DataContext dataContext) {
+    protected boolean hasContributors(DataContext dataContext) {
         return true;
     }
 
@@ -106,7 +106,7 @@ public abstract class GotoActionBase extends AnAction {
     }
 
     @Nullable
-    public static PsiElement getPsiContext(final AnActionEvent e) {
+    public static PsiElement getPsiContext(AnActionEvent e) {
         PsiFile file = e.getData(PsiFile.KEY);
         if (file != null) {
             return file;
@@ -116,7 +116,7 @@ public abstract class GotoActionBase extends AnAction {
     }
 
     @Nullable
-    public static PsiElement getPsiContext(final Project project) {
+    public static PsiElement getPsiContext(Project project) {
         if (project == null) {
             return null;
         }
@@ -138,36 +138,36 @@ public abstract class GotoActionBase extends AnAction {
     }
 
     protected static Pair<String, Integer> getInitialText(boolean useEditorSelection, AnActionEvent e) {
-        final String predefined = e.getData(PlatformDataKeys.PREDEFINED_TEXT);
+        String predefined = e.getData(PlatformDataKeys.PREDEFINED_TEXT);
         if (!StringUtil.isEmpty(predefined)) {
             return Pair.create(predefined, 0);
         }
         if (useEditorSelection) {
-            final Editor editor = e.getData(Editor.KEY);
+            Editor editor = e.getData(Editor.KEY);
             if (editor != null) {
-                final String selectedText = editor.getSelectionModel().getSelectedText();
+                String selectedText = editor.getSelectionModel().getSelectedText();
                 if (selectedText != null && !selectedText.contains("\n")) {
                     return Pair.create(selectedText, 0);
                 }
             }
         }
 
-        final String query = e.getData(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY);
+        String query = e.getData(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY);
         if (!StringUtil.isEmpty(query)) {
             return Pair.create(query, 0);
         }
 
         Project project = e == null ? null : e.getData(Project.KEY);
-        final Component focusOwner = ProjectIdeFocusManager.getInstance(project).getFocusOwner();
+        Component focusOwner = ProjectIdeFocusManager.getInstance(project).getFocusOwner();
         if (focusOwner instanceof JComponent jComponent) {
-            final SpeedSearchSupply supply = SpeedSearchSupply.getSupply(jComponent);
+            SpeedSearchSupply supply = SpeedSearchSupply.getSupply(jComponent);
             if (supply != null) {
                 return Pair.create(supply.getEnteredPrefix(), 0);
             }
         }
 
         if (myInAction != null) {
-            final Pair<String, Integer> lastString = ourLastStrings.get(myInAction);
+            Pair<String, Integer> lastString = ourLastStrings.get(myInAction);
             if (lastString != null) {
                 return lastString;
             }
@@ -186,15 +186,15 @@ public abstract class GotoActionBase extends AnAction {
         return selectedText != null && !selectedText.contains("\n") ? selectedText : null;
     }
 
-    protected <T> void showNavigationPopup(AnActionEvent e, ChooseByNameModel model, final GotoActionCallback<T> callback) {
+    protected <T> void showNavigationPopup(AnActionEvent e, ChooseByNameModel model, GotoActionCallback<T> callback) {
         showNavigationPopup(e, model, callback, true);
     }
 
     protected <T> void showNavigationPopup(
         AnActionEvent e,
         ChooseByNameModel model,
-        final GotoActionCallback<T> callback,
-        final boolean allowMultipleSelection
+        GotoActionCallback<T> callback,
+        boolean allowMultipleSelection
     ) {
         showNavigationPopup(e, model, callback, null, true, allowMultipleSelection);
     }
@@ -202,8 +202,8 @@ public abstract class GotoActionBase extends AnAction {
     protected <T> void showNavigationPopup(
         AnActionEvent e,
         ChooseByNameModel model,
-        final GotoActionCallback<T> callback,
-        @Nullable final String findUsagesTitle,
+        GotoActionCallback<T> callback,
+        @Nullable String findUsagesTitle,
         boolean useSelectionFromEditor
     ) {
         showNavigationPopup(e, model, callback, findUsagesTitle, useSelectionFromEditor, true);
@@ -212,10 +212,10 @@ public abstract class GotoActionBase extends AnAction {
     protected <T> void showNavigationPopup(
         AnActionEvent e,
         ChooseByNameModel model,
-        final GotoActionCallback<T> callback,
-        @Nullable final String findUsagesTitle,
+        GotoActionCallback<T> callback,
+        @Nullable String findUsagesTitle,
         boolean useSelectionFromEditor,
-        final boolean allowMultipleSelection
+        boolean allowMultipleSelection
     ) {
         showNavigationPopup(
             e,
@@ -231,13 +231,13 @@ public abstract class GotoActionBase extends AnAction {
     protected <T> void showNavigationPopup(
         AnActionEvent e,
         ChooseByNameModel model,
-        final GotoActionCallback<T> callback,
-        @Nullable final String findUsagesTitle,
+        GotoActionCallback<T> callback,
+        @Nullable String findUsagesTitle,
         boolean useSelectionFromEditor,
-        final boolean allowMultipleSelection,
-        final DefaultChooseByNameItemProvider itemProvider
+        boolean allowMultipleSelection,
+        DefaultChooseByNameItemProvider itemProvider
     ) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         boolean mayRequestOpenInCurrentWindow =
             model.willOpenEditor() && FileEditorManagerEx.getInstanceEx(project).hasSplitOrUndockedWindows();
         Pair<String, Integer> start = getInitialText(useSelectionFromEditor, e);
@@ -256,26 +256,22 @@ public abstract class GotoActionBase extends AnAction {
         );
     }
 
-    protected <T> void showNavigationPopup(
-        final GotoActionCallback<T> callback,
-        @Nullable final String findUsagesTitle,
-        final ChooseByNamePopup popup
-    ) {
+    protected <T> void showNavigationPopup(GotoActionCallback<T> callback, @Nullable String findUsagesTitle, ChooseByNamePopup popup) {
         showNavigationPopup(callback, findUsagesTitle, popup, true);
     }
 
     protected <T> void showNavigationPopup(
-        final GotoActionCallback<T> callback,
-        @Nullable final String findUsagesTitle,
-        final ChooseByNamePopup popup,
-        final boolean allowMultipleSelection
+        GotoActionCallback<T> callback,
+        @Nullable String findUsagesTitle,
+        ChooseByNamePopup popup,
+        boolean allowMultipleSelection
     ) {
-        final Class startedAction = myInAction;
+        Class startedAction = myInAction;
         LOG.assertTrue(startedAction != null);
 
         popup.setCheckBoxShortcut(getShortcutSet());
         popup.setFindUsagesTitle(findUsagesTitle);
-        final ChooseByNameFilter<T> filter = callback.createFilter(popup);
+        ChooseByNameFilter<T> filter = callback.createFilter(popup);
 
         if (historyEnabled() && popup.getAdText() == null) {
             popup.setAdText(
@@ -323,9 +319,9 @@ public abstract class GotoActionBase extends AnAction {
             allowMultipleSelection
         );
 
-        final JTextField editor = popup.getTextField();
+        JTextField editor = popup.getTextField();
 
-        final DocumentAdapter historyResetListener = new DocumentAdapter() {
+        DocumentAdapter historyResetListener = new DocumentAdapter() {
             @Override
             protected void textChanged(DocumentEvent e) {
                 myHistoryIndex = 0;

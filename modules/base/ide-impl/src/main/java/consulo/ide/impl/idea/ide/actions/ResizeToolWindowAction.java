@@ -92,7 +92,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
             return;
         }
 
-        final Window windowAncestor = SwingUtilities.getWindowAncestor(owner);
+        Window windowAncestor = SwingUtilities.getWindowAncestor(owner);
         consulo.ui.Window uiWindow = TargetAWT.from(windowAncestor);
         if (!IdeFrameUtil.isRootIdeFrameWindow(uiWindow)) {
             setDisabled(e);

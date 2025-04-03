@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.history.PlaceInfo;
 import consulo.fileEditor.history.RecentPlacesListener;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
@@ -198,15 +199,16 @@ public class RecentLocationsDataModel {
         }
     }
 
+    @RequiredReadAction
     private void applyHighlightingPasses(
         Project project,
-        final EditorEx editor,
+        EditorEx editor,
         Document document,
-        final EditorColorsScheme colorsScheme,
-        final TextRange rangeMarker
+        EditorColorsScheme colorsScheme,
+        TextRange rangeMarker
     ) {
-        final int startOffset = rangeMarker.getStartOffset();
-        final int endOffset = rangeMarker.getEndOffset();
+        int startOffset = rangeMarker.getStartOffset();
+        int endOffset = rangeMarker.getEndOffset();
         DaemonCodeAnalyzerEx.processHighlights(document, project, null, startOffset, endOffset, i -> {
             HighlightInfoImpl info = (HighlightInfoImpl)i;
 
@@ -219,8 +221,9 @@ public class RecentLocationsDataModel {
                     return true;
                 }
 
-                TextAttributes textAttributes =
-                    info.forcedTextAttributes != null ? info.forcedTextAttributes : colorsScheme.getAttributes(info.forcedTextAttributesKey);
+                TextAttributes textAttributes = info.forcedTextAttributes != null
+                    ? info.forcedTextAttributes
+                    : colorsScheme.getAttributes(info.forcedTextAttributesKey);
                 editor.getMarkupModel().addRangeHighlighter(
                     info.getActualStartOffset() - rangeMarker.getStartOffset(),
                     info.getActualEndOffset() - rangeMarker.getStartOffset(),

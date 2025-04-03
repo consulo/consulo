@@ -135,7 +135,9 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
             DumbService.getDumbAwareExtensions(myProject, myProject.getApplication().getExtensionPoint(GotoFileContributor.class));
         for (GotoFileContributor contributor : contributors) {
             if (contributor instanceof DefaultFileNavigationContributor) {
-                FilenameIndex.processAllFileNames(nameProcessor, parameters.getSearchScope(), // todo why it was true?
+                FilenameIndex.processAllFileNames(
+                    nameProcessor,
+                    parameters.getSearchScope(), // todo why it was true?
                     parameters.getIdFilter()
                 );
             }
@@ -210,8 +212,8 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
     ) {
         List<FoundItemDescriptor<PsiFileSystemItem>> dirs = new ArrayList<>();
         return JBIterable.from(iterable).filter(res -> {
-            if (res.getItem() instanceof PsiDirectory) {
-                dirs.add(new FoundItemDescriptor<>(res.getItem(), DIRECTORY_MATCH_DEGREE));
+            if (res.getItem() instanceof PsiDirectory directory) {
+                dirs.add(new FoundItemDescriptor<>(directory, DIRECTORY_MATCH_DEGREE));
                 return false;
             }
             return true;
@@ -246,8 +248,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
             ProgressManager.checkCanceled();
             for (Object o : myModel.getElementsByName(matchResult.elementName, parameters, indicator)) {
                 ProgressManager.checkCanceled();
-                if (o instanceof PsiFileSystemItem) {
-                    PsiFileSystemItem psiItem = (PsiFileSystemItem)o;
+                if (o instanceof PsiFileSystemItem psiItem) {
                     String qualifier = getParentPath(psiItem);
                     if (qualifier != null) {
                         group.add(psiItem);

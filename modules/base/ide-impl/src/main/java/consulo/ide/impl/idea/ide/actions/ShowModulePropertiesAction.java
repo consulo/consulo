@@ -41,11 +41,11 @@ public class ShowModulePropertiesAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
-        final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
+        Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
         if (module == null) {
             return;
         }
@@ -56,8 +56,8 @@ public class ShowModulePropertiesAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
+        Project project = e.getData(Project.KEY);
+        Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
         e.getPresentation().setVisible(project != null && module != null);
     }
 }

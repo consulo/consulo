@@ -123,11 +123,11 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
         queue.addLast(parent);
         while (!queue.isEmpty()) {
             JComponent component = queue.removeFirst();
-            if (component instanceof OccurenceNavigator) {
-                return (OccurenceNavigator)component;
+            if (component instanceof OccurenceNavigator occurenceNavigator) {
+                return occurenceNavigator;
             }
-            if (component instanceof JTabbedPane) {
-                final JComponent selectedComponent = (JComponent)((JTabbedPane)component).getSelectedComponent();
+            if (component instanceof JTabbedPane tabbedPane) {
+                JComponent selectedComponent = (JComponent)tabbedPane.getSelectedComponent();
                 if (selectedComponent != null) {
                     queue.addLast(selectedComponent);
                 }
@@ -135,10 +135,9 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
             else if (component != null) {
                 for (int i = 0; i < component.getComponentCount(); i++) {
                     Component child = component.getComponent(i);
-                    if (!(child instanceof JComponent)) {
-                        continue;
+                    if (child instanceof JComponent jComponent) {
+                        queue.addLast(jComponent);
                     }
-                    queue.addLast((JComponent)child);
                 }
             }
         }

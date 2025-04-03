@@ -78,8 +78,8 @@ public final class ToolWindowsGroup extends ActionGroup implements DumbAware {
             }
             String actionId = ActivateToolWindowAction.getActionIdForToolWindow(id);
             AnAction action = actionManager.getAction(actionId);
-            if (action instanceof ActivateToolWindowAction) {
-                result.add((ActivateToolWindowAction)action);
+            if (action instanceof ActivateToolWindowAction activateToolWindowAction) {
+                result.add(activateToolWindowAction);
             }
         }
         Collections.sort(result, COMPARATOR);

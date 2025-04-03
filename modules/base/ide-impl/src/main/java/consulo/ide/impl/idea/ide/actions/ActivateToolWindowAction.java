@@ -140,12 +140,12 @@ public class ActivateToolWindowAction extends DumbAwareAction {
             if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
                 KeyStroke keyStroke = keyboardShortcut.getFirstKeyStroke();
                 int modifiers = keyStroke.getModifiers();
-                if (modifiers == (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK) ||
-                    modifiers == InputEvent.ALT_MASK ||
-                    modifiers == InputEvent.ALT_DOWN_MASK ||
-                    modifiers == (InputEvent.META_DOWN_MASK | InputEvent.META_MASK) ||
-                    modifiers == InputEvent.META_MASK ||
-                    modifiers == InputEvent.META_DOWN_MASK) {
+                if (modifiers == (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK)
+                    || modifiers == InputEvent.ALT_MASK
+                    || modifiers == InputEvent.ALT_DOWN_MASK
+                    || modifiers == (InputEvent.META_DOWN_MASK | InputEvent.META_MASK)
+                    || modifiers == InputEvent.META_MASK
+                    || modifiers == InputEvent.META_DOWN_MASK) {
                     int keyCode = keyStroke.getKeyCode();
                     if (KeyEvent.VK_0 <= keyCode && keyCode <= KeyEvent.VK_9) {
                         char c = (char)('0' + keyCode - KeyEvent.VK_0);

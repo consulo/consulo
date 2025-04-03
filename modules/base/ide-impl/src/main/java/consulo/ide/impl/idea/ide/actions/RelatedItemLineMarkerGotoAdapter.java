@@ -60,9 +60,8 @@ public class RelatedItemLineMarkerGotoAdapter extends GotoRelatedProvider {
 
         List<GotoRelatedItem> items = new ArrayList<>();
         for (LineMarkerProvider provider : providers) {
-            if (provider instanceof RelatedItemLineMarkerProvider) {
+            if (provider instanceof RelatedItemLineMarkerProvider relatedItemLineMarkerProvider) {
                 List<RelatedItemLineMarkerInfo> markers = new ArrayList<>();
-                RelatedItemLineMarkerProvider relatedItemLineMarkerProvider = (RelatedItemLineMarkerProvider)provider;
                 for (PsiElement parent : parents) {
                     ContainerUtil.addIfNotNull(markers, relatedItemLineMarkerProvider.getLineMarkerInfo(parent));
                 }
@@ -84,11 +83,8 @@ public class RelatedItemLineMarkerGotoAdapter extends GotoRelatedProvider {
             Collection<? extends GotoRelatedItem> items = marker.createGotoRelatedItems();
             for (GotoRelatedItem item : items) {
                 PsiElement element = item.getElement();
-                if (element instanceof PsiFile) {
-                    PsiFile file = (PsiFile)element;
-                    if (addedFiles.contains(file)) {
-                        continue;
-                    }
+                if (element instanceof PsiFile file && addedFiles.contains(file)) {
+                    continue;
                 }
                 if (element != null) {
                     ContainerUtil.addIfNotNull(addedFiles, element.getContainingFile());

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.fileEditor.action.CloseEditorsActionBase;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.fileEditor.FileEditorComposite;
@@ -34,29 +34,26 @@ import java.util.Set;
  */
 public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
     @Override
-    protected boolean isFileToClose(FileEditorComposite editor, final FileEditorWindow window) {
+    protected boolean isFileToClose(FileEditorComposite editor, FileEditorWindow window) {
         return !window.isFilePinned(editor.getFile());
     }
 
     @Override
-    protected String getPresentationText(final boolean inSplitter) {
-        if (inSplitter) {
-            return IdeBundle.message("action.close.all.unpinned.editors.in.tab.group");
-        }
-        else {
-            return IdeBundle.message("action.close.all.unpinned.editors");
-        }
+    protected String getPresentationText(boolean inSplitter) {
+        return inSplitter
+            ? IdeLocalize.actionCloseAllUnpinnedEditorsInTabGroup().get()
+            : IdeLocalize.actionCloseAllUnpinnedEditors().get();
     }
 
     @Override
-    protected boolean isActionEnabled(final Project project, final AnActionEvent event) {
-        final List<Pair<FileEditorComposite, FileEditorWindow>> filesToClose = getFilesToClose(event);
+    protected boolean isActionEnabled(Project project, AnActionEvent event) {
+        List<Pair<FileEditorComposite, FileEditorWindow>> filesToClose = getFilesToClose(event);
         if (filesToClose.isEmpty()) {
             return false;
         }
         Set<FileEditorWindow> checked = new HashSet<>();
         for (Pair<FileEditorComposite, FileEditorWindow> pair : filesToClose) {
-            final FileEditorWindow window = pair.second;
+            FileEditorWindow window = pair.second;
             if (!checked.contains(window)) {
                 checked.add(window);
                 if (hasPinned(window)) {
@@ -67,7 +64,7 @@ public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
         return false;
     }
 
-    private static boolean hasPinned(final FileEditorWindow window) {
+    private static boolean hasPinned(FileEditorWindow window) {
         for (FileEditorWithProviderComposite e : window.getEditors()) {
             if (e.isPinned()) {
                 return true;
