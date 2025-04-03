@@ -28,19 +28,19 @@ import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class ClassSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<Object> {
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public ClassSearchEverywhereContributorFactory(Application application) {
-    myApplication = application;
-  }
-
-  @Nullable
-  @Override
-  public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
-    if (!myApplication.getExtensionPoint(GotoClassOrTypeContributor.class).hasAnyExtensions()) {
-      return null;
+    @Inject
+    public ClassSearchEverywhereContributorFactory(Application application) {
+        myApplication = application;
     }
-    return new ClassSearchEverywhereContributor(initEvent.getData(Project.KEY), GotoActionBase.getPsiContext(initEvent));
-  }
+
+    @Nullable
+    @Override
+    public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
+        if (!myApplication.getExtensionPoint(GotoClassOrTypeContributor.class).hasAnyExtensions()) {
+            return null;
+        }
+        return new ClassSearchEverywhereContributor(initEvent.getData(Project.KEY), GotoActionBase.getPsiContext(initEvent));
+    }
 }

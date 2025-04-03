@@ -16,24 +16,27 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface SearchEverywhereManager {
-  public static final Key<JBPopup> SEARCH_EVERYWHERE_POPUP = new Key<>("SearchEverywherePopup");
+    public static final Key<JBPopup> SEARCH_EVERYWHERE_POPUP = new Key<>("SearchEverywherePopup");
 
-  static SearchEverywhereManager getInstance(Project project) {
-    return ServiceManager.getService(project, SearchEverywhereManager.class);
-  }
+    static SearchEverywhereManager getInstance(Project project) {
+        return ServiceManager.getService(project, SearchEverywhereManager.class);
+    }
 
-  boolean isShown();
+    boolean isShown();
 
-  void show(@Nonnull String contributorID, @Nullable String searchText, @Nonnull AnActionEvent initEvent); //todo change to contributor??? UX-1
+    void show(
+        @Nonnull String contributorID,
+        @Nullable String searchText,
+        @Nonnull AnActionEvent initEvent
+    ); //todo change to contributor??? UX-1
 
-  @Nonnull
-  String getSelectedContributorID();
+    @Nonnull
+    String getSelectedContributorID();
 
-  void setSelectedContributor(@Nonnull String contributorID); //todo change to contributor??? UX-1
+    void setSelectedContributor(@Nonnull String contributorID); //todo change to contributor??? UX-1
 
-  void toggleEverywhereFilter();
+    void toggleEverywhereFilter();
 
-  // todo remove
-  boolean isEverywhere();
-
+    // todo remove
+    boolean isEverywhere();
 }

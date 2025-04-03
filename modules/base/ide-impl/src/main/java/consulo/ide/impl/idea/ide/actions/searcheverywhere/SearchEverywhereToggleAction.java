@@ -2,9 +2,9 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 public interface SearchEverywhereToggleAction {
-  boolean isEverywhere();
+    boolean isEverywhere();
 
-  void setEverywhere(boolean everywhere);
+    void setEverywhere(boolean everywhere);
 
-  boolean canToggleEverywhere();
+    boolean canToggleEverywhere();
 }

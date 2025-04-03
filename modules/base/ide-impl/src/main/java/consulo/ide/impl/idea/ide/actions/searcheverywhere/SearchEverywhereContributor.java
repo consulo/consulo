@@ -9,6 +9,7 @@ import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,99 +19,99 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
-  @Nonnull
-  String getSearchProviderId();
+    @Nonnull
+    String getSearchProviderId();
 
-  @Nonnull
-  String getGroupName();
+    @Nonnull
+    String getGroupName();
 
-  @Nonnull
-  default String getFullGroupName() {
-    return getGroupName();
-  }
+    @Nonnull
+    default String getFullGroupName() {
+        return getGroupName();
+    }
 
-  int getSortWeight();
+    int getSortWeight();
 
-  boolean showInFindResults();
+    boolean showInFindResults();
 
-  default boolean isShownInSeparateTab() {
-    return false;
-  }
-
-  /**
-   * @deprecated method is left for backward compatibility only. If you want to consider elements weight in your search contributor
-   * please use {@link WeightedSearchEverywhereContributor#fetchWeightedElements(String, ProgressIndicator, Processor)} method for fetching
-   * this elements
-   */
-  @Deprecated
-  default int getElementPriority(@Nonnull Item element, @Nonnull String searchPattern) {
-    return 0;
-  }
-
-  @Nonnull
-  default List<SearchEverywhereCommandInfo> getSupportedCommands() {
-    return Collections.emptyList();
-  }
-
-  @Nullable
-  default String getAdvertisement() {
-    return null;
-  }
-
-  @Nonnull
-  default List<AnAction> getActions(@Nonnull Runnable onChanged) {
-    return Collections.emptyList();
-  }
-
-  void fetchElements(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, @Nonnull Processor<? super Item> consumer);
-
-  @Nonnull
-  default ContributorSearchResult<Item> search(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, int elementsLimit) {
-    ContributorSearchResult.Builder<Item> builder = ContributorSearchResult.builder();
-    fetchElements(pattern, progressIndicator, element -> {
-      if (elementsLimit < 0 || builder.itemsCount() < elementsLimit) {
-        builder.addItem(element);
-        return true;
-      }
-      else {
-        builder.setHasMore(true);
+    default boolean isShownInSeparateTab() {
         return false;
-      }
-    });
+    }
 
-    return builder.build();
-  }
+    /**
+     * @deprecated method is left for backward compatibility only. If you want to consider elements weight in your search contributor
+     * please use {@link WeightedSearchEverywhereContributor#fetchWeightedElements(String, ProgressIndicator, Processor)} method for fetching
+     * this elements
+     */
+    @Deprecated
+    default int getElementPriority(@Nonnull Item element, @Nonnull String searchPattern) {
+        return 0;
+    }
 
-  @Nonnull
-  default List<Item> search(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator) {
-    List<Item> res = new ArrayList<>();
-    fetchElements(pattern, progressIndicator, o -> res.add(o));
-    return res;
-  }
+    @Nonnull
+    default List<SearchEverywhereCommandInfo> getSupportedCommands() {
+        return Collections.emptyList();
+    }
 
-  boolean processSelectedItem(@Nonnull Item selected, int modifiers, @Nonnull String searchText);
+    @Nullable
+    default String getAdvertisement() {
+        return null;
+    }
 
-  @Nonnull
-  ListCellRenderer<? super Item> getElementsRenderer();
+    @Nonnull
+    default List<AnAction> getActions(@Nonnull Runnable onChanged) {
+        return Collections.emptyList();
+    }
 
-  @Nullable
-  Object getDataForItem(@Nonnull Item element, @Nonnull Key dataId);
+    void fetchElements(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, @Nonnull Processor<? super Item> consumer);
 
-  @Nonnull
-  default String filterControlSymbols(@Nonnull String pattern) {
-    return pattern;
-  }
+    @Nonnull
+    default ContributorSearchResult<Item> search(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, int elementsLimit) {
+        ContributorSearchResult.Builder<Item> builder = ContributorSearchResult.builder();
+        fetchElements(pattern, progressIndicator, element -> {
+            if (elementsLimit < 0 || builder.itemsCount() < elementsLimit) {
+                builder.addItem(element);
+                return true;
+            }
+            else {
+                builder.setHasMore(true);
+                return false;
+            }
+        });
 
-  default boolean isMultiSelectionSupported() {
-    return false;
-  }
+        return builder.build();
+    }
 
-  @Override
-  default boolean isDumbAware() {
-    return true;
-  }
+    @Nonnull
+    default List<Item> search(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator) {
+        List<Item> res = new ArrayList<>();
+        fetchElements(pattern, progressIndicator, o -> res.add(o));
+        return res;
+    }
 
-  default boolean isEmptyPatternSupported() {
-    return false;
-  }
+    boolean processSelectedItem(@Nonnull Item selected, int modifiers, @Nonnull String searchText);
+
+    @Nonnull
+    ListCellRenderer<? super Item> getElementsRenderer();
+
+    @Nullable
+    Object getDataForItem(@Nonnull Item element, @Nonnull Key dataId);
+
+    @Nonnull
+    default String filterControlSymbols(@Nonnull String pattern) {
+        return pattern;
+    }
+
+    default boolean isMultiSelectionSupported() {
+        return false;
+    }
+
+    @Override
+    default boolean isDumbAware() {
+        return true;
+    }
+
+    default boolean isEmptyPatternSupported() {
+        return false;
+    }
 }

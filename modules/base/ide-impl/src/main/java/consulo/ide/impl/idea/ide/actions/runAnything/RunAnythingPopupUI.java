@@ -158,7 +158,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             //mySearchField.setForeground(UIUtil.getLabelForeground());
             mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
             Application.get().invokeLater(() -> {
-                JComponent parent = (JComponent) TargetAWT.to(mySearchField).getParent();
+                JComponent parent = (JComponent)TargetAWT.to(mySearchField).getParent();
                 parent.revalidate();
                 parent.repaint();
             });
@@ -436,7 +436,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     private void updateByModifierKeysEvent(@Nonnull consulo.ui.event.KeyEvent e) {
         KeyboardInputDetails inputDetails = e.getInputDetails();
-        
+
         LocalizeValue message;
         if (inputDetails.withShift() && inputDetails.withAlt()) {
             message = IdeLocalize.runAnythingRunInContextDebugTitle();
@@ -703,10 +703,12 @@ public class RunAnythingPopupUI extends BigPopupUI {
             assert myCalcThread == this : "There are two CalcThreads running before one of them was cancelled";
         }
 
-        private void buildAllGroups(@Nonnull DataContext dataContext,
-                                    @Nonnull String pattern,
-                                    @Nonnull Runnable checkCancellation,
-                                    boolean isRecent) {
+        private void buildAllGroups(
+            @Nonnull DataContext dataContext,
+            @Nonnull String pattern,
+            @Nonnull Runnable checkCancellation,
+            boolean isRecent
+        ) {
             if (isRecent) {
                 RunAnythingRecentGroup.INSTANCE.collectItems(dataContext, myListModel, pattern, checkCancellation);
             }
@@ -760,7 +762,8 @@ public class RunAnythingPopupUI extends BigPopupUI {
         public ActionCallback insert(int index, @Nonnull RunAnythingGroup group) {
             Application.get().executeOnPooledThread(() -> Application.get().runReadAction(() -> {
                 try {
-                    RunAnythingGroup.SearchResult result = group.getItems(getDataContext(), myListModel, trimHelpPattern(), true, this::check);
+                    RunAnythingGroup.SearchResult result =
+                        group.getItems(getDataContext(), myListModel, trimHelpPattern(), true, this::check);
 
                     check();
                     Application.get().invokeLater(() -> {
@@ -807,11 +810,16 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     @Override
     public void installScrollingActions() {
-        RunAnythingScrollingUtil.installActions(myResultsList, (JTextField) TargetAWT.to(getField()), () -> {
-            myIsItemSelected = true;
-            mySearchField.setValue(myLastInputText);
-            clearSelection();
-        }, UISettings.getInstance().getCycleScrolling());
+        RunAnythingScrollingUtil.installActions(
+            myResultsList,
+            (JTextField)TargetAWT.to(getField()),
+            () -> {
+                myIsItemSelected = true;
+                mySearchField.setValue(myLastInputText);
+                clearSelection();
+            },
+            UISettings.getInstance().getCycleScrolling()
+        );
 
         super.installScrollingActions();
     }
@@ -872,9 +880,9 @@ public class RunAnythingPopupUI extends BigPopupUI {
         });
 
         DumbAwareAction.create(e -> RunAnythingUtil.jumpNextGroup(true, myResultsList))
-            .registerCustomShortcutSet(CustomShortcutSet.fromString("TAB"), (JComponent) TargetAWT.to(mySearchField), this);
+            .registerCustomShortcutSet(CustomShortcutSet.fromString("TAB"), (JComponent)TargetAWT.to(mySearchField), this);
         DumbAwareAction.create(e -> RunAnythingUtil.jumpNextGroup(false, myResultsList))
-            .registerCustomShortcutSet(CustomShortcutSet.fromString("shift TAB"), (JComponent) TargetAWT.to(mySearchField), this);
+            .registerCustomShortcutSet(CustomShortcutSet.fromString("shift TAB"), (JComponent)TargetAWT.to(mySearchField), this);
 
         AnAction escape = ActionManager.getInstance().getAction("EditorEscape");
         DumbAwareAction.create(__ -> {
@@ -890,7 +898,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 "alt shift ENTER",
                 "meta ENTER"
             ),
-            (JComponent) TargetAWT.to(mySearchField),
+            (JComponent)TargetAWT.to(mySearchField),
             this
         );
 
@@ -906,7 +914,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 return;
             }
 
-            RunAnythingCache.getInstance(getProject()).getState().getCommands().remove(((RunAnythingItem) selectedValue).getCommand());
+            RunAnythingCache.getInstance(getProject()).getState().getCommands().remove(((RunAnythingItem)selectedValue).getCommand());
 
             model.remove(index);
             model.shiftIndexes(index, -1);
@@ -919,7 +927,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                     myCalcThread.updatePopup();
                 }
             });
-        }).registerCustomShortcutSet(CustomShortcutSet.fromString("shift BACK_SPACE"), (JComponent) TargetAWT.to(mySearchField), this);
+        }).registerCustomShortcutSet(CustomShortcutSet.fromString("shift BACK_SPACE"), (JComponent)TargetAWT.to(mySearchField), this);
 
         myProject.getMessageBus().connect(this).subscribe(DumbModeListener.class, new DumbModeListener() {
             @Override

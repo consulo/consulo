@@ -37,180 +37,187 @@ import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapSho
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getFirstKeyboardShortcutText;
 
 public class ActionSearchEverywhereContributor implements SearchEverywhereContributor<GotoActionModel.MatchedValue> {
+    private static final Logger LOG = Logger.getInstance(ActionSearchEverywhereContributor.class);
 
-  private static final Logger LOG = Logger.getInstance(ActionSearchEverywhereContributor.class);
+    private final Project myProject;
+    private final Component myContextComponent;
+    private final GotoActionModel myModel;
+    private final GotoActionItemProvider myProvider;
+    private boolean myDisabledActions;
 
-  private final Project myProject;
-  private final Component myContextComponent;
-  private final GotoActionModel myModel;
-  private final GotoActionItemProvider myProvider;
-  private boolean myDisabledActions;
-
-  public ActionSearchEverywhereContributor(Project project, Component contextComponent, Editor editor) {
-    myProject = project;
-    myContextComponent = contextComponent;
-    myModel = new GotoActionModel(project, contextComponent, editor);
-    myProvider = new GotoActionItemProvider(myModel);
-  }
-
-  @Nonnull
-  @Override
-  public String getGroupName() {
-    return "Actions";
-  }
-
-  @Nonnull
-  @Override
-  public String getAdvertisement() {
-    ShortcutSet altEnterShortcutSet = getActiveKeymapShortcuts(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
-    String altEnter = getFirstKeyboardShortcutText(altEnterShortcutSet);
-    return "Press " + altEnter + " to assign a shortcut";
-  }
-
-  public String includeNonProjectItemsText() {
-    return IdeLocalize.checkboxDisabledIncluded().get();
-  }
-
-  @Override
-  public int getSortWeight() {
-    return 400;
-  }
-
-  @Override
-  public boolean isShownInSeparateTab() {
-    return true;
-  }
-
-  @Override
-  public void fetchElements(
-    @Nonnull String pattern,
-    @Nonnull ProgressIndicator progressIndicator,
-    @Nonnull Processor<? super GotoActionModel.MatchedValue> consumer
-  ) {
-    if (StringUtil.isEmptyOrSpaces(pattern)) {
-      return;
+    public ActionSearchEverywhereContributor(Project project, Component contextComponent, Editor editor) {
+        myProject = project;
+        myContextComponent = contextComponent;
+        myModel = new GotoActionModel(project, contextComponent, editor);
+        myProvider = new GotoActionItemProvider(myModel);
     }
 
-    myProvider.filterElements(pattern, element -> {
-      if (progressIndicator.isCanceled()) return false;
-
-      if (!myDisabledActions
-        && element.value instanceof GotoActionModel.ActionWrapper actionWrapper
-        && !actionWrapper.isAvailable()) {
-        return true;
-      }
-
-      if (element == null) {
-        LOG.error("Null action has been returned from model");
-        return true;
-      }
-
-      return consumer.process(element);
-    });
-  }
-
-  @Nonnull
-  @Override
-  public List<AnAction> getActions(@Nonnull Runnable onChanged) {
-    return Collections.singletonList(new CheckBoxSearchEverywhereToggleAction(includeNonProjectItemsText()) {
-      @Override
-      public boolean isEverywhere() {
-        return myDisabledActions;
-      }
-
-      @Override
-      public void setEverywhere(boolean state) {
-        myDisabledActions = state;
-        onChanged.run();
-      }
-    });
-  }
-
-  @Nonnull
-  @Override
-  public ListCellRenderer<? super GotoActionModel.MatchedValue> getElementsRenderer() {
-    return new GotoActionModel.GotoActionListCellRenderer(myModel::getGroupName, true);
-  }
-
-  @Override
-  public boolean showInFindResults() {
-    return false;
-  }
-
-  @Nonnull
-  @Override
-  public String getSearchProviderId() {
-    return ActionSearchEverywhereContributor.class.getSimpleName();
-  }
-
-  @Override
-  public Object getDataForItem(@Nonnull GotoActionModel.MatchedValue element, @Nonnull Key dataId) {
-    if (SetShortcutAction.SELECTED_ACTION == dataId) {
-      return getAction(element);
+    @Nonnull
+    @Override
+    public String getGroupName() {
+        return "Actions";
     }
 
-    if (SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION == dataId) {
-      AnAction action = getAction(element);
-      if (action != null) {
-        String description = action.getTemplatePresentation().getDescription();
-        if (UISettings.getInstance().getShowInplaceCommentsInternal()) {
-          String presentableId =
-            StringUtil.notNullize(ActionManager.getInstance().getId(action), "class: " + action.getClass().getName());
-          return String.format("[%s] %s", presentableId, StringUtil.notNullize(description));
+    @Nonnull
+    @Override
+    public String getAdvertisement() {
+        ShortcutSet altEnterShortcutSet = getActiveKeymapShortcuts(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
+        String altEnter = getFirstKeyboardShortcutText(altEnterShortcutSet);
+        return "Press " + altEnter + " to assign a shortcut";
+    }
+
+    public String includeNonProjectItemsText() {
+        return IdeLocalize.checkboxDisabledIncluded().get();
+    }
+
+    @Override
+    public int getSortWeight() {
+        return 400;
+    }
+
+    @Override
+    public boolean isShownInSeparateTab() {
+        return true;
+    }
+
+    @Override
+    public void fetchElements(
+        @Nonnull String pattern,
+        @Nonnull ProgressIndicator progressIndicator,
+        @Nonnull Processor<? super GotoActionModel.MatchedValue> consumer
+    ) {
+        if (StringUtil.isEmptyOrSpaces(pattern)) {
+            return;
         }
-        return description;
-      }
+
+        myProvider.filterElements(pattern, element -> {
+            if (progressIndicator.isCanceled()) {
+                return false;
+            }
+
+            if (!myDisabledActions
+                && element.value instanceof GotoActionModel.ActionWrapper actionWrapper
+                && !actionWrapper.isAvailable()) {
+                return true;
+            }
+
+            if (element == null) {
+                LOG.error("Null action has been returned from model");
+                return true;
+            }
+
+            return consumer.process(element);
+        });
     }
 
-    return null;
-  }
+    @Nonnull
+    @Override
+    public List<AnAction> getActions(@Nonnull Runnable onChanged) {
+        return Collections.singletonList(new CheckBoxSearchEverywhereToggleAction(includeNonProjectItemsText()) {
+            @Override
+            public boolean isEverywhere() {
+                return myDisabledActions;
+            }
 
-  @Override
-  public boolean processSelectedItem(@Nonnull GotoActionModel.MatchedValue item, int modifiers, @Nonnull String text) {
-    if (modifiers == InputEvent.ALT_MASK) {
-      showAssignShortcutDialog(item);
-      return true;
+            @Override
+            public void setEverywhere(boolean state) {
+                myDisabledActions = state;
+                onChanged.run();
+            }
+        });
     }
 
-    Object selected = item.value;
-
-    if (selected instanceof BooleanOptionDescription option) {
-      option.setOptionState(!option.isOptionEnabled());
-      return false;
+    @Nonnull
+    @Override
+    public ListCellRenderer<? super GotoActionModel.MatchedValue> getElementsRenderer() {
+        return new GotoActionModel.GotoActionListCellRenderer(myModel::getGroupName, true);
     }
 
-    GotoActionAction.openOptionOrPerformAction(selected, text, myProject, myContextComponent);
-    boolean inplaceChange = selected instanceof GotoActionModel.ActionWrapper actionWrapper
-      && actionWrapper.getAction() instanceof ToggleAction;
-    return !inplaceChange;
-  }
-
-  @Nullable
-  private static AnAction getAction(@Nonnull GotoActionModel.MatchedValue element) {
-    Object value = element.value;
-    if (value instanceof GotoActionModel.ActionWrapper actionWrapper) {
-      value = actionWrapper.getAction();
+    @Override
+    public boolean showInFindResults() {
+        return false;
     }
-    return value instanceof AnAction action ? action : null;
-  }
 
-  private void showAssignShortcutDialog(@Nonnull GotoActionModel.MatchedValue value) {
-    AnAction action = getAction(value);
-    if (action == null) return;
+    @Nonnull
+    @Override
+    public String getSearchProviderId() {
+        return ActionSearchEverywhereContributor.class.getSimpleName();
+    }
 
-    String id = ActionManager.getInstance().getId(action);
+    @Override
+    public Object getDataForItem(@Nonnull GotoActionModel.MatchedValue element, @Nonnull Key dataId) {
+        if (SetShortcutAction.SELECTED_ACTION == dataId) {
+            return getAction(element);
+        }
 
-    Keymap activeKeymap = Optional.ofNullable(KeymapManager.getInstance()).map(KeymapManager::getActiveKeymap).orElse(null);
-    if (activeKeymap == null) return;
+        if (SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION == dataId) {
+            AnAction action = getAction(element);
+            if (action != null) {
+                String description = action.getTemplatePresentation().getDescription();
+                if (UISettings.getInstance().getShowInplaceCommentsInternal()) {
+                    String presentableId =
+                        StringUtil.notNullize(ActionManager.getInstance().getId(action), "class: " + action.getClass().getName());
+                    return String.format("[%s] %s", presentableId, StringUtil.notNullize(description));
+                }
+                return description;
+            }
+        }
 
-    ApplicationManager.getApplication().invokeLater(() -> {
-      Window window = myProject != null
-        ? TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject))
-        : KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-      if (window == null) return;
+        return null;
+    }
 
-      KeymapPanel.addKeyboardShortcut(id, ActionShortcutRestrictions.getInstance().getForActionId(id), activeKeymap, window);
-    });
-  }
+    @Override
+    public boolean processSelectedItem(@Nonnull GotoActionModel.MatchedValue item, int modifiers, @Nonnull String text) {
+        if (modifiers == InputEvent.ALT_MASK) {
+            showAssignShortcutDialog(item);
+            return true;
+        }
+
+        Object selected = item.value;
+
+        if (selected instanceof BooleanOptionDescription option) {
+            option.setOptionState(!option.isOptionEnabled());
+            return false;
+        }
+
+        GotoActionAction.openOptionOrPerformAction(selected, text, myProject, myContextComponent);
+        boolean inplaceChange = selected instanceof GotoActionModel.ActionWrapper actionWrapper
+            && actionWrapper.getAction() instanceof ToggleAction;
+        return !inplaceChange;
+    }
+
+    @Nullable
+    private static AnAction getAction(@Nonnull GotoActionModel.MatchedValue element) {
+        Object value = element.value;
+        if (value instanceof GotoActionModel.ActionWrapper actionWrapper) {
+            value = actionWrapper.getAction();
+        }
+        return value instanceof AnAction action ? action : null;
+    }
+
+    private void showAssignShortcutDialog(@Nonnull GotoActionModel.MatchedValue value) {
+        AnAction action = getAction(value);
+        if (action == null) {
+            return;
+        }
+
+        String id = ActionManager.getInstance().getId(action);
+
+        Keymap activeKeymap = Optional.ofNullable(KeymapManager.getInstance()).map(KeymapManager::getActiveKeymap).orElse(null);
+        if (activeKeymap == null) {
+            return;
+        }
+
+        ApplicationManager.getApplication().invokeLater(() -> {
+            Window window = myProject != null
+                ? TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject))
+                : KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+            if (window == null) {
+                return;
+            }
+
+            KeymapPanel.addKeyboardShortcut(id, ActionShortcutRestrictions.getInstance().getForActionId(id), activeKeymap, window);
+        });
+    }
 
 }

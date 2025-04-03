@@ -6,14 +6,12 @@ import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 
 public class SEActionStub extends DumbAwareAction {
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+    }
 
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(false);
-  }
-
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(false);
+    }
 }

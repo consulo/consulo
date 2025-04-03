@@ -26,68 +26,80 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class RecentFilesSEContributor extends FileSearchEverywhereContributor {
-
-  public RecentFilesSEContributor(@Nullable Project project, @Nullable PsiElement context) {
-    super(project, context);
-  }
-
-  @Nonnull
-  @Override
-  public String getSearchProviderId() {
-    return RecentFilesSEContributor.class.getSimpleName();
-  }
-
-  @Nonnull
-  @Override
-  public String getGroupName() {
-    return "Recent Files";
-  }
-
-  @Override
-  public int getSortWeight() {
-    return 70;
-  }
-
-  @Override
-  public int getElementPriority(@Nonnull Object element, @Nonnull String searchPattern) {
-    return super.getElementPriority(element, searchPattern) + 5;
-  }
-
-  @Override
-  public void fetchWeightedElements(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, @Nonnull Processor<? super FoundItemDescriptor<Object>> consumer) {
-    if (myProject == null) {
-      return; //nothing to search
+    public RecentFilesSEContributor(@Nullable Project project, @Nullable PsiElement context) {
+        super(project, context);
     }
 
-    String searchString = filterControlSymbols(pattern);
-    MinusculeMatcher matcher = NameUtil.buildMatcher("*" + searchString).build();
-    List<VirtualFile> opened = Arrays.asList(FileEditorManager.getInstance(myProject).getSelectedFiles());
-    List<VirtualFile> history = Lists.reverse(EditorHistoryManagerImpl.getInstance(myProject).getFileList());
+    @Nonnull
+    @Override
+    public String getSearchProviderId() {
+        return RecentFilesSEContributor.class.getSimpleName();
+    }
 
-    List<FoundItemDescriptor<Object>> res = new ArrayList<>();
-    ProgressIndicatorUtils.yieldToPendingWriteActions();
-    ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> {
-      PsiManager psiManager = PsiManager.getInstance(myProject);
-      Stream<VirtualFile> stream = history.stream();
-      if (!StringUtil.isEmptyOrSpaces(searchString)) {
-        stream = stream.filter(file -> matcher.matches(file.getName()));
-      }
-      res.addAll(stream.filter(vf -> !opened.contains(vf) && vf.isValid()).distinct().map(vf -> {
-        PsiFile f = psiManager.findFile(vf);
-        return f == null ? null : new FoundItemDescriptor<Object>(f, matcher.matchingDegree(vf.getName()));
-      }).filter(file -> file != null).collect(Collectors.toList()));
+    @Nonnull
+    @Override
+    public String getGroupName() {
+        return "Recent Files";
+    }
 
-      ContainerUtil.process(res, consumer);
-    }, progressIndicator);
-  }
+    @Override
+    public int getSortWeight() {
+        return 70;
+    }
 
-  @Override
-  public boolean isEmptyPatternSupported() {
-    return true;
-  }
+    @Override
+    public int getElementPriority(@Nonnull Object element, @Nonnull String searchPattern) {
+        return super.getElementPriority(element, searchPattern) + 5;
+    }
 
-  @Override
-  public boolean isShownInSeparateTab() {
-    return false;
-  }
+    @Override
+    public void fetchWeightedElements(
+        @Nonnull String pattern,
+        @Nonnull ProgressIndicator progressIndicator,
+        @Nonnull Processor<? super FoundItemDescriptor<Object>> consumer
+    ) {
+        if (myProject == null) {
+            return; //nothing to search
+        }
+
+        String searchString = filterControlSymbols(pattern);
+        MinusculeMatcher matcher = NameUtil.buildMatcher("*" + searchString).build();
+        List<VirtualFile> opened = Arrays.asList(FileEditorManager.getInstance(myProject).getSelectedFiles());
+        List<VirtualFile> history = Lists.reverse(EditorHistoryManagerImpl.getInstance(myProject).getFileList());
+
+        List<FoundItemDescriptor<Object>> res = new ArrayList<>();
+        ProgressIndicatorUtils.yieldToPendingWriteActions();
+        ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(
+            () -> {
+                PsiManager psiManager = PsiManager.getInstance(myProject);
+                Stream<VirtualFile> stream = history.stream();
+                if (!StringUtil.isEmptyOrSpaces(searchString)) {
+                    stream = stream.filter(file -> matcher.matches(file.getName()));
+                }
+                res.addAll(
+                    stream.filter(vf -> !opened.contains(vf) && vf.isValid())
+                        .distinct()
+                        .map(vf -> {
+                            PsiFile f = psiManager.findFile(vf);
+                            return f == null ? null : new FoundItemDescriptor<Object>(f, matcher.matchingDegree(vf.getName()));
+                        })
+                        .filter(file -> file != null)
+                        .collect(Collectors.toList())
+                );
+
+                ContainerUtil.process(res, consumer);
+            },
+            progressIndicator
+        );
+    }
+
+    @Override
+    public boolean isEmptyPatternSupported() {
+        return true;
+    }
+
+    @Override
+    public boolean isShownInSeparateTab() {
+        return false;
+    }
 }

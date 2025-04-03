@@ -28,6 +28,7 @@ import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,25 +40,25 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class RunAnythingContextRecentDirectoryCache implements PersistentStateComponent<RunAnythingContextRecentDirectoryCache.State> {
-  static class State {
-    public List<String> paths = new ArrayList<>();
-  }
+    static class State {
+        public List<String> paths = new ArrayList<>();
+    }
 
-  @Nonnull
-  public static RunAnythingContextRecentDirectoryCache getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, RunAnythingContextRecentDirectoryCache.class);
-  }
+    @Nonnull
+    public static RunAnythingContextRecentDirectoryCache getInstance(@Nonnull Project project) {
+        return ServiceManager.getService(project, RunAnythingContextRecentDirectoryCache.class);
+    }
 
-  private State myState = new State();
+    private State myState = new State();
 
-  @Nonnull
-  @Override
-  public State getState() {
-    return myState;
-  }
+    @Nonnull
+    @Override
+    public State getState() {
+        return myState;
+    }
 
-  @Override
-  public void loadState(State state) {
-    XmlSerializerUtil.copyBean(state, myState);
-  }
+    @Override
+    public void loadState(State state) {
+        XmlSerializerUtil.copyBean(state, myState);
+    }
 }

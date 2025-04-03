@@ -17,33 +17,33 @@ import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.fetc
 
 @ExtensionImpl
 public class RunAnythingRunConfigurationProvider extends consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingRunConfigurationProvider {
-  @Nonnull
-  @Override
-  public Collection<ChooseRunConfigurationPopup.ItemWrapper> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-    return getWrappers(dataContext);
-  }
+    @Nonnull
+    @Override
+    public Collection<ChooseRunConfigurationPopup.ItemWrapper> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+        return getWrappers(dataContext);
+    }
 
-  @Nullable
-  @Override
-  public String getHelpGroupTitle() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public String getHelpGroupTitle() {
+        return null;
+    }
 
-  @Nonnull
-  @Override
-  public String getCompletionGroupTitle() {
-    return IdeLocalize.runAnythingRunConfigurationsGroupTitle().get();
-  }
+    @Nonnull
+    @Override
+    public String getCompletionGroupTitle() {
+        return IdeLocalize.runAnythingRunConfigurationsGroupTitle().get();
+    }
 
-  @Nonnull
-  private static List<ChooseRunConfigurationPopup.ItemWrapper> getWrappers(@Nonnull DataContext dataContext) {
-    Project project = fetchProject(dataContext);
-    return ChooseRunConfigurationPopup.createFlatSettingsList(project);
-  }
+    @Nonnull
+    private static List<ChooseRunConfigurationPopup.ItemWrapper> getWrappers(@Nonnull DataContext dataContext) {
+        Project project = fetchProject(dataContext);
+        return ChooseRunConfigurationPopup.createFlatSettingsList(project);
+    }
 
-  @Nonnull
-  @Override
-  public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
-    return ContainerUtil.emptyList();
-  }
+    @Nonnull
+    @Override
+    public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
+        return ContainerUtil.emptyList();
+    }
 }

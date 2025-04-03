@@ -12,41 +12,41 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class RunAnythingRunProfile implements RunProfile {
-  @Nonnull
-  private final String myOriginalCommand;
-  @Nonnull
-  private final GeneralCommandLine myCommandLine;
+    @Nonnull
+    private final String myOriginalCommand;
+    @Nonnull
+    private final GeneralCommandLine myCommandLine;
 
-  public RunAnythingRunProfile(@Nonnull GeneralCommandLine commandLine, @Nonnull String originalCommand) {
-    myCommandLine = commandLine;
-    myOriginalCommand = originalCommand;
-  }
+    public RunAnythingRunProfile(@Nonnull GeneralCommandLine commandLine, @Nonnull String originalCommand) {
+        myCommandLine = commandLine;
+        myOriginalCommand = originalCommand;
+    }
 
-  @Nullable
-  @Override
-  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) {
-    return new RunAnythingRunProfileState(environment, myOriginalCommand);
-  }
+    @Nullable
+    @Override
+    public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) {
+        return new RunAnythingRunProfileState(environment, myOriginalCommand);
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return myOriginalCommand;
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return myOriginalCommand;
+    }
 
-  @Nonnull
-  public String getOriginalCommand() {
-    return myOriginalCommand;
-  }
+    @Nonnull
+    public String getOriginalCommand() {
+        return myOriginalCommand;
+    }
 
-  @Nonnull
-  public GeneralCommandLine getCommandLine() {
-    return myCommandLine;
-  }
+    @Nonnull
+    public GeneralCommandLine getCommandLine() {
+        return myCommandLine;
+    }
 
-  @Nullable
-  @Override
-  public Image getIcon() {
-    return AllIcons.Actions.Run_anything;
-  }
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return AllIcons.Actions.Run_anything;
+    }
 }

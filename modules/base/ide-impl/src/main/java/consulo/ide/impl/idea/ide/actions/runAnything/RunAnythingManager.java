@@ -68,7 +68,7 @@ public class RunAnythingManager {
         predefineSelectedText(searchText);
 
         myBalloon = JBPopupFactory.getInstance()
-            .createComponentPopupBuilder(myRunAnythingUI, (JComponent) TargetAWT.to(myRunAnythingUI.getSearchField()))
+            .createComponentPopupBuilder(myRunAnythingUI, (JComponent)TargetAWT.to(myRunAnythingUI.getSearchField()))
             .setProject(myProject)
             .setModalContext(false)
             .setCancelOnClickOutside(true)
@@ -83,7 +83,7 @@ public class RunAnythingManager {
             .setDimensionServiceKey(myProject, LOCATION_SETTINGS_KEY, true)
             .setLocateWithinScreenBounds(false)
             .createPopup();
-        
+
         Disposer.register(myBalloon, myRunAnythingUI);
         if (project != null) {
             Disposer.register(project, myBalloon);

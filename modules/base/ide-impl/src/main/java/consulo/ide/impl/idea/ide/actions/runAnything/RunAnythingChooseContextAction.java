@@ -187,9 +187,11 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                 }
 
                 @Override
-                protected void customizeComponent(JList<? extends PopupFactoryImpl.ActionItem> list,
-                                                  PopupFactoryImpl.ActionItem actionItem,
-                                                  boolean isSelected) {
+                protected void customizeComponent(
+                    JList<? extends PopupFactoryImpl.ActionItem> list,
+                    PopupFactoryImpl.ActionItem actionItem,
+                    boolean isSelected
+                ) {
                     AnActionEvent event = ActionUtil.createEmptyEvent();
                     ActionUtil.performDumbAwareUpdate(actionItem.getAction(), event, false);
 
@@ -214,7 +216,8 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
             List<PopupFactoryImpl.ActionItem> actions,
             DataContext dataContext
         ) {
-            super(actions,
+            super(
+                actions,
                 IdeLocalize.runAnythingContextTitleWorkingDirectory().get(),
                 () -> dataContext,
                 null,

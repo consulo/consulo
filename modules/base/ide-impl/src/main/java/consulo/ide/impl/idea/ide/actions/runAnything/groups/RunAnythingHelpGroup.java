@@ -10,6 +10,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -21,51 +22,54 @@ import java.util.stream.Collectors;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public class RunAnythingHelpGroup<P extends RunAnythingProvider> extends RunAnythingGroupBase {
-  public static final ExtensionPointName<RunAnythingGroup> EP_NAME = ExtensionPointName.create(RunAnythingGroup.class);
+    public static final ExtensionPointName<RunAnythingGroup> EP_NAME = ExtensionPointName.create(RunAnythingGroup.class);
 
-  @Nonnull
-  private String myTitle = "undefined";
-  @Nonnull
-  private Collection<P> myProviders = ContainerUtil.emptyList();
+    @Nonnull
+    private String myTitle = "undefined";
+    @Nonnull
+    private Collection<P> myProviders = ContainerUtil.emptyList();
 
-  public RunAnythingHelpGroup(@Nonnull String title, @Nonnull Collection<P> providers) {
-    myTitle = title;
-    myProviders = providers;
-  }
+    public RunAnythingHelpGroup(@Nonnull String title, @Nonnull Collection<P> providers) {
+        myTitle = title;
+        myProviders = providers;
+    }
 
-  /**
-   * @deprecated API compatibility
-   */
-  @Deprecated
-  public RunAnythingHelpGroup() {
-  }
+    /**
+     * @deprecated API compatibility
+     */
+    @Deprecated
+    public RunAnythingHelpGroup() {
+    }
 
-  @Nonnull
-  @Override
-  public String getTitle() {
-    return myTitle;
-  }
+    @Nonnull
+    @Override
+    public String getTitle() {
+        return myTitle;
+    }
 
-  /**
-   * Returns collections of providers each of them is expecting to provide not null {@link RunAnythingProvider#getHelpItem(DataContext)}
-   * See also {@code RunAnythingProviderBase.getHelp*()} methods.
-   *
-   * @deprecated please use {@link RunAnythingProvider#getHelpGroupTitle()} instead
-   */
-  @Deprecated
-  @Nonnull
-  public Collection<P> getProviders() {
-    return myProviders;
-  }
+    /**
+     * Returns collections of providers each of them is expecting to provide not null {@link RunAnythingProvider#getHelpItem(DataContext)}
+     * See also {@code RunAnythingProviderBase.getHelp*()} methods.
+     *
+     * @deprecated please use {@link RunAnythingProvider#getHelpGroupTitle()} instead
+     */
+    @Deprecated
+    @Nonnull
+    public Collection<P> getProviders() {
+        return myProviders;
+    }
 
-  @Nonnull
-  @Override
-  public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-    return getProviders().stream().map(provider -> provider.getHelpItem(dataContext)).filter(Objects::nonNull).collect(Collectors.toList());
-  }
+    @Nonnull
+    @Override
+    public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+        return getProviders().stream()
+            .map(provider -> provider.getHelpItem(dataContext))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+    }
 
-  @Override
-  protected int getMaxInitialItems() {
-    return 15;
-  }
+    @Override
+    protected int getMaxInitialItems() {
+        return 15;
+    }
 }

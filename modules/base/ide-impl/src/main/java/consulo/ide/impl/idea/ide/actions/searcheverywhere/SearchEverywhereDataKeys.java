@@ -4,9 +4,8 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.util.dataholder.Key;
 
 public class SearchEverywhereDataKeys {
-
-  /**
-   * String description for elements in suggestions list
-   */
-  public static final Key<String> ITEM_STRING_DESCRIPTION = Key.create("searchEverywhere.item.description");
+    /**
+     * String description for elements in suggestions list
+     */
+    public static final Key<String> ITEM_STRING_DESCRIPTION = Key.create("searchEverywhere.item.description");
 }

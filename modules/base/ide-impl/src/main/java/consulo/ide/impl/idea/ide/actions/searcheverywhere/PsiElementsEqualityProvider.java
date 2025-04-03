@@ -7,38 +7,43 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
+
 import java.util.Objects;
 
 @ExtensionImpl(order = "first")
 public class PsiElementsEqualityProvider implements SEResultsEqualityProvider {
+    @Nonnull
+    @Override
+    public SEEqualElementsActionType compareItems(
+        @Nonnull SearchEverywhereFoundElementInfo newItemInfo,
+        @Nonnull SearchEverywhereFoundElementInfo alreadyFoundItemInfo
+    ) {
+        PsiElement newElementPsi = toPsi(newItemInfo.getElement());
+        PsiElement alreadyFoundPsi = toPsi(alreadyFoundItemInfo.getElement());
 
-  @Nonnull
-  @Override
-  public SEEqualElementsActionType compareItems(@Nonnull SearchEverywhereFoundElementInfo newItemInfo, @Nonnull SearchEverywhereFoundElementInfo alreadyFoundItemInfo) {
-    PsiElement newElementPsi = toPsi(newItemInfo.getElement());
-    PsiElement alreadyFoundPsi = toPsi(alreadyFoundItemInfo.getElement());
+        if (newElementPsi == null || alreadyFoundPsi == null) {
+            return SEEqualElementsActionType.DO_NOTHING;
+        }
 
-    if (newElementPsi == null || alreadyFoundPsi == null) {
-      return SEEqualElementsActionType.DO_NOTHING;
+        if (Objects.equals(newElementPsi, alreadyFoundPsi)) {
+            return newItemInfo.priority > alreadyFoundItemInfo.priority
+                ? SEEqualElementsActionType.REPLACE
+                : SEEqualElementsActionType.SKIP;
+        }
+
+        return SEEqualElementsActionType.DO_NOTHING;
     }
 
-    if (Objects.equals(newElementPsi, alreadyFoundPsi)) {
-      return newItemInfo.priority > alreadyFoundItemInfo.priority ? SEEqualElementsActionType.REPLACE : SEEqualElementsActionType.SKIP;
+    @Nullable
+    public static PsiElement toPsi(Object o) {
+        if (o instanceof PsiElement) {
+            return (PsiElement)o;
+        }
+
+        if (o instanceof PsiElementNavigationItem) {
+            return ((PsiElementNavigationItem)o).getTargetElement();
+        }
+
+        return null;
     }
-
-    return SEEqualElementsActionType.DO_NOTHING;
-  }
-
-  @Nullable
-  public static PsiElement toPsi(Object o) {
-    if (o instanceof PsiElement) {
-      return (PsiElement)o;
-    }
-
-    if (o instanceof PsiElementNavigationItem) {
-      return ((PsiElementNavigationItem)o).getTargetElement();
-    }
-
-    return null;
-  }
 }

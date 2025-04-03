@@ -19,42 +19,42 @@ import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction.EX
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.fetchProject;
 
 public abstract class RunAnythingRunConfigurationProvider extends RunAnythingProviderBase<ChooseRunConfigurationPopup.ItemWrapper> {
-  @Nonnull
-  @Override
-  public String getCommand(@Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
-    return value.getText();
-  }
-
-  @Override
-  public void execute(@Nonnull DataContext dataContext, @Nonnull ChooseRunConfigurationPopup.ItemWrapper wrapper) {
-    Executor executor = dataContext.getData(EXECUTOR_KEY);
-    assert executor != null;
-
-    Object value = wrapper.getValue();
-    if (value instanceof RunnerAndConfigurationSettings configurationSettings
-      && !RunManager.getInstance(fetchProject(dataContext)).hasSettings(configurationSettings)) {
-      RunManager.getInstance(fetchProject(dataContext)).addConfiguration(configurationSettings);
+    @Nonnull
+    @Override
+    public String getCommand(@Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
+        return value.getText();
     }
 
-    wrapper.perform(fetchProject(dataContext), executor, dataContext);
-  }
+    @Override
+    public void execute(@Nonnull DataContext dataContext, @Nonnull ChooseRunConfigurationPopup.ItemWrapper wrapper) {
+        Executor executor = dataContext.getData(EXECUTOR_KEY);
+        assert executor != null;
 
-  @Nullable
-  @Override
-  public Image getIcon(@Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
-    return value.getIcon();
-  }
+        Object value = wrapper.getValue();
+        if (value instanceof RunnerAndConfigurationSettings configurationSettings
+            && !RunManager.getInstance(fetchProject(dataContext)).hasSettings(configurationSettings)) {
+            RunManager.getInstance(fetchProject(dataContext)).addConfiguration(configurationSettings);
+        }
 
-  @Nullable
-  @Override
-  public String getAdText() {
-    return IdeLocalize.runAnythingAdRunInContext(RunAnythingUtil.PRESSED_ALT) + ", " +
-      IdeLocalize.runAnythingAdRunWithDebug(RunAnythingUtil.SHIFT_SHORTCUT_TEXT);
-  }
+        wrapper.perform(fetchProject(dataContext), executor, dataContext);
+    }
 
-  @Nonnull
-  @Override
-  public RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
-    return new RunAnythingRunConfigurationItem(value, value.getIcon());
-  }
+    @Nullable
+    @Override
+    public Image getIcon(@Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
+        return value.getIcon();
+    }
+
+    @Nullable
+    @Override
+    public String getAdText() {
+        return IdeLocalize.runAnythingAdRunInContext(RunAnythingUtil.PRESSED_ALT) + ", " +
+            IdeLocalize.runAnythingAdRunWithDebug(RunAnythingUtil.SHIFT_SHORTCUT_TEXT);
+    }
+
+    @Nonnull
+    @Override
+    public RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
+        return new RunAnythingRunConfigurationItem(value, value.getIcon());
+    }
 }

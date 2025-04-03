@@ -25,13 +25,13 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ActionSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<GotoActionModel.MatchedValue> {
-  @Nonnull
-  @Override
-  public SearchEverywhereContributor<GotoActionModel.MatchedValue> createContributor(@Nonnull AnActionEvent initEvent) {
-    return new ActionSearchEverywhereContributor(
-      initEvent.getData(Project.KEY),
-      initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT),
-      initEvent.getData(Editor.KEY)
-    );
-  }
+    @Nonnull
+    @Override
+    public SearchEverywhereContributor<GotoActionModel.MatchedValue> createContributor(@Nonnull AnActionEvent initEvent) {
+        return new ActionSearchEverywhereContributor(
+            initEvent.getData(Project.KEY),
+            initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT),
+            initEvent.getData(Editor.KEY)
+        );
+    }
 }
