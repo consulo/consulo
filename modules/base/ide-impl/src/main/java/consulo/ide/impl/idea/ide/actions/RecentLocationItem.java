@@ -24,41 +24,45 @@ import java.util.Objects;
  * from kotlin
  */
 public final class RecentLocationItem {
-  private final EditorEx myEditor;
-  private final PlaceInfo myInfo;
+    private final EditorEx myEditor;
+    private final PlaceInfo myInfo;
 
-  public RecentLocationItem(EditorEx editor, PlaceInfo info) {
-    myEditor = editor;
-    myInfo = info;
-  }
+    public RecentLocationItem(EditorEx editor, PlaceInfo info) {
+        myEditor = editor;
+        myInfo = info;
+    }
 
-  public EditorEx getEditor() {
-    return myEditor;
-  }
+    public EditorEx getEditor() {
+        return myEditor;
+    }
 
-  public PlaceInfo getInfo() {
-    return myInfo;
-  }
+    public PlaceInfo getInfo() {
+        return myInfo;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    RecentLocationItem that = (RecentLocationItem)o;
-    return Objects.equals(myEditor, that.myEditor) && Objects.equals(myInfo, that.myInfo);
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        RecentLocationItem that = (RecentLocationItem)o;
+        return Objects.equals(myEditor, that.myEditor) && Objects.equals(myInfo, that.myInfo);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myEditor, myInfo);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(myEditor, myInfo);
+    }
 
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("RecentLocationItem{");
-    sb.append("myEditor=").append(myEditor);
-    sb.append(", myInfo=").append(myInfo);
-    sb.append('}');
-    return sb.toString();
-  }
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("RecentLocationItem{");
+        sb.append("myEditor=").append(myEditor);
+        sb.append(", myInfo=").append(myInfo);
+        sb.append('}');
+        return sb.toString();
+    }
 }

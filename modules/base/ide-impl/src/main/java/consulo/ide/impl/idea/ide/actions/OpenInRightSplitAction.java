@@ -37,78 +37,85 @@ import jakarta.annotation.Nullable;
  * from kotlin
  */
 public class OpenInRightSplitAction extends DumbAwareAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
-    }
-
-    VirtualFile file = e.getData(VirtualFile.KEY);
-    if (file == null) {
-      return;
-    }
-
-    Navigatable element = ObjectUtil.tryCast(e.getData(PsiElement.KEY), Navigatable.class);
-
-    FileEditorWindow editorWindow = openInRightSplit(project, file, element, true);
-    if (element == null && editorWindow != null) {
-      VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
-
-      if (files != null && files.length > 1) {
-        for (VirtualFile virtualFile : files) {
-          FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-          fileEditorManager.openFileWithProviders(virtualFile, true, editorWindow);
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
         }
-      }
-    }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    Editor editor = e.getData(Editor.KEY);
-    FileEditor fileEditor = e.getData(FileEditor.KEY);
+        VirtualFile file = e.getData(VirtualFile.KEY);
+        if (file == null) {
+            return;
+        }
 
-    String place = e.getPlace();
-    if(project == null || fileEditor != null || editor != null || ActionPlaces.EDITOR_TAB_POPUP.equals(place) || ActionPlaces.EDITOR_POPUP.equals(place)) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
-    }
+        Navigatable element = ObjectUtil.tryCast(e.getData(PsiElement.KEY), Navigatable.class);
 
-    VirtualFile contextFile = e.getData(VirtualFile.KEY);
-    e.getPresentation().setEnabledAndVisible(contextFile != null && !contextFile.isDirectory());
-  }
+        FileEditorWindow editorWindow = openInRightSplit(project, file, element, true);
+        if (element == null && editorWindow != null) {
+            VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
 
-  @Nullable
-  @RequiredUIAccess
-  public static FileEditorWindow openInRightSplit(Project project, VirtualFile file, @Nullable Navigatable element, boolean requestFocus) {
-    FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-
-    FileEditorsSplitters splitters = fileEditorManager.getSplitters();
-
-    FileEditorProvider[] providers = FileEditorProviderManager.getInstance().getProviders(project, file);
-    if (providers.length == 0) {
-      if (element != null) {
-        element.navigate(requestFocus);
-      }
-      return null;
+            if (files != null && files.length > 1) {
+                for (VirtualFile virtualFile : files) {
+                    FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+                    fileEditorManager.openFileWithProviders(virtualFile, true, editorWindow);
+                }
+            }
+        }
     }
 
-    FileEditorWindow editorWindow = splitters.openInRightSplit(file, requestFocus);
-    if (editorWindow == null) {
-      if (element != null) {
-        element.navigate(requestFocus);
-      }
-      return null;
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        Editor editor = e.getData(Editor.KEY);
+        FileEditor fileEditor = e.getData(FileEditor.KEY);
+
+        String place = e.getPlace();
+        if (project == null || fileEditor != null || editor != null
+            || ActionPlaces.EDITOR_TAB_POPUP.equals(place)
+            || ActionPlaces.EDITOR_POPUP.equals(place)) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+
+        VirtualFile contextFile = e.getData(VirtualFile.KEY);
+        e.getPresentation().setEnabledAndVisible(contextFile != null && !contextFile.isDirectory());
     }
 
-    if (element != null && !(element instanceof PsiFile)) {
-      Application.get().invokeLater(() -> element.navigate(requestFocus), project.getDisposed());
-    }
+    @Nullable
+    @RequiredUIAccess
+    public static FileEditorWindow openInRightSplit(
+        Project project,
+        VirtualFile file,
+        @Nullable Navigatable element,
+        boolean requestFocus
+    ) {
+        FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
 
-    return editorWindow;
-  }
+        FileEditorsSplitters splitters = fileEditorManager.getSplitters();
+
+        FileEditorProvider[] providers = FileEditorProviderManager.getInstance().getProviders(project, file);
+        if (providers.length == 0) {
+            if (element != null) {
+                element.navigate(requestFocus);
+            }
+            return null;
+        }
+
+        FileEditorWindow editorWindow = splitters.openInRightSplit(file, requestFocus);
+        if (editorWindow == null) {
+            if (element != null) {
+                element.navigate(requestFocus);
+            }
+            return null;
+        }
+
+        if (element != null && !(element instanceof PsiFile)) {
+            Application.get().invokeLater(() -> element.navigate(requestFocus), project.getDisposed());
+        }
+
+        return editorWindow;
+    }
 }

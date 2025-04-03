@@ -30,18 +30,18 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "Help.KeymapReference")
 public class RefCardAction extends AnAction implements DumbAware {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    String helpId;
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        String helpId;
 
-    if(Platform.current().os().isMac()) {
-      helpId = "platform/keymap/mac/";
-    }
-    else {
-      helpId = "platform/keymap/windows_linux/";
-    }
+        if (Platform.current().os().isMac()) {
+            helpId = "platform/keymap/mac/";
+        }
+        else {
+            helpId = "platform/keymap/windows_linux/";
+        }
 
-    HelpManager.getInstance().invokeHelp(helpId);
-  }
+        HelpManager.getInstance().invokeHelp(helpId);
+    }
 }

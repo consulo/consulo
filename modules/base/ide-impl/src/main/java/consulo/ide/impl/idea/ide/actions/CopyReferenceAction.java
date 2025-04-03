@@ -23,6 +23,7 @@ import consulo.ui.ex.awt.CopyPasteManager;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.util.Collections;
@@ -34,97 +35,104 @@ import static consulo.ide.impl.idea.ide.actions.CopyReferenceUtil.*;
  * @author Alexey
  */
 public class CopyReferenceAction extends DumbAwareAction {
-  public static final DataFlavor ourFlavor = FileCopyPasteUtil.createJvmDataFlavor(CopyReferenceFQNTransferable.class);
+    public static final DataFlavor ourFlavor = FileCopyPasteUtil.createJvmDataFlavor(CopyReferenceFQNTransferable.class);
 
-  public CopyReferenceAction() {
-    super();
-    setEnabledInModalContext(true);
-    setInjectedContext(true);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    boolean plural = false;
-    boolean enabled;
-    boolean paths = false;
-
-    DataContext dataContext = e.getDataContext();
-    Editor editor = dataContext.getData(Editor.KEY);
-    if (editor != null && FileDocumentManager.getInstance().getFile(editor.getDocument()) != null) {
-      enabled = true;
-    }
-    else {
-      List<PsiElement> elements = getPsiElements(dataContext, editor);
-      enabled = !elements.isEmpty();
-      plural = elements.size() > 1;
-      paths = elements.stream().allMatch(el -> el instanceof PsiFileSystemItem && getQualifiedNameFromProviders(el) == null);
+    public CopyReferenceAction() {
+        super();
+        setEnabledInModalContext(true);
+        setInjectedContext(true);
     }
 
-    e.getPresentation().setEnabled(enabled);
-    if (ActionPlaces.isPopupPlace(e.getPlace())) {
-      e.getPresentation().setVisible(enabled);
-    }
-    else {
-      e.getPresentation().setVisible(true);
-    }
-    e.getPresentation().setText(
-            paths ? plural ? IdeBundle.message("copy.relative.paths") : IdeBundle.message("copy.relative.path") : plural ? IdeBundle.message("copy.references") : IdeBundle.message("copy.reference"));
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        boolean plural = false;
+        boolean enabled;
+        boolean paths = false;
 
-    if (paths) {
-      e.getPresentation().setEnabledAndVisible(false);
-    }
-  }
+        DataContext dataContext = e.getDataContext();
+        Editor editor = dataContext.getData(Editor.KEY);
+        if (editor != null && FileDocumentManager.getInstance().getFile(editor.getDocument()) != null) {
+            enabled = true;
+        }
+        else {
+            List<PsiElement> elements = getPsiElements(dataContext, editor);
+            enabled = !elements.isEmpty();
+            plural = elements.size() > 1;
+            paths = elements.stream().allMatch(el -> el instanceof PsiFileSystemItem && getQualifiedNameFromProviders(el) == null);
+        }
 
-  @Nonnull
-  protected List<PsiElement> getPsiElements(DataContext dataContext, Editor editor) {
-    return getElementsToCopy(editor, dataContext);
-  }
+        e.getPresentation().setEnabled(enabled);
+        if (ActionPlaces.isPopupPlace(e.getPlace())) {
+            e.getPresentation().setVisible(enabled);
+        }
+        else {
+            e.getPresentation().setVisible(true);
+        }
+        e.getPresentation().setText(
+            paths
+                ? plural
+                ? IdeBundle.message("copy.relative.paths")
+                : IdeBundle.message("copy.relative.path")
+                : plural
+                ? IdeBundle.message("copy.references")
+                : IdeBundle.message("copy.reference")
+        );
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    Editor editor = dataContext.getData(Editor.KEY);
-    Project project = dataContext.getData(Project.KEY);
-    List<PsiElement> elements = getPsiElements(dataContext, editor);
-
-    String copy = getQualifiedName(editor, elements);
-    if (copy != null) {
-      CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(copy));
-      setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(copy).get());
-    }
-    else if (editor != null && project != null) {
-      Document document = editor.getDocument();
-      PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
-      if (file != null) {
-        String toCopy = QualifiedNameProviderUtil.getFileFqn(file) + ":" + (editor.getCaretModel().getLogicalPosition().line + 1);
-        CopyPasteManager.getInstance().setContents(new StringSelection(toCopy));
-        setStatusBarText(project, LangBundle.message("status.bar.text.reference.has.been.copied", toCopy));
-      }
-      return;
+        if (paths) {
+            e.getPresentation().setEnabledAndVisible(false);
+        }
     }
 
-    highlight(editor, project, elements);
-  }
+    @Nonnull
+    protected List<PsiElement> getPsiElements(DataContext dataContext, Editor editor) {
+        return getElementsToCopy(editor, dataContext);
+    }
 
-  protected String getQualifiedName(Editor editor, List<? extends PsiElement> elements) {
-    return CopyReferenceUtil.doCopy(elements, editor);
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Editor editor = dataContext.getData(Editor.KEY);
+        Project project = dataContext.getData(Project.KEY);
+        List<PsiElement> elements = getPsiElements(dataContext, editor);
 
-  public static boolean doCopy(final PsiElement element, final Project project) {
-    return doCopy(Collections.singletonList(element), project);
-  }
+        String copy = getQualifiedName(editor, elements);
+        if (copy != null) {
+            CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(copy));
+            setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(copy).get());
+        }
+        else if (editor != null && project != null) {
+            Document document = editor.getDocument();
+            PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
+            if (file != null) {
+                String toCopy = QualifiedNameProviderUtil.getFileFqn(file) + ":" + (editor.getCaretModel().getLogicalPosition().line + 1);
+                CopyPasteManager.getInstance().setContents(new StringSelection(toCopy));
+                setStatusBarText(project, LangBundle.message("status.bar.text.reference.has.been.copied", toCopy));
+            }
+            return;
+        }
 
-  private static boolean doCopy(List<? extends PsiElement> elements, @Nullable final Project project) {
-    String toCopy = CopyReferenceUtil.doCopy(elements, null);
-    CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(toCopy));
-    setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(toCopy).get());
+        highlight(editor, project, elements);
+    }
 
-    return true;
-  }
+    protected String getQualifiedName(Editor editor, List<? extends PsiElement> elements) {
+        return CopyReferenceUtil.doCopy(elements, editor);
+    }
 
-  @Nullable
-  public static String elementToFqn(@Nullable final PsiElement element) {
-    return CopyReferenceUtil.elementToFqn(element, null);
-  }
+    public static boolean doCopy(final PsiElement element, final Project project) {
+        return doCopy(Collections.singletonList(element), project);
+    }
+
+    private static boolean doCopy(List<? extends PsiElement> elements, @Nullable final Project project) {
+        String toCopy = CopyReferenceUtil.doCopy(elements, null);
+        CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(toCopy));
+        setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(toCopy).get());
+
+        return true;
+    }
+
+    @Nullable
+    public static String elementToFqn(@Nullable final PsiElement element) {
+        return CopyReferenceUtil.elementToFqn(element, null);
+    }
 }

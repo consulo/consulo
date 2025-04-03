@@ -24,13 +24,13 @@ import consulo.application.dumb.DumbAware;
  * @author yole
  */
 public class TogglePowerSaveAction extends ToggleAction implements DumbAware {
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return PowerSaveMode.isEnabled();
-  }
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        return PowerSaveMode.isEnabled();
+    }
 
-  @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    PowerSaveMode.setEnabled(state);
-  }
+    @Override
+    public void setSelected(AnActionEvent e, boolean state) {
+        PowerSaveMode.setEnabled(state);
+    }
 }

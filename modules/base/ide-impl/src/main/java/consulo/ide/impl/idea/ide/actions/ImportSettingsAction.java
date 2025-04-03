@@ -58,8 +58,8 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         myApplicationStore = applicationStore;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         ChooseComponentsToExportDialog.chooseSettingsFile(
@@ -136,7 +136,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
             StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(tempFile);
             StartupActionScriptManager.addActionCommand(deleteTemp);
 
-            UpdateSettingsEx updateSettings = (UpdateSettingsEx) UpdateSettings.getInstance();
+            UpdateSettingsEx updateSettings = (UpdateSettingsEx)UpdateSettings.getInstance();
             updateSettings.setLastTimeCheck(0);
 
             Application application = Application.get();

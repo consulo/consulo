@@ -24,14 +24,14 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 
 public class RunGcAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e){
-    /*
-    DataContext dataContext = e.getDataContext();
-    Project project = (Project)dataContext.getData(DataConstants.PROJECT);
-    if (project != null){
-      ((PsiManagerImpl)PsiManager.getInstance(project)).getMemoryManager().releaseCodeBlocks();
+    public void actionPerformed(AnActionEvent e) {
+        /*
+        DataContext dataContext = e.getDataContext();
+        Project project = (Project)dataContext.getData(DataConstants.PROJECT);
+        if (project != null){
+          ((PsiManagerImpl)PsiManager.getInstance(project)).getMemoryManager().releaseCodeBlocks();
+        }
+        */
+        System.gc();
     }
-    */
-    System.gc();
-  }
 }

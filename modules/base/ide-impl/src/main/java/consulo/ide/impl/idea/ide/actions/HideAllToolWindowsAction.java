@@ -27,79 +27,79 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class HideAllToolWindowsAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+
+        performAction(project);
     }
 
-    performAction(project);
-  }
+    @RequiredUIAccess
+    public static void performAction(final Project project) {
+        ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
 
-  @RequiredUIAccess
-  public static void performAction(final Project project) {
-    ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
+        ToolWindowLayout layout = new ToolWindowLayout();
+        layout.copyFrom(toolWindowManager.getLayout());
 
-    ToolWindowLayout layout = new ToolWindowLayout();
-    layout.copyFrom(toolWindowManager.getLayout());
-
-    // to clear windows stack
-    toolWindowManager.clearSideStack();
-    //toolWindowManager.activateEditorComponent();
+        // to clear windows stack
+        toolWindowManager.clearSideStack();
+        //toolWindowManager.activateEditorComponent();
 
 
-    String[] ids = toolWindowManager.getToolWindowIds();
-    boolean hasVisible = false;
-    for (String id : ids) {
-      ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
-      if (toolWindow.isVisible()) {
-        toolWindow.hide(null);
-        hasVisible = true;
-      }
+        String[] ids = toolWindowManager.getToolWindowIds();
+        boolean hasVisible = false;
+        for (String id : ids) {
+            ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
+            if (toolWindow.isVisible()) {
+                toolWindow.hide(null);
+                hasVisible = true;
+            }
+        }
+
+        if (hasVisible) {
+            toolWindowManager.setLayoutToRestoreLater(layout);
+            toolWindowManager.activateEditorComponent();
+        }
+        else {
+            final ToolWindowLayout restoredLayout = toolWindowManager.getLayoutToRestoreLater();
+            if (restoredLayout != null) {
+                toolWindowManager.setLayoutToRestoreLater(null);
+                toolWindowManager.setLayout(restoredLayout);
+            }
+        }
     }
 
-    if (hasVisible) {
-      toolWindowManager.setLayoutToRestoreLater(layout);
-      toolWindowManager.activateEditorComponent();
-    }
-    else {
-      final ToolWindowLayout restoredLayout = toolWindowManager.getLayoutToRestoreLater();
-      if (restoredLayout != null) {
-        toolWindowManager.setLayoutToRestoreLater(null);
-        toolWindowManager.setLayout(restoredLayout);
-      }
-    }
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
-    }
+        ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
+        String[] ids = toolWindowManager.getToolWindowIds();
+        for (String id : ids) {
+            if (toolWindowManager.getToolWindow(id).isVisible()) {
+                presentation.setEnabled(true);
+                presentation.setText(IdeLocalize.actionHideAllWindows().get(), true);
+                return;
+            }
+        }
 
-    ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
-    String[] ids = toolWindowManager.getToolWindowIds();
-    for (String id : ids) {
-      if (toolWindowManager.getToolWindow(id).isVisible()) {
-        presentation.setEnabled(true);
-        presentation.setText(IdeLocalize.actionHideAllWindows().get(), true);
-        return;
-      }
-    }
+        final ToolWindowLayout layout = toolWindowManager.getLayoutToRestoreLater();
+        if (layout != null) {
+            presentation.setEnabled(true);
+            presentation.setTextValue(IdeLocalize.actionRestoreWindows());
+            return;
+        }
 
-    final ToolWindowLayout layout = toolWindowManager.getLayoutToRestoreLater();
-    if (layout != null) {
-      presentation.setEnabled(true);
-      presentation.setTextValue(IdeLocalize.actionRestoreWindows());
-      return;
+        presentation.setEnabled(false);
     }
-
-    presentation.setEnabled(false);
-  }
 }

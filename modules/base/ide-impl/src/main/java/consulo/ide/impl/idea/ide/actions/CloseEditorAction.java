@@ -29,48 +29,48 @@ import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 
 public class CloseEditorAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
 
-    FileEditorManager editorManager = getEditorManager(project);
-    FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
-    VirtualFile file = null;
-    if (window == null) {
-      window = editorManager.getActiveWindow().getResult();
-      if (window != null) {
-        file = window.getSelectedFile();
-      }
+        FileEditorManager editorManager = getEditorManager(project);
+        FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
+        VirtualFile file = null;
+        if (window == null) {
+            window = editorManager.getActiveWindow().getResult();
+            if (window != null) {
+                file = window.getSelectedFile();
+            }
+        }
+        else {
+            file = e.getData(VirtualFile.KEY);
+        }
+        if (file != null) {
+            editorManager.closeFile(file, window);
+        }
     }
-    else {
-      file = e.getData(VirtualFile.KEY);
-    }
-    if (file != null) {
-      editorManager.closeFile(file, window);
-    }
-  }
 
-  private static FileEditorManager getEditorManager(Project project) {
-    return FileEditorManager.getInstance(project);
-  }
+    private static FileEditorManager getEditorManager(Project project) {
+        return FileEditorManager.getInstance(project);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent event){
-    final Presentation presentation = event.getPresentation();
-    final Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void update(final AnActionEvent event) {
+        final Presentation presentation = event.getPresentation();
+        final Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        if (ActionPlaces.EDITOR_POPUP.equals(event.getPlace()) || ActionPlaces.EDITOR_TAB_POPUP.equals(event.getPlace())) {
+            presentation.setTextValue(IdeLocalize.actionClose());
+        }
+        FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
+        if (window == null) {
+            window = getEditorManager(project).getActiveWindow().getResult();
+        }
+        presentation.setEnabled(window != null && window.getTabCount() > 0);
     }
-    if (ActionPlaces.EDITOR_POPUP.equals(event.getPlace()) || ActionPlaces.EDITOR_TAB_POPUP.equals(event.getPlace())) {
-      presentation.setTextValue(IdeLocalize.actionClose());
-    }
-    FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
-    if (window == null) {
-      window = getEditorManager(project).getActiveWindow().getResult();
-    }
-    presentation.setEnabled(window != null && window.getTabCount() > 0);
-  }
 }

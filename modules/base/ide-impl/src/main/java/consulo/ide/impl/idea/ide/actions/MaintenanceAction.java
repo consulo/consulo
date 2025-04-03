@@ -22,16 +22,15 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopupFactory;
 
 public class MaintenanceAction extends AnAction {
+    public MaintenanceAction() {
+        super("Maintenance");
+    }
 
-  public MaintenanceAction() {
-    super("Maintenance");
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction("MaintenanceGroup");
-    JBPopupFactory.getInstance().
-      createActionGroupPopup("Maintenance", group, e.getDataContext(), JBPopupFactory.ActionSelectionAid.NUMBERING, true).
-      showInFocusCenter();
-  }
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        final ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction("MaintenanceGroup");
+        JBPopupFactory.getInstance()
+            .createActionGroupPopup("Maintenance", group, e.getDataContext(), JBPopupFactory.ActionSelectionAid.NUMBERING, true)
+            .showInFocusCenter();
+    }
 }

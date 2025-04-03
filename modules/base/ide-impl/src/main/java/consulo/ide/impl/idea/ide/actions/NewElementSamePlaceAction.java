@@ -19,8 +19,8 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ide.IdeBundle;
 
 public class NewElementSamePlaceAction extends NewElementAction {
-  @Override
-  protected String getPopupTitle() {
-    return IdeBundle.message("title.popup.new.element.same.place");
-  }
+    @Override
+    protected String getPopupTitle() {
+        return IdeBundle.message("title.popup.new.element.same.place");
+    }
 }

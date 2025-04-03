@@ -30,32 +30,31 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 public class AssociateFileTypeAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    VirtualFile file = e.getRequiredData(VirtualFile.KEY);
-    FileTypeChooser.associateFileType(file.getName());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    VirtualFile file = e.getData(VirtualFile.KEY);
-    Project project = e.getData(Project.KEY);
-    boolean haveSmthToDo;
-    if (project == null || file == null || file.isDirectory()) {
-      haveSmthToDo = false;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        VirtualFile file = e.getRequiredData(VirtualFile.KEY);
+        FileTypeChooser.associateFileType(file.getName());
     }
-    else {
-      // the action should also be available for files which have been auto-detected as text or as a particular language (IDEA-79574)
-      haveSmthToDo = FileTypeManager.getInstance().getFileTypeByFileName(file.getNameSequence()) == UnknownFileType.INSTANCE &&
-                     !(file.getFileSystem() instanceof NonPhysicalFileSystem) &&
-                     !ScratchRootType.getInstance().containsFile(file);
-      haveSmthToDo |= ActionPlaces.isMainMenuOrActionSearch(e.getPlace());
-    }
-    presentation.setVisible(haveSmthToDo || ActionPlaces.isMainMenuOrActionSearch(e.getPlace()));
-    presentation.setEnabled(haveSmthToDo);
-  }
 
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        VirtualFile file = e.getData(VirtualFile.KEY);
+        Project project = e.getData(Project.KEY);
+        boolean haveSmthToDo;
+        if (project == null || file == null || file.isDirectory()) {
+            haveSmthToDo = false;
+        }
+        else {
+            // the action should also be available for files which have been auto-detected as text or as a particular language (IDEA-79574)
+            haveSmthToDo = FileTypeManager.getInstance().getFileTypeByFileName(file.getNameSequence()) == UnknownFileType.INSTANCE
+                && !(file.getFileSystem() instanceof NonPhysicalFileSystem)
+                && !ScratchRootType.getInstance().containsFile(file);
+            haveSmthToDo |= ActionPlaces.isMainMenuOrActionSearch(e.getPlace());
+        }
+        presentation.setVisible(haveSmthToDo || ActionPlaces.isMainMenuOrActionSearch(e.getPlace()));
+        presentation.setEnabled(haveSmthToDo);
+    }
 }

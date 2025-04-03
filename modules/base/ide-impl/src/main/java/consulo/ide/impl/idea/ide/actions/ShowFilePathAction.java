@@ -107,7 +107,9 @@ public class ShowFilePathAction extends AnAction {
     private static final NullableLazyValue<String> fileManagerApp = new AtomicNullableLazyValue<String>() {
         @Override
         protected String compute() {
-            return readDesktopEntryKey("Exec").map(line -> line.split(" ")[0]).filter(exec -> exec.endsWith("nautilus") || exec.endsWith("pantheon-files")).orElse(null);
+            return readDesktopEntryKey("Exec").map(line -> line.split(" ")[0])
+                .filter(exec -> exec.endsWith("nautilus") || exec.endsWith("pantheon-files"))
+                .orElse(null);
         }
     };
 
@@ -129,7 +131,11 @@ public class ShowFilePathAction extends AnAction {
         if (SystemInfo.hasXdgMime()) {
             String appName = ExecUtil.execAndReadLine(new GeneralCommandLine("xdg-mime", "query", "default", "inode/directory"));
             if (appName != null && appName.endsWith(".desktop")) {
-                return Stream.of(getXdgDataDirectories().split(":")).map(dir -> new File(dir, "applications/" + appName)).filter(File::exists).findFirst().map(file -> readDesktopEntryKey(file, key));
+                return Stream.of(getXdgDataDirectories().split(":"))
+                    .map(dir -> new File(dir, "applications/" + appName))
+                    .filter(File::exists)
+                    .findFirst()
+                    .map(file -> readDesktopEntryKey(file, key));
             }
         }
 
@@ -236,7 +242,7 @@ public class ShowFilePathAction extends AnAction {
             public PopupStep onChosen(final VirtualFile selectedValue, final boolean finalChoice) {
                 final File selectedFile = new File(getPresentableUrl(selectedValue));
                 if (selectedFile.exists()) {
-                    Application.get().executeOnPooledThread((Runnable) () -> openFile(selectedFile));
+                    Application.get().executeOnPooledThread((Runnable)() -> openFile(selectedFile));
                 }
                 return FINAL_CHOICE;
             }
@@ -249,8 +255,7 @@ public class ShowFilePathAction extends AnAction {
         return Platform.current().os().isWindows()
             || Platform.current().os().isMac()
             || SystemInfo.hasXdgOpen()
-            || Desktop.isDesktopSupported()
-            && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
+            || Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
     }
 
     @Nonnull
@@ -313,7 +318,8 @@ public class ShowFilePathAction extends AnAction {
             }
         }
         else if (Platform.current().os().isMac()) {
-            GeneralCommandLine cmd = toSelect != null ? new GeneralCommandLine("open", "-R", toSelect) : new GeneralCommandLine("open", dir);
+            GeneralCommandLine cmd =
+                toSelect != null ? new GeneralCommandLine("open", "-R", toSelect) : new GeneralCommandLine("open", dir);
             schedule(cmd);
         }
         else if (fileManagerApp.getValue() != null) {
@@ -470,7 +476,7 @@ public class ShowFilePathAction extends AnAction {
 
         VirtualFileSystem fs = file.getFileSystem();
         if (fs instanceof ArchiveFileSystem && file.getParent() == null) {
-            return ((ArchiveFileSystem) fs).getLocalVirtualFileFor(file);
+            return ((ArchiveFileSystem)fs).getLocalVirtualFileFor(file);
         }
 
         return null;

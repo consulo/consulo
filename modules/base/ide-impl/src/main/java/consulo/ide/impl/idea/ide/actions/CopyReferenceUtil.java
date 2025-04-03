@@ -25,100 +25,105 @@ import java.util.Collections;
 import java.util.List;
 
 public final class CopyReferenceUtil {
-  static void highlight(Editor editor, Project project, List<? extends PsiElement> elements) {
-    TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
+    static void highlight(Editor editor, Project project, List<? extends PsiElement> elements) {
+        TextAttributes attributes =
+            EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
 
-    HighlightManager highlightManager = HighlightManager.getInstance(project);
-    if (elements.size() == 1 && editor != null && project != null) {
-      PsiElement element = elements.get(0);
-      PsiElement nameIdentifier = IdentifierUtil.getNameIdentifier(element);
-      if (nameIdentifier != null) {
-        highlightManager.addOccurrenceHighlights(editor, new PsiElement[]{nameIdentifier}, attributes, true, null);
-      }
-      else {
-        PsiReference reference = TargetElementUtil.findReference(editor, editor.getCaretModel().getOffset());
-        if (reference != null) {
-          highlightManager.addOccurrenceHighlights(editor, new PsiReference[]{reference}, attributes, true, null);
+        HighlightManager highlightManager = HighlightManager.getInstance(project);
+        if (elements.size() == 1 && editor != null && project != null) {
+            PsiElement element = elements.get(0);
+            PsiElement nameIdentifier = IdentifierUtil.getNameIdentifier(element);
+            if (nameIdentifier != null) {
+                highlightManager.addOccurrenceHighlights(editor, new PsiElement[]{nameIdentifier}, attributes, true, null);
+            }
+            else {
+                PsiReference reference = TargetElementUtil.findReference(editor, editor.getCaretModel().getOffset());
+                if (reference != null) {
+                    highlightManager.addOccurrenceHighlights(editor, new PsiReference[]{reference}, attributes, true, null);
+                }
+                else if (element != PsiDocumentManager.getInstance(project).getCachedPsiFile(editor.getDocument())) {
+                    highlightManager.addOccurrenceHighlights(editor, new PsiElement[]{element}, attributes, true, null);
+                }
+            }
         }
-        else if (element != PsiDocumentManager.getInstance(project).getCachedPsiFile(editor.getDocument())) {
-          highlightManager.addOccurrenceHighlights(editor, new PsiElement[]{element}, attributes, true, null);
+    }
+
+    @Nonnull
+    static List<PsiElement> getElementsToCopy(@Nullable final Editor editor, final DataContext dataContext) {
+        List<PsiElement> elements = new ArrayList<>();
+        if (editor != null) {
+            PsiReference reference = TargetElementUtil.findReference(editor);
+            if (reference != null) {
+                ContainerUtil.addIfNotNull(elements, reference.getElement());
+            }
         }
-      }
-    }
-  }
 
-  @Nonnull
-  static List<PsiElement> getElementsToCopy(@Nullable final Editor editor, final DataContext dataContext) {
-    List<PsiElement> elements = new ArrayList<>();
-    if (editor != null) {
-      PsiReference reference = TargetElementUtil.findReference(editor);
-      if (reference != null) {
-        ContainerUtil.addIfNotNull(elements, reference.getElement());
-      }
-    }
-
-    if (elements.isEmpty()) {
-      PsiElement[] psiElements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
-      if (psiElements != null) {
-        Collections.addAll(elements, psiElements);
-      }
-    }
-
-    if (elements.isEmpty()) {
-      ContainerUtil.addIfNotNull(elements, dataContext.getData(PsiElement.KEY));
-    }
-
-    if (elements.isEmpty() && editor == null) {
-      final Project project = dataContext.getData(Project.KEY);
-      VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
-      if (project != null && files != null) {
-        for (VirtualFile file : files) {
-          ContainerUtil.addIfNotNull(elements, PsiManager.getInstance(project).findFile(file));
+        if (elements.isEmpty()) {
+            PsiElement[] psiElements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
+            if (psiElements != null) {
+                Collections.addAll(elements, psiElements);
+            }
         }
-      }
+
+        if (elements.isEmpty()) {
+            ContainerUtil.addIfNotNull(elements, dataContext.getData(PsiElement.KEY));
+        }
+
+        if (elements.isEmpty() && editor == null) {
+            final Project project = dataContext.getData(Project.KEY);
+            VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+            if (project != null && files != null) {
+                for (VirtualFile file : files) {
+                    ContainerUtil.addIfNotNull(elements, PsiManager.getInstance(project).findFile(file));
+                }
+            }
+        }
+
+        return ContainerUtil.mapNotNull(
+            elements,
+            element -> element instanceof PsiFile psiFile && !psiFile.getViewProvider().isPhysical() ? null : adjustElement(element)
+        );
     }
 
-    return ContainerUtil.mapNotNull(
-      elements,
-      element -> element instanceof PsiFile psiFile && !psiFile.getViewProvider().isPhysical() ? null : adjustElement(element)
-    );
-  }
-
-  static PsiElement adjustElement(PsiElement element) {
-    PsiElement adjustedElement = QualifiedNameProviderUtil.adjustElementToCopy(element);
-    return adjustedElement != null ? adjustedElement : element;
-  }
-
-  static void setStatusBarText(Project project, String message) {
-    if (project != null) {
-      final StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(project);
-      if (statusBar != null) {
-        statusBar.setInfo(message);
-      }
-    }
-  }
-
-  @Nullable
-  static String getQualifiedNameFromProviders(@Nullable PsiElement element) {
-    return QualifiedNameProviderUtil.getQualifiedNameDumbAware(element);
-  }
-
-  static String doCopy(List<? extends PsiElement> elements, @Nullable Editor editor) {
-    if (elements.isEmpty()) return null;
-
-    List<String> fqns = new ArrayList<>();
-    for (PsiElement element : elements) {
-      String fqn = elementToFqn(element, editor);
-      if (fqn == null) return null;
-
-      fqns.add(fqn);
+    static PsiElement adjustElement(PsiElement element) {
+        PsiElement adjustedElement = QualifiedNameProviderUtil.adjustElementToCopy(element);
+        return adjustedElement != null ? adjustedElement : element;
     }
 
-    return StringUtil.join(fqns, "\n");
-  }
+    static void setStatusBarText(Project project, String message) {
+        if (project != null) {
+            final StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(project);
+            if (statusBar != null) {
+                statusBar.setInfo(message);
+            }
+        }
+    }
 
-  @Nullable
-  static String elementToFqn(@Nullable final PsiElement element, @Nullable Editor editor) {
-    return QualifiedNameProviderUtil.elementToFqn(element, editor);
-  }
+    @Nullable
+    static String getQualifiedNameFromProviders(@Nullable PsiElement element) {
+        return QualifiedNameProviderUtil.getQualifiedNameDumbAware(element);
+    }
+
+    static String doCopy(List<? extends PsiElement> elements, @Nullable Editor editor) {
+        if (elements.isEmpty()) {
+            return null;
+        }
+
+        List<String> fqns = new ArrayList<>();
+        for (PsiElement element : elements) {
+            String fqn = elementToFqn(element, editor);
+            if (fqn == null) {
+                return null;
+            }
+
+            fqns.add(fqn);
+        }
+
+        return StringUtil.join(fqns, "\n");
+    }
+
+    @Nullable
+    static String elementToFqn(@Nullable final PsiElement element, @Nullable Editor editor) {
+        return QualifiedNameProviderUtil.elementToFqn(element, editor);
+    }
 }

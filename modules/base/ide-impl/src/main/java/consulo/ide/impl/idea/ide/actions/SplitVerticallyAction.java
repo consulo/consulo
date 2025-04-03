@@ -20,8 +20,8 @@ import javax.swing.*;
 /**
  * @author Vladimir Kondratyev
  */
-public final class SplitVerticallyAction extends SplitAction{
-  public SplitVerticallyAction() {
-    super(SwingConstants.VERTICAL);
-  }
+public final class SplitVerticallyAction extends SplitAction {
+    public SplitVerticallyAction() {
+        super(SwingConstants.VERTICAL);
+    }
 }

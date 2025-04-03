@@ -29,16 +29,16 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 public class ShowPluginManagerAction extends DumbAwareAction {
-  private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
+    private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
 
-  @Inject
-  public ShowPluginManagerAction(Provider<ShowSettingsUtil> showSettingsUtilProvider) {
-    myShowSettingsUtilProvider = showSettingsUtilProvider;
-  }
+    @Inject
+    public ShowPluginManagerAction(Provider<ShowSettingsUtil> showSettingsUtilProvider) {
+        myShowSettingsUtilProvider = showSettingsUtilProvider;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    myShowSettingsUtilProvider.get().showSettingsDialog(e.getData(Project.KEY), PluginContants.CONFIGURABLE_ID, null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        myShowSettingsUtilProvider.get().showSettingsDialog(e.getData(Project.KEY), PluginContants.CONFIGURABLE_ID, null);
+    }
 }

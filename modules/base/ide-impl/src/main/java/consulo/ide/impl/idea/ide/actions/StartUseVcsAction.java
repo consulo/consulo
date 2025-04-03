@@ -28,38 +28,40 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nullable;
 
 public class StartUseVcsAction extends AnAction implements DumbAware {
-  public StartUseVcsAction() {
-    super(VcsLocalize.actionEnableVersionControlIntegrationText());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    boolean enabled = isEnabled(project);
-
-    final Presentation presentation = e.getPresentation();
-    presentation.setEnabledAndVisible(enabled);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    if (!isEnabled(project)) {
-      return;
+    public StartUseVcsAction() {
+        super(VcsLocalize.actionEnableVersionControlIntegrationText());
     }
 
-    final StartUseVcsDialog dialog = new StartUseVcsDialog(project);
-    if (dialog.showAndGet()) {
-      AbstractVcs vcs = dialog.getSelectedVcs();
-      vcs.enableIntegration();
-    }
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(final AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        boolean enabled = isEnabled(project);
 
-  private static boolean isEnabled(@Nullable Project project) {
-    if (project == null) return false;
-    ProjectLevelVcsManagerImpl manager = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(project);
-    return manager.haveVcses() && !manager.hasAnyMappings();
-  }
+        final Presentation presentation = e.getPresentation();
+        presentation.setEnabledAndVisible(enabled);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(final AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        if (!isEnabled(project)) {
+            return;
+        }
+
+        final StartUseVcsDialog dialog = new StartUseVcsDialog(project);
+        if (dialog.showAndGet()) {
+            AbstractVcs vcs = dialog.getSelectedVcs();
+            vcs.enableIntegration();
+        }
+    }
+
+    private static boolean isEnabled(@Nullable Project project) {
+        if (project == null) {
+            return false;
+        }
+        ProjectLevelVcsManagerImpl manager = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(project);
+        return manager.haveVcses() && !manager.hasAnyMappings();
+    }
 }

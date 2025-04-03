@@ -30,38 +30,38 @@ import jakarta.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public class OpenModuleSettingsAction extends EditSourceAction {
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    super.update(event);
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        super.update(event);
 
-    if (!isModuleInProjectViewPopup(event)) {
-      event.getPresentation().setEnabledAndVisible(false);
+        if (!isModuleInProjectViewPopup(event)) {
+            event.getPresentation().setEnabledAndVisible(false);
+        }
     }
-  }
 
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return null;
-  }
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return null;
+    }
 
-  protected static boolean isModuleInProjectViewPopup(@Nonnull AnActionEvent e) {
-    return ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace()) && isModuleInContext(e);
-  }
+    protected static boolean isModuleInProjectViewPopup(@Nonnull AnActionEvent e) {
+        return ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace()) && isModuleInContext(e);
+    }
 
-  public static boolean isModuleInContext(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final Module module = e.getData(Module.KEY);
-    if (project != null && module != null) {
-      final VirtualFile moduleFolder = e.getData(VirtualFile.KEY);
-      if (moduleFolder == null) {
+    public static boolean isModuleInContext(@Nonnull AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        final Module module = e.getData(Module.KEY);
+        if (project != null && module != null) {
+            final VirtualFile moduleFolder = e.getData(VirtualFile.KEY);
+            if (moduleFolder == null) {
+                return false;
+            }
+            if (ProjectRootsUtil.isModuleContentRoot(moduleFolder, project) || ProjectRootsUtil.isModuleSourceRoot(moduleFolder, project)) {
+                return true;
+            }
+        }
         return false;
-      }
-      if (ProjectRootsUtil.isModuleContentRoot(moduleFolder, project) || ProjectRootsUtil.isModuleSourceRoot(moduleFolder, project)) {
-        return true;
-      }
     }
-    return false;
-  }
 }

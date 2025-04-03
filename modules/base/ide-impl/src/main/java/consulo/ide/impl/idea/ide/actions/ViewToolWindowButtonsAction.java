@@ -22,17 +22,17 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 
 public class ViewToolWindowButtonsAction extends ToggleAction implements DumbAware {
-  public ViewToolWindowButtonsAction() {
-    super("Show Tool Buttons");
-  }
+    public ViewToolWindowButtonsAction() {
+        super("Show Tool Buttons");
+    }
 
-  public boolean isSelected(AnActionEvent event) {
-    return !UISettings.getInstance().HIDE_TOOL_STRIPES;
-  }
+    public boolean isSelected(AnActionEvent event) {
+        return !UISettings.getInstance().HIDE_TOOL_STRIPES;
+    }
 
-  public void setSelected(AnActionEvent event,boolean state) {
-    UISettings uiSettings = UISettings.getInstance();
-    uiSettings.HIDE_TOOL_STRIPES=!state;
-    uiSettings.fireUISettingsChanged();
-  }
+    public void setSelected(AnActionEvent event, boolean state) {
+        UISettings uiSettings = UISettings.getInstance();
+        uiSettings.HIDE_TOOL_STRIPES = !state;
+        uiSettings.fireUISettingsChanged();
+    }
 }

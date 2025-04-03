@@ -28,33 +28,33 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 public class SaveFileAsTemplateAction extends AnAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e){
-    Project project = e.getRequiredData(Project.KEY);
-    String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
-    VirtualFile file = e.getData(VirtualFile.KEY);
-    String extension = file.getExtension();
-    String nameWithoutExtension = file.getNameWithoutExtension();
-    AllFileTemplatesConfigurable fileTemplateOptions = new AllFileTemplatesConfigurable(project);
-    ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(project, fileTemplateOptions);
-    PsiFile psiFile = e.getData(PsiFile.KEY);
-    for (SaveFileAsTemplateHandler handler: SaveFileAsTemplateHandler.EP_NAME.getExtensionList()) {
-      String textFromHandler = handler.getTemplateText(psiFile, fileText, nameWithoutExtension);
-      if (textFromHandler != null) {
-        fileText = textFromHandler;
-        break;
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
+        VirtualFile file = e.getData(VirtualFile.KEY);
+        String extension = file.getExtension();
+        String nameWithoutExtension = file.getNameWithoutExtension();
+        AllFileTemplatesConfigurable fileTemplateOptions = new AllFileTemplatesConfigurable(project);
+        ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(project, fileTemplateOptions);
+        PsiFile psiFile = e.getData(PsiFile.KEY);
+        for (SaveFileAsTemplateHandler handler : SaveFileAsTemplateHandler.EP_NAME.getExtensionList()) {
+            String textFromHandler = handler.getTemplateText(psiFile, fileText, nameWithoutExtension);
+            if (textFromHandler != null) {
+                fileText = textFromHandler;
+                break;
+            }
+        }
+        fileTemplateOptions.createNewTemplate(nameWithoutExtension, extension, fileText);
+        dialog.show();
     }
-    fileTemplateOptions.createNewTemplate(nameWithoutExtension, extension, fileText);
-    dialog.show();
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    VirtualFile file = e.getData(VirtualFile.KEY);
-    String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
-    e.getPresentation().setEnabled((fileText != null) && (file != null));
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        VirtualFile file = e.getData(VirtualFile.KEY);
+        String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
+        e.getPresentation().setEnabled((fileText != null) && (file != null));
+    }
 }

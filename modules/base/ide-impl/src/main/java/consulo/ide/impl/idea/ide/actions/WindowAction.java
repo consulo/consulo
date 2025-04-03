@@ -29,111 +29,120 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class WindowAction extends AnAction implements DumbAware {
-
-  public static void setEnabledFor(Window window, boolean enabled) {
-    JRootPane root = getRootPane(window);
-    if (root != null) root.putClientProperty(NO_WINDOW_ACTIONS, !enabled);
-  }
-
-  private static boolean isEnabledFor(Window window) {
-    if (window == null) return false;
-    consulo.ui.Window uiWindow = TargetAWT.from(window);
-    if(uiWindow != null && uiWindow.getUserData(IdeFrame.KEY) != null) return false;
-    if (window instanceof Dialog && !((Dialog)window).isResizable()) return false;
-    JRootPane root = getRootPane(window);
-    if (root == null) return true;
-    Object property = root.getClientProperty(NO_WINDOW_ACTIONS);
-    return property == null || !property.toString().equals("true");
-  }
-
-  private static JRootPane getRootPane(Window window) {
-    if (window instanceof RootPaneContainer) {
-      RootPaneContainer container = (RootPaneContainer)window;
-      return container.getRootPane();
+    public static void setEnabledFor(Window window, boolean enabled) {
+        JRootPane root = getRootPane(window);
+        if (root != null) {
+            root.putClientProperty(NO_WINDOW_ACTIONS, !enabled);
+        }
     }
-    return null;
-  }
 
-  public static final String NO_WINDOW_ACTIONS = "no.window.actions";
-
-  protected Window myWindow;
-  private static JLabel mySizeHelper = null;
-
-  {
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  public final void update(@Nonnull AnActionEvent event) {
-    Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-    boolean enabled = isEnabledFor(window);
-    if (enabled && Registry.is("no.window.actions.in.editor")) {
-      Editor editor = event.getData(Editor.KEY);
-      enabled = editor == null || !editor.getContentComponent().hasFocus();
+    private static boolean isEnabledFor(Window window) {
+        if (window == null) {
+            return false;
+        }
+        consulo.ui.Window uiWindow = TargetAWT.from(window);
+        if (uiWindow != null && uiWindow.getUserData(IdeFrame.KEY) != null) {
+            return false;
+        }
+        if (window instanceof Dialog && !((Dialog)window).isResizable()) {
+            return false;
+        }
+        JRootPane root = getRootPane(window);
+        if (root == null) {
+            return true;
+        }
+        Object property = root.getClientProperty(NO_WINDOW_ACTIONS);
+        return property == null || !property.toString().equals("true");
     }
-    event.getPresentation().setEnabled(enabled);
-    myWindow = enabled ? window : null;
-  }
 
-  public abstract static class BaseSizeAction extends WindowAction {
+    private static JRootPane getRootPane(Window window) {
+        if (window instanceof RootPaneContainer) {
+            RootPaneContainer container = (RootPaneContainer)window;
+            return container.getRootPane();
+        }
+        return null;
+    }
 
-    private final boolean myHorizontal;
-    private final boolean myPositive;
+    public static final String NO_WINDOW_ACTIONS = "no.window.actions";
 
-    protected BaseSizeAction(boolean horizontal, boolean positive) {
-      myHorizontal = horizontal;
-      myPositive = positive;
+    protected Window myWindow;
+    private static JLabel mySizeHelper = null;
+
+    {
+        setEnabledInModalContext(true);
     }
 
     @Override
-    @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      if (mySizeHelper == null) {
-        mySizeHelper = new JLabel("W"); // Must be sure to invoke label constructor from EDT thread or it may lead to a deadlock
-      }
-
-      int baseValue = myHorizontal ? mySizeHelper.getPreferredSize().width : mySizeHelper.getPreferredSize().height;
-
-      int inc = baseValue * Registry.intValue(myHorizontal ? "ide.windowSystem.hScrollChars" : "ide.windowSystem.vScrollChars");
-      if (!myPositive) {
-        inc = -inc;
-      }
-
-      Rectangle bounds = myWindow.getBounds();
-      if (myHorizontal) {
-        bounds.width += inc;
-      }
-      else {
-        bounds.height += inc;
-      }
-
-      myWindow.setBounds(bounds);
+    public final void update(@Nonnull AnActionEvent event) {
+        Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+        boolean enabled = isEnabledFor(window);
+        if (enabled && Registry.is("no.window.actions.in.editor")) {
+            Editor editor = event.getData(Editor.KEY);
+            enabled = editor == null || !editor.getContentComponent().hasFocus();
+        }
+        event.getPresentation().setEnabled(enabled);
+        myWindow = enabled ? window : null;
     }
-  }
 
-  public static class IncrementWidth extends BaseSizeAction {
+    public abstract static class BaseSizeAction extends WindowAction {
 
-    public IncrementWidth() {
-      super(true, true);
+        private final boolean myHorizontal;
+        private final boolean myPositive;
+
+        protected BaseSizeAction(boolean horizontal, boolean positive) {
+            myHorizontal = horizontal;
+            myPositive = positive;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            if (mySizeHelper == null) {
+                mySizeHelper = new JLabel("W"); // Must be sure to invoke label constructor from EDT thread or it may lead to a deadlock
+            }
+
+            int baseValue = myHorizontal ? mySizeHelper.getPreferredSize().width : mySizeHelper.getPreferredSize().height;
+
+            int inc = baseValue * Registry.intValue(myHorizontal ? "ide.windowSystem.hScrollChars" : "ide.windowSystem.vScrollChars");
+            if (!myPositive) {
+                inc = -inc;
+            }
+
+            Rectangle bounds = myWindow.getBounds();
+            if (myHorizontal) {
+                bounds.width += inc;
+            }
+            else {
+                bounds.height += inc;
+            }
+
+            myWindow.setBounds(bounds);
+        }
     }
-  }
 
-  public static class DecrementWidth extends BaseSizeAction {
+    public static class IncrementWidth extends BaseSizeAction {
 
-    public DecrementWidth() {
-      super(true, false);
+        public IncrementWidth() {
+            super(true, true);
+        }
     }
-  }
 
-  public static class IncrementHeight extends BaseSizeAction {
-    public IncrementHeight() {
-      super(false, true);
-    }
-  }
+    public static class DecrementWidth extends BaseSizeAction {
 
-  public static class DecrementHeight extends BaseSizeAction {
-    public DecrementHeight() {
-      super(false, false);
+        public DecrementWidth() {
+            super(true, false);
+        }
     }
-  }
+
+    public static class IncrementHeight extends BaseSizeAction {
+        public IncrementHeight() {
+            super(false, true);
+        }
+    }
+
+    public static class DecrementHeight extends BaseSizeAction {
+        public DecrementHeight() {
+            super(false, false);
+        }
+    }
 }

@@ -32,90 +32,94 @@ import java.util.ArrayList;
 import java.util.List;
 
 class StartUseVcsDialog extends DialogWrapper {
-  @Nonnull
-  private final Project myProject;
+    @Nonnull
+    private final Project myProject;
 
-  private ComboBox<Object> myVcsComboBox;
+    private ComboBox<Object> myVcsComboBox;
 
-  StartUseVcsDialog(@Nonnull Project project) {
-    super(project, true);
-    myProject = project;
-    setTitle(VcsLocalize.dialogEnableVersionControlIntegrationTitle());
+    StartUseVcsDialog(@Nonnull Project project) {
+        super(project, true);
+        myProject = project;
+        setTitle(VcsLocalize.dialogEnableVersionControlIntegrationTitle());
 
-    init();
-  }
+        init();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myVcsComboBox;
-  }
+    @Override
+    @RequiredUIAccess
+    public JComponent getPreferredFocusedComponent() {
+        return myVcsComboBox;
+    }
 
-  @Nullable
-  public AbstractVcs getSelectedVcs() {
-    Object selectedItem = myVcsComboBox.getSelectedItem();
-    return selectedItem == ObjectUtil.NULL ? null : (AbstractVcs)selectedItem;
-  }
+    @Nullable
+    public AbstractVcs getSelectedVcs() {
+        Object selectedItem = myVcsComboBox.getSelectedItem();
+        return selectedItem == ObjectUtil.NULL ? null : (AbstractVcs)selectedItem;
+    }
 
-  @Override
-  protected JComponent createCenterPanel() {
-    final JLabel selectText = new JLabel(VcsLocalize.dialogEnableVersionControlIntegrationSelectVcsLabelText().get());
-    selectText.setUI(new MultiLineLabelUI());
+    @Override
+    protected JComponent createCenterPanel() {
+        final JLabel selectText = new JLabel(VcsLocalize.dialogEnableVersionControlIntegrationSelectVcsLabelText().get());
+        selectText.setUI(new MultiLineLabelUI());
 
-    final JPanel mainPanel = new JPanel(new GridBagLayout());
-    final GridBagConstraints gb = new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0);
+        final JPanel mainPanel = new JPanel(new GridBagLayout());
+        final GridBagConstraints gb =
+            new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0);
 
-    mainPanel.add(selectText, gb);
+        mainPanel.add(selectText, gb);
 
-    ++gb.gridx;
-    gb.anchor = GridBagConstraints.NORTHEAST;
+        ++gb.gridx;
+        gb.anchor = GridBagConstraints.NORTHEAST;
 
-    List<Object> vcses = new ArrayList<>();
-    vcses.add(ObjectUtil.NULL);
+        List<Object> vcses = new ArrayList<>();
+        vcses.add(ObjectUtil.NULL);
 
-    List<AbstractVcs> sortedVcs = new ArrayList<>(AllVcses.getInstance(myProject).getSupportedVcses());
-    sortedVcs.sort((o1, o2) -> String.CASE_INSENSITIVE_ORDER.compare(o1.getDisplayName(), o2.getDisplayName()));
+        List<AbstractVcs> sortedVcs = new ArrayList<>(AllVcses.getInstance(myProject).getSupportedVcses());
+        sortedVcs.sort((o1, o2) -> String.CASE_INSENSITIVE_ORDER.compare(o1.getDisplayName(), o2.getDisplayName()));
 
-    vcses.addAll(sortedVcs);
-    
-    myVcsComboBox = new ComboBox<>(new CollectionComboBoxModel<>(vcses));
-    myVcsComboBox.setRenderer(new ColoredListCellRenderer() {
-      @Override
-      protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        if (value == ObjectUtil.NULL) {
-          append("");
-        }
-        else {
-          append(((AbstractVcs)value).getDisplayName());
-        }
-      }
-    });
-    mainPanel.add(myVcsComboBox, gb);
+        vcses.addAll(sortedVcs);
 
-    myVcsComboBox.addActionListener(e -> validateVcs());
-    validateVcs();
+        myVcsComboBox = new ComboBox<>(new CollectionComboBoxModel<>(vcses));
+        myVcsComboBox.setRenderer(new ColoredListCellRenderer() {
+            @Override
+            protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+                if (value == ObjectUtil.NULL) {
+                    append("");
+                }
+                else {
+                    append(((AbstractVcs)value).getDisplayName());
+                }
+            }
+        });
+        mainPanel.add(myVcsComboBox, gb);
 
-    final JLabel helpText = new JLabel(VcsLocalize.dialogEnableVersionControlIntegrationHintText().get());
-    helpText.setUI(new MultiLineLabelUI());
-    helpText.setForeground(UIUtil.getInactiveTextColor());
+        myVcsComboBox.addActionListener(e -> validateVcs());
+        validateVcs();
 
-    gb.anchor = GridBagConstraints.NORTHWEST;
-    gb.gridx = 0;
-    ++gb.gridy;
-    gb.gridwidth = 2;
-    mainPanel.add(helpText, gb);
+        final JLabel helpText = new JLabel(VcsLocalize.dialogEnableVersionControlIntegrationHintText().get());
+        helpText.setUI(new MultiLineLabelUI());
+        helpText.setForeground(UIUtil.getInactiveTextColor());
 
-    final JPanel wrapper = new JPanel(new GridBagLayout());
-    wrapper.add(mainPanel, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, JBUI.emptyInsets(), 0, 0));
-    return wrapper;
-  }
+        gb.anchor = GridBagConstraints.NORTHWEST;
+        gb.gridx = 0;
+        ++gb.gridy;
+        gb.gridwidth = 2;
+        mainPanel.add(helpText, gb);
 
-  private void validateVcs() {
-    setOKActionEnabled(getSelectedVcs() != null);
-  }
+        final JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.add(
+            mainPanel,
+            new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, JBUI.emptyInsets(), 0, 0)
+        );
+        return wrapper;
+    }
 
-  @Override
-  protected String getHelpId() {
-    return "reference.version.control.enable.version.control.integration";
-  }
+    private void validateVcs() {
+        setOKActionEnabled(getSelectedVcs() != null);
+    }
+
+    @Override
+    protected String getHelpId() {
+        return "reference.version.control.enable.version.control.integration";
+    }
 }

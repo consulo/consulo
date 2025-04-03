@@ -34,7 +34,12 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
 
     private boolean hide = false;
 
-    SwitcherToolWindowsListRenderer(SpeedSearchBase speedSearch, Map<ToolWindow, String> shortcuts, boolean pinned, @Nonnull Supplier<Boolean> showEdited) {
+    SwitcherToolWindowsListRenderer(
+        SpeedSearchBase speedSearch,
+        Map<ToolWindow, String> shortcuts,
+        boolean pinned,
+        @Nonnull Supplier<Boolean> showEdited
+    ) {
         mySpeedSearch = speedSearch;
         myShortcuts = shortcuts;
         myPinned = pinned;
@@ -48,7 +53,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
 
         String nameToMatch = "";
         if (value instanceof ToolWindow) {
-            ToolWindow tw = ((ToolWindow) value);
+            ToolWindow tw = ((ToolWindow)value);
             hide = false;
             setIcon(getIcon(tw));
 

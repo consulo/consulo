@@ -21,15 +21,15 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 
 public class ViewNavigationBarAction extends ToggleAction implements DumbAware {
-  @Override
-  public boolean isSelected(AnActionEvent e){
-    return UISettings.getInstance().SHOW_NAVIGATION_BAR;
-  }
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        return UISettings.getInstance().SHOW_NAVIGATION_BAR;
+    }
 
-  @Override
-  public void setSelected(AnActionEvent e,boolean state){
-    UISettings uiSettings = UISettings.getInstance();
-    uiSettings.SHOW_NAVIGATION_BAR=state;
-    uiSettings.fireUISettingsChanged();
-  }
+    @Override
+    public void setSelected(AnActionEvent e, boolean state) {
+        UISettings uiSettings = UISettings.getInstance();
+        uiSettings.SHOW_NAVIGATION_BAR = state;
+        uiSettings.fireUISettingsChanged();
+    }
 }

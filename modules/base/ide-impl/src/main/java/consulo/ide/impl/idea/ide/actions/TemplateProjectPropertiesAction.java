@@ -23,8 +23,8 @@ import consulo.project.Project;
 import consulo.project.internal.ProjectManagerEx;
 
 public class TemplateProjectPropertiesAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    Project defaultProject = ProjectManagerEx.getInstanceEx().getDefaultProject();
-    ShowSettingsUtil.getInstance().showSettingsDialog(defaultProject);
-  }
+    public void actionPerformed(AnActionEvent e) {
+        Project defaultProject = ProjectManagerEx.getInstanceEx().getDefaultProject();
+        ShowSettingsUtil.getInstance().showSettingsDialog(defaultProject);
+    }
 }

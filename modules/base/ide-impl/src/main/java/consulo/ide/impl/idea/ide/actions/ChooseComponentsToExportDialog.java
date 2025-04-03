@@ -47,227 +47,239 @@ import java.util.List;
 import java.util.*;
 
 public class ChooseComponentsToExportDialog extends DialogWrapper {
-  private static final Logger LOG = Logger.getInstance(ChooseComponentsToExportDialog.class);
+    private static final Logger LOG = Logger.getInstance(ChooseComponentsToExportDialog.class);
 
-  private final ElementsChooser<ComponentElementProperties> myChooser;
-  private final FieldPanel myPathPanel;
-  @NonNls
-  public static final String DEFAULT_PATH = FileUtil.toSystemDependentName(ContainerPathManager.get().getConfigPath() + "/" + "settings.zip");
-  private final boolean myShowFilePath;
-  private final String myDescription;
+    private final ElementsChooser<ComponentElementProperties> myChooser;
+    private final FieldPanel myPathPanel;
+    @NonNls
+    public static final String DEFAULT_PATH =
+        FileUtil.toSystemDependentName(ContainerPathManager.get().getConfigPath() + "/" + "settings.zip");
+    private final boolean myShowFilePath;
+    private final String myDescription;
 
-  public ChooseComponentsToExportDialog(MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents, boolean showFilePath, final String title, String description) {
-    super(false);
-    myDescription = description;
-    myShowFilePath = showFilePath;
-    Map<ExportSettingsAction.ExportableItem, ComponentElementProperties> componentToContainingListElement = new LinkedHashMap<>();
+    public ChooseComponentsToExportDialog(
+        MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents,
+        boolean showFilePath,
+        final String title,
+        String description
+    ) {
+        super(false);
+        myDescription = description;
+        myShowFilePath = showFilePath;
+        Map<ExportSettingsAction.ExportableItem, ComponentElementProperties> componentToContainingListElement = new LinkedHashMap<>();
 
-    for (ExportSettingsAction.ExportableItem component : fileToComponents.values()) {
-      if (!addToExistingListElement(component, componentToContainingListElement, fileToComponents)) {
-        ComponentElementProperties componentElementProperties = new ComponentElementProperties();
-        componentElementProperties.addComponent(component);
+        for (ExportSettingsAction.ExportableItem component : fileToComponents.values()) {
+            if (!addToExistingListElement(component, componentToContainingListElement, fileToComponents)) {
+                ComponentElementProperties componentElementProperties = new ComponentElementProperties();
+                componentElementProperties.addComponent(component);
 
-        componentToContainingListElement.put(component, componentElementProperties);
-      }
-    }
-    final Set<ComponentElementProperties> componentElementProperties = new LinkedHashSet<>(componentToContainingListElement.values());
-    myChooser = new ElementsChooser<>(true);
-    myChooser.setColorUnmarkedElements(false);
-    for (final ComponentElementProperties componentElementProperty : componentElementProperties) {
-      myChooser.addElement(componentElementProperty, true, componentElementProperty);
-    }
-    myChooser.sort((o1, o2) -> o1.toString().compareTo(o2.toString()));
-
-    final ActionListener browseAction = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        chooseSettingsFile(
-          myPathPanel.getText(),
-          getWindow(),
-          IdeLocalize.titleExportFileLocation().get(),
-          IdeLocalize.promptChooseExportSettingsFilePath().get()
-        ).doWhenDone(path -> myPathPanel.setText(FileUtil.toSystemDependentName(path)));
-      }
-    };
-
-    myPathPanel = new FieldPanel(
-      IdeLocalize.editboxExportSettingsTo().get(),
-      null,
-      browseAction,
-      null
-    );
-
-    String exportPath = PropertiesComponent.getInstance().getValue("export.settings.path", DEFAULT_PATH);
-    myPathPanel.setText(exportPath);
-    myPathPanel.setChangeListener(this::updateControls);
-    updateControls();
-
-    setTitle(title);
-    init();
-  }
-
-  private void updateControls() {
-    setOKActionEnabled(!StringUtil.isEmptyOrSpaces(myPathPanel.getText()));
-  }
-
-  @Nonnull
-  @Override
-  protected Action[] createLeftSideActions() {
-    AbstractAction selectAll = new AbstractAction("Select &All") {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myChooser.setAllElementsMarked(true);
-      }
-    };
-    AbstractAction selectNone = new AbstractAction("Select &None") {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myChooser.setAllElementsMarked(false);
-      }
-    };
-    AbstractAction invert = new AbstractAction("&Invert") {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myChooser.invertSelection();
-      }
-    };
-    return new Action[]{selectAll, selectNone, invert};
-  }
-
-  @Override
-  protected void doOKAction() {
-    PropertiesComponent.getInstance().setValue("export.settings.path", myPathPanel.getText());
-    super.doOKAction();
-  }
-
-  private static boolean addToExistingListElement(ExportSettingsAction.ExportableItem component,
-                                                  Map<ExportSettingsAction.ExportableItem, ComponentElementProperties> componentToContainingListElement,
-                                                  MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents) {
-    final File[] exportFiles = component.getExportFiles();
-    File file = null;
-    for (File exportFile : exportFiles) {
-      Collection<ExportSettingsAction.ExportableItem> tiedComponents = fileToComponents.get(exportFile);
-
-      for (ExportSettingsAction.ExportableItem tiedComponent : tiedComponents) {
-        if (tiedComponent == component) continue;
-        final ComponentElementProperties elementProperties = componentToContainingListElement.get(tiedComponent);
-        if (elementProperties != null && !FileUtil.filesEqual(exportFile, file)) {
-          LOG.assertTrue(file == null, "Component " + component + " serialize itself into " + file + " and " + exportFile);
-          // found
-          elementProperties.addComponent(component);
-          componentToContainingListElement.put(component, elementProperties);
-          file = exportFile;
+                componentToContainingListElement.put(component, componentElementProperties);
+            }
         }
-      }
+        final Set<ComponentElementProperties> componentElementProperties = new LinkedHashSet<>(componentToContainingListElement.values());
+        myChooser = new ElementsChooser<>(true);
+        myChooser.setColorUnmarkedElements(false);
+        for (final ComponentElementProperties componentElementProperty : componentElementProperties) {
+            myChooser.addElement(componentElementProperty, true, componentElementProperty);
+        }
+        myChooser.sort((o1, o2) -> o1.toString().compareTo(o2.toString()));
+
+        final ActionListener browseAction = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chooseSettingsFile(
+                    myPathPanel.getText(),
+                    getWindow(),
+                    IdeLocalize.titleExportFileLocation().get(),
+                    IdeLocalize.promptChooseExportSettingsFilePath().get()
+                ).doWhenDone(path -> myPathPanel.setText(FileUtil.toSystemDependentName(path)));
+            }
+        };
+
+        myPathPanel = new FieldPanel(
+            IdeLocalize.editboxExportSettingsTo().get(),
+            null,
+            browseAction,
+            null
+        );
+
+        String exportPath = PropertiesComponent.getInstance().getValue("export.settings.path", DEFAULT_PATH);
+        myPathPanel.setText(exportPath);
+        myPathPanel.setChangeListener(this::updateControls);
+        updateControls();
+
+        setTitle(title);
+        init();
     }
-    return file != null;
-  }
 
-  @Nonnull
-  @RequiredUIAccess
-  public static AsyncResult<String> chooseSettingsFile(String oldPath, Component parent, final String title, final String description) {
-    FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
-    chooserDescriptor.setDescription(description);
-    chooserDescriptor.setHideIgnored(false);
-    chooserDescriptor.setTitle(title);
-
-    VirtualFile initialDir;
-    if (oldPath != null) {
-      final File oldFile = new File(oldPath);
-      initialDir = LocalFileSystem.getInstance().findFileByIoFile(oldFile);
-      if (initialDir == null && oldFile.getParentFile() != null) {
-        initialDir = LocalFileSystem.getInstance().findFileByIoFile(oldFile.getParentFile());
-      }
+    private void updateControls() {
+        setOKActionEnabled(!StringUtil.isEmptyOrSpaces(myPathPanel.getText()));
     }
-    else {
-      initialDir = null;
-    }
-    final AsyncResult<String> result = AsyncResult.undefined();
-    AsyncResult<VirtualFile[]> fileAsyncResult = FileChooser.chooseFiles(chooserDescriptor, null, parent, initialDir);
-    fileAsyncResult.doWhenDone(files -> {
-      VirtualFile file = files[0];
-      if (file.isDirectory()) {
-        result.setDone(file.getPath() + '/' + new File(DEFAULT_PATH).getName());
-      }
-      else {
-        result.setDone(file.getPath());
-      }
-    });
-    fileAsyncResult.doWhenRejected((Runnable)result::setRejected);
-    return result;
-  }
 
-  @RequiredUIAccess
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myPathPanel.getTextField();
-  }
-
-  @Override
-  protected JComponent createNorthPanel() {
-    return new JLabel(myDescription);
-  }
-
-  @Override
-  protected JComponent createCenterPanel() {
-    return myChooser;
-  }
-
-  @Override
-  protected JComponent createSouthPanel() {
-    final JComponent buttons = super.createSouthPanel();
-    if (!myShowFilePath) return buttons;
-    final JPanel panel = new JPanel(new VerticalFlowLayout());
-    panel.add(myPathPanel);
-    panel.add(buttons);
-    return panel;
-  }
-
-  Set<ExportSettingsAction.ExportableItem> getExportableComponents() {
-    final List<ComponentElementProperties> markedElements = myChooser.getMarkedElements();
-    final Set<ExportSettingsAction.ExportableItem> components = new HashSet<>();
-    for (ComponentElementProperties elementProperties : markedElements) {
-      components.addAll(elementProperties.myComponents);
-    }
-    return components;
-  }
-
-  private static class ComponentElementProperties implements ElementsChooser.ElementProperties {
-    private final Set<ExportSettingsAction.ExportableItem> myComponents = new HashSet<>();
-
-    private boolean addComponent(ExportSettingsAction.ExportableItem component) {
-      return myComponents.add(component);
+    @Nonnull
+    @Override
+    protected Action[] createLeftSideActions() {
+        AbstractAction selectAll = new AbstractAction("Select &All") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                myChooser.setAllElementsMarked(true);
+            }
+        };
+        AbstractAction selectNone = new AbstractAction("Select &None") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                myChooser.setAllElementsMarked(false);
+            }
+        };
+        AbstractAction invert = new AbstractAction("&Invert") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                myChooser.invertSelection();
+            }
+        };
+        return new Action[]{selectAll, selectNone, invert};
     }
 
     @Override
-    @Nullable
-    public Image getIcon() {
-      return null;
+    protected void doOKAction() {
+        PropertiesComponent.getInstance().setValue("export.settings.path", myPathPanel.getText());
+        super.doOKAction();
+    }
+
+    private static boolean addToExistingListElement(
+        ExportSettingsAction.ExportableItem component,
+        Map<ExportSettingsAction.ExportableItem, ComponentElementProperties> componentToContainingListElement,
+        MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents
+    ) {
+        final File[] exportFiles = component.getExportFiles();
+        File file = null;
+        for (File exportFile : exportFiles) {
+            Collection<ExportSettingsAction.ExportableItem> tiedComponents = fileToComponents.get(exportFile);
+
+            for (ExportSettingsAction.ExportableItem tiedComponent : tiedComponents) {
+                if (tiedComponent == component) {
+                    continue;
+                }
+                final ComponentElementProperties elementProperties = componentToContainingListElement.get(tiedComponent);
+                if (elementProperties != null && !FileUtil.filesEqual(exportFile, file)) {
+                    LOG.assertTrue(file == null, "Component " + component + " serialize itself into " + file + " and " + exportFile);
+                    // found
+                    elementProperties.addComponent(component);
+                    componentToContainingListElement.put(component, elementProperties);
+                    file = exportFile;
+                }
+            }
+        }
+        return file != null;
+    }
+
+    @Nonnull
+    @RequiredUIAccess
+    public static AsyncResult<String> chooseSettingsFile(String oldPath, Component parent, final String title, final String description) {
+        FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
+        chooserDescriptor.setDescription(description);
+        chooserDescriptor.setHideIgnored(false);
+        chooserDescriptor.setTitle(title);
+
+        VirtualFile initialDir;
+        if (oldPath != null) {
+            final File oldFile = new File(oldPath);
+            initialDir = LocalFileSystem.getInstance().findFileByIoFile(oldFile);
+            if (initialDir == null && oldFile.getParentFile() != null) {
+                initialDir = LocalFileSystem.getInstance().findFileByIoFile(oldFile.getParentFile());
+            }
+        }
+        else {
+            initialDir = null;
+        }
+        final AsyncResult<String> result = AsyncResult.undefined();
+        AsyncResult<VirtualFile[]> fileAsyncResult = FileChooser.chooseFiles(chooserDescriptor, null, parent, initialDir);
+        fileAsyncResult.doWhenDone(files -> {
+            VirtualFile file = files[0];
+            if (file.isDirectory()) {
+                result.setDone(file.getPath() + '/' + new File(DEFAULT_PATH).getName());
+            }
+            else {
+                result.setDone(file.getPath());
+            }
+        });
+        fileAsyncResult.doWhenRejected((Runnable)result::setRejected);
+        return result;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return myPathPanel.getTextField();
     }
 
     @Override
-    @Nullable
-    public Color getColor() {
-      return null;
+    protected JComponent createNorthPanel() {
+        return new JLabel(myDescription);
     }
 
-    public String toString() {
-      Set<String> names = new LinkedHashSet<>();
-
-      for (ExportSettingsAction.ExportableItem component : myComponents) {
-        names.add(component.getPresentableName());
-      }
-
-      return StringUtil.join(names.toArray(new String[names.size()]), ", ");
+    @Override
+    protected JComponent createCenterPanel() {
+        return myChooser;
     }
-  }
 
-  File getExportFile() {
-    return new File(myPathPanel.getText());
-  }
+    @Override
+    protected JComponent createSouthPanel() {
+        final JComponent buttons = super.createSouthPanel();
+        if (!myShowFilePath) {
+            return buttons;
+        }
+        final JPanel panel = new JPanel(new VerticalFlowLayout());
+        panel.add(myPathPanel);
+        panel.add(buttons);
+        return panel;
+    }
 
-  @Override
-  protected String getDimensionServiceKey() {
-    return "#consulo.ide.impl.idea.ide.actions.ChooseComponentsToExportDialog";
-  }
+    Set<ExportSettingsAction.ExportableItem> getExportableComponents() {
+        final List<ComponentElementProperties> markedElements = myChooser.getMarkedElements();
+        final Set<ExportSettingsAction.ExportableItem> components = new HashSet<>();
+        for (ComponentElementProperties elementProperties : markedElements) {
+            components.addAll(elementProperties.myComponents);
+        }
+        return components;
+    }
+
+    private static class ComponentElementProperties implements ElementsChooser.ElementProperties {
+        private final Set<ExportSettingsAction.ExportableItem> myComponents = new HashSet<>();
+
+        private boolean addComponent(ExportSettingsAction.ExportableItem component) {
+            return myComponents.add(component);
+        }
+
+        @Override
+        @Nullable
+        public Image getIcon() {
+            return null;
+        }
+
+        @Override
+        @Nullable
+        public Color getColor() {
+            return null;
+        }
+
+        public String toString() {
+            Set<String> names = new LinkedHashSet<>();
+
+            for (ExportSettingsAction.ExportableItem component : myComponents) {
+                names.add(component.getPresentableName());
+            }
+
+            return StringUtil.join(names.toArray(new String[names.size()]), ", ");
+        }
+    }
+
+    File getExportFile() {
+        return new File(myPathPanel.getText());
+    }
+
+    @Override
+    protected String getDimensionServiceKey() {
+        return "#consulo.ide.impl.idea.ide.actions.ChooseComponentsToExportDialog";
+    }
 }

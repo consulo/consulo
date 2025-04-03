@@ -29,50 +29,50 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 public class CloseAllEditorsButActiveAction extends AnAction implements DumbAware {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-    VirtualFile selectedFile;
-    final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
-    if (window != null) {
-      window.closeAllExcept(e.getData(VirtualFile.KEY));
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+        VirtualFile selectedFile;
+        final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
+        if (window != null) {
+            window.closeAllExcept(e.getData(VirtualFile.KEY));
+            return;
+        }
+        selectedFile = fileEditorManager.getSelectedFiles()[0];
+        final VirtualFile[] siblings = fileEditorManager.getSiblings(selectedFile);
+        for (final VirtualFile sibling : siblings) {
+            if (!Comparing.equal(selectedFile, sibling)) {
+                fileEditorManager.closeFile(sibling);
+            }
+        }
     }
-    selectedFile = fileEditorManager.getSelectedFiles()[0];
-    final VirtualFile[] siblings = fileEditorManager.getSiblings(selectedFile);
-    for (final VirtualFile sibling : siblings) {
-      if (!Comparing.equal(selectedFile, sibling)) {
-        fileEditorManager.closeFile(sibling);
-      }
-    }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+        VirtualFile selectedFile;
+        final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
+        if (window != null) {
+            presentation.setEnabled(window.getFiles().length > 1);
+            return;
+        }
+        else {
+            if (fileEditorManager.getSelectedFiles().length == 0) {
+                presentation.setEnabled(false);
+                return;
+            }
+            selectedFile = fileEditorManager.getSelectedFiles()[0];
+        }
+        VirtualFile[] siblings = fileEditorManager.getSiblings(selectedFile);
+        presentation.setEnabled(siblings.length > 1);
     }
-    FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-    VirtualFile selectedFile;
-    final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
-    if (window != null) {
-      presentation.setEnabled(window.getFiles().length > 1);
-      return;
-    }
-    else {
-      if (fileEditorManager.getSelectedFiles().length == 0) {
-        presentation.setEnabled(false);
-        return;
-      }
-      selectedFile = fileEditorManager.getSelectedFiles()[0];
-    }
-    VirtualFile[] siblings = fileEditorManager.getSiblings(selectedFile);
-    presentation.setEnabled(siblings.length > 1);
-  }
 }

@@ -48,90 +48,104 @@ import jakarta.annotation.Nullable;
 import java.util.Arrays;
 
 public class ViewStructureAction extends DumbAwareAction {
-
-  public ViewStructureAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return;
-    FileEditor fileEditor = e.getData(FileEditor.KEY);
-    if (fileEditor == null) return;
-
-    VirtualFile virtualFile = fileEditor.getFile();
-    Editor editor = fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : e.getData(Editor.KEY);
-    if (editor != null) {
-      PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
+    public ViewStructureAction() {
+        setEnabledInModalContext(true);
     }
 
-    FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.file.structure");
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        FileEditor fileEditor = e.getData(FileEditor.KEY);
+        if (fileEditor == null) {
+            return;
+        }
 
-    FileStructurePopup popup = createPopup(project, fileEditor);
-    if (popup == null) return;
+        VirtualFile virtualFile = fileEditor.getFile();
+        Editor editor = fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : e.getData(Editor.KEY);
+        if (editor != null) {
+            PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
+        }
 
-    String title = virtualFile == null ? fileEditor.getName() : virtualFile.getName();
-    popup.setTitle(title);
-    popup.show();
-  }
+        FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.file.structure");
 
-  @Nullable
-  @RequiredReadAction
-  public static FileStructurePopup createPopup(@Nonnull Project project, @Nonnull FileEditor fileEditor) {
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
-    StructureViewBuilder builder = fileEditor.getStructureViewBuilder();
-    if (builder == null) return null;
-    StructureView structureView;
-    StructureViewModel treeModel;
-    if (builder instanceof TreeBasedStructureViewBuilder) {
-      structureView = null;
-      treeModel = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel(EditorUtil.getEditorEx(fileEditor));
-    }
-    else {
-      structureView = builder.createStructureView(fileEditor, project);
-      treeModel = createStructureViewModel(project, fileEditor, structureView);
-    }
-    if (treeModel instanceof PlaceHolder) {
-      //noinspection unchecked
-      ((PlaceHolder)treeModel).setPlace(TreeStructureUtil.PLACE);
-    }
-    FileStructurePopup popup = new FileStructurePopup(project, fileEditor, treeModel);
-    if (structureView != null) Disposer.register(popup, structureView);
-    return popup;
-  }
+        FileStructurePopup popup = createPopup(project, fileEditor);
+        if (popup == null) {
+            return;
+        }
 
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      e.getPresentation().setEnabled(false);
-      return;
+        String title = virtualFile == null ? fileEditor.getName() : virtualFile.getName();
+        popup.setTitle(title);
+        popup.show();
     }
 
-    FileEditor fileEditor = e.getData(FileEditor.KEY);
-    Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : e.getData(Editor.KEY);
-
-    boolean enabled = fileEditor != null && (!Boolean.TRUE.equals(InternalEditorKeys.SUPPLEMENTARY_KEY.get(editor))) && fileEditor.getStructureViewBuilder() != null;
-    e.getPresentation().setEnabled(enabled);
-  }
-
-  @Nonnull
-  @RequiredReadAction
-  public static StructureViewModel createStructureViewModel(@Nonnull Project project, @Nonnull FileEditor fileEditor, @Nonnull StructureView structureView) {
-    StructureViewModel treeModel;
-    VirtualFile virtualFile = fileEditor.getFile();
-    if (structureView instanceof StructureViewComposite && virtualFile != null) {
-      StructureViewComposite.StructureViewDescriptor[] views = ((StructureViewComposite)structureView).getStructureViews();
-      PsiFile psiFile = ObjectUtil.notNull(PsiManager.getInstance(project).findFile(virtualFile));
-      treeModel = new StructureViewCompositeModel(psiFile, EditorUtil.getEditorEx(fileEditor), Arrays.asList(views));
-      Disposer.register(structureView, treeModel);
+    @Nullable
+    @RequiredReadAction
+    public static FileStructurePopup createPopup(@Nonnull Project project, @Nonnull FileEditor fileEditor) {
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
+        StructureViewBuilder builder = fileEditor.getStructureViewBuilder();
+        if (builder == null) {
+            return null;
+        }
+        StructureView structureView;
+        StructureViewModel treeModel;
+        if (builder instanceof TreeBasedStructureViewBuilder) {
+            structureView = null;
+            treeModel = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel(EditorUtil.getEditorEx(fileEditor));
+        }
+        else {
+            structureView = builder.createStructureView(fileEditor, project);
+            treeModel = createStructureViewModel(project, fileEditor, structureView);
+        }
+        if (treeModel instanceof PlaceHolder) {
+            //noinspection unchecked
+            ((PlaceHolder)treeModel).setPlace(TreeStructureUtil.PLACE);
+        }
+        FileStructurePopup popup = new FileStructurePopup(project, fileEditor, treeModel);
+        if (structureView != null) {
+            Disposer.register(popup, structureView);
+        }
+        return popup;
     }
-    else {
-      treeModel = structureView.getTreeModel();
+
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+
+        FileEditor fileEditor = e.getData(FileEditor.KEY);
+        Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : e.getData(Editor.KEY);
+
+        boolean enabled =
+            fileEditor != null && (!Boolean.TRUE.equals(InternalEditorKeys.SUPPLEMENTARY_KEY.get(editor))) && fileEditor.getStructureViewBuilder() != null;
+        e.getPresentation().setEnabled(enabled);
     }
-    return treeModel;
-  }
+
+    @Nonnull
+    @RequiredReadAction
+    public static StructureViewModel createStructureViewModel(
+        @Nonnull Project project,
+        @Nonnull FileEditor fileEditor,
+        @Nonnull StructureView structureView
+    ) {
+        StructureViewModel treeModel;
+        VirtualFile virtualFile = fileEditor.getFile();
+        if (structureView instanceof StructureViewComposite && virtualFile != null) {
+            StructureViewComposite.StructureViewDescriptor[] views = ((StructureViewComposite)structureView).getStructureViews();
+            PsiFile psiFile = ObjectUtil.notNull(PsiManager.getInstance(project).findFile(virtualFile));
+            treeModel = new StructureViewCompositeModel(psiFile, EditorUtil.getEditorEx(fileEditor), Arrays.asList(views));
+            Disposer.register(structureView, treeModel);
+        }
+        else {
+            treeModel = structureView.getTreeModel();
+        }
+        return treeModel;
+    }
 }

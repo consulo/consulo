@@ -26,14 +26,14 @@ import consulo.project.Project;
  * @author yole
  */
 public class CustomizeUIAction extends AnAction {
-  public CustomizeUIAction() {
-    super("Customize Menus and Toolbars...");
-  }
+    public CustomizeUIAction() {
+        super("Customize Menus and Toolbars...");
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    ShowSettingsUtil.getInstance().showAndSelect(project, CustomizationConfigurable.class);
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        ShowSettingsUtil.getInstance().showAndSelect(project, CustomizationConfigurable.class);
+    }
 }

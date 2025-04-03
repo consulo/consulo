@@ -27,96 +27,101 @@ import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class TemplateKindCombo extends ComboboxWithBrowseButton {
-  public TemplateKindCombo() {
-    getComboBox().setRenderer(new ColoredListCellRenderer() {
-      @Override
-      protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        if (value instanceof Trinity) {
-          append((String)((Trinity)value).first);
-          setIcon((Image)((Trinity)value).second);
+    public TemplateKindCombo() {
+        getComboBox().setRenderer(new ColoredListCellRenderer() {
+            @Override
+            protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+                if (value instanceof Trinity) {
+                    append((String)((Trinity)value).first);
+                    setIcon((Image)((Trinity)value).second);
+                }
+            }
+        });
+
+        new ComboboxSpeedSearch(getComboBox()) {
+            @Override
+            protected String getElementText(Object element) {
+                if (element instanceof Trinity) {
+                    return (String)((Trinity)element).first;
+                }
+                return null;
+            }
+        };
+        setButtonListener(null);
+    }
+
+    public void addItem(String presentableName, Image icon, String templateName) {
+        getComboBox().addItem(new Trinity<>(presentableName, icon, templateName));
+    }
+
+    public String getSelectedName() {
+        //noinspection unchecked
+        final Trinity<String, Image, String> trinity = (Trinity<String, Image, String>)getComboBox().getSelectedItem();
+        if (trinity == null) {
+            // design time
+            return null;
         }
-      }
-    });
+        return trinity.third;
+    }
 
-    new ComboboxSpeedSearch(getComboBox()) {
-      @Override
-      protected String getElementText(Object element) {
-        if (element instanceof Trinity) {
-          return (String)((Trinity)element).first;
+    public void setSelectedName(@Nullable String name) {
+        if (name == null) {
+            return;
         }
-        return null;
-      }
-    };
-    setButtonListener(null);
-  }
-
-  public void addItem(String presentableName, Image icon, String templateName) {
-    getComboBox().addItem(new Trinity<>(presentableName, icon, templateName));
-  }
-
-  public String getSelectedName() {
-    //noinspection unchecked
-    final Trinity<String, Image, String> trinity = (Trinity<String, Image, String>)getComboBox().getSelectedItem();
-    if (trinity == null) {
-      // design time
-      return null;
-    }
-    return trinity.third;
-  }
-
-  public void setSelectedName(@Nullable String name) {
-    if (name == null) return;
-    ComboBoxModel model = getComboBox().getModel();
-    for (int i = 0, n = model.getSize(); i < n; i++) {
-      Trinity<String, Image, String> trinity = (Trinity<String, Image, String>)model.getElementAt(i);
-      if (name.equals(trinity.third)) {
-        getComboBox().setSelectedItem(trinity);
-        return;
-      }
-    }
-  }
-
-  public void registerUpDownHint(JComponent component) {
-    new AnAction() {
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        if (e.getInputEvent() instanceof KeyEvent) {
-          final int code = ((KeyEvent)e.getInputEvent()).getKeyCode();
-          scrollBy(code == KeyEvent.VK_DOWN ? 1 : code == KeyEvent.VK_UP ? -1 : 0);
+        ComboBoxModel model = getComboBox().getModel();
+        for (int i = 0, n = model.getSize(); i < n; i++) {
+            Trinity<String, Image, String> trinity = (Trinity<String, Image, String>)model.getElementAt(i);
+            if (name.equals(trinity.third)) {
+                getComboBox().setSelectedItem(trinity);
+                return;
+            }
         }
-      }
-    }.registerCustomShortcutSet(new CustomShortcutSet(KeyEvent.VK_UP, KeyEvent.VK_DOWN), component);
-  }
-
-  private void scrollBy(int delta) {
-    if (delta == 0) return;
-    final int size = getComboBox().getModel().getSize();
-    int next = getComboBox().getSelectedIndex() + delta;
-    if (next < 0 || next >= size) {
-      if (!UISettings.getInstance().CYCLE_SCROLLING) {
-        return;
-      }
-      next = (next + size) % size;
     }
-    getComboBox().setSelectedIndex(next);
-  }
 
-  /**
-   * @param listener pass <code>null</code> to hide browse button
-   */
-  public void setButtonListener(@Nullable ActionListener listener) {
-    getButton().setVisible(listener != null);
-    if (listener != null) {
-      addActionListener(listener);
+    public void registerUpDownHint(JComponent component) {
+        new AnAction() {
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                if (e.getInputEvent() instanceof KeyEvent) {
+                    final int code = ((KeyEvent)e.getInputEvent()).getKeyCode();
+                    scrollBy(code == KeyEvent.VK_DOWN ? 1 : code == KeyEvent.VK_UP ? -1 : 0);
+                }
+            }
+        }.registerCustomShortcutSet(new CustomShortcutSet(KeyEvent.VK_UP, KeyEvent.VK_DOWN), component);
     }
-  }
 
-  public void clear() {
-    getComboBox().removeAllItems();
-  }
+    private void scrollBy(int delta) {
+        if (delta == 0) {
+            return;
+        }
+        final int size = getComboBox().getModel().getSize();
+        int next = getComboBox().getSelectedIndex() + delta;
+        if (next < 0 || next >= size) {
+            if (!UISettings.getInstance().CYCLE_SCROLLING) {
+                return;
+            }
+            next = (next + size) % size;
+        }
+        getComboBox().setSelectedIndex(next);
+    }
+
+    /**
+     * @param listener pass <code>null</code> to hide browse button
+     */
+    public void setButtonListener(@Nullable ActionListener listener) {
+        getButton().setVisible(listener != null);
+        if (listener != null) {
+            addActionListener(listener);
+        }
+    }
+
+    public void clear() {
+        getComboBox().removeAllItems();
+    }
 }

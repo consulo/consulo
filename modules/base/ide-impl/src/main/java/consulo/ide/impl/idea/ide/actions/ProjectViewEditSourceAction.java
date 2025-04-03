@@ -22,36 +22,37 @@ import consulo.language.pom.NavigatableWithText;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Arrays;
 import java.util.Objects;
 
 // from kotlin
 public class ProjectViewEditSourceAction extends BaseNavigateToSourceAction {
-  public ProjectViewEditSourceAction() {
-    super(true);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-
-    Presentation presentation = e.getPresentation();
-    if (!presentation.isVisible() || !presentation.isEnabled()) {
-      return;
+    public ProjectViewEditSourceAction() {
+        super(true);
     }
 
-    Navigatable[] navigatables = getNavigatables(e.getDataContext());
-    if (navigatables == null) {
-      presentation.setEnabledAndVisible(false);
-      return;
-    }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
 
-    boolean find = Arrays.stream(navigatables)
+        Presentation presentation = e.getPresentation();
+        if (!presentation.isVisible() || !presentation.isEnabled()) {
+            return;
+        }
+
+        Navigatable[] navigatables = getNavigatables(e.getDataContext());
+        if (navigatables == null) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
+
+        boolean find = Arrays.stream(navigatables)
             .map(it -> it instanceof NavigatableWithText ? ((NavigatableWithText)it).getNavigateActionText(true) : null)
             .filter(Objects::nonNull)
             .findAny()
             .isPresent();
-    e.getPresentation().setEnabledAndVisible(find);
-  }
+        e.getPresentation().setEnabledAndVisible(find);
+    }
 }

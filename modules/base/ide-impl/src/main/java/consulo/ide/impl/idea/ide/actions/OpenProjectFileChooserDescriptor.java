@@ -29,53 +29,61 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nullable;
 
 public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
-  public OpenProjectFileChooserDescriptor(final boolean chooseFiles) {
-    super(chooseFiles, true, chooseFiles, chooseFiles, false, false);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean isFileSelectable(final VirtualFile file) {
-    if (file == null) return false;
-    return isProjectDirectory(file) || canOpen(file);
-  }
-
-  @Override
-  public Image getIcon(final VirtualFile file) {
-    if (isProjectDirectory(file)) {
-      return dressIcon(file, Application.get().getIcon());
+    public OpenProjectFileChooserDescriptor(final boolean chooseFiles) {
+        super(chooseFiles, true, chooseFiles, chooseFiles, false, false);
     }
-    final Image icon = getProcessorIcon(file);
-    if (icon != null) {
-      return dressIcon(file, icon);
+
+    @RequiredUIAccess
+    @Override
+    public boolean isFileSelectable(final VirtualFile file) {
+        if (file == null) {
+            return false;
+        }
+        return isProjectDirectory(file) || canOpen(file);
     }
-    return super.getIcon(file);
-  }
 
-  @Nullable
-  private Image getProcessorIcon(final VirtualFile virtualFile) {
-    final ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
-    if (provider != null) {
-      return provider.getIcon(virtualFile);
+    @Override
+    public Image getIcon(final VirtualFile file) {
+        if (isProjectDirectory(file)) {
+            return dressIcon(file, Application.get().getIcon());
+        }
+        final Image icon = getProcessorIcon(file);
+        if (icon != null) {
+            return dressIcon(file, icon);
+        }
+        return super.getIcon(file);
     }
-    return null;
-  }
 
-  @Override
-  public boolean isFileVisible(final VirtualFile file, final boolean showHiddenFiles) {
-    if (!showHiddenFiles && FileElement.isFileHidden(file)) return false;
-    return canOpen(file) || super.isFileVisible(file, showHiddenFiles) && file.isDirectory();
-  }
+    @Nullable
+    private Image getProcessorIcon(final VirtualFile virtualFile) {
+        final ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
+        if (provider != null) {
+            return provider.getIcon(virtualFile);
+        }
+        return null;
+    }
 
-  public static boolean canOpen(final VirtualFile file) {
-    return ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(file)) != null;
-  }
+    @Override
+    public boolean isFileVisible(final VirtualFile file, final boolean showHiddenFiles) {
+        if (!showHiddenFiles && FileElement.isFileHidden(file)) {
+            return false;
+        }
+        return canOpen(file) || super.isFileVisible(file, showHiddenFiles) && file.isDirectory();
+    }
 
-  private static boolean isProjectDirectory(final VirtualFile virtualFile) {
-    // the root directory of any drive is never an Consulo project
-    if (virtualFile.getParent() == null) return false;
-    // NOTE: For performance reasons, it's very important not to iterate through all of the children here.
-    if (virtualFile.isDirectory() && virtualFile.isValid() && virtualFile.findChild(Project.DIRECTORY_STORE_FOLDER) != null) return true;
-    return false;
-  }
+    public static boolean canOpen(final VirtualFile file) {
+        return ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(file)) != null;
+    }
+
+    private static boolean isProjectDirectory(final VirtualFile virtualFile) {
+        // the root directory of any drive is never an Consulo project
+        if (virtualFile.getParent() == null) {
+            return false;
+        }
+        // NOTE: For performance reasons, it's very important not to iterate through all of the children here.
+        if (virtualFile.isDirectory() && virtualFile.isValid() && virtualFile.findChild(Project.DIRECTORY_STORE_FOLDER) != null) {
+            return true;
+        }
+        return false;
+    }
 }

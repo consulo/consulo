@@ -32,29 +32,29 @@ import jakarta.inject.Provider;
 
 @ActionImpl(id = "About")
 public class AboutAction extends AnAction implements DumbAware {
-  private final Provider<AboutManager> myAboutManager;
-  private final Provider<WindowManager> myWindowManager;
-  private final Application myApplication;
+    private final Provider<AboutManager> myAboutManager;
+    private final Provider<WindowManager> myWindowManager;
+    private final Application myApplication;
 
-  @Inject
-  public AboutAction(Provider<AboutManager> aboutManager, Provider<WindowManager> windowManager, Application application) {
-    myAboutManager = aboutManager;
-    myWindowManager = windowManager;
-    myApplication = application;
-  }
+    @Inject
+    public AboutAction(Provider<AboutManager> aboutManager, Provider<WindowManager> windowManager, Application application) {
+        myAboutManager = aboutManager;
+        myWindowManager = windowManager;
+        myApplication = application;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setVisible(!TopApplicationMenuUtil.isMacSystemMenu);
-    e.getPresentation().setDescription("Show information about " + myApplication.getName());
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setVisible(!TopApplicationMenuUtil.isMacSystemMenu);
+        e.getPresentation().setDescription("Show information about " + myApplication.getName());
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Window window = myWindowManager.get().suggestParentWindow(e.getData(Project.KEY));
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Window window = myWindowManager.get().suggestParentWindow(e.getData(Project.KEY));
 
-    myAboutManager.get().showAsync(window);
-  }
+        myAboutManager.get().showAsync(window);
+    }
 }

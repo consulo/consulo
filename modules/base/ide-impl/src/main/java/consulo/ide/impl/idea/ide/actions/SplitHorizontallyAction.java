@@ -20,8 +20,8 @@ import javax.swing.*;
 /**
  * @author Vladimir Kondratyev
  */
-public final class SplitHorizontallyAction extends SplitAction{
-  public SplitHorizontallyAction() {
-    super(SwingConstants.HORIZONTAL);
-  }
+public final class SplitHorizontallyAction extends SplitAction {
+    public SplitHorizontallyAction() {
+        super(SwingConstants.HORIZONTAL);
+    }
 }

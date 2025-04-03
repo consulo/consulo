@@ -32,16 +32,16 @@ import jakarta.annotation.Nonnull;
  * @author Konstantin Bulenkov
  */
 public class ShowRecentFilesAction extends DumbAwareAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.recent.files");
-    Switcher.createAndShowSwitcher(e, IdeLocalize.titlePopupRecentFiles().get(), IdeActions.ACTION_RECENT_FILES, false, true);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.recent.files");
+        Switcher.createAndShowSwitcher(e, IdeLocalize.titlePopupRecentFiles().get(), IdeActions.ACTION_RECENT_FILES, false, true);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+    }
 }

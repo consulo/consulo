@@ -32,62 +32,64 @@ import java.util.List;
 
 public class ApplyIntentionAction extends AnAction {
 
-  private final IntentionAction myAction;
-  private final Editor myEditor;
-  private final PsiFile myFile;
+    private final IntentionAction myAction;
+    private final Editor myEditor;
+    private final PsiFile myFile;
 
-  public ApplyIntentionAction(final HighlightInfoImpl.IntentionActionDescriptor descriptor, String text, Editor editor, PsiFile file) {
-    this(descriptor.getAction(), text, editor, file);
-  }
-
-  public ApplyIntentionAction(final IntentionAction action, String text, Editor editor, PsiFile file) {
-    super(text);
-    myAction = action;
-    myEditor = editor;
-    myFile = file;
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    ShowIntentionActionsHandler.chooseActionAndInvoke(myFile, myEditor, myAction, myAction.getText());
-  }
-
-  public String getName() {
-    return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-      @Override
-      public String compute() {
-        return myAction.getText();
-      }
-    });
-  }
-
-  @Nullable
-  public static ApplyIntentionAction[] getAvailableIntentions(final Editor editor, final PsiFile file) {
-    final ShowIntentionsPass.IntentionsInfo info = new ShowIntentionsPass.IntentionsInfo();
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        ShowIntentionsPass.getActionsToShow(editor, file, info, -1);
-      }
-    });
-    if (info.isEmpty()) return null;
-
-    final List<HighlightInfoImpl.IntentionActionDescriptor> actions = new ArrayList<HighlightInfoImpl.IntentionActionDescriptor>();
-    actions.addAll(info.errorFixesToShow);
-    actions.addAll(info.inspectionFixesToShow);
-    actions.addAll(info.intentionsToShow);
-
-    final ApplyIntentionAction[] result = new ApplyIntentionAction[actions.size()];
-    for (int i = 0; i < result.length; i++) {
-      final HighlightInfoImpl.IntentionActionDescriptor descriptor = actions.get(i);
-      final String actionText = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-        @Override
-        public String compute() {
-          return descriptor.getAction().getText();
-        }
-      });
-      result[i] = new ApplyIntentionAction(descriptor, actionText, editor, file);
+    public ApplyIntentionAction(final HighlightInfoImpl.IntentionActionDescriptor descriptor, String text, Editor editor, PsiFile file) {
+        this(descriptor.getAction(), text, editor, file);
     }
-    return result;
-  }
+
+    public ApplyIntentionAction(final IntentionAction action, String text, Editor editor, PsiFile file) {
+        super(text);
+        myAction = action;
+        myEditor = editor;
+        myFile = file;
+    }
+
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        ShowIntentionActionsHandler.chooseActionAndInvoke(myFile, myEditor, myAction, myAction.getText());
+    }
+
+    public String getName() {
+        return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
+            @Override
+            public String compute() {
+                return myAction.getText();
+            }
+        });
+    }
+
+    @Nullable
+    public static ApplyIntentionAction[] getAvailableIntentions(final Editor editor, final PsiFile file) {
+        final ShowIntentionsPass.IntentionsInfo info = new ShowIntentionsPass.IntentionsInfo();
+        ApplicationManager.getApplication().runReadAction(new Runnable() {
+            @Override
+            public void run() {
+                ShowIntentionsPass.getActionsToShow(editor, file, info, -1);
+            }
+        });
+        if (info.isEmpty()) {
+            return null;
+        }
+
+        final List<HighlightInfoImpl.IntentionActionDescriptor> actions = new ArrayList<HighlightInfoImpl.IntentionActionDescriptor>();
+        actions.addAll(info.errorFixesToShow);
+        actions.addAll(info.inspectionFixesToShow);
+        actions.addAll(info.intentionsToShow);
+
+        final ApplyIntentionAction[] result = new ApplyIntentionAction[actions.size()];
+        for (int i = 0; i < result.length; i++) {
+            final HighlightInfoImpl.IntentionActionDescriptor descriptor = actions.get(i);
+            final String actionText = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
+                @Override
+                public String compute() {
+                    return descriptor.getAction().getText();
+                }
+            });
+            result[i] = new ApplyIntentionAction(descriptor, actionText, editor, file);
+        }
+        return result;
+    }
 }

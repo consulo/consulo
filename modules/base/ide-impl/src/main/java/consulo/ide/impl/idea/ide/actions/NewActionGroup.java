@@ -30,39 +30,45 @@ import java.util.function.Predicate;
  * @author Dmitry Avdeev
  */
 public class NewActionGroup extends ActionGroup {
-  private static final String PROJECT_OR_MODULE_GROUP_ID = "NewProjectOrModuleGroup";
+    private static final String PROJECT_OR_MODULE_GROUP_ID = "NewProjectOrModuleGroup";
 
-  @Nonnull
-  @Override
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    AnAction[] actions = ((ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_WEIGHING_NEW)).getChildren(e);
-    if (e == null || ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
-      AnAction newGroup = ActionManager.getInstance().getAction(PROJECT_OR_MODULE_GROUP_ID);
-      if (newGroup != null) {
-        AnAction[] newProjectActions = ((ActionGroup)newGroup).getChildren(e);
-        if (newProjectActions.length > 0) {
-          List<AnAction> mergedActions = new ArrayList<>(newProjectActions.length + 1 + actions.length);
-          Collections.addAll(mergedActions, newProjectActions);
-          mergedActions.add(AnSeparator.getInstance());
-          Collections.addAll(mergedActions, actions);
-          return mergedActions.toArray(AnAction.EMPTY_ARRAY);
+    @Nonnull
+    @Override
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        AnAction[] actions = ((ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_WEIGHING_NEW)).getChildren(e);
+        if (e == null || ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
+            AnAction newGroup = ActionManager.getInstance().getAction(PROJECT_OR_MODULE_GROUP_ID);
+            if (newGroup != null) {
+                AnAction[] newProjectActions = ((ActionGroup)newGroup).getChildren(e);
+                if (newProjectActions.length > 0) {
+                    List<AnAction> mergedActions = new ArrayList<>(newProjectActions.length + 1 + actions.length);
+                    Collections.addAll(mergedActions, newProjectActions);
+                    mergedActions.add(AnSeparator.getInstance());
+                    Collections.addAll(mergedActions, actions);
+                    return mergedActions.toArray(AnAction.EMPTY_ARRAY);
+                }
+            }
         }
-      }
-    }
-    return actions;
-  }
-
-  public static boolean isActionInNewPopupMenu(@Nonnull AnAction action) {
-    ActionManager actionManager = ActionManager.getInstance();
-    ActionGroup fileGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
-    if (!ActionUtil.anyActionFromGroupMatches(fileGroup, false, child -> child instanceof NewActionGroup)) return false;
-
-    AnAction newProjectOrModuleGroup = ActionManager.getInstance().getAction(PROJECT_OR_MODULE_GROUP_ID);
-    if (newProjectOrModuleGroup instanceof ActionGroup && ActionUtil.anyActionFromGroupMatches((ActionGroup)newProjectOrModuleGroup, false, Predicate.isEqual(action))) {
-      return true;
+        return actions;
     }
 
-    ActionGroup newGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_NEW);
-    return ActionUtil.anyActionFromGroupMatches(newGroup, false, Predicate.isEqual(action));
-  }
+    public static boolean isActionInNewPopupMenu(@Nonnull AnAction action) {
+        ActionManager actionManager = ActionManager.getInstance();
+        ActionGroup fileGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
+        if (!ActionUtil.anyActionFromGroupMatches(fileGroup, false, child -> child instanceof NewActionGroup)) {
+            return false;
+        }
+
+        AnAction newProjectOrModuleGroup = ActionManager.getInstance().getAction(PROJECT_OR_MODULE_GROUP_ID);
+        if (newProjectOrModuleGroup instanceof ActionGroup && ActionUtil.anyActionFromGroupMatches(
+            (ActionGroup)newProjectOrModuleGroup,
+            false,
+            Predicate.isEqual(action)
+        )) {
+            return true;
+        }
+
+        ActionGroup newGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_NEW);
+        return ActionUtil.anyActionFromGroupMatches(newGroup, false, Predicate.isEqual(action));
+    }
 }

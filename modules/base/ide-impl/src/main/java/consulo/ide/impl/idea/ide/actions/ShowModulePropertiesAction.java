@@ -28,36 +28,36 @@ import jakarta.inject.Provider;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Feb 8, 2004
+ * Date: Feb 8, 2004
  */
 public class ShowModulePropertiesAction extends AnAction {
-  private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
+    private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
 
-  @Inject
-  public ShowModulePropertiesAction(Provider<ShowSettingsUtil> showSettingsUtilProvider) {
-    myShowSettingsUtilProvider = showSettingsUtilProvider;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
-    }
-    final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
-    if (module == null) {
-      return;
+    @Inject
+    public ShowModulePropertiesAction(Provider<ShowSettingsUtil> showSettingsUtilProvider) {
+        myShowSettingsUtilProvider = showSettingsUtilProvider;
     }
 
-    myShowSettingsUtilProvider.get().showProjectStructureDialog(project, it -> it.select(module.getName(), null, true));
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
+        if (module == null) {
+            return;
+        }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
-    e.getPresentation().setVisible(project != null && module != null);
-  }
+        myShowSettingsUtilProvider.get().showProjectStructureDialog(project, it -> it.select(module.getName(), null, true));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
+        e.getPresentation().setVisible(project != null && module != null);
+    }
 }

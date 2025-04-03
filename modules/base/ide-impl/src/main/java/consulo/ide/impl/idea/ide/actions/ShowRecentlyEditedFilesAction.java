@@ -26,18 +26,18 @@ import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 
 public class ShowRecentlyEditedFilesAction extends DumbAwareAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project != null) {
-      Switcher.createAndShowSwitcher(e, "Recently Edited Files", "RecentChangedFiles", true, true);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        if (project != null) {
+            Switcher.createAndShowSwitcher(e, "Recently Edited Files", "RecentChangedFiles", true, true);
+        }
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+    }
 }

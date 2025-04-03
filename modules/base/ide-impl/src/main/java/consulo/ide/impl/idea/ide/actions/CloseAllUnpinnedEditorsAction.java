@@ -33,44 +33,46 @@ import java.util.Set;
  * @author yole
  */
 public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
-  @Override
-  protected boolean isFileToClose(FileEditorComposite editor, final FileEditorWindow window) {
-    return !window.isFilePinned(editor.getFile());
-  }
-
-  @Override
-  protected String getPresentationText(final boolean inSplitter) {
-    if (inSplitter) {
-      return IdeBundle.message("action.close.all.unpinned.editors.in.tab.group");
+    @Override
+    protected boolean isFileToClose(FileEditorComposite editor, final FileEditorWindow window) {
+        return !window.isFilePinned(editor.getFile());
     }
-    else {
-      return IdeBundle.message("action.close.all.unpinned.editors");
-    }
-  }
 
-  @Override
-  protected boolean isActionEnabled(final Project project, final AnActionEvent event) {
-    final List<Pair<FileEditorComposite, FileEditorWindow>> filesToClose = getFilesToClose(event);
-    if (filesToClose.isEmpty()) return false;
-    Set<FileEditorWindow> checked = new HashSet<>();
-    for (Pair<FileEditorComposite, FileEditorWindow> pair : filesToClose) {
-      final FileEditorWindow window = pair.second;
-      if (!checked.contains(window)) {
-        checked.add(window);
-        if (hasPinned(window)) {
-          return true;
+    @Override
+    protected String getPresentationText(final boolean inSplitter) {
+        if (inSplitter) {
+            return IdeBundle.message("action.close.all.unpinned.editors.in.tab.group");
         }
-      }
+        else {
+            return IdeBundle.message("action.close.all.unpinned.editors");
+        }
     }
-    return false;
-  }
 
-  private static boolean hasPinned(final FileEditorWindow window) {
-    for (FileEditorWithProviderComposite e : window.getEditors()) {
-      if (e.isPinned()) {
-        return true;
-      }
+    @Override
+    protected boolean isActionEnabled(final Project project, final AnActionEvent event) {
+        final List<Pair<FileEditorComposite, FileEditorWindow>> filesToClose = getFilesToClose(event);
+        if (filesToClose.isEmpty()) {
+            return false;
+        }
+        Set<FileEditorWindow> checked = new HashSet<>();
+        for (Pair<FileEditorComposite, FileEditorWindow> pair : filesToClose) {
+            final FileEditorWindow window = pair.second;
+            if (!checked.contains(window)) {
+                checked.add(window);
+                if (hasPinned(window)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    return false;
-  }
+
+    private static boolean hasPinned(final FileEditorWindow window) {
+        for (FileEditorWithProviderComposite e : window.getEditors()) {
+            if (e.isPinned()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

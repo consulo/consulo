@@ -22,13 +22,13 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nullable;
 
 public class EditSourceAction extends BaseNavigateToSourceAction {
-  public EditSourceAction() {
-    super(true);
-  }
+    public EditSourceAction() {
+        super(true);
+    }
 
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.actionsEditsource();
-  }
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.actionsEditsource();
+    }
 }

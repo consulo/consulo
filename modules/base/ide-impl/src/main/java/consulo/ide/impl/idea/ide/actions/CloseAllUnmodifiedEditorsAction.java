@@ -24,23 +24,23 @@ import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
 
 public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
-  @Override
-  protected boolean isFileToClose(FileEditorComposite editor, final FileEditorWindow window) {
-    return !window.getManager().isChanged (editor);
-  }
-
-  @Override
-  protected boolean isActionEnabled(final Project project, final AnActionEvent event) {
-    return super.isActionEnabled(project, event) && ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length > 0;
-  }
-
-  @Override
-  protected String getPresentationText(final boolean inSplitter) {
-    if (inSplitter) {
-      return IdeBundle.message("action.close.all.unmodified.editors.in.tab.group");
+    @Override
+    protected boolean isFileToClose(FileEditorComposite editor, final FileEditorWindow window) {
+        return !window.getManager().isChanged(editor);
     }
-    else {
-      return IdeBundle.message("action.close.all.unmodified.editors");
+
+    @Override
+    protected boolean isActionEnabled(final Project project, final AnActionEvent event) {
+        return super.isActionEnabled(project, event) && ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length > 0;
     }
-  }
+
+    @Override
+    protected String getPresentationText(final boolean inSplitter) {
+        if (inSplitter) {
+            return IdeBundle.message("action.close.all.unmodified.editors.in.tab.group");
+        }
+        else {
+            return IdeBundle.message("action.close.all.unmodified.editors");
+        }
+    }
 }

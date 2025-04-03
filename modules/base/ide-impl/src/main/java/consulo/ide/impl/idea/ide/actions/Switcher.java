@@ -102,14 +102,14 @@ public class Switcher extends AnAction implements DumbAware {
 
     private static final Color ON_MOUSE_OVER_BG_COLOR = new JBColor(new Color(231, 242, 249), new Color(77, 80, 84));
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -207,8 +207,8 @@ public class Switcher extends AnAction implements DumbAware {
     }
 
     public static class ToggleCheckBoxAction extends DumbAwareAction implements DumbAware {
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             SwitcherPanel switcherPanel = SWITCHER_KEY.get(project);
@@ -217,8 +217,8 @@ public class Switcher extends AnAction implements DumbAware {
             }
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             e.getPresentation().setEnabledAndVisible(SWITCHER_KEY.get(project) != null);
@@ -275,7 +275,6 @@ public class Switcher extends AnAction implements DumbAware {
         }
 
         private class MyFocusTraversalPolicy extends FocusTraversalPolicy {
-
             @Override
             public Component getComponentAfter(Container aContainer, Component aComponent) {
                 return aComponent == toolWindows ? files : toolWindows;
@@ -725,9 +724,12 @@ public class Switcher extends AnAction implements DumbAware {
         ) {
             ListModel<T> listModel;
             if (pinned) {
-                listModel = new NameFilteringListModel<>(baseModel, namer, s -> !speedSearch.isPopupActive() ||
-                    StringUtil.isEmpty(speedSearch.getEnteredPrefix()) ||
-                    speedSearch.getComparator().matchingFragments(speedSearch.getEnteredPrefix(), s) != null,
+                listModel = new NameFilteringListModel<>(
+                    baseModel,
+                    namer,
+                    s -> !speedSearch.isPopupActive()
+                        || StringUtil.isEmpty(speedSearch.getEnteredPrefix())
+                        || speedSearch.getComparator().matchingFragments(speedSearch.getEnteredPrefix(), s) != null,
                     () -> StringUtil.notNullize(speedSearch.getEnteredPrefix())
                 );
             }
@@ -821,7 +823,11 @@ public class Switcher extends AnAction implements DumbAware {
         }
 
         @Nonnull
-        private static CaptionPanel createTopPanel(@Nonnull JBCheckBox showOnlyEditedFilesCheckBox, @Nonnull String title, boolean isMovable) {
+        private static CaptionPanel createTopPanel(
+            @Nonnull JBCheckBox showOnlyEditedFilesCheckBox,
+            @Nonnull String title,
+            boolean isMovable
+        ) {
             CaptionPanel topPanel = new CaptionPanel();
             JBLabel titleLabel = new JBLabel(title);
             titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));

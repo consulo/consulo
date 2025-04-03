@@ -18,63 +18,63 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 
 public class SetShortcutAction extends AnAction implements DumbAware {
+    public final static Key<AnAction> SELECTED_ACTION = Key.create("SelectedAction");
 
-  public final static Key<AnAction> SELECTED_ACTION = Key.create("SelectedAction");
-
-  public SetShortcutAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    JBPopup seDialog = project == null ? null : project.getUserData(SearchEverywhereManager.SEARCH_EVERYWHERE_POPUP);
-    if (seDialog == null) {
-      return;
+    public SetShortcutAction() {
+        setEnabledInModalContext(true);
     }
 
-    KeymapManager km = KeymapManager.getInstance();
-    Keymap activeKeymap = km != null ? km.getActiveKeymap() : null;
-    if (activeKeymap == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        JBPopup seDialog = project == null ? null : project.getUserData(SearchEverywhereManager.SEARCH_EVERYWHERE_POPUP);
+        if (seDialog == null) {
+            return;
+        }
+
+        KeymapManager km = KeymapManager.getInstance();
+        Keymap activeKeymap = km != null ? km.getActiveKeymap() : null;
+        if (activeKeymap == null) {
+            return;
+        }
+
+        AnAction action = e.getData(SELECTED_ACTION);
+        Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        if (action == null || component == null) {
+            return;
+        }
+
+        seDialog.cancel();
+        String id = ActionManager.getInstance().getId(action);
+        KeymapPanel.addKeyboardShortcut(id, ActionShortcutRestrictions.getInstance().getForActionId(id), activeKeymap, component);
     }
 
-    AnAction action = e.getData(SELECTED_ACTION);
-    Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (action == null || component == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+
+        Project project = e.getData(Project.KEY);
+        JBPopup seDialog = project == null ? null : project.getUserData(SearchEverywhereManager.SEARCH_EVERYWHERE_POPUP);
+        if (seDialog == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+
+        KeymapManager km = KeymapManager.getInstance();
+        Keymap activeKeymap = km != null ? km.getActiveKeymap() : null;
+        if (activeKeymap == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+
+        AnAction action = e.getData(SELECTED_ACTION);
+        Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        presentation.setEnabled(action != null && component != null);
     }
-
-    seDialog.cancel();
-    String id = ActionManager.getInstance().getId(action);
-    KeymapPanel.addKeyboardShortcut(id, ActionShortcutRestrictions.getInstance().getForActionId(id), activeKeymap, component);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-
-    Project project = e.getData(Project.KEY);
-    JBPopup seDialog = project == null ? null : project.getUserData(SearchEverywhereManager.SEARCH_EVERYWHERE_POPUP);
-    if (seDialog == null) {
-      presentation.setEnabled(false);
-      return;
-    }
-
-    KeymapManager km = KeymapManager.getInstance();
-    Keymap activeKeymap = km != null ? km.getActiveKeymap() : null;
-    if (activeKeymap == null) {
-      presentation.setEnabled(false);
-      return;
-    }
-
-    AnAction action = e.getData(SELECTED_ACTION);
-    Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    presentation.setEnabled(action != null && component != null);
-  }
 }

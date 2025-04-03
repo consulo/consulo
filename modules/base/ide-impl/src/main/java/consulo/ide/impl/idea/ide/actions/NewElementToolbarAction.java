@@ -31,31 +31,31 @@ import consulo.ui.ex.toolWindow.ToolWindow;
  * @author yole
  */
 public class NewElementToolbarAction extends NewElementAction {
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    if (e.getData(IdeView.KEY) == null) {
-      final Project project = e.getData(Project.KEY);
-      final PsiFileSystemItem psiFile = e.getData(PsiFile.KEY).getParent();
-      ProjectView.getInstance(project).selectCB(psiFile, psiFile.getVirtualFile(), true)
-        .doWhenDone(() -> showPopup(DataManager.getInstance().getDataContext()));
-    }
-    else {
-      super.actionPerformed(e);
-    }
-  }
-
-  @Override
-  public void update(AnActionEvent event) {
-    super.update(event);
-    if (event.getData(IdeView.KEY) == null) {
-      Project project = event.getData(Project.KEY);
-      PsiFile psiFile = event.getData(PsiFile.KEY);
-      if (project != null && psiFile != null) {
-        final ToolWindow projectViewWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-        if (projectViewWindow.isVisible()) {
-          event.getPresentation().setEnabled(true);
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        if (e.getData(IdeView.KEY) == null) {
+            final Project project = e.getData(Project.KEY);
+            final PsiFileSystemItem psiFile = e.getData(PsiFile.KEY).getParent();
+            ProjectView.getInstance(project).selectCB(psiFile, psiFile.getVirtualFile(), true)
+                .doWhenDone(() -> showPopup(DataManager.getInstance().getDataContext()));
         }
-      }
+        else {
+            super.actionPerformed(e);
+        }
     }
-  }
+
+    @Override
+    public void update(AnActionEvent event) {
+        super.update(event);
+        if (event.getData(IdeView.KEY) == null) {
+            Project project = event.getData(Project.KEY);
+            PsiFile psiFile = event.getData(PsiFile.KEY);
+            if (project != null && psiFile != null) {
+                final ToolWindow projectViewWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
+                if (projectViewWindow.isVisible()) {
+                    event.getPresentation().setEnabled(true);
+                }
+            }
+        }
+    }
 }

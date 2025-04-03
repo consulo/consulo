@@ -38,120 +38,122 @@ import java.awt.event.KeyEvent;
  * Dynamically registered in Settings|Keymap for each newly-registered tool window.
  */
 public class ActivateToolWindowAction extends DumbAwareAction {
-  private final String myToolWindowId;
+    private final String myToolWindowId;
 
-  private ActivateToolWindowAction(@Nonnull String toolWindowId) {
-    myToolWindowId = toolWindowId;
-  }
-
-  @Nonnull
-  public String getToolWindowId() {
-    return myToolWindowId;
-  }
-
-  @RequiredUIAccess
-  public static void ensureToolWindowActionRegistered(@Nonnull ToolWindow toolWindow) {
-    ActionManager actionManager = ActionManager.getInstance();
-    String actionId = getActionIdForToolWindow(toolWindow.getId());
-    AnAction action = actionManager.getAction(actionId);
-    if (action == null) {
-      ActivateToolWindowAction newAction = new ActivateToolWindowAction(toolWindow.getId());
-      newAction.updatePresentation(newAction.getTemplatePresentation(), toolWindow);
-      actionManager.registerAction(actionId, newAction);
+    private ActivateToolWindowAction(@Nonnull String toolWindowId) {
+        myToolWindowId = toolWindowId;
     }
-  }
 
-  @RequiredUIAccess
-  public static void updateToolWindowActionPresentation(@Nonnull ToolWindow toolWindow) {
-    ActionManager actionManager = ActionManager.getInstance();
-    String actionId = getActionIdForToolWindow(toolWindow.getId());
-    AnAction action = actionManager.getAction(actionId);
-    if (action instanceof ActivateToolWindowAction activateToolWindowAction) {
-      activateToolWindowAction.updatePresentation(action.getTemplatePresentation(), toolWindow);
+    @Nonnull
+    public String getToolWindowId() {
+        return myToolWindowId;
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    Presentation presentation = e.getPresentation();
-    if (project == null || project.isDisposed()) {
-      presentation.setEnabledAndVisible(false);
-      return;
-    }
-    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(myToolWindowId);
-    if (toolWindow == null) {
-      presentation.setEnabledAndVisible(false);
-    }
-    else {
-      presentation.setVisible(true);
-      presentation.setEnabled(toolWindow.isAvailable());
-      updatePresentation(presentation, toolWindow);
-    }
-  }
-
-  @RequiredUIAccess
-  private void updatePresentation(@Nonnull Presentation presentation, @Nonnull ToolWindow toolWindow) {
-    LocalizeValue title = toolWindow.getDisplayName();
-    presentation.setTextValue(title);
-    presentation.setDescriptionValue(IdeLocalize.actionActivateToolWindow(title));
-    Image icon = toolWindow.getIcon();
-    presentation.setIcon(icon);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return;
-    ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
-    if (windowManager.isEditorComponentActive() || !myToolWindowId.equals(windowManager.getActiveToolWindowId())) {
-      windowManager.getToolWindow(myToolWindowId).activate(null);
-    }
-    else {
-      windowManager.getToolWindow(myToolWindowId).hide(null);
-    }
-  }
-
-  /**
-   * This is the "rule" method constructs <code>ID</code> of the action for activating tool window
-   * with specified <code>ID</code>.
-   *
-   * @param id <code>id</code> of tool window to be activated.
-   */
-  @NonNls
-  public static String getActionIdForToolWindow(String id) {
-    return "Activate" + id.replaceAll(" ", "") + "ToolWindow";
-  }
-
-  /**
-   * @return mnemonic for action if it has Alt+digit/Meta+digit shortcut.
-   * Otherwise the method returns <code>-1</code>. Meta mask is OK for
-   * Mac OS X user, because Alt+digit types strange characters into the
-   * editor.
-   */
-  public static int getMnemonicForToolWindow(String id) {
-    Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
-    Shortcut[] shortcuts = activeKeymap.getShortcuts(getActionIdForToolWindow(id));
-    for (Shortcut shortcut : shortcuts) {
-      if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
-        KeyStroke keyStroke = keyboardShortcut.getFirstKeyStroke();
-        int modifiers = keyStroke.getModifiers();
-        if (modifiers == (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK) ||
-            modifiers == InputEvent.ALT_MASK ||
-            modifiers == InputEvent.ALT_DOWN_MASK ||
-            modifiers == (InputEvent.META_DOWN_MASK | InputEvent.META_MASK) ||
-            modifiers == InputEvent.META_MASK ||
-            modifiers == InputEvent.META_DOWN_MASK) {
-          int keyCode = keyStroke.getKeyCode();
-          if (KeyEvent.VK_0 <= keyCode && keyCode <= KeyEvent.VK_9) {
-            char c = (char)('0' + keyCode - KeyEvent.VK_0);
-            return (int)c;
-          }
+    @RequiredUIAccess
+    public static void ensureToolWindowActionRegistered(@Nonnull ToolWindow toolWindow) {
+        ActionManager actionManager = ActionManager.getInstance();
+        String actionId = getActionIdForToolWindow(toolWindow.getId());
+        AnAction action = actionManager.getAction(actionId);
+        if (action == null) {
+            ActivateToolWindowAction newAction = new ActivateToolWindowAction(toolWindow.getId());
+            newAction.updatePresentation(newAction.getTemplatePresentation(), toolWindow);
+            actionManager.registerAction(actionId, newAction);
         }
-      }
     }
-    return -1;
-  }
+
+    @RequiredUIAccess
+    public static void updateToolWindowActionPresentation(@Nonnull ToolWindow toolWindow) {
+        ActionManager actionManager = ActionManager.getInstance();
+        String actionId = getActionIdForToolWindow(toolWindow.getId());
+        AnAction action = actionManager.getAction(actionId);
+        if (action instanceof ActivateToolWindowAction activateToolWindowAction) {
+            activateToolWindowAction.updatePresentation(action.getTemplatePresentation(), toolWindow);
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        Presentation presentation = e.getPresentation();
+        if (project == null || project.isDisposed()) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(myToolWindowId);
+        if (toolWindow == null) {
+            presentation.setEnabledAndVisible(false);
+        }
+        else {
+            presentation.setVisible(true);
+            presentation.setEnabled(toolWindow.isAvailable());
+            updatePresentation(presentation, toolWindow);
+        }
+    }
+
+    @RequiredUIAccess
+    private void updatePresentation(@Nonnull Presentation presentation, @Nonnull ToolWindow toolWindow) {
+        LocalizeValue title = toolWindow.getDisplayName();
+        presentation.setTextValue(title);
+        presentation.setDescriptionValue(IdeLocalize.actionActivateToolWindow(title));
+        Image icon = toolWindow.getIcon();
+        presentation.setIcon(icon);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
+        if (windowManager.isEditorComponentActive() || !myToolWindowId.equals(windowManager.getActiveToolWindowId())) {
+            windowManager.getToolWindow(myToolWindowId).activate(null);
+        }
+        else {
+            windowManager.getToolWindow(myToolWindowId).hide(null);
+        }
+    }
+
+    /**
+     * This is the "rule" method constructs <code>ID</code> of the action for activating tool window
+     * with specified <code>ID</code>.
+     *
+     * @param id <code>id</code> of tool window to be activated.
+     */
+    @NonNls
+    public static String getActionIdForToolWindow(String id) {
+        return "Activate" + id.replaceAll(" ", "") + "ToolWindow";
+    }
+
+    /**
+     * @return mnemonic for action if it has Alt+digit/Meta+digit shortcut.
+     * Otherwise the method returns <code>-1</code>. Meta mask is OK for
+     * Mac OS X user, because Alt+digit types strange characters into the
+     * editor.
+     */
+    public static int getMnemonicForToolWindow(String id) {
+        Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
+        Shortcut[] shortcuts = activeKeymap.getShortcuts(getActionIdForToolWindow(id));
+        for (Shortcut shortcut : shortcuts) {
+            if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
+                KeyStroke keyStroke = keyboardShortcut.getFirstKeyStroke();
+                int modifiers = keyStroke.getModifiers();
+                if (modifiers == (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK) ||
+                    modifiers == InputEvent.ALT_MASK ||
+                    modifiers == InputEvent.ALT_DOWN_MASK ||
+                    modifiers == (InputEvent.META_DOWN_MASK | InputEvent.META_MASK) ||
+                    modifiers == InputEvent.META_MASK ||
+                    modifiers == InputEvent.META_DOWN_MASK) {
+                    int keyCode = keyStroke.getKeyCode();
+                    if (KeyEvent.VK_0 <= keyCode && keyCode <= KeyEvent.VK_9) {
+                        char c = (char)('0' + keyCode - KeyEvent.VK_0);
+                        return (int)c;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
 }

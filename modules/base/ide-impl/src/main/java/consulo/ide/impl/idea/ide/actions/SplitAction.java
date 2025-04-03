@@ -31,37 +31,37 @@ import javax.swing.*;
  * @author Vladimir Kondratyev
  */
 public abstract class SplitAction extends AnAction implements DumbAware {
-  private final int myOrientation;
+    private final int myOrientation;
 
-  protected SplitAction(final int orientation){
-    myOrientation = orientation;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent event) {
-    final Project project = event.getData(Project.KEY);
-    final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-    final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
-
-    fileEditorManager.createSplitter(myOrientation, window);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent event) {
-    final Project project = event.getData(Project.KEY);
-    final Presentation presentation = event.getPresentation();
-    presentation.setTextValue(
-      myOrientation == SwingConstants.VERTICAL
-        ? IdeLocalize.actionSplitVertically()
-        : IdeLocalize.actionSplitHorizontally()
-    );
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+    protected SplitAction(final int orientation) {
+        myOrientation = orientation;
     }
-    final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-    presentation.setEnabled(fileEditorManager.hasOpenedFile ());
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(final AnActionEvent event) {
+        final Project project = event.getData(Project.KEY);
+        final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+        final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
+
+        fileEditorManager.createSplitter(myOrientation, window);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(final AnActionEvent event) {
+        final Project project = event.getData(Project.KEY);
+        final Presentation presentation = event.getPresentation();
+        presentation.setTextValue(
+            myOrientation == SwingConstants.VERTICAL
+                ? IdeLocalize.actionSplitVertically()
+                : IdeLocalize.actionSplitHorizontally()
+        );
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+        presentation.setEnabled(fileEditorManager.hasOpenedFile());
+    }
 }

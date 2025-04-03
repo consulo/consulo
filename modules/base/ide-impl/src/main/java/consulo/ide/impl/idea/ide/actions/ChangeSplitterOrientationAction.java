@@ -24,11 +24,11 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author Vladimir Kondratyev
  */
 public final class ChangeSplitterOrientationAction extends SplitterActionBase {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent event) {
-    final Project project = event.getData(Project.KEY);
-    final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-    fileEditorManager.changeSplitterOrientation ();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(final AnActionEvent event) {
+        final Project project = event.getData(Project.KEY);
+        final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+        fileEditorManager.changeSplitterOrientation();
+    }
 }

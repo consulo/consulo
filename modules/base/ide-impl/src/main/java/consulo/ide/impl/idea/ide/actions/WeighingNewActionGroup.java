@@ -23,34 +23,34 @@ import consulo.ui.ex.action.*;
  * @author peter
  */
 public class WeighingNewActionGroup extends WeighingActionGroup {
-  private ActionGroup myDelegate;
+    private ActionGroup myDelegate;
 
-  @Override
-  protected ActionGroup getDelegate() {
-    if (myDelegate == null) {
-      myDelegate = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_NEW);
-      getTemplatePresentation().setText(myDelegate.getTemplatePresentation().getText());
-      setPopup(myDelegate.isPopup());
+    @Override
+    protected ActionGroup getDelegate() {
+        if (myDelegate == null) {
+            myDelegate = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_NEW);
+            getTemplatePresentation().setText(myDelegate.getTemplatePresentation().getText());
+            setPopup(myDelegate.isPopup());
+        }
+        return myDelegate;
     }
-    return myDelegate;
-  }
 
-  @Override
-  public boolean isDumbAware() {
-    return true;
-  }
+    @Override
+    public boolean isDumbAware() {
+        return true;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setText(getTemplatePresentation().getText());
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setText(getTemplatePresentation().getText());
+    }
 
-  @Override
-  protected boolean shouldBeChosenAnyway(AnAction action) {
-    final Class<? extends AnAction> aClass = action.getClass();
-    return aClass == CreateFileAction.class || aClass == CreateDirectoryOrPackageAction.class ||
-           "NewModuleInGroupAction".equals(aClass.getSimpleName()); //todo why is it in idea module?
-  }
+    @Override
+    protected boolean shouldBeChosenAnyway(AnAction action) {
+        final Class<? extends AnAction> aClass = action.getClass();
+        return aClass == CreateFileAction.class || aClass == CreateDirectoryOrPackageAction.class ||
+            "NewModuleInGroupAction".equals(aClass.getSimpleName()); //todo why is it in idea module?
+    }
 }

@@ -27,20 +27,20 @@ import java.awt.*;
  * @author yole
  */
 public class ScrollTreeToCenterAction extends AnAction {
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (component instanceof JTree) {
-      JTree tree = (JTree)component;
-      final int[] selection = tree.getSelectionRows();
-       if (selection != null && selection.length > 0) {
-        TreeUtil.showRowCentered(tree, selection [0], false);
-      }
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        if (component instanceof JTree) {
+            JTree tree = (JTree)component;
+            final int[] selection = tree.getSelectionRows();
+            if (selection != null && selection.length > 0) {
+                TreeUtil.showRowCentered(tree, selection[0], false);
+            }
+        }
     }
-  }
 
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTree);
-  }
+    @Override
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTree);
+    }
 }

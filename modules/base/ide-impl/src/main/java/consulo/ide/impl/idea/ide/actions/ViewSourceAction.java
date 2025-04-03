@@ -16,10 +16,8 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-
-
 public class ViewSourceAction extends BaseNavigateToSourceAction {
-  public ViewSourceAction() {
-    super(false);
-  }
+    public ViewSourceAction() {
+        super(false);
+    }
 }

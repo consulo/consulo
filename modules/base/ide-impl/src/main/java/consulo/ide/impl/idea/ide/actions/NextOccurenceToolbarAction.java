@@ -22,14 +22,14 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 
 public class NextOccurenceToolbarAction extends NextOccurenceAction {
-  private final OccurenceNavigator myNavigator;
+    private final OccurenceNavigator myNavigator;
 
-  public NextOccurenceToolbarAction(OccurenceNavigator navigator) {
-    myNavigator = navigator;
-    copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_NEXT_OCCURENCE));
-  }
+    public NextOccurenceToolbarAction(OccurenceNavigator navigator) {
+        myNavigator = navigator;
+        copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_NEXT_OCCURENCE));
+    }
 
-  protected OccurenceNavigator getNavigator(DataContext dataContext) {
-    return myNavigator;
-  }
+    protected OccurenceNavigator getNavigator(DataContext dataContext) {
+        return myNavigator;
+    }
 }

@@ -50,119 +50,122 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
-  @NonNls
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    @Nullable final Project project = e.getData(Project.KEY);
-    final boolean showFiles = project != null;
+    @NonNls
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        @Nullable final Project project = e.getData(Project.KEY);
+        final boolean showFiles = project != null;
 
-    final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
-      @RequiredUIAccess
-      @Override
-      public boolean isFileSelectable(VirtualFile file) {
-        return super.isFileSelectable(file) || (!file.isDirectory() && showFiles && !FileElement.isArchive(file));
-      }
+        final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
+            @RequiredUIAccess
+            @Override
+            public boolean isFileSelectable(VirtualFile file) {
+                return super.isFileSelectable(file) || (!file.isDirectory() && showFiles && !FileElement.isArchive(file));
+            }
 
-      @Override
-      public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
-        if (!file.isDirectory() && isFileSelectable(file)) {
-          return showHiddenFiles || !FileElement.isFileHidden(file);
+            @Override
+            public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
+                if (!file.isDirectory() && isFileSelectable(file)) {
+                    return showHiddenFiles || !FileElement.isFileHidden(file);
+                }
+                return super.isFileVisible(file, showHiddenFiles);
+            }
+
+            @Override
+            public boolean isChooseMultiple() {
+                return showFiles;
+            }
+        };
+        descriptor.setTitle(showFiles ? "Open File or Project" : "Open Project");
+        // FIXME [VISTALL] we need this? descriptor.setDescription(getFileChooserDescription());
+
+        descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
+
+        FileChooser.chooseFiles(descriptor, project, VfsUtil.getUserHomeDir()).doWhenDone(files -> {
+            for (VirtualFile file : files) {
+                if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
+                    Messages.showInfoMessage(
+                        project,
+                        file.getPresentableUrl() + " contains no " + Application.get().getName() + " project",
+                        "Cannot Open Project"
+                    );
+                    return;
+                }
+            }
+            doOpenFile(project, files);
+        });
+    }
+
+    @Nonnull
+    private static String getFileChooserDescription() {
+        List<ProjectOpenProcessor> providers = ProjectOpenProcessors.getInstance().getProcessors();
+        List<String> fileSamples = new ArrayList<>();
+        for (ProjectOpenProcessor processor : providers) {
+            processor.collectFileSamples(fileSamples::add);
         }
-        return super.isFileVisible(file, showHiddenFiles);
-      }
+        return IdeLocalize.importProjectChooserHeader(StringUtil.join(fileSamples, ", <br>")).get();
+    }
 
-      @Override
-      public boolean isChooseMultiple() {
-        return showFiles;
-      }
-    };
-    descriptor.setTitle(showFiles ? "Open File or Project" : "Open Project");
-    // FIXME [VISTALL] we need this? descriptor.setDescription(getFileChooserDescription());
+    @RequiredUIAccess
+    private static void doOpenFile(@Nullable final Project project, @Nonnull final VirtualFile[] result) {
+        for (final VirtualFile file : result) {
+            if (file.isDirectory()) {
+                ProjectImplUtil.openAsync(file.getPath(), project, false, UIAccess.current())
+                    .doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+                return;
+            }
 
-    descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
+            if (OpenProjectFileChooserDescriptor.canOpen(file)) {
+                int answer = Messages.showYesNoDialog(
+                    project,
+                    IdeLocalize.messageOpenFileIsProject(file.getName()).get(),
+                    IdeLocalize.titleOpenProject().get(),
+                    Messages.getQuestionIcon()
+                );
+                if (answer == 0) {
+                    ProjectImplUtil.openAsync(
+                        file.getPath(),
+                        project,
+                        false,
+                        UIAccess.current()
+                    ).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+                    return;
+                }
+            }
 
-    FileChooser.chooseFiles(descriptor, project, VfsUtil.getUserHomeDir()).doWhenDone(files -> {
-      for (VirtualFile file : files) {
-        if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
-          Messages.showInfoMessage(
-            project,
-            file.getPresentableUrl() + " contains no " + Application.get().getName() + " project",
-            "Cannot Open Project"
-          );
-          return;
+            FileType type = FileTypeChooser.getKnownFileTypeOrAssociate(file, project);
+            if (type == null) {
+                return;
+            }
+
+            if (project != null) {
+                openFile(file, project);
+            }
         }
-      }
-      doOpenFile(project, files);
-    });
-  }
-
-  @Nonnull
-  private static String getFileChooserDescription() {
-    List<ProjectOpenProcessor> providers = ProjectOpenProcessors.getInstance().getProcessors();
-    List<String> fileSamples = new ArrayList<>();
-    for (ProjectOpenProcessor processor : providers) {
-      processor.collectFileSamples(fileSamples::add);
     }
-    return IdeLocalize.importProjectChooserHeader(StringUtil.join(fileSamples, ", <br>")).get();
-  }
 
-  @RequiredUIAccess
-  private static void doOpenFile(@Nullable final Project project, @Nonnull final VirtualFile[] result) {
-    for (final VirtualFile file : result) {
-      if (file.isDirectory()) {
-        ProjectImplUtil.openAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
-        return;
-      }
-
-      if (OpenProjectFileChooserDescriptor.canOpen(file)) {
-        int answer = Messages.showYesNoDialog(
-          project,
-          IdeLocalize.messageOpenFileIsProject(file.getName()).get(),
-          IdeLocalize.titleOpenProject().get(),
-          Messages.getQuestionIcon()
-        );
-        if (answer == 0) {
-          ProjectImplUtil.openAsync(
-            file.getPath(),
-            project,
-            false,
-            UIAccess.current()
-          ).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
-          return;
+    public static void openFile(final String filePath, final Project project) {
+        final VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
+        if (file != null && file.isValid()) {
+            openFile(file, project);
         }
-      }
-
-      FileType type = FileTypeChooser.getKnownFileTypeOrAssociate(file, project);
-      if (type == null) return;
-
-      if (project != null) {
-        openFile(file, project);
-      }
-    }
-  }
-
-  public static void openFile(final String filePath, final Project project) {
-    final VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
-    if (file != null && file.isValid()) {
-      openFile(file, project);
-    }
-  }
-
-  public static void openFile(final VirtualFile virtualFile, final Project project) {
-    FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
-    if (editorProviderManager.getProviders(project, virtualFile).length == 0) {
-      Messages.showMessageDialog(
-        project,
-        IdeLocalize.errorFilesOfThisTypeCannotBeOpened(Application.get().getName()).get(),
-        IdeLocalize.titleCannotOpenFile().get(),
-        Messages.getErrorIcon()
-      );
-      return;
     }
 
-    NonProjectFileWritingAccessProvider.allowWriting(virtualFile);
-    OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, virtualFile);
-    FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
-  }
+    public static void openFile(final VirtualFile virtualFile, final Project project) {
+        FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
+        if (editorProviderManager.getProviders(project, virtualFile).length == 0) {
+            Messages.showMessageDialog(
+                project,
+                IdeLocalize.errorFilesOfThisTypeCannotBeOpened(Application.get().getName()).get(),
+                IdeLocalize.titleCannotOpenFile().get(),
+                Messages.getErrorIcon()
+            );
+            return;
+        }
+
+        NonProjectFileWritingAccessProvider.allowWriting(virtualFile);
+        OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, virtualFile);
+        FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
+    }
 }
