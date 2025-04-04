@@ -89,10 +89,12 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
                 CredentialAttributes attributes = new CredentialAttributes(serviceName, user);
 
                 Credentials credentials = myPasswordSafe.get(attributes);
-
-                String password = credentials.getPasswordAsString();
-
-                Alerts.okInfo(LocalizeValue.ofNullable(password)).showAsync(event.getComponent());
+                if (credentials == null) {
+                    Alerts.okError(LocalizeValue.localizeTODO("No Password")).showAsync(event.getComponent());
+                } else {
+                    String password = credentials.getPasswordAsString();
+                    Alerts.okInfo(LocalizeValue.ofNullable(password)).showAsync(event.getComponent());
+                }
             });
 
             builder.addBottom(testButton);
