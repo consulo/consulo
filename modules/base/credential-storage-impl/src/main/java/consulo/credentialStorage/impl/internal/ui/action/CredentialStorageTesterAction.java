@@ -71,7 +71,7 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
             builder.addLabeled(LocalizeValue.localizeTODO("User:"), userBox);
             builder.addLabeled(LocalizeValue.localizeTODO("Password:"), passwordBox);
 
-            Button testButton = Button.create(LocalizeValue.localizeTODO("Store Password"), event -> {
+            Button testButton = Button.create(LocalizeValue.localizeTODO("Set Password"), event -> {
                 String user = userBox.getValueOrError();
                 String password = passwordBox.getValueOrError();
 
