@@ -6,10 +6,6 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 import consulo.credentialStorage.*;
 import consulo.credentialStorage.impl.internal.SharedLogger;
-import consulo.credentialStorage.impl.internal.mac.MacOsKeychainLibrary;
-import consulo.credentialStorage.impl.internal.mac.SecKeychainAttribute;
-import consulo.credentialStorage.impl.internal.mac.SecKeychainAttributeInfo;
-import consulo.credentialStorage.impl.internal.mac.SecKeychainAttributeList;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -182,7 +178,8 @@ public class KeyChainCredentialStore implements CredentialStore {
                 userName != null ? userName.length : 0,
                 userName,
                 password != null ? password.length : 0,
-                password));
+                password,
+                null));
         }
         else {
             SecKeychainAttribute attribute = new SecKeychainAttribute();

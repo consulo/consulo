@@ -8,24 +8,6 @@ import consulo.credentialStorage.impl.internal.mac.SecKeychainAttributeInfo;
 import consulo.credentialStorage.impl.internal.mac.SecKeychainAttributeList;
 
 public interface MacOsKeychainLibrary extends Library {
-    default int SecKeychainAddGenericPassword(Pointer keychain,
-                                      int serviceNameLength,
-                                      byte[] serviceName,
-                                      int accountNameLength,
-                                      byte[] accountName,
-                                      int passwordLength,
-                                      byte[] passwordData) {
-        return SecKeychainAddGenericPassword(keychain,
-            serviceNameLength,
-            serviceName,
-            accountNameLength,
-            accountName,
-            passwordLength,
-            passwordData,
-            null
-        );
-    }
-
     int SecKeychainAddGenericPassword(Pointer keychain,
                                       int serviceNameLength,
                                       byte[] serviceName,
