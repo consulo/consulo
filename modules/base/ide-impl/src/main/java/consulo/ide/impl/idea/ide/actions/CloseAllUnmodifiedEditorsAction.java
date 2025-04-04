@@ -17,11 +17,13 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.fileEditor.action.CloseEditorsActionBase;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
+import jakarta.annotation.Nonnull;
 
 public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
     @Override
@@ -34,13 +36,9 @@ public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
         return super.isActionEnabled(project, event) && ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length > 0;
     }
 
+    @Nonnull
     @Override
-    protected String getPresentationText(boolean inSplitter) {
-        if (inSplitter) {
-            return IdeLocalize.actionCloseAllUnmodifiedEditorsInTabGroup().get();
-        }
-        else {
-            return IdeLocalize.actionCloseAllUnmodifiedEditors().get();
-        }
+    protected LocalizeValue getPresentationText(boolean inSplitter) {
+        return inSplitter ? IdeLocalize.actionCloseAllUnmodifiedEditorsInTabGroup() : IdeLocalize.actionCloseAllUnmodifiedEditors();
     }
 }

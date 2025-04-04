@@ -109,20 +109,14 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
             install(entry, globalEntry);
             indicator.setFraction(indicator.getFraction() + step);
 
-            LocalizeValue message = ApplicationLocalize.desktopEntrySuccess(Application.get().getName());
-            if (Application.get() != null) {
-                Notifications.Bus.notify(new Notification(
-                    Notifications.SYSTEM_MESSAGES_GROUP,
-                    "Desktop entry created",
-                    message.get(),
-                    NotificationType.INFORMATION
-                ));
-            }
+            Notifications.Bus.notify(new Notification(
+                Notifications.SYSTEM_MESSAGES_GROUP,
+                "Desktop entry created",
+                ApplicationLocalize.desktopEntrySuccess(Application.get().getName()).get(),
+                NotificationType.INFORMATION
+            ));
         }
         catch (Exception e) {
-            if (ApplicationManager.getApplication() == null) {
-                throw new RuntimeException(e);
-            }
             String message = e.getMessage();
             if (!StringUtil.isEmptyOrSpaces(message)) {
                 LOG.warn(e);

@@ -18,12 +18,14 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.fileEditor.action.CloseEditorsActionBase;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.List;
@@ -38,11 +40,10 @@ public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
         return !window.isFilePinned(editor.getFile());
     }
 
+    @Nonnull
     @Override
-    protected String getPresentationText(boolean inSplitter) {
-        return inSplitter
-            ? IdeLocalize.actionCloseAllUnpinnedEditorsInTabGroup().get()
-            : IdeLocalize.actionCloseAllUnpinnedEditors().get();
+    protected LocalizeValue getPresentationText(boolean inSplitter) {
+        return inSplitter ? IdeLocalize.actionCloseAllUnpinnedEditorsInTabGroup() : IdeLocalize.actionCloseAllUnpinnedEditors();
     }
 
     @Override
