@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.application.AllIcons;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
@@ -37,10 +37,7 @@ public class RunAnythingContext {
         private Project myProject;
 
         public ProjectContext(Project project) {
-            super(
-                IdeLocalize.runAnythingContextProject().get(),
-                StringUtil.notNullize(project.getBasePath())
-            );
+            super(IdeLocalize.runAnythingContextProject(), LocalizeValue.ofNullable(project.getBasePath()));
             myProject = project;
         }
 
@@ -71,7 +68,7 @@ public class RunAnythingContext {
         public static final BrowseRecentDirectoryContext INSTANCE = new BrowseRecentDirectoryContext();
 
         public BrowseRecentDirectoryContext() {
-            super(IdeLocalize.runAnythingContextBrowseDirectory().get(), "", AllIcons.Nodes.Folder);
+            super(IdeLocalize.runAnythingContextBrowseDirectory(), LocalizeValue.empty(), PlatformIconGroup.nodesFolder());
         }
     }
 
@@ -80,7 +77,11 @@ public class RunAnythingContext {
         private final String myPath;
 
         public RecentDirectoryContext(@Nonnull String path) {
-            super(UserHomeFileUtil.getLocationRelativeToUserHome(path), "", AllIcons.Nodes.Folder);
+            super(
+                LocalizeValue.ofNullable(UserHomeFileUtil.getLocationRelativeToUserHome(path)),
+                LocalizeValue.empty(),
+                PlatformIconGroup.nodesFolder()
+            );
             myPath = path;
         }
 
@@ -111,7 +112,11 @@ public class RunAnythingContext {
         private final Module myModule;
 
         public ModuleContext(@Nonnull Module module) {
-            super(module.getName(), calcDescription(module), AllIcons.Nodes.Module);
+            super(
+                LocalizeValue.ofNullable(module.getName()),
+                LocalizeValue.ofNullable(calcDescription(module)),
+                PlatformIconGroup.nodesModule()
+            );
             myModule = module;
         }
 
@@ -160,29 +165,33 @@ public class RunAnythingContext {
         }
     }
 
-    protected final String label;
-    protected final String description;
+    @Nonnull
+    protected final LocalizeValue label;
+    @Nonnull
+    protected final LocalizeValue description;
     protected final Image icon;
 
-    private RunAnythingContext(String label) {
-        this(label, "", null);
+    private RunAnythingContext(@Nonnull LocalizeValue label) {
+        this(label, LocalizeValue.empty(), null);
     }
 
-    private RunAnythingContext(String label, String description) {
+    private RunAnythingContext(@Nonnull LocalizeValue label, @Nonnull LocalizeValue description) {
         this(label, description, null);
     }
 
-    private RunAnythingContext(String label, String description, Image icon) {
+    private RunAnythingContext(@Nonnull LocalizeValue label, @Nonnull LocalizeValue description, Image icon) {
         this.label = label;
         this.description = description;
         this.icon = icon;
     }
 
-    public String getLabel() {
+    @Nonnull
+    public LocalizeValue getLabel() {
         return label;
     }
 
-    public String getDescription() {
+    @Nonnull
+    public LocalizeValue getDescription() {
         return description;
     }
 

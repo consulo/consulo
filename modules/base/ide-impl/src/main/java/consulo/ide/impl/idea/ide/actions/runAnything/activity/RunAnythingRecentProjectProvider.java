@@ -1,8 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
@@ -33,11 +36,11 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
     @Nonnull
     @Override
     public RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull AnAction value) {
-        if (value instanceof ReopenProjectAction) {
+        if (value instanceof ReopenProjectAction reopenProjectAction) {
             return new RecentProjectElement(
-                ((ReopenProjectAction)value),
+                reopenProjectAction,
                 getCommand(value),
-                ((ReopenProjectAction)value).getExtensionIcon()
+                reopenProjectAction.getExtensionIcon()
             );
         }
         return super.getMainListItem(dataContext, value);
@@ -45,14 +48,14 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
 
     @Override
     @Nonnull
-    public String getCompletionGroupTitle() {
-        return IdeBundle.message("run.anything.recent.project.completion.group.title");
+    public LocalizeValue getCompletionGroupTitle() {
+        return IdeLocalize.runAnythingRecentProjectCompletionGroupTitle();
     }
 
     @Nonnull
     @Override
     public String getHelpCommandPlaceholder() {
-        return IdeBundle.message("run.anything.recent.project.command.placeholder");
+        return IdeLocalize.runAnythingRecentProjectCommandPlaceholder().get();
     }
 
     @Nonnull
@@ -64,7 +67,7 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
     @Nullable
     @Override
     public String getHelpGroupTitle() {
-        return IdeBundle.message("run.anything.recent.project.help.group.title");
+        return IdeLocalize.runAnythingRecentProjectHelpGroupTitle().get();
     }
 
     @Nonnull
@@ -72,7 +75,7 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
     public String getCommand(@Nonnull AnAction value) {
         return getHelpCommand() + " " + ObjectUtil.notNull(
             value.getTemplatePresentation().getText(),
-            IdeBundle.message("run.anything.actions.undefined")
+            IdeLocalize.runAnythingActionsUndefined().get()
         );
     }
 
@@ -94,6 +97,7 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
         return ContainerUtil.emptyList();
     }

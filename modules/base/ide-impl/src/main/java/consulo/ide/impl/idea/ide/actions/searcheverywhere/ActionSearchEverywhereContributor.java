@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
 import consulo.application.util.function.Processor;
@@ -13,10 +13,11 @@ import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.logging.Logger;
 import consulo.ide.localize.IdeLocalize;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
@@ -167,6 +168,7 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
     }
 
     @Override
+    @RequiredUIAccess
     public boolean processSelectedItem(@Nonnull GotoActionModel.MatchedValue item, int modifiers, @Nonnull String text) {
         if (modifiers == InputEvent.ALT_MASK) {
             showAssignShortcutDialog(item);
@@ -208,7 +210,7 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
             return;
         }
 
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
             Window window = myProject != null
                 ? TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject))
                 : KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();

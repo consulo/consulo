@@ -16,8 +16,8 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -33,7 +33,7 @@ public class RunAnythingUtil {
     public static final String SHIFT_SHORTCUT_TEXT = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("SHIFT"));
     public static final String SHIFT_BACK_SPACE = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("shift BACK_SPACE"));
     public static final String PRESSED_ALT = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("pressed ALT"));
-    private static final Key<Collection<Pair<String, String>>> RUN_ANYTHING_WRAPPED_COMMANDS = Key.create("RUN_ANYTHING_WRAPPED_COMMANDS");
+    private static final Key<Collection<Couple<String>>> RUN_ANYTHING_WRAPPED_COMMANDS = Key.create("RUN_ANYTHING_WRAPPED_COMMANDS");
 
     static Font getTitleFont() {
         return UIUtil.getLabelFont().deriveFont(UIUtil.getFontSize(UIUtil.FontSize.SMALL));
@@ -62,10 +62,10 @@ public class RunAnythingUtil {
     }
 
     static void jumpNextGroup(boolean forward, JBList list) {
-        final int index = list.getSelectedIndex();
-        final RunAnythingSearchListModel model = getSearchingModel(list);
+        int index = list.getSelectedIndex();
+        RunAnythingSearchListModel model = getSearchingModel(list);
         if (model != null && index >= 0) {
-            final int newIndex = forward ? model.next(index) : model.prev(index);
+            int newIndex = forward ? model.next(index) : model.prev(index);
             list.setSelectedIndex(newIndex);
             int more = model.next(newIndex) - 1;
             if (more < newIndex) {
@@ -77,8 +77,8 @@ public class RunAnythingUtil {
     }
 
     @Nonnull
-    public static Collection<Pair<String, String>> getOrCreateWrappedCommands(@Nonnull Project project) {
-        Collection<Pair<String, String>> list = project.getUserData(RUN_ANYTHING_WRAPPED_COMMANDS);
+    public static Collection<Couple<String>> getOrCreateWrappedCommands(@Nonnull Project project) {
+        Collection<Couple<String>> list = project.getUserData(RUN_ANYTHING_WRAPPED_COMMANDS);
         if (list == null) {
             list = new ArrayList<>();
             project.putUserData(RUN_ANYTHING_WRAPPED_COMMANDS, list);
@@ -114,7 +114,6 @@ public class RunAnythingUtil {
 
     @Nullable
     public static RunAnythingSearchListModel getSearchingModel(@Nonnull JBList list) {
-        ListModel model = list.getModel();
-        return model instanceof RunAnythingSearchListModel ? (RunAnythingSearchListModel)model : null;
+        return list.getModel() instanceof RunAnythingSearchListModel model ? model : null;
     }
 }

@@ -385,7 +385,6 @@ class MultiThreadSearcher implements SESearcher {
     }
 
     private static class FullSearchResultsAccumulator extends ResultsAccumulator {
-
         private final Map<? extends SearchEverywhereContributor<?>, Integer> sectionsLimits;
         private final Map<? extends SearchEverywhereContributor<?>, Condition> conditionsMap;
         private final Map<SearchEverywhereContributor<?>, Boolean> hasMoreMap = new ConcurrentHashMap<>();

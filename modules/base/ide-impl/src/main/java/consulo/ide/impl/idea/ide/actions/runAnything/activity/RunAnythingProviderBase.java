@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingChooseContextAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
@@ -8,6 +9,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingHelpItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.matcher.Matcher;
@@ -68,9 +70,9 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
     }
 
     @Override
-    @Nullable
-    public String getCompletionGroupTitle() {
-        return null;
+    @Nonnull
+    public LocalizeValue getCompletionGroupTitle() {
+        return LocalizeValue.empty();
     }
 
     @Nullable
@@ -81,6 +83,7 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
         return RunAnythingChooseContextAction.allContexts(RunAnythingUtil.fetchProject(dataContext));
     }

@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
@@ -35,12 +34,14 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -165,18 +166,16 @@ public class RunAnythingPopupUI extends BigPopupUI {
             rebuildList();
         });
 
-        mySearchField.addBlurListener(event -> {
-            UIUtil.invokeLaterIfNeeded(() -> {
-                if (myCalcThread != null) {
-                    myCalcThread.cancel();
-                }
-                myAlarm.cancelAllRequests();
+        mySearchField.addBlurListener(event -> UIUtil.invokeLaterIfNeeded(() -> {
+            if (myCalcThread != null) {
+                myCalcThread.cancel();
+            }
+            myAlarm.cancelAllRequests();
 
-                Application.get().invokeLater(() -> ActionToolbarsHolder.updateAllToolbarsImmediately());
+            Application.get().invokeLater(ActionToolbarsHolder::updateAllToolbarsImmediately);
 
-                searchFinishedHandler.run();
-            });
-        });
+            searchFinishedHandler.run();
+        }));
     }
 
     private static void adjustMainListEmptyText(@Nonnull TextBoxWithExtensions editor) {
@@ -200,6 +199,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         return mySearchField;
     }
 
+    @RequiredUIAccess
     private void executeCommand() {
         String pattern = getField().getValueOrError();
         int index = myResultsList.getSelectedIndex();
@@ -501,7 +501,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     }
 
     private void updateExtensions(@Nullable Image l) {
-        Image leftImage = ObjectUtil.notNull(l, AllIcons.Actions.Run_anything);
+        Image leftImage = ObjectUtil.notNull(l, PlatformIconGroup.actionsRun_anything());
 
         mySearchField.setExtensions(new TextBoxWithExtensions.Extension(true, leftImage, null));
     }
@@ -577,8 +577,8 @@ public class RunAnythingPopupUI extends BigPopupUI {
             myMainPanel.removeAll();
             RunAnythingSearchListModel model = getSearchingModel(myResultsList);
             if (model != null) {
-                String title = model.getTitle(index);
-                if (title != null) {
+                LocalizeValue title = model.getTitle(index);
+                if (title != LocalizeValue.empty()) {
                     myMainPanel.add(RunAnythingUtil.createTitle(" " + title, UIUtil.getListBackground(false, false)), BorderLayout.NORTH);
                 }
             }
@@ -680,13 +680,13 @@ public class RunAnythingPopupUI extends BigPopupUI {
         }
 
         private void buildGroups(boolean isRecent) {
-            buildAllGroups(getDataContext(), myPattern, () -> check(), isRecent);
+            buildAllGroups(getDataContext(), myPattern, this::check, isRecent);
             updatePopup();
         }
 
         private void buildHelpGroups(@Nonnull RunAnythingSearchListModel listModel) {
             listModel.getGroups().forEach(group -> {
-                group.collectItems(getDataContext(), myListModel, trimHelpPattern(), () -> check());
+                group.collectItems(getDataContext(), myListModel, trimHelpPattern(), this::check);
                 check();
             });
         }
@@ -890,7 +890,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             searchFinishedHandler.run();
         }).registerCustomShortcutSet(escape == null ? CommonShortcuts.ESCAPE : escape.getShortcutSet(), this);
 
-        DumbAwareAction.create(e -> Application.get().invokeLater(() -> executeCommand())).registerCustomShortcutSet(
+        DumbAwareAction.create(e -> Application.get().invokeLater(this::executeCommand)).registerCustomShortcutSet(
             CustomShortcutSet.fromString(
                 "ENTER",
                 "shift ENTER",
@@ -945,6 +945,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     protected JComponent createSettingsPanel() {
         JPanel res = new JPanel(new FlowLayout(RIGHT, 0, 0));
         res.setOpaque(false);
@@ -1036,7 +1037,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 new ElementsChooser<>(new ArrayList<>(RunAnythingCompletionGroup.MAIN_GROUPS), false) {
                     @Override
                     protected String getItemText(@Nonnull RunAnythingGroup value) {
-                        return value.getTitle();
+                        return value.getTitle().get();
                     }
                 };
 

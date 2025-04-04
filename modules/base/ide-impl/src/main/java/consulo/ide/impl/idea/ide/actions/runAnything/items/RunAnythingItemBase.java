@@ -98,11 +98,7 @@ public class RunAnythingItemBase extends RunAnythingItem {
 
         RunAnythingItemBase base = (RunAnythingItemBase)o;
 
-        if (!myCommand.equals(base.myCommand)) {
-            return false;
-        }
-
-        return true;
+        return myCommand.equals(base.myCommand);
     }
 
     @Override

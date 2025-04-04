@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.matcher.Matcher;
@@ -32,8 +33,8 @@ public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> ext
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return ObjectUtil.assertNotNull(getProvider().getCompletionGroupTitle());
+    public LocalizeValue getTitle() {
+        return getProvider().getCompletionGroupTitle();
     }
 
     @Nonnull
@@ -60,8 +61,8 @@ public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> ext
 
     @Nullable
     public static RunAnythingGroup createCompletionGroup(@Nonnull RunAnythingProvider provider) {
-        String title = provider.getCompletionGroupTitle();
-        if (title == null) {
+        LocalizeValue title = provider.getCompletionGroupTitle();
+        if (title == LocalizeValue.empty()) {
             return null;
         }
 

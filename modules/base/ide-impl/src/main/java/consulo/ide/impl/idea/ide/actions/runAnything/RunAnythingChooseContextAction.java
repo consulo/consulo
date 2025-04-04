@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
@@ -54,6 +55,7 @@ import java.util.List;
  * from kotlin
  */
 public abstract class RunAnythingChooseContextAction extends ActionGroup implements DumbAware {
+    @RequiredReadAction
     public static List<RunAnythingContext> allContexts(Project project) {
         List<RunAnythingContext> contexts = projectAndModulesContexts(project);
         contexts.add(RunAnythingContext.BrowseRecentDirectoryContext.INSTANCE);
@@ -65,6 +67,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         return contexts;
     }
 
+    @RequiredReadAction
     private static List<RunAnythingContext> projectAndModulesContexts(Project project) {
         List<RunAnythingContext> contexts = new ArrayList<>();
         contexts.add(new RunAnythingContext.ProjectContext(project));
@@ -92,8 +95,8 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
-            e.getPresentation().setText(context.getLabel());
-            e.getPresentation().setDescription(context.getDescription());
+            e.getPresentation().setTextValue(context.getLabel());
+            e.getPresentation().setDescriptionValue(context.getDescription());
             e.getPresentation().setIcon(context.getIcon());
         }
     }
@@ -261,7 +264,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     public abstract void setAvailableContexts(List<? extends RunAnythingContext> contexts);
 
     @Override
-    public boolean canBePerformed(DataContext context) {
+    public boolean canBePerformed(@Nonnull DataContext context) {
         return true;
     }
 
@@ -294,7 +297,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         setSelectedContext(getSelectedContext() == null ? getAvailableContexts().get(0) : getSelectedContext());
 
         presentation.setEnabledAndVisible(true);
-        presentation.setText(getSelectedContext().getLabel());
+        presentation.setTextValue(getSelectedContext().getLabel());
         presentation.setIcon(getSelectedContext().getIcon());
 
         containingPanel.revalidate();

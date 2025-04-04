@@ -6,6 +6,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingCompletio
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGroup;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
@@ -39,7 +40,7 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
     }
 
     @Nullable
-    String getTitle(int titleIndex) {
+    LocalizeValue getTitle(int titleIndex) {
         return RunAnythingGroup.getTitle(getGroups(), titleIndex);
     }
 

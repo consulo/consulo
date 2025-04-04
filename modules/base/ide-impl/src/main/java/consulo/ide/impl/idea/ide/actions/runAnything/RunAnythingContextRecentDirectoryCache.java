@@ -18,16 +18,14 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import consulo.component.persist.PersistentStateComponent;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +44,7 @@ public class RunAnythingContextRecentDirectoryCache implements PersistentStateCo
 
     @Nonnull
     public static RunAnythingContextRecentDirectoryCache getInstance(@Nonnull Project project) {
-        return ServiceManager.getService(project, RunAnythingContextRecentDirectoryCache.class);
+        return project.getInstance(RunAnythingContextRecentDirectoryCache.class);
     }
 
     private State myState = new State();

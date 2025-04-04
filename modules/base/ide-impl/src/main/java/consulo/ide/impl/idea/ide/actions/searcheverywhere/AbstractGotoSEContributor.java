@@ -137,7 +137,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         }
         ArrayList<AnAction> result = new ArrayList<>();
         result.add(new ScopeChooserAction() {
-            final boolean canToggleEverywhere = !myEverywhereScope.equals(myProjectScope);
+            boolean canToggleEverywhere = !myEverywhereScope.equals(myProjectScope);
 
             @Override
             void onScopeSelected(@Nonnull ScopeDescriptor o) {
@@ -499,7 +499,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         ) {
             JList<ScopeDescriptor> fakeList = new JBList<>();
             ListCellRenderer<ScopeDescriptor> renderer = new ListCellRenderer<>() {
-                final ListCellRenderer<ScopeDescriptor> delegate = ScopeChooserCombo.createDefaultRenderer();
+                ListCellRenderer<ScopeDescriptor> delegate = ScopeChooserCombo.createDefaultRenderer();
 
                 @Override
                 public Component getListCellRendererComponent(

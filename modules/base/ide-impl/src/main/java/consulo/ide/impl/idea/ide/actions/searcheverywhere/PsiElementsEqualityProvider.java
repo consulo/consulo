@@ -2,10 +2,9 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.psi.PsiElementNavigationItem;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementNavigationItem;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 import java.util.Objects;
@@ -36,14 +35,10 @@ public class PsiElementsEqualityProvider implements SEResultsEqualityProvider {
 
     @Nullable
     public static PsiElement toPsi(Object o) {
-        if (o instanceof PsiElement) {
-            return (PsiElement)o;
-        }
-
-        if (o instanceof PsiElementNavigationItem) {
-            return ((PsiElementNavigationItem)o).getTargetElement();
-        }
-
-        return null;
+        return o instanceof PsiElement psiElement
+            ? psiElement
+            : o instanceof PsiElementNavigationItem psiElementNavigationItem
+            ? psiElementNavigationItem.getTargetElement()
+            : null;
     }
 }

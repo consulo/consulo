@@ -170,7 +170,7 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
     }
 
     private static String getMemberName(String searchedText) {
-        final int index = searchedText.lastIndexOf('#');
+        int index = searchedText.lastIndexOf('#');
         if (index == -1) {
             return null;
         }
@@ -192,7 +192,7 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
             persistentConfig,
             Language::getDisplayName,
             language -> {
-                final LanguageFileType fileType = language.getAssociatedFileType();
+                LanguageFileType fileType = language.getAssociatedFileType();
                 return fileType != null ? fileType.getIcon() : null;
             }
         );

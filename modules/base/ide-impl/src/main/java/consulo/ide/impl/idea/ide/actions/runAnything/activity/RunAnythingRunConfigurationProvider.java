@@ -30,8 +30,7 @@ public abstract class RunAnythingRunConfigurationProvider extends RunAnythingPro
         Executor executor = dataContext.getData(EXECUTOR_KEY);
         assert executor != null;
 
-        Object value = wrapper.getValue();
-        if (value instanceof RunnerAndConfigurationSettings configurationSettings
+        if (wrapper.getValue() instanceof RunnerAndConfigurationSettings configurationSettings
             && !RunManager.getInstance(fetchProject(dataContext)).hasSettings(configurationSettings)) {
             RunManager.getInstance(fetchProject(dataContext)).addConfiguration(configurationSettings);
         }

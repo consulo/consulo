@@ -1,17 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
-import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
-import consulo.dataContext.DataContext;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.matcher.NameUtil;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.CollectionListModel;
-
-import java.util.function.Function;
-
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -19,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Represents 'run anything' list group.
@@ -43,7 +41,7 @@ public abstract class RunAnythingGroup {
      * @return Current group title in the main list.
      */
     @Nonnull
-    public abstract String getTitle();
+    public abstract LocalizeValue getTitle();
 
     /**
      * @return Current group maximum number of items to be shown.
@@ -97,9 +95,9 @@ public abstract class RunAnythingGroup {
      *
      * @return group title if {@code titleIndex} is equals to group {@link #myTitleIndex} and {@code null} if nothing found
      */
-    @Nullable
-    public static String getTitle(@Nonnull Collection<? extends RunAnythingGroup> groups, int titleIndex) {
-        return Optional.ofNullable(findGroup(groups, titleIndex)).map(RunAnythingGroup::getTitle).orElse(null);
+    @Nonnull
+    public static LocalizeValue getTitle(@Nonnull Collection<? extends RunAnythingGroup> groups, int titleIndex) {
+        return Optional.ofNullable(findGroup(groups, titleIndex)).map(RunAnythingGroup::getTitle).orElse(LocalizeValue.empty());
     }
 
     /**
@@ -110,7 +108,7 @@ public abstract class RunAnythingGroup {
     @Nullable
     public static RunAnythingGroup findGroup(@Nonnull Collection<? extends RunAnythingGroup> groups, int titleIndex) {
         return groups.stream()
-            .filter(runAnythingGroup -> titleIndex == ((RunAnythingGroup)runAnythingGroup).myTitleIndex)
+            .filter(runAnythingGroup -> titleIndex == runAnythingGroup.myTitleIndex)
             .findFirst()
             .orElse(null);
     }
@@ -154,7 +152,7 @@ public abstract class RunAnythingGroup {
      * Clears {@link #myTitleIndex} of all groups.
      */
     private static void clearTitleIndex(@Nonnull Collection<? extends RunAnythingGroup> groups) {
-        groups.forEach(runAnythingGroup -> ((RunAnythingGroup)runAnythingGroup).myTitleIndex = -1);
+        groups.forEach(runAnythingGroup -> runAnythingGroup.myTitleIndex = -1);
     }
 
     /**
@@ -221,7 +219,7 @@ public abstract class RunAnythingGroup {
 
         cancellationChecker.run();
         if (!result.isEmpty()) {
-            ApplicationManager.getApplication().invokeLater(() -> {
+            Application.get().invokeLater(() -> {
                 cancellationChecker.run();
 
                 myTitleIndex = model.getSize();

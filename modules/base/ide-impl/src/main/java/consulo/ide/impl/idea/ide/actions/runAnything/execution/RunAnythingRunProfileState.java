@@ -4,14 +4,14 @@ package consulo.ide.impl.idea.ide.actions.runAnything.execution;
 import consulo.execution.configuration.CommandLineState;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.runAnything.handlers.RunAnythingCommandHandler;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.process.*;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 
 public class RunAnythingRunProfileState extends CommandLineState {
@@ -27,10 +27,10 @@ public class RunAnythingRunProfileState extends CommandLineState {
     @Nonnull
     private RunAnythingRunProfile getRunProfile() {
         RunProfile runProfile = getEnvironment().getRunProfile();
-        if (!(runProfile instanceof RunAnythingRunProfile)) {
-            throw new IllegalStateException("Got " + runProfile + " instead of RunAnything profile");
+        if (runProfile instanceof RunAnythingRunProfile runAnythingRunProfile) {
+            return runAnythingRunProfile;
         }
-        return (RunAnythingRunProfile)runProfile;
+        throw new IllegalStateException("Got " + runProfile + " instead of RunAnything profile");
     }
 
     @Nonnull
@@ -53,12 +53,12 @@ public class RunAnythingRunProfileState extends CommandLineState {
             @Override
             public void processWillTerminate(ProcessEvent event, boolean willBeDestroyed) {
                 int exitCode = event.getExitCode();
-                print(IdeBundle.message("run.anything.console.process.finished", exitCode), ProcessOutputTypes.STDOUT);
+                print(IdeLocalize.runAnythingConsoleProcessFinished(exitCode), ProcessOutputTypes.STDOUT);
                 printCustomCommandOutput();
             }
 
-            private void print(@Nonnull String message, @Nonnull Key consoleViewContentType) {
-                processHandler.notifyTextAvailable(message, consoleViewContentType);
+            private void print(@Nonnull LocalizeValue message, @Nonnull Key consoleViewContentType) {
+                processHandler.notifyTextAvailable(message.get(), consoleViewContentType);
             }
 
             private void printCustomCommandOutput() {
@@ -66,8 +66,8 @@ public class RunAnythingRunProfileState extends CommandLineState {
                 if (handler != null) {
                     String customOutput = handler.getProcessTerminatedCustomOutput();
                     if (customOutput != null) {
-                        print("\n", ProcessOutputTypes.STDOUT);
-                        print(customOutput, ProcessOutputTypes.STDOUT);
+                        print(LocalizeValue.of("\n"), ProcessOutputTypes.STDOUT);
+                        print(LocalizeValue.ofNullable(customOutput), ProcessOutputTypes.STDOUT);
                     }
                 }
             }

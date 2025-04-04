@@ -4,14 +4,13 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.ui.Coordinate2D;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -44,13 +43,15 @@ public class RunAnythingManager {
     }
 
     public static RunAnythingManager getInstance(@Nonnull Project project) {
-        return ServiceManager.getService(project, RunAnythingManager.class);
+        return project.getInstance(RunAnythingManager.class);
     }
 
+    @RequiredUIAccess
     public void show(@Nullable String searchText, @Nonnull AnActionEvent initEvent) {
         show(searchText, true, initEvent);
     }
 
+    @RequiredUIAccess
     public void show(@Nullable String searchText, boolean selectSearchText, @Nonnull AnActionEvent initEvent) {
         IdeEventQueueProxy.getInstance().closeAllPopups(false);
 
@@ -112,6 +113,7 @@ public class RunAnythingManager {
         myRunAnythingUI.addInputListeners();
     }
 
+    @RequiredUIAccess
     private void predefineSelectedText(@Nullable String searchText) {
         if (StringUtil.isEmpty(searchText)) {
             searchText = mySelectedText;
@@ -169,7 +171,7 @@ public class RunAnythingManager {
                 return;
             }
 
-            ApplicationManager.getApplication().invokeLater(() -> {
+            myProject.getApplication().invokeLater(() -> {
                 Dimension minSize = view.getMinimumSize();
                 JBInsets.addTo(minSize, myBalloon.getContent().getInsets());
                 myBalloon.setMinimumSize(minSize);

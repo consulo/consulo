@@ -1,12 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.execution;
 
-import consulo.execution.executor.Executor;
-import consulo.process.cmd.GeneralCommandLine;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
+import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -47,6 +47,6 @@ public class RunAnythingRunProfile implements RunProfile {
     @Nullable
     @Override
     public Image getIcon() {
-        return AllIcons.Actions.Run_anything;
+        return PlatformIconGroup.actionsRun_anything();
     }
 }

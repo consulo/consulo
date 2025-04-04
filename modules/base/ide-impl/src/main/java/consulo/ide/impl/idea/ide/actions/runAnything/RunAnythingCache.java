@@ -8,16 +8,15 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +31,13 @@ public class RunAnythingCache implements PersistentStateComponent<RunAnythingCac
     private final State mySettings = new State();
 
     public static RunAnythingCache getInstance(Project project) {
-        return ServiceManager.getService(project, RunAnythingCache.class);
+        return project.getInstance(RunAnythingCache.class);
     }
 
     /**
      * @return true is group is visible; false if it's hidden
      */
-    public boolean isGroupVisible(@Nonnull String key) {
+    public boolean isGroupVisible(@Nonnull LocalizeValue key) {
         return mySettings.myKeys.get(key);
     }
 
@@ -48,7 +47,7 @@ public class RunAnythingCache implements PersistentStateComponent<RunAnythingCac
      * @param key     to store visibility flag
      * @param visible true if group should be shown
      */
-    public void saveGroupVisibilityKey(@Nonnull String key, boolean visible) {
+    public void saveGroupVisibilityKey(@Nonnull LocalizeValue key, boolean visible) {
         mySettings.myKeys.put(key, visible);
     }
 
@@ -69,9 +68,9 @@ public class RunAnythingCache implements PersistentStateComponent<RunAnythingCac
      * Updates group visibilities store for new providers
      */
     private static void updateNewProvidersGroupVisibility(@Nonnull State settings) {
-        Map<String, Boolean> defaultKeys = State.getDefaultKeys();
+        Map<LocalizeValue, Boolean> defaultKeys = State.getDefaultKeys();
 
-        for (String key : defaultKeys.keySet()) {
+        for (LocalizeValue key : defaultKeys.keySet()) {
             if (!settings.myKeys.containsKey(key)) {
                 settings.myKeys.put(key, Boolean.TRUE);
             }
@@ -81,13 +80,13 @@ public class RunAnythingCache implements PersistentStateComponent<RunAnythingCac
     public static class State {
         @Nonnull
         @MapAnnotation(entryTagName = "visibility", keyAttributeName = "group", valueAttributeName = "flag")
-        public final Map<String, Boolean> myKeys = getDefaultKeys();
+        public final Map<LocalizeValue, Boolean> myKeys = getDefaultKeys();
 
-        private static Map<String, Boolean> getDefaultKeys() {
+        private static Map<LocalizeValue, Boolean> getDefaultKeys() {
             List<RunAnythingProvider> extensionList = RunAnythingProvider.EP_NAME.getExtensionList();
 
             return extensionList.stream()
-                .filter(it -> it.getCompletionGroupTitle() != null)
+                .filter(it -> it.getCompletionGroupTitle() != LocalizeValue.empty())
                 .collect(Collectors.toMap(RunAnythingProvider::getCompletionGroupTitle, runAnythingProvider -> true));
         }
 

@@ -7,6 +7,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import consulo.application.util.matcher.Matcher;
@@ -142,8 +143,8 @@ public interface RunAnythingProvider<V> {
     /**
      * Returns completion group title. {@code null} means that current provider doesn't provide completion.
      */
-    @Nullable
-    String getCompletionGroupTitle();
+    @Nonnull
+    LocalizeValue getCompletionGroupTitle();
 
     /**
      * Returns group matcher for filtering group elements. Remain {@code null} to use default matcher

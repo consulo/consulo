@@ -7,6 +7,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvide
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -21,8 +22,8 @@ public class RunAnythingRecentGroup extends RunAnythingGroupBase {
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return IdeLocalize.runAnythingRecentGroupTitle().get();
+    public LocalizeValue getTitle() {
+        return IdeLocalize.runAnythingRecentGroupTitle();
     }
 
     @Nonnull

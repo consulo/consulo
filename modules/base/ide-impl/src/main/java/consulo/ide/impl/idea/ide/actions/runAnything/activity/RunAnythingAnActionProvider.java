@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingActionItem;
@@ -35,7 +35,7 @@ public abstract class RunAnythingAnActionProvider<V extends AnAction> extends Ru
     }
 
     private static void performRunAnythingAction(@Nonnull AnAction action, @Nonnull DataContext dataContext) {
-        ApplicationManager.getApplication().invokeLater(
+        Application.get().invokeLater(
             () -> ProjectIdeFocusManager.getInstance(RunAnythingUtil.fetchProject(dataContext))
                 .doWhenFocusSettlesDown(() -> performAction(action, dataContext))
         );

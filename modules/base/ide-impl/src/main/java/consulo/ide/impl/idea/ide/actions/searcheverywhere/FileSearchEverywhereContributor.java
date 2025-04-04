@@ -99,11 +99,11 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
 
     @Override
     public boolean processSelectedItem(@Nonnull Object selected, int modifiers, @Nonnull String searchText) {
-        if (selected instanceof PsiFile) {
-            VirtualFile file = ((PsiFile)selected).getVirtualFile();
-            if (file != null && myProject != null) {
+        if (selected instanceof PsiFile file) {
+            VirtualFile virtualFile = file.getVirtualFile();
+            if (virtualFile != null && myProject != null) {
                 Couple<Integer> pos = getLineAndColumn(searchText);
-                OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, file, pos.first, pos.second);
+                OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, virtualFile, pos.first, pos.second);
                 descriptor.setUseCurrentWindow(openInCurrentWindow(modifiers));
                 if (descriptor.canNavigate()) {
                     descriptor.navigate(true);
@@ -121,8 +121,8 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
             return element;
         }
 
-        if (SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION == dataId && element instanceof PsiFile) {
-            String path = ((PsiFile)element).getVirtualFile().getPath();
+        if (SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION == dataId && element instanceof PsiFile file) {
+            String path = file.getVirtualFile().getPath();
             path = FileUtil.toSystemIndependentName(path);
             if (myProject != null) {
                 String basePath = myProject.getBasePath();

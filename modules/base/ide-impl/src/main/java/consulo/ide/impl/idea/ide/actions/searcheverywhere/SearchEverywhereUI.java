@@ -413,6 +413,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         SETab(@Nullable SearchEverywhereContributor<?> contributor) {
             super(contributor == null ? IdeLocalize.searcheverywhereAllelementsTabName().get() : contributor.getGroupName());
             this.contributor = contributor;
+            @RequiredUIAccess
             Runnable onChanged = () -> {
                 myToolbar.updateActionsImmediately();
                 rebuildList();
@@ -428,6 +429,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
                     }
 
                     @Override
+                    @RequiredUIAccess
                     public void setEverywhere(boolean state) {
                         seManager.setEverywhere(state);
                         myTabs.stream().filter(tab -> tab != SETab.this).forEach(tab -> tab.everywhereAction.setEverywhere(state));

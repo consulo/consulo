@@ -1,11 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -31,8 +33,8 @@ public class RunAnythingRunConfigurationProvider extends consulo.ide.impl.idea.i
 
     @Nonnull
     @Override
-    public String getCompletionGroupTitle() {
-        return IdeLocalize.runAnythingRunConfigurationsGroupTitle().get();
+    public LocalizeValue getCompletionGroupTitle() {
+        return IdeLocalize.runAnythingRunConfigurationsGroupTitle();
     }
 
     @Nonnull
@@ -43,6 +45,7 @@ public class RunAnythingRunConfigurationProvider extends consulo.ide.impl.idea.i
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
         return ContainerUtil.emptyList();
     }

@@ -9,6 +9,7 @@ import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
@@ -25,12 +26,12 @@ public class RunAnythingHelpGroup<P extends RunAnythingProvider> extends RunAnyt
     public static final ExtensionPointName<RunAnythingGroup> EP_NAME = ExtensionPointName.create(RunAnythingGroup.class);
 
     @Nonnull
-    private String myTitle = "undefined";
+    private LocalizeValue myTitle = LocalizeValue.localizeTODO("undefined");
     @Nonnull
     private Collection<P> myProviders = ContainerUtil.emptyList();
 
     public RunAnythingHelpGroup(@Nonnull String title, @Nonnull Collection<P> providers) {
-        myTitle = title;
+        myTitle = LocalizeValue.localizeTODO(title);
         myProviders = providers;
     }
 
@@ -43,7 +44,7 @@ public class RunAnythingHelpGroup<P extends RunAnythingProvider> extends RunAnyt
 
     @Nonnull
     @Override
-    public String getTitle() {
+    public LocalizeValue getTitle() {
         return myTitle;
     }
 
