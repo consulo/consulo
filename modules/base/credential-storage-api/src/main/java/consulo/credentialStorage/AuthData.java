@@ -16,7 +16,6 @@
 package consulo.credentialStorage;
 
 import consulo.annotation.UsedInPlugin;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -27,25 +26,24 @@ import jakarta.annotation.Nullable;
  * @author Kirill Likhodedov
  */
 @UsedInPlugin
-public class AuthData {
+public final class AuthData {
+    @Nonnull
+    private final String myLogin;
+    @Nullable
+    private final String myPassword;
 
-  @Nonnull
-  private final String myLogin;
-  @Nullable
-  private final String myPassword;
+    public AuthData(@Nonnull String login, @Nullable String password) {
+        myPassword = password;
+        myLogin = login;
+    }
 
-  public AuthData(@Nonnull String login, @Nullable String password) {
-    myPassword = password;
-    myLogin = login;
-  }
+    @Nonnull
+    public String getLogin() {
+        return myLogin;
+    }
 
-  @Nonnull
-  public String getLogin() {
-    return myLogin;
-  }
-
-  @Nullable
-  public String getPassword() {
-    return myPassword;
-  }
+    @Nullable
+    public String getPassword() {
+        return myPassword;
+    }
 }

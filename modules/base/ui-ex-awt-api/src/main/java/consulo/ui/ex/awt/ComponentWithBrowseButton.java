@@ -32,7 +32,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.ui.ex.awt.internal.HasSuffixComponent;
+import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.localize.UILocalize;
@@ -73,7 +73,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         add(myComponent, BorderLayout.CENTER);
 
 
-        if (ApplicationManager.getApplication() != null && HasSuffixComponent.isSuffixComponent(myComponent)) {
+        if (ApplicationManager.getApplication() != null && AWTHasSuffixComponent.isSuffixComponent(myComponent)) {
             setOpaque(false);
 
             Image icon;
@@ -91,7 +91,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
 
             toolBar.setBorder(JBCurrentTheme.textFieldSubBorder(false));
 
-            HasSuffixComponent.setSuffixComponent(myComponent, toolBar);
+            AWTHasSuffixComponent.setSuffixComponent(myComponent, toolBar);
         }
         else {
             myBrowseButton = new FixedSizeButton(myComponent);

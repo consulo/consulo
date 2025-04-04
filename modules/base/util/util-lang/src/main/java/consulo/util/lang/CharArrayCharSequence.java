@@ -20,7 +20,7 @@ import jakarta.annotation.Nonnull;
 public class CharArrayCharSequence implements CharSequenceBackedByArray {
   protected final char[] myChars;
   protected final int myStart;
-  private final int myEnd;
+  protected final int myEnd;
 
   public CharArrayCharSequence(@Nonnull char... chars) {
     this(chars, 0, chars.length);

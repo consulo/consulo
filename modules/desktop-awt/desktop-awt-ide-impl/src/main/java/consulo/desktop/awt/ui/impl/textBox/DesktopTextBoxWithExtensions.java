@@ -21,12 +21,14 @@ import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextField;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -43,6 +45,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2019-10-31
  */
+@Deprecated
 public class DesktopTextBoxWithExtensions {
     public static class Supported extends DocumentSwingValidator<String, Supported.MyExtendableTextField> implements TextBoxWithExtensions, TextBoxWithTextField {
         public class MyExtendableTextField extends ExtendableTextField implements FromSwingComponentWrapper {
@@ -97,6 +100,21 @@ public class DesktopTextBoxWithExtensions {
             });
         }
 
+        @Override
+        public void setSuffixComponent(@Nullable Component suffixComponent) {
+            AWTHasSuffixComponent.setSuffixComponent(toAWTComponent(), TargetAWT.to(suffixComponent));
+        }
+
+        @Nullable
+        @Override
+        public Component getSuffixComponent() {
+            Object object = toAWTComponent().getClientProperty("JTextField.trailingComponent");
+            if (object instanceof JComponent jComponent) {
+                return TargetAWT.from(jComponent);
+            }
+            return null;
+        }
+        
         @Nonnull
         @Override
         public JTextField getTextField() {

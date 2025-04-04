@@ -44,7 +44,7 @@ import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import consulo.util.lang.StringUtil;
 import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.util.concurrency.SynchronizedClearableLazy;
+import consulo.application.util.SynchronizedClearableLazy;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 
@@ -53,7 +53,6 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 

@@ -16,8 +16,8 @@
 package consulo.web.internal.ui;
 
 import consulo.ui.TextBoxWithHistory;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -25,14 +25,14 @@ import java.util.List;
  * @since 2020-08-25
  */
 public class WebTextBoxWithHistoryImpl extends WebTextBoxImpl implements TextBoxWithHistory {
-  public WebTextBoxWithHistoryImpl(String text) {
-    super(text);
-  }
+    public WebTextBoxWithHistoryImpl(String text) {
+        super(text);
+    }
 
-  @Nonnull
-  @Override
-  public TextBoxWithHistory setHistory(@Nonnull List<String> history) {
-    // unsupported
-    return this;
-  }
+    @Nonnull
+    @Override
+    public TextBoxWithHistory setHistory(@Nonnull List<String> history) {
+        // unsupported
+        return this;
+    }
 }

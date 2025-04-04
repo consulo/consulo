@@ -34,6 +34,7 @@ module consulo.application.api {
     exports consulo.application.json;
     exports consulo.application.localize;
     exports consulo.application.plugin;
+    exports consulo.application.io;
 
     exports consulo.application.internal.start to
         consulo.ide.impl,

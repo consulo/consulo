@@ -85,7 +85,6 @@ open module consulo.ide.impl {
   requires consulo.execution.impl;
   requires consulo.execution.test.impl;
   requires consulo.builtin.web.server.impl;
-  requires consulo.credential.storage.impl;
   requires consulo.version.control.system.impl;
   requires consulo.diff.impl;
   requires transitive consulo.configuration.editor.api;

@@ -204,6 +204,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-credential-storage-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-language-editor-refactoring-impl</artifactId>
             <version>${project.version}</version>
         </dependency>

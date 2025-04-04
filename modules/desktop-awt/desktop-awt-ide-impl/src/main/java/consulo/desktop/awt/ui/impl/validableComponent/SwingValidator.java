@@ -24,10 +24,9 @@ import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
-import consulo.ui.ValidableComponent;
+import consulo.ui.HasValidator;
 
 import jakarta.annotation.Nonnull;
 import javax.swing.*;
@@ -43,19 +42,19 @@ import java.util.Optional;
  * @since 2019-11-04
  */
 public class SwingValidator<V> {
-  private List<ValidableComponent.Validator<V>> myValidators = Lists.newLockFreeCopyOnWriteList();
+  private List<HasValidator.Validator<V>> myValidators = Lists.newLockFreeCopyOnWriteList();
 
   private WeakReference<JBPopup> myLastPopup;
 
   @Nonnull
-  public Disposable addValidator(ValidableComponent.Validator<V> validator) {
+  public Disposable addValidator(HasValidator.Validator<V> validator) {
     myValidators.add(validator);
     return () -> myValidators.remove(validator);
   }
 
   public boolean validateValue(Component awtComponent, V value, boolean silence) {
-    for (ValidableComponent.Validator<V> validator : myValidators) {
-      ValidableComponent.ValidationInfo validationInfo = validator.validateValue(value);
+    for (HasValidator.Validator<V> validator : myValidators) {
+      HasValidator.ValidationInfo validationInfo = validator.validateValue(value);
       if (validationInfo != null) {
         if(!silence) {
           doShowPopup((JComponent)awtComponent, validationInfo);
@@ -73,7 +72,7 @@ public class SwingValidator<V> {
     return true;
   }
 
-  private void doShowPopup(JComponent awtComponent, ValidableComponent.ValidationInfo validationInfo) {
+  private void doShowPopup(JComponent awtComponent, HasValidator.ValidationInfo validationInfo) {
     Ref<Dimension> dimensionRef = Ref.create();
     ValidationInfo info = new ValidationInfo(validationInfo.getMessage());
     ComponentPopupBuilder popupBuilder = ComponentValidator.createPopupBuilder(info, tipComponent -> {

@@ -15,7 +15,7 @@
  */
 package consulo.ui.event;
 
-import consulo.ui.FocusableComponent;
+import consulo.ui.HasFocus;
 
 import jakarta.annotation.Nonnull;
 
@@ -23,8 +23,8 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-11-09
  */
-public final class FocusEvent extends ComponentEvent<FocusableComponent> {
-  public FocusEvent(@Nonnull FocusableComponent component) {
+public final class FocusEvent extends ComponentEvent<HasFocus> {
+  public FocusEvent(@Nonnull HasFocus component) {
     super(component);
   }
 }

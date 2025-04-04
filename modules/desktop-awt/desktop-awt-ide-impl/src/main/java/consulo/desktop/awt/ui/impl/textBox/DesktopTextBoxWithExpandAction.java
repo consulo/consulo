@@ -81,6 +81,17 @@ public class DesktopTextBoxWithExpandAction {
             return toAWTComponent();
         }
 
+        @Override
+        public void setSuffixComponent(@Nullable Component suffixComponent) {
+
+        }
+
+        @Nullable
+        @Override
+        public Component getSuffixComponent() {
+            return null;
+        }
+
         @Nullable
         @Override
         public String getValue() {

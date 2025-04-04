@@ -22,7 +22,6 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.ex.awt.ComboBoxWithWidePopup;
 import consulo.ui.model.ListModel;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -31,8 +30,8 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<ComboBoxWithWidePopup> implements ComboBox<E> {
-    class MyComboBoxWithWidePopup extends ComboBoxWithWidePopup implements FromSwingComponentWrapper {
+public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboBoxImpl.MyComboBox> implements ComboBox<E> {
+    class MyComboBox<T> extends consulo.ui.ex.awt.ComboBox<T> implements FromSwingComponentWrapper {
         @Nonnull
         @Override
         public Component toUIComponent() {
@@ -47,7 +46,7 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<ComboBoxWithW
         DesktopComboBoxModelWrapper wrapper = new DesktopComboBoxModelWrapper<>(model);
         myModel = model;
 
-        myComponent = new MyComboBoxWithWidePopup();
+        myComponent = new MyComboBox<>();
         myComponent.setModel(wrapper);
         myComponent.setRenderer(new DesktopListRender<>(() -> myRender));
     }

@@ -33,7 +33,7 @@ import consulo.platform.Platform;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.TextBox;
-import consulo.ui.ValidableComponent;
+import consulo.ui.HasValidator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -101,7 +101,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     contentPanel.addValidator(value -> {
       if (!validator.checkInput(value)) {
         String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
-        return new ValidableComponent.ValidationInfo(message);
+        return new HasValidator.ValidationInfo(message);
       }
 
       return null;

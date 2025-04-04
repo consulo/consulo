@@ -170,7 +170,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
 
     @Nonnull
     @Override
-    public Disposable addFocusListener(@Nonnull ComponentEventListener<FocusableComponent, FocusEvent> listener) {
+    public Disposable addFocusListener(@Nonnull ComponentEventListener<HasFocus, FocusEvent> listener) {
         AWTFocusAdapterAsFocusListener adapter = new AWTFocusAdapterAsFocusListener(this, listener);
         toAWTComponent().addFocusListener(adapter);
         return () -> toAWTComponent().removeFocusListener(adapter);
@@ -178,7 +178,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
 
     @Nonnull
     @Override
-    public Disposable addBlurListener(@Nonnull ComponentEventListener<FocusableComponent, BlurEvent> listener) {
+    public Disposable addBlurListener(@Nonnull ComponentEventListener<HasFocus, BlurEvent> listener) {
         AWTFocusAdapterAsBlurListener adapter = new AWTFocusAdapterAsBlurListener(this, listener);
         toAWTComponent().addFocusListener(adapter);
         return () -> toAWTComponent().removeFocusListener(adapter);

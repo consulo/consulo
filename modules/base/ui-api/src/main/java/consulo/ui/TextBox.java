@@ -24,63 +24,63 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-public interface TextBox extends ValueComponent<String>, ValidableComponent<String>, FocusableComponent {
-  @Nonnull
-  static TextBox create() {
-    return create(null);
-  }
+public interface TextBox extends ValueComponent<String>, HasValidator<String>, HasFocus, HasSuffixComponent {
+    @Nonnull
+    static TextBox create() {
+        return create(null);
+    }
 
-  @Nonnull
-  static TextBox create(@Nullable String text) {
-    return UIInternal.get()._Components_textBox(text == null ? "" : text);
-  }
+    @Nonnull
+    static TextBox create(@Nullable String text) {
+        return UIInternal.get()._Components_textBox(text == null ? "" : text);
+    }
 
-  default void setPlaceholder(@Nonnull LocalizeValue text) {
-    // unwarranted action
-  }
+    default void setPlaceholder(@Nonnull LocalizeValue text) {
+        // unwarranted action
+    }
 
-  @Nonnull
-  default TextBox withPlaceholder(@Nonnull LocalizeValue text) {
-    setPlaceholder(text);
-    return this;
-  }
+    @Nonnull
+    default TextBox withPlaceholder(@Nonnull LocalizeValue text) {
+        setPlaceholder(text);
+        return this;
+    }
 
-  @Deprecated
-  default void setPlaceholder(@Nullable String text) {
-    setPlaceholder(text == null ? LocalizeValue.of() : LocalizeValue.of(text));
-  }
+    @Deprecated
+    default void setPlaceholder(@Nullable String text) {
+        setPlaceholder(text == null ? LocalizeValue.of() : LocalizeValue.of(text));
+    }
 
-  @Nonnull
-  @Deprecated
-  default TextBox withPlaceholder(@Nullable String text) {
-    setPlaceholder(text == null ? LocalizeValue.of() : LocalizeValue.of(text));
-    return this;
-  }
+    @Nonnull
+    @Deprecated
+    default TextBox withPlaceholder(@Nullable String text) {
+        setPlaceholder(text == null ? LocalizeValue.of() : LocalizeValue.of(text));
+        return this;
+    }
 
-  default void setVisibleLength(int columns) {
-    // unwarranted action
-  }
+    default void setVisibleLength(int columns) {
+        // unwarranted action
+    }
 
-  @Nonnull
-  default TextBox withVisibleLength(int columns) {
-    setVisibleLength(columns);
-    return this;
-  }
+    @Nonnull
+    default TextBox withVisibleLength(int columns) {
+        setVisibleLength(columns);
+        return this;
+    }
 
-  void selectAll();
+    void selectAll();
 
-  default void select(int from, int to) {
-  }
+    default void select(int from, int to) {
+    }
 
-  default void moveCaretTo(int index) {
-  }
+    default void moveCaretTo(int index) {
+    }
 
-  void setEditable(boolean editable);
+    void setEditable(boolean editable);
 
-  boolean isEditable();
+    boolean isEditable();
 
-  default TextBox withEditable(boolean editable) {
-    setEditable(editable);
-    return this;
-  }
+    default TextBox withEditable(boolean editable) {
+        setEditable(editable);
+        return this;
+    }
 }

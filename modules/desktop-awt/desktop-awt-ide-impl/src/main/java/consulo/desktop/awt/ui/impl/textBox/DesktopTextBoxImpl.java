@@ -25,6 +25,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -93,6 +94,21 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
 
         field.getDocument().addDocumentListener(new Listener(this));
         setValue(text);
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        AWTHasSuffixComponent.setSuffixComponent(toAWTComponent(), TargetAWT.to(suffixComponent));
+    }
+
+    @Nullable
+    @Override
+    public Component getSuffixComponent() {
+        Object object = toAWTComponent().getClientProperty("JTextField.trailingComponent");
+        if (object instanceof JComponent jComponent) {
+            return TargetAWT.from(jComponent);
+        }
+        return null;
     }
 
     @Override

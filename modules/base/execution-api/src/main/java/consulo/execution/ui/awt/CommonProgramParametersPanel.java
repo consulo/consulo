@@ -24,12 +24,12 @@ import consulo.module.Module;
 import consulo.pathMacro.MacroSelector;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.io.PathUtil;
@@ -91,15 +91,11 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
             .fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor())
             .dialogTitle(ExecutionLocalize.selectWorkingDirectoryMessage())
             .dialogDescription(LocalizeValue.of());
+        workDirBuilder.firstActions(DumbAwareAction.create(LocalizeValue.localizeTODO("Enviroment Variables"), LocalizeValue.of(), PlatformIconGroup.generalInlinevariables(), e -> {
+            showMacroDialog();
+        }));
 
         myWorkDirectoryBox = workDirBuilder.build();
-        myWorkDirectoryBox.getComponent().addFirstExtension(new TextBoxWithExtensions.Extension(
-            false,
-            PlatformIconGroup.generalInlinevariables(),
-            PlatformIconGroup.generalInlinevariableshover(),
-            event -> showMacroDialog()
-        ));
-
         myWorkingDirectoryComponent = LabeledComponent.create(
             (JComponent) TargetAWT.to(myWorkDirectoryBox.getComponent()),
             ExecutionLocalize.runConfigurationWorkingDirectoryLabel().get()

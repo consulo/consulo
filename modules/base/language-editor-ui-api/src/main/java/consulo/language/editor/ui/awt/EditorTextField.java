@@ -43,7 +43,7 @@ import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.DocumentBasedComponent;
 import consulo.ui.ex.TextComponent;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.internal.HasSuffixComponent;
+import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
 import consulo.undoRedo.CommandProcessor;
@@ -64,7 +64,7 @@ import java.util.List;
 /**
  * @author max
  */
-public class EditorTextField extends NonOpaquePanel implements DocumentListener, TextComponent, DataProvider, DocumentBasedComponent, HasSuffixComponent {
+public class EditorTextField extends NonOpaquePanel implements DocumentListener, TextComponent, DataProvider, DocumentBasedComponent, AWTHasSuffixComponent {
     private static final String uiClassID = "EditorTextFieldUI";
 
     private static final Logger LOG = Logger.getInstance(EditorTextField.class);

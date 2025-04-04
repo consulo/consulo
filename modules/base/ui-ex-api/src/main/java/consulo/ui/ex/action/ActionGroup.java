@@ -109,6 +109,11 @@ public abstract class ActionGroup extends AnAction {
     }
 
     @Nonnull
+    public static ActionGroup of(@Nonnull AnAction... actions) {
+        return newImmutableBuilder().addAll(actions).build();
+    }
+
+    @Nonnull
     public static Builder newImmutableBuilder() {
         return new ImmutableBuilder();
     }

@@ -28,7 +28,6 @@ import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 public class ResultNode extends WatchNodeImpl {
     ResultNode(@Nonnull XDebuggerTree tree,
@@ -38,15 +37,15 @@ public class ResultNode extends WatchNodeImpl {
         super(tree, parent, expression, stackFrame, XDebuggerBundle.message("debugger.result.node.name"));
     }
 
-    ResultNode(@NotNull XDebuggerTree tree,
-               @NotNull WatchesRootNode parent,
-               @NotNull XExpression expression,
-               @NotNull XValue value) {
+    ResultNode(@Nonnull XDebuggerTree tree,
+               @Nonnull WatchesRootNode parent,
+               @Nonnull XExpression expression,
+               @Nonnull XValue value) {
         super(tree, parent, expression, XDebuggerBundle.message("debugger.result.node.name"), value);
     }
 
     @Override
-    public void applyPresentation(@Nullable Image icon, @NotNull XValuePresentation valuePresentation, boolean hasChildren) {
+    public void applyPresentation(@Nullable Image icon, @Nonnull XValuePresentation valuePresentation, boolean hasChildren) {
         super.applyPresentation(ExecutionDebugIconGroup.actionEvaluateexpression(), valuePresentation, hasChildren);
     }
 

@@ -15,11 +15,8 @@
  */
 package consulo.credentialStorage.impl.internal.ui;
 
-import consulo.credentialStorage.impl.internal.PasswordSafeSettings;
-import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.DialogUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
@@ -28,92 +25,80 @@ import javax.swing.*;
  * @author gregsh
  */
 public class PasswordPromptComponent {
-  private JPanel myRootPanel;
-  private JPanel myUserPanel;
-  private JPanel myPasswordPanel;
-  private JPasswordField myPasswordField;
-  private JCheckBox myRememberCheckBox;
-  private JLabel myMessageLabel;
-  private JLabel myPasswordLabel;
-  private JLabel myUserLabel;
-  private JTextField myUserTextField;
-  private JLabel myIconLabel;
+    private JPanel myRootPanel;
+    private JPanel myUserPanel;
+    private JPanel myPasswordPanel;
+    private JPasswordField myPasswordField;
+    private JCheckBox myRememberCheckBox;
+    private JLabel myMessageLabel;
+    private JLabel myPasswordLabel;
+    private JLabel myUserLabel;
+    private JTextField myUserTextField;
 
-  public PasswordPromptComponent(PasswordSafeSettings.ProviderType type,
-                                 String message,
-                                 boolean showUserName,
-                                 String passwordPrompt,
-                                 String rememberPrompt) {
-    myIconLabel.setText("");
-    myIconLabel.setIcon(TargetAWT.to(Messages.getWarningIcon()));
-    myMessageLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
-    myMessageLabel.setText(message);
-    setTargetProviderType(type);
-    setUserInputVisible(showUserName);
-    if (passwordPrompt != null) myPasswordLabel.setText(passwordPrompt);
-    if (rememberPrompt != null) {
-      myRememberCheckBox.setText(rememberPrompt);
-      DialogUtil.registerMnemonic(myRememberCheckBox);
+    public PasswordPromptComponent(boolean memoryOnly,
+                                   String message,
+                                   boolean showUserName,
+                                   String passwordPrompt,
+                                   String rememberPrompt) {
+        myMessageLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
+        myMessageLabel.setText(message);
+
+        if (memoryOnly) {
+            myRememberCheckBox.setVisible(false);
+            myRememberCheckBox.setEnabled(false);
+            myRememberCheckBox.setSelected(false);
+        }
+        else {
+            myRememberCheckBox.setEnabled(true);
+            myRememberCheckBox.setSelected(true);
+        }
+
+        setUserInputVisible(showUserName);
+
+        if (passwordPrompt != null) {
+            myPasswordLabel.setText(passwordPrompt);
+        }
+
+        if (rememberPrompt != null) {
+            myRememberCheckBox.setText(rememberPrompt);
+            DialogUtil.registerMnemonic(myRememberCheckBox);
+        }
     }
-  }
 
-  public JComponent getComponent() {
-    return myRootPanel;
-  }
-
-  public JComponent getPreferredFocusedComponent() {
-    return myUserTextField.isEnabled() && StringUtil.isEmpty(myUserTextField.getText()) ? myUserTextField : myPasswordField;
-  }
-
-  private void setUserInputVisible(boolean visible) {
-    UIUtil.setEnabled(myUserPanel, visible, true);
-    myUserPanel.setVisible(visible);
-  }
-
-  private void setTargetProviderType(PasswordSafeSettings.ProviderType type) {
-    switch (type) {
-      case MASTER_PASSWORD:
-        myRememberCheckBox.setEnabled(true);
-        myRememberCheckBox.setSelected(true);
-        myRememberCheckBox.setToolTipText("The password will be stored between application sessions.");
-        break;
-      case MEMORY_ONLY:
-        myRememberCheckBox.setEnabled(true);
-        myRememberCheckBox.setSelected(true);
-        myRememberCheckBox.setToolTipText("The password will be stored only during this application session.");
-        break;
-      case DO_NOT_STORE:
-        myRememberCheckBox.setVisible(false);
-        myRememberCheckBox.setEnabled(false);
-        myRememberCheckBox.setSelected(false);
-        myRememberCheckBox.setToolTipText("The password storing is disabled.");
-        break;
-      default:
-        throw new AssertionError("Unknown policy type: " + type);
+    public JComponent getComponent() {
+        return myRootPanel;
     }
-  }
 
-  public String getUserName() {
-    return myUserTextField.getText();
-  }
+    public JComponent getPreferredFocusedComponent() {
+        return myUserTextField.isEnabled() && StringUtil.isEmpty(myUserTextField.getText()) ? myUserTextField : myPasswordField;
+    }
 
-  public void setUserName(String text) {
-    myUserTextField.setText(text);
-  }
+    private void setUserInputVisible(boolean visible) {
+        UIUtil.setEnabled(myUserPanel, visible, true);
+        myUserPanel.setVisible(visible);
+    }
 
-  public char[] getPassword() {
-    return myPasswordField.getPassword();
-  }
+    public String getUserName() {
+        return myUserTextField.getText();
+    }
 
-  public void setPassword(String text) {
-    myPasswordField.setText(text);
-  }
+    public void setUserName(String text) {
+        myUserTextField.setText(text);
+    }
 
-  public boolean isRememberSelected() {
-    return myRememberCheckBox.isSelected();
-  }
+    public char[] getPassword() {
+        return myPasswordField.getPassword();
+    }
 
-  public void setRememberSelected(boolean selected) {
-    myRememberCheckBox.setSelected(selected);
-  }
+    public void setPassword(String text) {
+        myPasswordField.setText(text);
+    }
+
+    public boolean isRememberSelected() {
+        return myRememberCheckBox.isSelected();
+    }
+
+    public void setRememberSelected(boolean selected) {
+        myRememberCheckBox.setSelected(selected);
+    }
 }

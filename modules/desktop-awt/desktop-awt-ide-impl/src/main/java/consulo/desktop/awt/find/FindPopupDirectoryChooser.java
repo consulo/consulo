@@ -36,10 +36,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.awt.internal.ComboBoxStyle;
-import consulo.ui.ex.awt.internal.HasSuffixComponent;
+import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -137,7 +136,7 @@ public class FindPopupDirectoryChooser {
 
         toolbar.getComponent().setBorder(JBCurrentTheme.comboBoxSubBorder(true));
 
-        HasSuffixComponent.setSuffixComponent(myDirectoryComboBox, toolbar.getComponent());
+        AWTHasSuffixComponent.setSuffixComponent(myDirectoryComboBox, toolbar.getComponent());
     }
 
     public void initByModel(@Nonnull FindModel findModel) {

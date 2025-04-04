@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface CheckBox extends ValueComponent<Boolean>, FocusableComponent, Mnemonicable {
+public interface CheckBox extends ValueComponent<Boolean>, HasFocus, HasMnemonic {
   @Nonnull
   @RequiredUIAccess
   @Deprecated(forRemoval = true)

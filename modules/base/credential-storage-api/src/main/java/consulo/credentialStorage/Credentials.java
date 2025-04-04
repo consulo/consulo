@@ -1,41 +1,86 @@
-/*
- * Copyright 2013-2024 consulo.io
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package consulo.credentialStorage;
 
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
 
 /**
- * @author VISTALL
- * @since 2024-12-03
+ * Represents a pair of user and password.
+ *
+ * @param user     the account name or path to an SSH key file.
+ * @param password the associated password (can be empty).
  */
-public record Credentials(@Nullable String user, @Nullable OneTimeString password) {
-    public Credentials(String user) {
+public final class Credentials {
+    private final String userName;
+    private final OneTimeString password;
+
+    public static final Credentials ACCESS_TO_KEY_CHAIN_DENIED = new Credentials(null, (OneTimeString) null);
+    public static final Credentials CANNOT_UNLOCK_KEYCHAIN = new Credentials(null, (OneTimeString) null);
+
+    public Credentials(@Nullable String user, @Nullable OneTimeString password) {
+        this.userName = StringUtil.nullize(user);
+        this.password = password;
+    }
+
+    public Credentials(@Nullable String user) {
         this(user, (OneTimeString) null);
     }
 
-    public Credentials(String user, String password) {
-        this(user, password == null ? (OneTimeString) null : new OneTimeString(password));
+    public Credentials(@Nullable String user, @Nullable String password) {
+        this(user, password != null ? new OneTimeString(password) : null);
     }
 
-    @Nullable
+    public Credentials(@Nullable String user, @Nullable char[] password) {
+        this(user, password != null ? new OneTimeString(password) : null);
+    }
+
+    public Credentials(@Nullable String user, @Nullable byte[] password) throws Exception {
+        this(user, password != null ? OneTimeString.fromByteArray(password) : null);
+    }
+
+    @Deprecated
+    public Credentials(@Nullable String user, @Nullable OneTimeString password, int i, Object m) {
+        this(user, password);
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
     public String getPasswordAsString() {
-        @Nullable OneTimeString password = password();
-        if (password == null) {
-            return null;
+        return password != null ? password.toString() : null;
+    }
+
+    public OneTimeString getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Credentials)) return false;
+        Credentials other = (Credentials) obj;
+        if (userName == null) {
+            if (other.userName != null) return false;
         }
-        return password.toString();
+        else if (!userName.equals(other.userName)) return false;
+        if (password == null) {
+            return other.password == null;
+        }
+        else {
+            return password.equals(other.password);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (userName != null ? userName.hashCode() : 0);
+        result = result * 37 + (password != null ? password.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        int passwordLength = password != null ? password.length() : 0;
+        return "userName: " + userName + ", password size: " + passwordLength;
     }
 }

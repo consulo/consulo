@@ -16,6 +16,7 @@
 package consulo.component.macro;
 
 import org.jdom.Attribute;
+import org.jdom.Element;
 import org.jdom.Text;
 
 import java.util.List;
@@ -24,41 +25,59 @@ import java.util.List;
  * @author yole
  */
 public class CompositePathMacroFilter extends PathMacroFilter {
-  private final List<PathMacroFilter> myFilters;
+    private final List<PathMacroFilter> myFilters;
 
-  public CompositePathMacroFilter(List<PathMacroFilter> filters) {
-    myFilters = filters;
-  }
-
-  @Override
-  public boolean skipPathMacros(Text element) {
-    for (PathMacroFilter filter : myFilters) {
-      if (filter.skipPathMacros(element)) return true;
+    public CompositePathMacroFilter(List<PathMacroFilter> filters) {
+        myFilters = filters;
     }
-    return false;
-  }
 
-  @Override
-  public boolean skipPathMacros(Attribute attribute) {
-    for (PathMacroFilter filter : myFilters) {
-      if (filter.skipPathMacros(attribute)) return true;
+    @Override
+    public boolean skipPathMacros(Text element) {
+        for (PathMacroFilter filter : myFilters) {
+            if (filter.skipPathMacros(element)) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-  @Override
-  public boolean recursePathMacros(Text element) {
-    for (PathMacroFilter filter : myFilters) {
-      if (filter.recursePathMacros(element)) return true;
+    @Override
+    public boolean skipPathMacros(Element element) {
+        for (PathMacroFilter filter : myFilters) {
+            if (filter.skipPathMacros(element)) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-  @Override
-  public boolean recursePathMacros(Attribute attribute) {
-    for (PathMacroFilter filter : myFilters) {
-      if (filter.recursePathMacros(attribute)) return true;
+    @Override
+    public boolean skipPathMacros(Attribute attribute) {
+        for (PathMacroFilter filter : myFilters) {
+            if (filter.skipPathMacros(attribute)) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
+
+    @Override
+    public boolean recursePathMacros(Text element) {
+        for (PathMacroFilter filter : myFilters) {
+            if (filter.recursePathMacros(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean recursePathMacros(Attribute attribute) {
+        for (PathMacroFilter filter : myFilters) {
+            if (filter.recursePathMacros(attribute)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

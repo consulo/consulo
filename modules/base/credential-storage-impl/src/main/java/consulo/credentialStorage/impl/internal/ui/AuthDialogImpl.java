@@ -13,15 +13,13 @@
 package consulo.credentialStorage.impl.internal.ui;
 
 import consulo.credentialStorage.PasswordSafe;
-import consulo.credentialStorage.impl.internal.PasswordSafeImpl;
-import consulo.credentialStorage.impl.internal.PasswordSafeSettings;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 public class AuthDialogImpl extends DialogWrapper {
@@ -41,9 +39,9 @@ public class AuthDialogImpl extends DialogWrapper {
   }
 
   private static boolean decideOnShowRememberPasswordOption(@Nullable String password, boolean rememberByDefault) {
-    final PasswordSafeImpl passwordSafe = (PasswordSafeImpl)PasswordSafe.getInstance();
+    final PasswordSafe passwordSafe = PasswordSafe.getInstance();
     // if password saving is disabled, don't show the checkbox.
-    if (passwordSafe.getSettings().getProviderType().equals(PasswordSafeSettings.ProviderType.DO_NOT_STORE)) {
+    if (passwordSafe.isMemoryOnly()) {
       return false;
     }
     // if password is prefilled, it is expected to continue remembering it.

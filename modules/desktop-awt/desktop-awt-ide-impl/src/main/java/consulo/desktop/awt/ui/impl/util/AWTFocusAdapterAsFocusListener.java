@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.util;
 
-import consulo.ui.FocusableComponent;
+import consulo.ui.HasFocus;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 
@@ -27,11 +27,11 @@ import java.awt.event.FocusEvent;
  * @since 2019-11-09
  */
 public class AWTFocusAdapterAsFocusListener extends FocusAdapter {
-    private final FocusableComponent myComponent;
-    private final ComponentEventListener<FocusableComponent, consulo.ui.event.FocusEvent> myFocusListener;
+    private final HasFocus myComponent;
+    private final ComponentEventListener<HasFocus, consulo.ui.event.FocusEvent> myFocusListener;
 
-    public AWTFocusAdapterAsFocusListener(FocusableComponent component,
-                                          ComponentEventListener<FocusableComponent, consulo.ui.event.FocusEvent> focusListener) {
+    public AWTFocusAdapterAsFocusListener(HasFocus component,
+                                          ComponentEventListener<HasFocus, consulo.ui.event.FocusEvent> focusListener) {
         myComponent = component;
         myFocusListener = focusListener;
     }

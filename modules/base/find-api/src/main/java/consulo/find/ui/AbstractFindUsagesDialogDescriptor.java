@@ -169,6 +169,7 @@ public abstract class AbstractFindUsagesDialogDescriptor extends DialogDescripto
     protected void update() {
     }
 
+    @RequiredUIAccess
     @Override
     public boolean canHandle(@Nonnull AnAction action, @Nullable DialogValue value) {
         if (value == DialogValue.OK_VALUE) {

@@ -43,6 +43,17 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
     }
 
     @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+
+    }
+
+    @Nullable
+    @Override
+    public Component getSuffixComponent() {
+        return null;
+    }
+
+    @Override
     @Nonnull
     public Vaadin createVaadinComponent() {
         return new Vaadin();

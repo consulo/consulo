@@ -15,15 +15,15 @@
  */
 package consulo.ui.event;
 
-import consulo.ui.FocusableComponent;
+import consulo.ui.HasFocus;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2024-09-11
  */
-public final class BlurEvent extends ComponentEvent<FocusableComponent> {
-    public BlurEvent(@Nonnull FocusableComponent component) {
+public final class BlurEvent extends ComponentEvent<HasFocus> {
+    public BlurEvent(@Nonnull HasFocus component) {
         super(component);
     }
 }

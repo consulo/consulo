@@ -7,7 +7,6 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
 import consulo.desktop.awt.ui.plaf2.flat.InplaceComponent;
-import consulo.ui.ex.action.RightAlignedToolbarAction;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -19,6 +18,7 @@ import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
 import jakarta.annotation.Nonnull;
 
@@ -128,6 +128,12 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     @Override
     public JComponent getComponent() {
         return this;
+    }
+
+    @Nonnull
+    @Override
+    public consulo.ui.Component getUIComponent() {
+        return TargetAWT.wrap(this);
     }
 
     @Override

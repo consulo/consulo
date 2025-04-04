@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 22/03/2021
  */
-public interface PasswordBox extends ValueComponent<String>, ValidableComponent<String>, FocusableComponent {
+public interface PasswordBox extends ValueComponent<String>, HasValidator<String>, HasFocus {
   @Nonnull
   static PasswordBox create() {
     return UIInternal.get()._Components_passwordBox(null);

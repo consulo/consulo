@@ -24,6 +24,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.Size;
+import consulo.ui.Window;
 import consulo.ui.WindowOwner;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -106,6 +107,12 @@ public class DesktopAwtDialogService implements DialogService {
         @Override
         public DialogDescriptor getDescriptor() {
             return myDescriptor;
+        }
+
+        @Nonnull
+        @Override
+        public Window getWindow() {
+            return TargetAWT.from(myDialogWrapper.getWindow());
         }
     }
 

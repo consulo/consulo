@@ -15,14 +15,15 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
-import consulo.ui.ex.awt.TextFieldWithHistory;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.validableComponent.SwingValidableComponent;
 import consulo.ui.Component;
 import consulo.ui.TextBoxWithHistory;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.validableComponent.SwingValidableComponent;
-
+import consulo.ui.ex.awt.TextFieldWithHistory;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -30,52 +31,63 @@ import java.util.List;
  * @since 2020-08-24
  */
 public class DesktopTextBoxWithHistoryImpl extends SwingValidableComponent<String, DesktopTextBoxWithHistoryImpl.MyTextFieldWithHistory> implements TextBoxWithHistory {
-  public class MyTextFieldWithHistory extends TextFieldWithHistory implements FromSwingComponentWrapper {
+    public class MyTextFieldWithHistory extends TextFieldWithHistory implements FromSwingComponentWrapper {
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopTextBoxWithHistoryImpl.this;
+        }
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+
+    }
+
+    @Nullable
+    @Override
+    public Component getSuffixComponent() {
+        return null;
+    }
+
+    public DesktopTextBoxWithHistoryImpl(String text) {
+        MyTextFieldWithHistory component = new MyTextFieldWithHistory();
+        component.setHistorySize(-1);
+        component.setText(text);
+        initialize(component);
+    }
 
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopTextBoxWithHistoryImpl.this;
+    public TextBoxWithHistory setHistory(@Nonnull List<String> history) {
+        toAWTComponent().setHistory(history);
+        return this;
     }
-  }
 
-  public DesktopTextBoxWithHistoryImpl(String text) {
-    MyTextFieldWithHistory component = new MyTextFieldWithHistory();
-    component.setHistorySize(-1);
-    component.setText(text);
-    initialize(component);
-  }
+    @Override
+    public void selectAll() {
+        toAWTComponent().selectText();
+    }
 
-  @Nonnull
-  @Override
-  public TextBoxWithHistory setHistory(@Nonnull List<String> history) {
-    toAWTComponent().setHistory(history);
-    return this;
-  }
+    @Override
+    public void setEditable(boolean editable) {
+        toAWTComponent().setEditable(editable);
+    }
 
-  @Override
-  public void selectAll() {
-    toAWTComponent().selectText();
-  }
+    @Override
+    public boolean isEditable() {
+        return toAWTComponent().isEditable();
+    }
 
-  @Override
-  public void setEditable(boolean editable) {
-    toAWTComponent().setEditable(editable);
-  }
+    @Override
+    public String getValue() {
+        return toAWTComponent().getText();
+    }
 
-  @Override
-  public boolean isEditable() {
-    return toAWTComponent().isEditable();
-  }
-
-  @Override
-  public String getValue() {
-    return toAWTComponent().getText();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(String value, boolean fireListeners) {
-    toAWTComponent().setText(value);
-  }
+    @RequiredUIAccess
+    @Override
+    public void setValue(String value, boolean fireListeners) {
+        toAWTComponent().setText(value);
+    }
 }

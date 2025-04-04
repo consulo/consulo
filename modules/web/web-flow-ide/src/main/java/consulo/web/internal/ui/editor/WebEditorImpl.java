@@ -26,7 +26,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.ui.Component;
-import consulo.ui.FocusableComponent;
+import consulo.ui.HasFocus;
 import consulo.util.dataholder.Key;
 import consulo.web.internal.ui.base.ComponentHolder;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
@@ -64,7 +64,7 @@ public class WebEditorImpl extends CodeEditorBase {
     }
   }
 
-  private static class EditorComponent extends VaadinComponentDelegate<Vaadin> implements FocusableComponent {
+  private static class EditorComponent extends VaadinComponentDelegate<Vaadin> implements HasFocus {
     @Nonnull
     @Override
     public Vaadin createVaadinComponent() {

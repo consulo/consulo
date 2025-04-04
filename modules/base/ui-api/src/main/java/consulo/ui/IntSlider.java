@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 11/29/2020
  */
-public interface IntSlider extends ValueComponent<Integer>, FocusableComponent {
+public interface IntSlider extends ValueComponent<Integer>, HasFocus {
   @Nonnull
   static IntSlider create() {
     return create(0);

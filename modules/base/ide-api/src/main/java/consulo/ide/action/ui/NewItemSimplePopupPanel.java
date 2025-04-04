@@ -2,20 +2,16 @@
 package consulo.ide.action.ui;
 
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ui.TextBoxWithExtensions;
-import consulo.ui.ValidableComponent;
+import consulo.ui.HasValidator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.KeyboardInputDetails;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.layout.WrappedLayout;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -41,7 +37,7 @@ public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
         add(TargetAWT.to(layout), BorderLayout.NORTH);
     }
 
-    public void addValidator(@Nonnull ValidableComponent.Validator<String> validator) {
+    public void addValidator(@Nonnull HasValidator.Validator<String> validator) {
         myTextField.addValidator(value -> validator.validateValue(StringUtil.notNullize(value).trim()));
     }
 

@@ -25,8 +25,8 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.PseudoComponent;
 import consulo.ui.TextBox;
-import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -35,6 +35,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -46,157 +48,207 @@ import java.util.function.Function;
  * @since 2020-05-29
  */
 public final class FileChooserTextBoxBuilder {
-  public static class Controller implements PseudoComponent {
-    private final TextBoxWithExtensions myTextBox;
-    private final TextComponentAccessor<TextBox> myAccessor;
+    private static AnAction STUB = new EmptyAction();
+
+    private static class BrowseAction extends DumbAwareAction {
+        private final Controller myController;
+
+        public BrowseAction(Controller controller) {
+            super(LocalizeValue.localizeTODO("Browse"), LocalizeValue.of(), PlatformIconGroup.nodesFolderopened());
+            myController = controller;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            FileChooserDescriptor fileChooserDescriptor = (FileChooserDescriptor) myController.myFileChooserDescriptor.clone();
+            fileChooserDescriptor.withTitleValue(myController.myDialogTitle);
+            fileChooserDescriptor.withDescriptionValue(myController.myDialogDescription);
+
+            String text = myController.myAccessor.getValue(myController.myTextBox);
+
+            FileChooser.chooseFile(fileChooserDescriptor, myController.myProject, myController.mySelectedFileMapper.apply(text)).
+                doWhenDone((f) -> {
+                    myController.myAccessor.setValue(myController.myTextBox, f.getPresentableUrl());
+                });
+        }
+    }
+
+    public static class Controller implements PseudoComponent {
+        private final TextBox myTextBox;
+        private final TextComponentAccessor<TextBox> myAccessor;
+        private final ComponentManager myProject;
+        private final FileChooserDescriptor myFileChooserDescriptor;
+        private final Function<String, VirtualFile> mySelectedFileMapper;
+        private final LocalizeValue myDialogTitle;
+        private final LocalizeValue myDialogDescription;
+
+        public Controller(FileChooserTextBoxBuilder builder) {
+            myAccessor = builder.myTextBoxAccessor;
+            myProject = builder.myProject;
+            myFileChooserDescriptor = builder.myFileChooserDescriptor;
+            mySelectedFileMapper = builder.mySelectedFileMapper;
+            myDialogTitle = builder.myDialogTitle;
+            myDialogDescription = builder.myDialogDescription;
+
+            myTextBox = TextBox.create();
+            if (!builder.myDisableCompletion) {
+                FileChooserFactory.getInstance().installFileCompletion(myTextBox, myFileChooserDescriptor, true, builder.myDisposable);
+            }
+
+            // replace stub by own action impl
+            builder.myActions.replaceAll(action -> action == STUB ? new BrowseAction(this) : action);
+
+            ActionGroup actionGroup = ActionGroup.newImmutableBuilder().addAll(builder.myActions).build();
+            ActionToolbar toolbar =
+                ActionToolbarFactory.getInstance().createActionToolbar("FileChooserTextBox", actionGroup, ActionToolbar.Style.INPLACE);
+
+            toolbar.setTargetUIComponent(myTextBox);
+
+            myTextBox.setSuffixComponent(toolbar.getUIComponent());
+        }
+
+        @RequiredUIAccess
+        public void setValue(String text) {
+            myAccessor.setValue(myTextBox, text);
+        }
+
+        @RequiredUIAccess
+        public void setValue(@Nonnull String text, boolean fireListeners) {
+            myAccessor.setValue(myTextBox, text, fireListeners);
+        }
+
+        @RequiredUIAccess
+        public void setValue(@Nonnull VirtualFile value) {
+            setValue(value.getPresentableUrl());
+        }
+
+        @RequiredUIAccess
+        @Nonnull
+        public String getValue() {
+            return StringUtil.notNullize(myAccessor.getValue(myTextBox));
+        }
+
+        @RequiredUIAccess
+        @Nonnull
+        @Override
+        public TextBox getComponent() {
+            return myTextBox;
+        }
+    }
+
+    @Nonnull
+    public static FileChooserTextBoxBuilder create(@Nullable ComponentManager project) {
+        return new FileChooserTextBoxBuilder(project);
+    }
+
     private final ComponentManager myProject;
-    private final FileChooserDescriptor myFileChooserDescriptor;
-    private final Function<String, VirtualFile> mySelectedFileMapper;
 
-    public Controller(FileChooserTextBoxBuilder builder) {
-      myAccessor = builder.myTextBoxAccessor;
-      myProject = builder.myProject;
-      myFileChooserDescriptor = builder.myFileChooserDescriptor;
-      mySelectedFileMapper = builder.mySelectedFileMapper;
+    private LocalizeValue myDialogTitle = UILocalize.fileChooserDefaultTitle();
 
-      myTextBox = TextBoxWithExtensions.create();
-      if (!builder.myDisableCompletion) {
-        FileChooserFactory.getInstance().installFileCompletion(myTextBox, myFileChooserDescriptor, true, builder.myDisposable);
-      }
+    private LocalizeValue myDialogDescription = LocalizeValue.empty();
 
-      myTextBox.addLastExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderopenedtransparent(), PlatformIconGroup.nodesFolderopened(), event -> {
-          FileChooserDescriptor fileChooserDescriptor = (FileChooserDescriptor) myFileChooserDescriptor.clone();
-          fileChooserDescriptor.withTitleValue(builder.myDialogTitle);
-          fileChooserDescriptor.withDescriptionValue(builder.myDialogDescription);
+    private FileChooserDescriptor myFileChooserDescriptor = new FileChooserDescriptor(true, false, false, false, false, false);
 
-          String text = myAccessor.getValue(myTextBox);
+    private TextComponentAccessor<TextBox> myTextBoxAccessor = TextComponentAccessor.TEXT_BOX_WHOLE_TEXT;
 
-          FileChooser.chooseFile(fileChooserDescriptor, myProject, mySelectedFileMapper.apply(text)).doWhenDone((f) -> {
-              myAccessor.setValue(myTextBox, f.getPresentableUrl());
-          });
-      }));
+    private List<AnAction> myActions = new ArrayList<>(1);
+
+    private boolean myDisableCompletion;
+
+    private Disposable myDisposable;
+
+    private FileChooserTextBoxBuilder(ComponentManager project) {
+        myProject = project;
+        myActions.add(STUB);
     }
 
-    @RequiredUIAccess
-    public void setValue(String text) {
-      myAccessor.setValue(myTextBox, text);
+    private Function<String, VirtualFile> mySelectedFileMapper = directoryName -> {
+        if (StringUtil.isEmptyOrSpaces(directoryName)) {
+            return null;
+        }
+
+        directoryName = FileUtil.toSystemIndependentName(directoryName);
+        VirtualFile path = LocalFileSystem.getInstance().findFileByPath(directoryName);
+        while (path == null && directoryName.length() > 0) {
+            int pos = directoryName.lastIndexOf('/');
+            if (pos <= 0) {
+                break;
+            }
+            directoryName = directoryName.substring(0, pos);
+            path = LocalFileSystem.getInstance().findFileByPath(directoryName);
+        }
+        return path;
+    };
+
+    @Nonnull
+    public FileChooserTextBoxBuilder dialogTitle(@Nonnull LocalizeValue dialogTitle) {
+        myDialogTitle = dialogTitle;
+        return this;
     }
 
-    @RequiredUIAccess
-    public void setValue(@Nonnull String text, boolean fireListeners) {
-      myAccessor.setValue(myTextBox, text, fireListeners);
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use #dialogTitle(LocalizeValue)")
+    public FileChooserTextBoxBuilder dialogTitle(@Nonnull String dialogTitle) {
+        return dialogTitle(LocalizeValue.of(dialogTitle));
     }
 
-    @RequiredUIAccess
-    public void setValue(@Nonnull VirtualFile value) {
-      setValue(value.getPresentableUrl());
+    @Nonnull
+    public FileChooserTextBoxBuilder dialogDescription(@Nonnull LocalizeValue dialogDescription) {
+        myDialogDescription = dialogDescription;
+        return this;
+    }
+
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use #dialogDescription(LocalizeValue)")
+    public FileChooserTextBoxBuilder dialogDescription(@Nonnull String dialogDescription) {
+        return dialogTitle(LocalizeValue.of(dialogDescription));
+    }
+
+    @Nonnull
+    public FileChooserTextBoxBuilder fileChooserDescriptor(@Nonnull FileChooserDescriptor chooserDescriptor) {
+        myFileChooserDescriptor = chooserDescriptor;
+        return this;
+    }
+
+    public FileChooserTextBoxBuilder textBoxAccessor(@Nonnull TextComponentAccessor<TextBox> componentAccessor) {
+        myTextBoxAccessor = componentAccessor;
+        return this;
+    }
+
+    @Nonnull
+    public FileChooserTextBoxBuilder firstActions(@Nonnull AnAction... actions) {
+        for (AnAction action : actions) {
+            myActions.addFirst(action);
+        }
+        return this;
+    }
+
+    @Nonnull
+    public FileChooserTextBoxBuilder lastActions(@Nonnull AnAction... actions) {
+        for (AnAction action : actions) {
+            myActions.addLast(action);
+        }
+        return this;
+    }
+
+    @Nonnull
+    public FileChooserTextBoxBuilder disableCompletion() {
+        myDisableCompletion = true;
+        return this;
+    }
+
+    @Nonnull
+    public FileChooserTextBoxBuilder uiDisposable(@Nonnull Disposable disposable) {
+        myDisposable = disposable;
+        return this;
     }
 
     @RequiredUIAccess
     @Nonnull
-    public String getValue() {
-      return StringUtil.notNullize(myAccessor.getValue(myTextBox));
+    public Controller build() {
+        return new Controller(this);
     }
-
-    @RequiredUIAccess
-    @Nonnull
-    @Override
-    public TextBoxWithExtensions getComponent() {
-      return myTextBox;
-    }
-  }
-
-  @Nonnull
-  public static FileChooserTextBoxBuilder create(@Nullable ComponentManager project) {
-    return new FileChooserTextBoxBuilder(project);
-  }
-
-  private final ComponentManager myProject;
-
-  private LocalizeValue myDialogTitle = UILocalize.fileChooserDefaultTitle();
-
-  private LocalizeValue myDialogDescription = LocalizeValue.empty();
-
-  private FileChooserDescriptor myFileChooserDescriptor = new FileChooserDescriptor(true, false, false, false, false, false);
-
-  private TextComponentAccessor<TextBox> myTextBoxAccessor = TextComponentAccessor.TEXT_BOX_WHOLE_TEXT;
-
-  private boolean myDisableCompletion;
-
-  private Disposable myDisposable;
-
-  private Function<String, VirtualFile> mySelectedFileMapper = directoryName -> {
-    if (StringUtil.isEmptyOrSpaces(directoryName)) {
-      return null;
-    }
-
-    directoryName = FileUtil.toSystemIndependentName(directoryName);
-    VirtualFile path = LocalFileSystem.getInstance().findFileByPath(directoryName);
-    while (path == null && directoryName.length() > 0) {
-      int pos = directoryName.lastIndexOf('/');
-      if (pos <= 0) break;
-      directoryName = directoryName.substring(0, pos);
-      path = LocalFileSystem.getInstance().findFileByPath(directoryName);
-    }
-    return path;
-  };
-
-  @Nonnull
-  public FileChooserTextBoxBuilder dialogTitle(@Nonnull LocalizeValue dialogTitle) {
-    myDialogTitle = dialogTitle;
-    return this;
-  }
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use #dialogTitle(LocalizeValue)")
-  public FileChooserTextBoxBuilder dialogTitle(@Nonnull String dialogTitle) {
-    return dialogTitle(LocalizeValue.of(dialogTitle));
-  }
-
-  @Nonnull
-  public FileChooserTextBoxBuilder dialogDescription(@Nonnull LocalizeValue dialogDescription) {
-    myDialogDescription = dialogDescription;
-    return this;
-  }
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use #dialogDescription(LocalizeValue)")
-  public FileChooserTextBoxBuilder dialogDescription(@Nonnull String dialogDescription) {
-    return dialogTitle(LocalizeValue.of(dialogDescription));
-  }
-
-  @Nonnull
-  public FileChooserTextBoxBuilder fileChooserDescriptor(@Nonnull FileChooserDescriptor chooserDescriptor) {
-    myFileChooserDescriptor = chooserDescriptor;
-    return this;
-  }
-
-  public FileChooserTextBoxBuilder textBoxAccessor(@Nonnull TextComponentAccessor<TextBox> componentAccessor) {
-    myTextBoxAccessor = componentAccessor;
-    return this;
-  }
-
-  @Nonnull
-  public FileChooserTextBoxBuilder disableCompletion() {
-    myDisableCompletion = true;
-    return this;
-  }
-
-  @Nonnull
-  public FileChooserTextBoxBuilder uiDisposable(@Nonnull Disposable disposable) {
-    myDisposable = disposable;
-    return this;
-  }
-
-  private FileChooserTextBoxBuilder(ComponentManager project) {
-    myProject = project;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  public Controller build() {
-    return new Controller(this);
-  }
 }

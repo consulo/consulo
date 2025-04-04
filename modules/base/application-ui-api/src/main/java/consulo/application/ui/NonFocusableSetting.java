@@ -16,15 +16,15 @@
 package consulo.application.ui;
 
 import consulo.ui.Component;
-import consulo.ui.FocusableComponent;
-import consulo.ui.Mnemonicable;
+import consulo.ui.HasFocus;
+import consulo.ui.HasMnemonic;
 
 /**
  * @author VISTALL
  * @since 06-Jul-24
  */
 public class NonFocusableSetting {
-  public static <C extends Component & FocusableComponent & Mnemonicable> void initFocusability(C component) {
+  public static <C extends Component & HasFocus & HasMnemonic> void initFocusability(C component) {
     if (!UISettings.getShadowInstance().DISABLE_MNEMONICS_IN_CONTROLS) { // Or that won't be keyboard accessible at all
       component.setFocusable(false);
     }

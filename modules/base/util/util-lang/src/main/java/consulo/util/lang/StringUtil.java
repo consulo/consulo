@@ -1812,7 +1812,7 @@ public final class StringUtil {
         return buf.toString();
     }
 
-    private static void escapeChar(@Nonnull final StringBuilder buf, final char character) {
+    public static void escapeChar(@Nonnull final StringBuilder buf, final char character) {
         int idx = 0;
         while ((idx = indexOf(buf, character, idx)) >= 0) {
             buf.insert(idx, "\\");

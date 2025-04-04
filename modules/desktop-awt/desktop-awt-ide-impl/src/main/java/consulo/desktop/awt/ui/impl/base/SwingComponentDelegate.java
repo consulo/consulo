@@ -26,7 +26,7 @@ import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyReleasedListener;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.FocusableComponent;
+import consulo.ui.HasFocus;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -67,10 +67,10 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
         myComponent.addKeyListener(new AWTKeyAdapterAsKeyPressedListener(this, getListenerDispatcher(KeyPressedEvent.class)));
         myComponent.addKeyListener(new AWTKeyAdapterAsKeyReleasedListener(this, getListenerDispatcher(KeyReleasedEvent.class)));
 
-        if (this instanceof FocusableComponent) {
-            myComponent.addFocusListener(new AWTFocusAdapterAsFocusListener((FocusableComponent) this, getListenerDispatcher(FocusEvent.class)));
+        if (this instanceof HasFocus) {
+            myComponent.addFocusListener(new AWTFocusAdapterAsFocusListener((HasFocus) this, getListenerDispatcher(FocusEvent.class)));
             
-            myComponent.addFocusListener(new AWTFocusAdapterAsBlurListener((FocusableComponent) this, getListenerDispatcher(BlurEvent.class)));
+            myComponent.addFocusListener(new AWTFocusAdapterAsBlurListener((HasFocus) this, getListenerDispatcher(BlurEvent.class)));
         }
     }
 

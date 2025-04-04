@@ -18,6 +18,7 @@ package consulo.ui.ex;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.StringUtil;
 
 /**
  * Text component accessor. It wraps access to the content of text component
@@ -34,7 +35,7 @@ public interface TextComponentAccessor<T extends Component> {
     @RequiredUIAccess
     @Override
     public String getValue(TextBox textBox) {
-      return textBox.getValueOrError();
+      return StringUtil.notNullize(textBox.getValue());
     }
 
     @RequiredUIAccess

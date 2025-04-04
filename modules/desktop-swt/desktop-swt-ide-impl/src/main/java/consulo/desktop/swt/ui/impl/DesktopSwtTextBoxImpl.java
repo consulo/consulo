@@ -16,6 +16,7 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
@@ -88,5 +89,16 @@ public class DesktopSwtTextBoxImpl extends SWTComponentDelegate<Text> implements
         if (myComponent != null) {
             myComponent.setText(myText);
         }
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+
+    }
+
+    @Nullable
+    @Override
+    public Component getSuffixComponent() {
+        return null;
     }
 }

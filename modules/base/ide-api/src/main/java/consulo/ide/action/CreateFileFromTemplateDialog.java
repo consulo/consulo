@@ -22,7 +22,7 @@ import consulo.ide.action.ui.NewItemPopupUtil;
 import consulo.language.LangBundle;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import consulo.ui.ValidableComponent;
+import consulo.ui.HasValidator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.InputValidatorEx;
@@ -56,7 +56,7 @@ public class CreateFileFromTemplateDialog  {
     private String myTitle = "Title";
     private final List<Trinity<String, Image, String>> myTemplatesList = new ArrayList<>();
     private InputValidator myInputValidator;
-    private ValidableComponent.Validator<String> myValidator;
+    private HasValidator.Validator<String> myValidator;
 
     private NonBlockingPopupBuilderImpl(@Nonnull Project project) {
       myProject = project;
@@ -75,7 +75,7 @@ public class CreateFileFromTemplateDialog  {
     }
 
     @Override
-    public Builder setValidator(@Nonnull ValidableComponent.Validator<String> validator) {
+    public Builder setValidator(@Nonnull HasValidator.Validator<String> validator) {
       myValidator = validator;
       return this;
     }
@@ -112,7 +112,7 @@ public class CreateFileFromTemplateDialog  {
       contentPanel.addValidator(value -> {
         if (myInputValidator != null && !myInputValidator.canClose(value)) {
           String message = InputValidatorEx.getErrorText(myInputValidator, value, LangBundle.message("incorrect.name"));
-          return new ValidableComponent.ValidationInfo(message);
+          return new HasValidator.ValidationInfo(message);
         }
         return null;
       });
@@ -144,7 +144,7 @@ public class CreateFileFromTemplateDialog  {
 
     Builder setValidator(InputValidator validator);
 
-    Builder setValidator(@Nonnull ValidableComponent.Validator<String> validator);
+    Builder setValidator(@Nonnull HasValidator.Validator<String> validator);
 
     Builder addKind(@Nonnull String kind, @Nullable Image icon, @Nonnull String templateName);
 

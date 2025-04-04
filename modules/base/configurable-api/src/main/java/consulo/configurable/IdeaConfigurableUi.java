@@ -16,6 +16,7 @@
 package consulo.configurable;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -27,8 +28,8 @@ public interface IdeaConfigurableUi<S> {
 
   boolean isModified(@Nonnull S settings);
 
-  void apply(@Nonnull S settings);
+  void apply(@Nonnull S settings) throws ConfigurationException;
 
   @Nonnull
-  JComponent getComponent();
+  JComponent getComponent(Disposable disposable);
 }

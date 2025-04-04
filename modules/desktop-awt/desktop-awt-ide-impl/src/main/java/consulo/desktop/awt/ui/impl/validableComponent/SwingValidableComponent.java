@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.impl.validableComponent;
 
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ValidableComponent;
+import consulo.ui.HasValidator;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 
 import jakarta.annotation.Nonnull;
@@ -27,7 +27,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2019-11-04
  */
-public abstract class SwingValidableComponent<V, C extends Component> extends SwingComponentDelegate<C> implements ValidableComponent<V> {
+public abstract class SwingValidableComponent<V, C extends Component> extends SwingComponentDelegate<C> implements HasValidator<V> {
   protected final SwingValidator<V> myValidator = new SwingValidator<>();
 
   protected abstract V getValue();

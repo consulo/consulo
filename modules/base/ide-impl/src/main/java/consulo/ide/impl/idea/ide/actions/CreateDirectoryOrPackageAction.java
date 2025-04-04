@@ -37,7 +37,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 import consulo.ui.TextBox;
-import consulo.ui.ValidableComponent;
+import consulo.ui.HasValidator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.action.AnAction;
@@ -114,7 +114,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     contentPanel.addValidator(value -> {
       if (!validator.checkInput(value)) {
         String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
-        return new ValidableComponent.ValidationInfo(message);
+        return new HasValidator.ValidationInfo(message);
       }
 
       return null;

@@ -22,6 +22,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.configurable.IdeaConfigurableUi;
+import consulo.disposer.Disposable;
 import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.http.HttpRequests;
 import consulo.http.impl.internal.proxy.CommonProxy;
@@ -365,7 +366,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
 
   @Override
   @Nonnull
-  public JComponent getComponent() {
+  public JComponent getComponent(Disposable disposable) {
     return myMainPanel;
   }
 }

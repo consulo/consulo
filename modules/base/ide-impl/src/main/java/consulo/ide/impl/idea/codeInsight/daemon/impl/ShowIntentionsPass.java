@@ -33,7 +33,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.FocusableComponent;
+import consulo.ui.HasFocus;
 import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
 
@@ -217,7 +217,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
 
   @Override
   public void doCollectInformation(@Nonnull ProgressIndicator progress) {
-    if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !FocusableComponent.hasFocus(myEditor.getContentUIComponent())) return;
+    if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !HasFocus.hasFocus(myEditor.getContentUIComponent())) return;
     TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(myEditor);
     if (state != null && !state.isFinished()) return;
     getActionsToShow(myEditor, myFile, myIntentionsInfo, myPassIdToShowIntentionsFor, myQueryIntentionActions);

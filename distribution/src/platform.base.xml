@@ -237,6 +237,13 @@
                 <include>com.github.weisj:jsvg</include>
                 <include>it.unimi.dsi:fastutil</include>
                 <include>ch.qos.logback:logback-core</include>
+
+                <include>com.github.hypfvieh:dbus-java-core</include>
+                <include>com.github.hypfvieh:dbus-java-transport-native-unixsocket</include>
+
+                <include>org.bouncycastle:bcpkix-jdk18on</include>
+                <include>org.bouncycastle:bcutil-jdk18on</include>
+                <include>org.bouncycastle:bcprov-jdk18on</include>
             </includes>
         </dependencySet>
     </dependencySets>

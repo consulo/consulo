@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.wsl;
 
-import consulo.credentialStorage.impl.internal.ui.PasswordSafePromptDialogImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemBase;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
@@ -9,8 +8,6 @@ import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.cmd.ParametersList;
-import consulo.process.event.ProcessAdapter;
-import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.process.internal.CapturingProcessHandler;
 import consulo.process.util.ProcessOutput;
@@ -24,8 +21,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.File;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
@@ -202,27 +197,28 @@ public class WSLDistribution {
       prependCommandLineString(commandLineString, "sudo", "-S", "-p", "''");
       //TODO[traff]: ask password only if it is needed. When user is logged as root, password isn't asked.
 
-      SUDO_LISTENER_KEY.set(commandLine, new ProcessAdapter() {
-        @Override
-        public void startNotified(@Nonnull ProcessEvent event) {
-          OutputStream input = event.getProcessHandler().getProcessInput();
-          if (input == null) {
-            return;
-          }
-          String password = PasswordSafePromptDialogImpl.askPassword("Enter Root Password", "Sudo password for " + getPresentableName() + " root:", WSLDistribution.class, "WSL", true);
-          //String password = CredentialPromptDialog
-          //        .askPassword(project, "Enter Root Password", "Sudo password for " + getPresentableName() + " root:", new CredentialAttributes("WSL", "root", WSLDistribution.class), true);
-          if (password != null) {
-            try (PrintWriter pw = new PrintWriter(input)) {
-              pw.println(password);
-            }
-          }
-          else {
-            // fixme notify user?
-          }
-          super.startNotified(event);
-        }
-      });
+        //TODO disabled !
+//      SUDO_LISTENER_KEY.set(commandLine, new ProcessAdapter() {
+//        @Override
+//        public void startNotified(@Nonnull ProcessEvent event) {
+//          OutputStream input = event.getProcessHandler().getProcessInput();
+//          if (input == null) {
+//            return;
+//          }
+//          String password = PasswordSafePromptDialogImpl.askPassword("Enter Root Password", "Sudo password for " + getPresentableName() + " root:", WSLDistribution.class, "WSL", true);
+//          //String password = CredentialPromptDialog
+//          //        .askPassword(project, "Enter Root Password", "Sudo password for " + getPresentableName() + " root:", new CredentialAttributes("WSL", "root", WSLDistribution.class), true);
+//          if (password != null) {
+//            try (PrintWriter pw = new PrintWriter(input)) {
+//              pw.println(password);
+//            }
+//          }
+//          else {
+//            // fixme notify user?
+//          }
+//          super.startNotified(event);
+//        }
+//      });
     }
 
     if (StringUtil.isNotEmpty(remoteWorkingDir)) {

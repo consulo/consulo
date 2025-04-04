@@ -27,11 +27,15 @@ import consulo.pathMacro.MacroSelector;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.PseudoComponent;
+import consulo.ui.TextBoxWithExpandAction;
+import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.util.FormBuilder;
 import consulo.util.io.PathUtil;
@@ -74,10 +78,11 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
         workDirBuilder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
         workDirBuilder.dialogTitle(ExecutionLocalize.selectWorkingDirectoryMessage());
         workDirBuilder.dialogDescription(LocalizeValue.of());
+        workDirBuilder.firstActions(DumbAwareAction.create(LocalizeValue.localizeTODO("Enviroment Variables"), LocalizeValue.of(), PlatformIconGroup.generalInlinevariables(), e -> {
+            showMacroDialog();
+        }));
 
         myWorkDirectoryBox = workDirBuilder.build();
-        myWorkDirectoryBox.getComponent()
-            .addFirstExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlinevariables(), PlatformIconGroup.generalInlinevariableshover(), event -> showMacroDialog()));
 
         builder.addLabeled(ExecutionLocalize.runConfigurationWorkingDirectoryLabel(), myWorkDirectoryBox.getComponent());
 

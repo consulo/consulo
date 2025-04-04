@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.image.Image;
@@ -27,6 +28,8 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2019-10-31
  */
+@Deprecated
+@DeprecationInfo("Use raw TextBox#setSuffixComponent()")
 public interface TextBoxWithExtensions extends TextBox {
     public final class Extension {
         private final boolean myLeft;

@@ -20,6 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Component;
 import consulo.ui.Size;
+import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.dialog.action.DialogCancelAction;
@@ -76,6 +77,12 @@ public abstract class DialogDescriptor {
         return new DialogOkAction(CommonLocalize.buttonOk());
     }
 
+    @RequiredUIAccess
+    public boolean canHandle(@Nonnull AnAction action, @Nullable DialogValue value, @Nonnull Window window) {
+        return canHandle(action, value);
+    }
+
+    @RequiredUIAccess
     public boolean canHandle(@Nonnull AnAction action, @Nullable DialogValue value) {
         return true;
     }

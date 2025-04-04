@@ -10,6 +10,8 @@ module consulo.container.api {
     // required consulo-util-lang
     requires transitive jdk.unsupported;
 
+    requires transitive jdk.net;
+
     exports consulo.container;
     exports consulo.container.boot;
     exports consulo.container.classloader;

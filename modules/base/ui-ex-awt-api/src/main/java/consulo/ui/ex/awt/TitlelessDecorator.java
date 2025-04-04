@@ -17,9 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
-import consulo.project.ui.wm.IdeFrameState;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;

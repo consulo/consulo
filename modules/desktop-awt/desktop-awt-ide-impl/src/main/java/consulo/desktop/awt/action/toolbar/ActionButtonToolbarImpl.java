@@ -28,6 +28,7 @@ import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
 import jakarta.annotation.Nonnull;
 
@@ -245,6 +246,12 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
     @Override
     public JComponent getComponent() {
         return this;
+    }
+
+    @Nonnull
+    @Override
+    public consulo.ui.Component getUIComponent() {
+        return TargetAWT.wrap(this);
     }
 
     @Override

@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.ui.internal.UIInternal;
 
 import jakarta.annotation.Nonnull;
@@ -25,7 +24,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2020-04-19
  */
-public interface IntBox extends ValueComponent<Integer>, ValidableComponent<Integer>, FocusableComponent {
+public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, HasFocus {
   @Nonnull
   static IntBox create() {
     return create(0);

@@ -3,21 +3,30 @@
  * @since 23/01/2023
  */
 module consulo.credential.storage.impl {
-  requires consulo.credential.storage.api;
+    requires consulo.credential.storage.api;
+    requires consulo.process.api;
 
-  requires com.sun.jna;
-  requires com.sun.jna.platform;
-  requires org.apache.commons.codec;
+    requires consulo.util.jna;
 
-  // TODO remove this dependencies in future
-  requires java.desktop;
-  requires consulo.ui.ex.awt.api;
-  requires forms.rt;
+    requires com.sun.jna;
+    requires com.sun.jna.platform;
+    requires org.apache.commons.codec;
 
-  exports consulo.credentialStorage.impl.internal to consulo.ide.impl;
-  exports consulo.credentialStorage.impl.internal.provider.masterKey to consulo.ide.impl;
-  exports consulo.credentialStorage.impl.internal.ui to consulo.ide.impl;
+    // TODO remove this dependencies in future
+    requires java.desktop;
+    requires consulo.ui.ex.awt.api;
+    requires forms.rt;
+    
+    requires org.bouncycastle.provider;
+    requires com.google.common;
+    requires org.yaml.snakeyaml;
+    requires it.unimi.dsi.fastutil;
 
-  opens consulo.credentialStorage.impl.internal to consulo.util.xml.serializer;
-  opens consulo.credentialStorage.impl.internal.provider.masterKey to consulo.util.xml.serializer;
+    requires org.freedesktop.dbus;
+    requires jdk.net;
+
+    exports consulo.credentialStorage.impl.internal to consulo.ide.impl;
+    exports consulo.credentialStorage.impl.internal.ui to consulo.ide.impl;
+
+    opens consulo.credentialStorage.impl.internal to consulo.util.xml.serializer;
 }

@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import org.jdom.Attribute;
+import org.jdom.Element;
 import org.jdom.Text;
 
 /**
@@ -28,21 +29,25 @@ import org.jdom.Text;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PathMacroFilter {
-  public static final ExtensionPointName<PathMacroFilter> EP_NAME = ExtensionPointName.create(PathMacroFilter.class);
+    public static final ExtensionPointName<PathMacroFilter> EP_NAME = ExtensionPointName.create(PathMacroFilter.class);
 
-  public boolean skipPathMacros(Text element) {
-    return false;
-  }
+    public boolean skipPathMacros(Text element) {
+        return false;
+    }
 
-  public boolean skipPathMacros(Attribute attribute) {
-    return false;
-  }
+    public boolean skipPathMacros(Element element) {
+        return false;
+    }
 
-  public boolean recursePathMacros(Text element) {
-    return false;
-  }
+    public boolean skipPathMacros(Attribute attribute) {
+        return false;
+    }
 
-  public boolean recursePathMacros(Attribute attribute) {
-    return false;
-  }
+    public boolean recursePathMacros(Text element) {
+        return false;
+    }
+
+    public boolean recursePathMacros(Attribute attribute) {
+        return false;
+    }
 }

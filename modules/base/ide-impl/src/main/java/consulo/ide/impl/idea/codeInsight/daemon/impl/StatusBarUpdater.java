@@ -34,7 +34,7 @@ import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Component;
-import consulo.ui.FocusableComponent;
+import consulo.ui.HasFocus;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
@@ -92,7 +92,7 @@ public class StatusBarUpdater implements Disposable {
     }
 
     Component contentUIComponent = editor.getContentUIComponent();
-    if (!FocusableComponent.hasFocus(contentUIComponent)) {
+    if (!HasFocus.hasFocus(contentUIComponent)) {
       return;
     }
 
