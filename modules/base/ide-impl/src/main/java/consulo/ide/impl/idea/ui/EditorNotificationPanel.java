@@ -73,9 +73,7 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     public EditorNotificationPanel(@Nullable Color backgroundColor) {
         super(new BorderLayout());
         myBackgroundColor = backgroundColor;
-        setBorder(JBUI.Borders.empty(1, 10, 1, 10));
-
-        setPreferredSize(JBUI.size(-1, 24));
+        setBorder(JBUI.Borders.empty(4, 10, 4, 10));
 
         add(myLabel, BorderLayout.CENTER);
 
