@@ -1,5 +1,6 @@
 package consulo.credentialStorage.impl.internal.kdbx;
 
+import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 import org.jdom.Text;
 
@@ -8,6 +9,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class KdbxEntry {
     // The underlying XML element representing the entry.
@@ -61,7 +63,7 @@ public class KdbxEntry {
         if (valueElem == null) {
             return null;
         }
-        String value = nullize(valueElem.getText());
+        String value = StringUtil.nullize(valueElem.getText());
         if (isValueProtected(valueElem)) {
             throw new UnsupportedOperationException(propertyName + " protection is not supported");
         }
@@ -72,7 +74,7 @@ public class KdbxEntry {
 
     // Synchronized setter for a property.
     private synchronized Element setProperty(Element entryElem, String value, String propertyName) {
-        String normalizedValue = nullize(value);
+        String normalizedValue = StringUtil.nullize(value);
         Element propElem = getPropertyElement(entryElem, propertyName);
         if (propElem == null) {
             if (normalizedValue == null) {
@@ -81,9 +83,11 @@ public class KdbxEntry {
             propElem = createPropertyElement(entryElem, propertyName);
         }
         Element valueElem = getOrCreateChild(propElem, KdbxEntryElementNames.VALUE);
-        if (nullize(valueElem.getText()).equals(normalizedValue)) {
+
+        if (Objects.equals(StringUtil.nullize(valueElem.getText()), normalizedValue)) {
             return null;
         }
+
         valueElem.setText(value);
         if (entryElem == this.entryElement) {
             touch();
@@ -200,13 +204,6 @@ public class KdbxEntry {
             parent.addContent(child);
         }
         return child;
-    }
-
-    // Returns null if the string is null or empty after trimming.
-    private static String nullize(String s) {
-        if (s == null) return null;
-        String trimmed = s.trim();
-        return trimmed.isEmpty() ? null : trimmed;
     }
 
     // Returns the current time formatted as "yyyy-MM-dd'T'HH:mm:ss'Z'".

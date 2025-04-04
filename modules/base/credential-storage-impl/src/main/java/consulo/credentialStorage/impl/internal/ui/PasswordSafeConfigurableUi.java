@@ -136,7 +136,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
     @Override
     public boolean isModified(@Nonnull PasswordSafeSettings settings) {
         if (getActiveProviderType() != settings.getProviderType()) {
-            return false;
+            return true;
         }
 
         if (keePassDbFile == null) {

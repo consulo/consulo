@@ -29,4 +29,8 @@ module consulo.credential.storage.impl {
     exports consulo.credentialStorage.impl.internal.ui to consulo.ide.impl;
 
     opens consulo.credentialStorage.impl.internal to consulo.util.xml.serializer;
+
+    opens consulo.credentialStorage.impl.internal.linux to com.sun.jna;
+    opens consulo.credentialStorage.impl.internal.windows to com.sun.jna;
+    opens consulo.credentialStorage.impl.internal.mac to com.sun.jna;
 }

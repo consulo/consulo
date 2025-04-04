@@ -5,6 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.util.SynchronizedClearableLazy;
 import consulo.component.ProcessCanceledException;
+import consulo.component.extension.ExtensionPoint;
 import consulo.configurable.internal.ShowConfigurableService;
 import consulo.credentialStorage.CredentialAttributes;
 import consulo.credentialStorage.CredentialStore;
@@ -24,9 +25,11 @@ import consulo.credentialStorage.internal.ProviderType;
 import consulo.credentialStorage.localize.CredentialStorageLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationAction;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nullable;
 
 import java.io.Closeable;
 import java.nio.file.Path;
@@ -273,12 +276,13 @@ public abstract class BasePasswordSafe implements PasswordSafe {
         return new InMemoryCredentialStore();
     }
 
+    @Nullable
     public static CredentialStore createPersistentCredentialStore() {
-        for (CredentialStoreFactory factory : CredentialStoreFactory.CREDENTIAL_STORE_FACTORY.getExtensionList()) {
-            CredentialStore store = factory.create();
-            if (store != null) return store;
-        }
-        return null;
+        Platform platform = Platform.current();
+
+        ExtensionPoint<CredentialStoreFactory> point = Application.get().getExtensionPoint(CredentialStoreFactory.class);
+
+        return point.computeSafeIfAny(f -> f.create(platform));
     }
 
     private static Logger getLogger() {

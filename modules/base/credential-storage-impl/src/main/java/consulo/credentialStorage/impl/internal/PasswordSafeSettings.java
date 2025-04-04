@@ -1,22 +1,21 @@
 package consulo.credentialStorage.impl.internal;
 
-import consulo.credentialStorage.impl.internal.keePass.KeePassCredentialStore;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.credentialStorage.impl.internal.keePass.KeePassCredentialStore;
 import consulo.credentialStorage.internal.CredentialStoreManager;
 import consulo.credentialStorage.internal.PasswordSafeSettingsListener;
 import consulo.credentialStorage.internal.ProviderType;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import jakarta.inject.Singleton;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 @State(name = "PasswordSafe",
     storages = {@Storage(value = "security.xml", roamingType = RoamingType.DISABLED)})
@@ -48,9 +47,6 @@ public class PasswordSafeSettings implements PersistentStateComponent<PasswordSa
     }
 
     public ProviderType getProviderType() {
-        if (SystemInfo.isWindows && state.getProvider() == ProviderType.KEYCHAIN) {
-            return ProviderType.KEEPASS;
-        }
         return state.getProvider();
     }
 
