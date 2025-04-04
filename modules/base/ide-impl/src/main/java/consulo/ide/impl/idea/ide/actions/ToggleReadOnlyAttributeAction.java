@@ -82,7 +82,7 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         Application.get().runWriteAction(() -> {
             // Save all documents. We won't be able to save changes to the files that became read-only afterwards.
             FileDocumentManager.getInstance().saveAllDocuments();

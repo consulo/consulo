@@ -330,17 +330,17 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
 
     private List<ContextItem> createItems() {
         return ContainerUtil.map(getAvailableContexts(), it -> {
-            if (it instanceof RunAnythingContext.ProjectContext) {
-                return new ProjectItem((RunAnythingContext.ProjectContext) it);
+            if (it instanceof RunAnythingContext.ProjectContext projectContext) {
+                return new ProjectItem(projectContext);
             }
-            else if (it instanceof RunAnythingContext.ModuleContext) {
-                return new ModuleItem((RunAnythingContext.ModuleContext) it);
+            else if (it instanceof RunAnythingContext.ModuleContext moduleContext) {
+                return new ModuleItem(moduleContext);
             }
-            else if (it instanceof RunAnythingContext.BrowseRecentDirectoryContext) {
-                return new BrowseDirectoryItem((RunAnythingContext.BrowseRecentDirectoryContext) it);
+            else if (it instanceof RunAnythingContext.BrowseRecentDirectoryContext browseRecentDirectoryContext) {
+                return new BrowseDirectoryItem(browseRecentDirectoryContext);
             }
-            else if (it instanceof RunAnythingContext.RecentDirectoryContext) {
-                return new RecentDirectoryItem((RunAnythingContext.RecentDirectoryContext) it);
+            else if (it instanceof RunAnythingContext.RecentDirectoryContext recentDirectoryContext) {
+                return new RecentDirectoryItem(recentDirectoryContext);
             }
             else {
                 throw new UnsupportedOperationException();

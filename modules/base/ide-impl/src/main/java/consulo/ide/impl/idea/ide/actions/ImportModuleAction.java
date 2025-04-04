@@ -38,45 +38,51 @@ import jakarta.annotation.Nullable;
  * Date: 10/31/12
  */
 public class ImportModuleAction extends AnAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    assert project != null;
-    executeImportAction(project, null);
-  }
-
-  @RequiredUIAccess
-  public static void executeImportAction(@Nonnull Project project, @Nullable FileChooserDescriptor descriptor) {
-    AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser =
-      ModuleImportProcessor.showFileChooser(project, descriptor);
-
-    chooser.doWhenDone(pair -> {
-      ModuleImportContext context = pair.getFirst();
-
-      ModuleImportProvider<ModuleImportContext> provider = pair.getSecond();
-
-      ModifiableModuleModel modifiableModel = ModuleManager.getInstance(project).getModifiableModel();
-      provider.process(context, project, modifiableModel, module -> {});
-      WriteAction.runAndWait(modifiableModel::commit);
-    });
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-
-    if (e.getData(Project.KEY) == null) {
-      presentation.setEnabledAndVisible(false);
-      return;
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        assert project != null;
+        executeImportAction(project, null);
     }
 
-    presentation.setEnabledAndVisible(!ModuleImportProviders.getExtensions(true).isEmpty());
-  }
+    @RequiredUIAccess
+    public static void executeImportAction(@Nonnull Project project, @Nullable FileChooserDescriptor descriptor) {
+        AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser =
+            ModuleImportProcessor.showFileChooser(project, descriptor);
 
-  @Override
-  public boolean isDumbAware() {
-    return true;
-  }
+        chooser.doWhenDone(pair -> {
+            ModuleImportContext context = pair.getFirst();
+
+            ModuleImportProvider<ModuleImportContext> provider = pair.getSecond();
+
+            ModifiableModuleModel modifiableModel = ModuleManager.getInstance(project).getModifiableModel();
+            provider.process(
+                context,
+                project,
+                modifiableModel,
+                module -> {
+                }
+            );
+            WriteAction.runAndWait(modifiableModel::commit);
+        });
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+
+        if (e.getData(Project.KEY) == null) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
+
+        presentation.setEnabledAndVisible(!ModuleImportProviders.getExtensions(true).isEmpty());
+    }
+
+    @Override
+    public boolean isDumbAware() {
+        return true;
+    }
 }

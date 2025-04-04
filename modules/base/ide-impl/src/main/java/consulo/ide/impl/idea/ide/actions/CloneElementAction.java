@@ -26,29 +26,29 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 
 public class CloneElementAction extends CopyElementAction {
-  private static final Logger LOG = Logger.getInstance(CloneElementAction.class);
+    private static final Logger LOG = Logger.getInstance(CloneElementAction.class);
 
-  @Override
-  protected void doCopy(PsiElement[] elements, PsiDirectory defaultTargetDirectory) {
-    LOG.assertTrue(elements.length == 1);
-    CopyHandler.doClone(elements[0]);
-  }
-
-  @Override
-  @RequiredUIAccess
-  protected void updateForEditor(DataContext dataContext, Presentation presentation) {
-    super.updateForEditor(dataContext, presentation);
-    presentation.setVisible(false);
-  }
-
-  @Override
-  protected void updateForToolWindow(String id, DataContext dataContext,Presentation presentation) {
-    // work only with single selection
-    PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
-    presentation.setEnabled(elements != null && elements.length == 1 && CopyHandler.canClone(elements));
-    presentation.setVisible(true);
-    if (!ToolWindowId.COMMANDER.equals(id)) {
-      presentation.setVisible(false);
+    @Override
+    protected void doCopy(PsiElement[] elements, PsiDirectory defaultTargetDirectory) {
+        LOG.assertTrue(elements.length == 1);
+        CopyHandler.doClone(elements[0]);
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    protected void updateForEditor(DataContext dataContext, Presentation presentation) {
+        super.updateForEditor(dataContext, presentation);
+        presentation.setVisible(false);
+    }
+
+    @Override
+    protected void updateForToolWindow(String id, DataContext dataContext, Presentation presentation) {
+        // work only with single selection
+        PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
+        presentation.setEnabled(elements != null && elements.length == 1 && CopyHandler.canClone(elements));
+        presentation.setVisible(true);
+        if (!ToolWindowId.COMMANDER.equals(id)) {
+            presentation.setVisible(false);
+        }
+    }
 }

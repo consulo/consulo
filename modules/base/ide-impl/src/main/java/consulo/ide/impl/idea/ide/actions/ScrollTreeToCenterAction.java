@@ -15,32 +15,32 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.tree.TreeUtil;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author yole
  */
 public class ScrollTreeToCenterAction extends AnAction {
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (component instanceof JTree) {
-      JTree tree = (JTree)component;
-      final int[] selection = tree.getSelectionRows();
-       if (selection != null && selection.length > 0) {
-        TreeUtil.showRowCentered(tree, selection [0], false);
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        if (e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTree tree) {
+            int[] selection = tree.getSelectionRows();
+            if (selection != null && selection.length > 0) {
+                TreeUtil.showRowCentered(tree, selection[0], false);
+            }
+        }
     }
-  }
 
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTree);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTree);
+    }
 }

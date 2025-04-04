@@ -28,24 +28,26 @@ import jakarta.annotation.Nonnull;
  * @author Konstantin Bulenkov
  */
 public class EditSourceInNewWindowAction extends DumbAwareAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final FileEditorManager manager = FileEditorManager.getInstance(e == null ? null : e.getData(Project.KEY));
-    ((FileEditorManagerImpl)manager).openFileInNewWindow(getVirtualFiles(e)[0]);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final FileEditorManager manager = FileEditorManager.getInstance(e == null ? null : e.getData(Project.KEY));
+        ((FileEditorManagerImpl)manager).openFileInNewWindow(getVirtualFiles(e)[0]);
+    }
 
-  protected VirtualFile[] getVirtualFiles(AnActionEvent e) {
-    final VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
-    if (files != null) return files;
+    protected VirtualFile[] getVirtualFiles(AnActionEvent e) {
+        final VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        if (files != null) {
+            return files;
+        }
 
-    final VirtualFile file = e.getData(VirtualFile.KEY);
-    return file == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{file};
-  }
+        final VirtualFile file = e.getData(VirtualFile.KEY);
+        return file == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{file};
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible((e == null ? null : e.getData(Project.KEY)) != null && getVirtualFiles(e).length == 1);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible((e == null ? null : e.getData(Project.KEY)) != null && getVirtualFiles(e).length == 1);
+    }
 }

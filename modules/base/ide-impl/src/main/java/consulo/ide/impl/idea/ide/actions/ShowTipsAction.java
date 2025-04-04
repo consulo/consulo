@@ -27,16 +27,16 @@ import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ShowTips")
 public class ShowTipsAction extends AnAction implements DumbAware {
-  private final TipOfDayManager myManager;
+    private final TipOfDayManager myManager;
 
-  @Inject
-  public ShowTipsAction(TipOfDayManager manager) {
-    myManager = manager;
-  }
+    @Inject
+    public ShowTipsAction(TipOfDayManager manager) {
+        myManager = manager;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    myManager.showAsync();
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        myManager.showAsync();
+    }
 }

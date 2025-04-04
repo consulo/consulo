@@ -22,7 +22,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 
 public class SaveAllAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    ApplicationManager.getApplication().saveAll();
-  }
+    public void actionPerformed(AnActionEvent e) {
+        ApplicationManager.getApplication().saveAll();
+    }
 }

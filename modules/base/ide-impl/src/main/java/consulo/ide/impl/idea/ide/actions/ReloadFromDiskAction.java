@@ -38,12 +38,12 @@ public class ReloadFromDiskAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
-        final Project project = dataContext.getData(Project.KEY);
-        final Editor editor = dataContext.getData(Editor.KEY);
+        Project project = dataContext.getData(Project.KEY);
+        Editor editor = dataContext.getData(Editor.KEY);
         if (editor == null) {
             return;
         }
-        final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
         if (psiFile == null) {
             return;
         }

@@ -36,7 +36,7 @@ public class SelectAllAction extends TextComponentEditorAction implements DumbAw
     private static class Handler extends EditorActionHandler {
         @Override
         @RequiredUIAccess
-        public void execute(@Nonnull final Editor editor, DataContext dataContext) {
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
             CommandProcessor.getInstance().newCommand()
                 .project(dataContext.getData(Project.KEY))
                 .name(IdeLocalize.commandSelectAll())

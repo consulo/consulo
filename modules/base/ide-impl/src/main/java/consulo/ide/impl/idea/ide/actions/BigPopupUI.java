@@ -57,7 +57,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     protected abstract String getInitialHint();
 
     protected void installScrollingActions() {
-        ScrollingUtil.installActions(myResultsList, (JComponent) TargetAWT.to(getSearchField()));
+        ScrollingUtil.installActions(myResultsList, (JComponent)TargetAWT.to(getSearchField()));
     }
 
     @Nonnull

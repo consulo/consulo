@@ -16,32 +16,37 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.ui.UISettings;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class TabsAlphabeticalModeSwitcher extends ToggleAction {
-  @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
-    return UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT;
-  }
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        return UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT;
+    }
 
-  @Override
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-    UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT = state;
-  }
+    @Override
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT = state;
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    final int place = UISettings.getInstance().EDITOR_TAB_PLACEMENT;
-    e.getPresentation().setEnabled(UISettings.getInstance().SCROLL_TAB_LAYOUT_IN_EDITOR
-                                   || place == SwingConstants.LEFT
-                                   || place == SwingConstants.RIGHT);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        final int place = UISettings.getInstance().EDITOR_TAB_PLACEMENT;
+        e.getPresentation().setEnabled(
+            UISettings.getInstance().SCROLL_TAB_LAYOUT_IN_EDITOR
+                || place == SwingConstants.LEFT
+                || place == SwingConstants.RIGHT
+        );
+    }
 }

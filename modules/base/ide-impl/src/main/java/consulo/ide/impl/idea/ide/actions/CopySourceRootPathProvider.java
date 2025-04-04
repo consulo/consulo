@@ -26,15 +26,18 @@ import jakarta.annotation.Nullable;
 
 // from kotlin
 public class CopySourceRootPathProvider extends DumbAwareCopyPathProvider {
-  @Nullable
-  @Override
-  public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
-    return ObjectUtil.doIfNotNull(virtualFile, file -> {
-      VirtualFile sourceRootForFile = ProjectFileIndex.getInstance(project).getSourceRootForFile(file);
-      if(sourceRootForFile == null) {
-        return null;
-      }
-      return VfsUtilCore.getRelativePath(file, sourceRootForFile);
-    });
-  }
+    @Nullable
+    @Override
+    public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
+        return ObjectUtil.doIfNotNull(
+            virtualFile,
+            file -> {
+                VirtualFile sourceRootForFile = ProjectFileIndex.getInstance(project).getSourceRootForFile(file);
+                if (sourceRootForFile == null) {
+                    return null;
+                }
+                return VfsUtilCore.getRelativePath(file, sourceRootForFile);
+            }
+        );
+    }
 }

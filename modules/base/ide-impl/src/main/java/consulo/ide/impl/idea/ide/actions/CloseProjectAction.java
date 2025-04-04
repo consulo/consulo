@@ -29,33 +29,37 @@ import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 public class CloseProjectAction extends AnAction implements DumbAware {
-  private WelcomeFrameManager myWelcomeFrameManager;
-  private final ProjectManager myProjectManager;
-  private final RecentProjectsManager myRecentProjectsManager;
+    private WelcomeFrameManager myWelcomeFrameManager;
+    private final ProjectManager myProjectManager;
+    private final RecentProjectsManager myRecentProjectsManager;
 
-  @Inject
-  public CloseProjectAction(WelcomeFrameManager welcomeFrameManager, ProjectManager projectManager, RecentProjectsManager recentProjectsManager) {
-    myWelcomeFrameManager = welcomeFrameManager;
-    myProjectManager = projectManager;
-    myRecentProjectsManager = recentProjectsManager;
-  }
+    @Inject
+    public CloseProjectAction(
+        WelcomeFrameManager welcomeFrameManager,
+        ProjectManager projectManager,
+        RecentProjectsManager recentProjectsManager
+    ) {
+        myWelcomeFrameManager = welcomeFrameManager;
+        myProjectManager = projectManager;
+        myRecentProjectsManager = recentProjectsManager;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent event) {
-    Project project = event.getRequiredData(Project.KEY);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent event) {
+        Project project = event.getRequiredData(Project.KEY);
 
-    myProjectManager.closeAndDisposeAsync(project, UIAccess.current()).doWhenDone(() -> {
-      myRecentProjectsManager.updateLastProjectPath();
-      myWelcomeFrameManager.showIfNoProjectOpened();
-    });
-  }
+        myProjectManager.closeAndDisposeAsync(project, UIAccess.current()).doWhenDone(() -> {
+            myRecentProjectsManager.updateLastProjectPath();
+            myWelcomeFrameManager.showIfNoProjectOpened();
+        });
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    presentation.setEnabled(project != null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        presentation.setEnabled(project != null);
+    }
 }

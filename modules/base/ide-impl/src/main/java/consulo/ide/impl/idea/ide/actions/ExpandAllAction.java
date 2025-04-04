@@ -25,14 +25,14 @@ import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "ExpandAll")
 public class ExpandAllAction extends TreeExpandAllActionBase {
-  @Override
-  protected TreeExpander getExpander(DataContext dataContext) {
-    return dataContext.getData(PlatformDataKeys.TREE_EXPANDER);
-  }
+    @Override
+    protected TreeExpander getExpander(DataContext dataContext) {
+        return dataContext.getData(PlatformDataKeys.TREE_EXPANDER);
+    }
 
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.actionsExpandall();
-  }
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.actionsExpandall();
+    }
 }

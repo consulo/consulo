@@ -14,30 +14,32 @@ import java.awt.datatransfer.StringSelection;
 import static consulo.ui.ex.action.ActionPlaces.KEYBOARD_SHORTCUT;
 
 public class CopyPathsAction extends AnAction implements DumbAware {
-  public CopyPathsAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
-    if (files != null && files.length > 0) {
-      CopyPasteManager.getInstance().setContents(new StringSelection(getPaths(files)));
+    public CopyPathsAction() {
+        setEnabledInModalContext(true);
     }
-  }
 
-  private static String getPaths(VirtualFile[] files) {
-    StringBuilder buf = new StringBuilder(files.length * 64);
-    for (VirtualFile file : files) {
-      if (buf.length() > 0) buf.append('\n');
-      buf.append(file.getPresentableUrl());
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        if (files != null && files.length > 0) {
+            CopyPasteManager.getInstance().setContents(new StringSelection(getPaths(files)));
+        }
     }
-    return buf.toString();
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    event.getPresentation().setEnabledAndVisible(KEYBOARD_SHORTCUT.equals(event.getPlace()));
-  }
+    private static String getPaths(VirtualFile[] files) {
+        StringBuilder buf = new StringBuilder(files.length * 64);
+        for (VirtualFile file : files) {
+            if (buf.length() > 0) {
+                buf.append('\n');
+            }
+            buf.append(file.getPresentableUrl());
+        }
+        return buf.toString();
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        event.getPresentation().setEnabledAndVisible(KEYBOARD_SHORTCUT.equals(event.getPlace()));
+    }
 }

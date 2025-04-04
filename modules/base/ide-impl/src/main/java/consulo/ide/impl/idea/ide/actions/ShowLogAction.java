@@ -24,24 +24,25 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 
 /**
  * @author pegov
  */
 public class ShowLogAction extends AnAction implements DumbAware {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final File logFile = new File(ContainerPathManager.get().getLogPath(), "consulo.log");
-    ShowFilePathAction.openFile(logFile);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        File logFile = new File(ContainerPathManager.get().getLogPath(), "consulo.log");
+        ShowFilePathAction.openFile(logFile);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    presentation.setVisible(ShowFilePathAction.isSupported());
-    presentation.setTextValue(ActionLocalize.showLogInActionText(ShowFilePathAction.getFileManagerName()));
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        presentation.setVisible(ShowFilePathAction.isSupported());
+        presentation.setTextValue(ActionLocalize.showLogInActionText(ShowFilePathAction.getFileManagerName()));
+    }
 }

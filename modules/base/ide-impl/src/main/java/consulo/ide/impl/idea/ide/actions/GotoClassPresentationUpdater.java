@@ -19,15 +19,15 @@ package consulo.ide.impl.idea.ide.actions;
  * from kotlin
  */
 public class GotoClassPresentationUpdater {
-  public static String getTabTitle(boolean pluralize) {
-    return "Classes";
-  }
+    public static String getTabTitle(boolean pluralize) {
+        return "Classes";
+    }
 
-  public static String getActionTitle() {
-    return "Class";
-  }
+    public static String getActionTitle() {
+        return "Class";
+    }
 
-  public static String[] getElementKinds() {
-    return new String[]{"Class"};
-  }
+    public static String[] getElementKinds() {
+        return new String[]{"Class"};
+    }
 }

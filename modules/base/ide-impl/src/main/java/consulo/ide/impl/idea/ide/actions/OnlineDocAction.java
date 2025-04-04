@@ -30,16 +30,16 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "OnlineDocAction")
 public class OnlineDocAction extends DumbAwareAction {
-  private final Provider<HelpManager> myHelpManagerProvider;
+    private final Provider<HelpManager> myHelpManagerProvider;
 
-  @Inject
-  public OnlineDocAction(Provider<HelpManager> helpManagerProvider) {
-    myHelpManagerProvider = helpManagerProvider;
-  }
+    @Inject
+    public OnlineDocAction(Provider<HelpManager> helpManagerProvider) {
+        myHelpManagerProvider = helpManagerProvider;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    myHelpManagerProvider.get().invokeHelp(null);
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        myHelpManagerProvider.get().invokeHelp(null);
+    }
 }

@@ -33,51 +33,59 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ShowContentAction extends AnAction implements DumbAware {
-  private ToolWindow myWindow;
+    private ToolWindow myWindow;
 
-  @SuppressWarnings({"UnusedDeclaration"})
-  public ShowContentAction() {
-  }
+    @SuppressWarnings({"UnusedDeclaration"})
+    public ShowContentAction() {
+    }
 
-  public ShowContentAction(ToolWindow window, JComponent c) {
-    myWindow = window;
-    AnAction original = ActionManager.getInstance().getAction("ShowContent");
-    new ShadowAction(this, original, c);
-    copyFrom(original);
-  }
+    public ShowContentAction(ToolWindow window, JComponent c) {
+        myWindow = window;
+        AnAction original = ActionManager.getInstance().getAction("ShowContent");
+        new ShadowAction(this, original, c);
+        copyFrom(original);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final ToolWindow window = getWindow(e);
-    e.getPresentation().setEnabled(window != null && window.getContentManager().getContentCount() > 1);
-    e.getPresentation().setText(
-      window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED ? "Show List of Tabs" : "Show List of Views"
-    );
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ToolWindow window = getWindow(e);
+        e.getPresentation().setEnabled(window != null && window.getContentManager().getContentCount() > 1);
+        e.getPresentation().setText(
+            window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED ? "Show List of Tabs" : "Show List of Views"
+        );
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    getWindow(e).showContentPopup(e.getInputEvent());
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        getWindow(e).showContentPopup(e.getInputEvent());
+    }
 
-  @Nullable
-  @RequiredUIAccess
-  private ToolWindow getWindow(AnActionEvent event) {
-    if (myWindow != null) return myWindow;
+    @Nullable
+    @RequiredUIAccess
+    private ToolWindow getWindow(AnActionEvent event) {
+        if (myWindow != null) {
+            return myWindow;
+        }
 
-    Project project = event.getData(Project.KEY);
-    if (project == null) return null;
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            return null;
+        }
 
-    ToolWindowManager manager = ToolWindowManager.getInstance(project);
+        ToolWindowManager manager = ToolWindowManager.getInstance(project);
 
-    final ToolWindow window = manager.getToolWindow(manager.getActiveToolWindowId());
-    if (window == null) return null;
+        ToolWindow window = manager.getToolWindow(manager.getActiveToolWindowId());
+        if (window == null) {
+            return null;
+        }
 
-    final Component context = event.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (context == null) return null;
+        Component context = event.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        if (context == null) {
+            return null;
+        }
 
-    return SwingUtilities.isDescendingFrom(window.getComponent(), context) ? window : null;
-  }
+        return SwingUtilities.isDescendingFrom(window.getComponent(), context) ? window : null;
+    }
 }

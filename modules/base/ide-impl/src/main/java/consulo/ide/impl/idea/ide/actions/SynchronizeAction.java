@@ -23,10 +23,10 @@ import consulo.application.dumb.DumbAware;
 import consulo.virtualFileSystem.VirtualFileManager;
 
 public class SynchronizeAction extends AnAction implements DumbAware {
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    FileDocumentManager.getInstance().saveAllDocuments();
-    SaveAndSyncHandler.getInstance().refreshOpenFiles();
-    VirtualFileManager.getInstance().refreshWithoutFileWatcher(true);
-  }
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        FileDocumentManager.getInstance().saveAllDocuments();
+        SaveAndSyncHandler.getInstance().refreshOpenFiles();
+        VirtualFileManager.getInstance().refreshWithoutFileWatcher(true);
+    }
 }

@@ -28,15 +28,15 @@ import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "HelpTopics")
 public class HelpTopicsAction extends DumbAwareAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    HelpManager.getInstance().invokeHelp("");
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        HelpManager.getInstance().invokeHelp("");
+    }
 
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.actionsHelp();
-  }
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.actionsHelp();
+    }
 }

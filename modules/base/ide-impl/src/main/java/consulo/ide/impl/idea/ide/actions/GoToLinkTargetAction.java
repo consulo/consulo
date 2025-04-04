@@ -26,28 +26,28 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 
 public class GoToLinkTargetAction extends DumbAwareAction {
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    Project project = e == null ? null : e.getData(Project.KEY);
-    VirtualFile file = e.getDataContext().getData(VirtualFile.KEY);
-    e.getPresentation().setEnabledAndVisible(project != null && file != null && file.is(VFileProperty.SYMLINK));
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e == null ? null : e.getData(Project.KEY);
-    VirtualFile file = e.getDataContext().getData(VirtualFile.KEY);
-    if (project != null && file != null && file.is(VFileProperty.SYMLINK)) {
-      VirtualFile target = file.getCanonicalFile();
-      if (target != null) {
-        PsiManager psiManager = PsiManager.getInstance(project);
-        PsiFileSystemItem psiFile = target.isDirectory() ? psiManager.findDirectory(target) : psiManager.findFile(target);
-        if (psiFile != null) {
-          ProjectView.getInstance(project).select(psiFile, target, false);
-        }
-      }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        Project project = e == null ? null : e.getData(Project.KEY);
+        VirtualFile file = e.getDataContext().getData(VirtualFile.KEY);
+        e.getPresentation().setEnabledAndVisible(project != null && file != null && file.is(VFileProperty.SYMLINK));
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e == null ? null : e.getData(Project.KEY);
+        VirtualFile file = e.getDataContext().getData(VirtualFile.KEY);
+        if (project != null && file != null && file.is(VFileProperty.SYMLINK)) {
+            VirtualFile target = file.getCanonicalFile();
+            if (target != null) {
+                PsiManager psiManager = PsiManager.getInstance(project);
+                PsiFileSystemItem psiFile = target.isDirectory() ? psiManager.findDirectory(target) : psiManager.findFile(target);
+                if (psiFile != null) {
+                    ProjectView.getInstance(project).select(psiFile, target, false);
+                }
+            }
+        }
+    }
 }

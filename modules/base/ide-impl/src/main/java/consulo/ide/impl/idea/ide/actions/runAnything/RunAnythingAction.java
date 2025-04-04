@@ -37,27 +37,30 @@ public class RunAnythingAction extends AnAction implements DumbAware {
     private boolean myIsDoubleCtrlRegistered;
 
     public RunAnythingAction(@Nonnull IdeEventQueueProxy ideEventQueueProxy) {
-        ideEventQueueProxy.addPostprocessor(event -> {
-            if (event instanceof KeyEvent) {
-                final int keyCode = ((KeyEvent) event).getKeyCode();
-                if (keyCode == KeyEvent.VK_SHIFT) {
-                    SHIFT_IS_PRESSED.set(event.getID() == KeyEvent.KEY_PRESSED);
+        ideEventQueueProxy.addPostprocessor(
+            event -> {
+                if (event instanceof KeyEvent keyEvent) {
+                    int keyCode = keyEvent.getKeyCode();
+                    if (keyCode == KeyEvent.VK_SHIFT) {
+                        SHIFT_IS_PRESSED.set(keyEvent.getID() == KeyEvent.KEY_PRESSED);
+                    }
+                    else if (keyCode == KeyEvent.VK_ALT) {
+                        ALT_IS_PRESSED.set(keyEvent.getID() == KeyEvent.KEY_PRESSED);
+                    }
                 }
-                else if (keyCode == KeyEvent.VK_ALT) {
-                    ALT_IS_PRESSED.set(event.getID() == KeyEvent.KEY_PRESSED);
-                }
-            }
-            return false;
-        }, null);
+                return false;
+            },
+            null
+        );
     }
 
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        if (Registry.is("ide.suppress.double.click.handler") && e.getInputEvent() instanceof KeyEvent) {
-            if (((KeyEvent) e.getInputEvent()).getKeyCode() == KeyEvent.VK_CONTROL) {
-                return;
-            }
+        if (Registry.is("ide.suppress.double.click.handler")
+            && e.getInputEvent() instanceof KeyEvent keyEvent
+            && keyEvent.getKeyCode() == KeyEvent.VK_CONTROL) {
+            return;
         }
 
         Project project = e.getData(Project.KEY);
@@ -70,18 +73,21 @@ public class RunAnythingAction extends AnAction implements DumbAware {
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().putClientProperty(CustomShortcutBuilder.KEY, () -> {
-            if (myIsDoubleCtrlRegistered) {
-                return IdeLocalize.runAnythingDoubleCtrlShortcut(
-                    Platform.current().os().isMac() ? FontUtil.thinSpace() + MacKeymapUtil.CONTROL : "Ctrl"
-                );
+        e.getPresentation().putClientProperty(
+            CustomShortcutBuilder.KEY,
+            () -> {
+                if (myIsDoubleCtrlRegistered) {
+                    return IdeLocalize.runAnythingDoubleCtrlShortcut(
+                        Platform.current().os().isMac() ? FontUtil.thinSpace() + MacKeymapUtil.CONTROL : "Ctrl"
+                    );
+                }
+                //keymap shortcut is added automatically
+                return LocalizeValue.of();
             }
-            //keymap shortcut is added automatically
-            return LocalizeValue.of();
-        });
+        );
 
         if (getActiveKeymapShortcuts(RUN_ANYTHING_ACTION_ID).getShortcuts().length == 0) {
             if (!myIsDoubleCtrlRegistered) {

@@ -26,15 +26,15 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 public class ExitAction extends AnAction implements DumbAware {
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setVisible(!TopApplicationMenuUtil.isMacSystemMenu);
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setVisible(!TopApplicationMenuUtil.isMacSystemMenu);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Application.get().exit();
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Application.get().exit();
+    }
 }

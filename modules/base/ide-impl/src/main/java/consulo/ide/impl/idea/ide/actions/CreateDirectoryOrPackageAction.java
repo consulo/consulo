@@ -50,167 +50,173 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class CreateDirectoryOrPackageAction extends AnAction implements DumbAware {
-  public CreateDirectoryOrPackageAction() {
-    super(IdeLocalize.actionCreateNewDirectoryOrPackage(), IdeLocalize.actionCreateNewDirectoryOrPackage(), null);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    IdeView view = e.getData(IdeView.KEY);
-    Project project = e.getData(Project.KEY);
-
-    if (view == null || project == null) {
-      return;
+    public CreateDirectoryOrPackageAction() {
+        super(IdeLocalize.actionCreateNewDirectoryOrPackage(), IdeLocalize.actionCreateNewDirectoryOrPackage(), null);
     }
 
-    PsiDirectory directory = DirectoryChooserUtil.getOrChooseDirectory(view);
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        IdeView view = e.getData(IdeView.KEY);
+        Project project = e.getData(Project.KEY);
 
-    if (directory == null) {
-      return;
-    }
-
-    Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> info = getInfo(directory);
-
-    boolean isDirectory = info.getThird() == CreateDirectoryOrPackageType.Directory;
-
-    CreateDirectoryOrPackageHandler validator = new CreateDirectoryOrPackageHandler(project, directory, info.getThird(), info.getThird().getSeparator());
-
-    LocalizeValue title = isDirectory ? IdeLocalize.titleNewDirectory() : IdeLocalize.titleNewPackage();
-
-    String defaultValue = info.getThird().getDefaultValue(directory);
-
-    createLightWeightPopup(
-      validator,
-      title.get(),
-      defaultValue,
-      element -> {
-        if (element != null) {
-          view.selectElement(element);
+        if (view == null || project == null) {
+            return;
         }
-      })
-      .showCenteredInCurrentWindow(project);
-  }
 
-  @Nonnull
-  @RequiredUIAccess
-  private JBPopup createLightWeightPopup(
-    CreateDirectoryOrPackageHandler validator,
-    String title,
-    String defaultValue,
-    Consumer<PsiElement> consumer
-  ) {
-    NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
-    TextBox nameField = contentPanel.getTextField();
-    if (!StringUtil.isEmptyOrSpaces(defaultValue)) {
-        nameField.setValue(defaultValue);
-    }
-    JBPopup popup = NewItemPopupUtil.createNewItemPopup(title, contentPanel, (JComponent)TargetAWT.to(nameField));
-    contentPanel.addValidator(value -> {
-      if (!validator.checkInput(value)) {
-        String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
-        return new ValidableComponent.ValidationInfo(message);
-      }
+        PsiDirectory directory = DirectoryChooserUtil.getOrChooseDirectory(view);
 
-      return null;
-    });
-
-    contentPanel.setApplyAction(event -> {
-      String name = nameField.getValue();
-      validator.canClose(name);
-
-      popup.closeOk(event);
-      consumer.accept(validator.getCreatedElement());
-    });
-
-    return popup;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setVisible(false);
-      presentation.setEnabled(false);
-      return;
-    }
-
-    IdeView view = event.getData(IdeView.KEY);
-    if (view == null) {
-      presentation.setVisible(false);
-      presentation.setEnabled(false);
-      return;
-    }
-
-    final PsiDirectory[] directories = view.getDirectories();
-    if (directories.length == 0) {
-      presentation.setVisible(false);
-      presentation.setEnabled(false);
-      return;
-    }
-
-    presentation.setVisible(true);
-    presentation.setEnabled(true);
-
-    // is more that one directories not show package support
-    if (directories.length > 1) {
-      presentation.setText(CreateDirectoryOrPackageType.Directory.getName());
-      presentation.setIcon(AllIcons.Nodes.TreeClosed);
-    }
-    else {
-      Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> info = getInfo(directories[0]);
-
-      presentation.setText(info.getThird().getName());
-
-      ContentFolderTypeProvider first = info.getFirst();
-      Image childIcon;
-      if (first == null) {
-        childIcon = AllIcons.Nodes.TreeClosed;
-      }
-      else {
-        childIcon = first.getChildPackageIcon() == null ? first.getChildDirectoryIcon() : first.getChildPackageIcon();
-      }
-      presentation.setIcon(childIcon);
-    }
-  }
-
-  @Nonnull
-  @RequiredUIAccess
-  private static Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> getInfo(PsiDirectory d) {
-    Project project = d.getProject();
-    ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(project);
-
-    Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(d);
-    if (moduleForPsiElement != null) {
-      boolean isPackageSupported = false;
-      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForPsiElement);
-      List<PsiPackageSupportProvider> extensions = PsiPackageSupportProvider.EP_NAME.getExtensionList();
-      for (ModuleExtension moduleExtension : moduleRootManager.getExtensions()) {
-        for (PsiPackageSupportProvider supportProvider : extensions) {
-          if (supportProvider.isSupported(moduleExtension)) {
-            isPackageSupported = true;
-            break;
-          }
+        if (directory == null) {
+            return;
         }
-      }
 
-      if (isPackageSupported) {
-        ContentFolderTypeProvider contentFolderTypeForFile = projectFileIndex.getContentFolderTypeForFile(d.getVirtualFile());
-        if (contentFolderTypeForFile != null) {
-          Image childPackageIcon = contentFolderTypeForFile.getChildPackageIcon();
-          return Trinity.create(contentFolderTypeForFile, d, childPackageIcon != null ? CreateDirectoryOrPackageType.Package : CreateDirectoryOrPackageType.Directory);
-        }
-      }
+        Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> info = getInfo(directory);
+
+        boolean isDirectory = info.getThird() == CreateDirectoryOrPackageType.Directory;
+
+        CreateDirectoryOrPackageHandler validator =
+            new CreateDirectoryOrPackageHandler(project, directory, info.getThird(), info.getThird().getSeparator());
+
+        LocalizeValue title = isDirectory ? IdeLocalize.titleNewDirectory() : IdeLocalize.titleNewPackage();
+
+        String defaultValue = info.getThird().getDefaultValue(directory);
+
+        createLightWeightPopup(
+            validator,
+            title.get(),
+            defaultValue,
+            element -> {
+                if (element != null) {
+                    view.selectElement(element);
+                }
+            }
+        ).showCenteredInCurrentWindow(project);
     }
 
-    return Trinity.create(null, d, CreateDirectoryOrPackageType.Directory);
-  }
+    @Nonnull
+    @RequiredUIAccess
+    private JBPopup createLightWeightPopup(
+        CreateDirectoryOrPackageHandler validator,
+        String title,
+        String defaultValue,
+        Consumer<PsiElement> consumer
+    ) {
+        NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
+        TextBox nameField = contentPanel.getTextField();
+        if (!StringUtil.isEmptyOrSpaces(defaultValue)) {
+            nameField.setValue(defaultValue);
+        }
+        JBPopup popup = NewItemPopupUtil.createNewItemPopup(title, contentPanel, (JComponent)TargetAWT.to(nameField));
+        contentPanel.addValidator(value -> {
+            if (!validator.checkInput(value)) {
+                String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
+                return new ValidableComponent.ValidationInfo(message);
+            }
+
+            return null;
+        });
+
+        contentPanel.setApplyAction(event -> {
+            String name = nameField.getValue();
+            validator.canClose(name);
+
+            popup.closeOk(event);
+            consumer.accept(validator.getCreatedElement());
+        });
+
+        return popup;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setVisible(false);
+            presentation.setEnabled(false);
+            return;
+        }
+
+        IdeView view = event.getData(IdeView.KEY);
+        if (view == null) {
+            presentation.setVisible(false);
+            presentation.setEnabled(false);
+            return;
+        }
+
+        PsiDirectory[] directories = view.getDirectories();
+        if (directories.length == 0) {
+            presentation.setVisible(false);
+            presentation.setEnabled(false);
+            return;
+        }
+
+        presentation.setVisible(true);
+        presentation.setEnabled(true);
+
+        // is more that one directories not show package support
+        if (directories.length > 1) {
+            presentation.setText(CreateDirectoryOrPackageType.Directory.getName());
+            presentation.setIcon(AllIcons.Nodes.TreeClosed);
+        }
+        else {
+            Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> info = getInfo(directories[0]);
+
+            presentation.setText(info.getThird().getName());
+
+            ContentFolderTypeProvider first = info.getFirst();
+            Image childIcon;
+            if (first == null) {
+                childIcon = AllIcons.Nodes.TreeClosed;
+            }
+            else {
+                childIcon = first.getChildPackageIcon() == null ? first.getChildDirectoryIcon() : first.getChildPackageIcon();
+            }
+            presentation.setIcon(childIcon);
+        }
+    }
+
+    @Nonnull
+    @RequiredUIAccess
+    private static Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> getInfo(PsiDirectory d) {
+        Project project = d.getProject();
+        ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(project);
+
+        Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(d);
+        if (moduleForPsiElement != null) {
+            boolean isPackageSupported = false;
+            ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForPsiElement);
+            List<PsiPackageSupportProvider> extensions = PsiPackageSupportProvider.EP_NAME.getExtensionList();
+            for (ModuleExtension moduleExtension : moduleRootManager.getExtensions()) {
+                for (PsiPackageSupportProvider supportProvider : extensions) {
+                    if (supportProvider.isSupported(moduleExtension)) {
+                        isPackageSupported = true;
+                        break;
+                    }
+                }
+            }
+
+            if (isPackageSupported) {
+                ContentFolderTypeProvider contentFolderTypeForFile = projectFileIndex.getContentFolderTypeForFile(d.getVirtualFile());
+                if (contentFolderTypeForFile != null) {
+                    Image childPackageIcon = contentFolderTypeForFile.getChildPackageIcon();
+                    return Trinity.create(
+                        contentFolderTypeForFile,
+                        d,
+                        childPackageIcon != null ? CreateDirectoryOrPackageType.Package : CreateDirectoryOrPackageType.Directory
+                    );
+                }
+            }
+        }
+
+        return Trinity.create(null, d, CreateDirectoryOrPackageType.Directory);
+    }
 }

@@ -16,5 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 public class NextTabAction extends TabNavigationActionBase {
-  public NextTabAction () { super (+1); }
+    public NextTabAction() {
+        super(+1);
+    }
 }

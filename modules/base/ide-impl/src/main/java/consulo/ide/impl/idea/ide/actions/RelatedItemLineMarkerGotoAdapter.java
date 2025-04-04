@@ -29,6 +29,7 @@ import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 
 /**
@@ -36,60 +37,60 @@ import java.util.*;
  */
 @ExtensionImpl
 public class RelatedItemLineMarkerGotoAdapter extends GotoRelatedProvider {
-  @Nonnull
-  @Override
-  @RequiredReadAction
-  public List<? extends GotoRelatedItem> getItems(@Nonnull PsiElement context) {
-    List<PsiElement> parents = new ArrayList<>();
-    PsiElement current = context;
-    Set<Language> languages = new HashSet<>();
-    while (current != null) {
-      parents.add(current);
-      languages.add(current.getLanguage());
-      if (current instanceof PsiFile) break;
-      current = current.getParent();
-    }
-
-    List<LineMarkerProvider> providers = new ArrayList<>();
-    for (Language language : languages) {
-      providers.addAll(LineMarkersPass.getMarkerProviders(context.getContainingFile(), language, context.getProject()));
-    }
-
-    List<GotoRelatedItem> items = new ArrayList<>();
-    for (LineMarkerProvider provider : providers) {
-      if (provider instanceof RelatedItemLineMarkerProvider) {
-        List<RelatedItemLineMarkerInfo> markers = new ArrayList<>();
-        RelatedItemLineMarkerProvider relatedItemLineMarkerProvider = (RelatedItemLineMarkerProvider)provider;
-        for (PsiElement parent : parents) {
-          ContainerUtil.addIfNotNull(markers, relatedItemLineMarkerProvider.getLineMarkerInfo(parent));
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public List<? extends GotoRelatedItem> getItems(@Nonnull PsiElement context) {
+        List<PsiElement> parents = new ArrayList<>();
+        PsiElement current = context;
+        Set<Language> languages = new HashSet<>();
+        while (current != null) {
+            parents.add(current);
+            languages.add(current.getLanguage());
+            if (current instanceof PsiFile) {
+                break;
+            }
+            current = current.getParent();
         }
-        relatedItemLineMarkerProvider.collectNavigationMarkers(parents, markers, true);
 
-        addItemsForMarkers(markers, items);
-      }
+        List<LineMarkerProvider> providers = new ArrayList<>();
+        for (Language language : languages) {
+            providers.addAll(LineMarkersPass.getMarkerProviders(context.getContainingFile(), language, context.getProject()));
+        }
+
+        List<GotoRelatedItem> items = new ArrayList<>();
+        for (LineMarkerProvider provider : providers) {
+            if (provider instanceof RelatedItemLineMarkerProvider relatedItemLineMarkerProvider) {
+                List<RelatedItemLineMarkerInfo> markers = new ArrayList<>();
+                for (PsiElement parent : parents) {
+                    ContainerUtil.addIfNotNull(markers, relatedItemLineMarkerProvider.getLineMarkerInfo(parent));
+                }
+                relatedItemLineMarkerProvider.collectNavigationMarkers(parents, markers, true);
+
+                addItemsForMarkers(markers, items);
+            }
+        }
+
+        return items;
     }
 
-    return items;
-  }
-
-  private static void addItemsForMarkers(List<RelatedItemLineMarkerInfo> markers,
-                                         List<GotoRelatedItem> result) {
-    Set<PsiFile> addedFiles = new HashSet<>();
-    for (RelatedItemLineMarkerInfo<?> marker : markers) {
-      Collection<? extends GotoRelatedItem> items = marker.createGotoRelatedItems();
-      for (GotoRelatedItem item : items) {
-        PsiElement element = item.getElement();
-        if (element instanceof PsiFile) {
-          PsiFile file = (PsiFile)element;
-          if (addedFiles.contains(file)) {
-            continue;
-          }
+    private static void addItemsForMarkers(
+        List<RelatedItemLineMarkerInfo> markers,
+        List<GotoRelatedItem> result
+    ) {
+        Set<PsiFile> addedFiles = new HashSet<>();
+        for (RelatedItemLineMarkerInfo<?> marker : markers) {
+            Collection<? extends GotoRelatedItem> items = marker.createGotoRelatedItems();
+            for (GotoRelatedItem item : items) {
+                PsiElement element = item.getElement();
+                if (element instanceof PsiFile file && addedFiles.contains(file)) {
+                    continue;
+                }
+                if (element != null) {
+                    ContainerUtil.addIfNotNull(addedFiles, element.getContainingFile());
+                }
+                result.add(item);
+            }
         }
-        if (element != null) {
-          ContainerUtil.addIfNotNull(addedFiles, element.getContainingFile());
-        }
-        result.add(item);
-      }
     }
-  }
 }

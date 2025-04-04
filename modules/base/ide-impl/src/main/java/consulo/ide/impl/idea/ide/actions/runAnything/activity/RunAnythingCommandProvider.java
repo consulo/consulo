@@ -41,7 +41,7 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
     @Nonnull Executor executor,
     @Nonnull DataContext dataContext
   ) {
-    final Project project = dataContext.getData(Project.KEY);
+    Project project = dataContext.getData(Project.KEY);
     LOG.assertTrue(project != null);
 
     Collection<String> commands = RunAnythingCache.getInstance(project).getState().getCommands();

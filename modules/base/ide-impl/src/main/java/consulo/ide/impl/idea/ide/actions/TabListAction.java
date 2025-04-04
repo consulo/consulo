@@ -25,24 +25,24 @@ import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
  * @author yole
  */
 public class TabListAction extends AnAction {
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    JBTabsImpl tabs = e.getData(JBTabsImpl.NAVIGATION_ACTIONS_KEY);
-    if (tabs != null) {
-      tabs.showMorePopup(null);
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        JBTabsImpl tabs = e.getData(JBTabsImpl.NAVIGATION_ACTIONS_KEY);
+        if (tabs != null) {
+            tabs.showMorePopup(null);
+        }
     }
-  }
 
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(isTabListAvailable(e));
-  }
-
-  private static boolean isTabListAvailable(AnActionEvent e) {
-    JBTabsImpl tabs = e.getData(JBTabsImpl.NAVIGATION_ACTIONS_KEY);
-    if (tabs == null || !tabs.isEditorTabs()) {
-      return false;
+    @Override
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(isTabListAvailable(e));
     }
-    return tabs.canShowMorePopup();
-  }
+
+    private static boolean isTabListAvailable(AnActionEvent e) {
+        JBTabsImpl tabs = e.getData(JBTabsImpl.NAVIGATION_ACTIONS_KEY);
+        if (tabs == null || !tabs.isEditorTabs()) {
+            return false;
+        }
+        return tabs.canShowMorePopup();
+    }
 }

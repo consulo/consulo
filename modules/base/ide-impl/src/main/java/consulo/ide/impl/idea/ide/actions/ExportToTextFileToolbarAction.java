@@ -21,14 +21,14 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 
 public class ExportToTextFileToolbarAction extends ExportToTextFileAction {
-  private final ExporterToTextFile myExporterToTextFile;
+    private final ExporterToTextFile myExporterToTextFile;
 
-  public ExportToTextFileToolbarAction(ExporterToTextFile exporterToTextFile) {
-    myExporterToTextFile = exporterToTextFile;
-    copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_EXPORT_TO_TEXT_FILE));
-  }
+    public ExportToTextFileToolbarAction(ExporterToTextFile exporterToTextFile) {
+        myExporterToTextFile = exporterToTextFile;
+        copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_EXPORT_TO_TEXT_FILE));
+    }
 
-  protected ExporterToTextFile getExporter(DataContext dataContext) {
-    return myExporterToTextFile;
-  }
+    protected ExporterToTextFile getExporter(DataContext dataContext) {
+        return myExporterToTextFile;
+    }
 }

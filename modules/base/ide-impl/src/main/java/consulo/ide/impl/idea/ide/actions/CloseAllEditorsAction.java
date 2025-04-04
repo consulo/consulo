@@ -32,16 +32,16 @@ import consulo.virtualFileSystem.VirtualFile;
 public class CloseAllEditorsAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(final AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .name(IdeLocalize.commandCloseAllEditors())
             .run(() -> {
-                final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
+                FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
                 if (window != null) {
-                    final VirtualFile[] files = window.getFiles();
-                    for (final VirtualFile file : files) {
+                    VirtualFile[] files = window.getFiles();
+                    for (VirtualFile file : files) {
                         window.closeFile(file);
                     }
                     return;
@@ -49,7 +49,7 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
                 FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
                 VirtualFile selectedFile = fileEditorManager.getSelectedFiles()[0];
                 VirtualFile[] openFiles = fileEditorManager.getSiblings(selectedFile);
-                for (final VirtualFile openFile : openFiles) {
+                for (VirtualFile openFile : openFiles) {
                     fileEditorManager.closeFile(openFile);
                 }
             });
@@ -59,7 +59,7 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
-        final FileEditorWindow editorWindow = event.getData(FileEditorWindow.DATA_KEY);
+        FileEditorWindow editorWindow = event.getData(FileEditorWindow.DATA_KEY);
         LocalizeValue text = editorWindow != null && editorWindow.inSplitter()
             ? IdeLocalize.actionCloseAllEditorsInTabGroup()
             : IdeLocalize.actionCloseAllEditors();

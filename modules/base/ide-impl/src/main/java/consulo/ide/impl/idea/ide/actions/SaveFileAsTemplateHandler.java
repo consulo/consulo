@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ComponentScope;
@@ -27,8 +26,8 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SaveFileAsTemplateHandler {
-  ExtensionPointName<SaveFileAsTemplateHandler> EP_NAME = ExtensionPointName.create(SaveFileAsTemplateHandler.class);
+    ExtensionPointName<SaveFileAsTemplateHandler> EP_NAME = ExtensionPointName.create(SaveFileAsTemplateHandler.class);
 
-  @Nullable
-  String getTemplateText(PsiFile file, String fileText, String nameWithoutExtension);
+    @Nullable
+    String getTemplateText(PsiFile file, String fileText, String nameWithoutExtension);
 }

@@ -24,16 +24,16 @@ import jakarta.annotation.Nullable;
 
 // from kotlin
 public class CopyFileWithLineNumberPathProvider extends DumbAwareCopyPathProvider {
-  @Nullable
-  @Override
-  public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
-    if (virtualFile == null) {
-      return null;
+    @Nullable
+    @Override
+    public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
+        if (virtualFile == null) {
+            return null;
+        }
+        else if (editor != null) {
+            int line = editor.getCaretModel().getLogicalPosition().line + 1;
+            return QualifiedNameProviderUtil.getVirtualFileFqn(virtualFile, project) + ":" + line;
+        }
+        return null;
     }
-    else if (editor != null) {
-      int line = editor.getCaretModel().getLogicalPosition().line + 1;
-      return QualifiedNameProviderUtil.getVirtualFileFqn(virtualFile, project) + ":" + line;
-    }
-    return null;
-  }
 }

@@ -22,15 +22,15 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
-public class EditFileTemplatesAction extends AnAction{
-  public EditFileTemplatesAction(String text) {
-    super(text);
-  }
+public class EditFileTemplatesAction extends AnAction {
+    public EditFileTemplatesAction(String text) {
+        super(text);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e){
-    ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(e.getDataContext().getData(Project.KEY));
-    dialog.show();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(e.getDataContext().getData(Project.KEY));
+        dialog.show();
+    }
 }

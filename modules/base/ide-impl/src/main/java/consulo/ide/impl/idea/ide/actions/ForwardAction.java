@@ -25,23 +25,25 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class ForwardAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return;
-    IdeDocumentHistory.getInstance(project).forward();
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e){
-    Presentation presentation = e.getPresentation();
-    Project project = e.getData(Project.KEY);
-    if (project == null || project.isDisposed()) {
-      presentation.setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        IdeDocumentHistory.getInstance(project).forward();
     }
-    presentation.setEnabled(IdeDocumentHistory.getInstance(project).isForwardAvailable());
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Project project = e.getData(Project.KEY);
+        if (project == null || project.isDisposed()) {
+            presentation.setEnabled(false);
+            return;
+        }
+        presentation.setEnabled(IdeDocumentHistory.getInstance(project).isForwardAvailable());
+    }
 }

@@ -28,53 +28,52 @@ import consulo.ui.ex.toolWindow.ToolWindowType;
 import jakarta.annotation.Nonnull;
 
 public class ToggleFloatingModeAction extends ToggleAction implements DumbAware {
+    @Override
+    @RequiredUIAccess
+    public boolean isSelected(AnActionEvent event) {
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            return false;
+        }
+        ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
+        String id = windowManager.getActiveToolWindowId();
+        return id != null && ToolWindowType.FLOATING == windowManager.getToolWindow(id).getType();
+    }
 
-  @Override
-  @RequiredUIAccess
-  public boolean isSelected(AnActionEvent event) {
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      return false;
+    @Override
+    @RequiredUIAccess
+    public void setSelected(AnActionEvent event, boolean flag) {
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
+        if (id == null) {
+            return;
+        }
+        ToolWindowManagerEx mgr = ToolWindowManagerEx.getInstanceEx(project);
+        ToolWindowEx toolWindow = (ToolWindowEx)mgr.getToolWindow(id);
+        ToolWindowType type = toolWindow.getType();
+        if (ToolWindowType.FLOATING == type) {
+            toolWindow.setType(toolWindow.getInternalType(), null);
+        }
+        else {
+            toolWindow.setType(ToolWindowType.FLOATING, null);
+        }
     }
-    ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
-    String id = windowManager.getActiveToolWindowId();
-    return id != null && ToolWindowType.FLOATING == windowManager.getToolWindow(id).getType();
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void setSelected(AnActionEvent event, boolean flag) {
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
+        super.update(event);
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        ToolWindowManager mgr = ToolWindowManager.getInstance(project);
+        String id = mgr.getActiveToolWindowId();
+        presentation.setEnabled(id != null && mgr.getToolWindow(id).isAvailable());
     }
-    String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
-    if (id == null) {
-      return;
-    }
-    ToolWindowManagerEx mgr = ToolWindowManagerEx.getInstanceEx(project);
-    ToolWindowEx toolWindow = (ToolWindowEx)mgr.getToolWindow(id);
-    ToolWindowType type = toolWindow.getType();
-    if (ToolWindowType.FLOATING == type) {
-      toolWindow.setType(toolWindow.getInternalType(), null);
-    }
-    else {
-      toolWindow.setType(ToolWindowType.FLOATING, null);
-    }
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent event) {
-    super.update(event);
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
-    }
-    ToolWindowManager mgr = ToolWindowManager.getInstance(project);
-    String id = mgr.getActiveToolWindowId();
-    presentation.setEnabled(id != null && mgr.getToolWindow(id).isAvailable());
-  }
 }

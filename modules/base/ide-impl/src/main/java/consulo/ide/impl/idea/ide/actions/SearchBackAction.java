@@ -36,9 +36,9 @@ public class SearchBackAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(final AnActionEvent e) {
-        final Project project = e.getRequiredData(Project.KEY);
-        final FileEditor editor = e.getRequiredData(FileEditor.KEY);
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        FileEditor editor = e.getRequiredData(FileEditor.KEY);
         CommandProcessor.getInstance().newCommand()
             .project(e.getRequiredData(Project.KEY))
             .name(IdeLocalize.commandFindPrevious())
@@ -60,7 +60,7 @@ public class SearchBackAction extends AnAction implements DumbAware {
             presentation.setEnabled(false);
             return;
         }
-        final FileEditor editor = event.getData(FileEditor.KEY);
+        FileEditor editor = event.getData(FileEditor.KEY);
         presentation.setEnabled(editor instanceof TextEditor);
     }
 }

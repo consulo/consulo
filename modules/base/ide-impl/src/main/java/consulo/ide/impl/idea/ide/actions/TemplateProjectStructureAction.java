@@ -26,10 +26,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 public class TemplateProjectStructureAction extends AnAction implements DumbAware {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project defaultProject = ProjectManagerEx.getInstanceEx().getDefaultProject();
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(defaultProject);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project defaultProject = ProjectManagerEx.getInstanceEx().getDefaultProject();
+        ShowSettingsUtil.getInstance().showProjectStructureDialog(defaultProject);
+    }
 }

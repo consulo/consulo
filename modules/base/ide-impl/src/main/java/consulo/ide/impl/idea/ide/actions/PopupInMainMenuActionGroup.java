@@ -22,8 +22,8 @@ import jakarta.annotation.Nonnull;
 
 // from kotlin
 public class PopupInMainMenuActionGroup extends NonTrivialActionGroup {
-  @Override
-  public boolean isPopup(@Nonnull String place) {
-    return ActionPlaces.MAIN_MENU.equals(place);
-  }
+    @Override
+    public boolean isPopup(@Nonnull String place) {
+        return ActionPlaces.MAIN_MENU.equals(place);
+    }
 }

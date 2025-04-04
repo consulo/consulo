@@ -109,7 +109,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         int clickCount = event.getClickCount();
         if (clickCount > 1 && clickCount % 2 == 0) {
             event.consume();
-            final int i = myResultsList.locationToIndex(event.getPoint());
+            int i = myResultsList.locationToIndex(event.getPoint());
             if (i != -1) {
                 getGlobalInstance().doWhenFocusSettlesDown(() -> getGlobalInstance().requestFocus(getField(), true));
                 Application.get().invokeLater(() -> {
@@ -124,7 +124,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         mySearchField.addValueListener(event -> {
             myIsUsedTrigger = true;
 
-            final String pattern = mySearchField.getValueOrError();
+            String pattern = mySearchField.getValueOrError();
             if (mySearchField.hasFocus()) {
                 Application.get().invokeLater(() -> myIsItemSelected = false);
 
@@ -158,7 +158,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             //mySearchField.setForeground(UIUtil.getLabelForeground());
             mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
             Application.get().invokeLater(() -> {
-                final JComponent parent = (JComponent) TargetAWT.to(mySearchField).getParent();
+                JComponent parent = (JComponent) TargetAWT.to(mySearchField).getParent();
                 parent.revalidate();
                 parent.repaint();
             });
@@ -201,7 +201,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     }
 
     private void executeCommand() {
-        final String pattern = getField().getValueOrError();
+        String pattern = getField().getValueOrError();
         int index = myResultsList.getSelectedIndex();
 
         //do nothing on attempt to execute empty command
@@ -209,9 +209,9 @@ public class RunAnythingPopupUI extends BigPopupUI {
             return;
         }
 
-        final Project project = getProject();
+        Project project = getProject();
 
-        final RunAnythingSearchListModel model = getSearchingModel(myResultsList);
+        RunAnythingSearchListModel model = getSearchingModel(myResultsList);
         if (index != -1 && model != null && isMoreItem(index)) {
             RunAnythingGroup group = model.findGroupByMoreIndex(index);
 
@@ -304,7 +304,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     }
 
     @Nullable
-    public VirtualFile getFirstContentRoot(@Nonnull final Module module) {
+    public VirtualFile getFirstContentRoot(@Nonnull Module module) {
         if (module.isDisposed()) {
             return null;
         }
@@ -319,7 +319,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     @Nullable
     public static RunAnythingSearchListModel getSearchingModel(@Nonnull JBList list) {
         ListModel model = list.getModel();
-        return model instanceof RunAnythingSearchListModel ? (RunAnythingSearchListModel) model : null;
+        return model instanceof RunAnythingSearchListModel runAnythingSearchListModel ? runAnythingSearchListModel : null;
     }
 
     private void rebuildList() {
@@ -332,7 +332,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             myCalcThread.cancel();
         }
         synchronized (myWorkerRestartRequestLock) { // this lock together with RestartRequestId should be enough to prevent two CalcThreads running at the same time
-            final int currentRestartRequest = ++myCalcThreadRestartRequestId;
+            int currentRestartRequest = ++myCalcThreadRestartRequestId;
             myCurrentWorker.doWhenProcessed(() -> {
                 synchronized (myWorkerRestartRequestLock) {
                     if (currentRestartRequest != myCalcThreadRestartRequestId) {
@@ -364,7 +364,9 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 return;
             }
 
-            mySearchField.setValue(selectedValue instanceof RunAnythingItem ? ((RunAnythingItem) selectedValue).getCommand() : myLastInputText);
+            mySearchField.setValue(
+                selectedValue instanceof RunAnythingItem runAnythingItem ? runAnythingItem.getCommand() : myLastInputText
+            );
 
             if (myLastInputText == null) {
                 myLastInputText = lastInput;
@@ -375,7 +377,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     private void updateContextCombobox() {
         DataContext dataContext = getDataContext();
         Object value = myResultsList.getSelectedValue();
-        String text = value instanceof RunAnythingItem ? ((RunAnythingItem) value).getCommand() : getSearchPattern();
+        String text = value instanceof RunAnythingItem runAnythingItem ? runAnythingItem.getCommand() : getSearchPattern();
         RunAnythingProvider provider = RunAnythingProvider.findMatchedProvider(dataContext, text);
         if (provider != null) {
             myChooseContextAction.setAvailableContexts(provider.getExecutionContexts(dataContext));
@@ -507,8 +509,8 @@ public class RunAnythingPopupUI extends BigPopupUI {
     private void updateAdText(@Nonnull DataContext dataContext) {
         Object value = myResultsList.getSelectedValue();
 
-        if (value instanceof RunAnythingItem) {
-            RunAnythingProvider provider = RunAnythingProvider.findMatchedProvider(dataContext, ((RunAnythingItem) value).getCommand());
+        if (value instanceof RunAnythingItem runAnythingItem) {
+            RunAnythingProvider provider = RunAnythingProvider.findMatchedProvider(dataContext, runAnythingItem.getCommand());
             if (provider != null) {
                 String adText = provider.getAdText();
                 if (adText != null) {
@@ -526,14 +528,14 @@ public class RunAnythingPopupUI extends BigPopupUI {
     }
 
 
-    public void setAdText(@Nonnull final String s) {
+    public void setAdText(@Nonnull String s) {
         myHintLabel.setText(s);
     }
 
     @Nonnull
     public static Executor getExecutor() {
-        final Executor runExecutor = DefaultRunExecutor.getRunExecutorInstance();
-        final Executor debugExecutor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG);
+        Executor runExecutor = DefaultRunExecutor.getRunExecutorInstance();
+        Executor debugExecutor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG);
 
         return !SHIFT_IS_PRESSED.get() ? runExecutor : debugExecutor;
     }
@@ -549,12 +551,12 @@ public class RunAnythingPopupUI extends BigPopupUI {
             }
 
             if (cmp == null) {
-                if (value instanceof RunAnythingItem) {
-                    cmp = ((RunAnythingItem) value).createComponent(myLastInputText, isSelected, hasFocus);
+                if (value instanceof RunAnythingItem runAnythingItem) {
+                    cmp = runAnythingItem.createComponent(myLastInputText, isSelected, hasFocus);
                 }
                 else {
                     cmp = super.getListCellRendererComponent(list, value, index, isSelected, isSelected);
-                    final JPanel p = new JPanel(new BorderLayout());
+                    JPanel p = new JPanel(new BorderLayout());
                     p.setBackground(UIUtil.getListBackground(isSelected, true));
                     p.add(cmp, BorderLayout.CENTER);
                     cmp = p;
@@ -586,15 +588,15 @@ public class RunAnythingPopupUI extends BigPopupUI {
             wrapped.setBorder(RENDERER_BORDER);
             wrapped.add(cmp, BorderLayout.CENTER);
             myMainPanel.add(wrapped, BorderLayout.CENTER);
-            if (cmp instanceof Accessible) {
-                myMainPanel.setAccessible((Accessible) cmp);
+            if (cmp instanceof Accessible accessible) {
+                myMainPanel.setAccessible(accessible);
             }
 
             return myMainPanel;
         }
 
         @Override
-        protected void customizeCellRenderer(@Nonnull JList list, final Object value, int index, final boolean selected, boolean hasFocus) {
+        protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
         }
     }
 
@@ -755,7 +757,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             return myDone;
         }
 
-        public ActionCallback insert(final int index, @Nonnull RunAnythingGroup group) {
+        public ActionCallback insert(int index, @Nonnull RunAnythingGroup group) {
             Application.get().executeOnPooledThread(() -> Application.get().runReadAction(() -> {
                 try {
                     RunAnythingGroup.SearchResult result = group.getItems(getDataContext(), myListModel, trimHelpPattern(), true, this::check);
@@ -816,7 +818,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     protected void resetFields() {
         myCurrentWorker.doWhenProcessed(() -> {
-            final Object lock = myCalcThread;
+            Object lock = myCalcThread;
             if (lock != null) {
                 synchronized (lock) {
                     myCurrentWorker = ActionCallback.DONE;
