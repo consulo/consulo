@@ -220,6 +220,8 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         buttonsLayout.add(keePassButton);
         buttonsLayout.add(keePassPanel);
 
+        keePassPanel.setEnabledRecursive(false);
+
         RadioButton doNotSaveButton = RadioButton.create(CredentialStorageLocalize.passwordsafeconfigurableDoNotSave());
         doNotSaveButton.setVisible(CredentialStoreManager.getInstance().isSupported(ProviderType.MEMORY_ONLY));
 
