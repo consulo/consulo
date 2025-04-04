@@ -30,13 +30,13 @@ public class PasteReferenceProvider implements CustomPasteProvider {
     @Override
     @RequiredUIAccess
     public void performPaste(@Nonnull DataContext dataContext) {
-        final Project project = dataContext.getData(Project.KEY);
-        final Editor editor = dataContext.getData(Editor.KEY);
+        Project project = dataContext.getData(Project.KEY);
+        Editor editor = dataContext.getData(Editor.KEY);
         if (project == null || editor == null) {
             return;
         }
 
-        final String fqn = getCopiedFqn(dataContext);
+        String fqn = getCopiedFqn(dataContext);
 
         QualifiedNameProvider theProvider = null;
         PsiElement element = null;
@@ -55,35 +55,30 @@ public class PasteReferenceProvider implements CustomPasteProvider {
 
     @Override
     public boolean isPastePossible(@Nonnull DataContext dataContext) {
-        final Project project = dataContext.getData(Project.KEY);
-        final Editor editor = dataContext.getData(Editor.KEY);
+        Project project = dataContext.getData(Project.KEY);
+        Editor editor = dataContext.getData(Editor.KEY);
         return project != null && editor != null && getCopiedFqn(dataContext) != null;
     }
 
     @Override
     public boolean isPasteEnabled(@Nonnull DataContext dataContext) {
-        final Project project = dataContext.getData(Project.KEY);
+        Project project = dataContext.getData(Project.KEY);
         String fqn = getCopiedFqn(dataContext);
         return project != null && fqn != null && QualifiedNameProviderUtil.qualifiedNameToElement(fqn, project) != null;
     }
 
     @RequiredUIAccess
-    private static void insert(
-        final String fqn,
-        final PsiElement element,
-        final Editor editor,
-        final QualifiedNameProvider provider
-    ) {
-        final Project project = editor.getProject();
+    private static void insert(String fqn, PsiElement element, Editor editor, QualifiedNameProvider provider) {
+        Project project = editor.getProject();
         if (project == null) {
             return;
         }
 
-        final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-        final Document document = editor.getDocument();
+        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+        Document document = editor.getDocument();
         documentManager.commitDocument(document);
 
-        final PsiFile file = documentManager.getPsiFile(document);
+        PsiFile file = documentManager.getPsiFile(document);
         if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
             return;
         }
@@ -102,7 +97,7 @@ public class PasteReferenceProvider implements CustomPasteProvider {
     }
 
     @Nullable
-    private static String getCopiedFqn(final DataContext context) {
+    private static String getCopiedFqn(DataContext context) {
         Supplier<Transferable> producer = context.getData(PasteAction.TRANSFERABLE_PROVIDER);
 
         if (producer != null) {

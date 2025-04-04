@@ -20,18 +20,18 @@ import consulo.fileEditor.FileEditor;
 import consulo.util.lang.Couple;
 
 public class UndoAction extends UndoRedoAction {
-  @Override
-  protected boolean isAvailable(FileEditor editor, UndoManager undoManager) {
-    return undoManager.isUndoAvailable(editor);
-  }
+    @Override
+    protected boolean isAvailable(FileEditor editor, UndoManager undoManager) {
+        return undoManager.isUndoAvailable(editor);
+    }
 
-  @Override
-  protected void perform(FileEditor editor, UndoManager undoManager) {
-    undoManager.undo(editor);
-  }
+    @Override
+    protected void perform(FileEditor editor, UndoManager undoManager) {
+        undoManager.undo(editor);
+    }
 
-  @Override
-  protected Couple<String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager) {
-    return undoManager.getUndoActionNameAndDescription(editor);
-  }
+    @Override
+    protected Couple<String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager) {
+        return undoManager.getUndoActionNameAndDescription(editor);
+    }
 }

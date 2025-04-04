@@ -16,45 +16,54 @@ import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 public class GotoSymbolAction extends GotoActionBase implements DumbAware {
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return;
-
-    boolean dumb = DumbService.isDumb(project);
-    if (!dumb || new SymbolSearchEverywhereContributor(project, null).isDumbAware()) {
-      showInSearchEverywherePopup(SymbolSearchEverywhereContributor.class.getSimpleName(), e, true, true);
+        boolean dumb = DumbService.isDumb(project);
+        if (!dumb || new SymbolSearchEverywhereContributor(project, null).isDumbAware()) {
+            showInSearchEverywherePopup(SymbolSearchEverywhereContributor.class.getSimpleName(), e, true, true);
+        }
+        else {
+            GotoClassAction.invokeGoToFile(project, e);
+        }
     }
-    else {
-      GotoClassAction.invokeGoToFile(project, e);
+
+    @Override
+    public void gotoActionPerformed(@Nonnull AnActionEvent e) {
+        FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.symbol");
+
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+
+        GotoSymbolModel2 model = new GotoSymbolModel2(project);
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
+        showNavigationPopup(
+            e,
+            model,
+            new GotoActionCallback<Language>() {
+                @Override
+                protected ChooseByNameFilter<Language> createFilter(@Nonnull ChooseByNamePopup popup) {
+                    return new ChooseByNameLanguageFilter(popup, model, GotoClassSymbolConfiguration.getInstance(project), project);
+                }
+
+                @Override
+                public void elementChosen(ChooseByNamePopup popup, Object element) {
+                    GotoClassAction.handleSubMemberNavigation(popup, element);
+                }
+            },
+            "Symbols matching patterns",
+            true
+        );
     }
-  }
 
-  @Override
-  public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-    FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.symbol");
-
-    Project project = e.getData(Project.KEY);
-    if (project == null) return;
-
-    GotoSymbolModel2 model = new GotoSymbolModel2(project);
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
-    showNavigationPopup(e, model, new GotoActionCallback<Language>() {
-      @Override
-      protected ChooseByNameFilter<Language> createFilter(@Nonnull ChooseByNamePopup popup) {
-        return new ChooseByNameLanguageFilter(popup, model, GotoClassSymbolConfiguration.getInstance(project), project);
-      }
-
-      @Override
-      public void elementChosen(ChooseByNamePopup popup, Object element) {
-        GotoClassAction.handleSubMemberNavigation(popup, element);
-      }
-    }, "Symbols matching patterns", true);
-  }
-
-  @Override
-  protected boolean hasContributors(DataContext dataContext) {
-    return Application.get().getExtensionPoint(GotoSymbolContributor.class).hasAnyExtensions();
-  }
+    @Override
+    protected boolean hasContributors(DataContext dataContext) {
+        return Application.get().getExtensionPoint(GotoSymbolContributor.class).hasAnyExtensions();
+    }
 }

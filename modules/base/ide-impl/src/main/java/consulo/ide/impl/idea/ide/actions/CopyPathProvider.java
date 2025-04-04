@@ -42,92 +42,98 @@ import java.util.Optional;
 
 // from kotlin
 public class CopyPathProvider extends DumbAwareAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    DataContext dataContext = e.getDataContext();
-    Editor editor = dataContext.getData(Editor.KEY);
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        DataContext dataContext = e.getDataContext();
+        Editor editor = dataContext.getData(Editor.KEY);
 
-    DataContext customDataContext = createCustomDataContext(dataContext);
+        DataContext customDataContext = createCustomDataContext(dataContext);
 
-    List<PsiElement> elements = CopyReferenceUtil.getElementsToCopy(editor, customDataContext);
-    if (project != null) {
-      String copy = getQualifiedName(project, elements, editor, customDataContext);
-      CopyPasteManager.getInstance().setContents(new StringSelection(copy));
-      CopyReferenceUtil.setStatusBarText(project, IdeLocalize.messagePathToFqnHasBeenCopied(copy).get());
+        List<PsiElement> elements = CopyReferenceUtil.getElementsToCopy(editor, customDataContext);
+        if (project != null) {
+            String copy = getQualifiedName(project, elements, editor, customDataContext);
+            CopyPasteManager.getInstance().setContents(new StringSelection(copy));
+            CopyReferenceUtil.setStatusBarText(project, IdeLocalize.messagePathToFqnHasBeenCopied(copy).get());
 
-      CopyReferenceUtil.highlight(editor, project, elements);
-    }
-  }
-
-  private DataContext createCustomDataContext(DataContext dataContext) {
-    Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (!(component instanceof TabLabel)) {
-      return dataContext;
+            CopyReferenceUtil.highlight(editor, project, elements);
+        }
     }
 
-    Object file = ((TabLabel)component).getInfo().getObject();
-    if (!(file instanceof VirtualFile)) {
-      return dataContext;
+    private DataContext createCustomDataContext(DataContext dataContext) {
+        Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        if (!(component instanceof TabLabel)) {
+            return dataContext;
+        }
+
+        Object file = ((TabLabel)component).getInfo().getObject();
+        if (!(file instanceof VirtualFile)) {
+            return dataContext;
+        }
+
+        return SimpleDataContext.builder().setParent(dataContext)
+            .add(VirtualFile.KEY, (VirtualFile)file)
+            .add(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{(VirtualFile)file})
+            .build();
     }
 
-    return SimpleDataContext.builder().setParent(dataContext)
-      .add(VirtualFile.KEY, (VirtualFile)file)
-      .add(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{(VirtualFile)file})
-      .build();
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
+        Editor editor = dataContext.getData(Editor.KEY);
 
-    Editor editor = dataContext.getData(Editor.KEY);
+        Project project = e.getData(Project.KEY);
 
-    Project project = e.getData(Project.KEY);
-
-    e.getPresentation().setEnabledAndVisible(project != null && getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext) != null);
-  }
-
-  @Nullable
-  public String getQualifiedName(Project project, List<PsiElement> elements, Editor editor, DataContext dataContext) {
-    if (elements.isEmpty()) {
-      VirtualFile file = Optional.ofNullable(editor).map(Editor::getDocument).map(it -> FileDocumentManager.getInstance().getFile(it)).orElse(null);
-      return getPathToElement(project, file, editor);
+        e.getPresentation().setEnabledAndVisible(
+            project != null
+                && getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext) != null
+        );
     }
-    else {
-      List<VirtualFile> files = ContainerUtil.mapNotNull(elements, it -> {
-        if (it instanceof PsiFileSystemItem) {
-          return ((PsiFileSystemItem)it).getVirtualFile();
+
+    @Nullable
+    public String getQualifiedName(Project project, List<PsiElement> elements, Editor editor, DataContext dataContext) {
+        if (elements.isEmpty()) {
+            VirtualFile file = Optional.ofNullable(editor)
+                .map(Editor::getDocument)
+                .map(it -> FileDocumentManager.getInstance().getFile(it))
+                .orElse(null);
+            return getPathToElement(project, file, editor);
         }
         else {
-          PsiFile containingFile = it.getContainingFile();
-          return containingFile == null ? null : containingFile.getVirtualFile();
+            List<VirtualFile> files = ContainerUtil.mapNotNull(elements, it -> {
+                if (it instanceof PsiFileSystemItem psiFileSystemItem) {
+                    return psiFileSystemItem.getVirtualFile();
+                }
+                else {
+                    PsiFile containingFile = it.getContainingFile();
+                    return containingFile == null ? null : containingFile.getVirtualFile();
+                }
+            });
+
+            if (files.isEmpty()) {
+                VirtualFile[] contextFiles = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+                if (contextFiles != null && contextFiles.length > 0) {
+                    files = List.of(contextFiles);
+                }
+            }
+
+            if (files.isEmpty()) {
+                return null;
+            }
+
+            List<String> paths = ContainerUtil.mapNotNull(files, file -> getPathToElement(project, file, editor));
+            if (paths.isEmpty()) {
+                return null;
+            }
+            return String.join("\n", paths);
         }
-      });
-
-      if (files.isEmpty()) {
-        VirtualFile[] contextFiles = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
-        if(contextFiles != null && contextFiles.length > 0) {
-          files = List.of(contextFiles);
-        }
-      }
-
-      if(files.isEmpty()) {
-        return null;
-      }
-
-      List<String> paths = ContainerUtil.mapNotNull(files, file -> getPathToElement(project, file, editor));
-      if(paths.isEmpty()) {
-        return null;
-      }
-      return String.join("\n", paths);
     }
-  }
 
-  @Nullable
-  public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
-    return null;
-  }
+    @Nullable
+    public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
+        return null;
+    }
 }

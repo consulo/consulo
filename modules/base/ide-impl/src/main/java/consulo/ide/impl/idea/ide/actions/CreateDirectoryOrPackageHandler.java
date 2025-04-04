@@ -67,7 +67,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
         @Nullable Project project,
         @Nonnull PsiDirectory directory,
         CreateDirectoryOrPackageType type,
-        @Nonnull final String delimiters
+        @Nonnull String delimiters
     ) {
         this(project, directory, type, delimiters, null);
     }
@@ -76,7 +76,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
         @Nullable Project project,
         @Nonnull PsiDirectory directory,
         CreateDirectoryOrPackageType type,
-        @Nonnull final String delimiters,
+        @Nonnull String delimiters,
         @Nullable Component dialogParent
     ) {
         myProject = project;
@@ -89,18 +89,18 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     @Override
     @RequiredUIAccess
     public boolean checkInput(String inputString) {
-        final StringTokenizer tokenizer = new StringTokenizer(inputString, myDelimiters);
+        StringTokenizer tokenizer = new StringTokenizer(inputString, myDelimiters);
         VirtualFile vFile = myDirectory.getVirtualFile();
         boolean firstToken = true;
         while (tokenizer.hasMoreTokens()) {
-            final String token = tokenizer.nextToken();
+            String token = tokenizer.nextToken();
             if (!tokenizer.hasMoreTokens() && (token.equals(".") || token.equals(".."))) {
                 myErrorText = "Can't create a directory with name '" + token + "'";
                 return false;
             }
             if (vFile != null) {
                 if (firstToken && "~".equals(token)) {
-                    final VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+                    VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
                     if (userHomeDir == null) {
                         myErrorText = "User home directory not found";
                         return false;
@@ -115,7 +115,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
                     }
                 }
                 else if (!".".equals(token)) {
-                    final VirtualFile child = vFile.findChild(token);
+                    VirtualFile child = vFile.findChild(token);
                     if (child != null) {
                         if (!child.isDirectory()) {
                             myErrorText = "A file with name '" + token + "' already exists";
@@ -154,13 +154,13 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
 
     @Override
     @RequiredUIAccess
-    public boolean canClose(final String subDirName) {
+    public boolean canClose(String subDirName) {
         if (subDirName.isEmpty()) {
             showErrorDialog(IdeLocalize.errorNameShouldBeSpecified());
             return false;
         }
 
-        final boolean multiCreation = StringUtil.containsAnyChar(subDirName, myDelimiters);
+        boolean multiCreation = StringUtil.containsAnyChar(subDirName, myDelimiters);
         if (!multiCreation) {
             try {
                 myDirectory.checkCreateSubdirectory(subDirName);
@@ -171,7 +171,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
             }
         }
 
-        final Boolean createFile = suggestCreatingFileInstead(subDirName);
+        Boolean createFile = suggestCreatingFileInstead(subDirName);
         if (createFile == null) {
             return false;
         }
@@ -219,7 +219,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     }
 
     @RequiredUIAccess
-    private void doCreateElement(final String subDirName, final boolean createFile) {
+    private void doCreateElement(String subDirName, boolean createFile) {
         boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
 
         CommandProcessor.getInstance().newCommand()
@@ -245,7 +245,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
                         createDirectories(subDirName);
                     }
                 }
-                catch (final IncorrectOperationException ex) {
+                catch (IncorrectOperationException ex) {
                     Application.get().invokeLater(
                         () -> showErrorDialog(LocalizeValue.ofNullable(CreateElementActionBase.filterMessage(ex.getMessage())))
                     );

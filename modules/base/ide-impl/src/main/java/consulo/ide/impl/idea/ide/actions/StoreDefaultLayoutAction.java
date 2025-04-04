@@ -29,21 +29,21 @@ import consulo.ui.ex.action.Presentation;
  * @author Vladimir Kondratyev
  */
 public class StoreDefaultLayoutAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e){
-    Project project = e.getData(Project.KEY);
-    if(project==null){
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        ToolWindowLayout layout = ToolWindowManagerEx.getInstanceEx(project).getLayout();
+        WindowManagerEx.getInstanceEx().setLayout(layout);
     }
-    ToolWindowLayout layout = ToolWindowManagerEx.getInstanceEx(project).getLayout();
-    WindowManagerEx.getInstanceEx().setLayout(layout);
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    presentation.setEnabled(event.getData(Project.KEY) != null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        presentation.setEnabled(event.getData(Project.KEY) != null);
+    }
 }

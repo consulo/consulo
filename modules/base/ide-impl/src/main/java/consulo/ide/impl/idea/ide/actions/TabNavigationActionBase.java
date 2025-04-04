@@ -24,6 +24,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -32,84 +33,88 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {
-  private static final Logger LOG = Logger.getInstance(TabNavigationActionBase.class);
+    private static final Logger LOG = Logger.getInstance(TabNavigationActionBase.class);
 
-  private final int myDir;
+    private final int myDir;
 
-  TabNavigationActionBase(final int dir) {
-    LOG.assertTrue(dir == 1 || dir == -1);
-    myDir = dir;
-  }
-
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    TabNavigationActionBase(int dir) {
+        LOG.assertTrue(dir == 1 || dir == -1);
+        myDir = dir;
     }
 
-    ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-    if (windowManager.isEditorComponentActive()) {
-      doNavigate(dataContext, project);
-      return;
+        ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
+
+        if (windowManager.isEditorComponentActive()) {
+            doNavigate(dataContext, project);
+            return;
+        }
+
+        ContentManager contentManager = e.getData(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER);
+        if (contentManager == null) {
+            return;
+        }
+        doNavigate(contentManager);
     }
 
-    ContentManager contentManager = e.getData(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER);
-    if (contentManager == null) return;
-    doNavigate(contentManager);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        presentation.setEnabled(false);
+        if (project == null) {
+            return;
+        }
+        ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
+        if (windowManager.isEditorComponentActive()) {
+            FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
+            FileEditorWindow currentWindow = event.getData(FileEditorWindow.DATA_KEY);
+            if (currentWindow == null) {
+                editorManager.getCurrentWindow();
+            }
+            if (currentWindow != null) {
+                VirtualFile[] files = currentWindow.getFiles();
+                presentation.setEnabled(files.length > 1);
+            }
+            return;
+        }
 
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    presentation.setEnabled(false);
-    if (project == null) {
-      return;
-    }
-    final ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
-    if (windowManager.isEditorComponentActive()) {
-      final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
-      FileEditorWindow currentWindow = event.getData(FileEditorWindow.DATA_KEY);
-      if (currentWindow == null) {
-        editorManager.getCurrentWindow();
-      }
-      if (currentWindow != null) {
-        final VirtualFile[] files = currentWindow.getFiles();
-        presentation.setEnabled(files.length > 1);
-      }
-      return;
+        ContentManager contentManager = event.getData(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER);
+        presentation.setEnabled(contentManager != null && contentManager.getContentCount() > 1 && contentManager.isSingleSelection());
     }
 
-    ContentManager contentManager = event.getData(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER);
-    presentation.setEnabled(contentManager != null && contentManager.getContentCount() > 1 && contentManager.isSingleSelection());
-  }
-
-  private void doNavigate(ContentManager contentManager) {
-    if (myDir == -1) {
-      contentManager.selectPreviousContent();
+    private void doNavigate(ContentManager contentManager) {
+        if (myDir == -1) {
+            contentManager.selectPreviousContent();
+        }
+        else {
+            contentManager.selectNextContent();
+        }
     }
-    else {
-      contentManager.selectNextContent();
-    }
-  }
 
-  private void doNavigate(DataContext dataContext, Project project) {
-    VirtualFile selectedFile = dataContext.getData(VirtualFile.KEY);
-    navigateImpl(dataContext, project, selectedFile, myDir);
-  }
-
-  public static void navigateImpl(final DataContext dataContext, Project project, VirtualFile selectedFile, final int dir) {
-    LOG.assertTrue(dir == 1 || dir == -1);
-    final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
-    FileEditorWindow currentWindow = dataContext.getData(FileEditorWindow.DATA_KEY);
-    if (currentWindow == null) {
-      currentWindow = editorManager.getCurrentWindow();
+    private void doNavigate(DataContext dataContext, Project project) {
+        VirtualFile selectedFile = dataContext.getData(VirtualFile.KEY);
+        navigateImpl(dataContext, project, selectedFile, myDir);
     }
-    final VirtualFile[] files = currentWindow.getFiles();
-    int index = ArrayUtil.find(files, selectedFile);
-    LOG.assertTrue(index != -1);
-    editorManager.openFile(files[(index + files.length + dir) % files.length], true);
-  }
+
+    public static void navigateImpl(DataContext dataContext, Project project, VirtualFile selectedFile, int dir) {
+        LOG.assertTrue(dir == 1 || dir == -1);
+        FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
+        FileEditorWindow currentWindow = dataContext.getData(FileEditorWindow.DATA_KEY);
+        if (currentWindow == null) {
+            currentWindow = editorManager.getCurrentWindow();
+        }
+        VirtualFile[] files = currentWindow.getFiles();
+        int index = ArrayUtil.find(files, selectedFile);
+        LOG.assertTrue(index != -1);
+        editorManager.openFile(files[(index + files.length + dir) % files.length], true);
+    }
 }

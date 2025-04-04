@@ -16,31 +16,29 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.fileEditor.action.CloseEditorsActionBase;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
+import jakarta.annotation.Nonnull;
 
 public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
-  @Override
-  protected boolean isFileToClose(FileEditorComposite editor, final FileEditorWindow window) {
-    return !window.getManager().isChanged (editor);
-  }
-
-  @Override
-  protected boolean isActionEnabled(final Project project, final AnActionEvent event) {
-    return super.isActionEnabled(project, event) && ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length > 0;
-  }
-
-  @Override
-  protected String getPresentationText(final boolean inSplitter) {
-    if (inSplitter) {
-      return IdeBundle.message("action.close.all.unmodified.editors.in.tab.group");
+    @Override
+    protected boolean isFileToClose(FileEditorComposite editor, FileEditorWindow window) {
+        return !window.getManager().isChanged(editor);
     }
-    else {
-      return IdeBundle.message("action.close.all.unmodified.editors");
+
+    @Override
+    protected boolean isActionEnabled(Project project, AnActionEvent event) {
+        return super.isActionEnabled(project, event) && ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length > 0;
     }
-  }
+
+    @Nonnull
+    @Override
+    protected LocalizeValue getPresentationText(boolean inSplitter) {
+        return inSplitter ? IdeLocalize.actionCloseAllUnmodifiedEditorsInTabGroup() : IdeLocalize.actionCloseAllUnmodifiedEditors();
+    }
 }

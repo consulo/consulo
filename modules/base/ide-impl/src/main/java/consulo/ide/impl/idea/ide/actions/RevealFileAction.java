@@ -25,38 +25,42 @@ import jakarta.annotation.Nullable;
 import java.io.File;
 
 public class RevealFileAction extends DumbAwareAction {
-  public RevealFileAction() {
-    getTemplatePresentation().setText(getActionName(null));
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(VirtualFile.KEY));
-    Presentation presentation = e.getPresentation();
-    presentation.setText(getActionName(e.getPlace()));
-    presentation.setEnabled(file != null);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(VirtualFile.KEY));
-    if (file != null) {
-      ShowFilePathAction.openFile(new File(file.getPresentableUrl()));
+    public RevealFileAction() {
+        getTemplatePresentation().setText(getActionName(null));
     }
-  }
 
-  @Nonnull
-  public static String getActionName() {
-    return getActionName(null);
-  }
-
-  @Nonnull
-  public static String getActionName(@Nullable String place) {
-    if (ActionPlaces.EDITOR_TAB_POPUP.equals(place) || ActionPlaces.EDITOR_POPUP.equals(place) || ActionPlaces.PROJECT_VIEW_POPUP.equals(place)) {
-      return ShowFilePathAction.getFileManagerName();
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(VirtualFile.KEY));
+        Presentation presentation = e.getPresentation();
+        presentation.setText(getActionName(e.getPlace()));
+        presentation.setEnabled(file != null);
     }
-    return Platform.current().os().isMac() ? ActionsBundle.message("action.RevealIn.name.mac") : ActionsBundle.message("action.RevealIn.name.other", ShowFilePathAction.getFileManagerName());
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(VirtualFile.KEY));
+        if (file != null) {
+            ShowFilePathAction.openFile(new File(file.getPresentableUrl()));
+        }
+    }
+
+    @Nonnull
+    public static String getActionName() {
+        return getActionName(null);
+    }
+
+    @Nonnull
+    public static String getActionName(@Nullable String place) {
+        if (ActionPlaces.EDITOR_TAB_POPUP.equals(place)
+            || ActionPlaces.EDITOR_POPUP.equals(place)
+            || ActionPlaces.PROJECT_VIEW_POPUP.equals(place)) {
+            return ShowFilePathAction.getFileManagerName();
+        }
+        return Platform.current().os().isMac()
+            ? ActionsBundle.message("action.RevealIn.name.mac")
+            : ActionsBundle.message("action.RevealIn.name.other", ShowFilePathAction.getFileManagerName());
+    }
 }

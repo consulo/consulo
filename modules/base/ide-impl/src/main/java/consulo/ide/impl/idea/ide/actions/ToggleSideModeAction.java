@@ -19,20 +19,18 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
 public class ToggleSideModeAction extends BaseToolWindowToggleAction {
+    @Override
+    protected boolean isSelected(ToolWindow window) {
+        return window.isSplitMode();
+    }
 
-  @Override
-  protected boolean isSelected(ToolWindow window) {
-    return window.isSplitMode();
-  }
+    @Override
+    protected void setSelected(ToolWindow window, boolean state) {
+        window.setSplitMode(state, null);
+    }
 
-  @Override
-  protected void setSelected(ToolWindow window, boolean state) {
-    window.setSplitMode(state, null);
-  }
-
-  @Override
-  protected void update(ToolWindow window, Presentation presentation) {
-    presentation.setEnabled(window.isAvailable());
-  }
-
+    @Override
+    protected void update(ToolWindow window, Presentation presentation) {
+        presentation.setEnabled(window.isAvailable());
+    }
 }

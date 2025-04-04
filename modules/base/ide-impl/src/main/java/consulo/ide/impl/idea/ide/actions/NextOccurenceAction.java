@@ -19,15 +19,15 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ui.ex.OccurenceNavigator;
 
 public class NextOccurenceAction extends OccurenceNavigatorActionBase {
-  protected String getDescription(OccurenceNavigator navigator) {
-    return navigator.getNextOccurenceActionName();
-  }
+    protected String getDescription(OccurenceNavigator navigator) {
+        return navigator.getNextOccurenceActionName();
+    }
 
-  protected OccurenceNavigator.OccurenceInfo go(OccurenceNavigator navigator) {
-    return navigator.goNextOccurence();
-  }
+    protected OccurenceNavigator.OccurenceInfo go(OccurenceNavigator navigator) {
+        return navigator.goNextOccurence();
+    }
 
-  protected boolean hasOccurenceToGo(OccurenceNavigator navigator) {
-    return navigator.hasNextOccurence();
-  }
+    protected boolean hasOccurenceToGo(OccurenceNavigator navigator) {
+        return navigator.hasNextOccurence();
+    }
 }

@@ -30,58 +30,58 @@ import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Couple;
 
 public abstract class UndoRedoAction extends DumbAwareAction {
-  public UndoRedoAction() {
-    setEnabledInModalContext(true);
-  }
-
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    FileEditor editor = e.getData(FileEditor.KEY);
-    UndoManager undoManager = getUndoManager(editor, dataContext);
-    perform(editor, undoManager);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
-    FileEditor editor = event.getData(FileEditor.KEY);
-
-    // do not allow global undo in dialogs
-    if (editor == null) {
-      final Boolean isModalContext = event.getData(PlatformDataKeys.IS_MODAL_CONTEXT);
-      if (isModalContext != null && isModalContext) {
-        presentation.setEnabled(false);
-        return;
-      }
+    public UndoRedoAction() {
+        setEnabledInModalContext(true);
     }
 
-    UndoManager undoManager = getUndoManager(editor, dataContext);
-    if (undoManager == null) {
-      presentation.setEnabled(false);
-      return;
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        FileEditor editor = e.getData(FileEditor.KEY);
+        UndoManager undoManager = getUndoManager(editor, dataContext);
+        perform(editor, undoManager);
     }
-    presentation.setEnabled(isAvailable(editor, undoManager));
 
-    Couple<String> pair = getActionNameAndDescription(editor, undoManager);
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        DataContext dataContext = event.getDataContext();
+        FileEditor editor = event.getData(FileEditor.KEY);
 
-    presentation.setText(pair.first);
-    presentation.setDescription(pair.second);
-  }
+        // do not allow global undo in dialogs
+        if (editor == null) {
+            Boolean isModalContext = event.getData(PlatformDataKeys.IS_MODAL_CONTEXT);
+            if (isModalContext != null && isModalContext) {
+                presentation.setEnabled(false);
+                return;
+            }
+        }
 
-  private static UndoManager getUndoManager(FileEditor editor, DataContext dataContext) {
-    Project project = getProject(editor, dataContext);
-    return project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getInstance();
-  }
+        UndoManager undoManager = getUndoManager(editor, dataContext);
+        if (undoManager == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        presentation.setEnabled(isAvailable(editor, undoManager));
 
-  private static Project getProject(FileEditor editor, DataContext dataContext) {
-    return editor instanceof TextEditor textEditor ? textEditor.getEditor().getProject() : dataContext.getData(Project.KEY);
-  }
+        Couple<String> pair = getActionNameAndDescription(editor, undoManager);
 
-  protected abstract void perform(FileEditor editor, UndoManager undoManager);
+        presentation.setText(pair.first);
+        presentation.setDescription(pair.second);
+    }
 
-  protected abstract boolean isAvailable(FileEditor editor, UndoManager undoManager);
+    private static UndoManager getUndoManager(FileEditor editor, DataContext dataContext) {
+        Project project = getProject(editor, dataContext);
+        return project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getInstance();
+    }
 
-  protected abstract Couple<String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager);
+    private static Project getProject(FileEditor editor, DataContext dataContext) {
+        return editor instanceof TextEditor textEditor ? textEditor.getEditor().getProject() : dataContext.getData(Project.KEY);
+    }
+
+    protected abstract void perform(FileEditor editor, UndoManager undoManager);
+
+    protected abstract boolean isAvailable(FileEditor editor, UndoManager undoManager);
+
+    protected abstract Couple<String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager);
 }

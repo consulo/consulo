@@ -34,64 +34,66 @@ import jakarta.annotation.Nonnull;
  * @author max
  */
 public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAware {
-  protected static final Image ourCurrentAction = AllIcons.Actions.Forward;
-  protected static final Image ourNotCurrentAction = Image.empty(Image.DEFAULT_ICON_SIZE);
-  @Nonnull
-  protected String myActionPlace = ActionPlaces.UNKNOWN;
+    protected static final Image ourCurrentAction = AllIcons.Actions.Forward;
+    protected static final Image ourNotCurrentAction = Image.empty(Image.DEFAULT_ICON_SIZE);
+    @Nonnull
+    protected String myActionPlace = ActionPlaces.UNKNOWN;
 
-  private final boolean myShowPopupWithNoActions;
+    private final boolean myShowPopupWithNoActions;
 
-  protected QuickSwitchSchemeAction() {
-    this(false);
-  }
+    protected QuickSwitchSchemeAction() {
+        this(false);
+    }
 
-  protected QuickSwitchSchemeAction(boolean showPopupWithNoActions) {
-    myShowPopupWithNoActions = showPopupWithNoActions;
-  }
+    protected QuickSwitchSchemeAction(boolean showPopupWithNoActions) {
+        myShowPopupWithNoActions = showPopupWithNoActions;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    DefaultActionGroup group = new DefaultActionGroup();
-    fillActions(project, group, e.getDataContext());
-    showPopup(e, group);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        DefaultActionGroup group = new DefaultActionGroup();
+        fillActions(project, group, e.getDataContext());
+        showPopup(e, group);
+    }
 
-  protected abstract void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext);
+    protected abstract void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext);
 
-  private void showPopup(AnActionEvent e, DefaultActionGroup group) {
-    if (!myShowPopupWithNoActions && group.getChildrenCount() == 0) return;
-    final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-      getPopupTitle(e),
-      group,
-      e.getDataContext(),
-      getAidMethod(),
-      true,
-      myActionPlace
-    );
+    private void showPopup(AnActionEvent e, DefaultActionGroup group) {
+        if (!myShowPopupWithNoActions && group.getChildrenCount() == 0) {
+            return;
+        }
+        ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+            getPopupTitle(e),
+            group,
+            e.getDataContext(),
+            getAidMethod(),
+            true,
+            myActionPlace
+        );
 
-    showPopup(e, popup);
-  }
+        showPopup(e, popup);
+    }
 
-  protected void showPopup(AnActionEvent e, ListPopup popup) {
-    popup.showCenteredInCurrentWindow(e.getData(Project.KEY));
-  }
+    protected void showPopup(AnActionEvent e, ListPopup popup) {
+        popup.showCenteredInCurrentWindow(e.getData(Project.KEY));
+    }
 
-  protected JBPopupFactory.ActionSelectionAid getAidMethod() {
-    return JBPopupFactory.ActionSelectionAid.NUMBERING;
-  }
+    protected JBPopupFactory.ActionSelectionAid getAidMethod() {
+        return JBPopupFactory.ActionSelectionAid.NUMBERING;
+    }
 
-  protected String getPopupTitle(AnActionEvent e) {
-    return e.getPresentation().getText();
-  }
+    protected String getPopupTitle(AnActionEvent e) {
+        return e.getPresentation().getText();
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setEnabled(e.getData(Project.KEY) != null && isEnabled());
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(e.getData(Project.KEY) != null && isEnabled());
+    }
 
-  protected abstract boolean isEnabled();
+    protected abstract boolean isEnabled();
 }

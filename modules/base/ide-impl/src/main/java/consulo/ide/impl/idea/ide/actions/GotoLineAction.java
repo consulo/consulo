@@ -25,8 +25,8 @@ public class GotoLineAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        final Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
+        Project project = e.getData(Project.KEY);
+        Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
             GotoLineNumberDialog dialog = new EditorGotoLineNumberDialog(project, editor);
             dialog.show();

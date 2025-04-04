@@ -24,23 +24,25 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class JumpToLastEditAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return;
-    IdeDocumentHistory.getInstance(project).navigatePreviousChange();
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e){
-    Presentation presentation = e.getPresentation();
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        IdeDocumentHistory.getInstance(project).navigatePreviousChange();
     }
-    presentation.setEnabled(IdeDocumentHistory.getInstance(project).isNavigatePreviousChangeAvailable());
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        presentation.setEnabled(IdeDocumentHistory.getInstance(project).isNavigatePreviousChangeAvailable());
+    }
 }

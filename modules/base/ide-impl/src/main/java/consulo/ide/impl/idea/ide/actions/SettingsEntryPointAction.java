@@ -73,7 +73,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
 
     @Nonnull
     private static AnAction[] getTemplateActions() {
-        ActionGroup templateGroup = (ActionGroup) ActionManager.getInstance().getAction("SettingsEntryPointGroup");
+        ActionGroup templateGroup = (ActionGroup)ActionManager.getInstance().getAction("SettingsEntryPointGroup");
         return templateGroup == null ? EMPTY_ARRAY : templateGroup.getChildren(null);
     }
 
@@ -86,7 +86,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
             if (!actions.isEmpty()) {
                 for (AnAction action : actions) {
                     Presentation presentation = action.getTemplatePresentation();
-                    IconState iconState = (IconState) presentation.getClientProperty(SettingsEntryPointActionProvider.ICON_KEY);
+                    IconState iconState = (IconState)presentation.getClientProperty(SettingsEntryPointActionProvider.ICON_KEY);
                     if (iconState != null) {
                         presentation.setIcon(getActionIcon(iconState));
                     }
@@ -116,7 +116,14 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
 
                         @Override
                         public void actionPerformed(@Nonnull AnActionEvent e) {
-                            super.actionPerformed(new AnActionEvent(e.getInputEvent(), e.getDataContext(), e.getPlace(), getDelegate().getTemplatePresentation(), e.getActionManager(), e.getModifiers()));
+                            super.actionPerformed(new AnActionEvent(
+                                e.getInputEvent(),
+                                e.getDataContext(),
+                                e.getPlace(),
+                                getDelegate().getTemplatePresentation(),
+                                e.getActionManager(),
+                                e.getModifiers()
+                            ));
                         }
                     };
                     button.setShortcut(child.getShortcutSet());
@@ -128,15 +135,25 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
             }
         }
 
-        return JBPopupFactory.getInstance().createActionGroupPopup(null, group.build(), context, JBPopupFactory.ActionSelectionAid.MNEMONICS, true, () -> {
-            AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> ApplicationManager.getApplication().invokeLater(disposeCallback, IdeaModalityState.any()), 250, TimeUnit.MILLISECONDS);
-        }, -1);
+        return JBPopupFactory.getInstance().createActionGroupPopup(
+            null,
+            group.build(),
+            context,
+            JBPopupFactory.ActionSelectionAid.MNEMONICS,
+            true,
+            () -> AppExecutorUtil.getAppScheduledExecutorService().schedule(
+                () -> ApplicationManager.getApplication().invokeLater(disposeCallback, IdeaModalityState.any()),
+                250,
+                TimeUnit.MILLISECONDS
+            ),
+            -1
+        );
     }
 
     private static IconState ourIconState = IconState.Default;
 
     public static void updateState(UpdateSettings updateSettings) {
-        UpdateSettingsEx updateSettingsEx = (UpdateSettingsEx) updateSettings;
+        UpdateSettingsEx updateSettingsEx = (UpdateSettingsEx)updateSettings;
 
         PlatformOrPluginUpdateResultType lastCheckResult = updateSettingsEx.getLastCheckResult();
 
@@ -216,9 +233,9 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     }
 
     public static class StatusBarManager implements StatusBarWidgetFactory {
-        @Override
         @Nls
         @Nonnull
+        @Override
         public String getDisplayName() {
             return IdeBundle.message("settings.entry.point.widget.name");
         }
@@ -228,8 +245,8 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
             return isAvailableInStatusBar();
         }
 
-        @Override
         @Nonnull
+        @Override
         public StatusBarWidget createWidget(@Nonnull Project project) {
             return new MyStatusBarWidget(this);
         }
@@ -260,20 +277,20 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
             myStatusBar = statusBar;
         }
 
-        @Override
         @Nullable
+        @Override
         public WidgetPresentation getPresentation() {
             return this;
         }
 
-        @Override
         @Nullable
+        @Override
         public String getTooltipText() {
             return getActionTooltip();
         }
 
-        @Override
         @Nullable
+        @Override
         public Consumer<MouseEvent> getClickConsumer() {
             return event -> {
                 // why? resetActionIcon();
@@ -298,8 +315,8 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
             };
         }
 
-        @Override
         @Nullable
+        @Override
         public Image getIcon() {
             return getActionIcon(ourIconState);
         }

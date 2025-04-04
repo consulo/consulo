@@ -28,38 +28,38 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class CloseActiveTabAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(e.getDataContext(), true);
-    boolean processed = false;
-    if (contentManager != null && contentManager.canCloseContents()) {
-      final Content selectedContent = contentManager.getSelectedContent();
-      if (selectedContent != null && selectedContent.isCloseable()) {
-        contentManager.removeContent(selectedContent, true);
-        processed = true;
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(e.getDataContext(), true);
+        boolean processed = false;
+        if (contentManager != null && contentManager.canCloseContents()) {
+            final Content selectedContent = contentManager.getSelectedContent();
+            if (selectedContent != null && selectedContent.isCloseable()) {
+                contentManager.removeContent(selectedContent, true);
+                processed = true;
+            }
+        }
+
+        if (!processed && contentManager != null) {
+            DataContext context = DataManager.getInstance().getDataContext(contentManager.getComponent());
+            ToolWindow tw = context.getData(ToolWindow.KEY);
+            if (tw != null) {
+                tw.hide(null);
+            }
+        }
     }
 
-    if (!processed && contentManager != null) {
-      final DataContext context = DataManager.getInstance().getDataContext(contentManager.getComponent());
-      final ToolWindow tw = context.getData(ToolWindow.KEY);
-      if (tw != null) {
-        tw.hide(null);
-      }
-    }
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(event.getDataContext(), true);
+        presentation.setEnabled(contentManager != null && contentManager.canCloseContents());
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(event.getDataContext(), true);
-    presentation.setEnabled(contentManager != null && contentManager.canCloseContents());
-
-    if (!presentation.isEnabled() && contentManager != null) {
-      final DataContext context = DataManager.getInstance().getDataContext(contentManager.getComponent());
-      presentation.setEnabled(context.getData(ToolWindow.KEY) != null);
+        if (!presentation.isEnabled() && contentManager != null) {
+            DataContext context = DataManager.getInstance().getDataContext(contentManager.getComponent());
+            presentation.setEnabled(context.getData(ToolWindow.KEY) != null);
+        }
     }
-  }
 }

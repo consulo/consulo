@@ -28,22 +28,22 @@ import consulo.ui.ex.action.Presentation;
  * @author yole
  */
 public abstract class SplitterActionBase extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent event) {
-    final Project project = event.getData(Project.KEY);
-    final Presentation presentation = event.getPresentation();
-    boolean enabled = project != null && isActionEnabled(project);
-    if (ActionPlaces.isPopupPlace(event.getPlace())) {
-      presentation.setVisible(enabled);
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Project project = event.getData(Project.KEY);
+        Presentation presentation = event.getPresentation();
+        boolean enabled = project != null && isActionEnabled(project);
+        if (ActionPlaces.isPopupPlace(event.getPlace())) {
+            presentation.setVisible(enabled);
+        }
+        else {
+            presentation.setEnabled(enabled);
+        }
     }
-    else {
-      presentation.setEnabled(enabled);
-    }
-  }
 
-  protected boolean isActionEnabled(Project project) {
-    final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-    return fileEditorManager.isInSplitter();
-  }
+    protected boolean isActionEnabled(Project project) {
+        FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+        return fileEditorManager.isInSplitter();
+    }
 }

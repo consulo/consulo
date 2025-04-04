@@ -42,311 +42,317 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class ResizeToolWindowAction extends AnAction implements DumbAware {
+    private ToolWindow myLastWindow;
+    private ToolWindowManager myLastManager;
 
-  private ToolWindow myLastWindow;
-  private ToolWindowManager myLastManager;
+    protected JLabel myScrollHelper;
 
-  protected JLabel myScrollHelper;
+    private ToolWindow myToolWindow;
 
-  private ToolWindow myToolWindow;
+    private boolean myListenerInstalled;
 
-  private boolean myListenerInstalled;
-
-  protected ResizeToolWindowAction() {
-  }
-
-  protected ResizeToolWindowAction(String text) {
-    super(text);
-  }
-
-  protected ResizeToolWindowAction(String text, String description, Image icon) {
-    super(text, description, icon);
-  }
-
-  protected ResizeToolWindowAction(ToolWindow toolWindow, String originalAction, JComponent c) {
-    myToolWindow = toolWindow;
-    new ShadowAction(this, ActionManager.getInstance().getAction(originalAction), c);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public final void update(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      setDisabled(e);
-      return;
+    protected ResizeToolWindowAction() {
     }
 
-    if (!myListenerInstalled) {
-      myListenerInstalled = true;
-      ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
+    protected ResizeToolWindowAction(String text) {
+        super(text);
+    }
+
+    protected ResizeToolWindowAction(String text, String description, Image icon) {
+        super(text, description, icon);
+    }
+
+    protected ResizeToolWindowAction(ToolWindow toolWindow, String originalAction, JComponent c) {
+        myToolWindow = toolWindow;
+        new ShadowAction(this, ActionManager.getInstance().getAction(originalAction), c);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public final void update(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            setDisabled(e);
+            return;
+        }
+
+        if (!myListenerInstalled) {
+            myListenerInstalled = true;
+            ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
+                @Override
+                public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+                    setDisabled(null);
+                }
+            });
+        }
+
+        Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (owner == null) {
+            setDisabled(e);
+            return;
+        }
+
+        Window windowAncestor = SwingUtilities.getWindowAncestor(owner);
+        consulo.ui.Window uiWindow = TargetAWT.from(windowAncestor);
+        if (!IdeFrameUtil.isRootIdeFrameWindow(uiWindow)) {
+            setDisabled(e);
+            return;
+        }
+
+        ToolWindowManager mgr = ToolWindowManager.getInstance(project);
+
+        ToolWindow window = myToolWindow;
+
+        if (window != null || mgr.getActiveToolWindowId() != null) {
+            if (window == null) {
+                window = mgr.getToolWindow(mgr.getActiveToolWindowId());
+            }
+
+            if (window == null || !window.isAvailable() || !window.isVisible() || window.getType() == ToolWindowType.FLOATING || !window.isActive()) {
+                setDisabled(e);
+                return;
+            }
+
+            update(e, window, mgr);
+            if (e.getPresentation().isEnabled()) {
+                myLastWindow = window;
+                myLastManager = mgr;
+            }
+            else {
+                setDisabled(e);
+            }
+        }
+        else {
+            setDisabled(e);
+        }
+    }
+
+    private void setDisabled(@Nullable AnActionEvent e) {
+        if (e != null) {
+            e.getPresentation().setEnabled(false);
+        }
+
+        myLastWindow = null;
+        myLastManager = null;
+        myToolWindow = null;
+    }
+
+    protected abstract void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr);
+
+    @Override
+    @RequiredUIAccess
+    public final void actionPerformed(@Nonnull AnActionEvent e) {
+        actionPerformed(e, myLastWindow, myLastManager);
+    }
+
+    @Nullable
+    private ToolWindowScrollable getScrollable(ToolWindow wnd, boolean isHorizontalStretchingOffered) {
+        KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+
+        Component eachComponent = mgr.getFocusOwner();
+        ToolWindowScrollable scrollable = null;
+        while (eachComponent != null) {
+            if (!SwingUtilities.isDescendingFrom(eachComponent, wnd.getComponent())) {
+                break;
+            }
+
+            if (eachComponent instanceof ToolWindowScrollable eachScrollable) {
+                if (isHorizontalStretchingOffered) {
+                    if (eachScrollable.isHorizontalScrollingNeeded()) {
+                        scrollable = eachScrollable;
+                        break;
+                    }
+                }
+                else {
+                    if (eachScrollable.isVerticalScrollingNeeded()) {
+                        scrollable = eachScrollable;
+                        break;
+                    }
+                }
+            }
+
+            eachComponent = eachComponent.getParent();
+        }
+
+        if (scrollable == null) {
+            scrollable = new DefaultToolWindowScrollable();
+        }
+
+        if (isHorizontalStretchingOffered && scrollable.isHorizontalScrollingNeeded()) {
+            return scrollable;
+        }
+        if (!isHorizontalStretchingOffered && scrollable.isVerticalScrollingNeeded()) {
+            return scrollable;
+        }
+
+        return null;
+    }
+
+    protected abstract void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr);
+
+    protected void stretch(ToolWindow wnd, boolean isHorizontalStretching, boolean isIncrementAction) {
+        ToolWindowScrollable scrollable = getScrollable(wnd, isHorizontalStretching);
+        if (scrollable == null) {
+            return;
+        }
+
+        ToolWindowAnchor anchor = wnd.getAnchor();
+        if (isHorizontalStretching && !anchor.isHorizontal()) {
+            incWidth(wnd, scrollable.getNextHorizontalScroll(), (anchor == ToolWindowAnchor.LEFT) == isIncrementAction);
+        }
+        else if (!isHorizontalStretching && anchor.isHorizontal()) {
+            incHeight(wnd, scrollable.getNextVerticalScroll(), (anchor == ToolWindowAnchor.TOP) != isIncrementAction);
+        }
+    }
+
+    private static void incWidth(ToolWindow wnd, int value, boolean isPositive) {
+        ((ToolWindowEx)wnd).stretchWidth(isPositive ? value : -value);
+    }
+
+    private static void incHeight(ToolWindow wnd, int value, boolean isPositive) {
+        ((ToolWindowEx)wnd).stretchHeight(isPositive ? value : -value);
+    }
+
+    public static class Left extends ResizeToolWindowAction {
+        public Left() {
+        }
+
+        public Left(String text) {
+            super(text);
+        }
+
+        public Left(String text, String description, Image icon) {
+            super(text, description, icon);
+        }
+
+        public Left(ToolWindow toolWindow, JComponent c) {
+            super(toolWindow, "ResizeToolWindowLeft", c);
+        }
+
         @Override
-        public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-          setDisabled(null);
+        protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
+            event.getPresentation().setEnabled(!window.getAnchor().isHorizontal());
         }
-      });
-    }
 
-    Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-    if (owner == null) {
-      setDisabled(e);
-      return;
-    }
-
-    final Window windowAncestor = SwingUtilities.getWindowAncestor(owner);
-    consulo.ui.Window uiWindow = TargetAWT.from(windowAncestor);
-    if (!IdeFrameUtil.isRootIdeFrameWindow(uiWindow)) {
-      setDisabled(e);
-      return;
-    }
-
-    ToolWindowManager mgr = ToolWindowManager.getInstance(project);
-
-    ToolWindow window = myToolWindow;
-
-    if (window != null || mgr.getActiveToolWindowId() != null) {
-      if (window == null) {
-        window = mgr.getToolWindow(mgr.getActiveToolWindowId());
-      }
-
-      if (window == null || !window.isAvailable() || !window.isVisible() || window.getType() == ToolWindowType.FLOATING || !window.isActive()) {
-        setDisabled(e);
-        return;
-      }
-
-      update(e, window, mgr);
-      if (e.getPresentation().isEnabled()) {
-        myLastWindow = window;
-        myLastManager = mgr;
-      }
-      else {
-        setDisabled(e);
-      }
-    }
-    else {
-      setDisabled(e);
-    }
-  }
-
-  private void setDisabled(@Nullable AnActionEvent e) {
-    if (e != null) {
-      e.getPresentation().setEnabled(false);
-    }
-
-    myLastWindow = null;
-    myLastManager = null;
-    myToolWindow = null;
-  }
-
-  protected abstract void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr);
-
-  @Override
-  @RequiredUIAccess
-  public final void actionPerformed(@Nonnull AnActionEvent e) {
-    actionPerformed(e, myLastWindow, myLastManager);
-  }
-
-  @Nullable
-  private ToolWindowScrollable getScrollable(ToolWindow wnd, boolean isHorizontalStretchingOffered) {
-    KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-
-    Component eachComponent = mgr.getFocusOwner();
-    ToolWindowScrollable scrollable = null;
-    while (eachComponent != null) {
-      if (!SwingUtilities.isDescendingFrom(eachComponent, wnd.getComponent())) break;
-
-      if (eachComponent instanceof ToolWindowScrollable eachScrollable) {
-        if (isHorizontalStretchingOffered) {
-          if (eachScrollable.isHorizontalScrollingNeeded()) {
-            scrollable = eachScrollable;
-            break;
-          }
-        } else {
-          if (eachScrollable.isVerticalScrollingNeeded()) {
-            scrollable = eachScrollable;
-            break;
-          }
+        @Override
+        protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
+            stretch(wnd, true, false);
         }
-      }
-
-      eachComponent = eachComponent.getParent();
     }
 
-    if (scrollable == null) {
-      scrollable = new DefaultToolWindowScrollable();
+    public static class Right extends ResizeToolWindowAction {
+        public Right() {
+        }
+
+        public Right(String text) {
+            super(text);
+        }
+
+        public Right(String text, String description, Image icon) {
+            super(text, description, icon);
+        }
+
+        public Right(ToolWindow toolWindow, JComponent c) {
+            super(toolWindow, "ResizeToolWindowRight", c);
+        }
+
+        @Override
+        protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
+            event.getPresentation().setEnabled(!window.getAnchor().isHorizontal());
+        }
+
+        @Override
+        protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
+            stretch(wnd, true, true);
+        }
     }
 
-    if (isHorizontalStretchingOffered && scrollable.isHorizontalScrollingNeeded()) return scrollable;
-    if (!isHorizontalStretchingOffered && scrollable.isVerticalScrollingNeeded()) return scrollable;
+    public static class Up extends ResizeToolWindowAction {
+        public Up() {
+        }
 
-    return null;
-  }
+        public Up(String text) {
+            super(text);
+        }
 
-  protected abstract void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr);
+        public Up(String text, String description, Image icon) {
+            super(text, description, icon);
+        }
 
-  protected void stretch(ToolWindow wnd, boolean isHorizontalStretching, boolean isIncrementAction) {
-    ToolWindowScrollable scrollable = getScrollable(wnd, isHorizontalStretching);
-    if (scrollable == null) return;
+        public Up(ToolWindow toolWindow, JComponent c) {
+            super(toolWindow, "ResizeToolWindowUp", c);
+        }
 
-    ToolWindowAnchor anchor = wnd.getAnchor();
-    if (isHorizontalStretching && !anchor.isHorizontal()) {
-      incWidth(wnd, scrollable.getNextHorizontalScroll(), (anchor == ToolWindowAnchor.LEFT) == isIncrementAction);
-    } else if (!isHorizontalStretching && anchor.isHorizontal()) {
-      incHeight(wnd, scrollable.getNextVerticalScroll(), (anchor == ToolWindowAnchor.TOP) != isIncrementAction);  
-    }
-  }
+        @Override
+        protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
+            event.getPresentation().setEnabled(window.getAnchor().isHorizontal());
+        }
 
-  private static void incWidth(ToolWindow wnd, int value, boolean isPositive) {
-    ((ToolWindowEx)wnd).stretchWidth(isPositive ? value : -value);
-  }
-
-  private static void incHeight(ToolWindow wnd, int value, boolean isPositive) {
-    ((ToolWindowEx)wnd).stretchHeight(isPositive ? value : -value);
-  }
-
-  public static class Left extends ResizeToolWindowAction {
-
-    public Left() {
+        @Override
+        protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
+            stretch(wnd, false, true);
+        }
     }
 
-    public Left(String text) {
-      super(text);
+    public static class Down extends ResizeToolWindowAction {
+        public Down() {
+        }
+
+        public Down(String text) {
+            super(text);
+        }
+
+        public Down(String text, String description, Image icon) {
+            super(text, description, icon);
+        }
+
+        public Down(ToolWindow toolWindow, JComponent c) {
+            super(toolWindow, "ResizeToolWindowDown", c);
+        }
+
+        @Override
+        protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
+            event.getPresentation().setEnabled(window.getAnchor().isHorizontal());
+        }
+
+        @Override
+        protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
+            stretch(wnd, false, false);
+        }
     }
 
-    public Left(String text, String description, Image icon) {
-      super(text, description, icon);
+    private class DefaultToolWindowScrollable implements ToolWindowScrollable {
+        @Override
+        public boolean isHorizontalScrollingNeeded() {
+            return true;
+        }
+
+        @Override
+        public int getNextHorizontalScroll() {
+            return getReferenceSize().width * Registry.intValue("ide.windowSystem.hScrollChars");
+        }
+
+        @Override
+        public boolean isVerticalScrollingNeeded() {
+            return true;
+        }
+
+        @Override
+        public int getNextVerticalScroll() {
+            return getReferenceSize().height * Registry.intValue("ide.windowSystem.vScrollChars");
+        }
     }
 
-    public Left(ToolWindow toolWindow, JComponent c) {
-      super(toolWindow, "ResizeToolWindowLeft", c);
+    private Dimension getReferenceSize() {
+        if (myScrollHelper == null) {
+            if (SwingUtilities.isEventDispatchThread()) {
+                myScrollHelper = new JLabel("W");
+            }
+            else {
+                return new Dimension(1, 1);
+            }
+        }
+
+        return myScrollHelper.getPreferredSize();
     }
-
-    @Override
-    protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
-      event.getPresentation().setEnabled(!window.getAnchor().isHorizontal());
-    }
-
-    @Override
-    protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
-      stretch(wnd, true, false);
-    }
-  }
-
-  public static class Right extends ResizeToolWindowAction {
-
-    public Right() {
-    }
-
-    public Right(String text) {
-      super(text);
-    }
-
-    public Right(String text, String description, Image icon) {
-      super(text, description, icon);
-    }
-
-    public Right(ToolWindow toolWindow, JComponent c) {
-      super(toolWindow, "ResizeToolWindowRight", c);
-    }
-
-    @Override
-    protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
-      event.getPresentation().setEnabled(!window.getAnchor().isHorizontal());
-    }
-
-    @Override
-    protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
-      stretch(wnd, true, true);
-    }
-  }
-
-  public static class Up extends ResizeToolWindowAction {
-
-    public Up() {
-    }
-
-    public Up(String text) {
-      super(text);
-    }
-
-    public Up(String text, String description, Image icon) {
-      super(text, description, icon);
-    }
-
-    public Up(ToolWindow toolWindow, JComponent c) {
-      super(toolWindow, "ResizeToolWindowUp", c);
-    }
-
-    @Override
-    protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
-      event.getPresentation().setEnabled(window.getAnchor().isHorizontal());
-    }
-
-    @Override
-    protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
-      stretch(wnd, false, true);
-    }
-  }
-
-  public static class Down extends ResizeToolWindowAction {
-
-    public Down() {
-    }
-
-    public Down(String text) {
-      super(text);
-    }
-
-    public Down(String text, String description, Image icon) {
-      super(text, description, icon);
-    }
-
-    public Down(ToolWindow toolWindow, JComponent c) {
-      super(toolWindow, "ResizeToolWindowDown", c);
-    }
-
-    @Override
-    protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
-      event.getPresentation().setEnabled(window.getAnchor().isHorizontal());
-    }
-
-    @Override
-    protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
-      stretch(wnd, false, false);
-    }
-  }
-
-  private class DefaultToolWindowScrollable implements ToolWindowScrollable {
-    @Override
-    public boolean isHorizontalScrollingNeeded() {
-      return true;
-    }
-
-    @Override
-    public int getNextHorizontalScroll() {
-      return getReferenceSize().width * Registry.intValue("ide.windowSystem.hScrollChars");
-    }
-
-    @Override
-    public boolean isVerticalScrollingNeeded() {
-      return true;
-    }
-
-    @Override
-    public int getNextVerticalScroll() {
-      return getReferenceSize().height * Registry.intValue("ide.windowSystem.vScrollChars");
-    }
-  }
-
-  private Dimension getReferenceSize() {
-    if (myScrollHelper == null) {
-      if (SwingUtilities.isEventDispatchThread()) {
-        myScrollHelper = new JLabel("W");
-      } else {
-        return new Dimension(1, 1);
-      }
-    }
-
-    return myScrollHelper.getPreferredSize();
-  }
 }

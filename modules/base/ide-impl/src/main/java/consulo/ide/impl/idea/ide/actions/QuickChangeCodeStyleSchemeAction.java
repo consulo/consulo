@@ -32,65 +32,65 @@ import jakarta.annotation.Nonnull;
  * @author max
  */
 public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
-  @Override
-  protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
-    final CodeStyleSettingsManager manager = CodeStyleSettingsManager.getInstance(project);
-    if (manager.PER_PROJECT_SETTINGS != null) {
-      //noinspection HardCodedStringLiteral
-      group.add(new AnAction(
-        "<project>",
-        "",
-        manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction
-      ) {
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-          manager.USE_PER_PROJECT_SETTINGS = true;
+    @Override
+    protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
+        CodeStyleSettingsManager manager = CodeStyleSettingsManager.getInstance(project);
+        if (manager.PER_PROJECT_SETTINGS != null) {
+            //noinspection HardCodedStringLiteral
+            group.add(new AnAction(
+                "<project>",
+                "",
+                manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction
+            ) {
+                @Override
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull AnActionEvent e) {
+                    manager.USE_PER_PROJECT_SETTINGS = true;
+                }
+            });
         }
-      });
+
+        CodeStyleScheme currentScheme = CodeStyleSchemes.getInstance().getCurrentScheme();
+        for (CodeStyleScheme scheme : CodeStyleSchemes.getInstance().getSchemes()) {
+            addScheme(group, manager, currentScheme, scheme, false);
+        }
     }
 
-    CodeStyleScheme currentScheme = CodeStyleSchemes.getInstance().getCurrentScheme();
-    for (CodeStyleScheme scheme : CodeStyleSchemes.getInstance().getSchemes()) {
-      addScheme(group, manager, currentScheme, scheme, false);
-    }
-  }
-
-  private static void addScheme(
-    final DefaultActionGroup group,
-    final CodeStyleSettingsManager manager,
-    final CodeStyleScheme currentScheme,
-    final CodeStyleScheme scheme,
-    final boolean addScheme
-  ) {
-    group.add(new AnAction(
-      scheme.getName(),
-      "",
-      scheme == currentScheme && !manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction
+    private static void addScheme(
+        DefaultActionGroup group,
+        CodeStyleSettingsManager manager,
+        CodeStyleScheme currentScheme,
+        CodeStyleScheme scheme,
+        boolean addScheme
     ) {
-      @Override
-      @RequiredUIAccess
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        if (addScheme) {
-          CodeStyleSchemes.getInstance().addScheme(scheme);
-        }
-        CodeStyleSchemes.getInstance().setCurrentScheme(scheme);
-        manager.USE_PER_PROJECT_SETTINGS = false;
-        manager.PREFERRED_PROJECT_CODE_STYLE = scheme.getName();
-        EditorFactory.getInstance().refreshAllEditors();
-      }
-    });
-  }
+        group.add(new AnAction(
+            scheme.getName(),
+            "",
+            scheme == currentScheme && !manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction
+        ) {
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                if (addScheme) {
+                    CodeStyleSchemes.getInstance().addScheme(scheme);
+                }
+                CodeStyleSchemes.getInstance().setCurrentScheme(scheme);
+                manager.USE_PER_PROJECT_SETTINGS = false;
+                manager.PREFERRED_PROJECT_CODE_STYLE = scheme.getName();
+                EditorFactory.getInstance().refreshAllEditors();
+            }
+        });
+    }
 
-  @Override
-  protected boolean isEnabled() {
-    return CodeStyleSchemes.getInstance().getSchemes().length > 1;
-  }
+    @Override
+    protected boolean isEnabled() {
+        return CodeStyleSchemes.getInstance().getSchemes().length > 1;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setEnabled(e.getDataContext().getData(Project.KEY) != null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(e.getDataContext().getData(Project.KEY) != null);
+    }
 }

@@ -38,7 +38,11 @@ public class QuickChangeLookAndFeel extends QuickSwitchSchemeAction {
         List<Style> styles = styleManager.getStyles();
         Style currentStyle = styleManager.getCurrentStyle();
         for (Style newStyle : styles) {
-            group.add(new DumbAwareAction(LocalizeValue.of(newStyle.getName()), LocalizeValue.of(), newStyle == currentStyle ? ourCurrentAction : ourNotCurrentAction) {
+            group.add(new DumbAwareAction(
+                LocalizeValue.of(newStyle.getName()),
+                LocalizeValue.of(),
+                newStyle == currentStyle ? ourCurrentAction : ourNotCurrentAction
+            ) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(@Nonnull AnActionEvent e) {

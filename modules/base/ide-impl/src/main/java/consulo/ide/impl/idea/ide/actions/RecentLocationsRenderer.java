@@ -213,7 +213,10 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     }
 
     @Nonnull
-    private static TextAttributes createDefaultTextAttributesWithBackground(@Nonnull EditorColorsScheme colorsScheme, @Nonnull ColorValue backgroundColor) {
+    private static TextAttributes createDefaultTextAttributesWithBackground(
+        @Nonnull EditorColorsScheme colorsScheme,
+        @Nonnull ColorValue backgroundColor
+    ) {
         TextAttributes defaultTextAttributes = new TextAttributes();
         TextAttributes textAttributes = colorsScheme.getAttributes(HighlighterColors.TEXT);
         if (textAttributes != null) {

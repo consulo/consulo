@@ -25,14 +25,14 @@ import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "CollapseAll")
 public class CollapseAllAction extends TreeCollapseAllActionBase {
-  @Override
-  protected TreeExpander getExpander(DataContext dataContext) {
-    return dataContext.getData(PlatformDataKeys.TREE_EXPANDER);
-  }
+    @Override
+    protected TreeExpander getExpander(DataContext dataContext) {
+        return dataContext.getData(PlatformDataKeys.TREE_EXPANDER);
+    }
 
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.actionsCollapseall();
-  }
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.actionsCollapseall();
+    }
 }

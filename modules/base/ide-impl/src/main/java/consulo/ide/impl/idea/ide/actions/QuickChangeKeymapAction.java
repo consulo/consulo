@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
@@ -29,29 +30,36 @@ import jakarta.annotation.Nonnull;
  * @author max
  */
 public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
-  @Override
-  protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
-    KeymapManagerEx manager = (KeymapManagerEx) KeymapManager.getInstance();
-    Keymap current = manager.getActiveKeymap();
-    for (Keymap keymap : manager.getAllKeymaps()) {
-      addKeymapAction(group, manager, current, keymap, false);
-    }
-  }
-
-  private static void addKeymapAction(final DefaultActionGroup group, final KeymapManagerEx manager, final Keymap current, final Keymap keymap, final boolean addScheme) {
-    group.add(new AnAction(keymap.getPresentableName(), "", keymap == current ? ourCurrentAction : ourNotCurrentAction) {
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        if (addScheme) {
-          manager.getSchemeManager().addNewScheme(keymap, false);
+    @Override
+    protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
+        KeymapManagerEx manager = (KeymapManagerEx)KeymapManager.getInstance();
+        Keymap current = manager.getActiveKeymap();
+        for (Keymap keymap : manager.getAllKeymaps()) {
+            addKeymapAction(group, manager, current, keymap, false);
         }
-        manager.setActiveKeymap(keymap);
-      }
-    });
-  }
+    }
 
-  @Override
-  protected boolean isEnabled() {
-    return ((KeymapManagerEx) KeymapManager.getInstance()).getAllKeymaps().length > 1;
-  }
+    private static void addKeymapAction(
+        DefaultActionGroup group,
+        KeymapManagerEx manager,
+        Keymap current,
+        Keymap keymap,
+        boolean addScheme
+    ) {
+        group.add(new AnAction(keymap.getPresentableName(), "", keymap == current ? ourCurrentAction : ourNotCurrentAction) {
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                if (addScheme) {
+                    manager.getSchemeManager().addNewScheme(keymap, false);
+                }
+                manager.setActiveKeymap(keymap);
+            }
+        });
+    }
+
+    @Override
+    protected boolean isEnabled() {
+        return KeymapManager.getInstance().getAllKeymaps().length > 1;
+    }
 }

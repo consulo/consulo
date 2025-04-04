@@ -25,46 +25,46 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
 public class HideToolWindowAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+
+        ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
+        String id = toolWindowManager.getActiveToolWindowId();
+        if (id == null) {
+            id = toolWindowManager.getLastActiveToolWindowId();
+        }
+        toolWindowManager.getToolWindow(id).hide(null);
     }
 
-    ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
-    String id = toolWindowManager.getActiveToolWindowId();
-    if (id == null) {
-      id = toolWindowManager.getLastActiveToolWindowId();
-    }
-    toolWindowManager.getToolWindow(id).hide(null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
-    }
+        ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
+        String id = toolWindowManager.getActiveToolWindowId();
+        if (id != null) {
+            presentation.setEnabled(true);
+            return;
+        }
 
-    ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
-    String id = toolWindowManager.getActiveToolWindowId();
-    if (id != null) {
-      presentation.setEnabled(true);
-      return;
-    }
+        id = toolWindowManager.getLastActiveToolWindowId();
+        if (id == null) {
+            presentation.setEnabled(false);
+            return;
+        }
 
-    id = toolWindowManager.getLastActiveToolWindowId();
-    if (id == null) {
-      presentation.setEnabled(false);
-      return;
+        ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
+        presentation.setEnabled(toolWindow.isVisible());
     }
-
-    ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
-    presentation.setEnabled(toolWindow.isVisible());
-  }
 }

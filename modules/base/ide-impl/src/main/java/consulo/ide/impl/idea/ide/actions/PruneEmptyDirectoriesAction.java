@@ -33,66 +33,67 @@ import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 public class PruneEmptyDirectoriesAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
-    e.getPresentation().setEnabled(files != null && files.length > 0);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
-    assert files != null;
-
-    FileTypeManager ftManager = FileTypeManager.getInstance();
-    try {
-      for (VirtualFile file : files) {
-        pruneEmptiesIn(file, ftManager);
-      }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        e.getPresentation().setEnabled(files != null && files.length > 0);
     }
-    catch (IOException ignored) { }
-  }
 
-  private static void pruneEmptiesIn(VirtualFile file, final FileTypeManager ftManager) throws IOException {
-    VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
-      @Override
-      @RequiredUIAccess
-      public boolean visitFile(@Nonnull VirtualFile file) {
-        if (file.isDirectory()) {
-          if (ftManager.isFileIgnored(file)) {
-            return false;
-          }
-        }
-        else if (".DS_Store".equals(file.getName())) {
-          delete(file);
-          return false;
-        }
-        return true;
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        assert files != null;
 
-      @Override
-      @RequiredUIAccess
-      public void afterChildrenVisited(@Nonnull VirtualFile file) {
-        if (file.isDirectory() && file.getChildren().length == 0) {
-          delete(file);
+        FileTypeManager ftManager = FileTypeManager.getInstance();
+        try {
+            for (VirtualFile file : files) {
+                pruneEmptiesIn(file, ftManager);
+            }
         }
-      }
-    });
-  }
+        catch (IOException ignored) {
+        }
+    }
 
-  @RequiredUIAccess
-  private static void delete(final VirtualFile file) {
-    Application.get().runWriteAction(() -> {
-      try {
-        file.delete(PruneEmptyDirectoriesAction.class);
-        //noinspection UseOfSystemOutOrSystemErr
-        System.out.println("Deleted: " + file.getPresentableUrl());
-      }
-      catch (IOException e) {
-        Messages.showErrorDialog("Cannot delete '" + file.getPresentableUrl() + "', " + e.getLocalizedMessage(), "IOException");
-      }
-    });
-  }
+    private static void pruneEmptiesIn(VirtualFile file, FileTypeManager ftManager) throws IOException {
+        VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
+            @Override
+            @RequiredUIAccess
+            public boolean visitFile(@Nonnull VirtualFile file) {
+                if (file.isDirectory()) {
+                    if (ftManager.isFileIgnored(file)) {
+                        return false;
+                    }
+                }
+                else if (".DS_Store".equals(file.getName())) {
+                    delete(file);
+                    return false;
+                }
+                return true;
+            }
+
+            @Override
+            @RequiredUIAccess
+            public void afterChildrenVisited(@Nonnull VirtualFile file) {
+                if (file.isDirectory() && file.getChildren().length == 0) {
+                    delete(file);
+                }
+            }
+        });
+    }
+
+    @RequiredUIAccess
+    private static void delete(VirtualFile file) {
+        Application.get().runWriteAction(() -> {
+            try {
+                file.delete(PruneEmptyDirectoriesAction.class);
+                //noinspection UseOfSystemOutOrSystemErr
+                System.out.println("Deleted: " + file.getPresentableUrl());
+            }
+            catch (IOException e) {
+                Messages.showErrorDialog("Cannot delete '" + file.getPresentableUrl() + "', " + e.getLocalizedMessage(), "IOException");
+            }
+        });
+    }
 }

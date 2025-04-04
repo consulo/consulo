@@ -29,6 +29,7 @@ import consulo.ui.ex.action.Presentation;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.function.Function;
 
@@ -36,58 +37,58 @@ import java.util.function.Function;
  * @author max
  */
 public abstract class TreeCollapseAllActionBase extends DumbAwareAction implements DumbAware {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    TreeExpander expander = getExpanderMaybeFromToolWindow(e, this::getExpander);
-    if (expander == null) {
-      return;
-    }
-    if (!expander.canCollapse()) {
-      return;
-    }
-    expander.collapseAll();
-  }
-
-  @Nullable
-  protected abstract TreeExpander getExpander(DataContext dataContext);
-
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    TreeExpander expander = getExpanderMaybeFromToolWindow(event, this::getExpander);
-    presentation.setEnabled(expander != null && expander.canCollapse() && expander.isCollapseAllVisible());
-  }
-
-  @Nullable
-  public static TreeExpander getExpanderMaybeFromToolWindow(AnActionEvent e, Function<DataContext, TreeExpander> getExpander) {
-    TreeExpander expander = getExpander.apply(e.getDataContext());
-    if (expander != null) {
-      return expander;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        TreeExpander expander = getExpanderMaybeFromToolWindow(e, this::getExpander);
+        if (expander == null) {
+            return;
+        }
+        if (!expander.canCollapse()) {
+            return;
+        }
+        expander.collapseAll();
     }
 
-    ToolWindow toolWindow = e.getData(ToolWindow.KEY);
-    if (toolWindow == null) {
-      return null;
+    @Nullable
+    protected abstract TreeExpander getExpander(DataContext dataContext);
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        TreeExpander expander = getExpanderMaybeFromToolWindow(event, this::getExpander);
+        presentation.setEnabled(expander != null && expander.canCollapse() && expander.isCollapseAllVisible());
     }
 
-    ContentManager contentManager = toolWindow.getContentManagerIfCreated();
-    if (contentManager == null) {
-      return null;
-    }
+    @Nullable
+    public static TreeExpander getExpanderMaybeFromToolWindow(AnActionEvent e, Function<DataContext, TreeExpander> getExpander) {
+        TreeExpander expander = getExpander.apply(e.getDataContext());
+        if (expander != null) {
+            return expander;
+        }
 
-    Content selectedContent = contentManager.getSelectedContent();
-    if (selectedContent == null) {
-      return null;
-    }
+        ToolWindow toolWindow = e.getData(ToolWindow.KEY);
+        if (toolWindow == null) {
+            return null;
+        }
 
-    JComponent component = selectedContent.getComponent();
-    if (component == null) {
-      return null;
-    }
+        ContentManager contentManager = toolWindow.getContentManagerIfCreated();
+        if (contentManager == null) {
+            return null;
+        }
 
-    DataContext context = DataManager.getInstance().getDataContext(component);
-    return getExpander.apply(context);
-  }
+        Content selectedContent = contentManager.getSelectedContent();
+        if (selectedContent == null) {
+            return null;
+        }
+
+        JComponent component = selectedContent.getComponent();
+        if (component == null) {
+            return null;
+        }
+
+        DataContext context = DataManager.getInstance().getDataContext(component);
+        return getExpander.apply(context);
+    }
 }

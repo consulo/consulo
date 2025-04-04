@@ -60,7 +60,7 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
 
     private static String getShortcut() {
         String shortcutText;
-        final Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
+        Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
         if (shortcuts.length == 0) {
             shortcutText = "Double " + (Platform.current().os().isMac() ? MacKeymapUtil.SHIFT : "Shift");
         }

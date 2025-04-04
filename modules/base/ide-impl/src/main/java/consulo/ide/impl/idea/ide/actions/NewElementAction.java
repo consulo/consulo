@@ -36,84 +36,84 @@ import jakarta.annotation.Nullable;
  */
 @SuppressWarnings({"MethodMayBeStatic"})
 public class NewElementAction extends AnAction implements DumbAware, PopupAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent event) {
-    showPopup(event.getDataContext());
-  }
-
-  protected void showPopup(DataContext context) {
-    createPopup(context).showInBestPositionFor(context);
-  }
-
-  protected ListPopup createPopup(DataContext dataContext) {
-    return JBPopupFactory.getInstance().createActionGroupPopup(
-      getPopupTitle(),
-      getGroup(dataContext),
-      dataContext,
-      isShowNumbers(),
-      isShowDisabledActions(),
-      isHonorActionMnemonics(),
-      getDisposeCallback(),
-      getMaxRowCount(),
-      getPreselectActionCondition(dataContext)
-    );
-  }
-
-  protected int getMaxRowCount() {
-    return -1;
-  }
-
-  @Nullable
-  protected Condition<AnAction> getPreselectActionCondition(DataContext dataContext) {
-    return dataContext.getData(LangDataKeys.PRESELECT_NEW_ACTION_CONDITION);
-  }
-
-  @Nullable
-  protected Runnable getDisposeCallback() {
-    return null;
-  }
-
-  protected boolean isHonorActionMnemonics() {
-    return false;
-  }
-
-  protected boolean isShowDisabledActions() {
-    return false;
-  }
-
-  protected boolean isShowNumbers() {
-    return false;
-  }
-
-  protected String getPopupTitle() {
-    return IdeLocalize.titlePopupNewElement().get();
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e){
-    final Presentation presentation = e.getPresentation();
-    final DataContext context = e.getDataContext();
-    final Project project = context.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
-    }
-    if (Boolean.TRUE.equals(context.getData(LangDataKeys.NO_NEW_ACTION))) {
-      presentation.setEnabled(false);
-      return;
-    }
-    final IdeView ideView = context.getData(IdeView.KEY);
-    if (ideView == null) {
-      presentation.setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent event) {
+        showPopup(event.getDataContext());
     }
 
-    presentation.setEnabled(!ActionGroupUtil.isGroupEmpty(getGroup(context), e));
-  }
+    protected void showPopup(DataContext context) {
+        createPopup(context).showInBestPositionFor(context);
+    }
 
-  protected ActionGroup getGroup(DataContext dataContext) {
-    return (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_WEIGHING_NEW);
-  }
+    protected ListPopup createPopup(DataContext dataContext) {
+        return JBPopupFactory.getInstance().createActionGroupPopup(
+            getPopupTitle(),
+            getGroup(dataContext),
+            dataContext,
+            isShowNumbers(),
+            isShowDisabledActions(),
+            isHonorActionMnemonics(),
+            getDisposeCallback(),
+            getMaxRowCount(),
+            getPreselectActionCondition(dataContext)
+        );
+    }
+
+    protected int getMaxRowCount() {
+        return -1;
+    }
+
+    @Nullable
+    protected Condition<AnAction> getPreselectActionCondition(DataContext dataContext) {
+        return dataContext.getData(LangDataKeys.PRESELECT_NEW_ACTION_CONDITION);
+    }
+
+    @Nullable
+    protected Runnable getDisposeCallback() {
+        return null;
+    }
+
+    protected boolean isHonorActionMnemonics() {
+        return false;
+    }
+
+    protected boolean isShowDisabledActions() {
+        return false;
+    }
+
+    protected boolean isShowNumbers() {
+        return false;
+    }
+
+    protected String getPopupTitle() {
+        return IdeLocalize.titlePopupNewElement().get();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        DataContext context = e.getDataContext();
+        Project project = context.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        if (Boolean.TRUE.equals(context.getData(LangDataKeys.NO_NEW_ACTION))) {
+            presentation.setEnabled(false);
+            return;
+        }
+        IdeView ideView = context.getData(IdeView.KEY);
+        if (ideView == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+
+        presentation.setEnabled(!ActionGroupUtil.isGroupEmpty(getGroup(context), e));
+    }
+
+    protected ActionGroup getGroup(DataContext dataContext) {
+        return (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_WEIGHING_NEW);
+    }
 }

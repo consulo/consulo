@@ -21,23 +21,23 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 
 public class ExpandAllToolbarAction extends TreeExpandAllActionBase {
-  private TreeExpander myTreeExpander;
+    private TreeExpander myTreeExpander;
 
-  public ExpandAllToolbarAction(TreeExpander treeExpander) {
-    myTreeExpander = treeExpander;
-    copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_EXPAND_ALL));
-  }
+    public ExpandAllToolbarAction(TreeExpander treeExpander) {
+        myTreeExpander = treeExpander;
+        copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_EXPAND_ALL));
+    }
 
-  public ExpandAllToolbarAction(TreeExpander treeExpander, String description) {
-    this(treeExpander);
-    getTemplatePresentation().setDescription(description);
-  }
+    public ExpandAllToolbarAction(TreeExpander treeExpander, String description) {
+        this(treeExpander);
+        getTemplatePresentation().setDescription(description);
+    }
 
-  protected TreeExpander getExpander(DataContext dataContext) {
-    return myTreeExpander;
-  }
+    protected TreeExpander getExpander(DataContext dataContext) {
+        return myTreeExpander;
+    }
 
-  public void setTreeExpander(TreeExpander treeExpander) {
-    myTreeExpander = treeExpander;
-  }
+    public void setTreeExpander(TreeExpander treeExpander) {
+        myTreeExpander = treeExpander;
+    }
 }

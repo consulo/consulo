@@ -28,69 +28,69 @@ import java.util.List;
  * @author peter
  */
 abstract class WeighingActionGroup extends ActionGroup {
-  private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
+    private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    getDelegate().update(e);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        getDelegate().update(e);
+    }
 
-  protected abstract ActionGroup getDelegate();
+    protected abstract ActionGroup getDelegate();
 
-  @Override
-  @Nonnull
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    return getDelegate().getChildren(e);
-  }
+    @Override
+    @Nonnull
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        return getDelegate().getChildren(e);
+    }
 
-  @Nonnull
-  @Override
-  public List<AnAction> postProcessVisibleChildren(@Nonnull List<AnAction> visibleActions) {
-    LinkedHashSet<AnAction> heaviest = null;
-    double maxWeight = Presentation.DEFAULT_WEIGHT;
-    for (AnAction action : visibleActions) {
-      Presentation presentation = myPresentationFactory.getPresentation(action);
-      if (presentation.isEnabled() && presentation.isVisible()) {
-        if (presentation.getWeight() > maxWeight) {
-          maxWeight = presentation.getWeight();
-          heaviest = new LinkedHashSet<>();
+    @Nonnull
+    @Override
+    public List<AnAction> postProcessVisibleChildren(@Nonnull List<AnAction> visibleActions) {
+        LinkedHashSet<AnAction> heaviest = null;
+        double maxWeight = Presentation.DEFAULT_WEIGHT;
+        for (AnAction action : visibleActions) {
+            Presentation presentation = myPresentationFactory.getPresentation(action);
+            if (presentation.isEnabled() && presentation.isVisible()) {
+                if (presentation.getWeight() > maxWeight) {
+                    maxWeight = presentation.getWeight();
+                    heaviest = new LinkedHashSet<>();
+                }
+                if (presentation.getWeight() == maxWeight && heaviest != null) {
+                    heaviest.add(action);
+                }
+            }
         }
-        if (presentation.getWeight() == maxWeight && heaviest != null) {
-          heaviest.add(action);
+
+        if (heaviest == null) {
+            return visibleActions;
         }
-      }
+
+        ActionGroup.Builder chosen = ActionGroup.newImmutableBuilder();
+        boolean prevSeparator = true;
+        for (AnAction action : visibleActions) {
+            boolean separator = action instanceof AnSeparator;
+            if (separator && !prevSeparator) {
+                chosen.add(action);
+            }
+            prevSeparator = separator;
+
+            if (shouldBeChosenAnyway(action)) {
+                heaviest.add(action);
+            }
+
+            if (heaviest.contains(action)) {
+                chosen.add(action);
+            }
+        }
+
+        ActionGroup other = new ExcludingActionGroup(getDelegate(), heaviest);
+        other.setPopup(true);
+        other.getTemplatePresentation().setText("Other...");
+        return List.of(chosen.build(), new AnSeparator(), other);
     }
 
-    if (heaviest == null) {
-      return visibleActions;
+    protected boolean shouldBeChosenAnyway(AnAction action) {
+        return false;
     }
-
-    final ActionGroup.Builder chosen = ActionGroup.newImmutableBuilder();
-    boolean prevSeparator = true;
-    for (AnAction action : visibleActions) {
-      final boolean separator = action instanceof AnSeparator;
-      if (separator && !prevSeparator) {
-        chosen.add(action);
-      }
-      prevSeparator = separator;
-
-      if (shouldBeChosenAnyway(action)) {
-        heaviest.add(action);
-      }
-
-      if (heaviest.contains(action)) {
-        chosen.add(action);
-      }
-    }
-
-    ActionGroup other = new ExcludingActionGroup(getDelegate(), heaviest);
-    other.setPopup(true);
-    other.getTemplatePresentation().setText("Other...");
-    return List.of(chosen.build(), new AnSeparator(), other);
-  }
-
-  protected boolean shouldBeChosenAnyway(AnAction action) {
-    return false;
-  }
 }

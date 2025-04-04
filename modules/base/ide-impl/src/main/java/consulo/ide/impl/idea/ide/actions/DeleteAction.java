@@ -39,81 +39,87 @@ import javax.swing.text.JTextComponent;
 import java.awt.event.KeyEvent;
 
 public class DeleteAction extends AnAction implements DumbAware {
-  private static final Logger LOG = Logger.getInstance(DeleteAction.class);
+    private static final Logger LOG = Logger.getInstance(DeleteAction.class);
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    DeleteProvider provider = getDeleteProvider(dataContext);
-    if (provider == null) return;
-    try {
-      provider.deleteElement(dataContext);
-    }
-    catch (Throwable t) {
-      if (t instanceof StackOverflowError){
-        t.printStackTrace();
-      }
-      LOG.error(t);
-    }
-  }
-
-  @Nullable
-  protected DeleteProvider getDeleteProvider(DataContext dataContext) {
-    return dataContext.getData(DeleteProvider.KEY);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event){
-    String place = event.getPlace();
-    Presentation presentation = event.getPresentation();
-    if (ActionPlaces.PROJECT_VIEW_POPUP.equals(place) || ActionPlaces.COMMANDER_POPUP.equals(place)) {
-      presentation.setTextValue(IdeLocalize.actionDeleteEllipsis());
-    }
-    else {
-      presentation.setTextValue(IdeLocalize.actionDelete());
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        DeleteProvider provider = getDeleteProvider(dataContext);
+        if (provider == null) {
+            return;
+        }
+        try {
+            provider.deleteElement(dataContext);
+        }
+        catch (Throwable t) {
+            if (t instanceof StackOverflowError) {
+                t.printStackTrace();
+            }
+            LOG.error(t);
+        }
     }
 
-    DataContext dataContext = event.getDataContext();
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+    @Nullable
+    protected DeleteProvider getDeleteProvider(DataContext dataContext) {
+        return dataContext.getData(DeleteProvider.KEY);
     }
-    DeleteProvider provider = getDeleteProvider(dataContext);
-    if (event.getInputEvent() instanceof KeyEvent keyEvent) {
-      Object component = event.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-      if (component instanceof JTextComponent) provider = null; // Do not override text deletion
-      if (keyEvent.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-        // Do not override text deletion in speed search
-        if (component instanceof JComponent) {
-          SpeedSearchSupply searchSupply = SpeedSearchSupply.getSupply((JComponent)component);
-          if (searchSupply != null) provider = null;
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        String place = event.getPlace();
+        Presentation presentation = event.getPresentation();
+        if (ActionPlaces.PROJECT_VIEW_POPUP.equals(place) || ActionPlaces.COMMANDER_POPUP.equals(place)) {
+            presentation.setTextValue(IdeLocalize.actionDeleteEllipsis());
+        }
+        else {
+            presentation.setTextValue(IdeLocalize.actionDelete());
         }
 
-        String activeSpeedSearchFilter = event.getData(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY);
-        if (!StringUtil.isEmpty(activeSpeedSearchFilter)) {
-          provider = null;
+        DataContext dataContext = event.getDataContext();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
         }
-      }
-    }
-    if (provider instanceof TitledHandler titledHandler) {
-      presentation.setTextValue(titledHandler.getActionTitleValue());
-    }
-    final boolean canDelete = provider != null && provider.canDeleteElement(dataContext);
-    if (ActionPlaces.isPopupPlace(event.getPlace())) {
-      presentation.setVisible(canDelete);
-    }
-    else {
-      presentation.setEnabled(canDelete);
-    }
-  }
+        DeleteProvider provider = getDeleteProvider(dataContext);
+        if (event.getInputEvent() instanceof KeyEvent keyEvent) {
+            Object component = event.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+            if (component instanceof JTextComponent) {
+                provider = null; // Do not override text deletion
+            }
+            if (keyEvent.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                // Do not override text deletion in speed search
+                if (component instanceof JComponent jComponent) {
+                    SpeedSearchSupply searchSupply = SpeedSearchSupply.getSupply(jComponent);
+                    if (searchSupply != null) {
+                        provider = null;
+                    }
+                }
 
-  public DeleteAction(String text, String description, Image icon) {
-    super(text, description, icon);
-  }
+                String activeSpeedSearchFilter = event.getData(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY);
+                if (!StringUtil.isEmpty(activeSpeedSearchFilter)) {
+                    provider = null;
+                }
+            }
+        }
+        if (provider instanceof TitledHandler titledHandler) {
+            presentation.setTextValue(titledHandler.getActionTitleValue());
+        }
+        boolean canDelete = provider != null && provider.canDeleteElement(dataContext);
+        if (ActionPlaces.isPopupPlace(event.getPlace())) {
+            presentation.setVisible(canDelete);
+        }
+        else {
+            presentation.setEnabled(canDelete);
+        }
+    }
 
-  public DeleteAction() {
-  }
+    public DeleteAction(String text, String description, Image icon) {
+        super(text, description, icon);
+    }
+
+    public DeleteAction() {
+    }
 }

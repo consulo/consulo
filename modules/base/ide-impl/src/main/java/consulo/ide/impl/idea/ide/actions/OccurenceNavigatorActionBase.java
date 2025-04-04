@@ -36,131 +36,139 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
 abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return;
-
-    OccurenceNavigator navigator = getNavigator(e.getDataContext());
-    if (navigator == null) {
-      return;
-    }
-    if (!hasOccurenceToGo(navigator)) {
-      return;
-    }
-    OccurenceNavigator.OccurenceInfo occurenceInfo = go(navigator);
-    if (occurenceInfo == null) {
-      return;
-    }
-    Navigatable descriptor = occurenceInfo.getNavigateable();
-    if (descriptor != null && descriptor.canNavigate()) {
-      descriptor.navigate(false);
-    }
-    if(occurenceInfo.getOccurenceNumber()==-1||occurenceInfo.getOccurencesCount()==-1){
-      return;
-    }
-    WindowManager.getInstance().getStatusBar(project)
-      .setInfo(IdeLocalize.messageOccurrenceNOfM(occurenceInfo.getOccurenceNumber(), occurenceInfo.getOccurencesCount()).get());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      // make it invisible only in main menu to avoid initial invisibility in toolbars
-      presentation.setVisible(!ActionPlaces.MAIN_MENU.equals(event.getPlace()));
-      return;
-    }
-    OccurenceNavigator navigator = getNavigator(event.getDataContext());
-    if (navigator == null) {
-      presentation.setEnabled(false);
-      // make it invisible only in main menu to avoid initial invisibility in toolbars
-      presentation.setVisible(!ActionPlaces.MAIN_MENU.equals(event.getPlace()));
-      return;
-    }
-    presentation.setVisible(true);
-    presentation.setEnabled(hasOccurenceToGo(navigator));
-    presentation.setText(getDescription(navigator));
-  }
-
-  protected abstract OccurenceNavigator.OccurenceInfo go(OccurenceNavigator navigator);
-
-  protected abstract boolean hasOccurenceToGo(OccurenceNavigator navigator);
-
-  protected abstract String getDescription(OccurenceNavigator navigator);
-
-  @Nullable
-  @RequiredUIAccess
-  protected OccurenceNavigator getNavigator(DataContext dataContext) {
-    ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(dataContext, false);
-    if (contentManager != null) {
-      Content content = contentManager.getSelectedContent();
-      if (content == null) return null;
-      JComponent component = content.getComponent();
-      return findNavigator(component);
-    }
-
-    return (OccurenceNavigator)getOccurenceNavigatorFromContext(dataContext);
-  }
-
-  @Nullable
-  private static OccurenceNavigator findNavigator(JComponent parent) {
-    LinkedList<JComponent> queue = new LinkedList<>();
-    queue.addLast(parent);
-    while (!queue.isEmpty()) {
-      JComponent component = queue.removeFirst();
-      if (component instanceof OccurenceNavigator) return (OccurenceNavigator)component;
-      if (component instanceof JTabbedPane) {
-        final JComponent selectedComponent = (JComponent)((JTabbedPane)component).getSelectedComponent();
-        if (selectedComponent != null) {
-          queue.addLast(selectedComponent);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
         }
-      }
-      else if (component != null){
-        for (int i = 0; i < component.getComponentCount(); i++) {
-          Component child = component.getComponent(i);
-          if (!(child instanceof JComponent)) continue;
-          queue.addLast((JComponent)child);
+
+        OccurenceNavigator navigator = getNavigator(e.getDataContext());
+        if (navigator == null) {
+            return;
         }
-      }
-    }
-    return null;
-  }
-
-  @Nullable
-  @RequiredUIAccess
-  private static Component getOccurenceNavigatorFromContext(DataContext dataContext) {
-    Window window = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
-
-    if (window != null) {
-      Component component = window.getFocusOwner();
-      for (Component c = component; c != null; c = c.getParent()) {
-        if (c instanceof OccurenceNavigator) {
-          return c;
+        if (!hasOccurenceToGo(navigator)) {
+            return;
         }
-      }
+        OccurenceNavigator.OccurenceInfo occurenceInfo = go(navigator);
+        if (occurenceInfo == null) {
+            return;
+        }
+        Navigatable descriptor = occurenceInfo.getNavigateable();
+        if (descriptor != null && descriptor.canNavigate()) {
+            descriptor.navigate(false);
+        }
+        if (occurenceInfo.getOccurenceNumber() == -1 || occurenceInfo.getOccurencesCount() == -1) {
+            return;
+        }
+        WindowManager.getInstance().getStatusBar(project)
+            .setInfo(IdeLocalize.messageOccurrenceNOfM(occurenceInfo.getOccurenceNumber(), occurenceInfo.getOccurencesCount()).get());
     }
 
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null) {
-      return null;
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            // make it invisible only in main menu to avoid initial invisibility in toolbars
+            presentation.setVisible(!ActionPlaces.MAIN_MENU.equals(event.getPlace()));
+            return;
+        }
+        OccurenceNavigator navigator = getNavigator(event.getDataContext());
+        if (navigator == null) {
+            presentation.setEnabled(false);
+            // make it invisible only in main menu to avoid initial invisibility in toolbars
+            presentation.setVisible(!ActionPlaces.MAIN_MENU.equals(event.getPlace()));
+            return;
+        }
+        presentation.setVisible(true);
+        presentation.setEnabled(hasOccurenceToGo(navigator));
+        presentation.setText(getDescription(navigator));
     }
 
-    ToolWindowManagerEx mgr = ToolWindowManagerEx.getInstanceEx(project);
+    protected abstract OccurenceNavigator.OccurenceInfo go(OccurenceNavigator navigator);
 
-    String id = mgr.getLastActiveToolWindowId(component -> findNavigator(component) != null);
-    if (id == null) {
-      return null;
+    protected abstract boolean hasOccurenceToGo(OccurenceNavigator navigator);
+
+    protected abstract String getDescription(OccurenceNavigator navigator);
+
+    @Nullable
+    @RequiredUIAccess
+    protected OccurenceNavigator getNavigator(DataContext dataContext) {
+        ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(dataContext, false);
+        if (contentManager != null) {
+            Content content = contentManager.getSelectedContent();
+            if (content == null) {
+                return null;
+            }
+            JComponent component = content.getComponent();
+            return findNavigator(component);
+        }
+
+        return (OccurenceNavigator)getOccurenceNavigatorFromContext(dataContext);
     }
-    return (Component)findNavigator(mgr.getToolWindow(id).getComponent());
-  }
+
+    @Nullable
+    private static OccurenceNavigator findNavigator(JComponent parent) {
+        LinkedList<JComponent> queue = new LinkedList<>();
+        queue.addLast(parent);
+        while (!queue.isEmpty()) {
+            JComponent component = queue.removeFirst();
+            if (component instanceof OccurenceNavigator occurenceNavigator) {
+                return occurenceNavigator;
+            }
+            if (component instanceof JTabbedPane tabbedPane) {
+                JComponent selectedComponent = (JComponent)tabbedPane.getSelectedComponent();
+                if (selectedComponent != null) {
+                    queue.addLast(selectedComponent);
+                }
+            }
+            else if (component != null) {
+                for (int i = 0; i < component.getComponentCount(); i++) {
+                    Component child = component.getComponent(i);
+                    if (child instanceof JComponent jComponent) {
+                        queue.addLast(jComponent);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    @RequiredUIAccess
+    private static Component getOccurenceNavigatorFromContext(DataContext dataContext) {
+        Window window = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
+
+        if (window != null) {
+            Component component = window.getFocusOwner();
+            for (Component c = component; c != null; c = c.getParent()) {
+                if (c instanceof OccurenceNavigator) {
+                    return c;
+                }
+            }
+        }
+
+        Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            return null;
+        }
+
+        ToolWindowManagerEx mgr = ToolWindowManagerEx.getInstanceEx(project);
+
+        String id = mgr.getLastActiveToolWindowId(component -> findNavigator(component) != null);
+        if (id == null) {
+            return null;
+        }
+        return (Component)findNavigator(mgr.getToolWindow(id).getComponent());
+    }
 }

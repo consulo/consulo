@@ -41,74 +41,74 @@ import java.awt.event.KeyEvent;
  * from kotlin
  */
 public class ToolWindowTabRenameActionBase extends ToolWindowContextMenuActionBase {
-  private final String myToolWindowId;
-  private final String myLabeltext;
+    private final String myToolWindowId;
+    private final String myLabeltext;
 
-  public ToolWindowTabRenameActionBase(String toolWindowId, String labeltext) {
-    myToolWindowId = toolWindowId;
-    myLabeltext = labeltext;
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
-    String id = toolWindow.getId();
-    e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null && myToolWindowId.equals(id) && content != null);
-  }
-
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
-    Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (component == null || content == null || e.getData(Content.KEY) == null) {
-      return;
+    public ToolWindowTabRenameActionBase(String toolWindowId, String labeltext) {
+        myToolWindowId = toolWindowId;
+        myLabeltext = labeltext;
     }
 
-    showContentRenamePopup(component, content);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
+        String id = toolWindow.getId();
+        e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null && myToolWindowId.equals(id) && content != null);
+    }
 
-  private void showContentRenamePopup(Component baseLabel, Content content) {
-    JBTextField textField = new JBTextField(content.getDisplayName());
-    textField.getEmptyText().setText(content.getDisplayName());
-    textField.putClientProperty("StatusVisibleFunction", (BooleanFunction<JBTextField>)o -> o.getText().isEmpty());
-    textField.selectAll();
-
-    JBLabel label = new JBLabel(myLabeltext);
-    label.setFont(UIUtil.getLabelFont().deriveFont(Font.BOLD));
-
-    JPanel panel = new JPanel(new VerticalFlowLayout());
-    panel.addFocusListener(new FocusAdapter() {
-      @Override
-      public void focusGained(FocusEvent e) {
-        IdeFocusManager.findInstance().requestFocus(textField, false);
-      }
-    });
-    panel.add(label);
-    panel.add(textField);
-
-    Balloon balloon = JBPopupFactory.getInstance().createDialogBalloonBuilder(panel, null)
-      .setShowCallout(true)
-      .setCloseButtonEnabled(false)
-      .setAnimationCycle(0)
-      .setDisposable(content)
-      .setHideOnKeyOutside(true)
-      .setHideOnClickOutside(true)
-      .setRequestFocus(true)
-      .setBlockClicksThroughBalloon(true)
-      .createBalloon();
-
-    textField.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-          if (!Disposer.isDisposed(content)) {
-            String text = textField.getText();
-            if (!text.isEmpty()) {
-              content.setDisplayName(text);
-            }
-            balloon.hide();
-          }
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
+        Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        if (component == null || content == null || e.getData(Content.KEY) == null) {
+            return;
         }
-      }
-    });
-    balloon.show(new RelativePoint(baseLabel, new Point(baseLabel.getWidth() / 2, 0)), Balloon.Position.above);
-  }
+
+        showContentRenamePopup(component, content);
+    }
+
+    private void showContentRenamePopup(Component baseLabel, Content content) {
+        JBTextField textField = new JBTextField(content.getDisplayName());
+        textField.getEmptyText().setText(content.getDisplayName());
+        textField.putClientProperty("StatusVisibleFunction", (BooleanFunction<JBTextField>)o -> o.getText().isEmpty());
+        textField.selectAll();
+
+        JBLabel label = new JBLabel(myLabeltext);
+        label.setFont(UIUtil.getLabelFont().deriveFont(Font.BOLD));
+
+        JPanel panel = new JPanel(new VerticalFlowLayout());
+        panel.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                IdeFocusManager.findInstance().requestFocus(textField, false);
+            }
+        });
+        panel.add(label);
+        panel.add(textField);
+
+        Balloon balloon = JBPopupFactory.getInstance().createDialogBalloonBuilder(panel, null)
+            .setShowCallout(true)
+            .setCloseButtonEnabled(false)
+            .setAnimationCycle(0)
+            .setDisposable(content)
+            .setHideOnKeyOutside(true)
+            .setHideOnClickOutside(true)
+            .setRequestFocus(true)
+            .setBlockClicksThroughBalloon(true)
+            .createBalloon();
+
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (!Disposer.isDisposed(content)) {
+                        String text = textField.getText();
+                        if (!text.isEmpty()) {
+                            content.setDisplayName(text);
+                        }
+                        balloon.hide();
+                    }
+                }
+            }
+        });
+        balloon.show(new RelativePoint(baseLabel, new Point(baseLabel.getWidth() / 2, 0)), Balloon.Position.above);
+    }
 }

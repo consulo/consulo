@@ -17,13 +17,15 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.fileEditor.action.CloseEditorsActionBase;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.List;
@@ -33,44 +35,42 @@ import java.util.Set;
  * @author yole
  */
 public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
-  @Override
-  protected boolean isFileToClose(FileEditorComposite editor, final FileEditorWindow window) {
-    return !window.isFilePinned(editor.getFile());
-  }
-
-  @Override
-  protected String getPresentationText(final boolean inSplitter) {
-    if (inSplitter) {
-      return IdeBundle.message("action.close.all.unpinned.editors.in.tab.group");
+    @Override
+    protected boolean isFileToClose(FileEditorComposite editor, FileEditorWindow window) {
+        return !window.isFilePinned(editor.getFile());
     }
-    else {
-      return IdeBundle.message("action.close.all.unpinned.editors");
-    }
-  }
 
-  @Override
-  protected boolean isActionEnabled(final Project project, final AnActionEvent event) {
-    final List<Pair<FileEditorComposite, FileEditorWindow>> filesToClose = getFilesToClose(event);
-    if (filesToClose.isEmpty()) return false;
-    Set<FileEditorWindow> checked = new HashSet<>();
-    for (Pair<FileEditorComposite, FileEditorWindow> pair : filesToClose) {
-      final FileEditorWindow window = pair.second;
-      if (!checked.contains(window)) {
-        checked.add(window);
-        if (hasPinned(window)) {
-          return true;
+    @Nonnull
+    @Override
+    protected LocalizeValue getPresentationText(boolean inSplitter) {
+        return inSplitter ? IdeLocalize.actionCloseAllUnpinnedEditorsInTabGroup() : IdeLocalize.actionCloseAllUnpinnedEditors();
+    }
+
+    @Override
+    protected boolean isActionEnabled(Project project, AnActionEvent event) {
+        List<Pair<FileEditorComposite, FileEditorWindow>> filesToClose = getFilesToClose(event);
+        if (filesToClose.isEmpty()) {
+            return false;
         }
-      }
+        Set<FileEditorWindow> checked = new HashSet<>();
+        for (Pair<FileEditorComposite, FileEditorWindow> pair : filesToClose) {
+            FileEditorWindow window = pair.second;
+            if (!checked.contains(window)) {
+                checked.add(window);
+                if (hasPinned(window)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-  private static boolean hasPinned(final FileEditorWindow window) {
-    for (FileEditorWithProviderComposite e : window.getEditors()) {
-      if (e.isPinned()) {
-        return true;
-      }
+    private static boolean hasPinned(FileEditorWindow window) {
+        for (FileEditorWithProviderComposite e : window.getEditors()) {
+            if (e.isPinned()) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 }

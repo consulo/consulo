@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -29,39 +30,41 @@ import java.util.ArrayList;
  * @author peter
  */
 public class ExcludingActionGroup extends ActionGroup {
-  private final ActionGroup myDelegate;
-  private final Set<AnAction> myExcludes;
+    private final ActionGroup myDelegate;
+    private final Set<AnAction> myExcludes;
 
-  public ExcludingActionGroup(ActionGroup delegate, Set<AnAction> excludes) {
-    super(delegate.getTemplatePresentation().getText(), delegate.isPopup());
-    myDelegate = delegate;
-    myExcludes = excludes;
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    myDelegate.update(e);
-  }
-
-  @Override
-  public boolean isDumbAware() {
-    return myDelegate.isDumbAware();
-  }
-
-  @Override
-  @Nonnull
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    List<AnAction> result = new ArrayList<AnAction>();
-    for (AnAction action : myDelegate.getChildren(e)) {
-      if (myExcludes.contains(action)) {
-        continue;
-      }
-      if (action instanceof ActionGroup) {
-        result.add(new ExcludingActionGroup((ActionGroup) action, myExcludes));
-      } else {
-        result.add(action);
-      }
+    public ExcludingActionGroup(ActionGroup delegate, Set<AnAction> excludes) {
+        super(delegate.getTemplatePresentation().getText(), delegate.isPopup());
+        myDelegate = delegate;
+        myExcludes = excludes;
     }
-    return result.toArray(new AnAction[result.size()]);
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        myDelegate.update(e);
+    }
+
+    @Override
+    public boolean isDumbAware() {
+        return myDelegate.isDumbAware();
+    }
+
+    @Override
+    @Nonnull
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        List<AnAction> result = new ArrayList<>();
+        for (AnAction action : myDelegate.getChildren(e)) {
+            if (myExcludes.contains(action)) {
+                continue;
+            }
+            if (action instanceof ActionGroup group) {
+                result.add(new ExcludingActionGroup(group, myExcludes));
+            }
+            else {
+                result.add(action);
+            }
+        }
+        return result.toArray(new AnAction[result.size()]);
+    }
 }

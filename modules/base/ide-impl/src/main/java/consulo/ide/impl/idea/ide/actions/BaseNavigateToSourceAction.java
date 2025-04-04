@@ -30,53 +30,55 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class BaseNavigateToSourceAction extends AnAction implements DumbAware {
-  private final boolean myFocusEditor;
+    private final boolean myFocusEditor;
 
-  protected BaseNavigateToSourceAction(boolean focusEditor) {
-    myFocusEditor = focusEditor;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    OpenSourceUtil.navigate(myFocusEditor, getNavigatables(dataContext));
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    boolean inPopup = ActionPlaces.isPopupPlace(e.getPlace());
-    Navigatable target = findTargetForUpdate(e.getDataContext());
-    boolean enabled = target != null;
-    if (inPopup && !(this instanceof OpenModuleSettingsAction) && OpenModuleSettingsAction.isModuleInProjectViewPopup(e)) {
-      e.getPresentation().setVisible(false);
-      return;
+    protected BaseNavigateToSourceAction(boolean focusEditor) {
+        myFocusEditor = focusEditor;
     }
-    //as myFocusEditor is always ignored - Main Menu|View always contains 2 actions with the same name and actually same behaviour
-    e.getPresentation().setVisible((enabled || !inPopup) && (myFocusEditor || !(target instanceof NavigatableWithText)));
-    e.getPresentation().setEnabled(enabled);
 
-    String navigateActionText = myFocusEditor && target instanceof NavigatableWithText navigatableWithText
-      ? navigatableWithText.getNavigateActionText(true) : null;
-    e.getPresentation().setText(navigateActionText == null ? getTemplatePresentation().getText() : navigateActionText);
-  }
-
-  @Nullable
-  private Navigatable findTargetForUpdate(@Nonnull DataContext dataContext) {
-    Navigatable[] navigatables = getNavigatables(dataContext);
-    if (navigatables == null) return null;
-
-    for (Navigatable navigatable : navigatables) {
-      if (navigatable.canNavigate()) {
-        return navigatable instanceof PomTargetPsiElement ? ((PomTargetPsiElement)navigatable).getTarget() : navigatable;
-      }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        OpenSourceUtil.navigate(myFocusEditor, getNavigatables(dataContext));
     }
-    return null;
-  }
 
-  @Nullable
-  protected Navigatable[] getNavigatables(final DataContext dataContext) {
-    return dataContext.getData(Navigatable.KEY_OF_ARRAY);
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        boolean inPopup = ActionPlaces.isPopupPlace(e.getPlace());
+        Navigatable target = findTargetForUpdate(e.getDataContext());
+        boolean enabled = target != null;
+        if (inPopup && !(this instanceof OpenModuleSettingsAction) && OpenModuleSettingsAction.isModuleInProjectViewPopup(e)) {
+            e.getPresentation().setVisible(false);
+            return;
+        }
+        //as myFocusEditor is always ignored - Main Menu|View always contains 2 actions with the same name and actually same behaviour
+        e.getPresentation().setVisible((enabled || !inPopup) && (myFocusEditor || !(target instanceof NavigatableWithText)));
+        e.getPresentation().setEnabled(enabled);
+
+        String navigateActionText = myFocusEditor && target instanceof NavigatableWithText navigatableWithText
+            ? navigatableWithText.getNavigateActionText(true) : null;
+        e.getPresentation().setText(navigateActionText == null ? getTemplatePresentation().getText() : navigateActionText);
+    }
+
+    @Nullable
+    private Navigatable findTargetForUpdate(@Nonnull DataContext dataContext) {
+        Navigatable[] navigatables = getNavigatables(dataContext);
+        if (navigatables == null) {
+            return null;
+        }
+
+        for (Navigatable navigatable : navigatables) {
+            if (navigatable.canNavigate()) {
+                return navigatable instanceof PomTargetPsiElement targetPsiElement ? targetPsiElement.getTarget() : navigatable;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    protected Navigatable[] getNavigatables(DataContext dataContext) {
+        return dataContext.getData(Navigatable.KEY_OF_ARRAY);
+    }
 }

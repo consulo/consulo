@@ -20,19 +20,18 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 
 public class TogglePinnedModeAction extends BaseToolWindowToggleAction {
+    @Override
+    protected boolean isSelected(ToolWindow window) {
+        return !window.isAutoHide();
+    }
 
-  @Override
-  protected boolean isSelected(ToolWindow window) {
-    return !window.isAutoHide();
-  }
+    @Override
+    protected void setSelected(ToolWindow window, boolean state) {
+        window.setAutoHide(!state);
+    }
 
-  @Override
-  protected void setSelected(ToolWindow window, boolean state) {
-    window.setAutoHide(!state);
-  }
-
-  @Override
-  protected void update(ToolWindow window, Presentation presentation) {
-    presentation.setEnabled(window.isAvailable() && ToolWindowType.SLIDING!=window.getType());
-  }
+    @Override
+    protected void update(ToolWindow window, Presentation presentation) {
+        presentation.setEnabled(window.isAvailable() && ToolWindowType.SLIDING != window.getType());
+    }
 }

@@ -24,9 +24,9 @@ import jakarta.annotation.Nullable;
 
 // from kotlin
 public class CopyAbsolutePathProvider extends DumbAwareCopyPathProvider {
-  @Nullable
-  @Override
-  public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
-    return ObjectUtil.doIfNotNull(virtualFile, VirtualFile::getPresentableUrl);
-  }
+    @Nullable
+    @Override
+    public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
+        return ObjectUtil.doIfNotNull(virtualFile, VirtualFile::getPresentableUrl);
+    }
 }

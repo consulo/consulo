@@ -20,19 +20,18 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 
 public class ToggleContentUiTypeAction extends BaseToolWindowToggleAction {
+    @Override
+    protected boolean isSelected(ToolWindow window) {
+        return window.getContentUiType() == ToolWindowContentUiType.TABBED;
+    }
 
-  @Override
-  protected boolean isSelected(ToolWindow window) {
-    return window.getContentUiType() == ToolWindowContentUiType.TABBED;
-  }
+    @Override
+    protected void setSelected(ToolWindow window, boolean state) {
+        window.setContentUiType(state ? ToolWindowContentUiType.TABBED : ToolWindowContentUiType.COMBO, null);
+    }
 
-  @Override
-  protected void setSelected(ToolWindow window, boolean state) {
-    window.setContentUiType(state ? ToolWindowContentUiType.TABBED : ToolWindowContentUiType.COMBO, null);
-  }
-
-  @Override
-  protected void update(ToolWindow window, Presentation presentation) {
-    presentation.setEnabled(window.getContentManager().getContentCount() > 1);
-  }
+    @Override
+    protected void update(ToolWindow window, Presentation presentation) {
+        presentation.setEnabled(window.getContentManager().getContentCount() > 1);
+    }
 }
