@@ -16,15 +16,15 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeView;
-import consulo.ide.action.ui.NewItemPopupUtil;
-import consulo.ide.action.ui.NewItemSimplePopupPanel;
-import consulo.ide.localize.IdeLocalize;
-import consulo.ide.util.DirectoryChooserUtil;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.ide.IdeView;
+import consulo.ide.action.ui.NewItemPopupUtil;
+import consulo.ide.action.ui.NewItemSimplePopupPanel;
 import consulo.ide.impl.actions.CreateDirectoryOrPackageType;
+import consulo.ide.localize.IdeLocalize;
+import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.LangBundle;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -36,8 +36,8 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
+import consulo.ui.HasValidator;
 import consulo.ui.TextBox;
-import consulo.ui.ValidableComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.action.AnAction;
@@ -48,7 +48,6 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -116,7 +115,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
         contentPanel.addValidator(value -> {
             if (!validator.checkInput(value)) {
                 String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
-                return new ValidableComponent.ValidationInfo(message);
+                return new HasValidator.ValidationInfo(message);
             }
 
             return null;
