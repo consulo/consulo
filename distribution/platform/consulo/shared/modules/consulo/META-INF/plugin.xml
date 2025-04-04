@@ -461,6 +461,13 @@
         <action id="PinToolwindowTab" class="consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction"/>
         <action id="CloseEditor" class="consulo.ide.impl.idea.ide.actions.CloseEditorAction"/>
 
+        <group id="ChangeLineSeparators" popup="true">
+            <action id="ConvertToWindowsLineSeparators"
+                    class="consulo.ide.impl.idea.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
+            <action id="ConvertToUnixLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToUnixLineSeparatorsAction"/>
+            <action id="ConvertToMacLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToMacLineSeparatorsAction"/>
+        </group>
+
         <group id="MainMenu">
             <group id="FileMenu" popup="true">
                 <group id="FileOpenGroup">
@@ -509,17 +516,6 @@
                 <action id="Synchronize" class="consulo.ide.impl.idea.ide.actions.SynchronizeAction"
                         icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
                 <action id="InvalidateCaches" class="consulo.ide.impl.idea.ide.actions.InvalidateCachesAction"/>
-
-                <action id="ChangeFileEncodingAction" class="consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction"/>
-
-                <group id="ChangeLineSeparators" popup="true">
-                    <action id="ConvertToWindowsLineSeparators"
-                            class="consulo.ide.impl.idea.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
-                    <action id="ConvertToUnixLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToUnixLineSeparatorsAction"/>
-                    <action id="ConvertToMacLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToMacLineSeparatorsAction"/>
-                </group>
-
-                <action id="ToggleReadOnlyAttribute" class="consulo.ide.impl.idea.ide.actions.ToggleReadOnlyAttributeAction"/>
                 <separator/>
                 <action id="Exit" class="consulo.ide.impl.idea.ide.actions.ExitAction"/>
             </group>
