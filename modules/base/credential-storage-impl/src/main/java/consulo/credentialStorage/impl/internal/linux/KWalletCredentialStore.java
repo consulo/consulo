@@ -41,7 +41,7 @@ public class KWalletCredentialStore implements CredentialStore, Closeable {
     private static String appName() {
         Application app = ApplicationManager.getApplication();
         String appName = (app == null || app.isUnitTestMode()) ? null : app.getName().get();
-        return (appName != null) ? appName : "IDEA tests";
+        return (appName != null) ? appName : "Consulo tests";
     }
 
     public static KWalletCredentialStore create() {
