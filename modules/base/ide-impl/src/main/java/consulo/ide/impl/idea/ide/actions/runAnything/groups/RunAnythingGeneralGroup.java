@@ -13,7 +13,6 @@ import java.util.Collection;
 
 public class RunAnythingGeneralGroup extends RunAnythingGroupBase {
     public static final RunAnythingGeneralGroup INSTANCE = new RunAnythingGeneralGroup();
-    public static final String GENERAL_GROUP_TITLE = IdeLocalize.runAnythingGeneralGroupTitle().get();
 
     private RunAnythingGeneralGroup() {
     }
@@ -26,14 +25,14 @@ public class RunAnythingGeneralGroup extends RunAnythingGroupBase {
 
     @Nonnull
     @Override
+    @SuppressWarnings("unchecked")
     public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
         Collection<RunAnythingItem> collector = new ArrayList<>();
 
         for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensions()) {
-            if (IdeLocalize.runAnythingGeneralGroupTitle().equals(provider.getCompletionGroupTitle())) {
+            if (provider.getCompletionGroup() == RunAnythingGeneralGroup.INSTANCE) {
                 Collection values = provider.getValues(dataContext, pattern);
                 for (Object value : values) {
-                    //noinspection unchecked
                     collector.add(provider.getMainListItem(dataContext, value));
                 }
             }

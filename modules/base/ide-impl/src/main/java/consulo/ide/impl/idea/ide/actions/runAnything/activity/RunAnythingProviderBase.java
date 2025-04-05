@@ -5,11 +5,11 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingChooseContextAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
+import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingHelpItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
 import consulo.dataContext.DataContext;
-import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.matcher.Matcher;
@@ -70,9 +70,8 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
     }
 
     @Override
-    @Nonnull
-    public LocalizeValue getCompletionGroupTitle() {
-        return LocalizeValue.empty();
+    public RunAnythingGroup getCompletionGroup() {
+        return null;
     }
 
     @Nullable

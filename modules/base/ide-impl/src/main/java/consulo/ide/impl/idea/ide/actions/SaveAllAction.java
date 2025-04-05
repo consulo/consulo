@@ -22,11 +22,19 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 public class SaveAllAction extends AnAction implements DumbAware {
+    private final Application myApplication;
+
+    @Inject
+    public SaveAllAction(Application application) {
+        myApplication = application;
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Application.get().saveAll();
+        myApplication.saveAll();
     }
 }

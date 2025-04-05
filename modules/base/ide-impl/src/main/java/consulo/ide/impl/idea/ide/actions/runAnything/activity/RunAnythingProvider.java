@@ -4,10 +4,11 @@ package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
+import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
+import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
-import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import consulo.application.util.matcher.Matcher;
@@ -42,13 +43,13 @@ import java.util.List;
  * This help list is divided into several help groups, that usually are associated with a language or plugin, e.g. 'ruby'/'java'.
  * E.g. 'ruby' help group consists of "ruby \<script.rb\>", "rvm use \<sdk_version\>" etc. command placeholders.
  * <p>
- * Each help group {@link consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup} joins providers related to this group.
+ * Each help group {@link RunAnythingHelpGroup} joins providers related to this group.
  * <p>
  * To add a provider command help placeholder in a group do the following:
  * <ul>
- * <li>register your own help group {@link consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup}</li>
+ * <li>register your own help group {@link RunAnythingHelpGroup}</li>
  * <li>implement {@link #getHelpItem(DataContext)}. See also getHelp*() methods of {@link RunAnythingProviderBase}</li>
- * <li>add provider to {@link consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup#getProviders()}</li>
+ * <li>add provider to {@link RunAnythingHelpGroup#getProviders()}</li>
  * </ul>
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
@@ -141,10 +142,9 @@ public interface RunAnythingProvider<V> {
     RunAnythingItem getHelpItem(@Nonnull DataContext dataContext);
 
     /**
-     * Returns completion group title. {@code null} means that current provider doesn't provide completion.
+     * Returns completion group.
      */
-    @Nonnull
-    LocalizeValue getCompletionGroupTitle();
+    RunAnythingGroup getCompletionGroup();
 
     /**
      * Returns group matcher for filtering group elements. Remain {@code null} to use default matcher

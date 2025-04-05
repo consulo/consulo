@@ -19,9 +19,12 @@ public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> ext
 
     @Nonnull
     private final P myProvider;
+    @Nonnull
+    private final LocalizeValue myTitle;
 
-    public RunAnythingCompletionGroup(@Nonnull P provider) {
+    public RunAnythingCompletionGroup(@Nonnull P provider, @Nonnull LocalizeValue title) {
         myProvider = provider;
+        myTitle = title;
     }
 
     @Nonnull
@@ -32,7 +35,7 @@ public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> ext
     @Nonnull
     @Override
     public LocalizeValue getTitle() {
-        return getProvider().getCompletionGroupTitle();
+        return myTitle;
     }
 
     @Nonnull
@@ -51,24 +54,9 @@ public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> ext
     public static Collection<RunAnythingGroup> createCompletionGroups() {
         return RunAnythingProvider.EP_NAME.getExtensionList()
             .stream()
-            .map(RunAnythingCompletionGroup::createCompletionGroup)
+            .map(RunAnythingProvider::getCompletionGroup)
             .filter(Objects::nonNull)
             .distinct()
             .collect(Collectors.toList());
-    }
-
-    @Nullable
-    public static RunAnythingGroup createCompletionGroup(@Nonnull RunAnythingProvider provider) {
-        LocalizeValue title = provider.getCompletionGroupTitle();
-        if (title == LocalizeValue.empty()) {
-            return null;
-        }
-
-        if (RunAnythingGeneralGroup.GENERAL_GROUP_TITLE.equals(title)) {
-            return RunAnythingGeneralGroup.INSTANCE;
-        }
-
-        //noinspection unchecked
-        return new RunAnythingCompletionGroup(provider);
     }
 }

@@ -6,6 +6,8 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
+import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingCompletionGroup;
+import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
 import consulo.ide.localize.IdeLocalize;
@@ -45,9 +47,9 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
     }
 
     @Override
-    @Nonnull
-    public LocalizeValue getCompletionGroupTitle() {
-        return IdeLocalize.runAnythingRecentProjectCompletionGroupTitle();
+    @SuppressWarnings("unchecked")
+    public RunAnythingGroup getCompletionGroup() {
+        return new RunAnythingCompletionGroup(this, IdeLocalize.runAnythingRecentProjectCompletionGroupTitle());
     }
 
     @Nonnull

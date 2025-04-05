@@ -134,6 +134,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
             }
         }
 
+        Application application = Application.get();
         return JBPopupFactory.getInstance().createActionGroupPopup(
             null,
             group.build(),
@@ -141,7 +142,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
             JBPopupFactory.ActionSelectionAid.MNEMONICS,
             true,
             () -> AppExecutorUtil.getAppScheduledExecutorService().schedule(
-                () -> Application.get().invokeLater(disposeCallback, Application.get().getAnyModalityState()),
+                () -> application.invokeLater(disposeCallback, application.getAnyModalityState()),
                 250,
                 TimeUnit.MILLISECONDS
             ),

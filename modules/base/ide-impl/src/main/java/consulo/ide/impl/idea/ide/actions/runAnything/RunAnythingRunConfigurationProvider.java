@@ -5,8 +5,9 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
+import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingCompletionGroup;
+import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
 import consulo.ide.localize.IdeLocalize;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -31,10 +32,10 @@ public class RunAnythingRunConfigurationProvider extends consulo.ide.impl.idea.i
         return null;
     }
 
-    @Nonnull
     @Override
-    public LocalizeValue getCompletionGroupTitle() {
-        return IdeLocalize.runAnythingRunConfigurationsGroupTitle();
+    @SuppressWarnings("unchecked")
+    public RunAnythingGroup getCompletionGroup() {
+        return new RunAnythingCompletionGroup(this, IdeLocalize.runAnythingRunConfigurationsGroupTitle());
     }
 
     @Nonnull

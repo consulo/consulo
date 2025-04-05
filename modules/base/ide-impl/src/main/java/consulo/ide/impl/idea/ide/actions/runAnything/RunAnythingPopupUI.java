@@ -734,7 +734,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             list.addAll(myListModel.getGroups()
                 .stream()
                 .filter(group -> group instanceof RunAnythingCompletionGroup || group instanceof RunAnythingGeneralGroup)
-                .filter(group -> RunAnythingCache.getInstance(myProject).isGroupVisible(group.getTitle()))
+                .filter(group -> group.isVisibleFor(myProject))
                 .collect(Collectors.toList()));
 
             for (RunAnythingGroup group : list) {
@@ -1048,7 +1048,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
             res.markElements(getVisibleGroups());
             ElementsChooser.ElementsMarkListener<RunAnythingGroup> listener = (element, isMarked) -> {
-                RunAnythingCache.getInstance(myProject).saveGroupVisibilityKey(element.getTitle(), isMarked);
+                element.setVisibleFor(myProject, isMarked);
                 rebuildList();
             };
             res.addElementsMarkListener(listener);
@@ -1058,7 +1058,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         @Nonnull
         private List<RunAnythingGroup> getVisibleGroups() {
             Collection<RunAnythingGroup> groups = RunAnythingCompletionGroup.MAIN_GROUPS;
-            return ContainerUtil.filter(groups, group -> RunAnythingCache.getInstance(myProject).isGroupVisible(group.getTitle()));
+            return ContainerUtil.filter(groups, group -> group.isVisibleFor(myProject));
         }
     }
 }

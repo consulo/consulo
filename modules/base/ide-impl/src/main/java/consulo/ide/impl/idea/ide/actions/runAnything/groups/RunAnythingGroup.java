@@ -4,8 +4,11 @@ package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 import consulo.application.Application;
 import consulo.application.util.matcher.NameUtil;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
+import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -42,6 +45,19 @@ public abstract class RunAnythingGroup {
      */
     @Nonnull
     public abstract LocalizeValue getTitle();
+
+    public String getKey() {
+        Optional<LocalizeKey> key = getTitle().getKey();
+        return key.isPresent() ? key.get().getKey() : "";
+    }
+
+    public boolean isVisibleFor(@Nonnull Project project) {
+        return RunAnythingCache.getInstance(project).isGroupVisible(getKey());
+    }
+
+    public void setVisibleFor(@Nonnull Project project, boolean visibility) {
+        RunAnythingCache.getInstance(project).saveGroupVisibilityKey(getKey(), visibility);
+    }
 
     /**
      * @return Current group maximum number of items to be shown.
