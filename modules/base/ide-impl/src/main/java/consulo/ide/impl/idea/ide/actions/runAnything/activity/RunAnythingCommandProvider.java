@@ -14,6 +14,7 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
@@ -26,6 +27,7 @@ import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.*;
 
 public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase<String> {
     @Override
+    @RequiredUIAccess
     public void execute(@Nonnull DataContext dataContext, @Nonnull String value) {
         VirtualFile workDirectory = dataContext.getData(VirtualFile.KEY);
         Executor executor = dataContext.getData(RunAnythingAction.EXECUTOR_KEY);
@@ -35,6 +37,7 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
         runCommand(workDirectory, value, executor, dataContext);
     }
 
+    @RequiredUIAccess
     public static void runCommand(
         @Nonnull VirtualFile workDirectory,
         @Nonnull String commandString,

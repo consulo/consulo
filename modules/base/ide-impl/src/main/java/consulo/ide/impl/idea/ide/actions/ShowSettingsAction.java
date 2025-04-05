@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -36,7 +36,7 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
 
     @Inject
     public ShowSettingsAction(Provider<ShowSettingsUtil> showSettingsUtil) {
-        super(settingsTitle(), settingsDescription(), AllIcons.General.Settings);
+        super(settingsTitle(), settingsDescription(), PlatformIconGroup.generalSettings());
         myShowSettingsUtil = showSettingsUtil;
     }
 

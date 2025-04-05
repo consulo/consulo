@@ -1,14 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
+import consulo.application.util.matcher.Matcher;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
-import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.matcher.Matcher;
-
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

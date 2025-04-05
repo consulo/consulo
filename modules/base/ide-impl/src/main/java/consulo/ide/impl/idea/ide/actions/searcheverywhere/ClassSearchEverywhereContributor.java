@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.ide.actions.GotoClassAction;
 import consulo.ide.impl.idea.ide.actions.GotoClassPresentationUpdater;
 import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
@@ -112,6 +113,7 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
 
     @Nullable
     @Override
+    @RequiredReadAction
     protected Navigatable createExtendedNavigatable(PsiElement psi, String searchText, int modifiers) {
         Navigatable res = super.createExtendedNavigatable(psi, searchText, modifiers);
         if (res != null) {

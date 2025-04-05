@@ -28,7 +28,7 @@ import jakarta.inject.Provider;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Feb 8, 2004
+ * @since 2004-02-08
  */
 public class ShowModulePropertiesAction extends AnAction {
     private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;

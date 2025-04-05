@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.actions.AboutManager;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Window;
@@ -46,7 +46,7 @@ public class AboutAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setVisible(!TopApplicationMenuUtil.isMacSystemMenu);
+        e.getPresentation().setVisible(!Platform.current().os().isEnabledTopMenu());
         e.getPresentation().setDescription("Show information about " + myApplication.getName());
     }
 

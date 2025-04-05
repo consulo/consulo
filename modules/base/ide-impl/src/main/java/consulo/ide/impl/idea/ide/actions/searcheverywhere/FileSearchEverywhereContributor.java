@@ -2,12 +2,10 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoFileAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileConfiguration;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
-import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiElement;

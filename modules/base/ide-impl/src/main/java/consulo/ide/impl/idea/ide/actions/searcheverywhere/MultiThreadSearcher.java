@@ -1,16 +1,15 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
+import consulo.application.Application;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
-import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
@@ -64,11 +63,11 @@ class MultiThreadSearcher implements SESearcher {
 
         Collection<? extends SearchEverywhereContributor<?>> contributors = contributorsAndLimits.keySet();
         if (pattern.isEmpty()) {
-            if (ApplicationManager.getApplication().isUnitTestMode()) {
+            if (Application.get().isUnitTestMode()) {
                 contributors = Collections.emptySet(); //empty search string is not allowed for tests
             }
             else {
-                contributors = ContainerUtil.filter(contributors, contributor -> contributor.isEmptyPatternSupported());
+                contributors = ContainerUtil.filter(contributors, SearchEverywhereContributor::isEmptyPatternSupported);
             }
         }
 
@@ -86,12 +85,12 @@ class MultiThreadSearcher implements SESearcher {
             );
 
             for (SearchEverywhereContributor<?> contributor : contributors) {
-                Runnable task = createSearchTask(pattern, accumulator, indicatorWithCancelListener, contributor, () -> latch.countDown());
-                ApplicationManager.getApplication().executeOnPooledThread(task);
+                Runnable task = createSearchTask(pattern, accumulator, indicatorWithCancelListener, contributor, latch::countDown);
+                Application.get().executeOnPooledThread(task);
             }
 
             Runnable finisherTask = createFinisherTask(latch, accumulator, indicatorWithCancelListener);
-            Future<?> finisherFeature = ApplicationManager.getApplication().executeOnPooledThread(finisherTask);
+            Future<?> finisherFeature = Application.get().executeOnPooledThread(finisherTask);
             indicatorWithCancelListener.setCancelCallback(() -> {
                 accumulator.stop();
                 finisherFeature.cancel(true);
@@ -131,8 +130,8 @@ class MultiThreadSearcher implements SESearcher {
             indicator
         );
         indicator.start();
-        Runnable task = createSearchTask(pattern, accumulator, indicator, contributor, () -> indicator.stop());
-        ApplicationManager.getApplication().executeOnPooledThread(task);
+        Runnable task = createSearchTask(pattern, accumulator, indicator, contributor, indicator::stop);
+        Application.get().executeOnPooledThread(task);
 
         return indicator;
     }
@@ -402,7 +401,7 @@ class MultiThreadSearcher implements SESearcher {
             super(
                 contributorsAndLimits.entrySet()
                     .stream()
-                    .collect(Collectors.toMap(entry -> entry.getKey(), entry -> new ArrayList<>(entry.getValue()))),
+                    .collect(Collectors.toMap(Map.Entry::getKey, entry -> new ArrayList<>(entry.getValue()))),
                 equalityProvider,
                 listener,
                 notificationExecutor,
@@ -510,18 +509,14 @@ class MultiThreadSearcher implements SESearcher {
          * could be used only when current thread owns {@link #lock}
          */
         private void stopSearchIfNeeded() {
-            if (sections.keySet().stream().allMatch(contributor -> isContributorFinished(contributor))) {
+            if (sections.keySet().stream().allMatch(this::isContributorFinished)) {
                 mySearchFinished = true;
                 conditionsMap.values().forEach(Condition::signalAll);
             }
         }
 
         private boolean isContributorFinished(SearchEverywhereContributor<?> contributor) {
-            if (finishedContributorsSet.contains(contributor)) {
-                return true;
-            }
-
-            return sections.get(contributor).size() >= sectionsLimits.get(contributor);
+            return finishedContributorsSet.contains(contributor) || sections.get(contributor).size() >= sectionsLimits.get(contributor);
         }
     }
 

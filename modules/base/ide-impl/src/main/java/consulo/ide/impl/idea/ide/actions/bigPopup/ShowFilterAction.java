@@ -1,10 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.bigPopup;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.ExecutionUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.action.Toggleable;
@@ -25,7 +26,7 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
     private JBPopup myFilterPopup;
 
     public ShowFilterAction() {
-        super("Filter", "Show filters popup", AllIcons.General.Filter);
+        super("Filter", "Show filters popup", PlatformIconGroup.generalFilter());
     }
 
     @Override
@@ -46,6 +47,7 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         Image icon = getTemplatePresentation().getIcon();
         e.getPresentation().setIcon(isActive() ? ExecutionUtil.getIconWithLiveIndicator(icon) : icon);

@@ -958,6 +958,8 @@ label.wrap.attributes:
   text: 'Wrap attributes:'
 label.you.can.import:
   text: You can import your settings from a previous version of {0}.
+launcher.script.title:
+  text: Create Launcher Script
 launcher.script.overwrite:
   text: The file ''{0}'' already exists. Would you like to overwrite it?
 launcher.script.sudo.prompt:

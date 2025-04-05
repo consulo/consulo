@@ -108,7 +108,7 @@ public abstract class RunAnythingGroup {
     @Nullable
     public static RunAnythingGroup findGroup(@Nonnull Collection<? extends RunAnythingGroup> groups, int titleIndex) {
         return groups.stream()
-            .filter(runAnythingGroup -> titleIndex == runAnythingGroup.myTitleIndex)
+            .filter(runAnythingGroup -> titleIndex == ((RunAnythingGroup)runAnythingGroup).myTitleIndex)
             .findFirst()
             .orElse(null);
     }
@@ -152,7 +152,7 @@ public abstract class RunAnythingGroup {
      * Clears {@link #myTitleIndex} of all groups.
      */
     private static void clearTitleIndex(@Nonnull Collection<? extends RunAnythingGroup> groups) {
-        groups.forEach(runAnythingGroup -> runAnythingGroup.myTitleIndex = -1);
+        groups.forEach(runAnythingGroup -> ((RunAnythingGroup)runAnythingGroup).myTitleIndex = -1);
     }
 
     /**

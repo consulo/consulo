@@ -5,7 +5,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -13,6 +12,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.fetchProject;
@@ -47,6 +47,6 @@ public class RunAnythingRunConfigurationProvider extends consulo.ide.impl.idea.i
     @Override
     @RequiredReadAction
     public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
-        return ContainerUtil.emptyList();
+        return Collections.emptyList();
     }
 }

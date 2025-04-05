@@ -1,7 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import jakarta.annotation.Nonnull;
 
@@ -42,39 +43,45 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
         };
     }
 
+    @RequiredUIAccess
     public void clearBuffer() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
         myBuffer.clear();
         cancelScheduledFlush();
     }
 
     @Override
+    @RequiredUIAccess
     public void elementsAdded(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
         myBuffer.addEvent(new Event(Event.ADD, list));
         scheduleFlushBuffer();
     }
 
     @Override
+    @RequiredUIAccess
     public void elementsRemoved(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
         myBuffer.addEvent(new Event(Event.REMOVE, list));
         scheduleFlushBuffer();
     }
 
     @Override
+    @RequiredUIAccess
     public void searchFinished(@Nonnull Map<SearchEverywhereContributor<?>, Boolean> hasMoreContributors) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
         myBuffer.flush(myFlushConsumer);
         myDelegateExecutor.execute(() -> myDelegateListener.searchFinished(hasMoreContributors));
         cancelScheduledFlush();
     }
 
+    @RequiredUIAccess
     private void scheduleFlushBuffer() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
 
+        @RequiredUIAccess
         Runnable flushTask = () -> {
-            ApplicationManager.getApplication().assertIsDispatchThread();
+            Application.get().assertIsDispatchThread();
             if (!flushScheduled) {
                 return;
             }
@@ -88,8 +95,9 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
         }
     }
 
+    @RequiredUIAccess
     private void cancelScheduledFlush() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
         flushAlarm.cancelAllRequests();
         flushScheduled = false;
     }

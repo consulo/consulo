@@ -2,26 +2,27 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import com.google.common.collect.Lists;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.NameUtil;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.EditorHistoryManagerImpl;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.project.Project;
-import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.application.util.matcher.MinusculeMatcher;
-import consulo.application.util.matcher.NameUtil;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,7 +57,7 @@ public class RecentFilesSEContributor extends FileSearchEverywhereContributor {
     public void fetchWeightedElements(
         @Nonnull String pattern,
         @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Processor<? super FoundItemDescriptor<Object>> consumer
+        @Nonnull Predicate<? super FoundItemDescriptor<Object>> predicate
     ) {
         if (myProject == null) {
             return; //nothing to search
@@ -83,11 +84,11 @@ public class RecentFilesSEContributor extends FileSearchEverywhereContributor {
                             PsiFile f = psiManager.findFile(vf);
                             return f == null ? null : new FoundItemDescriptor<Object>(f, matcher.matchingDegree(vf.getName()));
                         })
-                        .filter(file -> file != null)
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList())
                 );
 
-                ContainerUtil.process(res, consumer);
+                ContainerUtil.process(res, predicate);
             },
             progressIndicator
         );

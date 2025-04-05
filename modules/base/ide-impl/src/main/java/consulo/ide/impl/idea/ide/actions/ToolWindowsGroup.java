@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -54,11 +55,13 @@ public final class ToolWindowsGroup extends ActionGroup implements DumbAware {
     };
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
-        e.getPresentation().setEnabledAndVisible((e == null ? null : e.getData(Project.KEY)) != null);
+        e.getPresentation().setEnabledAndVisible((e.getData(Project.KEY)) != null);
     }
 
     @Nonnull
+    @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         Project project = e == null ? null : e.getData(Project.KEY);
         if (project == null) {

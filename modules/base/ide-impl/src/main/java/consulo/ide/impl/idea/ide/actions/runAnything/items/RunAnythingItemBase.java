@@ -120,6 +120,9 @@ public class RunAnythingItemBase extends RunAnythingItem {
 
     @Nonnull
     private static SimpleTextAttributes getDescriptionAttributes(boolean isSelected) {
-        return new SimpleTextAttributes(STYLE_PLAIN, isSelected ? UIUtil.getListSelectionForeground(true) : UIUtil.getInactiveTextColor());
+        return new SimpleTextAttributes(
+            STYLE_PLAIN,
+            isSelected ? UIUtil.getListSelectionForeground(true) : UIUtil.getInactiveTextColor()
+        );
     }
 }

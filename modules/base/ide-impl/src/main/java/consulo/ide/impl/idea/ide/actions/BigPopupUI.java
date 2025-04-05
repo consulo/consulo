@@ -9,6 +9,7 @@ import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.project.Project;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
@@ -65,6 +66,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         return TextBoxWithExtensions.create();
     }
 
+    @RequiredUIAccess
     public void init() {
         myResultsList = createList();
 
@@ -162,7 +164,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     private JLabel createHint() {
         String hint = getInitialHint();
         JLabel hintLabel = HintUtil.createAdComponent(hint, JBCurrentTheme.BigPopup.advertiserBorder(), SwingConstants.LEFT);
-        hintLabel.setForeground(JBCurrentTheme.Advertiser.foreground());
+        hintLabel.setForeground(UIUtil.getLabelForeground());
         hintLabel.setBackground(UIUtil.getPanelBackground());
         hintLabel.setOpaque(true);
         Dimension size = hintLabel.getPreferredSize();

@@ -1,26 +1,25 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.IdeBundle;
-import consulo.language.LangBundle;
+import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.QualifiedNameProviderUtil;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.CopyPasteManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,6 +43,7 @@ public class CopyReferenceAction extends DumbAwareAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         boolean plural = false;
         boolean enabled;
@@ -68,14 +68,14 @@ public class CopyReferenceAction extends DumbAwareAction {
         else {
             e.getPresentation().setVisible(true);
         }
-        e.getPresentation().setText(
+        e.getPresentation().setTextValue(
             paths
                 ? plural
-                ? IdeBundle.message("copy.relative.paths")
-                : IdeBundle.message("copy.relative.path")
+                ? IdeLocalize.copyRelativePaths()
+                : IdeLocalize.copyRelativePath()
                 : plural
-                ? IdeBundle.message("copy.references")
-                : IdeBundle.message("copy.reference")
+                ? IdeLocalize.copyReferences()
+                : IdeLocalize.copyReference()
         );
 
         if (paths) {
@@ -84,6 +84,7 @@ public class CopyReferenceAction extends DumbAwareAction {
     }
 
     @Nonnull
+    @RequiredReadAction
     protected List<PsiElement> getPsiElements(DataContext dataContext, Editor editor) {
         return getElementsToCopy(editor, dataContext);
     }
@@ -99,7 +100,7 @@ public class CopyReferenceAction extends DumbAwareAction {
         String copy = getQualifiedName(editor, elements);
         if (copy != null) {
             CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(copy));
-            setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(copy).get());
+            setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(copy));
         }
         else if (editor != null && project != null) {
             Document document = editor.getDocument();
@@ -107,7 +108,7 @@ public class CopyReferenceAction extends DumbAwareAction {
             if (file != null) {
                 String toCopy = QualifiedNameProviderUtil.getFileFqn(file) + ":" + (editor.getCaretModel().getLogicalPosition().line + 1);
                 CopyPasteManager.getInstance().setContents(new StringSelection(toCopy));
-                setStatusBarText(project, LangBundle.message("status.bar.text.reference.has.been.copied", toCopy));
+                setStatusBarText(project, LanguageLocalize.statusBarTextReferenceHasBeenCopied(toCopy));
             }
             return;
         }
@@ -126,7 +127,7 @@ public class CopyReferenceAction extends DumbAwareAction {
     private static boolean doCopy(List<? extends PsiElement> elements, @Nullable Project project) {
         String toCopy = CopyReferenceUtil.doCopy(elements, null);
         CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(toCopy));
-        setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(toCopy).get());
+        setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(toCopy));
 
         return true;
     }

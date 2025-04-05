@@ -2,17 +2,16 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.dataContext.DataManager;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
@@ -36,6 +35,7 @@ import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class RunConfigurationsSEContributor implements SearchEverywhereContributor<ChooseRunConfigurationPopup.ItemWrapper> {
@@ -126,9 +126,8 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
     public void fetchElements(
         @Nonnull String pattern,
         @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Processor<? super ChooseRunConfigurationPopup.ItemWrapper> consumer
+        @Nonnull Predicate<? super ChooseRunConfigurationPopup.ItemWrapper> predicate
     ) {
-
         if (StringUtil.isEmptyOrSpaces(pattern)) {
             return;
         }
@@ -136,7 +135,7 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
         pattern = filterString(pattern);
         MinusculeMatcher matcher = NameUtil.buildMatcher(pattern).build();
         for (ChooseRunConfigurationPopup.ItemWrapper wrapper : ChooseRunConfigurationPopup.createFlatSettingsList(myProject)) {
-            if (matcher.matches(wrapper.getText()) && !consumer.process(wrapper)) {
+            if (matcher.matches(wrapper.getText()) && !predicate.test(wrapper)) {
                 return;
             }
         }
@@ -164,9 +163,13 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
     }
 
     private String filterString(String input) {
-        return extractFirstWord(input).filter(firstWord -> RUN_COMMAND.getCommandWithPrefix()
-                .startsWith(firstWord) || DEBUG_COMMAND.getCommandWithPrefix().startsWith(firstWord))
-            .map(firstWord -> input.substring(firstWord.length() + 1)).orElse(input);
+        return extractFirstWord(input)
+            .filter(
+                firstWord -> RUN_COMMAND.getCommandWithPrefix().startsWith(firstWord)
+                    || DEBUG_COMMAND.getCommandWithPrefix().startsWith(firstWord)
+            )
+            .map(firstWord -> input.substring(firstWord.length() + 1))
+            .orElse(input);
     }
 
     private static boolean isCommand(String input, SearchEverywhereCommandInfo command) {

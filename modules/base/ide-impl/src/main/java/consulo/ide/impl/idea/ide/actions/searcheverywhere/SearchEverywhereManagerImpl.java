@@ -65,7 +65,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
 
         Project project = initEvent.getData(Project.KEY);
         Component contextComponent = initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        List<SearchEverywhereContributor<?>> serviceContributors = Collections.EMPTY_LIST;
+        List<SearchEverywhereContributor<?>> serviceContributors = Collections.emptyList();
         Arrays.asList(
             //new TopHitSEContributor(project, contextComponent, s -> mySearchEverywhereUI.getSearchField().setValue(s)),
             new RecentFilesSEContributor(project, GotoActionBase.getPsiContext(initEvent)),
@@ -202,6 +202,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     }
 
     @Override
+    @RequiredUIAccess
     public void toggleEverywhereFilter() {
         checkIsShown();
         mySearchEverywhereUI.toggleEverywhereFilter();

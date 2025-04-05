@@ -3,16 +3,15 @@ package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
-import consulo.dataContext.DataContext;
-import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -28,7 +27,7 @@ public class RunAnythingHelpGroup<P extends RunAnythingProvider> extends RunAnyt
     @Nonnull
     private LocalizeValue myTitle = LocalizeValue.localizeTODO("undefined");
     @Nonnull
-    private Collection<P> myProviders = ContainerUtil.emptyList();
+    private Collection<P> myProviders = Collections.emptyList();
 
     public RunAnythingHelpGroup(@Nonnull String title, @Nonnull Collection<P> providers) {
         myTitle = LocalizeValue.localizeTODO(title);

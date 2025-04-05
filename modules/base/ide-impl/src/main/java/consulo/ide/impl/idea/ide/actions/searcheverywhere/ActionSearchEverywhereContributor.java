@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
-import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.ide.actions.GotoActionAction;
 import consulo.ide.impl.idea.ide.actions.SetShortcutAction;
@@ -14,6 +13,7 @@ import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
@@ -33,6 +33,7 @@ import java.awt.event.InputEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getFirstKeyboardShortcutText;
@@ -67,8 +68,8 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
         return "Press " + altEnter + " to assign a shortcut";
     }
 
-    public String includeNonProjectItemsText() {
-        return IdeLocalize.checkboxDisabledIncluded().get();
+    public LocalizeValue includeNonProjectItemsText() {
+        return IdeLocalize.checkboxDisabledIncluded();
     }
 
     @Override
@@ -85,30 +86,33 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
     public void fetchElements(
         @Nonnull String pattern,
         @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Processor<? super GotoActionModel.MatchedValue> consumer
+        @Nonnull Predicate<? super GotoActionModel.MatchedValue> predicate
     ) {
         if (StringUtil.isEmptyOrSpaces(pattern)) {
             return;
         }
 
-        myProvider.filterElements(pattern, element -> {
-            if (progressIndicator.isCanceled()) {
-                return false;
-            }
+        myProvider.filterElements(
+            pattern,
+            element -> {
+                if (progressIndicator.isCanceled()) {
+                    return false;
+                }
 
-            if (!myDisabledActions
-                && element.value instanceof GotoActionModel.ActionWrapper actionWrapper
-                && !actionWrapper.isAvailable()) {
-                return true;
-            }
+                if (!myDisabledActions
+                    && element.value instanceof GotoActionModel.ActionWrapper actionWrapper
+                    && !actionWrapper.isAvailable()) {
+                    return true;
+                }
 
-            if (element == null) {
-                LOG.error("Null action has been returned from model");
-                return true;
-            }
+                if (element == null) {
+                    LOG.error("Null action has been returned from model");
+                    return true;
+                }
 
-            return consumer.process(element);
-        });
+                return predicate.test(element);
+            }
+        );
     }
 
     @Nonnull
@@ -221,5 +225,4 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
             KeymapPanel.addKeyboardShortcut(id, ActionShortcutRestrictions.getInstance().getForActionId(id), activeKeymap, window);
         });
     }
-
 }

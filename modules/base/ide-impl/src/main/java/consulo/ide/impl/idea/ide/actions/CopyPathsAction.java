@@ -39,6 +39,7 @@ public class CopyPathsAction extends AnAction implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
         event.getPresentation().setEnabledAndVisible(KEYBOARD_SHORTCUT.equals(event.getPlace()));
     }

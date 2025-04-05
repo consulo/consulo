@@ -5,7 +5,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import consulo.content.scope.ScopeDescriptor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -58,6 +57,7 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -116,7 +116,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return true;
     }
 
-    private static void processScopes(@Nonnull DataContext dataContext, @Nonnull Processor<? super ScopeDescriptor> processor) {
+    private static void processScopes(@Nonnull DataContext dataContext, @Nonnull Predicate<? super ScopeDescriptor> processor) {
         Project project = ObjectUtil.notNull(dataContext.getData(Project.KEY));
         ScopeChooserCombo.processScopes(
             project,
@@ -212,7 +212,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     public void fetchWeightedElements(
         @Nonnull String pattern,
         @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Processor<? super FoundItemDescriptor<Object>> consumer
+        @Nonnull Predicate<? super FoundItemDescriptor<Object>> predicate
     ) {
         if (myProject == null) {
             return; //nowhere to search
@@ -222,60 +222,63 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         }
 
         ProgressIndicatorUtils.yieldToPendingWriteActions();
-        ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> {
-            if (!isDumbAware() && DumbService.isDumb(myProject)) {
-                return;
-            }
-
-            FilteringGotoByModel<?> model = createModel(myProject);
-            if (progressIndicator.isCanceled()) {
-                return;
-            }
-
-            PsiElement context = psiContext != null && psiContext.isValid() ? psiContext : null;
-            ChooseByNamePopup popup = ChooseByNamePopup.createPopup(myProject, model, context);
-            try {
-                ChooseByNameItemProvider provider = popup.getProvider();
-                GlobalSearchScope scope = (GlobalSearchScope)ObjectUtil.notNull(myScopeDescriptor.getScope());
-
-                boolean everywhere = scope.isSearchInLibraries();
-                if (provider instanceof ChooseByNameInScopeItemProvider chooseByNameInScopeItemProvider) {
-                    FindSymbolParameters parameters = FindSymbolParameters.wrap(pattern, scope);
-                    chooseByNameInScopeItemProvider.filterElementsWithWeights(
-                        popup,
-                        parameters,
-                        progressIndicator,
-                        item -> processElement(progressIndicator, consumer, model, item.getItem(), item.getWeight())
-                    );
+        ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(
+            () -> {
+                if (!isDumbAware() && DumbService.isDumb(myProject)) {
+                    return;
                 }
-                else if (provider instanceof ChooseByNameWeightedItemProvider chooseByNameWeightedItemProvider) {
-                    chooseByNameWeightedItemProvider.filterElementsWithWeights(
-                        popup,
-                        pattern,
-                        everywhere,
-                        progressIndicator,
-                        item -> processElement(progressIndicator, consumer, model, item.getItem(), item.getWeight())
-                    );
+
+                FilteringGotoByModel<?> model = createModel(myProject);
+                if (progressIndicator.isCanceled()) {
+                    return;
                 }
-                else {
-                    provider.filterElements(
-                        popup,
-                        pattern,
-                        everywhere,
-                        progressIndicator,
-                        element -> processElement(progressIndicator, consumer, model, element, getElementPriority(element, pattern))
-                    );
+
+                PsiElement context = psiContext != null && psiContext.isValid() ? psiContext : null;
+                ChooseByNamePopup popup = ChooseByNamePopup.createPopup(myProject, model, context);
+                try {
+                    ChooseByNameItemProvider provider = popup.getProvider();
+                    GlobalSearchScope scope = (GlobalSearchScope)ObjectUtil.notNull(myScopeDescriptor.getScope());
+
+                    boolean everywhere = scope.isSearchInLibraries();
+                    if (provider instanceof ChooseByNameInScopeItemProvider chooseByNameInScopeItemProvider) {
+                        FindSymbolParameters parameters = FindSymbolParameters.wrap(pattern, scope);
+                        chooseByNameInScopeItemProvider.filterElementsWithWeights(
+                            popup,
+                            parameters,
+                            progressIndicator,
+                            item -> processElement(progressIndicator, predicate, model, item.getItem(), item.getWeight())
+                        );
+                    }
+                    else if (provider instanceof ChooseByNameWeightedItemProvider chooseByNameWeightedItemProvider) {
+                        chooseByNameWeightedItemProvider.filterElementsWithWeights(
+                            popup,
+                            pattern,
+                            everywhere,
+                            progressIndicator,
+                            item -> processElement(progressIndicator, predicate, model, item.getItem(), item.getWeight())
+                        );
+                    }
+                    else {
+                        provider.filterElements(
+                            popup,
+                            pattern,
+                            everywhere,
+                            progressIndicator,
+                            element -> processElement(progressIndicator, predicate, model, element, getElementPriority(element, pattern))
+                        );
+                    }
                 }
-            }
-            finally {
-                Disposer.dispose(popup);
-            }
-        }, progressIndicator);
+                finally {
+                    Disposer.dispose(popup);
+                }
+            },
+            progressIndicator
+        );
     }
 
     private boolean processElement(
         @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Processor<? super FoundItemDescriptor<Object>> consumer,
+        @Nonnull Predicate<? super FoundItemDescriptor<Object>> predicate,
         FilteringGotoByModel<?> model,
         Object element,
         int degree
@@ -289,7 +292,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             return true;
         }
 
-        return consumer.process(new FoundItemDescriptor<>(element, degree));
+        return predicate.test(new FoundItemDescriptor<>(element, degree));
     }
 
     @Nonnull

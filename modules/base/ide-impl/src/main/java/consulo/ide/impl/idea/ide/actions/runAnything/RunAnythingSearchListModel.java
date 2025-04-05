@@ -8,9 +8,8 @@ import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGroup;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.CollectionListModel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

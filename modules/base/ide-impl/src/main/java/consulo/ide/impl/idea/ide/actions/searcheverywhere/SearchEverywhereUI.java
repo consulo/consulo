@@ -74,6 +74,7 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -1637,7 +1638,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         public void fetchElements(
             @Nonnull String pattern,
             @Nonnull ProgressIndicator progressIndicator,
-            @Nonnull Processor<? super Object> consumer
+            @Nonnull Predicate<? super Object> predicate
         ) {
         }
 

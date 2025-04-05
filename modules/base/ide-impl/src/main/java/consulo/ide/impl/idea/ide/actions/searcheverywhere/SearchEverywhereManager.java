@@ -3,9 +3,8 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.ServiceManager;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -19,7 +18,7 @@ public interface SearchEverywhereManager {
     public static final Key<JBPopup> SEARCH_EVERYWHERE_POPUP = new Key<>("SearchEverywherePopup");
 
     static SearchEverywhereManager getInstance(Project project) {
-        return ServiceManager.getService(project, SearchEverywhereManager.class);
+        return project.getInstance(SearchEverywhereManager.class);
     }
 
     boolean isShown();

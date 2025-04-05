@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
-import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ui.ex.awt.ScrollingUtil;
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.event.ListSelectionEvent;
@@ -50,7 +50,7 @@ class SEListSelectionTracker implements ListSelectionListener {
             myMoreSelected = false;
             selectedItemsList = Arrays.stream(indices)
                 .filter(i -> !myListModel.isMoreElement(i))
-                .mapToObj(i -> myListModel.getElementAt(i))
+                .mapToObj(myListModel::getElementAt)
                 .collect(Collectors.toList());
         }
 

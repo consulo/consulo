@@ -3,25 +3,23 @@ package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.IdeBundle;
-import consulo.ide.localize.IdeLocalize;
-import consulo.localize.LocalizeValue;
-import consulo.project.internal.RecentProjectsManager;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ui.ex.action.AnAction;
-import consulo.dataContext.DataContext;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,6 +97,6 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
     @Override
     @RequiredReadAction
     public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
-        return ContainerUtil.emptyList();
+        return Collections.emptyList();
     }
 }

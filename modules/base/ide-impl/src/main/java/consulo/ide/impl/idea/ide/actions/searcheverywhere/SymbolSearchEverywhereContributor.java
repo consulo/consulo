@@ -1,17 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoSymbolModel2;
-import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

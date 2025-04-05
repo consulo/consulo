@@ -24,9 +24,6 @@ import consulo.ide.impl.idea.ide.actions.runAnything.ui.RunAnythingScrollingUtil
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.BooleanFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
@@ -49,6 +46,8 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionToolbarsHolder;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
@@ -67,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
@@ -394,7 +394,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
         JPanel topPanel = new NonOpaquePanel(new BorderLayout());
         Color foregroundColor = UIUtil.getLabelForeground();
 
-
         myTextFieldTitle.setForeground(foregroundColor);
         myTextFieldTitle.setBorder(BorderFactory.createEmptyBorder(3, 5, 5, 0));
         if (Platform.current().os().isMac()) {
@@ -456,7 +455,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     public static void adjustEmptyText(
         @Nonnull TextBoxWithExtensions textEditor,
-        @Nonnull BooleanFunction<JBTextField> function,
+        @Nonnull Predicate<JBTextField> function,
         @Nonnull String leftText,
         @Nonnull String rightText
     ) {
@@ -579,7 +578,10 @@ public class RunAnythingPopupUI extends BigPopupUI {
             if (model != null) {
                 LocalizeValue title = model.getTitle(index);
                 if (title != LocalizeValue.empty()) {
-                    myMainPanel.add(RunAnythingUtil.createTitle(" " + title, UIUtil.getListBackground(false, false)), BorderLayout.NORTH);
+                    myMainPanel.add(
+                        RunAnythingUtil.createTitle(" " + title, UIUtil.getListBackground(false, false)),
+                        BorderLayout.NORTH
+                    );
                 }
             }
             JPanel wrapped = new JPanel(new BorderLayout());
@@ -615,8 +617,11 @@ public class RunAnythingPopupUI extends BigPopupUI {
             myPattern = pattern;
             RunAnythingSearchListModel model = getSearchingModel(myResultsList);
 
-            myListModel =
-                reuseModel && model != null ? model : isHelpMode(pattern) ? new RunAnythingSearchListModel.RunAnythingHelpListModel() : new RunAnythingSearchListModel.RunAnythingMainListModel();
+            myListModel = reuseModel && model != null
+                ? model
+                : isHelpMode(pattern)
+                ? new RunAnythingSearchListModel.RunAnythingHelpListModel()
+                : new RunAnythingSearchListModel.RunAnythingMainListModel();
         }
 
         @Override

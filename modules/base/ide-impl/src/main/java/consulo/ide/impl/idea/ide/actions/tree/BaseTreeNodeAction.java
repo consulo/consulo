@@ -16,10 +16,12 @@
 package consulo.ide.impl.idea.ide.actions.tree;
 
 import consulo.application.dumb.DumbAware;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.tree.table.TreeTable;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -28,30 +30,28 @@ abstract class BaseTreeNodeAction extends AnAction implements DumbAware {
         setEnabledInModalContext(true);
     }
 
-    public void actionPerformed(AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         Object sourceComponent = getSourceComponent(e);
-        if (sourceComponent instanceof JTree) {
-            performOn((JTree)sourceComponent);
+        if (sourceComponent instanceof JTree tree) {
+            performOn(tree);
         }
-        else if (sourceComponent instanceof TreeTable) {
-            performOn(((TreeTable)sourceComponent).getTree());
+        else if (sourceComponent instanceof TreeTable treeTable) {
+            performOn(treeTable.getTree());
         }
     }
 
     protected abstract void performOn(JTree tree);
 
+    @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(enabledOn(getSourceComponent(e)));
     }
 
     private static boolean enabledOn(Object sourceComponent) {
-        if (sourceComponent instanceof JTree) {
-            return true;
-        }
-        if (sourceComponent instanceof TreeTable) {
-            return true;
-        }
-        return false;
+        return sourceComponent instanceof JTree || sourceComponent instanceof TreeTable;
     }
 
     private static Object getSourceComponent(AnActionEvent e) {

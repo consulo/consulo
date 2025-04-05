@@ -3,10 +3,8 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -14,6 +12,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author Konstantin Bulenkov
@@ -40,7 +39,7 @@ public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
 
     /**
      * @deprecated method is left for backward compatibility only. If you want to consider elements weight in your search contributor
-     * please use {@link WeightedSearchEverywhereContributor#fetchWeightedElements(String, ProgressIndicator, Processor)} method for fetching
+     * please use {@link WeightedSearchEverywhereContributor#fetchWeightedElements(String, ProgressIndicator, Predicate)} method for fetching
      * this elements
      */
     @Deprecated
@@ -63,7 +62,7 @@ public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
         return Collections.emptyList();
     }
 
-    void fetchElements(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, @Nonnull Processor<? super Item> consumer);
+    void fetchElements(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, @Nonnull Predicate<? super Item> predicate);
 
     @Nonnull
     default ContributorSearchResult<Item> search(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, int elementsLimit) {
@@ -85,7 +84,7 @@ public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
     @Nonnull
     default List<Item> search(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator) {
         List<Item> res = new ArrayList<>();
-        fetchElements(pattern, progressIndicator, o -> res.add(o));
+        fetchElements(pattern, progressIndicator, res::add);
         return res;
     }
 

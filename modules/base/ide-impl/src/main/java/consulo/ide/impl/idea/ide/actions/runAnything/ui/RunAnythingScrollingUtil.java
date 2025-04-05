@@ -29,7 +29,7 @@ public class RunAnythingScrollingUtil {
     public static void installActions(
         @Nonnull JList list,
         @Nonnull JTextField focusParent,
-        @Nonnull Runnable handleFocusParent,
+        @Nonnull @RequiredUIAccess Runnable handleFocusParent,
         boolean isCycleScrolling
     ) {
         ActionMap actionMap = list.getActionMap();

@@ -2,26 +2,26 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface WeightedSearchEverywhereContributor<I> extends consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereContributor<I> {
     void fetchWeightedElements(
         @Nonnull String pattern,
         @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Processor<? super FoundItemDescriptor<I>> consumer
+        @Nonnull Predicate<? super FoundItemDescriptor<I>> predicate
     );
 
     @Override
     default void fetchElements(
         @Nonnull String pattern,
         @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Processor<? super I> consumer
+        @Nonnull Predicate<? super I> predicate
     ) {
-        fetchWeightedElements(pattern, progressIndicator, descriptor -> consumer.process(descriptor.getItem()));
+        fetchWeightedElements(pattern, progressIndicator, descriptor -> predicate.test(descriptor.getItem()));
     }
 
     @Nonnull
