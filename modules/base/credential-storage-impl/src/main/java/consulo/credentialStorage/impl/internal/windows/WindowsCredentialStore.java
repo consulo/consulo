@@ -56,6 +56,9 @@ public class WindowsCredentialStore implements CredentialStore {
                 return new Credentials(username, secret);
             }
         }
+        catch (LastErrorException e) {
+            SharedLogger.LOG.warn(e);
+        }
         finally {
             if (pcredential.credential != null) {
                 synchronized (INSTANCE) {
