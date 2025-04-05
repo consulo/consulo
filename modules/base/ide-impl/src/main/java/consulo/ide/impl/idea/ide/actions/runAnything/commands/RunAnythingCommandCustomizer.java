@@ -16,45 +16,54 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RunAnythingCommandCustomizer {
-  public static final ExtensionPointName<RunAnythingCommandCustomizer> EP_NAME = ExtensionPointName.create(RunAnythingCommandCustomizer.class);
+    public static final ExtensionPointName<RunAnythingCommandCustomizer> EP_NAME =
+        ExtensionPointName.create(RunAnythingCommandCustomizer.class);
 
-  /**
-   * Customizes command line to be executed
-   *
-   * @param workDirectory the working directory the command will be executed in
-   * @param dataContext   {@link DataContext} to fetch module, project etc.
-   * @param commandLine   command line to be customized
-   * @return patched command line
-   */
-  @Nonnull
-  protected GeneralCommandLine customizeCommandLine(@Nonnull VirtualFile workDirectory, @Nonnull DataContext dataContext, @Nonnull GeneralCommandLine commandLine) {
-    return commandLine;
-  }
-
-  /**
-   * Customizes data context command line to be executed on
-   *
-   * @param dataContext original {@link DataContext}
-   * @return customized {@link DataContext}
-   */
-  @Nonnull
-  protected DataContext customizeDataContext(@Nonnull DataContext dataContext) {
-    return dataContext;
-  }
-
-  @Nonnull
-  public static GeneralCommandLine customizeCommandLine(@Nonnull DataContext dataContext, @Nonnull VirtualFile workDirectory, @Nonnull GeneralCommandLine commandLine) {
-    for (RunAnythingCommandCustomizer customizer : EP_NAME.getExtensionList()) {
-      commandLine = customizer.customizeCommandLine(workDirectory, dataContext, commandLine);
+    /**
+     * Customizes command line to be executed
+     *
+     * @param workDirectory the working directory the command will be executed in
+     * @param dataContext   {@link DataContext} to fetch module, project etc.
+     * @param commandLine   command line to be customized
+     * @return patched command line
+     */
+    @Nonnull
+    protected GeneralCommandLine customizeCommandLine(
+        @Nonnull VirtualFile workDirectory,
+        @Nonnull DataContext dataContext,
+        @Nonnull GeneralCommandLine commandLine
+    ) {
+        return commandLine;
     }
-    return commandLine;
-  }
 
-  @Nonnull
-  public static DataContext customizeContext(@Nonnull DataContext dataContext) {
-    for (RunAnythingCommandCustomizer customizer : EP_NAME.getExtensionList()) {
-       dataContext = customizer.customizeDataContext(dataContext);
+    /**
+     * Customizes data context command line to be executed on
+     *
+     * @param dataContext original {@link DataContext}
+     * @return customized {@link DataContext}
+     */
+    @Nonnull
+    protected DataContext customizeDataContext(@Nonnull DataContext dataContext) {
+        return dataContext;
     }
-    return dataContext;
-  }
+
+    @Nonnull
+    public static GeneralCommandLine customizeCommandLine(
+        @Nonnull DataContext dataContext,
+        @Nonnull VirtualFile workDirectory,
+        @Nonnull GeneralCommandLine commandLine
+    ) {
+        for (RunAnythingCommandCustomizer customizer : EP_NAME.getExtensionList()) {
+            commandLine = customizer.customizeCommandLine(workDirectory, dataContext, commandLine);
+        }
+        return commandLine;
+    }
+
+    @Nonnull
+    public static DataContext customizeContext(@Nonnull DataContext dataContext) {
+        for (RunAnythingCommandCustomizer customizer : EP_NAME.getExtensionList()) {
+            dataContext = customizer.customizeDataContext(dataContext);
+        }
+        return dataContext;
+    }
 }

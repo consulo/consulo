@@ -21,6 +21,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -53,13 +54,14 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
     public static final String DEFAULT_PATH =
         FileUtil.toSystemDependentName(ContainerPathManager.get().getConfigPath() + "/" + "settings.zip");
     private final boolean myShowFilePath;
-    private final String myDescription;
+    @Nonnull
+    private final LocalizeValue myDescription;
 
     public ChooseComponentsToExportDialog(
         MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents,
         boolean showFilePath,
-        String title,
-        String description
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue description
     ) {
         super(false);
         myDescription = description;
@@ -89,8 +91,8 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
                 chooseSettingsFile(
                     myPathPanel.getText(),
                     getWindow(),
-                    IdeLocalize.titleExportFileLocation().get(),
-                    IdeLocalize.promptChooseExportSettingsFilePath().get()
+                    IdeLocalize.titleExportFileLocation(),
+                    IdeLocalize.promptChooseExportSettingsFilePath()
                 ).doWhenDone(path -> myPathPanel.setText(FileUtil.toSystemDependentName(path)));
             }
         };
@@ -174,11 +176,16 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
 
     @Nonnull
     @RequiredUIAccess
-    public static AsyncResult<String> chooseSettingsFile(String oldPath, Component parent, String title, String description) {
+    public static AsyncResult<String> chooseSettingsFile(
+        String oldPath,
+        Component parent,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue description
+    ) {
         FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
-        chooserDescriptor.setDescription(description);
+        chooserDescriptor.withDescriptionValue(description);
         chooserDescriptor.setHideIgnored(false);
-        chooserDescriptor.setTitle(title);
+        chooserDescriptor.withTitleValue(title);
 
         VirtualFile initialDir;
         if (oldPath != null) {
@@ -214,7 +221,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
 
     @Override
     protected JComponent createNorthPanel() {
-        return new JLabel(myDescription);
+        return new JLabel(myDescription.get());
     }
 
     @Override
@@ -263,6 +270,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
             return null;
         }
 
+        @Override
         public String toString() {
             Set<String> names = new LinkedHashSet<>();
 

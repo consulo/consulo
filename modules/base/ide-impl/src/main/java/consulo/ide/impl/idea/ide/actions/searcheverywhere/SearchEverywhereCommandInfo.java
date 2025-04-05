@@ -4,29 +4,29 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.ide.impl.idea.ide.SearchTopHitProvider;
 
 public class SearchEverywhereCommandInfo {
-  private final String command;
-  private final String definition;
-  private final SearchEverywhereContributor<?> contributor;
+    private final String command;
+    private final String definition;
+    private final SearchEverywhereContributor<?> contributor;
 
-  public SearchEverywhereCommandInfo(String command, String definition, SearchEverywhereContributor<?> contributor) {
-    this.command = command;
-    this.definition = definition;
-    this.contributor = contributor;
-  }
+    public SearchEverywhereCommandInfo(String command, String definition, SearchEverywhereContributor<?> contributor) {
+        this.command = command;
+        this.definition = definition;
+        this.contributor = contributor;
+    }
 
-  public String getCommand() {
-    return command;
-  }
+    public String getCommand() {
+        return command;
+    }
 
-  public String getDefinition() {
-    return definition;
-  }
+    public String getDefinition() {
+        return definition;
+    }
 
-  public SearchEverywhereContributor<?> getContributor() {
-    return contributor;
-  }
+    public SearchEverywhereContributor<?> getContributor() {
+        return contributor;
+    }
 
-  public String getCommandWithPrefix() {
-    return SearchTopHitProvider.getTopHitAccelerator() + command;
-  }
+    public String getCommandWithPrefix() {
+        return SearchTopHitProvider.getTopHitAccelerator() + command;
+    }
 }

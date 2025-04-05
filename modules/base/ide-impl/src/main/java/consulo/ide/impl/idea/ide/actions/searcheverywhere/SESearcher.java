@@ -9,21 +9,26 @@ import java.util.List;
 import java.util.Map;
 
 interface SESearcher {
-  ProgressIndicator search(@Nonnull Map<? extends SearchEverywhereContributor<?>, Integer> contributorsAndLimits, @Nonnull String pattern);
+    ProgressIndicator search(
+        @Nonnull Map<? extends SearchEverywhereContributor<?>, Integer> contributorsAndLimits,
+        @Nonnull String pattern
+    );
 
-  ProgressIndicator findMoreItems(@Nonnull Map<? extends SearchEverywhereContributor<?>, Collection<SearchEverywhereFoundElementInfo>> alreadyFound,
-                                  @Nonnull String pattern,
-                                  @Nonnull SearchEverywhereContributor<?> contributor,
-                                  int newLimit);
+    ProgressIndicator findMoreItems(
+        @Nonnull Map<? extends SearchEverywhereContributor<?>, Collection<SearchEverywhereFoundElementInfo>> alreadyFound,
+        @Nonnull String pattern,
+        @Nonnull SearchEverywhereContributor<?> contributor,
+        int newLimit
+    );
 
-  /**
-   * Search process listener interface
-   */
-  interface Listener {
-    void elementsAdded(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list);
+    /**
+     * Search process listener interface
+     */
+    interface Listener {
+        void elementsAdded(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list);
 
-    void elementsRemoved(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list);
+        void elementsRemoved(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list);
 
-    void searchFinished(@Nonnull Map<SearchEverywhereContributor<?>, Boolean> hasMoreContributors);
-  }
+        void searchFinished(@Nonnull Map<SearchEverywhereContributor<?>, Boolean> hasMoreContributors);
+    }
 }

@@ -66,7 +66,7 @@ public class ApplyIntentionAction extends AnAction {
             return null;
         }
 
-        List<HighlightInfoImpl.IntentionActionDescriptor> actions = new ArrayList<HighlightInfoImpl.IntentionActionDescriptor>();
+        List<HighlightInfoImpl.IntentionActionDescriptor> actions = new ArrayList<>();
         actions.addAll(info.errorFixesToShow);
         actions.addAll(info.inspectionFixesToShow);
         actions.addAll(info.intentionsToShow);

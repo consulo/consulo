@@ -64,7 +64,7 @@ class StartUseVcsDialog extends DialogWrapper {
 
         JPanel mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gb =
-            new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0);
+            new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, JBUI.insets(5), 0, 0);
 
         mainPanel.add(selectText, gb);
 

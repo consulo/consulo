@@ -19,17 +19,17 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 public interface ExclusionHandler<Node> {
-  Key<ExclusionHandler> EXCLUSION_HANDLER = Key.create("tree.exclusion.handler");
+    Key<ExclusionHandler> EXCLUSION_HANDLER = Key.create("tree.exclusion.handler");
 
-  boolean isNodeExclusionAvailable(@Nonnull Node node);
+    boolean isNodeExclusionAvailable(@Nonnull Node node);
 
-  boolean isNodeExcluded(@Nonnull Node node);
+    boolean isNodeExcluded(@Nonnull Node node);
 
-  void excludeNode(@Nonnull Node node);
+    void excludeNode(@Nonnull Node node);
 
-  void includeNode(@Nonnull Node node);
+    void includeNode(@Nonnull Node node);
 
-  boolean isActionEnabled(boolean isExcludeAction);
+    boolean isActionEnabled(boolean isExcludeAction);
 
-  void onDone(boolean isExcludeAction);
+    void onDone(boolean isExcludeAction);
 }

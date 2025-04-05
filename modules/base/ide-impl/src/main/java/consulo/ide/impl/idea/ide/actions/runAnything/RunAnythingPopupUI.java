@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
@@ -25,9 +24,6 @@ import consulo.ide.impl.idea.ide.actions.runAnything.ui.RunAnythingScrollingUtil
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.BooleanFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
@@ -35,12 +31,14 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -48,6 +46,8 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionToolbarsHolder;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
@@ -66,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
@@ -158,25 +159,23 @@ public class RunAnythingPopupUI extends BigPopupUI {
             //mySearchField.setForeground(UIUtil.getLabelForeground());
             mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
             Application.get().invokeLater(() -> {
-                JComponent parent = (JComponent) TargetAWT.to(mySearchField).getParent();
+                JComponent parent = (JComponent)TargetAWT.to(mySearchField).getParent();
                 parent.revalidate();
                 parent.repaint();
             });
             rebuildList();
         });
 
-        mySearchField.addBlurListener(event -> {
-            UIUtil.invokeLaterIfNeeded(() -> {
-                if (myCalcThread != null) {
-                    myCalcThread.cancel();
-                }
-                myAlarm.cancelAllRequests();
+        mySearchField.addBlurListener(event -> UIUtil.invokeLaterIfNeeded(() -> {
+            if (myCalcThread != null) {
+                myCalcThread.cancel();
+            }
+            myAlarm.cancelAllRequests();
 
-                Application.get().invokeLater(() -> ActionToolbarsHolder.updateAllToolbarsImmediately());
+            Application.get().invokeLater(ActionToolbarsHolder::updateAllToolbarsImmediately);
 
-                searchFinishedHandler.run();
-            });
-        });
+            searchFinishedHandler.run();
+        }));
     }
 
     private static void adjustMainListEmptyText(@Nonnull TextBoxWithExtensions editor) {
@@ -200,6 +199,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         return mySearchField;
     }
 
+    @RequiredUIAccess
     private void executeCommand() {
         String pattern = getField().getValueOrError();
         int index = myResultsList.getSelectedIndex();
@@ -394,7 +394,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
         JPanel topPanel = new NonOpaquePanel(new BorderLayout());
         Color foregroundColor = UIUtil.getLabelForeground();
 
-
         myTextFieldTitle.setForeground(foregroundColor);
         myTextFieldTitle.setBorder(BorderFactory.createEmptyBorder(3, 5, 5, 0));
         if (Platform.current().os().isMac()) {
@@ -436,7 +435,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     private void updateByModifierKeysEvent(@Nonnull consulo.ui.event.KeyEvent e) {
         KeyboardInputDetails inputDetails = e.getInputDetails();
-        
+
         LocalizeValue message;
         if (inputDetails.withShift() && inputDetails.withAlt()) {
             message = IdeLocalize.runAnythingRunInContextDebugTitle();
@@ -456,7 +455,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     public static void adjustEmptyText(
         @Nonnull TextBoxWithExtensions textEditor,
-        @Nonnull BooleanFunction<JBTextField> function,
+        @Nonnull Predicate<JBTextField> function,
         @Nonnull String leftText,
         @Nonnull String rightText
     ) {
@@ -501,7 +500,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     }
 
     private void updateExtensions(@Nullable Image l) {
-        Image leftImage = ObjectUtil.notNull(l, AllIcons.Actions.Run_anything);
+        Image leftImage = ObjectUtil.notNull(l, PlatformIconGroup.actionsRun_anything());
 
         mySearchField.setExtensions(new TextBoxWithExtensions.Extension(true, leftImage, null));
     }
@@ -577,9 +576,12 @@ public class RunAnythingPopupUI extends BigPopupUI {
             myMainPanel.removeAll();
             RunAnythingSearchListModel model = getSearchingModel(myResultsList);
             if (model != null) {
-                String title = model.getTitle(index);
-                if (title != null) {
-                    myMainPanel.add(RunAnythingUtil.createTitle(" " + title, UIUtil.getListBackground(false, false)), BorderLayout.NORTH);
+                LocalizeValue title = model.getTitle(index);
+                if (title != LocalizeValue.empty()) {
+                    myMainPanel.add(
+                        RunAnythingUtil.createTitle(" " + title, UIUtil.getListBackground(false, false)),
+                        BorderLayout.NORTH
+                    );
                 }
             }
             JPanel wrapped = new JPanel(new BorderLayout());
@@ -615,8 +617,11 @@ public class RunAnythingPopupUI extends BigPopupUI {
             myPattern = pattern;
             RunAnythingSearchListModel model = getSearchingModel(myResultsList);
 
-            myListModel =
-                reuseModel && model != null ? model : isHelpMode(pattern) ? new RunAnythingSearchListModel.RunAnythingHelpListModel() : new RunAnythingSearchListModel.RunAnythingMainListModel();
+            myListModel = reuseModel && model != null
+                ? model
+                : isHelpMode(pattern)
+                ? new RunAnythingSearchListModel.RunAnythingHelpListModel()
+                : new RunAnythingSearchListModel.RunAnythingMainListModel();
         }
 
         @Override
@@ -680,13 +685,13 @@ public class RunAnythingPopupUI extends BigPopupUI {
         }
 
         private void buildGroups(boolean isRecent) {
-            buildAllGroups(getDataContext(), myPattern, () -> check(), isRecent);
+            buildAllGroups(getDataContext(), myPattern, this::check, isRecent);
             updatePopup();
         }
 
         private void buildHelpGroups(@Nonnull RunAnythingSearchListModel listModel) {
             listModel.getGroups().forEach(group -> {
-                group.collectItems(getDataContext(), myListModel, trimHelpPattern(), () -> check());
+                group.collectItems(getDataContext(), myListModel, trimHelpPattern(), this::check);
                 check();
             });
         }
@@ -703,10 +708,12 @@ public class RunAnythingPopupUI extends BigPopupUI {
             assert myCalcThread == this : "There are two CalcThreads running before one of them was cancelled";
         }
 
-        private void buildAllGroups(@Nonnull DataContext dataContext,
-                                    @Nonnull String pattern,
-                                    @Nonnull Runnable checkCancellation,
-                                    boolean isRecent) {
+        private void buildAllGroups(
+            @Nonnull DataContext dataContext,
+            @Nonnull String pattern,
+            @Nonnull Runnable checkCancellation,
+            boolean isRecent
+        ) {
             if (isRecent) {
                 RunAnythingRecentGroup.INSTANCE.collectItems(dataContext, myListModel, pattern, checkCancellation);
             }
@@ -727,7 +734,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             list.addAll(myListModel.getGroups()
                 .stream()
                 .filter(group -> group instanceof RunAnythingCompletionGroup || group instanceof RunAnythingGeneralGroup)
-                .filter(group -> RunAnythingCache.getInstance(myProject).isGroupVisible(group.getTitle()))
+                .filter(group -> group.isVisibleFor(myProject))
                 .collect(Collectors.toList()));
 
             for (RunAnythingGroup group : list) {
@@ -760,7 +767,8 @@ public class RunAnythingPopupUI extends BigPopupUI {
         public ActionCallback insert(int index, @Nonnull RunAnythingGroup group) {
             Application.get().executeOnPooledThread(() -> Application.get().runReadAction(() -> {
                 try {
-                    RunAnythingGroup.SearchResult result = group.getItems(getDataContext(), myListModel, trimHelpPattern(), true, this::check);
+                    RunAnythingGroup.SearchResult result =
+                        group.getItems(getDataContext(), myListModel, trimHelpPattern(), true, this::check);
 
                     check();
                     Application.get().invokeLater(() -> {
@@ -807,11 +815,16 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     @Override
     public void installScrollingActions() {
-        RunAnythingScrollingUtil.installActions(myResultsList, (JTextField) TargetAWT.to(getField()), () -> {
-            myIsItemSelected = true;
-            mySearchField.setValue(myLastInputText);
-            clearSelection();
-        }, UISettings.getInstance().getCycleScrolling());
+        RunAnythingScrollingUtil.installActions(
+            myResultsList,
+            (JTextField)TargetAWT.to(getField()),
+            () -> {
+                myIsItemSelected = true;
+                mySearchField.setValue(myLastInputText);
+                clearSelection();
+            },
+            UISettings.getInstance().getCycleScrolling()
+        );
 
         super.installScrollingActions();
     }
@@ -872,9 +885,9 @@ public class RunAnythingPopupUI extends BigPopupUI {
         });
 
         DumbAwareAction.create(e -> RunAnythingUtil.jumpNextGroup(true, myResultsList))
-            .registerCustomShortcutSet(CustomShortcutSet.fromString("TAB"), (JComponent) TargetAWT.to(mySearchField), this);
+            .registerCustomShortcutSet(CustomShortcutSet.fromString("TAB"), (JComponent)TargetAWT.to(mySearchField), this);
         DumbAwareAction.create(e -> RunAnythingUtil.jumpNextGroup(false, myResultsList))
-            .registerCustomShortcutSet(CustomShortcutSet.fromString("shift TAB"), (JComponent) TargetAWT.to(mySearchField), this);
+            .registerCustomShortcutSet(CustomShortcutSet.fromString("shift TAB"), (JComponent)TargetAWT.to(mySearchField), this);
 
         AnAction escape = ActionManager.getInstance().getAction("EditorEscape");
         DumbAwareAction.create(__ -> {
@@ -882,7 +895,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             searchFinishedHandler.run();
         }).registerCustomShortcutSet(escape == null ? CommonShortcuts.ESCAPE : escape.getShortcutSet(), this);
 
-        DumbAwareAction.create(e -> Application.get().invokeLater(() -> executeCommand())).registerCustomShortcutSet(
+        DumbAwareAction.create(e -> Application.get().invokeLater(this::executeCommand)).registerCustomShortcutSet(
             CustomShortcutSet.fromString(
                 "ENTER",
                 "shift ENTER",
@@ -890,7 +903,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 "alt shift ENTER",
                 "meta ENTER"
             ),
-            (JComponent) TargetAWT.to(mySearchField),
+            (JComponent)TargetAWT.to(mySearchField),
             this
         );
 
@@ -906,7 +919,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 return;
             }
 
-            RunAnythingCache.getInstance(getProject()).getState().getCommands().remove(((RunAnythingItem) selectedValue).getCommand());
+            RunAnythingCache.getInstance(getProject()).getState().getCommands().remove(((RunAnythingItem)selectedValue).getCommand());
 
             model.remove(index);
             model.shiftIndexes(index, -1);
@@ -919,7 +932,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                     myCalcThread.updatePopup();
                 }
             });
-        }).registerCustomShortcutSet(CustomShortcutSet.fromString("shift BACK_SPACE"), (JComponent) TargetAWT.to(mySearchField), this);
+        }).registerCustomShortcutSet(CustomShortcutSet.fromString("shift BACK_SPACE"), (JComponent)TargetAWT.to(mySearchField), this);
 
         myProject.getMessageBus().connect(this).subscribe(DumbModeListener.class, new DumbModeListener() {
             @Override
@@ -937,6 +950,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     protected JComponent createSettingsPanel() {
         JPanel res = new JPanel(new FlowLayout(RIGHT, 0, 0));
         res.setOpaque(false);
@@ -1028,13 +1042,13 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 new ElementsChooser<>(new ArrayList<>(RunAnythingCompletionGroup.MAIN_GROUPS), false) {
                     @Override
                     protected String getItemText(@Nonnull RunAnythingGroup value) {
-                        return value.getTitle();
+                        return value.getTitle().get();
                     }
                 };
 
             res.markElements(getVisibleGroups());
             ElementsChooser.ElementsMarkListener<RunAnythingGroup> listener = (element, isMarked) -> {
-                RunAnythingCache.getInstance(myProject).saveGroupVisibilityKey(element.getTitle(), isMarked);
+                element.setVisibleFor(myProject, isMarked);
                 rebuildList();
             };
             res.addElementsMarkListener(listener);
@@ -1044,7 +1058,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         @Nonnull
         private List<RunAnythingGroup> getVisibleGroups() {
             Collection<RunAnythingGroup> groups = RunAnythingCompletionGroup.MAIN_GROUPS;
-            return ContainerUtil.filter(groups, group -> RunAnythingCache.getInstance(myProject).isGroupVisible(group.getTitle()));
+            return ContainerUtil.filter(groups, group -> group.isVisibleFor(myProject));
         }
     }
 }

@@ -8,16 +8,15 @@ import jakarta.annotation.Nullable;
 
 @ExtensionImpl(order = "last")
 public class RunAnythingCommandExecutionProvider extends RunAnythingCommandProvider {
+    @Nullable
+    @Override
+    public String findMatchingValue(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+        return pattern;
+    }
 
-  @Nullable
-  @Override
-  public String findMatchingValue(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-    return pattern;
-  }
-
-  @Nullable
-  @Override
-  public String getHelpGroupTitle() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public String getHelpGroupTitle() {
+        return null;
+    }
 }

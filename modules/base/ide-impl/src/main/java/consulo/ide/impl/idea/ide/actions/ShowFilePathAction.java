@@ -90,6 +90,7 @@ public class ShowFilePathAction extends AnAction {
     @UsedInPlugin
     public static final NotificationListener FILE_SELECTING_LISTENER = new NotificationListener.Adapter() {
         @Override
+        @RequiredUIAccess
         protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
             URL url = e.getURL();
             if (url != null) {

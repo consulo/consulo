@@ -7,21 +7,22 @@ import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.fetchProject;
 
 @ExtensionImpl(order = "last")
 public class RunAnythingRecentCommandProvider extends RunAnythingCommandProvider {
-  @Nonnull
-  @Override
-  public Collection<String> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-    return RunAnythingCache.getInstance(fetchProject(dataContext)).getState().getCommands();
-  }
+    @Nonnull
+    @Override
+    public Collection<String> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+        return RunAnythingCache.getInstance(fetchProject(dataContext)).getState().getCommands();
+    }
 
-  @Nullable
-  @Override
-  public String getHelpGroupTitle() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public String getHelpGroupTitle() {
+        return null;
+    }
 }

@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.ProgressIndicator;
@@ -24,7 +23,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -59,8 +58,8 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         return Platform.current().os().isUnix() && SystemInfo.hasXdgOpen();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
         boolean enabled = isAvailable();
         Presentation presentation = event.getPresentation();
@@ -68,8 +67,8 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         presentation.setVisible(enabled);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent event) {
         if (!isAvailable()) {
             return;
@@ -162,7 +161,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         String content = ExecUtil.loadTemplate(
             CreateDesktopEntryAction.class.getClassLoader(),
             "entry.desktop",
-            ContainerUtil.newHashMap(
+            consulo.ide.impl.idea.util.containers.ContainerUtil.newHashMap(
                 Arrays.asList("$NAME$", "$SCRIPT$", "$ICON$", "$WM_CLASS$"),
                 Arrays.asList(name, execPath.getPath(), iconPath.toAbsolutePath().toString(), wmClass)
             )

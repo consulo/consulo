@@ -16,33 +16,33 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RunAnythingCommandHandler {
-  public static final ExtensionPointName<RunAnythingCommandHandler> EP_NAME = ExtensionPointName.create(RunAnythingCommandHandler.class);
+    public static final ExtensionPointName<RunAnythingCommandHandler> EP_NAME = ExtensionPointName.create(RunAnythingCommandHandler.class);
 
-  public abstract boolean isMatched(@Nonnull String commandLine);
+    public abstract boolean isMatched(@Nonnull String commandLine);
 
-  /**
-   * See {@link KillableProcessHandlerImpl#shouldKillProcessSoftly()} for details.
-   */
-  public boolean shouldKillProcessSoftly() {
-    return true;
-  }
+    /**
+     * See {@link KillableProcessHandlerImpl#shouldKillProcessSoftly()} for details.
+     */
+    public boolean shouldKillProcessSoftly() {
+        return true;
+    }
 
-  /**
-   * Provides custom output to be printed in console on the process terminated.
-   * E.g. command execution time could be reported on a command execution terminating.
-   */
-  @Nullable
-  public String getProcessTerminatedCustomOutput() {
-    return null;
-  }
+    /**
+     * Provides custom output to be printed in console on the process terminated.
+     * E.g. command execution time could be reported on a command execution terminating.
+     */
+    @Nullable
+    public String getProcessTerminatedCustomOutput() {
+        return null;
+    }
 
-  /**
-   * Creates console builder for matched command
-   */
-  public abstract TextConsoleBuilder getConsoleBuilder(@Nonnull Project project);
+    /**
+     * Creates console builder for matched command
+     */
+    public abstract TextConsoleBuilder getConsoleBuilder(@Nonnull Project project);
 
-  @Nullable
-  public static RunAnythingCommandHandler getMatchedHandler(@Nonnull String commandLine) {
-    return EP_NAME.getExtensionList().stream().filter(handler -> handler.isMatched(commandLine)).findFirst().orElse(null);
-  }
+    @Nullable
+    public static RunAnythingCommandHandler getMatchedHandler(@Nonnull String commandLine) {
+        return EP_NAME.getExtensionList().stream().filter(handler -> handler.isMatched(commandLine)).findFirst().orElse(null);
+    }
 }

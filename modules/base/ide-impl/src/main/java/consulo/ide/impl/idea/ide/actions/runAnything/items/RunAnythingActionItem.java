@@ -7,22 +7,26 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class RunAnythingActionItem<T extends AnAction> extends RunAnythingItemBase {
-  @Nonnull
-  private final T myAction;
+    @Nonnull
+    private final T myAction;
 
-  public RunAnythingActionItem(@Nonnull T action, @Nonnull String fullCommand, @Nullable Image icon) {
-    super(fullCommand, icon);
-    myAction = action;
-  }
+    public RunAnythingActionItem(@Nonnull T action, @Nonnull String fullCommand, @Nullable Image icon) {
+        super(fullCommand, icon);
+        myAction = action;
+    }
 
-  @Nonnull
-  public static String getCommand(@Nonnull AnAction action, @Nonnull String command) {
-    return command + " " + (action.getTemplatePresentation().getText() != null ? action.getTemplatePresentation().getText() : "undefined");
-  }
+    @Nonnull
+    public static String getCommand(@Nonnull AnAction action, @Nonnull String command) {
+        return command + " " + (
+            action.getTemplatePresentation().getText() != null
+                ? action.getTemplatePresentation().getText()
+                : "undefined"
+        );
+    }
 
-  @Nullable
-  @Override
-  public String getDescription() {
-    return myAction.getTemplatePresentation().getDescription();
-  }
+    @Nullable
+    @Override
+    public String getDescription() {
+        return myAction.getTemplatePresentation().getDescription();
+    }
 }

@@ -11,24 +11,24 @@ import jakarta.annotation.Nonnull;
  * Implement this class if a particular run configuration should be created for matching input string.
  */
 public abstract class RunAnythingMatchedRunConfigurationProvider extends RunAnythingRunConfigurationProvider {
-  /**
-   * Actual run configuration creation by {@code commandLine}
-   *
-   * @param dataContext
-   * @param pattern
-   * @return created run configuration
-   */
-  @Nonnull
-  public abstract RunnerAndConfigurationSettings createConfiguration(@Nonnull DataContext dataContext, @Nonnull String pattern);
+    /**
+     * Actual run configuration creation by {@code commandLine}
+     *
+     * @param dataContext
+     * @param pattern
+     * @return created run configuration
+     */
+    @Nonnull
+    public abstract RunnerAndConfigurationSettings createConfiguration(@Nonnull DataContext dataContext, @Nonnull String pattern);
 
-  /**
-   * Returns current provider associated run configuration factory
-   */
-  @Nonnull
-  public abstract ConfigurationFactory getConfigurationFactory();
+    /**
+     * Returns current provider associated run configuration factory
+     */
+    @Nonnull
+    public abstract ConfigurationFactory getConfigurationFactory();
 
-  @Override
-  public Image getHelpIcon() {
-    return getConfigurationFactory().getIcon();
-  }
+    @Override
+    public Image getHelpIcon() {
+        return getConfigurationFactory().getIcon();
+    }
 }

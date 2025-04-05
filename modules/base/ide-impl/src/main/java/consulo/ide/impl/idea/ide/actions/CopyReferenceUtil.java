@@ -12,10 +12,11 @@ import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class CopyReferenceUtil {
+    @RequiredReadAction
     static void highlight(Editor editor, Project project, List<? extends PsiElement> elements) {
         TextAttributes attributes =
             EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
@@ -92,11 +94,11 @@ public final class CopyReferenceUtil {
         return adjustedElement != null ? adjustedElement : element;
     }
 
-    static void setStatusBarText(Project project, String message) {
+    static void setStatusBarText(Project project, @Nonnull LocalizeValue message) {
         if (project != null) {
             StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(project);
             if (statusBar != null) {
-                statusBar.setInfo(message);
+                statusBar.setInfo(message.get());
             }
         }
     }

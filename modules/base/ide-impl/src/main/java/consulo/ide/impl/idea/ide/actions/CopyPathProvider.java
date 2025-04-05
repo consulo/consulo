@@ -20,17 +20,17 @@ import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -55,7 +55,7 @@ public class CopyPathProvider extends DumbAwareAction {
         if (project != null) {
             String copy = getQualifiedName(project, elements, editor, customDataContext);
             CopyPasteManager.getInstance().setContents(new StringSelection(copy));
-            CopyReferenceUtil.setStatusBarText(project, IdeLocalize.messagePathToFqnHasBeenCopied(copy).get());
+            CopyReferenceUtil.setStatusBarText(project, IdeLocalize.messagePathToFqnHasBeenCopied(copy));
 
             CopyReferenceUtil.highlight(editor, project, elements);
         }
@@ -103,15 +103,18 @@ public class CopyPathProvider extends DumbAwareAction {
             return getPathToElement(project, file, editor);
         }
         else {
-            List<VirtualFile> files = ContainerUtil.mapNotNull(elements, it -> {
-                if (it instanceof PsiFileSystemItem psiFileSystemItem) {
-                    return psiFileSystemItem.getVirtualFile();
+            List<VirtualFile> files = ContainerUtil.mapNotNull(
+                elements,
+                it -> {
+                    if (it instanceof PsiFileSystemItem psiFileSystemItem) {
+                        return psiFileSystemItem.getVirtualFile();
+                    }
+                    else {
+                        PsiFile containingFile = it.getContainingFile();
+                        return containingFile == null ? null : containingFile.getVirtualFile();
+                    }
                 }
-                else {
-                    PsiFile containingFile = it.getContainingFile();
-                    return containingFile == null ? null : containingFile.getVirtualFile();
-                }
-            });
+            );
 
             if (files.isEmpty()) {
                 VirtualFile[] contextFiles = dataContext.getData(VirtualFile.KEY_OF_ARRAY);

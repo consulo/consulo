@@ -25,8 +25,8 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SearchEverywhereContributorFactory<Item> {
-  ExtensionPointName<SearchEverywhereContributorFactory> EP_NAME = ExtensionPointName.create(SearchEverywhereContributorFactory.class);
+    ExtensionPointName<SearchEverywhereContributorFactory> EP_NAME = ExtensionPointName.create(SearchEverywhereContributorFactory.class);
 
-  @Nullable
-  SearchEverywhereContributor<Item> createContributor(@Nonnull AnActionEvent initEvent);
+    @Nullable
+    SearchEverywhereContributor<Item> createContributor(@Nonnull AnActionEvent initEvent);
 }

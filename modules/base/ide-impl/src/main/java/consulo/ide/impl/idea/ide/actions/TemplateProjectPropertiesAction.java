@@ -15,15 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.internal.ProjectManagerEx;
+import jakarta.annotation.Nonnull;
 
 public class TemplateProjectPropertiesAction extends AnAction implements DumbAware {
-    public void actionPerformed(AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         Project defaultProject = ProjectManagerEx.getInstanceEx().getDefaultProject();
         ShowSettingsUtil.getInstance().showSettingsDialog(defaultProject);
     }

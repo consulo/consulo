@@ -1,9 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.Application;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.dataContext.DataContext;
@@ -11,7 +9,7 @@ import consulo.dataContext.DataManager;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.update.UpdateSettings;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -60,8 +58,8 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
-        presentation.setTextValue(LocalizeValue.of());
-        presentation.setDescription(getActionTooltip());
+        presentation.setTextValue(LocalizeValue.empty());
+        presentation.setDescriptionValue(getActionTooltip());
         presentation.setIcon(getActionIcon(ourIconState));
 
         updateState(UpdateSettings.getInstance());
@@ -109,6 +107,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
                 if (text != null && !text.endsWith("...")) {
                     AnActionButton button = new AnActionButton.AnActionButtonWrapper(child.getTemplatePresentation(), child) {
                         @Override
+                        @RequiredUIAccess
                         public void updateButton(@Nonnull AnActionEvent e) {
                             getDelegate().update(e);
                             e.getPresentation().setText(e.getPresentation().getText() + "...");
@@ -135,6 +134,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
             }
         }
 
+        Application application = Application.get();
         return JBPopupFactory.getInstance().createActionGroupPopup(
             null,
             group.build(),
@@ -142,7 +142,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
             JBPopupFactory.ActionSelectionAid.MNEMONICS,
             true,
             () -> AppExecutorUtil.getAppScheduledExecutorService().schedule(
-                () -> ApplicationManager.getApplication().invokeLater(disposeCallback, IdeaModalityState.any()),
+                () -> application.invokeLater(disposeCallback, application.getAnyModalityState()),
                 250,
                 TimeUnit.MILLISECONDS
             ),
@@ -152,6 +152,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
 
     private static IconState ourIconState = IconState.Default;
 
+    @RequiredUIAccess
     public static void updateState(UpdateSettings updateSettings) {
         UpdateSettingsEx updateSettingsEx = (UpdateSettingsEx)updateSettings;
 
@@ -173,6 +174,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
         }
     }
 
+    @RequiredUIAccess
     public static void updateState(IconState state) {
         ourIconState = state;
 
@@ -182,9 +184,8 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     }
 
     @Nonnull
-    @Nls
-    private static String getActionTooltip() {
-        return IdeBundle.message("settings.entry.point.tooltip");
+    private static LocalizeValue getActionTooltip() {
+        return IdeLocalize.settingsEntryPointTooltip();
     }
 
     private static void resetActionIcon() {
@@ -201,7 +202,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
             case RestartRequired:
                 return PlatformIconGroup.ideNotificationRestartrequiredupdate();
         }
-        return AllIcons.General.GearPlain;
+        return PlatformIconGroup.generalGearplain();
     }
 
     private static UISettingsListener mySettingsListener;
@@ -209,10 +210,11 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     private static void initUISettingsListener() {
         if (mySettingsListener == null) {
             mySettingsListener = uiSettings -> updateWidgets();
-            ApplicationManager.getApplication().getMessageBus().connect().subscribe(UISettingsListener.class, mySettingsListener);
+            Application.get().getMessageBus().connect().subscribe(UISettingsListener.class, mySettingsListener);
         }
     }
 
+    @RequiredUIAccess
     private static void updateWidgets() {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             project.getInstance(StatusBarWidgetsManager.class).updateWidget(StatusBarManager.class, UIAccess.current());
@@ -237,7 +239,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
         @Nonnull
         @Override
         public String getDisplayName() {
-            return IdeBundle.message("settings.entry.point.widget.name");
+            return IdeLocalize.settingsEntryPointWidgetName().get();
         }
 
         @Override
@@ -286,7 +288,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
         @Nullable
         @Override
         public String getTooltipText() {
-            return getActionTooltip();
+            return getActionTooltip().get();
         }
 
         @Nullable

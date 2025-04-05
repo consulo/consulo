@@ -15,17 +15,20 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 
 public class TogglePinnedModeAction extends BaseToolWindowToggleAction {
     @Override
+    @RequiredUIAccess
     protected boolean isSelected(ToolWindow window) {
         return !window.isAutoHide();
     }
 
     @Override
+    @RequiredUIAccess
     protected void setSelected(ToolWindow window, boolean state) {
         window.setAutoHide(!state);
     }

@@ -60,12 +60,14 @@ public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiE
 
     @Nullable
     @Override
+    @RequiredReadAction
     protected String getContainerText(PsiElement element, String name) {
         return getContainerTextForLeftComponent(element, name, -1, null);
     }
 
     @Nullable
     @Override
+    @RequiredReadAction
     protected String getContainerTextForLeftComponent(PsiElement element, String name, int maxWidth, FontMetrics fm) {
         String text = SymbolPresentationUtil.getSymbolContainerText(element);
 

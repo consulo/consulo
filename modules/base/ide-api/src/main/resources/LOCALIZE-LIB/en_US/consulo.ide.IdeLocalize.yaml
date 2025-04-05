@@ -2670,3 +2670,15 @@ web.search.label.layout:
   text: Web Search
 options.locale.auto.locale:
   text: <auto - {0}>
+copy.relative.paths:
+  text: Cop&y Relative Paths
+copy.relative.path:
+  text: Cop&y Relative Path
+copy.references:
+  text: Cop&y References
+copy.reference:
+  text: Cop&y Reference
+settings.entry.point.tooltip:
+  text: IDE and project settings
+settings.entry.point.widget.name:
+  text: IDE and Project Settings

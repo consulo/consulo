@@ -12,11 +12,6 @@ public abstract class CheckBoxSearchEverywhereToggleAction extends CheckboxActio
         super(text);
     }
 
-    @Deprecated
-    public CheckBoxSearchEverywhereToggleAction(@Nonnull String text) {
-        super(text);
-    }
-
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {
         return isEverywhere();

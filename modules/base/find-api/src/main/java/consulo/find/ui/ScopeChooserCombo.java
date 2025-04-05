@@ -139,16 +139,16 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
   public static boolean processScopes(@Nonnull Project project,
                                       @Nonnull DataContext dataContext,
                                       @MagicConstant(flagsFromClass = ScopeChooserCombo.class) int options,
-                                      @Nonnull Processor<? super ScopeDescriptor> processor) {
+                                      @Nonnull Predicate<? super ScopeDescriptor> processor) {
     List<SearchScope> predefinedScopes = PredefinedSearchScopeProvider.getInstance()
             .getPredefinedScopes(project, dataContext, BitUtil.isSet(options, OPT_LIBRARIES), BitUtil.isSet(options, OPT_SEARCH_RESULTS), BitUtil.isSet(options, OPT_FROM_SELECTION),
                                  BitUtil.isSet(options, OPT_USAGE_VIEW), BitUtil.isSet(options, OPT_EMPTY_SCOPES));
     for (SearchScope searchScope : predefinedScopes) {
-      if (!processor.process(new ScopeDescriptor(searchScope))) return false;
+      if (!processor.test(new ScopeDescriptor(searchScope))) return false;
     }
     for (ScopeDescriptorProvider provider : ScopeDescriptorProvider.EP_NAME.getExtensionList()) {
       for (ScopeDescriptor descriptor : provider.getScopeDescriptors(project)) {
-        if (!processor.process(descriptor)) return false;
+        if (!processor.test(descriptor)) return false;
       }
     }
     Comparator<SearchScope> comparator = (o1, o2) -> {
@@ -161,9 +161,9 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
       if (StringUtil.isEmpty(each.getDisplayName())) continue;
       List<SearchScope> scopes = each.getSearchScopes(project);
       if (scopes.isEmpty()) continue;
-      if (!processor.process(new ScopeSeparator(each.getDisplayName()))) return false;
+      if (!processor.test(new ScopeSeparator(each.getDisplayName()))) return false;
       for (SearchScope scope : ContainerUtil.sorted(scopes, comparator)) {
-        if (!processor.process(new ScopeDescriptor(scope))) return false;
+        if (!processor.test(new ScopeDescriptor(scope))) return false;
       }
     }
     return true;

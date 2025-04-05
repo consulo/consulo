@@ -20,14 +20,17 @@ import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindowType;
+import jakarta.annotation.Nonnull;
 
 public class ToggleWindowedModeAction extends ToggleAction implements DumbAware {
     @Override
+    @RequiredUIAccess
     public boolean isSelected(AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         if (project == null) {
@@ -35,13 +38,11 @@ public class ToggleWindowedModeAction extends ToggleAction implements DumbAware 
         }
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
         String id = windowManager.getActiveToolWindowId();
-        if (id == null) {
-            return false;
-        }
-        return ToolWindowType.WINDOWED == windowManager.getToolWindow(id).getType();
+        return id != null && ToolWindowType.WINDOWED == windowManager.getToolWindow(id).getType();
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(AnActionEvent event, boolean flag) {
         Project project = event.getData(Project.KEY);
         if (project == null) {
@@ -63,7 +64,8 @@ public class ToggleWindowedModeAction extends ToggleAction implements DumbAware 
     }
 
     @Override
-    public void update(AnActionEvent event) {
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
         super.update(event);
         Presentation presentation = event.getPresentation();
         if (Platform.current().os().isMac()) {

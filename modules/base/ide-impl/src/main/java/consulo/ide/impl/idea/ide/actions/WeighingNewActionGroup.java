@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ide.action.CreateFileAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -42,7 +43,7 @@ public class WeighingNewActionGroup extends WeighingActionGroup {
 
     @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setText(getTemplatePresentation().getText());
     }

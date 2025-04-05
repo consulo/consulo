@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.container.boot.ContainerPathManager;
 import consulo.localize.LocalizeValue;
@@ -30,11 +29,13 @@ import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
@@ -59,6 +60,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         boolean canCreateScript = isAvailable();
         Presentation presentation = e.getPresentation();
@@ -67,6 +69,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         if (!isAvailable()) {
             return;
@@ -97,8 +100,8 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
         File target = new File(path, name);
         if (target.exists()) {
             LocalizeValue message = ApplicationLocalize.launcherScriptOverwrite(target);
-            String title = ApplicationBundle.message("launcher.script.title");
-            if (Messages.showOkCancelDialog(project, message.get(), title, Messages.getQuestionIcon()) != Messages.OK) {
+            LocalizeValue title = ApplicationLocalize.launcherScriptTitle();
+            if (Messages.showOkCancelDialog(project, message.get(), title.get(), UIUtil.getQuestionIcon()) != Messages.OK) {
                 return;
             }
         }
@@ -181,7 +184,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
         protected CreateLauncherScriptDialog(Project project) {
             super(project);
             init();
-            setTitle(ApplicationBundle.message("launcher.script.title"));
+            setTitle(ApplicationLocalize.launcherScriptTitle());
             LocalizeValue productName = Application.get().getName();
             myTitle.setText(myTitle.getText().replace("$APP_NAME$", productName.get()));
             myNameField.setText(defaultScriptName());

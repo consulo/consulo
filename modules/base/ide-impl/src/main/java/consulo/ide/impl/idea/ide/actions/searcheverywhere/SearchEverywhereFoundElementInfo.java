@@ -5,25 +5,25 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
  * Class containing info about found elements
  */
 public class SearchEverywhereFoundElementInfo {
-  public final int priority;
-  public final Object element;
-  public final SearchEverywhereContributor<?> contributor;
+    public final int priority;
+    public final Object element;
+    public final SearchEverywhereContributor<?> contributor;
 
-  public SearchEverywhereFoundElementInfo(Object element, int priority, SearchEverywhereContributor<?> contributor) {
-    this.priority = priority;
-    this.element = element;
-    this.contributor = contributor;
-  }
+    public SearchEverywhereFoundElementInfo(Object element, int priority, SearchEverywhereContributor<?> contributor) {
+        this.priority = priority;
+        this.element = element;
+        this.contributor = contributor;
+    }
 
-  public int getPriority() {
-    return priority;
-  }
+    public int getPriority() {
+        return priority;
+    }
 
-  public Object getElement() {
-    return element;
-  }
+    public Object getElement() {
+        return element;
+    }
 
-  public SearchEverywhereContributor<?> getContributor() {
-    return contributor;
-  }
+    public SearchEverywhereContributor<?> getContributor() {
+        return contributor;
+    }
 }

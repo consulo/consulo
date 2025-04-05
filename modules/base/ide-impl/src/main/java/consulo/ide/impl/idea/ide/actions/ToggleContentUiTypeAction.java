@@ -15,17 +15,20 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 
 public class ToggleContentUiTypeAction extends BaseToolWindowToggleAction {
     @Override
+    @RequiredUIAccess
     protected boolean isSelected(ToolWindow window) {
         return window.getContentUiType() == ToolWindowContentUiType.TABBED;
     }
 
     @Override
+    @RequiredUIAccess
     protected void setSelected(ToolWindow window, boolean state) {
         window.setContentUiType(state ? ToolWindowContentUiType.TABBED : ToolWindowContentUiType.COMBO, null);
     }

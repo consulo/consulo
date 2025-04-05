@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OpenSourceUtil;
@@ -37,14 +37,14 @@ public class EditSourceForDialogAction extends EditSourceAction {
     super();
     Presentation presentation = getTemplatePresentation();
     presentation.setTextValue(ActionLocalize.actionEditsourceText());
-    presentation.setIcon(AllIcons.Actions.EditSource);
+    presentation.setIcon(PlatformIconGroup.actionsEditsource());
     presentation.setDescriptionValue(ActionLocalize.actionEditsourceDescription());
     mySourceComponent = component;
   }
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
     if (navigatableArray != null && navigatableArray.length > 0) {
       Application.get().invokeLater(() -> OpenSourceUtil.navigate(navigatableArray));
