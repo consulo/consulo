@@ -22,9 +22,11 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
+import jakarta.annotation.Nonnull;
 
 public class RunGcAction extends AnAction implements DumbAware {
-    public void actionPerformed(AnActionEvent e) {
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         /*
         DataContext dataContext = e.getDataContext();
         Project project = (Project)dataContext.getData(DataConstants.PROJECT);

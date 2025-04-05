@@ -1,14 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
-import consulo.ui.ex.awt.popup.PopupListElementRenderer;
-import consulo.language.LangBundle;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -17,6 +17,7 @@ import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.util.collection.ArrayUtil;
@@ -50,7 +51,7 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
         ).build();
         String popupPlace = ActionPlaces.getActionGroupPopupPlace(getClass().getSimpleName());
         ListPopup popup = new PopupFactoryImpl.ActionGroupPopup(
-            LangBundle.message("popup.title.copy"),
+            LanguageLocalize.popupTitleCopy().get(),
             this,
             e.getDataContext(),
             true,
@@ -91,6 +92,7 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
                     }
 
                     @Override
+                    @RequiredReadAction
                     protected void customizeComponent(
                         @Nonnull JList<? extends PopupFactoryImpl.ActionItem> list,
                         @Nonnull PopupFactoryImpl.ActionItem actionItem,
@@ -152,7 +154,7 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
     }
 
     private static void updatePopupSize(@Nonnull ListPopup popup) {
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
             popup.getContent().setPreferredSize(new Dimension(DEFAULT_WIDTH, popup.getContent().getPreferredSize().height));
             popup.getContent().setSize(new Dimension(DEFAULT_WIDTH, popup.getContent().getPreferredSize().height));
             popup.setSize(popup.getContent().getPreferredSize());

@@ -7,19 +7,19 @@ import javax.swing.*;
 import java.awt.*;
 
 class RunAnythingMyAccessibleComponent extends JPanel {
-  private Accessible myAccessible;
+    private Accessible myAccessible;
 
-  RunAnythingMyAccessibleComponent(LayoutManager layout) {
-    super(layout);
-    setOpaque(false);
-  }
+    RunAnythingMyAccessibleComponent(LayoutManager layout) {
+        super(layout);
+        setOpaque(false);
+    }
 
-  void setAccessible(Accessible comp) {
-    myAccessible = comp;
-  }
+    void setAccessible(Accessible comp) {
+        myAccessible = comp;
+    }
 
-  @Override
-  public AccessibleContext getAccessibleContext() {
-    return accessibleContext = (myAccessible != null ? myAccessible.getAccessibleContext() : super.getAccessibleContext());
-  }
+    @Override
+    public AccessibleContext getAccessibleContext() {
+        return accessibleContext = (myAccessible != null ? myAccessible.getAccessibleContext() : super.getAccessibleContext());
+    }
 }

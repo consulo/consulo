@@ -23,9 +23,9 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class FileSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<Object> {
-  @Nonnull
-  @Override
-  public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
-    return new FileSearchEverywhereContributor(initEvent.getData(Project.KEY), GotoActionBase.getPsiContext(initEvent));
-  }
+    @Nonnull
+    @Override
+    public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
+        return new FileSearchEverywhereContributor(initEvent.getData(Project.KEY), GotoActionBase.getPsiContext(initEvent));
+    }
 }

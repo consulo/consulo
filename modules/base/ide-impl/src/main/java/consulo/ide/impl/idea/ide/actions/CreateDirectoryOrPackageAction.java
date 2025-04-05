@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.ide.IdeView;
@@ -25,7 +24,7 @@ import consulo.ide.action.ui.NewItemSimplePopupPanel;
 import consulo.ide.impl.actions.CreateDirectoryOrPackageType;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.util.DirectoryChooserUtil;
-import consulo.language.LangBundle;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiPackageSupportProvider;
@@ -35,6 +34,7 @@ import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.extension.ModuleExtension;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.HasValidator;
 import consulo.ui.TextBox;
@@ -114,7 +114,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
         JBPopup popup = NewItemPopupUtil.createNewItemPopup(title, contentPanel, (JComponent)TargetAWT.to(nameField));
         contentPanel.addValidator(value -> {
             if (!validator.checkInput(value)) {
-                String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
+                String message = InputValidatorEx.getErrorText(validator, value, LanguageLocalize.incorrectName().get());
                 return new HasValidator.ValidationInfo(message);
             }
 
@@ -164,7 +164,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
         // is more that one directories not show package support
         if (directories.length > 1) {
             presentation.setText(CreateDirectoryOrPackageType.Directory.getName());
-            presentation.setIcon(AllIcons.Nodes.TreeClosed);
+            presentation.setIcon(PlatformIconGroup.nodesTreeclosed());
         }
         else {
             Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> info = getInfo(directories[0]);
@@ -174,7 +174,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
             ContentFolderTypeProvider first = info.getFirst();
             Image childIcon;
             if (first == null) {
-                childIcon = AllIcons.Nodes.TreeClosed;
+                childIcon = PlatformIconGroup.nodesTreeclosed();
             }
             else {
                 childIcon = first.getChildPackageIcon() == null ? first.getChildDirectoryIcon() : first.getChildPackageIcon();

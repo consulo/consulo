@@ -7,6 +7,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvide
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -14,40 +15,40 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class RunAnythingRecentGroup extends RunAnythingGroupBase {
-  public static final RunAnythingRecentGroup INSTANCE = new RunAnythingRecentGroup();
+    public static final RunAnythingRecentGroup INSTANCE = new RunAnythingRecentGroup();
 
-  private RunAnythingRecentGroup() {
-  }
-
-  @Nonnull
-  @Override
-  public String getTitle() {
-    return IdeLocalize.runAnythingRecentGroupTitle().get();
-  }
-
-  @Nonnull
-  @Override
-  public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-    Project project = dataContext.getData(Project.KEY);
-    assert project != null;
-
-    Collection<RunAnythingItem> collector = new ArrayList<>();
-    for (String command : ContainerUtil.iterateBackward(RunAnythingCache.getInstance(project).getState().getCommands())) {
-      for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensions()) {
-        Object matchingValue = provider.findMatchingValue(dataContext, command);
-        if (matchingValue != null) {
-          //noinspection unchecked
-          collector.add(provider.getMainListItem(dataContext, matchingValue));
-          break;
-        }
-      }
+    private RunAnythingRecentGroup() {
     }
 
-    return collector;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getTitle() {
+        return IdeLocalize.runAnythingRecentGroupTitle();
+    }
 
-  @Override
-  protected int getMaxInitialItems() {
-    return 10;
-  }
+    @Nonnull
+    @Override
+    public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+        Project project = dataContext.getData(Project.KEY);
+        assert project != null;
+
+        Collection<RunAnythingItem> collector = new ArrayList<>();
+        for (String command : ContainerUtil.iterateBackward(RunAnythingCache.getInstance(project).getState().getCommands())) {
+            for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensions()) {
+                Object matchingValue = provider.findMatchingValue(dataContext, command);
+                if (matchingValue != null) {
+                    //noinspection unchecked
+                    collector.add(provider.getMainListItem(dataContext, matchingValue));
+                    break;
+                }
+            }
+        }
+
+        return collector;
+    }
+
+    @Override
+    protected int getMaxInitialItems() {
+        return 10;
+    }
 }

@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.ui.UISettings;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -84,7 +85,8 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
     public void registerUpDownHint(JComponent component) {
         new AnAction() {
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 if (e.getInputEvent() instanceof KeyEvent keyEvent) {
                     int code = keyEvent.getKeyCode();
                     scrollBy(code == KeyEvent.VK_DOWN ? 1 : code == KeyEvent.VK_UP ? -1 : 0);

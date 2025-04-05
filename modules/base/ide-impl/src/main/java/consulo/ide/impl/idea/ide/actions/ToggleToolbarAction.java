@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataProvider;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,7 +29,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
-
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -75,6 +74,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         boolean hasToolbars = iterateToolbars(myToolWindow.getContentManager().getComponent()).iterator().hasNext();
@@ -95,6 +95,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
     }
 
     @Nonnull
+    @RequiredUIAccess
     private String getProperty() {
         return getShowToolbarProperty(myToolWindow);
     }
@@ -129,6 +130,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
         }
 
         @Override
+        @RequiredUIAccess
         public void update(AnActionEvent e) {
             e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
         }

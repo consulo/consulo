@@ -16,32 +16,32 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScopesCore;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.util.lang.Pair;
+import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
+import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.content.base.SourcesOrderRootType;
+import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.application.util.matcher.MinusculeMatcher;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.GlobalSearchScopesCore;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -62,6 +62,7 @@ class DirectoryPathMatcher {
     }
 
     @Nullable
+    @RequiredReadAction
     static DirectoryPathMatcher root(@Nonnull GotoFileModel model, @Nonnull String pattern) {
         DirectoryPathMatcher matcher = new DirectoryPathMatcher(model, null, "");
         for (int i = 0; i < pattern.length(); i++) {
@@ -168,14 +169,14 @@ class DirectoryPathMatcher {
 
     }
 
-    private void processProjectFilesUnder(List<VirtualFile> roots, Processor<? super VirtualFile> consumer) {
+    private void processProjectFilesUnder(List<VirtualFile> roots, Predicate<? super VirtualFile> predicate) {
         Set<VirtualFile> visited = new HashSet<>(roots.size());
         GlobalSearchScope scope = GlobalSearchScope.allScope(myModel.getProject());
         for (VirtualFile root : roots) {
             VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor<Void>() {
                 @Override
                 public boolean visitFile(@Nonnull VirtualFile file) {
-                    return visited.add(file) && scope.contains(file) && consumer.process(file);
+                    return visited.add(file) && scope.contains(file) && predicate.test(file);
                 }
 
                 @Nullable

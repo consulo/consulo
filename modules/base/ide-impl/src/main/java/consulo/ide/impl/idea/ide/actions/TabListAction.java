@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
@@ -26,6 +27,7 @@ import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
  */
 public class TabListAction extends AnAction {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         JBTabsImpl tabs = e.getData(JBTabsImpl.NAVIGATION_ACTIONS_KEY);
         if (tabs != null) {
@@ -34,15 +36,13 @@ public class TabListAction extends AnAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(isTabListAvailable(e));
     }
 
     private static boolean isTabListAvailable(AnActionEvent e) {
         JBTabsImpl tabs = e.getData(JBTabsImpl.NAVIGATION_ACTIONS_KEY);
-        if (tabs == null || !tabs.isEditorTabs()) {
-            return false;
-        }
-        return tabs.canShowMorePopup();
+        return !(tabs == null || !tabs.isEditorTabs()) && tabs.canShowMorePopup();
     }
 }

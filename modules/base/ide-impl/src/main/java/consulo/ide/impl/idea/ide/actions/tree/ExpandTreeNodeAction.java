@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.ui.TreeExpandCollapse;
 import javax.swing.*;
 
 public class ExpandTreeNodeAction extends BaseTreeNodeAction {
-  @Override
-  protected void performOn(JTree tree) {
-    TreeExpandCollapse.expand(tree);
-  }
+    @Override
+    protected void performOn(JTree tree) {
+        TreeExpandCollapse.expand(tree);
+    }
 }

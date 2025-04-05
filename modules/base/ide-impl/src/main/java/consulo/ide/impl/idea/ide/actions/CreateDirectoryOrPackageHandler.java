@@ -35,6 +35,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
@@ -75,7 +76,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     public CreateDirectoryOrPackageHandler(
         @Nullable Project project,
         @Nonnull PsiDirectory directory,
-        CreateDirectoryOrPackageType type,
+        @Nonnull CreateDirectoryOrPackageType type,
         @Nonnull String delimiters,
         @Nullable Component dialogParent
     ) {
@@ -259,7 +260,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     @RequiredUIAccess
     private void showErrorDialog(LocalizeValue message) {
         LocalizeValue title = CommonLocalize.titleError();
-        Image icon = Messages.getErrorIcon();
+        Image icon = UIUtil.getErrorIcon();
         if (myDialogParent != null) {
             Messages.showMessageDialog(myDialogParent, message.get(), title.get(), icon);
         }

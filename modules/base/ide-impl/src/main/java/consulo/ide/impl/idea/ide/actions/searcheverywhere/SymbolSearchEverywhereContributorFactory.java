@@ -28,20 +28,20 @@ import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class SymbolSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<Object> {
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public SymbolSearchEverywhereContributorFactory(Application application) {
-    myApplication = application;
-  }
-
-  @Nullable
-  @Override
-  public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
-    if (!myApplication.getExtensionPoint(GotoSymbolContributor.class).hasAnyExtensions()) {
-      return null;
-
+    @Inject
+    public SymbolSearchEverywhereContributorFactory(Application application) {
+        myApplication = application;
     }
-    return new SymbolSearchEverywhereContributor(initEvent.getData(Project.KEY), GotoActionBase.getPsiContext(initEvent));
-  }
+
+    @Nullable
+    @Override
+    public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
+        if (!myApplication.getExtensionPoint(GotoSymbolContributor.class).hasAnyExtensions()) {
+            return null;
+
+        }
+        return new SymbolSearchEverywhereContributor(initEvent.getData(Project.KEY), GotoActionBase.getPsiContext(initEvent));
+    }
 }
