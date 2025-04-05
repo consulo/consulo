@@ -558,7 +558,12 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     private void paintHoveredComponentBackground(Graphics g) {
         if (myHoveredComponent != null && myHoveredComponent.isEnabled() && !(myHoveredComponent instanceof MemoryUsagePanel)) {
             Rectangle bounds = myHoveredComponent.getBounds();
-            Point point = new RelativePoint(myHoveredComponent.getParent(), bounds.getLocation()).getPoint(this);
+            Container parent = myHoveredComponent.getParent();
+            if (parent == null) {
+                return;
+            }
+            
+            Point point = new RelativePoint(parent, bounds.getLocation()).getPoint(this);
             g.setColor(BasicStripeButtonUI.BACKGROUND_COLOR);
             int arc = UIManager.getInt("Component.arc");
             if (arc > 0) {
