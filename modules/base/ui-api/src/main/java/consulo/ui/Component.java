@@ -38,6 +38,8 @@ import java.util.function.Supplier;
  * @since 2016-01-09
  */
 public interface Component extends UserDataHolder {
+    Key<Component> KEY = Key.of(Component.class);
+
     @RequiredUIAccess
     default void addBorder(@Nonnull BorderPosition borderPosition) {
         addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);

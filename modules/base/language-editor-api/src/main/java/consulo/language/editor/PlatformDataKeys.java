@@ -20,6 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
+import consulo.ui.Component;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.*;
 import consulo.ui.ex.action.AnAction;
@@ -64,7 +65,8 @@ public interface PlatformDataKeys extends CommonDataKeys {
   /**
    * Returns java.awt.Component currently in focus, DataContext should be retrieved for
    */
-  Key<consulo.ui.Component> CONTEXT_UI_COMPONENT = Key.create("contextUIComponent");
+  @Deprecated
+  Key<consulo.ui.Component> CONTEXT_UI_COMPONENT = Component.KEY;
 
   @Deprecated(forRemoval = true)
   Key<CopyProvider> COPY_PROVIDER = CopyProvider.KEY;
