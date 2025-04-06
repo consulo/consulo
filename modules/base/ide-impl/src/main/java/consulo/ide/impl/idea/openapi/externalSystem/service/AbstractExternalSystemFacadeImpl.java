@@ -15,6 +15,7 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 /**
  * @author Denis Zhdanov
@@ -36,11 +37,11 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
   private final RemoteExternalSystemTaskManagerImpl<S>     myTaskManager;
 
   public AbstractExternalSystemFacadeImpl(
-    @Nonnull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
-    @Nonnull Class<ExternalSystemTaskManager<S>> buildManagerClass
+    @Nonnull Supplier<ExternalSystemProjectResolver<S>> projectResolverClass,
+    @Nonnull Supplier<ExternalSystemTaskManager<S>> buildManagerClass
   ) throws IllegalAccessException, InstantiationException {
-    myProjectResolver = new RemoteExternalSystemProjectResolverImpl<>(projectResolverClass.newInstance());
-    myTaskManager = new RemoteExternalSystemTaskManagerImpl<>(buildManagerClass.newInstance());
+    myProjectResolver = new RemoteExternalSystemProjectResolverImpl<>(projectResolverClass.get());
+    myTaskManager = new RemoteExternalSystemTaskManagerImpl<>(buildManagerClass.get());
   }
 
   protected void init() throws RemoteException {

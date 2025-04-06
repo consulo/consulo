@@ -15,9 +15,10 @@ import consulo.externalSystem.task.ExternalSystemTaskManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * IntelliJ external systems integration is built using GoF Bridge pattern, i.e. 'external-system' module defines
@@ -71,13 +72,14 @@ public interface ExternalSystemManager<ProjectSettings extends ExternalProjectSe
    * @return class of the project resolver to use for the target external system
    */
   @Nonnull
-  Class<? extends ExternalSystemProjectResolver<ExecutionSettings>> getProjectResolverClass();
+  Supplier<? extends ExternalSystemProjectResolver<ExecutionSettings>> getProjectResolverFactory();
 
   /**
    * @return class of the build manager to use for the target external system
-   * @see #getProjectResolverClass()
+   * @see #getProjectResolverFactory()
    */
-  Class<? extends ExternalSystemTaskManager<ExecutionSettings>> getTaskManagerClass();
+  @Nonnull
+  Supplier<? extends ExternalSystemTaskManager<ExecutionSettings>> getTaskManagerFactory();
 
   /**
    * @return file chooser descriptor to use when adding new external project

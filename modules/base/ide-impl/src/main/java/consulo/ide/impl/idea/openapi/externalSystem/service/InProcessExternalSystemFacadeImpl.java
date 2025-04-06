@@ -21,6 +21,7 @@ import consulo.externalSystem.task.ExternalSystemTaskManager;
 import jakarta.annotation.Nonnull;
 
 import java.rmi.RemoteException;
+import java.util.function.Supplier;
 
 /**
  * @author Denis Zhdanov
@@ -28,8 +29,8 @@ import java.rmi.RemoteException;
  */
 public class InProcessExternalSystemFacadeImpl<S extends ExternalSystemExecutionSettings> extends AbstractExternalSystemFacadeImpl<S> {
 
-  public InProcessExternalSystemFacadeImpl(@Nonnull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
-                                           @Nonnull Class<ExternalSystemTaskManager<S>> buildManagerClass)
+  public InProcessExternalSystemFacadeImpl(@Nonnull Supplier<ExternalSystemProjectResolver<S>> projectResolverClass,
+                                           @Nonnull Supplier<ExternalSystemTaskManager<S>> buildManagerClass)
     throws IllegalAccessException, InstantiationException
   {
     super(projectResolverClass, buildManagerClass);

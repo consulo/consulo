@@ -52,8 +52,8 @@ public class InProcessExternalSystemCommunicationManager implements ExternalSyst
   public RemoteExternalSystemFacade acquire(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId) throws Exception {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
-    InProcessExternalSystemFacadeImpl result = new InProcessExternalSystemFacadeImpl(manager.getProjectResolverClass(),
-                                                                                     manager.getTaskManagerClass());
+    InProcessExternalSystemFacadeImpl result = new InProcessExternalSystemFacadeImpl(manager.getProjectResolverFactory(),
+                                                                                     manager.getTaskManagerFactory());
     result.applyProgressManager(myProgressManager);
     return result;
   }
