@@ -517,6 +517,8 @@
                         icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
                 <action id="InvalidateCaches" class="consulo.ide.impl.idea.ide.actions.InvalidateCachesAction"/>
                 <separator/>
+                <action id="TogglePowerSave" class="consulo.ide.impl.idea.ide.actions.TogglePowerSaveAction"/>
+                <separator/>
                 <action id="Exit" class="consulo.ide.impl.idea.ide.actions.ExitAction"/>
             </group>
 
@@ -1294,12 +1296,6 @@
         <action id="ChangeTemplateDataLanguage" class="consulo.ide.impl.psi.templateLanguages.ChangeTemplateDataLanguageAction">
             <add-to-group group-id="FileMenu" anchor="before" relative-to-action="ToggleReadOnlyAttribute"/>
         </action>
-
-        <group id="PowerSaveGroup">
-            <separator/>
-            <action id="TogglePowerSave" class="consulo.ide.impl.idea.ide.actions.TogglePowerSaveAction"/>
-            <add-to-group group-id="FileMenu" anchor="after" relative-to-action="ToggleReadOnlyAttribute"/>
-        </group>
 
         <action id="CopyAbsolutePath" class="consulo.ide.impl.idea.ide.actions.CopyAbsolutePathProvider" use-shortcut-of="CopyPaths"/>
         <action id="CopyFileName" class="consulo.ide.impl.idea.ide.actions.CopyFileNameProvider"/>
