@@ -96,6 +96,15 @@ public class DesktopDataManagerImpl extends BaseDataManager {
       if (UIExAWTDataKey.CONTEXT_COMPONENT == dataId) {
         return (T)component;
       }
+
+      if (consulo.ui.Component.KEY == dataId) {
+        if (component instanceof FromSwingComponentWrapper fromSwingComponentWrapper) {
+            return (T) fromSwingComponentWrapper.toUIComponent();
+        }
+
+        return (T) TargetAWT.wrap(component);
+      }
+
       if (ModalityState.KEY == dataId) {
         return (T)(component != null ? IdeaModalityState.stateForComponent(component) : IdeaModalityState.nonModal());
       }
