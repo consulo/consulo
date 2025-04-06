@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.application.AllIcons;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
@@ -33,148 +33,169 @@ import java.util.Objects;
  * from kotlin
  */
 public class RunAnythingContext {
-  public static final class ProjectContext extends RunAnythingContext {
-    private Project myProject;
+    public static final class ProjectContext extends RunAnythingContext {
+        private Project myProject;
 
-    public ProjectContext(Project project) {
-      super(
-        IdeLocalize.runAnythingContextProject().get(),
-        StringUtil.notNullize(project.getBasePath())
-      );
-      myProject = project;
-    }
-
-    @Nonnull
-    public Project getProject() {
-      return myProject;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      ProjectContext that = (ProjectContext)o;
-      return Objects.equals(myProject, that.myProject);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(myProject);
-    }
-  }
-
-  public static final class BrowseRecentDirectoryContext extends RunAnythingContext {
-    public static final BrowseRecentDirectoryContext INSTANCE = new BrowseRecentDirectoryContext();
-
-    public BrowseRecentDirectoryContext() {
-      super(IdeLocalize.runAnythingContextBrowseDirectory().get(), "", AllIcons.Nodes.Folder);
-    }
-  }
-
-  public static final class RecentDirectoryContext extends RunAnythingContext {
-    @Nonnull
-    private final String myPath;
-
-    public RecentDirectoryContext(@Nonnull String path) {
-      super(UserHomeFileUtil.getLocationRelativeToUserHome(path), "", AllIcons.Nodes.Folder);
-      myPath = path;
-    }
-
-    @Nonnull
-    public String getPath() {
-      return myPath;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      RecentDirectoryContext that = (RecentDirectoryContext)o;
-      return Objects.equals(myPath, that.myPath);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(myPath);
-    }
-  }
-
-  public static final class ModuleContext extends RunAnythingContext {
-    private final Module myModule;
-
-    public ModuleContext(@Nonnull Module module) {
-      super(module.getName(), calcDescription(module), AllIcons.Nodes.Module);
-      myModule = module;
-    }
-
-    @Nonnull
-    private static String calcDescription(Module module) {
-      String basePath = module.getProject().getBasePath();
-      if (basePath != null) {
-        String modulePath = module.getModuleDirPath();
-        if (modulePath == null) {
-          VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
-          if (contentRoots.length == 1) {
-            modulePath = contentRoots[0].getPath();
-          }
+        public ProjectContext(Project project) {
+            super(IdeLocalize.runAnythingContextProject(), LocalizeValue.ofNullable(project.getBasePath()));
+            myProject = project;
         }
 
-        if (modulePath != null) {
-          String relativePath = FileUtil.getRelativePath(basePath, modulePath, '/');
-          if (relativePath != null) {
-            return relativePath;
-          }
+        @Nonnull
+        public Project getProject() {
+            return myProject;
         }
-      }
-      return "undefined";
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            ProjectContext that = (ProjectContext)o;
+            return Objects.equals(myProject, that.myProject);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(myProject);
+        }
+    }
+
+    public static final class BrowseRecentDirectoryContext extends RunAnythingContext {
+        public static final BrowseRecentDirectoryContext INSTANCE = new BrowseRecentDirectoryContext();
+
+        public BrowseRecentDirectoryContext() {
+            super(IdeLocalize.runAnythingContextBrowseDirectory(), LocalizeValue.empty(), PlatformIconGroup.nodesFolder());
+        }
+    }
+
+    public static final class RecentDirectoryContext extends RunAnythingContext {
+        @Nonnull
+        private final String myPath;
+
+        public RecentDirectoryContext(@Nonnull String path) {
+            super(
+                LocalizeValue.ofNullable(UserHomeFileUtil.getLocationRelativeToUserHome(path)),
+                LocalizeValue.empty(),
+                PlatformIconGroup.nodesFolder()
+            );
+            myPath = path;
+        }
+
+        @Nonnull
+        public String getPath() {
+            return myPath;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            RecentDirectoryContext that = (RecentDirectoryContext)o;
+            return Objects.equals(myPath, that.myPath);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(myPath);
+        }
+    }
+
+    public static final class ModuleContext extends RunAnythingContext {
+        private final Module myModule;
+
+        public ModuleContext(@Nonnull Module module) {
+            super(
+                LocalizeValue.ofNullable(module.getName()),
+                LocalizeValue.ofNullable(calcDescription(module)),
+                PlatformIconGroup.nodesModule()
+            );
+            myModule = module;
+        }
+
+        @Nonnull
+        private static String calcDescription(Module module) {
+            String basePath = module.getProject().getBasePath();
+            if (basePath != null) {
+                String modulePath = module.getModuleDirPath();
+                if (modulePath == null) {
+                    VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
+                    if (contentRoots.length == 1) {
+                        modulePath = contentRoots[0].getPath();
+                    }
+                }
+
+                if (modulePath != null) {
+                    String relativePath = FileUtil.getRelativePath(basePath, modulePath, '/');
+                    if (relativePath != null) {
+                        return relativePath;
+                    }
+                }
+            }
+            return "undefined";
+        }
+
+        @Nonnull
+        public Module getModule() {
+            return myModule;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            ModuleContext that = (ModuleContext)o;
+            return Objects.equals(myModule, that.myModule);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(myModule);
+        }
     }
 
     @Nonnull
-    public Module getModule() {
-      return myModule;
+    protected final LocalizeValue label;
+    @Nonnull
+    protected final LocalizeValue description;
+    protected final Image icon;
+
+    private RunAnythingContext(@Nonnull LocalizeValue label) {
+        this(label, LocalizeValue.empty(), null);
     }
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      ModuleContext that = (ModuleContext)o;
-      return Objects.equals(myModule, that.myModule);
+    private RunAnythingContext(@Nonnull LocalizeValue label, @Nonnull LocalizeValue description) {
+        this(label, description, null);
     }
 
-    @Override
-    public int hashCode() {
-      return Objects.hash(myModule);
+    private RunAnythingContext(@Nonnull LocalizeValue label, @Nonnull LocalizeValue description, Image icon) {
+        this.label = label;
+        this.description = description;
+        this.icon = icon;
     }
-  }
 
-  protected final String label;
-  protected final String description;
-  protected final Image icon;
+    @Nonnull
+    public LocalizeValue getLabel() {
+        return label;
+    }
 
-  private RunAnythingContext(String label) {
-    this(label, "", null);
-  }
+    @Nonnull
+    public LocalizeValue getDescription() {
+        return description;
+    }
 
-  private RunAnythingContext(String label, String description) {
-    this(label, description, null);
-  }
-
-  private RunAnythingContext(String label, String description, Image icon) {
-    this.label = label;
-    this.description = description;
-    this.icon = icon;
-  }
-
-  public String getLabel() {
-    return label;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public Image getIcon() {
-    return icon;
-  }
+    public Image getIcon() {
+        return icon;
+    }
 }

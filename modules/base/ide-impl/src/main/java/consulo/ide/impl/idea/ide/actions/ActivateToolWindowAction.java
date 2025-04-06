@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.localize.LocalizeValue;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -26,7 +26,6 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -122,7 +121,6 @@ public class ActivateToolWindowAction extends DumbAwareAction {
      *
      * @param id <code>id</code> of tool window to be activated.
      */
-    @NonNls
     public static String getActionIdForToolWindow(String id) {
         return "Activate" + id.replaceAll(" ", "") + "ToolWindow";
     }

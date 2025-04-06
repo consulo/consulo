@@ -46,6 +46,7 @@ abstract class WeighingActionGroup extends ActionGroup {
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public List<AnAction> postProcessVisibleChildren(@Nonnull List<AnAction> visibleActions) {
         LinkedHashSet<AnAction> heaviest = null;
         double maxWeight = Presentation.DEFAULT_WEIGHT;

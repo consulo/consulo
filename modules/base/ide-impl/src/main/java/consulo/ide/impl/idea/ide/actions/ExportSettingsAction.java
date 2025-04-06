@@ -87,8 +87,8 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
         ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(
             getExportableComponentsMap(myApplication, myApplicationStore, true),
             true,
-            IdeLocalize.titleSelectComponentsToExport().get(),
-            IdeLocalize.promptPleaseCheckAllComponentsToExport().get()
+            IdeLocalize.titleSelectComponentsToExport(),
+            IdeLocalize.promptPleaseCheckAllComponentsToExport()
         );
         if (!dialog.showAndGet()) {
             return;

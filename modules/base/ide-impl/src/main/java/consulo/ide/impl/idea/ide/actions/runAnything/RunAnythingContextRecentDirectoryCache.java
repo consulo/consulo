@@ -18,16 +18,15 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import consulo.component.persist.PersistentStateComponent;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,25 +38,25 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class RunAnythingContextRecentDirectoryCache implements PersistentStateComponent<RunAnythingContextRecentDirectoryCache.State> {
-  static class State {
-    public List<String> paths = new ArrayList<>();
-  }
+    static class State {
+        public List<String> paths = new ArrayList<>();
+    }
 
-  @Nonnull
-  public static RunAnythingContextRecentDirectoryCache getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, RunAnythingContextRecentDirectoryCache.class);
-  }
+    @Nonnull
+    public static RunAnythingContextRecentDirectoryCache getInstance(@Nonnull Project project) {
+        return project.getInstance(RunAnythingContextRecentDirectoryCache.class);
+    }
 
-  private State myState = new State();
+    private State myState = new State();
 
-  @Nonnull
-  @Override
-  public State getState() {
-    return myState;
-  }
+    @Nonnull
+    @Override
+    public State getState() {
+        return myState;
+    }
 
-  @Override
-  public void loadState(State state) {
-    XmlSerializerUtil.copyBean(state, myState);
-  }
+    @Override
+    public void loadState(State state) {
+        XmlSerializerUtil.copyBean(state, myState);
+    }
 }

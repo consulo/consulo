@@ -34,6 +34,8 @@ public abstract class UndoRedoAction extends DumbAwareAction {
         setEnabledInModalContext(true);
     }
 
+    @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         FileEditor editor = e.getData(FileEditor.KEY);

@@ -9,17 +9,17 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class RunAnythingRunConfigurationItem extends RunAnythingItemBase {
-  private final ChooseRunConfigurationPopup.ItemWrapper myWrapper;
+    private final ChooseRunConfigurationPopup.ItemWrapper myWrapper;
 
-  public RunAnythingRunConfigurationItem(@Nonnull ChooseRunConfigurationPopup.ItemWrapper wrapper, @Nullable Image icon) {
-    super(wrapper.getText(), icon);
-    myWrapper = wrapper;
-  }
+    public RunAnythingRunConfigurationItem(@Nonnull ChooseRunConfigurationPopup.ItemWrapper wrapper, @Nullable Image icon) {
+        super(wrapper.getText(), icon);
+        myWrapper = wrapper;
+    }
 
-  @Nullable
-  @Override
-  public String getDescription() {
-    ConfigurationType type = myWrapper.getType();
-    return type == null ? null : type.getConfigurationTypeDescription().get();
-  }
+    @Nullable
+    @Override
+    public String getDescription() {
+        ConfigurationType type = myWrapper.getType();
+        return type == null ? null : type.getConfigurationTypeDescription().get();
+    }
 }

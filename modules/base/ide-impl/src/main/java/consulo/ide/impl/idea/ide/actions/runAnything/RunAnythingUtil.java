@@ -16,8 +16,8 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -29,92 +29,91 @@ import java.util.Collection;
 import java.util.List;
 
 public class RunAnythingUtil {
-  public static final Logger LOG = Logger.getInstance(RunAnythingUtil.class);
-  public static final String SHIFT_SHORTCUT_TEXT = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("SHIFT"));
-  public static final String SHIFT_BACK_SPACE = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("shift BACK_SPACE"));
-  public static final String PRESSED_ALT = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("pressed ALT"));
-  private static final Key<Collection<Pair<String, String>>> RUN_ANYTHING_WRAPPED_COMMANDS = Key.create("RUN_ANYTHING_WRAPPED_COMMANDS");
+    public static final Logger LOG = Logger.getInstance(RunAnythingUtil.class);
+    public static final String SHIFT_SHORTCUT_TEXT = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("SHIFT"));
+    public static final String SHIFT_BACK_SPACE = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("shift BACK_SPACE"));
+    public static final String PRESSED_ALT = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("pressed ALT"));
+    private static final Key<Collection<Couple<String>>> RUN_ANYTHING_WRAPPED_COMMANDS = Key.create("RUN_ANYTHING_WRAPPED_COMMANDS");
 
-  static Font getTitleFont() {
-    return UIUtil.getLabelFont().deriveFont(UIUtil.getFontSize(UIUtil.FontSize.SMALL));
-  }
-
-  static JComponent createTitle(@Nonnull String titleText, @Nonnull Color background) {
-    JLabel titleLabel = new JLabel(StringUtil.capitalizeWords(titleText, true));
-    titleLabel.setFont(getTitleFont());
-    titleLabel.setForeground(UIUtil.getLabelDisabledForeground());
-
-    SeparatorComponent separatorComponent = new SeparatorComponent(
-      titleLabel.getPreferredSize().height / 2,
-      new JBColor(Gray._220, Gray._80),
-      null
-    );
-
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(titleLabel, BorderLayout.WEST);
-    panel.add(separatorComponent, BorderLayout.CENTER);
-
-    panel.setBorder(JBUI.Borders.empty(3));
-    titleLabel.setBorder(JBUI.Borders.emptyRight(3));
-
-    panel.setBackground(background);
-    return panel;
-  }
-
-  static void jumpNextGroup(boolean forward, JBList list) {
-    final int index = list.getSelectedIndex();
-    final RunAnythingSearchListModel model = getSearchingModel(list);
-    if (model != null && index >= 0) {
-      final int newIndex = forward ? model.next(index) : model.prev(index);
-      list.setSelectedIndex(newIndex);
-      int more = model.next(newIndex) - 1;
-      if (more < newIndex) {
-        more = list.getItemsCount() - 1;
-      }
-      ScrollingUtil.ensureIndexIsVisible(list, more, forward ? 1 : -1);
-      ScrollingUtil.ensureIndexIsVisible(list, newIndex, forward ? 1 : -1);
-    }
-  }
-
-  @Nonnull
-  public static Collection<Pair<String, String>> getOrCreateWrappedCommands(@Nonnull Project project) {
-    Collection<Pair<String, String>> list = project.getUserData(RUN_ANYTHING_WRAPPED_COMMANDS);
-    if (list == null) {
-      list = new ArrayList<>();
-      project.putUserData(RUN_ANYTHING_WRAPPED_COMMANDS, list);
-    }
-    return list;
-  }
-
-  @Nonnull
-  public static Project fetchProject(@Nonnull DataContext dataContext) {
-    return ObjectUtil.assertNotNull(dataContext.getData(Project.KEY));
-  }
-
-  public static boolean executeMatched(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-    List<String> commands = RunAnythingCache.getInstance(fetchProject(dataContext)).getState().getCommands();
-
-    Module module = dataContext.getData(Module.KEY);
-    if (module == null) {
-      LOG.info("RunAnything: module hasn't been found, command will be executed in context of 'null' module.");
+    static Font getTitleFont() {
+        return UIUtil.getLabelFont().deriveFont(UIUtil.getFontSize(UIUtil.FontSize.SMALL));
     }
 
-    for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensionList()) {
-      Object value = provider.findMatchingValue(dataContext, pattern);
-      if (value != null) {
-        //noinspection unchecked
-        provider.execute(dataContext, value);
-        commands.remove(pattern);
-        commands.add(pattern);
-        return true;
-      }
-    }
-    return false;
-  }
+    static JComponent createTitle(@Nonnull String titleText, @Nonnull Color background) {
+        JLabel titleLabel = new JLabel(StringUtil.capitalizeWords(titleText, true));
+        titleLabel.setFont(getTitleFont());
+        titleLabel.setForeground(UIUtil.getLabelDisabledForeground());
 
-  @Nullable
-  public static RunAnythingSearchListModel getSearchingModel(@Nonnull JBList list) {
-    ListModel model = list.getModel();
-    return model instanceof RunAnythingSearchListModel ? (RunAnythingSearchListModel)model : null;
-  }
+        SeparatorComponent separatorComponent = new SeparatorComponent(
+            titleLabel.getPreferredSize().height / 2,
+            new JBColor(Gray._220, Gray._80),
+            null
+        );
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(titleLabel, BorderLayout.WEST);
+        panel.add(separatorComponent, BorderLayout.CENTER);
+
+        panel.setBorder(JBUI.Borders.empty(3));
+        titleLabel.setBorder(JBUI.Borders.emptyRight(3));
+
+        panel.setBackground(background);
+        return panel;
+    }
+
+    static void jumpNextGroup(boolean forward, JBList list) {
+        int index = list.getSelectedIndex();
+        RunAnythingSearchListModel model = getSearchingModel(list);
+        if (model != null && index >= 0) {
+            int newIndex = forward ? model.next(index) : model.prev(index);
+            list.setSelectedIndex(newIndex);
+            int more = model.next(newIndex) - 1;
+            if (more < newIndex) {
+                more = list.getItemsCount() - 1;
+            }
+            ScrollingUtil.ensureIndexIsVisible(list, more, forward ? 1 : -1);
+            ScrollingUtil.ensureIndexIsVisible(list, newIndex, forward ? 1 : -1);
+        }
+    }
+
+    @Nonnull
+    public static Collection<Couple<String>> getOrCreateWrappedCommands(@Nonnull Project project) {
+        Collection<Couple<String>> list = project.getUserData(RUN_ANYTHING_WRAPPED_COMMANDS);
+        if (list == null) {
+            list = new ArrayList<>();
+            project.putUserData(RUN_ANYTHING_WRAPPED_COMMANDS, list);
+        }
+        return list;
+    }
+
+    @Nonnull
+    public static Project fetchProject(@Nonnull DataContext dataContext) {
+        return ObjectUtil.assertNotNull(dataContext.getData(Project.KEY));
+    }
+
+    public static boolean executeMatched(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+        List<String> commands = RunAnythingCache.getInstance(fetchProject(dataContext)).getState().getCommands();
+
+        Module module = dataContext.getData(Module.KEY);
+        if (module == null) {
+            LOG.info("RunAnything: module hasn't been found, command will be executed in context of 'null' module.");
+        }
+
+        for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensionList()) {
+            Object value = provider.findMatchingValue(dataContext, pattern);
+            if (value != null) {
+                //noinspection unchecked
+                provider.execute(dataContext, value);
+                commands.remove(pattern);
+                commands.add(pattern);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Nullable
+    public static RunAnythingSearchListModel getSearchingModel(@Nonnull JBList list) {
+        return list.getModel() instanceof RunAnythingSearchListModel model ? model : null;
+    }
 }

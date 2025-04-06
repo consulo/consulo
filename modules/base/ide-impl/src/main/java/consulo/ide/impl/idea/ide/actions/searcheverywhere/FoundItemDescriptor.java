@@ -2,21 +2,19 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 public class FoundItemDescriptor<I> {
+    private final I item;
+    private final int weight;
 
-  private final I item;
-  private final int weight;
+    public FoundItemDescriptor(I item, int weight) {
+        this.item = item;
+        this.weight = weight;
+    }
 
-  public FoundItemDescriptor(I item, int weight) {
-    this.item = item;
-    this.weight = weight;
-  }
+    public I getItem() {
+        return item;
+    }
 
-  public I getItem() {
-    return item;
-  }
-
-  public int getWeight() {
-    return weight;
-  }
-
+    public int getWeight() {
+        return weight;
+    }
 }

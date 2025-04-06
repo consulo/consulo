@@ -15,16 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
 public class ToggleSideModeAction extends BaseToolWindowToggleAction {
     @Override
+    @RequiredUIAccess
     protected boolean isSelected(ToolWindow window) {
         return window.isSplitMode();
     }
 
     @Override
+    @RequiredUIAccess
     protected void setSelected(ToolWindow window, boolean state) {
         window.setSplitMode(state, null);
     }

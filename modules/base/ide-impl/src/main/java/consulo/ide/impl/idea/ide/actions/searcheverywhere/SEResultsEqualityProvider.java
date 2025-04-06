@@ -11,32 +11,40 @@ import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SEResultsEqualityProvider {
+    ExtensionPointName<SEResultsEqualityProvider> EP_NAME = ExtensionPointName.create(SEResultsEqualityProvider.class);
 
-  ExtensionPointName<SEResultsEqualityProvider> EP_NAME = ExtensionPointName.create(SEResultsEqualityProvider.class);
+    enum SEEqualElementsActionType {
+        DO_NOTHING,
+        SKIP,
+        REPLACE
+    }
 
-  enum SEEqualElementsActionType {
-    DO_NOTHING,
-    SKIP,
-    REPLACE
-  }
+    @Nonnull
+    SEEqualElementsActionType compareItems(
+        @Nonnull SearchEverywhereFoundElementInfo newItem,
+        @Nonnull SearchEverywhereFoundElementInfo alreadyFoundItem
+    );
 
-  @Nonnull
-  SEEqualElementsActionType compareItems(@Nonnull SearchEverywhereFoundElementInfo newItem, @Nonnull SearchEverywhereFoundElementInfo alreadyFoundItem);
+    @Nonnull
+    static List<SEResultsEqualityProvider> getProviders() {
+        return EP_NAME.getExtensionList();
+    }
 
-  @Nonnull
-  static List<SEResultsEqualityProvider> getProviders() {
-    return EP_NAME.getExtensionList();
-  }
-
-  @Nonnull
-  static SEResultsEqualityProvider composite(@Nonnull Collection<? extends SEResultsEqualityProvider> providers) {
-    return new SEResultsEqualityProvider() {
-      @Nonnull
-      @Override
-      public SEEqualElementsActionType compareItems(@Nonnull SearchEverywhereFoundElementInfo newItem, @Nonnull SearchEverywhereFoundElementInfo alreadyFoundItem) {
-        return providers.stream().map(provider -> provider.compareItems(newItem, alreadyFoundItem)).filter(action -> action != SEEqualElementsActionType.DO_NOTHING).findFirst()
-                .orElse(SEEqualElementsActionType.DO_NOTHING);
-      }
-    };
-  }
+    @Nonnull
+    static SEResultsEqualityProvider composite(@Nonnull Collection<? extends SEResultsEqualityProvider> providers) {
+        return new SEResultsEqualityProvider() {
+            @Nonnull
+            @Override
+            public SEEqualElementsActionType compareItems(
+                @Nonnull SearchEverywhereFoundElementInfo newItem,
+                @Nonnull SearchEverywhereFoundElementInfo alreadyFoundItem
+            ) {
+                return providers.stream()
+                    .map(provider -> provider.compareItems(newItem, alreadyFoundItem))
+                    .filter(action -> action != SEEqualElementsActionType.DO_NOTHING)
+                    .findFirst()
+                    .orElse(SEEqualElementsActionType.DO_NOTHING);
+            }
+        };
+    }
 }

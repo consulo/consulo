@@ -65,8 +65,8 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         ChooseComponentsToExportDialog.chooseSettingsFile(
             ContainerPathManager.get().getConfigPath(),
             component,
-            IdeLocalize.titleImportFileLocation().get(),
-            IdeLocalize.promptChooseImportFilePath().get()
+            IdeLocalize.titleImportFileLocation(),
+            IdeLocalize.promptChooseImportFilePath()
         ).doWhenDone(this::doImport);
     }
 
@@ -103,8 +103,8 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
             ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(
                 fileToComponents,
                 false,
-                IdeLocalize.titleSelectComponentsToImport().get(),
-                IdeLocalize.promptCheckComponentsToImport().get()
+                IdeLocalize.titleSelectComponentsToImport(),
+                IdeLocalize.promptCheckComponentsToImport()
             );
             if (!dialog.showAndGet()) {
                 return;
