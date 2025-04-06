@@ -16,25 +16,32 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 public class ExitAction extends AnAction implements DumbAware {
+    private final Application myApplication;
+
+    @Inject
+    public ExitAction(Application application) {
+        myApplication = application;
+    }
+
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setVisible(!TopApplicationMenuUtil.isMacSystemMenu);
+        e.getPresentation().setVisible(!Platform.current().os().isEnabledTopMenu());
     }
 
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Application.get().exit();
+        myApplication.exit();
     }
 }
