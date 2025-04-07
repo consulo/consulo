@@ -49,6 +49,7 @@ import org.jetbrains.annotations.Nls;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -64,210 +65,215 @@ import java.util.*;
  * @since 10:33/19.05.13
  */
 public class ExtensionEditor extends ModuleElementsEditor {
-  private static final Logger LOG = Logger.getInstance(ExtensionEditor.class);
+    private static final Logger LOG = Logger.getInstance(ExtensionEditor.class);
 
-  private final ModuleConfigurationState myState;
-  private final CompilerOutputsEditor myCompilerOutputEditor;
-  private final ClasspathEditor myClasspathEditor;
-  private final ContentEntriesEditor myContentEntriesEditor;
-  private CheckboxTreeNoPolicy myTree;
-  private Splitter mySplitter;
+    private final ModuleConfigurationState myState;
+    private final CompilerOutputsEditor myCompilerOutputEditor;
+    private final ClasspathEditor myClasspathEditor;
+    private final ContentEntriesEditor myContentEntriesEditor;
+    private CheckboxTreeNoPolicy myTree;
+    private Splitter mySplitter;
 
-  private ModuleExtension<?> myConfigurablePanelExtension;
+    private ModuleExtension<?> myConfigurablePanelExtension;
 
-  private final Map<JComponent, Disposable> myExtensionDisposables = new HashMap<>();
+    private final Map<JComponent, Disposable> myExtensionDisposables = new HashMap<>();
 
-  public ExtensionEditor(ModuleConfigurationState state, CompilerOutputsEditor compilerOutputEditor, ClasspathEditor classpathEditor, ContentEntriesEditor contentEntriesEditor) {
-    super(state);
-    myState = state;
-    myCompilerOutputEditor = compilerOutputEditor;
-    myClasspathEditor = classpathEditor;
-    myContentEntriesEditor = contentEntriesEditor;
+    public ExtensionEditor(
+        ModuleConfigurationState state,
+        CompilerOutputsEditor compilerOutputEditor,
+        ClasspathEditor classpathEditor,
+        ContentEntriesEditor contentEntriesEditor
+    ) {
+        super(state);
+        myState = state;
+        myCompilerOutputEditor = compilerOutputEditor;
+        myClasspathEditor = classpathEditor;
+        myContentEntriesEditor = contentEntriesEditor;
 
-    registerDisposable(() -> {
-      for (Disposable disposable : myExtensionDisposables.values()) {
-        Disposer.dispose(disposable);
-      }
+        registerDisposable(() -> {
+            for (Disposable disposable : myExtensionDisposables.values()) {
+                Disposer.dispose(disposable);
+            }
 
-      myExtensionDisposables.clear();
-    });
-  }
+            myExtensionDisposables.clear();
+        });
+    }
 
-  @Override
-  public void moduleStateChanged() {
-    mySplitter.setSecondComponent(null);
-    myTree.setModel(new DefaultTreeModel(new ExtensionCheckedTreeNode(null, myState, this)));
-    TreeUtil.expandAll(myTree);
-  }
+    @Override
+    public void moduleStateChanged() {
+        mySplitter.setSecondComponent(null);
+        myTree.setModel(new DefaultTreeModel(new ExtensionCheckedTreeNode(null, myState, this)));
+        TreeUtil.expandAll(myTree);
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  protected JComponent createComponentImpl(@Nonnull Disposable parentUIDisposable) {
-    JPanel rootPane = new JPanel(new BorderLayout());
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    protected JComponent createComponentImpl(@Nonnull Disposable parentUIDisposable) {
+        JPanel rootPane = new JPanel(new BorderLayout());
 
-    mySplitter = new OnePixelSplitter();
+        mySplitter = new OnePixelSplitter();
 
-    myTree = new CheckboxTreeNoPolicy(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, this)) {
-      @Override
-      protected void adjustParentsAndChildren(CheckedTreeNode node, boolean checked) {
-        if (!checked) {
-          changeNodeState(node, false);
-          checkOrUncheckChildren(node, false);
+        myTree = new CheckboxTreeNoPolicy(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, this)) {
+            @Override
+            protected void adjustParentsAndChildren(CheckedTreeNode node, boolean checked) {
+                if (!checked) {
+                    changeNodeState(node, false);
+                    checkOrUncheckChildren(node, false);
+                }
+                else {
+                    // we need collect parents, and enable it in right order
+                    // A
+                    // - B
+                    // -- C
+                    // when we enable C, ill be calls like A -> B -> C
+                    List<CheckedTreeNode> parents = new ArrayList<>();
+                    TreeNode parent = node.getParent();
+                    while (parent != null) {
+                        if (parent instanceof CheckedTreeNode) {
+                            parents.add((CheckedTreeNode)parent);
+                        }
+                        parent = parent.getParent();
+                    }
+
+                    Collections.reverse(parents);
+                    for (CheckedTreeNode checkedTreeNode : parents) {
+                        checkNode(checkedTreeNode, true);
+                    }
+                    changeNodeState(node, true);
+                }
+                repaint();
+            }
+        };
+
+        myTree.setRootVisible(false);
+        myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        myTree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            @RequiredUIAccess
+            public void valueChanged(final TreeSelectionEvent e) {
+                final List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
+                updateSecondComponent(ContainerUtil.<MutableModuleExtension>getFirstItem(selected));
+            }
+        });
+        TreeUtil.expandAll(myTree);
+
+        mySplitter.setFirstComponent(myTree);
+
+        rootPane.add(ScrollPaneFactory.createScrollPane(mySplitter, true), BorderLayout.CENTER);
+
+        return rootPane;
+    }
+
+    @Nullable
+    @RequiredUIAccess
+    @SuppressWarnings("deprecation")
+    private JComponent createConfigurationPanel(final @Nonnull MutableModuleExtension extension) {
+        myConfigurablePanelExtension = extension;
+        @RequiredUIAccess Runnable updateOnCheck = () -> extensionChanged(extension);
+
+        Disposable uiDisposable = Disposable.newDisposable("module extension: " + extension.getId());
+
+        JComponent result = null;
+
+        if (extension instanceof SwingMutableModuleExtension) {
+            result = ((SwingMutableModuleExtension)extension).createConfigurablePanel(uiDisposable, updateOnCheck);
         }
         else {
-          // we need collect parents, and enable it in right order
-          // A
-          // - B
-          // -- C
-          // when we enable C, ill be calls like A -> B -> C
-          List<CheckedTreeNode> parents = new ArrayList<>();
-          TreeNode parent = node.getParent();
-          while (parent != null) {
-            if (parent instanceof CheckedTreeNode) {
-              parents.add((CheckedTreeNode)parent);
+            Component component = extension.createConfigurationComponent(uiDisposable, updateOnCheck);
+
+            if (component != null) {
+                if (component instanceof Layout) {
+                    component.removeBorders();
+
+                    component.addBorders(BorderStyle.EMPTY, null, 5);
+                }
+
+                result = (JComponent)TargetAWT.to(component);
             }
-            parent = parent.getParent();
-          }
-
-          Collections.reverse(parents);
-          for (CheckedTreeNode checkedTreeNode : parents) {
-            checkNode(checkedTreeNode, true);
-          }
-          changeNodeState(node, true);
-        }
-        repaint();
-      }
-    };
-
-    myTree.setRootVisible(false);
-    myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-    myTree.addTreeSelectionListener(new TreeSelectionListener() {
-      @Override
-      @RequiredUIAccess
-      public void valueChanged(final TreeSelectionEvent e) {
-        final List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
-        updateSecondComponent(ContainerUtil.<MutableModuleExtension>getFirstItem(selected));
-      }
-    });
-    TreeUtil.expandAll(myTree);
-
-    mySplitter.setFirstComponent(myTree);
-
-    rootPane.add(ScrollPaneFactory.createScrollPane(mySplitter, true), BorderLayout.CENTER);
-
-    return rootPane;
-  }
-
-  @Nullable
-  @RequiredUIAccess
-  @SuppressWarnings("deprecation")
-  private JComponent createConfigurationPanel(final @Nonnull MutableModuleExtension extension) {
-    myConfigurablePanelExtension = extension;
-    @RequiredUIAccess Runnable updateOnCheck = () -> extensionChanged(extension);
-
-    Disposable uiDisposable = Disposable.newDisposable("module extension: " + extension.getId());
-
-    JComponent result = null;
-
-    if (extension instanceof SwingMutableModuleExtension) {
-      result = ((SwingMutableModuleExtension)extension).createConfigurablePanel(uiDisposable, updateOnCheck);
-    }
-    else {
-      Component component = extension.createConfigurationComponent(uiDisposable, updateOnCheck);
-
-      if (component != null) {
-        if (component instanceof Layout) {
-          component.removeBorders();
-
-          component.addBorders(BorderStyle.EMPTY, null, 5);
         }
 
-        result = (JComponent)TargetAWT.to(component);
-      }
+        if (result != null) {
+            myExtensionDisposables.put(result, uiDisposable);
+        }
+
+        return result;
     }
 
-    if (result != null) {
-      myExtensionDisposables.put(result, uiDisposable);
-    }
+    @RequiredUIAccess
+    private void updateSecondComponent(@Nullable MutableModuleExtension extension) {
+        JComponent oldComponent;
+        if (extension == null || !extension.isEnabled()) {
+            oldComponent = mySplitter.replaceSecondComponent(null);
+        }
+        else {
+            oldComponent = mySplitter.replaceSecondComponent(createConfigurationPanel(extension));
+        }
 
-    return result;
-  }
-
-  @RequiredUIAccess
-  private void updateSecondComponent(@Nullable MutableModuleExtension extension) {
-    JComponent oldComponent;
-    if (extension == null || !extension.isEnabled()) {
-      oldComponent = mySplitter.replaceSecondComponent(null);
-    }
-    else {
-      oldComponent = mySplitter.replaceSecondComponent(createConfigurationPanel(extension));
-    }
-
-    if (oldComponent != null) {
-      Disposable disposable = myExtensionDisposables.remove(oldComponent);
-      if (disposable != null) {
-        Disposer.dispose(disposable);
-      }
-    }
-  }
-
-  @RequiredUIAccess
-  public void extensionChanged(MutableModuleExtension extension) {
-    final JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
-    if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
-      updateSecondComponent(!extension.isEnabled() ? null : extension);
-    }
-
-    if (extension instanceof ModuleExtensionWithSdk) {
-      // we using module layer, dont use modifiable model - it ill proxy, and methods 'addModuleExtensionSdkEntry' && 'removeOrderEntry'
-      // ill call this method again
-      ModifiableModuleRootLayer moduleRootLayer = (ModifiableModuleRootLayer)((ModuleExtensionBase) extension).getModuleRootLayer();
-
-      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(extension);
-      if (!extension.isEnabled() && sdkOrderEntry != null) {
-        moduleRootLayer.removeOrderEntry(sdkOrderEntry);
-      }
-
-      if (extension.isEnabled()) {
-        final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
-        if (!sdkExtension.getInheritableSdk().isNull()) {
-          if (sdkOrderEntry == null) {
-            moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
-          }
-          else {
-            final ModuleExtensionWithSdk<?> moduleExtension = sdkOrderEntry.getModuleExtension();
-            if (moduleExtension != null && !Comparing.equal(sdkExtension.getInheritableSdk(), moduleExtension.getInheritableSdk())) {
-              moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
+        if (oldComponent != null) {
+            Disposable disposable = myExtensionDisposables.remove(oldComponent);
+            if (disposable != null) {
+                Disposer.dispose(disposable);
             }
-          }
         }
-        else if (sdkOrderEntry != null) {
-          moduleRootLayer.removeOrderEntry(sdkOrderEntry);
-        }
-      }
     }
 
-    for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
-      final Module module = extension.getModule();
-      if (supportProvider.isSupported(extension)) {
-        PsiPackageManager.getInstance(module.getProject()).dropCache(extension.getClass());
-      }
+    @RequiredUIAccess
+    public void extensionChanged(MutableModuleExtension extension) {
+        final JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
+        if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
+            updateSecondComponent(!extension.isEnabled() ? null : extension);
+        }
+
+        if (extension instanceof ModuleExtensionWithSdk) {
+            // we using module layer, dont use modifiable model - it ill proxy, and methods 'addModuleExtensionSdkEntry' && 'removeOrderEntry'
+            // ill call this method again
+            ModifiableModuleRootLayer moduleRootLayer = (ModifiableModuleRootLayer)((ModuleExtensionBase)extension).getModuleRootLayer();
+
+            final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(extension);
+            if (!extension.isEnabled() && sdkOrderEntry != null) {
+                moduleRootLayer.removeOrderEntry(sdkOrderEntry);
+            }
+
+            if (extension.isEnabled()) {
+                final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
+                if (!sdkExtension.getInheritableSdk().isNull()) {
+                    if (sdkOrderEntry == null) {
+                        moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
+                    }
+                    else {
+                        final ModuleExtensionWithSdk<?> moduleExtension = sdkOrderEntry.getModuleExtension();
+                        if (moduleExtension != null
+                            && !Comparing.equal(sdkExtension.getInheritableSdk(), moduleExtension.getInheritableSdk())) {
+                            moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
+                        }
+                    }
+                }
+                else if (sdkOrderEntry != null) {
+                    moduleRootLayer.removeOrderEntry(sdkOrderEntry);
+                }
+            }
+        }
+
+        for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
+            final Module module = extension.getModule();
+            if (supportProvider.isSupported(extension)) {
+                PsiPackageManager.getInstance(module.getProject()).dropCache(extension.getClass());
+            }
+        }
+
+        myClasspathEditor.moduleStateChanged();
+        myContentEntriesEditor.moduleStateChanged();
+        myCompilerOutputEditor.moduleStateChanged();
     }
 
-    myClasspathEditor.moduleStateChanged();
-    myContentEntriesEditor.moduleStateChanged();
-    myCompilerOutputEditor.moduleStateChanged();
-  }
+    @Override
+    public void saveData() {
+    }
 
-  @Override
-  public void saveData() {
-
-  }
-
-  @Nls
-  @Override
-  public String getDisplayName() {
-    return "Extensions";
-  }
+    @Nls
+    @Override
+    public String getDisplayName() {
+        return "Extensions";
+    }
 }
