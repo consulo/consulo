@@ -18,6 +18,7 @@ package consulo.language.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
+import consulo.component.extension.ExtensionPoint;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
@@ -27,11 +28,9 @@ import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
 
-import java.util.List;
-
 /**
  * @author VISTALL
- * @since 27.04.2015
+ * @since 2015-04-27
  */
 public class PsiPackageSupportProviders {
     @RequiredReadAction
@@ -40,17 +39,16 @@ public class PsiPackageSupportProviders {
             project,
             () -> {
                 boolean result = false;
-                List<PsiPackageSupportProvider> extensions = PsiPackageSupportProvider.EP_NAME.getExtensionList(project.getApplication());
+                ExtensionPoint<PsiPackageSupportProvider> extensionPoint =
+                    project.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
                 ModuleManager moduleManager = ModuleManager.getInstance(project);
                 loop:
                 for (Module module : moduleManager.getModules()) {
                     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
                     for (ModuleExtension moduleExtension : rootManager.getExtensions()) {
-                        for (PsiPackageSupportProvider extension : extensions) {
-                            if (extension.isSupported(moduleExtension)) {
-                                result = true;
-                                break loop;
-                            }
+                        if (extensionPoint.anyMatchSafe(extension -> extension.isSupported(moduleExtension))) {
+                            result = true;
+                            break loop;
                         }
                     }
                 }

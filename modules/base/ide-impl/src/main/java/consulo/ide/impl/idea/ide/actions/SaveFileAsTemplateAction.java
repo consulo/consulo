@@ -39,14 +39,11 @@ public class SaveFileAsTemplateAction extends AnAction {
         AllFileTemplatesConfigurable fileTemplateOptions = new AllFileTemplatesConfigurable(project);
         ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(project, fileTemplateOptions);
         PsiFile psiFile = e.getData(PsiFile.KEY);
-        for (SaveFileAsTemplateHandler handler : SaveFileAsTemplateHandler.EP_NAME.getExtensionList()) {
-            String textFromHandler = handler.getTemplateText(psiFile, fileText, nameWithoutExtension);
-            if (textFromHandler != null) {
-                fileText = textFromHandler;
-                break;
-            }
-        }
-        fileTemplateOptions.createNewTemplate(nameWithoutExtension, extension, fileText);
+        String textFromHandler = project.getApplication().getExtensionPoint(SaveFileAsTemplateHandler.class).safeStream()
+            .mapNonnull(handler -> handler.getTemplateText(psiFile, fileText, nameWithoutExtension))
+            .findFirst()
+            .orElse(fileText);
+        fileTemplateOptions.createNewTemplate(nameWithoutExtension, extension, textFromHandler);
         dialog.show();
     }
 

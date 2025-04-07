@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.application.Application;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
@@ -11,8 +11,6 @@ import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SEResultsEqualityProvider {
-    ExtensionPointName<SEResultsEqualityProvider> EP_NAME = ExtensionPointName.create(SEResultsEqualityProvider.class);
-
     enum SEEqualElementsActionType {
         DO_NOTHING,
         SKIP,
@@ -27,7 +25,7 @@ public interface SEResultsEqualityProvider {
 
     @Nonnull
     static List<SEResultsEqualityProvider> getProviders() {
-        return EP_NAME.getExtensionList();
+        return Application.get().getExtensionPoint(SEResultsEqualityProvider.class).getExtensionList();
     }
 
     @Nonnull

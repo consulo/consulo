@@ -257,13 +257,11 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
     @Nonnull
     private static PsiElement[] getAnonymousClasses(@Nonnull PsiElement element) {
-        for (AnonymousElementProvider provider : AnonymousElementProvider.EP_NAME.getExtensionList()) {
-            PsiElement[] elements = provider.getAnonymousElements(element);
-            if (elements.length > 0) {
-                return elements;
-            }
-        }
-        return PsiElement.EMPTY_ARRAY;
+        return element.getApplication().getExtensionPoint(AnonymousElementProvider.class).safeStream()
+            .mapNonnull(provider -> provider.getAnonymousElements(element))
+            .filter(elements -> elements.length > 0)
+            .findFirst()
+            .orElse(PsiElement.EMPTY_ARRAY);
     }
 
     @Override

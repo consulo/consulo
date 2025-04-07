@@ -16,6 +16,7 @@
 
 package consulo.ide.action;
 
+import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.ide.IdeView;
 import consulo.language.psi.PsiDirectory;
@@ -34,8 +35,6 @@ import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-
-import java.util.List;
 
 /**
  * @author peter
@@ -69,19 +68,19 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
 
     @Override
     @SuppressWarnings("unchecked")
-    protected boolean isAvailable(final DataContext dataContext) {
-        final Project project = dataContext.getData(Project.KEY);
-        final IdeView view = dataContext.getData(IdeView.KEY);
+    protected boolean isAvailable(DataContext dataContext) {
+        Project project = dataContext.getData(Project.KEY);
+        IdeView view = dataContext.getData(IdeView.KEY);
         if (project == null || view == null || view.getDirectories().length == 0) {
             return false;
         }
 
-        final Module module = dataContext.getData(Module.KEY);
+        Module module = dataContext.getData(Module.KEY);
         if (module == null) {
             return false;
         }
 
-        final Class moduleExtensionClass = getModuleExtensionClass();
+        Class moduleExtensionClass = getModuleExtensionClass();
         if (moduleExtensionClass != null && ModuleUtilCore.getExtension(module, moduleExtensionClass) == null) {
             return false;
         }
@@ -90,17 +89,12 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
             return true;
         }
 
-        List<PsiPackageSupportProvider> extensions = PsiPackageSupportProvider.EP_NAME.getExtensionList();
+        ExtensionPoint<PsiPackageSupportProvider> extensionPoint =
+            project.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
 
         ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
         for (PsiDirectory dir : view.getDirectories()) {
-            boolean accepted = false;
-            for (PsiPackageSupportProvider provider : extensions) {
-                if (provider.acceptVirtualFile(module, dir.getVirtualFile())) {
-                    accepted = true;
-                    break;
-                }
-            }
+            boolean accepted = extensionPoint.anyMatchSafe(provider -> provider.acceptVirtualFile(module, dir.getVirtualFile()));
 
             if (accepted && projectFileIndex.isInSourceContent(dir.getVirtualFile()) && checkPackageExists(dir)) {
                 return true;
@@ -138,7 +132,7 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
     }
 
     protected String removeExtension(String templateName, String className) {
-        final String extension = StringUtil.getShortName(templateName);
+        String extension = StringUtil.getShortName(templateName);
         if (StringUtil.isNotEmpty(extension)) {
             className = StringUtil.trimEnd(className, "." + extension);
         }
@@ -146,5 +140,5 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
     }
 
     @Nullable
-    protected abstract T doCreate(final PsiDirectory dir, final String className, String templateName) throws IncorrectOperationException;
+    protected abstract T doCreate(PsiDirectory dir, String className, String templateName) throws IncorrectOperationException;
 }

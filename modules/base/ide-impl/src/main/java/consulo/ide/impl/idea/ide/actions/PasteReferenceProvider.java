@@ -19,6 +19,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CustomPasteProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,18 +39,15 @@ public class PasteReferenceProvider implements CustomPasteProvider {
 
         String fqn = getCopiedFqn(dataContext);
 
-        QualifiedNameProvider theProvider = null;
-        PsiElement element = null;
-        for (QualifiedNameProvider provider : QualifiedNameProvider.EP_NAME.getExtensionList()) {
-            element = provider.qualifiedNameToElement(fqn, project);
-            if (element != null) {
-                theProvider = provider;
-                break;
-            }
-        }
+        SimpleReference<QualifiedNameProvider> theProvider = SimpleReference.create();
+        PsiElement element = project.getApplication().getExtensionPoint(QualifiedNameProvider.class).safeStream()
+            .peek(theProvider::set)
+            .mapNonnull(provider -> provider.qualifiedNameToElement(fqn, project))
+            .findFirst()
+            .orElse(null);
 
-        if (theProvider != null) {
-            insert(fqn, element, editor, theProvider);
+        if (!theProvider.isNull()) {
+            insert(fqn, element, editor, theProvider.get());
         }
     }
 

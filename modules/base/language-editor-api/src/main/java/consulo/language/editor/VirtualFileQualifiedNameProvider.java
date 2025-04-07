@@ -17,7 +17,6 @@ package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -26,11 +25,9 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VirtualFileQualifiedNameProvider {
-  ExtensionPointName<VirtualFileQualifiedNameProvider> EP_NAME = ExtensionPointName.create(VirtualFileQualifiedNameProvider.class);
-
-  /**
-   * @return {@code virtualFile} fqn (relative path for example) or null if not handled by this provider
-   */
-  @Nullable
-  String getQualifiedName(@Nonnull Project project, @Nonnull VirtualFile virtualFile);
+    /**
+     * @return {@code virtualFile} fqn (relative path for example) or null if not handled by this provider
+     */
+    @Nullable
+    String getQualifiedName(@Nonnull Project project, @Nonnull VirtualFile virtualFile);
 }

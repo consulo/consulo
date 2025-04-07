@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import com.google.common.collect.Lists;
-import consulo.application.AllIcons;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
@@ -12,7 +12,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.application.util.function.Processor;
 import consulo.application.util.matcher.MatcherHolder;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
@@ -44,6 +43,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -115,6 +115,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     private final PersistentSearchEverywhereContributorFilter<String> myContributorsFilter;
     private ActionToolbar myToolbar;
 
+    @RequiredUIAccess
     public SearchEverywhereUI(Project project, List<? extends SearchEverywhereContributor<?>> contributors) {
         super(project);
         List<SEResultsEqualityProvider> equalityProviders = SEResultsEqualityProvider.getProviders();
@@ -206,6 +207,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         return mySelectedTab.everywhereAction != null && mySelectedTab.everywhereAction.canToggleEverywhere();
     }
 
+    @RequiredUIAccess
     public void switchToContributor(@Nonnull String contributorID) {
         SETab selectedTab = myTabs.stream()
             .filter(tab -> tab.getID().equals(contributorID))
@@ -216,12 +218,14 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         switchToTab(selectedTab);
     }
 
+    @RequiredUIAccess
     private void switchToNextTab() {
         int currentIndex = myTabs.indexOf(mySelectedTab);
         SETab nextTab = currentIndex == myTabs.size() - 1 ? myTabs.get(0) : myTabs.get(currentIndex + 1);
         switchToTab(nextTab);
     }
 
+    @RequiredUIAccess
     private void switchToPrevTab() {
         int currentIndex = myTabs.indexOf(mySelectedTab);
         SETab prevTab = currentIndex == 0 ? myTabs.get(myTabs.size() - 1) : myTabs.get(currentIndex - 1);
@@ -286,10 +290,12 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
         if (PsiElement.KEY_OF_ARRAY == dataId) {
             List<PsiElement> elements = indicesStream.mapToObj(i -> {
-                SearchEverywhereContributor<Object> contributor = myListModel.getContributorForIndex(i);
-                Object item = myListModel.getElementAt(i);
-                return (PsiElement)contributor.getDataForItem(item, PsiElement.KEY);
-            }).filter(Objects::nonNull).collect(Collectors.toList());
+                    SearchEverywhereContributor<Object> contributor = myListModel.getContributorForIndex(i);
+                    Object item = myListModel.getElementAt(i);
+                    return (PsiElement)contributor.getDataForItem(item, PsiElement.KEY);
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
             return PsiUtilCore.toPsiElementArray(elements);
         }
 
@@ -374,8 +380,8 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     @Override
     protected TextBoxWithExtensions createSearchField() {
         TextBoxWithExtensions field = super.createSearchField();
-        field.setExtensions(new TextBoxWithExtensions.Extension(true, AllIcons.Actions.Search, null));
-        field.addUserDataProvider(PlatformDataKeys.PREDEFINED_TEXT, () -> field.getValue());
+        field.setExtensions(new TextBoxWithExtensions.Extension(true, PlatformIconGroup.actionsSearch(), null));
+        field.addUserDataProvider(PlatformDataKeys.PREDEFINED_TEXT, field::getValue);
         return field;
     }
 
@@ -385,8 +391,9 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         ScrollingUtil.installMoveDownAction(myResultsList, (JComponent)TargetAWT.to(getSearchField()));
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredUIAccess
     protected JPanel createTopLeftPanel() {
         JPanel contributorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         contributorsPanel.setBorder(JBUI.Borders.empty(0, 12, 0, 0));
@@ -396,11 +403,13 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         contributorsPanel.add(allTab);
         myTabs.add(allTab);
 
-        myShownContributors.stream().filter(SearchEverywhereContributor::isShownInSeparateTab).forEach(contributor -> {
-            SETab tab = new SETab(contributor);
-            contributorsPanel.add(tab);
-            myTabs.add(tab);
-        });
+        myShownContributors.stream()
+            .filter(SearchEverywhereContributor::isShownInSeparateTab)
+            .forEach(contributor -> {
+                SETab tab = new SETab(contributor);
+                contributorsPanel.add(tab);
+                myTabs.add(tab);
+            });
 
         return contributorsPanel;
     }
@@ -870,6 +879,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         mySearchProgressIndicator = mySearcher.findMoreItems(found, getSearchPattern(), contributor, limit);
     }
 
+    @RequiredUIAccess
     private void stopSearching() {
         if (mySearchProgressIndicator != null && !mySearchProgressIndicator.isCanceled()) {
             mySearchProgressIndicator.cancel();
@@ -879,6 +889,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         }
     }
 
+    @RequiredUIAccess
     private void closePopup() {
         ActionMenuUtil.showDescriptionInStatusBar(true, myResultsList, null);
         stopSearching();
@@ -1288,7 +1299,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             super(
                 IdeLocalize.showInFindWindowButtonName(),
                 IdeLocalize.showInFindWindowButtonDescription(),
-                AllIcons.General.Pin_tab
+                PlatformIconGroup.generalPin_tab()
             );
         }
 
@@ -1310,14 +1321,14 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
                 .collect(Collectors.joining(", "));
 
             UsageViewPresentation presentation = new UsageViewPresentation();
-            String tabCaptionText = IdeLocalize.searcheverywhereFoundMatchesTitle(searchText, contributorsString).get();
-            presentation.setCodeUsagesString(tabCaptionText);
+            LocalizeValue tabCaptionText = IdeLocalize.searcheverywhereFoundMatchesTitle(searchText, contributorsString);
+            presentation.setCodeUsagesString(tabCaptionText.get());
             presentation.setUsagesInGeneratedCodeString(
                 IdeLocalize.searcheverywhereFoundMatchesGeneratedCodeTitle(searchText, contributorsString).get()
             );
             presentation.setTargetsNodeText(IdeBundle.message("searcheverywhere.found.targets.title", searchText, contributorsString));
-            presentation.setTabName(tabCaptionText);
-            presentation.setTabText(tabCaptionText);
+            presentation.setTabName(tabCaptionText.get());
+            presentation.setTabText(tabCaptionText.get());
 
             Collection<Usage> usages = new LinkedHashSet<>();
             Collection<PsiElement> targets = new LinkedHashSet<>();
@@ -1392,11 +1403,13 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
                     }
 
                     @Override
+                    @RequiredUIAccess
                     public void onCancel() {
                         progressIndicator.cancel();
                     }
 
                     @Override
+                    @RequiredUIAccess
                     public void onSuccess() {
                         showInFindWindow(targets, usages, presentation);
                     }
@@ -1435,6 +1448,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             );
         }
 
+        @RequiredReadAction
         private void showInFindWindow(
             Collection<? extends PsiElement> targets,
             Collection<Usage> usages,
@@ -1448,12 +1462,13 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         }
 
         @Override
+        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             SearchEverywhereContributor<?> contributor = mySelectedTab == null ? null : mySelectedTab.contributor;
             e.getPresentation().setEnabled(contributor == null || contributor.showInFindResults());
             e.getPresentation().setIcon(
                 ToolWindowManagerEx.getInstanceEx(myProject)
-                    .getLocationIcon(ToolWindowId.FIND, AllIcons.General.Pin_tab)
+                    .getLocationIcon(ToolWindowId.FIND, PlatformIconGroup.generalPin_tab())
             );
         }
     }
@@ -1510,6 +1525,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
     private class CompleteCommandAction extends DumbAwareAction {
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             if (completeCommand()) {
                 //FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(null).addInputEvent(e);
@@ -1590,6 +1606,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         }
 
         @Override
+        @RequiredUIAccess
         public void searchFinished(@Nonnull Map<SearchEverywhereContributor<?>, Boolean> hasMoreContributors) {
             if (myResultsList.isEmpty() || myListModel.isResultsExpired()) {
                 if (myEverywhereAutoSet && !isEverywhere() && canToggleEverywhere() && !getSearchPattern().isEmpty()) {

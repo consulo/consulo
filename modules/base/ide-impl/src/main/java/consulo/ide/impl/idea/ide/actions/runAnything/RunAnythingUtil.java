@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -99,7 +100,7 @@ public class RunAnythingUtil {
             LOG.info("RunAnything: module hasn't been found, command will be executed in context of 'null' module.");
         }
 
-        for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensionList()) {
+        return Application.get().getExtensionPoint(RunAnythingProvider.class).anyMatchSafe(provider -> {
             Object value = provider.findMatchingValue(dataContext, pattern);
             if (value != null) {
                 //noinspection unchecked
@@ -108,8 +109,8 @@ public class RunAnythingUtil {
                 commands.add(pattern);
                 return true;
             }
-        }
-        return false;
+            return false;
+        });
     }
 
     @Nullable

@@ -2,6 +2,8 @@
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.matcher.Matcher;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingChooseContextAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
@@ -9,16 +11,13 @@ import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingHelpItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
-import consulo.dataContext.DataContext;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.matcher.Matcher;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,7 +27,7 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
     @Nonnull
     @Override
     public Collection<V> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-        return ContainerUtil.emptyList();
+        return Collections.emptyList();
     }
 
     @Override
@@ -105,7 +104,7 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
     /**
      * Null means no help command
      *
-     * @return
+     * @return Help command.
      */
     @Nullable
     public String getHelpCommand() {

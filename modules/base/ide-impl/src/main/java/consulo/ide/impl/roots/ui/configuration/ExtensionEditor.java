@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.roots.ui.configuration;
 
+import consulo.application.Application;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
@@ -30,7 +31,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleExtension;
@@ -62,11 +62,9 @@ import java.util.*;
 
 /**
  * @author VISTALL
- * @since 10:33/19.05.13
+ * @since 2013-05-19
  */
 public class ExtensionEditor extends ModuleElementsEditor {
-    private static final Logger LOG = Logger.getInstance(ExtensionEditor.class);
-
     private final ModuleConfigurationState myState;
     private final CompilerOutputsEditor myCompilerOutputEditor;
     private final ClasspathEditor myClasspathEditor;
@@ -151,8 +149,8 @@ public class ExtensionEditor extends ModuleElementsEditor {
         myTree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             @RequiredUIAccess
-            public void valueChanged(final TreeSelectionEvent e) {
-                final List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
+            public void valueChanged(TreeSelectionEvent e) {
+                List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
                 updateSecondComponent(ContainerUtil.<MutableModuleExtension>getFirstItem(selected));
             }
         });
@@ -168,7 +166,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     @Nullable
     @RequiredUIAccess
     @SuppressWarnings("deprecation")
-    private JComponent createConfigurationPanel(final @Nonnull MutableModuleExtension extension) {
+    private JComponent createConfigurationPanel(@Nonnull MutableModuleExtension extension) {
         myConfigurablePanelExtension = extension;
         @RequiredUIAccess Runnable updateOnCheck = () -> extensionChanged(extension);
 
@@ -220,7 +218,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
     @RequiredUIAccess
     public void extensionChanged(MutableModuleExtension extension) {
-        final JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
+        JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
         if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
             updateSecondComponent(!extension.isEnabled() ? null : extension);
         }
@@ -230,19 +228,19 @@ public class ExtensionEditor extends ModuleElementsEditor {
             // ill call this method again
             ModifiableModuleRootLayer moduleRootLayer = (ModifiableModuleRootLayer)((ModuleExtensionBase)extension).getModuleRootLayer();
 
-            final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(extension);
+            ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(extension);
             if (!extension.isEnabled() && sdkOrderEntry != null) {
                 moduleRootLayer.removeOrderEntry(sdkOrderEntry);
             }
 
             if (extension.isEnabled()) {
-                final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
+                ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
                 if (!sdkExtension.getInheritableSdk().isNull()) {
                     if (sdkOrderEntry == null) {
                         moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
                     }
                     else {
-                        final ModuleExtensionWithSdk<?> moduleExtension = sdkOrderEntry.getModuleExtension();
+                        ModuleExtensionWithSdk<?> moduleExtension = sdkOrderEntry.getModuleExtension();
                         if (moduleExtension != null
                             && !Comparing.equal(sdkExtension.getInheritableSdk(), moduleExtension.getInheritableSdk())) {
                             moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
@@ -255,12 +253,12 @@ public class ExtensionEditor extends ModuleElementsEditor {
             }
         }
 
-        for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
-            final Module module = extension.getModule();
+        myProject.getExtensionPoint(PsiPackageSupportProvider.class).forEachExtensionSafe(supportProvider -> {
+            Module module = extension.getModule();
             if (supportProvider.isSupported(extension)) {
                 PsiPackageManager.getInstance(module.getProject()).dropCache(extension.getClass());
             }
-        }
+        });
 
         myClasspathEditor.moduleStateChanged();
         myContentEntriesEditor.moduleStateChanged();

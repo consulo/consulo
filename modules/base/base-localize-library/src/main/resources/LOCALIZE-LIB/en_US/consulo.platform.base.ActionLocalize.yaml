@@ -14,6 +14,16 @@ action.ContextHelp.text:
   text: Conte_xt Help
 action.ContextHelp.description:
   text: Show context help
+action.ShowFilterAction.text:
+  text: Filter
+action.ShowFilterAction.description:
+  text: Show filters popup
+action.ShowFilterAction.popup.button.all:
+  text: All
+action.ShowFilterAction.popup.button.invert:
+  text: Invert
+action.ShowFilterAction.popup.button.none:
+  text: None
 action.ToggleReadOnlyAttribute.files:
   text: Make {1,choice,1#File|2#Files} {0,choice,0#Read-Only|1#Writable}
 action.RunConfiguration.text:

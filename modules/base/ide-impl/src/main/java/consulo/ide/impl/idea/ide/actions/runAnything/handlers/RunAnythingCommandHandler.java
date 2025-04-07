@@ -3,11 +3,10 @@ package consulo.ide.impl.idea.ide.actions.runAnything.handlers;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.application.Application;
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.ide.impl.idea.execution.process.KillableProcessHandlerImpl;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -16,8 +15,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RunAnythingCommandHandler {
-    public static final ExtensionPointName<RunAnythingCommandHandler> EP_NAME = ExtensionPointName.create(RunAnythingCommandHandler.class);
-
     public abstract boolean isMatched(@Nonnull String commandLine);
 
     /**
@@ -43,6 +40,7 @@ public abstract class RunAnythingCommandHandler {
 
     @Nullable
     public static RunAnythingCommandHandler getMatchedHandler(@Nonnull String commandLine) {
-        return EP_NAME.getExtensionList().stream().filter(handler -> handler.isMatched(commandLine)).findFirst().orElse(null);
+        return Application.get().getExtensionPoint(RunAnythingCommandHandler.class)
+            .findFirstSafe(handler -> handler.isMatched(commandLine));
     }
 }

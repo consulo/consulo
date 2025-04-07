@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
-import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
@@ -10,6 +9,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
 import consulo.ide.impl.idea.ide.actions.runAnything.commands.RunAnythingCommandCustomizer;
 import consulo.ide.impl.idea.ide.actions.runAnything.execution.RunAnythingRunProfile;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.cmd.ParametersListUtil;
@@ -85,6 +85,6 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
     @Nullable
     @Override
     public Image getIcon(@Nonnull String value) {
-        return AllIcons.Actions.Run_anything;
+        return PlatformIconGroup.actionsRun_anything();
     }
 }

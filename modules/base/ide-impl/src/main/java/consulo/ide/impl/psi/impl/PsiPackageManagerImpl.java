@@ -16,6 +16,7 @@
 package consulo.ide.impl.psi.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.component.extension.ExtensionPoint;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.module.content.DirectoryIndex;
 import consulo.util.lang.ObjectUtil;
@@ -52,7 +53,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author VISTALL
- * @since 8:05/20.05.13
+ * @since 2013-05-20
  */
 @Singleton
 @ServiceImpl
@@ -114,7 +115,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     public PsiPackage findPackage(@Nonnull String qualifiedName, @Nonnull Class<? extends ModuleExtension> extensionClass) {
         ConcurrentMap<String, Object> map = myPackageCache.get(extensionClass);
         if (map != null) {
-            final Object value = map.get(qualifiedName);
+            Object value = map.get(qualifiedName);
             // if we processed - but not found package
             if (value == ObjectUtil.NULL) {
                 return null;
@@ -160,24 +161,23 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         @Nonnull Class<? extends ModuleExtension> extensionClass,
         @Nonnull String qualifiedName
     ) {
-        final Module moduleForFile = ModuleUtil.findModuleForFile(virtualFile, myProject);
+        Module moduleForFile = ModuleUtil.findModuleForFile(virtualFile, myProject);
         if (moduleForFile == null) {
             return null;
         }
 
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForFile);
 
-        final ModuleExtension extension = moduleRootManager.getExtension(extensionClass);
+        ModuleExtension extension = moduleRootManager.getExtension(extensionClass);
         if (extension == null) {
             return null;
         }
 
-        for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
-            if (p.isSupported(extension) && p.acceptVirtualFile(moduleForFile, virtualFile)) {
-                return p.createPackage(myPsiManager, this, extensionClass, qualifiedName);
-            }
-        }
-        return null;
+        return myProject.getExtensionPoint(PsiPackageSupportProvider.class).safeStream()
+            .filter(p -> p.isSupported(extension) && p.acceptVirtualFile(moduleForFile, virtualFile))
+            .map(p -> p.createPackage(myPsiManager, this, extensionClass, qualifiedName))
+            .findFirst()
+            .orElse(null);
     }
 
     private PsiPackage createPackageFromLibrary(
@@ -187,16 +187,18 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     ) {
         if (myProjectFileIndex.isInLibraryClasses(virtualFile)) {
             List<OrderEntry> orderEntriesForFile = myProjectFileIndex.getOrderEntriesForFile(virtualFile);
+            ExtensionPoint<PsiPackageSupportProvider> extensionPoint = myProject.getExtensionPoint(PsiPackageSupportProvider.class);
             for (OrderEntry orderEntry : orderEntriesForFile) {
                 Module ownerModule = orderEntry.getOwnerModule();
                 ModuleExtension extension = ModuleUtilCore.getExtension(ownerModule, extensionClass);
-                if (extension != null) {
-                    for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
-                        if (p.isSupported(extension)) {
-                            return p.createPackage(myPsiManager, this, extensionClass, qualifiedName);
-                        }
-                    }
+                if (extension == null) {
+                    continue;
                 }
+                extensionPoint.safeStream()
+                    .filter(p -> p.isSupported(extension))
+                    .map(p -> p.createPackage(myPsiManager, this, extensionClass, qualifiedName))
+                    .findFirst()
+                    .orElse(null);
             }
         }
         return null;
@@ -229,7 +231,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
         Module module = ModuleUtilCore.findModuleForFile(directory, myProject);
         if (module != null) {
-            final PsiPackage aPackage = findForModule(packageName, module);
+            PsiPackage aPackage = findForModule(packageName, module);
             if (aPackage != null) {
                 return aPackage;
             }
@@ -249,7 +251,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     private PsiPackage findForModule(String packageName, Module module) {
         ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         for (ModuleExtension<?> moduleExtension : rootManager.getExtensions()) {
-            final PsiPackage aPackage = findPackage(packageName, moduleExtension.getClass());
+            PsiPackage aPackage = findPackage(packageName, moduleExtension.getClass());
             if (aPackage != null) {
                 return aPackage;
             }
@@ -293,14 +295,14 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     @Override
     @RequiredReadAction
     public boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName) {
-        List<PsiPackageSupportProvider> extensionList = PsiPackageSupportProvider.EP_NAME.getExtensionList();
+        ExtensionPoint<PsiPackageSupportProvider> extensionPoint = myProject.getExtensionPoint(PsiPackageSupportProvider.class);
 
         ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         for (ModuleExtension<?> moduleExtension : rootManager.getExtensions()) {
-            for (PsiPackageSupportProvider provider : extensionList) {
-                if (provider.isSupported(moduleExtension)) {
-                    return provider.isValidPackageName(module, packageName);
-                }
+            boolean matched = extensionPoint
+                .anyMatchSafe(provider -> provider.isSupported(moduleExtension) && provider.isValidPackageName(module, packageName));
+            if (matched) {
+                return true;
             }
         }
         return true;

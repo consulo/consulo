@@ -110,6 +110,25 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         }
     }
 
+    default ExtensionStream<E> safeStream() {
+        List<E> extensionList = getExtensionList();
+        return extensionList.isEmpty() ? ExtensionStream.empty() : ExtensionStream.of(extensionList.stream());
+    }
+
+    default boolean anyMatchSafe(@Nonnull Predicate<E> predicate) {
+        for (E extension : getExtensionList()) {
+            try {
+                if (predicate.test(extension)) {
+                    return true;
+                }
+            }
+            catch (Throwable e) {
+                checkException(e, extension);
+            }
+        }
+        return false;
+    }
+
     @Nullable
     default E findFirstSafe(@Nonnull Predicate<E> predicate) {
         for (E extension : getExtensionList()) {
@@ -119,10 +138,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
                 }
             }
             catch (Throwable e) {
-                if (e instanceof ControlFlowException) {
-                    throw ControlFlowException.rethrow(e);
-                }
-                PluginExceptionUtil.logPluginError(Logger.getInstance(ExtensionPoint.class), e.getMessage(), e, extension.getClass());
+                checkException(e, extension);
             }
         }
         return null;
@@ -138,10 +154,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
                 }
             }
             catch (Throwable e) {
-                if (e instanceof ControlFlowException) {
-                    throw ControlFlowException.rethrow(e);
-                }
-                PluginExceptionUtil.logPluginError(Logger.getInstance(ExtensionPoint.class), e.getMessage(), e, extension.getClass());
+                checkException(e, extension);
             }
         }
         return null;
@@ -153,10 +166,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
                 consumer.accept(value);
             }
             catch (Throwable e) {
-                if (e instanceof ControlFlowException) {
-                    throw ControlFlowException.rethrow(e);
-                }
-                PluginExceptionUtil.logPluginError(Logger.getInstance(ExtensionPoint.class), e.getMessage(), e, value.getClass());
+                checkException(e, value);
             }
         });
     }
@@ -164,5 +174,13 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     @Override
     default Iterator<E> iterator() {
         return getExtensionList().iterator();
+    }
+
+    private static void checkException(Throwable e, Object value) {
+        if (e instanceof ControlFlowException) {
+            throw ControlFlowException.rethrow(e);
+        }
+        Logger logger = Logger.getInstance(ExtensionPoint.class);
+        PluginExceptionUtil.logPluginError(logger, e.getMessage(), e, value != null ? value.getClass() : Void.TYPE);
     }
 }
