@@ -24,6 +24,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -32,14 +33,14 @@ import javax.swing.*;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PsiViewerExtension {
-  ExtensionPointName<PsiViewerExtension> EP_NAME = ExtensionPointName.create(PsiViewerExtension.class);
+    ExtensionPointName<PsiViewerExtension> EP_NAME = ExtensionPointName.create(PsiViewerExtension.class);
 
-  String getName();
+    String getName();
 
-  Icon getIcon();
+    Icon getIcon();
 
-  PsiElement createElement(Project project, String text);
+    PsiElement createElement(Project project, String text);
 
-  @Nonnull
-  FileType getDefaultFileType();
+    @Nonnull
+    FileType getDefaultFileType();
 }

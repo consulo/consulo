@@ -14,7 +14,8 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SearchableOptionContributor {
-  public static final ExtensionPointName<SearchableOptionContributor> EP_NAME = ExtensionPointName.create(SearchableOptionContributor.class);
+    public static final ExtensionPointName<SearchableOptionContributor> EP_NAME =
+        ExtensionPointName.create(SearchableOptionContributor.class);
 
-  public abstract void processOptions(@Nonnull SearchableOptionProcessor processor);
+    public abstract void processOptions(@Nonnull SearchableOptionProcessor processor);
 }

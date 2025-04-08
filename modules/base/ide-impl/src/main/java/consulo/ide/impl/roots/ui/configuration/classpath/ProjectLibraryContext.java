@@ -31,6 +31,7 @@ import consulo.module.content.layer.ModifiableModuleRootLayer;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,73 +41,80 @@ import java.util.List;
  * @since 28.09.14
  */
 public class ProjectLibraryContext extends AddModuleDependencyContext<List<Library>> {
-  private List<Library> myItems;
+    private List<Library> myItems;
 
-  public ProjectLibraryContext(final ClasspathPanel classpathPanel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
-    super(classpathPanel, modulesConfigurator, librariesConfigurator);
+    public ProjectLibraryContext(
+        final ClasspathPanel classpathPanel,
+        ModulesConfigurator modulesConfigurator,
+        LibrariesConfigurator librariesConfigurator
+    ) {
+        super(classpathPanel, modulesConfigurator, librariesConfigurator);
 
-    LibraryTableModifiableModelProvider projectLibrariesProvider = librariesConfigurator.getProjectLibrariesProvider();
-    Library[] libraries = projectLibrariesProvider.getModifiableModel().getLibraries();
-    final Condition<Library> condition = LibraryEditingUtil.getNotAddedLibrariesCondition(myClasspathPanel.getRootModel());
+        LibraryTableModifiableModelProvider projectLibrariesProvider = librariesConfigurator.getProjectLibrariesProvider();
+        Library[] libraries = projectLibrariesProvider.getModifiableModel().getLibraries();
+        final Condition<Library> condition = LibraryEditingUtil.getNotAddedLibrariesCondition(myClasspathPanel.getRootModel());
 
-    myItems = ContainerUtil.filter(libraries, condition);
-    ContainerUtil.sort(myItems, (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), false));
-  }
+        myItems = ContainerUtil.filter(libraries, condition);
+        ContainerUtil.sort(myItems, (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), false));
+    }
 
-  @Nonnull
-  @Override
-  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull List<Library> value) {
-    List<OrderEntry> entries = new ArrayList<>();
+    @Nonnull
+    @Override
+    public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull List<Library> value) {
+        List<OrderEntry> entries = new ArrayList<>();
 
-    for (Library item : value) {
-      final OrderEntry[] orderEntries = layer.getOrderEntries();
-      for (OrderEntry orderEntry : orderEntries) {
-        if (orderEntry instanceof LibraryOrderEntry) {
-          final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)orderEntry;
-          if (item.equals(libraryOrderEntry.getLibrary())) {
-            continue; // already added
-          }
+        for (Library item : value) {
+            final OrderEntry[] orderEntries = layer.getOrderEntries();
+            for (OrderEntry orderEntry : orderEntries) {
+                if (orderEntry instanceof LibraryOrderEntry) {
+                    final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)orderEntry;
+                    if (item.equals(libraryOrderEntry.getLibrary())) {
+                        continue; // already added
+                    }
 
-          String name = item.getName();
-          if (name != null && name.equals(libraryOrderEntry.getLibraryName())) {
-            if (orderEntry.isValid()) {
-              Messages.showErrorDialog(ProjectBundle.message("classpath.message.library.already.added", item.getName()), ProjectBundle.message("classpath.title.adding.dependency"));
-              return Collections.emptyList();
+                    String name = item.getName();
+                    if (name != null && name.equals(libraryOrderEntry.getLibraryName())) {
+                        if (orderEntry.isValid()) {
+                            Messages.showErrorDialog(
+                                ProjectBundle.message("classpath.message.library.already.added", item.getName()),
+                                ProjectBundle.message("classpath.title.adding.dependency")
+                            );
+                            return Collections.emptyList();
+                        }
+                        else {
+                            layer.removeOrderEntry(orderEntry);
+                        }
+                    }
+                }
             }
-            else {
-              layer.removeOrderEntry(orderEntry);
+            final LibraryOrderEntry orderEntry = layer.addLibraryEntry(item);
+            DependencyScope defaultScope = getDefaultScope(item);
+            if (defaultScope != null) {
+                orderEntry.setScope(defaultScope);
             }
-          }
+            entries.add(orderEntry);
         }
-      }
-      final LibraryOrderEntry orderEntry = layer.addLibraryEntry(item);
-      DependencyScope defaultScope = getDefaultScope(item);
-      if (defaultScope != null) {
-        orderEntry.setScope(defaultScope);
-      }
-      entries.add(orderEntry);
+
+        return entries;
     }
 
-    return entries;
-  }
-
-  @Nullable
-  private static DependencyScope getDefaultScope(Library item) {
-    for (LibraryDependencyScopeSuggester suggester : LibraryDependencyScopeSuggester.EP_NAME.getExtensionList()) {
-      DependencyScope scope = suggester.getDefaultDependencyScope(item);
-      if (scope != null) {
-        return scope;
-      }
+    @Nullable
+    private static DependencyScope getDefaultScope(Library item) {
+        for (LibraryDependencyScopeSuggester suggester : LibraryDependencyScopeSuggester.EP_NAME.getExtensionList()) {
+            DependencyScope scope = suggester.getDefaultDependencyScope(item);
+            if (scope != null) {
+                return scope;
+            }
+        }
+        return null;
     }
-    return null;
-  }
 
-  @Override
-  public boolean isEmpty() {
-    return myItems.isEmpty();
-  }
+    @Override
+    public boolean isEmpty() {
+        return myItems.isEmpty();
+    }
 
-  public List<Library> getItems() {
-    return myItems;
-  }
+    public List<Library> getItems() {
+        return myItems;
+    }
 }

@@ -27,21 +27,21 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class TodoIndexPatternProvider implements IndexPatternProvider {
-  private final TodoConfiguration myConfiguration;
+    private final TodoConfiguration myConfiguration;
 
-  @Nonnull
-  public static TodoIndexPatternProvider getInstance() {
-    return EP_NAME.findExtensionOrFail(TodoIndexPatternProvider.class);
-  }
+    @Nonnull
+    public static TodoIndexPatternProvider getInstance() {
+        return EP_NAME.findExtensionOrFail(TodoIndexPatternProvider.class);
+    }
 
-  @Inject
-  public TodoIndexPatternProvider(TodoConfiguration configuration) {
-    myConfiguration = configuration;
-  }
+    @Inject
+    public TodoIndexPatternProvider(TodoConfiguration configuration) {
+        myConfiguration = configuration;
+    }
 
-  @Override
-  @Nonnull
-  public IndexPattern[] getIndexPatterns() {
-    return myConfiguration.getIndexPatterns();
-  }
+    @Override
+    @Nonnull
+    public IndexPattern[] getIndexPatterns() {
+        return myConfiguration.getIndexPatterns();
+    }
 }

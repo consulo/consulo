@@ -69,14 +69,15 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
         List<Runnable> delayedTasks = new ArrayList<>();
         for (VFileEvent event : events) {
             if (event instanceof VFileCreateEvent) {
-                boolean isDirectory = ((VFileCreateEvent) event).isDirectory();
+                boolean isDirectory = ((VFileCreateEvent)event).isDirectory();
                 List<FilePropertyPusher> pushers = isDirectory ? FilePropertyPusher.EP_NAME.getExtensionList() : myFilePushers.getValue();
 
                 if (!event.isFromRefresh()) {
                     ContainerUtil.addIfNotNull(syncTasks, createRecursivePushTask(event, pushers));
                 }
                 else {
-                    boolean isProjectOrWorkspaceFile = VfsUtilCore.findContainingDirectory(((VFileCreateEvent) event).getParent(), Project.DIRECTORY_STORE_FOLDER) != null;
+                    boolean isProjectOrWorkspaceFile =
+                        VfsUtilCore.findContainingDirectory(((VFileCreateEvent)event).getParent(), Project.DIRECTORY_STORE_FOLDER) != null;
                     if (!isProjectOrWorkspaceFile) {
                         ContainerUtil.addIfNotNull(delayedTasks, createRecursivePushTask(event, pushers));
                     }
@@ -95,7 +96,8 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
                 ContainerUtil.addIfNotNull(syncTasks, createRecursivePushTask(event, pushers));
             }
         }
-        boolean pushingSomethingSynchronously = !syncTasks.isEmpty() && syncTasks.size() < FileBasedIndexProjectHandler.ourMinFilesToStartDumMode;
+        boolean pushingSomethingSynchronously =
+            !syncTasks.isEmpty() && syncTasks.size() < FileBasedIndexProjectHandler.ourMinFilesToStartDumMode;
         if (pushingSomethingSynchronously) {
             // push synchronously to avoid entering dumb mode in the middle of a meaningful write action
             // when only a few files are created/moved
@@ -115,7 +117,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
     private static VirtualFile getFile(@Nonnull VFileEvent event) {
         VirtualFile file = event.getFile();
         if (event instanceof VFileCopyEvent) {
-            file = ((VFileCopyEvent) event).getNewParent().findChild(((VFileCopyEvent) event).getNewChildName());
+            file = ((VFileCopyEvent)event).getNewParent().findChild(((VFileCopyEvent)event).getNewChildName());
         }
         return file;
     }
@@ -333,7 +335,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
             catch (ExecutionException ex) {
                 Throwable cause = ex.getCause();
                 if (cause instanceof ProcessCanceledException) {
-                    throw (ProcessCanceledException) cause;
+                    throw (ProcessCanceledException)cause;
                 }
 
                 LOG.error(ex);
@@ -344,7 +346,11 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
         }
     }
 
-    private void applyPushersToFile(final VirtualFile fileOrDir, @Nonnull List<? extends FilePropertyPusher> pushers, final Object[] moduleValues) {
+    private void applyPushersToFile(
+        final VirtualFile fileOrDir,
+        @Nonnull List<? extends FilePropertyPusher> pushers,
+        final Object[] moduleValues
+    ) {
         ApplicationManager.getApplication().runReadAction(() -> {
             ProgressManager.checkCanceled();
             if (!fileOrDir.isValid()) {
@@ -354,14 +360,21 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
         });
     }
 
-    private void doApplyPushersToFile(@Nonnull VirtualFile fileOrDir, @Nonnull List<? extends FilePropertyPusher> pushers, Object[] moduleValues) {
+    private void doApplyPushersToFile(
+        @Nonnull VirtualFile fileOrDir,
+        @Nonnull List<? extends FilePropertyPusher> pushers,
+        Object[] moduleValues
+    ) {
         FilePropertyPusher<Object> pusher = null;
         try {
             final boolean isDir = fileOrDir.isDirectory();
             for (int i = 0; i < pushers.size(); i++) {
                 //noinspection unchecked
-                pusher = (FilePropertyPusher<Object>) pushers.get(i);
-                if (isDir ? !pusher.acceptsDirectory(fileOrDir, myProject) : pusher.pushDirectoriesOnly() || !pusher.acceptsFile(fileOrDir, myProject)) {
+                pusher = (FilePropertyPusher<Object>)pushers.get(i);
+                if (isDir ? !pusher.acceptsDirectory(fileOrDir, myProject) : pusher.pushDirectoriesOnly() || !pusher.acceptsFile(
+                    fileOrDir,
+                    myProject
+                )) {
                     continue;
                 }
                 Object value = moduleValues != null ? moduleValues[i] : null;
@@ -382,7 +395,12 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
         updateValue(myProject, fileOrDir, value, pusher);
     }
 
-    public static <T> void updateValue(final Project project, final VirtualFile fileOrDir, final T value, final FilePropertyPusher<T> pusher) {
+    public static <T> void updateValue(
+        final Project project,
+        final VirtualFile fileOrDir,
+        final T value,
+        final FilePropertyPusher<T> pusher
+    ) {
         final T oldValue = fileOrDir.getUserData(pusher.getFileDataKey());
         if (value != oldValue) {
             fileOrDir.putUserData(pusher.getFileDataKey(), value);
@@ -405,7 +423,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
     }
 
     private static void reloadPsi(final VirtualFile file, final Project project) {
-        final FileManagerImpl fileManager = (FileManagerImpl) PsiManagerEx.getInstanceEx(project).getFileManager();
+        final FileManagerImpl fileManager = (FileManagerImpl)PsiManagerEx.getInstanceEx(project).getFileManager();
         if (fileManager.findCachedViewProvider(file) != null) {
             Runnable runnable = () -> WriteAction.run(() -> fileManager.forceReload(file));
             if (ApplicationManager.getApplication().isDispatchThread()) {

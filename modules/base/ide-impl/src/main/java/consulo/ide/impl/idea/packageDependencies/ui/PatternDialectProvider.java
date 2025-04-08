@@ -33,51 +33,58 @@ import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 import java.util.Set;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PatternDialectProvider {
-  private static final ExtensionPointCacheKey<PatternDialectProvider, Map<String, PatternDialectProvider>> CACHE_KEY =
-    ExtensionPointCacheKey.groupBy("PatternDialectProvider", PatternDialectProvider::getId);
-  public static final ExtensionPointName<PatternDialectProvider> EP_NAME = ExtensionPointName.create(PatternDialectProvider.class);
+    private static final ExtensionPointCacheKey<PatternDialectProvider, Map<String, PatternDialectProvider>> CACHE_KEY =
+        ExtensionPointCacheKey.groupBy("PatternDialectProvider", PatternDialectProvider::getId);
+    public static final ExtensionPointName<PatternDialectProvider> EP_NAME = ExtensionPointName.create(PatternDialectProvider.class);
 
-  @Nullable
-  public static PatternDialectProvider findById(String id) {
-    Map<String, PatternDialectProvider> map =
-      Application.get().getExtensionPoint(PatternDialectProvider.class).getOrBuildCache(CACHE_KEY);
-    return map.get(id);
-  }
+    @Nullable
+    public static PatternDialectProvider findById(String id) {
+        Map<String, PatternDialectProvider> map =
+            Application.get().getExtensionPoint(PatternDialectProvider.class).getOrBuildCache(CACHE_KEY);
+        return map.get(id);
+    }
 
-  public abstract TreeModel createTreeModel(Project project, Marker marker);
+    public abstract TreeModel createTreeModel(Project project, Marker marker);
 
-  public abstract TreeModel createTreeModel(Project project,
-                                            Set<PsiFile> deps,
-                                            Marker marker,
-                                            final DependenciesPanel.DependencyPanelSettings settings);
+    public abstract TreeModel createTreeModel(
+        Project project,
+        Set<PsiFile> deps,
+        Marker marker,
+        final DependenciesPanel.DependencyPanelSettings settings
+    );
 
-  public abstract String getDisplayName();
+    public abstract String getDisplayName();
 
-  @Nonnull
-  public abstract String getId();
+    @Nonnull
+    public abstract String getId();
 
-  public abstract AnAction[] createActions(Project project, final Runnable update);
+    public abstract AnAction[] createActions(Project project, final Runnable update);
 
-  @Nullable
-  public abstract PackageSet createPackageSet(final PackageDependenciesNode node, final boolean recursively);
+    @Nullable
+    public abstract PackageSet createPackageSet(final PackageDependenciesNode node, final boolean recursively);
 
-  @Nullable
-  protected static String getModulePattern(final PackageDependenciesNode node) {
-    final ModuleNode moduleParent = getModuleParent(node);
-    return moduleParent != null ? moduleParent.getModuleName() : null;
-  }
+    @Nullable
+    protected static String getModulePattern(final PackageDependenciesNode node) {
+        final ModuleNode moduleParent = getModuleParent(node);
+        return moduleParent != null ? moduleParent.getModuleName() : null;
+    }
 
-  @Nullable
-  protected static ModuleNode getModuleParent(PackageDependenciesNode node) {
-    if (node instanceof ModuleNode) return (ModuleNode)node;
-    if (node == null || node instanceof RootNode) return null;
-    return getModuleParent((PackageDependenciesNode)node.getParent());
-  }
+    @Nullable
+    protected static ModuleNode getModuleParent(PackageDependenciesNode node) {
+        if (node instanceof ModuleNode) {
+            return (ModuleNode)node;
+        }
+        if (node == null || node instanceof RootNode) {
+            return null;
+        }
+        return getModuleParent((PackageDependenciesNode)node.getParent());
+    }
 
-  public abstract Image getIcon();
+    public abstract Image getIcon();
 }

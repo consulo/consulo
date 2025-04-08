@@ -11,8 +11,8 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IndexImporterFactory {
-  ExtensionPointName<IndexImporterFactory> EP_NAME = ExtensionPointName.create(IndexImporterFactory.class);
+    ExtensionPointName<IndexImporterFactory> EP_NAME = ExtensionPointName.create(IndexImporterFactory.class);
 
-  @Nullable
-  <Key, Value, Input> SnapshotInputMappingIndex<Key, Value, Input> createImporter(@Nonnull IndexExtension<Key, Value, Input> extension);
+    @Nullable
+    <Key, Value, Input> SnapshotInputMappingIndex<Key, Value, Input> createImporter(@Nonnull IndexExtension<Key, Value, Input> extension);
 }

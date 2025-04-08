@@ -24,21 +24,21 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class ProjectAbstractTreeStructureBase extends AbstractTreeStructureBase {
-  private List<TreeStructureProvider> myProviders;
+    private List<TreeStructureProvider> myProviders;
 
-  protected ProjectAbstractTreeStructureBase(Project project) {
-    super(project);
-  }
-
-  @Override
-  public List<TreeStructureProvider> getProviders() {
-    if (myProviders == null) {
-      myProviders = TreeStructureProvider.EP_NAME.getExtensionList(myProject);
+    protected ProjectAbstractTreeStructureBase(Project project) {
+        super(project);
     }
-    return myProviders;
-  }
 
-  public void setProviders(TreeStructureProvider... treeStructureProviders) {
-    myProviders = treeStructureProviders == null ? null : Arrays.asList(treeStructureProviders);
-  }
+    @Override
+    public List<TreeStructureProvider> getProviders() {
+        if (myProviders == null) {
+            myProviders = TreeStructureProvider.EP_NAME.getExtensionList(myProject);
+        }
+        return myProviders;
+    }
+
+    public void setProviders(TreeStructureProvider... treeStructureProviders) {
+        myProviders = treeStructureProviders == null ? null : Arrays.asList(treeStructureProviders);
+    }
 }

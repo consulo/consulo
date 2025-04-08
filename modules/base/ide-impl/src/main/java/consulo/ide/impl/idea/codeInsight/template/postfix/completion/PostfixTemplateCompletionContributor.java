@@ -18,20 +18,23 @@ import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "postfix", order = "last")
 public class PostfixTemplateCompletionContributor extends CompletionContributor {
-  public PostfixTemplateCompletionContributor() {
-    extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new PostfixTemplatesCompletionProvider());
-  }
+    public PostfixTemplateCompletionContributor() {
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new PostfixTemplatesCompletionProvider());
+    }
 
-  @Nullable
-  public static PostfixLiveTemplate getPostfixLiveTemplate(@Nonnull PsiFile file, @Nonnull Editor editor) {
-    PostfixLiveTemplate postfixLiveTemplate = CustomLiveTemplate.EP_NAME.findExtension(PostfixLiveTemplate.class);
-    TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
-    return postfixLiveTemplate != null && TemplateManagerImpl.isApplicable(postfixLiveTemplate, templateActionContext) ? postfixLiveTemplate : null;
-  }
+    @Nullable
+    public static PostfixLiveTemplate getPostfixLiveTemplate(@Nonnull PsiFile file, @Nonnull Editor editor) {
+        PostfixLiveTemplate postfixLiveTemplate = CustomLiveTemplate.EP_NAME.findExtension(PostfixLiveTemplate.class);
+        TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
+        return postfixLiveTemplate != null
+            && TemplateManagerImpl.isApplicable(postfixLiveTemplate, templateActionContext)
+            ? postfixLiveTemplate
+            : null;
+    }
 
-  @Nonnull
-  @Override
-  public Language getLanguage() {
-    return Language.ANY;
-  }
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return Language.ANY;
+    }
 }

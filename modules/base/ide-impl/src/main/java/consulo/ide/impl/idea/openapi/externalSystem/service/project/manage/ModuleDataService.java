@@ -68,7 +68,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
      * We can't modify project modules (add/remove) until it's initialised, so, we delay that activity. Current constant
      * holds number of milliseconds to wait between 'after project initialisation' processing attempts.
      */
-    private static final int PROJECT_INITIALISATION_DELAY_MS = (int) TimeUnit.SECONDS.toMillis(1);
+    private static final int PROJECT_INITIALISATION_DELAY_MS = (int)TimeUnit.SECONDS.toMillis(1);
 
     private Future<?> myFuture = CompletableFuture.completedFuture(null);
 
@@ -79,7 +79,11 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     }
 
     @Override
-    public void importData(@Nonnull final Collection<DataNode<ModuleData>> toImport, @Nonnull final Project project, final boolean synchronous) {
+    public void importData(
+        @Nonnull final Collection<DataNode<ModuleData>> toImport,
+        @Nonnull final Project project,
+        final boolean synchronous
+    ) {
         if (toImport.isEmpty()) {
             return;
         }
@@ -157,7 +161,10 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
     @Nonnull
     @RequiredUIAccess
-    private Collection<DataNode<ModuleData>> filterExistingModules(@Nonnull Collection<DataNode<ModuleData>> modules, @Nonnull Project project) {
+    private Collection<DataNode<ModuleData>> filterExistingModules(
+        @Nonnull Collection<DataNode<ModuleData>> modules,
+        @Nonnull Project project
+    ) {
         Collection<DataNode<ModuleData>> result = ContainerUtilRt.newArrayList();
         for (DataNode<ModuleData> node : modules) {
             ModuleData moduleData = node.getData();
@@ -246,7 +253,11 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
             myFuture.cancel(false);
             if (!myProject.isInitialized()) {
                 myFuture = AppExecutorUtil.getAppScheduledExecutorService()
-                    .schedule(new ImportModulesTask(myProject, myModules, mySynchronous), PROJECT_INITIALISATION_DELAY_MS, TimeUnit.MILLISECONDS);
+                    .schedule(
+                        new ImportModulesTask(myProject, myModules, mySynchronous),
+                        PROJECT_INITIALISATION_DELAY_MS,
+                        TimeUnit.MILLISECONDS
+                    );
                 return;
             }
 
@@ -255,9 +266,11 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     }
 
     @RequiredUIAccess
-    private static void setModuleOptions(@Nonnull final Module module,
-                                         @Nullable final ModifiableRootModel originalModel,
-                                         @Nonnull final DataNode<ModuleData> moduleDataNode) {
+    private static void setModuleOptions(
+        @Nonnull final Module module,
+        @Nullable final ModifiableRootModel originalModel,
+        @Nonnull final DataNode<ModuleData> moduleDataNode
+    ) {
 
         ModuleData moduleData = moduleDataNode.getData();
         module.putUserData(MODULE_DATA_KEY, moduleData);

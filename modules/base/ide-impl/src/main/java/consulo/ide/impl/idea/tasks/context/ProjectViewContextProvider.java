@@ -27,6 +27,7 @@ import jakarta.inject.Inject;
 import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.List;
 
@@ -35,52 +36,51 @@ import java.util.List;
  */
 @ExtensionImpl
 public class ProjectViewContextProvider extends WorkingContextProvider {
+    private final List<AbstractProjectViewPane> myPanes;
 
-  private final List<AbstractProjectViewPane> myPanes;
-
-  @Inject
-  public ProjectViewContextProvider(Project project) {
-    myPanes = AbstractProjectViewPane.EP_NAME.getExtensionList(project);
-  }
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return "projectView";
-  }
-
-  @Nonnull
-  @Override
-  public String getDescription() {
-    return "Project view state";
-  }
-
-  public void saveContext(Element toElement) throws WriteExternalException {
-    for (AbstractProjectViewPane pane : myPanes) {
-      Element paneElement = new Element(pane.getId());
-      pane.writeExternal(paneElement);
-      toElement.addContent(paneElement);
+    @Inject
+    public ProjectViewContextProvider(Project project) {
+        myPanes = AbstractProjectViewPane.EP_NAME.getExtensionList(project);
     }
-  }
 
-  public void loadContext(Element fromElement) throws InvalidDataException {
-    for (AbstractProjectViewPane pane : myPanes) {
-      Element paneElement = fromElement.getChild(pane.getId());
-      if (paneElement != null) {
-        pane.readExternal(paneElement);
-        if (pane.getTree() != null) {
-          pane.restoreExpandedPaths();
+    @Nonnull
+    @Override
+    public String getId() {
+        return "projectView";
+    }
+
+    @Nonnull
+    @Override
+    public String getDescription() {
+        return "Project view state";
+    }
+
+    public void saveContext(Element toElement) throws WriteExternalException {
+        for (AbstractProjectViewPane pane : myPanes) {
+            Element paneElement = new Element(pane.getId());
+            pane.writeExternal(paneElement);
+            toElement.addContent(paneElement);
         }
-      }
     }
-  }
 
-  public void clearContext() {
-    for (AbstractProjectViewPane pane : myPanes) {
-      JTree tree = pane.getTree();
-      if (tree != null) {
-        TreeUtil.collapseAll(tree, -1);
-      }
+    public void loadContext(Element fromElement) throws InvalidDataException {
+        for (AbstractProjectViewPane pane : myPanes) {
+            Element paneElement = fromElement.getChild(pane.getId());
+            if (paneElement != null) {
+                pane.readExternal(paneElement);
+                if (pane.getTree() != null) {
+                    pane.restoreExpandedPaths();
+                }
+            }
+        }
     }
-  }
+
+    public void clearContext() {
+        for (AbstractProjectViewPane pane : myPanes) {
+            JTree tree = pane.getTree();
+            if (tree != null) {
+                TreeUtil.collapseAll(tree, -1);
+            }
+        }
+    }
 }

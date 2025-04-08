@@ -33,23 +33,32 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 public class PatchWriter {
-  private PatchWriter() {
-  }
+    private PatchWriter() {
+    }
 
-  public static void writePatches(@Nonnull final Project project,
-                                  String fileName,
-                                  @Nullable String basePath,
-                                  List<FilePatch> patches,
-                                  CommitContext commitContext,
-                                  @Nonnull Charset charset) throws IOException {
-    Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), charset);
-    try {
-      final String lineSeparator = CodeStyleFacade.getInstance(project).getLineSeparator();
-      UnifiedDiffWriter
-              .write(project, basePath, patches, writer, lineSeparator, Extensions.getExtensions(PatchEP.EP_NAME, project), commitContext);
+    public static void writePatches(
+        @Nonnull final Project project,
+        String fileName,
+        @Nullable String basePath,
+        List<FilePatch> patches,
+        CommitContext commitContext,
+        @Nonnull Charset charset
+    ) throws IOException {
+        Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), charset);
+        try {
+            final String lineSeparator = CodeStyleFacade.getInstance(project).getLineSeparator();
+            UnifiedDiffWriter.write(
+                project,
+                basePath,
+                patches,
+                writer,
+                lineSeparator,
+                Extensions.getExtensions(PatchEP.EP_NAME, project),
+                commitContext
+            );
+        }
+        finally {
+            writer.close();
+        }
     }
-    finally {
-      writer.close();
-    }
-  }
 }

@@ -28,68 +28,68 @@ import java.util.List;
  */
 public class RefreshAllExternalProjectsAction extends AnAction implements DumbAware {
 
-  public RefreshAllExternalProjectsAction() {
-    getTemplatePresentation().setText(ExternalSystemBundle.message("action.refresh.all.projects.text", "external"));
-    getTemplatePresentation().setDescription(ExternalSystemBundle.message("action.refresh.all.projects.description", "external"));
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(Project.KEY);
-    if (project == null) {
-      e.getPresentation().setEnabled(false);
-      return;
+    public RefreshAllExternalProjectsAction() {
+        getTemplatePresentation().setText(ExternalSystemBundle.message("action.refresh.all.projects.text", "external"));
+        getTemplatePresentation().setDescription(ExternalSystemBundle.message("action.refresh.all.projects.description", "external"));
     }
 
-    final List<ProjectSystemId> systemIds = getSystemIds(e);
-    if (systemIds.isEmpty()) {
-      e.getPresentation().setEnabled(false);
-      return;
+    @Override
+    public void update(AnActionEvent e) {
+        final Project project = e.getDataContext().getData(Project.KEY);
+        if (project == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+
+        final List<ProjectSystemId> systemIds = getSystemIds(e);
+        if (systemIds.isEmpty()) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+
+        final String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getReadableName().get(), ",");
+        e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshAllProjectsText(name));
+        e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshAllProjectsDescription(name));
+
+        ExternalSystemProcessingManager processingManager = ServiceManager.getService(ExternalSystemProcessingManager.class);
+        e.getPresentation().setEnabled(!processingManager.hasTaskOfTypeInProgress(ExternalSystemTaskType.RESOLVE_PROJECT, project));
     }
 
-    final String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getReadableName().get(), ",");
-    e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshAllProjectsText(name));
-    e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshAllProjectsDescription(name));
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getDataContext().getData(Project.KEY);
+        if (project == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
 
-    ExternalSystemProcessingManager processingManager = ServiceManager.getService(ExternalSystemProcessingManager.class);
-    e.getPresentation().setEnabled(!processingManager.hasTaskOfTypeInProgress(ExternalSystemTaskType.RESOLVE_PROJECT, project));
-  }
+        final List<ProjectSystemId> systemIds = getSystemIds(e);
+        if (systemIds.isEmpty()) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
 
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(Project.KEY);
-    if (project == null) {
-      e.getPresentation().setEnabled(false);
-      return;
+        // We save all documents because there is a possible case that there is an external system config file changed inside the ide.
+        FileDocumentManager.getInstance().saveAllDocuments();
+
+        for (ProjectSystemId externalSystemId : systemIds) {
+            ExternalSystemUtil.refreshProjects(project, externalSystemId, true);
+        }
     }
 
-    final List<ProjectSystemId> systemIds = getSystemIds(e);
-    if (systemIds.isEmpty()) {
-      e.getPresentation().setEnabled(false);
-      return;
+    private static List<ProjectSystemId> getSystemIds(AnActionEvent e) {
+        final List<ProjectSystemId> systemIds = new ArrayList<>();
+
+        final ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
+        if (externalSystemId != null) {
+            systemIds.add(externalSystemId);
+        }
+        else {
+            for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
+                systemIds.add(manager.getSystemId());
+            }
+        }
+
+        return systemIds;
     }
-
-    // We save all documents because there is a possible case that there is an external system config file changed inside the ide.
-    FileDocumentManager.getInstance().saveAllDocuments();
-
-    for (ProjectSystemId externalSystemId : systemIds) {
-      ExternalSystemUtil.refreshProjects(project, externalSystemId, true);
-    }
-  }
-
-  private static List<ProjectSystemId> getSystemIds(AnActionEvent e) {
-    final List<ProjectSystemId> systemIds = new ArrayList<>();
-
-    final ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
-    if (externalSystemId != null) {
-      systemIds.add(externalSystemId);
-    }
-    else {
-      for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
-        systemIds.add(manager.getSystemId());
-      }
-    }
-
-    return systemIds;
-  }
 }

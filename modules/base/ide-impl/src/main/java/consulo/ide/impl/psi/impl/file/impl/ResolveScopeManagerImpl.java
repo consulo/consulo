@@ -46,184 +46,198 @@ import java.util.Map;
 @Singleton
 @ServiceImpl
 public class ResolveScopeManagerImpl extends ResolveScopeManager {
-  private final Project myProject;
-  private final ProjectRootManager myProjectRootManager;
-  private final PsiManager myManager;
+    private final Project myProject;
+    private final ProjectRootManager myProjectRootManager;
+    private final PsiManager myManager;
 
-  private final Map<VirtualFile, GlobalSearchScope> myDefaultResolveScopesCache;
+    private final Map<VirtualFile, GlobalSearchScope> myDefaultResolveScopesCache;
 
-  @Inject
-  public ResolveScopeManagerImpl(Project project, ProjectRootManager projectRootManager, PsiManager psiManager) {
-    myProject = project;
-    myProjectRootManager = projectRootManager;
-    myManager = psiManager;
+    @Inject
+    public ResolveScopeManagerImpl(Project project, ProjectRootManager projectRootManager, PsiManager psiManager) {
+        myProject = project;
+        myProjectRootManager = projectRootManager;
+        myManager = psiManager;
 
-    myDefaultResolveScopesCache = ConcurrentFactoryMap.createMap((key) -> {
-      GlobalSearchScope scope = null;
-      for (ResolveScopeProvider resolveScopeProvider : ResolveScopeProvider.EP_NAME.getExtensionList()) {
-        scope = resolveScopeProvider.getResolveScope(key, myProject);
-        if (scope != null) break;
-      }
-      if (scope == null) scope = getInherentResolveScope(key);
-      for (ResolveScopeEnlarger enlarger : ResolveScopeEnlarger.EP_NAME.getExtensionList()) {
-        final SearchScope extra = enlarger.getAdditionalResolveScope(key, myProject);
-        if (extra != null) {
-          scope = scope.union(extra);
+        myDefaultResolveScopesCache = ConcurrentFactoryMap.createMap((key) -> {
+            GlobalSearchScope scope = null;
+            for (ResolveScopeProvider resolveScopeProvider : ResolveScopeProvider.EP_NAME.getExtensionList()) {
+                scope = resolveScopeProvider.getResolveScope(key, myProject);
+                if (scope != null) {
+                    break;
+                }
+            }
+            if (scope == null) {
+                scope = getInherentResolveScope(key);
+            }
+            for (ResolveScopeEnlarger enlarger : ResolveScopeEnlarger.EP_NAME.getExtensionList()) {
+                final SearchScope extra = enlarger.getAdditionalResolveScope(key, myProject);
+                if (extra != null) {
+                    scope = scope.union(extra);
+                }
+            }
+
+            return scope;
+        });
+
+        ((PsiManagerEx)psiManager).registerRunnableToRunOnChange(myDefaultResolveScopesCache::clear);
+    }
+
+    @Nonnull
+    private GlobalSearchScope getInherentResolveScope(VirtualFile vFile) {
+        ProjectFileIndex projectFileIndex = myProjectRootManager.getFileIndex();
+        Module module = projectFileIndex.getModuleForFile(vFile);
+        if (module != null) {
+            boolean includeTests = TestSourcesFilter.isTestSources(vFile, myProject);
+            return GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, includeTests);
         }
-      }
+        else {
+            // resolve references in libraries in context of all modules which contain it
+            List<Module> modulesLibraryUsedIn = new ArrayList<>();
+            List<OrderEntry> orderEntries = projectFileIndex.getOrderEntriesForFile(vFile);
 
-      return scope;
-    });
+            LibraryOrderEntry lib = null;
+            for (OrderEntry entry : orderEntries) {
+                if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
+                    modulesLibraryUsedIn.add(entry.getOwnerModule());
+                }
+                else if (entry instanceof LibraryOrderEntry) {
+                    lib = (LibraryOrderEntry)entry;
+                    modulesLibraryUsedIn.add(entry.getOwnerModule());
+                }
+                else if (entry instanceof ModuleOrderEntry) {
+                    modulesLibraryUsedIn.add(entry.getOwnerModule());
+                }
+                else if (entry instanceof OrderEntryWithTracking) {
+                    modulesLibraryUsedIn.add(entry.getOwnerModule());
+                }
+            }
 
-    ((PsiManagerEx)psiManager).registerRunnableToRunOnChange(myDefaultResolveScopesCache::clear);
-  }
+            GlobalSearchScope allCandidates = LibraryScopeCache.getInstance(myProject).getScopeForLibraryUsedIn(modulesLibraryUsedIn);
+            if (lib != null) {
+                final LibraryRuntimeClasspathScope preferred = new LibraryRuntimeClasspathScope(myProject, lib);
+                // prefer current library
+                return new DelegatingGlobalSearchScope(allCandidates, preferred) {
+                    @Override
+                    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+                        boolean c1 = preferred.contains(file1);
+                        boolean c2 = preferred.contains(file2);
+                        if (c1 && !c2) {
+                            return 1;
+                        }
+                        if (c2 && !c1) {
+                            return -1;
+                        }
 
-  @Nonnull
-  private GlobalSearchScope getInherentResolveScope(VirtualFile vFile) {
-    ProjectFileIndex projectFileIndex = myProjectRootManager.getFileIndex();
-    Module module = projectFileIndex.getModuleForFile(vFile);
-    if (module != null) {
-      boolean includeTests = TestSourcesFilter.isTestSources(vFile, myProject);
-      return GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, includeTests);
-    }
-    else {
-      // resolve references in libraries in context of all modules which contain it
-      List<Module> modulesLibraryUsedIn = new ArrayList<>();
-      List<OrderEntry> orderEntries = projectFileIndex.getOrderEntriesForFile(vFile);
-
-      LibraryOrderEntry lib = null;
-      for (OrderEntry entry : orderEntries) {
-        if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
-          modulesLibraryUsedIn.add(entry.getOwnerModule());
+                        return super.compare(file1, file2);
+                    }
+                };
+            }
+            return allCandidates;
         }
-        else if (entry instanceof LibraryOrderEntry) {
-          lib = (LibraryOrderEntry)entry;
-          modulesLibraryUsedIn.add(entry.getOwnerModule());
+    }
+
+    @Override
+    @Nonnull
+    public GlobalSearchScope getResolveScope(@Nonnull PsiElement element) {
+        ProgressIndicatorProvider.checkCanceled();
+
+        VirtualFile vFile;
+        final PsiFile contextFile;
+        if (element instanceof PsiDirectory) {
+            vFile = ((PsiDirectory)element).getVirtualFile();
+            contextFile = null;
         }
-        else if (entry instanceof ModuleOrderEntry) {
-          modulesLibraryUsedIn.add(entry.getOwnerModule());
+        else {
+            final PsiFile containingFile = element.getContainingFile();
+            if (containingFile instanceof PsiCodeFragment) {
+                final GlobalSearchScope forcedScope = ((PsiCodeFragment)containingFile).getForcedResolveScope();
+                if (forcedScope != null) {
+                    return forcedScope;
+                }
+                final PsiElement context = containingFile.getContext();
+                if (context == null) {
+                    return GlobalSearchScope.allScope(myProject);
+                }
+                return getResolveScope(context);
+            }
+
+            contextFile = containingFile != null ? FileContextUtil.getContextFile(containingFile) : null;
+            if (contextFile == null) {
+                return GlobalSearchScope.allScope(myProject);
+            }
+            else if (contextFile instanceof FileResolveScopeProvider) {
+                return ((FileResolveScopeProvider)contextFile).getFileResolveScope();
+            }
+            vFile = contextFile.getOriginalFile().getVirtualFile();
         }
-        else if (entry instanceof OrderEntryWithTracking) {
-          modulesLibraryUsedIn.add(entry.getOwnerModule());
+        if (vFile == null || contextFile == null) {
+            return GlobalSearchScope.allScope(myProject);
         }
-      }
 
-      GlobalSearchScope allCandidates = LibraryScopeCache.getInstance(myProject).getScopeForLibraryUsedIn(modulesLibraryUsedIn);
-      if (lib != null) {
-        final LibraryRuntimeClasspathScope preferred = new LibraryRuntimeClasspathScope(myProject, lib);
-        // prefer current library
-        return new DelegatingGlobalSearchScope(allCandidates, preferred) {
-          @Override
-          public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
-            boolean c1 = preferred.contains(file1);
-            boolean c2 = preferred.contains(file2);
-            if (c1 && !c2) return 1;
-            if (c2 && !c1) return -1;
-
-            return super.compare(file1, file2);
-          }
-        };
-      }
-      return allCandidates;
+        return myDefaultResolveScopesCache.get(vFile);
     }
-  }
 
-  @Override
-  @Nonnull
-  public GlobalSearchScope getResolveScope(@Nonnull PsiElement element) {
-    ProgressIndicatorProvider.checkCanceled();
-
-    VirtualFile vFile;
-    final PsiFile contextFile;
-    if (element instanceof PsiDirectory) {
-      vFile = ((PsiDirectory)element).getVirtualFile();
-      contextFile = null;
+    @Nonnull
+    @RequiredReadAction
+    @Override
+    public GlobalSearchScope getDefaultResolveScope(final VirtualFile vFile) {
+        final PsiFile psiFile = myManager.findFile(vFile);
+        assert psiFile != null;
+        return myDefaultResolveScopesCache.get(vFile);
     }
-    else {
-      final PsiFile containingFile = element.getContainingFile();
-      if (containingFile instanceof PsiCodeFragment) {
-        final GlobalSearchScope forcedScope = ((PsiCodeFragment)containingFile).getForcedResolveScope();
-        if (forcedScope != null) {
-          return forcedScope;
+
+    @Override
+    @Nonnull
+    public GlobalSearchScope getUseScope(@Nonnull PsiElement element) {
+        Pair<GlobalSearchScope, VirtualFile> pair = getDefaultResultScopeInfo(element);
+        if (pair.getSecond() == null) {
+            return pair.getFirst();
         }
-        final PsiElement context = containingFile.getContext();
-        if (context == null) {
-          return GlobalSearchScope.allScope(myProject);
+
+        GlobalSearchScope targetScope = pair.getFirst();
+        for (ResolveScopeEnlarger scopeEnlarger : ResolveScopeEnlarger.EP_NAME.getExtensionList()) {
+            SearchScope scope = scopeEnlarger.getAdditionalUseScope(pair.getSecond(), element.getProject());
+            if (scope != null) {
+                targetScope = targetScope.union(scope);
+            }
         }
-        return getResolveScope(context);
-      }
-
-      contextFile = containingFile != null ? FileContextUtil.getContextFile(containingFile) : null;
-      if (contextFile == null) {
-        return GlobalSearchScope.allScope(myProject);
-      }
-      else if (contextFile instanceof FileResolveScopeProvider) {
-        return ((FileResolveScopeProvider)contextFile).getFileResolveScope();
-      }
-      vFile = contextFile.getOriginalFile().getVirtualFile();
-    }
-    if (vFile == null || contextFile == null) {
-      return GlobalSearchScope.allScope(myProject);
+        return targetScope;
     }
 
-    return myDefaultResolveScopesCache.get(vFile);
-  }
+    @Nonnull
+    private Pair<GlobalSearchScope, VirtualFile> getDefaultResultScopeInfo(@Nonnull PsiElement element) {
+        VirtualFile vFile;
+        final GlobalSearchScope allScope = GlobalSearchScope.allScope(myManager.getProject());
+        if (element instanceof PsiDirectory) {
+            vFile = ((PsiDirectory)element).getVirtualFile();
+        }
+        else {
+            final PsiFile containingFile = element.getContainingFile();
+            if (containingFile == null) {
+                return Pair.create(allScope, null);
+            }
+            vFile = containingFile.getVirtualFile();
+        }
 
-  @Nonnull
-  @RequiredReadAction
-  @Override
-  public GlobalSearchScope getDefaultResolveScope(final VirtualFile vFile) {
-    final PsiFile psiFile = myManager.findFile(vFile);
-    assert psiFile != null;
-    return myDefaultResolveScopesCache.get(vFile);
-  }
+        if (vFile == null) {
+            return Pair.create(allScope, null);
+        }
+        ProjectFileIndex projectFileIndex = myProjectRootManager.getFileIndex();
+        Module module = projectFileIndex.getModuleForFile(vFile);
+        if (module != null) {
+            boolean isTest = TestSourcesFilter.isTestSources(vFile, element.getProject());
+            GlobalSearchScope scope =
+                isTest ? GlobalSearchScope.moduleTestsWithDependentsScope(module) : GlobalSearchScope.moduleWithDependentsScope(module);
+            return Pair.create(scope, vFile);
+        }
+        else {
+            final PsiFile f = element.getContainingFile();
+            final VirtualFile vf = f == null ? null : f.getVirtualFile();
 
-  @Override
-  @Nonnull
-  public GlobalSearchScope getUseScope(@Nonnull PsiElement element) {
-    Pair<GlobalSearchScope, VirtualFile> pair = getDefaultResultScopeInfo(element);
-    if(pair.getSecond() == null) {
-      return pair.getFirst();
+            GlobalSearchScope scope = f == null || vf == null || vf.isDirectory() || allScope.contains(vf)
+                ? allScope
+                : GlobalSearchScope.fileScope(f).uniteWith(allScope);
+            return Pair.create(scope, vf);
+        }
     }
-
-    GlobalSearchScope targetScope = pair.getFirst();
-    for (ResolveScopeEnlarger scopeEnlarger : ResolveScopeEnlarger.EP_NAME.getExtensionList()) {
-      SearchScope scope = scopeEnlarger.getAdditionalUseScope(pair.getSecond(), element.getProject());
-      if(scope != null) {
-        targetScope = targetScope.union(scope);
-      }
-    }
-    return targetScope;
-  }
-
-  @Nonnull
-  private Pair<GlobalSearchScope, VirtualFile> getDefaultResultScopeInfo(@Nonnull PsiElement element) {
-    VirtualFile vFile;
-    final GlobalSearchScope allScope = GlobalSearchScope.allScope(myManager.getProject());
-    if (element instanceof PsiDirectory) {
-      vFile = ((PsiDirectory)element).getVirtualFile();
-    }
-    else {
-      final PsiFile containingFile = element.getContainingFile();
-      if (containingFile == null) return Pair.create(allScope, null);
-      vFile = containingFile.getVirtualFile();
-    }
-
-    if (vFile == null) return Pair.create(allScope, null);
-    ProjectFileIndex projectFileIndex = myProjectRootManager.getFileIndex();
-    Module module = projectFileIndex.getModuleForFile(vFile);
-    if (module != null) {
-      boolean isTest = TestSourcesFilter.isTestSources(vFile, element.getProject());
-      GlobalSearchScope scope = isTest ? GlobalSearchScope.moduleTestsWithDependentsScope(module) : GlobalSearchScope.moduleWithDependentsScope(module);
-      return Pair.create(scope, vFile);
-    }
-    else {
-      final PsiFile f = element.getContainingFile();
-      final VirtualFile vf = f == null ? null : f.getVirtualFile();
-
-      GlobalSearchScope scope =
-              f == null || vf == null || vf.isDirectory() || allScope.contains(vf) ? allScope : GlobalSearchScope.fileScope(f).uniteWith(allScope);
-      return Pair.create(scope, vf);
-    }
-  }
 }

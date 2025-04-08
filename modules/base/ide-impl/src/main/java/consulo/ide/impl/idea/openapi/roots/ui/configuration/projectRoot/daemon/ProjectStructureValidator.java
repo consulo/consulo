@@ -28,6 +28,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEdi
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -35,68 +36,73 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ProjectStructureValidator {
+    private static final ExtensionPointName<ProjectStructureValidator> EP_NAME = ExtensionPointName.create(ProjectStructureValidator.class);
 
-  private static final ExtensionPointName<ProjectStructureValidator> EP_NAME = ExtensionPointName.create(ProjectStructureValidator.class);
-
-  public static List<ProjectStructureElementUsage> getUsagesInElement(final ProjectStructureElement element) {
-    for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
-      List<ProjectStructureElementUsage> usages = validator.getUsagesIn(element);
-      if (usages != null) {
-        return usages;
-      }
-    }
-    return element.getUsagesInElement();
-  }
-
-  public static void check(Project project, ProjectStructureElement element, ProjectStructureProblemsHolder problemsHolder) {
-    for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
-      if (validator.checkElement(element, problemsHolder)) {
-        return;
-      }
-    }
-    element.check(project, problemsHolder);
-  }
-
-  public static void showDialogAndAddLibraryToDependencies(final Library library, final Project project, boolean allowEmptySelection) {
-    for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
-      if (validator.addLibraryToDependencies(library, project, allowEmptySelection)) {
-        return;
-      }
+    public static List<ProjectStructureElementUsage> getUsagesInElement(final ProjectStructureElement element) {
+        for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
+            List<ProjectStructureElementUsage> usages = validator.getUsagesIn(element);
+            if (usages != null) {
+                return usages;
+            }
+        }
+        return element.getUsagesInElement();
     }
 
-    final List<Module> modules = LibraryEditingUtil.getSuitableModules(project, ((LibraryEx)library).getKind(), library);
-    if (modules.isEmpty()) return;
-    final ChooseModulesDialog dlg =
-            new ChooseModulesDialog(project, modules, ProjectBundle.message("choose.modules.dialog.title"), ProjectBundle.message("choose.modules.dialog.description", library.getName()));
-    dlg.show();
-    if (dlg.isOK()) {
-      final List<Module> chosenModules = dlg.getChosenElements();
-      for (Module module : chosenModules) {
-        ModuleStructureConfigurable.addLibraryOrderEntry(module, library);
-      }
+    public static void check(Project project, ProjectStructureElement element, ProjectStructureProblemsHolder problemsHolder) {
+        for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
+            if (validator.checkElement(element, problemsHolder)) {
+                return;
+            }
+        }
+        element.check(project, problemsHolder);
     }
-  }
 
-  /**
-   * @return <code>true</code> if handled
-   */
-  protected boolean addLibraryToDependencies(final Library library, final Project project, final boolean allowEmptySelection) {
-    return false;
-  }
+    public static void showDialogAndAddLibraryToDependencies(final Library library, final Project project, boolean allowEmptySelection) {
+        for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
+            if (validator.addLibraryToDependencies(library, project, allowEmptySelection)) {
+                return;
+            }
+        }
+
+        final List<Module> modules = LibraryEditingUtil.getSuitableModules(project, ((LibraryEx)library).getKind(), library);
+        if (modules.isEmpty()) {
+            return;
+        }
+        final ChooseModulesDialog dlg = new ChooseModulesDialog(
+            project,
+            modules,
+            ProjectBundle.message("choose.modules.dialog.title"),
+            ProjectBundle.message("choose.modules.dialog.description", library.getName())
+        );
+        dlg.show();
+        if (dlg.isOK()) {
+            final List<Module> chosenModules = dlg.getChosenElements();
+            for (Module module : chosenModules) {
+                ModuleStructureConfigurable.addLibraryOrderEntry(module, library);
+            }
+        }
+    }
+
+    /**
+     * @return <code>true</code> if handled
+     */
+    protected boolean addLibraryToDependencies(final Library library, final Project project, final boolean allowEmptySelection) {
+        return false;
+    }
 
 
-  /**
-   * @return <code>true</code> if it handled this element
-   */
-  protected boolean checkElement(ProjectStructureElement element, ProjectStructureProblemsHolder problemsHolder) {
-    return false;
-  }
+    /**
+     * @return <code>true</code> if it handled this element
+     */
+    protected boolean checkElement(ProjectStructureElement element, ProjectStructureProblemsHolder problemsHolder) {
+        return false;
+    }
 
-  /**
-   * @return list of usages or <code>null</code> when it does not handle such element
-   */
-  @Nullable
-  protected List<ProjectStructureElementUsage> getUsagesIn(final ProjectStructureElement element) {
-    return null;
-  }
+    /**
+     * @return list of usages or <code>null</code> when it does not handle such element
+     */
+    @Nullable
+    protected List<ProjectStructureElementUsage> getUsagesIn(final ProjectStructureElement element) {
+        return null;
+    }
 }

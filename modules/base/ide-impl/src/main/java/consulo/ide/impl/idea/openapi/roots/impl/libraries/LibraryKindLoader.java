@@ -28,9 +28,11 @@ import jakarta.inject.Singleton;
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class LibraryKindLoader {
-  public LibraryKindLoader() {
-    //todo[nik] this is temporary workaround for IDEA-98118: we need to initialize all library types to ensure that their kinds are created and registered in LibraryKind.ourAllKinds
-    //In order to properly fix the problem we should extract all UI-related methods from LibraryType to a separate class and move LibraryType to projectModel-impl module
-    LibraryType.EP_NAME.getExtensions();
-  }
+    public LibraryKindLoader() {
+        //todo[nik] this is temporary workaround for IDEA-98118: we need to initialize all library types
+        // to ensure that their kinds are created and registered in LibraryKind.ourAllKinds
+        // In order to properly fix the problem we should extract all UI-related methods
+        // from LibraryType to a separate class and move LibraryType to projectModel-impl module
+        LibraryType.EP_NAME.getExtensions();
+    }
 }

@@ -32,64 +32,64 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class NextPrevParameterAction extends CodeInsightAction {
-  private final boolean myNext;
+    private final boolean myNext;
 
-  protected NextPrevParameterAction(boolean next) {
-    myNext = next;
-  }
-
-  @Nonnull
-  @Override
-  public CodeInsightActionHandler getHandler() {
-    return new Handler();
-  }
-
-  @Override
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    return hasSutablePolicy(editor, file);
-  }
-
-  public static boolean hasSutablePolicy(Editor editor, PsiFile file) {
-    return findSuitableTraversalPolicy(editor, file) != null;
-  }
-
-  @Nullable
-  private static TemplateParameterTraversalPolicy findSuitableTraversalPolicy(Editor editor, PsiFile file) {
-    for (TemplateParameterTraversalPolicy policy : TemplateParameterTraversalPolicy.EP_NAME.getExtensionList()) {
-      if (policy.isValidForFile(editor, file)) {
-        return policy;
-      }
+    protected NextPrevParameterAction(boolean next) {
+        myNext = next;
     }
-    return null;
-  }
 
-  private class Handler implements CodeInsightActionHandler {
-    @RequiredUIAccess
+    @Nonnull
     @Override
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-      TemplateParameterTraversalPolicy policy = findSuitableTraversalPolicy(editor, file);
-      if (policy != null) {
-        PsiDocumentManager.getInstance(project).commitAllDocuments();
-
-        policy.invoke(editor, file, myNext);
-      }
+    public CodeInsightActionHandler getHandler() {
+        return new Handler();
     }
 
     @Override
-    public boolean startInWriteAction() {
-      return false;
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        return hasSutablePolicy(editor, file);
     }
-  }
 
-  public static class Next extends NextPrevParameterAction {
-    public Next() {
-      super(true);
+    public static boolean hasSutablePolicy(Editor editor, PsiFile file) {
+        return findSuitableTraversalPolicy(editor, file) != null;
     }
-  }
 
-  public static class Prev extends NextPrevParameterAction {
-    public Prev() {
-      super(false);
+    @Nullable
+    private static TemplateParameterTraversalPolicy findSuitableTraversalPolicy(Editor editor, PsiFile file) {
+        for (TemplateParameterTraversalPolicy policy : TemplateParameterTraversalPolicy.EP_NAME.getExtensionList()) {
+            if (policy.isValidForFile(editor, file)) {
+                return policy;
+            }
+        }
+        return null;
     }
-  }
+
+    private class Handler implements CodeInsightActionHandler {
+        @RequiredUIAccess
+        @Override
+        public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+            TemplateParameterTraversalPolicy policy = findSuitableTraversalPolicy(editor, file);
+            if (policy != null) {
+                PsiDocumentManager.getInstance(project).commitAllDocuments();
+
+                policy.invoke(editor, file, myNext);
+            }
+        }
+
+        @Override
+        public boolean startInWriteAction() {
+            return false;
+        }
+    }
+
+    public static class Next extends NextPrevParameterAction {
+        public Next() {
+            super(true);
+        }
+    }
+
+    public static class Prev extends NextPrevParameterAction {
+        public Prev() {
+            super(false);
+        }
+    }
 }

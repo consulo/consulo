@@ -15,36 +15,36 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GlobalIndexFilter {
-  /**
-   * Returns true if the given file should be excluded from indexing by the given index.
-   */
-  boolean isExcludedFromIndex(@Nonnull VirtualFile virtualFile, @Nonnull IndexId<?, ?> indexId);
+    /**
+     * Returns true if the given file should be excluded from indexing by the given index.
+     */
+    boolean isExcludedFromIndex(@Nonnull VirtualFile virtualFile, @Nonnull IndexId<?, ?> indexId);
 
-  int getVersion();
+    int getVersion();
 
-  boolean affectsIndex(@Nonnull IndexId<?, ?> indexId);
+    boolean affectsIndex(@Nonnull IndexId<?, ?> indexId);
 
-  ExtensionPointName<GlobalIndexFilter> EP_NAME = ExtensionPointName.create(GlobalIndexFilter.class);
+    ExtensionPointName<GlobalIndexFilter> EP_NAME = ExtensionPointName.create(GlobalIndexFilter.class);
 
-  /**
-   * Returns true if the given file should be excluded from indexing by any of the registered filters.
-   */
-  static boolean isExcludedFromIndexViaFilters(@Nonnull VirtualFile file, @Nonnull IndexId<?, ?> indexId) {
-    for (GlobalIndexFilter filter : EP_NAME.getExtensionList()) {
-      if (filter.isExcludedFromIndex(file, indexId)) {
-        return true;
-      }
+    /**
+     * Returns true if the given file should be excluded from indexing by any of the registered filters.
+     */
+    static boolean isExcludedFromIndexViaFilters(@Nonnull VirtualFile file, @Nonnull IndexId<?, ?> indexId) {
+        for (GlobalIndexFilter filter : EP_NAME.getExtensionList()) {
+            if (filter.isExcludedFromIndex(file, indexId)) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-  static int getFiltersVersion(@Nonnull IndexId<?, ?> indexId) {
-    int result = 0;
-    for (GlobalIndexFilter extension : EP_NAME.getExtensionList()) {
-      if (extension.affectsIndex(indexId)) {
-        result += extension.getVersion();
-      }
+    static int getFiltersVersion(@Nonnull IndexId<?, ?> indexId) {
+        int result = 0;
+        for (GlobalIndexFilter extension : EP_NAME.getExtensionList()) {
+            if (extension.affectsIndex(indexId)) {
+                result += extension.getVersion();
+            }
+        }
+        return result;
     }
-    return result;
-  }
 }
