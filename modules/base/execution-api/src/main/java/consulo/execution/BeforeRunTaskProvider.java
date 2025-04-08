@@ -77,14 +77,14 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
      * @return 'before run' task for the configuration or null, if the task from this provider is not applicable to the specified configuration
      */
     @Nullable
-    public abstract T createTask(final RunConfiguration runConfiguration);
+    public abstract T createTask(RunConfiguration runConfiguration);
 
     /**
      * @return <code>true</code> if task configuration is changed
      */
     @Nonnull
     @RequiredUIAccess
-    public abstract AsyncResult<Void> configureTask(final RunConfiguration runConfiguration, T task);
+    public abstract AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task);
 
     public boolean canExecuteTask(RunConfiguration configuration, T task) {
         return true;

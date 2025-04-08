@@ -82,8 +82,8 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
         CharSequence chars = editor.getDocument().getCharsSequence();
         char c = chars.charAt(offset);
 
-        final Editor injectedEditor = TypedHandler.injectedEditorIfCharTypedIsSignificant(c, editor, file);
-        final Editor originalEditor = editor;
+        Editor injectedEditor = TypedHandler.injectedEditorIfCharTypedIsSignificant(c, editor, file);
+        Editor originalEditor = editor;
         if (injectedEditor != editor) {
             int injectedOffset = injectedEditor.getCaretModel().getOffset();
             if (EditorBackspaceUtil.isOffsetInsideInjected(injectedEditor, injectedOffset)) {
@@ -93,7 +93,7 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
             }
         }
 
-        final List<BackspaceHandlerDelegate> delegates = BackspaceHandlerDelegate.EP_NAME.getExtensionList();
+        List<BackspaceHandlerDelegate> delegates = BackspaceHandlerDelegate.EP_NAME.getExtensionList();
         if (!toWordStart) {
             for (BackspaceHandlerDelegate delegate : delegates) {
                 delegate.beforeCharDeleted(c, file, editor);
@@ -101,7 +101,7 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
         }
 
         FileType fileType = file.getFileType();
-        final QuoteHandler quoteHandler = TypedHandler.getQuoteHandler(file, editor);
+        QuoteHandler quoteHandler = TypedHandler.getQuoteHandler(file, editor);
 
         HighlighterIterator hiterator = editor.getHighlighter().createIterator(offset);
         boolean wasClosingQuote = quoteHandler != null && quoteHandler.isClosingQuote(hiterator, offset);

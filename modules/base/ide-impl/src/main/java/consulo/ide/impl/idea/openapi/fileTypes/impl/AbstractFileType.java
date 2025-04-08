@@ -41,49 +41,27 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
     protected SyntaxTable mySyntaxTable;
     private SyntaxTable myDefaultSyntaxTable;
     protected Commenter myCommenter;
-    @NonNls
     public static final String ELEMENT_HIGHLIGHTING = "highlighting";
-    @NonNls
     private static final String ELEMENT_OPTIONS = "options";
-    @NonNls
     private static final String ELEMENT_OPTION = "option";
-    @NonNls
     private static final String ATTRIBUTE_VALUE = "value";
-    @NonNls
     private static final String VALUE_LINE_COMMENT = "LINE_COMMENT";
-    @NonNls
     private static final String VALUE_COMMENT_START = "COMMENT_START";
-    @NonNls
     private static final String VALUE_COMMENT_END = "COMMENT_END";
-    @NonNls
     private static final String VALUE_HEX_PREFIX = "HEX_PREFIX";
-    @NonNls
     private static final String VALUE_NUM_POSTFIXES = "NUM_POSTFIXES";
-    @NonNls
     private static final String VALUE_HAS_BRACES = "HAS_BRACES";
-    @NonNls
     private static final String VALUE_HAS_BRACKETS = "HAS_BRACKETS";
-    @NonNls
     private static final String VALUE_HAS_PARENS = "HAS_PARENS";
-    @NonNls
     private static final String VALUE_HAS_STRING_ESCAPES = "HAS_STRING_ESCAPES";
-    @NonNls
     private static final String VALUE_LINE_COMMENT_AT_START = "LINE_COMMENT_AT_START";
-    @NonNls
     private static final String ELEMENT_KEYWORDS = "keywords";
-    @NonNls
     private static final String ATTRIBUTE_IGNORE_CASE = "ignore_case";
-    @NonNls
     private static final String ELEMENT_KEYWORD = "keyword";
-    @NonNls
     private static final String ELEMENT_KEYWORDS2 = "keywords2";
-    @NonNls
     private static final String ELEMENT_KEYWORDS3 = "keywords3";
-    @NonNls
     private static final String ELEMENT_KEYWORDS4 = "keywords4";
-    @NonNls
     private static final String ATTRIBUTE_NAME = "name";
-    @NonNls
     public static final String ELEMENT_EXTENSION_MAP = "extensionMap";
 
     private final ExternalInfo myExternalInfo = new ExternalInfo();
@@ -151,7 +129,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
 
         for (Element element : root.getChildren()) {
             if (ELEMENT_OPTIONS.equals(element.getName())) {
-                for (final Object o1 : element.getChildren(ELEMENT_OPTION)) {
+                for (Object o1 : element.getChildren(ELEMENT_OPTION)) {
                     Element e = (Element)o1;
                     String name = e.getAttributeValue(ATTRIBUTE_NAME);
                     String value = e.getAttributeValue(ATTRIBUTE_VALUE);
@@ -171,24 +149,24 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
                         table.setNumPostfixChars(value);
                     }
                     else if (VALUE_LINE_COMMENT_AT_START.equals(name)) {
-                        table.lineCommentOnlyAtStart = Boolean.valueOf(value).booleanValue();
+                        table.lineCommentOnlyAtStart = Boolean.valueOf(value);
                     }
                     else if (VALUE_HAS_BRACES.equals(name)) {
-                        table.setHasBraces(Boolean.valueOf(value).booleanValue());
+                        table.setHasBraces(Boolean.valueOf(value));
                     }
                     else if (VALUE_HAS_BRACKETS.equals(name)) {
-                        table.setHasBrackets(Boolean.valueOf(value).booleanValue());
+                        table.setHasBrackets(Boolean.valueOf(value));
                     }
                     else if (VALUE_HAS_PARENS.equals(name)) {
-                        table.setHasParens(Boolean.valueOf(value).booleanValue());
+                        table.setHasParens(Boolean.valueOf(value));
                     }
                     else if (VALUE_HAS_STRING_ESCAPES.equals(name)) {
-                        table.setHasStringEscapes(Boolean.valueOf(value).booleanValue());
+                        table.setHasStringEscapes(Boolean.valueOf(value));
                     }
                 }
             }
             else if (ELEMENT_KEYWORDS.equals(element.getName())) {
-                boolean ignoreCase = Boolean.valueOf(element.getAttributeValue(ATTRIBUTE_IGNORE_CASE)).booleanValue();
+                boolean ignoreCase = Boolean.valueOf(element.getAttributeValue(ATTRIBUTE_IGNORE_CASE));
                 table.setIgnoreCase(ignoreCase);
                 loadKeywords(element, table.getKeywords1());
             }
@@ -228,7 +206,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
                 }
             }
         }
-        for (final Object o1 : element.getChildren(ELEMENT_KEYWORD)) {
+        for (Object o1 : element.getChildren(ELEMENT_KEYWORD)) {
             keywords.add(((Element)o1).getAttributeValue(ATTRIBUTE_NAME));
         }
     }
@@ -291,10 +269,8 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
 
         highlightingElement.addContent(optionsElement);
 
-        writeKeywords(table.getKeywords1(), ELEMENT_KEYWORDS, highlightingElement).setAttribute(
-            ATTRIBUTE_IGNORE_CASE,
-            String.valueOf(table.isIgnoreCase())
-        );
+        writeKeywords(table.getKeywords1(), ELEMENT_KEYWORDS, highlightingElement)
+            .setAttribute(ATTRIBUTE_IGNORE_CASE, String.valueOf(table.isIgnoreCase()));
         writeKeywords(table.getKeywords2(), ELEMENT_KEYWORDS2, highlightingElement);
         writeKeywords(table.getKeywords3(), ELEMENT_KEYWORDS3, highlightingElement);
         writeKeywords(table.getKeywords4(), ELEMENT_KEYWORDS4, highlightingElement);
@@ -302,7 +278,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
         element.addContent(highlightingElement);
     }
 
-    private static void addElementOption(final Element optionsElement, final String valueHasParens, final boolean hasParens) {
+    private static void addElementOption(Element optionsElement, String valueHasParens, boolean hasParens) {
         if (!hasParens) {
             return;
         }
@@ -322,7 +298,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
         Arrays.sort(strings);
         StringBuilder keywordsAttribute = new StringBuilder();
 
-        for (final String keyword : strings) {
+        for (String keyword : strings) {
             if (!keyword.contains(SEMICOLON)) {
                 if (keywordsAttribute.length() != 0) {
                     keywordsAttribute.append(SEMICOLON);
@@ -352,13 +328,9 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
         return !Comparing.equal(myDefaultSyntaxTable, getSyntaxTable());
     }
 
-    @NonNls
     static final String ELEMENT_MAPPING = "mapping";
-    @NonNls
     static final String ATTRIBUTE_EXT = "ext";
-    @NonNls
     static final String ATTRIBUTE_PATTERN = "pattern";
-    @NonNls
     static final String ATTRIBUTE_TYPE = "type";
 
     @Nonnull
@@ -414,7 +386,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
         return new CustomFileTypeEditor();
     }
 
-    public void setCommenter(final Commenter commenter) {
+    public void setCommenter(Commenter commenter) {
         myCommenter = commenter;
     }
 

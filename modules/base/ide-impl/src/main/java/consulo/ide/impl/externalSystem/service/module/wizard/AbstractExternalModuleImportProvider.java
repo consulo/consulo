@@ -54,7 +54,7 @@ import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.ex.wizard.WizardStepValidationException;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -68,7 +68,7 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 30-Jan-17
+ * @since 2017-01-30
  */
 public abstract class AbstractExternalModuleImportProvider<C extends AbstractImportFromExternalSystemControl> implements ModuleImportProvider<ExternalModuleImportContext<C>> {
     private static final Logger LOG = Logger.getInstance(AbstractExternalModuleImportProvider.class);
@@ -120,23 +120,23 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
         return myControl;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public void process(
         @Nonnull ExternalModuleImportContext<C> context,
-        @Nonnull final Project project,
+        @Nonnull Project project,
         @Nonnull ModifiableModuleModel model,
         @Nonnull Consumer<Module> newModuleConsumer
     ) {
         project.putUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT, Boolean.TRUE);
-        final DataNode<ProjectData> externalProjectNode = getExternalProjectNode();
+        DataNode<ProjectData> externalProjectNode = getExternalProjectNode();
         if (externalProjectNode != null) {
             beforeCommit(externalProjectNode, project);
         }
 
         StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
             AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, myExternalSystemId);
-            final ExternalProjectSettings projectSettings = getCurrentExternalProjectSettings();
+            ExternalProjectSettings projectSettings = getCurrentExternalProjectSettings();
             Set<ExternalProjectSettings> projects = new HashSet<>(systemSettings.getLinkedProjectsSettings());
             // add current importing project settings to linked projects settings or replace if similar already exist
             projects.remove(projectSettings);
@@ -163,11 +163,11 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
                     }
                 });
 
-                final Runnable resolveDependenciesTask = () -> {
+                Runnable resolveDependenciesTask = () -> {
                     LocalizeValue progressText = ExternalSystemLocalize.progressResolveLibraries(myExternalSystemId.getDisplayName());
                     ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText.get(), false) {
                         @Override
-                        public void run(@Nonnull final ProgressIndicator indicator) {
+                        public void run(@Nonnull ProgressIndicator indicator) {
                             if (project.isDisposed()) {
                                 return;
                             }
@@ -205,14 +205,14 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
      */
     @SuppressWarnings("unchecked")
     public void ensureProjectIsDefined(@Nonnull ExternalModuleImportContext<C> context) throws WizardStepValidationException {
-        final String externalSystemName = myExternalSystemId.getReadableName().get();
+        String externalSystemName = myExternalSystemId.getReadableName().get();
         File projectFile = getProjectFile();
         if (projectFile == null) {
             throw new WizardStepValidationException(ExternalSystemLocalize.errorProjectUndefined().get());
         }
         projectFile = getExternalProjectConfigToUse(projectFile);
-        final Ref<WizardStepValidationException> error = new Ref<>();
-        final ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
+        SimpleReference<WizardStepValidationException> error = new SimpleReference<>();
+        ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
             @Override
             public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
                 myExternalProjectNode = externalProject;
@@ -227,10 +227,10 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
             }
         };
 
-        final Project project = getContextOrDefaultProject(context);
-        final File finalProjectFile = projectFile;
-        final String externalProjectPath = FileUtil.toCanonicalPath(finalProjectFile.getAbsolutePath());
-        final Ref<WizardStepValidationException> exRef = new Ref<>();
+        Project project = getContextOrDefaultProject(context);
+        File finalProjectFile = projectFile;
+        String externalProjectPath = FileUtil.toCanonicalPath(finalProjectFile.getAbsolutePath());
+        SimpleReference<WizardStepValidationException> exRef = new SimpleReference<>();
         executeAndRestoreDefaultProjectSettings(project, () -> {
             try {
                 ExternalSystemUtil.refreshProject(
@@ -314,7 +314,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
     private ExternalProjectSettings getCurrentExternalProjectSettings() {
         ExternalProjectSettings result = myControl.getProjectSettings().clone();
         File externalProjectConfigFile = getExternalProjectConfigToUse(new File(result.getExternalProjectPath()));
-        final String linkedProjectPath = FileUtil.toCanonicalPath(externalProjectConfigFile.getPath());
+        String linkedProjectPath = FileUtil.toCanonicalPath(externalProjectConfigFile.getPath());
         assert linkedProjectPath != null;
         result.setExternalProjectPath(linkedProjectPath);
         return result;
@@ -340,10 +340,10 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
      * @param project                      current intellij project which should be configured by libraries and module library
      *                                     dependencies information available at the given gradle project
      */
-    private void setupLibraries(@Nonnull final DataNode<ProjectData> projectWithResolvedLibraries, final Project project) {
+    private void setupLibraries(@Nonnull DataNode<ProjectData> projectWithResolvedLibraries, Project project) {
         ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void execute() {
                 ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(() -> {
                     if (ExternalSystemApiUtil.isNewProjectConstruction()) {

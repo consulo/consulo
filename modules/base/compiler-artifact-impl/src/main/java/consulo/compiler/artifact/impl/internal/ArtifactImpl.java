@@ -29,7 +29,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -72,7 +71,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
         myRootElement = rootElement;
         myOutputPath = outputPath;
         myDispatcher = dispatcher;
-        myProperties = new HashMap<ArtifactPropertiesProvider, ArtifactProperties<?>>();
+        myProperties = new HashMap<>();
         resetProperties();
     }
 
@@ -137,7 +136,6 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
         }
     }
 
-    @NonNls
     @Override
     public String toString() {
         return "artifact:" + myName;

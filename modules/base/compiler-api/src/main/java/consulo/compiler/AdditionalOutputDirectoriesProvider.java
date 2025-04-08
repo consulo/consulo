@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 20:22/12.06.13
+ * @since 2013-06-12
  */
 @Deprecated
 @DeprecationInfo("Use consulo.compiler.ModuleAdditionalOutputDirectoriesProvider")

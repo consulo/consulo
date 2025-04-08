@@ -90,18 +90,18 @@ public class CodeFormatterFacade {
     }
 
     @RequiredUIAccess
-    public ASTNode processRange(final ASTNode element, final int startOffset, final int endOffset) {
-        final PsiElement psiElement = SourceTreeToPsiMap.treeElementToPsi(element);
+    public ASTNode processRange(ASTNode element, int startOffset, int endOffset) {
+        PsiElement psiElement = SourceTreeToPsiMap.treeElementToPsi(element);
         assert psiElement != null;
-        final PsiFile file = psiElement.getContainingFile();
-        final Document document = file.getViewProvider().getDocument();
+        PsiFile file = psiElement.getContainingFile();
+        Document document = file.getViewProvider().getDocument();
 
         PsiElement elementToFormat = document instanceof DocumentWindow
             ? InjectedLanguageManager.getInstance(file.getProject()).getTopLevelFile(file) : psiElement;
-        final PsiFile fileToFormat = elementToFormat.getContainingFile();
+        PsiFile fileToFormat = elementToFormat.getContainingFile();
 
         RangeMarker rangeMarker = null;
-        final FormattingModelBuilder builder = FormattingModelBuilder.forContext(fileToFormat);
+        FormattingModelBuilder builder = FormattingModelBuilder.forContext(fileToFormat);
         if (builder != null) {
             if (document != null && endOffset < document.getTextLength()) {
                 rangeMarker = document.createRangeMarker(startOffset, endOffset);
@@ -112,12 +112,12 @@ public class CodeFormatterFacade {
                 range = documentWindow.injectedToHost(range);
             }
 
-            //final SmartPsiElementPointer pointer = SmartPointerManager.getInstance(psiElement.getProject()).createSmartPsiElementPointer(psiElement);
-            final FormattingModel model =
+            //SmartPsiElementPointer pointer = SmartPointerManager.getInstance(psiElement.getProject()).createSmartPsiElementPointer(psiElement);
+            FormattingModel model =
                 CoreFormatterUtil.buildModel(builder, elementToFormat, range, mySettings, FormattingMode.REFORMAT);
             if (file.getTextLength() > 0) {
                 try {
-                    final FormatTextRanges ranges = new FormatTextRanges(range, true);
+                    FormatTextRanges ranges = new FormatTextRanges(range, true);
                     setDisabledRanges(fileToFormat, ranges);
                     FormatterEx.getInstanceEx().format(model, mySettings, mySettings.getIndentOptionsByFile(fileToFormat, range), ranges);
 
@@ -130,8 +130,8 @@ public class CodeFormatterFacade {
 
             if (!psiElement.isValid()) {
                 if (rangeMarker != null) {
-                    final PsiElement at = file.findElementAt(rangeMarker.getStartOffset());
-                    final PsiElement result = PsiTreeUtil.getParentOfType(at, psiElement.getClass(), false);
+                    PsiElement at = file.findElementAt(rangeMarker.getStartOffset());
+                    PsiElement result = PsiTreeUtil.getParentOfType(at, psiElement.getClass(), false);
                     assert result != null;
                     rangeMarker.dispose();
                     return result.getNode();
@@ -150,10 +150,10 @@ public class CodeFormatterFacade {
     }
 
     @RequiredUIAccess
-    public void processText(@Nonnull PsiFile file, final FormatTextRanges ranges, boolean doPostponedFormatting) {
-        final Project project = file.getProject();
+    public void processText(@Nonnull PsiFile file, FormatTextRanges ranges, boolean doPostponedFormatting) {
+        Project project = file.getProject();
         Document document = file.getViewProvider().getDocument();
-        final List<FormatTextRange> textRanges = ranges.getRanges();
+        List<FormatTextRange> textRanges = ranges.getRanges();
         if (document instanceof DocumentWindow documentWindow) {
             file = InjectedLanguageManager.getInstance(file.getProject()).getTopLevelFile(file);
             for (FormatTextRange range : textRanges) {
@@ -162,7 +162,7 @@ public class CodeFormatterFacade {
             document = documentWindow.getDelegate();
         }
 
-        final FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
+        FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
         if (builder != null) {
             if (file.getTextLength() > 0) {
                 LOG.assertTrue(document != null);
@@ -184,9 +184,9 @@ public class CodeFormatterFacade {
 
                     TextRange formattingModelRange = ObjectUtil.notNull(ranges.getBoundRange(), file.getTextRange());
 
-                    final FormattingModel originalModel =
+                    FormattingModel originalModel =
                         CoreFormatterUtil.buildModel(builder, file, formattingModelRange, mySettings, FormattingMode.REFORMAT);
-                    final FormattingModel model =
+                    FormattingModel model =
                         new DocumentBasedFormattingModel(originalModel, document, project, mySettings, file.getFileType(), file);
 
                     FormatterEx formatter = FormatterEx.getInstanceEx();
@@ -211,8 +211,9 @@ public class CodeFormatterFacade {
         }
     }
 
+    @RequiredReadAction
     private void setDisabledRanges(@Nonnull PsiFile file, FormatTextRanges ranges) {
-        final Iterable<TextRange> excludedRangesIterable =
+        Iterable<TextRange> excludedRangesIterable =
             TextRangeUtil.excludeRanges(file.getTextRange(), myTagHandler.getEnabledRanges(file.getNode(), file.getTextRange()));
         ranges.setDisabledRanges((Collection<TextRange>)excludedRangesIterable);
     }
@@ -231,7 +232,7 @@ public class CodeFormatterFacade {
                 i++;
             }
         }
-        final PostprocessReformattingAspectImpl component =
+        PostprocessReformattingAspectImpl component =
             (PostprocessReformattingAspectImpl)PostprocessReformattingAspect.getInstance(file.getProject());
         FormattingProgressTask.FORMATTING_CANCELLED_FLAG.set(false);
         component.doPostponedFormatting(file.getViewProvider());
@@ -253,10 +254,10 @@ public class CodeFormatterFacade {
         if (range == null) {
             return null;
         }
-        final FileViewProvider viewProvider = file.getViewProvider();
-        final PsiElement startElement = viewProvider.findElementAt(range.getStartOffset(), language);
-        final PsiElement endElement = viewProvider.findElementAt(range.getEndOffset() - 1, language);
-        final PsiElement commonParent =
+        FileViewProvider viewProvider = file.getViewProvider();
+        PsiElement startElement = viewProvider.findElementAt(range.getStartOffset(), language);
+        PsiElement endElement = viewProvider.findElementAt(range.getEndOffset() - 1, language);
+        PsiElement commonParent =
             startElement != null && endElement != null ? PsiTreeUtil.findCommonParent(startElement, endElement) : null;
         ASTNode node = null;
         if (commonParent != null) {
@@ -274,7 +275,8 @@ public class CodeFormatterFacade {
         return node;
     }
 
-    private TextRange preprocess(@Nonnull final ASTNode node, @Nonnull TextRange range) {
+    @RequiredReadAction
+    private TextRange preprocess(@Nonnull ASTNode node, @Nonnull TextRange range) {
         TextRange result = range;
         PsiElement psi = node.getPsi();
         if (!psi.isValid()) {
@@ -285,7 +287,7 @@ public class CodeFormatterFacade {
 
         // We use a set here because we encountered a situation when more than one PSI leaf points to the same injected fragment
         // (at least for sql injected into sql).
-        final LinkedHashSet<TextRange> injectedFileRangesSet = new LinkedHashSet<>();
+        LinkedHashSet<TextRange> injectedFileRangesSet = new LinkedHashSet<>();
 
         if (!psi.getProject().isDefault()) {
             List<DocumentWindow> injectedDocuments =
@@ -318,7 +320,7 @@ public class CodeFormatterFacade {
                 if (startHostOffset >= range.getStartOffset() && endHostOffset <= range.getEndOffset()) {
                     PsiFile injected = InjectedLanguageUtil.findInjectedPsiNoCommit(file, startHostOffset);
                     if (injected != null) {
-                        final TextRange initialInjectedRange = TextRange.create(0, injected.getTextLength());
+                        TextRange initialInjectedRange = TextRange.create(0, injected.getTextLength());
                         TextRange injectedRange = initialInjectedRange;
                         for (PreFormatProcessor processor : PreFormatProcessor.EP_NAME.getExtensionList()) {
                             if (processor.changesWhitespacesOnly() || !myCanChangeWhitespaceOnly) {
@@ -355,7 +357,7 @@ public class CodeFormatterFacade {
         return result;
     }
 
-    private TextRange preprocessEnabledRanges(@Nonnull final ASTNode node, @Nonnull TextRange range) {
+    private TextRange preprocessEnabledRanges(@Nonnull ASTNode node, @Nonnull TextRange range) {
         TextRange result = TextRange.create(range.getStartOffset(), range.getEndOffset());
         List<TextRange> enabledRanges = myTagHandler.getEnabledRanges(node, result);
         int delta = 0;
@@ -434,12 +436,7 @@ public class CodeFormatterFacade {
      * @param endOffset   end offset of the first line to check for wrapping (exclusive)
      */
     @RequiredUIAccess
-    private void wrapLongLinesIfNecessary(
-        @Nonnull final PsiFile file,
-        @Nullable final Document document,
-        final int startOffset,
-        final int endOffset
-    ) {
+    private void wrapLongLinesIfNecessary(@Nonnull PsiFile file, @Nullable Document document, int startOffset, int endOffset) {
         if (!mySettings.getCommonSettings(file.getLanguage()).WRAP_LONG_LINES ||
             PostprocessReformattingAspect.getInstance(file.getProject()).isViewProviderLocked(file.getViewProvider()) ||
             document == null) {
@@ -449,7 +446,7 @@ public class CodeFormatterFacade {
         FormatterTagHandler formatterTagHandler = new FormatterTagHandler(CodeStyle.getSettings(file));
         List<TextRange> enabledRanges = formatterTagHandler.getEnabledRanges(file.getNode(), new TextRange(startOffset, endOffset));
 
-        final VirtualFile vFile = FileDocumentManager.getInstance().getFile(document);
+        VirtualFile vFile = FileDocumentManager.getInstance().getFile(document);
         if ((vFile == null || vFile instanceof LightVirtualFile) && !Application.get().isUnitTestMode()) {
             // we assume that control flow reaches this place when the document is backed by a "virtual" file so any changes made by
             // a formatter affect only PSI and it is out of sync with a document text
@@ -466,11 +463,11 @@ public class CodeFormatterFacade {
             editor = editorFactory.createEditor(document, file.getProject(), file.getVirtualFile(), false);
         }
         try {
-            final Editor editorToUse = editor;
+            Editor editorToUse = editor;
             Application.get().runWriteAction(() -> {
-                final CaretModel caretModel = editorToUse.getCaretModel();
-                final int caretOffset = caretModel.getOffset();
-                final RangeMarker caretMarker = editorToUse.getDocument().createRangeMarker(caretOffset, caretOffset);
+                CaretModel caretModel = editorToUse.getCaretModel();
+                int caretOffset = caretModel.getOffset();
+                RangeMarker caretMarker = editorToUse.getDocument().createRangeMarker(caretOffset, caretOffset);
                 doWrapLongLinesIfNecessary(
                     editorToUse,
                     file.getProject(),
@@ -497,8 +494,8 @@ public class CodeFormatterFacade {
 
     @RequiredUIAccess
     public void doWrapLongLinesIfNecessary(
-        @Nonnull final Editor editor,
-        @Nonnull final Project project,
+        @Nonnull Editor editor,
+        @Nonnull Project project,
         @Nonnull Document document,
         int startOffset,
         int endOffset,
@@ -535,7 +532,7 @@ public class CodeFormatterFacade {
                 continue;
             }
 
-            final int preferredWrapPosition =
+            int preferredWrapPosition =
                 calculatePreferredWrapPosition(editor, text, tabSize, spaceSize, startLineOffset, endLineOffset, endOffsetToUse);
 
             if (preferredWrapPosition < 0 || preferredWrapPosition >= endLineOffset) {
@@ -601,8 +598,8 @@ public class CodeFormatterFacade {
      *                2. The second element holds added symbols number;
      */
     @RequiredUIAccess
-    private static void emulateEnter(@Nonnull final Editor editor, @Nonnull Project project, int[] shifts) {
-        final DataContext dataContext = prepareContext(editor.getComponent(), project);
+    private static void emulateEnter(@Nonnull Editor editor, @Nonnull Project project, int[] shifts) {
+        DataContext dataContext = prepareContext(editor.getComponent(), project);
         int caretOffset = editor.getCaretModel().getOffset();
         Document document = editor.getDocument();
         SelectionModel selectionModel = editor.getSelectionModel();
@@ -807,10 +804,10 @@ public class CodeFormatterFacade {
     }
 
     @Nonnull
-    private static DataContext prepareContext(@Nonnull Component component, @Nonnull final Project project) {
+    private static DataContext prepareContext(@Nonnull Component component, @Nonnull Project project) {
         // There is a possible case that formatting is performed from project view and editor is not opened yet. The problem is that
         // its data context doesn't contain information about project then. So, we explicitly support that here (see IDEA-72791).
-        final DataContext baseDataContext = DataManager.getInstance().getDataContext(component);
+        DataContext baseDataContext = DataManager.getInstance().getDataContext(component);
         return new DelegatingDataContext(baseDataContext) {
             @Override
             public Object getData(@Nonnull Key dataId) {

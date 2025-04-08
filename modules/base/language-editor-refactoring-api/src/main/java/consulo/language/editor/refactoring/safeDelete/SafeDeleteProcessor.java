@@ -39,10 +39,12 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.*;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -172,7 +174,8 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  protected boolean preprocessUsages(@Nonnull Ref<UsageInfo[]> refUsages) {
+  @RequiredUIAccess
+  protected boolean preprocessUsages(@Nonnull SimpleReference<UsageInfo[]> refUsages) {
     UsageInfo[] usages = refUsages.get();
     ArrayList<String> conflicts = new ArrayList<String>();
 

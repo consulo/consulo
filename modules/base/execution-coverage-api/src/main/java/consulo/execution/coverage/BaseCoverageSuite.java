@@ -10,11 +10,9 @@ import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 import java.io.File;
 import java.lang.ref.SoftReference;
@@ -25,28 +23,15 @@ import java.lang.ref.SoftReference;
 public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternalizable {
     private static final Logger LOG = Logger.getInstance(BaseCoverageSuite.class);
 
-    @NonNls
     private static final String FILE_PATH = "FILE_PATH";
-
-    @NonNls
     private static final String SOURCE_PROVIDER = "SOURCE_PROVIDER";
-
-    @NonNls
     private static final String MODIFIED_STAMP = "MODIFIED";
-
-    @NonNls
     private static final String NAME_ATTRIBUTE = "NAME";
-
-    @NonNls
     private static final String COVERAGE_RUNNER = "RUNNER";
-
-    @NonNls
     private static final String COVERAGE_BY_TEST_ENABLED_ATTRIBUTE_NAME = "COVERAGE_BY_TEST_ENABLED";
-
-    @NonNls
     private static final String TRACING_ENABLED_ATTRIBUTE_NAME = "COVERAGE_TRACING_ENABLED";
 
-    private SoftReference<ProjectData> myCoverageData = new SoftReference<ProjectData>(null);
+    private SoftReference<ProjectData> myCoverageData = new SoftReference<>(null);
 
     private String myName;
     private long myLastCoverageTimeStamp;
@@ -63,25 +48,25 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     }
 
     public BaseCoverageSuite(
-        final String name,
-        @Nullable final CoverageFileProvider fileProvider,
-        final long lastCoverageTimeStamp,
-        final boolean coverageByTestEnabled,
-        final boolean tracingEnabled,
-        final boolean trackTestFolders,
-        final CoverageRunner coverageRunner
+        String name,
+        @Nullable CoverageFileProvider fileProvider,
+        long lastCoverageTimeStamp,
+        boolean coverageByTestEnabled,
+        boolean tracingEnabled,
+        boolean trackTestFolders,
+        CoverageRunner coverageRunner
     ) {
         this(name, fileProvider, lastCoverageTimeStamp, coverageByTestEnabled, tracingEnabled, trackTestFolders, coverageRunner, null);
     }
 
     public BaseCoverageSuite(
-        final String name,
-        @Nullable final CoverageFileProvider fileProvider,
-        final long lastCoverageTimeStamp,
-        final boolean coverageByTestEnabled,
-        final boolean tracingEnabled,
-        final boolean trackTestFolders,
-        final CoverageRunner coverageRunner,
+        String name,
+        @Nullable CoverageFileProvider fileProvider,
+        long lastCoverageTimeStamp,
+        boolean coverageByTestEnabled,
+        boolean tracingEnabled,
+        boolean trackTestFolders,
+        CoverageRunner coverageRunner,
         Project project
     ) {
         myCoverageDataFileProvider = fileProvider;
@@ -96,7 +81,7 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
 
     @Nullable
     public static CoverageRunner readRunnerAttribute(Element element) {
-        final String runner = element.getAttributeValue(COVERAGE_RUNNER);
+        String runner = element.getAttributeValue(COVERAGE_RUNNER);
         if (runner != null) {
             for (CoverageRunner coverageRunner : CoverageRunner.EP_NAME.getExtensionList()) {
                 if (Comparing.strEqual(coverageRunner.getId(), runner)) {
@@ -108,9 +93,9 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     }
 
     public static CoverageFileProvider readDataFileProviderAttribute(Element element) {
-        final String sourceProvider = element.getAttributeValue(SOURCE_PROVIDER);
-        final String relativePath = FileUtil.toSystemDependentName(element.getAttributeValue(FILE_PATH));
-        final File file = new File(relativePath);
+        String sourceProvider = element.getAttributeValue(SOURCE_PROVIDER);
+        String relativePath = FileUtil.toSystemDependentName(element.getAttributeValue(FILE_PATH));
+        File file = new File(relativePath);
         return new DefaultCoverageFileProvider(
             file.exists() ? file : new File(ContainerPathManager.get().getSystemPath(), relativePath),
             sourceProvider != null ? sourceProvider : DefaultCoverageFileProvider.class.getName()
@@ -172,18 +157,18 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
         myRunner = readRunnerAttribute(element);
 
         // coverage per test
-        final String collectedLineInfo = element.getAttributeValue(COVERAGE_BY_TEST_ENABLED_ATTRIBUTE_NAME);
-        myCoverageByTestEnabled = collectedLineInfo != null && Boolean.valueOf(collectedLineInfo).booleanValue();
+        String collectedLineInfo = element.getAttributeValue(COVERAGE_BY_TEST_ENABLED_ATTRIBUTE_NAME);
+        myCoverageByTestEnabled = collectedLineInfo != null && Boolean.valueOf(collectedLineInfo);
 
 
         // tracing
-        final String tracingEnabled = element.getAttributeValue(TRACING_ENABLED_ATTRIBUTE_NAME);
-        myTracingEnabled = tracingEnabled != null && Boolean.valueOf(tracingEnabled).booleanValue();
+        String tracingEnabled = element.getAttributeValue(TRACING_ENABLED_ATTRIBUTE_NAME);
+        myTracingEnabled = tracingEnabled != null && Boolean.valueOf(tracingEnabled);
     }
 
     @Override
-    public void writeExternal(final Element element) throws WriteExternalException {
-        final String fileName = FileUtil.getRelativePath(
+    public void writeExternal(Element element) throws WriteExternalException {
+        String fileName = FileUtil.getRelativePath(
             new File(ContainerPathManager.get().getSystemPath()),
             new File(myCoverageDataFileProvider.getCoverageDataFilePath())
         );
@@ -212,8 +197,8 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     }
 
     @Override
-    public void setCoverageData(final ProjectData projectData) {
-        myCoverageData = new SoftReference<ProjectData>(projectData);
+    public void setCoverageData(ProjectData projectData) {
+        myCoverageData = new SoftReference<>(projectData);
     }
 
     public ProjectData getCoverageData() {
@@ -237,8 +222,8 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
 
     @Override
     @Nullable
-    public ProjectData getCoverageData(final CoverageDataManager coverageDataManager) {
-        final ProjectData data = getCoverageData();
+    public ProjectData getCoverageData(CoverageDataManager coverageDataManager) {
+        ProjectData data = getCoverageData();
         if (data != null) {
             return data;
         }
@@ -247,7 +232,8 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
         return map;
     }
 
-    public boolean equals(final Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -255,11 +241,12 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
             return false;
         }
 
-        final String thisName = myCoverageDataFileProvider.getCoverageDataFilePath();
-        final String thatName = ((BaseCoverageSuite)o).myCoverageDataFileProvider.getCoverageDataFilePath();
+        String thisName = myCoverageDataFileProvider.getCoverageDataFilePath();
+        String thatName = ((BaseCoverageSuite)o).myCoverageDataFileProvider.getCoverageDataFilePath();
         return thisName.equals(thatName);
     }
 
+    @Override
     public int hashCode() {
         return myCoverageDataFileProvider.getCoverageDataFilePath().hashCode();
     }

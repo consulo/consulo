@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 20-Sep-22
+ * @since 2022-09-20
  */
 public class CustomScopesProviders {
     @Nonnull

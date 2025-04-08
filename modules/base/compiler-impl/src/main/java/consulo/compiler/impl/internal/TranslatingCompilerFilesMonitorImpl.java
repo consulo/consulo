@@ -65,8 +65,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * @author Eugene Zhuravlev
- * @since Jun 3, 2008
  * <p>
  * A source file is scheduled for recompilation if
  * 1. its timestamp has changed
@@ -76,6 +74,9 @@ import java.util.function.Supplier;
  * An output file is scheduled for deletion if:
  * 1. corresponding source file has been scheduled for recompilation (see above)
  * 2. corresponding source file has been deleted
+ *
+ * @author Eugene Zhuravlev
+ * @since 2008-06-03
  */
 @Singleton
 @ServiceImpl

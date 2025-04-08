@@ -24,12 +24,10 @@ import consulo.util.lang.function.ThrowableFunction;
 import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.resolver.HostsFileEntriesResolver;
 import io.netty.resolver.ResolvedAddressTypes;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -48,7 +46,6 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     public static final NotificationGroup NOTIFICATION_GROUP =
         new NotificationGroup("Built-in Server", NotificationDisplayType.STICKY_BALLOON, true);
 
-    @NonNls
     public static final String PROPERTY_RPC_PORT = "consulo.rpc.port";
     private static final int PORTS_COUNT = 20;
 

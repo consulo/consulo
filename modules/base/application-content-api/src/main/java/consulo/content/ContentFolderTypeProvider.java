@@ -36,7 +36,7 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 22:32/31.10.13
+ * @since 2013-10-31
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ContentFolderTypeProvider {
@@ -110,11 +110,7 @@ public abstract class ContentFolderTypeProvider {
 
         ContentFolderTypeProvider that = (ContentFolderTypeProvider)o;
 
-        if (!myId.equals(that.myId)) {
-            return false;
-        }
-
-        return true;
+        return myId.equals(that.myId);
     }
 
     @Override

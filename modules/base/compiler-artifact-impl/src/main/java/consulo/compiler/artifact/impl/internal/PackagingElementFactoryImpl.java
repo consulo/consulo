@@ -41,7 +41,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -129,7 +128,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
     @Override
     @Nonnull
-    public DirectoryPackagingElement createDirectory(@Nonnull @NonNls String directoryName) {
+    public DirectoryPackagingElement createDirectory(@Nonnull String directoryName) {
         return new DirectoryPackagingElement(directoryName);
     }
 
@@ -177,7 +176,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     @Nonnull
     private CompositePackagingElement<?> getOrCreateDirectoryOrArchive(
         @Nonnull CompositePackagingElement<?> root,
-        @Nonnull @NonNls String path,
+        @Nonnull String path,
         final boolean directory
     ) {
         path = StringUtil.trimStart(StringUtil.trimEnd(path, "/"), "/");
@@ -254,7 +253,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
     @Override
     @Nonnull
-    public CompositePackagingElement<?> createZipArchive(@Nonnull @NonNls String archiveFileName) {
+    public CompositePackagingElement<?> createZipArchive(@Nonnull String archiveFileName) {
         return new ZipArchivePackagingElement(archiveFileName);
     }
 

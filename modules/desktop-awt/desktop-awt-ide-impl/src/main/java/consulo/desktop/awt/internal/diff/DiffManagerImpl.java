@@ -50,21 +50,21 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class DiffManagerImpl extends DiffManagerEx {
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void showDiff(@Nullable Project project, @Nonnull DiffRequest request) {
         showDiff(project, request, DiffDialogHints.DEFAULT);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void showDiff(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints) {
         DiffRequestChain requestChain = new SimpleDiffRequestChain(request);
         showDiff(project, requestChain, hints);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void showDiff(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
         if (ExternalDiffTool.isDefault()) {
             ExternalDiffTool.show(project, requests, hints);
@@ -74,21 +74,21 @@ public class DiffManagerImpl extends DiffManagerEx {
         showDiffBuiltin(project, requests, hints);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request) {
         showDiffBuiltin(project, request, DiffDialogHints.DEFAULT);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints) {
         DiffRequestChain requestChain = new SimpleDiffRequestChain(request);
         showDiffBuiltin(project, requestChain, hints);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
         DiffEditorTabFilesManager diffEditorTabFilesManager = project != null ? DiffEditorTabFilesManager.getInstance(project) : null;
         if (diffEditorTabFilesManager != null &&

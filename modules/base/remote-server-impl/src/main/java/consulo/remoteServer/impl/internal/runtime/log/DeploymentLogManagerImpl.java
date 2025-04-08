@@ -33,12 +33,7 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
         myMainLoggingHandler = new LoggingHandlerImpl.Colored(null, project);
         myLogsDisposable = Disposable.newDisposable();
         Disposer.register(myLogsDisposable, myMainLoggingHandler);
-        Disposer.register(project, new Disposable() {
-            @Override
-            public void dispose() {
-                disposeLogs();
-            }
-        });
+        Disposer.register(project, this::disposeLogs);
     }
 
     @Override
@@ -85,7 +80,7 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
         synchronized (myAdditionalLoggingHandlers) {
             for (LoggingHandlerBase next : myAdditionalLoggingHandlers) {
                 if (next instanceof LoggingHandler && presentableName.equals(next.getPresentableName())) {
-                    return (LoggingHandler) next;
+                    return (LoggingHandler)next;
                 }
             }
             return addAdditionalLog(presentableName);
@@ -93,13 +88,17 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
     }
 
     @Override
-    public @Nullable TerminalHandler addTerminal(final @Nonnull @Nls String presentableName, InputStream terminalOutput, OutputStream terminalInput) {
+    public @Nullable TerminalHandler addTerminal(
+        @Nonnull @Nls String presentableName,
+        InputStream terminalOutput,
+        OutputStream terminalInput
+    ) {
         synchronized (myLogsDisposed) {
             if (myLogsDisposed.get()) {
                 return null;
             }
-            TerminalHandlerBase handler = CloudTerminalProvider.getInstance().createTerminal(presentableName, myProject, terminalOutput,
-                terminalInput);
+            TerminalHandlerBase handler =
+                CloudTerminalProvider.getInstance().createTerminal(presentableName, myProject, terminalOutput, terminalInput);
             addAdditionalLoggingHandler(handler);
             return handler;
         }

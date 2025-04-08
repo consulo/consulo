@@ -128,7 +128,7 @@ class BeforeRunStepsPanel {
 
     @Nullable
     private Pair<BeforeRunTask, BeforeRunTaskProvider<BeforeRunTask>> getSelection() {
-        final int index = myList.getSelectedIndex();
+        int index = myList.getSelectedIndex();
         if (index == -1) {
             return null;
         }
@@ -214,8 +214,8 @@ class BeforeRunStepsPanel {
             return false;
         }
         Set<Key> activeProviderKeys = getActiveProviderKeys();
-        final List<BeforeRunTaskProvider> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
-        for (final BeforeRunTaskProvider<BeforeRunTask> provider : providers) {
+        List<BeforeRunTaskProvider> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
+        for (BeforeRunTaskProvider<BeforeRunTask> provider : providers) {
             if (provider.createTask(myRunConfiguration) != null) {
                 if (!checkOnlyAddAction) {
                     return true;
@@ -237,12 +237,12 @@ class BeforeRunStepsPanel {
             return;
         }
 
-        final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-        final List<BeforeRunTaskProvider> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
+        JBPopupFactory popupFactory = JBPopupFactory.getInstance();
+        List<BeforeRunTaskProvider> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
         Set<Key> activeProviderKeys = getActiveProviderKeys();
 
         ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
-        for (final BeforeRunTaskProvider<BeforeRunTask> provider : providers) {
+        for (BeforeRunTaskProvider<BeforeRunTask> provider : providers) {
             if (provider.createTask(myRunConfiguration) == null) {
                 continue;
             }
@@ -291,7 +291,7 @@ class BeforeRunStepsPanel {
             .add(UIExAWTDataKey.CONTEXT_COMPONENT, myPanel)
             .build();
 
-        final ListPopup popup = popupFactory.createActionGroupPopup(
+        ListPopup popup = popupFactory.createActionGroupPopup(
             ExecutionLocalize.addNewRunConfigurationAction2Name().get(),
             actionGroup.build(),
             dataContext,

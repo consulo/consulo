@@ -24,7 +24,6 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.content.bundle.*;
 import consulo.content.bundle.event.SdkTableListener;
 import consulo.util.collection.SmartHashSet;
@@ -39,13 +38,12 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.nio.file.Path;
 import java.util.*;

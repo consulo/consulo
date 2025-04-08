@@ -31,7 +31,7 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 13:25/07.11.13
+ * @since 2013-11-07
  */
 public class ContentFoldersSupportUtil {
     @Nonnull

@@ -23,13 +23,12 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.websocketx.*;
 
 public class WebSocketHandler extends ChannelInboundHandlerAdapter {
-
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof WebSocketFrame) {
-            if (msg instanceof BinaryWebSocketFrame) {
+            if (msg instanceof BinaryWebSocketFrame binaryWebSocketFrame) {
                 if (WebSocketAccepter.EP_NAME.hasAnyExtensions()) {
-                    byte[] array = ByteBufUtil.getBytes(((BinaryWebSocketFrame)msg).content());
+                    byte[] array = ByteBufUtil.getBytes(binaryWebSocketFrame.content());
 
                     WebSocketConnection connection = new WebSocketConnectionImpl(ctx);
                     for (WebSocketAccepter accepter : WebSocketAccepter.EP_NAME.getExtensionList()) {
@@ -37,9 +36,9 @@ public class WebSocketHandler extends ChannelInboundHandlerAdapter {
                     }
                 }
             }
-            else if (msg instanceof TextWebSocketFrame) {
+            else if (msg instanceof TextWebSocketFrame textWebSocketFrame) {
                 if (WebSocketAccepter.EP_NAME.hasAnyExtensions()) {
-                    String text = ((TextWebSocketFrame)msg).text();
+                    String text = textWebSocketFrame.text();
 
                     WebSocketConnection connection = new WebSocketConnectionImpl(ctx);
                     for (WebSocketAccepter accepter : WebSocketAccepter.EP_NAME.getExtensionList()) {

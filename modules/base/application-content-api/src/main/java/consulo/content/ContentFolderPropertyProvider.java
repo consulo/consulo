@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 21:58/25.11.13
+ * @since 2013-11-25
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ContentFolderPropertyProvider<T> {

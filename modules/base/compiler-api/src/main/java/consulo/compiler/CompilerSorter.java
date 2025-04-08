@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 08.05.14
+ * @since 2014-05-08
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CompilerSorter {

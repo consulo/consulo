@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 17:09/15.10.13
+ * @since 2013-10-15
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EarlyAccessProgramDescriptor {

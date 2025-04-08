@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author VISTALL
- * @since 06-Jun-16
+ * @since 2016-06-06
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PathMacrosService {

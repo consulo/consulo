@@ -36,7 +36,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 17:11/15.10.13
+ * @since 2013-10-15
  */
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)

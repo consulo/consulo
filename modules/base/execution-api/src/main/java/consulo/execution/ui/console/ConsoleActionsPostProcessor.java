@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
  * Defines contract for the {@link ConsoleView#createConsoleActions() console actions} customization.
  *
  * @author Denis Zhdanov
- * @since 4/25/11 1:16 PM
+ * @since 2011-04-25
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ConsoleActionsPostProcessor {

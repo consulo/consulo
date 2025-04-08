@@ -248,10 +248,7 @@ public abstract class CoverageEngine {
         @Nonnull final CoverageSuitesBundle suite
     ) {
         final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(outputFile);
-        if (virtualFile != null) {
-            return includeUntouchedFileInCoverage(qualifiedName, virtualFile, sourceFile, suite);
-        }
-        return false;
+        return virtualFile != null && includeUntouchedFileInCoverage(qualifiedName, virtualFile, sourceFile, suite);
     }
 
     @Deprecated

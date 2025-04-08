@@ -20,7 +20,7 @@ import consulo.component.extension.Extensions;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PatchApplier;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -57,19 +57,20 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
         @Nullable String fileName,
         @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo
     ) {
-        final CommitContext commitContext = new CommitContext();
+        CommitContext commitContext = new CommitContext();
         applyAdditionalInfoBefore(myProject, additionalInfo, commitContext);
-        final Collection<PatchApplier> appliers = getPatchAppliers(patchGroupsToApply, localList, commitContext);
+        Collection<PatchApplier> appliers = getPatchAppliers(patchGroupsToApply, localList, commitContext);
         executeAndApplyAdditionalInfo(localList, additionalInfo, commitContext, appliers);
     }
 
+    @RequiredUIAccess
     protected ApplyPatchStatus executeAndApplyAdditionalInfo(
         @Nullable LocalChangeList localList,
         @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
         @Nonnull CommitContext commitContext,
         @Nonnull Collection<PatchApplier> appliers
     ) {
-        final ApplyPatchStatus applyPatchStatus = PatchApplier.executePatchGroup(appliers, localList);
+        ApplyPatchStatus applyPatchStatus = PatchApplier.executePatchGroup(appliers, localList);
         if (applyPatchStatus != ApplyPatchStatus.ABORT) {
             applyAdditionalInfo(myProject, additionalInfo, commitContext);
         }
@@ -82,7 +83,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
         @Nullable LocalChangeList localList,
         @Nonnull CommitContext commitContext
     ) {
-        final Collection<PatchApplier> appliers = new LinkedList<>();
+        Collection<PatchApplier> appliers = new LinkedList<>();
         for (VirtualFile base : patchGroups.keySet()) {
             appliers.add(new PatchApplier<BinaryFilePatch>(
                 myProject,
@@ -98,7 +99,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
 
 
     public static void applyAdditionalInfoBefore(
-        final Project project,
+        Project project,
         @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
         CommitContext commitContext
     ) {
@@ -115,7 +116,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     }
 
     private static void applyAdditionalInfo(
-        final Project project,
+        Project project,
         @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
         CommitContext commitContext
     ) {
@@ -128,23 +129,23 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     }
 
     private static void applyAdditionalInfoImpl(
-        final Project project,
+        Project project,
         @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
         CommitContext commitContext,
-        final Consumer<InfoGroup> worker
+        Consumer<InfoGroup> worker
     ) {
-        final PatchEP[] extensions = Extensions.getExtensions(PatchEP.EP_NAME, project);
+        PatchEP[] extensions = Extensions.getExtensions(PatchEP.EP_NAME, project);
         if (extensions.length == 0) {
             return;
         }
         if (additionalInfo != null) {
             try {
                 for (Map.Entry<String, Map<String, CharSequence>> entry : additionalInfo.compute().entrySet()) {
-                    final String path = entry.getKey();
-                    final Map<String, CharSequence> innerMap = entry.getValue();
+                    String path = entry.getKey();
+                    Map<String, CharSequence> innerMap = entry.getValue();
 
                     for (PatchEP extension : extensions) {
-                        final CharSequence charSequence = innerMap.get(extension.getName());
+                        CharSequence charSequence = innerMap.get(extension.getName());
                         if (charSequence != null) {
                             worker.accept(new InfoGroup(extension, path, charSequence, commitContext));
                         }
@@ -176,11 +177,10 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     }
 
     public static Set<String> pathsFromGroups(MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroups) {
-        final Set<String> selectedPaths = new HashSet<>();
-        final Collection<? extends AbstractFilePatchInProgress> values = patchGroups.values();
+        Set<String> selectedPaths = new HashSet<>();
+        Collection<? extends AbstractFilePatchInProgress> values = patchGroups.values();
         for (AbstractFilePatchInProgress value : values) {
-            final String path =
-                value.getPatch().getBeforeName() == null ? value.getPatch().getAfterName() : value.getPatch().getBeforeName();
+            String path = value.getPatch().getBeforeName() == null ? value.getPatch().getAfterName() : value.getPatch().getBeforeName();
             selectedPaths.add(path);
         }
         return selectedPaths;

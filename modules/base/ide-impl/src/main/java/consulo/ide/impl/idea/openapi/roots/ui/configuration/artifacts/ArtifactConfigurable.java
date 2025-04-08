@@ -26,8 +26,6 @@ import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author nik
@@ -38,14 +36,14 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
     public ArtifactConfigurable(
         Artifact originalArtifact,
         ArtifactsStructureConfigurableContextImpl artifactsStructureContext,
-        final Runnable updateTree
+        Runnable updateTree
     ) {
         super(originalArtifact, artifactsStructureContext, updateTree, true);
     }
 
     @Override
     public void setDisplayName(String name) {
-        final String oldName = getArtifact().getName();
+        String oldName = getArtifact().getName();
         if (name != null && !name.equals(oldName) && !myIsInUpdateName) {
             myArtifactsStructureContext.getOrCreateModifiableArtifactModel()
                 .getOrCreateModifiableArtifact(myOriginalArtifact)
@@ -72,8 +70,8 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
     }
 
     @Override
-    protected JComponent createTopRightComponent(final JTextField nameField) {
-        final ComboBox artifactTypeBox = new ComboBox();
+    protected JComponent createTopRightComponent(JTextField nameField) {
+        ComboBox<ArtifactType> artifactTypeBox = new ComboBox<>();
         for (ArtifactType type : ArtifactType.EP_NAME.getExtensionList()) {
             artifactTypeBox.addItem(type);
         }
@@ -81,13 +79,10 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
         artifactTypeBox.setRenderer(new ArtifactTypeCellRenderer());
 
         artifactTypeBox.setSelectedItem(getArtifact().getArtifactType());
-        artifactTypeBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                final ArtifactType selected = (ArtifactType)artifactTypeBox.getSelectedItem();
-                if (selected != null && !Comparing.equal(selected, getArtifact().getArtifactType())) {
-                    getEditor().setArtifactType(selected);
-                }
+        artifactTypeBox.addActionListener(e -> {
+            ArtifactType selected = (ArtifactType)artifactTypeBox.getSelectedItem();
+            if (selected != null && !Comparing.equal(selected, getArtifact().getArtifactType())) {
+                getEditor().setArtifactType(selected);
             }
         });
 
@@ -95,16 +90,19 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean isModified() {
         return getEditor().isModified();
     }
 
     @Override
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         getEditor().apply();
     }
 
     @Override
+    @RequiredUIAccess
     public void reset() {
     }
 

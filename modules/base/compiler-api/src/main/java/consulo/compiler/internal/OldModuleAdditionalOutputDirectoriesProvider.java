@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 07/05/2023
+ * @since 2023-05-07
  */
 @ExtensionImpl
 public class OldModuleAdditionalOutputDirectoriesProvider implements ModuleAdditionalOutputDirectoriesProvider {

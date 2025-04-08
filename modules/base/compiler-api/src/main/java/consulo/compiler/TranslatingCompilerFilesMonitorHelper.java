@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 16.01.14
+ * @since 2014-01-16
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TranslatingCompilerFilesMonitorHelper {

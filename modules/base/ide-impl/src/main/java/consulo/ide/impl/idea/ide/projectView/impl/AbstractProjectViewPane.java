@@ -42,6 +42,7 @@ import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.tree.*;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.UIUtil;
@@ -289,6 +290,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         doSelectModuleOrGroup(module, requestFocus);
     }
 
+    @RequiredUIAccess
     private void doSelectModuleOrGroup(@Nonnull Object toSelect, final boolean requestFocus) {
         ToolWindowManager windowManager = ToolWindowManager.getInstance(myProject);
         final Runnable runnable = () -> {
@@ -316,6 +318,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
 
     @Override
+    @RequiredUIAccess
     public void selectModuleGroup(@Nonnull ModuleGroup moduleGroup, boolean requestFocus) {
         doSelectModuleOrGroup(moduleGroup, requestFocus);
     }

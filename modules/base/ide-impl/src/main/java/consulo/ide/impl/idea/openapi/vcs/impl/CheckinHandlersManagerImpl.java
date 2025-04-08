@@ -56,10 +56,10 @@ public class CheckinHandlersManagerImpl extends CheckinHandlersManager {
 
     @Override
     public List<BaseCheckinHandlerFactory> getRegisteredCheckinHandlerFactories(AbstractVcs[] allActiveVcss) {
-        final ArrayList<BaseCheckinHandlerFactory> list = new ArrayList<>(myRegisteredBeforeCheckinHandlers.size() + allActiveVcss.length);
+        List<BaseCheckinHandlerFactory> list = new ArrayList<>(myRegisteredBeforeCheckinHandlers.size() + allActiveVcss.length);
         list.addAll(myRegisteredBeforeCheckinHandlers);
         for (AbstractVcs vcs : allActiveVcss) {
-            final Collection<VcsCheckinHandlerFactory> factories = myVcsMap.get(vcs.getKeyInstanceMethod());
+            Collection<VcsCheckinHandlerFactory> factories = myVcsMap.get(vcs.getKeyInstanceMethod());
             if (!factories.isEmpty()) {
                 list.addAll(factories);
             }
@@ -69,9 +69,9 @@ public class CheckinHandlersManagerImpl extends CheckinHandlersManager {
 
     @Override
     public List<VcsCheckinHandlerFactory> getMatchingVcsFactories(@Nonnull List<AbstractVcs> vcsList) {
-        final SmartList<VcsCheckinHandlerFactory> result = new SmartList<>();
+        List<VcsCheckinHandlerFactory> result = new SmartList<>();
         for (AbstractVcs vcs : vcsList) {
-            final Collection<VcsCheckinHandlerFactory> factories = myVcsMap.get(vcs.getKeyInstanceMethod());
+            Collection<VcsCheckinHandlerFactory> factories = myVcsMap.get(vcs.getKeyInstanceMethod());
             if (!factories.isEmpty()) {
                 result.addAll(factories);
             }
