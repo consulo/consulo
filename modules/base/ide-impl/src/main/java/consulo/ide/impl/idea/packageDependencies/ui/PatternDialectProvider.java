@@ -56,7 +56,7 @@ public abstract class PatternDialectProvider {
         Project project,
         Set<PsiFile> deps,
         Marker marker,
-        final DependenciesPanel.DependencyPanelSettings settings
+        DependenciesPanel.DependencyPanelSettings settings
     );
 
     public abstract String getDisplayName();
@@ -64,21 +64,21 @@ public abstract class PatternDialectProvider {
     @Nonnull
     public abstract String getId();
 
-    public abstract AnAction[] createActions(Project project, final Runnable update);
+    public abstract AnAction[] createActions(Project project, Runnable update);
 
     @Nullable
-    public abstract PackageSet createPackageSet(final PackageDependenciesNode node, final boolean recursively);
+    public abstract PackageSet createPackageSet(PackageDependenciesNode node, boolean recursively);
 
     @Nullable
-    protected static String getModulePattern(final PackageDependenciesNode node) {
-        final ModuleNode moduleParent = getModuleParent(node);
+    protected static String getModulePattern(PackageDependenciesNode node) {
+        ModuleNode moduleParent = getModuleParent(node);
         return moduleParent != null ? moduleParent.getModuleName() : null;
     }
 
     @Nullable
     protected static ModuleNode getModuleParent(PackageDependenciesNode node) {
-        if (node instanceof ModuleNode) {
-            return (ModuleNode)node;
+        if (node instanceof ModuleNode moduleNode) {
+            return moduleNode;
         }
         if (node == null || node instanceof RootNode) {
             return null;

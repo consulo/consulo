@@ -18,15 +18,14 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
-import consulo.module.ui.awt.ChooseModulesDialog;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
-
+import consulo.module.Module;
+import consulo.module.ui.awt.ChooseModulesDialog;
+import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
@@ -38,7 +37,7 @@ import java.util.List;
 public abstract class ProjectStructureValidator {
     private static final ExtensionPointName<ProjectStructureValidator> EP_NAME = ExtensionPointName.create(ProjectStructureValidator.class);
 
-    public static List<ProjectStructureElementUsage> getUsagesInElement(final ProjectStructureElement element) {
+    public static List<ProjectStructureElementUsage> getUsagesInElement(ProjectStructureElement element) {
         for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
             List<ProjectStructureElementUsage> usages = validator.getUsagesIn(element);
             if (usages != null) {
@@ -57,26 +56,27 @@ public abstract class ProjectStructureValidator {
         element.check(project, problemsHolder);
     }
 
-    public static void showDialogAndAddLibraryToDependencies(final Library library, final Project project, boolean allowEmptySelection) {
+    @RequiredUIAccess
+    public static void showDialogAndAddLibraryToDependencies(Library library, Project project, boolean allowEmptySelection) {
         for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
             if (validator.addLibraryToDependencies(library, project, allowEmptySelection)) {
                 return;
             }
         }
 
-        final List<Module> modules = LibraryEditingUtil.getSuitableModules(project, ((LibraryEx)library).getKind(), library);
+        List<Module> modules = LibraryEditingUtil.getSuitableModules(project, library.getKind(), library);
         if (modules.isEmpty()) {
             return;
         }
-        final ChooseModulesDialog dlg = new ChooseModulesDialog(
+        ChooseModulesDialog dlg = new ChooseModulesDialog(
             project,
             modules,
-            ProjectBundle.message("choose.modules.dialog.title"),
-            ProjectBundle.message("choose.modules.dialog.description", library.getName())
+            ProjectLocalize.chooseModulesDialogTitle().get(),
+            ProjectLocalize.chooseModulesDialogDescription(library.getName()).get()
         );
         dlg.show();
         if (dlg.isOK()) {
-            final List<Module> chosenModules = dlg.getChosenElements();
+            List<Module> chosenModules = dlg.getChosenElements();
             for (Module module : chosenModules) {
                 ModuleStructureConfigurable.addLibraryOrderEntry(module, library);
             }
@@ -86,7 +86,7 @@ public abstract class ProjectStructureValidator {
     /**
      * @return <code>true</code> if handled
      */
-    protected boolean addLibraryToDependencies(final Library library, final Project project, final boolean allowEmptySelection) {
+    protected boolean addLibraryToDependencies(Library library, Project project, boolean allowEmptySelection) {
         return false;
     }
 
@@ -102,7 +102,7 @@ public abstract class ProjectStructureValidator {
      * @return list of usages or <code>null</code> when it does not handle such element
      */
     @Nullable
-    protected List<ProjectStructureElementUsage> getUsagesIn(final ProjectStructureElement element) {
+    protected List<ProjectStructureElementUsage> getUsagesIn(ProjectStructureElement element) {
         return null;
     }
 }

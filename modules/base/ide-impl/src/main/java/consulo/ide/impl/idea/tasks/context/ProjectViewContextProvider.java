@@ -55,6 +55,7 @@ public class ProjectViewContextProvider extends WorkingContextProvider {
         return "Project view state";
     }
 
+    @Override
     public void saveContext(Element toElement) throws WriteExternalException {
         for (AbstractProjectViewPane pane : myPanes) {
             Element paneElement = new Element(pane.getId());
@@ -63,6 +64,7 @@ public class ProjectViewContextProvider extends WorkingContextProvider {
         }
     }
 
+    @Override
     public void loadContext(Element fromElement) throws InvalidDataException {
         for (AbstractProjectViewPane pane : myPanes) {
             Element paneElement = fromElement.getChild(pane.getId());
@@ -75,6 +77,7 @@ public class ProjectViewContextProvider extends WorkingContextProvider {
         }
     }
 
+    @Override
     public void clearContext() {
         for (AbstractProjectViewPane pane : myPanes) {
             JTree tree = pane.getTree();

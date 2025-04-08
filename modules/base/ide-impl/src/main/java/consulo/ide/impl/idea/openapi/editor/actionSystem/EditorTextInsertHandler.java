@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actionSystem;
 
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.util.Producer;
+import consulo.dataContext.DataContext;
 
 import java.awt.datatransfer.Transferable;
+import java.util.function.Supplier;
 
 /**
  * @author pegov
  */
 public interface EditorTextInsertHandler {
-  
-  void execute(final Editor editor, final DataContext dataContext, final Producer<Transferable> producer);  
+    void execute(Editor editor, DataContext dataContext, Supplier<Transferable> producer);
 }

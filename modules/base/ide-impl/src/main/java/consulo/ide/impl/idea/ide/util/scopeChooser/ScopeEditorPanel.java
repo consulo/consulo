@@ -71,7 +71,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class ScopeEditorPanel {
-
     private JPanel myButtonsPanel;
     private RawCommandLineEditor myPatternField;
     private JPanel myTreeToolbar;

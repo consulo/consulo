@@ -18,7 +18,6 @@ package consulo.ide.impl.psi.impl.cache.impl.todo;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.util.lang.Comparing;
 import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import consulo.index.io.DataIndexer;
 import consulo.index.io.ID;
@@ -35,13 +34,12 @@ import consulo.language.psi.stub.todo.TodoIndexer;
 import consulo.language.psi.stub.todo.VersionedTodoIndexer;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.inject.Inject;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -51,11 +49,10 @@ import java.util.Collections;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jan 20, 2008
+ * @since 2008-01-20
  */
 @ExtensionImpl
 public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> {
-    @NonNls
     public static final ID<TodoIndexEntry, Integer> NAME = ID.create("TodoIndex");
 
     private final FileTypeManager myFileTypeManager;
@@ -70,15 +67,15 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
 
     private final KeyDescriptor<TodoIndexEntry> myKeyDescriptor = new KeyDescriptor<>() {
         @Override
-        public void save(@Nonnull final DataOutput out, final TodoIndexEntry value) throws IOException {
+        public void save(@Nonnull DataOutput out, TodoIndexEntry value) throws IOException {
             out.writeUTF(value.getPattern());
             out.writeBoolean(value.isCaseSensitive());
         }
 
         @Override
-        public TodoIndexEntry read(@Nonnull final DataInput in) throws IOException {
-            final String pattern = in.readUTF();
-            final boolean caseSensitive = in.readBoolean();
+        public TodoIndexEntry read(@Nonnull DataInput in) throws IOException {
+            String pattern = in.readUTF();
+            boolean caseSensitive = in.readBoolean();
             return new TodoIndexEntry(pattern, caseSensitive);
         }
     };
@@ -91,8 +88,8 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
     };
 
     private final DataIndexer<TodoIndexEntry, Integer, FileContent> myIndexer = inputData -> {
-        final VirtualFile file = inputData.getFile();
-        final DataIndexer<TodoIndexEntry, Integer, FileContent> indexer =
+        VirtualFile file = inputData.getFile();
+        DataIndexer<TodoIndexEntry, Integer, FileContent> indexer =
             PlatformIdTableBuilding.getTodoIndexer(inputData.getFileType(), inputData.getProject(), file);
         if (indexer != null) {
             return indexer.map(inputData);
@@ -122,7 +119,7 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
                 continue;
             }
 
-            int versionFromIndexer = indexer instanceof VersionedTodoIndexer ? (((VersionedTodoIndexer)indexer).getVersion()) : 0xFF;
+            int versionFromIndexer = indexer instanceof VersionedTodoIndexer todoIndexer ? todoIndexer.getVersion() : 0xFF;
             version = version * 31 + (versionFromIndexer ^ indexer.getClass().getName().hashCode());
         }
         return version;

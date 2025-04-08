@@ -48,8 +48,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * User: anna
- * Date: 07-Feb-2006
+ * @author anna
+ * @since 2006-02-07
  */
 @Singleton
 @ServiceImpl

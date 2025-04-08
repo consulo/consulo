@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.impl;
 import consulo.project.ui.view.CompositeSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
@@ -51,27 +52,28 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
     }
 
     @Override
-    protected final void select(final Object selector, final VirtualFile virtualFile, final boolean requestFocus) {
+    @RequiredUIAccess
+    protected final void select(Object selector, VirtualFile virtualFile, boolean requestFocus) {
         select(myProject, selector, getMinorViewId(), mySubId, virtualFile, requestFocus);
     }
 
     @Nonnull
+    @RequiredUIAccess
     public static ActionCallback select(
         @Nonnull Project project,
-        final Object toSelect,
-        @Nullable final String viewId,
-        @Nullable final String subviewId,
-        final VirtualFile virtualFile,
-        final boolean requestFocus
+        Object toSelect,
+        @Nullable String viewId,
+        @Nullable String subviewId,
+        VirtualFile virtualFile,
+        boolean requestFocus
     ) {
-        final ActionCallback result = new ActionCallback();
+        ActionCallback result = new ActionCallback();
 
-        final ProjectView projectView = ProjectView.getInstance(project);
-
+        ProjectView projectView = ProjectView.getInstance(project);
 
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
-        final ToolWindow projectViewToolWindow = windowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
-        final Runnable runnable = () -> {
+        ToolWindow projectViewToolWindow = windowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
+        Runnable runnable = () -> {
             Runnable r = () -> projectView.selectCB(toSelect, virtualFile, requestFocus).notify(result);
             projectView.changeViewCB(ObjectUtil.chooseNotNull(viewId, ProjectViewPaneImpl.ID), subviewId).doWhenProcessed(r);
         };
@@ -113,7 +115,8 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
     }
 
     @Override
-    public void select(PsiElement element, final boolean requestFocus) {
+    @RequiredUIAccess
+    public void select(PsiElement element, boolean requestFocus) {
         PsiElement toSelect = null;
         for (TreeStructureProvider provider : getProvidersDumbAware()) {
             if (provider instanceof SelectableTreeStructureProvider) {

@@ -2,7 +2,6 @@ package consulo.ide.impl.idea.openapi.externalSystem.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
@@ -12,6 +11,7 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemProcessingManager;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
@@ -24,16 +24,16 @@ import java.util.List;
  * (e.g. imports missing libraries).
  *
  * @author Denis Zhdanov
- * @since 1/23/12 3:48 PM
+ * @since 2012-01-23
  */
 public class RefreshAllExternalProjectsAction extends AnAction implements DumbAware {
-
     public RefreshAllExternalProjectsAction() {
-        getTemplatePresentation().setText(ExternalSystemBundle.message("action.refresh.all.projects.text", "external"));
-        getTemplatePresentation().setDescription(ExternalSystemBundle.message("action.refresh.all.projects.description", "external"));
+        getTemplatePresentation().setTextValue(ExternalSystemLocalize.actionRefreshAllProjectsText("external"));
+        getTemplatePresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshAllProjectsDescription("external"));
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
         final Project project = e.getDataContext().getData(Project.KEY);
         if (project == null) {
@@ -56,6 +56,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         final Project project = e.getDataContext().getData(Project.KEY);
         if (project == null) {

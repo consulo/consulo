@@ -91,13 +91,12 @@ public class PatchReader {
     }
 
     @Nullable
-    public CharSequence getBaseRevision(final Project project, final String relativeFilePath) {
-        final Map<String, Map<String, CharSequence>> map = myAdditionalInfoParser.getResultMap();
+    public CharSequence getBaseRevision(Project project, String relativeFilePath) {
+        Map<String, Map<String, CharSequence>> map = myAdditionalInfoParser.getResultMap();
         if (!map.isEmpty()) {
-            final Map<String, CharSequence> inner = map.get(relativeFilePath);
+            Map<String, CharSequence> inner = map.get(relativeFilePath);
             if (inner != null) {
-                final BaseRevisionTextPatchEP baseRevisionTextPatchEP =
-                    PatchEP.EP_NAME.findExtension(project, BaseRevisionTextPatchEP.class);
+                BaseRevisionTextPatchEP baseRevisionTextPatchEP = PatchEP.EP_NAME.findExtension(project, BaseRevisionTextPatchEP.class);
                 if (baseRevisionTextPatchEP != null) {
                     return inner.get(baseRevisionTextPatchEP.getName());
                 }
@@ -107,19 +106,19 @@ public class PatchReader {
     }
 
     /*private void callAdditionalInfoExtensions() {
-        final Map<String, Map<String, CharSequence>> map = myAdditionalInfoParser.getResultMap();
+        Map<String, Map<String, CharSequence>> map = myAdditionalInfoParser.getResultMap();
         if (! map.isEmpty()) {
             PatchEP[] extensions = Extensions.getExtensions(PatchEP.EP_NAME, myProject);
-            final Map<String, PatchEP> byName = new HashMap<String, PatchEP>();
+            Map<String, PatchEP> byName = new HashMap<String, PatchEP>();
             for (PatchEP extension : extensions) {
                 byName.put(extension.getName(), extension);
             }
             if (extensions == null || extensions.length == 0) return;
             for (Map.Entry<String, Map<String, CharSequence>> entry : map.entrySet()) {
-                final String path = entry.getKey();
-                final Map<String, CharSequence> extensionToContents = entry.getValue();
+                String path = entry.getKey();
+                Map<String, CharSequence> extensionToContents = entry.getValue();
                 for (Map.Entry<String, CharSequence> innerEntry : extensionToContents.entrySet()) {
-                    final PatchEP patchEP = byName.get(innerEntry.getKey());
+                    PatchEP patchEP = byName.get(innerEntry.getKey());
                     if (patchEP != null) {
                         patchEP.consumeContentBeforePatchApplied(path, innerEntry.getValue(), myCommitContext);
                     }
@@ -140,7 +139,7 @@ public class PatchReader {
     }
 
     public void parseAllPatches() throws PatchSyntaxException {
-        final ListIterator<String> iterator = myLines.listIterator();
+        ListIterator<String> iterator = myLines.listIterator();
         if (!iterator.hasNext()) {
             myPatches = Collections.emptyList();
             return;
@@ -150,7 +149,7 @@ public class PatchReader {
         boolean containsAdditional = false;
         while (iterator.hasNext()) {
             next = iterator.next();
-            final boolean containsAdditionalNow = myAdditionalInfoParser.testIsStart(next);
+            boolean containsAdditionalNow = myAdditionalInfoParser.testIsStart(next);
             if (containsAdditionalNow && containsAdditional) {
                 myAdditionalInfoParser.acceptError(new PatchSyntaxException(
                     iterator.previousIndex(),
@@ -174,7 +173,7 @@ public class PatchReader {
                 myPatchContentParser.parse(next, iterator);
                 //iterator.previous();  // to correctly initialize next
                 if (containsAdditional) {
-                    final String lastName = myPatchContentParser.getLastName();
+                    String lastName = myPatchContentParser.getLastName();
                     if (lastName == null) {
                         myAdditionalInfoParser.acceptError(new PatchSyntaxException(
                             iterator.previousIndex(),
@@ -232,7 +231,7 @@ public class PatchReader {
             return myResultMap;
         }
 
-        public void copyToResult(final String filePath) {
+        public void copyToResult(String filePath) {
             if (myAddMap != null && !myAddMap.isEmpty()) {
                 myResultMap.put(filePath, myAddMap);
                 myAddMap = new HashMap<>();
@@ -258,8 +257,8 @@ public class PatchReader {
                 return;
             }
             while (true) {
-                final String header = iterator.next();
-                final int idxHead = header.indexOf(UnifiedDiffWriter.ADD_INFO_HEADER);
+                String header = iterator.next();
+                int idxHead = header.indexOf(UnifiedDiffWriter.ADD_INFO_HEADER);
                 if (idxHead == -1) {
                     if (myAddMap.isEmpty()) {
                         mySyntaxException = new PatchSyntaxException(iterator.previousIndex(), "Empty additional info header");
@@ -268,16 +267,16 @@ public class PatchReader {
                     return;
                 }
 
-                final String subsystem = header.substring(idxHead + UnifiedDiffWriter.ADD_INFO_HEADER.length()).trim();
+                String subsystem = header.substring(idxHead + UnifiedDiffWriter.ADD_INFO_HEADER.length()).trim();
                 if (!iterator.hasNext()) {
                     mySyntaxException = new PatchSyntaxException(iterator.previousIndex(), "Empty '" + subsystem + "' data section");
                     return;
                 }
 
-                final StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 myAddMap.put(subsystem, sb);
                 while (iterator.hasNext()) {
-                    final String line = iterator.next();
+                    String line = iterator.next();
                     if (!line.startsWith(UnifiedDiffWriter.ADD_INFO_LINE_START)) {
                         iterator.previous();
                         break;
@@ -333,7 +332,7 @@ public class PatchReader {
 
         @Override
         public void parse(String start, ListIterator<String> iterator) throws PatchSyntaxException {
-            final TextFilePatch patch = readPatch(start, iterator);
+            TextFilePatch patch = readPatch(start, iterator);
             if (patch != null) {
                 myPatches.add(patch);
             }
@@ -346,7 +345,7 @@ public class PatchReader {
         }
 
         private TextFilePatch readPatch(String curLine, ListIterator<String> iterator) throws PatchSyntaxException {
-            final TextFilePatch curPatch = mySaveHunks ? new TextFilePatch(null) : new EmptyTextFilePatch();
+            TextFilePatch curPatch = mySaveHunks ? new TextFilePatch(null) : new EmptyTextFilePatch();
             extractFileName(curLine, curPatch, true, myDiffCommandLike && myIndexLike);
 
             if (!iterator.hasNext()) {
@@ -407,10 +406,10 @@ public class PatchReader {
                 throw new PatchSyntaxException(iterator.previousIndex(), "Unknown hunk start syntax");
             }
             int startLineBefore = Integer.parseInt(m.group(1));
-            final String linesBeforeText = m.group(3);
+            String linesBeforeText = m.group(3);
             int linesBefore = linesBeforeText == null ? 1 : Integer.parseInt(linesBeforeText);
             int startLineAfter = Integer.parseInt(m.group(4));
-            final String linesAfterText = m.group(6);
+            String linesAfterText = m.group(6);
             int linesAfter = linesAfterText == null ? 1 : Integer.parseInt(linesAfterText);
             PatchHunk hunk =
                 new PatchHunk(startLineBefore - 1, startLineBefore + linesBefore - 1, startLineAfter - 1, startLineAfter + linesAfter - 1);
@@ -452,18 +451,18 @@ public class PatchReader {
                 return null;
             }
             else {
-                final TextFilePatch patch = myPatches.get(myPatches.size() - 1);
+                TextFilePatch patch = myPatches.get(myPatches.size() - 1);
                 return patch.getBeforeName() == null ? patch.getAfterName() : patch.getBeforeName();
             }
         }
 
         @Nullable
-        private static PatchLine parsePatchLine(final String line, final int prefixLength) {
+        private static PatchLine parsePatchLine(String line, int prefixLength) {
             return parsePatchLine(line, prefixLength, true);
         }
 
         @Nullable
-        private static PatchLine parsePatchLine(final String line, final int prefixLength, boolean expectMeaningfulLines) {
+        private static PatchLine parsePatchLine(String line, int prefixLength, boolean expectMeaningfulLines) {
             PatchLine.Type type;
             if (line.startsWith("+") && expectMeaningfulLines) {
                 type = PatchLine.Type.ADD;
@@ -583,12 +582,12 @@ public class PatchReader {
             return hunk;
         }
 
-        private static boolean startsWith(@Nullable final String line, final String prefix) {
+        private static boolean startsWith(@Nullable String line, String prefix) {
             return line != null && line.startsWith(prefix);
         }
 
-        private static PatchLine addContextDiffLine(final PatchHunk hunk, final String line, final PatchLine.Type type) {
-            final PatchLine patchLine = new PatchLine(type, line.length() < 2 ? "" : line.substring(2));
+        private static PatchLine addContextDiffLine(PatchHunk hunk, String line, PatchLine.Type type) {
+            PatchLine patchLine = new PatchLine(type, line.length() < 2 ? "" : line.substring(2));
             hunk.addLine(patchLine);
             return patchLine;
         }
@@ -596,7 +595,7 @@ public class PatchReader {
         private List<String> readContextDiffLines(ListIterator<String> iterator) {
             ArrayList<String> result = new ArrayList<>();
             while (iterator.hasNext()) {
-                final String line = iterator.next();
+                String line = iterator.next();
                 if (!line.startsWith(" ") && !line.startsWith("+ ") && !line.startsWith("- ") && !line.startsWith("! ") &&
                     !line.startsWith(NO_NEWLINE_SIGNATURE)) {
                     iterator.previous();
@@ -607,7 +606,7 @@ public class PatchReader {
             return result;
         }
 
-        private static void extractFileName(final String curLine, final FilePatch patch, final boolean before, final boolean gitPatch) {
+        private static void extractFileName(String curLine, FilePatch patch, boolean before, boolean gitPatch) {
             String fileName = curLine.substring(4);
             int pos = fileName.indexOf('\t');
             if (pos < 0) {
@@ -644,9 +643,9 @@ public class PatchReader {
     }
 
     private interface Parser {
-        boolean testIsStart(final String start);
+        boolean testIsStart(String start);
 
-        void parse(final String start, final ListIterator<String> iterator) throws PatchSyntaxException;
+        void parse(String start, ListIterator<String> iterator) throws PatchSyntaxException;
     }
 
     private static class EmptyTextFilePatch extends TextFilePatch {
@@ -687,7 +686,7 @@ public class PatchReader {
             return false;
         }
         List<String> lines = LineTokenizer.tokenizeIntoList(content, false);
-        final ListIterator<String> iterator = lines.listIterator();
+        ListIterator<String> iterator = lines.listIterator();
         DiffFormat currentFormat = null;
         while (iterator.hasNext()) {
             String line = iterator.next();

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
@@ -42,23 +42,17 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author nik
  */
 public class RemoteFilePanel implements PropertyChangeListener {
     private static final Logger LOG = Logger.getInstance(RemoteFilePanel.class);
-    @NonNls
     private static final String ERROR_CARD = "error";
-    @NonNls
     private static final String DOWNLOADING_CARD = "downloading";
-    @NonNls
     private static final String EDITOR_CARD = "editor";
     private JPanel myMainPanel;
     private JLabel myProgressLabel;
@@ -90,23 +84,15 @@ public class RemoteFilePanel implements PropertyChangeListener {
         final RemoteFileInfo remoteFileInfo = virtualFile.getFileInfo();
         myDownloadingListener = new MyDownloadingListener();
         remoteFileInfo.addDownloadingListener(myDownloadingListener);
-        myCancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                remoteFileInfo.cancelDownloading();
-            }
-        });
+        myCancelButton.addActionListener(e -> remoteFileInfo.cancelDownloading());
 
-        myTryAgainButton.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                showCard(DOWNLOADING_CARD);
-                remoteFileInfo.restartDownloading();
-            }
+        myTryAgainButton.addActionListener(e -> {
+            showCard(DOWNLOADING_CARD);
+            remoteFileInfo.restartDownloading();
         });
-        myChangeProxySettingsButton.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                ShowSettingsUtil.getInstance().editConfigurable(myMainPanel, new HttpProxyConfigurable());
-            }
-        });
+        myChangeProxySettingsButton.addActionListener(
+            e -> ShowSettingsUtil.getInstance().editConfigurable(myMainPanel, new HttpProxyConfigurable())
+        );
         showCard(DOWNLOADING_CARD);
         remoteFileInfo.startDownloading();
         if (remoteFileInfo.getState() == RemoteFileState.DOWNLOADED) {
@@ -126,26 +112,24 @@ public class RemoteFilePanel implements PropertyChangeListener {
         for (RemoteFileEditorActionProvider actionProvider : RemoteFileEditorActionProvider.EP_NAME.getExtensionList()) {
             group.addAll(actionProvider.createToolbarActions(project, myVirtualFile));
         }
-        final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
         myToolbarPanel.add(actionToolbar.getComponent(), BorderLayout.CENTER);
     }
 
-    private void showCard(final String name) {
+    private void showCard(String name) {
         ((CardLayout)myContentPanel.getLayout()).show(myContentPanel, name);
     }
 
     private void switchEditor() {
         LOG.debug("Switching editor...");
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            public void run() {
-                final TextEditor textEditor = (TextEditor)TextEditorProvider.getInstance().createEditor(myProject, myVirtualFile);
-                textEditor.addPropertyChangeListener(RemoteFilePanel.this);
-                myEditorPanel.removeAll();
-                myEditorPanel.add(textEditor.getComponent(), BorderLayout.CENTER);
-                myFileEditor = textEditor;
-                showCard(EDITOR_CARD);
-                LOG.debug("Editor for downloaded file opened.");
-            }
+        Application.get().invokeLater(() -> {
+            TextEditor textEditor = (TextEditor)TextEditorProvider.getInstance().createEditor(myProject, myVirtualFile);
+            textEditor.addPropertyChangeListener(RemoteFilePanel.this);
+            myEditorPanel.removeAll();
+            myEditorPanel.add(textEditor.getComponent(), BorderLayout.CENTER);
+            myFileEditor = textEditor;
+            showCard(EDITOR_CARD);
+            LOG.debug("Editor for downloaded file opened.");
         });
     }
 
@@ -159,23 +143,19 @@ public class RemoteFilePanel implements PropertyChangeListener {
     }
 
     public void selectNotify() {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-            public void run() {
-                myProgressUpdatesQueue.showNotify();
-                if (myFileEditor != null) {
-                    myFileEditor.selectNotify();
-                }
+        UIUtil.invokeLaterIfNeeded(() -> {
+            myProgressUpdatesQueue.showNotify();
+            if (myFileEditor != null) {
+                myFileEditor.selectNotify();
             }
         });
     }
 
     public void deselectNotify() {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-            public void run() {
-                myProgressUpdatesQueue.hideNotify();
-                if (myFileEditor != null) {
-                    myFileEditor.deselectNotify();
-                }
+        UIUtil.invokeLaterIfNeeded(() -> {
+            myProgressUpdatesQueue.hideNotify();
+            if (myFileEditor != null) {
+                myFileEditor.deselectNotify();
             }
         });
     }
@@ -196,56 +176,57 @@ public class RemoteFilePanel implements PropertyChangeListener {
         myDispatcher.removeListener(listener);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         myDispatcher.getMulticaster().propertyChange(evt);
     }
 
     private class MyDownloadingListener implements FileDownloadingListener {
+        @Override
         public void fileDownloaded(final VirtualFile localFile) {
             switchEditor();
         }
 
+        @Override
         public void downloadingCancelled() {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                public void run() {
-                    if (myFileEditor != null) {
-                        showCard(EDITOR_CARD);
-                    }
-                    else {
-                        myErrorLabel.setText("Downloading cancelled");
-                        showCard(ERROR_CARD);
-                    }
+            Application.get().invokeLater(() -> {
+                if (myFileEditor != null) {
+                    showCard(EDITOR_CARD);
                 }
-            });
-        }
-
-        public void downloadingStarted() {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                public void run() {
-                    showCard(DOWNLOADING_CARD);
-                }
-            });
-        }
-
-        public void errorOccurred(@Nonnull final String errorMessage) {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                public void run() {
-                    myErrorLabel.setText(errorMessage);
+                else {
+                    myErrorLabel.setText("Downloading cancelled");
                     showCard(ERROR_CARD);
                 }
             });
         }
 
+        @Override
+        public void downloadingStarted() {
+            Application.get().invokeLater(() -> showCard(DOWNLOADING_CARD));
+        }
+
+        @Override
+        public void errorOccurred(@Nonnull final String errorMessage) {
+            Application.get().invokeLater(() -> {
+                myErrorLabel.setText(errorMessage);
+                showCard(ERROR_CARD);
+            });
+        }
+
+        @Override
         public void progressMessageChanged(final boolean indeterminate, @Nonnull final String message) {
             myProgressUpdatesQueue.queue(new Update("progress text") {
+                @Override
                 public void run() {
                     myProgressLabel.setText(message);
                 }
             });
         }
 
+        @Override
         public void progressFractionChanged(final double fraction) {
             myProgressUpdatesQueue.queue(new Update("fraction") {
+                @Override
                 public void run() {
                     myProgressBar.setValue((int)Math.round(100 * fraction));
                 }

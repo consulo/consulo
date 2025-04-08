@@ -6,7 +6,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.Inlay;
@@ -47,9 +46,9 @@ import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.Balloon.Position;
 import consulo.undoRedo.ProjectUndoManager;
@@ -146,7 +145,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         return myHint.isVisible() && (!mySingleParameterInfo || anyType);
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     public ParameterInfoController(
         @Nonnull Project project,
         @Nonnull Editor editor,
@@ -245,7 +244,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         myEditor.getCaretModel().removeCaretListener(myEditorCaretListener);
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     public void showHint(boolean requestFocus, boolean singleParameterInfo) {
         if (myHint.isVisible()) {
             JComponent myHintComponent = myHint.getComponent();
@@ -322,7 +321,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
 
     private void rescheduleUpdate() {
         myAlarm.cancelAllRequests();
-        myAlarm.addRequest(this::updateWhenAllCommitted, DELAY, IdeaModalityState.stateForComponent(myEditor.getComponent()));
+        myAlarm.addRequest(this::updateWhenAllCommitted, DELAY, Application.get().getModalityStateForComponent(myEditor.getComponent()));
     }
 
     private void updateWhenAllCommitted() {
@@ -346,56 +345,63 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
             return;
         }
 
-        final PsiFile file = PsiUtilBase.getPsiFileInEditor(myEditor, myProject);
+        PsiFile file = PsiUtilBase.getPsiFileInEditor(myEditor, myProject);
         int caretOffset = myEditor.getCaretModel().getOffset();
-        final int offset = getCurrentOffset();
-        final MyUpdateParameterInfoContext context = new MyUpdateParameterInfoContext(offset, file);
-        executeFindElementForUpdatingParameterInfo(context, elementForUpdating -> {
-            myHandler.processFoundElementForUpdatingParameterInfo(elementForUpdating, context);
-            if (elementForUpdating != null) {
-                executeUpdateParameterInfo(elementForUpdating, context, () -> {
-                    boolean knownParameter = (myComponent.getObjects().length == 1 || myComponent.getHighlighted() != null)
-                        && myComponent.getCurrentParameterIndex() != -1;
-                    if (mySingleParameterInfo && !knownParameter && myHint.isVisible()) {
-                        hideHint();
-                    }
-                    if (myKeepOnHintHidden && knownParameter && !myHint.isVisible()) {
-                        AutoPopupController.getInstance(myProject).autoPopupParameterInfo(myEditor, null);
-                    }
-                    if (!myDisposed && (myHint.isVisible() && !myEditor.isDisposed()
-                            && (myEditor.getComponent().getRootPane() != null || Application.get().isUnitTestMode())
-                            || Application.get().isHeadlessEnvironment())) {
-                        Model result = myComponent.update(mySingleParameterInfo);
-                        result.project = myProject;
-                        result.range = myComponent.getParameterOwner().getTextRange();
-                        result.editor = myEditor;
-                        //for (ParameterInfoListener listener : ParameterInfoListener.EP_NAME.getExtensionList()) {
-                        //    listener.hintUpdated(result);
-                        //}
-                        if (Application.get().isHeadlessEnvironment()) {
-                            return;
+        int offset = getCurrentOffset();
+        MyUpdateParameterInfoContext context = new MyUpdateParameterInfoContext(offset, file);
+        executeFindElementForUpdatingParameterInfo(
+            context,
+            elementForUpdating -> {
+                myHandler.processFoundElementForUpdatingParameterInfo(elementForUpdating, context);
+                if (elementForUpdating != null) {
+                    executeUpdateParameterInfo(
+                        elementForUpdating,
+                        context,
+                        () -> {
+                            boolean knownParameter = (myComponent.getObjects().length == 1 || myComponent.getHighlighted() != null)
+                                && myComponent.getCurrentParameterIndex() != -1;
+                            if (mySingleParameterInfo && !knownParameter && myHint.isVisible()) {
+                                hideHint();
+                            }
+                            if (myKeepOnHintHidden && knownParameter && !myHint.isVisible()) {
+                                AutoPopupController.getInstance(myProject).autoPopupParameterInfo(myEditor, null);
+                            }
+                            if (!myDisposed && (myHint.isVisible() && !myEditor.isDisposed()
+                                && (myEditor.getComponent().getRootPane() != null || Application.get().isUnitTestMode())
+                                || Application.get().isHeadlessEnvironment())) {
+                                Model result = myComponent.update(mySingleParameterInfo);
+                                result.project = myProject;
+                                result.range = myComponent.getParameterOwner().getTextRange();
+                                result.editor = myEditor;
+                                //for (ParameterInfoListener listener : ParameterInfoListener.EP_NAME.getExtensionList()) {
+                                //    listener.hintUpdated(result);
+                                //}
+                                if (Application.get().isHeadlessEnvironment()) {
+                                    return;
+                                }
+                                IdeTooltip tooltip = myHint.getCurrentIdeTooltip();
+                                short position = tooltip != null ? toShort(tooltip.getPreferredPosition()) : HintManager.ABOVE;
+                                Pair<Point, Short> pos = myProvider.getBestPointPosition(
+                                    myHint,
+                                    elementForUpdating,
+                                    caretOffset,
+                                    myEditor.getCaretModel().getVisualPosition(),
+                                    position
+                                );
+                                HintManagerImpl.getInstanceImpl()
+                                    .adjustEditorHintPosition(myHint, myEditor, pos.getFirst(), pos.getSecond());
+                            }
                         }
-                        IdeTooltip tooltip = myHint.getCurrentIdeTooltip();
-                        short position = tooltip != null ? toShort(tooltip.getPreferredPosition()) : HintManager.ABOVE;
-                        Pair<Point, Short> pos =
-                            myProvider.getBestPointPosition(
-                                myHint,
-                                elementForUpdating,
-                                caretOffset,
-                                myEditor.getCaretModel().getVisualPosition(),
-                                position
-                            );
-                        HintManagerImpl.getInstanceImpl().adjustEditorHintPosition(myHint, myEditor, pos.getFirst(), pos.getSecond());
+                    );
+                }
+                else {
+                    hideHint();
+                    if (!myKeepOnHintHidden) {
+                        Disposer.dispose(this);
                     }
-                });
-            }
-            else {
-                hideHint();
-                if (!myKeepOnHintHidden) {
-                    Disposer.dispose(this);
                 }
             }
-        });
+        );
     }
 
     private int getCurrentOffset() {
@@ -471,11 +477,13 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         }
     }
 
+    @RequiredReadAction
     static boolean hasPrevOrNextParameter(Editor editor, int lbraceOffset, boolean isNext) {
         ParameterInfoController controller = findControllerAtOffset(editor, lbraceOffset);
         return controller != null && controller.getPrevOrNextParameterOffset(isNext) != -1;
     }
 
+    @RequiredReadAction
     static void prevOrNextParameter(Editor editor, int lbraceOffset, boolean isNext) {
         ParameterInfoController controller = findControllerAtOffset(editor, lbraceOffset);
         int newOffset = controller != null ? controller.getPrevOrNextParameterOffset(isNext) : -1;
@@ -625,12 +633,8 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
 
         if (handlers != null) {
             for (ParameterInfoHandler handler : handlers) {
-                if (handler instanceof ParameterInfoHandlerWithTabActionSupport) {
-                    final ParameterInfoHandlerWithTabActionSupport parameterInfoHandler2 =
-                        (ParameterInfoHandlerWithTabActionSupport)handler;
-
-                    // please don't remove typecast in the following line; it's required to compile the code under old JDK 6 versions
-                    final E e = ParameterInfoUtils.findArgumentList(file, offset, lbraceOffset, parameterInfoHandler2);
+                if (handler instanceof ParameterInfoHandlerWithTabActionSupport parameterInfoHandler2) {
+                    E e = ParameterInfoUtils.findArgumentList(file, offset, lbraceOffset, parameterInfoHandler2);
                     if (e != null) {
                         return e;
                     }
@@ -681,6 +685,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
      * Returned Point is in layered pane coordinate system.
      * Second value is a {@link HintManager.PositionFlags position flag}.
      */
+    @RequiredUIAccess
     static Pair<Point, Short> chooseBestHintPosition(
         Editor editor,
         VisualPosition pos,
@@ -746,7 +751,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         private final PsiFile myFile;
         private final boolean[] enabled;
 
-        MyUpdateParameterInfoContext(final int offset, final PsiFile file) {
+        MyUpdateParameterInfoContext(int offset, PsiFile file) {
             myOffset = offset;
             myFile = file;
 
@@ -797,7 +802,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         }
 
         @Override
-        public void setParameterOwner(final PsiElement o) {
+        public void setParameterOwner(PsiElement o) {
             myComponent.setParameterOwner(o);
         }
 
@@ -807,7 +812,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         }
 
         @Override
-        public void setHighlightedParameter(final Object method) {
+        public void setHighlightedParameter(Object method) {
             myComponent.setHighlightedParameter(method);
         }
 
@@ -817,7 +822,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         }
 
         @Override
-        public void setCurrentParameter(final int index) {
+        public void setCurrentParameter(int index) {
             myComponent.setCurrentParameterIndex(index);
         }
 
@@ -959,15 +964,15 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         private Point previousBestPoint;
         private Short previousBestPosition;
 
-        MyBestLocationPointProvider(final Editor editor) {
+        MyBestLocationPointProvider(Editor editor) {
             myEditor = editor;
         }
 
         @Nonnull
-        @RequiredReadAction
+        @RequiredUIAccess
         private Pair<Point, Short> getBestPointPosition(
             LightweightHintImpl hint,
-            final PsiElement list,
+            PsiElement list,
             int offset,
             VisualPosition pos,
             short preferredPosition
@@ -986,7 +991,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
                 return Pair.create(previousBestPoint, previousBestPosition);
             }
 
-            final boolean isMultiline = list != null && StringUtil.containsAnyChar(list.getText(), "\n\r");
+            boolean isMultiline = list != null && StringUtil.containsAnyChar(list.getText(), "\n\r");
             if (pos == null) {
                 pos = EditorUtil.inlayAwareOffsetToVisualPosition(myEditor, offset);
             }

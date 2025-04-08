@@ -70,7 +70,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
                 scope = getInherentResolveScope(key);
             }
             for (ResolveScopeEnlarger enlarger : ResolveScopeEnlarger.EP_NAME.getExtensionList()) {
-                final SearchScope extra = enlarger.getAdditionalResolveScope(key, myProject);
+                SearchScope extra = enlarger.getAdditionalResolveScope(key, myProject);
                 if (extra != null) {
                     scope = scope.union(extra);
                 }
@@ -114,7 +114,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
 
             GlobalSearchScope allCandidates = LibraryScopeCache.getInstance(myProject).getScopeForLibraryUsedIn(modulesLibraryUsedIn);
             if (lib != null) {
-                final LibraryRuntimeClasspathScope preferred = new LibraryRuntimeClasspathScope(myProject, lib);
+                LibraryRuntimeClasspathScope preferred = new LibraryRuntimeClasspathScope(myProject, lib);
                 // prefer current library
                 return new DelegatingGlobalSearchScope(allCandidates, preferred) {
                     @Override
@@ -142,19 +142,19 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
         ProgressIndicatorProvider.checkCanceled();
 
         VirtualFile vFile;
-        final PsiFile contextFile;
+        PsiFile contextFile;
         if (element instanceof PsiDirectory) {
             vFile = ((PsiDirectory)element).getVirtualFile();
             contextFile = null;
         }
         else {
-            final PsiFile containingFile = element.getContainingFile();
-            if (containingFile instanceof PsiCodeFragment) {
-                final GlobalSearchScope forcedScope = ((PsiCodeFragment)containingFile).getForcedResolveScope();
+            PsiFile containingFile = element.getContainingFile();
+            if (containingFile instanceof PsiCodeFragment codeFragment) {
+                GlobalSearchScope forcedScope = codeFragment.getForcedResolveScope();
                 if (forcedScope != null) {
                     return forcedScope;
                 }
-                final PsiElement context = containingFile.getContext();
+                PsiElement context = containingFile.getContext();
                 if (context == null) {
                     return GlobalSearchScope.allScope(myProject);
                 }
@@ -180,8 +180,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     @Nonnull
     @RequiredReadAction
     @Override
-    public GlobalSearchScope getDefaultResolveScope(final VirtualFile vFile) {
-        final PsiFile psiFile = myManager.findFile(vFile);
+    public GlobalSearchScope getDefaultResolveScope(VirtualFile vFile) {
+        PsiFile psiFile = myManager.findFile(vFile);
         assert psiFile != null;
         return myDefaultResolveScopesCache.get(vFile);
     }
@@ -207,12 +207,12 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     @Nonnull
     private Pair<GlobalSearchScope, VirtualFile> getDefaultResultScopeInfo(@Nonnull PsiElement element) {
         VirtualFile vFile;
-        final GlobalSearchScope allScope = GlobalSearchScope.allScope(myManager.getProject());
+        GlobalSearchScope allScope = GlobalSearchScope.allScope(myManager.getProject());
         if (element instanceof PsiDirectory) {
             vFile = ((PsiDirectory)element).getVirtualFile();
         }
         else {
-            final PsiFile containingFile = element.getContainingFile();
+            PsiFile containingFile = element.getContainingFile();
             if (containingFile == null) {
                 return Pair.create(allScope, null);
             }
@@ -231,8 +231,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
             return Pair.create(scope, vFile);
         }
         else {
-            final PsiFile f = element.getContainingFile();
-            final VirtualFile vf = f == null ? null : f.getVirtualFile();
+            PsiFile f = element.getContainingFile();
+            VirtualFile vf = f == null ? null : f.getVirtualFile();
 
             GlobalSearchScope scope = f == null || vf == null || vf.isDirectory() || allScope.contains(vf)
                 ? allScope

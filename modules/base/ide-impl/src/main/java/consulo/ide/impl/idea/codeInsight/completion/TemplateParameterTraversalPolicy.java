@@ -23,7 +23,7 @@ import consulo.language.psi.PsiFile;
 
 /**
  * @author Evgeny Gerashchenko
- * @since 2/1/12
+ * @since 2012-02-01
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplateParameterTraversalPolicy {

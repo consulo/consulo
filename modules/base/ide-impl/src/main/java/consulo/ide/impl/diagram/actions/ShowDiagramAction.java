@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 22:29/15.10.13
+ * @since 2013-10-15
  */
 public class ShowDiagramAction extends AnAction {
     @RequiredUIAccess
@@ -41,7 +41,6 @@ public class ShowDiagramAction extends AnAction {
             PsiElement psiElement = e.getData(PsiElement.KEY);
             state = false;
             if (psiElement != null) {
-                state = false;
                 for (GraphProvider graphProvider : GraphProvider.EP_NAME.getExtensionList()) {
                     if (graphProvider.isSupported(psiElement)) {
                         state = true;

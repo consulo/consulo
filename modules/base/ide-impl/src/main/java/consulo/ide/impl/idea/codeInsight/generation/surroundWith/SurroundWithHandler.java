@@ -54,7 +54,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
+    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         invoke(project, editor, file, null);
     }
 
@@ -84,12 +84,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
     @Nullable
     @RequiredUIAccess
-    public static List<AnAction> buildSurroundActions(
-        final Project project,
-        final Editor editor,
-        PsiFile file,
-        @Nullable Surrounder surrounder
-    ) {
+    public static List<AnAction> buildSurroundActions(Project project, Editor editor, PsiFile file, @Nullable Surrounder surrounder) {
         SelectionModel selectionModel = editor.getSelectionModel();
         boolean hasSelection = selectionModel.hasSelection();
         if (!hasSelection) {
@@ -116,9 +111,9 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
         endOffset = textRange.getEndOffset();
         element1 = file.findElementAt(startOffset);
 
-        final Language baseLanguage = file.getViewProvider().getBaseLanguage();
+        Language baseLanguage = file.getViewProvider().getBaseLanguage();
         assert element1 != null;
-        final Language l = element1.getParent().getLanguage();
+        Language l = element1.getParent().getLanguage();
 
         List<SurroundDescriptor> surroundDescriptors = new ArrayList<>(SurroundDescriptor.forLanguage(l));
         if (l != baseLanguage) {
@@ -146,7 +141,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
         Map<Surrounder, PsiElement[]> surrounders = new LinkedHashMap<>();
         for (SurroundDescriptor descriptor : surroundDescriptors) {
-            final PsiElement[] elements = descriptor.getElementsToSurround(file, startOffset, endOffset);
+            PsiElement[] elements = descriptor.getElementsToSurround(file, startOffset, endOffset);
             if (elements.length > 0) {
                 for (PsiElement element : elements) {
                     assert element != null : "descriptor " + descriptor + " returned null element";
@@ -181,7 +176,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     ) {
         assert project.getApplication().isUnitTestMode();
         for (SurroundDescriptor descriptor : surroundDescriptors) {
-            final PsiElement[] elements = descriptor.getElementsToSurround(file, startOffset, endOffset);
+            PsiElement[] elements = descriptor.getElementsToSurround(file, startOffset, endOffset);
             if (elements.length > 0) {
                 for (Surrounder descriptorSurrounder : descriptor.getSurrounders()) {
                     if (surrounder.getClass().equals(descriptorSurrounder.getClass())) {
@@ -207,7 +202,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     }
 
     @RequiredUIAccess
-    static void doSurround(final Project project, final Editor editor, final Surrounder surrounder, final PsiElement[] elements) {
+    static void doSurround(Project project, Editor editor, Surrounder surrounder, PsiElement[] elements) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
         int col = editor.getCaretModel().getLogicalPosition().column;
         int line = editor.getCaretModel().getLogicalPosition().line;

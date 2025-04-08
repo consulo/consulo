@@ -2,8 +2,6 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.extension.ExtensionPointName;
@@ -14,7 +12,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
 import consulo.language.editor.ChangeLocalityDetector;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
@@ -31,11 +29,11 @@ import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -58,7 +56,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
             new DocumentListener() {
                 @Override
                 public void beforeDocumentChange(@Nonnull DocumentEvent e) {
-                    final Document document = e.getDocument();
+                    Document document = e.getDocument();
                     PsiDocumentManagerImpl documentManager = (PsiDocumentManagerImpl)PsiDocumentManager.getInstance(myProject);
                     if (documentManager.getSynchronizer().isInSynchronization(document)) {
                         return;
@@ -82,11 +80,12 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
 
         connection.subscribe(PsiDocumentTransactionListener.class, new PsiDocumentTransactionListener() {
             @Override
-            public void transactionStarted(@Nonnull final Document doc, @Nonnull final PsiFile file) {
+            public void transactionStarted(@Nonnull Document doc, @Nonnull PsiFile file) {
             }
 
             @Override
-            public void transactionCompleted(@Nonnull final Document document, @Nonnull final PsiFile file) {
+            @RequiredUIAccess
+            public void transactionCompleted(@Nonnull Document document, @Nonnull PsiFile file) {
                 updateChangesForDocument(document);
                 document.putUserData(
                     UPDATE_ON_COMMIT_ENGAGED,
@@ -100,8 +99,10 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
     public void dispose() {
     }
 
-    private void updateChangesForDocument(@Nonnull final Document document) {
-        ApplicationManager.getApplication().assertIsWriteThread();
+    @RequiredUIAccess
+    private void updateChangesForDocument(@Nonnull Document document) {
+        Application application = myProject.getApplication();
+        application.assertIsWriteThread();
         if (myProject.isDisposed()) {
             return;
         }
@@ -121,8 +122,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
 
             toUpdate = Collections.singletonList(Pair.create(file, true));
         }
-        Application application = ApplicationManager.getApplication();
-        final Editor editor = FileEditorManager.getInstance(myProject).getSelectedTextEditor();
+        Editor editor = FileEditorManager.getInstance(myProject).getSelectedTextEditor();
         if (editor != null && !application.isUnitTestMode()) {
             application.invokeLater(
                 () -> {
@@ -132,7 +132,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
                         ErrorStripeUpdateManager.getInstance(myProject).setOrRefreshErrorStripeRenderer(markupModel, file);
                     }
                 },
-                IdeaModalityState.stateForComponent(editor.getComponent()),
+                application.getModalityStateForComponent(editor.getComponent()),
                 myProject.getDisposed()
             );
         }
@@ -160,7 +160,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
         queueElement(event.getNewChild(), typesEqual(event.getNewChild(), event.getOldChild()), event);
     }
 
-    private static boolean typesEqual(final PsiElement newChild, final PsiElement oldChild) {
+    private static boolean typesEqual(PsiElement newChild, PsiElement oldChild) {
         return newChild != null && oldChild != null && newChild.getClass() == oldChild.getClass();
     }
 
@@ -201,8 +201,8 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
         }
     }
 
-    private void queueElement(@Nonnull PsiElement child, final boolean whitespaceOptimizationAllowed, @Nonnull PsiTreeChangeEvent event) {
-        ApplicationManager.getApplication().assertIsWriteThread();
+    private void queueElement(@Nonnull PsiElement child, boolean whitespaceOptimizationAllowed, @Nonnull PsiTreeChangeEvent event) {
+        myProject.getApplication().assertIsWriteThread();
         PsiFile file = event.getFile();
         if (file == null) {
             file = child.getContainingFile();
@@ -234,9 +234,10 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
         }
     }
 
-    private void updateByChange(@Nonnull PsiElement child, @Nonnull final Document document, final boolean whitespaceOptimizationAllowed) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        final PsiFile file;
+    @RequiredUIAccess
+    private void updateByChange(@Nonnull PsiElement child, @Nonnull Document document, boolean whitespaceOptimizationAllowed) {
+        myProject.getApplication().assertIsDispatchThread();
+        PsiFile file;
         try {
             file = child.getContainingFile();
         }
@@ -268,7 +269,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
                 return;
             }
 
-            final PsiElement scope = getChangeHighlightingScope(element);
+            PsiElement scope = getChangeHighlightingScope(element);
             if (scope != null) {
                 myFileStatusMap.markFileScopeDirty(document, scope.getTextRange(), fileLength, "Scope: " + scope);
                 return;
@@ -290,7 +291,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
             .getApplication()
             .getExtensionPoint(ChangeLocalityDetector.class)
             .getExtensionList()) {
-            final PsiElement scope = detector.getChangeHighlightingDirtyScopeFor(element);
+            PsiElement scope = detector.getChangeHighlightingDirtyScopeFor(element);
             if (scope != null) {
                 return scope;
             }
