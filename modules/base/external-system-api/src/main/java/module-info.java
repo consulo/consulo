@@ -26,7 +26,6 @@ module consulo.external.system.api {
   exports consulo.externalSystem.model.execution;
   exports consulo.externalSystem.model.setting;
   exports consulo.externalSystem.model.task;
-  exports consulo.externalSystem.service;
   exports consulo.externalSystem.service.execution;
   exports consulo.externalSystem.service.notification;
   exports consulo.externalSystem.service.setting;

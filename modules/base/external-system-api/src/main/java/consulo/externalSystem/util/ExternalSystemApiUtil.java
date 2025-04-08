@@ -49,7 +49,6 @@ import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.externalSystem.model.task.TaskCallback;
 import consulo.externalSystem.rt.model.ExternalSystemException;
-import consulo.externalSystem.service.ParametersEnhancer;
 import consulo.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
 import consulo.externalSystem.service.execution.ExternalSystemRunConfiguration;
 import consulo.externalSystem.service.module.extension.ExternalSystemModuleExtension;
@@ -856,64 +855,6 @@ public class ExternalSystemApiUtil {
               String.format("Can't retrieve external system execution settings for id '%s'. Reason: no such external system is registered", externalSystemId.getDisplayName()));
     }
     return (S)manager.getExecutionSettingsProvider().apply(Pair.create(project, linkedProjectPath));
-  }
-
-  /**
-   * There is a possible case that methods of particular object should be executed with classpath different from the one implied
-   * by the current class' class loader. External system offers {@link ParametersEnhancer#enhanceLocalProcessing(List)} method
-   * for defining that custom classpath.
-   * <p>
-   * It's also possible that particular implementation of {@link ParametersEnhancer} is compiled using dependency to classes
-   * which are provided by the {@link ParametersEnhancer#enhanceLocalProcessing(List) expanded classpath}. E.g. a class
-   * <code>'A'</code> might use method of class <code>'B'</code> and 'A' is located at the current (system/plugin) classpath but
-   * <code>'B'</code> is not. We need to reload <code>'A'</code> using its expanded classpath then, i.e. create new class loaded
-   * with that expanded classpath and load <code>'A'</code> by it.
-   * <p>
-   * This method allows to do that.
-   *
-   * @param clazz custom classpath-aware class which instance should be created (is assumed to have a no-args constructor)
-   * @param <T>   target type
-   * @return newly created instance of the given class loaded by custom classpath-aware loader
-   * @throws IllegalAccessException    as defined by reflection processing
-   * @throws InstantiationException    as defined by reflection processing
-   * @throws NoSuchMethodException     as defined by reflection processing
-   * @throws InvocationTargetException as defined by reflection processing
-   * @throws ClassNotFoundException    as defined by reflection processing
-   */
-  @Nonnull
-  public static <T extends ParametersEnhancer> T reloadIfNecessary(@Nonnull final Class<T> clazz)
-          throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException {
-    T instance = clazz.newInstance();
-    List<URL> urls = new ArrayList<>();
-    instance.enhanceLocalProcessing(urls);
-    if (urls.isEmpty()) {
-      return instance;
-    }
-
-    final ClassLoader baseLoader = clazz.getClassLoader();
-    Method method = baseLoader.getClass().getMethod("getUrls");
-    if (method != null) {
-      //noinspection unchecked
-      urls.addAll((Collection<? extends URL>)method.invoke(baseLoader));
-    }
-    UrlClassLoader loader = new UrlClassLoader(UrlClassLoader.build().urls(urls).parent(baseLoader.getParent())) {
-      @Override
-      protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        if (name.equals(clazz.getName())) {
-          return super.loadClass(name, resolve);
-        }
-        else {
-          try {
-            return baseLoader.loadClass(name);
-          }
-          catch (ClassNotFoundException e) {
-            return super.loadClass(name, resolve);
-          }
-        }
-      }
-    };
-    //noinspection unchecked
-    return (T)loader.loadClass(clazz.getName()).newInstance();
   }
 
   @Contract("null -> false, _")

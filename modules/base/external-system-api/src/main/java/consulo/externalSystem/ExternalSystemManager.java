@@ -5,7 +5,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
-import consulo.externalSystem.service.ParametersEnhancer;
 import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
@@ -32,8 +31,7 @@ import java.util.function.Supplier;
  * @since 4/4/13 4:05 PM
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface ExternalSystemManager<ProjectSettings extends ExternalProjectSettings, SettingsListener extends ExternalSystemSettingsListener<ProjectSettings>, Settings extends AbstractExternalSystemSettings<Settings, ProjectSettings, SettingsListener>, LocalSettings extends AbstractExternalSystemLocalSettings, ExecutionSettings extends ExternalSystemExecutionSettings>
-        extends ParametersEnhancer {
+public interface ExternalSystemManager<ProjectSettings extends ExternalProjectSettings, SettingsListener extends ExternalSystemSettingsListener<ProjectSettings>, Settings extends AbstractExternalSystemSettings<Settings, ProjectSettings, SettingsListener>, LocalSettings extends AbstractExternalSystemLocalSettings, ExecutionSettings extends ExternalSystemExecutionSettings> {
 
   ExtensionPointName<ExternalSystemManager> EP_NAME = ExtensionPointName.create(ExternalSystemManager.class);
 
