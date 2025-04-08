@@ -15,20 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
 
-import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.disposer.Disposable;
+import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.service.execution.ExternalSystemSettingsControl;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.setting.ExternalSystemSettingsListener;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.externalSystem.ExternalSystemBundle;
-import consulo.externalSystem.service.execution.ExternalSystemSettingsControl;
 import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.externalSystem.ui.awt.PaintAwarePanel;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,10 +35,10 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.JBUI;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -64,7 +63,7 @@ import java.util.List;
  * @since 4/30/13 12:50 PM
  */
 public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends ExternalProjectSettings, L extends ExternalSystemSettingsListener<ProjectSettings>, SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>>
-        implements SearchableConfigurable, Configurable.NoScroll {
+        implements SearchableConfigurable {
 
   @Nonnull
   private final List<ExternalSystemSettingsControl<ProjectSettings>> myProjectSettingsControls = new ArrayList<>();
