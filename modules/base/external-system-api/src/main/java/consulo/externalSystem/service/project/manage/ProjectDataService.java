@@ -23,6 +23,7 @@ import consulo.externalSystem.model.Key;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 
 /**
@@ -50,47 +51,46 @@ import java.util.Collection;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ProjectDataService<E, I> {
+    @Deprecated
+    ExtensionPointName<ProjectDataService> EP_NAME = ExtensionPointName.create(ProjectDataService.class);
 
-  @Deprecated
-  ExtensionPointName<ProjectDataService> EP_NAME = ExtensionPointName.create(ProjectDataService.class);
+    /**
+     * @return key of project data supported by the current manager
+     */
+    @Nonnull
+    Key<E> getTargetDataKey();
 
-  /**
-   * @return key of project data supported by the current manager
-   */
-  @Nonnull
-  Key<E> getTargetDataKey();
+    /**
+     * It's assumed that given data nodes present at the ide when this method returns. I.e. the method should behave as below for
+     * every of the given data nodes:
+     * <pre>
+     * <ul>
+     *   <li>there is an existing project entity for the given data node and it has the same state. Do nothing for it then;</li>
+     *   <li>
+     *     there is an existing project entity for the given data node but it has different state (e.g. a module dependency
+     *     is configured as 'exported' at the ide but not at external system). Reset the state to the external system's one then;
+     *   </li>
+     *   <li> there is no corresponding project entity at the ide side. Create it then; </li>
+     * </ul>
+     * </pre>
+     * are created, updated or left as-is if they have the
+     *
+     * @param toImport
+     * @param project
+     * @param synchronous
+     */
+    void importData(@Nonnull Collection<DataNode<E>> toImport, @Nonnull Project project, boolean synchronous);
 
-  /**
-   * It's assumed that given data nodes present at the ide when this method returns. I.e. the method should behave as below for
-   * every of the given data nodes:
-   * <pre>
-   * <ul>
-   *   <li>there is an existing project entity for the given data node and it has the same state. Do nothing for it then;</li>
-   *   <li>
-   *     there is an existing project entity for the given data node but it has different state (e.g. a module dependency
-   *     is configured as 'exported' at the ide but not at external system). Reset the state to the external system's one then;
-   *   </li>
-   *   <li> there is no corresponding project entity at the ide side. Create it then; </li>
-   * </ul>
-   * </pre>
-   * are created, updated or left as-is if they have the
-   *
-   * @param toImport
-   * @param project
-   * @param synchronous
-   */
-  void importData(@Nonnull Collection<DataNode<E>> toImport, @Nonnull Project project, boolean synchronous);
-
-  /**
-   * Asks to remove all given ide project entities.
-   * <p/>
-   * <b>Note:</b> as more than one {@link ProjectDataService} might be configured for a target entity type, there is a possible case
-   * that the entities have already been removed when this method is called. Then it's necessary to cleanup auxiliary data (if any)
-   * or just return otherwise.
-   *
-   * @param toRemove    project entities to remove
-   * @param project     target project
-   * @param synchronous flag which defines if entities removal should be synchronous
-   */
-  void removeData(@Nonnull Collection<? extends I> toRemove, @Nonnull Project project, boolean synchronous);
+    /**
+     * Asks to remove all given ide project entities.
+     * <p/>
+     * <b>Note:</b> as more than one {@link ProjectDataService} might be configured for a target entity type, there is a possible case
+     * that the entities have already been removed when this method is called. Then it's necessary to cleanup auxiliary data (if any)
+     * or just return otherwise.
+     *
+     * @param toRemove    project entities to remove
+     * @param project     target project
+     * @param synchronous flag which defines if entities removal should be synchronous
+     */
+    void removeData(@Nonnull Collection<? extends I> toRemove, @Nonnull Project project, boolean synchronous);
 }

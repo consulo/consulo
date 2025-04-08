@@ -24,6 +24,7 @@ import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -33,12 +34,12 @@ import java.util.regex.Pattern;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PathMacrosService {
-  public static final Pattern MACRO_PATTERN = Pattern.compile("\\$([\\w\\-\\.]+?)\\$");
+    public static final Pattern MACRO_PATTERN = Pattern.compile("\\$([\\w\\-\\.]+?)\\$");
 
-  @Nonnull
-  public Set<String> getMacroNames(@Nonnull final Element e) {
-    return getMacroNames(e, new CompositePathMacroFilter(PathMacroFilter.EP_NAME.getExtensionList()), PathMacros.getInstance());
-  }
+    @Nonnull
+    public Set<String> getMacroNames(@Nonnull final Element e) {
+        return getMacroNames(e, new CompositePathMacroFilter(PathMacroFilter.EP_NAME.getExtensionList()), PathMacros.getInstance());
+    }
 
-  public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull final PathMacros pathMacros);
+    public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull final PathMacros pathMacros);
 }

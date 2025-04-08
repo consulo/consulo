@@ -20,40 +20,41 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class BuiltInServerOptions implements PersistentStateComponent<BuiltInServerOptions> {
-  public static final int DEFAULT_PORT = 63342;
+    public static final int DEFAULT_PORT = 63342;
 
-  @Attribute
-  public int builtInServerPort = DEFAULT_PORT;
-  @Attribute
-  public boolean builtInServerAvailableExternally = false;
+    @Attribute
+    public int builtInServerPort = DEFAULT_PORT;
+    @Attribute
+    public boolean builtInServerAvailableExternally = false;
 
-  @Attribute
-  public boolean allowUnsignedRequests = false;
+    @Attribute
+    public boolean allowUnsignedRequests = false;
 
-  public static BuiltInServerOptions getInstance() {
-    return Application.get().getInstance(BuiltInServerOptions.class);
-  }
-
-  @Nullable
-  @Override
-  public BuiltInServerOptions getState() {
-    return this;
-  }
-
-  @Override
-  public void loadState(BuiltInServerOptions state) {
-    XmlSerializerUtil.copyBean(state, this);
-  }
-
-  public int getEffectiveBuiltInServerPort() {
-    DefaultCustomPortServerManager portServerManager = CustomPortServerManager.EP_NAME.findExtension(DefaultCustomPortServerManager.class);
-    if (!portServerManager.isBound()) {
-      return BuiltInServerManager.getInstance().getPort();
+    public static BuiltInServerOptions getInstance() {
+        return Application.get().getInstance(BuiltInServerOptions.class);
     }
-    return builtInServerPort;
-  }
 
-  public static void onBuiltInServerPortChanged() {
-    CustomPortServerManager.EP_NAME.findExtension(DefaultCustomPortServerManager.class).portChanged();
-  }
+    @Nullable
+    @Override
+    public BuiltInServerOptions getState() {
+        return this;
+    }
+
+    @Override
+    public void loadState(BuiltInServerOptions state) {
+        XmlSerializerUtil.copyBean(state, this);
+    }
+
+    public int getEffectiveBuiltInServerPort() {
+        DefaultCustomPortServerManager portServerManager =
+            CustomPortServerManager.EP_NAME.findExtension(DefaultCustomPortServerManager.class);
+        if (!portServerManager.isBound()) {
+            return BuiltInServerManager.getInstance().getPort();
+        }
+        return builtInServerPort;
+    }
+
+    public static void onBuiltInServerPortChanged() {
+        CustomPortServerManager.EP_NAME.findExtension(DefaultCustomPortServerManager.class).portChanged();
+    }
 }

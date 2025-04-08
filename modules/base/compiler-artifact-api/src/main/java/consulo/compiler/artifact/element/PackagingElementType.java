@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -34,48 +35,51 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PackagingElementType<E extends PackagingElement<?>> {
-  public static final ExtensionPointName<PackagingElementType> EP_NAME = ExtensionPointName.create(PackagingElementType.class);
-  private final String myId;
-  private final String myPresentableName;
+    public static final ExtensionPointName<PackagingElementType> EP_NAME = ExtensionPointName.create(PackagingElementType.class);
+    private final String myId;
+    private final String myPresentableName;
 
-  protected PackagingElementType(@Nonnull @NonNls String id, @Nonnull String presentableName) {
-    myId = id;
-    myPresentableName = presentableName;
-  }
-
-  public final String getId() {
-    return myId;
-  }
-
-  public String getPresentableName() {
-    return myPresentableName;
-  }
-
-  @Nonnull
-  public abstract Image getIcon();
-
-  public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
-    return true;
-  }
-
-  @Nonnull
-  public abstract List<? extends PackagingElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
-                                                                      @Nonnull CompositePackagingElement<?> parent);
-
-  @Nonnull
-  public abstract E createEmpty(@Nonnull Project project);
-
-  protected static <T extends PackagingElementType<?>> T getInstance(final Class<T> aClass) {
-    for (PackagingElementType type : EP_NAME.getExtensionList()) {
-      if (aClass.isInstance(type)) {
-        return aClass.cast(type);
-      }
+    protected PackagingElementType(@Nonnull @NonNls String id, @Nonnull String presentableName) {
+        myId = id;
+        myPresentableName = presentableName;
     }
-    throw new AssertionError();
-  }
 
-  @Nullable
-  public PackagingElementPropertiesPanel createElementPropertiesPanel(@Nonnull E element, @Nonnull ArtifactEditorContext context) {
-    return null;
-  }
+    public final String getId() {
+        return myId;
+    }
+
+    public String getPresentableName() {
+        return myPresentableName;
+    }
+
+    @Nonnull
+    public abstract Image getIcon();
+
+    public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
+        return true;
+    }
+
+    @Nonnull
+    public abstract List<? extends PackagingElement<?>> chooseAndCreate(
+        @Nonnull ArtifactEditorContext context,
+        @Nonnull Artifact artifact,
+        @Nonnull CompositePackagingElement<?> parent
+    );
+
+    @Nonnull
+    public abstract E createEmpty(@Nonnull Project project);
+
+    protected static <T extends PackagingElementType<?>> T getInstance(final Class<T> aClass) {
+        for (PackagingElementType type : EP_NAME.getExtensionList()) {
+            if (aClass.isInstance(type)) {
+                return aClass.cast(type);
+            }
+        }
+        throw new AssertionError();
+    }
+
+    @Nullable
+    public PackagingElementPropertiesPanel createElementPropertiesPanel(@Nonnull E element, @Nonnull ArtifactEditorContext context) {
+        return null;
+    }
 }

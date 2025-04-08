@@ -34,27 +34,26 @@ import java.util.Properties;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DefaultTemplatePropertiesProvider {
-  ExtensionPointName<DefaultTemplatePropertiesProvider> EP_NAME = ExtensionPointName.create(DefaultTemplatePropertiesProvider.class);
+    ExtensionPointName<DefaultTemplatePropertiesProvider> EP_NAME = ExtensionPointName.create(DefaultTemplatePropertiesProvider.class);
 
-  /**
-   * Fills the default properties for a file which is created in the specified directory.
-   *
-   * @param directory the directory in which the file is created.
-   * @param props     the map in which the defined properties should be stored.
-   */
-  @Deprecated
-  @DeprecationInfo("Use #fillProperties(PsiDirectory directory, Map<String, Object> props)")
-  default void fillProperties(PsiDirectory directory, Properties props) {
-
-  }
-
-  default void fillProperties(PsiDirectory directory, Map<String, Object> props) {
-    Properties properties = new Properties();
-    fillProperties(directory, properties);
-
-    for (Enumeration<?> e = properties.propertyNames(); e.hasMoreElements(); ) {
-      String s = (String)e.nextElement();
-      props.put(s, properties.getProperty(s));
+    /**
+     * Fills the default properties for a file which is created in the specified directory.
+     *
+     * @param directory the directory in which the file is created.
+     * @param props     the map in which the defined properties should be stored.
+     */
+    @Deprecated
+    @DeprecationInfo("Use #fillProperties(PsiDirectory directory, Map<String, Object> props)")
+    default void fillProperties(PsiDirectory directory, Properties props) {
     }
-  }
+
+    default void fillProperties(PsiDirectory directory, Map<String, Object> props) {
+        Properties properties = new Properties();
+        fillProperties(directory, properties);
+
+        for (Enumeration<?> e = properties.propertyNames(); e.hasMoreElements(); ) {
+            String s = (String)e.nextElement();
+            props.put(s, properties.getProperty(s));
+        }
+    }
 }

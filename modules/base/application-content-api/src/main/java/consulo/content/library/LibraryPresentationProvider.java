@@ -23,6 +23,7 @@ import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -30,26 +31,27 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LibraryPresentationProvider<P extends LibraryProperties> implements LibraryPresentation<P> {
-  public static final ExtensionPointName<LibraryPresentationProvider> EP_NAME = ExtensionPointName.create(LibraryPresentationProvider.class);
-  private final LibraryKind myKind;
+    public static final ExtensionPointName<LibraryPresentationProvider> EP_NAME =
+        ExtensionPointName.create(LibraryPresentationProvider.class);
+    private final LibraryKind myKind;
 
-  protected LibraryPresentationProvider(@Nonnull LibraryKind kind) {
-    myKind = kind;
-  }
+    protected LibraryPresentationProvider(@Nonnull LibraryKind kind) {
+        myKind = kind;
+    }
 
-  @Nonnull
-  public LibraryKind getKind() {
-    return myKind;
-  }
+    @Nonnull
+    public LibraryKind getKind() {
+        return myKind;
+    }
 
-  @Nullable
-  public abstract Image getIcon();
+    @Nullable
+    public abstract Image getIcon();
 
-  @Nullable
-  public String getDescription(@Nonnull P properties) {
-    return null;
-  }
+    @Nullable
+    public String getDescription(@Nonnull P properties) {
+        return null;
+    }
 
-  @Nullable
-  public abstract P detect(@Nonnull List<VirtualFile> classesRoots);
+    @Nullable
+    public abstract P detect(@Nonnull List<VirtualFile> classesRoots);
 }

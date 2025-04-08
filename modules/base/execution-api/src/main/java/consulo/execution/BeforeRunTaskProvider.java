@@ -41,74 +41,81 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
-  public static final ExtensionPointName<BeforeRunTaskProvider> EP_NAME = ExtensionPointName.create(BeforeRunTaskProvider.class);
+    public static final ExtensionPointName<BeforeRunTaskProvider> EP_NAME = ExtensionPointName.create(BeforeRunTaskProvider.class);
 
-  @Nonnull
-  public abstract Key<T> getId();
+    @Nonnull
+    public abstract Key<T> getId();
 
-  @Nonnull
-  public abstract String getName();
+    @Nonnull
+    public abstract String getName();
 
-  @Nullable
-  public abstract Image getIcon();
+    @Nullable
+    public abstract Image getIcon();
 
-  @Nonnull
-  public String getDescription(T task) {
-    return getName();
-  }
-
-  @Nullable
-  public Image getTaskIcon(T task) {
-    return getIcon();
-  }
-
-  public boolean isConfigurable() {
-    return false;
-  }
-
-  /**
-   * @return <code>true</code> if at most one task may be configured
-   */
-  public boolean isSingleton() {
-    return false;
-  }
-
-  /**
-   * @return 'before run' task for the configuration or null, if the task from this provider is not applicable to the specified configuration 
-   */
-  @Nullable
-  public abstract T createTask(final RunConfiguration runConfiguration);
-
-  /**
-   * @return <code>true</code> if task configuration is changed
-   */
-  @Nonnull
-  @RequiredUIAccess
-  public abstract AsyncResult<Void> configureTask(final RunConfiguration runConfiguration, T task);
-
-  public boolean canExecuteTask(RunConfiguration configuration, T task) {
-    return true;
-  }
-
-  @Deprecated
-  @DeprecationInfo("See executeTaskAsync()")
-  public boolean executeTask(DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task) {
-    throw new AbstractMethodError();
-  }
-
-  @Nonnull
-  @SuppressWarnings("deprecation")
-  public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task) {
-    return executeTask(context, configuration, env, task) ? AsyncResult.resolved() : AsyncResult.rejected();
-  }
-
-  @Nullable
-  @SuppressWarnings("unchecked")
-  public static <T extends BeforeRunTask> BeforeRunTaskProvider<T> getProvider(Project project, Key<T> key) {
-    for (BeforeRunTaskProvider<BeforeRunTask> provider : BeforeRunTaskProvider.EP_NAME.getExtensionList(project)) {
-      if (provider.getId() == key)
-        return (BeforeRunTaskProvider<T>)provider;
+    @Nonnull
+    public String getDescription(T task) {
+        return getName();
     }
-    return null;
-  }
+
+    @Nullable
+    public Image getTaskIcon(T task) {
+        return getIcon();
+    }
+
+    public boolean isConfigurable() {
+        return false;
+    }
+
+    /**
+     * @return <code>true</code> if at most one task may be configured
+     */
+    public boolean isSingleton() {
+        return false;
+    }
+
+    /**
+     * @return 'before run' task for the configuration or null, if the task from this provider is not applicable to the specified configuration
+     */
+    @Nullable
+    public abstract T createTask(final RunConfiguration runConfiguration);
+
+    /**
+     * @return <code>true</code> if task configuration is changed
+     */
+    @Nonnull
+    @RequiredUIAccess
+    public abstract AsyncResult<Void> configureTask(final RunConfiguration runConfiguration, T task);
+
+    public boolean canExecuteTask(RunConfiguration configuration, T task) {
+        return true;
+    }
+
+    @Deprecated
+    @DeprecationInfo("See executeTaskAsync()")
+    public boolean executeTask(DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task) {
+        throw new AbstractMethodError();
+    }
+
+    @Nonnull
+    @SuppressWarnings("deprecation")
+    public AsyncResult<Void> executeTaskAsync(
+        UIAccess uiAccess,
+        DataContext context,
+        RunConfiguration configuration,
+        ExecutionEnvironment env,
+        T task
+    ) {
+        return executeTask(context, configuration, env, task) ? AsyncResult.resolved() : AsyncResult.rejected();
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static <T extends BeforeRunTask> BeforeRunTaskProvider<T> getProvider(Project project, Key<T> key) {
+        for (BeforeRunTaskProvider<BeforeRunTask> provider : BeforeRunTaskProvider.EP_NAME.getExtensionList(project)) {
+            if (provider.getId() == key) {
+                return (BeforeRunTaskProvider<T>)provider;
+            }
+        }
+        return null;
+    }
 }

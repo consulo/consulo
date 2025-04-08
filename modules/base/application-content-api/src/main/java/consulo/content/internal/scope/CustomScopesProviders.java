@@ -20,6 +20,7 @@ import consulo.util.lang.ref.SimpleReference;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,33 +31,35 @@ import java.util.function.Consumer;
  * @since 20-Sep-22
  */
 public class CustomScopesProviders {
-  @Nonnull
-  public static List<NamedScope> getFilteredScopes(CustomScopesProvider provider) {
-    List<NamedScope> result = new ArrayList<>();
-    acceptFilteredScopes(provider, result::add);
-    return result;
-  }
+    @Nonnull
+    public static List<NamedScope> getFilteredScopes(CustomScopesProvider provider) {
+        List<NamedScope> result = new ArrayList<>();
+        acceptFilteredScopes(provider, result::add);
+        return result;
+    }
 
-  public static void acceptFilteredScopes(CustomScopesProvider provider, Consumer<NamedScope> consumer) {
-    List<CustomScopesFilter> filters = CustomScopesFilter.EP_NAME.getExtensionList();
+    public static void acceptFilteredScopes(CustomScopesProvider provider, Consumer<NamedScope> consumer) {
+        List<CustomScopesFilter> filters = CustomScopesFilter.EP_NAME.getExtensionList();
 
-    provider.acceptScopes(namedScope -> {
-      for (CustomScopesFilter filter : filters) {
-        if (filter.excludeScope(namedScope)) return;
-      }
+        provider.acceptScopes(namedScope -> {
+            for (CustomScopesFilter filter : filters) {
+                if (filter.excludeScope(namedScope)) {
+                    return;
+                }
+            }
 
-      consumer.accept(Objects.requireNonNull(namedScope));
-    });
-  }
+            consumer.accept(Objects.requireNonNull(namedScope));
+        });
+    }
 
-  @Nullable
-  public static NamedScope findScopeByName(String name, CustomScopesProvider provider) {
-    SimpleReference<NamedScope> ref = SimpleReference.create();
-    provider.acceptScopes(namedScope -> {
-      if (Objects.equals(namedScope.getName(), name)) {
-        ref.setIfNull(namedScope);
-      }
-    });
-    return ref.get();
-  }
+    @Nullable
+    public static NamedScope findScopeByName(String name, CustomScopesProvider provider) {
+        SimpleReference<NamedScope> ref = SimpleReference.create();
+        provider.acceptScopes(namedScope -> {
+            if (Objects.equals(namedScope.getName(), name)) {
+                ref.setIfNull(namedScope);
+            }
+        });
+        return ref.get();
+    }
 }

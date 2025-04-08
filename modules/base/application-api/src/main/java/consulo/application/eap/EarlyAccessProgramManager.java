@@ -29,6 +29,7 @@ import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,87 +43,87 @@ import java.util.Map;
 @ServiceImpl
 @State(name = "EarlyAccessProgramManager", storages = @Storage("eap.xml"))
 public class EarlyAccessProgramManager implements PersistentStateComponent<Element> {
-  @Nonnull
-  public static EarlyAccessProgramManager getInstance() {
-    return Application.get().getInstance(EarlyAccessProgramManager.class);
-  }
-
-  public static boolean is(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
-    return getInstance().getState(key);
-  }
-
-  private static final Logger LOG = Logger.getInstance(EarlyAccessProgramManager.class);
-
-  private final Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates = new LinkedHashMap<>();
-
-  @Inject
-  public EarlyAccessProgramManager() {
-  }
-
-  public boolean getState(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
-    Boolean value = myStates.get(key);
-    if (value == null) {
-      EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtension(key);
-      return extension != null && extension.getDefaultState();
+    @Nonnull
+    public static EarlyAccessProgramManager getInstance() {
+        return Application.get().getInstance(EarlyAccessProgramManager.class);
     }
-    return value;
-  }
 
-  public void setState(Class<? extends EarlyAccessProgramDescriptor> key, boolean itemSelected) {
-    EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtensionOrFail(key);
-
-    if(extension.getDefaultState() == itemSelected) {
-      myStates.remove(key);
+    public static boolean is(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
+        return getInstance().getState(key);
     }
-    else {
-      myStates.put(key, itemSelected);
+
+    private static final Logger LOG = Logger.getInstance(EarlyAccessProgramManager.class);
+
+    private final Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates = new LinkedHashMap<>();
+
+    @Inject
+    public EarlyAccessProgramManager() {
     }
-  }
 
-  @Nullable
-  @Override
-  public Element getState() {
-    Element element = new Element("state");
-    for (Map.Entry<Class<? extends EarlyAccessProgramDescriptor>, Boolean> entry : myStates.entrySet()) {
-      EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtension(entry.getKey());
-      if (extension == null || extension.getDefaultState() == entry.getValue()) {
-        continue;
-      }
-
-      Element child = new Element("state");
-      child.setAttribute("class", entry.getKey().getName());
-      child.setAttribute("value", String.valueOf(entry.getValue()));
-
-      element.addContent(child);
+    public boolean getState(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
+        Boolean value = myStates.get(key);
+        if (value == null) {
+            EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtension(key);
+            return extension != null && extension.getDefaultState();
+        }
+        return value;
     }
-    return element;
-  }
 
-  @Override
-  public void loadState(Element state) {
-    myStates.clear();
-    
-    Map<String, EarlyAccessProgramDescriptor> map = descriptorToMap();
+    public void setState(Class<? extends EarlyAccessProgramDescriptor> key, boolean itemSelected) {
+        EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtensionOrFail(key);
 
-    for (Element element : state.getChildren()) {
-      String aClass = element.getAttributeValue("class");
-
-      EarlyAccessProgramDescriptor descriptor = map.get(aClass);
-      if (descriptor == null) {
-        continue;
-      }
-
-      Boolean value = Boolean.parseBoolean(element.getAttributeValue("value"));
-
-      myStates.put(descriptor.getClass(), value);
+        if (extension.getDefaultState() == itemSelected) {
+            myStates.remove(key);
+        }
+        else {
+            myStates.put(key, itemSelected);
+        }
     }
-  }
 
-  private static Map<String, EarlyAccessProgramDescriptor> descriptorToMap() {
-    Map<String, EarlyAccessProgramDescriptor> map = new HashMap<>();
-    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
-      map.put(descriptor.getClass().getName(), descriptor);
+    @Nullable
+    @Override
+    public Element getState() {
+        Element element = new Element("state");
+        for (Map.Entry<Class<? extends EarlyAccessProgramDescriptor>, Boolean> entry : myStates.entrySet()) {
+            EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtension(entry.getKey());
+            if (extension == null || extension.getDefaultState() == entry.getValue()) {
+                continue;
+            }
+
+            Element child = new Element("state");
+            child.setAttribute("class", entry.getKey().getName());
+            child.setAttribute("value", String.valueOf(entry.getValue()));
+
+            element.addContent(child);
+        }
+        return element;
     }
-    return map;
-  }
+
+    @Override
+    public void loadState(Element state) {
+        myStates.clear();
+
+        Map<String, EarlyAccessProgramDescriptor> map = descriptorToMap();
+
+        for (Element element : state.getChildren()) {
+            String aClass = element.getAttributeValue("class");
+
+            EarlyAccessProgramDescriptor descriptor = map.get(aClass);
+            if (descriptor == null) {
+                continue;
+            }
+
+            Boolean value = Boolean.parseBoolean(element.getAttributeValue("value"));
+
+            myStates.put(descriptor.getClass(), value);
+        }
+    }
+
+    private static Map<String, EarlyAccessProgramDescriptor> descriptorToMap() {
+        Map<String, EarlyAccessProgramDescriptor> map = new HashMap<>();
+        for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
+            map.put(descriptor.getClass().getName(), descriptor);
+        }
+        return map;
+    }
 }

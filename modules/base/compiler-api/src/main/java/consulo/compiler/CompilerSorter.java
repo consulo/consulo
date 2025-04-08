@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CompilerSorter {
-  ExtensionPointName<CompilerSorter> EP_NAME = ExtensionPointName.create(CompilerSorter.class);
+    ExtensionPointName<CompilerSorter> EP_NAME = ExtensionPointName.create(CompilerSorter.class);
 
-  void sort(Chunk<Module> moduleChunk, @Nonnull Compiler[] compilers, Class<? extends Compiler> clazz);
+    void sort(Chunk<Module> moduleChunk, @Nonnull Compiler[] compilers, Class<? extends Compiler> clazz);
 }

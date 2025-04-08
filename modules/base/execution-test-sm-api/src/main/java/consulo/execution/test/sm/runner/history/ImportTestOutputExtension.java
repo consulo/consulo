@@ -23,6 +23,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.function.Supplier;
@@ -32,31 +33,35 @@ import java.util.function.Supplier;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImportTestOutputExtension {
-  ExtensionPointName<ImportTestOutputExtension> EP_NAME = ExtensionPointName.create(ImportTestOutputExtension.class);
+    ExtensionPointName<ImportTestOutputExtension> EP_NAME = ExtensionPointName.create(ImportTestOutputExtension.class);
 
-  /**
-   * When extension can parse xml file under reader, then it should return corresponding handler. Otherwise return null.
-   * <p>
-   * When no custom extension accepts the xml, xml would be parsed as it was exported by IDEA itself {@link ImportTestOutputExtension#findHandler(Supplier, GeneralTestEventsProcessor)}
-   *
-   * @return handler if xml contains tests output in recognised format,
-   * otherwise null
-   */
-  @Nullable
-  DefaultHandler createHandler(final Reader reader, GeneralTestEventsProcessor processor) throws IOException;
+    /**
+     * When extension can parse xml file under reader, then it should return corresponding handler. Otherwise return null.
+     * <p>
+     * When no custom extension accepts the xml, xml would be parsed as it was exported by IDEA itself {@link ImportTestOutputExtension#findHandler(Supplier, GeneralTestEventsProcessor)}
+     *
+     * @return handler if xml contains tests output in recognised format,
+     * otherwise null
+     */
+    @Nullable
+    DefaultHandler createHandler(final Reader reader, GeneralTestEventsProcessor processor) throws IOException;
 
-  @Nonnull
-  static DefaultHandler findHandler(final Supplier<Reader> readerSupplier, GeneralTestEventsProcessor processor) {
-    for (ImportTestOutputExtension extension : EP_NAME.getExtensionList()) {
-      Reader reader = readerSupplier.get();
-      if (reader == null) continue;
-      try {
-        DefaultHandler handler = extension.createHandler(reader, processor);
-        if (handler != null) return handler;
-      }
-      catch (IOException ignored) {
-      }
+    @Nonnull
+    static DefaultHandler findHandler(final Supplier<Reader> readerSupplier, GeneralTestEventsProcessor processor) {
+        for (ImportTestOutputExtension extension : EP_NAME.getExtensionList()) {
+            Reader reader = readerSupplier.get();
+            if (reader == null) {
+                continue;
+            }
+            try {
+                DefaultHandler handler = extension.createHandler(reader, processor);
+                if (handler != null) {
+                    return handler;
+                }
+            }
+            catch (IOException ignored) {
+            }
+        }
+        return new ImportedTestContentHandler(processor);
     }
-    return new ImportedTestContentHandler(processor);
-  }
 }

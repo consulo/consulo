@@ -27,9 +27,9 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface WebSocketAccepter {
-  ExtensionPointName<WebSocketAccepter> EP_NAME = ExtensionPointName.create(WebSocketAccepter.class);
+    ExtensionPointName<WebSocketAccepter> EP_NAME = ExtensionPointName.create(WebSocketAccepter.class);
 
-  void accept(@Nonnull WebSocketConnection connection, @Nonnull byte[] array);
+    void accept(@Nonnull WebSocketConnection connection, @Nonnull byte[] array);
 
-  void accept(@Nonnull WebSocketConnection connection, @Nonnull String text);
+    void accept(@Nonnull WebSocketConnection connection, @Nonnull String text);
 }

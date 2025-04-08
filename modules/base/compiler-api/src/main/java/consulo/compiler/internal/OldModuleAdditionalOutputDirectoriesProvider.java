@@ -23,6 +23,7 @@ import consulo.module.Module;
 import jakarta.inject.Inject;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,24 +33,24 @@ import java.util.List;
  */
 @ExtensionImpl
 public class OldModuleAdditionalOutputDirectoriesProvider implements ModuleAdditionalOutputDirectoriesProvider {
-  private final Module myModule;
+    private final Module myModule;
 
-  @Inject
-  public OldModuleAdditionalOutputDirectoriesProvider(Module module) {
-    myModule = module;
-  }
+    @Inject
+    public OldModuleAdditionalOutputDirectoriesProvider(Module module) {
+        myModule = module;
+    }
 
-  @Nonnull
-  @Override
-  public List<ModuleAdditionalOutputDirectory> getOutputDirectories() {
-    List<ModuleAdditionalOutputDirectory> result = new ArrayList<>();
+    @Nonnull
+    @Override
+    public List<ModuleAdditionalOutputDirectory> getOutputDirectories() {
+        List<ModuleAdditionalOutputDirectory> result = new ArrayList<>();
 
-    AdditionalOutputDirectoriesProvider.EP_NAME.forEachExtensionSafe(provider -> {
-      String[] outputDirectories = provider.getOutputDirectories(myModule.getProject(), myModule);
-      for (String outputDirectory : outputDirectories) {
-        result.add(new ModuleAdditionalOutputDirectory(outputDirectory, false));
-      }
-    });
-    return result;
-  }
+        AdditionalOutputDirectoriesProvider.EP_NAME.forEachExtensionSafe(provider -> {
+            String[] outputDirectories = provider.getOutputDirectories(myModule.getProject(), myModule);
+            for (String outputDirectory : outputDirectories) {
+                result.add(new ModuleAdditionalOutputDirectory(outputDirectory, false));
+            }
+        });
+        return result;
+    }
 }

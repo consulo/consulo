@@ -28,6 +28,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,100 +40,106 @@ import java.util.function.Predicate;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ContentFolderTypeProvider {
-  @Nonnull
-  public static Predicate<ContentFolderTypeProvider> allExceptExcluded() {
-    return typeProvider -> !(typeProvider instanceof ExcludedContentFolderTypeProvider);
-  }
-
-  @Nonnull
-  public static Predicate<ContentFolderTypeProvider> onlyExcluded() {
-    return typeProvider -> typeProvider instanceof ExcludedContentFolderTypeProvider;
-  }
-
-  public static final ExtensionPointName<ContentFolderTypeProvider> EP_NAME = ExtensionPointName.create(ContentFolderTypeProvider.class);
-
-  private final String myId;
-
-  protected ContentFolderTypeProvider(String id) {
-    myId = id;
-  }
-
-  @Nonnull
-  public String getId() {
-    return myId;
-  }
-
-  public int getWeight() {
-    return Integer.MAX_VALUE;
-  }
-
-  /**
-   * Return child directory icon
-   * If psiDirectory is null it require force package support if this provider is supported it
-   *
-   * @param dir child directory
-   * @return icon of child directory
-   */
-  @Nonnull
-  @RequiredReadAction
-  public Image getChildDirectoryIcon(@Nullable VirtualFile dir, @Nullable ComponentManager project) {
-    return getChildDirectoryIcon();
-  }
-
-  @Nonnull
-  public Image getChildDirectoryIcon() {
-    return PlatformIconGroup.nodesTreeopen();
-  }
-
-  @Nullable
-  public Image getChildPackageIcon() {
-    return null;
-  }
-
-  @Nonnull
-  public abstract Image getIcon();
-
-  @Nonnull
-  public abstract String getName();
-
-  @Nonnull
-  public abstract ColorValue getGroupColor();
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    ContentFolderTypeProvider that = (ContentFolderTypeProvider)o;
-
-    if (!myId.equals(that.myId)) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return myId.hashCode();
-  }
-
-  @Nonnull
-  public static List<ContentFolderTypeProvider> filter(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
-    List<ContentFolderTypeProvider> providers = new ArrayList<>();
-    for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensionList()) {
-      if (predicate.test(contentFolderTypeProvider)) {
-        providers.add(contentFolderTypeProvider);
-      }
+    @Nonnull
+    public static Predicate<ContentFolderTypeProvider> allExceptExcluded() {
+        return typeProvider -> !(typeProvider instanceof ExcludedContentFolderTypeProvider);
     }
-    return providers;
-  }
 
-  @Nullable
-  public static ContentFolderTypeProvider byId(String attributeValue) {
-    for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensionList()) {
-      if (Objects.equals(attributeValue, contentFolderTypeProvider.getId())) {
-        return contentFolderTypeProvider;
-      }
+    @Nonnull
+    public static Predicate<ContentFolderTypeProvider> onlyExcluded() {
+        return typeProvider -> typeProvider instanceof ExcludedContentFolderTypeProvider;
     }
-    return null;
-  }
+
+    public static final ExtensionPointName<ContentFolderTypeProvider> EP_NAME = ExtensionPointName.create(ContentFolderTypeProvider.class);
+
+    private final String myId;
+
+    protected ContentFolderTypeProvider(String id) {
+        myId = id;
+    }
+
+    @Nonnull
+    public String getId() {
+        return myId;
+    }
+
+    public int getWeight() {
+        return Integer.MAX_VALUE;
+    }
+
+    /**
+     * Return child directory icon
+     * If psiDirectory is null it require force package support if this provider is supported it
+     *
+     * @param dir child directory
+     * @return icon of child directory
+     */
+    @Nonnull
+    @RequiredReadAction
+    public Image getChildDirectoryIcon(@Nullable VirtualFile dir, @Nullable ComponentManager project) {
+        return getChildDirectoryIcon();
+    }
+
+    @Nonnull
+    public Image getChildDirectoryIcon() {
+        return PlatformIconGroup.nodesTreeopen();
+    }
+
+    @Nullable
+    public Image getChildPackageIcon() {
+        return null;
+    }
+
+    @Nonnull
+    public abstract Image getIcon();
+
+    @Nonnull
+    public abstract String getName();
+
+    @Nonnull
+    public abstract ColorValue getGroupColor();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ContentFolderTypeProvider that = (ContentFolderTypeProvider)o;
+
+        if (!myId.equals(that.myId)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return myId.hashCode();
+    }
+
+    @Nonnull
+    public static List<ContentFolderTypeProvider> filter(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+        List<ContentFolderTypeProvider> providers = new ArrayList<>();
+        for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensionList()) {
+            if (predicate.test(contentFolderTypeProvider)) {
+                providers.add(contentFolderTypeProvider);
+            }
+        }
+        return providers;
+    }
+
+    @Nullable
+    public static ContentFolderTypeProvider byId(String attributeValue) {
+        for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensionList()) {
+            if (Objects.equals(attributeValue, contentFolderTypeProvider.getId())) {
+                return contentFolderTypeProvider;
+            }
+        }
+        return null;
+    }
 }

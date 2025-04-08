@@ -32,6 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.function.Predicate;
 
@@ -44,43 +45,43 @@ import java.util.function.Predicate;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface NavBarModelExtension {
-  ExtensionPointName<NavBarModelExtension> EP_NAME = ExtensionPointName.create(NavBarModelExtension.class);
+    ExtensionPointName<NavBarModelExtension> EP_NAME = ExtensionPointName.create(NavBarModelExtension.class);
 
-  @Nullable
-  String getPresentableText(Object object);
+    @Nullable
+    String getPresentableText(Object object);
 
-  @Nullable
-  default String getPresentableText(Object object, boolean forPopup) {
-    return getPresentableText(object);
-  }
+    @Nullable
+    default String getPresentableText(Object object, boolean forPopup) {
+        return getPresentableText(object);
+    }
 
-  @Nullable
-  PsiElement getParent(@Nonnull PsiElement psiElement);
+    @Nullable
+    PsiElement getParent(@Nonnull PsiElement psiElement);
 
-  @Nullable
-  PsiElement adjustElement(PsiElement psiElement);
+    @Nullable
+    PsiElement adjustElement(PsiElement psiElement);
 
-  Collection<VirtualFile> additionalRoots(Project project);
+    Collection<VirtualFile> additionalRoots(Project project);
 
-  @Nullable
-  default Object getData(@Nonnull Key<?> dataId, @Nonnull DataProvider provider) {
-    return null;
-  }
+    @Nullable
+    default Object getData(@Nonnull Key<?> dataId, @Nonnull DataProvider provider) {
+        return null;
+    }
 
-  @Nullable
-  default String getPopupMenuGroup(@Nonnull DataProvider provider) {
-    return null;
-  }
+    @Nullable
+    default String getPopupMenuGroup(@Nonnull DataProvider provider) {
+        return null;
+    }
 
-  default PsiElement getLeafElement(@Nonnull DataContext dataContext) {
-    return null;
-  }
+    default PsiElement getLeafElement(@Nonnull DataContext dataContext) {
+        return null;
+    }
 
-  default boolean processChildren(Object object, Object rootElement, Predicate<Object> processor) {
-    return true;
-  }
+    default boolean processChildren(Object object, Object rootElement, Predicate<Object> processor) {
+        return true;
+    }
 
-  default boolean normalizeChildren() {
-    return true;
-  }
+    default boolean normalizeChildren() {
+        return true;
+    }
 }

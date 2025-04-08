@@ -237,10 +237,10 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             // Event queue should not be changed during initialization of application components.
             // It also cannot be changed before initialization of application components because IdeEventQueue uses other
             // application components. So it is proper to perform replacement only here.
-            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl) WindowManager.getInstance();
+            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
             IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl) RecentProjectsManager.getInstance();
+            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl)RecentProjectsManager.getInstance();
 
             if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
                 SwingUtilities.invokeLater(windowManager::showFrame);
@@ -340,8 +340,11 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                             String description = event.getDescription();
                             if (PluginsInitializeInfo.EDIT.equals(description)) {
                                 IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-                                ShowSettingsUtil.getInstance()
-                                    .showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginContants.CONFIGURABLE_ID, null);
+                                ShowSettingsUtil.getInstance().showSettingsDialog(
+                                    ideFrame == null ? null : ideFrame.getProject(),
+                                    PluginContants.CONFIGURABLE_ID,
+                                    null
+                                );
                             }
                         }
                     }

@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CustomScopesFilter {
-  ExtensionPointName<CustomScopesFilter> EP_NAME = ExtensionPointName.create(CustomScopesFilter.class);
+    ExtensionPointName<CustomScopesFilter> EP_NAME = ExtensionPointName.create(CustomScopesFilter.class);
 
-  boolean excludeScope(@Nonnull NamedScope scope);
+    boolean excludeScope(@Nonnull NamedScope scope);
 }

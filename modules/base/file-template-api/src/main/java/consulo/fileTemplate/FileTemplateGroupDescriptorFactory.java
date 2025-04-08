@@ -26,8 +26,8 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileTemplateGroupDescriptorFactory {
-  ExtensionPointName<FileTemplateGroupDescriptorFactory> EP_NAME = ExtensionPointName.create(FileTemplateGroupDescriptorFactory.class);
+    ExtensionPointName<FileTemplateGroupDescriptorFactory> EP_NAME = ExtensionPointName.create(FileTemplateGroupDescriptorFactory.class);
 
-  @Nullable
-  FileTemplateGroupDescriptor getFileTemplatesDescriptor();
+    @Nullable
+    FileTemplateGroupDescriptor getFileTemplatesDescriptor();
 }

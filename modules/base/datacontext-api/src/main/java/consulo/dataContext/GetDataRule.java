@@ -24,11 +24,11 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GetDataRule<T> {
-  ExtensionPointName<GetDataRule> EP_NAME = ExtensionPointName.create(GetDataRule.class);
+    ExtensionPointName<GetDataRule> EP_NAME = ExtensionPointName.create(GetDataRule.class);
 
-  @Nonnull
-  Key<T> getKey();
+    @Nonnull
+    Key<T> getKey();
 
-  @Nullable
-  T getData(@Nonnull DataProvider dataProvider);
+    @Nullable
+    T getData(@Nonnull DataProvider dataProvider);
 }

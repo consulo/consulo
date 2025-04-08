@@ -36,28 +36,30 @@ import java.util.Set;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface FavoritesListProvider extends Comparator<FavoritesTreeNodeDescriptor>, Comparable<FavoritesListProvider> {
-  ExtensionPointName<FavoritesListProvider> EP_NAME = ExtensionPointName.create(FavoritesListProvider.class);
+    ExtensionPointName<FavoritesListProvider> EP_NAME = ExtensionPointName.create(FavoritesListProvider.class);
 
-  String getListName(final Project project);
+    String getListName(final Project project);
 
-  @Nullable
-  String getCustomName(@Nonnull CommonActionsPanel.Buttons type);
+    @Nullable
+    String getCustomName(@Nonnull CommonActionsPanel.Buttons type);
 
-  boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects);
+    boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects);
 
-  void handle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects, JComponent component);
+    void handle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects, JComponent component);
 
-  int getWeight();
+    int getWeight();
 
-  @Nullable
-  FavoritesListNode createFavoriteListNode(Project project);
+    @Nullable
+    FavoritesListNode createFavoriteListNode(Project project);
 
-  void customizeRenderer(ColoredTreeCellRenderer renderer,
-                         JTree tree,
-                         Object value,
-                         boolean selected,
-                         boolean expanded,
-                         boolean leaf,
-                         int row,
-                         boolean hasFocus);
+    void customizeRenderer(
+        ColoredTreeCellRenderer renderer,
+        JTree tree,
+        Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
+    );
 }

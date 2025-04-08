@@ -28,13 +28,14 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileDocumentSynchronizationVetoer {
-  public static final ExtensionPointName<FileDocumentSynchronizationVetoer> EP_NAME = ExtensionPointName.create(FileDocumentSynchronizationVetoer.class);
+    public static final ExtensionPointName<FileDocumentSynchronizationVetoer> EP_NAME =
+        ExtensionPointName.create(FileDocumentSynchronizationVetoer.class);
 
-  public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
-    return true;
-  }
+    public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
+        return true;
+    }
 
-  public boolean mayReloadFileContent(VirtualFile file, @Nonnull Document document) {
-    return true;
-  }
+    public boolean mayReloadFileContent(VirtualFile file, @Nonnull Document document) {
+        return true;
+    }
 }

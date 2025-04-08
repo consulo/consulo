@@ -30,10 +30,11 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TranslatingCompilerFilesMonitorHelper {
-  ExtensionPointName<TranslatingCompilerFilesMonitorHelper> EP_NAME = ExtensionPointName.create(TranslatingCompilerFilesMonitorHelper.class);
+    ExtensionPointName<TranslatingCompilerFilesMonitorHelper> EP_NAME =
+        ExtensionPointName.create(TranslatingCompilerFilesMonitorHelper.class);
 
-  @Nullable
-  VirtualFile[] getRootsForModule(@Nonnull Module module);
+    @Nullable
+    VirtualFile[] getRootsForModule(@Nonnull Module module);
 
-  boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> oldExtension);
+    boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> oldExtension);
 }

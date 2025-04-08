@@ -27,31 +27,32 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ArtifactPropertiesProvider {
-  public static final ExtensionPointName<ArtifactPropertiesProvider> EP_NAME = ExtensionPointName.create(ArtifactPropertiesProvider.class);
-  private final String myId;
+    public static final ExtensionPointName<ArtifactPropertiesProvider> EP_NAME =
+        ExtensionPointName.create(ArtifactPropertiesProvider.class);
+    private final String myId;
 
-  protected ArtifactPropertiesProvider(@Nonnull String id) {
-    myId = id;
-  }
-
-  public final String getId() {
-    return myId;
-  }
-
-  public boolean isAvailableFor(@Nonnull ArtifactType type) {
-    return true;
-  } 
-
-  @Nonnull
-  public abstract ArtifactProperties<?> createProperties(@Nonnull ArtifactType artifactType);
-
-  @Nullable
-  public static ArtifactPropertiesProvider findById(@Nonnull String id) {
-    for (ArtifactPropertiesProvider provider : EP_NAME.getExtensionList()) {
-      if (provider.getId().equals(id)) {
-        return provider;
-      }
+    protected ArtifactPropertiesProvider(@Nonnull String id) {
+        myId = id;
     }
-    return null;
-  }
+
+    public final String getId() {
+        return myId;
+    }
+
+    public boolean isAvailableFor(@Nonnull ArtifactType type) {
+        return true;
+    }
+
+    @Nonnull
+    public abstract ArtifactProperties<?> createProperties(@Nonnull ArtifactType artifactType);
+
+    @Nullable
+    public static ArtifactPropertiesProvider findById(@Nonnull String id) {
+        for (ArtifactPropertiesProvider provider : EP_NAME.getExtensionList()) {
+            if (provider.getId().equals(id)) {
+                return provider;
+            }
+        }
+        return null;
+    }
 }

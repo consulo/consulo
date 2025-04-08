@@ -28,6 +28,7 @@ import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -37,63 +38,75 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ArtifactType {
-  private static final ExtensionPointCacheKey<ArtifactType, Map<String, ArtifactType>> GROUP = ExtensionPointCacheKey.groupBy("GroupArtifactType", ArtifactType::getId);
+    private static final ExtensionPointCacheKey<ArtifactType, Map<String, ArtifactType>> GROUP =
+        ExtensionPointCacheKey.groupBy("GroupArtifactType", ArtifactType::getId);
 
-  @Nullable
-  public static ArtifactType findById(@Nonnull String id) {
-    Map<String, ArtifactType> map = Application.get().getExtensionPoint(ArtifactType.class).getOrBuildCache(GROUP);
-    return map.get(id);
-  }
+    @Nullable
+    public static ArtifactType findById(@Nonnull String id) {
+        Map<String, ArtifactType> map = Application.get().getExtensionPoint(ArtifactType.class).getOrBuildCache(GROUP);
+        return map.get(id);
+    }
 
-  public static final ExtensionPointName<ArtifactType> EP_NAME = ExtensionPointName.create(ArtifactType.class);
-  private final String myId;
-  private final String myTitle;
+    public static final ExtensionPointName<ArtifactType> EP_NAME = ExtensionPointName.create(ArtifactType.class);
+    private final String myId;
+    private final String myTitle;
 
-  protected ArtifactType(String id, String title) {
-    myId = id;
-    myTitle = title;
-  }
+    protected ArtifactType(String id, String title) {
+        myId = id;
+        myTitle = title;
+    }
 
-  public final String getId() {
-    return myId;
-  }
+    public final String getId() {
+        return myId;
+    }
 
-  public String getPresentableName() {
-    return myTitle;
-  }
+    public String getPresentableName() {
+        return myTitle;
+    }
 
-  @Nonnull
-  public abstract Image getIcon();
+    @Nonnull
+    public abstract Image getIcon();
 
-  @Nullable
-  public String getDefaultPathFor(@Nonnull PackagingSourceItem sourceItem) {
-    return getDefaultPathFor(sourceItem.getKindOfProducedElements());
-  }
+    @Nullable
+    public String getDefaultPathFor(@Nonnull PackagingSourceItem sourceItem) {
+        return getDefaultPathFor(sourceItem.getKindOfProducedElements());
+    }
 
-  @Nullable
-  public abstract String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind);
+    @Nullable
+    public abstract String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind);
 
-  public boolean isSuitableItem(@Nonnull PackagingSourceItem sourceItem) {
-    return true;
-  }
+    public boolean isSuitableItem(@Nonnull PackagingSourceItem sourceItem) {
+        return true;
+    }
 
-  public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
-    return true;
-  }
+    public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
+        return true;
+    }
 
-  @Nonnull
-  public abstract CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory packagingElementFactory, @Nonnull String artifactName);
+    @Nonnull
+    public abstract CompositePackagingElement<?> createRootElement(
+        @Nonnull PackagingElementFactory packagingElementFactory,
+        @Nonnull String artifactName
+    );
 
-  @Nonnull
-  public List<? extends ArtifactTemplate> getNewArtifactTemplates(@Nonnull PackagingElementResolvingContext context) {
-    return Collections.emptyList();
-  }
+    @Nonnull
+    public List<? extends ArtifactTemplate> getNewArtifactTemplates(@Nonnull PackagingElementResolvingContext context) {
+        return Collections.emptyList();
+    }
 
-  public void checkRootElement(@Nonnull CompositePackagingElement<?> rootElement, @Nonnull Artifact artifact, @Nonnull ArtifactProblemsHolder manager) {
-  }
+    public void checkRootElement(
+        @Nonnull CompositePackagingElement<?> rootElement,
+        @Nonnull Artifact artifact,
+        @Nonnull ArtifactProblemsHolder manager
+    ) {
+    }
 
-  @Nullable
-  public List<? extends PackagingElement<?>> getSubstitution(@Nonnull Artifact artifact, @Nonnull PackagingElementResolvingContext context, @Nonnull ArtifactType parentType) {
-    return null;
-  }
+    @Nullable
+    public List<? extends PackagingElement<?>> getSubstitution(
+        @Nonnull Artifact artifact,
+        @Nonnull PackagingElementResolvingContext context,
+        @Nonnull ArtifactType parentType
+    ) {
+        return null;
+    }
 }

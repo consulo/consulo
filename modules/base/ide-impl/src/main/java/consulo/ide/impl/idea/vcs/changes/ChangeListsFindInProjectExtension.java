@@ -35,38 +35,38 @@ import consulo.util.collection.ContainerUtil;
  */
 @ExtensionImpl
 public class ChangeListsFindInProjectExtension implements FindInProjectExtension {
-  @Override
-  public boolean initModelFromContext(FindModel model, DataContext dataContext) {
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null) {
-      return false;
-    }
-
-    ChangeList changeList = ArrayUtil.getFirstElement(dataContext.getData(VcsDataKeys.CHANGE_LISTS));
-    if (changeList == null) {
-      Change change = ArrayUtil.getFirstElement(dataContext.getData(VcsDataKeys.CHANGES));
-      changeList = change == null ? null : ChangeListManager.getInstance(project).getChangeList(change);
-    }
-
-    if (changeList != null) {
-      String changeListName = changeList.getName();
-      ChangeListsSearchScopeProvider changeListsScopeProvider =
-        SearchScopeProvider.EP_NAME.findExtension(ChangeListsSearchScopeProvider.class);
-      if (changeListsScopeProvider != null) {
-        SearchScope changeListScope = ContainerUtil.find(
-          changeListsScopeProvider.getSearchScopes(project),
-          scope -> scope.getDisplayName().equals(changeListName)
-        );
-        if (changeListScope != null) {
-          model.setCustomScope(true);
-          model.setCustomScopeName(changeListScope.getDisplayName());
-          model.setCustomScope(changeListScope);
+    @Override
+    public boolean initModelFromContext(FindModel model, DataContext dataContext) {
+        Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            return false;
         }
-      }
 
-      return true;
+        ChangeList changeList = ArrayUtil.getFirstElement(dataContext.getData(VcsDataKeys.CHANGE_LISTS));
+        if (changeList == null) {
+            Change change = ArrayUtil.getFirstElement(dataContext.getData(VcsDataKeys.CHANGES));
+            changeList = change == null ? null : ChangeListManager.getInstance(project).getChangeList(change);
+        }
+
+        if (changeList != null) {
+            String changeListName = changeList.getName();
+            ChangeListsSearchScopeProvider changeListsScopeProvider =
+                SearchScopeProvider.EP_NAME.findExtension(ChangeListsSearchScopeProvider.class);
+            if (changeListsScopeProvider != null) {
+                SearchScope changeListScope = ContainerUtil.find(
+                    changeListsScopeProvider.getSearchScopes(project),
+                    scope -> scope.getDisplayName().equals(changeListName)
+                );
+                if (changeListScope != null) {
+                    model.setCustomScope(true);
+                    model.setCustomScopeName(changeListScope.getDisplayName());
+                    model.setCustomScope(changeListScope);
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
-
-    return false;
-  }
 }

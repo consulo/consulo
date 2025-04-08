@@ -24,37 +24,37 @@ import io.netty.handler.codec.http.websocketx.*;
 
 public class WebSocketHandler extends ChannelInboundHandlerAdapter {
 
-  @Override
-  public void channelRead(ChannelHandlerContext ctx, Object msg) {
-    if (msg instanceof WebSocketFrame) {
-      if (msg instanceof BinaryWebSocketFrame) {
-        if(WebSocketAccepter.EP_NAME.hasAnyExtensions()) {
-          byte[] array = ByteBufUtil.getBytes(((BinaryWebSocketFrame)msg).content());
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        if (msg instanceof WebSocketFrame) {
+            if (msg instanceof BinaryWebSocketFrame) {
+                if (WebSocketAccepter.EP_NAME.hasAnyExtensions()) {
+                    byte[] array = ByteBufUtil.getBytes(((BinaryWebSocketFrame)msg).content());
 
-          WebSocketConnection connection = new WebSocketConnectionImpl(ctx);
-          for (WebSocketAccepter accepter : WebSocketAccepter.EP_NAME.getExtensionList()) {
-            accepter.accept(connection, array);
-          }
-        }
-      }
-      else if (msg instanceof TextWebSocketFrame) {
-        if (WebSocketAccepter.EP_NAME.hasAnyExtensions()) {
-          String text = ((TextWebSocketFrame)msg).text();
+                    WebSocketConnection connection = new WebSocketConnectionImpl(ctx);
+                    for (WebSocketAccepter accepter : WebSocketAccepter.EP_NAME.getExtensionList()) {
+                        accepter.accept(connection, array);
+                    }
+                }
+            }
+            else if (msg instanceof TextWebSocketFrame) {
+                if (WebSocketAccepter.EP_NAME.hasAnyExtensions()) {
+                    String text = ((TextWebSocketFrame)msg).text();
 
-          WebSocketConnection connection = new WebSocketConnectionImpl(ctx);
-          for (WebSocketAccepter accepter : WebSocketAccepter.EP_NAME.getExtensionList()) {
-            accepter.accept(connection, text);
-          }
+                    WebSocketConnection connection = new WebSocketConnectionImpl(ctx);
+                    for (WebSocketAccepter accepter : WebSocketAccepter.EP_NAME.getExtensionList()) {
+                        accepter.accept(connection, text);
+                    }
+                }
+            }
+            //else if (msg instanceof PingWebSocketFrame) {
+            //}
+            //else if (msg instanceof PongWebSocketFrame) {
+            //}
+            //else if (msg instanceof CloseWebSocketFrame) {
+            //}
+            //else {
+            //}
         }
-      }
-      //else if (msg instanceof PingWebSocketFrame) {
-      //}
-      //else if (msg instanceof PongWebSocketFrame) {
-      //}
-      //else if (msg instanceof CloseWebSocketFrame) {
-      //}
-      //else {
-      //}
     }
-  }
 }

@@ -23,25 +23,25 @@ import jakarta.annotation.Nullable;
  * @author yole
  */
 public class ConfigurationTypeUtil {
-  private ConfigurationTypeUtil() {
-  }
-
-  @Nonnull
-  public static <T extends ConfigurationType> T findConfigurationType(@Nonnull Class<T> configurationTypeClass) {
-    return ConfigurationType.EP_NAME.findExtensionOrFail(configurationTypeClass);
-  }
-
-  public static boolean equals(@Nonnull ConfigurationType type1, @Nonnull ConfigurationType type2) {
-    return type1.getId().equals(type2.getId());
-  }
-
-  @Nullable
-  public static ConfigurationType findConfigurationType(String configurationId) {
-    for (ConfigurationType type : ConfigurationType.EP_NAME.getExtensionList()) {
-      if (type.getId().equals(configurationId)) {
-        return type;
-      }
+    private ConfigurationTypeUtil() {
     }
-    return null;
-  }
+
+    @Nonnull
+    public static <T extends ConfigurationType> T findConfigurationType(@Nonnull Class<T> configurationTypeClass) {
+        return ConfigurationType.EP_NAME.findExtensionOrFail(configurationTypeClass);
+    }
+
+    public static boolean equals(@Nonnull ConfigurationType type1, @Nonnull ConfigurationType type2) {
+        return type1.getId().equals(type2.getId());
+    }
+
+    @Nullable
+    public static ConfigurationType findConfigurationType(String configurationId) {
+        for (ConfigurationType type : ConfigurationType.EP_NAME.getExtensionList()) {
+            if (type.getId().equals(configurationId)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

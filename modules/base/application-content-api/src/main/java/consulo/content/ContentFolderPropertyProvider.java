@@ -30,32 +30,33 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ContentFolderPropertyProvider<T> {
-  public static final ExtensionPointName<ContentFolderPropertyProvider> EP_NAME = ExtensionPointName.create(ContentFolderPropertyProvider.class);
+    public static final ExtensionPointName<ContentFolderPropertyProvider> EP_NAME =
+        ExtensionPointName.create(ContentFolderPropertyProvider.class);
 
-  @Nonnull
-  public abstract Key<T> getKey();
+    @Nonnull
+    public abstract Key<T> getKey();
 
-  @Nullable
-  public abstract Image getIcon(@Nonnull T value, @Nonnull ContentFolderTypeProvider typeProvider);
+    @Nullable
+    public abstract Image getIcon(@Nonnull T value, @Nonnull ContentFolderTypeProvider typeProvider);
 
-  public boolean isUpdateFullIcon() {
-      return false;
-  }
-
-  public abstract T fromString(@Nonnull String value);
-
-  public abstract String toString(@Nonnull T value);
-
-  @Nonnull
-  public abstract T[] getValues();
-
-  @Nullable
-  public static ContentFolderPropertyProvider<?> findProvider(@Nonnull String key) {
-    for (ContentFolderPropertyProvider provider : EP_NAME.getExtensionList()) {
-      if (key.equals(provider.getKey().toString())) {
-        return provider;
-      }
+    public boolean isUpdateFullIcon() {
+        return false;
     }
-    return null;
-  }
+
+    public abstract T fromString(@Nonnull String value);
+
+    public abstract String toString(@Nonnull T value);
+
+    @Nonnull
+    public abstract T[] getValues();
+
+    @Nullable
+    public static ContentFolderPropertyProvider<?> findProvider(@Nonnull String key) {
+        for (ContentFolderPropertyProvider provider : EP_NAME.getExtensionList()) {
+            if (key.equals(provider.getKey().toString())) {
+                return provider;
+            }
+        }
+        return null;
+    }
 }

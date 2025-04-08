@@ -27,25 +27,26 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EarlyAccessProgramDescriptor {
-  public static final ExtensionPointName<EarlyAccessProgramDescriptor> EP_NAME = ExtensionPointName.create(EarlyAccessProgramDescriptor.class);
+    public static final ExtensionPointName<EarlyAccessProgramDescriptor> EP_NAME =
+        ExtensionPointName.create(EarlyAccessProgramDescriptor.class);
 
-  @Nonnull
-  public abstract String getName();
+    @Nonnull
+    public abstract String getName();
 
-  public boolean getDefaultState() {
-    return false;
-  }
+    public boolean getDefaultState() {
+        return false;
+    }
 
-  public boolean isAvailable() {
-    return true;
-  }
+    public boolean isAvailable() {
+        return true;
+    }
 
-  public boolean isRestartRequired() {
-    return false;
-  }
+    public boolean isRestartRequired() {
+        return false;
+    }
 
-  @Nullable
-  public String getDescription() {
-    return null;
-  }
+    @Nullable
+    public String getDescription() {
+        return null;
+    }
 }

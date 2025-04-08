@@ -39,118 +39,139 @@ import jakarta.inject.Inject;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 @ExtensionImpl(order = "first")
 public class BackspaceHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
-  protected EditorActionHandler myOriginalHandler;
+    protected EditorActionHandler myOriginalHandler;
 
-  @Inject
-  public BackspaceHandler() {
-    super(true);
-  }
-
-  @RequiredWriteAction
-  @Override
-  public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-    if (!handleBackspace(editor, caret, dataContext, false)) {
-      myOriginalHandler.execute(editor, caret, dataContext);
-    }
-  }
-
-  protected boolean handleBackspace(Editor editor, Caret caret, DataContext dataContext, boolean toWordStart) {
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null) return false;
-
-    PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, project);
-
-    if (file == null) return false;
-
-    if (editor.getSelectionModel().hasSelection()) return false;
-
-    int offset = editor.getCaretModel().getOffset() - 1;
-    if (offset < 0) return false;
-    CharSequence chars = editor.getDocument().getCharsSequence();
-    char c = chars.charAt(offset);
-
-    final Editor injectedEditor = TypedHandler.injectedEditorIfCharTypedIsSignificant(c, editor, file);
-    final Editor originalEditor = editor;
-    if (injectedEditor != editor) {
-      int injectedOffset = injectedEditor.getCaretModel().getOffset();
-      if (EditorBackspaceUtil.isOffsetInsideInjected(injectedEditor, injectedOffset)) {
-        file = PsiDocumentManager.getInstance(project).getPsiFile(injectedEditor.getDocument());
-        editor = injectedEditor;
-        offset = injectedOffset - 1;
-      }
+    @Inject
+    public BackspaceHandler() {
+        super(true);
     }
 
-    final List<BackspaceHandlerDelegate> delegates = BackspaceHandlerDelegate.EP_NAME.getExtensionList();
-    if (!toWordStart) {
-      for (BackspaceHandlerDelegate delegate : delegates) {
-        delegate.beforeCharDeleted(c, file, editor);
-      }
-    }
-
-    FileType fileType = file.getFileType();
-    final QuoteHandler quoteHandler = TypedHandler.getQuoteHandler(file, editor);
-
-    HighlighterIterator hiterator = editor.getHighlighter().createIterator(offset);
-    boolean wasClosingQuote = quoteHandler != null && quoteHandler.isClosingQuote(hiterator, offset);
-
-    myOriginalHandler.execute(originalEditor, caret, dataContext);
-
-    if (!toWordStart) {
-      for (BackspaceHandlerDelegate delegate : delegates) {
-        if (delegate.charDeleted(c, file, editor)) {
-          return true;
+    @RequiredWriteAction
+    @Override
+    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        if (!handleBackspace(editor, caret, dataContext, false)) {
+            myOriginalHandler.execute(editor, caret, dataContext);
         }
-      }
     }
 
-    if (offset >= editor.getDocument().getTextLength()) return true;
+    protected boolean handleBackspace(Editor editor, Caret caret, DataContext dataContext, boolean toWordStart) {
+        Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            return false;
+        }
 
-    chars = editor.getDocument().getCharsSequence();
-    if (c == '(' || c == '[' || c == '{') {
-      char c1 = chars.charAt(offset);
-      if (c1 != EditorBackspaceUtil.getRightChar(c)) return true;
+        PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, project);
 
-      HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
-      BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
-      if (!braceMatcher.isLBraceToken(iterator, chars, fileType) && !braceMatcher.isRBraceToken(iterator, chars, fileType)) {
+        if (file == null) {
+            return false;
+        }
+
+        if (editor.getSelectionModel().hasSelection()) {
+            return false;
+        }
+
+        int offset = editor.getCaretModel().getOffset() - 1;
+        if (offset < 0) {
+            return false;
+        }
+        CharSequence chars = editor.getDocument().getCharsSequence();
+        char c = chars.charAt(offset);
+
+        final Editor injectedEditor = TypedHandler.injectedEditorIfCharTypedIsSignificant(c, editor, file);
+        final Editor originalEditor = editor;
+        if (injectedEditor != editor) {
+            int injectedOffset = injectedEditor.getCaretModel().getOffset();
+            if (EditorBackspaceUtil.isOffsetInsideInjected(injectedEditor, injectedOffset)) {
+                file = PsiDocumentManager.getInstance(project).getPsiFile(injectedEditor.getDocument());
+                editor = injectedEditor;
+                offset = injectedOffset - 1;
+            }
+        }
+
+        final List<BackspaceHandlerDelegate> delegates = BackspaceHandlerDelegate.EP_NAME.getExtensionList();
+        if (!toWordStart) {
+            for (BackspaceHandlerDelegate delegate : delegates) {
+                delegate.beforeCharDeleted(c, file, editor);
+            }
+        }
+
+        FileType fileType = file.getFileType();
+        final QuoteHandler quoteHandler = TypedHandler.getQuoteHandler(file, editor);
+
+        HighlighterIterator hiterator = editor.getHighlighter().createIterator(offset);
+        boolean wasClosingQuote = quoteHandler != null && quoteHandler.isClosingQuote(hiterator, offset);
+
+        myOriginalHandler.execute(originalEditor, caret, dataContext);
+
+        if (!toWordStart) {
+            for (BackspaceHandlerDelegate delegate : delegates) {
+                if (delegate.charDeleted(c, file, editor)) {
+                    return true;
+                }
+            }
+        }
+
+        if (offset >= editor.getDocument().getTextLength()) {
+            return true;
+        }
+
+        chars = editor.getDocument().getCharsSequence();
+        if (c == '(' || c == '[' || c == '{') {
+            char c1 = chars.charAt(offset);
+            if (c1 != EditorBackspaceUtil.getRightChar(c)) {
+                return true;
+            }
+
+            HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
+            BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
+            if (!braceMatcher.isLBraceToken(iterator, chars, fileType) && !braceMatcher.isRBraceToken(iterator, chars, fileType)) {
+                return true;
+            }
+
+            int rparenOffset = BraceMatchingUtil.findRightmostRParen(iterator, (IElementType)iterator.getTokenType(), chars, fileType);
+            if (rparenOffset >= 0) {
+                iterator = editor.getHighlighter().createIterator(rparenOffset);
+                boolean matched = BraceMatchingUtil.matchBrace(chars, fileType, iterator, false);
+                if (matched) {
+                    return true;
+                }
+            }
+
+            editor.getDocument().deleteString(offset, offset + 1);
+        }
+        else if (c == '"' || c == '\'' || c == '`') {
+            char c1 = chars.charAt(offset);
+            if (c1 != c) {
+                return true;
+            }
+            if (wasClosingQuote) {
+                return true;
+            }
+
+            HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
+            if (quoteHandler == null || !quoteHandler.isOpeningQuote(iterator, offset)) {
+                return true;
+            }
+
+            editor.getDocument().deleteString(offset, offset + 1);
+        }
+
         return true;
-      }
-
-      int rparenOffset = BraceMatchingUtil.findRightmostRParen(iterator, (IElementType)iterator.getTokenType(), chars, fileType);
-      if (rparenOffset >= 0) {
-        iterator = editor.getHighlighter().createIterator(rparenOffset);
-        boolean matched = BraceMatchingUtil.matchBrace(chars, fileType, iterator, false);
-        if (matched) return true;
-      }
-
-      editor.getDocument().deleteString(offset, offset + 1);
-    }
-    else if (c == '"' || c == '\'' || c == '`') {
-      char c1 = chars.charAt(offset);
-      if (c1 != c) return true;
-      if (wasClosingQuote) return true;
-
-      HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
-      if (quoteHandler == null || !quoteHandler.isOpeningQuote(iterator, offset)) return true;
-
-      editor.getDocument().deleteString(offset, offset + 1);
     }
 
-    return true;
-  }
+    @Override
+    public void init(@Nullable EditorActionHandler originalHandler) {
+        myOriginalHandler = originalHandler;
+    }
 
-  @Override
-  public void init(@Nullable EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
-
-  @Nonnull
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_BACKSPACE;
-  }
+    @Nonnull
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_EDITOR_BACKSPACE;
+    }
 }

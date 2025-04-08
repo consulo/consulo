@@ -153,7 +153,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     private final Collection<LocalChangeList> myListsToBeDeleted = new HashSet<>();
 
     public static ChangeListManagerImpl getInstanceImpl(final Project project) {
-        return (ChangeListManagerImpl) project.getInstance(ChangeListManager.class);
+        return (ChangeListManagerImpl)project.getInstance(ChangeListManager.class);
     }
 
     @Inject
@@ -182,7 +182,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         myListeners.addListener(new ChangeListListener() {
             @Override
             public void defaultListChanged(final ChangeList oldDefaultList, ChangeList newDefaultList) {
-                final LocalChangeList oldList = (LocalChangeList) oldDefaultList;
+                final LocalChangeList oldList = (LocalChangeList)oldDefaultList;
                 if (oldDefaultList == null || oldList.hasDefaultName() || oldDefaultList.equals(newDefaultList)) {
                     return;
                 }
@@ -244,8 +244,10 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
         final String question;
         if (lists.size() == 1) {
-            question = String.format("<html>The empty changelist '%s' is no longer active.<br>Do you want to remove it?</html>",
-                StringUtil.first(lists.iterator().next().getName(), 30, true));
+            question = String.format(
+                "<html>The empty changelist '%s' is no longer active.<br>Do you want to remove it?</html>",
+                StringUtil.first(lists.iterator().next().getName(), 30, true)
+            );
         }
         else {
             question = String.format(
@@ -298,7 +300,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         initializeForNewProject();
 
         final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
-        ((ProjectLevelVcsManagerImpl) vcsManager).addInitializationRequest(VcsInitObject.CHANGE_LIST_MANAGER, (DumbAwareRunnable) () -> {
+        ((ProjectLevelVcsManagerImpl)vcsManager).addInitializationRequest(VcsInitObject.CHANGE_LIST_MANAGER, (DumbAwareRunnable)() -> {
             myUpdater.initialized();
             broadcastStateAfterLoad();
             myProject.getMessageBus().connect().subscribe(VcsMappingListener.class, myVcsListener);
@@ -368,10 +370,12 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
      * so waiting for its completion on AWT thread is not good runnable is invoked on AWT thread
      */
     @Override
-    public void invokeAfterUpdate(final Runnable afterUpdate,
-                                  final InvokeAfterUpdateMode mode,
-                                  @Nullable final String title,
-                                  @Nullable final ModalityState state) {
+    public void invokeAfterUpdate(
+        final Runnable afterUpdate,
+        final InvokeAfterUpdateMode mode,
+        @Nullable final String title,
+        @Nullable final ModalityState state
+    ) {
         myUpdater.invokeAfterUpdate(afterUpdate, mode, title, null, state);
     }
 
@@ -459,7 +463,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
                 final IgnoredFilesCompositeHolder fileHolder = myComposite.getIgnoredFileHolder();
 
                 for (Iterator<VcsDirtyScope> iterator = scopes.iterator(); iterator.hasNext(); ) {
-                    final VcsModifiableDirtyScope scope = (VcsModifiableDirtyScope) iterator.next();
+                    final VcsModifiableDirtyScope scope = (VcsModifiableDirtyScope)iterator.next();
                     final VcsDirtyScopeModifier modifier = scope.getModifier();
                     if (modifier != null) {
                         fileHolder.notifyVcsStarted(scope.getVcs());
@@ -506,7 +510,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             return true;
         }
 
-        VcsDirtyScopeManagerImpl dirtyScopeManager = (VcsDirtyScopeManagerImpl) VcsDirtyScopeManager.getInstance(myProject);
+        VcsDirtyScopeManagerImpl dirtyScopeManager = (VcsDirtyScopeManagerImpl)VcsDirtyScopeManager.getInstance(myProject);
 
         final VcsInvalidated invalidated = dirtyScopeManager.retrieveScopes();
         if (checkScopeIsEmpty(invalidated)) {
@@ -527,7 +531,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             final DataHolder dataHolder;
             ProgressIndicator indicator = createProgressIndicator();
             synchronized (myDataLock) {
-                dataHolder = new DataHolder((FileHolderComposite) myComposite.copy(), myWorker.copy(), wasEverythingDirty);
+                dataHolder = new DataHolder((FileHolderComposite)myComposite.copy(), myWorker.copy(), wasEverythingDirty);
                 myModifier.enterUpdate();
                 if (wasEverythingDirty) {
                     myUpdateException = null;
@@ -706,11 +710,13 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         }
     }
 
-    private void actualUpdate(@Nonnull UpdatingChangeListBuilder builder,
-                              @Nonnull VcsDirtyScope scope,
-                              @Nonnull AbstractVcs vcs,
-                              @Nonnull DataHolder dataHolder,
-                              @Nonnull ChangeListManagerGate gate) {
+    private void actualUpdate(
+        @Nonnull UpdatingChangeListBuilder builder,
+        @Nonnull VcsDirtyScope scope,
+        @Nonnull AbstractVcs vcs,
+        @Nonnull DataHolder dataHolder,
+        @Nonnull ChangeListManagerGate gate
+    ) {
         try {
             final ChangeProvider changeProvider = vcs.getChangeProvider();
             if (changeProvider != null) {
@@ -882,13 +888,13 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     Map<VirtualFile, LogicalLock> getLogicallyLockedFolders() {
         synchronized (myDataLock) {
-            return new HashMap<>(((LogicallyLockedHolder) myComposite.get(FileHolder.HolderType.LOGICALLY_LOCKED)).getMap());
+            return new HashMap<>(((LogicallyLockedHolder)myComposite.get(FileHolder.HolderType.LOGICALLY_LOCKED)).getMap());
         }
     }
 
     public boolean isLogicallyLocked(final VirtualFile file) {
         synchronized (myDataLock) {
-            return ((LogicallyLockedHolder) myComposite.get(FileHolder.HolderType.LOGICALLY_LOCKED)).containsKey(file);
+            return ((LogicallyLockedHolder)myComposite.get(FileHolder.HolderType.LOGICALLY_LOCKED)).containsKey(file);
         }
     }
 
@@ -914,7 +920,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     @Nullable
     Map<VirtualFile, String> getSwitchedRoots() {
         synchronized (myDataLock) {
-            return ((SwitchedFileHolder) myComposite.get(FileHolder.HolderType.ROOT_SWITCH)).getFilesMapCopy();
+            return ((SwitchedFileHolder)myComposite.get(FileHolder.HolderType.ROOT_SWITCH)).getFilesMapCopy();
         }
     }
 
@@ -960,7 +966,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     @Nonnull
     @Override
     public LocalChangeList addChangeList(@Nonnull final String name, @Nullable final String comment, @Nullable final Object data) {
-        return myProject.getApplication().runReadAction((Computable<LocalChangeList>) () -> {
+        return myProject.getApplication().runReadAction((Computable<LocalChangeList>)() -> {
             synchronized (myDataLock) {
                 final LocalChangeList changeList = myModifier.addChangeList(name, comment, data);
                 myChangesViewManager.scheduleRefresh();
@@ -1378,7 +1384,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     private boolean doCommit(final LocalChangeList changeList, final List<Change> changes, final boolean synchronously) {
         FileDocumentManager.getInstance().saveAllDocuments();
-        return new CommitHelper(myProject,
+        return new CommitHelper(
+            myProject,
             changeList,
             changes,
             changeList.getName(),
@@ -1387,7 +1394,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             false,
             synchronously,
             FunctionUtil.nullConstant(),
-            null).doCommit();
+            null
+        ).doCommit();
     }
 
     @Override
@@ -1442,7 +1450,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     // used in TeamCity
     @Override
     public void reopenFiles(List<FilePath> paths) {
-        final ReadonlyStatusHandlerImpl readonlyStatusHandler = (ReadonlyStatusHandlerImpl) ReadonlyStatusHandler.getInstance(myProject);
+        final ReadonlyStatusHandlerImpl readonlyStatusHandler = (ReadonlyStatusHandlerImpl)ReadonlyStatusHandler.getInstance(myProject);
         final boolean savedOption = readonlyStatusHandler.getState().SHOW_DIALOG;
         readonlyStatusHandler.getState().SHOW_DIALOG = false;
         try {
@@ -1519,7 +1527,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
         synchronized (myDataLock) {
             final VirtualFileHolder unversionedHolder = myComposite.getVFHolder(FileHolder.HolderType.UNVERSIONED);
-            final IgnoredFilesHolder ignoredHolder = (IgnoredFilesHolder) myComposite.get(FileHolder.HolderType.IGNORED);
+            final IgnoredFilesHolder ignoredHolder = (IgnoredFilesHolder)myComposite.get(FileHolder.HolderType.IGNORED);
 
             scheduler.accept(unversionedHolder.getFiles());
             scheduler.accept(ignoredHolder.values());
@@ -1598,7 +1606,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     @Override
     public boolean setReadOnly(final String name, final boolean value) {
-        return myProject.getApplication().runReadAction((Computable<Boolean>) () -> {
+        return myProject.getApplication().runReadAction((Computable<Boolean>)() -> {
             synchronized (myDataLock) {
                 final boolean result = myModifier.setReadOnly(name, value);
                 myChangesViewManager.scheduleRefresh();
@@ -1609,7 +1617,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     @Override
     public boolean editName(@Nonnull final String fromName, @Nonnull final String toName) {
-        return myProject.getApplication().runReadAction((Computable<Boolean>) () -> {
+        return myProject.getApplication().runReadAction((Computable<Boolean>)() -> {
             synchronized (myDataLock) {
                 final boolean result = myModifier.editName(fromName, toName);
                 myChangesViewManager.scheduleRefresh();
@@ -1620,7 +1628,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     @Override
     public String editComment(@Nonnull final String fromName, final String newComment) {
-        return myProject.getApplication().runReadAction((Computable<String>) () -> {
+        return myProject.getApplication().runReadAction((Computable<String>)() -> {
             synchronized (myDataLock) {
                 final String oldComment = myModifier.editComment(fromName, newComment);
                 myChangesViewManager.scheduleRefresh();
