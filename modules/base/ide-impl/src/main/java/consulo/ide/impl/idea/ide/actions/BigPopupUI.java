@@ -10,6 +10,7 @@ import consulo.language.editor.ui.awt.HintUtil;
 import consulo.project.Project;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
@@ -73,7 +74,11 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         JPanel topLeftPanel = createTopLeftPanel();
         JComponent settingsPanel = createSettingsPanel();
         mySearchField = createSearchField();
-        mySearchField.addBorders(BorderStyle.EMPTY, null, 4);
+        mySearchField.addBorder(BorderPosition.TOP, BorderStyle.EMPTY, null, 8);
+        mySearchField.addBorder(BorderPosition.BOTTOM, BorderStyle.EMPTY, null, 8);
+        mySearchField.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, null, 4);
+        mySearchField.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 4);
+
         (TargetAWT.to(mySearchField)).setFocusTraversalKeysEnabled(false);
         suggestionsPanel = createSuggestionsPanel();
 

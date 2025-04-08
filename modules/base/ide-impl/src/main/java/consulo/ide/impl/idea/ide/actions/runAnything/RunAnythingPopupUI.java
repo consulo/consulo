@@ -32,7 +32,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -397,13 +396,9 @@ public class RunAnythingPopupUI extends BigPopupUI {
         Color foregroundColor = UIUtil.getLabelForeground();
 
         myTextFieldTitle.setForeground(foregroundColor);
-        myTextFieldTitle.setBorder(BorderFactory.createEmptyBorder(3, 5, 5, 0));
-        if (Platform.current().os().isMac()) {
-            myTextFieldTitle.setFont(myTextFieldTitle.getFont().deriveFont(Font.BOLD, myTextFieldTitle.getFont().getSize() - 1f));
-        }
-        else {
-            myTextFieldTitle.setFont(myTextFieldTitle.getFont().deriveFont(Font.BOLD));
-        }
+        myTextFieldTitle.setBorder(JBUI.Borders.empty(6, 8, 6, 0));
+
+        myTextFieldTitle.putClientProperty("FlatLaf.style", "font: bold");
 
         topPanel.add(myTextFieldTitle);
 
@@ -589,7 +584,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             JPanel wrapped = new JPanel(new BorderLayout());
             wrapped.setBackground(bg);
             wrapped.setForeground(foreground);
-            wrapped.setBorder(RENDERER_BORDER);
+            wrapped.setBorder(JBCurrentTheme.listCellBorderSemi());
             wrapped.add(cmp, BorderLayout.CENTER);
             myMainPanel.add(wrapped, BorderLayout.CENTER);
             if (cmp instanceof Accessible accessible) {
