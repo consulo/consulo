@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
@@ -72,12 +73,9 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
             new RunConfigurationsSEContributor(project, contextComponent, () -> mySearchEverywhereUI.getSearchField().getValue())
         );
         List<SearchEverywhereContributor<?>> contributors = new ArrayList<>(serviceContributors);
-        SearchEverywhereContributorFactory.EP_NAME.forEachExtensionSafe(factory -> {
-            SearchEverywhereContributor contributor = factory.createContributor(initEvent);
-            if (contributor != null) {
-                contributors.add(contributor);
-            }
-        });
+        myProject.getApplication().getExtensionPoint(SearchEverywhereContributorFactory.class).safeStream()
+            .mapNonnull(factory -> factory.createContributor(initEvent))
+            .forEach(contributors::add);
         Collections.sort(contributors, Comparator.comparingInt(SearchEverywhereContributor::getSortWeight));
 
         mySearchEverywhereUI = createView(myProject, contributors);
@@ -87,8 +85,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
         //history could be suppressed by user for some reasons (creating promo video, conference demo etc.)
         boolean suppressHistory = "true".equals(System.getProperty("idea.searchEverywhere.noHistory", "false"));
         //or could be suppressed just for All tab in registry
-        suppressHistory =
-            suppressHistory || (ALL_CONTRIBUTORS_GROUP_ID.equals(contributorID) && Registry.is("search.everywhere.disable.history.for.all"));
+        suppressHistory = suppressHistory || (ALL_CONTRIBUTORS_GROUP_ID.equals(contributorID) && Registry.is("search.everywhere.disable.history.for.all"));
 
         if (searchText == null && !suppressHistory) {
             searchText = myHistoryIterator.prev();

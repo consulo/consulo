@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.dataContext.DataProvider;
@@ -40,6 +41,7 @@ import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.extension.ModuleExtension;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -66,8 +68,7 @@ import java.util.Set;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Oct 9, 2003
- * Time: 1:19:47 PM
+ * @since 2023-10-09
  */
 public class ContentEntryTreeEditor {
     private final Project myProject;
@@ -220,14 +221,13 @@ public class ContentEntryTreeEditor {
 
                 boolean hasSupport = false;
                 for (ModuleExtension moduleExtension : getContentEntryEditor().getModel().getExtensions()) {
-                    for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
-                        if (supportProvider.isSupported(moduleExtension)) {
-                            hasSupport = true;
-                            break;
-                        }
+                    hasSupport = myProject.getExtensionPoint(PsiPackageSupportProvider.class)
+                        .anyMatchSafe(supportProvider -> supportProvider.isSupported(moduleExtension));
+                    if (hasSupport) {
+                        break;
                     }
                 }
-                icon = hasSupport ? contentFolder.getType().getChildDirectoryIcon(null, null) : AllIcons.Nodes.TreeOpen;
+                icon = hasSupport ? contentFolder.getType().getChildDirectoryIcon(null, null) : PlatformIconGroup.nodesTreeopen();
                 currentRoot = contentPath;
             }
         }

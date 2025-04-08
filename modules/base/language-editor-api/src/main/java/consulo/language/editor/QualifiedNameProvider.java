@@ -20,7 +20,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.util.EditorModificationUtil;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nullable;
@@ -30,18 +29,16 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface QualifiedNameProvider {
-  ExtensionPointName<QualifiedNameProvider> EP_NAME = ExtensionPointName.create(QualifiedNameProvider.class);
+    @Nullable
+    PsiElement adjustElementToCopy(PsiElement element);
 
-  @Nullable
-  PsiElement adjustElementToCopy(PsiElement element);
+    @Nullable
+    String getQualifiedName(PsiElement element);
 
-  @Nullable
-  String getQualifiedName(PsiElement element);
+    @Nullable
+    PsiElement qualifiedNameToElement(final String fqn, final Project project);
 
-  @Nullable
-  PsiElement qualifiedNameToElement(final String fqn, final Project project);
-
-  default void insertQualifiedName(final String fqn, final PsiElement element, final Editor editor, final Project project) {
-    EditorModificationUtil.insertStringAtCaret(editor, fqn);
-  }
+    default void insertQualifiedName(final String fqn, final PsiElement element, final Editor editor, final Project project) {
+        EditorModificationUtil.insertStringAtCaret(editor, fqn);
+    }
 }

@@ -5,17 +5,15 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
-import consulo.component.extension.ExtensionPointName;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SettingsEntryPointActionProvider {
-  ExtensionPointName<SettingsEntryPointActionProvider> EP_NAME = ExtensionPointName.create(SettingsEntryPointActionProvider.class);
+    String ICON_KEY = "Update_Type_Icon_Key";
 
-  String ICON_KEY = "Update_Type_Icon_Key";
-
-  @Nonnull
-  Collection<AnAction> getUpdateActions(@Nonnull DataContext context);
+    @Nonnull
+    Collection<AnAction> getUpdateActions(@Nonnull DataContext context);
 }

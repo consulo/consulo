@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 
 /**
  * @author VISTALL
- * @since 27-Jun-22
+ * @since 2022-07-27
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GotoSymbolContributor extends ChooseByNameContributorEx {

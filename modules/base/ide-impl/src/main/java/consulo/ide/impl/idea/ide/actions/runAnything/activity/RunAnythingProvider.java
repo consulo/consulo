@@ -3,21 +3,20 @@ package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.application.util.matcher.Matcher;
+import consulo.component.extension.ExtensionPoint;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
-import consulo.dataContext.DataContext;
-import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.action.AnAction;
-import consulo.util.dataholder.Key;
-import consulo.application.util.matcher.Matcher;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -54,7 +53,6 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface RunAnythingProvider<V> {
-    ExtensionPointName<RunAnythingProvider> EP_NAME = ExtensionPointName.create(RunAnythingProvider.class);
     /**
      * Use it to retrieve command executing context, e.g. project base directory, module or custom working directory
      * that'd been chosen by the "Choose context" dropdown
@@ -174,9 +172,7 @@ public interface RunAnythingProvider<V> {
      */
     @Nullable
     static RunAnythingProvider findMatchedProvider(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-        return Arrays.stream(EP_NAME.getExtensions())
-            .filter(provider -> provider.findMatchingValue(dataContext, pattern) != null)
-            .findFirst()
-            .orElse(null);
+        return Application.get().getExtensionPoint(RunAnythingProvider.class)
+            .findFirstSafe(provider -> provider.findMatchingValue(dataContext, pattern) != null);
     }
 }

@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.application.Application;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -21,32 +21,19 @@ public interface SearchEverywhereClassifier {
         }
 
         public static boolean isClass(@Nullable Object o) {
-            for (SearchEverywhereClassifier classifier : SearchEverywhereClassifier.EP_NAME.getExtensionList()) {
-                if (classifier.isClass(o)) {
-                    return true;
-                }
-            }
-            return false;
+            return Application.get().getExtensionPoint(SearchEverywhereClassifier.class)
+                .anyMatchSafe(classifier -> classifier.isClass(o));
         }
 
         public static boolean isSymbol(@Nullable Object o) {
-            for (SearchEverywhereClassifier classifier : SearchEverywhereClassifier.EP_NAME.getExtensionList()) {
-                if (classifier.isSymbol(o)) {
-                    return true;
-                }
-            }
-            return false;
+            return Application.get().getExtensionPoint(SearchEverywhereClassifier.class)
+                .anyMatchSafe(classifier -> classifier.isSymbol(o));
         }
 
         @Nullable
         public static VirtualFile getVirtualFile(@Nonnull Object o) {
-            for (SearchEverywhereClassifier classifier : SearchEverywhereClassifier.EP_NAME.getExtensionList()) {
-                VirtualFile virtualFile = classifier.getVirtualFile(o);
-                if (virtualFile != null) {
-                    return virtualFile;
-                }
-            }
-            return null;
+            return Application.get().getExtensionPoint(SearchEverywhereClassifier.class)
+                .computeSafeIfAny(classifier -> classifier.getVirtualFile(o));
         }
 
         @Nullable
@@ -57,17 +44,10 @@ public interface SearchEverywhereClassifier {
             boolean isSelected,
             boolean cellHasFocus
         ) {
-            for (SearchEverywhereClassifier classifier : SearchEverywhereClassifier.EP_NAME.getExtensionList()) {
-                Component component = classifier.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (component != null) {
-                    return component;
-                }
-            }
-            return null;
+            return Application.get().getExtensionPoint(SearchEverywhereClassifier.class)
+                .computeSafeIfAny(classifier -> classifier.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus));
         }
     }
-
-    ExtensionPointName<SearchEverywhereClassifier> EP_NAME = ExtensionPointName.create(SearchEverywhereClassifier.class);
 
     boolean isClass(@Nullable Object o);
 

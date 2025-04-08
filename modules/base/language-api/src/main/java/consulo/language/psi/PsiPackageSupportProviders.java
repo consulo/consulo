@@ -18,6 +18,7 @@ package consulo.language.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
+import consulo.component.extension.ExtensionPoint;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
@@ -26,32 +27,33 @@ import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
-import java.util.List;
 
 /**
  * @author VISTALL
- * @since 27.04.2015
+ * @since 2015-04-27
  */
 public class PsiPackageSupportProviders {
-  @RequiredReadAction
-  public static boolean isPackageSupported(@Nonnull Project project) {
-    return CachedValuesManager.getManager(project).getCachedValue(project, () -> {
-      boolean result = false;
-      List<PsiPackageSupportProvider> extensions = PsiPackageSupportProvider.EP_NAME.getExtensionList(project.getApplication());
-      ModuleManager moduleManager = ModuleManager.getInstance(project);
-      loop:
-      for (Module module : moduleManager.getModules()) {
-        ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-        for (ModuleExtension moduleExtension : rootManager.getExtensions()) {
-          for (PsiPackageSupportProvider extension : extensions) {
-            if (extension.isSupported(moduleExtension)) {
-              result = true;
-              break loop;
+    @RequiredReadAction
+    public static boolean isPackageSupported(@Nonnull Project project) {
+        return CachedValuesManager.getManager(project).getCachedValue(
+            project,
+            () -> {
+                boolean result = false;
+                ExtensionPoint<PsiPackageSupportProvider> extensionPoint =
+                    project.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
+                ModuleManager moduleManager = ModuleManager.getInstance(project);
+                loop:
+                for (Module module : moduleManager.getModules()) {
+                    ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+                    for (ModuleExtension moduleExtension : rootManager.getExtensions()) {
+                        if (extensionPoint.anyMatchSafe(extension -> extension.isSupported(moduleExtension))) {
+                            result = true;
+                            break loop;
+                        }
+                    }
+                }
+                return CachedValueProvider.Result.create(result, ProjectRootManager.getInstance(project));
             }
-          }
-        }
-      }
-      return CachedValueProvider.Result.create(result, ProjectRootManager.getInstance(project));
-    });
-  }
+        );
+    }
 }

@@ -79,7 +79,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     private static ListPopup createMainPopup(@Nonnull DataContext context, @Nonnull Runnable disposeCallback) {
         ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
 
-        for (SettingsEntryPointActionProvider provider : SettingsEntryPointActionProvider.EP_NAME.getExtensionList()) {
+        Application.get().getExtensionPoint(SettingsEntryPointActionProvider.class).forEachExtensionSafe(provider -> {
             Collection<AnAction> actions = provider.getUpdateActions(context);
             if (!actions.isEmpty()) {
                 for (AnAction action : actions) {
@@ -92,7 +92,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
                 }
                 group.addSeparator();
             }
-        }
+        });
 
         if (group.isEmpty()) {
             resetActionIcon();

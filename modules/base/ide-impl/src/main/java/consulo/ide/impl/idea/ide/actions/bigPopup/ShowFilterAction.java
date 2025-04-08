@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.ide.actions.bigPopup;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.ExecutionUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,23 +27,21 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
     private JBPopup myFilterPopup;
 
     public ShowFilterAction() {
-        super("Filter", "Show filters popup", PlatformIconGroup.generalFilter());
+        super(ActionLocalize.actionShowfilteractionText(), ActionLocalize.actionShowfilteractionDescription(), PlatformIconGroup.generalFilter());
     }
 
     @Override
-    public boolean isSelected(@Nonnull final AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
         return myFilterPopup != null && !myFilterPopup.isDisposed();
     }
 
     @Override
-    public void setSelected(@Nonnull final AnActionEvent e, final boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         if (state) {
             showPopup(e.getRequiredData(Project.KEY), e.getInputEvent().getComponent());
         }
-        else {
-            if (myFilterPopup != null && !myFilterPopup.isDisposed()) {
-                myFilterPopup.cancel();
-            }
+        else if (myFilterPopup != null && !myFilterPopup.isDisposed()) {
+            myFilterPopup.cancel();
         }
     }
 
@@ -105,13 +104,13 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(chooser);
         JPanel buttons = new JPanel();
-        JButton all = new JButton("All");
+        JButton all = new JButton(ActionLocalize.actionShowfilteractionPopupButtonAll().get());
         all.addActionListener(e -> chooser.setAllElementsMarked(true));
         buttons.add(all);
-        JButton none = new JButton("None");
+        JButton none = new JButton(ActionLocalize.actionShowfilteractionPopupButtonNone().get());
         none.addActionListener(e -> chooser.setAllElementsMarked(false));
         buttons.add(none);
-        JButton invert = new JButton("Invert");
+        JButton invert = new JButton(ActionLocalize.actionShowfilteractionPopupButtonInvert().get());
         invert.addActionListener(e -> chooser.invertSelection());
         buttons.add(invert);
         panel.add(buttons);

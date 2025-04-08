@@ -17,7 +17,6 @@ package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
@@ -30,23 +29,26 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 8:21/20.05.13
+ * @since 2013-05-20
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PsiPackageSupportProvider {
-  ExtensionPointName<PsiPackageSupportProvider> EP_NAME = ExtensionPointName.create(PsiPackageSupportProvider.class);
+    boolean isSupported(@Nonnull ModuleExtension<?> moduleExtension);
 
-  boolean isSupported(@Nonnull ModuleExtension<?> moduleExtension);
+    default boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName) {
+        return true;
+    }
 
-  default boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName) {
-    return true;
-  }
+    default boolean acceptVirtualFile(@Nonnull Module module, @Nonnull VirtualFile virtualFile) {
+        ContentFolderTypeProvider type = ProjectFileIndex.getInstance(module.getProject()).getContentFolderTypeForFile(virtualFile);
+        return ProductionContentFolderTypeProvider.getInstance().equals(type) || TestContentFolderTypeProvider.getInstance().equals(type);
+    }
 
-  default boolean acceptVirtualFile(@Nonnull Module module, @Nonnull VirtualFile virtualFile) {
-    ContentFolderTypeProvider type = ProjectFileIndex.getInstance(module.getProject()).getContentFolderTypeForFile(virtualFile);
-    return ProductionContentFolderTypeProvider.getInstance().equals(type) || TestContentFolderTypeProvider.getInstance().equals(type);
-  }
-
-  @Nonnull
-  PsiPackage createPackage(@Nonnull PsiManager psiManager, @Nonnull PsiPackageManager packageManager, @Nonnull Class<? extends ModuleExtension> extensionClass, @Nonnull String packageName);
+    @Nonnull
+    PsiPackage createPackage(
+        @Nonnull PsiManager psiManager,
+        @Nonnull PsiPackageManager packageManager,
+        @Nonnull Class<? extends ModuleExtension> extensionClass,
+        @Nonnull String packageName
+    );
 }

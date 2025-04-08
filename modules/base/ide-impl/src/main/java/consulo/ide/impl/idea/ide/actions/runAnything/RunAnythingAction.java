@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
 import consulo.execution.executor.Executor;
@@ -22,6 +23,7 @@ import consulo.ui.ex.awt.FontUtil;
 import consulo.ui.ex.internal.CustomShortcutBuilder;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,8 +37,11 @@ public class RunAnythingAction extends AnAction implements DumbAware {
     public static final AtomicBoolean ALT_IS_PRESSED = new AtomicBoolean(false);
 
     private boolean myIsDoubleCtrlRegistered;
+    private final Application myApplication;
 
-    public RunAnythingAction(@Nonnull IdeEventQueueProxy ideEventQueueProxy) {
+    @Inject
+    public RunAnythingAction(@Nonnull Application application, @Nonnull IdeEventQueueProxy ideEventQueueProxy) {
+        this.myApplication = application;
         ideEventQueueProxy.addPostprocessor(
             event -> {
                 if (event instanceof KeyEvent keyEvent) {
@@ -102,6 +107,6 @@ public class RunAnythingAction extends AnAction implements DumbAware {
             }
         }
 
-        e.getPresentation().setEnabledAndVisible(RunAnythingProvider.EP_NAME.hasAnyExtensions());
+        e.getPresentation().setEnabledAndVisible(myApplication.getExtensionPoint(RunAnythingProvider.class).hasAnyExtensions());
     }
 }

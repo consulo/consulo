@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingCompletionGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
@@ -102,15 +103,17 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
         protected List<RunAnythingGroup> getGroups() {
             if (myHelpGroups == null) {
                 myHelpGroups = new ArrayList<>();
-                MultiMap<String, RunAnythingProvider> groupBy =
-                    ContainerUtil.groupBy(RunAnythingProvider.EP_NAME.getExtensionList(), RunAnythingProvider::getHelpGroupTitle);
+                Application application = Application.get();
+                MultiMap<String, RunAnythingProvider> groupBy = ContainerUtil.groupBy(
+                    application.getExtensionPoint(RunAnythingProvider.class).getExtensionList(),
+                    RunAnythingProvider::getHelpGroupTitle
+                );
 
                 for (Map.Entry<String, Collection<RunAnythingProvider>> entry : groupBy.entrySet()) {
                     myHelpGroups.add(new RunAnythingHelpGroup<>(entry.getKey(), entry.getValue()));
                 }
 
-                myHelpGroups.addAll(RunAnythingHelpGroup.EP_NAME.getExtensionList());
-
+                myHelpGroups.addAll(application.getExtensionPoint(RunAnythingGroup.class).getExtensionList());
             }
             return myHelpGroups;
         }

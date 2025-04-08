@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
+import consulo.application.Application;
 import consulo.application.util.matcher.Matcher;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
@@ -11,8 +12,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> extends RunAnythingGroupBase {
     public static final Collection<RunAnythingGroup> MAIN_GROUPS = createCompletionGroups();
@@ -52,11 +51,9 @@ public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> ext
     }
 
     public static Collection<RunAnythingGroup> createCompletionGroups() {
-        return RunAnythingProvider.EP_NAME.getExtensionList()
-            .stream()
-            .map(RunAnythingProvider::getCompletionGroup)
-            .filter(Objects::nonNull)
+        return Application.get().getExtensionPoint(RunAnythingProvider.class).safeStream()
+            .mapNonnull(RunAnythingProvider::getCompletionGroup)
             .distinct()
-            .collect(Collectors.toList());
+            .toList();
     }
 }

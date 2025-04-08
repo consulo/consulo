@@ -41,13 +41,12 @@ public class RunAnythingRunProfileState extends CommandLineState {
         String originalCommand = runProfile.getOriginalCommand();
         RunAnythingCommandHandler handler = RunAnythingCommandHandler.getMatchedHandler(originalCommand);
 
-        ProcessHandler processHandler =
-            ProcessHandlerBuilder.create(commandLine)
-                .killable()
-                .shouldKillProcessSoftly(handler != null && handler.shouldKillProcessSoftly())
-                .colored()
-                .consoleType(ProcessConsoleType.EXTERNAL).build();
-
+        ProcessHandler processHandler = ProcessHandlerBuilder.create(commandLine)
+            .killable()
+            .shouldKillProcessSoftly(handler != null && handler.shouldKillProcessSoftly())
+            .colored()
+            .consoleType(ProcessConsoleType.EXTERNAL)
+            .build();
 
         processHandler.addProcessListener(new ProcessListener() {
             @Override
@@ -71,7 +70,6 @@ public class RunAnythingRunProfileState extends CommandLineState {
                     }
                 }
             }
-
         });
         return processHandler;
     }

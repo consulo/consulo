@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
@@ -29,14 +30,14 @@ public class RunAnythingGeneralGroup extends RunAnythingGroupBase {
     public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
         Collection<RunAnythingItem> collector = new ArrayList<>();
 
-        for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensions()) {
+        Application.get().getExtensionPoint(RunAnythingProvider.class).forEachExtensionSafe(provider -> {
             if (provider.getCompletionGroup() == RunAnythingGeneralGroup.INSTANCE) {
                 Collection values = provider.getValues(dataContext, pattern);
                 for (Object value : values) {
                     collector.add(provider.getMainListItem(dataContext, value));
                 }
             }
-        }
+        });
 
         return collector;
     }

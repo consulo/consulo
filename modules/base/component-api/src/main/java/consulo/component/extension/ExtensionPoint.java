@@ -40,129 +40,147 @@ import java.util.function.Predicate;
  * Also when count count changed all cache {@link #getOrBuildCache(ExtensionPointCacheKey, Function)} & {@link #findExtension(Class)} will be dropped
  */
 public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
-  @Nonnull
-  default String getName() {
-    return getClassName();
-  }
-
-  @Nonnull
-  @SuppressWarnings("unchecked")
-  @Deprecated
-  @DeprecationInfo("Use #getExtensionList()")
-  default E[] getExtensions() {
-    List<E> list = getExtensionList();
-    return list.toArray((E[])Array.newInstance(getExtensionClass(), list.size()));
-  }
-
-  default boolean hasAnyExtensions() {
-    return !getExtensionList().isEmpty();
-  }
-
-  @Nonnull
-  List<E> getExtensionList();
-
-  @Nonnull
-  Class<E> getExtensionClass();
-
-  @Nonnull
-  default String getClassName() {
-    return getExtensionClass().getName();
-  }
-
-  @Override
-  default long getModificationCount() {
-    return 0;
-  }
-
-  @Nullable
-  default <K extends E> K findExtension(Class<K> extensionClass) {
-    return ContainerUtil.findInstance(getExtensionList(), extensionClass);
-  }
-
-  /**
-   * Sort extensions depends on @{@link ExtensionImpl#order()} - internal logic
-   */
-  @Nonnull
-  default List<E> sort(List<E> extensionsList) {
-    return extensionsList;
-  }
-
-  /**
-   * Return cache or build it. This cache will be dropped if extensions reloaded (for example plugin added/removed)
-   */
-  @Nonnull
-  <K> K getOrBuildCache(@Nonnull ExtensionPointCacheKey<E, K> key);
-
-  @Nonnull
-  default <V extends E> V findExtensionOrFail(@Nonnull Class<V> instanceOf) {
-    V extension = findExtension(instanceOf);
-    if (extension == null) {
-      throw new IllegalArgumentException("Extension point: " + getName() + " not contains extension of type: " + instanceOf);
+    @Nonnull
+    default String getName() {
+        return getClassName();
     }
-    return extension;
-  }
 
-  default void processWithPluginDescriptor(@Nonnull BiConsumer<? super E, ? super PluginDescriptor> consumer) {
-    for (E extension : getExtensionList()) {
-      PluginDescriptor plugin = PluginManager.getPlugin(extension.getClass());
-
-      consumer.accept(extension, plugin);
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    @Deprecated
+    @DeprecationInfo("Use #getExtensionList()")
+    default E[] getExtensions() {
+        List<E> list = getExtensionList();
+        return list.toArray((E[])Array.newInstance(getExtensionClass(), list.size()));
     }
-  }
 
-  @Nullable
-  default E findFirstSafe(@Nonnull Predicate<E> predicate) {
-    for (E extension : getExtensionList()) {
-      try {
-        if (predicate.test(extension)) {
-          return extension;
+    default boolean hasAnyExtensions() {
+        return !getExtensionList().isEmpty();
+    }
+
+    @Nonnull
+    List<E> getExtensionList();
+
+    @Nonnull
+    Class<E> getExtensionClass();
+
+    @Nonnull
+    default String getClassName() {
+        return getExtensionClass().getName();
+    }
+
+    @Override
+    default long getModificationCount() {
+        return 0;
+    }
+
+    @Nullable
+    default <K extends E> K findExtension(Class<K> extensionClass) {
+        return ContainerUtil.findInstance(getExtensionList(), extensionClass);
+    }
+
+    /**
+     * Sort extensions depends on @{@link ExtensionImpl#order()} - internal logic
+     */
+    @Nonnull
+    default List<E> sort(List<E> extensionsList) {
+        return extensionsList;
+    }
+
+    /**
+     * Return cache or build it. This cache will be dropped if extensions reloaded (for example plugin added/removed)
+     */
+    @Nonnull
+    <K> K getOrBuildCache(@Nonnull ExtensionPointCacheKey<E, K> key);
+
+    @Nonnull
+    default <V extends E> V findExtensionOrFail(@Nonnull Class<V> instanceOf) {
+        V extension = findExtension(instanceOf);
+        if (extension == null) {
+            throw new IllegalArgumentException("Extension point: " + getName() + " not contains extension of type: " + instanceOf);
         }
-      }
-      catch (Throwable e) {
+        return extension;
+    }
+
+    default void processWithPluginDescriptor(@Nonnull BiConsumer<? super E, ? super PluginDescriptor> consumer) {
+        for (E extension : getExtensionList()) {
+            PluginDescriptor plugin = PluginManager.getPlugin(extension.getClass());
+
+            consumer.accept(extension, plugin);
+        }
+    }
+
+    default ExtensionStream<E> safeStream() {
+        List<E> extensionList = getExtensionList();
+        return extensionList.isEmpty() ? ExtensionStream.empty() : ExtensionStream.of(extensionList.stream());
+    }
+
+    default boolean anyMatchSafe(@Nonnull Predicate<E> predicate) {
+        for (E extension : getExtensionList()) {
+            try {
+                if (predicate.test(extension)) {
+                    return true;
+                }
+            }
+            catch (Throwable e) {
+                checkException(e, extension);
+            }
+        }
+        return false;
+    }
+
+    @Nullable
+    default E findFirstSafe(@Nonnull Predicate<E> predicate) {
+        for (E extension : getExtensionList()) {
+            try {
+                if (predicate.test(extension)) {
+                    return extension;
+                }
+            }
+            catch (Throwable e) {
+                checkException(e, extension);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    default <R> R computeSafeIfAny(@Nonnull Function<? super E, ? extends R> processor) {
+        for (E extension : getExtensionList()) {
+            try {
+                R result = processor.apply(extension);
+                if (result != null) {
+                    return result;
+                }
+            }
+            catch (Throwable e) {
+                checkException(e, extension);
+            }
+        }
+        return null;
+    }
+
+    default void forEachExtensionSafe(@Nonnull Consumer<? super E> consumer) {
+        processWithPluginDescriptor((value, pluginDescriptor) -> {
+            try {
+                consumer.accept(value);
+            }
+            catch (Throwable e) {
+                checkException(e, value);
+            }
+        });
+    }
+
+    @Override
+    default Iterator<E> iterator() {
+        return getExtensionList().iterator();
+    }
+
+    private static void checkException(Throwable e, Object value) {
         if (e instanceof ControlFlowException) {
-          throw ControlFlowException.rethrow(e);
+            throw ControlFlowException.rethrow(e);
         }
-        PluginExceptionUtil.logPluginError(Logger.getInstance(ExtensionPoint.class), e.getMessage(), e, extension.getClass());
-      }
+        Logger logger = Logger.getInstance(ExtensionPoint.class);
+        PluginExceptionUtil.logPluginError(logger, e.getMessage(), e, value != null ? value.getClass() : Void.TYPE);
     }
-    return null;
-  }
-
-  @Nullable
-  default <R> R computeSafeIfAny(@Nonnull Function<? super E, ? extends R> processor) {
-    for (E extension : getExtensionList()) {
-      try {
-        R result = processor.apply(extension);
-        if (result != null) {
-          return result;
-        }
-      }
-      catch (Throwable e) {
-        if (e instanceof ControlFlowException) {
-          throw ControlFlowException.rethrow(e);
-        }
-        PluginExceptionUtil.logPluginError(Logger.getInstance(ExtensionPoint.class), e.getMessage(), e, extension.getClass());
-      }
-    }
-    return null;
-  }
-
-  default void forEachExtensionSafe(@Nonnull Consumer<? super E> consumer) {
-    processWithPluginDescriptor((value, pluginDescriptor) -> {
-      try {
-        consumer.accept(value);
-      }
-      catch (Throwable e) {
-        if (e instanceof ControlFlowException) {
-          throw ControlFlowException.rethrow(e);
-        }
-        PluginExceptionUtil.logPluginError(Logger.getInstance(ExtensionPoint.class), e.getMessage(), e, value.getClass());
-      }
-    });
-  }
-
-  @Override
-  default Iterator<E> iterator() {
-    return getExtensionList().iterator();
-  }
 }

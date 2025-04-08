@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
+import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -32,16 +32,14 @@ public class RunAnythingRecentGroup extends RunAnythingGroupBase {
         Project project = dataContext.getData(Project.KEY);
         assert project != null;
 
+        ExtensionPoint<RunAnythingProvider> extensionPoint = project.getApplication().getExtensionPoint(RunAnythingProvider.class);
         Collection<RunAnythingItem> collector = new ArrayList<>();
-        for (String command : ContainerUtil.iterateBackward(RunAnythingCache.getInstance(project).getState().getCommands())) {
-            for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensions()) {
+        for (String command : RunAnythingCache.getInstance(project).getState().getCommands().reversed()) {
+            collector.add(extensionPoint.computeSafeIfAny(provider -> {
                 Object matchingValue = provider.findMatchingValue(dataContext, command);
-                if (matchingValue != null) {
-                    //noinspection unchecked
-                    collector.add(provider.getMainListItem(dataContext, matchingValue));
-                    break;
-                }
-            }
+                //noinspection unchecked
+                return matchingValue != null ? provider.getMainListItem(dataContext, matchingValue) : null;
+            }));
         }
 
         return collector;

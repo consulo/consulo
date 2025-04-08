@@ -3,11 +3,11 @@ package consulo.ide.impl.idea.ide.actions.runAnything.commands;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.process.cmd.GeneralCommandLine;
+import consulo.application.Application;
 import consulo.dataContext.DataContext;
-import consulo.component.extension.ExtensionPointName;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -16,9 +16,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RunAnythingCommandCustomizer {
-    public static final ExtensionPointName<RunAnythingCommandCustomizer> EP_NAME =
-        ExtensionPointName.create(RunAnythingCommandCustomizer.class);
-
     /**
      * Customizes command line to be executed
      *
@@ -28,6 +25,7 @@ public abstract class RunAnythingCommandCustomizer {
      * @return patched command line
      */
     @Nonnull
+    @SuppressWarnings("unused")
     protected GeneralCommandLine customizeCommandLine(
         @Nonnull VirtualFile workDirectory,
         @Nonnull DataContext dataContext,
@@ -53,17 +51,18 @@ public abstract class RunAnythingCommandCustomizer {
         @Nonnull VirtualFile workDirectory,
         @Nonnull GeneralCommandLine commandLine
     ) {
-        for (RunAnythingCommandCustomizer customizer : EP_NAME.getExtensionList()) {
-            commandLine = customizer.customizeCommandLine(workDirectory, dataContext, commandLine);
-        }
-        return commandLine;
+        SimpleReference<GeneralCommandLine> commandLineRef = SimpleReference.create(commandLine);
+        Application.get().getExtensionPoint(RunAnythingCommandCustomizer.class).forEachExtensionSafe(
+            customizer -> commandLineRef.set(customizer.customizeCommandLine(workDirectory, dataContext, commandLineRef.get()))
+        );
+        return commandLineRef.get();
     }
 
     @Nonnull
     public static DataContext customizeContext(@Nonnull DataContext dataContext) {
-        for (RunAnythingCommandCustomizer customizer : EP_NAME.getExtensionList()) {
-            dataContext = customizer.customizeDataContext(dataContext);
-        }
-        return dataContext;
+        SimpleReference<DataContext> dataContextRef = SimpleReference.create(dataContext);
+        Application.get().getExtensionPoint(RunAnythingCommandCustomizer.class)
+            .forEachExtensionSafe(customizer -> dataContextRef.set(customizer.customizeDataContext(dataContextRef.get())));
+        return dataContextRef.get();
     }
 }

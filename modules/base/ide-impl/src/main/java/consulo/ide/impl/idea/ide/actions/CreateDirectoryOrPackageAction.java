@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
+import consulo.component.extension.ExtensionPoint;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.ide.IdeView;
 import consulo.ide.action.ui.NewItemPopupUtil;
@@ -51,7 +52,6 @@ import consulo.util.lang.Trinity;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class CreateDirectoryOrPackageAction extends AnAction implements DumbAware {
@@ -191,15 +191,14 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
 
         Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(d);
         if (moduleForPsiElement != null) {
-            boolean isPackageSupported = false;
             ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForPsiElement);
-            List<PsiPackageSupportProvider> extensions = PsiPackageSupportProvider.EP_NAME.getExtensionList();
+            ExtensionPoint<PsiPackageSupportProvider> extensionPoint =
+                project.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
+            boolean isPackageSupported = false;
             for (ModuleExtension moduleExtension : moduleRootManager.getExtensions()) {
-                for (PsiPackageSupportProvider supportProvider : extensions) {
-                    if (supportProvider.isSupported(moduleExtension)) {
-                        isPackageSupported = true;
-                        break;
-                    }
+                isPackageSupported = extensionPoint.anyMatchSafe(supportProvider -> supportProvider.isSupported(moduleExtension));
+                if (isPackageSupported) {
+                    break;
                 }
             }
 

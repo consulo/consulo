@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.action.AnActionEvent;
 
 import jakarta.annotation.Nonnull;
@@ -25,8 +24,6 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SearchEverywhereContributorFactory<Item> {
-    ExtensionPointName<SearchEverywhereContributorFactory> EP_NAME = ExtensionPointName.create(SearchEverywhereContributorFactory.class);
-
     @Nullable
     SearchEverywhereContributor<Item> createContributor(@Nonnull AnActionEvent initEvent);
 }

@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
@@ -22,8 +21,6 @@ import java.util.stream.Collectors;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public class RunAnythingHelpGroup<P extends RunAnythingProvider> extends RunAnythingGroupBase {
-    public static final ExtensionPointName<RunAnythingGroup> EP_NAME = ExtensionPointName.create(RunAnythingGroup.class);
-
     @Nonnull
     private LocalizeValue myTitle = LocalizeValue.localizeTODO("undefined");
     @Nonnull

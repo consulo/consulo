@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
@@ -300,7 +301,7 @@ public class GotoRelatedFileAction extends AnAction {
         Set<GotoRelatedItem> items = new LinkedHashSet<>();
 
         PsiElement finalContextElement = contextElement;
-        GotoRelatedProvider.EP_NAME.forEachExtensionSafe(provider -> {
+        psiFile.getApplication().getExtensionPoint(GotoRelatedProvider.class).forEachExtensionSafe(provider -> {
             items.addAll(provider.getItems(finalContextElement));
             if (dataContext != null) {
                 items.addAll(provider.getItems(dataContext));

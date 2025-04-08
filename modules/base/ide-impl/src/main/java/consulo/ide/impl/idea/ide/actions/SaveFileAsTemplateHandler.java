@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nullable;
 
@@ -26,8 +25,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SaveFileAsTemplateHandler {
-    ExtensionPointName<SaveFileAsTemplateHandler> EP_NAME = ExtensionPointName.create(SaveFileAsTemplateHandler.class);
-
     @Nullable
     String getTemplateText(PsiFile file, String fileText, String nameWithoutExtension);
 }
