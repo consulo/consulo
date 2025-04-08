@@ -2,8 +2,8 @@
 package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
-import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
+import consulo.ide.runAnything.RunAnythingProvider;
+import consulo.ide.runAnything.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;

@@ -3,9 +3,10 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.SeparatorComponent;
+import consulo.ide.internal.RunAnythingCache;
+import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -93,7 +94,7 @@ public class RunAnythingUtil {
     }
 
     public static boolean executeMatched(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-        List<String> commands = RunAnythingCache.getInstance(fetchProject(dataContext)).getState().getCommands();
+        List<String> commands = ((RunAnythingCacheImpl) RunAnythingCache.getInstance(fetchProject(dataContext))).getState().getCommands();
 
         Module module = dataContext.getData(Module.KEY);
         if (module == null) {

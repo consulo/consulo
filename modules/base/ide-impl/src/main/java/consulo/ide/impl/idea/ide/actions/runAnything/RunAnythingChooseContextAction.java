@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
@@ -27,10 +26,8 @@ import consulo.fileChooser.PathChooserDialog;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.ui.popup.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
-import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ide.localize.IdeLocalize;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
+import consulo.ide.runAnything.RunAnythingContext;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -38,6 +35,7 @@ import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
@@ -48,37 +46,12 @@ import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * from kotlin
  */
 public abstract class RunAnythingChooseContextAction extends ActionGroup implements DumbAware {
-    @RequiredReadAction
-    public static List<RunAnythingContext> allContexts(Project project) {
-        List<RunAnythingContext> contexts = projectAndModulesContexts(project);
-        contexts.add(RunAnythingContext.BrowseRecentDirectoryContext.INSTANCE);
-
-        List<String> paths = RunAnythingContextRecentDirectoryCache.getInstance(project).getState().paths;
-        for (String path : paths) {
-            contexts.add(new RunAnythingContext.RecentDirectoryContext(path));
-        }
-        return contexts;
-    }
-
-    @RequiredReadAction
-    private static List<RunAnythingContext> projectAndModulesContexts(Project project) {
-        List<RunAnythingContext> contexts = new ArrayList<>();
-        contexts.add(new RunAnythingContext.ProjectContext(project));
-        ModuleManager manager = ModuleManager.getInstance(project);
-        Module[] modules = manager.getModules();
-        if (modules.length == 1) {
-            contexts.add(new RunAnythingContext.ModuleContext(modules[0]));
-        }
-        return contexts;
-    }
-
     private abstract class ContextItem extends AnAction {
         protected RunAnythingContext context;
 
@@ -151,7 +124,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                 );
 
                 chooser.chooseAsync(project.getBaseDir()).doWhenDone(virtualFiles -> {
-                    List<String> recentDirectories = RunAnythingContextRecentDirectoryCache.getInstance(project).getState().paths;
+                    List<String> recentDirectories = RunAnythingContextRecentDirectoryCacheImpl.getInstance(project).getPaths();
 
                     String path = ArrayUtil.getFirstElement(virtualFiles).getPath();
 

@@ -1,13 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.internal.RunAnythingCache;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
@@ -23,18 +22,18 @@ import java.util.Map;
 
 @Singleton
 @State(name = "RunAnythingCache", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class RunAnythingCache implements PersistentStateComponent<RunAnythingCache.State> {
+public class RunAnythingCacheImpl implements RunAnythingCache, PersistentStateComponent<RunAnythingCacheImpl.State> {
     private final State mySettings = new State();
 
-    public static RunAnythingCache getInstance(Project project) {
-        return project.getInstance(RunAnythingCache.class);
+    public static RunAnythingCacheImpl getInstance(Project project) {
+        return project.getInstance(RunAnythingCacheImpl.class);
     }
 
     /**
      * @return true is group is visible; false if it's hidden
      */
+    @Override
     public boolean isGroupVisible(@Nonnull String key) {
         return mySettings.myKeys.getOrDefault(key, true);
     }
@@ -45,6 +44,7 @@ public class RunAnythingCache implements PersistentStateComponent<RunAnythingCac
      * @param key     to store visibility flag
      * @param visible true if group should be shown
      */
+    @Override
     public void saveGroupVisibilityKey(@Nonnull String key, boolean visible) {
         mySettings.myKeys.put(key, visible);
     }

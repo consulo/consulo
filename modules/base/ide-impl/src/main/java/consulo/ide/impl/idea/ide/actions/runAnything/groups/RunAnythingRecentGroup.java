@@ -3,10 +3,11 @@ package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
 import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
-import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
-import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
+import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCacheImpl;
+import consulo.ide.internal.RunAnythingCache;
 import consulo.ide.localize.IdeLocalize;
+import consulo.ide.runAnything.RunAnythingItem;
+import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
@@ -34,7 +35,7 @@ public class RunAnythingRecentGroup extends RunAnythingGroupBase {
 
         ExtensionPoint<RunAnythingProvider> extensionPoint = project.getApplication().getExtensionPoint(RunAnythingProvider.class);
         Collection<RunAnythingItem> collector = new ArrayList<>();
-        for (String command : RunAnythingCache.getInstance(project).getState().getCommands().reversed()) {
+        for (String command : ((RunAnythingCacheImpl) RunAnythingCache.getInstance(project)).getState().getCommands().reversed()) {
             collector.add(extensionPoint.computeSafeIfAny(provider -> {
                 Object matchingValue = provider.findMatchingValue(dataContext, command);
                 //noinspection unchecked

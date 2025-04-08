@@ -1,16 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.actions.runAnything.activity;
+package consulo.ide.runAnything;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.matcher.Matcher;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingChooseContextAction;
-import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
-import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
-import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
-import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingHelpItem;
-import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
-import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -83,7 +77,7 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
     @Override
     @RequiredReadAction
     public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
-        return RunAnythingChooseContextAction.allContexts(RunAnythingUtil.fetchProject(dataContext));
+        return RunAnythingContext.allContexts(dataContext.getData(Project.KEY));
     }
 
     @Nullable

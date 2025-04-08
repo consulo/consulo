@@ -7,9 +7,10 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingRunConfigurationItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
-import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
+import consulo.ide.runAnything.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import consulo.ide.localize.IdeLocalize;
+import consulo.ide.runAnything.RunAnythingProviderBase;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;

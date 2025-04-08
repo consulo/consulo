@@ -5,10 +5,12 @@ import consulo.dataContext.DataContext;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction;
-import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
+import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCacheImpl;
 import consulo.ide.impl.idea.ide.actions.runAnything.commands.RunAnythingCommandCustomizer;
 import consulo.ide.impl.idea.ide.actions.runAnything.execution.RunAnythingRunProfile;
+import consulo.ide.internal.RunAnythingCache;
 import consulo.ide.localize.IdeLocalize;
+import consulo.ide.runAnything.RunAnythingProviderBase;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
@@ -47,7 +49,7 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
         Project project = dataContext.getData(Project.KEY);
         LOG.assertTrue(project != null);
 
-        Collection<String> commands = RunAnythingCache.getInstance(project).getState().getCommands();
+        Collection<String> commands = ((RunAnythingCacheImpl) RunAnythingCache.getInstance(project)).getState().getCommands();
         commands.remove(commandString);
         commands.add(commandString);
 

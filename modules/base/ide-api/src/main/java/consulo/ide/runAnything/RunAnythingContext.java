@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions.runAnything;
+package consulo.ide.runAnything;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.UserHomeFileUtil;
+import consulo.ide.internal.RunAnythingContextRecentDirectoryCache;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
+import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -26,7 +29,10 @@ import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -44,6 +50,12 @@ public class RunAnythingContext {
         @Nonnull
         public Project getProject() {
             return myProject;
+        }
+
+        @Nullable
+        @Override
+        public String getPath() {
+            return myProject.getBasePath();
         }
 
         @Override
@@ -120,6 +132,12 @@ public class RunAnythingContext {
             myModule = module;
         }
 
+        @Nullable
+        @Override
+        public String getPath() {
+            return myModule.getModuleDirPath();
+        }
+
         @Nonnull
         private static String calcDescription(Module module) {
             String basePath = module.getProject().getBasePath();
@@ -185,6 +203,11 @@ public class RunAnythingContext {
         this.icon = icon;
     }
 
+    @Nullable
+    public String getPath() {
+        return null;
+    }
+
     @Nonnull
     public LocalizeValue getLabel() {
         return label;
@@ -197,5 +220,29 @@ public class RunAnythingContext {
 
     public Image getIcon() {
         return icon;
+    }
+
+    @RequiredReadAction
+    public static List<RunAnythingContext> allContexts(Project project) {
+        List<RunAnythingContext> contexts = projectAndModulesContexts(project);
+        contexts.add(RunAnythingContext.BrowseRecentDirectoryContext.INSTANCE);
+
+        List<String> paths = RunAnythingContextRecentDirectoryCache.getInstance(project).getPaths();
+        for (String path : paths) {
+            contexts.add(new RunAnythingContext.RecentDirectoryContext(path));
+        }
+        return contexts;
+    }
+
+    @RequiredReadAction
+    private static List<RunAnythingContext> projectAndModulesContexts(Project project) {
+        List<RunAnythingContext> contexts = new ArrayList<>();
+        contexts.add(new RunAnythingContext.ProjectContext(project));
+        ModuleManager manager = ModuleManager.getInstance(project);
+        Module[] modules = manager.getModules();
+        if (modules.length == 1) {
+            contexts.add(new RunAnythingContext.ModuleContext(modules[0]));
+        }
+        return contexts;
     }
 }

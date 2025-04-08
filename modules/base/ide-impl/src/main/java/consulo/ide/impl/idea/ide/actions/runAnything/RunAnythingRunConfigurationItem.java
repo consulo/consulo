@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.execution.configuration.ConfigurationType;
-import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
+import consulo.ide.runAnything.RunAnythingItemBase;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

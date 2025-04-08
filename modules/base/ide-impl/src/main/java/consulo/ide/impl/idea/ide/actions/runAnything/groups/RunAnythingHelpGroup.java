@@ -4,8 +4,8 @@ package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
-import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
+import consulo.ide.runAnything.RunAnythingProvider;
+import consulo.ide.runAnything.RunAnythingItem;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 

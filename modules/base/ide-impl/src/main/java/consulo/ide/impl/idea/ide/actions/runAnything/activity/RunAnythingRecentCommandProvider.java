@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
-
+import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCacheImpl;
+import consulo.ide.internal.RunAnythingCache;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -17,7 +17,7 @@ public class RunAnythingRecentCommandProvider extends RunAnythingCommandProvider
     @Nonnull
     @Override
     public Collection<String> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-        return RunAnythingCache.getInstance(fetchProject(dataContext)).getState().getCommands();
+        return ((RunAnythingCacheImpl) RunAnythingCache.getInstance(fetchProject(dataContext))).getState().getCommands();
     }
 
     @Nullable

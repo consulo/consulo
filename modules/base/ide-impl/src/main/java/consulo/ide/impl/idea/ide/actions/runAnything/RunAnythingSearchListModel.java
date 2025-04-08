@@ -2,9 +2,9 @@
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
+import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingCompletionGroup;
-import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
+import consulo.ide.runAnything.RunAnythingGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGroup;
 import consulo.localize.LocalizeValue;

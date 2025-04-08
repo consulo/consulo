@@ -41,8 +41,7 @@ public interface DataContext {
   };
 
   /**
-   * Returns the value corresponding to the specified data key. Some of the supported
-   * data identifiers are defined in the {@link consulo.ide.impl.idea.openapi.actionSystem.PlatformDataKeys} class.
+   * Returns the value corresponding to the specified data key.
    *
    * @param key the data key for which the value is requested.
    * @return the value, or null if no value is available in the current context for this identifier.

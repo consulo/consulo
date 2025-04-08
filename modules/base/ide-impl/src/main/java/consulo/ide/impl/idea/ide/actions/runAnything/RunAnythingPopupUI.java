@@ -14,17 +14,19 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
-import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingCompletionGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGeneralGroup;
-import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGroup;
-import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.ui.RunAnythingScrollingUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.internal.RunAnythingCache;
 import consulo.ide.localize.IdeLocalize;
+import consulo.ide.runAnything.RunAnythingContext;
+import consulo.ide.runAnything.RunAnythingGroup;
+import consulo.ide.runAnything.RunAnythingItem;
+import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -919,7 +921,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 return;
             }
 
-            RunAnythingCache.getInstance(getProject()).getState().getCommands().remove(((RunAnythingItem)selectedValue).getCommand());
+            ((RunAnythingCacheImpl) RunAnythingCache.getInstance(getProject())).getState().getCommands().remove(((RunAnythingItem)selectedValue).getCommand());
 
             model.remove(index);
             model.shiftIndexes(index, -1);

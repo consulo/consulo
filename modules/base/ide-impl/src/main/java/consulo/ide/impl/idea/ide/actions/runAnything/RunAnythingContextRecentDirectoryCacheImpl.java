@@ -15,13 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.internal.RunAnythingContextRecentDirectoryCache;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.annotation.Nonnull;
@@ -35,9 +34,10 @@ import java.util.List;
  */
 @Singleton
 @State(name = "RunAnythingContextRecentDirectoryCache", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class RunAnythingContextRecentDirectoryCache implements PersistentStateComponent<RunAnythingContextRecentDirectoryCache.State> {
+public class RunAnythingContextRecentDirectoryCacheImpl implements
+    RunAnythingContextRecentDirectoryCache,
+    PersistentStateComponent<RunAnythingContextRecentDirectoryCacheImpl.State> {
     static class State {
         public List<String> paths = new ArrayList<>();
     }
@@ -48,6 +48,11 @@ public class RunAnythingContextRecentDirectoryCache implements PersistentStateCo
     }
 
     private State myState = new State();
+
+    @Override
+    public List<String> getPaths() {
+        return myState.paths;
+    }
 
     @Nonnull
     @Override
