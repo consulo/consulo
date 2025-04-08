@@ -5,6 +5,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.WriteAction;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
 import consulo.externalSystem.model.ProjectKeys;
@@ -21,7 +22,9 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStruc
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionResourceContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.language.content.TestResourceContentFolderTypeProvider;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -38,6 +41,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -172,13 +176,20 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
         ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
         compilerPathsManager.setInheritedCompilerOutput(data.isInheritProjectCompileOutputPath());
         if (!data.isInheritProjectCompileOutputPath()) {
-            String compileOutputPath = data.getCompileOutputPath(ExternalSystemSourceType.SOURCE);
-            if (compileOutputPath != null) {
-                compilerPathsManager.setCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance(), VfsUtilCore.pathToUrl(compileOutputPath));
-            }
-            String testCompileOutputPath = data.getCompileOutputPath(ExternalSystemSourceType.TEST);
-            if (testCompileOutputPath != null) {
-                compilerPathsManager.setCompilerOutputUrl(TestContentFolderTypeProvider.getInstance(), VfsUtilCore.pathToUrl(testCompileOutputPath));
+            Map<ExternalSystemSourceType, ContentFolderTypeProvider> setPaths = new LinkedHashMap<>();
+            setPaths.put(ExternalSystemSourceType.SOURCE, ProductionContentFolderTypeProvider.getInstance());
+            setPaths.put(ExternalSystemSourceType.TEST, TestContentFolderTypeProvider.getInstance());
+            setPaths.put(ExternalSystemSourceType.RESOURCE, ProductionResourceContentFolderTypeProvider.getInstance());
+            setPaths.put(ExternalSystemSourceType.TEST_RESOURCE, TestResourceContentFolderTypeProvider.getInstance());
+
+            for (Map.Entry<ExternalSystemSourceType, ContentFolderTypeProvider> entry : setPaths.entrySet()) {
+                ExternalSystemSourceType sourceType = entry.getKey();
+                ContentFolderTypeProvider provider = entry.getValue();
+
+                String outputPath = data.getCompileOutputPath(sourceType);
+                if (outputPath != null) {
+                    compilerPathsManager.setCompilerOutputUrl(provider, VfsUtilCore.pathToUrl(outputPath));
+                }
             }
         }
     }
