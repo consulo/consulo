@@ -29,204 +29,216 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 public class PackageElementNode extends ProjectViewNode<PackageElement> {
-  public PackageElementNode(@Nonnull Project project,
-                            final PackageElement value,
-                            final ViewSettings viewSettings) {
-    super(project, value, viewSettings);
-  }
-
-  public PackageElementNode(@Nonnull Project project,
-                            final Object value,
-                            final ViewSettings viewSettings) {
-    this(project, (PackageElement)value, viewSettings);
-  }
-
-  @Override
-  public boolean contains(@Nonnull final VirtualFile file) {
-    if (!isUnderContent(file) || getValue() == null) {
-      return false;
+    public PackageElementNode(
+        @Nonnull Project project,
+        final PackageElement value,
+        final ViewSettings viewSettings
+    ) {
+        super(project, value, viewSettings);
     }
 
-    final PsiDirectory[] directories = getValue().getPackage().getDirectories();
-    for (PsiDirectory directory : directories) {
-      if (VirtualFileUtil.isAncestor(directory.getVirtualFile(), file, false)) return true;
-    }
-    return false;
-  }
-
-  private boolean isUnderContent(final VirtualFile file) {
-    PackageElement element = getValue();
-    final Module module = element == null ? null : element.getModule();
-    if (module == null) {
-      return ModuleUtilCore.projectContainsFile(getProject(), file, isLibraryElement());
-    }
-    else {
-      return ModuleUtilCore.moduleContainsFile(module, file, isLibraryElement());
-    }
-  }
-
-  private boolean isLibraryElement() {
-    return getValue() != null && getValue().isLibraryElement();
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public Collection<AbstractTreeNode> getChildren() {
-    final PackageElement value = getValue();
-    if (value == null) return Collections.emptyList();
-    final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
-    final Module module = value.getModule();
-    final PsiPackage aPackage = value.getPackage();
-
-    if (!getSettings().isFlattenPackages()) {
-
-      final PsiPackage[] subpackages = PackageNodeUtil.getSubpackages(aPackage, module, myProject, isLibraryElement());
-      for (PsiPackage subpackage : subpackages) {
-        PackageNodeUtil.addPackageAsChild(children, subpackage, module, getSettings(), isLibraryElement());
-      }
-    }
-    // process only files in package's directories
-    final PsiDirectory[] dirs = PackageNodeUtil.getDirectories(aPackage, myProject, module, isLibraryElement());
-    for (final PsiDirectory dir : dirs) {
-      children.addAll(BaseProjectViewDirectoryHelper.getDirectoryChildren(dir, getSettings(), false));
-    }
-    return children;
-  }
-
-
-  @Override
-  protected void update(final PresentationData presentation) {
-    if (getValue() != null && getValue().getPackage().isValid()) {
-      updateValidData(presentation);
-    }
-    else {
-      setValue(null);
-    }
-  }
-
-  private void updateValidData(final PresentationData presentation) {
-    final PackageElement value = getValue();
-    final PsiPackage aPackage = value.getPackage();
-
-    if (!getSettings().isFlattenPackages()
-        && getSettings().isHideEmptyMiddlePackages()
-        && PackageNodeUtil.isPackageEmpty(aPackage, value.getModule(), true, isLibraryElement())) {
-      setValue(null);
-      return;
+    public PackageElementNode(
+        @Nonnull Project project,
+        final Object value,
+        final ViewSettings viewSettings
+    ) {
+        this(project, (PackageElement)value, viewSettings);
     }
 
-    PsiPackage parentPackage;
-    Object parentValue = getParentValue();
-    if (parentValue instanceof PackageElement) {
-      parentPackage = ((PackageElement)parentValue).getPackage();
+    @Override
+    public boolean contains(@Nonnull final VirtualFile file) {
+        if (!isUnderContent(file) || getValue() == null) {
+            return false;
+        }
+
+        final PsiDirectory[] directories = getValue().getPackage().getDirectories();
+        for (PsiDirectory directory : directories) {
+            if (VirtualFileUtil.isAncestor(directory.getVirtualFile(), file, false)) {
+                return true;
+            }
+        }
+        return false;
     }
-    else {
-      parentPackage = null;
+
+    private boolean isUnderContent(final VirtualFile file) {
+        PackageElement element = getValue();
+        final Module module = element == null ? null : element.getModule();
+        if (module == null) {
+            return ModuleUtilCore.projectContainsFile(getProject(), file, isLibraryElement());
+        }
+        else {
+            return ModuleUtilCore.moduleContainsFile(module, file, isLibraryElement());
+        }
     }
-    String qName = aPackage.getQualifiedName();
-    String name = TreeViewUtil.getNodeName(getSettings(), aPackage, parentPackage, qName, showFQName(aPackage));
-    presentation.setPresentableText(name);
 
-    presentation.setIcon(AllIcons.Nodes.Package);
-
-    for(ProjectViewNodeDecorator decorator: ProjectViewNodeDecorator.EP_NAME.getExtensionList(myProject)) {
-      decorator.decorate(this, presentation);
+    private boolean isLibraryElement() {
+        return getValue() != null && getValue().isLibraryElement();
     }
-  }
 
-  private boolean showFQName(final PsiPackage aPackage) {
-    return getSettings().isFlattenPackages() && !aPackage.getQualifiedName().isEmpty();
-  }
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public Collection<AbstractTreeNode> getChildren() {
+        final PackageElement value = getValue();
+        if (value == null) {
+            return Collections.emptyList();
+        }
+        final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
+        final Module module = value.getModule();
+        final PsiPackage aPackage = value.getPackage();
 
-  @Override
-  public String getTestPresentation() {
-    final PresentationData presentation = new PresentationData();
-    update(presentation);
-    return "PsiJavaPackage: " + presentation.getPresentableText();
-  }
+        if (!getSettings().isFlattenPackages()) {
 
-  @Override
-  public boolean valueIsCut() {
-    return getValue() != null && CopyPasteManager.getInstance().isCutElement(getValue().getPackage());
-  }
-
-  @Nonnull
-  public VirtualFile[] getVirtualFiles() {
-    final PackageElement value = getValue();
-    if (value == null) {
-      return VirtualFile.EMPTY_ARRAY;
+            final PsiPackage[] subpackages = PackageNodeUtil.getSubpackages(aPackage, module, myProject, isLibraryElement());
+            for (PsiPackage subpackage : subpackages) {
+                PackageNodeUtil.addPackageAsChild(children, subpackage, module, getSettings(), isLibraryElement());
+            }
+        }
+        // process only files in package's directories
+        final PsiDirectory[] dirs = PackageNodeUtil.getDirectories(aPackage, myProject, module, isLibraryElement());
+        for (final PsiDirectory dir : dirs) {
+            children.addAll(BaseProjectViewDirectoryHelper.getDirectoryChildren(dir, getSettings(), false));
+        }
+        return children;
     }
-    final PsiDirectory[] directories = PackageNodeUtil
-      .getDirectories(value.getPackage(), getProject(), value.getModule(), isLibraryElement());
-    final VirtualFile[] result = new VirtualFile[directories.length];
-    for (int i = 0; i < directories.length; i++) {
-      PsiDirectory directory = directories[i];
-      result[i] = directory.getVirtualFile();
+
+
+    @Override
+    protected void update(final PresentationData presentation) {
+        if (getValue() != null && getValue().getPackage().isValid()) {
+            updateValidData(presentation);
+        }
+        else {
+            setValue(null);
+        }
     }
-    return result;
-  }
 
-  @Override
-  public boolean canRepresent(final Object element) {
-    if (super.canRepresent(element)) return true;
-    final PackageElement value = getValue();
-    if (value == null) return true;
-    if (element instanceof PackageElement) {
-      final PackageElement packageElement = (PackageElement)element;
-      final String otherPackage = packageElement.getPackage().getQualifiedName();
-      final String aPackage = value.getPackage().getQualifiedName();
-      if (otherPackage.equals(aPackage)) {
-        return true;
-      }
+    private void updateValidData(final PresentationData presentation) {
+        final PackageElement value = getValue();
+        final PsiPackage aPackage = value.getPackage();
+
+        if (!getSettings().isFlattenPackages()
+            && getSettings().isHideEmptyMiddlePackages()
+            && PackageNodeUtil.isPackageEmpty(aPackage, value.getModule(), true, isLibraryElement())) {
+            setValue(null);
+            return;
+        }
+
+        PsiPackage parentPackage;
+        Object parentValue = getParentValue();
+        if (parentValue instanceof PackageElement) {
+            parentPackage = ((PackageElement)parentValue).getPackage();
+        }
+        else {
+            parentPackage = null;
+        }
+        String qName = aPackage.getQualifiedName();
+        String name = TreeViewUtil.getNodeName(getSettings(), aPackage, parentPackage, qName, showFQName(aPackage));
+        presentation.setPresentableText(name);
+
+        presentation.setIcon(AllIcons.Nodes.Package);
+
+        for (ProjectViewNodeDecorator decorator : ProjectViewNodeDecorator.EP_NAME.getExtensionList(myProject)) {
+            decorator.decorate(this, presentation);
+        }
     }
-    if (element instanceof PsiDirectory) {
-      final PsiDirectory directory = (PsiDirectory)element;
-      return Arrays.asList(value.getPackage().getDirectories()).contains(directory);
+
+    private boolean showFQName(final PsiPackage aPackage) {
+        return getSettings().isFlattenPackages() && !aPackage.getQualifiedName().isEmpty();
     }
-    return false;
-  }
 
-  @Override
-  public int getWeight() {
-    return 0;
-  }
-
-  @Override
-  public String getTitle() {
-    final PackageElement packageElement = getValue();
-    if (packageElement == null) {
-      return super.getTitle();
+    @Override
+    public String getTestPresentation() {
+        final PresentationData presentation = new PresentationData();
+        update(presentation);
+        return "PsiJavaPackage: " + presentation.getPresentableText();
     }
-    return packageElement.getPackage().getQualifiedName();
-  }
 
-  @Override
-  @Nullable
-  public String getQualifiedNameSortKey() {
-    final PackageElement packageElement = getValue();
-    if (packageElement != null) {
-      return packageElement.getPackage().getQualifiedName();
+    @Override
+    public boolean valueIsCut() {
+        return getValue() != null && CopyPasteManager.getInstance().isCutElement(getValue().getPackage());
     }
-    return null;
-  }
 
-  @Override
-  public int getTypeSortWeight(final boolean sortByType) {
-    return 4;
-  }
-
-  @Override
-  public boolean isAlwaysShowPlus() {
-    for (final VirtualFile dir : getVirtualFiles()) {
-      if (dir.getChildren().length > 0) {
-        return true;
-      }
+    @Nonnull
+    public VirtualFile[] getVirtualFiles() {
+        final PackageElement value = getValue();
+        if (value == null) {
+            return VirtualFile.EMPTY_ARRAY;
+        }
+        final PsiDirectory[] directories = PackageNodeUtil
+            .getDirectories(value.getPackage(), getProject(), value.getModule(), isLibraryElement());
+        final VirtualFile[] result = new VirtualFile[directories.length];
+        for (int i = 0; i < directories.length; i++) {
+            PsiDirectory directory = directories[i];
+            result[i] = directory.getVirtualFile();
+        }
+        return result;
     }
-    return false;
 
-  }
+    @Override
+    public boolean canRepresent(final Object element) {
+        if (super.canRepresent(element)) {
+            return true;
+        }
+        final PackageElement value = getValue();
+        if (value == null) {
+            return true;
+        }
+        if (element instanceof PackageElement) {
+            final PackageElement packageElement = (PackageElement)element;
+            final String otherPackage = packageElement.getPackage().getQualifiedName();
+            final String aPackage = value.getPackage().getQualifiedName();
+            if (otherPackage.equals(aPackage)) {
+                return true;
+            }
+        }
+        if (element instanceof PsiDirectory) {
+            final PsiDirectory directory = (PsiDirectory)element;
+            return Arrays.asList(value.getPackage().getDirectories()).contains(directory);
+        }
+        return false;
+    }
+
+    @Override
+    public int getWeight() {
+        return 0;
+    }
+
+    @Override
+    public String getTitle() {
+        final PackageElement packageElement = getValue();
+        if (packageElement == null) {
+            return super.getTitle();
+        }
+        return packageElement.getPackage().getQualifiedName();
+    }
+
+    @Override
+    @Nullable
+    public String getQualifiedNameSortKey() {
+        final PackageElement packageElement = getValue();
+        if (packageElement != null) {
+            return packageElement.getPackage().getQualifiedName();
+        }
+        return null;
+    }
+
+    @Override
+    public int getTypeSortWeight(final boolean sortByType) {
+        return 4;
+    }
+
+    @Override
+    public boolean isAlwaysShowPlus() {
+        for (final VirtualFile dir : getVirtualFiles()) {
+            if (dir.getChildren().length > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

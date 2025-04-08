@@ -25,6 +25,7 @@ import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -37,50 +38,49 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TaskRepositoryType<T extends TaskRepository> implements TaskRepositorySubtype {
+    public static final ExtensionPointName<TaskRepositoryType> EP_NAME = ExtensionPointName.create(TaskRepositoryType.class);
 
-  public static final ExtensionPointName<TaskRepositoryType> EP_NAME = ExtensionPointName.create(TaskRepositoryType.class);
+    public static List<TaskRepositoryType> getRepositoryTypes() {
+        return EP_NAME.getExtensionList();
+    }
 
-  public static List<TaskRepositoryType> getRepositoryTypes() {
-    return EP_NAME.getExtensionList();
-  }
+    @Nonnull
+    public abstract String getId();
 
-  @Nonnull
-  public abstract String getId();
+    @Nonnull
+    public abstract LocalizeValue getPresentableName();
 
-  @Nonnull
-  public abstract LocalizeValue getPresentableName();
+    @Override
+    @Nonnull
+    public abstract Image getIcon();
 
-  @Override
-  @Nonnull
-  public abstract Image getIcon();
+    @Nullable
+    public String getAdvertiser() {
+        return null;
+    }
 
-  @Nullable
-  public String getAdvertiser() {
-    return null;
-  }
+    @Nonnull
+    public abstract TaskRepositoryEditor createEditor(T repository, Project project, Consumer<T> changeListener);
 
-  @Nonnull
-  public abstract TaskRepositoryEditor createEditor(T repository, Project project, Consumer<T> changeListener);
+    public List<TaskRepositorySubtype> getAvailableSubtypes() {
+        return Arrays.asList((TaskRepositorySubtype)this);
+    }
 
-  public List<TaskRepositorySubtype> getAvailableSubtypes() {
-    return Arrays.asList((TaskRepositorySubtype)this);
-  }
+    @Nonnull
+    public TaskRepository createRepository(TaskRepositorySubtype subtype) {
+        return subtype.createRepository();
+    }
 
-  @Nonnull
-  public TaskRepository createRepository(TaskRepositorySubtype subtype) {
-    return subtype.createRepository();
-  }
+    @Override
+    @Nonnull
+    public abstract TaskRepository createRepository();
 
-  @Override
-  @Nonnull
-  public abstract TaskRepository createRepository();
+    public abstract Class<T> getRepositoryClass();
 
-  public abstract Class<T> getRepositoryClass();
-
-  /**
-   * @return states that can be set by {@link TaskRepository#setTaskState(Task, TaskState)}
-   */
-  public EnumSet<TaskState> getPossibleTaskStates() {
-    return EnumSet.noneOf(TaskState.class);
-  }
+    /**
+     * @return states that can be set by {@link TaskRepository#setTaskState(Task, TaskState)}
+     */
+    public EnumSet<TaskState> getPossibleTaskStates() {
+        return EnumSet.noneOf(TaskState.class);
+    }
 }

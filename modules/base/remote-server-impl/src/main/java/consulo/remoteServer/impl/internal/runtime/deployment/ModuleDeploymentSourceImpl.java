@@ -29,98 +29,103 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 /**
  * @author nik
  */
 public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
-  private final NamedPointer<Module> myPointer;
+    private final NamedPointer<Module> myPointer;
 
-  public ModuleDeploymentSourceImpl(@Nonnull NamedPointer<Module> pointer) {
-    myPointer = pointer;
-  }
-
-  @Override
-  @Nonnull
-  public NamedPointer<Module> getModulePointer() {
-    return myPointer;
-  }
-
-  @Override
-  @Nullable
-  public Module getModule() {
-    return myPointer.get();
-  }
-
-  @Override
-  @Nullable
-  public VirtualFile getContentRoot() {
-    Module module = myPointer.get();
-    if (module == null) {
-      return null;
+    public ModuleDeploymentSourceImpl(@Nonnull NamedPointer<Module> pointer) {
+        myPointer = pointer;
     }
-    return ArrayUtil.getFirstElement(ModuleRootManager.getInstance(module).getContentRoots());
-  }
 
-  @Nullable
-  @Override
-  public File getFile() {
-    VirtualFile contentRoot = getContentRoot();
-    if (contentRoot == null) {
-      return null;
+    @Override
+    @Nonnull
+    public NamedPointer<Module> getModulePointer() {
+        return myPointer;
     }
-    return VirtualFileUtil.virtualToIoFile(contentRoot);
-  }
 
-  @Nullable
-  @Override
-  public String getFilePath() {
-    File file = getFile();
-    if (file == null) {
-      return null;
+    @Override
+    @Nullable
+    public Module getModule() {
+        return myPointer.get();
     }
-    return file.getAbsolutePath();
-  }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getPresentableName() {
-    return LocalizeValue.of(myPointer.getName());
-  }
+    @Override
+    @Nullable
+    public VirtualFile getContentRoot() {
+        Module module = myPointer.get();
+        if (module == null) {
+            return null;
+        }
+        return ArrayUtil.getFirstElement(ModuleRootManager.getInstance(module).getContentRoots());
+    }
 
-  @Nullable
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.Module;
-  }
+    @Nullable
+    @Override
+    public File getFile() {
+        VirtualFile contentRoot = getContentRoot();
+        if (contentRoot == null) {
+            return null;
+        }
+        return VirtualFileUtil.virtualToIoFile(contentRoot);
+    }
 
-  @Override
-  public boolean isValid() {
-    return getModule() != null;
-  }
+    @Nullable
+    @Override
+    public String getFilePath() {
+        File file = getFile();
+        if (file == null) {
+            return null;
+        }
+        return file.getAbsolutePath();
+    }
 
-  @Override
-  public boolean isArchive() {
-    return false;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getPresentableName() {
+        return LocalizeValue.of(myPointer.getName());
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ModuleDeploymentSource)) return false;
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.Module;
+    }
 
-    return myPointer.equals(((ModuleDeploymentSource)o).getModulePointer());
-  }
+    @Override
+    public boolean isValid() {
+        return getModule() != null;
+    }
 
-  @Override
-  public int hashCode() {
-    return myPointer.hashCode();
-  }
+    @Override
+    public boolean isArchive() {
+        return false;
+    }
 
-  @Nonnull
-  @Override
-  public DeploymentSourceType<?> getType() {
-    return DeploymentSourceType.EP_NAME.findExtensionOrFail(ModuleDeploymentSourceType.class);
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ModuleDeploymentSource)) {
+            return false;
+        }
+
+        return myPointer.equals(((ModuleDeploymentSource)o).getModulePointer());
+    }
+
+    @Override
+    public int hashCode() {
+        return myPointer.hashCode();
+    }
+
+    @Nonnull
+    @Override
+    public DeploymentSourceType<?> getType() {
+        return DeploymentSourceType.EP_NAME.findExtensionOrFail(ModuleDeploymentSourceType.class);
+    }
 }

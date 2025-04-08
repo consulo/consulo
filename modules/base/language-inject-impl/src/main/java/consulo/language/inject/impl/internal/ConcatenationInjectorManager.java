@@ -24,6 +24,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 import java.util.function.Function;
 
@@ -31,117 +32,128 @@ import java.util.function.Function;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class ConcatenationInjectorManager extends SimpleModificationTracker {
-  @Nonnull
-  public static ConcatenationInjectorManager getInstance(@Nonnull Project project) {
-    return project.getInstance(ConcatenationInjectorManager.class);
-  }
-
-  private final List<ConcatenationAwareInjector> myConcatenationInjectors = Lists.newLockFreeCopyOnWriteList();
-
-  private final Project myProject;
-
-  @Inject
-  public ConcatenationInjectorManager(@Nonnull Project project) {
-    myProject = project;
-
-    List<ConcatenationAwareInjector> extensionList = ConcatenationAwareInjector.EP_NAME.getExtensionList(project);
-
-    for (ConcatenationAwareInjector concatenationAwareInjector : extensionList) {
-      registerConcatenationInjector(concatenationAwareInjector);
+    @Nonnull
+    public static ConcatenationInjectorManager getInstance(@Nonnull Project project) {
+        return project.getInstance(ConcatenationInjectorManager.class);
     }
 
-    // clear caches even on non-physical changes
-    PsiManagerEx.getInstanceEx(project).registerRunnableToRunOnAnyChange(this::incModificationCount);
-  }
+    private final List<ConcatenationAwareInjector> myConcatenationInjectors = Lists.newLockFreeCopyOnWriteList();
 
-  private static InjectionResult doCompute(@Nonnull PsiFile containingFile, @Nonnull Project project, @Nonnull PsiElement anchor, @Nonnull PsiElement[] operands) {
-    PsiDocumentManager docManager = PsiDocumentManager.getInstance(project);
-    InjectionRegistrarImpl registrar = new InjectionRegistrarImpl(project, containingFile, anchor, docManager);
-    InjectionResult result = null;
-    ConcatenationInjectorManager concatenationInjectorManager = getInstance(project);
-    for (ConcatenationAwareInjector concatenationInjector : concatenationInjectorManager.myConcatenationInjectors) {
-      concatenationInjector.inject(registrar, operands);
-      result = registrar.getInjectedResult();
-      if (result != null) break;
-    }
+    private final Project myProject;
 
-    return result;
-  }
+    @Inject
+    public ConcatenationInjectorManager(@Nonnull Project project) {
+        myProject = project;
 
-  private static final Key<ParameterizedCachedValue<InjectionResult, PsiElement>> INJECTED_PSI_IN_CONCATENATION = Key.create("INJECTED_PSI_IN_CONCATENATION");
-  private static final Key<Integer> NO_CONCAT_INJECTION_TIMESTAMP = Key.create("NO_CONCAT_INJECTION_TIMESTAMP");
+        List<ConcatenationAwareInjector> extensionList = ConcatenationAwareInjector.EP_NAME.getExtensionList(project);
 
-  public void injectLanguagesFromConcatenationAdapter(@Nonnull MultiHostRegistrar registrar,
-                                                      @Nonnull PsiElement context,
-                                                      @Nonnull Function<PsiElement, Pair<PsiElement, PsiElement[]>> computeAnchorAndOperandsFunc) {
-    ConcatenationInjectorManager manager = getInstance(myProject);
-    if (manager.myConcatenationInjectors.isEmpty()) {
-      return;
-    }
-
-    final PsiFile containingFile = ((InjectionRegistrarImpl)registrar).getHostPsiFile();
-    Project project = containingFile.getProject();
-    long modificationCount = PsiManager.getInstance(project).getModificationTracker().getModificationCount();
-    Pair<PsiElement, PsiElement[]> pair = computeAnchorAndOperandsFunc.apply(context);
-    PsiElement anchor = pair.first;
-    PsiElement[] operands = pair.second;
-    Integer noInjectionTimestamp = anchor.getUserData(NO_CONCAT_INJECTION_TIMESTAMP);
-
-    InjectionResult result;
-    ParameterizedCachedValue<InjectionResult, PsiElement> data = null;
-    if (operands.length == 0 || noInjectionTimestamp != null && noInjectionTimestamp == modificationCount) {
-      result = null;
-    }
-    else {
-      data = anchor.getUserData(INJECTED_PSI_IN_CONCATENATION);
-
-      result = data == null ? null : data.getValue(context);
-      if (result == null || !result.isValid()) {
-        result = doCompute(containingFile, project, anchor, operands);
-      }
-    }
-    if (result != null) {
-      ((InjectionRegistrarImpl)registrar).addToResults(result);
-
-      if (data == null) {
-        CachedValueProvider.Result<InjectionResult> cachedResult = CachedValueProvider.Result.create(result, manager);
-        data = CachedValuesManager.getManager(project).createParameterizedCachedValue(context1 -> {
-          PsiFile containingFile1 = context1.getContainingFile();
-          Project project1 = containingFile1.getProject();
-          Pair<PsiElement, PsiElement[]> pair1 = computeAnchorAndOperandsFunc.apply(context1);
-          InjectionResult result1 = pair1.second.length == 0 ? null : doCompute(containingFile1, project1, pair1.first, pair1.second);
-          return result1 == null ? null : CachedValueProvider.Result.create(result1, manager);
-        }, false);
-
-        ((CachaValueEx<InjectionResult>)data).setValue(cachedResult);
-
-        anchor.putUserData(INJECTED_PSI_IN_CONCATENATION, data);
-        if (anchor.getUserData(NO_CONCAT_INJECTION_TIMESTAMP) != null) {
-          anchor.putUserData(NO_CONCAT_INJECTION_TIMESTAMP, null);
+        for (ConcatenationAwareInjector concatenationAwareInjector : extensionList) {
+            registerConcatenationInjector(concatenationAwareInjector);
         }
-      }
+
+        // clear caches even on non-physical changes
+        PsiManagerEx.getInstanceEx(project).registerRunnableToRunOnAnyChange(this::incModificationCount);
     }
-    else {
-      // cache no-injection flag
-      if (anchor.getUserData(INJECTED_PSI_IN_CONCATENATION) != null) {
-        anchor.putUserData(INJECTED_PSI_IN_CONCATENATION, null);
-      }
-      anchor.putUserData(NO_CONCAT_INJECTION_TIMESTAMP, (int)modificationCount);
+
+    private static InjectionResult doCompute(
+        @Nonnull PsiFile containingFile,
+        @Nonnull Project project,
+        @Nonnull PsiElement anchor,
+        @Nonnull PsiElement[] operands
+    ) {
+        PsiDocumentManager docManager = PsiDocumentManager.getInstance(project);
+        InjectionRegistrarImpl registrar = new InjectionRegistrarImpl(project, containingFile, anchor, docManager);
+        InjectionResult result = null;
+        ConcatenationInjectorManager concatenationInjectorManager = getInstance(project);
+        for (ConcatenationAwareInjector concatenationInjector : concatenationInjectorManager.myConcatenationInjectors) {
+            concatenationInjector.inject(registrar, operands);
+            result = registrar.getInjectedResult();
+            if (result != null) {
+                break;
+            }
+        }
+
+        return result;
     }
-  }
 
-  private void registerConcatenationInjector(@Nonnull ConcatenationAwareInjector injector) {
-    myConcatenationInjectors.add(injector);
-    concatenationInjectorsChanged();
-  }
+    private static final Key<ParameterizedCachedValue<InjectionResult, PsiElement>> INJECTED_PSI_IN_CONCATENATION =
+        Key.create("INJECTED_PSI_IN_CONCATENATION");
+    private static final Key<Integer> NO_CONCAT_INJECTION_TIMESTAMP = Key.create("NO_CONCAT_INJECTION_TIMESTAMP");
 
-  private boolean unregisterConcatenationInjector(@Nonnull ConcatenationAwareInjector injector) {
-    boolean removed = myConcatenationInjectors.remove(injector);
-    concatenationInjectorsChanged();
-    return removed;
-  }
+    public void injectLanguagesFromConcatenationAdapter(
+        @Nonnull MultiHostRegistrar registrar,
+        @Nonnull PsiElement context,
+        @Nonnull Function<PsiElement, Pair<PsiElement, PsiElement[]>> computeAnchorAndOperandsFunc
+    ) {
+        ConcatenationInjectorManager manager = getInstance(myProject);
+        if (manager.myConcatenationInjectors.isEmpty()) {
+            return;
+        }
 
-  private void concatenationInjectorsChanged() {
-    incModificationCount();
-  }
+        final PsiFile containingFile = ((InjectionRegistrarImpl)registrar).getHostPsiFile();
+        Project project = containingFile.getProject();
+        long modificationCount = PsiManager.getInstance(project).getModificationTracker().getModificationCount();
+        Pair<PsiElement, PsiElement[]> pair = computeAnchorAndOperandsFunc.apply(context);
+        PsiElement anchor = pair.first;
+        PsiElement[] operands = pair.second;
+        Integer noInjectionTimestamp = anchor.getUserData(NO_CONCAT_INJECTION_TIMESTAMP);
+
+        InjectionResult result;
+        ParameterizedCachedValue<InjectionResult, PsiElement> data = null;
+        if (operands.length == 0 || noInjectionTimestamp != null && noInjectionTimestamp == modificationCount) {
+            result = null;
+        }
+        else {
+            data = anchor.getUserData(INJECTED_PSI_IN_CONCATENATION);
+
+            result = data == null ? null : data.getValue(context);
+            if (result == null || !result.isValid()) {
+                result = doCompute(containingFile, project, anchor, operands);
+            }
+        }
+        if (result != null) {
+            ((InjectionRegistrarImpl)registrar).addToResults(result);
+
+            if (data == null) {
+                CachedValueProvider.Result<InjectionResult> cachedResult = CachedValueProvider.Result.create(result, manager);
+                data = CachedValuesManager.getManager(project).createParameterizedCachedValue(context1 -> {
+                    PsiFile containingFile1 = context1.getContainingFile();
+                    Project project1 = containingFile1.getProject();
+                    Pair<PsiElement, PsiElement[]> pair1 = computeAnchorAndOperandsFunc.apply(context1);
+                    InjectionResult result1 =
+                        pair1.second.length == 0 ? null : doCompute(containingFile1, project1, pair1.first, pair1.second);
+                    return result1 == null ? null : CachedValueProvider.Result.create(result1, manager);
+                }, false);
+
+                ((CachaValueEx<InjectionResult>)data).setValue(cachedResult);
+
+                anchor.putUserData(INJECTED_PSI_IN_CONCATENATION, data);
+                if (anchor.getUserData(NO_CONCAT_INJECTION_TIMESTAMP) != null) {
+                    anchor.putUserData(NO_CONCAT_INJECTION_TIMESTAMP, null);
+                }
+            }
+        }
+        else {
+            // cache no-injection flag
+            if (anchor.getUserData(INJECTED_PSI_IN_CONCATENATION) != null) {
+                anchor.putUserData(INJECTED_PSI_IN_CONCATENATION, null);
+            }
+            anchor.putUserData(NO_CONCAT_INJECTION_TIMESTAMP, (int)modificationCount);
+        }
+    }
+
+    private void registerConcatenationInjector(@Nonnull ConcatenationAwareInjector injector) {
+        myConcatenationInjectors.add(injector);
+        concatenationInjectorsChanged();
+    }
+
+    private boolean unregisterConcatenationInjector(@Nonnull ConcatenationAwareInjector injector) {
+        boolean removed = myConcatenationInjectors.remove(injector);
+        concatenationInjectorsChanged();
+        return removed;
+    }
+
+    private void concatenationInjectorsChanged() {
+        incModificationCount();
+    }
 }

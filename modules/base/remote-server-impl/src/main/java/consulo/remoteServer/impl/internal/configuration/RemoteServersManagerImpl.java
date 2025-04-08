@@ -47,7 +47,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
         for (RemoteServer<?> server : myServers) {
             if (server.getType().equals(type)) {
                 //noinspection unchecked
-                servers.add((RemoteServer<C>) server);
+                servers.add((RemoteServer<C>)server);
             }
         }
         return servers;
@@ -58,7 +58,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
         for (RemoteServer<?> server : myServers) {
             if (server.getType().equals(type) && server.getName().equals(name)) {
                 //noinspection unchecked
-                return (RemoteServer<C>) server;
+                return (RemoteServer<C>)server;
             }
         }
         return null;
@@ -113,8 +113,8 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
                 RemoteServer<? extends ServerConfiguration> nextServer = createConfiguration(type, server);
                 myServers.add(nextServer);
                 ServerConfiguration nextConfig = nextServer.getConfiguration();
-                if (nextConfig instanceof CloudConfigurationBase && ((CloudConfigurationBase<?>) nextConfig).shouldMigrateToPasswordSafe()) {
-                    needsMigration.add((CloudConfigurationBase<?>) nextConfig);
+                if (nextConfig instanceof CloudConfigurationBase && ((CloudConfigurationBase<?>)nextConfig).shouldMigrateToPasswordSafe()) {
+                    needsMigration.add((CloudConfigurationBase<?>)nextConfig);
                 }
             }
         }
@@ -136,7 +136,10 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
         return serverState;
     }
 
-    private static @Nonnull <C extends ServerConfiguration> RemoteServerImpl<C> createConfiguration(ServerType<C> type, RemoteServerState server) {
+    private static @Nonnull <C extends ServerConfiguration> RemoteServerImpl<C> createConfiguration(
+        ServerType<C> type,
+        RemoteServerState server
+    ) {
         C configuration = type.createDefaultConfiguration();
         PersistentStateComponent<?> serializer = configuration.getSerializer();
         ComponentSerializationUtil.loadComponentState(serializer, server.myConfiguration);

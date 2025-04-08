@@ -46,6 +46,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -60,248 +61,256 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class WorkingContextManager {
+    private static final Logger LOG = Logger.getInstance(WorkingContextManager.class);
+    @NonNls
+    private static final String TASKS_FOLDER = "tasks";
 
-  private static final Logger LOG = Logger.getInstance(WorkingContextManager.class);
-  @NonNls
-  private static final String TASKS_FOLDER = "tasks";
+    private final Project myProject;
+    @NonNls
+    private static final String TASKS_ZIP_POSTFIX = ".tasks.zip";
+    @NonNls
+    private static final String TASK_XML_POSTFIX = ".task.xml";
+    private static final String CONTEXT_ZIP_POSTFIX = ".contexts.zip";
+    private static final Comparator<JBZipEntry> ENTRY_COMPARATOR = (o1, o2) -> Long.signum(o2.getTime() - o1.getTime());
 
-  private final Project myProject;
-  @NonNls
-  private static final String TASKS_ZIP_POSTFIX = ".tasks.zip";
-  @NonNls
-  private static final String TASK_XML_POSTFIX = ".task.xml";
-  private static final String CONTEXT_ZIP_POSTFIX = ".contexts.zip";
-  private static final Comparator<JBZipEntry> ENTRY_COMPARATOR = (o1, o2) -> Long.signum(o2.getTime() - o1.getTime());
+    public static WorkingContextManager getInstance(Project project) {
+        return project.getInstance(WorkingContextManager.class);
+    }
 
-  public static WorkingContextManager getInstance(Project project) {
-    return project.getInstance(WorkingContextManager.class);
-  }
+    @Inject
+    public WorkingContextManager(Project project) {
+        myProject = project;
+    }
 
-  @Inject
-  public WorkingContextManager(Project project) {
-    myProject = project;
-  }
-
-  private void loadContext(Element fromElement) {
-    for (WorkingContextProvider provider : WorkingContextProvider.EP_NAME.getExtensionList(myProject)) {
-      try {
-        Element child = fromElement.getChild(provider.getId());
-        if (child != null) {
-          provider.loadContext(child);
+    private void loadContext(Element fromElement) {
+        for (WorkingContextProvider provider : WorkingContextProvider.EP_NAME.getExtensionList(myProject)) {
+            try {
+                Element child = fromElement.getChild(provider.getId());
+                if (child != null) {
+                    provider.loadContext(child);
+                }
+            }
+            catch (InvalidDataException e) {
+                LOG.error(e);
+            }
         }
-      }
-      catch (InvalidDataException e) {
-        LOG.error(e);
-      }
     }
-  }
 
-  public void saveContext(Element toElement) {
-    for (WorkingContextProvider provider : WorkingContextProvider.EP_NAME.getExtensionList(myProject)) {
-      try {
-        Element child = new Element(provider.getId());
-        provider.saveContext(child);
-        toElement.addContent(child);
-      }
-      catch (WriteExternalException e) {
-        LOG.error(e);
-      }
-    }
-  }
-
-  public void clearContext() {
-    for (WorkingContextProvider provider : WorkingContextProvider.EP_NAME.getExtensionList(myProject)) {
-      provider.clearContext();
-    }
-  }
-
-  public void saveContext(Task task) {
-    String entryName = task.getId() + TASK_XML_POSTFIX;
-    saveContext(entryName, TASKS_ZIP_POSTFIX, task.getSummary());
-  }
-
-  public void saveContext(@Nullable String entryName, @Nullable String comment) {
-    saveContext(entryName, CONTEXT_ZIP_POSTFIX, comment);
-  }
-
-  private synchronized void saveContext(@Nullable String entryName, String zipPostfix, @Nullable String comment) {
-    JBZipFile archive = null;
-    try {
-      archive = getTasksArchive(zipPostfix);
-      if (entryName == null) {
-        int i = archive.getEntries().size();
-        do {
-          entryName = "context" + i++;
+    public void saveContext(Element toElement) {
+        for (WorkingContextProvider provider : WorkingContextProvider.EP_NAME.getExtensionList(myProject)) {
+            try {
+                Element child = new Element(provider.getId());
+                provider.saveContext(child);
+                toElement.addContent(child);
+            }
+            catch (WriteExternalException e) {
+                LOG.error(e);
+            }
         }
-        while (archive.getEntry("/" + entryName) != null);
-      }
-      JBZipEntry entry = archive.getOrCreateEntry("/" + entryName);
-      if (comment != null) {
-        entry.setComment(comment);
-      }
-      Element element = new Element("context");
-      saveContext(element);
-      String s = new XMLOutputter().outputString(element);
-      entry.setData(s.getBytes("UTF-8"));
     }
-    catch (IOException e) {
-      LOG.error(e);
-    }
-    finally {
-      closeArchive(archive);
-    }
-  }
 
-  private JBZipFile getTasksArchive(String postfix) throws IOException {
-    File file = getArchiveFile(postfix);
-    try {
-      return new JBZipFile(file);
-    }
-    catch (IOException e) {
-      file.delete();
-      JBZipFile zipFile = null;
-      try {
-        zipFile = new JBZipFile(file);
-        Notifications.Bus.notify(new Notification(TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP,
-                                                  "Context Data Corrupted",
-                                                  "Context information history for " + myProject.getName() + " was corrupted.\n" +
-                                                    "The history was replaced with empty one.",
-                                                  NotificationType.ERROR), myProject);
-      }
-      catch (IOException e1) {
-        LOG.error("Can't repair form context data corruption", e1);
-      }
-      return zipFile;
-    }
-  }
-
-  private File getArchiveFile(String postfix) {
-    File tasksFolder = new File(ContainerPathManager.get().getConfigPath(), TASKS_FOLDER);
-    if (!tasksFolder.exists()) {
-      //noinspection ResultOfMethodCallIgnored
-      tasksFolder.mkdir();
-    }
-    String projectName = FileUtil.sanitizeFileName(myProject.getName());
-    return new File(tasksFolder, projectName + postfix);
-  }
-
-  public void restoreContext(@Nonnull Task task) {
-    loadContext(TASKS_ZIP_POSTFIX, task.getId() + TASK_XML_POSTFIX);
-  }
-
-  private synchronized boolean loadContext(String zipPostfix, String entryName) {
-    JBZipFile archive = null;
-    try {
-      archive = getTasksArchive(zipPostfix);
-      JBZipEntry entry = archive.getEntry(StringUtil.startsWithChar(entryName, '/') ? entryName : "/" + entryName);
-      if (entry != null) {
-        byte[] bytes = entry.getData();
-        Document document = JDOMUtil.loadDocument(new String(bytes));
-        Element rootElement = document.getRootElement();
-        loadContext(rootElement);
-        return true;
-      }
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-    finally {
-      closeArchive(archive);
-    }
-    return false;
-  }
-
-  private static void closeArchive(JBZipFile archive) {
-    if (archive != null) {
-      try {
-        archive.close();
-      }
-      catch (IOException e) {
-        LOG.error(e);
-      }
-    }
-  }
-
-  public List<ContextInfo> getContextHistory() {
-    return getContextHistory(CONTEXT_ZIP_POSTFIX);
-  }
-
-  private synchronized List<ContextInfo> getContextHistory(String zipPostfix) {
-    JBZipFile archive = null;
-    try {
-      archive = getTasksArchive(zipPostfix);
-      List<JBZipEntry> entries = archive.getEntries();
-      return ContainerUtil.mapNotNull(entries,
-                                      entry -> entry.getName().startsWith("/context") ? new ContextInfo(entry.getName(),
-                                                                                                        entry.getTime(),
-                                                                                                        entry.getComment()) : null);
-    }
-    catch (IOException e) {
-      LOG.error(e);
-      return Collections.emptyList();
-    }
-    finally {
-      closeArchive(archive);
-    }
-  }
-
-  public boolean loadContext(String name) {
-    return loadContext(CONTEXT_ZIP_POSTFIX, name);
-  }
-
-  public void removeContext(String name) {
-    removeContext(name, CONTEXT_ZIP_POSTFIX);
-  }
-
-  public void removeContext(Task task) {
-    removeContext(task.getId(), TASKS_ZIP_POSTFIX);
-  }
-
-  private void removeContext(String name, String postfix) {
-    JBZipFile archive = null;
-    try {
-      archive = getTasksArchive(postfix);
-      JBZipEntry entry = archive.getEntry(name);
-      if (entry != null) {
-        archive.eraseEntry(entry);
-      }
-    }
-    catch (IOException e) {
-      LOG.error(e);
-    }
-    finally {
-      closeArchive(archive);
-    }
-  }
-
-  public void pack(int max, int delta) {
-    pack(max, delta, CONTEXT_ZIP_POSTFIX);
-    pack(max, delta, TASKS_ZIP_POSTFIX);
-  }
-
-  private synchronized void pack(int max, int delta, String zipPostfix) {
-    JBZipFile archive = null;
-    try {
-      archive = getTasksArchive(zipPostfix);
-      List<JBZipEntry> entries = archive.getEntries();
-      if (entries.size() > max + delta) {
-        JBZipEntry[] array = entries.toArray(new JBZipEntry[entries.size()]);
-        Arrays.sort(array, ENTRY_COMPARATOR);
-        for (int i = array.length - 1; i >= max; i--) {
-          archive.eraseEntry(array[i]);
+    public void clearContext() {
+        for (WorkingContextProvider provider : WorkingContextProvider.EP_NAME.getExtensionList(myProject)) {
+            provider.clearContext();
         }
-      }
     }
-    catch (IOException e) {
-      LOG.error(e);
-    }
-    finally {
-      closeArchive(archive);
-    }
-  }
 
-  @TestOnly
-  public File getContextFile() throws IOException {
-    return getArchiveFile(CONTEXT_ZIP_POSTFIX);
-  }
+    public void saveContext(Task task) {
+        String entryName = task.getId() + TASK_XML_POSTFIX;
+        saveContext(entryName, TASKS_ZIP_POSTFIX, task.getSummary());
+    }
+
+    public void saveContext(@Nullable String entryName, @Nullable String comment) {
+        saveContext(entryName, CONTEXT_ZIP_POSTFIX, comment);
+    }
+
+    private synchronized void saveContext(@Nullable String entryName, String zipPostfix, @Nullable String comment) {
+        JBZipFile archive = null;
+        try {
+            archive = getTasksArchive(zipPostfix);
+            if (entryName == null) {
+                int i = archive.getEntries().size();
+                do {
+                    entryName = "context" + i++;
+                }
+                while (archive.getEntry("/" + entryName) != null);
+            }
+            JBZipEntry entry = archive.getOrCreateEntry("/" + entryName);
+            if (comment != null) {
+                entry.setComment(comment);
+            }
+            Element element = new Element("context");
+            saveContext(element);
+            String s = new XMLOutputter().outputString(element);
+            entry.setData(s.getBytes("UTF-8"));
+        }
+        catch (IOException e) {
+            LOG.error(e);
+        }
+        finally {
+            closeArchive(archive);
+        }
+    }
+
+    private JBZipFile getTasksArchive(String postfix) throws IOException {
+        File file = getArchiveFile(postfix);
+        try {
+            return new JBZipFile(file);
+        }
+        catch (IOException e) {
+            file.delete();
+            JBZipFile zipFile = null;
+            try {
+                zipFile = new JBZipFile(file);
+                Notifications.Bus.notify(
+                    new Notification(
+                        TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP,
+                        "Context Data Corrupted",
+                        "Context information history for " + myProject.getName() + " was corrupted.\n" +
+                            "The history was replaced with empty one.",
+                        NotificationType.ERROR
+                    ),
+                    myProject
+                );
+            }
+            catch (IOException e1) {
+                LOG.error("Can't repair form context data corruption", e1);
+            }
+            return zipFile;
+        }
+    }
+
+    private File getArchiveFile(String postfix) {
+        File tasksFolder = new File(ContainerPathManager.get().getConfigPath(), TASKS_FOLDER);
+        if (!tasksFolder.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            tasksFolder.mkdir();
+        }
+        String projectName = FileUtil.sanitizeFileName(myProject.getName());
+        return new File(tasksFolder, projectName + postfix);
+    }
+
+    public void restoreContext(@Nonnull Task task) {
+        loadContext(TASKS_ZIP_POSTFIX, task.getId() + TASK_XML_POSTFIX);
+    }
+
+    private synchronized boolean loadContext(String zipPostfix, String entryName) {
+        JBZipFile archive = null;
+        try {
+            archive = getTasksArchive(zipPostfix);
+            JBZipEntry entry = archive.getEntry(StringUtil.startsWithChar(entryName, '/') ? entryName : "/" + entryName);
+            if (entry != null) {
+                byte[] bytes = entry.getData();
+                Document document = JDOMUtil.loadDocument(new String(bytes));
+                Element rootElement = document.getRootElement();
+                loadContext(rootElement);
+                return true;
+            }
+        }
+        catch (Exception e) {
+            LOG.error(e);
+        }
+        finally {
+            closeArchive(archive);
+        }
+        return false;
+    }
+
+    private static void closeArchive(JBZipFile archive) {
+        if (archive != null) {
+            try {
+                archive.close();
+            }
+            catch (IOException e) {
+                LOG.error(e);
+            }
+        }
+    }
+
+    public List<ContextInfo> getContextHistory() {
+        return getContextHistory(CONTEXT_ZIP_POSTFIX);
+    }
+
+    private synchronized List<ContextInfo> getContextHistory(String zipPostfix) {
+        JBZipFile archive = null;
+        try {
+            archive = getTasksArchive(zipPostfix);
+            List<JBZipEntry> entries = archive.getEntries();
+            return ContainerUtil.mapNotNull(
+                entries,
+                entry -> entry.getName().startsWith("/context") ? new ContextInfo(
+                    entry.getName(),
+                    entry.getTime(),
+                    entry.getComment()
+                ) : null
+            );
+        }
+        catch (IOException e) {
+            LOG.error(e);
+            return Collections.emptyList();
+        }
+        finally {
+            closeArchive(archive);
+        }
+    }
+
+    public boolean loadContext(String name) {
+        return loadContext(CONTEXT_ZIP_POSTFIX, name);
+    }
+
+    public void removeContext(String name) {
+        removeContext(name, CONTEXT_ZIP_POSTFIX);
+    }
+
+    public void removeContext(Task task) {
+        removeContext(task.getId(), TASKS_ZIP_POSTFIX);
+    }
+
+    private void removeContext(String name, String postfix) {
+        JBZipFile archive = null;
+        try {
+            archive = getTasksArchive(postfix);
+            JBZipEntry entry = archive.getEntry(name);
+            if (entry != null) {
+                archive.eraseEntry(entry);
+            }
+        }
+        catch (IOException e) {
+            LOG.error(e);
+        }
+        finally {
+            closeArchive(archive);
+        }
+    }
+
+    public void pack(int max, int delta) {
+        pack(max, delta, CONTEXT_ZIP_POSTFIX);
+        pack(max, delta, TASKS_ZIP_POSTFIX);
+    }
+
+    private synchronized void pack(int max, int delta, String zipPostfix) {
+        JBZipFile archive = null;
+        try {
+            archive = getTasksArchive(zipPostfix);
+            List<JBZipEntry> entries = archive.getEntries();
+            if (entries.size() > max + delta) {
+                JBZipEntry[] array = entries.toArray(new JBZipEntry[entries.size()]);
+                Arrays.sort(array, ENTRY_COMPARATOR);
+                for (int i = array.length - 1; i >= max; i--) {
+                    archive.eraseEntry(array[i]);
+                }
+            }
+        }
+        catch (IOException e) {
+            LOG.error(e);
+        }
+        finally {
+            closeArchive(archive);
+        }
+    }
+
+    @TestOnly
+    public File getContextFile() throws IOException {
+        return getArchiveFile(CONTEXT_ZIP_POSTFIX);
+    }
 }

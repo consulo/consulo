@@ -29,12 +29,12 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface FileStatusProvider {
-  ExtensionPointName<FileStatusProvider> EP_NAME = ExtensionPointName.create(FileStatusProvider.class);
+    ExtensionPointName<FileStatusProvider> EP_NAME = ExtensionPointName.create(FileStatusProvider.class);
 
-  FileStatus getFileStatus(@Nonnull VirtualFile virtualFile);
+    FileStatus getFileStatus(@Nonnull VirtualFile virtualFile);
 
-  void refreshFileStatusFromDocument(@Nonnull VirtualFile virtualFile, @Nonnull Document doc);
+    void refreshFileStatusFromDocument(@Nonnull VirtualFile virtualFile, @Nonnull Document doc);
 
-  @Nonnull
-  ThreeState getNotChangedDirectoryParentingStatus(@Nonnull VirtualFile virtualFile);
+    @Nonnull
+    ThreeState getNotChangedDirectoryParentingStatus(@Nonnull VirtualFile virtualFile);
 }

@@ -28,7 +28,8 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CustomizableActionGroupProvider {
-    public static final ExtensionPointName<CustomizableActionGroupProvider> EP_NAME = ExtensionPointName.create(CustomizableActionGroupProvider.class);
+    public static final ExtensionPointName<CustomizableActionGroupProvider> EP_NAME =
+        ExtensionPointName.create(CustomizableActionGroupProvider.class);
 
     public abstract void registerGroups(CustomizableActionGroupRegistrar registrar);
 

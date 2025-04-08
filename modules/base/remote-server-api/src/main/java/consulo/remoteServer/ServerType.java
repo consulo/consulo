@@ -24,7 +24,6 @@ import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ServerType<C extends ServerConfiguration> {
-
     public static final ExtensionPointName<ServerType> EP_NAME = ExtensionPointName.create(ServerType.class);
 
     private final String myId;

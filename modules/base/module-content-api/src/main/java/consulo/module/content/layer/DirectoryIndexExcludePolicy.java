@@ -28,11 +28,11 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface DirectoryIndexExcludePolicy {
-  ExtensionPointName<DirectoryIndexExcludePolicy> EP_NAME = ExtensionPointName.create(DirectoryIndexExcludePolicy.class);
+    ExtensionPointName<DirectoryIndexExcludePolicy> EP_NAME = ExtensionPointName.create(DirectoryIndexExcludePolicy.class);
 
-   @Nonnull
-  VirtualFile[] getExcludeRootsForProject();
+    @Nonnull
+    VirtualFile[] getExcludeRootsForProject();
 
-  @Nonnull
-  VirtualFilePointer[] getExcludeRootsForModule(@Nonnull ModuleRootLayer rootModel);
+    @Nonnull
+    VirtualFilePointer[] getExcludeRootsForModule(@Nonnull ModuleRootLayer rootModel);
 }

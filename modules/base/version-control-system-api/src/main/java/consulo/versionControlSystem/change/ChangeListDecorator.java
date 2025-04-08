@@ -33,7 +33,13 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ChangeListDecorator {
-  ExtensionPointName<ChangeListDecorator> EP_NAME = ExtensionPointName.create(ChangeListDecorator.class);
+    ExtensionPointName<ChangeListDecorator> EP_NAME = ExtensionPointName.create(ChangeListDecorator.class);
 
-  void decorateChangeList(LocalChangeList changeList, ColoredTreeCellRenderer cellRenderer, boolean selected, boolean expanded, boolean hasFocus);
+    void decorateChangeList(
+        LocalChangeList changeList,
+        ColoredTreeCellRenderer cellRenderer,
+        boolean selected,
+        boolean expanded,
+        boolean hasFocus
+    );
 }

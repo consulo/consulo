@@ -30,7 +30,7 @@ import java.io.File;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsAwareCheckoutListener {
-  ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create(VcsAwareCheckoutListener.class);
+    ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create(VcsAwareCheckoutListener.class);
 
-  boolean processCheckedOutDirectory(final Project project, final File directory, final VcsKey vcsKey);
+    boolean processCheckedOutDirectory(final Project project, final File directory, final VcsKey vcsKey);
 }

@@ -26,5 +26,5 @@ import consulo.component.extension.ExtensionPointName;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImportFilteringRule extends UsageFilteringRule {
-  ExtensionPointName<ImportFilteringRule> EP_NAME = ExtensionPointName.create(ImportFilteringRule.class);
+    ExtensionPointName<ImportFilteringRule> EP_NAME = ExtensionPointName.create(ImportFilteringRule.class);
 }

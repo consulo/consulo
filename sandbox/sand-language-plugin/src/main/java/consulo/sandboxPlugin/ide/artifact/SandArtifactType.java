@@ -36,36 +36,36 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class SandArtifactType extends ArtifactType {
-  @NonNls
-  public static final String ID = "sand";
+    @NonNls
+    public static final String ID = "sand";
 
-  public static SandArtifactType getInstance() {
-    return EP_NAME.findExtension(SandArtifactType.class);
-  }
+    public static SandArtifactType getInstance() {
+        return EP_NAME.findExtension(SandArtifactType.class);
+    }
 
-  public SandArtifactType() {
-    super(ID, "Sand");
-  }
+    public SandArtifactType() {
+        super(ID, "Sand");
+    }
 
-  @Override
-  public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
-    return ModuleUtil.hasModuleExtension(modulesProvider, SandModuleExtension.class);
-  }
+    @Override
+    public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
+        return ModuleUtil.hasModuleExtension(modulesProvider, SandModuleExtension.class);
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.Artifact;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.Artifact;
+    }
 
-  @Override
-  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
-    return "/";
-  }
+    @Override
+    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+        return "/";
+    }
 
-  @Override
-  @Nonnull
-  public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory project, @Nonnull String artifactName) {
-    return new ArtifactRootElementImpl();
-  }
+    @Override
+    @Nonnull
+    public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory project, @Nonnull String artifactName) {
+        return new ArtifactRootElementImpl();
+    }
 }

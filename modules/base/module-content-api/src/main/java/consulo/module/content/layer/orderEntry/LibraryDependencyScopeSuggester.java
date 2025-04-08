@@ -28,8 +28,9 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LibraryDependencyScopeSuggester {
-  public static final ExtensionPointName<LibraryDependencyScopeSuggester> EP_NAME = ExtensionPointName.create(LibraryDependencyScopeSuggester.class);
+    public static final ExtensionPointName<LibraryDependencyScopeSuggester> EP_NAME =
+        ExtensionPointName.create(LibraryDependencyScopeSuggester.class);
 
-  @Nullable
-  public abstract DependencyScope getDefaultDependencyScope(@Nonnull Library library);
+    @Nullable
+    public abstract DependencyScope getDefaultDependencyScope(@Nonnull Library library);
 }

@@ -32,13 +32,13 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class UsageToPsiElementProvider {
-  public static final ExtensionPointName<UsageToPsiElementProvider> EP_NAME = ExtensionPointName.create(UsageToPsiElementProvider.class);
+    public static final ExtensionPointName<UsageToPsiElementProvider> EP_NAME = ExtensionPointName.create(UsageToPsiElementProvider.class);
 
-  @Nullable
-  public abstract PsiElement getAppropriateParentFrom(PsiElement element);
+    @Nullable
+    public abstract PsiElement getAppropriateParentFrom(PsiElement element);
 
-  @Nullable
-  public static PsiElement findAppropriateParentFrom(@Nonnull PsiElement element) {
-    return EP_NAME.computeSafeIfAny(Application.get(), p -> p.getAppropriateParentFrom(element));
-  }
+    @Nullable
+    public static PsiElement findAppropriateParentFrom(@Nonnull PsiElement element) {
+        return EP_NAME.computeSafeIfAny(Application.get(), p -> p.getAppropriateParentFrom(element));
+    }
 }

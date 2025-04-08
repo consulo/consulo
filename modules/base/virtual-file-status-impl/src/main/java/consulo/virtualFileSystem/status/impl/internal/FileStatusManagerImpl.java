@@ -41,6 +41,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -52,191 +53,200 @@ import java.util.Map;
 @Singleton
 @ServiceImpl
 public class FileStatusManagerImpl extends FileStatusManager implements Disposable {
-  private final Map<VirtualFile, FileStatus> myCachedStatuses = Collections.synchronizedMap(new HashMap<VirtualFile, FileStatus>());
-  private final Map<VirtualFile, Boolean> myWhetherExactlyParentToChanged = Collections.synchronizedMap(new HashMap<VirtualFile, Boolean>());
-  private final Project myProject;
-  private final List<FileStatusListener> myListeners = Lists.newLockFreeCopyOnWriteList();
-  private FileStatusProvider myFileStatusProvider;
+    private final Map<VirtualFile, FileStatus> myCachedStatuses = Collections.synchronizedMap(new HashMap<VirtualFile, FileStatus>());
+    private final Map<VirtualFile, Boolean> myWhetherExactlyParentToChanged =
+        Collections.synchronizedMap(new HashMap<VirtualFile, Boolean>());
+    private final Project myProject;
+    private final List<FileStatusListener> myListeners = Lists.newLockFreeCopyOnWriteList();
+    private FileStatusProvider myFileStatusProvider;
 
-  private static class FileStatusNull implements FileStatus {
-    private static final FileStatus INSTANCE = new FileStatusNull();
+    private static class FileStatusNull implements FileStatus {
+        private static final FileStatus INSTANCE = new FileStatusNull();
+
+        @Nonnull
+        @Override
+        public LocalizeValue getText() {
+            throw new AssertionError("Should not be called");
+        }
+
+        @Override
+        public ColorValue getColor() {
+            throw new AssertionError("Should not be called");
+        }
+
+        @Nonnull
+        @Override
+        public EditorColorKey getColorKey() {
+            throw new AssertionError("Should not be called");
+        }
+
+        @Nonnull
+        @Override
+        public String getId() {
+            throw new AssertionError("Should not be called");
+        }
+    }
+
+    @Inject
+    public FileStatusManagerImpl(Project project) {
+        myProject = project;
+
+        project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> fileStatusesChanged());
+    }
+
+    public void setFileStatusProvider(final FileStatusProvider fileStatusProvider) {
+        myFileStatusProvider = fileStatusProvider;
+    }
+
+    public FileStatus calcStatus(@Nonnull final VirtualFile virtualFile) {
+        for (FileStatusProvider extension : FileStatusProvider.EP_NAME.getExtensionList(myProject)) {
+            final FileStatus status = extension.getFileStatus(virtualFile);
+            if (status != null) {
+                return status;
+            }
+        }
+
+        if (virtualFile.isInLocalFileSystem() && myFileStatusProvider != null) {
+            return myFileStatusProvider.getFileStatus(virtualFile);
+        }
+
+        return getDefaultStatus(virtualFile);
+    }
 
     @Nonnull
-    @Override
-    public LocalizeValue getText() {
-      throw new AssertionError("Should not be called");
+    public static FileStatus getDefaultStatus(@Nonnull final VirtualFile file) {
+        return file.isValid() && file.is(VFileProperty.SPECIAL) ? FileStatus.IGNORED : FileStatus.NOT_CHANGED;
     }
 
     @Override
-    public ColorValue getColor() {
-      throw new AssertionError("Should not be called");
+    public void dispose() {
+        myCachedStatuses.clear();
     }
 
-    @Nonnull
+
     @Override
-    public EditorColorKey getColorKey() {
-      throw new AssertionError("Should not be called");
+    public void addFileStatusListener(@Nonnull FileStatusListener listener) {
+        myListeners.add(listener);
     }
 
-    @Nonnull
     @Override
-    public String getId() {
-      throw new AssertionError("Should not be called");
+    public void addFileStatusListener(@Nonnull final FileStatusListener listener, @Nonnull Disposable parentDisposable) {
+        addFileStatusListener(listener);
+        Disposer.register(parentDisposable, () -> removeFileStatusListener(listener));
     }
-  }
 
-  @Inject
-  public FileStatusManagerImpl(Project project) {
-    myProject = project;
+    @Override
+    public void fileStatusesChanged() {
+        if (myProject.isDisposed()) {
+            return;
+        }
+        Application application = myProject.getApplication();
 
-    project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> fileStatusesChanged());
-  }
+        if (!application.isDispatchThread()) {
+            application.invokeLater((DumbAwareRunnable)this::fileStatusesChanged, application.getNoneModalityState());
+            return;
+        }
 
-  public void setFileStatusProvider(final FileStatusProvider fileStatusProvider) {
-    myFileStatusProvider = fileStatusProvider;
-  }
+        myCachedStatuses.clear();
+        myWhetherExactlyParentToChanged.clear();
 
-  public FileStatus calcStatus(@Nonnull final VirtualFile virtualFile) {
-    for (FileStatusProvider extension : FileStatusProvider.EP_NAME.getExtensionList(myProject)) {
-      final FileStatus status = extension.getFileStatus(virtualFile);
-      if (status != null) {
+        for (FileStatusListener listener : myListeners) {
+            listener.fileStatusesChanged();
+        }
+    }
+
+    private void cacheChangedFileStatus(final VirtualFile virtualFile, final FileStatus fs) {
+        myCachedStatuses.put(virtualFile, fs);
+        if (FileStatus.NOT_CHANGED.equals(fs)) {
+            final ThreeState parentingStatus = myFileStatusProvider.getNotChangedDirectoryParentingStatus(virtualFile);
+            if (ThreeState.YES.equals(parentingStatus)) {
+                myWhetherExactlyParentToChanged.put(virtualFile, true);
+            }
+            else if (ThreeState.UNSURE.equals(parentingStatus)) {
+                myWhetherExactlyParentToChanged.put(virtualFile, false);
+            }
+        }
+        else {
+            myWhetherExactlyParentToChanged.remove(virtualFile);
+        }
+    }
+
+    @Override
+    public void fileStatusChanged(final VirtualFile file) {
+        final Application application = ApplicationManager.getApplication();
+        if (!application.isDispatchThread() && !application.isUnitTestMode()) {
+            ApplicationManager.getApplication().invokeLater((DumbAwareRunnable)() -> fileStatusChanged(file));
+            return;
+        }
+
+        if (file == null || !file.isValid()) {
+            return;
+        }
+        FileStatus cachedStatus = getCachedStatus(file);
+        if (cachedStatus == FileStatusNull.INSTANCE) {
+            return;
+        }
+        if (cachedStatus == null) {
+            cacheChangedFileStatus(file, FileStatusNull.INSTANCE);
+            return;
+        }
+        FileStatus newStatus = calcStatus(file);
+        if (cachedStatus == newStatus) {
+            return;
+        }
+        cacheChangedFileStatus(file, newStatus);
+
+        for (FileStatusListener listener : myListeners) {
+            listener.fileStatusChanged(file);
+        }
+    }
+
+    @Override
+    public FileStatus getStatus(@Nonnull final VirtualFile file) {
+        if (file.getFileSystem() instanceof NonPhysicalFileSystem) {
+            return FileStatus.SUPPRESSED;  // do not leak light files via cache
+        }
+
+        FileStatus status = getCachedStatus(file);
+        if (status == null || status == FileStatusNull.INSTANCE) {
+            status = calcStatus(file);
+            cacheChangedFileStatus(file, status);
+        }
+
         return status;
-      }
     }
 
-    if (virtualFile.isInLocalFileSystem() && myFileStatusProvider != null) {
-      return myFileStatusProvider.getFileStatus(virtualFile);
+    public FileStatus getCachedStatus(final VirtualFile file) {
+        return myCachedStatuses.get(file);
     }
 
-    return getDefaultStatus(virtualFile);
-  }
-
-  @Nonnull
-  public static FileStatus getDefaultStatus(@Nonnull final VirtualFile file) {
-    return file.isValid() && file.is(VFileProperty.SPECIAL) ? FileStatus.IGNORED : FileStatus.NOT_CHANGED;
-  }
-
-  @Override
-  public void dispose() {
-    myCachedStatuses.clear();
-  }
-
-
-  @Override
-  public void addFileStatusListener(@Nonnull FileStatusListener listener) {
-    myListeners.add(listener);
-  }
-
-  @Override
-  public void addFileStatusListener(@Nonnull final FileStatusListener listener, @Nonnull Disposable parentDisposable) {
-    addFileStatusListener(listener);
-    Disposer.register(parentDisposable, () -> removeFileStatusListener(listener));
-  }
-
-  @Override
-  public void fileStatusesChanged() {
-    if (myProject.isDisposed()) {
-      return;
-    }
-    Application application = myProject.getApplication();
-
-    if (!application.isDispatchThread()) {
-      application.invokeLater((DumbAwareRunnable)this::fileStatusesChanged, application.getNoneModalityState());
-      return;
+    @Override
+    public void removeFileStatusListener(@Nonnull FileStatusListener listener) {
+        myListeners.remove(listener);
     }
 
-    myCachedStatuses.clear();
-    myWhetherExactlyParentToChanged.clear();
-
-    for (FileStatusListener listener : myListeners) {
-      listener.fileStatusesChanged();
-    }
-  }
-
-  private void cacheChangedFileStatus(final VirtualFile virtualFile, final FileStatus fs) {
-    myCachedStatuses.put(virtualFile, fs);
-    if (FileStatus.NOT_CHANGED.equals(fs)) {
-      final ThreeState parentingStatus = myFileStatusProvider.getNotChangedDirectoryParentingStatus(virtualFile);
-      if (ThreeState.YES.equals(parentingStatus)) {
-        myWhetherExactlyParentToChanged.put(virtualFile, true);
-      }
-      else if (ThreeState.UNSURE.equals(parentingStatus)) {
-        myWhetherExactlyParentToChanged.put(virtualFile, false);
-      }
-    }
-    else {
-      myWhetherExactlyParentToChanged.remove(virtualFile);
-    }
-  }
-
-  @Override
-  public void fileStatusChanged(final VirtualFile file) {
-    final Application application = ApplicationManager.getApplication();
-    if (!application.isDispatchThread() && !application.isUnitTestMode()) {
-      ApplicationManager.getApplication().invokeLater((DumbAwareRunnable)() -> fileStatusChanged(file));
-      return;
+    @Override
+    public ColorValue getNotChangedDirectoryColor(@Nonnull VirtualFile file) {
+        return getRecursiveStatus(file).getColor();
     }
 
-    if (file == null || !file.isValid()) return;
-    FileStatus cachedStatus = getCachedStatus(file);
-    if (cachedStatus == FileStatusNull.INSTANCE) {
-      return;
-    }
-    if (cachedStatus == null) {
-      cacheChangedFileStatus(file, FileStatusNull.INSTANCE);
-      return;
-    }
-    FileStatus newStatus = calcStatus(file);
-    if (cachedStatus == newStatus) return;
-    cacheChangedFileStatus(file, newStatus);
-
-    for (FileStatusListener listener : myListeners) {
-      listener.fileStatusChanged(file);
-    }
-  }
-
-  @Override
-  public FileStatus getStatus(@Nonnull final VirtualFile file) {
-    if (file.getFileSystem() instanceof NonPhysicalFileSystem) {
-      return FileStatus.SUPPRESSED;  // do not leak light files via cache
+    @Nonnull
+    @Override
+    public FileStatus getRecursiveStatus(@Nonnull VirtualFile file) {
+        FileStatus status = super.getRecursiveStatus(file);
+        if (status != FileStatus.NOT_CHANGED || !file.isValid() || !file.isDirectory()) {
+            return status;
+        }
+        Boolean immediate = myWhetherExactlyParentToChanged.get(file);
+        if (immediate == null) {
+            return status;
+        }
+        return immediate ? FileStatus.NOT_CHANGED_IMMEDIATE : FileStatus.NOT_CHANGED_RECURSIVE;
     }
 
-    FileStatus status = getCachedStatus(file);
-    if (status == null || status == FileStatusNull.INSTANCE) {
-      status = calcStatus(file);
-      cacheChangedFileStatus(file, status);
+    public void refreshFileStatusFromDocument(final VirtualFile file, final Document doc) {
+        if (myFileStatusProvider != null) {
+            myFileStatusProvider.refreshFileStatusFromDocument(file, doc);
+        }
     }
-
-    return status;
-  }
-
-  public FileStatus getCachedStatus(final VirtualFile file) {
-    return myCachedStatuses.get(file);
-  }
-
-  @Override
-  public void removeFileStatusListener(@Nonnull FileStatusListener listener) {
-    myListeners.remove(listener);
-  }
-
-  @Override
-  public ColorValue getNotChangedDirectoryColor(@Nonnull VirtualFile file) {
-    return getRecursiveStatus(file).getColor();
-  }
-
-  @Nonnull
-  @Override
-  public FileStatus getRecursiveStatus(@Nonnull VirtualFile file) {
-    FileStatus status = super.getRecursiveStatus(file);
-    if (status != FileStatus.NOT_CHANGED || !file.isValid() || !file.isDirectory()) return status;
-    Boolean immediate = myWhetherExactlyParentToChanged.get(file);
-    if (immediate == null) return status;
-    return immediate ? FileStatus.NOT_CHANGED_IMMEDIATE : FileStatus.NOT_CHANGED_RECURSIVE;
-  }
-
-  public void refreshFileStatusFromDocument(final VirtualFile file, final Document doc) {
-    if (myFileStatusProvider != null) {
-      myFileStatusProvider.refreshFileStatusFromDocument(file, doc);
-    }
-  }
 }

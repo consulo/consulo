@@ -30,13 +30,13 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface OrderEntryType<T extends OrderEntry> {
-  ExtensionPointName<OrderEntryType> EP_NAME = ExtensionPointName.create(OrderEntryType.class);
+    ExtensionPointName<OrderEntryType> EP_NAME = ExtensionPointName.create(OrderEntryType.class);
 
-  @Nonnull
-  String getId();
+    @Nonnull
+    String getId();
 
-  @Nonnull
-  T loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException;
+    @Nonnull
+    T loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException;
 
-  void storeOrderEntry(@Nonnull Element element, @Nonnull T orderEntry);
+    void storeOrderEntry(@Nonnull Element element, @Nonnull T orderEntry);
 }

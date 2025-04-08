@@ -21,6 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.ui.awt.EditorTextField;
 
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.function.Consumer;
 
@@ -29,12 +30,11 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface EditChangelistSupport {
+    ExtensionPointName<EditChangelistSupport> EP_NAME = ExtensionPointName.create(EditChangelistSupport.class);
 
-  ExtensionPointName<EditChangelistSupport> EP_NAME = ExtensionPointName.create(EditChangelistSupport.class);
+    void installSearch(EditorTextField name, EditorTextField comment);
 
-  void installSearch(EditorTextField name, EditorTextField comment);
+    Consumer<LocalChangeList> addControls(JPanel bottomPanel, @Nullable LocalChangeList initial);
 
-  Consumer<LocalChangeList> addControls(JPanel bottomPanel, @Nullable LocalChangeList initial);
-
-  void changelistCreated(LocalChangeList changeList);
+    void changelistCreated(LocalChangeList changeList);
 }

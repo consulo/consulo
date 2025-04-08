@@ -35,45 +35,52 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibraryOrderEntryImpl> {
-  public static final String ID = "module-library";
+    public static final String ID = "module-library";
 
-  private static final Logger LOG = Logger.getInstance(ModuleLibraryOrderEntryType.class);
+    private static final Logger LOG = Logger.getInstance(ModuleLibraryOrderEntryType.class);
 
-  @Nonnull
-  public static ModuleLibraryOrderEntryType getInstance() {
-    return EP_NAME.findExtensionOrFail(ModuleLibraryOrderEntryType.class);
-  }
-
-  public static final String EXPORTED_ATTR = "exported";
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return ID;
-  }
-
-  @Nonnull
-  @Override
-  public ModuleLibraryOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
-    boolean exported = element.getAttributeValue(EXPORTED_ATTR) != null;
-    DependencyScope scope = DependencyScope.readExternal(element);
-    Library library = LibraryTableImplUtil.loadLibrary(element, (ModuleRootLayerImpl)moduleRootLayer);
-    return new ModuleLibraryOrderEntryImpl(library, (ModuleRootLayerImpl)moduleRootLayer, exported, scope, false);
-  }
-
-  @Override
-  public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
-    if (orderEntry.isExported()) {
-      element.setAttribute(EXPORTED_ATTR, "");
+    @Nonnull
+    public static ModuleLibraryOrderEntryType getInstance() {
+        return EP_NAME.findExtensionOrFail(ModuleLibraryOrderEntryType.class);
     }
-    orderEntry.getScope().writeExternal(element);
-    try {
-      Library library = orderEntry.getLibrary();
-      assert library != null;
-      library.writeExternal(element);
+
+    public static final String EXPORTED_ATTR = "exported";
+
+    @Nonnull
+    @Override
+    public String getId() {
+        return ID;
     }
-    catch (WriteExternalException e) {
-      LOG.error("Exception while writing module library: " + orderEntry.getLibraryName() + " in module: " + orderEntry.getOwnerModule().getName(), e);
+
+    @Nonnull
+    @Override
+    public ModuleLibraryOrderEntryImpl loadOrderEntry(
+        @Nonnull Element element,
+        @Nonnull ModuleRootLayer moduleRootLayer
+    ) throws InvalidDataException {
+        boolean exported = element.getAttributeValue(EXPORTED_ATTR) != null;
+        DependencyScope scope = DependencyScope.readExternal(element);
+        Library library = LibraryTableImplUtil.loadLibrary(element, (ModuleRootLayerImpl)moduleRootLayer);
+        return new ModuleLibraryOrderEntryImpl(library, (ModuleRootLayerImpl)moduleRootLayer, exported, scope, false);
     }
-  }
+
+    @Override
+    public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
+        if (orderEntry.isExported()) {
+            element.setAttribute(EXPORTED_ATTR, "");
+        }
+        orderEntry.getScope().writeExternal(element);
+        try {
+            Library library = orderEntry.getLibrary();
+            assert library != null;
+            library.writeExternal(element);
+        }
+        catch (WriteExternalException e) {
+            LOG.error(
+                "Exception while writing module library: " + orderEntry.getLibraryName() +
+                    " in module: " + orderEntry.getOwnerModule().getName(),
+                e
+            );
+        }
+    }
 }

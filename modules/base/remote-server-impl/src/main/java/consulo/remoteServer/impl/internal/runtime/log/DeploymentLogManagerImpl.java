@@ -103,12 +103,12 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
             return handler;
         }
     }
-    //
+
     //private static CloudTerminalProvider getTerminalProvider() {
-    //  CloudTerminalProvider.getInstance()
+    //    CloudTerminalProvider.getInstance()
     //
-    //  CloudTerminalProvider terminalProvider = ArrayUtil.getFirstElement(CloudTerminalProvider.EP_NAME.getExtensions());
-    //  return terminalProvider != null ? terminalProvider : ConsoleTerminalHandlerImpl.PROVIDER;
+    //    CloudTerminalProvider terminalProvider = ArrayUtil.getFirstElement(CloudTerminalProvider.EP_NAME.getExtensions());
+    //    return terminalProvider != null ? terminalProvider : ConsoleTerminalHandlerImpl.PROVIDER;
     //}
 
     @Override

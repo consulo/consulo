@@ -33,45 +33,48 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryImpl> {
-  public static final String ID = "library";
+    public static final String ID = "library";
 
-  @Nonnull
-  public static LibraryOrderEntryType getInstance() {
-    return EP_NAME.findExtensionOrFail(LibraryOrderEntryType.class);
-  }
-
-  private static final String NAME_ATTR = "name";
-  private static final String LEVEL_ATTR = "level";
-  private static final String EXPORTED_ATTR = "exploded";
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return ID;
-  }
-
-  @Nonnull
-  @Override
-  public LibraryOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
-    String name = element.getAttributeValue(NAME_ATTR);
-    if (name == null) {
-      throw new InvalidDataException();
+    @Nonnull
+    public static LibraryOrderEntryType getInstance() {
+        return EP_NAME.findExtensionOrFail(LibraryOrderEntryType.class);
     }
 
-    String level = element.getAttributeValue(LEVEL_ATTR, LibraryTablesRegistrar.PROJECT_LEVEL);
-    DependencyScope dependencyScope = DependencyScope.readExternal(element);
-    boolean exported = element.getAttributeValue(EXPORTED_ATTR) != null;
-    return new LibraryOrderEntryImpl(name, level, (ModuleRootLayerImpl)moduleRootLayer, dependencyScope, exported, false);
-  }
+    private static final String NAME_ATTR = "name";
+    private static final String LEVEL_ATTR = "level";
+    private static final String EXPORTED_ATTR = "exploded";
 
-  @Override
-  public void storeOrderEntry(@Nonnull Element element, @Nonnull LibraryOrderEntryImpl orderEntry) {
-    final String libraryLevel = orderEntry.getLibraryLevel();
-    if (orderEntry.isExported()) {
-      element.setAttribute(EXPORTED_ATTR, "");
+    @Nonnull
+    @Override
+    public String getId() {
+        return ID;
     }
-    orderEntry.getScope().writeExternal(element);
-    element.setAttribute(NAME_ATTR, orderEntry.getLibraryName());
-    element.setAttribute(LEVEL_ATTR, libraryLevel);
-  }
+
+    @Nonnull
+    @Override
+    public LibraryOrderEntryImpl loadOrderEntry(
+        @Nonnull Element element,
+        @Nonnull ModuleRootLayer moduleRootLayer
+    ) throws InvalidDataException {
+        String name = element.getAttributeValue(NAME_ATTR);
+        if (name == null) {
+            throw new InvalidDataException();
+        }
+
+        String level = element.getAttributeValue(LEVEL_ATTR, LibraryTablesRegistrar.PROJECT_LEVEL);
+        DependencyScope dependencyScope = DependencyScope.readExternal(element);
+        boolean exported = element.getAttributeValue(EXPORTED_ATTR) != null;
+        return new LibraryOrderEntryImpl(name, level, (ModuleRootLayerImpl)moduleRootLayer, dependencyScope, exported, false);
+    }
+
+    @Override
+    public void storeOrderEntry(@Nonnull Element element, @Nonnull LibraryOrderEntryImpl orderEntry) {
+        final String libraryLevel = orderEntry.getLibraryLevel();
+        if (orderEntry.isExported()) {
+            element.setAttribute(EXPORTED_ATTR, "");
+        }
+        orderEntry.getScope().writeExternal(element);
+        element.setAttribute(NAME_ATTR, orderEntry.getLibraryName());
+        element.setAttribute(LEVEL_ATTR, libraryLevel);
+    }
 }
