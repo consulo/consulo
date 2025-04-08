@@ -82,11 +82,12 @@ public class RootIndexImpl implements RootIndex {
         myProject = project;
         myInfoCache = cache;
 
-        final RootInfo info = buildRootInfo(project);
+        RootInfo info = buildRootInfo(project);
         Set<VirtualFile> allRoots = info.getAllRoots();
         for (VirtualFile root : allRoots) {
             List<VirtualFile> hierarchy = getHierarchy(root, allRoots, info);
-            Pair<DirectoryInfo, String> pair = hierarchy != null ? calcDirectoryInfo(root, hierarchy, info) : new Pair<>(NonProjectDirectoryInfo.IGNORED, null);
+            Pair<DirectoryInfo, String> pair =
+                hierarchy != null ? calcDirectoryInfo(root, hierarchy, info) : new Pair<>(NonProjectDirectoryInfo.IGNORED, null);
             cacheInfos(root, root, pair.first);
             myPackagePrefixRoots.putValue(pair.second, root);
             if (info.shouldMarkAsProjectExcluded(root, hierarchy)) {
@@ -102,11 +103,11 @@ public class RootIndexImpl implements RootIndex {
     @Nonnull
     @RequiredReadAction
     private RootInfo buildRootInfo(@Nonnull Project project) {
-        final RootInfo info = new RootInfo();
-        for (final Module module : ModuleManager.getInstance(project).getModules()) {
-            final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+        RootInfo info = new RootInfo();
+        for (Module module : ModuleManager.getInstance(project).getModules()) {
+            ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
-            for (final VirtualFile contentRoot : moduleRootManager.getContentRoots()) {
+            for (VirtualFile contentRoot : moduleRootManager.getContentRoots()) {
                 if (!info.contentRootOf.containsKey(contentRoot)) {
                     info.contentRootOf.put(contentRoot, module);
                 }
@@ -118,8 +119,8 @@ public class RootIndexImpl implements RootIndex {
                 }
 
                 // Init module sources
-                for (final ContentFolder sourceFolder : contentEntry.getFolders(ExcludedContentFolderTypeProvider.allExceptExcluded())) {
-                    final VirtualFile sourceFolderRoot = sourceFolder.getFile();
+                for (ContentFolder sourceFolder : contentEntry.getFolders(ExcludedContentFolderTypeProvider.allExceptExcluded())) {
+                    VirtualFile sourceFolderRoot = sourceFolder.getFile();
                     if (sourceFolderRoot != null) {
                         info.contentFolders.put(sourceFolderRoot, sourceFolder);
                         info.classAndSourceRoots.add(sourceFolderRoot);
@@ -131,18 +132,18 @@ public class RootIndexImpl implements RootIndex {
 
             for (OrderEntry orderEntry : moduleRootManager.getOrderEntries()) {
                 if (orderEntry instanceof OrderEntryWithTracking) {
-                    final VirtualFile[] sourceRoots = orderEntry.getFiles(SourcesOrderRootType.getInstance());
-                    final VirtualFile[] classRoots = orderEntry.getFiles(BinariesOrderRootType.getInstance());
+                    VirtualFile[] sourceRoots = orderEntry.getFiles(SourcesOrderRootType.getInstance());
+                    VirtualFile[] classRoots = orderEntry.getFiles(BinariesOrderRootType.getInstance());
 
                     // Init library sources
-                    for (final VirtualFile sourceRoot : sourceRoots) {
+                    for (VirtualFile sourceRoot : sourceRoots) {
                         info.classAndSourceRoots.add(sourceRoot);
                         info.libraryOrSdkSources.add(sourceRoot);
                         info.packagePrefix.put(sourceRoot, "");
                     }
 
                     // init library classes
-                    for (final VirtualFile classRoot : classRoots) {
+                    for (VirtualFile classRoot : classRoots) {
                         info.classAndSourceRoots.add(classRoot);
                         info.libraryOrSdkClasses.add(classRoot);
                         info.packagePrefix.put(classRoot, "");
@@ -179,7 +180,7 @@ public class RootIndexImpl implements RootIndex {
         if (!(info instanceof DirectoryInfoImpl)) {
             return OrderEntry.EMPTY_ARRAY;
         }
-        OrderEntry[] entries = getOrderEntries().get(((DirectoryInfoImpl) info).getRoot());
+        OrderEntry[] entries = getOrderEntries().get(((DirectoryInfoImpl)info).getRoot());
         return entries == null ? OrderEntry.EMPTY_ARRAY : entries;
     }
 
@@ -195,13 +196,14 @@ public class RootIndexImpl implements RootIndex {
         MultiMap<VirtualFile, OrderEntry> libSourceRootEntries = MultiMap.createSmart();
         MultiMap<VirtualFile, OrderEntry> depEntries = MultiMap.createSmart();
 
-        for (final Module module : ModuleManager.getInstance(myProject).getModules()) {
-            final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+        for (Module module : ModuleManager.getInstance(myProject).getModules()) {
+            ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
             for (OrderEntry orderEntry : moduleRootManager.getOrderEntries()) {
                 if (orderEntry instanceof ModuleOrderEntry moduleOrderEntry) {
-                    final Module depModule = moduleOrderEntry.getModule();
+                    Module depModule = moduleOrderEntry.getModule();
                     if (depModule != null) {
-                        VirtualFile[] importedClassRoots = OrderEnumerator.orderEntries(depModule).exportedOnly().recursively().classes().usingCache().getRoots();
+                        VirtualFile[] importedClassRoots =
+                            OrderEnumerator.orderEntries(depModule).exportedOnly().recursively().classes().usingCache().getRoots();
                         for (VirtualFile importedClassRoot : importedClassRoots) {
                             depEntries.putValue(importedClassRoot, orderEntry);
                         }
@@ -211,10 +213,10 @@ public class RootIndexImpl implements RootIndex {
                     }
                 }
                 else if (orderEntry instanceof OrderEntryWithTracking) {
-                    for (final VirtualFile sourceRoot : orderEntry.getFiles(SourcesOrderRootType.getInstance())) {
+                    for (VirtualFile sourceRoot : orderEntry.getFiles(SourcesOrderRootType.getInstance())) {
                         libSourceRootEntries.putValue(sourceRoot, orderEntry);
                     }
-                    for (final VirtualFile classRoot : orderEntry.getFiles(BinariesOrderRootType.getInstance())) {
+                    for (VirtualFile classRoot : orderEntry.getFiles(BinariesOrderRootType.getInstance())) {
                         libClassRootEntries.putValue(classRoot, orderEntry);
                     }
                 }
@@ -246,7 +248,13 @@ public class RootIndexImpl implements RootIndex {
         @Nullable VirtualFile libraryClassRoot = info.findLibraryRootInfo(hierarchy, false);
         @Nullable VirtualFile librarySourceRoot = info.findLibraryRootInfo(hierarchy, true);
         Set<OrderEntry> orderEntries = new LinkedHashSet<>();
-        orderEntries.addAll(info.getLibraryOrderEntries(hierarchy, libraryClassRoot, librarySourceRoot, libClassRootEntries, libSourceRootEntries));
+        orderEntries.addAll(info.getLibraryOrderEntries(
+            hierarchy,
+            libraryClassRoot,
+            librarySourceRoot,
+            libClassRootEntries,
+            libSourceRootEntries
+        ));
         for (VirtualFile root : hierarchy) {
             orderEntries.addAll(depEntries.get(root));
         }
@@ -330,7 +338,7 @@ public class RootIndexImpl implements RootIndex {
 
     @Override
     @Nonnull
-    public Query<VirtualFile> getDirectoriesByPackageName(@Nonnull final String packageName, final boolean includeLibrarySources) {
+    public Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources) {
         List<VirtualFile> result = myDirectoriesByPackageNameCache.get(packageName);
         if (result == null) {
             if (myNonExistentPackages.contains(packageName)) {
@@ -346,7 +354,8 @@ public class RootIndexImpl implements RootIndex {
                     String parentPackage = i > 0 ? packageName.substring(0, i) : "";
                     for (VirtualFile parentDir : getDirectoriesByPackageName(parentPackage, true)) {
                         VirtualFile child = !parentDir.isValid() ? null : parentDir.findChild(shortName);
-                        if (child != null && child.isDirectory() && getInfoForFile(child).isInProject(child) && packageName.equals(getPackageName(child))) {
+                        if (child != null && child.isDirectory() && getInfoForFile(child).isInProject(child) && packageName.equals(
+                            getPackageName(child))) {
                             result.add(child);
                         }
                     }
@@ -382,19 +391,19 @@ public class RootIndexImpl implements RootIndex {
 
     @Override
     @Nullable
-    public String getPackageName(@Nonnull final VirtualFile dir) {
+    public String getPackageName(@Nonnull VirtualFile dir) {
         if (dir.isDirectory()) {
             if (isIgnored(dir)) {
                 return null;
             }
 
-            for (final Map.Entry<String, Collection<VirtualFile>> entry : myPackagePrefixRoots.entrySet()) {
+            for (Map.Entry<String, Collection<VirtualFile>> entry : myPackagePrefixRoots.entrySet()) {
                 if (entry.getValue().contains(dir)) {
                     return entry.getKey();
                 }
             }
 
-            final VirtualFile parent = dir.getParent();
+            VirtualFile parent = dir.getParent();
             if (parent != null) {
                 return getPackageNameForSubdir(getPackageName(parent), dir.getName());
             }
@@ -488,13 +497,9 @@ public class RootIndexImpl implements RootIndex {
         }
 
         private boolean shouldMarkAsProjectExcluded(@Nonnull VirtualFile root, @Nullable List<VirtualFile> hierarchy) {
-            if (hierarchy == null) {
-                return false;
-            }
-            if (!excludedFromProject.contains(root) && !excludedFromModule.containsKey(root)) {
-                return false;
-            }
-            return ContainerUtil.find(hierarchy, contentRootOf::containsKey) == null;
+            return hierarchy != null
+                && (excludedFromProject.contains(root) || excludedFromModule.containsKey(root))
+                && ContainerUtil.find(hierarchy, contentRootOf::containsKey) == null;
         }
 
         @Nullable
@@ -565,9 +570,15 @@ public class RootIndexImpl implements RootIndex {
         }
 
         @Nullable
-        private VirtualFile findPackageRootInfo(@Nonnull List<VirtualFile> hierarchy, VirtualFile moduleContentRoot, VirtualFile libraryClassRoot, VirtualFile librarySourceRoot) {
+        private VirtualFile findPackageRootInfo(
+            @Nonnull List<VirtualFile> hierarchy,
+            VirtualFile moduleContentRoot,
+            VirtualFile libraryClassRoot,
+            VirtualFile librarySourceRoot
+        ) {
             for (VirtualFile root : hierarchy) {
-                if (moduleContentRoot != null && sourceRootOf.get(root).contains(contentRootOf.get(moduleContentRoot)) && librarySourceRoot == null) {
+                if (moduleContentRoot != null && sourceRootOf.get(root)
+                    .contains(contentRootOf.get(moduleContentRoot)) && librarySourceRoot == null) {
                     return root;
                 }
                 if (root == libraryClassRoot || root == librarySourceRoot) {
@@ -604,11 +615,18 @@ public class RootIndexImpl implements RootIndex {
         }
 
         @Nullable
-        private ModuleSourceOrderEntry getModuleSourceEntry(@Nonnull List<VirtualFile> hierarchy, @Nonnull VirtualFile moduleContentRoot, @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries) {
+        private ModuleSourceOrderEntry getModuleSourceEntry(
+            @Nonnull List<VirtualFile> hierarchy,
+            @Nonnull VirtualFile moduleContentRoot,
+            @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries
+        ) {
             Module module = contentRootOf.get(moduleContentRoot);
             for (VirtualFile root : hierarchy) {
                 if (sourceRootOf.get(root).contains(module)) {
-                    return ContainerUtil.findInstance(ModuleRootManager.getInstance(module).getOrderEntries(), ModuleSourceOrderEntry.class);
+                    return ContainerUtil.findInstance(
+                        ModuleRootManager.getInstance(module).getOrderEntries(),
+                        ModuleSourceOrderEntry.class
+                    );
                 }
                 if (libClassRootEntries.containsKey(root)) {
                     return null;
@@ -619,7 +637,11 @@ public class RootIndexImpl implements RootIndex {
     }
 
     @Nonnull
-    private Pair<DirectoryInfo, String> calcDirectoryInfo(@Nonnull final VirtualFile root, @Nonnull final List<VirtualFile> hierarchy, @Nonnull RootInfo info) {
+    private Pair<DirectoryInfo, String> calcDirectoryInfo(
+        @Nonnull VirtualFile root,
+        @Nonnull List<VirtualFile> hierarchy,
+        @Nonnull RootInfo info
+    ) {
         VirtualFile moduleContentRoot = info.findModuleRootInfo(hierarchy);
         VirtualFile libraryClassRoot = info.findLibraryRootInfo(hierarchy, false);
         VirtualFile librarySourceRoot = info.findLibraryRootInfo(hierarchy, true);
@@ -644,7 +666,19 @@ public class RootIndexImpl implements RootIndex {
         ContentFolderTypeProvider typeId = folder == null ? null : folder.getType();
 
         Module module = info.contentRootOf.get(nearestContentRoot);
-        DirectoryInfo directoryInfo = new DirectoryInfoImpl(root, module, nearestContentRoot, sourceRoot, folder, libraryClassRoot, inModuleSources, inLibrarySource, !inProject, typeId, null);
+        DirectoryInfo directoryInfo = new DirectoryInfoImpl(
+            root,
+            module,
+            nearestContentRoot,
+            sourceRoot,
+            folder,
+            libraryClassRoot,
+            inModuleSources,
+            inLibrarySource,
+            !inProject,
+            typeId,
+            null
+        );
 
         String packagePrefix = info.calcPackagePrefix(root, hierarchy, moduleContentRoot, libraryClassRoot, librarySourceRoot);
 

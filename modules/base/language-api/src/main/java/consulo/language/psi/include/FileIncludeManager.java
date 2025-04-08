@@ -18,22 +18,21 @@ package consulo.language.psi.include;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.util.function.Processor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.function.Predicate;
 
 /**
  * @author Dmitry Avdeev
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class FileIncludeManager {
-
   public static FileIncludeManager getManager(Project project) {
     return project.getInstance(FileIncludeManager.class);
   }
@@ -44,7 +43,7 @@ public abstract class FileIncludeManager {
 
   public abstract VirtualFile[] getIncludingFiles(@Nonnull VirtualFile file, boolean compileTimeOnly);
 
-  public abstract void processIncludingFiles(PsiFile context, Processor<? super Pair<VirtualFile, FileIncludeInfo>> processor);
+  public abstract void processIncludingFiles(PsiFile context, Predicate<? super Pair<VirtualFile, FileIncludeInfo>> processor);
 
   @Nullable
   public abstract PsiFileSystemItem resolveFileInclude(@Nonnull FileIncludeInfo info, @Nonnull PsiFile context);

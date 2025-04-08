@@ -36,16 +36,14 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,13 +60,10 @@ import java.util.List;
 @ServiceImpl
 public class WorkingContextManager {
     private static final Logger LOG = Logger.getInstance(WorkingContextManager.class);
-    @NonNls
     private static final String TASKS_FOLDER = "tasks";
 
     private final Project myProject;
-    @NonNls
     private static final String TASKS_ZIP_POSTFIX = ".tasks.zip";
-    @NonNls
     private static final String TASK_XML_POSTFIX = ".task.xml";
     private static final String CONTEXT_ZIP_POSTFIX = ".contexts.zip";
     private static final Comparator<JBZipEntry> ENTRY_COMPARATOR = (o1, o2) -> Long.signum(o2.getTime() - o1.getTime());

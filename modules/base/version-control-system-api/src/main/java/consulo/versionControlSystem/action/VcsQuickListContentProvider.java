@@ -28,11 +28,7 @@ public interface VcsQuickListContentProvider {
      * @return actions list or null if do nothing
      */
     @Nullable
-    List<AnAction> getVcsActions(
-        @Nullable final Project project,
-        @Nullable final AbstractVcs activeVcs,
-        @Nullable final DataContext dataContext
-    );
+    List<AnAction> getVcsActions(@Nullable Project project, @Nullable AbstractVcs activeVcs, @Nullable DataContext dataContext);
 
     /**
      * Allows to customise VCS actions popup if project isn't in VCS
@@ -42,10 +38,7 @@ public interface VcsQuickListContentProvider {
      * @return actions list or null if do nothing
      */
     @Nullable
-    List<AnAction> getNotInVcsActions(
-        @Nullable final Project project,
-        @Nullable final DataContext dataContext
-    );
+    List<AnAction> getNotInVcsActions(@Nullable Project project, @Nullable DataContext dataContext);
 
     /**
      * @param activeVcs   Active vcs for current file
@@ -53,8 +46,5 @@ public interface VcsQuickListContentProvider {
      * @return True if replace general actions with actions specified in getVcsActions() method. Otherwise
      * custom actions will be inserted in general popup. Usually should be false.
      */
-    boolean replaceVcsActionsFor(
-        @Nonnull final AbstractVcs activeVcs,
-        @Nullable final DataContext dataContext
-    );
+    boolean replaceVcsActionsFor(@Nonnull AbstractVcs activeVcs, @Nullable DataContext dataContext);
 }

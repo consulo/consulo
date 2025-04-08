@@ -135,11 +135,11 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         return temp;
     }
 
-    public void run(@Nonnull final AsyncResult<Void> actionCallback, BuildProgress<BuildProgressDescriptor> buildProgress) {
+    public void run(@Nonnull AsyncResult<Void> actionCallback, BuildProgress<BuildProgressDescriptor> buildProgress) {
         try {
             UIAccess uiAccess = Application.get().getLastUIAccess();
 
-            final ExpandMacroToPathMap expandMacroToPathMap = createExpandMacroToPathMap();
+            ExpandMacroToPathMap expandMacroToPathMap = createExpandMacroToPathMap();
 
             GeneralCommandLine commandLine = new GeneralCommandLine();
             commandLine.setExePath(myParameters.getExePath());
@@ -177,7 +177,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
                     }
                     String substitute = expandMacroToPathMap.substitute(outPath, false);
 
-                    final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(substitute);
+                    VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(substitute);
                     if (fileByPath != null) {
                         uiAccess.give(() -> ProgressManager.getInstance()
                             .runProcessWithProgressSynchronously(
@@ -199,7 +199,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     }
 
     public ExpandMacroToPathMap createExpandMacroToPathMap() {
-        final ExpandMacroToPathMap expandMacroToPathMap = new ExpandMacroToPathMap();
+        ExpandMacroToPathMap expandMacroToPathMap = new ExpandMacroToPathMap();
         expandMacroToPathMap.addMacroExpand("FileName", myVirtualFilePointer.getFileName());
         expandMacroToPathMap.addMacroExpand("DocumentFilePath", myVirtualFilePointer.getPresentableUrl());
 
@@ -209,7 +209,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     }
 
     private ExpandMacroToPathMap createExpandOutMacroToPathMap() {
-        final ExpandMacroToPathMap expandMacroToPathMap = new ExpandMacroToPathMap();
+        ExpandMacroToPathMap expandMacroToPathMap = new ExpandMacroToPathMap();
         expandMacroToPathMap.addMacroExpand("FileName", myVirtualFilePointer.getFileName());
         expandMacroToPathMap.addMacroExpand("DocumentFilePath", myVirtualFilePointer.getPresentableUrl());
         expandMacroToPathMap.addMacroExpand("OutPath", myParameters.getOutPath());
@@ -222,7 +222,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     public ReplacePathToMacroMap createReplaceMacroToPathMap() {
         PathMacroProtocolProvider pathMacroProtocolProvider = Application.get().getInstance(PathMacroProtocolProvider.class);
 
-        final ReplacePathToMacroMap replacePathToMacroMap = new ReplacePathToMacroMap();
+        ReplacePathToMacroMap replacePathToMacroMap = new ReplacePathToMacroMap();
         replacePathToMacroMap.put(myVirtualFilePointer.getFileName(), "$FileName$");
         replacePathToMacroMap.addMacroReplacement(pathMacroProtocolProvider, myVirtualFilePointer.getPresentableUrl(), "DocumentFilePath");
 

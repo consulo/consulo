@@ -22,14 +22,12 @@ import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import org.jdom.Element;
 
 /**
  * @author VISTALL
- * @since 21.08.14
+ * @since 2014-08-21
  */
 @ExtensionImpl
 public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryImpl> {
@@ -69,7 +67,7 @@ public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryIm
 
     @Override
     public void storeOrderEntry(@Nonnull Element element, @Nonnull LibraryOrderEntryImpl orderEntry) {
-        final String libraryLevel = orderEntry.getLibraryLevel();
+        String libraryLevel = orderEntry.getLibraryLevel();
         if (orderEntry.isExported()) {
             element.setAttribute(EXPORTED_ATTR, "");
         }

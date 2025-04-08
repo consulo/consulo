@@ -17,8 +17,6 @@ package consulo.virtualFileSystem.status.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.dumb.DumbAwareRunnable;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.disposer.Disposable;
@@ -26,7 +24,6 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.startup.StartupManager;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ThreeState;
@@ -37,10 +34,9 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.status.FileStatusProvider;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -94,13 +90,13 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
         project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> fileStatusesChanged());
     }
 
-    public void setFileStatusProvider(final FileStatusProvider fileStatusProvider) {
+    public void setFileStatusProvider(FileStatusProvider fileStatusProvider) {
         myFileStatusProvider = fileStatusProvider;
     }
 
-    public FileStatus calcStatus(@Nonnull final VirtualFile virtualFile) {
+    public FileStatus calcStatus(@Nonnull VirtualFile virtualFile) {
         for (FileStatusProvider extension : FileStatusProvider.EP_NAME.getExtensionList(myProject)) {
-            final FileStatus status = extension.getFileStatus(virtualFile);
+            FileStatus status = extension.getFileStatus(virtualFile);
             if (status != null) {
                 return status;
             }
@@ -114,7 +110,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
     }
 
     @Nonnull
-    public static FileStatus getDefaultStatus(@Nonnull final VirtualFile file) {
+    public static FileStatus getDefaultStatus(@Nonnull VirtualFile file) {
         return file.isValid() && file.is(VFileProperty.SPECIAL) ? FileStatus.IGNORED : FileStatus.NOT_CHANGED;
     }
 
@@ -130,7 +126,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
     }
 
     @Override
-    public void addFileStatusListener(@Nonnull final FileStatusListener listener, @Nonnull Disposable parentDisposable) {
+    public void addFileStatusListener(@Nonnull FileStatusListener listener, @Nonnull Disposable parentDisposable) {
         addFileStatusListener(listener);
         Disposer.register(parentDisposable, () -> removeFileStatusListener(listener));
     }
@@ -143,7 +139,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
         Application application = myProject.getApplication();
 
         if (!application.isDispatchThread()) {
-            application.invokeLater((DumbAwareRunnable)this::fileStatusesChanged, application.getNoneModalityState());
+            application.invokeLater(this::fileStatusesChanged, application.getNoneModalityState());
             return;
         }
 
@@ -155,10 +151,10 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
         }
     }
 
-    private void cacheChangedFileStatus(final VirtualFile virtualFile, final FileStatus fs) {
+    private void cacheChangedFileStatus(VirtualFile virtualFile, FileStatus fs) {
         myCachedStatuses.put(virtualFile, fs);
         if (FileStatus.NOT_CHANGED.equals(fs)) {
-            final ThreeState parentingStatus = myFileStatusProvider.getNotChangedDirectoryParentingStatus(virtualFile);
+            ThreeState parentingStatus = myFileStatusProvider.getNotChangedDirectoryParentingStatus(virtualFile);
             if (ThreeState.YES.equals(parentingStatus)) {
                 myWhetherExactlyParentToChanged.put(virtualFile, true);
             }
@@ -172,10 +168,10 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
     }
 
     @Override
-    public void fileStatusChanged(final VirtualFile file) {
-        final Application application = ApplicationManager.getApplication();
+    public void fileStatusChanged(VirtualFile file) {
+        Application application = Application.get();
         if (!application.isDispatchThread() && !application.isUnitTestMode()) {
-            ApplicationManager.getApplication().invokeLater((DumbAwareRunnable)() -> fileStatusChanged(file));
+            application.invokeLater(() -> fileStatusChanged(file));
             return;
         }
 
@@ -202,7 +198,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
     }
 
     @Override
-    public FileStatus getStatus(@Nonnull final VirtualFile file) {
+    public FileStatus getStatus(@Nonnull VirtualFile file) {
         if (file.getFileSystem() instanceof NonPhysicalFileSystem) {
             return FileStatus.SUPPRESSED;  // do not leak light files via cache
         }
@@ -216,7 +212,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
         return status;
     }
 
-    public FileStatus getCachedStatus(final VirtualFile file) {
+    public FileStatus getCachedStatus(VirtualFile file) {
         return myCachedStatuses.get(file);
     }
 
@@ -244,7 +240,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
         return immediate ? FileStatus.NOT_CHANGED_IMMEDIATE : FileStatus.NOT_CHANGED_RECURSIVE;
     }
 
-    public void refreshFileStatusFromDocument(final VirtualFile file, final Document doc) {
+    public void refreshFileStatusFromDocument(VirtualFile file, Document doc) {
         if (myFileStatusProvider != null) {
             myFileStatusProvider.refreshFileStatusFromDocument(file, doc);
         }

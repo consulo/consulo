@@ -49,7 +49,6 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
         //        removeWidgetFactory(factory);
         //    }
         //}, true, this);
-        //
     }
 
     @Nonnull

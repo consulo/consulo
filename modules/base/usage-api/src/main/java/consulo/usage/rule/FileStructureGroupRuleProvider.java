@@ -27,5 +27,5 @@ public interface FileStructureGroupRuleProvider {
     ExtensionPointName<FileStructureGroupRuleProvider> EP_NAME = ExtensionPointName.create(FileStructureGroupRuleProvider.class);
 
     @Nullable
-    UsageGroupingRule getUsageGroupingRule(final Project project);
+    UsageGroupingRule getUsageGroupingRule(Project project);
 }

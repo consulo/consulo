@@ -115,14 +115,14 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
         checkSetName(name);
 
-    /*
-    final String oldName = myFile.getName();
-    PsiTreeChangeEventImpl event = new PsiTreeChangeEventImpl(myManager);
-    event.setElement(this);
-    event.setPropertyName(PsiTreeChangeEvent.PROP_DIRECTORY_NAME);
-    event.setOldValue(oldName);
-    myManager.beforePropertyChange(event);
-    */
+        /*
+        String oldName = myFile.getName();
+        PsiTreeChangeEventImpl event = new PsiTreeChangeEventImpl(myManager);
+        event.setElement(this);
+        event.setPropertyName(PsiTreeChangeEvent.PROP_DIRECTORY_NAME);
+        event.setOldValue(oldName);
+        myManager.beforePropertyChange(event);
+        */
 
         try {
             myFile.rename(myManager, name);
@@ -263,7 +263,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         checkValid();
 
         VirtualFile[] files = myFile.getChildren();
-        final ArrayList<PsiElement> children = new ArrayList<>(files.length);
+        ArrayList<PsiElement> children = new ArrayList<>(files.length);
         processChildren(element -> {
             children.add(element);
             return true;
@@ -404,19 +404,20 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         }
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public PsiFile copyFileFrom(@Nonnull String newName, @Nonnull PsiFile originalFile) throws IncorrectOperationException {
         checkCreateFile(newName);
 
-        final Document document = PsiDocumentManager.getInstance(getProject()).getDocument(originalFile);
+        Document document = PsiDocumentManager.getInstance(getProject()).getDocument(originalFile);
         if (document != null) {
             FileDocumentManager.getInstance().saveDocument(document);
         }
 
-        final VirtualFile parent = getVirtualFile();
+        VirtualFile parent = getVirtualFile();
         try {
-            final VirtualFile vFile = originalFile.getVirtualFile();
+            VirtualFile vFile = originalFile.getVirtualFile();
             if (vFile == null) {
                 throw new IncorrectOperationException("Cannot copy nonphysical file");
             }
@@ -433,7 +434,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
             }
             LOG.assertTrue(copyVFile != null, "File was not copied: " + vFile);
             DumbService.getInstance(getProject()).completeJustSubmittedTasks();
-            final PsiFile copyPsi = myManager.findFile(copyVFile);
+            PsiFile copyPsi = myManager.findFile(copyVFile);
             if (copyPsi == null) {
                 LOG.error("Could not find file '" + copyVFile + "' after copying '" + vFile + "'");
             }
@@ -446,9 +447,9 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     private static void updateAddedFile(PsiFile copyPsi) throws IncorrectOperationException {
-        final UpdateAddedFileProcessor processor = UpdateAddedFileProcessor.forElement(copyPsi);
+        UpdateAddedFileProcessor processor = UpdateAddedFileProcessor.forElement(copyPsi);
         if (processor != null) {
-            final TreeElement tree = (TreeElement)SourceTreeToPsiMap.psiElementToTree(copyPsi);
+            TreeElement tree = (TreeElement)SourceTreeToPsiMap.psiElementToTree(copyPsi);
             if (tree != null) {
                 ChangeUtil.encodeInformation(tree);
             }
@@ -477,24 +478,23 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
 
     @Override
+    @RequiredReadAction
     public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
         checkAdd(element);
         if (element instanceof PsiDirectory) {
             LOG.error("not implemented");
             return null;
         }
-        else if (element instanceof PsiFile) {
-            PsiFile originalFile = (PsiFile)element;
-
+        else if (element instanceof PsiFile originalFile) {
             try {
                 VirtualFile newVFile;
-                final PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(myManager.getProject());
+                PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(myManager.getProject());
                 if (originalFile instanceof PsiFileImpl) {
                     newVFile = myFile.createChildData(myManager, originalFile.getName());
                     String text = originalFile.getText();
-                    final PsiFile psiFile = getManager().findFile(newVFile);
-                    final Document document = psiFile == null ? null : psiDocumentManager.getDocument(psiFile);
-                    final FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
+                    PsiFile psiFile = getManager().findFile(newVFile);
+                    Document document = psiFile == null ? null : psiDocumentManager.getDocument(psiFile);
+                    FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
                     if (document != null) {
                         document.setText(text);
                         fileDocumentManager.saveDocument(document);
@@ -543,6 +543,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     @Override
+    @RequiredReadAction
     public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
         CheckUtil.checkWritable(this);
         if (element instanceof PsiDirectory directory) {
@@ -560,8 +561,9 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
             PsiFile[] files = getFiles();
             for (PsiFile file : files) {
                 if (Comparing.strEqual(file.getName(), name, Platform.current().fs().isCaseSensitive())) {
-                    throw new IncorrectOperationException(VirtualFileSystemLocalize.fileAlreadyExistsError(file.getVirtualFile()
-                        .getPresentableUrl()).get());
+                    throw new IncorrectOperationException(
+                        VirtualFileSystemLocalize.fileAlreadyExistsError(file.getVirtualFile().getPresentableUrl()).get()
+                    );
                 }
             }
         }
@@ -633,6 +635,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         visitor.visitDirectory(this);
     }
 
+    @Override
     public String toString() {
         return "PsiDirectory:" + myFile.getPresentableUrl();
     }
@@ -658,6 +661,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     @Override
+    @RequiredReadAction
     public void putInfo(@Nonnull Map<String, String> info) {
         info.put("fileName", getName());
     }

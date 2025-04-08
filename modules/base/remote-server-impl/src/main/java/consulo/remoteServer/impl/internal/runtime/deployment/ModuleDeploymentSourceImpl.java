@@ -15,18 +15,17 @@
  */
 package consulo.remoteServer.impl.internal.runtime.deployment;
 
-import consulo.application.AllIcons;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.remoteServer.configuration.deployment.ModuleDeploymentSource;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -93,7 +92,7 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
     @Nullable
     @Override
     public Image getIcon() {
-        return AllIcons.Nodes.Module;
+        return PlatformIconGroup.nodesModule();
     }
 
     @Override
@@ -108,14 +107,9 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ModuleDeploymentSource)) {
-            return false;
-        }
-
-        return myPointer.equals(((ModuleDeploymentSource)o).getModulePointer());
+        return o == this
+            || o instanceof ModuleDeploymentSource source
+            && myPointer.equals(source.getModulePointer());
     }
 
     @Override

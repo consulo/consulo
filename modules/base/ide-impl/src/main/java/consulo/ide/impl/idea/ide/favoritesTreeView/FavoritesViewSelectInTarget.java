@@ -22,7 +22,6 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ui.view.SelectInManager;
 import consulo.project.ui.view.StandardTargetWeights;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.wm.ToolWindowId;
@@ -53,7 +52,7 @@ public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
 
     @Override
     public String getToolWindowId() {
-        return SelectInManager.FAVORITES;
+        return ProjectUIViewLocalize.selectInFavorites().get();
     }
 
     @Override

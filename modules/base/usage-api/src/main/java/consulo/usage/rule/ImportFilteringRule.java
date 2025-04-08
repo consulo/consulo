@@ -20,9 +20,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 /**
- * User: Maxim.Mossienko
- * Date: 11.03.2010
- * Time: 19:08:33
+ * @author Maxim.Mossienko
+ * @since 2010-03-11
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImportFilteringRule extends UsageFilteringRule {

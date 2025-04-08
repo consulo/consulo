@@ -26,7 +26,7 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 31.03.14
+ * @since 2014-03-31
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ContentFolderSupportPatcher {

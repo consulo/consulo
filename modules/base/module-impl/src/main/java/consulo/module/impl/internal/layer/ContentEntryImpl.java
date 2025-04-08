@@ -137,7 +137,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
 
         if (predicate.test(ExcludedContentFolderTypeProvider.getInstance())) {
             for (DirectoryIndexExcludePolicy excludePolicy : DirectoryIndexExcludePolicy.EP_NAME.getExtensionList(getRootModel().getProject())) {
-                final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(myModuleRootLayer);
+                VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(myModuleRootLayer);
                 for (VirtualFilePointer file : files) {
                     list.add(new LightContentFolderImpl(file, ExcludedContentFolderTypeProvider.getInstance(), this));
                 }
@@ -197,8 +197,8 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     }
 
     private void assertFolderUnderMe(@Nonnull String url) {
-        final String path = VirtualFileUtil.urlToPath(url);
-        final String rootPath = VirtualFileUtil.urlToPath(getUrl());
+        String path = VirtualFileUtil.urlToPath(url);
+        String rootPath = VirtualFileUtil.urlToPath(getUrl());
         if (!FileUtil.isAncestor(rootPath, path, false)) {
             LOG.error("The file '" + path + "' is not under content entry root '" + rootPath + "'");
         }
@@ -225,7 +225,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
         LOG.assertTrue(ELEMENT_NAME.equals(element.getName()));
         element.setAttribute(URL_ATTRIBUTE, myRoot.getUrl());
         for (ContentFolder contentFolder : myContentFolders) {
-            final Element subElement = new Element(ContentFolderImpl.ELEMENT_NAME);
+            Element subElement = new Element(ContentFolderImpl.ELEMENT_NAME);
             ((ContentFolderImpl)contentFolder).writeExternal(subElement);
             element.addContent(subElement);
         }

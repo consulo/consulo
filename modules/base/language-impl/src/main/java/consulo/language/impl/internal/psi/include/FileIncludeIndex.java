@@ -38,7 +38,6 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileIncludeInfoImpl>> {
-
     public static final ID<String, List<FileIncludeInfoImpl>> INDEX_ID = ID.create("fileIncludes");
 
     private static final int BASE_VERSION = 6;
@@ -51,11 +50,17 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
 
     @Nonnull
     public static MultiMap<VirtualFile, FileIncludeInfoImpl> getIncludingFileCandidates(String fileName, @Nonnull GlobalSearchScope scope) {
-        final MultiMap<VirtualFile, FileIncludeInfoImpl> result = new MultiMap<>();
-        FileBasedIndex.getInstance().processValues(INDEX_ID, fileName, null, (file, value) -> {
-            result.put(file, value);
-            return true;
-        }, scope);
+        MultiMap<VirtualFile, FileIncludeInfoImpl> result = new MultiMap<>();
+        FileBasedIndex.getInstance().processValues(
+            INDEX_ID,
+            fileName,
+            null,
+            (file, value) -> {
+                result.put(file, value);
+                return true;
+            },
+            scope
+        );
         return result;
     }
 
@@ -107,7 +112,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
     @Nonnull
     @Override
     public DataExternalizer<List<FileIncludeInfoImpl>> getValueExternalizer() {
-        return new DataExternalizer<List<FileIncludeInfoImpl>>() {
+        return new DataExternalizer<>() {
             @Override
             public void save(@Nonnull DataOutput out, List<FileIncludeInfoImpl> value) throws IOException {
                 out.writeInt(value.size());

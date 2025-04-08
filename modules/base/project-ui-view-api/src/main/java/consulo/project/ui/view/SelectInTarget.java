@@ -35,7 +35,7 @@ public interface SelectInTarget {
      */
     boolean canSelect(SelectInContext context);
 
-    void selectIn(SelectInContext context, final boolean requestFocus);
+    void selectIn(SelectInContext context, boolean requestFocus);
 
     /**
      * Tool window this target is supposed to select in

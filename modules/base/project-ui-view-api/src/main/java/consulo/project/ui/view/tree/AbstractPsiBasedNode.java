@@ -3,8 +3,7 @@
 package consulo.project.ui.view.tree;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
@@ -21,6 +20,7 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.StatePreservingNavigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectViewInternalHelper;
 import consulo.ui.ex.awt.tree.TreeNode;
@@ -31,7 +31,6 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -103,6 +102,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         return parentValue instanceof PsiDirectory || parentValue instanceof Module;
     }
 
+    @Nonnull
     @Override
     public FileStatus getFileStatus() {
         return computeFileStatus(getVirtualFileForValue(), Objects.requireNonNull(getProject()));
@@ -132,7 +132,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
 
     private void doUpdate(@Nonnull PresentationData data) {
-        ApplicationManager.getApplication().runReadAction(() -> {
+        Application.get().runReadAction(() -> {
             if (!validate()) {
                 return;
             }
@@ -181,11 +181,11 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         }
 
         if (!file.isWritable()) {
-            iconDescriptor.addLayerIcon(AllIcons.Nodes.Locked);
+            iconDescriptor.addLayerIcon(PlatformIconGroup.nodesLocked());
         }
 
         if (file.is(VFileProperty.SYMLINK)) {
-            iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
+            iconDescriptor.addLayerIcon(PlatformIconGroup.nodesSymlink());
         }
 
         return iconDescriptor.toIcon();

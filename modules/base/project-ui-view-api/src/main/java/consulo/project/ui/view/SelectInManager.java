@@ -38,7 +38,7 @@ public class SelectInManager {
         public static final SelectInTargetComparator INSTANCE = new SelectInTargetComparator();
 
         @Override
-        public int compare(final SelectInTarget o1, final SelectInTarget o2) {
+        public int compare(SelectInTarget o1, SelectInTarget o2) {
             if (o1.getWeight() < o2.getWeight()) {
                 return -1;
             }
@@ -53,7 +53,6 @@ public class SelectInManager {
     public static final String PACKAGES = ProjectUIViewBundle.message("select.in.packages");
     public static final String ASPECTS = ProjectUIViewBundle.message("select.in.aspects");
     public static final String COMMANDER = ProjectUIViewBundle.message("select.in.commander");
-    public static final String FAVORITES = ProjectUIViewBundle.message("select.in.favorites");
     public static final String NAV_BAR = ProjectUIViewBundle.message("select.in.nav.bar");
     public static final String SCOPE = ProjectUIViewBundle.message("select.in.scope");
 
@@ -64,7 +63,7 @@ public class SelectInManager {
     private final Project myProject;
 
     @Inject
-    public SelectInManager(final Project project) {
+    public SelectInManager(Project project) {
         myProject = project;
     }
 

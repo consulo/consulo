@@ -16,22 +16,20 @@
 
 package consulo.module.impl.internal.layer;
 
+import consulo.content.ContentFolderPropertyProvider;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.UnknownContentFolderTypeProvider;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
-import consulo.content.ContentFolderPropertyProvider;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 import java.util.*;
 
@@ -41,11 +39,8 @@ import java.util.*;
 public class ContentFolderImpl extends BaseModuleRootLayerChild
     implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
 
-    @NonNls
     public static final String URL_ATTRIBUTE = "url";
-    @NonNls
     public static final String TYPE_ATTRIBUTE = "type";
-    @NonNls
     public static final String ELEMENT_NAME = "content-folder";
 
     @Nonnull
@@ -116,7 +111,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
         if (elementChildren.isEmpty()) {
             return null;
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
 
         for (Element elementChild : elementChildren) {
             String key = elementChild.getAttributeValue("key");
@@ -211,7 +206,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
             myPropertiesByKeyCache = Collections.emptyMap();
         }
         else {
-            myPropertiesByKeyCache = new HashMap<Key, Object>(myProperties.size());
+            myPropertiesByKeyCache = new HashMap<>(myProperties.size());
             for (Map.Entry<String, Object> entry : myProperties.entrySet()) {
                 ContentFolderPropertyProvider<?> provider = ContentFolderPropertyProvider.findProvider(entry.getKey());
                 if (provider == null) {
@@ -280,10 +275,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ContentFolderImpl)) {
-            return false;
-        }
-        return compareTo((ContentFolderImpl)obj) == 0;
+        return obj instanceof ContentFolderImpl contentFolder && compareTo(contentFolder) == 0;
     }
 
     @Override

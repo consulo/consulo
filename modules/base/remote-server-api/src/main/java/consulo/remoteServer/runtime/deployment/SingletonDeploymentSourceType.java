@@ -9,7 +9,6 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.Nls;
 
 import java.io.File;
 

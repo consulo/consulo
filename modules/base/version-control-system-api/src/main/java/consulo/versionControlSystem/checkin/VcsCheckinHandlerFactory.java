@@ -27,8 +27,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author irengrig
- * Date: 1/28/11
- * Time: 3:49 PM
+ * @since 2011-01-28
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class VcsCheckinHandlerFactory implements BaseCheckinHandlerFactory {
@@ -36,7 +35,7 @@ public abstract class VcsCheckinHandlerFactory implements BaseCheckinHandlerFact
 
     private VcsKey myKey;
 
-    protected VcsCheckinHandlerFactory(@Nonnull final VcsKey key) {
+    protected VcsCheckinHandlerFactory(@Nonnull VcsKey key) {
         myKey = key;
     }
 

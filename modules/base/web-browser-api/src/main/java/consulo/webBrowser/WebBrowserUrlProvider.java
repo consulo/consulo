@@ -36,7 +36,7 @@ public abstract class WebBrowserUrlProvider {
      * Browser exceptions are printed in Error Dialog when user presses any browser button
      */
     public static class BrowserException extends Exception {
-        public BrowserException(final String message) {
+        public BrowserException(String message) {
             super(message);
         }
     }

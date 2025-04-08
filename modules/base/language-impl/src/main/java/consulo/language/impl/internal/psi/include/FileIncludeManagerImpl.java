@@ -1,12 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.internal.psi.include;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
 import consulo.application.util.ParameterizedCachedValue;
 import consulo.application.util.ParameterizedCachedValueProvider;
-import consulo.application.util.function.Processor;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiFile;
@@ -27,13 +27,13 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author Dmitry Avdeev
@@ -47,8 +47,8 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
 
     private final IncludeCacheHolder myIncludedHolder = new IncludeCacheHolder("compile time includes", "runtime includes") {
         @Override
-        protected VirtualFile[] computeFiles(final PsiFile file, final boolean compileTimeOnly) {
-            final Set<VirtualFile> files = new HashSet<>();
+        protected VirtualFile[] computeFiles(PsiFile file, boolean compileTimeOnly) {
+            Set<VirtualFile> files = new HashSet<>();
             processIncludes(file, info -> {
                 if (compileTimeOnly != info.runtimeOnly) {
                     PsiFileSystemItem item = resolveFileInclude(info, file);
@@ -63,10 +63,10 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
     };
     private final Map<String, FileIncludeProvider> myProviderMap;
 
-    public void processIncludes(PsiFile file, Processor<? super FileIncludeInfo> processor) {
+    public void processIncludes(PsiFile file, Predicate<? super FileIncludeInfo> processor) {
         List<FileIncludeInfo> infoList = FileIncludeIndex.getIncludes(file.getVirtualFile(), myProject);
         for (FileIncludeInfo info : infoList) {
-            if (!processor.process(info)) {
+            if (!processor.test(info)) {
                 return;
             }
         }
@@ -74,8 +74,9 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
 
     private final IncludeCacheHolder myIncludingHolder = new IncludeCacheHolder("compile time contexts", "runtime contexts") {
         @Override
+        @RequiredReadAction
         protected VirtualFile[] computeFiles(PsiFile context, boolean compileTimeOnly) {
-            final Set<VirtualFile> files = new HashSet<>();
+            Set<VirtualFile> files = new HashSet<>();
             processIncludingFiles(context, virtualFileFileIncludeInfoPair -> {
                 files.add(virtualFileFileIncludeInfoPair.first);
                 return true;
@@ -85,7 +86,8 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
     };
 
     @Override
-    public void processIncludingFiles(PsiFile context, Processor<? super Pair<VirtualFile, FileIncludeInfo>> processor) {
+    @RequiredReadAction
+    public void processIncludingFiles(PsiFile context, Predicate<? super Pair<VirtualFile, FileIncludeInfo>> processor) {
         context = context.getOriginalFile();
         VirtualFile contextFile = context.getVirtualFile();
         if (contextFile == null) {
@@ -106,7 +108,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
                 for (FileIncludeInfo info : infoList.get(candidate)) {
                     PsiFileSystemItem item = resolveFileInclude(info, psiFile);
                     if (item != null && contextFile.equals(item.getVirtualFile())) {
-                        if (!processor.process(Pair.create(candidate, info))) {
+                        if (!processor.test(Pair.create(candidate, info))) {
                             return;
                         }
                     }
@@ -143,11 +145,13 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
     }
 
     @Override
+    @RequiredReadAction
     public VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly) {
         return getIncludedFiles(file, compileTimeOnly, false);
     }
 
     @Override
+    @RequiredReadAction
     public VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly, boolean recursively) {
         if (file instanceof VirtualFileWithId) {
             return myIncludedHolder.getAllFiles(file, compileTimeOnly, recursively);
@@ -158,21 +162,22 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
     }
 
     @Override
+    @RequiredReadAction
     public VirtualFile[] getIncludingFiles(@Nonnull VirtualFile file, boolean compileTimeOnly) {
         return myIncludingHolder.getAllFiles(file, compileTimeOnly, false);
     }
 
     @Override
-    public PsiFileSystemItem resolveFileInclude(@Nonnull final FileIncludeInfo info, @Nonnull final PsiFile context) {
+    public PsiFileSystemItem resolveFileInclude(@Nonnull FileIncludeInfo info, @Nonnull PsiFile context) {
         return doResolve(info, context);
     }
 
     @Nullable
-    private PsiFileSystemItem doResolve(@Nonnull final FileIncludeInfo info, @Nonnull final PsiFile context) {
-        if (info instanceof FileIncludeInfoImpl) {
-            String id = ((FileIncludeInfoImpl)info).providerId;
+    private PsiFileSystemItem doResolve(@Nonnull FileIncludeInfo info, @Nonnull PsiFile context) {
+        if (info instanceof FileIncludeInfoImpl fileIncludeInfo) {
+            String id = fileIncludeInfo.providerId;
             FileIncludeProvider provider = id == null ? null : myProviderMap.get(id);
-            final PsiFileSystemItem resolvedByProvider = provider == null ? null : provider.resolveIncludedFile(info, context);
+            PsiFileSystemItem resolvedByProvider = provider == null ? null : provider.resolveIncludedFile(info, context);
             if (resolvedByProvider != null) {
                 return resolvedByProvider;
             }
@@ -213,6 +218,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
         }
 
         @Nonnull
+        @RequiredReadAction
         private VirtualFile[] getAllFiles(@Nonnull VirtualFile file, boolean compileTimeOnly, boolean recursively) {
             if (recursively) {
                 Set<VirtualFile> result = new HashSet<>();
@@ -222,6 +228,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
             return getFiles(file, compileTimeOnly);
         }
 
+        @RequiredReadAction
         private void getAllFilesRecursively(@Nonnull VirtualFile file, boolean compileTimeOnly, Set<? super VirtualFile> result) {
             if (!result.add(file)) {
                 return;
@@ -234,6 +241,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
             }
         }
 
+        @RequiredReadAction
         private VirtualFile[] getFiles(@Nonnull VirtualFile file, boolean compileTimeOnly) {
             PsiFile psiFile = myPsiManager.findFile(file);
             if (psiFile == null) {
@@ -248,7 +256,6 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
         }
 
         protected abstract VirtualFile[] computeFiles(PsiFile file, boolean compileTimeOnly);
-
     }
 
     private abstract static class IncludedFilesProvider implements ParameterizedCachedValueProvider<VirtualFile[], PsiFile> {

@@ -45,9 +45,11 @@ public abstract class TaskRepositoryType<T extends TaskRepository> implements Ta
     }
 
     @Nonnull
+    @Override
     public abstract String getId();
 
     @Nonnull
+    @Override
     public abstract LocalizeValue getPresentableName();
 
     @Override

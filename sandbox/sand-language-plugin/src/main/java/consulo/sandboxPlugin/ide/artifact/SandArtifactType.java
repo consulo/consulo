@@ -16,27 +16,24 @@
 package consulo.sandboxPlugin.ide.artifact;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
-import consulo.compiler.artifact.element.ArtifactRootElementImpl;
-import consulo.application.AllIcons;
 import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.element.ArtifactRootElementImpl;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
+import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.module.content.layer.ModulesProvider;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19.03.14
+ * @since 2014-03-19
  */
 @ExtensionImpl
 public class SandArtifactType extends ArtifactType {
-    @NonNls
     public static final String ID = "sand";
 
     public static SandArtifactType getInstance() {
@@ -55,7 +52,7 @@ public class SandArtifactType extends ArtifactType {
     @Nonnull
     @Override
     public Image getIcon() {
-        return AllIcons.Nodes.Artifact;
+        return PlatformIconGroup.nodesArtifact();
     }
 
     @Override

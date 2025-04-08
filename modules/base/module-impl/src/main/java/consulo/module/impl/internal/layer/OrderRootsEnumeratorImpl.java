@@ -123,10 +123,10 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     public VirtualFile[] getRoots() {
         if (myUsingCache) {
             checkCanUseCache();
-            final OrderRootsCache cache = myOrderEnumerator.getCache();
+            OrderRootsCache cache = myOrderEnumerator.getCache();
             if (cache != null) {
-                final int flags = myOrderEnumerator.getFlags();
-                final VirtualFile[] cached = cache.getCachedRoots(myRootType, flags);
+                int flags = myOrderEnumerator.getFlags();
+                VirtualFile[] cached = cache.getCachedRoots(myRootType, flags);
                 if (cached == null) {
                     return cache.setCachedRoots(myRootType, flags, computeRootsUrls()).getFiles();
                 }
@@ -143,9 +143,9 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     public String[] getUrls() {
         if (myUsingCache) {
             checkCanUseCache();
-            final OrderRootsCache cache = myOrderEnumerator.getCache();
+            OrderRootsCache cache = myOrderEnumerator.getCache();
             if (cache != null) {
-                final int flags = myOrderEnumerator.getFlags();
+                int flags = myOrderEnumerator.getFlags();
                 String[] cached = cache.getCachedUrls(myRootType, flags);
                 if (cached == null) {
                     return cache.setCachedRoots(myRootType, flags, computeRootsUrls()).getUrls();
@@ -168,7 +168,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     }
 
     private Collection<VirtualFile> computeRoots() {
-        final Collection<VirtualFile> result = new LinkedHashSet<>();
+        Collection<VirtualFile> result = new LinkedHashSet<>();
         myOrderEnumerator.forEach(orderEntry -> {
             OrderRootType type = getRootType(orderEntry);
 
@@ -185,7 +185,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
             }
             else if (orderEntry instanceof ModuleOrderEntry) {
                 ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)orderEntry;
-                final Module module = moduleOrderEntry.getModule();
+                Module module = moduleOrderEntry.getModule();
                 if (module != null) {
                     ModuleRootModel rootModel = myOrderEnumerator.getRootModel(module);
                     boolean productionOnTests =
@@ -209,7 +209,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
 
     @Nonnull
     private Collection<String> computeRootsUrls() {
-        final Collection<String> result = new LinkedHashSet<>();
+        Collection<String> result = new LinkedHashSet<>();
         myOrderEnumerator.forEach(orderEntry -> {
             OrderRootType type = getRootType(orderEntry);
 
@@ -226,7 +226,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
             }
             else if (orderEntry instanceof ModuleOrderEntry) {
                 ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)orderEntry;
-                final Module module = moduleOrderEntry.getModule();
+                Module module = moduleOrderEntry.getModule();
                 if (module != null) {
                     ModuleRootModel rootModel = myOrderEnumerator.getRootModel(module);
                     boolean productionOnTests =
@@ -247,7 +247,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     @Nonnull
     @Override
     public PathsList getPathsList() {
-        final PathsList list = new PathsList();
+        PathsList list = new PathsList();
         collectPaths(list);
         return list;
     }
@@ -282,8 +282,8 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         OrderRootType type,
         ModuleRootModel rootModel,
         Collection<VirtualFile> result,
-        final boolean includeProduction,
-        final boolean includeTests,
+        boolean includeProduction,
+        boolean includeTests,
         BiFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, VirtualFile[]> funForSources,
         BiFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]> funForRuntime
     ) {
@@ -339,8 +339,8 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         OrderRootType type,
         ModuleRootModel rootModel,
         Collection<String> result,
-        final boolean includeProduction,
-        final boolean includeTests,
+        boolean includeProduction,
+        boolean includeTests,
         BiFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, String[]> funForSources,
         BiFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]> funForRuntime
     ) {

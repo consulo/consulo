@@ -2,7 +2,7 @@
 package consulo.remoteServer.impl.internal.configuration;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.component.persist.*;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.remoteServer.ServerType;
@@ -79,13 +79,13 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
     @Override
     public void addServer(RemoteServer<?> server) {
         myServers.add(server);
-        ApplicationManager.getApplication().getMessageBus().syncPublisher(RemoteServerListener.class).serverAdded(server);
+        Application.get().getMessageBus().syncPublisher(RemoteServerListener.class).serverAdded(server);
     }
 
     @Override
     public void removeServer(RemoteServer<?> server) {
         myServers.remove(server);
-        ApplicationManager.getApplication().getMessageBus().syncPublisher(RemoteServerListener.class).serverRemoved(server);
+        Application.get().getMessageBus().syncPublisher(RemoteServerListener.class).serverRemoved(server);
     }
 
     @Override
@@ -120,7 +120,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
         }
 
         if (!needsMigration.isEmpty()) {
-            ApplicationManager.getApplication().invokeLater(() -> {
+            Application.get().invokeLater(() -> {
                 for (CloudConfigurationBase nextConfig : needsMigration) {
                     nextConfig.migrateToPasswordSafe();
                 }

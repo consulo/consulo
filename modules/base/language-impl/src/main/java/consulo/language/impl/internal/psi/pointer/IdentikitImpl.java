@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.internal.psi.pointer;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
@@ -12,7 +13,6 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.util.interner.Interner;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -72,6 +72,7 @@ public abstract class IdentikitImpl implements Identikit {
 
         @Nullable
         @Override
+        @RequiredReadAction
         public PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset) {
             Language fileLanguage = Language.findLanguageByID(myFileLanguageId);
             if (fileLanguage == null) {
@@ -85,6 +86,7 @@ public abstract class IdentikitImpl implements Identikit {
             return findInside(actualLanguagePsi, startOffset, endOffset);
         }
 
+        @RequiredReadAction
         public PsiElement findInside(@Nonnull PsiElement element, int startOffset, int endOffset) {
             // finds child in this tree only, unlike PsiElement.findElementAt()
             PsiElement anchor = AbstractFileViewProvider.findElementAt(element, startOffset);
@@ -112,6 +114,7 @@ public abstract class IdentikitImpl implements Identikit {
         }
 
         @Nullable
+        @RequiredReadAction
         private PsiElement findParent(int startOffset, int endOffset, PsiElement anchor) {
             TextRange range = anchor.getTextRange();
 
@@ -199,26 +202,11 @@ public abstract class IdentikitImpl implements Identikit {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof ByAnchor)) {
-                return false;
-            }
-
-            ByAnchor anchor = (ByAnchor)o;
-
-            if (!myElementInfo.equals(anchor.myElementInfo)) {
-                return false;
-            }
-            if (!myAnchorInfo.equals(anchor.myAnchorInfo)) {
-                return false;
-            }
-            if (!myAnchorProvider.equals(anchor.myAnchorProvider)) {
-                return false;
-            }
-
-            return true;
+            return o == this
+                || o instanceof ByAnchor anchor
+                && myElementInfo.equals(anchor.myElementInfo)
+                && myAnchorInfo.equals(anchor.myAnchorInfo)
+                && myAnchorProvider.equals(anchor.myAnchorProvider);
         }
 
         @Override
@@ -228,6 +216,7 @@ public abstract class IdentikitImpl implements Identikit {
 
         @Nullable
         @Override
+        @RequiredReadAction
         public PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset) {
             PsiElement anchor = myAnchorInfo.findPsiElement(file, startOffset, endOffset);
             PsiElement element = anchor == null ? null : myAnchorProvider.restoreElement(anchor);

@@ -34,7 +34,7 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 08.12.14
+ * @since 2014-12-08
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ModuleRootsProcessor {
@@ -57,7 +57,7 @@ public abstract class ModuleRootsProcessor {
     public void processFiles(
         @Nonnull ModuleRootModel moduleRootModel,
         @Nonnull Predicate<ContentFolderTypeProvider> predicate,
-        @Nonnull Processor<VirtualFile> processor
+        @Nonnull Predicate<VirtualFile> processor
     ) {
         VirtualFile[] files = getFiles(moduleRootModel, predicate);
         ContainerUtil.process(files, processor);
@@ -66,7 +66,7 @@ public abstract class ModuleRootsProcessor {
     public void processFileUrls(
         @Nonnull ModuleRootModel moduleRootModel,
         @Nonnull Predicate<ContentFolderTypeProvider> predicate,
-        @Nonnull Processor<String> processor
+        @Nonnull Predicate<String> processor
     ) {
         String[] files = getUrls(moduleRootModel, predicate);
         ContainerUtil.process(files, processor);

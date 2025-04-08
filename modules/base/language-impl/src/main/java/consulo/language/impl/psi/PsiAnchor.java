@@ -2,6 +2,8 @@
 
 package consulo.language.impl.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.document.Document;
@@ -15,21 +17,14 @@ import consulo.language.impl.internal.psi.WrappedElementAnchor;
 import consulo.language.impl.internal.psi.pointer.IdentikitImpl;
 import consulo.language.impl.internal.psi.pointer.SelfElementInfo;
 import consulo.language.psi.*;
-import consulo.language.psi.stub.PsiFileWithStubSupport;
-import consulo.language.psi.stub.IStubElementType;
-import consulo.language.psi.stub.IStubFileElementType;
-import consulo.language.psi.stub.StubBase;
-import consulo.language.psi.stub.StubElement;
-import consulo.language.psi.stub.StubbedSpine;
+import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -48,11 +43,11 @@ public abstract class PsiAnchor {
     public abstract int getEndOffset();
 
     @Nonnull
-    public static PsiAnchor create(@Nonnull final PsiElement element) {
+    public static PsiAnchor create(@Nonnull PsiElement element) {
         PsiUtilCore.ensureValid(element);
 
         PsiAnchor anchor = doCreateAnchor(element);
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             PsiElement restored = anchor.retrieve();
             if (!element.equals(restored)) {
                 LOG.error("Cannot restore element " + element + " of " + element.getClass() + " from anchor " + anchor + ", getting " + restored + " instead");
@@ -62,16 +57,17 @@ public abstract class PsiAnchor {
     }
 
     @Nonnull
+    @RequiredReadAction
     private static PsiAnchor doCreateAnchor(@Nonnull PsiElement element) {
-        if (element instanceof PsiFile) {
-            VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
+        if (element instanceof PsiFile file) {
+            VirtualFile virtualFile = file.getVirtualFile();
             if (virtualFile != null) {
-                return new PsiFileReference(virtualFile, (PsiFile)element);
+                return new PsiFileReference(virtualFile, file);
             }
-            return new HardReference(element);
+            return new HardReference(file);
         }
-        if (element instanceof PsiDirectory) {
-            VirtualFile virtualFile = ((PsiDirectory)element).getVirtualFile();
+        if (element instanceof PsiDirectory directory) {
+            VirtualFile virtualFile = directory.getVirtualFile();
             return new PsiDirectoryReference(virtualFile, element.getProject());
         }
 
@@ -99,7 +95,7 @@ public abstract class PsiAnchor {
         }
 
         Language lang = null;
-        final FileViewProvider viewProvider = file.getViewProvider();
+        FileViewProvider viewProvider = file.getViewProvider();
         for (Language l : viewProvider.getLanguages()) {
             if (viewProvider.getPsi(l) == file) {
                 lang = l;
@@ -135,13 +131,13 @@ public abstract class PsiAnchor {
     }
 
     @Nullable
+    @RequiredReadAction
     public static StubIndexReference createStubReference(@Nonnull PsiElement element, @Nonnull PsiFile containingFile) {
-        if (element instanceof StubBasedPsiElement && element.isPhysical() && (element instanceof PsiCompiledElement || canHaveStub(
-            containingFile))) {
-            final StubBasedPsiElement elt = (StubBasedPsiElement)element;
-            final IStubElementType elementType = elt.getElementType();
+        if (element instanceof StubBasedPsiElement elt && element.isPhysical()
+            && (element instanceof PsiCompiledElement || canHaveStub(containingFile))) {
+            IStubElementType elementType = elt.getElementType();
             if (elt.getStub() != null || elementType.shouldCreateStub(element.getNode())) {
-                int index = calcStubIndex((StubBasedPsiElement)element);
+                int index = calcStubIndex(elt);
                 if (index != -1) {
                     return new StubIndexReference(containingFile, index, containingFile.getLanguage(), elementType);
                 }
@@ -226,20 +222,17 @@ public abstract class PsiAnchor {
             return myEndOffset;
         }
 
+        @Override
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof TreeRangeReference)) {
-                return false;
-            }
-
-            final TreeRangeReference that = (TreeRangeReference)o;
-
-            return myEndOffset == that.myEndOffset && myStartOffset == that.myStartOffset && myInfo.equals(that.myInfo) && myVirtualFile.equals(
-                that.myVirtualFile);
+            return o == this
+                || o instanceof TreeRangeReference that
+                && myEndOffset == that.myEndOffset
+                && myStartOffset == that.myStartOffset
+                && myInfo.equals(that.myInfo)
+                && myVirtualFile.equals(that.myVirtualFile);
         }
 
+        @Override
         public int hashCode() {
             int result = myInfo.hashCode();
             result = 31 * result + myStartOffset;
@@ -268,29 +261,25 @@ public abstract class PsiAnchor {
         }
 
         @Override
+        @RequiredReadAction
         public int getStartOffset() {
             return myElement.getTextRange().getStartOffset();
         }
 
         @Override
+        @RequiredReadAction
         public int getEndOffset() {
             return myElement.getTextRange().getEndOffset();
         }
 
-
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof HardReference)) {
-                return false;
-            }
-
-            final HardReference that = (HardReference)o;
-
-            return myElement.equals(that.myElement);
+        @Override
+        public boolean equals(Object o) {
+            return o == this
+                || o instanceof HardReference that
+                && myElement.equals(that.myElement);
         }
 
+        @Override
         public int hashCode() {
             return myElement.hashCode();
         }
@@ -343,26 +332,11 @@ public abstract class PsiAnchor {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof PsiFileReference)) {
-                return false;
-            }
-
-            PsiFileReference reference = (PsiFileReference)o;
-
-            if (!myFile.equals(reference.myFile)) {
-                return false;
-            }
-            if (!myLanguage.equals(reference.myLanguage)) {
-                return false;
-            }
-            if (!myProject.equals(reference.myProject)) {
-                return false;
-            }
-
-            return true;
+            return o == this
+                || o instanceof PsiFileReference reference
+                && myFile.equals(reference.myFile)
+                && myLanguage.equals(reference.myLanguage)
+                && myProject.equals(reference.myProject);
         }
 
         @Override
@@ -405,23 +379,10 @@ public abstract class PsiAnchor {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof PsiDirectoryReference)) {
-                return false;
-            }
-
-            PsiDirectoryReference reference = (PsiDirectoryReference)o;
-
-            if (!myFile.equals(reference.myFile)) {
-                return false;
-            }
-            if (!myProject.equals(reference.myProject)) {
-                return false;
-            }
-
-            return true;
+            return o == this
+                || o instanceof PsiDirectoryReference reference
+                && myFile.equals(reference.myFile)
+                && myProject.equals(reference.myProject);
         }
 
         @Override
@@ -479,8 +440,8 @@ public abstract class PsiAnchor {
         private final IStubElementType myElementType;
 
         private StubIndexReference(
-            @Nonnull final PsiFile file,
-            final int index,
+            @Nonnull PsiFile file,
+            int index,
             @Nonnull Language language,
             @Nonnull IStubElementType elementType
         ) {
@@ -514,7 +475,7 @@ public abstract class PsiAnchor {
 
         @Nonnull
         public String diagnoseNull() {
-            final PsiFile file = ReadAction.compute(this::getFile);
+            PsiFile file = ReadAction.compute(this::getFile);
             try {
                 PsiElement element =
                     ReadAction.compute(() -> restoreFromStubIndex((PsiFileWithStubSupport)file, myIndex, myElementType, true));
@@ -523,7 +484,7 @@ public abstract class PsiAnchor {
             catch (AssertionError e) {
                 String msg = e.getMessage();
                 msg += file == null ? "\n no PSI file" : "\n current file stamp=" + (short)file.getModificationStamp();
-                final Document document = FileDocumentManager.getInstance().getCachedDocument(myVirtualFile);
+                Document document = FileDocumentManager.getInstance().getCachedDocument(myVirtualFile);
                 if (document != null) {
                     msg += "\n committed=" + PsiDocumentManager.getInstance(myProject).isCommitted(document);
                     msg += "\n saved=" + !FileDocumentManager.getInstance().isDocumentUnsaved(document);
@@ -533,20 +494,13 @@ public abstract class PsiAnchor {
         }
 
         @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof StubIndexReference)) {
-                return false;
-            }
-
-            final StubIndexReference that = (StubIndexReference)o;
-
-            return myIndex == that.myIndex && myVirtualFile.equals(that.myVirtualFile) && Comparing.equal(
-                myElementType,
-                that.myElementType
-            ) && myLanguage == that.myLanguage;
+        public boolean equals(Object o) {
+            return o == this
+                || o instanceof StubIndexReference that
+                && myIndex == that.myIndex
+                && myVirtualFile.equals(that.myVirtualFile)
+                && Objects.equals(myElementType, that.myElementType)
+                && myLanguage == that.myLanguage;
         }
 
         @Override
@@ -554,25 +508,33 @@ public abstract class PsiAnchor {
             return ((31 * myVirtualFile.hashCode() + myIndex) * 31 + myElementType.hashCode()) * 31 + myLanguage.hashCode();
         }
 
-        @NonNls
         @Override
         public String toString() {
-            return "StubIndexReference{" + "myVirtualFile=" + myVirtualFile + ", myProject=" + myProject + ", myIndex=" + myIndex + ", myLanguage=" + myLanguage + ", myElementType=" + myElementType + '}';
+            return "StubIndexReference{" +
+                "myVirtualFile=" + myVirtualFile +
+                ", myProject=" + myProject +
+                ", myIndex=" + myIndex +
+                ", myLanguage=" + myLanguage +
+                ", myElementType=" + myElementType +
+                '}';
         }
 
         @Override
+        @RequiredReadAction
         public int getStartOffset() {
             return getTextRange().getStartOffset();
         }
 
         @Override
+        @RequiredReadAction
         public int getEndOffset() {
             return getTextRange().getEndOffset();
         }
 
         @Nonnull
+        @RequiredReadAction
         private TextRange getTextRange() {
-            final PsiElement resolved = retrieve();
+            PsiElement resolved = retrieve();
             if (resolved == null) {
                 throw new PsiInvalidElementAccessException(null, "Element type: " + myElementType + "; " + myVirtualFile);
             }
