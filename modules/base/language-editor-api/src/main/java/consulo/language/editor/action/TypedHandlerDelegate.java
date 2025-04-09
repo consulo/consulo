@@ -24,49 +24,55 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TypedHandlerDelegate {
-  public static final ExtensionPointName<TypedHandlerDelegate> EP_NAME = ExtensionPointName.create(TypedHandlerDelegate.class);
+    public static final ExtensionPointName<TypedHandlerDelegate> EP_NAME = ExtensionPointName.create(TypedHandlerDelegate.class);
 
-  /**
-   * If the specified character triggers auto-popup, schedules the auto-popup appearance. This method is called even
-   * in overwrite mode, when the rest of typed handler delegate methods are not called. It is invoked only for the primary caret.
-   */
-  @Nonnull
-  public Result checkAutoPopup(char charTyped, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    return Result.CONTINUE;
-  }
+    /**
+     * If the specified character triggers auto-popup, schedules the auto-popup appearance. This method is called even
+     * in overwrite mode, when the rest of typed handler delegate methods are not called. It is invoked only for the primary caret.
+     */
+    @Nonnull
+    public Result checkAutoPopup(char charTyped, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        return Result.CONTINUE;
+    }
 
-  /**
-   * Called before selected text is deleted.
-   * This method is supposed to be overridden by handlers having custom behaviour with respect to selection.
-   */
-  @Nonnull
-  public Result beforeSelectionRemoved(char c, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    return Result.CONTINUE;
-  }
+    /**
+     * Called before selected text is deleted.
+     * This method is supposed to be overridden by handlers having custom behaviour with respect to selection.
+     */
+    @Nonnull
+    public Result beforeSelectionRemoved(char c, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        return Result.CONTINUE;
+    }
 
-  /**
-   * Called before the specified character typed by the user is inserted in the editor.
-   */
-  @Nonnull
-  public Result beforeCharTyped(char c, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull FileType fileType) {
-    return Result.CONTINUE;
-  }
+    /**
+     * Called before the specified character typed by the user is inserted in the editor.
+     */
+    @Nonnull
+    public Result beforeCharTyped(
+        char c,
+        @Nonnull Project project,
+        @Nonnull Editor editor,
+        @Nonnull PsiFile file,
+        @Nonnull FileType fileType
+    ) {
+        return Result.CONTINUE;
+    }
 
-  /**
-   * Called after the specified character typed by the user has been inserted in the editor.
-   */
-  @Nonnull
-  public Result charTyped(char c, @Nonnull Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
-    return Result.CONTINUE;
-  }
+    /**
+     * Called after the specified character typed by the user has been inserted in the editor.
+     */
+    @Nonnull
+    public Result charTyped(char c, @Nonnull Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
+        return Result.CONTINUE;
+    }
 
-  public boolean isImmediatePaintingEnabled(@Nonnull Editor editor, char c, @Nonnull DataContext context) {
-    return true;
-  }
+    public boolean isImmediatePaintingEnabled(@Nonnull Editor editor, char c, @Nonnull DataContext context) {
+        return true;
+    }
 
-  public enum Result {
-    STOP,
-    CONTINUE,
-    DEFAULT
-  }
+    public enum Result {
+        STOP,
+        CONTINUE,
+        DEFAULT
+    }
 }
