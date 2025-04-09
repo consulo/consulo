@@ -24,7 +24,6 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.content.bundle.*;
 import consulo.content.bundle.event.SdkTableListener;
 import consulo.util.collection.SmartHashSet;
@@ -39,13 +38,13 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
@@ -54,233 +53,236 @@ import java.util.function.Consumer;
 @ServiceImpl
 @State(name = "SdkTable", storages = @Storage(value = "sdk.table.xml", roamingType = RoamingType.DISABLED))
 public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element> {
-  private static final String ELEMENT_SDK = "sdk";
+    private static final String ELEMENT_SDK = "sdk";
 
-  private final List<SdkImpl> mySdks = new ArrayList<>();
+    private final List<SdkImpl> mySdks = new ArrayList<>();
 
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public SdkTableImpl(Application application, Provider<FileTypeRegistry> fileTypeRegistry) {
-    myApplication = application;
-    final MessageBusConnection connection = myApplication.getMessageBus().connect();
+    @Inject
+    public SdkTableImpl(Application application, Provider<FileTypeRegistry> fileTypeRegistry) {
+        myApplication = application;
+        final MessageBusConnection connection = myApplication.getMessageBus().connect();
 
-    // support external changes to sdk libraries (Endorsed Standards Override)
-    connection.subscribe(BulkFileListener.class, new BulkFileListener() {
-      @Override
-      public void after(@Nonnull List<? extends VFileEvent> events) {
-        if (!events.isEmpty()) {
-          final Set<Sdk> affected = new SmartHashSet<>();
-          for (VFileEvent event : events) {
-            addAffectedSdk(event, affected);
-          }
-          if (!affected.isEmpty()) {
-            for (Sdk sdk : affected) {
-              ((SdkType)sdk.getSdkType()).setupSdkPaths(sdk);
+        // support external changes to sdk libraries (Endorsed Standards Override)
+        connection.subscribe(BulkFileListener.class, new BulkFileListener() {
+            @Override
+            public void after(@Nonnull List<? extends VFileEvent> events) {
+                if (!events.isEmpty()) {
+                    final Set<Sdk> affected = new SmartHashSet<>();
+                    for (VFileEvent event : events) {
+                        addAffectedSdk(event, affected);
+                    }
+                    if (!affected.isEmpty()) {
+                        for (Sdk sdk : affected) {
+                            ((SdkType)sdk.getSdkType()).setupSdkPaths(sdk);
+                        }
+                    }
+                }
             }
-          }
-        }
-      }
 
-      private void addAffectedSdk(VFileEvent event, Set<? super Sdk> affected) {
-        CharSequence fileName = null;
-        if (event instanceof VFileCreateEvent) {
-          if (((VFileCreateEvent)event).isDirectory()) return;
-          fileName = ((VFileCreateEvent)event).getChildName();
-        }
-        else {
-          final VirtualFile file = event.getFile();
+            private void addAffectedSdk(VFileEvent event, Set<? super Sdk> affected) {
+                CharSequence fileName = null;
+                if (event instanceof VFileCreateEvent) {
+                    if (((VFileCreateEvent)event).isDirectory()) {
+                        return;
+                    }
+                    fileName = ((VFileCreateEvent)event).getChildName();
+                }
+                else {
+                    final VirtualFile file = event.getFile();
 
-          if (file != null && file.isValid()) {
-            if (file.isDirectory()) {
-              return;
+                    if (file != null && file.isValid()) {
+                        if (file.isDirectory()) {
+                            return;
+                        }
+                        fileName = file.getNameSequence();
+                    }
+                }
+                if (fileName == null) {
+                    final String eventPath = event.getPath();
+                    fileName = VirtualFileUtil.extractFileName(eventPath);
+                }
+                if (fileName != null) {
+                    // avoid calling getFileType() because it will try to detect file type from content for unknown/text file types
+                    // consider only archive files that may contain libraries
+                    FileType fileType = fileTypeRegistry.get().getFileTypeByFileName(fileName);
+                    if (!(fileType instanceof ArchiveFileType)) {
+                        return;
+                    }
+                }
+
+                for (Sdk sdk : mySdks) {
+                    if (!affected.contains(sdk)) {
+                        final String homePath = sdk.getHomePath();
+                        final String eventPath = event.getPath();
+                        if (!StringUtil.isEmpty(homePath) && FileUtil.isAncestor(homePath, eventPath, true)) {
+                            affected.add(sdk);
+                        }
+                    }
+                }
             }
-            fileName = file.getNameSequence();
-          }
-        }
-        if (fileName == null) {
-          final String eventPath = event.getPath();
-          fileName = VirtualFileUtil.extractFileName(eventPath);
-        }
-        if (fileName != null) {
-          // avoid calling getFileType() because it will try to detect file type from content for unknown/text file types
-          // consider only archive files that may contain libraries
-          FileType fileType = fileTypeRegistry.get().getFileTypeByFileName(fileName);
-          if (!(fileType instanceof ArchiveFileType)) {
-            return;
-          }
-        }
+        });
+    }
 
+    @Override
+    @Nullable
+    public Sdk findSdk(String name) {
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0, len = mySdks.size(); i < len; ++i) {
+            // avoid foreach, it instantiates ArrayList$Itr, this traversal happens very often
+            final Sdk jdk = mySdks.get(i);
+            if (Comparing.strEqual(name, jdk.getName())) {
+                return jdk;
+            }
+        }
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public Sdk[] getAllSdks() {
+        return mySdks.toArray(new Sdk[mySdks.size()]);
+    }
+
+    @Override
+    public void forEachBundle(@Nonnull Consumer<Sdk> sdkConsumer) {
+        for (SdkImpl sdk : mySdks) {
+            sdkConsumer.accept(sdk);
+        }
+    }
+
+    @Override
+    public List<Sdk> getSdksOfType(final SdkTypeId type) {
+        List<Sdk> result = new ArrayList<>();
+        final Sdk[] sdks = getAllSdks();
+        for (Sdk sdk : sdks) {
+            if (sdk.getSdkType() == type) {
+                result.add(sdk);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    @Nullable
+    public Sdk findPredefinedSdkByType(@Nonnull SdkTypeId sdkType) {
         for (Sdk sdk : mySdks) {
-          if (!affected.contains(sdk)) {
-            final String homePath = sdk.getHomePath();
-            final String eventPath = event.getPath();
-            if (!StringUtil.isEmpty(homePath) && FileUtil.isAncestor(homePath, eventPath, true)) {
-              affected.add(sdk);
+            if (sdk.isPredefined() && sdk.getSdkType() == sdkType) {
+                return sdk;
             }
-          }
         }
-      }
-    });
-  }
-
-  @Override
-  @Nullable
-  public Sdk findSdk(String name) {
-    //noinspection ForLoopReplaceableByForEach
-    for (int i = 0, len = mySdks.size(); i < len; ++i) { // avoid foreach,  it instantiates ArrayList$Itr, this traversal happens very often
-      final Sdk jdk = mySdks.get(i);
-      if (Comparing.strEqual(name, jdk.getName())) {
-        return jdk;
-      }
-    }
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public Sdk[] getAllSdks() {
-    return mySdks.toArray(new Sdk[mySdks.size()]);
-  }
-
-  @Override
-  public void forEachBundle(@Nonnull Consumer<Sdk> sdkConsumer) {
-    for (SdkImpl sdk : mySdks) {
-      sdkConsumer.accept(sdk);
-    }
-  }
-
-  @Override
-  public List<Sdk> getSdksOfType(final SdkTypeId type) {
-    List<Sdk> result = new ArrayList<>();
-    final Sdk[] sdks = getAllSdks();
-    for (Sdk sdk : sdks) {
-      if (sdk.getSdkType() == type) {
-        result.add(sdk);
-      }
-    }
-    return result;
-  }
-
-  @Override
-  @Nullable
-  public Sdk findPredefinedSdkByType(@Nonnull SdkTypeId sdkType) {
-    for (Sdk sdk : mySdks) {
-      if (sdk.isPredefined() && sdk.getSdkType() == sdkType) {
-        return sdk;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Add sdks without write access, and without listener notify
-   */
-  public void addSdksUnsafe(@Nonnull Collection<? extends Sdk> sdks) {
-    for (Sdk sdk : sdks) {
-      mySdks.add((SdkImpl)sdk);
-    }
-  }
-
-  @Override
-  @RequiredWriteAction
-  public void addSdk(@Nonnull Sdk sdk) {
-    myApplication.assertWriteAccessAllowed();
-    myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkAdded(sdk);
-    mySdks.add((SdkImpl)sdk);
-    myApplication.getMessageBus().syncPublisher(SdkTableListener.class).sdkAdded(sdk);
-  }
-
-  @Override
-  @RequiredWriteAction
-  public void removeSdk(@Nonnull Sdk sdk) {
-    myApplication.assertWriteAccessAllowed();
-    myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkRemoved(sdk);
-    mySdks.remove(sdk);
-    myApplication.getMessageBus().syncPublisher(SdkTableListener.class).sdkRemoved(sdk);
-  }
-
-  @Override
-  @RequiredWriteAction
-  public void updateSdk(@Nonnull Sdk originalSdk, @Nonnull Sdk modifiedSdk) {
-    myApplication.assertWriteAccessAllowed();
-    final String previousName = originalSdk.getName();
-    final String newName = modifiedSdk.getName();
-
-    boolean nameChanged = !previousName.equals(newName);
-    if (nameChanged) {
-      myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkNameChanged(originalSdk, previousName);
+        return null;
     }
 
-    ((SdkImpl)modifiedSdk).copyTo((SdkImpl)originalSdk);
-
-    if (nameChanged) {
-      myApplication.getMessageBus().syncPublisher(SdkTableListener.class).sdkNameChanged(originalSdk, previousName);
-    }
-  }
-
-  @Override
-  public SdkTypeId getDefaultSdkType() {
-    return UnknownSdkType.getInstance(null);
-  }
-
-  @Override
-  public SdkTypeId getSdkTypeByName(String sdkTypeName) {
-    return findSdkTypeByName(sdkTypeName);
-  }
-
-  public static SdkTypeId findSdkTypeByName(String sdkTypeName) {
-    for (final SdkType type : SdkType.EP_NAME.getExtensionList()) {
-      if (type.getId().equals(sdkTypeName)) {
-        return type;
-      }
-    }
-    return UnknownSdkType.getInstance(sdkTypeName);
-  }
-
-  @Nonnull
-  @Override
-  @SuppressWarnings("deprecation")
-  public Sdk createSdk(final String name, final SdkTypeId sdkType) {
-    return new SdkImpl(this, name, sdkType);
-  }
-
-  @Nonnull
-  @Override
-  public Sdk createSdk(@Nonnull Path homePath, @Nonnull String name, @Nonnull SdkTypeId sdkType) {
-    return new SdkImpl(this, sdkType, homePath, name);
-  }
-
-  @Override
-  public void loadState(Element element) {
-    Iterator<SdkImpl> iterator = mySdks.iterator();
-    while (iterator.hasNext()) {
-      SdkImpl sdk = iterator.next();
-
-      if (!sdk.isPredefined()) {
-        iterator.remove();
-      }
+    /**
+     * Add sdks without write access, and without listener notify
+     */
+    public void addSdksUnsafe(@Nonnull Collection<? extends Sdk> sdks) {
+        for (Sdk sdk : sdks) {
+            mySdks.add((SdkImpl)sdk);
+        }
     }
 
-    List<Element> children = element.getChildren(ELEMENT_SDK);
-
-    for (final Element child : children) {
-      final SdkImpl sdk = new SdkImpl(this, null, null);
-      sdk.readExternal(child, this);
-      mySdks.add(sdk);
+    @Override
+    @RequiredWriteAction
+    public void addSdk(@Nonnull Sdk sdk) {
+        myApplication.assertWriteAccessAllowed();
+        myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkAdded(sdk);
+        mySdks.add((SdkImpl)sdk);
+        myApplication.getMessageBus().syncPublisher(SdkTableListener.class).sdkAdded(sdk);
     }
-  }
 
-  @Override
-  public Element getState() {
-    Element element = new Element("SdkTable");
-    for (Sdk sdk : mySdks) {
-      if (!sdk.isPredefined()) {
-        Element e = new Element(ELEMENT_SDK);
-        ((SdkImpl)sdk).writeExternal(e);
-        element.addContent(e);
-      }
+    @Override
+    @RequiredWriteAction
+    public void removeSdk(@Nonnull Sdk sdk) {
+        myApplication.assertWriteAccessAllowed();
+        myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkRemoved(sdk);
+        mySdks.remove(sdk);
+        myApplication.getMessageBus().syncPublisher(SdkTableListener.class).sdkRemoved(sdk);
     }
-    return element;
-  }
+
+    @Override
+    @RequiredWriteAction
+    public void updateSdk(@Nonnull Sdk originalSdk, @Nonnull Sdk modifiedSdk) {
+        myApplication.assertWriteAccessAllowed();
+        final String previousName = originalSdk.getName();
+        final String newName = modifiedSdk.getName();
+
+        boolean nameChanged = !previousName.equals(newName);
+        if (nameChanged) {
+            myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkNameChanged(originalSdk, previousName);
+        }
+
+        ((SdkImpl)modifiedSdk).copyTo((SdkImpl)originalSdk);
+
+        if (nameChanged) {
+            myApplication.getMessageBus().syncPublisher(SdkTableListener.class).sdkNameChanged(originalSdk, previousName);
+        }
+    }
+
+    @Override
+    public SdkTypeId getDefaultSdkType() {
+        return UnknownSdkType.getInstance(null);
+    }
+
+    @Override
+    public SdkTypeId getSdkTypeByName(String sdkTypeName) {
+        return findSdkTypeByName(sdkTypeName);
+    }
+
+    public static SdkTypeId findSdkTypeByName(String sdkTypeName) {
+        for (final SdkType type : SdkType.EP_NAME.getExtensionList()) {
+            if (type.getId().equals(sdkTypeName)) {
+                return type;
+            }
+        }
+        return UnknownSdkType.getInstance(sdkTypeName);
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("deprecation")
+    public Sdk createSdk(final String name, final SdkTypeId sdkType) {
+        return new SdkImpl(this, name, sdkType);
+    }
+
+    @Nonnull
+    @Override
+    public Sdk createSdk(@Nonnull Path homePath, @Nonnull String name, @Nonnull SdkTypeId sdkType) {
+        return new SdkImpl(this, sdkType, homePath, name);
+    }
+
+    @Override
+    public void loadState(Element element) {
+        Iterator<SdkImpl> iterator = mySdks.iterator();
+        while (iterator.hasNext()) {
+            SdkImpl sdk = iterator.next();
+
+            if (!sdk.isPredefined()) {
+                iterator.remove();
+            }
+        }
+
+        List<Element> children = element.getChildren(ELEMENT_SDK);
+
+        for (final Element child : children) {
+            final SdkImpl sdk = new SdkImpl(this, null, null);
+            sdk.readExternal(child, this);
+            mySdks.add(sdk);
+        }
+    }
+
+    @Override
+    public Element getState() {
+        Element element = new Element("SdkTable");
+        for (Sdk sdk : mySdks) {
+            if (!sdk.isPredefined()) {
+                Element e = new Element(ELEMENT_SDK);
+                ((SdkImpl)sdk).writeExternal(e);
+                element.addContent(e);
+            }
+        }
+        return element;
+    }
 }

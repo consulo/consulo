@@ -26,88 +26,92 @@ import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author nik
  */
 public class ArtifactConfigurable extends ArtifactConfigurableBase {
-  private boolean myIsInUpdateName;
+    private boolean myIsInUpdateName;
 
-  public ArtifactConfigurable(Artifact originalArtifact, ArtifactsStructureConfigurableContextImpl artifactsStructureContext, final Runnable updateTree) {
-    super(originalArtifact, artifactsStructureContext, updateTree, true);
-  }
-
-  @Override
-  public void setDisplayName(String name) {
-    final String oldName = getArtifact().getName();
-    if (name != null && !name.equals(oldName) && !myIsInUpdateName) {
-      myArtifactsStructureContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact).setName(name);
-      getEditor().updateOutputPath(oldName, name);
-    }
-  }
-
-  @Override
-  public void updateName() {
-    myIsInUpdateName = true;
-    try {
-      super.updateName();
-    }
-    finally {
-      myIsInUpdateName = false;
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public JComponent createOptionsPanel(@Nonnull Disposable parentDisposable) {
-    return getEditor().createMainComponent();
-  }
-
-  @Override
-  protected JComponent createTopRightComponent(final JTextField nameField) {
-    final ComboBox artifactTypeBox = new ComboBox();
-    for (ArtifactType type : ArtifactType.EP_NAME.getExtensionList()) {
-      artifactTypeBox.addItem(type);
+    public ArtifactConfigurable(
+        Artifact originalArtifact,
+        ArtifactsStructureConfigurableContextImpl artifactsStructureContext,
+        Runnable updateTree
+    ) {
+        super(originalArtifact, artifactsStructureContext, updateTree, true);
     }
 
-    artifactTypeBox.setRenderer(new ArtifactTypeCellRenderer());
-
-    artifactTypeBox.setSelectedItem(getArtifact().getArtifactType());
-    artifactTypeBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        final ArtifactType selected = (ArtifactType)artifactTypeBox.getSelectedItem();
-        if (selected != null && !Comparing.equal(selected, getArtifact().getArtifactType())) {
-          getEditor().setArtifactType(selected);
+    @Override
+    public void setDisplayName(String name) {
+        String oldName = getArtifact().getName();
+        if (name != null && !name.equals(oldName) && !myIsInUpdateName) {
+            myArtifactsStructureContext.getOrCreateModifiableArtifactModel()
+                .getOrCreateModifiableArtifact(myOriginalArtifact)
+                .setName(name);
+            getEditor().updateOutputPath(oldName, name);
         }
-      }
-    });
+    }
 
-    return LabeledComponent.left(artifactTypeBox, "Type");
-  }
+    @Override
+    public void updateName() {
+        myIsInUpdateName = true;
+        try {
+            super.updateName();
+        }
+        finally {
+            myIsInUpdateName = false;
+        }
+    }
 
-  @Override
-  public boolean isModified() {
-    return getEditor().isModified();
-  }
+    @RequiredUIAccess
+    @Override
+    public JComponent createOptionsPanel(@Nonnull Disposable parentDisposable) {
+        return getEditor().createMainComponent();
+    }
 
-  @Override
-  public void apply() throws ConfigurationException {
-    getEditor().apply();
-  }
+    @Override
+    protected JComponent createTopRightComponent(JTextField nameField) {
+        ComboBox<ArtifactType> artifactTypeBox = new ComboBox<>();
+        for (ArtifactType type : ArtifactType.EP_NAME.getExtensionList()) {
+            artifactTypeBox.addItem(type);
+        }
 
-  @Override
-  public void reset() {
-  }
+        artifactTypeBox.setRenderer(new ArtifactTypeCellRenderer());
 
-  @Override
-  public String getHelpTopic() {
-    return getEditor().getHelpTopic();
-  }
+        artifactTypeBox.setSelectedItem(getArtifact().getArtifactType());
+        artifactTypeBox.addActionListener(e -> {
+            ArtifactType selected = (ArtifactType)artifactTypeBox.getSelectedItem();
+            if (selected != null && !Comparing.equal(selected, getArtifact().getArtifactType())) {
+                getEditor().setArtifactType(selected);
+            }
+        });
 
-  private ArtifactEditorImpl getEditor() {
-    return myArtifactsStructureContext.getOrCreateEditor(myOriginalArtifact);
-  }
+        return LabeledComponent.left(artifactTypeBox, "Type");
+    }
+
+    @Override
+    @RequiredUIAccess
+    public boolean isModified() {
+        return getEditor().isModified();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void apply() throws ConfigurationException {
+        getEditor().apply();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void reset() {
+    }
+
+    @Override
+    public String getHelpTopic() {
+        return getEditor().getHelpTopic();
+    }
+
+    private ArtifactEditorImpl getEditor() {
+        return myArtifactsStructureContext.getOrCreateEditor(myOriginalArtifact);
+    }
 }

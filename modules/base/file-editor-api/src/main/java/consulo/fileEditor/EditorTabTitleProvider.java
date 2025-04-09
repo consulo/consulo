@@ -30,13 +30,13 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface EditorTabTitleProvider {
-  ExtensionPointName<EditorTabTitleProvider> EP_NAME = ExtensionPointName.create(EditorTabTitleProvider.class);
+    ExtensionPointName<EditorTabTitleProvider> EP_NAME = ExtensionPointName.create(EditorTabTitleProvider.class);
 
-  @Nullable
-  String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file);
+    @Nullable
+    String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file);
 
-  @Nullable
-  default String getEditorTabTooltipText(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
-    return null;
-  }
+    @Nullable
+    default String getEditorTabTooltipText(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+        return null;
+    }
 }

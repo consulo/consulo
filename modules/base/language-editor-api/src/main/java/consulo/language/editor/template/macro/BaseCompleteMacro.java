@@ -55,15 +55,15 @@ public abstract class BaseCompleteMacro extends Macro {
     }
 
     @Override
-    public final Result calculateResult(@Nonnull Expression[] params, final ExpressionContext context) {
+    public final Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
         return new InvokeActionResult(() -> invokeCompletion(context));
     }
 
-    private void invokeCompletion(final ExpressionContext context) {
-        final Project project = context.getProject();
-        final Editor editor = context.getEditor();
+    private void invokeCompletion(ExpressionContext context) {
+        Project project = context.getProject();
+        Editor editor = context.getEditor();
 
-        final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
+        PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
         Runnable runnable = () -> {
             if (project.isDisposed() || editor.isDisposed() || psiFile == null || !psiFile.isValid()) {
                 return;
@@ -128,7 +128,7 @@ public abstract class BaseCompleteMacro extends Macro {
                 }
             }
 
-            final Project project = myContext.getProject();
+            Project project = myContext.getProject();
             if (project == null) {
                 return;
             }

@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.configurable.*;
@@ -144,6 +143,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         fireListChanged();
     }
 
+    @Nonnull
     @Override
     public String getDisplayName() {
         return IdeLocalize.titleFileTemplates().get();
@@ -233,7 +233,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         myTabbedPane.addChangeListener(e -> onTabChanged());
 
         DefaultActionGroup group = new DefaultActionGroup();
-        AnAction removeAction = new AnAction(IdeLocalize.actionRemoveTemplate(), LocalizeValue.empty(), AllIcons.General.Remove) {
+        AnAction removeAction = new AnAction(IdeLocalize.actionRemoveTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -249,7 +249,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                     .setEnabled(selectedItem != null && !isInternalTemplate(selectedItem.getName(), myCurrentTab.getTitle()));
             }
         };
-        AnAction addAction = new AnAction(IdeLocalize.actionCreateTemplate(), LocalizeValue.empty(), AllIcons.General.Add) {
+        AnAction addAction = new AnAction(IdeLocalize.actionCreateTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -281,7 +281,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                 );
             }
         };
-        AnAction resetAction = new AnAction(IdeLocalize.actionResetToDefault(), LocalizeValue.empty(), AllIcons.General.Reset) {
+        AnAction resetAction = new AnAction(IdeLocalize.actionResetToDefault(), LocalizeValue.empty(), PlatformIconGroup.generalReset()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -332,10 +332,10 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         myMainPanel.add(toolbarPanel, BorderLayout.NORTH);
         myMainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        final ApplicationPropertiesComponent propertiesComponent = ApplicationPropertiesComponent.getInstance();
-        final String tabName = propertiesComponent.getValue(CURRENT_TAB);
+        ApplicationPropertiesComponent propertiesComponent = ApplicationPropertiesComponent.getInstance();
+        String tabName = propertiesComponent.getValue(CURRENT_TAB);
         if (selectTab(tabName)) {
-            //final String selectedTemplateName = propertiesComponent.getValue(SELECTED_TEMPLATE);
+            //String selectedTemplateName = propertiesComponent.getValue(SELECTED_TEMPLATE);
             //for (FileTemplate template : myCurrentTab.getTemplates()) {
             //  if (Comparing.strEqual(template.getName(), selectedTemplateName)) {
             //    myCurrentTab.selectTemplate(template);
@@ -373,7 +373,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     private void onTabChanged() {
         applyEditor(myCurrentTab.getSelectedTemplate());
 
-        final int selectedIndex = myTabbedPane.getSelectedIndex();
+        int selectedIndex = myTabbedPane.getSelectedIndex();
         if (0 <= selectedIndex && selectedIndex < myTabs.length) {
             myCurrentTab = myTabs[selectedIndex];
         }
@@ -431,7 +431,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         }
         if (myEditor.getTemplate() != template) {
             myEditor.setTemplate(template, defDesc);
-            final boolean isInternal = template != null && isInternalTemplate(template.getName(), myCurrentTab.getTitle());
+            boolean isInternal = template != null && isInternalTemplate(template.getName(), myCurrentTab.getTitle());
             myEditor.setShowInternalMessage(isInternal ? " " : null);
             myEditor.setShowAdjustCheckBox(myTemplatesList == myCurrentTab);
         }
@@ -458,7 +458,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         return false;
     }
 
-    private static boolean isInternalTemplateName(final String templateName) {
+    private static boolean isInternalTemplateName(String templateName) {
         return FileTemplateRegistratorImpl.last().getInternalTemplates().containsKey(templateName);
     }
 
@@ -497,13 +497,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
     @RequiredUIAccess
     private void checkCanApply(FileTemplateTab list) throws ConfigurationException {
-        final FileTemplate[] templates = myCurrentTab.getTemplates();
-        final List<String> allNames = new ArrayList<>();
+        FileTemplate[] templates = myCurrentTab.getTemplates();
+        List<String> allNames = new ArrayList<>();
         FileTemplate itemWithError = null;
         boolean errorInName = true;
         LocalizeValue errorMessage = LocalizeValue.empty();
         for (FileTemplate template : templates) {
-            final String currName = template.getName();
+            String currName = template.getName();
             if (currName.isEmpty()) {
                 itemWithError = template;
                 errorMessage = IdeLocalize.errorPleaseSpecifyTemplateName();
@@ -518,7 +518,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         }
 
         if (itemWithError != null) {
-            final boolean _errorInName = errorInName;
+            boolean _errorInName = errorInName;
             myTabbedPane.setSelectedIndex(Arrays.asList(myTabs).indexOf(list));
             selectTemplate(itemWithError);
             list.selectTemplate(itemWithError);
@@ -603,9 +603,9 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     @Override
     public void disposeUIResources() {
         if (myCurrentTab != null) {
-            final ApplicationPropertiesComponent propertiesComponent = ApplicationPropertiesComponent.getInstance();
+            ApplicationPropertiesComponent propertiesComponent = ApplicationPropertiesComponent.getInstance();
             propertiesComponent.setValue(CURRENT_TAB, myCurrentTab.getTitle(), IdeLocalize.tabFiletemplatesTemplates().get());
-            final FileTemplate template = myCurrentTab.getSelectedTemplate();
+            FileTemplate template = myCurrentTab.getSelectedTemplate();
             if (template != null) {
                 propertiesComponent.setValue(SELECTED_TEMPLATE, template.getName());
             }
@@ -644,9 +644,9 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     }
 
     @RequiredUIAccess
-    public static void editCodeTemplate(@Nonnull final String templateId, Project project) {
-        final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
-        final AllFileTemplatesConfigurable configurable = new AllFileTemplatesConfigurable(project);
+    public static void editCodeTemplate(@Nonnull String templateId, Project project) {
+        ShowSettingsUtil util = ShowSettingsUtil.getInstance();
+        AllFileTemplatesConfigurable configurable = new AllFileTemplatesConfigurable(project);
         util.editConfigurable(
             project,
             configurable,

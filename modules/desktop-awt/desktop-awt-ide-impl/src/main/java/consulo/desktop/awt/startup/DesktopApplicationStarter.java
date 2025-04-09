@@ -16,8 +16,6 @@
 package consulo.desktop.awt.startup;
 
 import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.ui.FlatNativeMacLibrary;
-import com.formdev.flatlaf.ui.FlatNativeWindowsLibrary;
 import com.formdev.flatlaf.util.HiDPIUtils;
 import com.google.gson.Gson;
 import consulo.application.Application;
@@ -41,7 +39,6 @@ import consulo.desktop.awt.application.impl.DesktopApplicationImpl;
 import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.desktop.awt.ui.plaf.LafManagerImpl;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.desktop.awt.uiOld.DesktopAWTFontRegistry;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
@@ -72,7 +69,6 @@ import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.lang.Couple;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -237,10 +233,10 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             // Event queue should not be changed during initialization of application components.
             // It also cannot be changed before initialization of application components because IdeEventQueue uses other
             // application components. So it is proper to perform replacement only here.
-            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl) WindowManager.getInstance();
+            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
             IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl) RecentProjectsManager.getInstance();
+            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl)RecentProjectsManager.getInstance();
 
             if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
                 SwingUtilities.invokeLater(windowManager::showFrame);
@@ -340,8 +336,11 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                             String description = event.getDescription();
                             if (PluginsInitializeInfo.EDIT.equals(description)) {
                                 IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-                                ShowSettingsUtil.getInstance()
-                                    .showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginContants.CONFIGURABLE_ID, null);
+                                ShowSettingsUtil.getInstance().showSettingsDialog(
+                                    ideFrame == null ? null : ideFrame.getProject(),
+                                    PluginContants.CONFIGURABLE_ID,
+                                    null
+                                );
                             }
                         }
                     }

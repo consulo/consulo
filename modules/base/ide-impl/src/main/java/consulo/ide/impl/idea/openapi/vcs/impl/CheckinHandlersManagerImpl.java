@@ -27,6 +27,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,52 +40,52 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class CheckinHandlersManagerImpl extends CheckinHandlersManager {
-  private final List<BaseCheckinHandlerFactory> myRegisteredBeforeCheckinHandlers;
-  private final MultiMap<VcsKey, VcsCheckinHandlerFactory> myVcsMap;
+    private final List<BaseCheckinHandlerFactory> myRegisteredBeforeCheckinHandlers;
+    private final MultiMap<VcsKey, VcsCheckinHandlerFactory> myVcsMap;
 
-  @Inject
-  public CheckinHandlersManagerImpl() {
-    myVcsMap = new MultiMap<>();
-    myRegisteredBeforeCheckinHandlers = new ArrayList<>();
+    @Inject
+    public CheckinHandlersManagerImpl() {
+        myVcsMap = new MultiMap<>();
+        myRegisteredBeforeCheckinHandlers = new ArrayList<>();
 
-    myRegisteredBeforeCheckinHandlers.addAll(CheckinHandlerFactory.EP_NAME.getExtensionList());
-    for (VcsCheckinHandlerFactory factory : VcsCheckinHandlerFactory.EP_NAME.getExtensionList()) {
-      myVcsMap.putValue(factory.getKey(), factory);
+        myRegisteredBeforeCheckinHandlers.addAll(CheckinHandlerFactory.EP_NAME.getExtensionList());
+        for (VcsCheckinHandlerFactory factory : VcsCheckinHandlerFactory.EP_NAME.getExtensionList()) {
+            myVcsMap.putValue(factory.getKey(), factory);
+        }
     }
-  }
 
-  @Override
-  public List<BaseCheckinHandlerFactory> getRegisteredCheckinHandlerFactories(AbstractVcs[] allActiveVcss) {
-    final ArrayList<BaseCheckinHandlerFactory> list = new ArrayList<>(myRegisteredBeforeCheckinHandlers.size() + allActiveVcss.length);
-    list.addAll(myRegisteredBeforeCheckinHandlers);
-    for (AbstractVcs vcs : allActiveVcss) {
-      final Collection<VcsCheckinHandlerFactory> factories = myVcsMap.get(vcs.getKeyInstanceMethod());
-      if (!factories.isEmpty()) {
-        list.addAll(factories);
-      }
+    @Override
+    public List<BaseCheckinHandlerFactory> getRegisteredCheckinHandlerFactories(AbstractVcs[] allActiveVcss) {
+        List<BaseCheckinHandlerFactory> list = new ArrayList<>(myRegisteredBeforeCheckinHandlers.size() + allActiveVcss.length);
+        list.addAll(myRegisteredBeforeCheckinHandlers);
+        for (AbstractVcs vcs : allActiveVcss) {
+            Collection<VcsCheckinHandlerFactory> factories = myVcsMap.get(vcs.getKeyInstanceMethod());
+            if (!factories.isEmpty()) {
+                list.addAll(factories);
+            }
+        }
+        return list;
     }
-    return list;
-  }
 
-  @Override
-  public List<VcsCheckinHandlerFactory> getMatchingVcsFactories(@Nonnull List<AbstractVcs> vcsList) {
-    final SmartList<VcsCheckinHandlerFactory> result = new SmartList<>();
-    for (AbstractVcs vcs : vcsList) {
-      final Collection<VcsCheckinHandlerFactory> factories = myVcsMap.get(vcs.getKeyInstanceMethod());
-      if (!factories.isEmpty()) {
-        result.addAll(factories);
-      }
+    @Override
+    public List<VcsCheckinHandlerFactory> getMatchingVcsFactories(@Nonnull List<AbstractVcs> vcsList) {
+        List<VcsCheckinHandlerFactory> result = new SmartList<>();
+        for (AbstractVcs vcs : vcsList) {
+            Collection<VcsCheckinHandlerFactory> factories = myVcsMap.get(vcs.getKeyInstanceMethod());
+            if (!factories.isEmpty()) {
+                result.addAll(factories);
+            }
+        }
+        return result;
     }
-    return result;
-  }
 
-  @Override
-  public void registerCheckinHandlerFactory(BaseCheckinHandlerFactory factory) {
-    myRegisteredBeforeCheckinHandlers.add(factory);
-  }
+    @Override
+    public void registerCheckinHandlerFactory(BaseCheckinHandlerFactory factory) {
+        myRegisteredBeforeCheckinHandlers.add(factory);
+    }
 
-  @Override
-  public void unregisterCheckinHandlerFactory(BaseCheckinHandlerFactory handler) {
-    myRegisteredBeforeCheckinHandlers.remove(handler);
-  }
+    @Override
+    public void unregisterCheckinHandlerFactory(BaseCheckinHandlerFactory handler) {
+        myRegisteredBeforeCheckinHandlers.remove(handler);
+    }
 }

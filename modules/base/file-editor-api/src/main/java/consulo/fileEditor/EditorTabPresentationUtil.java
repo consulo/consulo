@@ -10,46 +10,50 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class EditorTabPresentationUtil {
-  @Nonnull
-  public static String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
-    for (EditorTabTitleProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabTitleProvider.EP_NAME)) {
-      String result = provider.getEditorTabTitle(project, file);
-      if (StringUtil.isNotEmpty(result)) {
-        return result;
-      }
+    @Nonnull
+    public static String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
+        for (EditorTabTitleProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabTitleProvider.EP_NAME)) {
+            String result = provider.getEditorTabTitle(project, file);
+            if (StringUtil.isNotEmpty(result)) {
+                return result;
+            }
+        }
+
+        return file.getPresentableName();
     }
 
-    return file.getPresentableName();
-  }
-
-  @Nonnull
-  public static String getUniqueEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
-    String name = getEditorTabTitle(project, file);
-    if (name.equals(file.getPresentableName())) {
-      return UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file);
+    @Nonnull
+    public static String getUniqueEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
+        String name = getEditorTabTitle(project, file);
+        if (name.equals(file.getPresentableName())) {
+            return UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file);
+        }
+        return name;
     }
-    return name;
-  }
 
-  @Nullable
-  public static ColorValue getEditorTabBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
-    for (EditorTabColorProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabColorProvider.EP_NAME)) {
-        ColorValue result = provider.getEditorTabColor(project, file, editorWindow);
-      if (result != null) {
-        return result;
-      }
+    @Nullable
+    public static ColorValue getEditorTabBackgroundColor(
+        @Nonnull Project project,
+        @Nonnull VirtualFile file,
+        @Nullable FileEditorWindow editorWindow
+    ) {
+        for (EditorTabColorProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabColorProvider.EP_NAME)) {
+            ColorValue result = provider.getEditorTabColor(project, file, editorWindow);
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
     }
-    return null;
-  }
 
-  @Nullable
-  public static ColorValue getFileBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    for (EditorTabColorProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabColorProvider.EP_NAME)) {
-      ColorValue result = provider.getProjectViewColor(project, file);
-      if (result != null) {
-        return result;
-      }
+    @Nullable
+    public static ColorValue getFileBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+        for (EditorTabColorProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabColorProvider.EP_NAME)) {
+            ColorValue result = provider.getProjectViewColor(project, file);
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
     }
-    return null;
-  }
 }

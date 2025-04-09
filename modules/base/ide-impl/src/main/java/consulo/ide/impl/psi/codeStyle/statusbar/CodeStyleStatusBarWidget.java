@@ -53,8 +53,8 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         }
         CodeStyleSettings settings = CodeStyle.getSettings(psiFile);
         IndentOptions indentOptions = CodeStyle.getIndentOptions(psiFile);
-        if (settings instanceof TransientCodeStyleSettings) {
-            return createWidgetState(psiFile, indentOptions, getUiContributor((TransientCodeStyleSettings) settings));
+        if (settings instanceof TransientCodeStyleSettings codeStyleSettings) {
+            return createWidgetState(psiFile, indentOptions, getUiContributor(codeStyleSettings));
         }
         else {
             return createWidgetState(psiFile, indentOptions, getUiContributor(file, indentOptions));
@@ -64,7 +64,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
 
     @Nullable
     private static CodeStyleStatusBarUIContributor getUiContributor(@Nonnull TransientCodeStyleSettings settings) {
-        final CodeStyleSettingsModifier modifier = settings.getModifier();
+        CodeStyleSettingsModifier modifier = settings.getModifier();
         return modifier != null ? modifier.getStatusBarUiContributor(settings) : null;
     }
 
@@ -72,10 +72,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
     @Nullable
     private static IndentStatusBarUIContributor getUiContributor(@Nonnull VirtualFile file, @Nonnull IndentOptions indentOptions) {
         FileIndentOptionsProvider provider = findProvider(file, indentOptions);
-        if (provider != null) {
-            return provider.getIndentStatusBarUiContributor(indentOptions);
-        }
-        return null;
+        return provider != null ? provider.getIndentStatusBarUiContributor(indentOptions) : null;
     }
 
     @Nullable
@@ -93,11 +90,19 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         return null;
     }
 
-    private static WidgetState createWidgetState(@Nonnull PsiFile psiFile,
-                                                 @Nonnull final IndentOptions indentOptions,
-                                                 @Nullable CodeStyleStatusBarUIContributor uiContributor) {
+    private static WidgetState createWidgetState(
+        @Nonnull PsiFile psiFile,
+        @Nonnull IndentOptions indentOptions,
+        @Nullable CodeStyleStatusBarUIContributor uiContributor
+    ) {
         if (uiContributor != null) {
-            return new MyWidgetState(uiContributor.getTooltip(), uiContributor.getStatusText(psiFile), psiFile, indentOptions, uiContributor);
+            return new MyWidgetState(
+                uiContributor.getTooltip(),
+                uiContributor.getStatusText(psiFile),
+                psiFile,
+                indentOptions,
+                uiContributor
+            );
         }
         else {
             String indentInfo = IndentStatusBarUIContributor.getIndentInfo(indentOptions);
@@ -122,8 +127,8 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         WidgetState state = getWidgetState(context.getData(VirtualFile.KEY));
         Editor editor = getEditor();
         PsiFile psiFile = getPsiFile();
-        if (state instanceof MyWidgetState && editor != null && psiFile != null) {
-            final CodeStyleStatusBarUIContributor uiContributor = ((MyWidgetState) state).getContributor();
+        if (state instanceof MyWidgetState widgetState && editor != null && psiFile != null) {
+            CodeStyleStatusBarUIContributor uiContributor = widgetState.getContributor();
             AnAction[] actions = getActions(uiContributor, psiFile);
             ActionGroup actionGroup = new ActionGroup() {
                 @Override
@@ -132,18 +137,19 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
                     return actions;
                 }
             };
-            return JBPopupFactory.getInstance()
-                .createActionGroupPopup(uiContributor != null ? uiContributor.getActionGroupTitle() : null,
-                    actionGroup,
-                    context,
-                    JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                    false);
+            return JBPopupFactory.getInstance().createActionGroupPopup(
+                uiContributor != null ? uiContributor.getActionGroupTitle() : null,
+                actionGroup,
+                context,
+                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                false
+            );
         }
         return null;
     }
 
     @Nonnull
-    private static AnAction[] getActions(@Nullable final CodeStyleStatusBarUIContributor uiContributor, @Nonnull PsiFile psiFile) {
+    private static AnAction[] getActions(@Nullable CodeStyleStatusBarUIContributor uiContributor, @Nonnull PsiFile psiFile) {
         List<AnAction> allActions = new ArrayList<>();
         if (uiContributor != null) {
             AnAction[] actions = uiContributor.getActions(psiFile);
@@ -151,7 +157,8 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
                 allActions.addAll(Arrays.asList(actions));
             }
         }
-        if (uiContributor == null || (uiContributor instanceof IndentStatusBarUIContributor) && ((IndentStatusBarUIContributor) uiContributor).isShowFileIndentOptionsEnabled()) {
+        if (uiContributor == null
+            || uiContributor instanceof IndentStatusBarUIContributor iUIContributor && iUIContributor.isShowFileIndentOptionsEnabled()) {
             allActions.add(CodeStyleStatusBarWidgetFactory.createDefaultIndentConfigureAction(psiFile));
         }
         if (uiContributor != null) {
@@ -188,22 +195,20 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
     }
 
     private static class MyWidgetState extends WidgetState {
-
-        private final
         @Nonnull
-        IndentOptions myIndentOptions;
-        private final
+        private final IndentOptions myIndentOptions;
         @Nullable
-        CodeStyleStatusBarUIContributor myContributor;
-        private final
+        private final CodeStyleStatusBarUIContributor myContributor;
         @Nonnull
-        PsiFile myPsiFile;
+        private final PsiFile myPsiFile;
 
-        protected MyWidgetState(String toolTip,
-                                String text,
-                                @Nonnull PsiFile psiFile,
-                                @Nonnull IndentOptions indentOptions,
-                                @Nullable CodeStyleStatusBarUIContributor uiContributor) {
+        protected MyWidgetState(
+            String toolTip,
+            String text,
+            @Nonnull PsiFile psiFile,
+            @Nonnull IndentOptions indentOptions,
+            @Nullable CodeStyleStatusBarUIContributor uiContributor
+        ) {
             super(toolTip, text, true);
             myIndentOptions = indentOptions;
             myContributor = uiContributor;

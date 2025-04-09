@@ -16,7 +16,6 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
-import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
@@ -25,6 +24,7 @@ import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
+import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.remoteServer.runtime.deployment.DeployToServerStateProvider;
 import consulo.remoteServer.runtime.deployment.SingletonDeploymentSourceType;
 import consulo.util.collection.ContainerUtil;
@@ -94,7 +94,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
 
 
         SettingsEditorGroup<DeployToServerRunConfiguration> group = new SettingsEditorGroup<>();
-        group.addEditor(CloudBundle.message("DeployToServerRunConfiguration.tab.title.deployment"), commonEditor);
+        group.addEditor(RemoteServerLocalize.deploytoserverrunconfigurationTabTitleDeployment().get(), commonEditor);
         DeployToServerRunConfigurationExtensionsManager.getInstance().appendEditors(this, group);
         commonEditor.addSettingsEditorListener(e -> group.bulkUpdate(() -> {
         }));
@@ -105,16 +105,16 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     public @Nullable RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
         String serverName = getServerName();
         if (serverName == null) {
-            throw new ExecutionException(CloudBundle.message("DeployToServerRunConfiguration.error.server.required"));
+            throw new ExecutionException(RemoteServerLocalize.deploytoserverrunconfigurationErrorServerRequired().get());
         }
 
         RemoteServer<S> server = findServer();
         if (server == null) {
-            throw new ExecutionException(CloudBundle.message("DeployToServerRunConfiguration.error.server.not.found", serverName));
+            throw new ExecutionException(RemoteServerLocalize.deploytoserverrunconfigurationErrorServerNotFound(serverName).get());
         }
 
         if (myDeploymentSource == null) {
-            throw new ExecutionException(CloudBundle.message("DeployToServerRunConfiguration.error.deployment.not.selected"));
+            throw new ExecutionException(RemoteServerLocalize.deploytoserverrunconfigurationErrorDeploymentNotSelected().get());
         }
 
         ExtensionPoint<DeployToServerStateProvider> point = Application.get().getExtensionPoint(DeployToServerStateProvider.class);
@@ -195,10 +195,10 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
         myServerName = null;
         myDeploymentSource = null;
         myServerName = state.myServerName;
-        final Element deploymentTag = state.myDeploymentTag;
+        Element deploymentTag = state.myDeploymentTag;
         if (deploymentTag != null) {
             String typeId = deploymentTag.getAttributeValue(DEPLOYMENT_SOURCE_TYPE_ATTRIBUTE);
-            final DeploymentSourceType<?> type = findDeploymentSourceType(typeId);
+            DeploymentSourceType<?> type = findDeploymentSourceType(typeId);
             if (type != null) {
                 myDeploymentSource = type.load(deploymentTag, getProject());
                 myDeploymentConfiguration = myDeploymentConfigurator.createDefaultConfiguration(myDeploymentSource);

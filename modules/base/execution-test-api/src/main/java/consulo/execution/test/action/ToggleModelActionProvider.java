@@ -29,8 +29,8 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ToggleModelActionProvider {
-  ExtensionPointName<ToggleModelActionProvider> EP_NAME = ExtensionPointName.create(ToggleModelActionProvider.class);
+    ExtensionPointName<ToggleModelActionProvider> EP_NAME = ExtensionPointName.create(ToggleModelActionProvider.class);
 
-  @Nonnull
-  ToggleModelAction createToggleModelAction(TestConsoleProperties properties);
+    @Nonnull
+    ToggleModelAction createToggleModelAction(TestConsoleProperties properties);
 }

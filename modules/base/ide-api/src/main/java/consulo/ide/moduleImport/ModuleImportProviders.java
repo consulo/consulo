@@ -16,6 +16,7 @@
 package consulo.ide.moduleImport;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,19 +25,19 @@ import java.util.List;
  * @since 30-Jan-17
  */
 public class ModuleImportProviders {
-  @Nonnull
-  public static List<ModuleImportProvider> getExtensions(boolean forImportAction) {
-    List<ModuleImportProvider> list = new ArrayList<>();
-    ModuleImportProvider.EP_NAME.forEachExtensionSafe(provider -> {
-      if (forImportAction) {
-        if (!provider.isOnlyForNewImport()) {
-          list.add(provider);
-        }
-      }
-      else {
-        list.add(provider);
-      }
-    });
-    return list;
-  }
+    @Nonnull
+    public static List<ModuleImportProvider> getExtensions(boolean forImportAction) {
+        List<ModuleImportProvider> list = new ArrayList<>();
+        ModuleImportProvider.EP_NAME.forEachExtensionSafe(provider -> {
+            if (forImportAction) {
+                if (!provider.isOnlyForNewImport()) {
+                    list.add(provider);
+                }
+            }
+            else {
+                list.add(provider);
+            }
+        });
+        return list;
+    }
 }

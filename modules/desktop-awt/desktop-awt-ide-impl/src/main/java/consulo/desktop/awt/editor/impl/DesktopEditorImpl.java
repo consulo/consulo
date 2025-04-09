@@ -1381,6 +1381,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
+    @RequiredUIAccess
     public void setInsertMode(boolean mode) {
         super.setInsertMode(mode);
         myCaretCursor.repaint();
@@ -1765,6 +1766,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
      In principle, we can apply this method to other components by defining, for example,
      VariableWidth interface and supporting it in JBScrollPane. */
+    @RequiredUIAccess
     private int getPreferredWidthOfVisibleLines() {
         Rectangle area = getScrollingModel().getVisibleArea();
         VisualPosition begin = xyToVisualPosition(area.getLocation());
@@ -2024,6 +2026,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             .run(() -> processMouseDragged(e));
     }
 
+    @RequiredUIAccess
     private void processMouseDragged(@Nonnull MouseEvent e) {
         if (!SwingUtilities.isLeftMouseButton(e) && !SwingUtilities.isMiddleMouseButton(e)
             || (Registry.is("editor.disable.drag.with.right.button") && SwingUtilities.isRightMouseButton(e))) {
@@ -2728,6 +2731,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myInputMethodRequestsHandler.replaceInputMethodText(e);
     }
 
+    @RequiredUIAccess
     void inputMethodCaretPositionChanged(@Nonnull InputMethodEvent e) {
         if (isReleased) {
             return;
@@ -2779,6 +2783,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return myLastTypedActionTimestamp != -1;
     }
 
+    @RequiredUIAccess
     public void beforeModalityStateChanged() {
         ((DesktopScrollingModelImpl)myScrollingModel).beforeModalityStateChanged();
     }

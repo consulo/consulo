@@ -24,27 +24,27 @@ import java.util.Map;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CustomPortServerManager {
-  public static final ExtensionPointName<CustomPortServerManager> EP_NAME = ExtensionPointName.create(CustomPortServerManager.class);
+    public static final ExtensionPointName<CustomPortServerManager> EP_NAME = ExtensionPointName.create(CustomPortServerManager.class);
 
-  public abstract void cannotBind(Exception e, int port);
+    public abstract void cannotBind(Exception e, int port);
 
-  public interface CustomPortService {
-    boolean rebind();
+    public interface CustomPortService {
+        boolean rebind();
 
-    boolean isBound();
-  }
+        boolean isBound();
+    }
 
-  public abstract int getPort();
+    public abstract int getPort();
 
-  public abstract boolean isAvailableExternally();
+    public abstract boolean isAvailableExternally();
 
-  public abstract void setManager(@Nullable CustomPortService manager);
+    public abstract void setManager(@Nullable CustomPortService manager);
 
-  /**
-   * This server will accept only XML-RPC requests if this method returns not-null map of XMl-RPC handlers
-   */
-  @Nullable
-  public Map<String, Object> createXmlRpcHandlers() {
-    return null;
-  }
+    /**
+     * This server will accept only XML-RPC requests if this method returns not-null map of XMl-RPC handlers
+     */
+    @Nullable
+    public Map<String, Object> createXmlRpcHandlers() {
+        return null;
+    }
 }

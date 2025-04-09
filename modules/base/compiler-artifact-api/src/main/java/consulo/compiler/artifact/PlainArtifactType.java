@@ -31,30 +31,30 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(order = "last")
 public class PlainArtifactType extends ArtifactType {
-  public static final String ID = "plain";
+    public static final String ID = "plain";
 
-  public static PlainArtifactType getInstance() {
-    return EP_NAME.findExtension(PlainArtifactType.class);
-  }
+    public static PlainArtifactType getInstance() {
+        return EP_NAME.findExtension(PlainArtifactType.class);
+    }
 
-  public PlainArtifactType() {
-    super(ID, CompilerBundle.message("artifact.type.plain"));
-  }
+    public PlainArtifactType() {
+        super(ID, CompilerBundle.message("artifact.type.plain"));
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.Artifact;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.Artifact;
+    }
 
-  @Override
-  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
-    return "/";
-  }
+    @Override
+    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+        return "/";
+    }
 
-  @Override
-  @Nonnull
-  public CompositePackagingElement<?> createRootElement(PackagingElementFactory elementFactory, @Nonnull String artifactName) {
-    return new ArtifactRootElementImpl();
-  }
+    @Override
+    @Nonnull
+    public CompositePackagingElement<?> createRootElement(PackagingElementFactory elementFactory, @Nonnull String artifactName) {
+        return new ArtifactRootElementImpl();
+    }
 }

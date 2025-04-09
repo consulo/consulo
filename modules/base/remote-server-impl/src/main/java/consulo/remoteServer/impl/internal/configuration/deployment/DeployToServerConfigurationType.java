@@ -14,14 +14,12 @@ import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.remoteServer.runtime.deployment.SingletonDeploymentSourceType;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class DeployToServerConfigurationType<C extends ServerConfiguration> extends ConfigurationTypeBase {
-
     private final @Nonnull ServerType<C> myServerType;
     private final @Nullable MultiSourcesConfigurationFactory myMultiSourcesFactory;
     private final Map<String, SingletonTypeConfigurationFactory> myPerTypeFactories = new HashMap<>();
@@ -96,16 +94,15 @@ public final class DeployToServerConfigurationType<C extends ServerConfiguration
     public final class MultiSourcesConfigurationFactory extends DeployToServerConfigurationFactory {
 
         @Override
-        public @Nonnull @NonNls String getId() {
+        public @Nonnull String getId() {
             //compatibility reasons, before 173 it was the only configuration factory stored with this ID
             return myServerType.getDeploymentConfigurationFactoryId();
         }
     }
 
     public final class SingletonTypeConfigurationFactory extends DeployToServerConfigurationFactory {
-
-        private final @Nonnull
-        @NonNls String mySourceTypeId;
+        @Nonnull
+        private final String mySourceTypeId;
         private final LocalizeValue myPresentableName;
 
         public SingletonTypeConfigurationFactory(@Nonnull SingletonDeploymentSourceType sourceType) {
@@ -114,10 +111,11 @@ public final class DeployToServerConfigurationType<C extends ServerConfiguration
         }
 
         @Override
-        public @Nonnull @NonNls String getId() {
+        public @Nonnull String getId() {
             return mySourceTypeId;
         }
 
+        @Nonnull
         @Override
         public LocalizeValue getDisplayName() {
             return myPresentableName;
@@ -127,8 +125,8 @@ public final class DeployToServerConfigurationType<C extends ServerConfiguration
         public @Nonnull DeployToServerRunConfiguration<C, ?> createTemplateConfiguration(@Nonnull Project project) {
             DeployToServerRunConfiguration<C, ?> result = super.createTemplateConfiguration(project);
             DeploymentSourceType<?> type = getSourceTypeImpl();
-            if (type instanceof SingletonDeploymentSourceType) {
-                result.lockDeploymentSource((SingletonDeploymentSourceType) type);
+            if (type instanceof SingletonDeploymentSourceType singletonDeploymentSourceType) {
+                result.lockDeploymentSource(singletonDeploymentSourceType);
             }
             return result;
         }

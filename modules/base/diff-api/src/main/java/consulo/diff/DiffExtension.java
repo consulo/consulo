@@ -25,10 +25,12 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DiffExtension {
-  public static final ExtensionPointName<DiffExtension> EP_NAME = ExtensionPointName.create(DiffExtension.class);
+    public static final ExtensionPointName<DiffExtension> EP_NAME = ExtensionPointName.create(DiffExtension.class);
 
-  @RequiredUIAccess
-  public abstract void onViewerCreated(@Nonnull FrameDiffTool.DiffViewer viewer,
-                                       @Nonnull DiffContext context,
-                                       @Nonnull DiffRequest request);
+    @RequiredUIAccess
+    public abstract void onViewerCreated(
+        @Nonnull FrameDiffTool.DiffViewer viewer,
+        @Nonnull DiffContext context,
+        @Nonnull DiffRequest request
+    );
 }

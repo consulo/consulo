@@ -36,194 +36,199 @@ import java.util.Set;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SdkType implements SdkTypeId {
-  public static final ExtensionPointName<SdkType> EP_NAME = ExtensionPointName.create(SdkType.class);
+    public static final ExtensionPointName<SdkType> EP_NAME = ExtensionPointName.create(SdkType.class);
 
-  private final String myId;
+    private final String myId;
 
-  public SdkType(@Nonnull String id) {
-    myId = id;
-  }
-
-  /**
-   * @return paths for select in file chooser. Selected path will exists on file system
-   */
-  @Nonnull
-  public Collection<String> suggestHomePaths() {
-    return List.of();
-  }
-
-  public boolean canCreatePredefinedSdks() {
-    return false;
-  }
-
-  /**
-   * @return env variables which will be checked while creating predefined sdks
-   */
-  @Nonnull
-  public Set<String> getEnviromentVariables(@Nonnull Platform platform) {
-    return Set.of();
-  }
-
-  /**
-   * If a path selected in the file chooser is not a valid SDK home path, returns an adjusted version of the path that is again
-   * checked for validity.
-   *
-   * @param homePath the path selected in the file chooser.
-   * @return the path to be used as the SDK home.
-   */
-
-  public String adjustSelectedSdkHome(String homePath) {
-    return homePath;
-  }
-
-  public abstract boolean isValidSdkHome(String path);
-
-  @Override
-  @Nullable
-  public final String getVersionString(Sdk sdk) {
-    SdkTypeId sdkType = sdk.getSdkType();
-    if (sdkType instanceof BundleType bundleType) {
-      return bundleType.getVersionString(sdk.getPlatform(), sdk.getHomeNioPath());
+    public SdkType(@Nonnull String id) {
+        myId = id;
     }
-    return getVersionString(sdk.getHomePath());
-  }
 
-  @Nullable
-  public abstract String getVersionString(String sdkHome);
+    /**
+     * @return paths for select in file chooser. Selected path will exists on file system
+     */
+    @Nonnull
+    public Collection<String> suggestHomePaths() {
+        return List.of();
+    }
 
-  public abstract String suggestSdkName(String currentSdkName, String sdkHome);
+    public boolean canCreatePredefinedSdks() {
+        return false;
+    }
 
-  public void setupSdkPaths(@Nonnull Sdk sdk) {
-    SdkModificator sdkModificator = sdk.getSdkModificator();
-    setupSdkPaths(sdkModificator);
-    sdkModificator.commitChanges();
-  }
+    /**
+     * @return env variables which will be checked while creating predefined sdks
+     */
+    @Nonnull
+    public Set<String> getEnviromentVariables(@Nonnull Platform platform) {
+        return Set.of();
+    }
 
-  public void setupSdkPaths(@Nonnull SdkModificator sdkModificator) {
-  }
+    /**
+     * If a path selected in the file chooser is not a valid SDK home path, returns an adjusted version of the path that is again
+     * checked for validity.
+     *
+     * @param homePath the path selected in the file chooser.
+     * @return the path to be used as the SDK home.
+     */
 
-  /**
-   * @return Configurable object for the sdk's additional data or null if not applicable
-   */
-  @Nullable
-  public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator) {
-    return null;
-  }
+    public String adjustSelectedSdkHome(String homePath) {
+        return homePath;
+    }
 
-  @Override
-  public void saveAdditionalData(SdkAdditionalData additionalData, Element additional) {
+    public abstract boolean isValidSdkHome(String path);
 
-  }
-
-  @Override
-  @Nullable
-  public SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional) {
-    return null;
-  }
-
-  @Override
-  public final String getName() {
-    return myId;
-  }
-
-  @Nonnull
-  @Override
-  public final String getId() {
-    return myId;
-  }
-
-  @Nonnull
-  public abstract String getPresentableName();
-
-  @Nonnull
-  public abstract Image getIcon();
-
-  @Nonnull
-  public Image getGroupIcon() {
-    return ImageEffects.transparent(getIcon(), 0.5f);
-  }
-
-  @Nonnull
-  public String getHelpTopic() {
-    return "bundle";
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof SdkType)) return false;
-
-    final SdkType sdkType = (SdkType)o;
-
-    return myId.equals(sdkType.myId);
-  }
-
-  @Override
-  public int hashCode() {
-    return myId.hashCode();
-  }
-
-  @Override
-  public String toString() {
-    return getId();
-  }
-
-  @Nonnull
-  public FileChooserDescriptor getHomeChooserDescriptor() {
-    final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
-      @Override
-      public void validateSelectedFiles(VirtualFile[] files) throws Exception {
-        if (files.length != 0) {
-          final String selectedPath = files[0].getPath();
-          boolean valid = isValidSdkHome(selectedPath);
-          if (!valid) {
-            valid = isValidSdkHome(adjustSelectedSdkHome(selectedPath));
-            if (!valid) {
-              LocalizeValue message = files[0].isDirectory()
-                ? ProjectLocalize.sdkConfigureHomeInvalidError(getPresentableName())
-                : ProjectLocalize.sdkConfigureHomeFileInvalidError(getPresentableName());
-              throw new Exception(message.get());
-            }
-          }
+    @Override
+    @Nullable
+    public final String getVersionString(Sdk sdk) {
+        SdkTypeId sdkType = sdk.getSdkType();
+        if (sdkType instanceof BundleType bundleType) {
+            return bundleType.getVersionString(sdk.getPlatform(), sdk.getHomeNioPath());
         }
-      }
-    };
-    descriptor.withTitleValue(ProjectLocalize.sdkConfigureHomeTitle(getPresentableName()));
-    return descriptor;
-  }
+        return getVersionString(sdk.getHomePath());
+    }
 
-  @Nullable
-  public String getDefaultDocumentationUrl(final @Nonnull Sdk sdk) {
-    return null;
-  }
+    @Nullable
+    public abstract String getVersionString(String sdkHome);
 
-  public boolean isRootTypeApplicable(final OrderRootType type) {
-    return false;
-  }
+    public abstract String suggestSdkName(String currentSdkName, String sdkHome);
 
-  /**
-   * If this method return true, user can add Sdk via configuration. If false - required canCreatePredefinedSdks() = true,
-   * and user can copy sdk with custom name
-   * @return true if user add is supported
-   */
-  public boolean supportsUserAdd() {
-    return true;
-  }
+    public void setupSdkPaths(@Nonnull Sdk sdk) {
+        SdkModificator sdkModificator = sdk.getSdkModificator();
+        setupSdkPaths(sdkModificator);
+        sdkModificator.commitChanges();
+    }
 
-  /**
-   * Checks if the home directory of the specified SDK is valid. By default, checks that the directory points to a valid local
-   * path. Can be overridden for remote SDKs.
-   *
-   * @param sdk the SDK to validate the path for.
-   * @return true if the home path is valid, false otherwise.
-   * @since 12.1
-   */
-  public boolean sdkHasValidPath(@Nonnull Sdk sdk) {
-    VirtualFile homeDir = sdk.getHomeDirectory();
-    return homeDir != null && homeDir.isValid();
-  }
+    public void setupSdkPaths(@Nonnull SdkModificator sdkModificator) {
+    }
 
-  public String sdkPath(VirtualFile homePath) {
-    return homePath.getPath();
-  }
+    /**
+     * @return Configurable object for the sdk's additional data or null if not applicable
+     */
+    @Nullable
+    public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator) {
+        return null;
+    }
+
+    @Override
+    public void saveAdditionalData(SdkAdditionalData additionalData, Element additional) {
+
+    }
+
+    @Override
+    @Nullable
+    public SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional) {
+        return null;
+    }
+
+    @Override
+    public final String getName() {
+        return myId;
+    }
+
+    @Nonnull
+    @Override
+    public final String getId() {
+        return myId;
+    }
+
+    @Nonnull
+    public abstract String getPresentableName();
+
+    @Nonnull
+    public abstract Image getIcon();
+
+    @Nonnull
+    public Image getGroupIcon() {
+        return ImageEffects.transparent(getIcon(), 0.5f);
+    }
+
+    @Nonnull
+    public String getHelpTopic() {
+        return "bundle";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SdkType)) {
+            return false;
+        }
+
+        final SdkType sdkType = (SdkType)o;
+
+        return myId.equals(sdkType.myId);
+    }
+
+    @Override
+    public int hashCode() {
+        return myId.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getId();
+    }
+
+    @Nonnull
+    public FileChooserDescriptor getHomeChooserDescriptor() {
+        final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
+            @Override
+            public void validateSelectedFiles(VirtualFile[] files) throws Exception {
+                if (files.length != 0) {
+                    final String selectedPath = files[0].getPath();
+                    boolean valid = isValidSdkHome(selectedPath);
+                    if (!valid) {
+                        valid = isValidSdkHome(adjustSelectedSdkHome(selectedPath));
+                        if (!valid) {
+                            LocalizeValue message = files[0].isDirectory()
+                                ? ProjectLocalize.sdkConfigureHomeInvalidError(getPresentableName())
+                                : ProjectLocalize.sdkConfigureHomeFileInvalidError(getPresentableName());
+                            throw new Exception(message.get());
+                        }
+                    }
+                }
+            }
+        };
+        descriptor.withTitleValue(ProjectLocalize.sdkConfigureHomeTitle(getPresentableName()));
+        return descriptor;
+    }
+
+    @Nullable
+    public String getDefaultDocumentationUrl(final @Nonnull Sdk sdk) {
+        return null;
+    }
+
+    public boolean isRootTypeApplicable(final OrderRootType type) {
+        return false;
+    }
+
+    /**
+     * If this method return true, user can add Sdk via configuration. If false - required canCreatePredefinedSdks() = true,
+     * and user can copy sdk with custom name
+     *
+     * @return true if user add is supported
+     */
+    public boolean supportsUserAdd() {
+        return true;
+    }
+
+    /**
+     * Checks if the home directory of the specified SDK is valid. By default, checks that the directory points to a valid local
+     * path. Can be overridden for remote SDKs.
+     *
+     * @param sdk the SDK to validate the path for.
+     * @return true if the home path is valid, false otherwise.
+     * @since 12.1
+     */
+    public boolean sdkHasValidPath(@Nonnull Sdk sdk) {
+        VirtualFile homeDir = sdk.getHomeDirectory();
+        return homeDir != null && homeDir.isValid();
+    }
+
+    public String sdkPath(VirtualFile homePath) {
+        return homePath.getPath();
+    }
 }

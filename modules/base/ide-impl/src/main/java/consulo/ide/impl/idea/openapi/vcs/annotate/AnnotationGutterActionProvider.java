@@ -30,14 +30,14 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface AnnotationGutterActionProvider {
+    ExtensionPointName<AnnotationGutterActionProvider> EP_NAME = ExtensionPointName.create(AnnotationGutterActionProvider.class);
 
-  ExtensionPointName<AnnotationGutterActionProvider> EP_NAME = ExtensionPointName.create(AnnotationGutterActionProvider.class);
-
-  /**
-   * Create an action that will be added to the annotation gutter popup.
-   * @param annotation annotation which is currently shown on the gutter.
-   * @return new action that can be invoked from the annotation gutter popup.
-   */
-  @Nonnull
-  AnAction createAction(FileAnnotation annotation);
+    /**
+     * Create an action that will be added to the annotation gutter popup.
+     *
+     * @param annotation annotation which is currently shown on the gutter.
+     * @return new action that can be invoked from the annotation gutter popup.
+     */
+    @Nonnull
+    AnAction createAction(FileAnnotation annotation);
 }

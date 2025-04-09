@@ -50,98 +50,98 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class DiffManagerImpl extends DiffManagerEx {
-  @RequiredUIAccess
-  @Override
-  public void showDiff(@Nullable Project project, @Nonnull DiffRequest request) {
-    showDiff(project, request, DiffDialogHints.DEFAULT);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void showDiff(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints) {
-    DiffRequestChain requestChain = new SimpleDiffRequestChain(request);
-    showDiff(project, requestChain, hints);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void showDiff(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
-    if (ExternalDiffTool.isDefault()) {
-      ExternalDiffTool.show(project, requests, hints);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void showDiff(@Nullable Project project, @Nonnull DiffRequest request) {
+        showDiff(project, request, DiffDialogHints.DEFAULT);
     }
 
-    showDiffBuiltin(project, requests, hints);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request) {
-    showDiffBuiltin(project, request, DiffDialogHints.DEFAULT);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints) {
-    DiffRequestChain requestChain = new SimpleDiffRequestChain(request);
-    showDiffBuiltin(project, requestChain, hints);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
-    DiffEditorTabFilesManager diffEditorTabFilesManager = project != null ? DiffEditorTabFilesManager.getInstance(project) : null;
-    if (diffEditorTabFilesManager != null &&
-        DiffSettingsHolder.DiffSettings.getSettings().isShowDiffInEditor() &&
-        AWTDiffUtil.getWindowMode(hints) == WindowWrapper.Mode.FRAME &&
-        !isFromDialog(project) &&
-        hints.getWindowConsumer() == null) {
-      ChainDiffVirtualFile diffFile = new ChainDiffVirtualFile(requests, DiffLocalize.labelDefaultDiffEditorTabName().get());
-      diffEditorTabFilesManager.showDiffFile(diffFile, true);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void showDiff(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints) {
+        DiffRequestChain requestChain = new SimpleDiffRequestChain(request);
+        showDiff(project, requestChain, hints);
     }
 
-    new DiffWindow(project, requests, hints).show();
-  }
+    @Override
+    @RequiredUIAccess
+    public void showDiff(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
+        if (ExternalDiffTool.isDefault()) {
+            ExternalDiffTool.show(project, requests, hints);
+            return;
+        }
 
-  private static boolean isFromDialog(@Nullable Project project) {
-    return DialogWrapper.findInstance(ProjectIdeFocusManager.getInstance(project).getFocusOwner()) != null;
-  }
-
-  @Nonnull
-  @Override
-  public DiffRequestPanel createRequestPanel(@Nullable Project project, @Nonnull Disposable parent, @Nullable Window window) {
-    DiffRequestPanelImpl panel = new DiffRequestPanelImpl(project, window);
-    Disposer.register(parent, panel);
-    return panel;
-  }
-
-  @Nonnull
-  @Override
-  public List<DiffTool> getDiffTools() {
-    return DiffTool.EP_NAME.getExtensionList();
-  }
-
-  @Nonnull
-  @Override
-  public List<MergeTool> getMergeTools() {
-    return MergeTool.EP_NAME.getExtensionList();
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void showMerge(@Nullable Project project, @Nonnull MergeRequest request) {
-    if (ExternalMergeTool.isDefault()) {
-      ExternalMergeTool.show(project, request);
-      return;
+        showDiffBuiltin(project, requests, hints);
     }
 
-    showMergeBuiltin(project, request);
-  }
+    @Override
+    @RequiredUIAccess
+    public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request) {
+        showDiffBuiltin(project, request, DiffDialogHints.DEFAULT);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void showMergeBuiltin(@Nullable Project project, @Nonnull MergeRequest request) {
-    new MergeWindow(project, request).show();
-  }
+    @Override
+    @RequiredUIAccess
+    public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints) {
+        DiffRequestChain requestChain = new SimpleDiffRequestChain(request);
+        showDiffBuiltin(project, requestChain, hints);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
+        DiffEditorTabFilesManager diffEditorTabFilesManager = project != null ? DiffEditorTabFilesManager.getInstance(project) : null;
+        if (diffEditorTabFilesManager != null &&
+            DiffSettingsHolder.DiffSettings.getSettings().isShowDiffInEditor() &&
+            AWTDiffUtil.getWindowMode(hints) == WindowWrapper.Mode.FRAME &&
+            !isFromDialog(project) &&
+            hints.getWindowConsumer() == null) {
+            ChainDiffVirtualFile diffFile = new ChainDiffVirtualFile(requests, DiffLocalize.labelDefaultDiffEditorTabName().get());
+            diffEditorTabFilesManager.showDiffFile(diffFile, true);
+            return;
+        }
+
+        new DiffWindow(project, requests, hints).show();
+    }
+
+    private static boolean isFromDialog(@Nullable Project project) {
+        return DialogWrapper.findInstance(ProjectIdeFocusManager.getInstance(project).getFocusOwner()) != null;
+    }
+
+    @Nonnull
+    @Override
+    public DiffRequestPanel createRequestPanel(@Nullable Project project, @Nonnull Disposable parent, @Nullable Window window) {
+        DiffRequestPanelImpl panel = new DiffRequestPanelImpl(project, window);
+        Disposer.register(parent, panel);
+        return panel;
+    }
+
+    @Nonnull
+    @Override
+    public List<DiffTool> getDiffTools() {
+        return DiffTool.EP_NAME.getExtensionList();
+    }
+
+    @Nonnull
+    @Override
+    public List<MergeTool> getMergeTools() {
+        return MergeTool.EP_NAME.getExtensionList();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showMerge(@Nullable Project project, @Nonnull MergeRequest request) {
+        if (ExternalMergeTool.isDefault()) {
+            ExternalMergeTool.show(project, request);
+            return;
+        }
+
+        showMergeBuiltin(project, request);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showMergeBuiltin(@Nullable Project project, @Nonnull MergeRequest request) {
+        new MergeWindow(project, request).show();
+    }
 }

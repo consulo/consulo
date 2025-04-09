@@ -22,40 +22,41 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.http.HTTPMethod;
 
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class HttpRequestHandler {
-  public static final ExtensionPointName<HttpRequestHandler> EP_NAME = ExtensionPointName.create(HttpRequestHandler.class);
+    public static final ExtensionPointName<HttpRequestHandler> EP_NAME = ExtensionPointName.create(HttpRequestHandler.class);
 
-  public static boolean checkPrefix(String uri, String prefix) {
-    if (uri.length() > prefix.length() && uri.charAt(0) == '/' && uri.regionMatches(true, 1, prefix, 0, prefix.length())) {
-      if (uri.length() - prefix.length() == 1) {
-        return true;
-      }
-      else {
-        char c = uri.charAt(prefix.length() + 1);
-        return c == '/' || c == '?';
-      }
+    public static boolean checkPrefix(String uri, String prefix) {
+        if (uri.length() > prefix.length() && uri.charAt(0) == '/' && uri.regionMatches(true, 1, prefix, 0, prefix.length())) {
+            if (uri.length() - prefix.length() == 1) {
+                return true;
+            }
+            else {
+                char c = uri.charAt(prefix.length() + 1);
+                return c == '/' || c == '?';
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-  public boolean isSupported(HttpRequest request) {
-    return request.method() == HTTPMethod.GET || request.method() == HTTPMethod.HEAD;
-  }
+    public boolean isSupported(HttpRequest request) {
+        return request.method() == HTTPMethod.GET || request.method() == HTTPMethod.HEAD;
+    }
 
-  /**
-   * Write request from browser without Origin will be always blocked regardless of your implementation.
-   */
-  @SuppressWarnings("SpellCheckingInspection")
-  public boolean isAccessible(HttpRequest request) {
-    String host = HttpRequestUtil.getHost(request);
-    // If attacker.com DNS rebound to 127.0.0.1 and user open site directly — no Origin or Referrer headers.
-    // So we should check Host header.
-    return host != null && HttpRequestUtil.isLocalOrigin(request) && HttpRequestUtil.parseAndCheckIsLocalHost("http://" + host);
-  }
+    /**
+     * Write request from browser without Origin will be always blocked regardless of your implementation.
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    public boolean isAccessible(HttpRequest request) {
+        String host = HttpRequestUtil.getHost(request);
+        // If attacker.com DNS rebound to 127.0.0.1 and user open site directly — no Origin or Referrer headers.
+        // So we should check Host header.
+        return host != null && HttpRequestUtil.isLocalOrigin(request) && HttpRequestUtil.parseAndCheckIsLocalHost("http://" + host);
+    }
 
-  @Nonnull
-  public abstract HttpResponse process(@Nonnull HttpRequest request) throws IOException;
+    @Nonnull
+    public abstract HttpResponse process(@Nonnull HttpRequest request) throws IOException;
 }

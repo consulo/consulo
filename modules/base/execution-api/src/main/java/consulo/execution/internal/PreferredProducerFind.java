@@ -44,7 +44,11 @@ public class PreferredProducerFind {
     @Nullable
     @Deprecated
     @SuppressWarnings("deprecation")
-    public static List<RuntimeConfigurationProducer> findPreferredProducers(final Location location, final ConfigurationContext context, final boolean strict) {
+    public static List<RuntimeConfigurationProducer> findPreferredProducers(
+        final Location location,
+        final ConfigurationContext context,
+        final boolean strict
+    ) {
         if (location == null) {
             return null;
         }
@@ -72,7 +76,8 @@ public class PreferredProducerFind {
     private static List<RuntimeConfigurationProducer> findAllProducers(Location location, ConfigurationContext context) {
         //todo load configuration types if not already loaded
         ConfigurationType.EP_NAME.getExtensionList();
-        final List<RuntimeConfigurationProducer> configurationProducers = RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER.getExtensionList();
+        final List<RuntimeConfigurationProducer> configurationProducers =
+            RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER.getExtensionList();
         final ArrayList<RuntimeConfigurationProducer> producers = new ArrayList<>();
         for (final RuntimeConfigurationProducer prototype : configurationProducers) {
             final RuntimeConfigurationProducer producer;
@@ -91,17 +96,21 @@ public class PreferredProducerFind {
         return producers;
     }
 
-    public static List<ConfigurationFromContext> getConfigurationsFromContext(final Location location,
-                                                                              final ConfigurationContext context,
-                                                                              final boolean strict) {
+    public static List<ConfigurationFromContext> getConfigurationsFromContext(
+        final Location location,
+        final ConfigurationContext context,
+        final boolean strict
+    ) {
         return getConfigurationsFromContext(location, context, strict, true);
 
     }
 
-    public static List<ConfigurationFromContext> getConfigurationsFromContext(final Location location,
-                                                                              final ConfigurationContext context,
-                                                                              final boolean strict,
-                                                                              boolean preferExisting) {
+    public static List<ConfigurationFromContext> getConfigurationsFromContext(
+        final Location location,
+        final ConfigurationContext context,
+        final boolean strict,
+        boolean preferExisting
+    ) {
         if (location == null) {
             return null;
         }

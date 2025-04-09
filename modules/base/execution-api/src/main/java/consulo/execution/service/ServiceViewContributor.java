@@ -12,19 +12,19 @@ import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ServiceViewContributor<T> {
-  ExtensionPointName<ServiceViewContributor> CONTRIBUTOR_EP_NAME = ExtensionPointName.create(ServiceViewContributor.class);
+    ExtensionPointName<ServiceViewContributor> CONTRIBUTOR_EP_NAME = ExtensionPointName.create(ServiceViewContributor.class);
 
-  @Nullable
-  static <V extends ServiceViewContributor<?>> V findRootContributor(@Nonnull Class<V> contributorClass) {
-    return CONTRIBUTOR_EP_NAME.findExtension(contributorClass);
-  }
+    @Nullable
+    static <V extends ServiceViewContributor<?>> V findRootContributor(@Nonnull Class<V> contributorClass) {
+        return CONTRIBUTOR_EP_NAME.findExtension(contributorClass);
+    }
 
-  @Nonnull
-  ServiceViewDescriptor getViewDescriptor(@Nonnull Project project);
+    @Nonnull
+    ServiceViewDescriptor getViewDescriptor(@Nonnull Project project);
 
-  @Nonnull
-  List<T> getServices(@Nonnull Project project);
+    @Nonnull
+    List<T> getServices(@Nonnull Project project);
 
-  @Nonnull
-  ServiceViewDescriptor getServiceDescriptor(@Nonnull Project project, @Nonnull T service);
+    @Nonnull
+    ServiceViewDescriptor getServiceDescriptor(@Nonnull Project project, @Nonnull T service);
 }

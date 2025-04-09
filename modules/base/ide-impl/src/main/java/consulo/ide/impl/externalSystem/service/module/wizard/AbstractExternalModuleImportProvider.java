@@ -54,7 +54,7 @@ import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.ex.wizard.WizardStepValidationException;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -68,325 +68,345 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 30-Jan-17
+ * @since 2017-01-30
  */
 public abstract class AbstractExternalModuleImportProvider<C extends AbstractImportFromExternalSystemControl> implements ModuleImportProvider<ExternalModuleImportContext<C>> {
-  private static final Logger LOG = Logger.getInstance(AbstractExternalModuleImportProvider.class);
+    private static final Logger LOG = Logger.getInstance(AbstractExternalModuleImportProvider.class);
 
-  @Nonnull
-  private final ProjectDataManager myProjectDataManager;
-  @Nonnull
-  private final C myControl;
-  @Nonnull
-  private final ProjectSystemId myExternalSystemId;
+    @Nonnull
+    private final ProjectDataManager myProjectDataManager;
+    @Nonnull
+    private final C myControl;
+    @Nonnull
+    private final ProjectSystemId myExternalSystemId;
 
-  private DataNode<ProjectData> myExternalProjectNode;
+    private DataNode<ProjectData> myExternalProjectNode;
 
-  public AbstractExternalModuleImportProvider(@Nonnull ProjectDataManager projectDataManager, @Nonnull C control, @Nonnull ProjectSystemId externalSystemId) {
-    myProjectDataManager = projectDataManager;
-    myControl = control;
-    myExternalSystemId = externalSystemId;
-  }
-
-  @Nonnull
-  public ProjectSystemId getExternalSystemId() {
-    return myExternalSystemId;
-  }
-
-  protected abstract void doPrepare(@Nonnull ExternalModuleImportContext<C> context);
-
-  protected abstract void beforeCommit(@Nonnull DataNode<ProjectData> dataNode, @Nonnull Project project);
-
-  /**
-   * Allows to adjust external project config file to use on the basis of the given value.
-   * <p>
-   * Example: a user might choose a directory which contains target config file and particular implementation expands
-   * that to a particular file under the directory.
-   *
-   * @param file base external project config file
-   * @return external project config file to use
-   */
-  @Nonnull
-  protected abstract File getExternalProjectConfigToUse(@Nonnull File file);
-
-  protected abstract void applyExtraSettings(@Nonnull ExternalModuleImportContext<C> context);
-
-  @Nonnull
-  public C getControl() {
-    return myControl;
-  }
-
-  @RequiredReadAction
-  @Override
-  public void process(@Nonnull ExternalModuleImportContext<C> context, @Nonnull final Project project, @Nonnull ModifiableModuleModel model, @Nonnull Consumer<Module> newModuleConsumer) {
-    project.putUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT, Boolean.TRUE);
-    final DataNode<ProjectData> externalProjectNode = getExternalProjectNode();
-    if (externalProjectNode != null) {
-      beforeCommit(externalProjectNode, project);
+    public AbstractExternalModuleImportProvider(
+        @Nonnull ProjectDataManager projectDataManager,
+        @Nonnull C control,
+        @Nonnull ProjectSystemId externalSystemId
+    ) {
+        myProjectDataManager = projectDataManager;
+        myControl = control;
+        myExternalSystemId = externalSystemId;
     }
 
-    StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
-      AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, myExternalSystemId);
-      final ExternalProjectSettings projectSettings = getCurrentExternalProjectSettings();
-      Set<ExternalProjectSettings> projects = new HashSet<>(systemSettings.getLinkedProjectsSettings());
-      // add current importing project settings to linked projects settings or replace if similar already exist
-      projects.remove(projectSettings);
-      projects.add(projectSettings);
-
-      systemSettings.copyFrom(myControl.getSystemSettings());
-      systemSettings.setLinkedProjectsSettings(projects);
-
-      if (externalProjectNode != null) {
-        ExternalSystemUtil.ensureToolWindowInitialized(project, myExternalSystemId);
-        ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
-          @Override
-          @RequiredUIAccess
-          public void execute() {
-            ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(()-> {
-              myProjectDataManager.importData(externalProjectNode.getKey(), Collections.singleton(externalProjectNode), project, true);
-              myExternalProjectNode = null;
-            });
-          }
-        });
-
-        final Runnable resolveDependenciesTask = () -> {
-          LocalizeValue progressText = ExternalSystemLocalize.progressResolveLibraries(myExternalSystemId.getDisplayName());
-          ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText.get(), false) {
-            @Override
-            public void run(@Nonnull final ProgressIndicator indicator) {
-              if (project.isDisposed()) return;
-              ExternalSystemResolveProjectTask task =
-                new ExternalSystemResolveProjectTask(myExternalSystemId, project, projectSettings.getExternalProjectPath(), false);
-              task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
-              DataNode<ProjectData> projectWithResolvedLibraries = task.getExternalProject();
-              if (projectWithResolvedLibraries == null) {
-                return;
-              }
-
-              setupLibraries(projectWithResolvedLibraries, project);
-            }
-          });
-        };
-        UIUtil.invokeLaterIfNeeded(resolveDependenciesTask);
-      }
-    });
-  }
-
-  @Nullable
-  public DataNode<ProjectData> getExternalProjectNode() {
-    return myExternalProjectNode;
-  }
-
-  /**
-   * Asks current builder to ensure that target external project is defined.
-   *
-   * @param context current wizard context
-   * @throws WizardStepValidationException if gradle project is not defined and can't be constructed
-   */
-  @SuppressWarnings("unchecked")
-  public void ensureProjectIsDefined(@Nonnull ExternalModuleImportContext<C> context) throws WizardStepValidationException {
-    final String externalSystemName = myExternalSystemId.getReadableName().get();
-    File projectFile = getProjectFile();
-    if (projectFile == null) {
-      throw new WizardStepValidationException(ExternalSystemLocalize.errorProjectUndefined().get());
+    @Nonnull
+    public ProjectSystemId getExternalSystemId() {
+        return myExternalSystemId;
     }
-    projectFile = getExternalProjectConfigToUse(projectFile);
-    final Ref<WizardStepValidationException> error = new Ref<>();
-    final ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
-      @Override
-      public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
-        myExternalProjectNode = externalProject;
-      }
 
-      @Override
-      public void onFailure(@Nonnull String errorMessage, @Nullable String errorDetails) {
-        if (!StringUtil.isEmpty(errorDetails)) {
-          LOG.warn(errorDetails);
+    protected abstract void doPrepare(@Nonnull ExternalModuleImportContext<C> context);
+
+    protected abstract void beforeCommit(@Nonnull DataNode<ProjectData> dataNode, @Nonnull Project project);
+
+    /**
+     * Allows to adjust external project config file to use on the basis of the given value.
+     * <p>
+     * Example: a user might choose a directory which contains target config file and particular implementation expands
+     * that to a particular file under the directory.
+     *
+     * @param file base external project config file
+     * @return external project config file to use
+     */
+    @Nonnull
+    protected abstract File getExternalProjectConfigToUse(@Nonnull File file);
+
+    protected abstract void applyExtraSettings(@Nonnull ExternalModuleImportContext<C> context);
+
+    @Nonnull
+    public C getControl() {
+        return myControl;
+    }
+
+    @Override
+    @RequiredReadAction
+    public void process(
+        @Nonnull ExternalModuleImportContext<C> context,
+        @Nonnull Project project,
+        @Nonnull ModifiableModuleModel model,
+        @Nonnull Consumer<Module> newModuleConsumer
+    ) {
+        project.putUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT, Boolean.TRUE);
+        DataNode<ProjectData> externalProjectNode = getExternalProjectNode();
+        if (externalProjectNode != null) {
+            beforeCommit(externalProjectNode, project);
         }
-        error.set(new WizardStepValidationException(ExternalSystemLocalize.errorResolveWithReason(errorMessage).get()));
-      }
-    };
 
-    final Project project = getContextOrDefaultProject(context);
-    final File finalProjectFile = projectFile;
-    final String externalProjectPath = FileUtil.toCanonicalPath(finalProjectFile.getAbsolutePath());
-    final Ref<WizardStepValidationException> exRef = new Ref<>();
-    executeAndRestoreDefaultProjectSettings(project, ()-> {
-      try {
-        ExternalSystemUtil.refreshProject(
-          project,
-          myExternalSystemId,
-          externalProjectPath,
-          callback,
-          true,
-          ProgressExecutionMode.MODAL_SYNC
-        );
-      }
-      catch (IllegalArgumentException e) {
-        exRef.set(new WizardStepValidationException(ExternalSystemLocalize.errorCannotParseProject(externalSystemName).get()));
-      }
-    });
-    WizardStepValidationException ex = exRef.get();
-    if (ex != null) {
-      throw ex;
-    }
-    if (myExternalProjectNode == null) {
-      WizardStepValidationException exception = error.get();
-      if (exception != null) {
-        throw exception;
-      }
-    }
-    else {
-      applyProjectSettings(context);
-    }
-  }
+        StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
+            AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, myExternalSystemId);
+            ExternalProjectSettings projectSettings = getCurrentExternalProjectSettings();
+            Set<ExternalProjectSettings> projects = new HashSet<>(systemSettings.getLinkedProjectsSettings());
+            // add current importing project settings to linked projects settings or replace if similar already exist
+            projects.remove(projectSettings);
+            projects.add(projectSettings);
 
-  /**
-   * Applies external system-specific settings like project files location etc to the given context.
-   *
-   * @param context storage for the project/module settings.
-   */
-  public void applyProjectSettings(@Nonnull ExternalModuleImportContext<C> context) {
-    if (myExternalProjectNode == null) {
-      assert false;
-      return;
-    }
-    context.setName(myExternalProjectNode.getData().getInternalName());
-    context.setPath(myExternalProjectNode.getData().getIdeProjectFileDirectoryPath());
-    applyExtraSettings(context);
-  }
+            systemSettings.copyFrom(myControl.getSystemSettings());
+            systemSettings.setLinkedProjectsSettings(projects);
 
-  @Nullable
-  private File getProjectFile() {
-    String path = myControl.getProjectSettings().getExternalProjectPath();
-    return path == null ? null : new File(path);
-  }
+            if (externalProjectNode != null) {
+                ExternalSystemUtil.ensureToolWindowInitialized(project, myExternalSystemId);
+                ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
+                    @Override
+                    @RequiredUIAccess
+                    public void execute() {
+                        ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(() -> {
+                            myProjectDataManager.importData(
+                                externalProjectNode.getKey(),
+                                Collections.singleton(externalProjectNode),
+                                project,
+                                true
+                            );
+                            myExternalProjectNode = null;
+                        });
+                    }
+                });
 
-  @SuppressWarnings("unchecked")
-  private void executeAndRestoreDefaultProjectSettings(@Nonnull Project project, @Nonnull Runnable task) {
-    if (!project.isDefault()) {
-      task.run();
-      return;
-    }
+                Runnable resolveDependenciesTask = () -> {
+                    LocalizeValue progressText = ExternalSystemLocalize.progressResolveLibraries(myExternalSystemId.getDisplayName());
+                    ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText.get(), false) {
+                        @Override
+                        public void run(@Nonnull ProgressIndicator indicator) {
+                            if (project.isDisposed()) {
+                                return;
+                            }
+                            ExternalSystemResolveProjectTask task = new ExternalSystemResolveProjectTask(
+                                myExternalSystemId,
+                                project,
+                                projectSettings.getExternalProjectPath(),
+                                false
+                            );
+                            task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
+                            DataNode<ProjectData> projectWithResolvedLibraries = task.getExternalProject();
+                            if (projectWithResolvedLibraries == null) {
+                                return;
+                            }
 
-    AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, myExternalSystemId);
-    Object systemStateToRestore = null;
-    if (systemSettings instanceof PersistentStateComponent) {
-      systemStateToRestore = ((PersistentStateComponent)systemSettings).getState();
-    }
-    systemSettings.copyFrom(myControl.getSystemSettings());
-    Collection projectSettingsToRestore = systemSettings.getLinkedProjectsSettings();
-    systemSettings.setLinkedProjectsSettings(Collections.singleton(getCurrentExternalProjectSettings()));
-    try {
-      task.run();
-    }
-    finally {
-      if (systemStateToRestore != null) {
-        ((PersistentStateComponent)systemSettings).loadState(systemStateToRestore);
-      }
-      else {
-        systemSettings.setLinkedProjectsSettings(projectSettingsToRestore);
-      }
-    }
-  }
-
-  @Nonnull
-  private ExternalProjectSettings getCurrentExternalProjectSettings() {
-    ExternalProjectSettings result = myControl.getProjectSettings().clone();
-    File externalProjectConfigFile = getExternalProjectConfigToUse(new File(result.getExternalProjectPath()));
-    final String linkedProjectPath = FileUtil.toCanonicalPath(externalProjectConfigFile.getPath());
-    assert linkedProjectPath != null;
-    result.setExternalProjectPath(linkedProjectPath);
-    return result;
-  }
-
-  /**
-   * The whole import sequence looks like below:
-   * <p>
-   * <pre>
-   * <ol>
-   *   <li>Get project view from the gradle tooling api without resolving dependencies (downloading libraries);</li>
-   *   <li>Allow to adjust project settings before importing;</li>
-   *   <li>Create IJ project and modules;</li>
-   *   <li>Ask gradle tooling api to resolve library dependencies (download the if necessary);</li>
-   *   <li>Configure libraries used by the gradle project at intellij;</li>
-   *   <li>Configure library dependencies;</li>
-   * </ol>
-   * </pre>
-   * <p>
-   *
-   * @param projectWithResolvedLibraries gradle project with resolved libraries (libraries have already been downloaded and
-   *                                     are available at file system under gradle service directory)
-   * @param project                      current intellij project which should be configured by libraries and module library
-   *                                     dependencies information available at the given gradle project
-   */
-  private void setupLibraries(@Nonnull final DataNode<ProjectData> projectWithResolvedLibraries, final Project project) {
-    ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
-      @RequiredUIAccess
-      @Override
-      public void execute() {
-        ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(() -> {
-          if (ExternalSystemApiUtil.isNewProjectConstruction()) {
-            // Clean existing libraries (if any).
-            LibraryTable projectLibraryTable = ProjectLibraryTableImpl.getInstance(project);
-            if (projectLibraryTable == null) {
-              LOG.warn(
-                "Can't resolve external dependencies of the target gradle project (" + project + ")." +
-                  " Reason: project library table is undefined"
-              );
-              return;
+                            setupLibraries(projectWithResolvedLibraries, project);
+                        }
+                    });
+                };
+                UIUtil.invokeLaterIfNeeded(resolveDependenciesTask);
             }
-            LibraryTable.ModifiableModel model = projectLibraryTable.getModifiableModel();
-            try {
-              for (Library library : model.getLibraries()) {
-                model.removeLibrary(library);
-              }
-            }
-            finally {
-              model.commit();
-            }
-          }
-
-          // Register libraries.
-          myProjectDataManager.importData(Collections.<DataNode<?>>singletonList(projectWithResolvedLibraries), project, false);
         });
-      }
-    });
-  }
-
-  /**
-   * Allows to get {@link Project} instance to use. Basically, there are two alternatives -
-   * {@link ExternalModuleImportContext#getProject() project from the current wizard context} and
-   * {@link ProjectManager#getDefaultProject() default project}.
-   *
-   * @param context current wizard context
-   * @return {@link Project} instance to use
-   */
-  @Nonnull
-  public Project getContextOrDefaultProject(@Nonnull ExternalModuleImportContext<C> context) {
-    Project result = context.getProject();
-    if (result == null) {
-      result = ProjectManager.getInstance().getDefaultProject();
     }
-    return result;
-  }
 
-  @Override
-  public void buildSteps(
-    @Nonnull Consumer<WizardStep<ExternalModuleImportContext<C>>> consumer,
-    @Nonnull ExternalModuleImportContext<C> context
-  ) {
-    consumer.accept(new SelectExternalProjectStep<>());
-  }
+    @Nullable
+    public DataNode<ProjectData> getExternalProjectNode() {
+        return myExternalProjectNode;
+    }
 
-  @Nonnull
-  @Override
-  public ExternalModuleImportContext<C> createContext(@Nullable Project project) {
-    return new ExternalModuleImportContext<>(project, this);
-  }
+    /**
+     * Asks current builder to ensure that target external project is defined.
+     *
+     * @param context current wizard context
+     * @throws WizardStepValidationException if gradle project is not defined and can't be constructed
+     */
+    @SuppressWarnings("unchecked")
+    public void ensureProjectIsDefined(@Nonnull ExternalModuleImportContext<C> context) throws WizardStepValidationException {
+        String externalSystemName = myExternalSystemId.getReadableName().get();
+        File projectFile = getProjectFile();
+        if (projectFile == null) {
+            throw new WizardStepValidationException(ExternalSystemLocalize.errorProjectUndefined().get());
+        }
+        projectFile = getExternalProjectConfigToUse(projectFile);
+        SimpleReference<WizardStepValidationException> error = new SimpleReference<>();
+        ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
+            @Override
+            public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
+                myExternalProjectNode = externalProject;
+            }
 
-  @Override
-  public String getPathToBeImported(@Nonnull VirtualFile file) {
-    return file.getPath();
-  }
+            @Override
+            public void onFailure(@Nonnull String errorMessage, @Nullable String errorDetails) {
+                if (!StringUtil.isEmpty(errorDetails)) {
+                    LOG.warn(errorDetails);
+                }
+                error.set(new WizardStepValidationException(ExternalSystemLocalize.errorResolveWithReason(errorMessage).get()));
+            }
+        };
+
+        Project project = getContextOrDefaultProject(context);
+        File finalProjectFile = projectFile;
+        String externalProjectPath = FileUtil.toCanonicalPath(finalProjectFile.getAbsolutePath());
+        SimpleReference<WizardStepValidationException> exRef = new SimpleReference<>();
+        executeAndRestoreDefaultProjectSettings(project, () -> {
+            try {
+                ExternalSystemUtil.refreshProject(
+                    project,
+                    myExternalSystemId,
+                    externalProjectPath,
+                    callback,
+                    true,
+                    ProgressExecutionMode.MODAL_SYNC
+                );
+            }
+            catch (IllegalArgumentException e) {
+                exRef.set(new WizardStepValidationException(ExternalSystemLocalize.errorCannotParseProject(externalSystemName).get()));
+            }
+        });
+        WizardStepValidationException ex = exRef.get();
+        if (ex != null) {
+            throw ex;
+        }
+        if (myExternalProjectNode == null) {
+            WizardStepValidationException exception = error.get();
+            if (exception != null) {
+                throw exception;
+            }
+        }
+        else {
+            applyProjectSettings(context);
+        }
+    }
+
+    /**
+     * Applies external system-specific settings like project files location etc to the given context.
+     *
+     * @param context storage for the project/module settings.
+     */
+    public void applyProjectSettings(@Nonnull ExternalModuleImportContext<C> context) {
+        if (myExternalProjectNode == null) {
+            assert false;
+            return;
+        }
+        context.setName(myExternalProjectNode.getData().getInternalName());
+        context.setPath(myExternalProjectNode.getData().getIdeProjectFileDirectoryPath());
+        applyExtraSettings(context);
+    }
+
+    @Nullable
+    private File getProjectFile() {
+        String path = myControl.getProjectSettings().getExternalProjectPath();
+        return path == null ? null : new File(path);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void executeAndRestoreDefaultProjectSettings(@Nonnull Project project, @Nonnull Runnable task) {
+        if (!project.isDefault()) {
+            task.run();
+            return;
+        }
+
+        AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, myExternalSystemId);
+        Object systemStateToRestore = null;
+        if (systemSettings instanceof PersistentStateComponent) {
+            systemStateToRestore = ((PersistentStateComponent)systemSettings).getState();
+        }
+        systemSettings.copyFrom(myControl.getSystemSettings());
+        Collection projectSettingsToRestore = systemSettings.getLinkedProjectsSettings();
+        systemSettings.setLinkedProjectsSettings(Collections.singleton(getCurrentExternalProjectSettings()));
+        try {
+            task.run();
+        }
+        finally {
+            if (systemStateToRestore != null) {
+                ((PersistentStateComponent)systemSettings).loadState(systemStateToRestore);
+            }
+            else {
+                systemSettings.setLinkedProjectsSettings(projectSettingsToRestore);
+            }
+        }
+    }
+
+    @Nonnull
+    private ExternalProjectSettings getCurrentExternalProjectSettings() {
+        ExternalProjectSettings result = myControl.getProjectSettings().clone();
+        File externalProjectConfigFile = getExternalProjectConfigToUse(new File(result.getExternalProjectPath()));
+        String linkedProjectPath = FileUtil.toCanonicalPath(externalProjectConfigFile.getPath());
+        assert linkedProjectPath != null;
+        result.setExternalProjectPath(linkedProjectPath);
+        return result;
+    }
+
+    /**
+     * The whole import sequence looks like below:
+     * <p>
+     * <pre>
+     * <ol>
+     *   <li>Get project view from the gradle tooling api without resolving dependencies (downloading libraries);</li>
+     *   <li>Allow to adjust project settings before importing;</li>
+     *   <li>Create IJ project and modules;</li>
+     *   <li>Ask gradle tooling api to resolve library dependencies (download the if necessary);</li>
+     *   <li>Configure libraries used by the gradle project at intellij;</li>
+     *   <li>Configure library dependencies;</li>
+     * </ol>
+     * </pre>
+     * <p>
+     *
+     * @param projectWithResolvedLibraries gradle project with resolved libraries (libraries have already been downloaded and
+     *                                     are available at file system under gradle service directory)
+     * @param project                      current intellij project which should be configured by libraries and module library
+     *                                     dependencies information available at the given gradle project
+     */
+    private void setupLibraries(@Nonnull DataNode<ProjectData> projectWithResolvedLibraries, Project project) {
+        ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
+            @Override
+            @RequiredUIAccess
+            public void execute() {
+                ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(() -> {
+                    if (ExternalSystemApiUtil.isNewProjectConstruction()) {
+                        // Clean existing libraries (if any).
+                        LibraryTable projectLibraryTable = ProjectLibraryTableImpl.getInstance(project);
+                        if (projectLibraryTable == null) {
+                            LOG.warn(
+                                "Can't resolve external dependencies of the target gradle project (" + project + ")." +
+                                    " Reason: project library table is undefined"
+                            );
+                            return;
+                        }
+                        LibraryTable.ModifiableModel model = projectLibraryTable.getModifiableModel();
+                        try {
+                            for (Library library : model.getLibraries()) {
+                                model.removeLibrary(library);
+                            }
+                        }
+                        finally {
+                            model.commit();
+                        }
+                    }
+
+                    // Register libraries.
+                    myProjectDataManager.importData(Collections.<DataNode<?>>singletonList(projectWithResolvedLibraries), project, false);
+                });
+            }
+        });
+    }
+
+    /**
+     * Allows to get {@link Project} instance to use. Basically, there are two alternatives -
+     * {@link ExternalModuleImportContext#getProject() project from the current wizard context} and
+     * {@link ProjectManager#getDefaultProject() default project}.
+     *
+     * @param context current wizard context
+     * @return {@link Project} instance to use
+     */
+    @Nonnull
+    public Project getContextOrDefaultProject(@Nonnull ExternalModuleImportContext<C> context) {
+        Project result = context.getProject();
+        if (result == null) {
+            result = ProjectManager.getInstance().getDefaultProject();
+        }
+        return result;
+    }
+
+    @Override
+    public void buildSteps(
+        @Nonnull Consumer<WizardStep<ExternalModuleImportContext<C>>> consumer,
+        @Nonnull ExternalModuleImportContext<C> context
+    ) {
+        consumer.accept(new SelectExternalProjectStep<>());
+    }
+
+    @Nonnull
+    @Override
+    public ExternalModuleImportContext<C> createContext(@Nullable Project project) {
+        return new ExternalModuleImportContext<>(project, this);
+    }
+
+    @Override
+    public String getPathToBeImported(@Nonnull VirtualFile file) {
+        return file.getPath();
+    }
 }

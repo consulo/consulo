@@ -24,19 +24,20 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface NonProjectFileWritingAccessExtension {
-  ExtensionPointName<NonProjectFileWritingAccessExtension> EP_NAME = ExtensionPointName.create(NonProjectFileWritingAccessExtension.class);
+    ExtensionPointName<NonProjectFileWritingAccessExtension> EP_NAME =
+        ExtensionPointName.create(NonProjectFileWritingAccessExtension.class);
 
-  /**
-   * @return true if the file should not be protected from accidental writing. false to use default logic.
-   */
-  default boolean isWritable(@Nonnull VirtualFile file) {
-    return false;
-  }
+    /**
+     * @return true if the file should not be protected from accidental writing. false to use default logic.
+     */
+    default boolean isWritable(@Nonnull VirtualFile file) {
+        return false;
+    }
 
-  /**
-   * @return true if the file should be protected from accidental writing. false to use default logic.
-   */
-  default boolean isNotWritable(@Nonnull VirtualFile file) {
-    return false;
-  }
+    /**
+     * @return true if the file should be protected from accidental writing. false to use default logic.
+     */
+    default boolean isNotWritable(@Nonnull VirtualFile file) {
+        return false;
+    }
 }

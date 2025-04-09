@@ -6,7 +6,6 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.Dumpable;
 import consulo.application.util.Queryable;
-import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorAction;
@@ -777,10 +776,10 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         myLineExtensionPainters.add(lineExtensionPainter);
     }
 
-    public boolean processLineExtensions(int line, Processor<? super LineExtensionInfo> processor) {
+    public boolean processLineExtensions(int line, Predicate<? super LineExtensionInfo> processor) {
         for (IntFunction<Collection<LineExtensionInfo>> painter : myLineExtensionPainters) {
             for (LineExtensionInfo extension : painter.apply(line)) {
-                if (!processor.process(extension)) {
+                if (!processor.test(extension)) {
                     return false;
                 }
             }
@@ -790,7 +789,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
                 Collection<LineExtensionInfo> extensions = painter.getLineExtensions(myProject, myVirtualFile, line);
                 if (extensions != null) {
                     for (LineExtensionInfo extension : extensions) {
-                        if (!processor.process(extension)) {
+                        if (!processor.test(extension)) {
                             return false;
                         }
                     }
@@ -1056,13 +1055,13 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
      * To be called when editor was not disposed while it should
      */
     @Override
-    public void throwEditorNotDisposedError(@Nonnull final String msg) {
+    public void throwEditorNotDisposedError(@Nonnull String msg) {
         myTraceableDisposable.throwObjectNotDisposedError(msg);
     }
 
     @Override
     public void putInfo(@Nonnull Map<String, String> info) {
-        final VisualPosition visual = getCaretModel().getVisualPosition();
+        VisualPosition visual = getCaretModel().getVisualPosition();
         info.put("caret", visual.getLine() + ":" + visual.getColumn());
     }
 
@@ -1090,7 +1089,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             getFoldingModel().dumpState() +
             "\ninlay model: " +
             getInlayModel().dumpState() +
-            (myDocument instanceof DocumentImpl ? "\n\ndocument info: " + ((DocumentImpl)myDocument).dumpState() : "") +
+            (myDocument instanceof DocumentImpl document ? "\n\ndocument info: " + document.dumpState() : "") +
             "\nfont preferences: " +
             myScheme.getFontPreferences() +
             "\npure painting mode: " +
@@ -1104,7 +1103,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Nonnull
-    private DataContext getProjectAwareDataContext(@Nonnull final DataContext original) {
+    private DataContext getProjectAwareDataContext(@Nonnull DataContext original) {
         if (original.getData(Project.KEY) == myProject) {
             return original;
         }
@@ -1151,7 +1150,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    public void addPropertyChangeListener(@Nonnull final PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
+    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
         addPropertyChangeListener(listener);
         Disposer.register(parentDisposable, () -> removePropertyChangeListener(listener));
     }
@@ -1187,18 +1186,18 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     @Nonnull
     @Override
-    public EditorColorsScheme createBoundColorSchemeDelegate(@Nullable final EditorColorsScheme customGlobalScheme) {
+    public EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme) {
         return new MyColorSchemeDelegate(customGlobalScheme);
     }
 
     @Override
     @RequiredUIAccess
-    public void setHighlighter(@Nonnull final EditorHighlighter highlighter) {
+    public void setHighlighter(@Nonnull EditorHighlighter highlighter) {
         if (isReleased) {
             return; // do not set highlighter to the released editor
         }
         assertIsDispatchThread();
-        final Document document = getDocument();
+        Document document = getDocument();
         Disposer.dispose(myHighlighterDisposable);
 
         document.addDocumentListener(highlighter);

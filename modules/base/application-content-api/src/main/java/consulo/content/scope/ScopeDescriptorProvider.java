@@ -28,8 +28,8 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ScopeDescriptorProvider {
-  ExtensionPointName<ScopeDescriptorProvider> EP_NAME = ExtensionPointName.create(ScopeDescriptorProvider.class);
+    ExtensionPointName<ScopeDescriptorProvider> EP_NAME = ExtensionPointName.create(ScopeDescriptorProvider.class);
 
-  @Nonnull
-  ScopeDescriptor[] getScopeDescriptors(Project project);
+    @Nonnull
+    ScopeDescriptor[] getScopeDescriptors(Project project);
 }

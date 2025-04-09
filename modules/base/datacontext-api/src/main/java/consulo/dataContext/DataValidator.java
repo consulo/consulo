@@ -24,11 +24,11 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DataValidator<T> {
-  ExtensionPointName<DataValidator> EP_NAME = ExtensionPointName.create(DataValidator.class);
+    ExtensionPointName<DataValidator> EP_NAME = ExtensionPointName.create(DataValidator.class);
 
-  @Nonnull
-  Key<T> getKey();
+    @Nonnull
+    Key<T> getKey();
 
-  @Nullable
-  T findInvalid(Key<T> key, T data, final Object dataSource);
+    @Nullable
+    T findInvalid(Key<T> key, T data, final Object dataSource);
 }
