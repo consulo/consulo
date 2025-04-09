@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.notification;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.errorTreeView.CustomizeColoredTreeCellRendererReplacement;
 import consulo.ide.impl.idea.ide.errorTreeView.GroupingElement;
 import consulo.ide.impl.idea.ide.errorTreeView.NavigatableMessageElement;
 import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeRenderer;
 import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.SimpleColoredComponent;
@@ -61,6 +61,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
                                     String rendererTextPrefix) {
     super(kind, parent, message, navigatable, exportText, rendererTextPrefix);
     myLeftTreeCellRenderer = new CustomizeColoredTreeCellRenderer() {
+      @Override
       public void customizeCellRenderer(SimpleColoredComponent renderer,
                                         JTree tree,
                                         Object value,
@@ -79,16 +80,16 @@ public class NotificationMessageElement extends NavigatableMessageElement {
         Image icon = Image.empty(Image.DEFAULT_ICON_SIZE);
         switch (kind) {
           case INFO:
-            icon = AllIcons.General.Information;
+            icon = PlatformIconGroup.generalInformation();
             break;
           case ERROR:
-            icon = AllIcons.General.Error;
+            icon = PlatformIconGroup.generalError();
             break;
           case WARNING:
-            icon = AllIcons.General.Warning;
+            icon = PlatformIconGroup.generalWarning();
             break;
           case NOTE:
-            icon = AllIcons.General.Tip;
+            icon = PlatformIconGroup.actionsIntentionbulb();
             break;
           case GENERIC:
             break;
@@ -100,7 +101,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
     myRightTreeCellRenderer = new MyCustomizeColoredTreeCellRendererReplacement();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public CustomizeColoredTreeCellRenderer getRightSelfRenderer() {
     return myRightTreeCellRenderer;

@@ -298,7 +298,6 @@ public class AllIcons {
         public static final Image Show_to_implement = PlatformIconGroup.generalShowtoimplement(); // 16x16
         public static final Image TbHidden = PlatformIconGroup.generalTbhidden(); // 16x16
         public static final Image TbShown = PlatformIconGroup.generalTbshown(); // 16x16
-        public static final Image Tip = PlatformIconGroup.generalTip(); // 32x32
         public static final Image TodoDefault = PlatformIconGroup.generalTododefault(); // 12x12
         public static final Image TodoImportant = PlatformIconGroup.generalTodoimportant(); // 12x12
         public static final Image TodoQuestion = PlatformIconGroup.generalTodoquestion(); // 12x12
