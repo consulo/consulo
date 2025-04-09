@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CutElementMarker {
-  ExtensionPointName<CutElementMarker> EP_NAME = ExtensionPointName.create(CutElementMarker.class);
+    ExtensionPointName<CutElementMarker> EP_NAME = ExtensionPointName.create(CutElementMarker.class);
 
-  boolean isCutElement(Object element);
+    boolean isCutElement(Object element);
 }

@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileTypeRegistrator {
-  ExtensionPointName<FileTypeRegistrator> EP_NAME = ExtensionPointName.create(FileTypeRegistrator.class);
+    ExtensionPointName<FileTypeRegistrator> EP_NAME = ExtensionPointName.create(FileTypeRegistrator.class);
 
-  void initFileType(FileType fileType);
+    void initFileType(FileType fileType);
 }

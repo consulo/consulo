@@ -24,7 +24,9 @@ import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.ref.Ref;
 
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -32,22 +34,29 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ChangeSignatureUsageProcessor {
-  ExtensionPointName<ChangeSignatureUsageProcessor> EP_NAME = ExtensionPointName.create(ChangeSignatureUsageProcessor.class);
+    ExtensionPointName<ChangeSignatureUsageProcessor> EP_NAME = ExtensionPointName.create(ChangeSignatureUsageProcessor.class);
 
-  @Nonnull
-  UsageInfo[] findUsages(@Nonnull ChangeInfo info);
+    @Nonnull
+    UsageInfo[] findUsages(@Nonnull ChangeInfo info);
 
-  @Nonnull
-  MultiMap<PsiElement, String> findConflicts(@Nonnull ChangeInfo info, Ref<UsageInfo[]> refUsages);
+    @Nonnull
+    MultiMap<PsiElement, String> findConflicts(@Nonnull ChangeInfo info, SimpleReference<UsageInfo[]> refUsages);
 
-  boolean processUsage(@Nonnull ChangeInfo changeInfo, @Nonnull UsageInfo usageInfo, boolean beforeMethodChange, @Nonnull UsageInfo[] usages);
+    boolean processUsage(
+        @Nonnull ChangeInfo changeInfo,
+        @Nonnull UsageInfo usageInfo,
+        boolean beforeMethodChange,
+        @Nonnull UsageInfo[] usages
+    );
 
-  boolean processPrimaryMethod(@Nonnull ChangeInfo changeInfo);
+    boolean processPrimaryMethod(@Nonnull ChangeInfo changeInfo);
 
-  boolean shouldPreviewUsages(@Nonnull ChangeInfo changeInfo, @Nonnull UsageInfo[] usages);
+    boolean shouldPreviewUsages(@Nonnull ChangeInfo changeInfo, @Nonnull UsageInfo[] usages);
 
-  void registerConflictResolvers(@Nonnull List<ResolveSnapshotProvider.ResolveSnapshot> snapshots,
-                                 @Nonnull ResolveSnapshotProvider resolveSnapshotProvider,
-                                 @Nonnull UsageInfo[] usages,
-                                 @Nonnull ChangeInfo changeInfo);
+    void registerConflictResolvers(
+        @Nonnull List<ResolveSnapshotProvider.ResolveSnapshot> snapshots,
+        @Nonnull ResolveSnapshotProvider resolveSnapshotProvider,
+        @Nonnull UsageInfo[] usages,
+        @Nonnull ChangeInfo changeInfo
+    );
 }

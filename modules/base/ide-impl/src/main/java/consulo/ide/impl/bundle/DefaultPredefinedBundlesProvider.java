@@ -33,111 +33,111 @@ import java.util.List;
  */
 @ExtensionImpl(id = "default", order = "first")
 public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider {
-  private record LegacySDKPath(String path, String envVarName) {
-  }
-
-  private record BundlePath(Path path, String envVarName) {
-  }
-
-  @Override
-  public void createBundles(@Nonnull Context context) {
-    Platform platform = Platform.current();
-
-    SdkType.EP_NAME.forEachExtensionSafe(sdkType -> {
-      if (sdkType instanceof BundleType bundleType) {
-        createBundles(context, bundleType, platform);
-      }
-      else {
-        createLegacySdks(context, sdkType, platform);
-      }
-    });
-  }
-
-  private void createBundles(@Nonnull Context context, BundleType sdkType, Platform platform) {
-    if (!sdkType.canCreatePredefinedSdks(platform)) {
-      return;
+    private record LegacySDKPath(String path, String envVarName) {
     }
 
-    List<BundlePath> paths = new ArrayList<>();
-    sdkType.collectHomePaths(platform, path -> paths.add(new BundlePath(path, null)));
-    for (String envVar : sdkType.getEnviromentVariables(platform)) {
-      String varValue = platform.os().getEnvironmentVariable(envVar);
-      if (!StringUtil.isEmptyOrSpaces(varValue)) {
-        paths.add(new BundlePath(platform.fs().getPath(varValue), envVar));
-      }
+    private record BundlePath(Path path, String envVarName) {
     }
 
-    for (BundlePath bundlePath : paths) {
-      Path path = sdkType.adjustSelectedSdkHome(platform, bundlePath.path());
+    @Override
+    public void createBundles(@Nonnull Context context) {
+        Platform platform = Platform.current();
 
-      if (sdkType.isValidSdkHome(platform, path)) {
-        VirtualFile dirPath = LocalFileSystem.getInstance().findFileByNioFile(path);
-        if (dirPath == null) {
-          continue;
+        SdkType.EP_NAME.forEachExtensionSafe(sdkType -> {
+            if (sdkType instanceof BundleType bundleType) {
+                createBundles(context, bundleType, platform);
+            }
+            else {
+                createLegacySdks(context, sdkType, platform);
+            }
+        });
+    }
+
+    private void createBundles(@Nonnull Context context, BundleType sdkType, Platform platform) {
+        if (!sdkType.canCreatePredefinedSdks(platform)) {
+            return;
         }
 
-        String versionString = sdkType.getVersionString(platform, path);
-
-        Sdk sdk;
-        if (bundlePath.envVarName() != null) {
-          sdk = context.createSdkWithName(sdkType, path, bundlePath.envVarName());
-        }
-        else {
-          sdk = context.createSdk(platform, sdkType, path);
-        }
-
-        SdkModificator sdkModificator = sdk.getSdkModificator();
-        sdkModificator.setVersionString(versionString);
-        sdkModificator.commitChanges();
-
-        sdkType.setupSdkPaths(sdk);
-      }
-    }
-  }
-
-  private void createLegacySdks(@Nonnull Context context, SdkType sdkType, Platform platform) {
-    if (!sdkType.canCreatePredefinedSdks()) {
-      return;
-    }
-
-    List<LegacySDKPath> paths = new ArrayList<>();
-    for (String path : sdkType.suggestHomePaths()) {
-      paths.add(new LegacySDKPath(path, null));
-    }
-
-    for (String envVar : sdkType.getEnviromentVariables(platform)) {
-      String varValue = platform.os().getEnvironmentVariable(envVar);
-      if (!StringUtil.isEmptyOrSpaces(varValue)) {
-        paths.add(new LegacySDKPath(varValue, envVar));
-      }
-    }
-
-    for (LegacySDKPath legacySDKPath : paths) {
-      String path = sdkType.adjustSelectedSdkHome(legacySDKPath.path());
-
-      if (sdkType.isValidSdkHome(path)) {
-        VirtualFile dirPath = LocalFileSystem.getInstance().findFileByPath(path);
-        if (dirPath == null) {
-          continue;
+        List<BundlePath> paths = new ArrayList<>();
+        sdkType.collectHomePaths(platform, path -> paths.add(new BundlePath(path, null)));
+        for (String envVar : sdkType.getEnviromentVariables(platform)) {
+            String varValue = platform.os().getEnvironmentVariable(envVar);
+            if (!StringUtil.isEmptyOrSpaces(varValue)) {
+                paths.add(new BundlePath(platform.fs().getPath(varValue), envVar));
+            }
         }
 
-        String sdkPath = sdkType.sdkPath(dirPath);
+        for (BundlePath bundlePath : paths) {
+            Path path = sdkType.adjustSelectedSdkHome(platform, bundlePath.path());
 
-        Sdk sdk;
-        if (legacySDKPath.envVarName() != null) {
-          sdk = context.createSdkWithName(sdkType, legacySDKPath.envVarName());
+            if (sdkType.isValidSdkHome(platform, path)) {
+                VirtualFile dirPath = LocalFileSystem.getInstance().findFileByNioFile(path);
+                if (dirPath == null) {
+                    continue;
+                }
+
+                String versionString = sdkType.getVersionString(platform, path);
+
+                Sdk sdk;
+                if (bundlePath.envVarName() != null) {
+                    sdk = context.createSdkWithName(sdkType, path, bundlePath.envVarName());
+                }
+                else {
+                    sdk = context.createSdk(platform, sdkType, path);
+                }
+
+                SdkModificator sdkModificator = sdk.getSdkModificator();
+                sdkModificator.setVersionString(versionString);
+                sdkModificator.commitChanges();
+
+                sdkType.setupSdkPaths(sdk);
+            }
         }
-        else {
-          sdk = context.createSdk(sdkType, sdkPath);
-        }
-
-        SdkModificator sdkModificator = sdk.getSdkModificator();
-        sdkModificator.setHomePath(sdkPath);
-        sdkModificator.setVersionString(sdkType.getVersionString(sdkPath));
-        sdkModificator.commitChanges();
-
-        sdkType.setupSdkPaths(sdk);
-      }
     }
-  }
+
+    private void createLegacySdks(@Nonnull Context context, SdkType sdkType, Platform platform) {
+        if (!sdkType.canCreatePredefinedSdks()) {
+            return;
+        }
+
+        List<LegacySDKPath> paths = new ArrayList<>();
+        for (String path : sdkType.suggestHomePaths()) {
+            paths.add(new LegacySDKPath(path, null));
+        }
+
+        for (String envVar : sdkType.getEnviromentVariables(platform)) {
+            String varValue = platform.os().getEnvironmentVariable(envVar);
+            if (!StringUtil.isEmptyOrSpaces(varValue)) {
+                paths.add(new LegacySDKPath(varValue, envVar));
+            }
+        }
+
+        for (LegacySDKPath legacySDKPath : paths) {
+            String path = sdkType.adjustSelectedSdkHome(legacySDKPath.path());
+
+            if (sdkType.isValidSdkHome(path)) {
+                VirtualFile dirPath = LocalFileSystem.getInstance().findFileByPath(path);
+                if (dirPath == null) {
+                    continue;
+                }
+
+                String sdkPath = sdkType.sdkPath(dirPath);
+
+                Sdk sdk;
+                if (legacySDKPath.envVarName() != null) {
+                    sdk = context.createSdkWithName(sdkType, legacySDKPath.envVarName());
+                }
+                else {
+                    sdk = context.createSdk(sdkType, sdkPath);
+                }
+
+                SdkModificator sdkModificator = sdk.getSdkModificator();
+                sdkModificator.setHomePath(sdkPath);
+                sdkModificator.setVersionString(sdkType.getVersionString(sdkPath));
+                sdkModificator.commitChanges();
+
+                sdkType.setupSdkPaths(sdk);
+            }
+        }
+    }
 }

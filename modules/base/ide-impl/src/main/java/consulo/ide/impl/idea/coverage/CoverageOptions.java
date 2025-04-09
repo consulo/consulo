@@ -11,5 +11,5 @@ import consulo.project.Project;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class CoverageOptions extends ConfigurableProvider {
-  public static final ExtensionList<CoverageOptions, Project> EP_NAME = ExtensionList.of(CoverageOptions.class);
+    public static final ExtensionList<CoverageOptions, Project> EP_NAME = ExtensionList.of(CoverageOptions.class);
 }

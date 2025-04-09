@@ -47,84 +47,88 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 @ServiceImpl
 public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanRunnableCollector {
-  private final Project myProject;
-  @Nonnull
-  private final Provider<ProjectFileIndex> myProjectFileIndexProvider;
-  private final FileTypeManager myFileTypeManager;
+    private final Project myProject;
+    @Nonnull
+    private final Provider<ProjectFileIndex> myProjectFileIndexProvider;
+    private final FileTypeManager myFileTypeManager;
 
-  @Inject
-  public FileBasedIndexScanRunnableCollectorImpl(@Nonnull Project project, @Nonnull Provider<ProjectFileIndex> projectFileIndexProvider) {
-    myProject = project;
-    myProjectFileIndexProvider = projectFileIndexProvider;
-    myFileTypeManager = FileTypeManager.getInstance();
-  }
-
-  @Override
-  public boolean shouldCollect(@Nonnull VirtualFile file) {
-    ProjectFileIndex projectFileIndex = myProjectFileIndexProvider.get();
-    if (projectFileIndex.isInContent(file) || projectFileIndex.isInLibraryClasses(file) || projectFileIndex.isInLibrarySource(file)) {
-      return !myFileTypeManager.isFileIgnored(file);
+    @Inject
+    public FileBasedIndexScanRunnableCollectorImpl(@Nonnull Project project, @Nonnull Provider<ProjectFileIndex> projectFileIndexProvider) {
+        myProject = project;
+        myProjectFileIndexProvider = projectFileIndexProvider;
+        myFileTypeManager = FileTypeManager.getInstance();
     }
-    return false;
-  }
 
-  @Override
-  public List<Runnable> collectScanRootRunnables(@Nonnull ContentIterator processor, ProgressIndicator indicator) {
-    ProjectFileIndex projectFileIndex = myProjectFileIndexProvider.get();
-
-    return AccessRule.read(() -> {
-      if (myProject.isDisposed()) {
-        return Collections.emptyList();
-      }
-
-      List<Runnable> tasks = new ArrayList<>();
-      final Set<VirtualFile> visitedRoots = ConcurrentHashMap.newKeySet();
-
-      tasks.add(() -> projectFileIndex.iterateContent(processor, file -> !file.isDirectory() || visitedRoots.add(file)));
-
-      JBIterable<VirtualFile> contributedRoots = JBIterable.empty();
-      for (IndexableSetContributor contributor : IndexableSetContributor.EP_NAME.getExtensionList()) {
-        //important not to depend on project here, to support per-project background reindex
-        // each client gives a project to FileBasedIndex
-        if (myProject.isDisposed()) {
-          return tasks;
+    @Override
+    public boolean shouldCollect(@Nonnull VirtualFile file) {
+        ProjectFileIndex projectFileIndex = myProjectFileIndexProvider.get();
+        if (projectFileIndex.isInContent(file) || projectFileIndex.isInLibraryClasses(file) || projectFileIndex.isInLibrarySource(file)) {
+            return !myFileTypeManager.isFileIgnored(file);
         }
-        contributedRoots = contributedRoots.append(IndexableSetContributor.getRootsToIndex(contributor));
-        contributedRoots = contributedRoots.append(IndexableSetContributor.getProjectRootsToIndex(contributor, myProject));
-      }
+        return false;
+    }
 
-      for (VirtualFile root : contributedRoots) {
-        if (visitedRoots.add(root)) {
-          tasks.add(() -> {
-            if (myProject.isDisposed() || !root.isValid()) return;
-            FileBasedIndex.iterateRecursively(root, processor, indicator, visitedRoots, null);
-          });
-        }
-      }
+    @Override
+    public List<Runnable> collectScanRootRunnables(@Nonnull ContentIterator processor, ProgressIndicator indicator) {
+        ProjectFileIndex projectFileIndex = myProjectFileIndexProvider.get();
 
-      // iterate associated libraries
-      for (final Module module : ModuleManager.getInstance(myProject).getModules()) {
-        OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
-        for (OrderEntry orderEntry : orderEntries) {
-          if (orderEntry instanceof OrderEntryWithTracking) {
-            if (orderEntry.isValid()) {
-              final VirtualFile[] libSources = orderEntry.getFiles(SourcesOrderRootType.getInstance());
-              final VirtualFile[] libClasses = orderEntry.getFiles(BinariesOrderRootType.getInstance());
-              for (VirtualFile[] roots : new VirtualFile[][]{libSources, libClasses}) {
-                for (final VirtualFile root : roots) {
-                  if (visitedRoots.add(root)) {
-                    tasks.add(() -> {
-                      if (myProject.isDisposed() || module.isDisposed() || !root.isValid()) return;
-                      FileBasedIndex.iterateRecursively(root, processor, indicator, visitedRoots, projectFileIndex);
-                    });
-                  }
-                }
-              }
+        return AccessRule.read(() -> {
+            if (myProject.isDisposed()) {
+                return Collections.emptyList();
             }
-          }
-        }
-      }
-      return tasks;
-    });
-  }
+
+            List<Runnable> tasks = new ArrayList<>();
+            final Set<VirtualFile> visitedRoots = ConcurrentHashMap.newKeySet();
+
+            tasks.add(() -> projectFileIndex.iterateContent(processor, file -> !file.isDirectory() || visitedRoots.add(file)));
+
+            JBIterable<VirtualFile> contributedRoots = JBIterable.empty();
+            for (IndexableSetContributor contributor : IndexableSetContributor.EP_NAME.getExtensionList()) {
+                //important not to depend on project here, to support per-project background reindex
+                // each client gives a project to FileBasedIndex
+                if (myProject.isDisposed()) {
+                    return tasks;
+                }
+                contributedRoots = contributedRoots.append(IndexableSetContributor.getRootsToIndex(contributor));
+                contributedRoots = contributedRoots.append(IndexableSetContributor.getProjectRootsToIndex(contributor, myProject));
+            }
+
+            for (VirtualFile root : contributedRoots) {
+                if (visitedRoots.add(root)) {
+                    tasks.add(() -> {
+                        if (myProject.isDisposed() || !root.isValid()) {
+                            return;
+                        }
+                        FileBasedIndex.iterateRecursively(root, processor, indicator, visitedRoots, null);
+                    });
+                }
+            }
+
+            // iterate associated libraries
+            for (final Module module : ModuleManager.getInstance(myProject).getModules()) {
+                OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
+                for (OrderEntry orderEntry : orderEntries) {
+                    if (orderEntry instanceof OrderEntryWithTracking) {
+                        if (orderEntry.isValid()) {
+                            final VirtualFile[] libSources = orderEntry.getFiles(SourcesOrderRootType.getInstance());
+                            final VirtualFile[] libClasses = orderEntry.getFiles(BinariesOrderRootType.getInstance());
+                            for (VirtualFile[] roots : new VirtualFile[][]{libSources, libClasses}) {
+                                for (final VirtualFile root : roots) {
+                                    if (visitedRoots.add(root)) {
+                                        tasks.add(() -> {
+                                            if (myProject.isDisposed() || module.isDisposed() || !root.isValid()) {
+                                                return;
+                                            }
+                                            FileBasedIndex.iterateRecursively(root, processor, indicator, visitedRoots, projectFileIndex);
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return tasks;
+        });
+    }
 }

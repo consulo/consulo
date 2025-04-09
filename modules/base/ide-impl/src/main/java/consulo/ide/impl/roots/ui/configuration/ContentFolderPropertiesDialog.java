@@ -15,22 +15,20 @@
  */
 package consulo.ide.impl.roots.ui.configuration;
 
-import consulo.ui.ex.awt.ChooseElementsDialog;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.content.ContentFolderPropertyProvider;
+import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
 import consulo.module.content.layer.ContentFolder;
-import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
+import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.ex.awt.ChooseElementsDialog;
+import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import consulo.ui.ex.awt.AnActionButton;
-import consulo.ui.ex.awt.AnActionButtonRunnable;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.awt.table.TableView;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
-import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.content.ContentFolderPropertyProvider;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -45,155 +43,161 @@ import java.util.Map;
  * @since 05.02.14
  */
 public class ContentFolderPropertiesDialog extends DialogWrapper {
-  private static class Item {
-    public ContentFolderPropertyProvider myProvider;
-    public Key myKey;
-    public Object myValue;
+    private static class Item {
+        public ContentFolderPropertyProvider myProvider;
+        public Key myKey;
+        public Object myValue;
 
-    private Item(ContentFolderPropertyProvider provider, Key key, Object value) {
-      myProvider = provider;
-      myKey = key;
-      myValue = value;
-    }
-  }
-
-  private static class ChooseProvidersDialog extends ChooseElementsDialog<ContentFolderPropertyProvider<?>> {
-
-    public ChooseProvidersDialog(Project project, List<? extends ContentFolderPropertyProvider<?>> items, String title, String description) {
-      super(project, items, title, description);
+        private Item(ContentFolderPropertyProvider provider, Key key, Object value) {
+            myProvider = provider;
+            myKey = key;
+            myValue = value;
+        }
     }
 
-    @Override
-    protected String getItemText(ContentFolderPropertyProvider<?> item) {
-      return item.getKey().toString();
-    }
+    private static class ChooseProvidersDialog extends ChooseElementsDialog<ContentFolderPropertyProvider<?>> {
+        public ChooseProvidersDialog(
+            Project project,
+            List<? extends ContentFolderPropertyProvider<?>> items,
+            String title,
+            String description
+        ) {
+            super(project, items, title, description);
+        }
 
-    @Nullable
-    @Override
-    protected Image getItemIcon(ContentFolderPropertyProvider<?> item) {
-      return null;
-    }
-  }
-
-  private static final ColumnInfo[] ourColumns = new ColumnInfo[]{new ColumnInfo<Item, String>("Name") {
-
-    @Nullable
-    @Override
-    public String valueOf(Item info) {
-      return info.myKey.toString();
-    }
-  }, new ColumnInfo<Item, String>("Value") {
-
-    @Nullable
-    @Override
-    public String valueOf(Item info) {
-      return String.valueOf(info.myValue);
-    }
-
-    @Nullable
-    @Override
-    public TableCellRenderer getRenderer(Item item) {
-      return new ComboBoxTableRenderer<Object>(item.myProvider.getValues());
-    }
-
-    @Nullable
-    @Override
-    public TableCellEditor getEditor(final Item o) {
-      return new ComboBoxCellEditor() {
         @Override
-        protected List<String> getComboBoxItems() {
-          Object[] values = o.myProvider.getValues();
-          List<String> items = new ArrayList<String>();
-          for (Object value : values) {
-            items.add(String.valueOf(value));
-          }
-          return items;
+        protected String getItemText(ContentFolderPropertyProvider<?> item) {
+            return item.getKey().toString();
         }
-      };
-    }
 
-    @Override
-    public boolean isCellEditable(Item item) {
-      return item.myProvider != null;
-    }
-
-    @Override
-    public void setValue(Item item, String value) {
-      item.myValue = item.myProvider.fromString(value);
-    }
-  }};
-
-  @Nullable private final Project myProject;
-  private final ContentFolder myContentFolder;
-  private List<Item> myItems = new ArrayList<Item>();
-
-  public ContentFolderPropertiesDialog(@Nullable Project project, ContentFolder contentFolder) {
-    super(project);
-    myProject = project;
-    myContentFolder = contentFolder;
-
-    for (Map.Entry<Key, Object> entry : contentFolder.getProperties().entrySet()) {
-      ContentFolderPropertyProvider provider = null;
-      for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
-        if (propertyProvider.getKey() == entry.getKey()) {
-          provider = propertyProvider;
-          break;
+        @Nullable
+        @Override
+        protected Image getItemIcon(ContentFolderPropertyProvider<?> item) {
+            return null;
         }
-      }
-
-      myItems.add(new Item(provider, entry.getKey(), entry.getValue()));
     }
 
-    setTitle(ProjectBundle.message("module.paths.properties.tooltip"));
+    private static final ColumnInfo[] ourColumns = new ColumnInfo[]{new ColumnInfo<Item, String>("Name") {
 
-    init();
-  }
+        @Nullable
+        @Override
+        public String valueOf(Item info) {
+            return info.myKey.toString();
+        }
+    }, new ColumnInfo<Item, String>("Value") {
 
-  @Nullable
-  @Override
-  protected JComponent createCenterPanel() {
-    ListTableModel<Item> model = new ListTableModel<Item>(ourColumns, myItems, 0);
-    TableView<Item> table = new TableView<Item>(model);
+        @Nullable
+        @Override
+        public String valueOf(Item info) {
+            return String.valueOf(info.myValue);
+        }
 
-    ToolbarDecorator decorator = ToolbarDecorator.createDecorator(table);
-    decorator.setAddAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton anActionButton) {
-        List<ContentFolderPropertyProvider<?>> list = new ArrayList<ContentFolderPropertyProvider<?>>();
-        loop:
-        for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
-          for (Item item : myItems) {
-            if (item.myProvider == propertyProvider) {
-              continue loop;
+        @Nullable
+        @Override
+        public TableCellRenderer getRenderer(Item item) {
+            return new ComboBoxTableRenderer<>(item.myProvider.getValues());
+        }
+
+        @Nullable
+        @Override
+        public TableCellEditor getEditor(Item o) {
+            return new ComboBoxCellEditor() {
+                @Override
+                protected List<String> getComboBoxItems() {
+                    Object[] values = o.myProvider.getValues();
+                    List<String> items = new ArrayList<>();
+                    for (Object value : values) {
+                        items.add(String.valueOf(value));
+                    }
+                    return items;
+                }
+            };
+        }
+
+        @Override
+        public boolean isCellEditable(Item item) {
+            return item.myProvider != null;
+        }
+
+        @Override
+        public void setValue(Item item, String value) {
+            item.myValue = item.myProvider.fromString(value);
+        }
+    }};
+
+    @Nullable
+    private final Project myProject;
+    private final ContentFolder myContentFolder;
+    private List<Item> myItems = new ArrayList<>();
+
+    public ContentFolderPropertiesDialog(@Nullable Project project, ContentFolder contentFolder) {
+        super(project);
+        myProject = project;
+        myContentFolder = contentFolder;
+
+        for (Map.Entry<Key, Object> entry : contentFolder.getProperties().entrySet()) {
+            ContentFolderPropertyProvider provider = null;
+            for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
+                if (propertyProvider.getKey() == entry.getKey()) {
+                    provider = propertyProvider;
+                    break;
+                }
             }
-          }
 
-          list.add(propertyProvider);
+            myItems.add(new Item(provider, entry.getKey(), entry.getValue()));
         }
 
-        ChooseProvidersDialog d = new ChooseProvidersDialog(myProject, list, ProjectBundle.message("module.paths.add.properties.title"),
-                                                            ProjectBundle.message("module.paths.add.properties.desc"));
+        setTitle(ProjectLocalize.modulePathsPropertiesTooltip().get());
 
-        List<ContentFolderPropertyProvider<?>> temp = d.showAndGetResult();
-        for (ContentFolderPropertyProvider<?> propertyProvider : temp) {
-          model.addRow(new Item(propertyProvider, propertyProvider.getKey(), propertyProvider.getValues()[0]));
+        init();
+    }
+
+    @Nullable
+    @Override
+    protected JComponent createCenterPanel() {
+        ListTableModel<Item> model = new ListTableModel<>(ourColumns, myItems, 0);
+        TableView<Item> table = new TableView<>(model);
+
+        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(table);
+        decorator.setAddAction(anActionButton -> {
+            List<ContentFolderPropertyProvider<?>> list = new ArrayList<>();
+            loop:
+            for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
+                for (Item item : myItems) {
+                    if (item.myProvider == propertyProvider) {
+                        continue loop;
+                    }
+                }
+
+                list.add(propertyProvider);
+            }
+
+            ChooseProvidersDialog d = new ChooseProvidersDialog(
+                myProject,
+                list,
+                ProjectLocalize.modulePathsAddPropertiesTitle().get(),
+                ProjectLocalize.modulePathsAddPropertiesDesc().get()
+            );
+
+            List<ContentFolderPropertyProvider<?>> temp = d.showAndGetResult();
+            for (ContentFolderPropertyProvider<?> propertyProvider : temp) {
+                model.addRow(new Item(propertyProvider, propertyProvider.getKey(), propertyProvider.getValues()[0]));
+            }
+        });
+        decorator.disableUpDownActions();
+        return decorator.createPanel();
+    }
+
+    @Override
+    protected void doOKAction() {
+        Map<Key, Object> properties = myContentFolder.getProperties();
+        for (Key<?> key : properties.keySet()) {
+            myContentFolder.setPropertyValue(key, null);
         }
-      }
-    });
-    decorator.disableUpDownActions();
-    return decorator.createPanel();
-  }
 
-  @Override
-  protected void doOKAction() {
-    Map<Key, Object> properties = myContentFolder.getProperties();
-    for (Key<?> key : properties.keySet()) {
-      myContentFolder.setPropertyValue(key, null);
+        for (Item item : myItems) {
+            myContentFolder.setPropertyValue(item.myKey, item.myValue);
+        }
+        super.doOKAction();
     }
-
-    for (Item item : myItems) {
-      myContentFolder.setPropertyValue(item.myKey, item.myValue);
-    }
-    super.doOKAction();
-  }
 }

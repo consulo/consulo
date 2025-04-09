@@ -54,344 +54,353 @@ import java.util.*;
 @ServiceImpl
 @State(name = "CustomActionsSchema", storages = @Storage("customization.xml"))
 public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExternalizable {
-  private static final String ACTIONS_SCHEMA = "custom_actions_schema";
-  private static final String ACTIVE = "active";
-  private static final String ELEMENT_ACTION = "action";
-  private static final String ATTRIBUTE_ID = "id";
-  private static final String ATTRIBUTE_ICON = "icon";
-  private static final String GROUP = "group";
+    private static final String ACTIONS_SCHEMA = "custom_actions_schema";
+    private static final String ACTIVE = "active";
+    private static final String ELEMENT_ACTION = "action";
+    private static final String ATTRIBUTE_ID = "id";
+    private static final String ATTRIBUTE_ICON = "icon";
+    private static final String GROUP = "group";
 
-  private final Map<String, String> myIconCustomizations = new HashMap<>();
+    private final Map<String, String> myIconCustomizations = new HashMap<>();
 
-  private ArrayList<ActionUrl> myActions = new ArrayList<>();
+    private ArrayList<ActionUrl> myActions = new ArrayList<>();
 
-  private final HashMap<String, ActionGroup> myIdToActionGroup = new HashMap<>();
+    private final HashMap<String, ActionGroup> myIdToActionGroup = new HashMap<>();
 
-  private final List<Pair> myIdToNameList = new ArrayList<>();
+    private final List<Pair> myIdToNameList = new ArrayList<>();
 
-  private static final Logger LOG = Logger.getInstance(CustomActionsSchemaImpl.class);
+    private static final Logger LOG = Logger.getInstance(CustomActionsSchemaImpl.class);
 
-  private boolean myInitial = true;
+    private boolean myInitial = true;
 
-  @Inject
-  public CustomActionsSchemaImpl(Application application) {
-    myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_MENU, KeyMapLocalize.mainMenuActionTitle().get()));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_TOOLBAR, KeyMapLocalize.mainToolbarTitle().get()));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_POPUP, KeyMapLocalize.editorPopupMenuTitle().get()));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_GUTTER, "Editor Gutter Popup Menu"));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_TAB_POPUP, KeyMapLocalize.editorTabPopupMenuTitle().get()));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_PROJECT_VIEW_POPUP, KeyMapLocalize.projectViewPopupMenuTitle().get()));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_SCOPE_VIEW_POPUP, "Scope View Popup Menu"));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_FAVORITES_VIEW_POPUP, KeyMapLocalize.favoritesPopupTitle().get()));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_COMMANDER_POPUP, KeyMapLocalize.commenderViewPopupMenuTitle().get()));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_J2EE_VIEW_POPUP, KeyMapLocalize.j2eeViewPopupMenuTitle().get()));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_NAVBAR_POPUP, "Navigation Bar"));
-    myIdToNameList.add(new Pair("NavBarToolBar", "Navigation Bar Toolbar"));
+    @Inject
+    public CustomActionsSchemaImpl(Application application) {
+        myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_MENU, KeyMapLocalize.mainMenuActionTitle().get()));
+        myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_TOOLBAR, KeyMapLocalize.mainToolbarTitle().get()));
+        myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_POPUP, KeyMapLocalize.editorPopupMenuTitle().get()));
+        myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_GUTTER, "Editor Gutter Popup Menu"));
+        myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_TAB_POPUP, KeyMapLocalize.editorTabPopupMenuTitle().get()));
+        myIdToNameList.add(new Pair(IdeActions.GROUP_PROJECT_VIEW_POPUP, KeyMapLocalize.projectViewPopupMenuTitle().get()));
+        myIdToNameList.add(new Pair(IdeActions.GROUP_SCOPE_VIEW_POPUP, "Scope View Popup Menu"));
+        myIdToNameList.add(new Pair(IdeActions.GROUP_FAVORITES_VIEW_POPUP, KeyMapLocalize.favoritesPopupTitle().get()));
+        myIdToNameList.add(new Pair(IdeActions.GROUP_COMMANDER_POPUP, KeyMapLocalize.commenderViewPopupMenuTitle().get()));
+        myIdToNameList.add(new Pair(IdeActions.GROUP_J2EE_VIEW_POPUP, KeyMapLocalize.j2eeViewPopupMenuTitle().get()));
+        myIdToNameList.add(new Pair(IdeActions.GROUP_NAVBAR_POPUP, "Navigation Bar"));
+        myIdToNameList.add(new Pair("NavBarToolBar", "Navigation Bar Toolbar"));
 
-    CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar =
-      (groupId, groupTitle) -> myIdToNameList.add(new Pair(groupId, groupTitle));
-    
-    for (CustomizableActionGroupProvider provider : CustomizableActionGroupProvider.EP_NAME.getExtensionList(application)) {
-      provider.registerGroups(registrar);
-    }
-  }
+        CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar =
+            (groupId, groupTitle) -> myIdToNameList.add(new Pair(groupId, groupTitle));
 
-  public static CustomActionsSchemaImpl getInstance() {
-    return (CustomActionsSchemaImpl)CustomActionsSchema.getInstance();
-  }
-
-  public void addAction(ActionUrl url) {
-    myActions.add(url);
-    resortActions();
-  }
-
-  public ArrayList<ActionUrl> getActions() {
-    return myActions;
-  }
-
-  public void setActions(final ArrayList<ActionUrl> actions) {
-    myActions = actions;
-    resortActions();
-  }
-
-  public void copyFrom(CustomActionsSchemaImpl result) {
-    myIdToActionGroup.clear();
-    myActions.clear();
-    myIconCustomizations.clear();
-
-    for (ActionUrl actionUrl : result.myActions) {
-      final ActionUrl url = new ActionUrl(new ArrayList<>(actionUrl.getGroupPath()), actionUrl.getComponent(), actionUrl.getActionType(),
-                                          actionUrl.getAbsolutePosition());
-      url.setInitialPosition(actionUrl.getInitialPosition());
-      myActions.add(url);
-    }
-    resortActions();
-
-    myIconCustomizations.putAll(result.myIconCustomizations);
-  }
-
-  private void resortActions() {
-    Collections.sort(myActions, ActionUrlComparator.INSTANCE);
-  }
-
-  public boolean isModified(CustomActionsSchemaImpl schema) {
-    final ArrayList<ActionUrl> storedActions = schema.getActions();
-    if (storedActions.size() != getActions().size()) {
-      return true;
-    }
-    for (int i = 0; i < getActions().size(); i++) {
-      if (!getActions().get(i).equals(storedActions.get(i))) {
-        return true;
-      }
-    }
-    if (schema.myIconCustomizations.size() != myIconCustomizations.size()) return true;
-    for (String actionId : myIconCustomizations.keySet()) {
-      if (!Comparing.strEqual(schema.getIconPath(actionId), getIconPath(actionId))) return true;
-    }
-    return false;
-  }
-
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    DefaultJDOMExternalizer.readExternal(this, element);
-    Element schElement = element;
-    final String activeName = element.getAttributeValue(ACTIVE);
-    if (activeName != null) {
-      for (Element toolbarElement : element.getChildren(ACTIONS_SCHEMA)) {
-        for (Object o : toolbarElement.getChildren("option")) {
-          if (Comparing.strEqual(((Element)o).getAttributeValue("name"), "myName") && Comparing.strEqual(((Element)o).getAttributeValue("value"), activeName)) {
-            schElement = toolbarElement;
-            break;
-          }
+        for (CustomizableActionGroupProvider provider : CustomizableActionGroupProvider.EP_NAME.getExtensionList(application)) {
+            provider.registerGroups(registrar);
         }
-      }
-    }
-    for (Object groupElement : schElement.getChildren(GROUP)) {
-      ActionUrl url = new ActionUrl();
-      url.readExternal((Element)groupElement);
-      myActions.add(url);
     }
 
-    readIcons(element);
-  }
-
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    DefaultJDOMExternalizer.writeExternal(this, element);
-    writeActions(element);
-    writeIcons(element);
-  }
-
-  private void writeActions(Element element) throws WriteExternalException {
-    for (ActionUrl group : myActions) {
-      Element groupElement = new Element(GROUP);
-      group.writeExternal(groupElement);
-      element.addContent(groupElement);
+    public static CustomActionsSchemaImpl getInstance() {
+        return (CustomActionsSchemaImpl)CustomActionsSchema.getInstance();
     }
-  }
 
-  @Override
-  public AnAction getCorrectedAction(String id) {
-    if (!myIdToNameList.contains(new Pair(id, ""))) {
-      return ActionManager.getInstance().getAction(id);
+    public void addAction(ActionUrl url) {
+        myActions.add(url);
+        resortActions();
     }
-    if (myIdToActionGroup.get(id) == null) {
-      for (Pair pair : myIdToNameList) {
-        if (pair.first.equals(id)) {
-          final ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(id);
-          if (actionGroup != null) { //J2EE/Commander plugin was disabled
-            myIdToActionGroup.put(id, CustomizationUtil.correctActionGroup(actionGroup, this, pair.second));
-          }
+
+    public ArrayList<ActionUrl> getActions() {
+        return myActions;
+    }
+
+    public void setActions(final ArrayList<ActionUrl> actions) {
+        myActions = actions;
+        resortActions();
+    }
+
+    public void copyFrom(CustomActionsSchemaImpl result) {
+        myIdToActionGroup.clear();
+        myActions.clear();
+        myIconCustomizations.clear();
+
+        for (ActionUrl actionUrl : result.myActions) {
+            final ActionUrl url = new ActionUrl(
+                new ArrayList<>(actionUrl.getGroupPath()),
+                actionUrl.getComponent(),
+                actionUrl.getActionType(),
+                actionUrl.getAbsolutePosition()
+            );
+            url.setInitialPosition(actionUrl.getInitialPosition());
+            myActions.add(url);
         }
-      }
-    }
-    return myIdToActionGroup.get(id);
-  }
+        resortActions();
 
-  public void resetMainActionGroups() {
-    for (Pair pair : myIdToNameList) {
-      final ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(pair.first);
-      if (actionGroup != null) {
-        myIdToActionGroup.put(pair.first, CustomizationUtil.correctActionGroup(actionGroup, this, pair.second));
-      }
-    }
-  }
-
-  public void fillActionGroups(DefaultMutableTreeNode root) {
-    final ActionManager actionManager = ActionManager.getInstance();
-    for (Pair pair : myIdToNameList) {
-      final ActionGroup actionGroup = (ActionGroup)actionManager.getAction(pair.first);
-      if (actionGroup != null) {
-        root.add(ActionsTreeUtil.createNode(ActionsTreeUtil.createGroup(actionGroup, pair.second, null, null, true, null, false)));
-      }
-    }
-  }
-
-
-  public boolean isCorrectActionGroup(ActionGroup group, String defaultGroupName) {
-    if (myActions.isEmpty()) {
-      return false;
+        myIconCustomizations.putAll(result.myIconCustomizations);
     }
 
-    final String text = group.getTemplatePresentation().getText();
-    if (!StringUtil.isEmpty(text)) {
-      for (ActionUrl url : myActions) {
-        if (url.getGroupPath().contains(text) || url.getGroupPath().contains(defaultGroupName)) {
-          return true;
-        }
-        if (url.getComponent() instanceof KeymapGroupImpl urlGroup) {
-          String id = urlGroup.getName() != null ? urlGroup.getName() : urlGroup.getId();
-          if (id == null || id.equals(text) || id.equals(defaultGroupName)) {
+    private void resortActions() {
+        Collections.sort(myActions, ActionUrlComparator.INSTANCE);
+    }
+
+    public boolean isModified(CustomActionsSchemaImpl schema) {
+        final ArrayList<ActionUrl> storedActions = schema.getActions();
+        if (storedActions.size() != getActions().size()) {
             return true;
-          }
         }
-      }
-      return false;
-    }
-    return true;
-  }
-
-  public List<ActionUrl> getChildActions(final ActionUrl url) {
-    ArrayList<ActionUrl> result = new ArrayList<>();
-    final ArrayList<String> groupPath = url.getGroupPath();
-    for (ActionUrl actionUrl : myActions) {
-      int index = 0;
-      if (groupPath.size() <= actionUrl.getGroupPath().size()) {
-        while (index < groupPath.size()) {
-          if (!Comparing.equal(groupPath.get(index), actionUrl.getGroupPath().get(index))) {
-            break;
-          }
-          index++;
+        for (int i = 0; i < getActions().size(); i++) {
+            if (!getActions().get(i).equals(storedActions.get(i))) {
+                return true;
+            }
         }
-        if (index == groupPath.size()) {
-          result.add(actionUrl);
+        if (schema.myIconCustomizations.size() != myIconCustomizations.size()) {
+            return true;
         }
-      }
-    }
-    return result;
-  }
-
-  public void removeIconCustomization(String actionId) {
-    myIconCustomizations.remove(actionId);
-  }
-
-  public void addIconCustomization(String actionId, String iconPath) {
-    myIconCustomizations.put(actionId, iconPath != null ? FileUtil.toSystemIndependentName(iconPath) : null);
-  }
-
-  public String getIconPath(String actionId) {
-    final String path = myIconCustomizations.get(actionId);
-    return path == null ? "" : path;
-  }
-
-  private void readIcons(Element parent) {
-    for (Object actionO : parent.getChildren(ELEMENT_ACTION)) {
-      Element action = (Element)actionO;
-      final String actionId = action.getAttributeValue(ATTRIBUTE_ID);
-      final String iconPath = action.getAttributeValue(ATTRIBUTE_ICON);
-      if (actionId != null) {
-        myIconCustomizations.put(actionId, iconPath);
-      }
-    }
-    SwingUtilities.invokeLater(() -> initActionIcons());
-  }
-
-  private void writeIcons(Element parent) {
-    for (String actionId : myIconCustomizations.keySet()) {
-      Element action = new Element(ELEMENT_ACTION);
-      action.setAttribute(ATTRIBUTE_ID, actionId);
-      String icon = myIconCustomizations.get(actionId);
-      if (icon != null) {
-        action.setAttribute(ATTRIBUTE_ICON, icon);
-      }
-      parent.addContent(action);
-    }
-  }
-
-  private void initActionIcons() {
-    ActionManager actionManager = ActionManager.getInstance();
-    for (String actionId : myIconCustomizations.keySet()) {
-      final AnAction anAction = actionManager.getAction(actionId);
-      if (anAction != null) {
-        Image icon;
-        final String iconPath = myIconCustomizations.get(actionId);
-        if (iconPath != null && new File(FileUtil.toSystemDependentName(iconPath)).exists()) {
-          try {
-            icon = Image.fromUrl(VfsUtil.convertToURL(VfsUtil.pathToUrl(iconPath)));
-          }
-          catch (IOException e) {
-            icon = PlatformIconGroup.actionsHelp();
-
-            LOG.warn(e);
-          }
+        for (String actionId : myIconCustomizations.keySet()) {
+            if (!Comparing.strEqual(schema.getIconPath(actionId), getIconPath(actionId))) {
+                return true;
+            }
         }
-        else {
-          icon = PlatformIconGroup.actionsHelp();
-        }
-        if (anAction.getTemplatePresentation() != null) {
-          anAction.getTemplatePresentation().setIcon(icon);
-          anAction.setDefaultIcon(false);
-        }
-      }
-    }
-
-    if (!myInitial) {
-        final IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(null);
-        if (frame != null) {
-            frame.updateView();
-        }
-    }
-
-    myInitial = false;
-  }
-
-  private static class Pair {
-    String first;
-    String second;
-
-    public Pair(final String first, final String second) {
-      this.first = first;
-      this.second = second;
+        return false;
     }
 
     @Override
-    public int hashCode() {
-      return first.hashCode();
+    public void readExternal(Element element) throws InvalidDataException {
+        DefaultJDOMExternalizer.readExternal(this, element);
+        Element schElement = element;
+        final String activeName = element.getAttributeValue(ACTIVE);
+        if (activeName != null) {
+            for (Element toolbarElement : element.getChildren(ACTIONS_SCHEMA)) {
+                for (Object o : toolbarElement.getChildren("option")) {
+                    if (Comparing.strEqual(((Element)o).getAttributeValue("name"), "myName")
+                        && Comparing.strEqual(((Element)o).getAttributeValue("value"), activeName)) {
+                        schElement = toolbarElement;
+                        break;
+                    }
+                }
+            }
+        }
+        for (Object groupElement : schElement.getChildren(GROUP)) {
+            ActionUrl url = new ActionUrl();
+            url.readExternal((Element)groupElement);
+            myActions.add(url);
+        }
+
+        readIcons(element);
     }
 
     @Override
-    public boolean equals(Object obj) {
-      return obj instanceof Pair pair && first.equals(pair.first);
+    public void writeExternal(Element element) throws WriteExternalException {
+        DefaultJDOMExternalizer.writeExternal(this, element);
+        writeActions(element);
+        writeIcons(element);
     }
-  }
 
-  private static class ActionUrlComparator implements Comparator<ActionUrl> {
-    public static ActionUrlComparator INSTANCE = new ActionUrlComparator();
-    private static final int DELETED = 1;
-    private static final int ADDED = 2;
+    private void writeActions(Element element) throws WriteExternalException {
+        for (ActionUrl group : myActions) {
+            Element groupElement = new Element(GROUP);
+            group.writeExternal(groupElement);
+            element.addContent(groupElement);
+        }
+    }
 
     @Override
-    public int compare(ActionUrl u1, ActionUrl u2) {
-      final int w1 = getEquivalenceClass(u1);
-      final int w2 = getEquivalenceClass(u2);
-      if (w1 != w2) {
-        return w1 - w2; // deleted < added < others
-      }
-      if (w1 == DELETED) {
-        return u2.getAbsolutePosition() - u1.getAbsolutePosition(); // within DELETED equivalence class urls with greater position go first
-      }
-      return u1.getAbsolutePosition() - u2.getAbsolutePosition(); // within ADDED equivalence class: urls with lower position go first
+    public AnAction getCorrectedAction(String id) {
+        if (!myIdToNameList.contains(new Pair(id, ""))) {
+            return ActionManager.getInstance().getAction(id);
+        }
+        if (myIdToActionGroup.get(id) == null) {
+            for (Pair pair : myIdToNameList) {
+                if (pair.first.equals(id)) {
+                    final ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(id);
+                    if (actionGroup != null) { //J2EE/Commander plugin was disabled
+                        myIdToActionGroup.put(id, CustomizationUtil.correctActionGroup(actionGroup, this, pair.second));
+                    }
+                }
+            }
+        }
+        return myIdToActionGroup.get(id);
     }
 
-    private static int getEquivalenceClass(ActionUrl url) {
-      switch (url.getActionType()) {
-        case ActionUrl.DELETED:
-          return 1;
-        case ActionUrl.ADDED:
-          return 2;
-        default:
-          return 3;
-      }
+    public void resetMainActionGroups() {
+        for (Pair pair : myIdToNameList) {
+            final ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(pair.first);
+            if (actionGroup != null) {
+                myIdToActionGroup.put(pair.first, CustomizationUtil.correctActionGroup(actionGroup, this, pair.second));
+            }
+        }
     }
-  }
+
+    public void fillActionGroups(DefaultMutableTreeNode root) {
+        final ActionManager actionManager = ActionManager.getInstance();
+        for (Pair pair : myIdToNameList) {
+            final ActionGroup actionGroup = (ActionGroup)actionManager.getAction(pair.first);
+            if (actionGroup != null) {
+                root.add(ActionsTreeUtil.createNode(ActionsTreeUtil.createGroup(actionGroup, pair.second, null, null, true, null, false)));
+            }
+        }
+    }
+
+
+    public boolean isCorrectActionGroup(ActionGroup group, String defaultGroupName) {
+        if (myActions.isEmpty()) {
+            return false;
+        }
+
+        final String text = group.getTemplatePresentation().getText();
+        if (!StringUtil.isEmpty(text)) {
+            for (ActionUrl url : myActions) {
+                if (url.getGroupPath().contains(text) || url.getGroupPath().contains(defaultGroupName)) {
+                    return true;
+                }
+                if (url.getComponent() instanceof KeymapGroupImpl urlGroup) {
+                    String id = urlGroup.getName() != null ? urlGroup.getName() : urlGroup.getId();
+                    if (id == null || id.equals(text) || id.equals(defaultGroupName)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public List<ActionUrl> getChildActions(final ActionUrl url) {
+        ArrayList<ActionUrl> result = new ArrayList<>();
+        final ArrayList<String> groupPath = url.getGroupPath();
+        for (ActionUrl actionUrl : myActions) {
+            int index = 0;
+            if (groupPath.size() <= actionUrl.getGroupPath().size()) {
+                while (index < groupPath.size()) {
+                    if (!Comparing.equal(groupPath.get(index), actionUrl.getGroupPath().get(index))) {
+                        break;
+                    }
+                    index++;
+                }
+                if (index == groupPath.size()) {
+                    result.add(actionUrl);
+                }
+            }
+        }
+        return result;
+    }
+
+    public void removeIconCustomization(String actionId) {
+        myIconCustomizations.remove(actionId);
+    }
+
+    public void addIconCustomization(String actionId, String iconPath) {
+        myIconCustomizations.put(actionId, iconPath != null ? FileUtil.toSystemIndependentName(iconPath) : null);
+    }
+
+    public String getIconPath(String actionId) {
+        final String path = myIconCustomizations.get(actionId);
+        return path == null ? "" : path;
+    }
+
+    private void readIcons(Element parent) {
+        for (Object actionO : parent.getChildren(ELEMENT_ACTION)) {
+            Element action = (Element)actionO;
+            final String actionId = action.getAttributeValue(ATTRIBUTE_ID);
+            final String iconPath = action.getAttributeValue(ATTRIBUTE_ICON);
+            if (actionId != null) {
+                myIconCustomizations.put(actionId, iconPath);
+            }
+        }
+        SwingUtilities.invokeLater(() -> initActionIcons());
+    }
+
+    private void writeIcons(Element parent) {
+        for (String actionId : myIconCustomizations.keySet()) {
+            Element action = new Element(ELEMENT_ACTION);
+            action.setAttribute(ATTRIBUTE_ID, actionId);
+            String icon = myIconCustomizations.get(actionId);
+            if (icon != null) {
+                action.setAttribute(ATTRIBUTE_ICON, icon);
+            }
+            parent.addContent(action);
+        }
+    }
+
+    private void initActionIcons() {
+        ActionManager actionManager = ActionManager.getInstance();
+        for (String actionId : myIconCustomizations.keySet()) {
+            final AnAction anAction = actionManager.getAction(actionId);
+            if (anAction != null) {
+                Image icon;
+                final String iconPath = myIconCustomizations.get(actionId);
+                if (iconPath != null && new File(FileUtil.toSystemDependentName(iconPath)).exists()) {
+                    try {
+                        icon = Image.fromUrl(VfsUtil.convertToURL(VfsUtil.pathToUrl(iconPath)));
+                    }
+                    catch (IOException e) {
+                        icon = PlatformIconGroup.actionsHelp();
+
+                        LOG.warn(e);
+                    }
+                }
+                else {
+                    icon = PlatformIconGroup.actionsHelp();
+                }
+                if (anAction.getTemplatePresentation() != null) {
+                    anAction.getTemplatePresentation().setIcon(icon);
+                    anAction.setDefaultIcon(false);
+                }
+            }
+        }
+
+        if (!myInitial) {
+            final IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(null);
+            if (frame != null) {
+                frame.updateView();
+            }
+        }
+
+        myInitial = false;
+    }
+
+    private static class Pair {
+        String first;
+        String second;
+
+        public Pair(final String first, final String second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        @Override
+        public int hashCode() {
+            return first.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof Pair pair && first.equals(pair.first);
+        }
+    }
+
+    private static class ActionUrlComparator implements Comparator<ActionUrl> {
+        public static ActionUrlComparator INSTANCE = new ActionUrlComparator();
+        private static final int DELETED = 1;
+        private static final int ADDED = 2;
+
+        @Override
+        public int compare(ActionUrl u1, ActionUrl u2) {
+            final int w1 = getEquivalenceClass(u1);
+            final int w2 = getEquivalenceClass(u2);
+            if (w1 != w2) {
+                return w1 - w2; // deleted < added < others
+            }
+            if (w1 == DELETED) {
+                return u2.getAbsolutePosition() - u1.getAbsolutePosition(); // within DELETED equivalence class urls with greater position go first
+            }
+            return u1.getAbsolutePosition() - u2.getAbsolutePosition(); // within ADDED equivalence class: urls with lower position go first
+        }
+
+        private static int getEquivalenceClass(ActionUrl url) {
+            switch (url.getActionType()) {
+                case ActionUrl.DELETED:
+                    return 1;
+                case ActionUrl.ADDED:
+                    return 2;
+                default:
+                    return 3;
+            }
+        }
+    }
 }

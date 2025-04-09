@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
@@ -30,8 +29,8 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ElementDescriptionProvider {
-  ExtensionPointName<ElementDescriptionProvider> EP_NAME = ExtensionPointName.create(ElementDescriptionProvider.class);
-  
-  @Nullable
-  String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location);
+    ExtensionPointName<ElementDescriptionProvider> EP_NAME = ExtensionPointName.create(ElementDescriptionProvider.class);
+
+    @Nullable
+    String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location);
 }

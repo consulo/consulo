@@ -13,33 +13,33 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EquivalenceDescriptorProvider {
-  public static final ExtensionPointName<EquivalenceDescriptorProvider> EP_NAME =
-    ExtensionPointName.create(EquivalenceDescriptorProvider.class);
+    public static final ExtensionPointName<EquivalenceDescriptorProvider> EP_NAME =
+        ExtensionPointName.create(EquivalenceDescriptorProvider.class);
 
-  // for using in tests only !!!
-  public static boolean ourUseDefaultEquivalence = false;
+    // for using in tests only !!!
+    public static boolean ourUseDefaultEquivalence = false;
 
-  public abstract boolean isMyContext(@Nonnull PsiElement context);
+    public abstract boolean isMyContext(@Nonnull PsiElement context);
 
-  @Nullable
-  public abstract EquivalenceDescriptor buildDescriptor(@Nonnull PsiElement element);
+    @Nullable
+    public abstract EquivalenceDescriptor buildDescriptor(@Nonnull PsiElement element);
 
-  // by default only PsiWhitespace ignored
-  public TokenSet getIgnoredTokens() {
-    return TokenSet.EMPTY;
-  }
-
-  @Nullable
-  public static EquivalenceDescriptorProvider getInstance(@Nonnull PsiElement context) {
-    if (ourUseDefaultEquivalence) {
-      return null;
+    // by default only PsiWhitespace ignored
+    public TokenSet getIgnoredTokens() {
+        return TokenSet.EMPTY;
     }
 
-    for (EquivalenceDescriptorProvider descriptorProvider : EP_NAME.getExtensions()) {
-      if (descriptorProvider.isMyContext(context)) {
-        return descriptorProvider;
-      }
+    @Nullable
+    public static EquivalenceDescriptorProvider getInstance(@Nonnull PsiElement context) {
+        if (ourUseDefaultEquivalence) {
+            return null;
+        }
+
+        for (EquivalenceDescriptorProvider descriptorProvider : EP_NAME.getExtensions()) {
+            if (descriptorProvider.isMyContext(context)) {
+                return descriptorProvider;
+            }
+        }
+        return null;
     }
-    return null;
-  }
 }

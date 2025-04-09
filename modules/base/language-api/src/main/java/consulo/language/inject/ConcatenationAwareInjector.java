@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Sep 10, 2007
- * Time: 1:58:08 PM
- */
 package consulo.language.inject;
 
 import consulo.annotation.component.ComponentScope;
@@ -29,9 +22,15 @@ import consulo.language.psi.PsiElement;
 
 import jakarta.annotation.Nonnull;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: cdr
+ * Date: Sep 10, 2007
+ * Time: 1:58:08 PM
+ */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ConcatenationAwareInjector {
-  ExtensionPointName<ConcatenationAwareInjector> EP_NAME = ExtensionPointName.create(ConcatenationAwareInjector.class);
+    ExtensionPointName<ConcatenationAwareInjector> EP_NAME = ExtensionPointName.create(ConcatenationAwareInjector.class);
 
-  void inject(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement... operands);
+    void inject(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement... operands);
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.find.findUsages;
 
 import consulo.annotation.component.ComponentScope;
@@ -29,7 +28,7 @@ import consulo.application.util.function.Processor;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CustomUsageSearcher {
-  public static final ExtensionPointName<CustomUsageSearcher> EP_NAME = ExtensionPointName.create(CustomUsageSearcher.class);
+    public static final ExtensionPointName<CustomUsageSearcher> EP_NAME = ExtensionPointName.create(CustomUsageSearcher.class);
 
-  public abstract void processElementUsages(final PsiElement element, final Processor<Usage> processor, final FindUsagesOptions options);
+    public abstract void processElementUsages(final PsiElement element, final Processor<Usage> processor, final FindUsagesOptions options);
 }

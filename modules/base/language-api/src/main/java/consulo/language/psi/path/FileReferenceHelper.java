@@ -26,6 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.Collections;
 
@@ -34,46 +35,45 @@ import java.util.Collections;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileReferenceHelper {
+    public static final ExtensionPointName<FileReferenceHelper> EP_NAME = ExtensionPointName.create(FileReferenceHelper.class);
 
-  public static final ExtensionPointName<FileReferenceHelper> EP_NAME = ExtensionPointName.create(FileReferenceHelper.class);
+    @Nonnull
+    public String trimUrl(@Nonnull String url) {
+        return url;
+    }
 
-  @Nonnull
-  public String trimUrl(@Nonnull String url) {
-    return url;
-  }
+    // FIXME use consulo.language.editor.inspection.PsiReferenceLocalQuickFixProvider
+    //@Nonnull
+    //public List<? extends LocalQuickFix> registerFixes(FileReference reference) {
+    //  return Collections.emptyList();
+    //}
 
-  // FIXME use consulo.language.editor.inspection.PsiReferenceLocalQuickFixProvider
-  //@Nonnull
-  //public List<? extends LocalQuickFix> registerFixes(FileReference reference) {
-  //  return Collections.emptyList();
-  //}
+    @Nullable
+    public PsiFileSystemItem getPsiFileSystemItem(final Project project, @Nonnull final VirtualFile file) {
+        final PsiManager psiManager = PsiManager.getInstance(project);
+        return getPsiFileSystemItem(psiManager, file);
+    }
 
-  @Nullable
-  public PsiFileSystemItem getPsiFileSystemItem(final Project project, @Nonnull final VirtualFile file) {
-    final PsiManager psiManager = PsiManager.getInstance(project);
-    return getPsiFileSystemItem(psiManager, file);
-  }
+    public static PsiFileSystemItem getPsiFileSystemItem(PsiManager psiManager, VirtualFile file) {
+        return file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
+    }
 
-  public static PsiFileSystemItem getPsiFileSystemItem(PsiManager psiManager, VirtualFile file) {
-    return file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
-  }
+    @Nullable
+    public PsiFileSystemItem findRoot(final Project project, @Nonnull final VirtualFile file) {
+        return null;
+    }
 
-  @Nullable
-  public PsiFileSystemItem findRoot(final Project project, @Nonnull final VirtualFile file) {
-    return null;
-  }
+    @Nonnull
+    public Collection<PsiFileSystemItem> getRoots(@Nonnull Module module) {
+        return Collections.emptyList();
+    }
 
-  @Nonnull
-  public Collection<PsiFileSystemItem> getRoots(@Nonnull Module module) {
-    return Collections.emptyList();
-  }
+    @Nonnull
+    public abstract Collection<PsiFileSystemItem> getContexts(final Project project, @Nonnull final VirtualFile file);
 
-  @Nonnull
-  public abstract Collection<PsiFileSystemItem> getContexts(final Project project, @Nonnull final VirtualFile file);
+    public abstract boolean isMine(final Project project, @Nonnull final VirtualFile file);
 
-  public abstract boolean isMine(final Project project, @Nonnull final VirtualFile file);
-
-  public boolean isFallback() {
-    return false;
-  }
+    public boolean isFallback() {
+        return false;
+    }
 }
