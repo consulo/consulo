@@ -23,13 +23,13 @@ import consulo.language.psi.PsiFile;
 
 /**
  * @author Evgeny Gerashchenko
- * @since 2/1/12
+ * @since 2012-02-01
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplateParameterTraversalPolicy {
-  ExtensionPointName<TemplateParameterTraversalPolicy> EP_NAME = ExtensionPointName.create(TemplateParameterTraversalPolicy.class);
+    ExtensionPointName<TemplateParameterTraversalPolicy> EP_NAME = ExtensionPointName.create(TemplateParameterTraversalPolicy.class);
 
-  boolean isValidForFile(Editor editor, PsiFile file);
+    boolean isValidForFile(Editor editor, PsiFile file);
 
-  void invoke(Editor editor, PsiFile file, boolean next);
+    void invoke(Editor editor, PsiFile file, boolean next);
 }

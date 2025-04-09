@@ -24,6 +24,7 @@ import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -34,22 +35,22 @@ import javax.swing.*;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PreviewHintProvider {
-  ExtensionPointName<PreviewHintProvider> EP_NAME = ExtensionPointName.create(PreviewHintProvider.class);
+    ExtensionPointName<PreviewHintProvider> EP_NAME = ExtensionPointName.create(PreviewHintProvider.class);
 
-  /**
-   * Returns true if Shift-hover preview is supported for the given file.
-   *
-   * @param file the file to check for preview availability
-   * @return true if preview is supported, false otherwise.
-   */
-  boolean isSupportedFile(PsiFile file);
+    /**
+     * Returns true if Shift-hover preview is supported for the given file.
+     *
+     * @param file the file to check for preview availability
+     * @return true if preview is supported, false otherwise.
+     */
+    boolean isSupportedFile(PsiFile file);
 
-  /**
-   * Returns the Swing component to be displayed in the Shift-preview popup for the specified element.
-   *
-   * @param element the element for which preview is requested
-   * @return the component or null if no preview is available for the specified element.
-   */
-  @Nullable
-  JComponent getPreviewComponent(@Nonnull PsiElement element);
+    /**
+     * Returns the Swing component to be displayed in the Shift-preview popup for the specified element.
+     *
+     * @param element the element for which preview is requested
+     * @return the component or null if no preview is available for the specified element.
+     */
+    @Nullable
+    JComponent getPreviewComponent(@Nonnull PsiElement element);
 }

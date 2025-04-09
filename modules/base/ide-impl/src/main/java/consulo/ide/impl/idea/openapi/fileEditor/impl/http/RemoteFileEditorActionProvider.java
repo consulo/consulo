@@ -28,8 +28,9 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RemoteFileEditorActionProvider {
-  public static final ExtensionPointName<RemoteFileEditorActionProvider> EP_NAME = ExtensionPointName.create(RemoteFileEditorActionProvider.class);
+    public static final ExtensionPointName<RemoteFileEditorActionProvider> EP_NAME =
+        ExtensionPointName.create(RemoteFileEditorActionProvider.class);
 
-  @Nonnull
-  public abstract AnAction[] createToolbarActions(@Nonnull Project project, @Nonnull HttpVirtualFile file);
+    @Nonnull
+    public abstract AnAction[] createToolbarActions(@Nonnull Project project, @Nonnull HttpVirtualFile file);
 }

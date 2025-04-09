@@ -22,8 +22,8 @@ import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiFile;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;
@@ -46,6 +46,6 @@ public abstract class CopyPastePostProcessor<T extends TextBlockTransferableData
   }
 
   public void processTransferableData(final Project project, final Editor editor, final RangeMarker bounds, int caretOffset,
-                                      Ref<Boolean> indented, final List<T> values) {
+                                      SimpleReference<Boolean> indented, final List<T> values) {
   }
 }

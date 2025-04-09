@@ -25,6 +25,7 @@ import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,54 +36,55 @@ import java.util.Map;
 @Singleton
 @ServiceImpl
 public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
-  private final Map<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>> myCache = new HashMap<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>>();
-  
-  @Override
-  public boolean processProperties(@Nonnull List<VirtualFile> files, @Nonnull LibraryPropertiesProcessor processor) {
-    for (Pair<LibraryKind, LibraryProperties> pair : getOrComputeKinds(files)) {
-      //noinspection unchecked
-      if (!processor.processProperties(pair.getFirst(), pair.getSecond())) {
-        return false;
-      }
-    }
-    return true;
-  }
+    private final Map<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>> myCache =
+        new HashMap<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>>();
 
-  @Nullable
-  @Override
-  public Pair<LibraryType<?>, LibraryProperties<?>> detectType(@Nonnull List<VirtualFile> files) {
-    Pair<LibraryType<?>, LibraryProperties<?>> result = null;
-    for (LibraryType<?> type : LibraryType.EP_NAME.getExtensions()) {
-      final LibraryProperties<?> properties = type.detect(files);
-      if (properties != null) {
-        if (result != null) {
-          return null;
+    @Override
+    public boolean processProperties(@Nonnull List<VirtualFile> files, @Nonnull LibraryPropertiesProcessor processor) {
+        for (Pair<LibraryKind, LibraryProperties> pair : getOrComputeKinds(files)) {
+            //noinspection unchecked
+            if (!processor.processProperties(pair.getFirst(), pair.getSecond())) {
+                return false;
+            }
         }
-        result = Pair.<LibraryType<?>, LibraryProperties<?>>create(type, properties);
-      }
+        return true;
     }
-    return result;
-  }
 
-  private List<Pair<LibraryKind, LibraryProperties>> getOrComputeKinds(List<VirtualFile> files) {
-    List<Pair<LibraryKind, LibraryProperties>> result = myCache.get(files);
-    if (result == null) {
-      result = computeKinds(files);
-      myCache.put(files, result);
+    @Nullable
+    @Override
+    public Pair<LibraryType<?>, LibraryProperties<?>> detectType(@Nonnull List<VirtualFile> files) {
+        Pair<LibraryType<?>, LibraryProperties<?>> result = null;
+        for (LibraryType<?> type : LibraryType.EP_NAME.getExtensions()) {
+            final LibraryProperties<?> properties = type.detect(files);
+            if (properties != null) {
+                if (result != null) {
+                    return null;
+                }
+                result = Pair.<LibraryType<?>, LibraryProperties<?>>create(type, properties);
+            }
+        }
+        return result;
     }
-    return result;
-  }
 
-  private static List<Pair<LibraryKind, LibraryProperties>> computeKinds(List<VirtualFile> files) {
-    final SmartList<Pair<LibraryKind, LibraryProperties>> result = new SmartList<Pair<LibraryKind, LibraryProperties>>();
-    final LibraryType<?>[] libraryTypes = LibraryType.EP_NAME.getExtensions();
-    final LibraryPresentationProvider[] presentationProviders = LibraryPresentationProvider.EP_NAME.getExtensions();
-    for (LibraryPresentation provider : ContainerUtil.concat(libraryTypes, presentationProviders)) {
-      final LibraryProperties properties = provider.detect(files);
-      if (properties != null) {
-        result.add(Pair.create(provider.getKind(), properties));
-      }
+    private List<Pair<LibraryKind, LibraryProperties>> getOrComputeKinds(List<VirtualFile> files) {
+        List<Pair<LibraryKind, LibraryProperties>> result = myCache.get(files);
+        if (result == null) {
+            result = computeKinds(files);
+            myCache.put(files, result);
+        }
+        return result;
     }
-    return result;
-  }
+
+    private static List<Pair<LibraryKind, LibraryProperties>> computeKinds(List<VirtualFile> files) {
+        final SmartList<Pair<LibraryKind, LibraryProperties>> result = new SmartList<Pair<LibraryKind, LibraryProperties>>();
+        final LibraryType<?>[] libraryTypes = LibraryType.EP_NAME.getExtensions();
+        final LibraryPresentationProvider[] presentationProviders = LibraryPresentationProvider.EP_NAME.getExtensions();
+        for (LibraryPresentation provider : ContainerUtil.concat(libraryTypes, presentationProviders)) {
+            final LibraryProperties properties = provider.detect(files);
+            if (properties != null) {
+                result.add(Pair.create(provider.getKind(), properties));
+            }
+        }
+        return result;
+    }
 }

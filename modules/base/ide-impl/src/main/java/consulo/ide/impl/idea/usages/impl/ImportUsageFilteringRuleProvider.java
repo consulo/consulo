@@ -28,6 +28,7 @@ import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageFilteringRuleProvider;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -39,43 +40,50 @@ import java.util.List;
  */
 @ExtensionImpl
 public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvider {
-  @Override
-  @Nonnull
-  public UsageFilteringRule[] getActiveRules(@Nonnull final Project project) {
-    final List<UsageFilteringRule> rules = new ArrayList<>();
-    if (!ImportFilteringUsageViewSetting.getInstance().SHOW_IMPORTS) {
-      rules.addAll(ImportFilteringRule.EP_NAME.getExtensionList());
-    }
-    return rules.toArray(new UsageFilteringRule[rules.size()]);
-  }
-
-  @Override
-  @Nonnull
-  public AnAction[] createFilteringActions(@Nonnull final UsageView view) {
-    if (view.getPresentation().isCodeUsages()) {
-      final JComponent component = view.getComponent();
-      final ShowImportsAction showImportsAction = new ShowImportsAction(view);
-      showImportsAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK)), component, view);
-      return new AnAction[] { showImportsAction };
-    }
-    else {
-      return AnAction.EMPTY_ARRAY;
-    }
-  }
-
-  private static class ShowImportsAction extends RuleAction {
-    private ShowImportsAction(UsageView view) {
-      super(view, UsageViewBundle.message("action.show.import.statements"), AllIcons.Actions.ShowImportStatements);
+    @Override
+    @Nonnull
+    public UsageFilteringRule[] getActiveRules(@Nonnull final Project project) {
+        final List<UsageFilteringRule> rules = new ArrayList<>();
+        if (!ImportFilteringUsageViewSetting.getInstance().SHOW_IMPORTS) {
+            rules.addAll(ImportFilteringRule.EP_NAME.getExtensionList());
+        }
+        return rules.toArray(new UsageFilteringRule[rules.size()]);
     }
 
     @Override
-    protected boolean getOptionValue() {
-      return ImportFilteringUsageViewSetting.getInstance().SHOW_IMPORTS;
+    @Nonnull
+    public AnAction[] createFilteringActions(@Nonnull final UsageView view) {
+        if (view.getPresentation().isCodeUsages()) {
+            final JComponent component = view.getComponent();
+            final ShowImportsAction showImportsAction = new ShowImportsAction(view);
+            showImportsAction.registerCustomShortcutSet(
+                new CustomShortcutSet(KeyStroke.getKeyStroke(
+                    KeyEvent.VK_I,
+                    InputEvent.CTRL_DOWN_MASK
+                )),
+                component,
+                view
+            );
+            return new AnAction[]{showImportsAction};
+        }
+        else {
+            return AnAction.EMPTY_ARRAY;
+        }
     }
 
-    @Override
-    protected void setOptionValue(boolean value) {
-      ImportFilteringUsageViewSetting.getInstance().SHOW_IMPORTS = value;
+    private static class ShowImportsAction extends RuleAction {
+        private ShowImportsAction(UsageView view) {
+            super(view, UsageViewBundle.message("action.show.import.statements"), AllIcons.Actions.ShowImportStatements);
+        }
+
+        @Override
+        protected boolean getOptionValue() {
+            return ImportFilteringUsageViewSetting.getInstance().SHOW_IMPORTS;
+        }
+
+        @Override
+        protected void setOptionValue(boolean value) {
+            ImportFilteringUsageViewSetting.getInstance().SHOW_IMPORTS = value;
+        }
     }
-  }
 }

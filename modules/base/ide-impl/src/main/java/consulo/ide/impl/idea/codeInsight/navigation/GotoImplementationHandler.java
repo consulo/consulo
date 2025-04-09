@@ -37,122 +37,130 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GotoImplementationHandler extends GotoTargetHandler {
-  @Override
-  protected String getFeatureUsedKey() {
-    return "navigation.goto.implementation";
-  }
-
-  @Override
-  @Nullable
-  public GotoData getSourceAndTargetElements(@Nonnull Editor editor, PsiFile file) {
-    int offset = editor.getCaretModel().getOffset();
-    PsiElement source = TargetElementUtil.findTargetElement(editor, ImplementationSearcher.getFlags(), offset);
-    if (source == null) return null;
-    final PsiReference reference = TargetElementUtil.findReference(editor, offset);
-    PsiElement[] targets = new ImplementationSearcher.FirstImplementationsSearcher() {
-      @Override
-      protected boolean accept(PsiElement element) {
-        return TargetElementUtil.acceptImplementationForReference(reference, element);
-      }
-
-      @Override
-      protected boolean canShowPopupWithOneItem(PsiElement element) {
-        return false;
-      }
-    }.searchImplementations(editor, source, offset);
-    if (targets == null) return null;
-    GotoData gotoData = new GotoData(source, targets, Collections.emptyList());
-    gotoData.listUpdaterTask = new ImplementationsUpdaterTask(gotoData, editor, offset, reference) {
-      @Override
-      public void onFinished() {
-        super.onFinished();
-        PsiElement oneElement = getTheOnlyOneElement();
-        if (oneElement != null && navigateToElement(oneElement)) {
-          myPopup.cancel();
-        }
-      }
-    };
-    return gotoData;
-  }
-
-
-  private static PsiElement getContainer(PsiElement refElement) {
-    for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensionList()) {
-      final PsiElement container = provider.getContainer(refElement);
-      if (container != null) return container;
-    }
-    return refElement.getParent();
-  }
-
-  @Override
-  @Nonnull
-  protected String getChooserTitle(@Nonnull PsiElement sourceElement, String name, int length, boolean finished) {
-    ItemPresentation presentation = ((NavigationItem)sourceElement).getPresentation();
-    String fullName;
-    if (presentation == null) {
-      fullName = name;
-    }
-    else {
-      PsiElement container = getContainer(sourceElement);
-      ItemPresentation containerPresentation = container == null || container instanceof PsiFile ? null : ((NavigationItem)container).getPresentation();
-      String containerText = containerPresentation == null ? null : containerPresentation.getPresentableText();
-      fullName = (containerText == null ? "" : containerText+".") + presentation.getPresentableText();
-    }
-    return CodeInsightBundle.message("goto.implementation.chooserTitle", fullName, length, finished ? "" : " so far");
-  }
-
-  @Nonnull
-  @Override
-  protected String getFindUsagesTitle(@Nonnull PsiElement sourceElement, String name, int length) {
-    return CodeInsightBundle.message("goto.implementation.findUsages.title", name, length);
-  }
-
-  @Nonnull
-  @Override
-  protected String getNotFoundMessage(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    return CodeInsightBundle.message("goto.implementation.notFound");
-  }
-
-  private class ImplementationsUpdaterTask extends ListBackgroundUpdaterTask {
-    private final Editor myEditor;
-    private final int myOffset;
-    private final GotoData myGotoData;
-    private final Map<Object, PsiElementListCellRenderer> renderers = new HashMap<>();
-    private final PsiReference myReference;
-
-    ImplementationsUpdaterTask(@Nonnull GotoData gotoData, @Nonnull Editor editor, int offset, final PsiReference reference) {
-      super(gotoData.source.getProject(), ImplementationSearcher.SEARCHING_FOR_IMPLEMENTATIONS);
-      myEditor = editor;
-      myOffset = offset;
-      myGotoData = gotoData;
-      myReference = reference;
+    @Override
+    protected String getFeatureUsedKey() {
+        return "navigation.goto.implementation";
     }
 
     @Override
-    public void run(@Nonnull final ProgressIndicator indicator) {
-      super.run(indicator);
-      for (PsiElement element : myGotoData.targets) {
-        if (!updateComponent(element, createComparator(renderers, myGotoData))) {
-          return;
+    @Nullable
+    public GotoData getSourceAndTargetElements(@Nonnull Editor editor, PsiFile file) {
+        int offset = editor.getCaretModel().getOffset();
+        PsiElement source = TargetElementUtil.findTargetElement(editor, ImplementationSearcher.getFlags(), offset);
+        if (source == null) {
+            return null;
         }
-      }
-      new ImplementationSearcher.BackgroundableImplementationSearcher() {
-        @Override
-        protected void processElement(PsiElement element) {
-          indicator.checkCanceled();
-          if (!TargetElementUtil.acceptImplementationForReference(myReference, element)) return;
-          if (myGotoData.addTarget(element)) {
-            if (!updateComponent(element, createComparator(renderers, myGotoData))) {
-              indicator.cancel();
+        final PsiReference reference = TargetElementUtil.findReference(editor, offset);
+        PsiElement[] targets = new ImplementationSearcher.FirstImplementationsSearcher() {
+            @Override
+            protected boolean accept(PsiElement element) {
+                return TargetElementUtil.acceptImplementationForReference(reference, element);
             }
-          }
+
+            @Override
+            protected boolean canShowPopupWithOneItem(PsiElement element) {
+                return false;
+            }
+        }.searchImplementations(editor, source, offset);
+        if (targets == null) {
+            return null;
         }
-      }.searchImplementations(myEditor, myGotoData.source, myOffset);
+        GotoData gotoData = new GotoData(source, targets, Collections.emptyList());
+        gotoData.listUpdaterTask = new ImplementationsUpdaterTask(gotoData, editor, offset, reference) {
+            @Override
+            public void onFinished() {
+                super.onFinished();
+                PsiElement oneElement = getTheOnlyOneElement();
+                if (oneElement != null && navigateToElement(oneElement)) {
+                    myPopup.cancel();
+                }
+            }
+        };
+        return gotoData;
+    }
+
+    private static PsiElement getContainer(PsiElement refElement) {
+        for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensionList()) {
+            final PsiElement container = provider.getContainer(refElement);
+            if (container != null) {
+                return container;
+            }
+        }
+        return refElement.getParent();
     }
 
     @Override
-    public String getCaption(int size) {
-      return getChooserTitle(myGotoData.source, ((PsiNamedElement)myGotoData.source).getName(), size, isFinished());
+    @Nonnull
+    protected String getChooserTitle(@Nonnull PsiElement sourceElement, String name, int length, boolean finished) {
+        ItemPresentation presentation = ((NavigationItem)sourceElement).getPresentation();
+        String fullName;
+        if (presentation == null) {
+            fullName = name;
+        }
+        else {
+            PsiElement container = getContainer(sourceElement);
+            ItemPresentation containerPresentation =
+                container == null || container instanceof PsiFile ? null : ((NavigationItem)container).getPresentation();
+            String containerText = containerPresentation == null ? null : containerPresentation.getPresentableText();
+            fullName = (containerText == null ? "" : containerText + ".") + presentation.getPresentableText();
+        }
+        return CodeInsightBundle.message("goto.implementation.chooserTitle", fullName, length, finished ? "" : " so far");
     }
-  }
+
+    @Nonnull
+    @Override
+    protected String getFindUsagesTitle(@Nonnull PsiElement sourceElement, String name, int length) {
+        return CodeInsightBundle.message("goto.implementation.findUsages.title", name, length);
+    }
+
+    @Nonnull
+    @Override
+    protected String getNotFoundMessage(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        return CodeInsightBundle.message("goto.implementation.notFound");
+    }
+
+    private class ImplementationsUpdaterTask extends ListBackgroundUpdaterTask {
+        private final Editor myEditor;
+        private final int myOffset;
+        private final GotoData myGotoData;
+        private final Map<Object, PsiElementListCellRenderer> renderers = new HashMap<>();
+        private final PsiReference myReference;
+
+        ImplementationsUpdaterTask(@Nonnull GotoData gotoData, @Nonnull Editor editor, int offset, final PsiReference reference) {
+            super(gotoData.source.getProject(), ImplementationSearcher.SEARCHING_FOR_IMPLEMENTATIONS);
+            myEditor = editor;
+            myOffset = offset;
+            myGotoData = gotoData;
+            myReference = reference;
+        }
+
+        @Override
+        public void run(@Nonnull final ProgressIndicator indicator) {
+            super.run(indicator);
+            for (PsiElement element : myGotoData.targets) {
+                if (!updateComponent(element, createComparator(renderers, myGotoData))) {
+                    return;
+                }
+            }
+            new ImplementationSearcher.BackgroundableImplementationSearcher() {
+                @Override
+                protected void processElement(PsiElement element) {
+                    indicator.checkCanceled();
+                    if (!TargetElementUtil.acceptImplementationForReference(myReference, element)) {
+                        return;
+                    }
+                    if (myGotoData.addTarget(element)) {
+                        if (!updateComponent(element, createComparator(renderers, myGotoData))) {
+                            indicator.cancel();
+                        }
+                    }
+                }
+            }.searchImplementations(myEditor, myGotoData.source, myOffset);
+        }
+
+        @Override
+        public String getCaption(int size) {
+            return getChooserTitle(myGotoData.source, ((PsiNamedElement)myGotoData.source).getName(), size, isFinished());
+        }
+    }
 }

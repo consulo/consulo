@@ -27,16 +27,16 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ToolsProvider {
-  public static final ExtensionPointName<ToolsProvider> EP_NAME = ExtensionPointName.create(ToolsProvider.class);
+    public static final ExtensionPointName<ToolsProvider> EP_NAME = ExtensionPointName.create(ToolsProvider.class);
 
-  public abstract List<Tool> getTools();
+    public abstract List<Tool> getTools();
 
-  public static List<Tool> getAllTools() {
-    List<Tool> result = new ArrayList<>();
-    for (ToolsProvider provider : EP_NAME.getExtensionList()) {
-      result.addAll(provider.getTools());
+    public static List<Tool> getAllTools() {
+        List<Tool> result = new ArrayList<>();
+        for (ToolsProvider provider : EP_NAME.getExtensionList()) {
+            result.addAll(provider.getTools());
+        }
+
+        return result;
     }
-
-    return result;
-  }
 }

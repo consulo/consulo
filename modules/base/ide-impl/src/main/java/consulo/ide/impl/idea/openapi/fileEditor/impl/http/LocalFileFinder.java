@@ -28,8 +28,8 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LocalFileFinder {
-  public static final ExtensionPointName<LocalFileFinder> EP_NAME = ExtensionPointName.create(LocalFileFinder.class);
+    public static final ExtensionPointName<LocalFileFinder> EP_NAME = ExtensionPointName.create(LocalFileFinder.class);
 
-  @Nullable
-  public abstract VirtualFile findLocalFile(@Nonnull String url, @Nonnull Project project);
+    @Nullable
+    public abstract VirtualFile findLocalFile(@Nonnull String url, @Nonnull Project project);
 }

@@ -13,18 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: mike
- * Date: Aug 20, 2002
- * Time: 5:04:04 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.codeInsight.template.actions;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.util.pointer.NamedPointer;
@@ -37,7 +27,6 @@ import consulo.ide.impl.idea.codeInsight.template.impl.TemplateListPanel;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.LanguagePointerUtil;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.OffsetKey;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.impl.internal.completion.OffsetsInFile;
@@ -58,6 +47,10 @@ import consulo.undoRedo.CommandProcessor;
 
 import java.util.*;
 
+/*
+ * @author mike
+ * @since 2002-08-20
+ */
 public class SaveAsTemplateAction extends AnAction {
     private static final Logger LOG = Logger.getInstance(SaveAsTemplateAction.class);
     //FIXME [VISTALL] how remove this depend?
@@ -70,11 +63,10 @@ public class SaveAsTemplateAction extends AnAction {
         Editor editor = Objects.requireNonNull(dataContext.getData(Editor.KEY));
         PsiFile file = Objects.requireNonNull(dataContext.getData(PsiFile.KEY));
 
-        final Project project = file.getProject();
+        Project project = file.getProject();
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-        final TextRange selection =
-            new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd());
+        TextRange selection = new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd());
         PsiElement current = file.findElementAt(selection.getStartOffset());
         int startOffset = selection.getStartOffset();
         while (current instanceof PsiWhiteSpace) {
@@ -89,13 +81,14 @@ public class SaveAsTemplateAction extends AnAction {
             startOffset = selection.getStartOffset();
         }
 
-        final PsiElement[] psiElements =
+        PsiElement[] psiElements =
             PsiTreeUtil.collectElements(file, element -> selection.contains(element.getTextRange()) && element.getReferences().length > 0);
 
-        final Document document = EditorFactory.getInstance().createDocument(editor.getDocument().getText().
-            substring(startOffset, selection.getEndOffset()));
-        final boolean isXml = file.getLanguage().is(ourXmlLanguagePointer.get());
-        final int offsetDelta = startOffset;
+        Document document = EditorFactory.getInstance().createDocument(
+            editor.getDocument().getText().substring(startOffset, selection.getEndOffset())
+        );
+        boolean isXml = file.getLanguage().is(ourXmlLanguagePointer.get());
+        int offsetDelta = startOffset;
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .inWriteAction()
@@ -107,10 +100,10 @@ public class SaveAsTemplateAction extends AnAction {
                         if (!(reference instanceof PsiQualifiedReference qualifiedReference) || qualifiedReference.getQualifier() == null) {
                             String canonicalText = reference.getCanonicalText();
                             TextRange referenceRange = reference.getRangeInElement();
-                            final TextRange elementTextRange = element.getTextRange();
+                            TextRange elementTextRange = element.getTextRange();
                             LOG.assertTrue(elementTextRange != null, elementTextRange);
-                            final TextRange range = elementTextRange.cutOut(referenceRange).shiftRight(-offsetDelta);
-                            final String oldText = document.getText(range);
+                            TextRange range = elementTextRange.cutOut(referenceRange).shiftRight(-offsetDelta);
+                            String oldText = document.getText(range);
                             // workaround for Java references: canonicalText contains generics, and we need to cut them off because otherwise
                             // they will be duplicated
                             int pos = canonicalText.indexOf('<');
@@ -146,13 +139,12 @@ public class SaveAsTemplateAction extends AnAction {
                 }
 
                 for (RangeMarker marker : markers) {
-                    final String value = rangeToText.get(marker);
+                    String value = rangeToText.get(marker);
                     document.replaceString(marker.getStartOffset(), marker.getEndOffset(), value);
                 }
             });
 
-        final TemplateImpl template =
-            new TemplateImpl(TemplateListPanel.ABBREVIATION, document.getText(), TemplateSettingsImpl.USER_GROUP_NAME);
+        TemplateImpl template = new TemplateImpl(TemplateListPanel.ABBREVIATION, document.getText(), TemplateSettingsImpl.USER_GROUP_NAME);
         template.setToReformat(true);
 
         OffsetKey startKey = OffsetKey.create("pivot");
@@ -172,7 +164,7 @@ public class SaveAsTemplateAction extends AnAction {
             template.getTemplateContext().setEnabled(contextType, applicable.contains(contextType));
         }
 
-        final LiveTemplatesConfigurable configurable = new LiveTemplatesConfigurable();
+        LiveTemplatesConfigurable configurable = new LiveTemplatesConfigurable();
         ShowSettingsUtil.getInstance()
             .editConfigurable(project, configurable, () -> configurable.getTemplateListPanel().addTemplate(template));
     }

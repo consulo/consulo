@@ -59,211 +59,218 @@ import java.util.concurrent.TimeUnit;
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotionListener {
-  private static final Logger LOG = Logger.getInstance(ImageOrColorPreviewManager.class);
+    private static final Logger LOG = Logger.getInstance(ImageOrColorPreviewManager.class);
 
-  private static final Key<KeyListener> EDITOR_LISTENER_ADDED = Key.create("previewManagerListenerAdded");
+    private static final Key<KeyListener> EDITOR_LISTENER_ADDED = Key.create("previewManagerListenerAdded");
 
-  private Future<?> executeFuture = CompletableFuture.completedFuture(null);
+    private Future<?> executeFuture = CompletableFuture.completedFuture(null);
 
-  /**
-   * this collection should not keep strong references to the elements
-   *
-   * @link getPsiElementsAt()
-   */
-  @Nullable
-  private Collection<PsiElement> myElements;
+    /**
+     * this collection should not keep strong references to the elements
+     *
+     * @link getPsiElementsAt()
+     */
+    @Nullable
+    private Collection<PsiElement> myElements;
 
-  @Inject
-  public ImageOrColorPreviewManager(Application application, EditorFactory editorFactory) {
-    if (!application.isSwingApplication()) {
-      return;
+    @Inject
+    public ImageOrColorPreviewManager(Application application, EditorFactory editorFactory) {
+        if (!application.isSwingApplication()) {
+            return;
+        }
+
+        // we don't use multicaster because we don't want to serve all editors - only supported
+        editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
+            @Override
+            public void editorCreated(@Nonnull EditorFactoryEvent event) {
+                registerListeners(event.getEditor());
+            }
+
+            @Override
+            public void editorReleased(@Nonnull EditorFactoryEvent event) {
+                Editor editor = event.getEditor();
+                if (editor.isOneLineMode()) {
+                    return;
+                }
+
+                KeyListener keyListener = EDITOR_LISTENER_ADDED.get(editor);
+                if (keyListener != null) {
+                    EDITOR_LISTENER_ADDED.set(editor, null);
+                    editor.getContentComponent().removeKeyListener(keyListener);
+                    editor.removeEditorMouseMotionListener(ImageOrColorPreviewManager.this);
+                }
+            }
+        }, this);
     }
 
-    // we don't use multicaster because we don't want to serve all editors - only supported
-    editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
-      @Override
-      public void editorCreated(@Nonnull EditorFactoryEvent event) {
-        registerListeners(event.getEditor());
-      }
-
-      @Override
-      public void editorReleased(@Nonnull EditorFactoryEvent event) {
-        Editor editor = event.getEditor();
+    private void registerListeners(final Editor editor) {
         if (editor.isOneLineMode()) {
-          return;
+            return;
         }
 
-        KeyListener keyListener = EDITOR_LISTENER_ADDED.get(editor);
-        if (keyListener != null) {
-          EDITOR_LISTENER_ADDED.set(editor, null);
-          editor.getContentComponent().removeKeyListener(keyListener);
-          editor.removeEditorMouseMotionListener(ImageOrColorPreviewManager.this);
+        Project project = editor.getProject();
+        if (project == null || project.isDisposed()) {
+            return;
         }
-      }
-    }, this);
-  }
 
-  private void registerListeners(final Editor editor) {
-    if (editor.isOneLineMode()) {
-      return;
-    }
-
-    Project project = editor.getProject();
-    if (project == null || project.isDisposed()) {
-      return;
-    }
-
-    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    if (psiFile == null || psiFile instanceof PsiCompiledElement || !isSupportedFile(psiFile)) {
-      return;
-    }
-
-    editor.addEditorMouseMotionListener(this);
-
-    KeyListener keyListener = new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SHIFT && !editor.isOneLineMode()) {
-          PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-          if (pointerInfo != null) {
-            Point location = pointerInfo.getLocation();
-            SwingUtilities.convertPointFromScreen(location, editor.getContentComponent());
-
-            executeFuture.cancel(false);
-            executeFuture =
-              project.getUIAccess().getScheduler().schedule(new PreviewRequest(location, editor, true), 100, TimeUnit.MILLISECONDS);
-          }
+        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        if (psiFile == null || psiFile instanceof PsiCompiledElement || !isSupportedFile(psiFile)) {
+            return;
         }
-      }
-    };
-    editor.getContentComponent().addKeyListener(keyListener);
 
-    EDITOR_LISTENER_ADDED.set(editor, keyListener);
-  }
+        editor.addEditorMouseMotionListener(this);
 
-  private static boolean isSupportedFile(PsiFile psiFile) {
-    for (PsiFile file : psiFile.getViewProvider().getAllFiles()) {
-      for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
-        if (provider.isSupportedFile(file)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
+        KeyListener keyListener = new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_SHIFT && !editor.isOneLineMode()) {
+                    PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+                    if (pointerInfo != null) {
+                        Point location = pointerInfo.getLocation();
+                        SwingUtilities.convertPointFromScreen(location, editor.getContentComponent());
 
-  @Nonnull
-  private static Collection<PsiElement> getPsiElementsAt(Point point, Editor editor) {
-    if (editor.isDisposed()) {
-      return Collections.emptySet();
-    }
-
-    Project project = editor.getProject();
-    if (project == null || project.isDisposed()) {
-      return Collections.emptySet();
-    }
-
-    final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-    final Document document = editor.getDocument();
-    PsiFile psiFile = documentManager.getPsiFile(document);
-    if (psiFile == null || psiFile instanceof PsiCompiledElement || !psiFile.isValid()) {
-      return Collections.emptySet();
-    }
-
-    final Set<PsiElement> elements = Collections.newSetFromMap(ContainerUtil.createWeakMap());
-    final int offset = editor.logicalPositionToOffset(editor.xyToLogicalPosition(point));
-    if (documentManager.isCommitted(document)) {
-      ContainerUtil.addIfNotNull(elements, InjectedLanguageUtil.findElementAtNoCommit(psiFile, offset));
-    }
-    for (PsiFile file : psiFile.getViewProvider().getAllFiles()) {
-      ContainerUtil.addIfNotNull(elements, file.findElementAt(offset));
-    }
-
-    return elements;
-  }
-
-  @Override
-  public void dispose() {
-    executeFuture.cancel(false);
-    myElements = null;
-  }
-
-  @Override
-  public void mouseMoved(@Nonnull EditorMouseEvent event) {
-    Editor editor = event.getEditor();
-    if (editor.isOneLineMode()) {
-      return;
-    }
-
-    Project project = editor.getProject();
-    if (project == null) {
-      return;
-    }
-
-    executeFuture.cancel(false);
-    Point point = event.getMouseEvent().getPoint();
-    if (myElements == null && event.getMouseEvent().isShiftDown()) {
-      executeFuture = project.getUIAccess().getScheduler().schedule(new PreviewRequest(point, editor, false), 100, TimeUnit.MILLISECONDS);
-    }
-    else {
-      Collection<PsiElement> elements = myElements;
-      if (!getPsiElementsAt(point, editor).equals(elements)) {
-        myElements = null;
-        for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
-          try {
-            if (elements != null) {
-              for (PsiElement element : elements) {
-                provider.hide(element, editor);
-              }
+                        executeFuture.cancel(false);
+                        executeFuture =
+                            project.getUIAccess()
+                                .getScheduler()
+                                .schedule(new PreviewRequest(location, editor, true), 100, TimeUnit.MILLISECONDS);
+                    }
+                }
             }
-            else {
-              provider.hide(null, editor);
-            }
-          }
-          catch (Exception e) {
-            LOG.error(e);
-          }
-        }
-      }
+        };
+        editor.getContentComponent().addKeyListener(keyListener);
+
+        EDITOR_LISTENER_ADDED.set(editor, keyListener);
     }
-  }
 
-  private final class PreviewRequest implements Runnable {
-    private final Point point;
-    private final Editor editor;
-    private final boolean keyTriggered;
+    private static boolean isSupportedFile(PsiFile psiFile) {
+        for (PsiFile file : psiFile.getViewProvider().getAllFiles()) {
+            for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
+                if (provider.isSupportedFile(file)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-    public PreviewRequest(Point point, Editor editor, boolean keyTriggered) {
-      this.point = point;
-      this.editor = editor;
-      this.keyTriggered = keyTriggered;
+    @Nonnull
+    private static Collection<PsiElement> getPsiElementsAt(Point point, Editor editor) {
+        if (editor.isDisposed()) {
+            return Collections.emptySet();
+        }
+
+        Project project = editor.getProject();
+        if (project == null || project.isDisposed()) {
+            return Collections.emptySet();
+        }
+
+        final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+        final Document document = editor.getDocument();
+        PsiFile psiFile = documentManager.getPsiFile(document);
+        if (psiFile == null || psiFile instanceof PsiCompiledElement || !psiFile.isValid()) {
+            return Collections.emptySet();
+        }
+
+        final Set<PsiElement> elements = Collections.newSetFromMap(ContainerUtil.createWeakMap());
+        final int offset = editor.logicalPositionToOffset(editor.xyToLogicalPosition(point));
+        if (documentManager.isCommitted(document)) {
+            ContainerUtil.addIfNotNull(elements, InjectedLanguageUtil.findElementAtNoCommit(psiFile, offset));
+        }
+        for (PsiFile file : psiFile.getViewProvider().getAllFiles()) {
+            ContainerUtil.addIfNotNull(elements, file.findElementAt(offset));
+        }
+
+        return elements;
     }
 
     @Override
-    public void run() {
-      Collection<PsiElement> elements = getPsiElementsAt(point, editor);
-      if (elements.equals(myElements)) return;
-      for (PsiElement element : elements) {
-        if (element == null || !element.isValid()) {
-          return;
-        }
-        if (PsiDocumentManager.getInstance(element.getProject()).isUncommited(editor.getDocument()) ||
-          DumbService.getInstance(element.getProject()).isDumb()) {
-          return;
-        }
-
-        for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensions()) {
-          if (!provider.isSupportedFile(element.getContainingFile())) continue;
-
-          try {
-            provider.show(element, editor, point, keyTriggered);
-          }
-          catch (Exception e) {
-            LOG.error(e);
-          }
-        }
-      }
-      myElements = elements;
+    public void dispose() {
+        executeFuture.cancel(false);
+        myElements = null;
     }
-  }
+
+    @Override
+    public void mouseMoved(@Nonnull EditorMouseEvent event) {
+        Editor editor = event.getEditor();
+        if (editor.isOneLineMode()) {
+            return;
+        }
+
+        Project project = editor.getProject();
+        if (project == null) {
+            return;
+        }
+
+        executeFuture.cancel(false);
+        Point point = event.getMouseEvent().getPoint();
+        if (myElements == null && event.getMouseEvent().isShiftDown()) {
+            executeFuture =
+                project.getUIAccess().getScheduler().schedule(new PreviewRequest(point, editor, false), 100, TimeUnit.MILLISECONDS);
+        }
+        else {
+            Collection<PsiElement> elements = myElements;
+            if (!getPsiElementsAt(point, editor).equals(elements)) {
+                myElements = null;
+                for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
+                    try {
+                        if (elements != null) {
+                            for (PsiElement element : elements) {
+                                provider.hide(element, editor);
+                            }
+                        }
+                        else {
+                            provider.hide(null, editor);
+                        }
+                    }
+                    catch (Exception e) {
+                        LOG.error(e);
+                    }
+                }
+            }
+        }
+    }
+
+    private final class PreviewRequest implements Runnable {
+        private final Point point;
+        private final Editor editor;
+        private final boolean keyTriggered;
+
+        public PreviewRequest(Point point, Editor editor, boolean keyTriggered) {
+            this.point = point;
+            this.editor = editor;
+            this.keyTriggered = keyTriggered;
+        }
+
+        @Override
+        public void run() {
+            Collection<PsiElement> elements = getPsiElementsAt(point, editor);
+            if (elements.equals(myElements)) {
+                return;
+            }
+            for (PsiElement element : elements) {
+                if (element == null || !element.isValid()) {
+                    return;
+                }
+                if (PsiDocumentManager.getInstance(element.getProject()).isUncommited(editor.getDocument()) ||
+                    DumbService.getInstance(element.getProject()).isDumb()) {
+                    return;
+                }
+
+                for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensions()) {
+                    if (!provider.isSupportedFile(element.getContainingFile())) {
+                        continue;
+                    }
+
+                    try {
+                        provider.show(element, editor, point, keyTriggered);
+                    }
+                    catch (Exception e) {
+                        LOG.error(e);
+                    }
+                }
+            }
+            myElements = elements;
+        }
+    }
 }

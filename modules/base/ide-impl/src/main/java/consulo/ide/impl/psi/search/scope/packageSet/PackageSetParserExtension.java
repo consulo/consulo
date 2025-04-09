@@ -31,11 +31,11 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PackageSetParserExtension {
-  ExtensionPointName<PackageSetParserExtension> EP_NAME = ExtensionPointName.create(PackageSetParserExtension.class);
+    ExtensionPointName<PackageSetParserExtension> EP_NAME = ExtensionPointName.create(PackageSetParserExtension.class);
 
-  @Nullable
-  PackageSet parsePackageSet(Lexer lexer, final String scope, String modulePattern) throws ParsingException;
+    @Nullable
+    PackageSet parsePackageSet(Lexer lexer, final String scope, String modulePattern) throws ParsingException;
 
-  @Nullable
-  String parseScope(Lexer lexer);
+    @Nullable
+    String parseScope(Lexer lexer);
 }

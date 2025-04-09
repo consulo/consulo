@@ -17,7 +17,13 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IntentionMenuContributor {
-  ExtensionPointName<IntentionMenuContributor> EP_NAME = ExtensionPointName.create(IntentionMenuContributor.class);
+    ExtensionPointName<IntentionMenuContributor> EP_NAME = ExtensionPointName.create(IntentionMenuContributor.class);
 
-  void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull final ShowIntentionsPass.IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset);
+    void collectActions(
+        @Nonnull Editor hostEditor,
+        @Nonnull PsiFile hostFile,
+        @Nonnull final ShowIntentionsPass.IntentionsInfo intentions,
+        int passIdToShowIntentionsFor,
+        int offset
+    );
 }

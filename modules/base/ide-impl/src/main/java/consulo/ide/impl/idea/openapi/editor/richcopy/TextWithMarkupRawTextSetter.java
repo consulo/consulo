@@ -32,23 +32,23 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl(id = "first", order = "first")
 public final class TextWithMarkupRawTextSetter implements CopyPastePreProcessor {
-  private final TextWithMarkupProcessor myProcessor;
+    private final TextWithMarkupProcessor myProcessor;
 
-  @Inject
-  TextWithMarkupRawTextSetter() {
-    myProcessor = CopyPastePostProcessor.EP_NAME.findExtensionOrFail(TextWithMarkupProcessor.class);
-  }
+    @Inject
+    TextWithMarkupRawTextSetter() {
+        myProcessor = CopyPastePostProcessor.EP_NAME.findExtensionOrFail(TextWithMarkupProcessor.class);
+    }
 
-  @Nullable
-  @Override
-  public String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text) {
-    myProcessor.setRawText(text);
-    return null;
-  }
+    @Nullable
+    @Override
+    public String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text) {
+        myProcessor.setRawText(text);
+        return null;
+    }
 
-  @Nonnull
-  @Override
-  public String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText) {
-    return text;
-  }
+    @Nonnull
+    @Override
+    public String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText) {
+        return text;
+    }
 }
