@@ -194,11 +194,14 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
                 if (extension == null) {
                     continue;
                 }
-                extensionPoint.safeStream()
+                PsiPackage psiPackage = extensionPoint.safeStream()
                     .filter(p -> p.isSupported(extension))
                     .map(p -> p.createPackage(myPsiManager, this, extensionClass, qualifiedName))
                     .findFirst()
                     .orElse(null);
+                if (psiPackage != null) {
+                    return psiPackage;
+                }
             }
         }
         return null;
