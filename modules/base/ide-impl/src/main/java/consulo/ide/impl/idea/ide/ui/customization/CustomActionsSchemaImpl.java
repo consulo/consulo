@@ -109,7 +109,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         return myActions;
     }
 
-    public void setActions(final ArrayList<ActionUrl> actions) {
+    public void setActions(ArrayList<ActionUrl> actions) {
         myActions = actions;
         resortActions();
     }
@@ -120,7 +120,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         myIconCustomizations.clear();
 
         for (ActionUrl actionUrl : result.myActions) {
-            final ActionUrl url = new ActionUrl(
+            ActionUrl url = new ActionUrl(
                 new ArrayList<>(actionUrl.getGroupPath()),
                 actionUrl.getComponent(),
                 actionUrl.getActionType(),
@@ -139,7 +139,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
     }
 
     public boolean isModified(CustomActionsSchemaImpl schema) {
-        final ArrayList<ActionUrl> storedActions = schema.getActions();
+        ArrayList<ActionUrl> storedActions = schema.getActions();
         if (storedActions.size() != getActions().size()) {
             return true;
         }
@@ -163,7 +163,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
     public void readExternal(Element element) throws InvalidDataException {
         DefaultJDOMExternalizer.readExternal(this, element);
         Element schElement = element;
-        final String activeName = element.getAttributeValue(ACTIVE);
+        String activeName = element.getAttributeValue(ACTIVE);
         if (activeName != null) {
             for (Element toolbarElement : element.getChildren(ACTIONS_SCHEMA)) {
                 for (Object o : toolbarElement.getChildren("option")) {
@@ -207,7 +207,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         if (myIdToActionGroup.get(id) == null) {
             for (Pair pair : myIdToNameList) {
                 if (pair.first.equals(id)) {
-                    final ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(id);
+                    ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(id);
                     if (actionGroup != null) { //J2EE/Commander plugin was disabled
                         myIdToActionGroup.put(id, CustomizationUtil.correctActionGroup(actionGroup, this, pair.second));
                     }
@@ -219,7 +219,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
 
     public void resetMainActionGroups() {
         for (Pair pair : myIdToNameList) {
-            final ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(pair.first);
+            ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(pair.first);
             if (actionGroup != null) {
                 myIdToActionGroup.put(pair.first, CustomizationUtil.correctActionGroup(actionGroup, this, pair.second));
             }
@@ -227,9 +227,9 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
     }
 
     public void fillActionGroups(DefaultMutableTreeNode root) {
-        final ActionManager actionManager = ActionManager.getInstance();
+        ActionManager actionManager = ActionManager.getInstance();
         for (Pair pair : myIdToNameList) {
-            final ActionGroup actionGroup = (ActionGroup)actionManager.getAction(pair.first);
+            ActionGroup actionGroup = (ActionGroup)actionManager.getAction(pair.first);
             if (actionGroup != null) {
                 root.add(ActionsTreeUtil.createNode(ActionsTreeUtil.createGroup(actionGroup, pair.second, null, null, true, null, false)));
             }
@@ -242,7 +242,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
             return false;
         }
 
-        final String text = group.getTemplatePresentation().getText();
+        String text = group.getTemplatePresentation().getText();
         if (!StringUtil.isEmpty(text)) {
             for (ActionUrl url : myActions) {
                 if (url.getGroupPath().contains(text) || url.getGroupPath().contains(defaultGroupName)) {
@@ -260,9 +260,9 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         return true;
     }
 
-    public List<ActionUrl> getChildActions(final ActionUrl url) {
+    public List<ActionUrl> getChildActions(ActionUrl url) {
         ArrayList<ActionUrl> result = new ArrayList<>();
-        final ArrayList<String> groupPath = url.getGroupPath();
+        ArrayList<String> groupPath = url.getGroupPath();
         for (ActionUrl actionUrl : myActions) {
             int index = 0;
             if (groupPath.size() <= actionUrl.getGroupPath().size()) {
@@ -289,20 +289,20 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
     }
 
     public String getIconPath(String actionId) {
-        final String path = myIconCustomizations.get(actionId);
+        String path = myIconCustomizations.get(actionId);
         return path == null ? "" : path;
     }
 
     private void readIcons(Element parent) {
         for (Object actionO : parent.getChildren(ELEMENT_ACTION)) {
             Element action = (Element)actionO;
-            final String actionId = action.getAttributeValue(ATTRIBUTE_ID);
-            final String iconPath = action.getAttributeValue(ATTRIBUTE_ICON);
+            String actionId = action.getAttributeValue(ATTRIBUTE_ID);
+            String iconPath = action.getAttributeValue(ATTRIBUTE_ICON);
             if (actionId != null) {
                 myIconCustomizations.put(actionId, iconPath);
             }
         }
-        SwingUtilities.invokeLater(() -> initActionIcons());
+        SwingUtilities.invokeLater(this::initActionIcons);
     }
 
     private void writeIcons(Element parent) {
@@ -320,10 +320,10 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
     private void initActionIcons() {
         ActionManager actionManager = ActionManager.getInstance();
         for (String actionId : myIconCustomizations.keySet()) {
-            final AnAction anAction = actionManager.getAction(actionId);
+            AnAction anAction = actionManager.getAction(actionId);
             if (anAction != null) {
                 Image icon;
-                final String iconPath = myIconCustomizations.get(actionId);
+                String iconPath = myIconCustomizations.get(actionId);
                 if (iconPath != null && new File(FileUtil.toSystemDependentName(iconPath)).exists()) {
                     try {
                         icon = Image.fromUrl(VfsUtil.convertToURL(VfsUtil.pathToUrl(iconPath)));
@@ -345,7 +345,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         }
 
         if (!myInitial) {
-            final IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(null);
+            IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(null);
             if (frame != null) {
                 frame.updateView();
             }
@@ -358,7 +358,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         String first;
         String second;
 
-        public Pair(final String first, final String second) {
+        public Pair(String first, String second) {
             this.first = first;
             this.second = second;
         }
@@ -381,8 +381,8 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
 
         @Override
         public int compare(ActionUrl u1, ActionUrl u2) {
-            final int w1 = getEquivalenceClass(u1);
-            final int w2 = getEquivalenceClass(u2);
+            int w1 = getEquivalenceClass(u1);
+            int w2 = getEquivalenceClass(u2);
             if (w1 != w2) {
                 return w1 - w2; // deleted < added < others
             }

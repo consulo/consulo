@@ -29,7 +29,6 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.change.CommitContext;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,16 +40,11 @@ import java.util.List;
 import java.util.Map;
 
 public class UnifiedDiffWriter {
-    @NonNls
     private static final String INDEX_SIGNATURE = "Index: {0}{1}";
-    @NonNls
     public static final String ADDITIONAL_PREFIX = "IDEA additional info:";
-    @NonNls
     public static final String ADD_INFO_HEADER = "Subsystem: ";
-    @NonNls
     public static final String ADD_INFO_LINE_START = "<+>";
     private static final String HEADER_SEPARATOR = "===================================================================";
-    @NonNls
     public static final String NO_NEWLINE_SIGNATURE = "\\ No newline at end of file";
 
     private UnifiedDiffWriter() {
@@ -60,10 +54,10 @@ public class UnifiedDiffWriter {
         @Nullable Project project,
         Collection<FilePatch> patches,
         Writer writer,
-        final String lineSeparator,
-        @Nullable final CommitContext commitContext
+        String lineSeparator,
+        @Nullable CommitContext commitContext
     ) throws IOException {
-        final PatchEP[] extensions = project == null ? new PatchEP[0] : PatchEP.EP_NAME.getExtensions(project);
+        PatchEP[] extensions = project == null ? new PatchEP[0] : PatchEP.EP_NAME.getExtensions(project);
         write(project, patches, writer, lineSeparator, extensions, commitContext);
     }
 
@@ -71,9 +65,9 @@ public class UnifiedDiffWriter {
         @Nullable Project project,
         Collection<FilePatch> patches,
         Writer writer,
-        final String lineSeparator,
-        final PatchEP[] extensions,
-        final CommitContext commitContext
+        String lineSeparator,
+        PatchEP[] extensions,
+        CommitContext commitContext
     ) throws IOException {
         write(project, project == null ? null : project.getBasePath(), patches, writer, lineSeparator, extensions, commitContext);
     }
@@ -83,9 +77,9 @@ public class UnifiedDiffWriter {
         @Nullable String basePath,
         Collection<FilePatch> patches,
         Writer writer,
-        final String lineSeparator,
-        @Nonnull final PatchEP[] extensions,
-        final CommitContext commitContext
+        String lineSeparator,
+        @Nonnull PatchEP[] extensions,
+        CommitContext commitContext
     ) throws IOException {
         for (FilePatch filePatch : patches) {
             if (!(filePatch instanceof TextFilePatch)) {
@@ -95,9 +89,9 @@ public class UnifiedDiffWriter {
             String path = ObjectUtil.assertNotNull(patch.getBeforeName() == null ? patch.getAfterName() : patch.getBeforeName());
             String pathRelatedToProjectDir =
                 project == null ? path : getPathRelatedToDir(ObjectUtil.assertNotNull(project.getBasePath()), basePath, path);
-            final Map<String, CharSequence> additionalMap = new HashMap<>();
+            Map<String, CharSequence> additionalMap = new HashMap<>();
             for (PatchEP extension : extensions) {
-                final CharSequence charSequence = extension.provideContent(pathRelatedToProjectDir, commitContext);
+                CharSequence charSequence = extension.provideContent(pathRelatedToProjectDir, commitContext);
                 if (!StringUtil.isEmpty(charSequence)) {
                     additionalMap.put(extension.getName(), charSequence);
                 }
@@ -149,9 +143,9 @@ public class UnifiedDiffWriter {
     }
 
     private static void writeFileHeading(
-        final FilePatch patch,
-        final Writer writer,
-        final String lineSeparator,
+        FilePatch patch,
+        Writer writer,
+        String lineSeparator,
         Map<String, CharSequence> additionalMap
     ) throws IOException {
         writer.write(MessageFormat.format(INDEX_SIGNATURE, patch.getBeforeName(), lineSeparator));
@@ -161,8 +155,8 @@ public class UnifiedDiffWriter {
             for (Map.Entry<String, CharSequence> entry : additionalMap.entrySet()) {
                 writer.write(ADD_INFO_HEADER + entry.getKey());
                 writer.write(lineSeparator);
-                final String value = StringUtil.escapeStringCharacters(entry.getValue().toString());
-                final List<String> lines = StringUtil.split(value, "\n");
+                String value = StringUtil.escapeStringCharacters(entry.getValue().toString());
+                List<String> lines = StringUtil.split(value, "\n");
                 for (String line : lines) {
                     writer.write(ADD_INFO_LINE_START);
                     writer.write(line);
@@ -175,13 +169,7 @@ public class UnifiedDiffWriter {
         writeRevisionHeading(writer, "+++", patch.getAfterName(), patch.getAfterVersionId(), lineSeparator);
     }
 
-    private static void writeRevisionHeading(
-        final Writer writer,
-        final String prefix,
-        final String revisionPath,
-        final String revisionName,
-        final String lineSeparator
-    )
+    private static void writeRevisionHeading(Writer writer, String prefix, String revisionPath, String revisionName, String lineSeparator)
         throws IOException {
         writer.write(prefix + " ");
         writer.write(revisionPath);
@@ -192,17 +180,15 @@ public class UnifiedDiffWriter {
         writer.write(lineSeparator);
     }
 
-    private static void writeHunkStart(
-        Writer writer, int startLine1, int endLine1, int startLine2, int endLine2,
-        final String lineSeparator
-    ) throws IOException {
+    private static void writeHunkStart(Writer writer, int startLine1, int endLine1, int startLine2, int endLine2, String lineSeparator)
+        throws IOException {
         StringBuilder builder = new StringBuilder("@@ -");
         builder.append(startLine1 + 1).append(",").append(endLine1 - startLine1);
         builder.append(" +").append(startLine2 + 1).append(",").append(endLine2 - startLine2).append(" @@").append(lineSeparator);
         writer.append(builder.toString());
     }
 
-    private static void writeLine(final Writer writer, final String line, final char prefix) throws IOException {
+    private static void writeLine(Writer writer, String line, char prefix) throws IOException {
         writer.write(prefix);
         writer.write(line);
     }

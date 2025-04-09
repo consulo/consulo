@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.configurable.ConfigurationException;
@@ -25,10 +25,10 @@ import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.setting.bundle.SettingsSdksModel;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.project.ProjectBundle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -36,6 +36,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
@@ -126,7 +127,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     @Override
     public void reset() {
         mySdks.clear();
-        final Sdk[] sdks = mySdkTableProvider.get().getAllSdks();
+        Sdk[] sdks = mySdkTableProvider.get().getAllSdks();
         for (Sdk sdk : sdks) {
             try {
                 mySdks.put(sdk, (Sdk)sdk.clone());
@@ -172,12 +173,13 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         if (!canApply(errorString, configurable, addedOnly)) {
             throw new ConfigurationException(errorString[0]);
         }
-        final Sdk[] allFromTable = mySdkTableProvider.get().getAllSdks();
-        final ArrayList<Sdk> itemsInTable = new ArrayList<>();
+        Sdk[] allFromTable = mySdkTableProvider.get().getAllSdks();
+        ArrayList<Sdk> itemsInTable = new ArrayList<>();
         // Delete removed and fill itemsInTable
-        ApplicationManager.getApplication().runWriteAction(() -> {
-            final SdkTable sdkTable = mySdkTableProvider.get();
-            for (final Sdk tableItem : allFromTable) {
+        Application app = Application.get();
+        app.runWriteAction(() -> {
+            SdkTable sdkTable = mySdkTableProvider.get();
+            for (Sdk tableItem : allFromTable) {
                 if (mySdks.containsKey(tableItem)) {
                     itemsInTable.add(tableItem);
                 }
@@ -186,17 +188,17 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
                 }
             }
         });
-        ApplicationManager.getApplication().runWriteAction(() -> {
+        app.runWriteAction(() -> {
             // Now all removed items are deleted from table, itemsInTable contains all items in table
-            final SdkTable sdkTable = mySdkTableProvider.get();
+            SdkTable sdkTable = mySdkTableProvider.get();
             for (Sdk originalSdk : itemsInTable) {
-                final Sdk modifiedSdk = mySdks.get(originalSdk);
+                Sdk modifiedSdk = mySdks.get(originalSdk);
                 LOG.assertTrue(modifiedSdk != null);
                 sdkTable.updateSdk(originalSdk, modifiedSdk);
             }
             // Add new items to table
-            final Sdk[] allSdks = sdkTable.getAllSdks();
-            for (final Sdk sdk : mySdks.keySet()) {
+            Sdk[] allSdks = sdkTable.getAllSdks();
+            for (Sdk sdk : mySdks.keySet()) {
                 LOG.assertTrue(sdk != null);
                 if (ArrayUtil.find(allSdks, sdk) == -1) {
                     sdkTable.addSdk(sdk);
@@ -225,28 +227,27 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
             String currName = currItem.getName();
             if (currName.isEmpty()) {
                 itemWithError = currItem;
-                errorString[0] = ProjectBundle.message("sdk.list.name.required.error");
+                errorString[0] = ProjectLocalize.sdkListNameRequiredError().get();
                 break;
             }
             if (allNames.contains(currName)) {
                 itemWithError = currItem;
-                errorString[0] = ProjectBundle.message("sdk.list.unique.name.required.error");
+                errorString[0] = ProjectLocalize.sdkListUniqueNameRequiredError().get();
                 break;
             }
-            final SdkAdditionalData sdkAdditionalData = currItem.getSdkAdditionalData();
-            if (sdkAdditionalData instanceof ValidatableSdkAdditionalData) {
+            if (currItem.getSdkAdditionalData() instanceof ValidatableSdkAdditionalData sdkAdditionalData) {
                 try {
-                    ((ValidatableSdkAdditionalData)sdkAdditionalData).checkValid(this);
+                    sdkAdditionalData.checkValid(this);
                 }
                 catch (ConfigurationException e) {
                     if (rootConfigurable != null) {
-                        final Object projectJdk = rootConfigurable.getSelectedObject();
-                        if (!(projectJdk instanceof Sdk) || !Comparing.strEqual(((Sdk)projectJdk).getName(), currName)) {
+                        if (!(rootConfigurable.getSelectedObject() instanceof Sdk projectJdk
+                            && Comparing.strEqual(projectJdk.getName(), currName))) {
                             //do not leave current item with current name
                             rootConfigurable.selectNodeInTree(currName);
                         }
                     }
-                    throw new ConfigurationException(ProjectBundle.message("sdk.configuration.exception", currName) + " " + e.getMessage());
+                    throw new ConfigurationException(ProjectLocalize.sdkConfigurationException(currName) + " " + e.getMessage());
                 }
             }
             allNames.add(currName);
@@ -261,7 +262,8 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     }
 
     @Override
-    public void removeSdk(final Sdk editableObject) {
+    @RequiredUIAccess
+    public void removeSdk(Sdk editableObject) {
         Sdk removedSdk = null;
         for (Sdk sdk : mySdks.keySet()) {
             if (mySdks.get(sdk) == editableObject) {
@@ -279,11 +281,11 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     @Override
     public void createAddActions(
         DefaultActionGroup group,
-        final JComponent parent,
-        final Consumer<Sdk> updateTree,
+        JComponent parent,
+        Consumer<Sdk> updateTree,
         @Nullable Predicate<SdkTypeId> filter
     ) {
-        final List<SdkType> types = SdkType.EP_NAME.getExtensionList();
+        List<SdkType> types = SdkType.EP_NAME.getExtensionList();
         List<SdkType> list = new ArrayList<>(types.size());
         for (SdkType sdkType : types) {
             if (filter != null && !filter.test(sdkType)) {
@@ -294,8 +296,8 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         }
         Collections.sort(list, (o1, o2) -> StringUtil.compare(o1.getPresentableName(), o2.getPresentableName(), true));
 
-        for (final SdkType type : list) {
-            final AnAction addAction = new DumbAwareAction(type.getPresentableName(), null, type.getIcon()) {
+        for (SdkType type : list) {
+            AnAction addAction = new DumbAwareAction(type.getPresentableName(), null, type.getIcon()) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -307,7 +309,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     }
 
     @RequiredUIAccess
-    public void doAdd(JComponent parent, final SdkType type, final Consumer<Sdk> callback) {
+    public void doAdd(JComponent parent, SdkType type, Consumer<Sdk> callback) {
         myModified = true;
         if (type instanceof SdkTypeWithCustomCreateUI customCreateUI) {
             customCreateUI.showCustomCreateUI(this, parent, sdk -> setupSdk(sdk, callback));
@@ -316,17 +318,20 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
             Platform platform = Platform.current();
             SdkUtil.selectSdkHome(platform, bundleType, homePath -> {
                 String newSdkName = SdkUtil.createUniqueSdkName(platform, bundleType, homePath, getSdks());
-                final SdkImpl newSdk = new SdkImpl(mySdkTableProvider.get(), type, homePath, newSdkName);
+                SdkImpl newSdk = new SdkImpl(mySdkTableProvider.get(), type, homePath, newSdkName);
                 setupSdk(newSdk, callback);
             });
         }
         else {
-            SdkUtil.selectSdkHome(type, home -> {
-                String newSdkName = SdkUtil.createUniqueSdkName(type, home, getSdks());
-                final SdkImpl newSdk = new SdkImpl(mySdkTableProvider.get(), newSdkName, type);
-                newSdk.setHomePath(home);
-                setupSdk(newSdk, callback);
-            });
+            SdkUtil.selectSdkHome(
+                type,
+                home -> {
+                    String newSdkName = SdkUtil.createUniqueSdkName(type, home, getSdks());
+                    SdkImpl newSdk = new SdkImpl(mySdkTableProvider.get(), newSdkName, type);
+                    newSdk.setHomePath(home);
+                    setupSdk(newSdk, callback);
+                }
+            );
         }
     }
 
@@ -344,9 +349,9 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
                     if (newSdk.getVersionString() == null) {
                         String home = newSdk.getHomePath();
                         Messages.showMessageDialog(
-                            ProjectBundle.message("sdk.java.corrupt.error", home),
-                            ProjectBundle.message("sdk.java.corrupt.title"),
-                            Messages.getErrorIcon()
+                            ProjectLocalize.sdkJavaCorruptError(home).get(),
+                            ProjectLocalize.sdkJavaCorruptTitle().get(),
+                            UIUtil.getErrorIcon()
                         );
                     }
 
@@ -357,11 +362,13 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     }
 
     @Override
+    @RequiredUIAccess
     public void addSdk(Sdk sdk) {
         doAdd(sdk, null);
     }
 
     @Override
+    @RequiredUIAccess
     public void doAdd(Sdk newSdk, @Nullable Consumer<Sdk> updateTree) {
         myModified = true;
         mySdks.put(newSdk, newSdk);
@@ -372,7 +379,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     }
 
     @Nullable
-    public Sdk findSdk(@Nullable final Sdk modelJdk) {
+    public Sdk findSdk(@Nullable Sdk modelJdk) {
         for (Sdk sdk : mySdks.keySet()) {
             if (Comparing.equal(mySdks.get(sdk), modelJdk)) {
                 return sdk;

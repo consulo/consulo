@@ -31,17 +31,17 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
 
     @Override
     protected void fillActions(
-        @Nullable final Project project,
-        @Nonnull final DefaultActionGroup group,
-        @Nonnull final DataContext dataContext
+        @Nullable Project project,
+        @Nonnull DefaultActionGroup group,
+        @Nonnull DataContext dataContext
     ) {
         if (project == null) {
             return;
         }
 
-        final Pair<SupportedVCS, AbstractVcs> typeAndVcs = getActiveVCS(project, dataContext);
-        final AbstractVcs vcs = typeAndVcs.getSecond();
-        final SupportedVCS popupType = typeAndVcs.getFirst();
+        Pair<SupportedVCS, AbstractVcs> typeAndVcs = getActiveVCS(project, dataContext);
+        AbstractVcs vcs = typeAndVcs.getSecond();
+        SupportedVCS popupType = typeAndVcs.getFirst();
 
         switch (popupType) {
             case VCS:
@@ -60,17 +60,17 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
 
     private void fillVcsPopup(
-        @Nonnull final Project project,
-        @Nonnull final DefaultActionGroup group,
-        @Nullable final DataContext dataContext,
-        @Nullable final AbstractVcs vcs
+        @Nonnull Project project,
+        @Nonnull DefaultActionGroup group,
+        @Nullable DataContext dataContext,
+        @Nullable AbstractVcs vcs
     ) {
         if (vcs != null) {
             // replace general vcs actions if necessary
 
             for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
                 if (provider.replaceVcsActionsFor(vcs, dataContext)) {
-                    final List<AnAction> actionsToReplace = provider.getVcsActions(project, vcs, dataContext);
+                    List<AnAction> actionsToReplace = provider.getVcsActions(project, vcs, dataContext);
                     if (actionsToReplace != null) {
                         // replace general actions with custom ones:
                         addActions(actionsToReplace, group);
@@ -87,15 +87,15 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
 
     private void fillGeneralVcsPopup(
-        @Nonnull final Project project,
-        @Nonnull final DefaultActionGroup group,
-        @Nullable final DataContext dataContext,
-        @Nullable final AbstractVcs vcs
+        @Nonnull Project project,
+        @Nonnull DefaultActionGroup group,
+        @Nullable DataContext dataContext,
+        @Nullable AbstractVcs vcs
     ) {
         // include all custom actions in general popup
-        final List<AnAction> actions = new ArrayList<>();
+        List<AnAction> actions = new ArrayList<>();
         for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
-            final List<AnAction> providerActions = provider.getVcsActions(project, vcs, dataContext);
+            List<AnAction> providerActions = provider.getVcsActions(project, vcs, dataContext);
             if (providerActions != null) {
                 actions.addAll(providerActions);
             }
@@ -127,13 +127,13 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
 
     private void fillNonInVcsActions(
-        @Nonnull final Project project,
-        @Nonnull final DefaultActionGroup group,
-        @Nullable final DataContext dataContext
+        @Nonnull Project project,
+        @Nonnull DefaultActionGroup group,
+        @Nullable DataContext dataContext
     ) {
         // add custom vcs actions
         for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
-            final List<AnAction> actions = provider.getNotInVcsActions(project, dataContext);
+            List<AnAction> actions = provider.getNotInVcsActions(project, dataContext);
             if (actions != null) {
                 addActions(actions, group);
             }
@@ -154,16 +154,16 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
 
     private void addActions(
-        @Nonnull final List<AnAction> actions,
-        @Nonnull final DefaultActionGroup toGroup
+        @Nonnull List<AnAction> actions,
+        @Nonnull DefaultActionGroup toGroup
     ) {
         for (AnAction action : actions) {
             toGroup.addAction(action);
         }
     }
 
-    private Pair<SupportedVCS, AbstractVcs> getActiveVCS(@Nonnull final Project project, @Nullable final DataContext dataContext) {
-        final AbstractVcs[] activeVcss = getActiveVCSs(project);
+    private Pair<SupportedVCS, AbstractVcs> getActiveVCS(@Nonnull Project project, @Nullable DataContext dataContext) {
+        AbstractVcs[] activeVcss = getActiveVCSs(project);
         if (activeVcss.length == 0) {
             // no vcs
             return new Pair<>(SupportedVCS.NOT_IN_VCS, null);
@@ -174,9 +174,9 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         }
 
         // by current file
-        final VirtualFile file = dataContext != null ? dataContext.getData(VirtualFile.KEY) : null;
+        VirtualFile file = dataContext != null ? dataContext.getData(VirtualFile.KEY) : null;
         if (file != null) {
-            final AbstractVcs vscForFile = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
+            AbstractVcs vscForFile = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
             if (vscForFile != null) {
                 return Pair.create(SupportedVCS.VCS, vscForFile);
             }
@@ -185,13 +185,13 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         return new Pair<>(SupportedVCS.VCS, null);
     }
 
-    private AbstractVcs[] getActiveVCSs(final Project project) {
-        final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
+    private AbstractVcs[] getActiveVCSs(Project project) {
+        ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
         return vcsManager.getAllActiveVcss();
     }
 
-    private void addAction(final String actionId, final DefaultActionGroup toGroup) {
-        final AnAction action = ActionManager.getInstance().getAction(actionId);
+    private void addAction(String actionId, DefaultActionGroup toGroup) {
+        AnAction action = ActionManager.getInstance().getAction(actionId);
 
         // add action to group if it is available
         if (action != null) {
@@ -199,12 +199,12 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         }
     }
 
-    private void addSeparator(final DefaultActionGroup toGroup) {
+    private void addSeparator(DefaultActionGroup toGroup) {
         addSeparator(toGroup, null);
     }
 
-    private void addSeparator(final DefaultActionGroup toGroup, @Nullable final String title) {
-        final AnSeparator separator = title == null ? new AnSeparator() : new AnSeparator(title);
+    private void addSeparator(DefaultActionGroup toGroup, @Nullable String title) {
+        AnSeparator separator = title == null ? new AnSeparator() : new AnSeparator(title);
         toGroup.add(separator);
     }
 

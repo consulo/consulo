@@ -157,7 +157,7 @@ public class VcsLogDataImpl implements VcsLogData {
         return hashMap;
     }
 
-    private void fireDataPackChangeEvent(@Nonnull final DataPack dataPack) {
+    private void fireDataPackChangeEvent(@Nonnull DataPack dataPack) {
         myProject.getApplication().invokeLater(() -> {
             for (DataPackChangeListener listener : myDataPackChangeListeners) {
                 listener.onDataPackChange(dataPack);
@@ -165,7 +165,7 @@ public class VcsLogDataImpl implements VcsLogData {
         });
     }
 
-    public void addDataPackChangeListener(@Nonnull final DataPackChangeListener listener) {
+    public void addDataPackChangeListener(@Nonnull DataPackChangeListener listener) {
         myDataPackChangeListeners.add(listener);
     }
 
@@ -200,7 +200,7 @@ public class VcsLogDataImpl implements VcsLogData {
     }
 
     public void initialize() {
-        final StopWatch initSw = StopWatch.start("initialize");
+        StopWatch initSw = StopWatch.start("initialize");
         myDataLoaderQueue.clear();
 
         runInBackground(indicator -> {

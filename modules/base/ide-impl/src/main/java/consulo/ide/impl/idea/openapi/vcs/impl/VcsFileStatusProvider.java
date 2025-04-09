@@ -46,9 +46,9 @@ import jakarta.annotation.Nullable;
 /**
  * @author yole
  */
-@Singleton
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 @ServiceImpl
+@Singleton
 public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContentProvider {
     private final Project myProject;
     private final FileStatusManagerImpl myFileStatusManager;
@@ -62,9 +62,9 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
 
     @Inject
     public VcsFileStatusProvider(
-        final Project project,
-        final FileStatusManager fileStatusManager,
-        final ProjectLevelVcsManager vcsManager,
+        Project project,
+        FileStatusManager fileStatusManager,
+        ProjectLevelVcsManager vcsManager,
         ChangeListManager changeListManager,
         VcsDirtyScopeManager dirtyScopeManager, VcsConfiguration configuration
     ) {
@@ -114,8 +114,8 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
 
     @Override
     @Nonnull
-    public FileStatus getFileStatus(@Nonnull final VirtualFile virtualFile) {
-        final AbstractVcs vcs = myVcsManager.getVcsFor(virtualFile);
+    public FileStatus getFileStatus(@Nonnull VirtualFile virtualFile) {
+        AbstractVcs vcs = myVcsManager.getVcsFor(virtualFile);
         if (vcs == null) {
             if (ScratchUtil.isScratch(virtualFile)) {
                 return FileStatus.SUPPRESSED;
@@ -123,7 +123,7 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
             return FileStatusManagerImpl.getDefaultStatus(virtualFile);
         }
 
-        final FileStatus status = myChangeListManager.getStatus(virtualFile);
+        FileStatus status = myChangeListManager.getStatus(virtualFile);
         if (status == FileStatus.NOT_CHANGED && isDocumentModified(virtualFile)) {
             return FileStatus.MODIFIED;
         }
@@ -141,13 +141,13 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
     }
 
     @Override
-    public void refreshFileStatusFromDocument(@Nonnull final VirtualFile virtualFile, @Nonnull final Document doc) {
+    public void refreshFileStatusFromDocument(@Nonnull VirtualFile virtualFile, @Nonnull Document doc) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("refreshFileStatusFromDocument: file.getModificationStamp()=" + virtualFile.getModificationStamp() + ", document.getModificationStamp()=" + doc.getModificationStamp());
         }
         FileStatus cachedStatus = myFileStatusManager.getCachedStatus(virtualFile);
         if (cachedStatus == null || cachedStatus == FileStatus.NOT_CHANGED || !isDocumentModified(virtualFile)) {
-            final AbstractVcs vcs = myVcsManager.getVcsFor(virtualFile);
+            AbstractVcs vcs = myVcsManager.getVcsFor(virtualFile);
             if (vcs == null) {
                 return;
             }
@@ -175,16 +175,16 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
 
     @Override
     @Nullable
-    public BaseContent getBaseRevision(@Nonnull final VirtualFile file) {
+    public BaseContent getBaseRevision(@Nonnull VirtualFile file) {
         if (!isHandledByVcs(file)) {
             VcsBaseContentProvider provider = findProviderFor(file);
             return provider == null ? null : provider.getBaseRevision(file);
         }
-        final Change change = ChangeListManager.getInstance(myProject).getChange(file);
+        Change change = ChangeListManager.getInstance(myProject).getChange(file);
         if (change == null) {
             return null;
         }
-        final ContentRevision beforeRevision = change.getBeforeRevision();
+        ContentRevision beforeRevision = change.getBeforeRevision();
         if (beforeRevision == null) {
             return null;
         }

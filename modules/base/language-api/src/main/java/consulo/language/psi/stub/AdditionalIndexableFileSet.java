@@ -77,7 +77,7 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
 
     @Override
     public boolean isInSet(@Nonnull VirtualFile file) {
-        for (final VirtualFile root : getDirectories()) {
+        for (VirtualFile root : getDirectories()) {
             if (VirtualFileUtil.isAncestor(root, file, false)) {
                 return true;
             }
@@ -86,7 +86,7 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
     }
 
     @Override
-    public void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull final ContentIterator iterator) {
+    public void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull ContentIterator iterator) {
         VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
             @Override
             public boolean visitFile(@Nonnull VirtualFile file) {

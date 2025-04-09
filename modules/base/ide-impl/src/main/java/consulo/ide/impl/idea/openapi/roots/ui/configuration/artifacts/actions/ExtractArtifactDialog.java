@@ -22,11 +22,11 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactTy
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -60,9 +60,9 @@ public class ExtractArtifactDialog extends DialogWrapper implements IExtractArti
     }
 
     @Override
-    @NonNls
+    @RequiredUIAccess
     protected void doOKAction() {
-        final String artifactName = getArtifactName();
+        String artifactName = getArtifactName();
         if (myContext.getArtifactModel().findArtifact(artifactName) != null) {
             Messages.showErrorDialog(
                 myContext.getProject(),

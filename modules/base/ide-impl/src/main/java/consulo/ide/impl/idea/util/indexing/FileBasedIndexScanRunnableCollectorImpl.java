@@ -78,7 +78,7 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
             }
 
             List<Runnable> tasks = new ArrayList<>();
-            final Set<VirtualFile> visitedRoots = ConcurrentHashMap.newKeySet();
+            Set<VirtualFile> visitedRoots = ConcurrentHashMap.newKeySet();
 
             tasks.add(() -> projectFileIndex.iterateContent(processor, file -> !file.isDirectory() || visitedRoots.add(file)));
 
@@ -105,23 +105,21 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
             }
 
             // iterate associated libraries
-            for (final Module module : ModuleManager.getInstance(myProject).getModules()) {
+            for (Module module : ModuleManager.getInstance(myProject).getModules()) {
                 OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
                 for (OrderEntry orderEntry : orderEntries) {
-                    if (orderEntry instanceof OrderEntryWithTracking) {
-                        if (orderEntry.isValid()) {
-                            final VirtualFile[] libSources = orderEntry.getFiles(SourcesOrderRootType.getInstance());
-                            final VirtualFile[] libClasses = orderEntry.getFiles(BinariesOrderRootType.getInstance());
-                            for (VirtualFile[] roots : new VirtualFile[][]{libSources, libClasses}) {
-                                for (final VirtualFile root : roots) {
-                                    if (visitedRoots.add(root)) {
-                                        tasks.add(() -> {
-                                            if (myProject.isDisposed() || module.isDisposed() || !root.isValid()) {
-                                                return;
-                                            }
-                                            FileBasedIndex.iterateRecursively(root, processor, indicator, visitedRoots, projectFileIndex);
-                                        });
-                                    }
+                    if (orderEntry instanceof OrderEntryWithTracking && orderEntry.isValid()) {
+                        VirtualFile[] libSources = orderEntry.getFiles(SourcesOrderRootType.getInstance());
+                        VirtualFile[] libClasses = orderEntry.getFiles(BinariesOrderRootType.getInstance());
+                        for (VirtualFile[] roots : new VirtualFile[][]{libSources, libClasses}) {
+                            for (VirtualFile root : roots) {
+                                if (visitedRoots.add(root)) {
+                                    tasks.add(() -> {
+                                        if (myProject.isDisposed() || module.isDisposed() || !root.isValid()) {
+                                            return;
+                                        }
+                                        FileBasedIndex.iterateRecursively(root, processor, indicator, visitedRoots, projectFileIndex);
+                                    });
                                 }
                             }
                         }

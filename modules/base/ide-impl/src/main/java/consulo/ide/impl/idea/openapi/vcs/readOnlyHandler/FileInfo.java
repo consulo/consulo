@@ -21,14 +21,14 @@ import consulo.util.collection.ListWithSelection;
 
 class FileInfo {
     private final VirtualFile myFile;
-    private final ListWithSelection<HandleType> myHandleType = new ListWithSelection<HandleType>();
+    private final ListWithSelection<HandleType> myHandleType = new ListWithSelection<>();
 
     public FileInfo(VirtualFile file, Project project) {
         myFile = file;
         myHandleType.add(HandleType.USE_FILE_SYSTEM);
         myHandleType.selectFirst();
         for (HandleTypeFactory factory : HandleTypeFactory.EP_NAME.getExtensionList(project)) {
-            final HandleType handleType = factory.createHandleType(file);
+            HandleType handleType = factory.createHandleType(file);
             if (handleType != null) {
                 myHandleType.add(handleType);
                 myHandleType.select(handleType);

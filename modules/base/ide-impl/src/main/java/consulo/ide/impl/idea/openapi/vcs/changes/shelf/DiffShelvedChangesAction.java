@@ -63,18 +63,18 @@ import java.util.function.Consumer;
 public class DiffShelvedChangesAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
-    public void update(final AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(isEnabled(e.getDataContext()));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(final AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         showShelvedChangesDiff(e.getDataContext());
     }
 
-    public static boolean isEnabled(final DataContext dc) {
-        final Project project = dc.getData(Project.KEY);
+    public static boolean isEnabled(DataContext dc) {
+        Project project = dc.getData(Project.KEY);
         if (project == null) {
             return false;
         }
@@ -87,8 +87,8 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    public static void showShelvedChangesDiff(final DataContext dc) {
-        final Project project = dc.getData(Project.KEY);
+    public static void showShelvedChangesDiff(DataContext dc) {
+        Project project = dc.getData(Project.KEY);
         if (project == null) {
             return;
         }
@@ -104,10 +104,10 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
             return;
         }
 
-        final List<ShelvedChange> textChanges = changeLists[0].getChanges(project);
-        final List<ShelvedBinaryFile> binaryChanges = changeLists[0].getBinaryFiles();
+        List<ShelvedChange> textChanges = changeLists[0].getChanges(project);
+        List<ShelvedBinaryFile> binaryChanges = changeLists[0].getBinaryFiles();
 
-        final List<MyDiffRequestProducer> diffRequestProducers = new ArrayList<>();
+        List<MyDiffRequestProducer> diffRequestProducers = new ArrayList<>();
 
         processTextChanges(project, textChanges, diffRequestProducers);
         processBinaryFiles(project, binaryChanges, diffRequestProducers);
@@ -115,7 +115,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
         Collections.sort(diffRequestProducers, ChangeDiffRequestComparator.getInstance());
 
         // selected changes inside lists
-        final Set<Object> selectedChanges = new HashSet<>();
+        Set<Object> selectedChanges = new HashSet<>();
         selectedChanges.addAll(ContainerUtil.notNullize(dc.getData(ShelvedChangesViewManager.SHELVED_CHANGE_KEY)));
         selectedChanges.addAll(ContainerUtil.notNullize(dc.getData(ShelvedChangesViewManager.SHELVED_BINARY_FILE_KEY)));
 
@@ -146,14 +146,14 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
     }
 
     private static void processBinaryFiles(
-        @Nonnull final Project project,
+        @Nonnull Project project,
         @Nonnull List<ShelvedBinaryFile> files,
         @Nonnull List<MyDiffRequestProducer> diffRequestProducers
     ) {
-        final String base = project.getBaseDir().getPath();
-        for (final ShelvedBinaryFile shelvedChange : files) {
-            final File file = new File(base, shelvedChange.AFTER_PATH == null ? shelvedChange.BEFORE_PATH : shelvedChange.AFTER_PATH);
-            final FilePath filePath = VcsUtil.getFilePath(file);
+        String base = project.getBaseDir().getPath();
+        for (ShelvedBinaryFile shelvedChange : files) {
+            File file = new File(base, shelvedChange.AFTER_PATH == null ? shelvedChange.BEFORE_PATH : shelvedChange.AFTER_PATH);
+            FilePath filePath = VcsUtil.getFilePath(file);
             diffRequestProducers.add(new MyDiffRequestProducer(shelvedChange, filePath) {
                 @Nonnull
                 @Override
@@ -167,21 +167,21 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
     }
 
     private static void processTextChanges(
-        @Nonnull final Project project,
+        @Nonnull Project project,
         @Nonnull List<ShelvedChange> changesFromFirstList,
         @Nonnull List<MyDiffRequestProducer> diffRequestProducers
     ) {
-        final String base = project.getBasePath();
-        final ApplyPatchContext patchContext = new ApplyPatchContext(project.getBaseDir(), 0, false, false);
-        final PatchesPreloader preloader = new PatchesPreloader(project);
+        String base = project.getBasePath();
+        ApplyPatchContext patchContext = new ApplyPatchContext(project.getBaseDir(), 0, false, false);
+        PatchesPreloader preloader = new PatchesPreloader(project);
 
-        for (final ShelvedChange shelvedChange : changesFromFirstList) {
-            final String beforePath = shelvedChange.getBeforePath();
-            final String afterPath = shelvedChange.getAfterPath();
-            final FilePath filePath = VcsUtil.getFilePath(new File(base, afterPath == null ? beforePath : afterPath));
-            final boolean isNewFile = FileStatus.ADDED.equals(shelvedChange.getFileStatus());
+        for (ShelvedChange shelvedChange : changesFromFirstList) {
+            String beforePath = shelvedChange.getBeforePath();
+            String afterPath = shelvedChange.getAfterPath();
+            FilePath filePath = VcsUtil.getFilePath(new File(base, afterPath == null ? beforePath : afterPath));
+            boolean isNewFile = FileStatus.ADDED.equals(shelvedChange.getFileStatus());
 
-            final VirtualFile file; // isNewFile -> parent directory, !isNewFile -> file
+            VirtualFile file; // isNewFile -> parent directory, !isNewFile -> file
             try {
                 file = ApplyFilePatchBase.findPatchTarget(patchContext, beforePath, afterPath, isNewFile);
                 if (!isNewFile && (file == null || !file.exists())) {
@@ -211,12 +211,12 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
 
                     if (shelvedChange.isConflictingChange(project)) {
                         try {
-                            final CommitContext commitContext = new CommitContext();
-                            final TextFilePatch patch = preloader.getPatch(shelvedChange, commitContext);
-                            final FilePath pathBeforeRename = patchContext.getPathBeforeRename(file);
-                            final String relativePath = patch.getAfterName() == null ? patch.getBeforeName() : patch.getAfterName();
+                            CommitContext commitContext = new CommitContext();
+                            TextFilePatch patch = preloader.getPatch(shelvedChange, commitContext);
+                            FilePath pathBeforeRename = patchContext.getPathBeforeRename(file);
+                            String relativePath = patch.getAfterName() == null ? patch.getBeforeName() : patch.getAfterName();
 
-                            final Getter<CharSequence> baseContentGetter = () -> {
+                            Getter<CharSequence> baseContentGetter = () -> {
                                 BaseRevisionTextPatchEP baseRevisionTextPatchEP =
                                     PatchEP.EP_NAME.findExtensionOrFail(project, BaseRevisionTextPatchEP.class);
                                 return baseRevisionTextPatchEP.provideContent(relativePath, commitContext);
@@ -241,7 +241,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
                         }
                     }
                     else {
-                        final Change change = shelvedChange.getChange(project);
+                        Change change = shelvedChange.getChange(project);
                         return PatchDiffRequestFactory.createDiffRequest(project, change, getName(), context, indicator);
                     }
                 }
@@ -253,13 +253,13 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
         private final Map<String, List<TextFilePatch>> myFilePatchesMap;
         private final Project myProject;
 
-        private PatchesPreloader(final Project project) {
+        private PatchesPreloader(Project project) {
             myProject = project;
             myFilePatchesMap = new HashMap<>();
         }
 
         @Nonnull
-        public TextFilePatch getPatch(final ShelvedChange shelvedChange, CommitContext commitContext) throws VcsException {
+        public TextFilePatch getPatch(ShelvedChange shelvedChange, CommitContext commitContext) throws VcsException {
             List<TextFilePatch> textFilePatches = myFilePatchesMap.get(shelvedChange.getPatchPath());
             if (textFilePatches == null) {
                 try {

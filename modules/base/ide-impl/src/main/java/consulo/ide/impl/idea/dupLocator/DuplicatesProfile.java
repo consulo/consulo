@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.dupLocator;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.ide.impl.idea.dupLocator.treeHash.FragmentsCollector;
@@ -70,12 +71,8 @@ public abstract class DuplicatesProfile {
     private static final int MAX_COST = 7000;
 
     public boolean shouldPutInIndex(PsiFragment fragment, int cost, DuplocatorState state) {
-        final int lowerBound = state.getLowerBound();
-        if (cost < FACTOR * lowerBound || cost > MAX_COST) {
-            return false;
-        }
-
-        return true;
+        int lowerBound = state.getLowerBound();
+        return cost >= FACTOR * lowerBound && cost <= MAX_COST;
     }
 
     @Nullable
@@ -100,6 +97,7 @@ public abstract class DuplicatesProfile {
     }
 
     @Nonnull
+    @RequiredReadAction
     public Language getLanguage(@Nonnull PsiElement element) {
         return element.getLanguage();
     }

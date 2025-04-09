@@ -15,25 +15,23 @@
  */
 package consulo.ide.impl.idea.ui.debugger;
 
-import consulo.ui.ex.action.ActionManager;
 import consulo.component.extension.Extensions;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.project.ui.internal.WindowManagerEx;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.tab.JBTabs;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awt.tab.UiDecorator;
-import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
-import consulo.ui.ex.awt.JBUI;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
@@ -44,7 +42,7 @@ public class UiDebugger extends JPanel implements Disposable {
     private final UiDebuggerExtension[] myExtensions;
 
     public UiDebugger() {
-        consulo.disposer.Disposer.register(consulo.disposer.Disposer.get("ui"), this);
+        Disposer.register(Disposer.get("ui"), this);
 
         myTabs = new JBEditorTabs(null, ActionManager.getInstance(), null, this);
         myTabs.getPresentation().setPaintBorder(JBUI.scale(1), 0, 0, 0)
@@ -71,6 +69,7 @@ public class UiDebugger extends JPanel implements Disposable {
             }
 
             @Override
+            @RequiredUIAccess
             public JComponent getPreferredFocusedComponent() {
                 return myTabs.getComponent();
             }
@@ -81,27 +80,25 @@ public class UiDebugger extends JPanel implements Disposable {
             }
 
             @Override
+            @RequiredUIAccess
             protected JComponent createSouthPanel() {
-                final JPanel result = new JPanel(new BorderLayout());
+                JPanel result = new JPanel(new BorderLayout());
                 result.add(super.createSouthPanel(), BorderLayout.EAST);
-                final JSlider slider = new JSlider(0, 100);
+                JSlider slider = new JSlider(0, 100);
                 slider.setValue(100);
-                slider.addChangeListener(new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent e) {
-                        final int value = slider.getValue();
-                        float alpha = value / 100f;
+                slider.addChangeListener(e -> {
+                    int value = slider.getValue();
+                    float alpha = value / 100f;
 
-                        final Window wnd = SwingUtilities.getWindowAncestor(slider);
-                        if (wnd != null) {
-                            final WindowManagerEx mgr = WindowManagerEx.getInstanceEx();
-                            if (value == 100) {
-                                mgr.setAlphaModeEnabled(wnd, false);
-                            }
-                            else {
-                                mgr.setAlphaModeEnabled(wnd, true);
-                                mgr.setAlphaModeRatio(wnd, 1f - alpha);
-                            }
+                    Window wnd = SwingUtilities.getWindowAncestor(slider);
+                    if (wnd != null) {
+                        WindowManagerEx mgr = WindowManagerEx.getInstanceEx();
+                        if (value == 100) {
+                            mgr.setAlphaModeEnabled(wnd, false);
+                        }
+                        else {
+                            mgr.setAlphaModeEnabled(wnd, true);
+                            mgr.setAlphaModeRatio(wnd, 1f - alpha);
                         }
                     }
                 });

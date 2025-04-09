@@ -37,6 +37,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
@@ -103,6 +104,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
     }
 
     @Nullable
+    @RequiredReadAction
     private static PsiElement findClosestParentAfterLineBreak(PsiElement element) {
         PsiElement parent = element;
         while (parent != null) {
@@ -119,6 +121,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
     }
 
     @Nullable
+    @RequiredReadAction
     private static PsiElement findClosestParentBeforeLineBreak(PsiElement element) {
         PsiElement parent = element;
         while (parent != null) {
@@ -131,6 +134,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
         return null;
     }
 
+    @RequiredReadAction
     private static boolean isWhiteSpaceWithLineFeed(@Nullable PsiElement element) {
         if (element == null) {
             return false;
@@ -138,14 +142,14 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
         if (element instanceof PsiWhiteSpace) {
             return element.textContains('\n');
         }
-        final ASTNode node = element.getNode();
+        ASTNode node = element.getNode();
         if (node == null) {
             return false;
         }
-        final CharSequence text = node.getChars();
+        CharSequence text = node.getChars();
         boolean lineFeedFound = false;
         for (int i = 0; i < text.length(); i++) {
-            final char c = text.charAt(i);
+            char c = text.charAt(i);
             if (!StringUtil.isWhiteSpace(c)) {
                 return false;
             }
@@ -185,6 +189,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
         }
 
         @Override
+        @RequiredReadAction
         public boolean isApplicable(@Nonnull PsiElement[] elements) {
             if (elements.length == 0) {
                 return false;
@@ -198,6 +203,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
         }
 
         @Override
+        @RequiredUIAccess
         public TextRange surroundElements(
             @Nonnull Project project,
             @Nonnull Editor editor,
