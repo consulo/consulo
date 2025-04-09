@@ -16,56 +16,53 @@
 package consulo.sandboxPlugin.ide.artifact;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
-import consulo.compiler.artifact.element.ArtifactRootElementImpl;
-import consulo.application.AllIcons;
 import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.element.ArtifactRootElementImpl;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
+import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.module.content.layer.ModulesProvider;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19.03.14
+ * @since 2014-03-19
  */
 @ExtensionImpl
 public class SandArtifactType extends ArtifactType {
-  @NonNls
-  public static final String ID = "sand";
+    public static final String ID = "sand";
 
-  public static SandArtifactType getInstance() {
-    return EP_NAME.findExtension(SandArtifactType.class);
-  }
+    public static SandArtifactType getInstance() {
+        return EP_NAME.findExtension(SandArtifactType.class);
+    }
 
-  public SandArtifactType() {
-    super(ID, "Sand");
-  }
+    public SandArtifactType() {
+        super(ID, "Sand");
+    }
 
-  @Override
-  public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
-    return ModuleUtil.hasModuleExtension(modulesProvider, SandModuleExtension.class);
-  }
+    @Override
+    public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
+        return ModuleUtil.hasModuleExtension(modulesProvider, SandModuleExtension.class);
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.Artifact;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.nodesArtifact();
+    }
 
-  @Override
-  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
-    return "/";
-  }
+    @Override
+    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+        return "/";
+    }
 
-  @Override
-  @Nonnull
-  public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory project, @Nonnull String artifactName) {
-    return new ArtifactRootElementImpl();
-  }
+    @Override
+    @Nonnull
+    public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory project, @Nonnull String artifactName) {
+        return new ArtifactRootElementImpl();
+    }
 }

@@ -25,31 +25,30 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 22:29/15.10.13
+ * @since 2013-10-15
  */
 public class ShowDiagramAction extends AnAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    boolean state = EarlyAccessProgramManager.is(DiagramSupportEapDescriptor.class);
-    if (state) {
-      PsiElement psiElement = e.getData(PsiElement.KEY);
-      state = false;
-      if (psiElement != null) {
-        state = false;
-        for (GraphProvider graphProvider : GraphProvider.EP_NAME.getExtensionList()) {
-          if (graphProvider.isSupported(psiElement)) {
-            state = true;
-            break;
-          }
-        }
-      }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
     }
-    e.getPresentation().setEnabledAndVisible(state);
-  }
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        boolean state = EarlyAccessProgramManager.is(DiagramSupportEapDescriptor.class);
+        if (state) {
+            PsiElement psiElement = e.getData(PsiElement.KEY);
+            state = false;
+            if (psiElement != null) {
+                for (GraphProvider graphProvider : GraphProvider.EP_NAME.getExtensionList()) {
+                    if (graphProvider.isSupported(psiElement)) {
+                        state = true;
+                        break;
+                    }
+                }
+            }
+        }
+        e.getPresentation().setEnabledAndVisible(state);
+    }
 }

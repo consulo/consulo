@@ -40,150 +40,165 @@ import static consulo.virtualFileSystem.util.VirtualFileVisitor.*;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class VcsRootScanner implements Disposable {
-  private static final Logger LOG = Logger.getInstance(VcsRootScanner.class);
+    private static final Logger LOG = Logger.getInstance(VcsRootScanner.class);
 
-  @Nonnull
-  private final VcsRootProblemNotifier myRootProblemNotifier;
-  @Nonnull
-  private final Project myProject;
-  private final ApplicationConcurrency myApplicationConcurrency;
+    @Nonnull
+    private final VcsRootProblemNotifier myRootProblemNotifier;
+    @Nonnull
+    private final Project myProject;
+    private final ApplicationConcurrency myApplicationConcurrency;
 
-  @Nonnull
-  private Future<?> myUpdateFuture = CompletableFuture.completedFuture(null);
+    @Nonnull
+    private Future<?> myUpdateFuture = CompletableFuture.completedFuture(null);
 
-  @Nonnull
-  public static VcsRootScanner getInstance(@Nonnull Project project) {
-    return project.getInstance(VcsRootScanner.class);
-  }
+    @Nonnull
+    public static VcsRootScanner getInstance(@Nonnull Project project) {
+        return project.getInstance(VcsRootScanner.class);
+    }
 
-  @Inject
-  public VcsRootScanner(@Nonnull Project project,
-                        @Nonnull AsyncVfsEventsPostProcessor processor,
-                        ApplicationConcurrency applicationConcurrency) {
-    myProject = project;
-    myApplicationConcurrency = applicationConcurrency;
-    myRootProblemNotifier = VcsRootProblemNotifier.createInstance(project);
+    @Inject
+    public VcsRootScanner(
+        @Nonnull Project project,
+        @Nonnull AsyncVfsEventsPostProcessor processor,
+        ApplicationConcurrency applicationConcurrency
+    ) {
+        myProject = project;
+        myApplicationConcurrency = applicationConcurrency;
+        myRootProblemNotifier = VcsRootProblemNotifier.createInstance(project);
 
-    processor.addListener(this::filesChanged, this);
-    //VcsRootChecker.EXTENSION_POINT_NAME.addChangeListener(this::scheduleScan, this);
-    //VcsEP.EP_NAME.addChangeListener(this::scheduleScan, this);
-  }
+        processor.addListener(this::filesChanged, this);
+        //VcsRootChecker.EXTENSION_POINT_NAME.addChangeListener(this::scheduleScan, this);
+        //VcsEP.EP_NAME.addChangeListener(this::scheduleScan, this);
+    }
 
-  @Override
-  public void dispose() {
-    myUpdateFuture.cancel(false);
-  }
+    @Override
+    public void dispose() {
+        myUpdateFuture.cancel(false);
+    }
 
-  private void filesChanged(@Nonnull List<? extends VFileEvent> events) {
-    List<VcsRootChecker> checkers = VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList();
-    if (checkers.isEmpty()) return;
+    private void filesChanged(@Nonnull List<? extends VFileEvent> events) {
+        List<VcsRootChecker> checkers = VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList();
+        if (checkers.isEmpty()) {
+            return;
+        }
 
-    for (VFileEvent event : events) {
-      VirtualFile file = event.getFile();
-      if (file != null && file.isDirectory()) {
-        visitDirsRecursivelyWithoutExcluded(myProject, file, true, dir -> {
-          if (isVcsDir(checkers, dir.getName())) {
-            scheduleScan();
-            return skipTo(file);
-          }
-          return CONTINUE;
+        for (VFileEvent event : events) {
+            VirtualFile file = event.getFile();
+            if (file != null && file.isDirectory()) {
+                visitDirsRecursivelyWithoutExcluded(myProject, file, true, dir -> {
+                    if (isVcsDir(checkers, dir.getName())) {
+                        scheduleScan();
+                        return skipTo(file);
+                    }
+                    return CONTINUE;
+                });
+            }
+        }
+    }
+
+    static void visitDirsRecursivelyWithoutExcluded(
+        @Nonnull Project project,
+        @Nonnull VirtualFile root,
+        boolean visitIgnoredFoldersThemselves,
+        @Nonnull Function<? super VirtualFile, Result> processor
+    ) {
+        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+        Option depthLimit = limit(Registry.intValue("vcs.root.detector.folder.depth"));
+        Pattern ignorePattern = parseDirIgnorePattern();
+
+        if (isUnderIgnoredDirectory(project, ignorePattern, visitIgnoredFoldersThemselves ? root.getParent() : root)) {
+            return;
+        }
+
+        VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor<Void>(NO_FOLLOW_SYMLINKS, depthLimit) {
+            @Nonnull
+            @Override
+            public VirtualFileVisitor.Result visitFileEx(@Nonnull VirtualFile file) {
+                if (!file.isDirectory()) {
+                    return CONTINUE;
+                }
+
+                if (visitIgnoredFoldersThemselves) {
+                    Result apply = processor.apply(file);
+                    if (apply != CONTINUE) {
+                        return apply;
+                    }
+                }
+
+                if (isIgnoredDirectory(project, ignorePattern, file)) {
+                    return SKIP_CHILDREN;
+                }
+
+                if (ReadAction.compute(() -> project.isDisposed() || !fileIndex.isInContent(file))) {
+                    return SKIP_CHILDREN;
+                }
+
+                if (!visitIgnoredFoldersThemselves) {
+                    Result apply = processor.apply(file);
+                    if (apply != CONTINUE) {
+                        return apply;
+                    }
+                }
+
+                return CONTINUE;
+            }
         });
-      }
     }
-  }
 
-  static void visitDirsRecursivelyWithoutExcluded(@Nonnull Project project,
-                                                  @Nonnull VirtualFile root,
-                                                  boolean visitIgnoredFoldersThemselves,
-                                                  @Nonnull Function<? super VirtualFile, Result> processor) {
-    ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    Option depthLimit = limit(Registry.intValue("vcs.root.detector.folder.depth"));
-    Pattern ignorePattern = parseDirIgnorePattern();
+    private static boolean isVcsDir(@Nonnull List<VcsRootChecker> checkers, @Nonnull String filePath) {
+        return checkers.stream().anyMatch(it -> it.isVcsDir(filePath));
+    }
 
-    if (isUnderIgnoredDirectory(project, ignorePattern, visitIgnoredFoldersThemselves ? root.getParent() : root)) return;
-
-    VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor<Void>(NO_FOLLOW_SYMLINKS, depthLimit) {
-      @Nonnull
-      @Override
-      public VirtualFileVisitor.Result visitFileEx(@Nonnull VirtualFile file) {
-        if (!file.isDirectory()) {
-          return CONTINUE;
+    public void scheduleScan() {
+        if (VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList().isEmpty()) {
+            return;
         }
 
-        if (visitIgnoredFoldersThemselves) {
-          Result apply = processor.apply(file);
-          if (apply != CONTINUE) {
-            return apply;
-          }
+        myUpdateFuture.cancel(false); // one scan is enough, no need to queue, they all do the same
+        myUpdateFuture =
+            myApplicationConcurrency.getScheduledExecutorService().schedule(
+                () -> BackgroundTaskUtil.runUnderDisposeAwareIndicator(
+                    myProject,
+                    myRootProblemNotifier::rescanAndNotifyIfNeeded
+                ),
+                1,
+                TimeUnit.SECONDS
+            );
+    }
+
+
+    static boolean isUnderIgnoredDirectory(@Nonnull Project project, @Nullable Pattern ignorePattern, @Nullable VirtualFile dir) {
+        VirtualFile parent = dir;
+        while (parent != null) {
+            if (isIgnoredDirectory(project, ignorePattern, parent)) {
+                return true;
+            }
+            parent = parent.getParent();
         }
+        return false;
+    }
 
-        if (isIgnoredDirectory(project, ignorePattern, file)) {
-          return SKIP_CHILDREN;
+    private static boolean isIgnoredDirectory(@Nonnull Project project, @Nullable Pattern ignorePattern, @Nonnull VirtualFile dir) {
+        if (ProjectLevelVcsManager.getInstance(project).isIgnored(dir)) {
+            LOG.debug("Skipping ignored dir: ", dir);
+            return true;
         }
-
-        if (ReadAction.compute(() -> project.isDisposed() || !fileIndex.isInContent(file))) {
-          return SKIP_CHILDREN;
+        if (ignorePattern != null && ignorePattern.matcher(dir.getName()).matches()) {
+            LOG.debug("Skipping dir by pattern: ", dir);
+            return true;
         }
+        return false;
+    }
 
-        if (!visitIgnoredFoldersThemselves) {
-          Result apply = processor.apply(file);
-          if (apply != CONTINUE) {
-            return apply;
-          }
+    @Nullable
+    static Pattern parseDirIgnorePattern() {
+        try {
+            return Pattern.compile(Registry.stringValue("vcs.root.detector.ignore.pattern"));
         }
-
-        return CONTINUE;
-      }
-    });
-  }
-
-  private static boolean isVcsDir(@Nonnull List<VcsRootChecker> checkers, @Nonnull String filePath) {
-    return checkers.stream().anyMatch(it -> it.isVcsDir(filePath));
-  }
-
-  public void scheduleScan() {
-    if (VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList().isEmpty()) return;
-
-    myUpdateFuture.cancel(false); // one scan is enough, no need to queue, they all do the same
-    myUpdateFuture =
-      myApplicationConcurrency.getScheduledExecutorService().schedule(() ->
-                                                                        BackgroundTaskUtil.runUnderDisposeAwareIndicator(myProject,
-                                                                                                                         myRootProblemNotifier::rescanAndNotifyIfNeeded),
-                                                                      1,
-                                                                      TimeUnit.SECONDS);
-  }
-
-
-  static boolean isUnderIgnoredDirectory(@Nonnull Project project, @Nullable Pattern ignorePattern, @Nullable VirtualFile dir) {
-    VirtualFile parent = dir;
-    while (parent != null) {
-      if (isIgnoredDirectory(project, ignorePattern, parent)) return true;
-      parent = parent.getParent();
+        catch (MissingResourceException | PatternSyntaxException e) {
+            LOG.warn(e);
+            return null;
+        }
     }
-    return false;
-  }
-
-  private static boolean isIgnoredDirectory(@Nonnull Project project, @Nullable Pattern ignorePattern, @Nonnull VirtualFile dir) {
-    if (ProjectLevelVcsManager.getInstance(project).isIgnored(dir)) {
-      LOG.debug("Skipping ignored dir: ", dir);
-      return true;
-    }
-    if (ignorePattern != null && ignorePattern.matcher(dir.getName()).matches()) {
-      LOG.debug("Skipping dir by pattern: ", dir);
-      return true;
-    }
-    return false;
-  }
-
-  @Nullable
-  static Pattern parseDirIgnorePattern() {
-    try {
-      return Pattern.compile(Registry.stringValue("vcs.root.detector.ignore.pattern"));
-    }
-    catch (MissingResourceException | PatternSyntaxException e) {
-      LOG.warn(e);
-      return null;
-    }
-  }
 
 }

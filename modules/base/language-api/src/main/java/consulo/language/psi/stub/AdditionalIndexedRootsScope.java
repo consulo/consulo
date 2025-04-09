@@ -25,45 +25,45 @@ import jakarta.annotation.Nonnull;
  * @author peter
  */
 public class AdditionalIndexedRootsScope extends GlobalSearchScope {
-  private final GlobalSearchScope myBaseScope;
-  private final IndexableFileSet myFileSet;
+    private final GlobalSearchScope myBaseScope;
+    private final IndexableFileSet myFileSet;
 
-  public AdditionalIndexedRootsScope(GlobalSearchScope baseScope) {
-    this(baseScope, new AdditionalIndexableFileSet());
-  }
+    public AdditionalIndexedRootsScope(GlobalSearchScope baseScope) {
+        this(baseScope, new AdditionalIndexableFileSet());
+    }
 
-  public AdditionalIndexedRootsScope(GlobalSearchScope baseScope, Class<? extends IndexableSetContributor> providerClass) {
-    this(baseScope, new AdditionalIndexableFileSet(IndexableSetContributor.EP_NAME.findExtension(providerClass)));
-  }
+    public AdditionalIndexedRootsScope(GlobalSearchScope baseScope, Class<? extends IndexableSetContributor> providerClass) {
+        this(baseScope, new AdditionalIndexableFileSet(IndexableSetContributor.EP_NAME.findExtension(providerClass)));
+    }
 
-  public AdditionalIndexedRootsScope(GlobalSearchScope baseScope, IndexableFileSet myFileSet) {
-    super(baseScope.getProject());
-    myBaseScope = baseScope;
-    this.myFileSet = myFileSet;
-  }
+    public AdditionalIndexedRootsScope(GlobalSearchScope baseScope, IndexableFileSet myFileSet) {
+        super(baseScope.getProject());
+        myBaseScope = baseScope;
+        this.myFileSet = myFileSet;
+    }
 
-  @Override
-  public boolean contains(@Nonnull VirtualFile file) {
-    return myBaseScope.contains(file) || myFileSet.isInSet(file);
-  }
+    @Override
+    public boolean contains(@Nonnull VirtualFile file) {
+        return myBaseScope.contains(file) || myFileSet.isInSet(file);
+    }
 
-  @Override
-  public boolean isSearchOutsideRootModel() {
-    return true;
-  }
+    @Override
+    public boolean isSearchOutsideRootModel() {
+        return true;
+    }
 
-  @Override
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
-    return myBaseScope.compare(file1, file2);
-  }
+    @Override
+    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+        return myBaseScope.compare(file1, file2);
+    }
 
-  @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
-    return myBaseScope.isSearchInModuleContent(aModule);
-  }
+    @Override
+    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+        return myBaseScope.isSearchInModuleContent(aModule);
+    }
 
-  @Override
-  public boolean isSearchInLibraries() {
-    return myBaseScope.isSearchInLibraries();
-  }
+    @Override
+    public boolean isSearchInLibraries() {
+        return myBaseScope.isSearchInLibraries();
+    }
 }

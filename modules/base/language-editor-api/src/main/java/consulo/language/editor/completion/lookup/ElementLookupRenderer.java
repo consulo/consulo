@@ -31,5 +31,5 @@ public interface ElementLookupRenderer<T> {
 
   boolean handlesItem(Object element);
 
-  void renderElement(final LookupItem item, T element, LookupElementPresentation presentation);
+  void renderElement(LookupItem item, T element, LookupElementPresentation presentation);
 }

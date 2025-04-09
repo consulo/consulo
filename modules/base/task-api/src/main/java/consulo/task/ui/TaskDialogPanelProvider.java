@@ -25,29 +25,27 @@ import consulo.util.collection.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class TaskDialogPanelProvider
-{
-	private final static ExtensionPointName<TaskDialogPanelProvider> EP_NAME = ExtensionPointName.create(TaskDialogPanelProvider.class);
+public abstract class TaskDialogPanelProvider {
+    private final static ExtensionPointName<TaskDialogPanelProvider> EP_NAME = ExtensionPointName.create(TaskDialogPanelProvider.class);
 
-	public static List<TaskDialogPanel> getOpenTaskPanels(@Nonnull Project project, @Nonnull Task task)
-	{
-		return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getOpenTaskPanel(project, task));
-	}
+    public static List<TaskDialogPanel> getOpenTaskPanels(@Nonnull Project project, @Nonnull Task task) {
+        return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getOpenTaskPanel(project, task));
+    }
 
-	public static List<TaskDialogPanel> getCloseTaskPanels(@Nonnull Project project, @Nonnull LocalTask task)
-	{
-		return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getCloseTaskPanel(project, task));
-	}
+    public static List<TaskDialogPanel> getCloseTaskPanels(@Nonnull Project project, @Nonnull LocalTask task) {
+        return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getCloseTaskPanel(project, task));
+    }
 
-	@Nullable
-	public abstract TaskDialogPanel getOpenTaskPanel(@Nonnull Project project, @Nonnull Task task);
+    @Nullable
+    public abstract TaskDialogPanel getOpenTaskPanel(@Nonnull Project project, @Nonnull Task task);
 
-	@Nullable
-	public abstract TaskDialogPanel getCloseTaskPanel(@Nonnull Project project, @Nonnull LocalTask task);
+    @Nullable
+    public abstract TaskDialogPanel getCloseTaskPanel(@Nonnull Project project, @Nonnull LocalTask task);
 }

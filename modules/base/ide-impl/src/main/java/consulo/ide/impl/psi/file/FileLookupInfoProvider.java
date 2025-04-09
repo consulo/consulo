@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.psi.file;
 
 import consulo.annotation.component.ComponentScope;
@@ -31,11 +30,11 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileLookupInfoProvider {
-  public static ExtensionPointName<FileLookupInfoProvider> EP_NAME = ExtensionPointName.create(FileLookupInfoProvider.class);
+    public static ExtensionPointName<FileLookupInfoProvider> EP_NAME = ExtensionPointName.create(FileLookupInfoProvider.class);
 
-  @Nonnull
-  public abstract FileType[] getFileTypes();
+    @Nonnull
+    public abstract FileType[] getFileTypes();
 
-  @Nullable
-  public abstract Pair<String, String> getLookupInfo(@Nonnull final VirtualFile file, Project project);
+    @Nullable
+    public abstract Pair<String, String> getLookupInfo(@Nonnull VirtualFile file, Project project);
 }

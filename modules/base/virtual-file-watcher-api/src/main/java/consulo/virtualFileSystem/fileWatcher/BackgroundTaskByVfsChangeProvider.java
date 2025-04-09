@@ -34,54 +34,56 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class BackgroundTaskByVfsChangeProvider {
-  public static abstract class ByFileType extends BackgroundTaskByVfsChangeProvider {
-    private final FileType myFileType;
+    public static abstract class ByFileType extends BackgroundTaskByVfsChangeProvider {
+        private final FileType myFileType;
 
-    public ByFileType(FileType fileType) {
-      myFileType = fileType;
+        public ByFileType(FileType fileType) {
+            myFileType = fileType;
+        }
+
+        @Override
+        public boolean validate(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+            return virtualFile.getFileType() == myFileType;
+        }
     }
 
-    @Override
+    public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME =
+        ExtensionPointName.create(BackgroundTaskByVfsChangeProvider.class);
+
     public boolean validate(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
-      return virtualFile.getFileType() == myFileType;
+        return true;
     }
-  }
 
-  public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME =
-    ExtensionPointName.create(BackgroundTaskByVfsChangeProvider.class);
+    public abstract void setDefaultParameters(
+        @Nonnull Project project,
+        @Nonnull VirtualFile virtualFile,
+        @Nonnull BackgroundTaskByVfsParameters parameters
+    );
 
-  public boolean validate(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
-    return true;
-  }
+    @Nonnull
+    public abstract String getTemplateName();
 
-  public abstract void setDefaultParameters(@Nonnull Project project,
-                                            @Nonnull VirtualFile virtualFile,
-                                            @Nonnull BackgroundTaskByVfsParameters parameters);
-
-  @Nonnull
-  public abstract String getTemplateName();
-
-  public boolean containsGeneratedFiles() {
-    return false;
-  }
-
-  @Nonnull
-  @RequiredReadAction
-  public String[] getGeneratedFiles(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
-    if (!containsGeneratedFiles()) {
-      return ArrayUtil.EMPTY_STRING_ARRAY;
+    public boolean containsGeneratedFiles() {
+        return false;
     }
-    
-    PsiManager psiManager = PsiManager.getInstance(project);
-    PsiFile file = psiManager.findFile(virtualFile);
-    if (file != null) {
-      return getGeneratedFiles(file);
-    }
-    return ArrayUtil.EMPTY_STRING_ARRAY;
-  }
 
-  @Nonnull
-  public String[] getGeneratedFiles(@Nonnull PsiFile psiFile) {
-    return ArrayUtil.EMPTY_STRING_ARRAY;
-  }
+    @Nonnull
+    @RequiredReadAction
+    public String[] getGeneratedFiles(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+        if (!containsGeneratedFiles()) {
+            return ArrayUtil.EMPTY_STRING_ARRAY;
+        }
+
+        PsiManager psiManager = PsiManager.getInstance(project);
+        PsiFile file = psiManager.findFile(virtualFile);
+        if (file != null) {
+            return getGeneratedFiles(file);
+        }
+        return ArrayUtil.EMPTY_STRING_ARRAY;
+    }
+
+    @Nonnull
+    public String[] getGeneratedFiles(@Nonnull PsiFile psiFile) {
+        return ArrayUtil.EMPTY_STRING_ARRAY;
+    }
 }

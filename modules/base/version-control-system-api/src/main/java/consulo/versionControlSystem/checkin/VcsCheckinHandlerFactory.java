@@ -27,35 +27,36 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author irengrig
- * Date: 1/28/11
- * Time: 3:49 PM
+ * @since 2011-01-28
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class VcsCheckinHandlerFactory implements BaseCheckinHandlerFactory {
-  public static final ExtensionPointName<VcsCheckinHandlerFactory> EP_NAME = ExtensionPointName.create(VcsCheckinHandlerFactory.class);
+    public static final ExtensionPointName<VcsCheckinHandlerFactory> EP_NAME = ExtensionPointName.create(VcsCheckinHandlerFactory.class);
 
-  private VcsKey myKey;
+    private VcsKey myKey;
 
-  protected VcsCheckinHandlerFactory(@Nonnull final VcsKey key) {
-    myKey = key;
-  }
+    protected VcsCheckinHandlerFactory(@Nonnull VcsKey key) {
+        myKey = key;
+    }
 
-  @Nullable
-  @Override
-  public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
-    if (!panel.vcsIsAffected(myKey.getName())) return null;
-    return createVcsHandler(panel);
-  }
+    @Nullable
+    @Override
+    public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
+        if (!panel.vcsIsAffected(myKey.getName())) {
+            return null;
+        }
+        return createVcsHandler(panel);
+    }
 
-  @Nonnull
-  protected abstract CheckinHandler createVcsHandler(CheckinProjectPanel panel);
+    @Nonnull
+    protected abstract CheckinHandler createVcsHandler(CheckinProjectPanel panel);
 
-  public VcsKey getKey() {
-    return myKey;
-  }
+    public VcsKey getKey() {
+        return myKey;
+    }
 
-  @Override
-  public BeforeCheckinDialogHandler createSystemReadyHandler(Project project) {
-    return null;
-  }
+    @Override
+    public BeforeCheckinDialogHandler createSystemReadyHandler(Project project) {
+        return null;
+    }
 }

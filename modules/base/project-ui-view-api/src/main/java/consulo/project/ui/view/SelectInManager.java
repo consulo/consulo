@@ -24,6 +24,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,45 +34,48 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class SelectInManager {
-  public static class SelectInTargetComparator implements Comparator<SelectInTarget> {
-    public static final SelectInTargetComparator INSTANCE = new SelectInTargetComparator();
+    public static class SelectInTargetComparator implements Comparator<SelectInTarget> {
+        public static final SelectInTargetComparator INSTANCE = new SelectInTargetComparator();
 
-    @Override
-    public int compare(final SelectInTarget o1, final SelectInTarget o2) {
-      if (o1.getWeight() < o2.getWeight()) return -1;
-      if (o1.getWeight() > o2.getWeight()) return 1;
-      return 0;
-    }
-  }
-
-  public static final String PROJECT = ProjectUIViewBundle.message("select.in.project");
-  public static final String PACKAGES = ProjectUIViewBundle.message("select.in.packages");
-  public static final String ASPECTS = ProjectUIViewBundle.message("select.in.aspects");
-  public static final String COMMANDER = ProjectUIViewBundle.message("select.in.commander");
-  public static final String FAVORITES = ProjectUIViewBundle.message("select.in.favorites");
-  public static final String NAV_BAR = ProjectUIViewBundle.message("select.in.nav.bar");
-  public static final String SCOPE = ProjectUIViewBundle.message("select.in.scope");
-
-  public static SelectInManager getInstance(Project project) {
-    return project.getInstance(SelectInManager.class);
-  }
-
-  private final Project myProject;
-
-  @Inject
-  public SelectInManager(final Project project) {
-    myProject = project;
-  }
-
-  @Nonnull
-  public List<SelectInTarget> getTargets() {
-    List<SelectInTarget> targets = DumbService.getDumbAwareExtensions(myProject, myProject, SelectInTarget.EP_NAME);
-    if(targets.isEmpty()) {
-      return Collections.emptyList();
+        @Override
+        public int compare(SelectInTarget o1, SelectInTarget o2) {
+            if (o1.getWeight() < o2.getWeight()) {
+                return -1;
+            }
+            if (o1.getWeight() > o2.getWeight()) {
+                return 1;
+            }
+            return 0;
+        }
     }
 
-    targets = new ArrayList<>(targets);
-    targets.sort(SelectInTargetComparator.INSTANCE);
-    return targets;
-  }
+    public static final String PROJECT = ProjectUIViewBundle.message("select.in.project");
+    public static final String PACKAGES = ProjectUIViewBundle.message("select.in.packages");
+    public static final String ASPECTS = ProjectUIViewBundle.message("select.in.aspects");
+    public static final String COMMANDER = ProjectUIViewBundle.message("select.in.commander");
+    public static final String NAV_BAR = ProjectUIViewBundle.message("select.in.nav.bar");
+    public static final String SCOPE = ProjectUIViewBundle.message("select.in.scope");
+
+    public static SelectInManager getInstance(Project project) {
+        return project.getInstance(SelectInManager.class);
+    }
+
+    private final Project myProject;
+
+    @Inject
+    public SelectInManager(Project project) {
+        myProject = project;
+    }
+
+    @Nonnull
+    public List<SelectInTarget> getTargets() {
+        List<SelectInTarget> targets = DumbService.getDumbAwareExtensions(myProject, myProject, SelectInTarget.EP_NAME);
+        if (targets.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        targets = new ArrayList<>(targets);
+        targets.sort(SelectInTargetComparator.INSTANCE);
+        return targets;
+    }
 }

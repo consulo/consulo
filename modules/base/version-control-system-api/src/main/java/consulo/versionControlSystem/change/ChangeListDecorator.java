@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 12.07.2006
- * Time: 13:51:49
- */
 package consulo.versionControlSystem.change;
 
 import consulo.annotation.component.ComponentScope;
@@ -30,10 +23,19 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 /**
  * Allows to modify the painting of changelists in the Changes view. Classes implementing this
  * interface need to be registered as project components.
+ *
+ * @author yole
+ * @since 2006-07-12
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ChangeListDecorator {
-  ExtensionPointName<ChangeListDecorator> EP_NAME = ExtensionPointName.create(ChangeListDecorator.class);
+    ExtensionPointName<ChangeListDecorator> EP_NAME = ExtensionPointName.create(ChangeListDecorator.class);
 
-  void decorateChangeList(LocalChangeList changeList, ColoredTreeCellRenderer cellRenderer, boolean selected, boolean expanded, boolean hasFocus);
+    void decorateChangeList(
+        LocalChangeList changeList,
+        ColoredTreeCellRenderer cellRenderer,
+        boolean selected,
+        boolean expanded,
+        boolean hasFocus
+    );
 }

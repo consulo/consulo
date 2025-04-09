@@ -12,12 +12,12 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface Utf8BomOptionProvider {
-  ExtensionPointName<Utf8BomOptionProvider> EP_NAME = ExtensionPointName.create(Utf8BomOptionProvider.class);
+    ExtensionPointName<Utf8BomOptionProvider> EP_NAME = ExtensionPointName.create(Utf8BomOptionProvider.class);
 
-  /**
-   * @param file The file to check.
-   * @return true if BOM should be added for UTF-8-encoded file.
-   * @see EncodingManager#shouldAddBOMForNewUtf8File()
-   */
-  boolean shouldAddBOMForNewUtf8File(@Nonnull VirtualFile file);
+    /**
+     * @param file The file to check.
+     * @return true if BOM should be added for UTF-8-encoded file.
+     * @see EncodingManager#shouldAddBOMForNewUtf8File()
+     */
+    boolean shouldAddBOMForNewUtf8File(@Nonnull VirtualFile file);
 }

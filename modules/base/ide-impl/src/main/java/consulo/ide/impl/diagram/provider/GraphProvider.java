@@ -28,10 +28,10 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GraphProvider {
-  ExtensionPointName<GraphProvider> EP_NAME = ExtensionPointName.create(GraphProvider.class);
+    ExtensionPointName<GraphProvider> EP_NAME = ExtensionPointName.create(GraphProvider.class);
 
-  @Nonnull
-  GraphBuilder createBuilder(@Nonnull PsiElement element);
+    @Nonnull
+    GraphBuilder createBuilder(@Nonnull PsiElement element);
 
-  boolean isSupported(@Nonnull PsiElement element);
+    boolean isSupported(@Nonnull PsiElement element);
 }

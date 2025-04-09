@@ -36,6 +36,7 @@ import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -47,94 +48,92 @@ import java.util.function.Supplier;
 @Singleton
 @ServiceImpl
 public class MetaRegistryImpl implements MetaDataService, MetaDataRegistrar {
-  private final List<MyBinding> myBindings = Lists.newLockFreeCopyOnWriteList();
+    private final List<MyBinding> myBindings = Lists.newLockFreeCopyOnWriteList();
 
-  private static volatile boolean ourContributorsLoaded = false;
+    private static volatile boolean ourContributorsLoaded = false;
 
-  private static final Key<CachedValue<PsiMetaData>> META_DATA_KEY = Key.create("META DATA KEY");
+    private static final Key<CachedValue<PsiMetaData>> META_DATA_KEY = Key.create("META DATA KEY");
 
-  @Override
-  public void bindDataToElement(final PsiElement element, final PsiMetaData data) {
-    CachedValue<PsiMetaData> value = CachedValuesManager.getManager(element.getProject()).createCachedValue(new CachedValueProvider<PsiMetaData>() {
-      @Override
-      public Result<PsiMetaData> compute() {
-        data.init(element);
-        return new Result<>(data, data.getDependences());
-      }
-    });
-    element.putUserData(META_DATA_KEY, value);
-  }
-
-  @Override
-  public PsiMetaData getMeta(final PsiElement element) {
-    final PsiMetaData base = getMetaBase(element);
-    return base != null ? base : null;
-  }
-
-  private final UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object> myCachedMetaCache = new UserDataCache<>() {
     @Override
-    protected CachedValue<PsiMetaData> compute(final PsiElement element, Object p) {
-      return CachedValuesManager.getManager(element.getProject()).createCachedValue(new CachedValueProvider<PsiMetaData>() {
+    public void bindDataToElement(PsiElement element, PsiMetaData data) {
+        CachedValue<PsiMetaData> value = CachedValuesManager.getManager(element.getProject()).createCachedValue(() -> {
+            data.init(element);
+            return new CachedValueProvider.Result<>(data, data.getDependences());
+        });
+        element.putUserData(META_DATA_KEY, value);
+    }
+
+    @Override
+    public PsiMetaData getMeta(PsiElement element) {
+        PsiMetaData base = getMetaBase(element);
+        return base != null ? base : null;
+    }
+
+    private final UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object> myCachedMetaCache = new UserDataCache<>() {
         @Override
-        public Result<PsiMetaData> compute() {
-          ensureContributorsLoaded();
-          for (final MyBinding binding : myBindings) {
-            if (binding.myFilter.isClassAcceptable(element.getClass()) && binding.myFilter.isAcceptable(element, element.getParent())) {
-              final PsiMetaData data = binding.myFactory.get();
-              data.init(element);
-              return new Result<PsiMetaData>(data, data.getDependences());
-            }
-          }
-          return new Result<PsiMetaData>(null, element);
+        protected CachedValue<PsiMetaData> compute(PsiElement element, Object p) {
+            return CachedValuesManager.getManager(element.getProject()).createCachedValue(
+                () -> {
+                    ensureContributorsLoaded();
+                    for (MyBinding binding : myBindings) {
+                        if (binding.myFilter.isClassAcceptable(element.getClass())
+                            && binding.myFilter.isAcceptable(element, element.getParent())) {
+                            PsiMetaData data = binding.myFactory.get();
+                            data.init(element);
+                            return new CachedValueProvider.Result<>(data, data.getDependences());
+                        }
+                    }
+                    return new CachedValueProvider.Result<>(null, element);
+                },
+                false
+            );
         }
-      }, false);
-    }
-  };
+    };
 
-  private void ensureContributorsLoaded() {
-    if (!ourContributorsLoaded) {
-      synchronized (myBindings) {
+    private void ensureContributorsLoaded() {
         if (!ourContributorsLoaded) {
-          for (MetaDataContributor contributor : MetaDataContributor.EP_NAME.getExtensionList()) {
-            contributor.contributeMetaData(this);
-          }
-          ourContributorsLoaded = true;
+            synchronized (myBindings) {
+                if (!ourContributorsLoaded) {
+                    for (MetaDataContributor contributor : MetaDataContributor.EP_NAME.getExtensionList()) {
+                        contributor.contributeMetaData(this);
+                    }
+                    ourContributorsLoaded = true;
+                }
+            }
         }
-      }
     }
-  }
 
-  @Nullable
-  public PsiMetaData getMetaBase(final PsiElement element) {
-    ProgressIndicatorProvider.checkCanceled();
-    return myCachedMetaCache.get(META_DATA_KEY, element, null).getValue();
-  }
-
-  public <T extends PsiMetaData> void addMetadataBinding(ElementFilter filter, Supplier<T> aMetadataClass) {
-    addBinding(new MyBinding(filter, aMetadataClass));
-  }
-
-  private void addBinding(final MyBinding binding) {
-    myBindings.add(0, binding);
-  }
-
-  @Override
-  public <T extends PsiMetaData> void registerMetaData(ElementFilter filter, Supplier<T> metadataDescriptorFactory) {
-    addMetadataBinding(filter, metadataDescriptorFactory);
-  }
-
-  @Override
-  public <T extends PsiMetaData> void registerMetaData(ElementPattern<?> pattern, Supplier<T> metadataDescriptorFactory) {
-    addMetadataBinding(new PatternFilter(pattern), metadataDescriptorFactory);
-  }
-
-  private static class MyBinding {
-    private final ElementFilter myFilter;
-    private final Supplier<? extends PsiMetaData> myFactory;
-
-    public MyBinding(@Nonnull ElementFilter filter, @Nonnull Supplier<? extends PsiMetaData> factory) {
-      myFilter = filter;
-      myFactory = factory;
+    @Nullable
+    public PsiMetaData getMetaBase(PsiElement element) {
+        ProgressIndicatorProvider.checkCanceled();
+        return myCachedMetaCache.get(META_DATA_KEY, element, null).getValue();
     }
-  }
+
+    public <T extends PsiMetaData> void addMetadataBinding(ElementFilter filter, Supplier<T> aMetadataClass) {
+        addBinding(new MyBinding(filter, aMetadataClass));
+    }
+
+    private void addBinding(MyBinding binding) {
+        myBindings.add(0, binding);
+    }
+
+    @Override
+    public <T extends PsiMetaData> void registerMetaData(ElementFilter filter, Supplier<T> metadataDescriptorFactory) {
+        addMetadataBinding(filter, metadataDescriptorFactory);
+    }
+
+    @Override
+    public <T extends PsiMetaData> void registerMetaData(ElementPattern<?> pattern, Supplier<T> metadataDescriptorFactory) {
+        addMetadataBinding(new PatternFilter(pattern), metadataDescriptorFactory);
+    }
+
+    private static class MyBinding {
+        private final ElementFilter myFilter;
+        private final Supplier<? extends PsiMetaData> myFactory;
+
+        public MyBinding(@Nonnull ElementFilter filter, @Nonnull Supplier<? extends PsiMetaData> factory) {
+            myFilter = filter;
+            myFactory = factory;
+        }
+    }
 }

@@ -24,19 +24,20 @@ import consulo.language.psi.PsiFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ElementPreviewProvider {
-  ExtensionPointName<ElementPreviewProvider> EP_NAME = ExtensionPointName.create(ElementPreviewProvider.class);
+    ExtensionPointName<ElementPreviewProvider> EP_NAME = ExtensionPointName.create(ElementPreviewProvider.class);
 
-  boolean isSupportedFile(@Nonnull PsiFile psiFile);
+    boolean isSupportedFile(@Nonnull PsiFile psiFile);
 
-  void show(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull Point point, boolean keyTriggered);
+    void show(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull Point point, boolean keyTriggered);
 
-  /**
-   * @param element if disposed
-   * @param editor
-   */
-  void hide(@Nullable PsiElement element, @Nonnull Editor editor);
+    /**
+     * @param element if disposed
+     * @param editor
+     */
+    void hide(@Nullable PsiElement element, @Nonnull Editor editor);
 }

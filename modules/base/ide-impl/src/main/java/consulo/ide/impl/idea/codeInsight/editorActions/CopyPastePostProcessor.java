@@ -22,8 +22,8 @@ import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiFile;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;
@@ -35,17 +35,23 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CopyPastePostProcessor<T extends TextBlockTransferableData> {
-  public static final ExtensionPointName<CopyPastePostProcessor> EP_NAME = ExtensionPointName.create(CopyPastePostProcessor.class);
+    public static final ExtensionPointName<CopyPastePostProcessor> EP_NAME = ExtensionPointName.create(CopyPastePostProcessor.class);
 
-  @Nonnull
-  public abstract List<T> collectTransferableData(final PsiFile file, final Editor editor, final int[] startOffsets, final int[] endOffsets);
+    @Nonnull
+    public abstract List<T> collectTransferableData(PsiFile file, Editor editor, int[] startOffsets, int[] endOffsets);
 
-  @Nonnull
-  public List<T> extractTransferableData(final Transferable content) {
-    return Collections.emptyList();
-  }
+    @Nonnull
+    public List<T> extractTransferableData(Transferable content) {
+        return Collections.emptyList();
+    }
 
-  public void processTransferableData(final Project project, final Editor editor, final RangeMarker bounds, int caretOffset,
-                                      Ref<Boolean> indented, final List<T> values) {
-  }
+    public void processTransferableData(
+        Project project,
+        Editor editor,
+        RangeMarker bounds,
+        int caretOffset,
+        SimpleReference<Boolean> indented,
+        List<T> values
+    ) {
+    }
 }

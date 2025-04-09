@@ -12,13 +12,18 @@ import java.util.Objects;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ProvidedIndexExtensionLocator {
-  ExtensionPointName<ProvidedIndexExtensionLocator> EP_NAME = ExtensionPointName.create(ProvidedIndexExtensionLocator.class);
+    ExtensionPointName<ProvidedIndexExtensionLocator> EP_NAME = ExtensionPointName.create(ProvidedIndexExtensionLocator.class);
 
-  @Nullable
-  <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtension(@Nonnull FileBasedIndexExtension<K, V> originalExtension);
+    @Nullable
+    <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtension(@Nonnull FileBasedIndexExtension<K, V> originalExtension);
 
-  @Nullable
-  static <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtensionFor(@Nonnull FileBasedIndexExtension<K, V> originalExtension) {
-    return EP_NAME.getExtensionList().stream().map(ex -> ex.findProvidedIndexExtension(originalExtension)).filter(Objects::nonNull).findFirst().orElse(null);
-  }
+    @Nullable
+    static <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtensionFor(@Nonnull FileBasedIndexExtension<K, V> originalExtension) {
+        return EP_NAME.getExtensionList()
+            .stream()
+            .map(ex -> ex.findProvidedIndexExtension(originalExtension))
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElse(null);
+    }
 }

@@ -34,28 +34,30 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 5/2/13 9:23 PM
+ * @since 2013-05-02
  */
 @ExtensionImpl
 public class ExternalSystemStartupActivity implements BackgroundStartupActivity {
-
-  @Override
-  public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
-    Application.get().invokeLater(() -> {
-      for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-        if (manager instanceof StartupActivity) {
-          ((StartupActivity)manager).runActivity(project, uiAccess);
-        }
-      }
-      if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) != Boolean.TRUE) {
-        for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
-          ExternalSystemUtil.refreshProjects(project, manager.getSystemId(), false);
-        }
-      }
-      ExternalSystemAutoImporter.letTheMagicBegin(project);
-      ExternalToolWindowManager.handle(project);
-      ExternalSystemVcsRegistrar.handle(project);
-      ProjectRenameAware.beAware(project);
-    }, project.getDisposed());
-  }
+    @Override
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        Application.get().invokeLater(
+            () -> {
+                for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
+                    if (manager instanceof StartupActivity startupActivity) {
+                        startupActivity.runActivity(project, uiAccess);
+                    }
+                }
+                if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) != Boolean.TRUE) {
+                    for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
+                        ExternalSystemUtil.refreshProjects(project, manager.getSystemId(), false);
+                    }
+                }
+                ExternalSystemAutoImporter.letTheMagicBegin(project);
+                ExternalToolWindowManager.handle(project);
+                ExternalSystemVcsRegistrar.handle(project);
+                ProjectRenameAware.beAware(project);
+            },
+            project.getDisposed()
+        );
+    }
 }

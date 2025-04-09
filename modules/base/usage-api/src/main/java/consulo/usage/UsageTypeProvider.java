@@ -32,13 +32,13 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageTypeProvider {
-  ExtensionPointName<UsageTypeProvider> EP_NAME = ExtensionPointName.create(UsageTypeProvider.class);
+    ExtensionPointName<UsageTypeProvider> EP_NAME = ExtensionPointName.create(UsageTypeProvider.class);
 
-  @Nullable
-  UsageType getUsageType(PsiElement element);
+    @Nullable
+    UsageType getUsageType(PsiElement element);
 
-  @Nullable
-  default UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets) {
-    return getUsageType(element);
-  }
+    @Nullable
+    default UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets) {
+        return getUsageType(element);
+    }
 }

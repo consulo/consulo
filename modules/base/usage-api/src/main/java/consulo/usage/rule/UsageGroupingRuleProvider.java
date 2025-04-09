@@ -18,16 +18,16 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageGroupingRuleProvider {
-  ExtensionPointName<UsageGroupingRuleProvider> EP_NAME = ExtensionPointName.create(UsageGroupingRuleProvider.class);
+    ExtensionPointName<UsageGroupingRuleProvider> EP_NAME = ExtensionPointName.create(UsageGroupingRuleProvider.class);
 
-  @Nonnull
-  UsageGroupingRule[] getActiveRules(@Nonnull Project project);
+    @Nonnull
+    UsageGroupingRule[] getActiveRules(@Nonnull Project project);
 
-  @Nonnull
-  default UsageGroupingRule[] getActiveRules(@Nonnull Project project, @Nonnull UsageViewSettings usageViewSettings) {
-    return getActiveRules(project);
-  }
+    @Nonnull
+    default UsageGroupingRule[] getActiveRules(@Nonnull Project project, @Nonnull UsageViewSettings usageViewSettings) {
+        return getActiveRules(project);
+    }
 
-  @Nonnull
-  AnAction[] createGroupingActions(@Nonnull UsageView view);
+    @Nonnull
+    AnAction[] createGroupingActions(@Nonnull UsageView view);
 }

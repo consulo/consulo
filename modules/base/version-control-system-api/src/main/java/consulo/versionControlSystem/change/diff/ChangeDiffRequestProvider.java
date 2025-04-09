@@ -31,15 +31,17 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ChangeDiffRequestProvider {
-  ExtensionPointName<ChangeDiffRequestProvider> EP_NAME = ExtensionPointName.create(ChangeDiffRequestProvider.class);
+    ExtensionPointName<ChangeDiffRequestProvider> EP_NAME = ExtensionPointName.create(ChangeDiffRequestProvider.class);
 
-  @Nonnull
-  ThreeState isEquals(@Nonnull Change change1, @Nonnull Change change2);
+    @Nonnull
+    ThreeState isEquals(@Nonnull Change change1, @Nonnull Change change2);
 
-  boolean canCreate(@Nullable Project project, @Nonnull Change change);
+    boolean canCreate(@Nullable Project project, @Nonnull Change change);
 
-  @Nonnull
-  DiffRequest process(@Nonnull ChangeDiffRequestProducer presentable,
-                      @Nonnull UserDataHolder context,
-                      @Nonnull ProgressIndicator indicator) throws DiffRequestProducerException, ProcessCanceledException;
+    @Nonnull
+    DiffRequest process(
+        @Nonnull ChangeDiffRequestProducer presentable,
+        @Nonnull UserDataHolder context,
+        @Nonnull ProgressIndicator indicator
+    ) throws DiffRequestProducerException, ProcessCanceledException;
 }

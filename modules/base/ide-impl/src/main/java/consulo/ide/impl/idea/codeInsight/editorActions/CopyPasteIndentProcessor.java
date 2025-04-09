@@ -32,11 +32,11 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.CharFilter;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -96,7 +96,7 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
                                       final Editor editor,
                                       final RangeMarker bounds,
                                       final int caretOffset,
-                                      final Ref<Boolean> indented,
+                                      final SimpleReference<Boolean> indented,
                                       final List<IndentTransferableData> values) {
     if (!CodeInsightSettings.getInstance().INDENT_TO_CARET_ON_PASTE) {
       return;

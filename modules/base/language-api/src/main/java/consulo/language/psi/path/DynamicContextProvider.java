@@ -26,16 +26,15 @@ import consulo.language.psi.PsiElement;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DynamicContextProvider {
+    ExtensionPointName<DynamicContextProvider> EP_NAME = ExtensionPointName.create(DynamicContextProvider.class);
 
-  ExtensionPointName<DynamicContextProvider> EP_NAME = ExtensionPointName.create(DynamicContextProvider.class);
-
-  /**
-   * Returns starting position for file references
-   *
-   * @param element
-   * @param offset initial offset
-   * @param elementText
-   * @return -1 to suppress file references generation
-   */
-  int getOffset(final PsiElement element, final int offset, final String elementText);
+    /**
+     * Returns starting position for file references
+     *
+     * @param element
+     * @param offset      initial offset
+     * @param elementText
+     * @return -1 to suppress file references generation
+     */
+    int getOffset(PsiElement element, int offset, String elementText);
 }

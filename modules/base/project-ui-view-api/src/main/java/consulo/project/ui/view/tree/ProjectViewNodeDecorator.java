@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.project.ui.view.tree;
 
 import consulo.annotation.component.ComponentScope;
@@ -26,7 +25,7 @@ import consulo.ui.ex.tree.PresentationData;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ProjectViewNodeDecorator {
-  ExtensionPointName<ProjectViewNodeDecorator> EP_NAME = ExtensionPointName.create(ProjectViewNodeDecorator.class);
+    ExtensionPointName<ProjectViewNodeDecorator> EP_NAME = ExtensionPointName.create(ProjectViewNodeDecorator.class);
 
-  void decorate(ProjectViewNode node, PresentationData data);
+    void decorate(ProjectViewNode node, PresentationData data);
 }

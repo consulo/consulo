@@ -16,6 +16,7 @@
 package consulo.usage;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
@@ -32,6 +33,13 @@ public abstract class RuleAction extends ToggleAction implements DumbAware {
   private final UsageView myView;
   private boolean myState;
 
+  public RuleAction(@Nonnull UsageView view, @Nonnull LocalizeValue text, @Nonnull Image icon) {
+    super(text, LocalizeValue.empty(), icon);
+    myView = view;
+    myState = getOptionValue();
+  }
+
+  @Deprecated
   public RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Image icon) {
     super(text, null, icon);
     myView = view;

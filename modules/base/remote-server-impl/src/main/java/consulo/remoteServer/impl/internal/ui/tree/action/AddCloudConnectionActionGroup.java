@@ -34,9 +34,11 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
     @Override
     @Nonnull
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        List<ServerType> serverTypes = ContainerUtil.filter(ServerType.EP_NAME.getExtensionList(),
-            type -> type.getCustomToolWindowId() == null &&
-                type.createDefaultConfiguration().getCustomToolWindowId() == null);
+        List<ServerType> serverTypes = ContainerUtil.filter(
+            ServerType.EP_NAME.getExtensionList(),
+            type -> type.getCustomToolWindowId() == null
+                && type.createDefaultConfiguration().getCustomToolWindowId() == null
+        );
         AnAction[] actions = new AnAction[serverTypes.size()];
         for (int i = 0; i < serverTypes.size(); i++) {
             actions[i] = new AddCloudConnectionAction(serverTypes.get(i));
@@ -48,7 +50,8 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
         private final ServerType<?> myServerType;
 
         AddCloudConnectionAction(ServerType<?> serverType) {
-            super(serverType.getPresentableName(),
+            super(
+                serverType.getPresentableName(),
                 RemoteServerLocalize.addcloudconnectionactionDescription(serverType.getPresentableName()),
                 serverType.getIcon()
             );
@@ -59,7 +62,8 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
         @Override
         public void update(@Nonnull AnActionEvent e) {
             if (e.getPlace().equals(ActionPlaces.ACTION_SEARCH)) {
-                e.getPresentation().setTextValue(RemoteServerLocalize.newCloudConnectionConfigurableTitle(myServerType.getPresentableName()));
+                e.getPresentation()
+                    .setTextValue(RemoteServerLocalize.newCloudConnectionConfigurableTitle(myServerType.getPresentableName()));
             }
             else {
                 e.getPresentation().setTextValue(myServerType.getPresentableName());

@@ -17,14 +17,14 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.folding.CodeFoldingManager;
-import consulo.ide.impl.idea.codeInsight.folding.impl.CodeFoldingManagerImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.document.RangeMarker;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
+import consulo.ide.impl.idea.codeInsight.folding.impl.CodeFoldingManagerImpl;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.DataFlavor;
@@ -91,7 +91,7 @@ public class CopyPasteFoldingProcessor extends CopyPastePostProcessor<FoldingTra
                                       final Editor editor,
                                       final RangeMarker bounds,
                                       int caretOffset,
-                                      Ref<Boolean> indented,
+                                      SimpleReference<Boolean> indented,
                                       final List<FoldingTransferableData> values) {
     assert values.size() == 1;
     final FoldingTransferableData value = values.get(0);

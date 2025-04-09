@@ -32,28 +32,28 @@ import jakarta.annotation.Nullable;
  * use {@link VcsCheckinHandlerFactory} implementations instead
  * they would automatically would be registered in {@link AbstractVcs#activate()}
  * and unregistered in {@link AbstractVcs#deactivate()}
+ *
  * @author lesya
  * @since 5.1
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CheckinHandlerFactory implements BaseCheckinHandlerFactory {
-  public static final ExtensionPointName<CheckinHandlerFactory> EP_NAME = ExtensionPointName.create(CheckinHandlerFactory.class);
-  
-  /**
-   * Creates a handler for a single Checkin Project or Checkin File operation.
-   *
-   *
-   * @param panel the class which can be used to retrieve information about the files to be committed,
-   *              and to get or set the commit message.
-   * @param commitContext
-   * @return the handler instance.
-   */
-  @Override
-  @Nullable
-  public abstract CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext);
+    public static final ExtensionPointName<CheckinHandlerFactory> EP_NAME = ExtensionPointName.create(CheckinHandlerFactory.class);
 
-  @Override
-  public BeforeCheckinDialogHandler createSystemReadyHandler(Project project) {
-    return null;
-  }
+    /**
+     * Creates a handler for a single Checkin Project or Checkin File operation.
+     *
+     * @param panel         the class which can be used to retrieve information about the files to be committed,
+     *                      and to get or set the commit message.
+     * @param commitContext
+     * @return the handler instance.
+     */
+    @Override
+    @Nullable
+    public abstract CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext);
+
+    @Override
+    public BeforeCheckinDialogHandler createSystemReadyHandler(Project project) {
+        return null;
+    }
 }

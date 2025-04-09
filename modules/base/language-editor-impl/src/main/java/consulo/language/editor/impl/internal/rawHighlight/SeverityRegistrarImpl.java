@@ -44,8 +44,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * User: anna
- * Date: 24-Feb-2006
+ * @author anna
+ * @since 2006-02-24
  */
 public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<HighlightSeverity>, SeverityRegistrar {
   private static final String INFO_TAG = "info";

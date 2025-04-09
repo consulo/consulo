@@ -20,8 +20,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 /**
- * User: anna
- * Date: Jan 30, 2005
+ * @author anna
+ * @since 2005-01-30
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ProductivityFeaturesProvider {

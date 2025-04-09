@@ -35,78 +35,85 @@ import consulo.ui.ex.awt.CopyPasteManager;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 import java.util.List;
 
 @ExtensionImpl(order = "first")
 public class CopyHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
-  private EditorActionHandler myOriginalAction;
+    private EditorActionHandler myOriginalAction;
 
-  @Override
-  public void init(@Nullable EditorActionHandler originalHandler) {
-    myOriginalAction = originalHandler;
-  }
-
-  @Nonnull
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_COPY;
-  }
-
-  @Override
-  public void doExecute(final Editor editor, Caret caret, final DataContext dataContext) {
-    assert caret == null : "Invocation of 'copy' operation for specific caret is not supported";
-    final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
-    if (project == null) {
-      if (myOriginalAction != null) {
-        myOriginalAction.execute(editor, null, dataContext);
-      }
-      return;
-    }
-    final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    if (file == null) {
-      if (myOriginalAction != null) {
-        myOriginalAction.execute(editor, null, dataContext);
-      }
-      return;
+    @Override
+    public void init(@Nullable EditorActionHandler originalHandler) {
+        myOriginalAction = originalHandler;
     }
 
-    final SelectionModel selectionModel = editor.getSelectionModel();
-    if (!selectionModel.hasSelection(true)) {
-      if (Registry.is(CopyAction.SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
-        return;
-      }
-      editor.getCaretModel().runForEachCaret(caret1 -> selectionModel.selectLineAtCaret());
-      if (!selectionModel.hasSelection(true)) return;
-      editor.getCaretModel().runForEachCaret(caret12 -> EditorActionUtil.moveCaretToLineStartIgnoringSoftWraps(editor));
+    @Nonnull
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_EDITOR_COPY;
     }
 
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
+    @Override
+    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+        assert caret == null : "Invocation of 'copy' operation for specific caret is not supported";
+        Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
+        if (project == null) {
+            if (myOriginalAction != null) {
+                myOriginalAction.execute(editor, null, dataContext);
+            }
+            return;
+        }
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        if (file == null) {
+            if (myOriginalAction != null) {
+                myOriginalAction.execute(editor, null, dataContext);
+            }
+            return;
+        }
 
-    final int[] startOffsets = selectionModel.getBlockSelectionStarts();
-    final int[] endOffsets = selectionModel.getBlockSelectionEnds();
+        SelectionModel selectionModel = editor.getSelectionModel();
+        if (!selectionModel.hasSelection(true)) {
+            if (Registry.is(CopyAction.SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
+                return;
+            }
+            editor.getCaretModel().runForEachCaret(caret1 -> selectionModel.selectLineAtCaret());
+            if (!selectionModel.hasSelection(true)) {
+                return;
+            }
+            editor.getCaretModel().runForEachCaret(caret12 -> EditorActionUtil.moveCaretToLineStartIgnoringSoftWraps(editor));
+        }
 
-    List<TextBlockTransferableData> transferableDatas = new ArrayList<TextBlockTransferableData>();
-    for (CopyPastePostProcessor<? extends TextBlockTransferableData> processor : CopyPastePostProcessor.EP_NAME.getExtensionList()) {
-      transferableDatas.addAll(processor.collectTransferableData(file, editor, startOffsets, endOffsets));
-    }
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    String text = editor.getCaretModel().supportsMultipleCarets() ? EditorCopyPasteHelperImpl.getSelectedTextForClipboard(editor, transferableDatas) : selectionModel.getSelectedText();
-    String rawText = TextBlockTransferable.convertLineSeparators(text, "\n", transferableDatas);
-    String escapedText = null;
-    for (CopyPastePreProcessor processor : CopyPastePreProcessor.EP_NAME.getExtensionList()) {
-      escapedText = processor.preprocessOnCopy(file, startOffsets, endOffsets, rawText);
-      if (escapedText != null) {
-        break;
-      }
+        int[] startOffsets = selectionModel.getBlockSelectionStarts();
+        int[] endOffsets = selectionModel.getBlockSelectionEnds();
+
+        List<TextBlockTransferableData> transferableDatas = new ArrayList<>();
+        for (CopyPastePostProcessor<? extends TextBlockTransferableData> processor : CopyPastePostProcessor.EP_NAME.getExtensionList()) {
+            transferableDatas.addAll(processor.collectTransferableData(file, editor, startOffsets, endOffsets));
+        }
+
+        String text = editor.getCaretModel().supportsMultipleCarets()
+            ? EditorCopyPasteHelperImpl.getSelectedTextForClipboard(editor, transferableDatas)
+            : selectionModel.getSelectedText();
+        String rawText = TextBlockTransferable.convertLineSeparators(text, "\n", transferableDatas);
+        String escapedText = null;
+        for (CopyPastePreProcessor processor : CopyPastePreProcessor.EP_NAME.getExtensionList()) {
+            escapedText = processor.preprocessOnCopy(file, startOffsets, endOffsets, rawText);
+            if (escapedText != null) {
+                break;
+            }
+        }
+        Transferable transferable = new TextBlockTransferable(
+            escapedText != null ? escapedText : rawText,
+            transferableDatas,
+            escapedText != null ? new RawText(rawText) : null
+        );
+        CopyPasteManager.getInstance().setContents(transferable);
+        if (editor instanceof EditorEx ex && ex.isStickySelection()) {
+            ex.setStickySelection(false);
+        }
     }
-    final Transferable transferable = new TextBlockTransferable(escapedText != null ? escapedText : rawText, transferableDatas, escapedText != null ? new RawText(rawText) : null);
-    CopyPasteManager.getInstance().setContents(transferable);
-    if (editor instanceof EditorEx ex) {
-      if (ex.isStickySelection()) {
-        ex.setStickySelection(false);
-      }
-    }
-  }
 }

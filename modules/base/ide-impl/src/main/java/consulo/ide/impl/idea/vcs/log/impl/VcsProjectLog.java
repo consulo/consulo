@@ -37,6 +37,7 @@ import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,128 +46,130 @@ import java.util.Collection;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class VcsProjectLog {
-  @Nonnull
-  private final Project myProject;
-  @Nonnull
-  private final MessageBus myMessageBus;
-  @Nonnull
-  private final VcsLogTabsProperties myUiProperties;
-
-  @Nonnull
-  private final LazyVcsLogManager myLogManager = new LazyVcsLogManager();
-  private volatile VcsLogUiImpl myUi;
-
-  @Inject
-  public VcsProjectLog(@Nonnull Project project, @Nonnull VcsLogTabsProperties uiProperties) {
-    myProject = project;
-    myMessageBus = project.getMessageBus();
-    myUiProperties = uiProperties;
-  }
-
-  @Nullable
-  public VcsLogDataImpl getDataManager() {
-    VcsLogManager cached = myLogManager.getCached();
-    if (cached == null) return null;
-    return cached.getDataManager();
-  }
-
-  @Nonnull
-  private Collection<VcsRoot> getVcsRoots() {
-    return Arrays.asList(ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots());
-  }
-
-  @Nonnull
-  public JComponent initMainLog(@Nonnull String contentTabName) {
-    myUi = myLogManager.getValue().createLogUi(VcsLogTabsProperties.MAIN_LOG_ID, contentTabName, null);
-    return new VcsLogPanel(myLogManager.getValue(), myUi);
-  }
-
-  /**
-   * The instance of the {@link VcsLogUiImpl} or null if the log was not initialized yet.
-   */
-  @Nullable
-  public VcsLogUiImpl getMainLogUi() {
-    return myUi;
-  }
-
-  @Nullable
-  public VcsLogManager getLogManager() {
-    return myLogManager.getCached();
-  }
-
-  @CalledInAny
-  protected void recreateLog() {
-    ApplicationManager.getApplication().invokeLater(() -> {
-      disposeLog();
-
-      if (hasDvcsRoots()) {
-        createLog();
-      }
-    });
-  }
-
-  @CalledInAwt
-  private void disposeLog() {
-    myUi = null;
-    myLogManager.drop();
-  }
-
-  @CalledInAwt
-  public void createLog() {
-    VcsLogManager logManager = myLogManager.getValue();
-
-    if (logManager.isLogVisible()) {
-      logManager.scheduleInitialization();
-    }
-    else if (PostponableLogRefresher.keepUpToDate()) {
-      VcsLogCachesInvalidator invalidator = CachesInvalidator.EP_NAME.findExtensionOrFail(VcsLogCachesInvalidator.class);
-      if (invalidator.isValid()) {
-        HeavyAwareExecutor.executeOutOfHeavyProcessLater(logManager::scheduleInitialization, 5000);
-      }
-    }
-  }
-
-  protected boolean hasDvcsRoots() {
-    return !VcsLogManager.findLogProviders(getVcsRoots(), myProject).isEmpty();
-  }
-
-  public static VcsProjectLog getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, VcsProjectLog.class);
-  }
-
-  private class LazyVcsLogManager {
-    @Nullable
-    private VcsLogManager myValue;
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final MessageBus myMessageBus;
+    @Nonnull
+    private final VcsLogTabsProperties myUiProperties;
 
     @Nonnull
-    @CalledInAwt
-    public synchronized VcsLogManager getValue() {
-      if (myValue == null) {
-        myValue = compute();
-        myMessageBus.syncPublisher(ProjectLogListener.class).logCreated();
-      }
-      return myValue;
-    }
+    private final LazyVcsLogManager myLogManager = new LazyVcsLogManager();
+    private volatile VcsLogUiImpl myUi;
 
-    @Nonnull
-    @CalledInAwt
-    protected synchronized VcsLogManager compute() {
-      return new VcsLogManager(myProject, myUiProperties, getVcsRoots(), false, VcsProjectLog.this::recreateLog);
-    }
-
-    @CalledInAwt
-    public synchronized void drop() {
-      if (myValue != null) {
-        myMessageBus.syncPublisher(ProjectLogListener.class).logDisposed();
-        Disposer.dispose(myValue);
-      }
-      myValue = null;
+    @Inject
+    public VcsProjectLog(@Nonnull Project project, @Nonnull VcsLogTabsProperties uiProperties) {
+        myProject = project;
+        myMessageBus = project.getMessageBus();
+        myUiProperties = uiProperties;
     }
 
     @Nullable
-    public synchronized VcsLogManager getCached() {
-      return myValue;
+    public VcsLogDataImpl getDataManager() {
+        VcsLogManager cached = myLogManager.getCached();
+        if (cached == null) {
+            return null;
+        }
+        return cached.getDataManager();
     }
-  }
+
+    @Nonnull
+    private Collection<VcsRoot> getVcsRoots() {
+        return Arrays.asList(ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots());
+    }
+
+    @Nonnull
+    public JComponent initMainLog(@Nonnull String contentTabName) {
+        myUi = myLogManager.getValue().createLogUi(VcsLogTabsProperties.MAIN_LOG_ID, contentTabName, null);
+        return new VcsLogPanel(myLogManager.getValue(), myUi);
+    }
+
+    /**
+     * The instance of the {@link VcsLogUiImpl} or null if the log was not initialized yet.
+     */
+    @Nullable
+    public VcsLogUiImpl getMainLogUi() {
+        return myUi;
+    }
+
+    @Nullable
+    public VcsLogManager getLogManager() {
+        return myLogManager.getCached();
+    }
+
+    @CalledInAny
+    protected void recreateLog() {
+        ApplicationManager.getApplication().invokeLater(() -> {
+            disposeLog();
+
+            if (hasDvcsRoots()) {
+                createLog();
+            }
+        });
+    }
+
+    @CalledInAwt
+    private void disposeLog() {
+        myUi = null;
+        myLogManager.drop();
+    }
+
+    @CalledInAwt
+    public void createLog() {
+        VcsLogManager logManager = myLogManager.getValue();
+
+        if (logManager.isLogVisible()) {
+            logManager.scheduleInitialization();
+        }
+        else if (PostponableLogRefresher.keepUpToDate()) {
+            VcsLogCachesInvalidator invalidator = CachesInvalidator.EP_NAME.findExtensionOrFail(VcsLogCachesInvalidator.class);
+            if (invalidator.isValid()) {
+                HeavyAwareExecutor.executeOutOfHeavyProcessLater(logManager::scheduleInitialization, 5000);
+            }
+        }
+    }
+
+    protected boolean hasDvcsRoots() {
+        return !VcsLogManager.findLogProviders(getVcsRoots(), myProject).isEmpty();
+    }
+
+    public static VcsProjectLog getInstance(@Nonnull Project project) {
+        return ServiceManager.getService(project, VcsProjectLog.class);
+    }
+
+    private class LazyVcsLogManager {
+        @Nullable
+        private VcsLogManager myValue;
+
+        @Nonnull
+        @CalledInAwt
+        public synchronized VcsLogManager getValue() {
+            if (myValue == null) {
+                myValue = compute();
+                myMessageBus.syncPublisher(ProjectLogListener.class).logCreated();
+            }
+            return myValue;
+        }
+
+        @Nonnull
+        @CalledInAwt
+        protected synchronized VcsLogManager compute() {
+            return new VcsLogManager(myProject, myUiProperties, getVcsRoots(), false, VcsProjectLog.this::recreateLog);
+        }
+
+        @CalledInAwt
+        public synchronized void drop() {
+            if (myValue != null) {
+                myMessageBus.syncPublisher(ProjectLogListener.class).logDisposed();
+                Disposer.dispose(myValue);
+            }
+            myValue = null;
+        }
+
+        @Nullable
+        public synchronized VcsLogManager getCached() {
+            return myValue;
+        }
+    }
 
 }

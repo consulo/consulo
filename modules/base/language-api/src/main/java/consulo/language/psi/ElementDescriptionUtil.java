@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi;
 
 import jakarta.annotation.Nonnull;
@@ -22,26 +21,26 @@ import jakarta.annotation.Nonnull;
  * @author yole
  */
 public class ElementDescriptionUtil {
-  private ElementDescriptionUtil() {
-  }
-
-  @Nonnull
-  public static String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
-    for (ElementDescriptionProvider provider : ElementDescriptionProvider.EP_NAME.getExtensionList()) {
-      String result = provider.getElementDescription(element, location);
-      if (result != null) {
-        return result;
-      }
+    private ElementDescriptionUtil() {
     }
 
-    ElementDescriptionProvider defaultProvider = location.getDefaultProvider();
-    if (defaultProvider != null) {
-      String result = defaultProvider.getElementDescription(element, location);
-      if (result != null) {
-        return result;
-      }
-    }
+    @Nonnull
+    public static String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
+        for (ElementDescriptionProvider provider : ElementDescriptionProvider.EP_NAME.getExtensionList()) {
+            String result = provider.getElementDescription(element, location);
+            if (result != null) {
+                return result;
+            }
+        }
 
-    return element.toString();
-  }
+        ElementDescriptionProvider defaultProvider = location.getDefaultProvider();
+        if (defaultProvider != null) {
+            String result = defaultProvider.getElementDescription(element, location);
+            if (result != null) {
+                return result;
+            }
+        }
+
+        return element.toString();
+    }
 }

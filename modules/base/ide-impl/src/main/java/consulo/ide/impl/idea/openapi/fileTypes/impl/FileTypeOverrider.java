@@ -24,8 +24,8 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileTypeOverrider {
-  ExtensionPointName<FileTypeOverrider> EP_NAME = ExtensionPointName.create(FileTypeOverrider.class);
+    ExtensionPointName<FileTypeOverrider> EP_NAME = ExtensionPointName.create(FileTypeOverrider.class);
 
-  @Nullable
-  FileType getOverriddenFileType(@Nonnull VirtualFile file);
+    @Nullable
+    FileType getOverriddenFileType(@Nonnull VirtualFile file);
 }

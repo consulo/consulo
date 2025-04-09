@@ -27,16 +27,16 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TestSourcesFilter {
-  private static final ExtensionPointName<TestSourcesFilter> EP_NAME = ExtensionPointName.create(TestSourcesFilter.class);
+    private static final ExtensionPointName<TestSourcesFilter> EP_NAME = ExtensionPointName.create(TestSourcesFilter.class);
 
-  public static boolean isTestSources(@Nonnull VirtualFile file, @Nonnull Project project) {
-    for (TestSourcesFilter filter : EP_NAME.getExtensionList()) {
-      if (filter.isTestSource(file, project)) {
-        return true;
-      }
+    public static boolean isTestSources(@Nonnull VirtualFile file, @Nonnull Project project) {
+        for (TestSourcesFilter filter : EP_NAME.getExtensionList()) {
+            if (filter.isTestSource(file, project)) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-  public abstract boolean isTestSource(@Nonnull VirtualFile file, @Nonnull Project project);
+    public abstract boolean isTestSource(@Nonnull VirtualFile file, @Nonnull Project project);
 }

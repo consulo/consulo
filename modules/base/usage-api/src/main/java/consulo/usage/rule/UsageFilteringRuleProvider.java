@@ -26,11 +26,11 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageFilteringRuleProvider {
-  ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create(UsageFilteringRuleProvider.class);
+    ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create(UsageFilteringRuleProvider.class);
 
-  @Nonnull
-  UsageFilteringRule[] getActiveRules(@Nonnull Project project);
+    @Nonnull
+    UsageFilteringRule[] getActiveRules(@Nonnull Project project);
 
-  @Nonnull
-  AnAction[] createFilteringActions(@Nonnull UsageView view);
+    @Nonnull
+    AnAction[] createFilteringActions(@Nonnull UsageView view);
 }

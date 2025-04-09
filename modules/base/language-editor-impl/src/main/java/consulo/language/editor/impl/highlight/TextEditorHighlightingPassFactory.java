@@ -27,8 +27,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
- * Date: 19-Apr-2006
+ * @author anna
+ * @since 2006-04-19
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface TextEditorHighlightingPassFactory {

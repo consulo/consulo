@@ -30,12 +30,12 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IndentHelperExtension {
-  ExtensionPointName<IndentHelperExtension> EP_NAME = ExtensionPointName.create(IndentHelperExtension.class);
+    ExtensionPointName<IndentHelperExtension> EP_NAME = ExtensionPointName.create(IndentHelperExtension.class);
 
-  int TOO_BIG_WALK_THRESHOLD = 450;
+    int TOO_BIG_WALK_THRESHOLD = 450;
 
-  boolean isAvailable(@Nonnull PsiFile file);
+    boolean isAvailable(@Nonnull PsiFile file);
 
-  @RequiredReadAction
-  int getIndentInner(@Nonnull PsiFile file, @Nonnull final ASTNode element, boolean includeNonSpace, int recursionLevel);
+    @RequiredReadAction
+    int getIndentInner(@Nonnull PsiFile file, @Nonnull final ASTNode element, boolean includeNonSpace, int recursionLevel);
 }

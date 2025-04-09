@@ -10,12 +10,12 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageViewElementsListener {
-  ExtensionPointName<UsageViewElementsListener> EP_NAME = ExtensionPointName.create(UsageViewElementsListener.class);
+    ExtensionPointName<UsageViewElementsListener> EP_NAME = ExtensionPointName.create(UsageViewElementsListener.class);
 
-  default void beforeUsageAdded(@Nonnull UsageView view, @Nonnull Usage usage) {
-  }
+    default void beforeUsageAdded(@Nonnull UsageView view, @Nonnull Usage usage) {
+    }
 
-  default boolean isExcludedByDefault(@Nonnull UsageView view, @Nonnull Usage usage) {
-    return false;
-  }
+    default boolean isExcludedByDefault(@Nonnull UsageView view, @Nonnull Usage usage) {
+        return false;
+    }
 }

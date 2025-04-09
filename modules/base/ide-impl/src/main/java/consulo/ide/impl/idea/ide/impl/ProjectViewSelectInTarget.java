@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.impl;
 import consulo.project.ui.view.CompositeSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
@@ -38,114 +39,121 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper implements CompositeSelectInTarget {
-  private String mySubId;
+    private String mySubId;
 
-  protected ProjectViewSelectInTarget(Project project) {
-    super(project);
-  }
-
-  @Override
-  protected final void select(final Object selector, final VirtualFile virtualFile, final boolean requestFocus) {
-    select(myProject, selector, getMinorViewId(), mySubId, virtualFile, requestFocus);
-  }
-
-  @Nonnull
-  public static ActionCallback select(@Nonnull Project project,
-                                                              final Object toSelect,
-                                                              @Nullable final String viewId,
-                                                              @Nullable final String subviewId,
-                                                              final VirtualFile virtualFile,
-                                                              final boolean requestFocus) {
-    final ActionCallback result = new ActionCallback();
-
-    final ProjectView projectView = ProjectView.getInstance(project);
-
-
-    ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
-    final ToolWindow projectViewToolWindow = windowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
-    final Runnable runnable = () -> {
-      Runnable r = () -> projectView.selectCB(toSelect, virtualFile, requestFocus).notify(result);
-      projectView.changeViewCB(ObjectUtil.chooseNotNull(viewId, ProjectViewPaneImpl.ID), subviewId).doWhenProcessed(r);
-    };
-
-    if (requestFocus) {
-      projectViewToolWindow.activate(runnable, true);
-    }
-    else {
-      projectViewToolWindow.show(runnable);
+    protected ProjectViewSelectInTarget(Project project) {
+        super(project);
     }
 
-    return result;
-  }
-
-  @Override
-  @Nonnull
-  public Collection<SelectInTarget> getSubTargets(@Nonnull SelectInContext context) {
-    List<SelectInTarget> result = new ArrayList<>();
-    ProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
-    int index = 0;
-    for (String subId : pane.getSubIds()) {
-      result.add(new ProjectSubViewSelectInTarget(this, subId, index++));
-    }
-    return result;
-  }
-
-  public boolean isSubIdSelectable(String subId, SelectInContext context) {
-    return false;
-  }
-
-  @Override
-  protected boolean canSelect(PsiFileSystemItem file) {
-    return true;
-  }
-
-  public LocalizeValue getSubIdPresentableName(String subId) {
-    ProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
-    return pane.getPresentableSubIdName(subId);
-  }
-
-  @Override
-  public void select(PsiElement element, final boolean requestFocus) {
-    PsiElement toSelect = null;
-    for (TreeStructureProvider provider : getProvidersDumbAware()) {
-      if (provider instanceof SelectableTreeStructureProvider) {
-        toSelect = ((SelectableTreeStructureProvider) provider).getTopLevelElement(element);
-      }
-      if (toSelect != null) break;
+    @Override
+    @RequiredUIAccess
+    protected final void select(Object selector, VirtualFile virtualFile, boolean requestFocus) {
+        select(myProject, selector, getMinorViewId(), mySubId, virtualFile, requestFocus);
     }
 
-    toSelect = findElementToSelect(element, toSelect);
+    @Nonnull
+    @RequiredUIAccess
+    public static ActionCallback select(
+        @Nonnull Project project,
+        Object toSelect,
+        @Nullable String viewId,
+        @Nullable String subviewId,
+        VirtualFile virtualFile,
+        boolean requestFocus
+    ) {
+        ActionCallback result = new ActionCallback();
 
-    if (toSelect != null) {
-      VirtualFile virtualFile = PsiUtilCore.getVirtualFile(toSelect);
-      select(toSelect, virtualFile, requestFocus);
+        ProjectView projectView = ProjectView.getInstance(project);
+
+        ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
+        ToolWindow projectViewToolWindow = windowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
+        Runnable runnable = () -> {
+            Runnable r = () -> projectView.selectCB(toSelect, virtualFile, requestFocus).notify(result);
+            projectView.changeViewCB(ObjectUtil.chooseNotNull(viewId, ProjectViewPaneImpl.ID), subviewId).doWhenProcessed(r);
+        };
+
+        if (requestFocus) {
+            projectViewToolWindow.activate(runnable, true);
+        }
+        else {
+            projectViewToolWindow.show(runnable);
+        }
+
+        return result;
     }
-  }
 
-  private List<TreeStructureProvider> getProvidersDumbAware() {
-    return DumbService.getInstance(myProject).filterByDumbAwareness(TreeStructureProvider.EP_NAME.getExtensionList(myProject));
-  }
+    @Override
+    @Nonnull
+    public Collection<SelectInTarget> getSubTargets(@Nonnull SelectInContext context) {
+        List<SelectInTarget> result = new ArrayList<>();
+        ProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
+        int index = 0;
+        for (String subId : pane.getSubIds()) {
+            result.add(new ProjectSubViewSelectInTarget(this, subId, index++));
+        }
+        return result;
+    }
 
-  @Override
-  public final String getToolWindowId() {
-    return ToolWindowId.PROJECT_VIEW;
-  }
+    public boolean isSubIdSelectable(String subId, SelectInContext context) {
+        return false;
+    }
 
-  @Override
-  protected boolean canWorkWithCustomObjects() {
-    return true;
-  }
+    @Override
+    protected boolean canSelect(PsiFileSystemItem file) {
+        return true;
+    }
 
-  public final void setSubId(String subId) {
-    mySubId = subId;
-  }
+    public LocalizeValue getSubIdPresentableName(String subId) {
+        ProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
+        return pane.getPresentableSubIdName(subId);
+    }
 
-  public final String getSubId() {
-    return mySubId;
-  }
+    @Override
+    @RequiredUIAccess
+    public void select(PsiElement element, boolean requestFocus) {
+        PsiElement toSelect = null;
+        for (TreeStructureProvider provider : getProvidersDumbAware()) {
+            if (provider instanceof SelectableTreeStructureProvider) {
+                toSelect = ((SelectableTreeStructureProvider)provider).getTopLevelElement(element);
+            }
+            if (toSelect != null) {
+                break;
+            }
+        }
+
+        toSelect = findElementToSelect(element, toSelect);
+
+        if (toSelect != null) {
+            VirtualFile virtualFile = PsiUtilCore.getVirtualFile(toSelect);
+            select(toSelect, virtualFile, requestFocus);
+        }
+    }
+
+    private List<TreeStructureProvider> getProvidersDumbAware() {
+        return DumbService.getInstance(myProject).filterByDumbAwareness(TreeStructureProvider.EP_NAME.getExtensionList(myProject));
+    }
+
+    @Override
+    public final String getToolWindowId() {
+        return ToolWindowId.PROJECT_VIEW;
+    }
+
+    @Override
+    protected boolean canWorkWithCustomObjects() {
+        return true;
+    }
+
+    public final void setSubId(String subId) {
+        mySubId = subId;
+    }
+
+    public final String getSubId() {
+        return mySubId;
+    }
 }

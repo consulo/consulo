@@ -16,281 +16,283 @@
 
 package consulo.module.impl.internal.layer;
 
+import consulo.content.ContentFolderPropertyProvider;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.UnknownContentFolderTypeProvider;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
-import consulo.content.ContentFolderPropertyProvider;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.*;
 
 /**
  * @author dsl
  */
 public class ContentFolderImpl extends BaseModuleRootLayerChild
-  implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
+    implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
 
-  @NonNls
-  public static final String URL_ATTRIBUTE = "url";
-  @NonNls
-  public static final String TYPE_ATTRIBUTE = "type";
-  @NonNls
-  public static final String ELEMENT_NAME = "content-folder";
+    public static final String URL_ATTRIBUTE = "url";
+    public static final String TYPE_ATTRIBUTE = "type";
+    public static final String ELEMENT_NAME = "content-folder";
 
-  @Nonnull
-  private final VirtualFilePointer myFilePointer;
-  protected final ContentEntryImpl myContentEntry;
-  private final ContentFolderTypeProvider myContentFolderType;
-  // LinkedHashMap for saving order
-  private LinkedHashMap<String, Object> myProperties;
+    @Nonnull
+    private final VirtualFilePointer myFilePointer;
+    protected final ContentEntryImpl myContentEntry;
+    private final ContentFolderTypeProvider myContentFolderType;
+    // LinkedHashMap for saving order
+    private LinkedHashMap<String, Object> myProperties;
 
-  private Map<Key, Object> myPropertiesByKeyCache;
+    private Map<Key, Object> myPropertiesByKeyCache;
 
-  ContentFolderImpl(@Nonnull VirtualFile file,
-                    @Nonnull ContentFolderTypeProvider contentFolderType,
-                    @Nonnull ContentEntryImpl contentEntry) {
-    super(contentEntry.getModuleRootLayer());
-    myContentEntry = contentEntry;
-    myContentFolderType = contentFolderType;
-    myFilePointer = VirtualFilePointerManager.getInstance().create(file, this, null);
-  }
-
-  ContentFolderImpl(@Nonnull String url,
-                    @Nonnull ContentFolderTypeProvider contentFolderType,
-                    @Nullable Map<String, Object> map,
-                    @Nonnull ContentEntryImpl contentEntry) {
-    super(contentEntry.getModuleRootLayer());
-    myContentEntry = contentEntry;
-    myContentFolderType = contentFolderType;
-    myProperties = map == null ? null : new LinkedHashMap<>(map);
-    myFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
-  }
-
-  protected ContentFolderImpl(@Nonnull ContentFolderImpl that, @Nonnull ContentEntryImpl contentEntry) {
-    this(that.myFilePointer, that.myProperties, that.getType(), contentEntry);
-  }
-
-  ContentFolderImpl(@Nonnull Element element, @Nonnull ContentEntryImpl contentEntry) throws InvalidDataException {
-    this(getUrlFrom(element), getType(element), readProperties(element), contentEntry);
-  }
-
-  protected ContentFolderImpl(@Nonnull VirtualFilePointer filePointer,
-                              @Nullable Map<String, Object> properties,
-                              @Nonnull ContentFolderTypeProvider contentFolderType,
-                              @Nonnull ContentEntryImpl contentEntry) {
-    super(contentEntry.getModuleRootLayer());
-    myContentEntry = contentEntry;
-    myContentFolderType = contentFolderType;
-    myProperties = properties == null ? null : new LinkedHashMap<>(properties);
-    myFilePointer = VirtualFilePointerManager.getInstance().duplicate(filePointer, this, null);
-  }
-
-  private static String getUrlFrom(Element element) throws InvalidDataException {
-    String url = element.getAttributeValue(URL_ATTRIBUTE);
-    if (url == null) {
-      throw new InvalidDataException();
-    }
-    return url;
-  }
-
-  @Nullable
-  private static Map<String, Object> readProperties(Element element) throws InvalidDataException {
-    List<Element> elementChildren = element.getChildren("property");
-    if (elementChildren.isEmpty()) {
-      return null;
-    }
-    Map<String, Object> map = new HashMap<String, Object>();
-
-    for (Element elementChild : elementChildren) {
-      String key = elementChild.getAttributeValue("key");
-      String value = elementChild.getAttributeValue("value");
-
-      ContentFolderPropertyProvider propertyProvider = ContentFolderPropertyProvider.findProvider(key);
-      if(propertyProvider != null) {
-        Object b = propertyProvider.fromString(value);
-        map.put(key, b);
-      }
-      else {
-        map.put(key, value);
-      }
-    }
-    return map;
-  }
-
-  private static ContentFolderTypeProvider getType(Element element) throws InvalidDataException {
-    String type = element.getAttributeValue(TYPE_ATTRIBUTE);
-    if (type == null) {
-      throw new InvalidDataException();
+    ContentFolderImpl(
+        @Nonnull VirtualFile file,
+        @Nonnull ContentFolderTypeProvider contentFolderType,
+        @Nonnull ContentEntryImpl contentEntry
+    ) {
+        super(contentEntry.getModuleRootLayer());
+        myContentEntry = contentEntry;
+        myContentFolderType = contentFolderType;
+        myFilePointer = VirtualFilePointerManager.getInstance().create(file, this, null);
     }
 
-    for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensionList()) {
-      if (Comparing.equal(contentFolderTypeProvider.getId(), type)) {
-        return contentFolderTypeProvider;
-      }
+    ContentFolderImpl(
+        @Nonnull String url,
+        @Nonnull ContentFolderTypeProvider contentFolderType,
+        @Nullable Map<String, Object> map,
+        @Nonnull ContentEntryImpl contentEntry
+    ) {
+        super(contentEntry.getModuleRootLayer());
+        myContentEntry = contentEntry;
+        myContentFolderType = contentFolderType;
+        myProperties = map == null ? null : new LinkedHashMap<>(map);
+        myFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
     }
 
-    return new UnknownContentFolderTypeProvider(type);
-  }
-
-  @Override
-  public VirtualFile getFile() {
-    if (!myFilePointer.isValid()) {
-      return null;
-    }
-    return myFilePointer.getFile();
-  }
-
-  @Override
-  @Nonnull
-  public ContentEntry getContentEntry() {
-    return myContentEntry;
-  }
-
-  @SuppressWarnings("unchecked")
-  protected void writeExternal(Element element) {
-    element.setAttribute(TYPE_ATTRIBUTE, myContentFolderType.getId());
-    element.setAttribute(URL_ATTRIBUTE, myFilePointer.getUrl());
-
-    if(myProperties == null) {
-      return;
-    }
-    for (Map.Entry<String, Object> entry : myProperties.entrySet()) {
-      String key = entry.getKey();
-      Object value = entry.getValue();
-
-      Element child = new Element("property");
-      child.setAttribute("key", key);
-
-      ContentFolderPropertyProvider propertiesProvider = ContentFolderPropertyProvider.findProvider(key);
-      if(propertiesProvider != null) {
-        child.setAttribute("value", propertiesProvider.toString(value));
-      }
-      else {
-        child.setAttribute("value", (String)value);
-      }
-      element.addContent(child);
-    }
-  }
-
-  @Override
-  @Nonnull
-  public String getUrl() {
-    return myFilePointer.getUrl();
-  }
-
-  @Nonnull
-  @Override
-  public Map<Key, Object> getProperties() {
-    initPropertiesByKeyCache();
-    return myPropertiesByKeyCache;
-  }
-
-  private void initPropertiesByKeyCache() {
-    if (myPropertiesByKeyCache != null) {
-      return;
+    protected ContentFolderImpl(@Nonnull ContentFolderImpl that, @Nonnull ContentEntryImpl contentEntry) {
+        this(that.myFilePointer, that.myProperties, that.getType(), contentEntry);
     }
 
-    if(myProperties == null) {
-      myPropertiesByKeyCache = Collections.emptyMap();
+    ContentFolderImpl(@Nonnull Element element, @Nonnull ContentEntryImpl contentEntry) throws InvalidDataException {
+        this(getUrlFrom(element), getType(element), readProperties(element), contentEntry);
     }
-    else {
-      myPropertiesByKeyCache = new HashMap<Key, Object>(myProperties.size());
-      for (Map.Entry<String, Object> entry : myProperties.entrySet()) {
-        ContentFolderPropertyProvider<?> provider = ContentFolderPropertyProvider.findProvider(entry.getKey());
-        if(provider == null) {
-          continue;
+
+    protected ContentFolderImpl(
+        @Nonnull VirtualFilePointer filePointer,
+        @Nullable Map<String, Object> properties,
+        @Nonnull ContentFolderTypeProvider contentFolderType,
+        @Nonnull ContentEntryImpl contentEntry
+    ) {
+        super(contentEntry.getModuleRootLayer());
+        myContentEntry = contentEntry;
+        myContentFolderType = contentFolderType;
+        myProperties = properties == null ? null : new LinkedHashMap<>(properties);
+        myFilePointer = VirtualFilePointerManager.getInstance().duplicate(filePointer, this, null);
+    }
+
+    private static String getUrlFrom(Element element) throws InvalidDataException {
+        String url = element.getAttributeValue(URL_ATTRIBUTE);
+        if (url == null) {
+            throw new InvalidDataException();
         }
-        myPropertiesByKeyCache.put(provider.getKey(), entry.getValue());
-      }
-    }
-  }
-
-  @Nullable
-  @Override
-  @SuppressWarnings("unchecked")
-  public <T> T getPropertyValue(@Nonnull Key<T> key) {
-    if (myProperties == null) {
-      return null;
-    }
-    return (T)myProperties.get(key.toString());
-  }
-
-  @Override
-  public <T> void setPropertyValue(@Nonnull Key<T> key, @Nullable T value) {
-    myPropertiesByKeyCache = null;
-
-    if (value == null && myProperties == null) {
-      return;
+        return url;
     }
 
-    if (value == null) {
-      myProperties.remove(key.toString());
-    }
-    else {
-      if (myProperties == null) {
-        myProperties = new LinkedHashMap<>();
-      }
+    @Nullable
+    private static Map<String, Object> readProperties(Element element) throws InvalidDataException {
+        List<Element> elementChildren = element.getChildren("property");
+        if (elementChildren.isEmpty()) {
+            return null;
+        }
+        Map<String, Object> map = new HashMap<>();
 
-      myProperties.put(key.toString(), value);
-    }
-  }
+        for (Element elementChild : elementChildren) {
+            String key = elementChild.getAttributeValue("key");
+            String value = elementChild.getAttributeValue("value");
 
-  @Override
-  public boolean isSynthetic() {
-    return false;
-  }
-
-  @Nonnull
-  @Override
-  public ContentFolderTypeProvider getType() {
-    return myContentFolderType;
-  }
-
-  @Override
-  public int compareTo(@Nonnull ContentFolderImpl folder) {
-    int typeCompare = getType().getId().compareToIgnoreCase(folder.getType().getId());
-    if (typeCompare != 0) {
-      return typeCompare;
+            ContentFolderPropertyProvider propertyProvider = ContentFolderPropertyProvider.findProvider(key);
+            if (propertyProvider != null) {
+                Object b = propertyProvider.fromString(value);
+                map.put(key, b);
+            }
+            else {
+                map.put(key, value);
+            }
+        }
+        return map;
     }
 
-    int diff = (myProperties == null ? 0 : myProperties.hashCode()) - (folder.myProperties == null ? 0 : folder.myProperties.hashCode());
-    if (diff != 0) {
-      return diff > 0 ? 1 : -1;
+    private static ContentFolderTypeProvider getType(Element element) throws InvalidDataException {
+        String type = element.getAttributeValue(TYPE_ATTRIBUTE);
+        if (type == null) {
+            throw new InvalidDataException();
+        }
+
+        for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensionList()) {
+            if (Comparing.equal(contentFolderTypeProvider.getId(), type)) {
+                return contentFolderTypeProvider;
+            }
+        }
+
+        return new UnknownContentFolderTypeProvider(type);
     }
-    return getUrl().compareTo(folder.getUrl());
-  }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof ContentFolderImpl)) return false;
-    return compareTo((ContentFolderImpl)obj) == 0;
-  }
+    @Override
+    public VirtualFile getFile() {
+        if (!myFilePointer.isValid()) {
+            return null;
+        }
+        return myFilePointer.getFile();
+    }
 
-  @Override
-  public int hashCode() {
-    return getUrl().hashCode();
-  }
+    @Override
+    @Nonnull
+    public ContentEntry getContentEntry() {
+        return myContentEntry;
+    }
 
-  @Nullable
-  @Override
-  public String toString() {
-    return getUrl();
-  }
+    @SuppressWarnings("unchecked")
+    protected void writeExternal(Element element) {
+        element.setAttribute(TYPE_ATTRIBUTE, myContentFolderType.getId());
+        element.setAttribute(URL_ATTRIBUTE, myFilePointer.getUrl());
 
-  @Override
-  public ContentFolder cloneFolder(ContentEntry contentEntry) {
-    assert !((ContentEntryImpl)contentEntry).isDisposed() : "target entry already disposed: " + contentEntry;
-    assert !isDisposed() : "Already disposed: " + this;
-    return new ContentFolderImpl(this, (ContentEntryImpl)contentEntry);
-  }
+        if (myProperties == null) {
+            return;
+        }
+        for (Map.Entry<String, Object> entry : myProperties.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            Element child = new Element("property");
+            child.setAttribute("key", key);
+
+            ContentFolderPropertyProvider propertiesProvider = ContentFolderPropertyProvider.findProvider(key);
+            if (propertiesProvider != null) {
+                child.setAttribute("value", propertiesProvider.toString(value));
+            }
+            else {
+                child.setAttribute("value", (String)value);
+            }
+            element.addContent(child);
+        }
+    }
+
+    @Override
+    @Nonnull
+    public String getUrl() {
+        return myFilePointer.getUrl();
+    }
+
+    @Nonnull
+    @Override
+    public Map<Key, Object> getProperties() {
+        initPropertiesByKeyCache();
+        return myPropertiesByKeyCache;
+    }
+
+    private void initPropertiesByKeyCache() {
+        if (myPropertiesByKeyCache != null) {
+            return;
+        }
+
+        if (myProperties == null) {
+            myPropertiesByKeyCache = Collections.emptyMap();
+        }
+        else {
+            myPropertiesByKeyCache = new HashMap<>(myProperties.size());
+            for (Map.Entry<String, Object> entry : myProperties.entrySet()) {
+                ContentFolderPropertyProvider<?> provider = ContentFolderPropertyProvider.findProvider(entry.getKey());
+                if (provider == null) {
+                    continue;
+                }
+                myPropertiesByKeyCache.put(provider.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getPropertyValue(@Nonnull Key<T> key) {
+        if (myProperties == null) {
+            return null;
+        }
+        return (T)myProperties.get(key.toString());
+    }
+
+    @Override
+    public <T> void setPropertyValue(@Nonnull Key<T> key, @Nullable T value) {
+        myPropertiesByKeyCache = null;
+
+        if (value == null && myProperties == null) {
+            return;
+        }
+
+        if (value == null) {
+            myProperties.remove(key.toString());
+        }
+        else {
+            if (myProperties == null) {
+                myProperties = new LinkedHashMap<>();
+            }
+
+            myProperties.put(key.toString(), value);
+        }
+    }
+
+    @Override
+    public boolean isSynthetic() {
+        return false;
+    }
+
+    @Nonnull
+    @Override
+    public ContentFolderTypeProvider getType() {
+        return myContentFolderType;
+    }
+
+    @Override
+    public int compareTo(@Nonnull ContentFolderImpl folder) {
+        int typeCompare = getType().getId().compareToIgnoreCase(folder.getType().getId());
+        if (typeCompare != 0) {
+            return typeCompare;
+        }
+
+        int diff =
+            (myProperties == null ? 0 : myProperties.hashCode()) - (folder.myProperties == null ? 0 : folder.myProperties.hashCode());
+        if (diff != 0) {
+            return diff > 0 ? 1 : -1;
+        }
+        return getUrl().compareTo(folder.getUrl());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ContentFolderImpl contentFolder && compareTo(contentFolder) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUrl().hashCode();
+    }
+
+    @Nullable
+    @Override
+    public String toString() {
+        return getUrl();
+    }
+
+    @Override
+    public ContentFolder cloneFolder(ContentEntry contentEntry) {
+        assert !((ContentEntryImpl)contentEntry).isDisposed() : "target entry already disposed: " + contentEntry;
+        assert !isDisposed() : "Already disposed: " + this;
+        return new ContentFolderImpl(this, (ContentEntryImpl)contentEntry);
+    }
 }

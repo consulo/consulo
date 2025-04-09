@@ -15,11 +15,11 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SearchTopHitProvider {
-  ExtensionPointName<SearchTopHitProvider> EP_NAME = ExtensionPointName.create(SearchTopHitProvider.class);
+    ExtensionPointName<SearchTopHitProvider> EP_NAME = ExtensionPointName.create(SearchTopHitProvider.class);
 
-  void consumeTopHits(@Nonnull String pattern, @Nonnull Consumer<Object> collector, @Nullable Project project);
+    void consumeTopHits(@Nonnull String pattern, @Nonnull Consumer<Object> collector, @Nullable Project project);
 
-  static String getTopHitAccelerator() {
-    return "/";
-  }
+    static String getTopHitAccelerator() {
+        return "/";
+    }
 }

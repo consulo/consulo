@@ -23,16 +23,16 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface UsageContextPanelProvider {
-  ExtensionPointName<UsageContextPanelProvider> EP_NAME = ExtensionPointName.create(UsageContextPanelProvider.class);
+    ExtensionPointName<UsageContextPanelProvider> EP_NAME = ExtensionPointName.create(UsageContextPanelProvider.class);
 
-  @Nonnull
-  UsageContextPanel create(@Nonnull UsageView usageView);
+    @Nonnull
+    UsageContextPanel create(@Nonnull UsageView usageView);
 
-  /**
-   * E.g. Call hierarchy is not available for variable usages
-   */
-  boolean isAvailableFor(@Nonnull UsageView usageView);
+    /**
+     * E.g. Call hierarchy is not available for variable usages
+     */
+    boolean isAvailableFor(@Nonnull UsageView usageView);
 
-  @Nonnull
-  String getTabTitle();
+    @Nonnull
+    String getTabTitle();
 }

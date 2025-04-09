@@ -30,11 +30,11 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageTargetProvider {
-  ExtensionPointName<UsageTargetProvider> EP_NAME = ExtensionPointName.create(UsageTargetProvider.class);
+    ExtensionPointName<UsageTargetProvider> EP_NAME = ExtensionPointName.create(UsageTargetProvider.class);
 
-  @Nullable
-  UsageTarget[] getTargets(Editor editor, PsiFile file);
+    @Nullable
+    UsageTarget[] getTargets(Editor editor, PsiFile file);
 
-  @Nullable
-  UsageTarget[] getTargets(PsiElement psiElement);
+    @Nullable
+    UsageTarget[] getTargets(PsiElement psiElement);
 }
