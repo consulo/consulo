@@ -62,7 +62,7 @@ public abstract class TypedHandlerDelegate {
      * Called after the specified character typed by the user has been inserted in the editor.
      */
     @Nonnull
-    public Result charTyped(char c, @Nonnull Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
+    public Result charTyped(char c, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         return Result.CONTINUE;
     }
 

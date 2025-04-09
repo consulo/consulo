@@ -47,7 +47,7 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 20.04.2015
+ * @since 2015-04-20
  */
 public class TargetElementUtil {
     @Nonnull
@@ -91,11 +91,11 @@ public class TargetElementUtil {
      * @return
      * @deprecated adjust offset with PsiElement should be used instead to provide correct checking for identifier part
      */
-    public static int adjustOffset(Document document, final int offset) {
+    public static int adjustOffset(Document document, int offset) {
         return adjustOffset(null, document, offset);
     }
 
-    public static int adjustOffset(@Nullable PsiFile file, Document document, final int offset) {
+    public static int adjustOffset(@Nullable PsiFile file, Document document, int offset) {
         CharSequence text = document.getCharsSequence();
         int correctedOffset = offset;
         int textLength = document.getTextLength();
@@ -132,11 +132,9 @@ public class TargetElementUtil {
 
         offset = adjustOffset(file, document, offset);
 
-        if (file instanceof PsiCompiledFile) {
-            return ((PsiCompiledFile)file).getDecompiledPsiFile().findReferenceAt(offset);
-        }
-
-        return file.findReferenceAt(offset);
+        return file instanceof PsiCompiledFile compiledFile
+            ? compiledFile.getDecompiledPsiFile().findReferenceAt(offset)
+            : file.findReferenceAt(offset);
     }
 
     @Nullable
@@ -145,7 +143,7 @@ public class TargetElementUtil {
         Application.get().assertIsDispatchThread();
 
         int offset = editor.getCaretModel().getOffset();
-        final PsiElement result = findTargetElement(editor, flags, offset);
+        PsiElement result = findTargetElement(editor, flags, offset);
         if (result != null) {
             return result;
         }
@@ -158,6 +156,7 @@ public class TargetElementUtil {
     }
 
     @Nullable
+    @RequiredReadAction
     public static PsiElement findTargetElement(@Nonnull Editor editor, @Nonnull Set<String> flags, int offset) {
         PsiElement targetElement = findTargetElementImpl(editor, flags, offset);
         if (targetElement == null) {
@@ -196,14 +195,14 @@ public class TargetElementUtil {
 
         offset = adjustOffset(file, document, offset);
 
-        if (file instanceof PsiCompiledFile) {
-            file = ((PsiCompiledFile)file).getDecompiledPsiFile();
+        if (file instanceof PsiCompiledFile compiledFile) {
+            file = compiledFile.getDecompiledPsiFile();
         }
         PsiElement element = file.findElementAt(offset);
         if (flags.contains(TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED)) {
-            final PsiElement referenceOrReferencedElement = getReferenceOrReferencedElement(file, editor, flags, offset);
+            PsiElement referenceOrReferencedElement = getReferenceOrReferencedElement(file, editor, flags, offset);
             //if (referenceOrReferencedElement == null) {
-            //  return getReferenceOrReferencedElement(file, editor, flags, offset);
+            //    return getReferenceOrReferencedElement(file, editor, flags, offset);
             //}
             if (isAcceptableReferencedElement(element, referenceOrReferencedElement)) {
                 return referenceOrReferencedElement;
@@ -260,7 +259,7 @@ public class TargetElementUtil {
         Lookup activeLookup = LookupManager.getInstance(project).getActiveLookup();
         if (activeLookup != null) {
             LookupElement item = activeLookup.getCurrentItem();
-            final PsiElement psi = item == null ? null : CompletionUtilCore.getTargetElement(item);
+            PsiElement psi = item == null ? null : CompletionUtilCore.getTargetElement(item);
             if (psi != null && psi.isValid()) {
                 return psi;
             }
@@ -268,7 +267,7 @@ public class TargetElementUtil {
         return null;
     }
 
-    private static boolean isAcceptableReferencedElement(final PsiElement element, final PsiElement referenceOrReferencedElement) {
+    private static boolean isAcceptableReferencedElement(PsiElement element, PsiElement referenceOrReferencedElement) {
         if (referenceOrReferencedElement == null || !referenceOrReferencedElement.isValid()) {
             return false;
         }
@@ -281,26 +280,24 @@ public class TargetElementUtil {
     }
 
     @Nullable
-    public static PsiElement getNamedElement(@Nullable final PsiElement element, final int offsetInElement) {
+    @RequiredReadAction
+    public static PsiElement getNamedElement(@Nullable PsiElement element, int offsetInElement) {
         if (element == null) {
             return null;
         }
 
-        final List<PomTarget> targets = new ArrayList<>();
-        final Consumer<PomTarget> consumer = new Consumer<>() {
-            @Override
-            public void accept(PomTarget target) {
-                if (target instanceof PsiDeclaredTarget) {
-                    final PsiDeclaredTarget declaredTarget = (PsiDeclaredTarget)target;
-                    final PsiElement navigationElement = declaredTarget.getNavigationElement();
-                    final TextRange range = declaredTarget.getNameIdentifierRange();
-                    if (range != null && !range.shiftRight(navigationElement.getTextRange().getStartOffset())
-                        .contains(element.getTextRange().getStartOffset() + offsetInElement)) {
-                        return;
-                    }
+        List<PomTarget> targets = new ArrayList<>();
+        @RequiredReadAction
+        Consumer<PomTarget> consumer = target -> {
+            if (target instanceof PsiDeclaredTarget declaredTarget) {
+                PsiElement navigationElement = declaredTarget.getNavigationElement();
+                TextRange range = declaredTarget.getNameIdentifierRange();
+                if (range != null && !range.shiftRight(navigationElement.getTextRange().getStartOffset())
+                    .contains(element.getTextRange().getStartOffset() + offsetInElement)) {
+                    return;
                 }
-                targets.add(target);
             }
+            targets.add(target);
         };
 
         PsiElement parent = element;
@@ -310,7 +307,7 @@ public class TargetElementUtil {
             for (PomDeclarationSearcher searcher : PomDeclarationSearcher.EP_NAME.getExtensionList()) {
                 searcher.findDeclarationsAt(parent, offset, consumer);
                 if (!targets.isEmpty()) {
-                    final PomTarget target = targets.get(0);
+                    PomTarget target = targets.get(0);
                     return target == null ? null : PomService.convertToPsi(element.getProject(), target);
                 }
             }
@@ -323,7 +320,8 @@ public class TargetElementUtil {
 
 
     @Nullable
-    private static PsiElement getNamedElement(@Nullable final PsiElement element) {
+    @RequiredReadAction
+    private static PsiElement getNamedElement(@Nullable PsiElement element) {
         PsiElement parent;
         if ((parent = PsiTreeUtil.getParentOfType(element, PsiNamedElement.class, false)) != null) {
             // A bit hacky depends on navigation offset correctly overridden
@@ -339,12 +337,7 @@ public class TargetElementUtil {
     }
 
     @Nullable
-    public static PsiElement adjustElement(
-        final Editor editor,
-        final Set<String> flags,
-        final PsiElement element,
-        final PsiElement contextElement
-    ) {
+    public static PsiElement adjustElement(Editor editor, Set<String> flags, PsiElement element, PsiElement contextElement) {
         return TargetElementUtilExtender.EP.computeSafeIfAny(
             Application.get(),
             it -> it.adjustElement(editor, flags, element, contextElement)
@@ -352,11 +345,8 @@ public class TargetElementUtil {
     }
 
     public static boolean inVirtualSpace(@Nonnull Editor editor, int offset) {
-        if (offset == editor.getCaretModel().getOffset()) {
-            return EditorUtil.inVirtualSpace(editor, editor.getCaretModel().getLogicalPosition());
-        }
-
-        return false;
+        return offset == editor.getCaretModel().getOffset()
+            && EditorUtil.inVirtualSpace(editor, editor.getCaretModel().getLogicalPosition());
     }
 
     private static boolean isIdentifierPart(@Nullable PsiFile file, CharSequence text, int offset) {
@@ -380,13 +370,14 @@ public class TargetElementUtil {
     @Nonnull
     @RequiredReadAction
     public static Collection<PsiElement> getTargetCandidates(PsiReference reference) {
-        if (reference instanceof PsiPolyVariantReference) {
-            final ResolveResult[] results = ((PsiPolyVariantReference)reference).multiResolve(false);
-            final ArrayList<PsiElement> navigatableResults = new ArrayList<>(results.length);
+        if (reference instanceof PsiPolyVariantReference polyVariantReference) {
+            ResolveResult[] results = polyVariantReference.multiResolve(false);
+            ArrayList<PsiElement> navigatableResults = new ArrayList<>(results.length);
 
             for (ResolveResult r : results) {
                 PsiElement element = r.getElement();
-                if (EditSourceUtil.canNavigate(element) || element instanceof Navigatable && ((Navigatable)element).canNavigateToSource()) {
+                if (EditSourceUtil.canNavigate(element)
+                    || element instanceof Navigatable navigatable && navigatable.canNavigateToSource()) {
                     navigatableResults.add(element);
                 }
             }
@@ -406,7 +397,7 @@ public class TargetElementUtil {
     }
 
     @Nullable
-    public static PsiElement getGotoDeclarationTarget(final PsiElement element, final PsiElement navElement) {
+    public static PsiElement getGotoDeclarationTarget(PsiElement element, PsiElement navElement) {
         PsiElement gotoDeclarationTarget =
             TargetElementUtilExtender.EP.computeSafeIfAny(Application.get(), it -> it.getGotoDeclarationTarget(element, navElement));
         if (gotoDeclarationTarget != null) {
@@ -415,7 +406,7 @@ public class TargetElementUtil {
         return navElement;
     }
 
-    public static boolean includeSelfInGotoImplementation(final PsiElement element) {
+    public static boolean includeSelfInGotoImplementation(PsiElement element) {
         for (TargetElementUtilExtender extender : TargetElementUtilExtender.EP.getExtensionList(Application.get())) {
             if (!extender.includeSelfInGotoImplementation(element)) {
                 return false;

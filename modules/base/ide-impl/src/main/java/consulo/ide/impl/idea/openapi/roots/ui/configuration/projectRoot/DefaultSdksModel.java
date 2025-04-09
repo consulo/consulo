@@ -52,8 +52,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * User: anna
- * Date: 05-Jun-2006
+ * @author anna
+ * @since 2006-06-05
  */
 public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     private static final Logger LOG = Logger.getInstance(DefaultSdksModel.class);

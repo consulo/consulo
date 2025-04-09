@@ -25,8 +25,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Sep 18, 2008
- *         Time: 3:13:17 PM
+ * @since 2008-09-18
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class UpdateAddedFileProcessor {

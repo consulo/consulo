@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: mike
- * Date: Jul 23, 2002
- * Time: 2:18:55 PM
- * To change template for new interface use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.completion.lookup;
 
 import consulo.annotation.component.ComponentScope;
@@ -30,6 +21,10 @@ import consulo.component.extension.ExtensionPointName;
 
 import jakarta.annotation.Nullable;
 
+/*
+ * @author mike
+ * @since 2002-07-23
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CharFilter {
   public static final ExtensionPointName<CharFilter> EP_NAME = ExtensionPointName.create(CharFilter.class);
@@ -47,5 +42,5 @@ public abstract class CharFilter {
    * should handle this char. Default char filter handles common cases like finishing with ' ', '(', ';', etc.  
    */
   @Nullable
-  public abstract Result acceptChar(char c, final int prefixLength, final Lookup lookup);
+  public abstract Result acceptChar(char c, int prefixLength, Lookup lookup);
 }
