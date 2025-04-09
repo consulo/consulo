@@ -38,25 +38,20 @@ public abstract class CopyPastePostProcessor<T extends TextBlockTransferableData
     public static final ExtensionPointName<CopyPastePostProcessor> EP_NAME = ExtensionPointName.create(CopyPastePostProcessor.class);
 
     @Nonnull
-    public abstract List<T> collectTransferableData(
-        final PsiFile file,
-        final Editor editor,
-        final int[] startOffsets,
-        final int[] endOffsets
-    );
+    public abstract List<T> collectTransferableData(PsiFile file, Editor editor, int[] startOffsets, int[] endOffsets);
 
     @Nonnull
-    public List<T> extractTransferableData(final Transferable content) {
+    public List<T> extractTransferableData(Transferable content) {
         return Collections.emptyList();
     }
 
     public void processTransferableData(
-        final Project project,
-        final Editor editor,
-        final RangeMarker bounds,
+        Project project,
+        Editor editor,
+        RangeMarker bounds,
         int caretOffset,
         SimpleReference<Boolean> indented,
-        final List<T> values
+        List<T> values
     ) {
     }
 }

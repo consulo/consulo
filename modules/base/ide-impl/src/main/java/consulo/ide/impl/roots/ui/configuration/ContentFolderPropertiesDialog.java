@@ -15,22 +15,20 @@
  */
 package consulo.ide.impl.roots.ui.configuration;
 
-import consulo.ui.ex.awt.ChooseElementsDialog;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.content.ContentFolderPropertyProvider;
+import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
 import consulo.module.content.layer.ContentFolder;
-import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
+import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.ex.awt.ChooseElementsDialog;
+import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import consulo.ui.ex.awt.AnActionButton;
-import consulo.ui.ex.awt.AnActionButtonRunnable;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.awt.table.TableView;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
-import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.content.ContentFolderPropertyProvider;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -97,17 +95,17 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
         @Nullable
         @Override
         public TableCellRenderer getRenderer(Item item) {
-            return new ComboBoxTableRenderer<Object>(item.myProvider.getValues());
+            return new ComboBoxTableRenderer<>(item.myProvider.getValues());
         }
 
         @Nullable
         @Override
-        public TableCellEditor getEditor(final Item o) {
+        public TableCellEditor getEditor(Item o) {
             return new ComboBoxCellEditor() {
                 @Override
                 protected List<String> getComboBoxItems() {
                     Object[] values = o.myProvider.getValues();
-                    List<String> items = new ArrayList<String>();
+                    List<String> items = new ArrayList<>();
                     for (Object value : values) {
                         items.add(String.valueOf(value));
                     }
@@ -130,7 +128,7 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
     @Nullable
     private final Project myProject;
     private final ContentFolder myContentFolder;
-    private List<Item> myItems = new ArrayList<Item>();
+    private List<Item> myItems = new ArrayList<>();
 
     public ContentFolderPropertiesDialog(@Nullable Project project, ContentFolder contentFolder) {
         super(project);
@@ -149,7 +147,7 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
             myItems.add(new Item(provider, entry.getKey(), entry.getValue()));
         }
 
-        setTitle(ProjectBundle.message("module.paths.properties.tooltip"));
+        setTitle(ProjectLocalize.modulePathsPropertiesTooltip().get());
 
         init();
     }
@@ -157,36 +155,33 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        ListTableModel<Item> model = new ListTableModel<Item>(ourColumns, myItems, 0);
-        TableView<Item> table = new TableView<Item>(model);
+        ListTableModel<Item> model = new ListTableModel<>(ourColumns, myItems, 0);
+        TableView<Item> table = new TableView<>(model);
 
         ToolbarDecorator decorator = ToolbarDecorator.createDecorator(table);
-        decorator.setAddAction(new AnActionButtonRunnable() {
-            @Override
-            public void run(AnActionButton anActionButton) {
-                List<ContentFolderPropertyProvider<?>> list = new ArrayList<ContentFolderPropertyProvider<?>>();
-                loop:
-                for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
-                    for (Item item : myItems) {
-                        if (item.myProvider == propertyProvider) {
-                            continue loop;
-                        }
+        decorator.setAddAction(anActionButton -> {
+            List<ContentFolderPropertyProvider<?>> list = new ArrayList<>();
+            loop:
+            for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
+                for (Item item : myItems) {
+                    if (item.myProvider == propertyProvider) {
+                        continue loop;
                     }
-
-                    list.add(propertyProvider);
                 }
 
-                ChooseProvidersDialog d = new ChooseProvidersDialog(
-                    myProject,
-                    list,
-                    ProjectBundle.message("module.paths.add.properties.title"),
-                    ProjectBundle.message("module.paths.add.properties.desc")
-                );
+                list.add(propertyProvider);
+            }
 
-                List<ContentFolderPropertyProvider<?>> temp = d.showAndGetResult();
-                for (ContentFolderPropertyProvider<?> propertyProvider : temp) {
-                    model.addRow(new Item(propertyProvider, propertyProvider.getKey(), propertyProvider.getValues()[0]));
-                }
+            ChooseProvidersDialog d = new ChooseProvidersDialog(
+                myProject,
+                list,
+                ProjectLocalize.modulePathsAddPropertiesTitle().get(),
+                ProjectLocalize.modulePathsAddPropertiesDesc().get()
+            );
+
+            List<ContentFolderPropertyProvider<?>> temp = d.showAndGetResult();
+            for (ContentFolderPropertyProvider<?> propertyProvider : temp) {
+                model.addRow(new Item(propertyProvider, propertyProvider.getKey(), propertyProvider.getValues()[0]));
             }
         });
         decorator.disableUpDownActions();

@@ -16,19 +16,18 @@
 package consulo.ide.impl.idea.openapi.vcs.checkout;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.checkout.*;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,15 +43,16 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
     private File myFirstDirectory;
     private VcsKey myVcsKey;
 
-    public CompositeCheckoutListener(final Project project) {
+    public CompositeCheckoutListener(Project project) {
         myProject = project;
     }
 
     @Override
-    public void directoryCheckedOut(final File directory, VcsKey vcs) {
+    @RequiredUIAccess
+    public void directoryCheckedOut(File directory, VcsKey vcs) {
         myVcsKey = vcs;
         if (!myFoundProject) {
-            final VirtualFile virtualFile = refreshVFS(directory);
+            VirtualFile virtualFile = refreshVFS(directory);
             if (virtualFile != null) {
                 if (myFirstDirectory == null) {
                     myFirstDirectory = directory;
@@ -62,29 +62,27 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
         }
     }
 
-    private static VirtualFile refreshVFS(final File directory) {
-        final Ref<VirtualFile> result = new Ref<VirtualFile>();
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-                final LocalFileSystem lfs = LocalFileSystem.getInstance();
-                final VirtualFile vDir = lfs.refreshAndFindFileByIoFile(directory);
-                result.set(vDir);
-                if (vDir != null) {
-                    final LocalFileSystem.WatchRequest watchRequest = lfs.addRootToWatch(vDir.getPath(), true);
-                    ((NewVirtualFile)vDir).markDirtyRecursively();
-                    vDir.refresh(false, true);
-                    if (watchRequest != null) {
-                        lfs.removeWatchedRoot(watchRequest);
-                    }
+    @RequiredUIAccess
+    private static VirtualFile refreshVFS(File directory) {
+        SimpleReference<VirtualFile> result = new SimpleReference<>();
+        Application.get().runWriteAction(() -> {
+            LocalFileSystem lfs = LocalFileSystem.getInstance();
+            VirtualFile vDir = lfs.refreshAndFindFileByIoFile(directory);
+            result.set(vDir);
+            if (vDir != null) {
+                LocalFileSystem.WatchRequest watchRequest = lfs.addRootToWatch(vDir.getPath(), true);
+                ((NewVirtualFile)vDir).markDirtyRecursively();
+                vDir.refresh(false, true);
+                if (watchRequest != null) {
+                    lfs.removeWatchedRoot(watchRequest);
                 }
             }
         });
         return result.get();
     }
 
-    private void notifyCheckoutListeners(final File directory, final Class<? extends CheckoutListener> checkoutListenerEP) {
-        final List<? extends CheckoutListener> listeners = Application.get().getExtensionList(checkoutListenerEP);
+    private void notifyCheckoutListeners(File directory, Class<? extends CheckoutListener> checkoutListenerEP) {
+        List<? extends CheckoutListener> listeners = Application.get().getExtensionList(checkoutListenerEP);
         for (CheckoutListener listener : listeners) {
             myFoundProject = listener.processCheckedOutDirectory(myProject, directory);
             if (myFoundProject) {
@@ -92,7 +90,7 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
             }
         }
         if (!myFoundProject && checkoutListenerEP != CompletedCheckoutListener.class) {
-            final List<VcsAwareCheckoutListener> vcsAwareExtensions = VcsAwareCheckoutListener.EP_NAME.getExtensionList();
+            List<VcsAwareCheckoutListener> vcsAwareExtensions = VcsAwareCheckoutListener.EP_NAME.getExtensionList();
             for (VcsAwareCheckoutListener extension : vcsAwareExtensions) {
                 myFoundProject = extension.processCheckedOutDirectory(myProject, directory, myVcsKey);
                 if (myFoundProject) {
@@ -100,9 +98,9 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
                 }
             }
         }
-        final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         if (openProjects.length > 0) {
-            final Project lastOpenedProject = openProjects[openProjects.length - 1];
+            Project lastOpenedProject = openProjects[openProjects.length - 1];
             for (CheckoutListener listener : listeners) {
                 listener.processOpenedProject(lastOpenedProject);
             }
@@ -117,7 +115,7 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
     }
 
     @Nullable
-    static Project findProjectByBaseDirLocation(@Nonnull final File directory) {
+    static Project findProjectByBaseDirLocation(@Nonnull File directory) {
         return ContainerUtil.find(ProjectManager.getInstance().getOpenProjects(), project -> {
             VirtualFile baseDir = project.getBaseDir();
             return baseDir != null && FileUtil.filesEqual(VfsUtilCore.virtualToIoFile(baseDir), directory);

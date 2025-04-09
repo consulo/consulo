@@ -56,16 +56,16 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
     }
 
     @Override
-    public void doExecute(final Editor editor, Caret caret, final DataContext dataContext) {
+    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
         assert caret == null : "Invocation of 'copy' operation for specific caret is not supported";
-        final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
+        Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
         if (project == null) {
             if (myOriginalAction != null) {
                 myOriginalAction.execute(editor, null, dataContext);
             }
             return;
         }
-        final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
         if (file == null) {
             if (myOriginalAction != null) {
                 myOriginalAction.execute(editor, null, dataContext);
@@ -73,7 +73,7 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
             return;
         }
 
-        final SelectionModel selectionModel = editor.getSelectionModel();
+        SelectionModel selectionModel = editor.getSelectionModel();
         if (!selectionModel.hasSelection(true)) {
             if (Registry.is(CopyAction.SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
                 return;
@@ -87,10 +87,10 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
 
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-        final int[] startOffsets = selectionModel.getBlockSelectionStarts();
-        final int[] endOffsets = selectionModel.getBlockSelectionEnds();
+        int[] startOffsets = selectionModel.getBlockSelectionStarts();
+        int[] endOffsets = selectionModel.getBlockSelectionEnds();
 
-        List<TextBlockTransferableData> transferableDatas = new ArrayList<TextBlockTransferableData>();
+        List<TextBlockTransferableData> transferableDatas = new ArrayList<>();
         for (CopyPastePostProcessor<? extends TextBlockTransferableData> processor : CopyPastePostProcessor.EP_NAME.getExtensionList()) {
             transferableDatas.addAll(processor.collectTransferableData(file, editor, startOffsets, endOffsets));
         }
@@ -106,16 +106,14 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
                 break;
             }
         }
-        final Transferable transferable = new TextBlockTransferable(
+        Transferable transferable = new TextBlockTransferable(
             escapedText != null ? escapedText : rawText,
             transferableDatas,
             escapedText != null ? new RawText(rawText) : null
         );
         CopyPasteManager.getInstance().setContents(transferable);
-        if (editor instanceof EditorEx ex) {
-            if (ex.isStickySelection()) {
-                ex.setStickySelection(false);
-            }
+        if (editor instanceof EditorEx ex && ex.isStickySelection()) {
+            ex.setStickySelection(false);
         }
     }
 }

@@ -4,6 +4,7 @@ import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
@@ -25,7 +26,6 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.coverage.view.CoverageViewSuiteListener;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;
@@ -41,10 +41,12 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import consulo.project.ui.view.ProjectView;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
@@ -79,7 +81,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     private static final String SUITE = "SUITE";
 
     private final Project myProject;
-    private final Set<CoverageSuite> myCoverageSuites = new HashSet<CoverageSuite>();
+    private final Set<CoverageSuite> myCoverageSuites = new HashSet<>();
     private boolean myIsProjectClosing = false;
 
     private final Object myLock = new Object();
@@ -93,10 +95,10 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     private CoverageSuitesBundle myCurrentSuitesBundle;
 
     private final Object ANNOTATORS_LOCK = new Object();
-    private final Map<Editor, SrcFileAnnotator> myAnnotators = new HashMap<Editor, SrcFileAnnotator>();
+    private final Map<Editor, SrcFileAnnotator> myAnnotators = new HashMap<>();
 
     @Inject
-    public CoverageDataManagerImpl(final Project project) {
+    public CoverageDataManagerImpl(Project project) {
         myProject = project;
         if (project.isDefault()) {
             return;
@@ -107,7 +109,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         EditorFactory.getInstance().addEditorFactoryListener(new CoverageEditorFactoryListener(), myProject);
         ProjectManagerAdapter projectManagerListener = new ProjectManagerAdapter() {
             @Override
-            public void projectClosing(Project project) {
+            public void projectClosing(@Nonnull Project project) {
                 synchronized (myLock) {
                     myIsProjectClosing = true;
                 }
@@ -122,11 +124,11 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     public void readExternal(Element element) throws InvalidDataException {
         //noinspection unchecked
         for (Element suiteElement : element.getChildren(SUITE)) {
-            final CoverageRunner coverageRunner = BaseCoverageSuite.readRunnerAttribute(suiteElement);
+            CoverageRunner coverageRunner = BaseCoverageSuite.readRunnerAttribute(suiteElement);
             // skip unknown runners
             if (coverageRunner == null) {
                 // collect gc
-                final CoverageFileProvider fileProvider = BaseCoverageSuite.readDataFileProviderAttribute(suiteElement);
+                CoverageFileProvider fileProvider = BaseCoverageSuite.readDataFileProviderAttribute(suiteElement);
                 if (fileProvider.isValid()) {
                     //deleteCachedCoverage(fileProvider.getCoverageDataFilePath());
                 }
@@ -155,9 +157,9 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public void writeExternal(final Element element) throws WriteExternalException {
+    public void writeExternal(Element element) throws WriteExternalException {
         for (CoverageSuite coverageSuite : myCoverageSuites) {
-            final Element suiteElement = new Element(SUITE);
+            Element suiteElement = new Element(SUITE);
             element.addContent(suiteElement);
             coverageSuite.writeExternal(suiteElement);
         }
@@ -165,16 +167,16 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
     @Override
     public CoverageSuite addCoverageSuite(
-        final String name,
-        final CoverageFileProvider fileProvider,
-        final String[] filters,
-        final long lastCoverageTimeStamp,
-        @Nullable final String suiteToMergeWith,
-        final CoverageRunner coverageRunner,
-        final boolean collectLineInfo,
-        final boolean tracingEnabled
+        String name,
+        CoverageFileProvider fileProvider,
+        String[] filters,
+        long lastCoverageTimeStamp,
+        @Nullable String suiteToMergeWith,
+        CoverageRunner coverageRunner,
+        boolean collectLineInfo,
+        boolean tracingEnabled
     ) {
-        final CoverageSuite suite = createCoverageSuite(
+        CoverageSuite suite = createCoverageSuite(
             coverageRunner,
             name,
             fileProvider,
@@ -199,7 +201,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         CoverageRunner coverageRunner,
         CoverageFileProvider fileProvider
     ) {
-        final CoverageSuite suite = createCoverageSuite(
+        CoverageSuite suite = createCoverageSuite(
             coverageRunner,
             selectedFileName,
             fileProvider,
@@ -214,16 +216,16 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public CoverageSuite addCoverageSuite(final CoverageEnabledConfiguration config) {
-        final String name = config.getName() + " Coverage Results";
-        final String covFilePath = config.getCoverageFilePath();
+    public CoverageSuite addCoverageSuite(CoverageEnabledConfiguration config) {
+        String name = config.getName() + " Coverage Results";
+        String covFilePath = config.getCoverageFilePath();
         assert covFilePath != null; // Shouldn't be null here!
 
-        final CoverageRunner coverageRunner = config.getCoverageRunner();
+        CoverageRunner coverageRunner = config.getCoverageRunner();
         LOG.assertTrue(coverageRunner != null, "Coverage runner id = " + config.getRunnerId());
 
-        final DefaultCoverageFileProvider fileProvider = new DefaultCoverageFileProvider(new File(covFilePath));
-        final CoverageSuite suite = createCoverageSuite(config, name, coverageRunner, fileProvider);
+        DefaultCoverageFileProvider fileProvider = new DefaultCoverageFileProvider(new File(covFilePath));
+        CoverageSuite suite = createCoverageSuite(config, name, coverageRunner, fileProvider);
 
         // remove previous instance
         removeCoverageSuite(suite);
@@ -234,8 +236,9 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public void removeCoverageSuite(final CoverageSuite suite) {
-        final String fileName = suite.getCoverageDataFileName();
+    @RequiredUIAccess
+    public void removeCoverageSuite(CoverageSuite suite) {
+        String fileName = suite.getCoverageDataFileName();
 
         boolean deleteTraces = suite.isTracingEnabled();
         if (!FileUtil.isAncestor(ContainerPathManager.get().getSystemPath(), fileName, false)) {
@@ -278,7 +281,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public void chooseSuitesBundle(final CoverageSuitesBundle suite) {
+    public void chooseSuitesBundle(CoverageSuitesBundle suite) {
         if (myCurrentSuitesBundle == suite && suite == null) {
             return;
         }
@@ -301,7 +304,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         }
 
         for (CoverageSuite coverageSuite : myCurrentSuitesBundle.getSuites()) {
-            final boolean suiteFileExists = coverageSuite.getCoverageDataFileProvider().ensureFileExists();
+            boolean suiteFileExists = coverageSuite.getCoverageDataFileProvider().ensureFileExists();
             if (!suiteFileExists) {
                 chooseSuitesBundle(null);
                 return;
@@ -314,16 +317,16 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public void coverageGathered(@Nonnull final CoverageSuite suite) {
+    public void coverageGathered(@Nonnull CoverageSuite suite) {
         myProject.getApplication().invokeLater(() -> {
             if (myProject.isDisposed()) {
                 return;
             }
             if (myCurrentSuitesBundle != null) {
-                final LocalizeValue message = CodeInsightLocalize.displayCoveragePrompt(suite.getPresentableName());
+                LocalizeValue message = CodeInsightLocalize.displayCoveragePrompt(suite.getPresentableName());
 
-                final CoverageOptionsProvider coverageOptionsProvider = CoverageOptionsProvider.getInstance(myProject);
-                final DialogWrapper.DoNotAskOption doNotAskOption = new DialogWrapper.DoNotAskOption() {
+                CoverageOptionsProvider coverageOptionsProvider = CoverageOptionsProvider.getInstance(myProject);
+                DialogWrapper.DoNotAskOption doNotAskOption = new DialogWrapper.DoNotAskOption() {
                     @Override
                     public boolean isToBeShown() {
                         return coverageOptionsProvider.getOptionToReplace() == 3;
@@ -350,18 +353,18 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                         return CommonLocalize.dialogOptionsDoNotShow();
                     }
                 };
-                final String[] options = myCurrentSuitesBundle.getCoverageEngine() == suite.getCoverageEngine()
+                String[] options = myCurrentSuitesBundle.getCoverageEngine() == suite.getCoverageEngine()
                     ? new String[]{REPLACE_ACTIVE_SUITES, ADD_TO_ACTIVE_SUITES, DO_NOT_APPLY_COLLECTED_COVERAGE}
                     : new String[]{REPLACE_ACTIVE_SUITES, DO_NOT_APPLY_COLLECTED_COVERAGE};
-                final int answer = doNotAskOption.isToBeShown()
+                int answer = doNotAskOption.isToBeShown()
                     ? Messages.showDialog(
-                    message.get(),
-                    CodeInsightLocalize.codeCoverage().get(),
-                    options,
-                    1,
-                    UIUtil.getQuestionIcon(),
-                    doNotAskOption
-                )
+                        message.get(),
+                        CodeInsightLocalize.codeCoverage().get(),
+                        options,
+                        1,
+                        UIUtil.getQuestionIcon(),
+                        doNotAskOption
+                    )
                     : coverageOptionsProvider.getOptionToReplace();
                 if (answer == DialogWrapper.OK_EXIT_CODE) {
                     chooseSuitesBundle(new CoverageSuitesBundle(suite));
@@ -390,13 +393,13 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
     @Override
     public void attachToProcess(
-        @Nonnull final ProcessHandler handler,
-        @Nonnull final RunConfigurationBase configuration,
-        final RunnerSettings runnerSettings
+        @Nonnull ProcessHandler handler,
+        @Nonnull RunConfigurationBase configuration,
+        RunnerSettings runnerSettings
     ) {
         handler.addProcessListener(new ProcessAdapter() {
             @Override
-            public void processTerminated(final ProcessEvent event) {
+            public void processTerminated(ProcessEvent event) {
                 processGatheredCoverage(configuration, runnerSettings);
             }
         });
@@ -410,52 +413,53 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     public static void processGatheredCoverage(RunConfigurationBase configuration) {
-        final Project project = configuration.getProject();
+        Project project = configuration.getProject();
         if (project.isDisposed()) {
             return;
         }
-        final CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(project);
-        final CoverageEnabledConfiguration coverageEnabledConfiguration = CoverageEnabledConfiguration.getOrCreate(configuration);
+        CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(project);
+        CoverageEnabledConfiguration coverageEnabledConfiguration = CoverageEnabledConfiguration.getOrCreate(configuration);
         //noinspection ConstantConditions
-        final CoverageSuite coverageSuite = coverageEnabledConfiguration.getCurrentCoverageSuite();
+        CoverageSuite coverageSuite = coverageEnabledConfiguration.getCurrentCoverageSuite();
         if (coverageSuite != null) {
             ((BaseCoverageSuite)coverageSuite).setConfiguration(configuration);
             coverageDataManager.coverageGathered(coverageSuite);
         }
     }
 
-    protected void renewCoverageData(@Nonnull final CoverageSuitesBundle suite) {
+    protected void renewCoverageData(@Nonnull CoverageSuitesBundle suite) {
         if (myCurrentSuitesBundle != null) {
             myCurrentSuitesBundle.getCoverageEngine().getCoverageAnnotator(myProject).renewCoverageData(suite, this);
         }
     }
 
     private void renewInformationInEditors() {
-        final FileEditorManager fileEditorManager = FileEditorManager.getInstance(myProject);
-        final VirtualFile[] openFiles = fileEditorManager.getOpenFiles();
+        FileEditorManager fileEditorManager = FileEditorManager.getInstance(myProject);
+        VirtualFile[] openFiles = fileEditorManager.getOpenFiles();
         for (VirtualFile openFile : openFiles) {
-            final FileEditor[] allEditors = fileEditorManager.getAllEditors(openFile);
+            FileEditor[] allEditors = fileEditorManager.getAllEditors(openFile);
             applyInformationToEditor(allEditors, openFile);
         }
     }
 
-    private void applyInformationToEditor(FileEditor[] editors, final VirtualFile file) {
-        final PsiFile psiFile = doInReadActionIfProjectOpen(new Computable<PsiFile>() {
+    private void applyInformationToEditor(FileEditor[] editors, VirtualFile file) {
+        PsiFile psiFile = doInReadActionIfProjectOpen(new Computable<PsiFile>() {
             @Nullable
             @Override
+            @RequiredReadAction
             public PsiFile compute() {
                 return PsiManager.getInstance(myProject).findFile(file);
             }
         });
         if (psiFile != null && myCurrentSuitesBundle != null && psiFile.isPhysical()) {
-            final CoverageEngine engine = myCurrentSuitesBundle.getCoverageEngine();
+            CoverageEngine engine = myCurrentSuitesBundle.getCoverageEngine();
             if (!engine.coverageEditorHighlightingApplicableTo(psiFile)) {
                 return;
             }
 
             for (FileEditor editor : editors) {
                 if (editor instanceof TextEditor) {
-                    final Editor textEditor = ((TextEditor)editor).getEditor();
+                    Editor textEditor = ((TextEditor)editor).getEditor();
                     SrcFileAnnotator annotator;
                     synchronized (ANNOTATORS_LOCK) {
                         annotator = myAnnotators.remove(textEditor);
@@ -469,7 +473,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
             for (FileEditor editor : editors) {
                 if (editor instanceof TextEditor) {
-                    final Editor textEditor = ((TextEditor)editor).getEditor();
+                    Editor textEditor = ((TextEditor)editor).getEditor();
                     SrcFileAnnotator annotator = getAnnotator(textEditor);
                     if (annotator == null) {
                         annotator = new SrcFileAnnotator(psiFile, textEditor);
@@ -497,27 +501,27 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public void selectSubCoverage(@Nonnull final CoverageSuitesBundle suite, final List<String> testNames) {
+    public void selectSubCoverage(@Nonnull CoverageSuitesBundle suite, List<String> testNames) {
         suite.restoreCoverageData();
-        final ProjectData data = suite.getCoverageData();
+        ProjectData data = suite.getCoverageData();
         if (data == null) {
             return;
         }
         mySubCoverageIsActive = true;
-        final Map<String, Set<Integer>> executionTrace = new HashMap<>();
+        Map<String, Set<Integer>> executionTrace = new HashMap<>();
         for (CoverageSuite coverageSuite : suite.getSuites()) {
-            final String fileName = coverageSuite.getCoverageDataFileName();
-            final File tracesDir = getTracesDirectory(fileName);
+            String fileName = coverageSuite.getCoverageDataFileName();
+            File tracesDir = getTracesDirectory(fileName);
             for (String testName : testNames) {
-                final File file = new File(tracesDir, FileUtil.sanitizeFileName(testName) + ".tr");
+                File file = new File(tracesDir, FileUtil.sanitizeFileName(testName) + ".tr");
                 if (file.exists()) {
                     DataInputStream in = null;
                     try {
                         in = new DataInputStream(new FileInputStream(file));
                         int traceSize = in.readInt();
                         for (int i = 0; i < traceSize; i++) {
-                            final String className = in.readUTF();
-                            final int linesSize = in.readInt();
+                            String className = in.readUTF();
+                            int linesSize = in.readInt();
                             Set<Integer> lines = executionTrace.get(className);
                             if (lines == null) {
                                 lines = new HashSet<>();
@@ -542,16 +546,16 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                 }
             }
         }
-        final ProjectData projectData = new ProjectData();
+        ProjectData projectData = new ProjectData();
         for (String className : executionTrace.keySet()) {
             ClassData loadedClassData = projectData.getClassData(className);
             if (loadedClassData == null) {
                 loadedClassData = projectData.getOrCreateClassData(className);
             }
-            final Set<Integer> lineNumbers = executionTrace.get(className);
-            final ClassData oldData = data.getClassData(className);
+            Set<Integer> lineNumbers = executionTrace.get(className);
+            ClassData oldData = data.getClassData(className);
             LOG.assertTrue(oldData != null, "missed className: \"" + className + "\"");
-            final Object[] oldLines = oldData.getLines();
+            Object[] oldLines = oldData.getLines();
             LOG.assertTrue(oldLines != null);
             int maxNumber = oldLines.length;
             for (Integer lineNumber : lineNumbers) {
@@ -559,17 +563,17 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                     maxNumber = lineNumber + 1;
                 }
             }
-            final LineData[] lines = new LineData[maxNumber];
+            LineData[] lines = new LineData[maxNumber];
             for (Integer line : lineNumbers) {
-                final int lineIdx = line.intValue() - 1;
+                int lineIdx = line - 1;
                 String methodSig = null;
                 if (lineIdx < oldData.getLines().length) {
-                    final LineData oldLineData = oldData.getLineData(lineIdx);
+                    LineData oldLineData = oldData.getLineData(lineIdx);
                     if (oldLineData != null) {
                         methodSig = oldLineData.getMethodSignature();
                     }
                 }
-                final LineData lineData = new LineData(lineIdx, methodSig);
+                LineData lineData = new LineData(lineIdx, methodSig);
                 if (methodSig != null) {
                     loadedClassData.registerMethodSignature(lineData);
                 }
@@ -582,19 +586,19 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         renewCoverageData(suite);
     }
 
-    private File getTracesDirectory(final String fileName) {
+    private File getTracesDirectory(String fileName) {
         return new File(new File(fileName).getParentFile(), FileUtil.getNameWithoutExtension(new File(fileName)));
     }
 
     @Override
-    public void restoreMergedCoverage(@Nonnull final CoverageSuitesBundle suite) {
+    public void restoreMergedCoverage(@Nonnull CoverageSuitesBundle suite) {
         mySubCoverageIsActive = false;
         suite.restoreCoverageData();
         renewCoverageData(suite);
     }
 
     @Override
-    public void addSuiteListener(final CoverageSuiteListener listener, Disposable parentDisposable) {
+    public void addSuiteListener(CoverageSuiteListener listener, Disposable parentDisposable) {
         myListeners.add(listener);
         Disposer.register(parentDisposable, () -> myListeners.remove(listener));
     }
@@ -636,10 +640,10 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
     @Nonnull
     private CoverageSuite createCoverageSuite(
-        final CoverageEnabledConfiguration config,
-        final String name,
-        final CoverageRunner coverageRunner,
-        final DefaultCoverageFileProvider fileProvider
+        CoverageEnabledConfiguration config,
+        String name,
+        CoverageRunner coverageRunner,
+        DefaultCoverageFileProvider fileProvider
     ) {
         CoverageSuite suite = null;
         for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
@@ -656,14 +660,14 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
     @Nonnull
     private CoverageSuite createCoverageSuite(
-        final CoverageRunner coverageRunner,
-        final String name,
-        final CoverageFileProvider fileProvider,
-        final String[] filters,
-        final long lastCoverageTimeStamp,
-        final String suiteToMergeWith,
-        final boolean collectLineInfo,
-        final boolean tracingEnabled
+        CoverageRunner coverageRunner,
+        String name,
+        CoverageFileProvider fileProvider,
+        String[] filters,
+        long lastCoverageTimeStamp,
+        String suiteToMergeWith,
+        boolean collectLineInfo,
+        boolean tracingEnabled
     ) {
         CoverageSuite suite = null;
         for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
@@ -702,25 +706,25 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                 }
             }
 
-            final Editor editor = event.getEditor();
+            Editor editor = event.getEditor();
             if (editor.getProject() != myProject) {
                 return;
             }
-            final PsiFile psiFile = myProject.getApplication().runReadAction(new Computable<PsiFile>() {
+            PsiFile psiFile = myProject.getApplication().runReadAction(new Supplier<PsiFile>() {
                 @Nullable
                 @Override
-                public PsiFile compute() {
+                public PsiFile get() {
                     if (myProject.isDisposed()) {
                         return null;
                     }
-                    final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
-                    final Document document = editor.getDocument();
+                    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
+                    Document document = editor.getDocument();
                     return documentManager.getPsiFile(document);
                 }
             });
 
             if (psiFile != null && myCurrentSuitesBundle != null && psiFile.isPhysical()) {
-                final CoverageEngine engine = myCurrentSuitesBundle.getCoverageEngine();
+                CoverageEngine engine = myCurrentSuitesBundle.getCoverageEngine();
                 if (!engine.coverageEditorHighlightingApplicableTo(psiFile)) {
                     return;
                 }
@@ -730,13 +734,13 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                     annotator = new SrcFileAnnotator(psiFile, editor);
                 }
 
-                final SrcFileAnnotator finalAnnotator = annotator;
+                SrcFileAnnotator finalAnnotator = annotator;
 
                 synchronized (ANNOTATORS_LOCK) {
                     myAnnotators.put(editor, finalAnnotator);
                 }
 
-                final Runnable request = () -> {
+                Runnable request = () -> {
                     if (myProject.isDisposed()) {
                         return;
                     }
@@ -753,12 +757,12 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
         @Override
         public void editorReleased(@Nonnull EditorFactoryEvent event) {
-            final Editor editor = event.getEditor();
+            Editor editor = event.getEditor();
             if (editor.getProject() != myProject) {
                 return;
             }
             try {
-                final SrcFileAnnotator fileAnnotator;
+                SrcFileAnnotator fileAnnotator;
                 synchronized (ANNOTATORS_LOCK) {
                     fileAnnotator = myAnnotators.remove(editor);
                 }
@@ -767,7 +771,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                 }
             }
             finally {
-                final Runnable request = myCurrentEditors.remove(editor);
+                Runnable request = myCurrentEditors.remove(editor);
                 if (request != null) {
                     myAlarm.cancelRequest(request);
                 }

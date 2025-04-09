@@ -13,11 +13,10 @@ import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import org.jetbrains.annotations.Nls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +142,7 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
     @RequiredUIAccess
     @Override
     protected void reset(@Nonnull Panel panel) {
-        final int addOrReplace = myManager.getOptionToReplace();
+        int addOrReplace = myManager.getOptionToReplace();
         switch (addOrReplace) {
             case 0:
                 panel.myReplaceRB.setValue(true);

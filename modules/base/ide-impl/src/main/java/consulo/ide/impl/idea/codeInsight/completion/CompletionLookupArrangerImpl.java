@@ -102,7 +102,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
             ProcessingContext context = createContext();
             Classifier<LookupElement> classifier = myClassifiers.get(sorter);
             while (classifier != null) {
-                final Set<LookupElement> itemSet = ContainerUtil.newIdentityTroveSet(thisSorterItems);
+                Set<LookupElement> itemSet = ContainerUtil.newIdentityTroveSet(thisSorterItems);
                 List<LookupElement> unsortedItems = ContainerUtil.filter(myItems, lookupElement -> itemSet.contains(lookupElement));
                 List<Pair<LookupElement, Object>> pairs = classifier.getSortingWeights(unsortedItems, context);
                 if (!hideSingleValued || !haveSameWeights(pairs)) {
@@ -196,7 +196,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
         List<LookupElement> items = getMatchingItems();
         Iterator<LookupElement> iterator = sortByRelevance(groupItemsBySorter(items)).iterator();
 
-        final Set<LookupElement> retainedSet = ContainerUtil.newIdentityTroveSet();
+        Set<LookupElement> retainedSet = ContainerUtil.newIdentityTroveSet();
         retainedSet.addAll(getPrefixItems(true));
         retainedSet.addAll(getPrefixItems(false));
         retainedSet.addAll(myFrozenItems);
@@ -335,7 +335,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
         Iterator<? extends LookupElement> byRelevance =
             myFinalSorter.sort(sortedElements, Objects.requireNonNull(myProcess.getParameters())).iterator();
 
-        final LinkedHashSet<LookupElement> model = new LinkedHashSet<>();
+        LinkedHashSet<LookupElement> model = new LinkedHashSet<>();
 
         addPrefixItems(model);
         addFrozenItems(items, model);
@@ -357,7 +357,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
         Set<? extends LookupElement> items,
         LinkedHashSet<? super LookupElement> model,
         Iterator<? extends LookupElement> byRelevance,
-        @Nullable final LookupElement item
+        @Nullable LookupElement item
     ) {
         if (item != null && items.contains(item) && !model.contains(item)) {
             addSomeItems(model, byRelevance, lastAdded -> lastAdded == item);
@@ -418,7 +418,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
             return Collections.emptyList();
         }
 
-        final List<Iterable<LookupElement>> byClassifier = new ArrayList<>();
+        List<Iterable<LookupElement>> byClassifier = new ArrayList<>();
         for (CompletionSorterImpl sorter : myClassifiers.keySet()) {
             ProcessingContext context = createContext();
             byClassifier.add(myClassifiers.get(sorter).classify(inputBySorter.get(sorter), context));
@@ -458,7 +458,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
         }
 
         if (lookup.isSelectionTouched() || !onExplicitAction) {
-            final LookupElement lastSelection = lookup.getCurrentItem();
+            LookupElement lastSelection = lookup.getCurrentItem();
             int old = ContainerUtil.indexOfIdentity(items, lastSelection);
             if (old >= 0) {
                 return old;
@@ -521,7 +521,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
 
     @Nullable
     private LookupElement findMostRelevantItem(Iterable<? extends LookupElement> sorted) {
-        final List<CompletionPreselectSkipper> skippers = CompletionPreselectSkipper.EP_NAME.getExtensionList();
+        List<CompletionPreselectSkipper> skippers = CompletionPreselectSkipper.EP_NAME.getExtensionList();
 
         for (LookupElement element : sorted) {
             if (!shouldSkip(skippers, element)) {
@@ -542,7 +542,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
         if (location == null) {
             location = new CompletionLocation(Objects.requireNonNull(myProcess.getParameters()));
         }
-        for (final CompletionPreselectSkipper skipper : skippers) {
+        for (CompletionPreselectSkipper skipper : skippers) {
             if (skipper.skipElement(element, location)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Skipped element " + element + " by " + skipper);

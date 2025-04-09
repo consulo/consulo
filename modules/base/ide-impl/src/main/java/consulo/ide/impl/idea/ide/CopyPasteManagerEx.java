@@ -56,7 +56,7 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
     }
 
     @Override
-    public void addContentChangedListener(@Nonnull final ContentChangedListener listener, @Nonnull Disposable parentDisposable) {
+    public void addContentChangedListener(@Nonnull ContentChangedListener listener, @Nonnull Disposable parentDisposable) {
         myDispatcher.addListener(listener, parentDisposable);
     }
 
@@ -81,7 +81,7 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
     }
 
     @Override
-    public boolean isCutElement(@Nullable final Object element) {
+    public boolean isCutElement(@Nullable Object element) {
         for (CutElementMarker marker : CutElementMarker.EP_NAME.getExtensions()) {
             if (marker.isCutElement(element)) {
                 return true;

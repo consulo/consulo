@@ -16,7 +16,6 @@
 package consulo.externalSystem.util;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
@@ -29,7 +28,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.event.ExecutionListener;
@@ -38,10 +36,14 @@ import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.externalSystem.ExternalSystemAutoImportAware;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
-import consulo.externalSystem.model.*;
+import consulo.externalSystem.model.DataNode;
+import consulo.externalSystem.model.ExternalSystemDataKeys;
+import consulo.externalSystem.model.Key;
+import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.model.project.LibraryData;
@@ -63,6 +65,7 @@ import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
@@ -72,24 +75,18 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
-import consulo.util.nodep.classloader.UrlClassLoader;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.rmi.RemoteUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.util.PathsList;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -125,8 +122,7 @@ public class ExternalSystemApiUtil {
     private static final Pattern ARTIFACT_PATTERN = Pattern.compile("(?:.*/)?(.+?)(?:-([\\d+](?:\\.[\\d]+)*))?(?:\\.[^\\.]+?)?");
 
     @Nonnull
-    public static final Comparator<Object> ORDER_AWARE_COMPARATOR = new Comparator<Object>() {
-
+    public static final Comparator<Object> ORDER_AWARE_COMPARATOR = new Comparator<>() {
         @Override
         public int compare(@Nonnull Object o1, @Nonnull Object o2) {
             int order1 = getOrder(o1);
@@ -135,7 +131,7 @@ public class ExternalSystemApiUtil {
         }
 
         private int getOrder(@Nonnull Object o) {
-            Queue<Class<?>> toCheck = new ArrayDeque<Class<?>>();
+            Queue<Class<?>> toCheck = new ArrayDeque<>();
             toCheck.add(o.getClass());
             while (!toCheck.isEmpty()) {
                 Class<?> clazz = toCheck.poll();
@@ -155,21 +151,10 @@ public class ExternalSystemApiUtil {
     };
 
     @Nonnull
-    private static final Function<DataNode<?>, Key<?>> GROUPER = new Function<DataNode<?>, Key<?>>() {
-        @Override
-        public Key<?> apply(DataNode<?> node) {
-            return node.getKey();
-        }
-    };
+    private static final Function<DataNode<?>, Key<?>> GROUPER = DataNode::getKey;
 
     @Nonnull
-    private static final Comparator<Object> COMPARABLE_GLUE = new Comparator<Object>() {
-        @SuppressWarnings("unchecked")
-        @Override
-        public int compare(Object o1, Object o2) {
-            return ((Comparable)o1).compareTo(o2);
-        }
-    };
+    private static final Comparator<Object> COMPARABLE_GLUE = (o1, o2) -> ((Comparable)o1).compareTo(o2);
 
     private ExternalSystemApiUtil() {
     }
@@ -179,6 +164,7 @@ public class ExternalSystemApiUtil {
         return RUNNER_IDS.get(executorId);
     }
 
+    @RequiredUIAccess
     public static void runTask(
         @Nonnull ExternalSystemTaskExecutionSettings taskSettings,
         @Nonnull String executorId,
@@ -188,138 +174,132 @@ public class ExternalSystemApiUtil {
         runTask(taskSettings, executorId, project, externalSystemId, null, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
     }
 
+    @RequiredUIAccess
     public static void runTask(
-        @Nonnull final ExternalSystemTaskExecutionSettings taskSettings,
-        @Nonnull final String executorId,
-        @Nonnull final Project project,
-        @Nonnull final ProjectSystemId externalSystemId,
-        @Nullable final TaskCallback callback,
-        @Nonnull final ProgressExecutionMode progressExecutionMode
+        @Nonnull ExternalSystemTaskExecutionSettings taskSettings,
+        @Nonnull String executorId,
+        @Nonnull Project project,
+        @Nonnull ProjectSystemId externalSystemId,
+        @Nullable TaskCallback callback,
+        @Nonnull ProgressExecutionMode progressExecutionMode
     ) {
-        final Pair<ProgramRunner, ExecutionEnvironment> pair = createRunner(taskSettings, executorId, project, externalSystemId);
+        Pair<ProgramRunner, ExecutionEnvironment> pair = createRunner(taskSettings, executorId, project, externalSystemId);
         if (pair == null) {
             return;
         }
 
-        final ProgramRunner runner = pair.first;
-        final ExecutionEnvironment environment = pair.second;
+        ProgramRunner runner = pair.first;
+        ExecutionEnvironment environment = pair.second;
 
-        final TaskUnderProgress task = new TaskUnderProgress() {
-            @Override
-            public void execute(@Nonnull ProgressIndicator indicator) {
-                final Semaphore targetDone = new Semaphore();
-                final Ref<Boolean> result = new Ref<Boolean>(false);
-                final Disposable disposable = Disposable.newDisposable();
+        @RequiredUIAccess
+        TaskUnderProgress task = indicator -> {
+            Semaphore targetDone = new Semaphore();
+            SimpleReference<Boolean> result = new SimpleReference<>(false);
+            Disposable disposable = Disposable.newDisposable();
 
-                project.getMessageBus().connect(disposable).subscribe(ExecutionListener.class, new ExecutionListener() {
-                    @Override
-                    public void processStartScheduled(final String executorIdLocal, final ExecutionEnvironment environmentLocal) {
-                        if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
-                            targetDone.down();
-                        }
+            project.getMessageBus().connect(disposable).subscribe(ExecutionListener.class, new ExecutionListener() {
+                @Override
+                public void processStartScheduled(@Nonnull String executorIdLocal, @Nonnull ExecutionEnvironment environmentLocal) {
+                    if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
+                        targetDone.down();
                     }
+                }
 
-                    @Override
-                    public void processNotStarted(final String executorIdLocal, @Nonnull final ExecutionEnvironment environmentLocal) {
-                        if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
-                            targetDone.up();
-                        }
+                @Override
+                public void processNotStarted(@Nonnull String executorIdLocal, @Nonnull ExecutionEnvironment environmentLocal) {
+                    if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
+                        targetDone.up();
                     }
+                }
 
-                    @Override
-                    public void processStarted(
-                        final String executorIdLocal,
-                        @Nonnull final ExecutionEnvironment environmentLocal,
-                        @Nonnull final ProcessHandler handler
-                    ) {
-                        if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
-                            handler.addProcessListener(new ProcessAdapter() {
-                                @Override
-                                public void processTerminated(ProcessEvent event) {
-                                    result.set(event.getExitCode() == 0);
-                                    targetDone.up();
-                                }
-                            });
-                        }
-                    }
-                });
-
-                try {
-                    ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                runner.execute(environment);
-                            }
-                            catch (ExecutionException e) {
+                @Override
+                public void processStarted(
+                    @Nonnull String executorIdLocal,
+                    @Nonnull ExecutionEnvironment environmentLocal,
+                    @Nonnull ProcessHandler handler
+                ) {
+                    if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
+                        handler.addProcessListener(new ProcessAdapter() {
+                            @Override
+                            public void processTerminated(ProcessEvent event) {
+                                result.set(event.getExitCode() == 0);
                                 targetDone.up();
-                                LOG.error(e);
                             }
+                        });
+                    }
+                }
+            });
+
+            try {
+                Application app = Application.get();
+                app.invokeAndWait(
+                    () -> {
+                        try {
+                            runner.execute(environment);
                         }
-                    }, Application.get().getNoneModalityState());
-                }
-                catch (Exception e) {
-                    LOG.error(e);
-                    Disposer.dispose(disposable);
-                    return;
-                }
-
-                targetDone.waitFor();
+                        catch (ExecutionException e) {
+                            targetDone.up();
+                            LOG.error(e);
+                        }
+                    },
+                    app.getNoneModalityState()
+                );
+            }
+            catch (Exception e) {
+                LOG.error(e);
                 Disposer.dispose(disposable);
+                return;
+            }
 
-                if (callback != null) {
-                    if (result.get()) {
-                        callback.onSuccess();
-                    }
-                    else {
-                        callback.onFailure();
-                    }
+            targetDone.waitFor();
+            Disposer.dispose(disposable);
+
+            if (callback != null) {
+                if (result.get()) {
+                    callback.onSuccess();
+                }
+                else {
+                    callback.onFailure();
                 }
             }
         };
 
-        UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-            @Override
-            public void run() {
-                final String title = AbstractExternalSystemTaskConfigurationType.generateName(project, taskSettings);
-                switch (progressExecutionMode) {
-                    case MODAL_SYNC:
-                        new Task.Modal(project, title, true) {
-                            @Override
-                            public void run(@Nonnull ProgressIndicator indicator) {
-                                task.execute(indicator);
-                            }
-                        }.queue();
-                        break;
-                    case IN_BACKGROUND_ASYNC:
-                        new Task.Backgroundable(project, title) {
-                            @Override
-                            public void run(@Nonnull ProgressIndicator indicator) {
-                                task.execute(indicator);
-                            }
-                        }.queue();
-                        break;
-                    case START_IN_FOREGROUND_ASYNC:
-                        new Task.Backgroundable(project, title, true, PerformInBackgroundOption.DEAF) {
-                            @Override
-                            public void run(@Nonnull ProgressIndicator indicator) {
-                                task.execute(indicator);
-                            }
-                        }.queue();
-                }
+        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+            String title = AbstractExternalSystemTaskConfigurationType.generateName(project, taskSettings);
+            switch (progressExecutionMode) {
+                case MODAL_SYNC:
+                    new Task.Modal(project, title, true) {
+                        @Override
+                        public void run(@Nonnull ProgressIndicator indicator) {
+                            task.execute(indicator);
+                        }
+                    }.queue();
+                    break;
+                case IN_BACKGROUND_ASYNC:
+                    new Task.Backgroundable(project, title) {
+                        @Override
+                        public void run(@Nonnull ProgressIndicator indicator) {
+                            task.execute(indicator);
+                        }
+                    }.queue();
+                    break;
+                case START_IN_FOREGROUND_ASYNC:
+                    new Task.Backgroundable(project, title, true, PerformInBackgroundOption.DEAF) {
+                        @Override
+                        public void run(@Nonnull ProgressIndicator indicator) {
+                            task.execute(indicator);
+                        }
+                    }.queue();
             }
         });
     }
 
-
     @Nullable
     public static AbstractExternalSystemTaskConfigurationType findConfigurationType(@Nonnull ProjectSystemId externalSystemId) {
         for (ConfigurationType type : ConfigurationType.EP_NAME.getExtensionList()) {
-            if (type instanceof AbstractExternalSystemTaskConfigurationType) {
-                AbstractExternalSystemTaskConfigurationType candidate = (AbstractExternalSystemTaskConfigurationType)type;
-                if (externalSystemId.equals(candidate.getExternalSystemId())) {
-                    return candidate;
-                }
+            if (type instanceof AbstractExternalSystemTaskConfigurationType candidate
+                && externalSystemId.equals(candidate.getExternalSystemId())) {
+                return candidate;
             }
         }
         return null;
@@ -404,21 +384,20 @@ public class ExternalSystemApiUtil {
         if (project.isDisposed() || !project.isOpen()) {
             return null;
         }
-        final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         if (toolWindowManager == null) {
             return null;
         }
-        final ToolWindow toolWindow = ensureToolWindowContentInitialized(project, externalSystemId);
+        ToolWindow toolWindow = ensureToolWindowContentInitialized(project, externalSystemId);
         if (toolWindow == null) {
             return null;
         }
 
-        final ContentManager contentManager = toolWindow.getContentManager();
+        ContentManager contentManager = toolWindow.getContentManager();
 
         for (Content content : contentManager.getContents()) {
-            final JComponent component = content.getComponent();
-            if (component instanceof DataProvider) {
-                final Object data = ((DataProvider)component).getData(key);
+            if (content.getComponent() instanceof DataProvider dataProvider) {
+                Object data = dataProvider.getData(key);
                 if (data != null && clazz.isInstance(data)) {
                     return (T)data;
                 }
@@ -430,12 +409,12 @@ public class ExternalSystemApiUtil {
 
     @Nullable
     public static ToolWindow ensureToolWindowContentInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
-        final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         if (toolWindowManager == null) {
             return null;
         }
 
-        final ToolWindow toolWindow = toolWindowManager.getToolWindow(externalSystemId.getToolWindowId());
+        ToolWindow toolWindow = toolWindowManager.getToolWindow(externalSystemId.getToolWindowId());
         if (toolWindow == null) {
             return null;
         }
@@ -448,8 +427,8 @@ public class ExternalSystemApiUtil {
     @Nonnull
     public static String extractNameFromPath(@Nonnull String path) {
         String strippedPath = stripPath(path);
-        final int i = strippedPath.lastIndexOf(PATH_SEPARATOR);
-        final String result;
+        int i = strippedPath.lastIndexOf(PATH_SEPARATOR);
+        String result;
         if (i < 0 || i >= strippedPath.length() - 1) {
             result = strippedPath;
         }
@@ -473,7 +452,7 @@ public class ExternalSystemApiUtil {
 
     @Nonnull
     public static String getLibraryName(@Nonnull Library library) {
-        final String result = library.getName();
+        String result = library.getName();
         if (result != null) {
             return result;
         }
@@ -524,7 +503,7 @@ public class ExternalSystemApiUtil {
 
     @Nonnull
     public static String getLocalFileSystemPath(@Nonnull VirtualFile file) {
-        final VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
+        VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
         if (archiveRoot != null) {
             return archiveRoot.getPath();
         }
@@ -572,7 +551,7 @@ public class ExternalSystemApiUtil {
     }
 
     @Nonnull
-    public static <K, V> Map<DataNode<K>, List<DataNode<V>>> groupBy(@Nonnull Collection<DataNode<V>> nodes, @Nonnull final Key<K> key) {
+    public static <K, V> Map<DataNode<K>, List<DataNode<V>>> groupBy(@Nonnull Collection<DataNode<V>> nodes, @Nonnull Key<K> key) {
         return groupBy(nodes, new Function<DataNode<V>, DataNode<K>>() {
             @Nullable
             @Override
@@ -584,7 +563,7 @@ public class ExternalSystemApiUtil {
 
     @Nonnull
     public static <K, V> Map<K, List<V>> groupBy(@Nonnull Collection<V> nodes, @Nonnull Function<V, K> grouper) {
-        Map<K, List<V>> result = new HashMap<K, List<V>>();
+        Map<K, List<V>> result = new HashMap<>();
         for (V data : nodes) {
             K key = grouper.apply(data);
             if (key == null) {
@@ -604,9 +583,9 @@ public class ExternalSystemApiUtil {
         }
 
         if (!result.isEmpty() && result.keySet().iterator().next() instanceof Comparable) {
-            List<K> ordered = new ArrayList<K>(result.keySet());
+            List<K> ordered = new ArrayList<>(result.keySet());
             Collections.sort(ordered, COMPARABLE_GLUE);
-            Map<K, List<V>> orderedResult = new LinkedHashMap<K, List<V>>();
+            Map<K, List<V>> orderedResult = new LinkedHashMap<>();
             for (K k : ordered) {
                 orderedResult.put(k, result.get(k));
             }
@@ -687,16 +666,19 @@ public class ExternalSystemApiUtil {
         return result == null ? Collections.<DataNode<T>>emptyList() : result;
     }
 
-    public static void executeProjectChangeAction(@Nonnull final DisposeAwareProjectChange task) {
+    @RequiredUIAccess
+    public static void executeProjectChangeAction(@Nonnull DisposeAwareProjectChange task) {
         executeProjectChangeAction(false, task);
     }
 
-    public static void executeProjectChangeAction(boolean synchronous, @Nonnull final DisposeAwareProjectChange task) {
-        executeOnEdt(synchronous, () -> ApplicationManager.getApplication().runWriteAction(task));
+    @RequiredUIAccess
+    public static void executeProjectChangeAction(boolean synchronous, @Nonnull DisposeAwareProjectChange task) {
+        executeOnEdt(synchronous, () -> Application.get().runWriteAction(task));
     }
 
-    public static void executeOnEdt(boolean synchronous, @Nonnull Runnable task) {
-        final Application app = ApplicationManager.getApplication();
+    @RequiredUIAccess
+    public static void executeOnEdt(boolean synchronous, @Nonnull @RequiredUIAccess Runnable task) {
+        Application app = Application.get();
         if (app.isDispatchThread()) {
             task.run();
             return;
@@ -710,19 +692,22 @@ public class ExternalSystemApiUtil {
         }
     }
 
-    public static <T> T executeOnEdt(@Nonnull final Supplier<T> task) {
-        final Application app = ApplicationManager.getApplication();
-        final Ref<T> result = Ref.create();
+    @RequiredUIAccess
+    public static <T> T executeOnEdt(@Nonnull @RequiredUIAccess Supplier<T> task) {
+        Application app = Application.get();
+        SimpleReference<T> result = SimpleReference.create();
         app.invokeAndWait(() -> result.set(task.get()));
         return result.get();
     }
 
-    public static <T> T doWriteAction(@Nonnull final Supplier<T> task) {
-        return executeOnEdt(() -> ApplicationManager.getApplication().runWriteAction(task));
+    @RequiredUIAccess
+    public static <T> T doWriteAction(@Nonnull Supplier<T> task) {
+        return executeOnEdt(() -> Application.get().runWriteAction(task));
     }
 
-    public static void doWriteAction(@Nonnull final Runnable task) {
-        executeOnEdt(true, () -> ApplicationManager.getApplication().runWriteAction(task));
+    @RequiredUIAccess
+    public static void doWriteAction(@Nonnull Runnable task) {
+        executeOnEdt(true, () -> Application.get().runWriteAction(task));
     }
 
     /**
@@ -731,13 +716,13 @@ public class ExternalSystemApiUtil {
      *
      * @param runnable Runnable
      */
-    public static void addToInvokeLater(final Runnable runnable) {
-        final Application application = ApplicationManager.getApplication();
-        if (application.isHeadlessEnvironment() || application.isDispatchThread()) {
+    public static void addToInvokeLater(Runnable runnable) {
+        Application app = Application.get();
+        if (app.isHeadlessEnvironment() || app.isDispatchThread()) {
             runnable.run();
         }
         else {
-            application.getLastUIAccess().giveIfNeed(runnable);
+            app.getLastUIAccess().giveIfNeed(runnable);
         }
     }
 
@@ -844,8 +829,8 @@ public class ExternalSystemApiUtil {
         if (manager == null) {
             return null;
         }
-        if (manager instanceof ExternalSystemAutoImportAware) {
-            return ((ExternalSystemAutoImportAware)manager).getAffectedExternalProjectPath(externalProjectPath, project);
+        if (manager instanceof ExternalSystemAutoImportAware autoImportAware) {
+            return autoImportAware.getAffectedExternalProjectPath(externalProjectPath, project);
         }
         return null;
     }
@@ -864,10 +849,10 @@ public class ExternalSystemApiUtil {
         if (!StringUtil.isEmpty(reason)) {
             return reason;
         }
-        else if (unwrapped.getClass() == ExternalSystemException.class) {
+        else if (unwrapped instanceof ExternalSystemException externalSystemException) {
             return String.format(
                 "exception during working with external system: %s",
-                ((ExternalSystemException)unwrapped).getOriginalReason()
+                externalSystemException.getOriginalReason()
             );
         }
         else {
