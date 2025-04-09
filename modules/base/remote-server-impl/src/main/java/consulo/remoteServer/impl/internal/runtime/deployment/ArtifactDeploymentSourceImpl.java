@@ -37,17 +37,17 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
 
     @Override
     public File getFile() {
-        final String path = getFilePath();
+        String path = getFilePath();
         return path != null ? new File(path) : null;
     }
 
     @Override
     public String getFilePath() {
-        final Artifact artifact = getArtifact();
+        Artifact artifact = getArtifact();
         if (artifact != null) {
             String outputPath = artifact.getOutputPath();
             if (outputPath != null) {
-                final CompositePackagingElement<?> rootElement = artifact.getRootElement();
+                CompositePackagingElement<?> rootElement = artifact.getRootElement();
                 if (!(rootElement instanceof ArtifactRootElement<?>)) {
                     outputPath += "/" + rootElement.getName();
                 }
@@ -65,7 +65,7 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
 
     @Override
     public Image getIcon() {
-        final Artifact artifact = getArtifact();
+        Artifact artifact = getArtifact();
         return artifact != null ? artifact.getArtifactType().getIcon() : null;
     }
 
@@ -82,15 +82,9 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ArtifactDeploymentSourceImpl)) {
-            return false;
-        }
-
-        return myPointer.equals(((ArtifactDeploymentSourceImpl)o).myPointer);
-
+        return o == this
+            || o instanceof ArtifactDeploymentSourceImpl that
+            && myPointer.equals(that.myPointer);
     }
 
     @Override

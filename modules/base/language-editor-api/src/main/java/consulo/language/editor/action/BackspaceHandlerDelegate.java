@@ -31,5 +31,5 @@ public abstract class BackspaceHandlerDelegate {
 
   public abstract void beforeCharDeleted(char c, PsiFile file, Editor editor);
 
-  public abstract boolean charDeleted(final char c, final PsiFile file, final Editor editor);
+  public abstract boolean charDeleted(char c, PsiFile file, Editor editor);
 }

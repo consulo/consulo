@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 0:08/11.11.13
+ * @since 2013-11-11
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PsiDirectoryMethodProxy {
@@ -33,5 +33,5 @@ public interface PsiDirectoryMethodProxy {
 
   boolean checkCreateFile(@Nonnull PsiDirectory directory, @Nonnull String name) throws IncorrectOperationException;
 
-  PsiElement add(@Nonnull PsiDirectory directory, @Nonnull final PsiElement element) throws IncorrectOperationException;
+  PsiElement add(@Nonnull PsiDirectory directory, @Nonnull PsiElement element) throws IncorrectOperationException;
 }

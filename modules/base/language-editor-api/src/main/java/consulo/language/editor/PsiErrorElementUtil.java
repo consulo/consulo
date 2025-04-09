@@ -15,61 +15,67 @@
  */
 package consulo.language.editor;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.application.util.CachedValue;
-import consulo.application.util.CachedValueProvider;
-import consulo.application.util.CachedValuesManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 public class PsiErrorElementUtil {
 
-  private static final Key<CachedValue<Boolean>> CONTAINS_ERROR_ELEMENT = Key.create("CONTAINS_ERROR_ELEMENT");
+    private static final Key<CachedValue<Boolean>> CONTAINS_ERROR_ELEMENT = Key.create("CONTAINS_ERROR_ELEMENT");
 
-  private PsiErrorElementUtil() {
-  }
+    private PsiErrorElementUtil() {
+    }
 
-  public static boolean hasErrors(@Nonnull final Project project, @Nonnull final VirtualFile virtualFile) {
-    return ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> {
-      if (project.isDisposed() || !virtualFile.isValid()) {
-        return false;
-      }
-      PsiManager psiManager = PsiManager.getInstance(project);
-      PsiFile psiFile = psiManager.findFile(virtualFile);
-      return psiFile != null && hasErrors(psiFile);
-    });
-  }
+    public static boolean hasErrors(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+        return Application.get().runReadAction((Supplier<Boolean>)() -> {
+            if (project.isDisposed() || !virtualFile.isValid()) {
+                return false;
+            }
+            PsiManager psiManager = PsiManager.getInstance(project);
+            PsiFile psiFile = psiManager.findFile(virtualFile);
+            return psiFile != null && hasErrors(psiFile);
+        });
+    }
 
-  private static boolean hasErrors(@Nonnull final PsiFile psiFile) {
-    CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(psiFile.getProject());
-    return cachedValuesManager.getCachedValue(psiFile, CONTAINS_ERROR_ELEMENT, () -> {
-      boolean error = hasErrorElements(psiFile);
-      return CachedValueProvider.Result.create(error, psiFile);
-    }, false);
-  }
+    private static boolean hasErrors(@Nonnull PsiFile psiFile) {
+        CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(psiFile.getProject());
+        return cachedValuesManager.getCachedValue(psiFile,
+            CONTAINS_ERROR_ELEMENT,
+            () -> {
+                boolean error = hasErrorElements(psiFile);
+                return CachedValueProvider.Result.create(error, psiFile);
+            },
+            false
+        );
+    }
 
-  private static boolean hasErrorElements(@Nonnull final PsiElement element) {
-    if (element instanceof PsiErrorElement) {
-      for (HighlightErrorFilter errorFilter : HighlightErrorFilter.EP_NAME.getExtensionList(element.getProject())) {
-        if (!errorFilter.shouldHighlightErrorElement((PsiErrorElement)element)) {
-          return false;
+    @RequiredReadAction
+    private static boolean hasErrorElements(@Nonnull PsiElement element) {
+        if (element instanceof PsiErrorElement errorElement) {
+            for (HighlightErrorFilter errorFilter : HighlightErrorFilter.EP_NAME.getExtensionList(element.getProject())) {
+                if (!errorFilter.shouldHighlightErrorElement(errorElement)) {
+                    return false;
+                }
+            }
+            return true;
         }
-      }
-      return true;
+        for (PsiElement child : element.getChildren()) {
+            if (hasErrorElements(child)) {
+                return true;
+            }
+        }
+        return false;
     }
-    for (PsiElement child : element.getChildren()) {
-      if (hasErrorElements(child)) {
-        return true;
-      }
-    }
-    return false;
-  }
 }

@@ -47,8 +47,8 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * User: anna
- * Date: Jan 20, 2005
+ * @author anna
+ * @since 2005-01-20
  */
 @Singleton
 @ServiceImpl

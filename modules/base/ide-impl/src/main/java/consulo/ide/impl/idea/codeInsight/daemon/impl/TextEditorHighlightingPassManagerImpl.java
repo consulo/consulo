@@ -43,8 +43,8 @@ import jakarta.inject.Singleton;
 import java.util.*;
 
 /**
- * User: anna
- * Date: 2006-04-19
+ * @author anna
+ * @since 2006-04-19
  */
 @Singleton
 @ServiceImpl

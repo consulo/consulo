@@ -22,7 +22,7 @@ public interface IntentionMenuContributor {
     void collectActions(
         @Nonnull Editor hostEditor,
         @Nonnull PsiFile hostFile,
-        @Nonnull final ShowIntentionsPass.IntentionsInfo intentions,
+        @Nonnull ShowIntentionsPass.IntentionsInfo intentions,
         int passIdToShowIntentionsFor,
         int offset
     );
