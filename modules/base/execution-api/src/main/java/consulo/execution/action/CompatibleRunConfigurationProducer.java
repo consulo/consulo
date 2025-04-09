@@ -23,33 +23,36 @@ import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 
 public abstract class CompatibleRunConfigurationProducer<T extends RunConfiguration> extends RunConfigurationProducer<T> {
-
-  protected CompatibleRunConfigurationProducer(@Nonnull ConfigurationType configurationType) {
-    super(configurationType);
-  }
-
-  @Override
-  protected boolean setupConfigurationFromContext(T configuration, ConfigurationContext context, Ref<PsiElement> sourceElement) {
-    if (configuration == null || context == null || sourceElement == null || !isContextCompatible(context)) {
-      return false;
+    protected CompatibleRunConfigurationProducer(@Nonnull ConfigurationType configurationType) {
+        super(configurationType);
     }
-    return setupConfigurationFromCompatibleContext(configuration, context, sourceElement);
-  }
 
-  protected abstract boolean setupConfigurationFromCompatibleContext(@Nonnull T configuration, @Nonnull ConfigurationContext context, @Nonnull Ref<PsiElement> sourceElement);
-
-  @Override
-  public final boolean isConfigurationFromContext(T configuration, ConfigurationContext context) {
-    if (configuration == null || context == null || !isContextCompatible(context)) {
-      return false;
+    @Override
+    protected boolean setupConfigurationFromContext(T configuration, ConfigurationContext context, Ref<PsiElement> sourceElement) {
+        if (configuration == null || context == null || sourceElement == null || !isContextCompatible(context)) {
+            return false;
+        }
+        return setupConfigurationFromCompatibleContext(configuration, context, sourceElement);
     }
-    return isConfigurationFromCompatibleContext(configuration, context);
-  }
 
-  protected abstract boolean isConfigurationFromCompatibleContext(@Nonnull T configuration, @Nonnull ConfigurationContext context);
+    protected abstract boolean setupConfigurationFromCompatibleContext(
+        @Nonnull T configuration,
+        @Nonnull ConfigurationContext context,
+        @Nonnull Ref<PsiElement> sourceElement
+    );
 
-  protected boolean isContextCompatible(@Nonnull ConfigurationContext context) {
-    ConfigurationType type = getConfigurationType();
-    return context.isCompatibleWithOriginalRunConfiguration(type);
-  }
+    @Override
+    public final boolean isConfigurationFromContext(T configuration, ConfigurationContext context) {
+        if (configuration == null || context == null || !isContextCompatible(context)) {
+            return false;
+        }
+        return isConfigurationFromCompatibleContext(configuration, context);
+    }
+
+    protected abstract boolean isConfigurationFromCompatibleContext(@Nonnull T configuration, @Nonnull ConfigurationContext context);
+
+    protected boolean isContextCompatible(@Nonnull ConfigurationContext context) {
+        ConfigurationType type = getConfigurationType();
+        return context.isCompatibleWithOriginalRunConfiguration(type);
+    }
 }
