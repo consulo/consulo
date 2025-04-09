@@ -30,5 +30,5 @@ import consulo.application.util.function.Processor;
 public abstract class CustomUsageSearcher {
     public static final ExtensionPointName<CustomUsageSearcher> EP_NAME = ExtensionPointName.create(CustomUsageSearcher.class);
 
-    public abstract void processElementUsages(final PsiElement element, final Processor<Usage> processor, final FindUsagesOptions options);
+    public abstract void processElementUsages(PsiElement element, Processor<Usage> processor, FindUsagesOptions options);
 }

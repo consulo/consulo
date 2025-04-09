@@ -22,9 +22,9 @@ public abstract class DiffPreviewProvider {
     @Nonnull
     public static DiffContent[] getContents() {
         // Assuming that standalone IDE should provide one provider
-        //final List<DiffPreviewProvider> providers = EP_NAME.getExtensionList();
+        //List<DiffPreviewProvider> providers = EP_NAME.getExtensionList();
         //if (providers.size() != 0) {
-        //  return providers.get(0).createContents();
+        //    return providers.get(0).createContents();
         //}
         return createContent(LEFT_TEXT, CENTER_TEXT, RIGHT_TEXT, PlainTextFileType.INSTANCE);
     }
@@ -44,7 +44,6 @@ public abstract class DiffPreviewProvider {
         return DiffContentFactory.getInstance().create(text, fileType);
     }
 
-    @NonNls
     private static final String LEFT_TEXT = "class MyClass {\n" +
         "  int value;\n" +
         "\n" +
@@ -60,10 +59,20 @@ public abstract class DiffPreviewProvider {
         "}\n" +
         "\n" +
         "\n";
-    @NonNls
-    private static final String CENTER_TEXT =
-        "class MyClass {\n" + "  int value;\n" + "\n" + "  void foo() {\n" + "  }\n" + "\n" + "  void removedFromLeft() {}\n" + "\n" + "  void bar() {\n" + "\n" + "  }\n" + "}\n" + "\n" + "\n";
-    @NonNls
+    private static final String CENTER_TEXT = "class MyClass {\n" +
+        "  int value;\n" +
+        "\n" +
+        "  void foo() {\n" +
+        "  }\n" +
+        "\n" +
+        "  void removedFromLeft() {}\n" +
+        "\n" +
+        "  void bar() {\n" +
+        "\n" +
+        "  }\n" +
+        "}\n" +
+        "\n" +
+        "\n";
     private static final String RIGHT_TEXT = "class MyClass {\n" +
         "  long value;\n" +
         "\n" +

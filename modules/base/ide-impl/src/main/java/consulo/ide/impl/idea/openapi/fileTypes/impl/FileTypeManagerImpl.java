@@ -6,7 +6,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
@@ -24,22 +24,19 @@ import consulo.ide.impl.idea.openapi.fileTypes.UserFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.ConcurrentPackedBitsArray;
 import consulo.ide.impl.idea.util.containers.HashSetQueue;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
-import consulo.virtualFileSystem.fileType.FileTypeEvent;
-import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.dataholder.Key;
@@ -57,6 +54,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.fileType.*;
 import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
 import consulo.virtualFileSystem.internal.FileTypeAssocTable;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcherImpl;
 import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcherImpl;
 import jakarta.annotation.Nonnull;
@@ -64,7 +62,6 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.*;
@@ -109,18 +106,12 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     private final Map<FileNameMatcher, String> myUnresolvedMappings = new HashMap<>();
     private final RemovedMappingTracker myRemovedMappingTracker = new RemovedMappingTracker();
 
-    @NonNls
     private static final String ELEMENT_FILETYPE = "filetype";
-    @NonNls
     private static final String ELEMENT_IGNORE_FILES = "ignoreFiles";
-    @NonNls
     private static final String ATTRIBUTE_LIST = "list";
 
-    @NonNls
     private static final String ATTRIBUTE_VERSION = "version";
-    @NonNls
     private static final String ATTRIBUTE_NAME = "name";
-    @NonNls
     private static final String ATTRIBUTE_DESCRIPTION = "description";
 
     private static class StandardFileType {
@@ -224,12 +215,15 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
             @Override
             public void onSchemeDeleted(@Nonnull AbstractFileType scheme) {
-                GuiUtils.invokeLaterIfNeeded(() -> {
-                    Application app = Application.get();
-                    app.runWriteAction(() -> fireBeforeFileTypesChanged());
-                    myPatternsTable.removeAllAssociations(scheme);
-                    app.runWriteAction(() -> fireFileTypesChanged(null, scheme));
-                }, IdeaModalityState.nonModal());
+                GuiUtils.invokeLaterIfNeeded(
+                    () -> {
+                        Application app = Application.get();
+                        app.runWriteAction(() -> fireBeforeFileTypesChanged());
+                        myPatternsTable.removeAllAssociations(scheme);
+                        app.runWriteAction(() -> fireFileTypesChanged(null, scheme));
+                    },
+                    ModalityStateImpl.NON_MODAL
+                );
             }
 
             @Nonnull
@@ -303,17 +297,17 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
             }
 
             @Override
-            public void consume(@Nonnull final FileType fileType, String extensions) {
+            public void consume(@Nonnull FileType fileType, String extensions) {
                 register(fileType, parse(extensions));
             }
 
             @Override
-            public void consume(@Nonnull final FileType fileType, @Nonnull final FileNameMatcher... matchers) {
+            public void consume(@Nonnull FileType fileType, @Nonnull FileNameMatcher... matchers) {
                 register(fileType, new ArrayList<>(Arrays.asList(matchers)));
             }
 
             private void register(@Nonnull FileType fileType, @Nonnull List<FileNameMatcher> fileNameMatchers) {
-                final StandardFileType type = myStandardFileTypes.get(fileType.getId());
+                StandardFileType type = myStandardFileTypes.get(fileType.getId());
                 if (type != null) {
                     type.matchers.addAll(fileNameMatchers);
                 }
@@ -515,7 +509,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
     @Override
     @Nonnull
-    public FileType getStdFileType(@Nonnull @NonNls String name) {
+    public FileType getStdFileType(@Nonnull String name) {
         StandardFileType stdFileType;
         synchronized (PENDING_INIT_LOCK) {
             stdFileType = myStandardFileTypes.get(name);
@@ -669,13 +663,9 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
             if (autoDetectWasRun) {
                 FileType type = textOrBinaryFromCachedFlags(flags);
                 if (toLog()) {
-                    log("F: getOrDetectFromContent(" +
-                        file.getName() +
-                        "):" +
-                        " cached type = " +
-                        (type == null ? null : type.getName()) +
-                        "; packedFlags.get(id):" +
-                        readableFlags(flags) +
+                    log("F: getOrDetectFromContent(" + file.getName() + "):" +
+                        " cached type = " + (type == null ? null : type.getName()) +
+                        "; packedFlags.get(id):" + readableFlags(flags) +
                         "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " +
                         file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
                 }
@@ -686,7 +676,10 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }
         FileType fileType = file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY);
         if (toLog()) {
-            log("F: getOrDetectFromContent(" + file.getName() + "): " + "getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY) = " + (fileType == null ? null : fileType.getName()));
+            log(
+                "F: getOrDetectFromContent(" + file.getName() + "): " +
+                    "getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY) = " + (fileType == null ? null : fileType.getName())
+            );
         }
         if (fileType == null) {
             // run autodetection
@@ -830,7 +823,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         return type;
     }
 
-    private static boolean isDetectable(@Nonnull final VirtualFile file) {
+    private static boolean isDetectable(@Nonnull VirtualFile file) {
         return !(file.isDirectory() || !file.isValid() || file.is(VFileProperty.SPECIAL)
             || file.getLength() == 0) && file.getFileSystem() instanceof FileSystemInterface;
     }
@@ -852,7 +845,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
 
     @Nonnull
-    private FileType detectFromContentAndCache(@Nonnull final VirtualFile file, @Nullable byte[] content) throws IOException {
+    private FileType detectFromContentAndCache(@Nonnull VirtualFile file, @Nullable byte[] content) throws IOException {
         long start = System.currentTimeMillis();
         FileType fileType = detectFromContent(file, content, FileTypeDetector.EP_NAME.getExtensionList());
 
@@ -1219,14 +1212,14 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
     @Override
     public void addFileTypeListener(@Nonnull FileTypeListener listener) {
-        final MessageBusConnection connection = myMessageBus.connect();
+        MessageBusConnection connection = myMessageBus.connect();
         connection.subscribe(FileTypeListener.class, listener);
         myAdapters.put(listener, connection);
     }
 
     @Override
     public void removeFileTypeListener(@Nonnull FileTypeListener listener) {
-        final MessageBusConnection connection = myAdapters.remove(listener);
+        MessageBusConnection connection = myAdapters.remove(listener);
         if (connection != null) {
             connection.disconnect();
         }
@@ -1307,12 +1300,12 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }
     }
 
-    private void unignoreMask(@Nonnull final String maskToRemove) {
-        final Set<String> masks = new LinkedHashSet<>(myIgnoredPatterns.getIgnoreMasks());
+    private void unignoreMask(@Nonnull String maskToRemove) {
+        Set<String> masks = new LinkedHashSet<>(myIgnoredPatterns.getIgnoreMasks());
         masks.remove(maskToRemove);
 
         myIgnoredPatterns.clearPatterns();
-        for (final String each : masks) {
+        for (String each : masks) {
             myIgnoredPatterns.addIgnoreMask(each);
         }
     }

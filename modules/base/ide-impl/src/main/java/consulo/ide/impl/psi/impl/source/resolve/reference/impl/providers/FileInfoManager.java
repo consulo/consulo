@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.disposer.Disposable;
-import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ide.ServiceManager;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.psi.file.FileLookupInfoProvider;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.file.FileLookupInfoProvider;
 import consulo.ui.image.Image;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,8 +50,8 @@ public class FileInfoManager implements Disposable {
 
     @Inject
     public FileInfoManager(@Nonnull Application application) {
-        for (final FileLookupInfoProvider provider : FileLookupInfoProvider.EP_NAME.getExtensionList(application)) {
-            final FileType[] types = provider.getFileTypes();
+        for (FileLookupInfoProvider provider : FileLookupInfoProvider.EP_NAME.getExtensionList(application)) {
+            FileType[] types = provider.getFileTypes();
             for (FileType type : types) {
                 myFileType2InfoProvider.put(type, provider);
             }
@@ -62,12 +62,13 @@ public class FileInfoManager implements Disposable {
         return ServiceManager.getService(FileInfoManager.class);
     }
 
+    @RequiredReadAction
     public static Object getFileLookupItem(PsiElement psiElement) {
         if (!(psiElement instanceof PsiFile) || !(psiElement.isPhysical())) {
             return psiElement;
         }
 
-        final PsiFile file = (PsiFile)psiElement;
+        PsiFile file = (PsiFile)psiElement;
         return getFileInfoManager()._getLookupItem(file, file.getName(), IconDescriptorUpdaters.getIcon(file, 0));
     }
 
@@ -82,12 +83,12 @@ public class FileInfoManager implements Disposable {
             return null;
         }
 
-        final PsiFile psiFile = (PsiFile)psiElement;
-        final FileLookupInfoProvider provider = myFileType2InfoProvider.get(psiFile.getFileType());
+        PsiFile psiFile = (PsiFile)psiElement;
+        FileLookupInfoProvider provider = myFileType2InfoProvider.get(psiFile.getFileType());
         if (provider != null) {
-            final VirtualFile virtualFile = psiFile.getVirtualFile();
+            VirtualFile virtualFile = psiFile.getVirtualFile();
             if (virtualFile != null) {
-                final Pair<String, String> info = provider.getLookupInfo(virtualFile, psiElement.getProject());
+                Pair<String, String> info = provider.getLookupInfo(virtualFile, psiElement.getProject());
                 return info == null ? null : info.second;
             }
         }
@@ -103,10 +104,10 @@ public class FileInfoManager implements Disposable {
         return getFileInfoManager()._getLookupItem((PsiFile)psiElement, encoded, icon);
     }
 
-    public LookupElementBuilder _getLookupItem(@Nonnull final PsiFile file, String name, Image icon) {
+    public LookupElementBuilder _getLookupItem(@Nonnull PsiFile file, String name, Image icon) {
         LookupElementBuilder builder = LookupElementBuilder.create(file, name).withIcon(icon);
 
-        final String info = _getInfo(file);
+        String info = _getInfo(file);
         if (info != null) {
             return builder.withTailText(String.format(" (%s)", info), true);
         }

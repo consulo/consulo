@@ -1,20 +1,20 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.application.AllIcons;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.PowerSaveMode;
 import consulo.application.ReadAction;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.EditorKind;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.compiler.ProblemsView;
 import consulo.component.ProcessCanceledException;
 import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.diff.DiffUserDataKeys;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
@@ -43,12 +43,13 @@ import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
@@ -86,7 +87,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     String statusLabel;
     String statusExtraLine;
     boolean passStatusesVisible;
-    final Map<ProgressableTextEditorHighlightingPass, Pair<JProgressBar, JLabel>> passes = new LinkedHashMap<>();
+    Map<ProgressableTextEditorHighlightingPass, Pair<JProgressBar, JLabel>> passes = new LinkedHashMap<>();
     static final int MAX = 100;
     boolean progressBarsEnabled;
     Boolean progressBarsCompleted;
@@ -115,7 +116,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
 
         refresh(null);
 
-        final MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
+        MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
         model.addMarkupModelListener(this, new MarkupModelListener() {
             @Override
             public void afterAdded(@Nonnull RangeHighlighter highlighter) {
@@ -164,7 +165,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         if (infoSeverity.myVal <= HighlightSeverity.INFORMATION.myVal) {
             return;
         }
-        final int severityIdx = mySeverityRegistrar.getSeverityIdx(infoSeverity);
+        int severityIdx = mySeverityRegistrar.getSeverityIdx(infoSeverity);
         if (severityIdx != -1) {
             errorCount[severityIdx] += delta;
         }
@@ -230,7 +231,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                 status.errorAnalyzingFinished = true;
                 return status;
             }
-            final FileType fileType = psiFile.getFileType();
+            FileType fileType = psiFile.getFileType();
             if (fileType.isBinary()) {
                 status.reasonWhyDisabled = DaemonLocalize.processTitleFileIsBinary().get();
                 status.errorAnalyzingFinished = true;
@@ -314,7 +315,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         if (PowerSaveMode.isEnabled() || status.reasonWhySuspended != null || status.reasonWhyDisabled != null || status.errorAnalyzingFinished) {
             return icon;
         }
-        return AllIcons.General.InspectionsEye;
+        return PlatformIconGroup.generalInspectionseye();
     }
 
     // return true if panel needs to be rebuilt
@@ -336,7 +337,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         if (PowerSaveMode.isEnabled()) {
             statusLabel = DaemonLocalize.labelCodeAnalysisIsDisabledInPowerSaveMode().get();
             status.errorAnalyzingFinished = true;
-            icon = AllIcons.General.InspectionsPowerSaveMode;
+            icon = PlatformIconGroup.generalInspectionspowersavemode();
             return result;
         }
         if (status.reasonWhyDisabled != null) {
@@ -344,7 +345,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             statusExtraLine = "(" + status.reasonWhyDisabled + ")";
             passStatusesVisible = true;
             progressBarsCompleted = Boolean.FALSE;
-            icon = AllIcons.General.InspectionsTrafficOff;
+            icon = PlatformIconGroup.generalInspectionstrafficoff();
             return result;
         }
         if (status.reasonWhySuspended != null) {
@@ -352,12 +353,14 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             statusExtraLine = "(" + status.reasonWhySuspended + ")";
             passStatusesVisible = true;
             progressBarsCompleted = Boolean.FALSE;
-            icon = AllIcons.General.InspectionsPause;
+            icon = PlatformIconGroup.generalInspectionspause();
             return result;
         }
 
         int lastNotNullIndex = ArrayUtil.lastIndexOfNot(status.errorCount, 0);
-        Image icon = lastNotNullIndex == -1 ? AllIcons.General.InspectionsOK : mySeverityRegistrar.getRendererIconByIndex(lastNotNullIndex);
+        Image icon = lastNotNullIndex == -1
+            ? PlatformIconGroup.generalInspectionsok()
+            : mySeverityRegistrar.getRendererIconByIndex(lastNotNullIndex);
 
         if (status.errorAnalyzingFinished) {
             boolean isDumb = DumbService.isDumb(myProject);
@@ -382,7 +385,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         for (int i = lastNotNullIndex; i >= 0; i--) {
             int count = status.errorCount[i];
             if (count > 0) {
-                final HighlightSeverity severity = mySeverityRegistrar.getSeverityByIndex(i);
+                HighlightSeverity severity = mySeverityRegistrar.getSeverityByIndex(i);
                 String name = count > 1
                     ? StringUtil.pluralize(StringUtil.toLowerCase(severity.getName()))
                     : StringUtil.toLowerCase(severity.getName());
@@ -424,7 +427,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     public AnalyzerStatus getStatus(@Nonnull Editor editor) {
         if (PowerSaveMode.isEnabled()) {
             return new AnalyzerStatus(
-                AllIcons.General.InspectionsPowerSaveMode,
+                PlatformIconGroup.generalInspectionspowersavemode(),
                 "Code analysis is disabled in power save mode",
                 "",
                 () -> createUIController(editor)
@@ -469,7 +472,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
 
             if (!statusItems.isEmpty()) {
                 if (mainIcon == null) {
-                    mainIcon = AllIcons.General.InspectionsOK;
+                    mainIcon = PlatformIconGroup.generalInspectionsok();
                 }
                 AnalyzerStatus result = new AnalyzerStatus(mainIcon, title, "", () -> createUIController(editor)).
                     withNavigation().
@@ -484,7 +487,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             }
             if (StringUtil.isNotEmpty(status.reasonWhyDisabled)) {
                 return new AnalyzerStatus(
-                    AllIcons.General.InspectionsTrafficOff,
+                    PlatformIconGroup.generalInspectionstrafficoff(),
                     DaemonLocalize.noAnalysisPerformed().get(),
                     status.reasonWhyDisabled,
                     () -> createUIController(editor)
@@ -492,7 +495,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             }
             if (StringUtil.isNotEmpty(status.reasonWhySuspended)) {
                 return new AnalyzerStatus(
-                    AllIcons.General.InspectionsPause,
+                    PlatformIconGroup.generalInspectionspause(),
                     DaemonLocalize.analysisSuspended().get(),
                     status.reasonWhySuspended,
                     () -> createUIController(editor)
@@ -503,21 +506,21 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             if (status.errorAnalyzingFinished) {
                 return isDumb
                     ? new AnalyzerStatus(
-                    AllIcons.General.InspectionsPause,
-                    title,
-                    details,
-                    () -> createUIController(editor)
-                ).withTextStatus(DaemonLocalize.heavyprocessTypeIndexing().get())
+                        PlatformIconGroup.generalInspectionspause(),
+                        title,
+                        details,
+                        () -> createUIController(editor)
+                    ).withTextStatus(DaemonLocalize.heavyprocessTypeIndexing().get())
                     : new AnalyzerStatus(
-                    AllIcons.General.InspectionsOK,
-                    DaemonLocalize.noErrorsOrWarningsFound().get(),
-                    details,
-                    () -> createUIController(editor)
-                );
+                        PlatformIconGroup.generalInspectionsok(),
+                        DaemonLocalize.noErrorsOrWarningsFound().get(),
+                        details,
+                        () -> createUIController(editor)
+                    );
             }
 
             //noinspection ConstantConditions
-            return new AnalyzerStatus(AllIcons.General.InspectionsEye, title, details, () -> createUIController(editor))
+            return new AnalyzerStatus(PlatformIconGroup.generalInspectionseye(), title, details, () -> createUIController(editor))
                 .withTextStatus(DaemonLocalize.iwStatusAnalyzing().get())
                 .withAnalyzingType(AnalyzingType.EMPTY)
                 .withPasses(ContainerUtil.map(
@@ -612,11 +615,12 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         public void fillHectorPanels(@Nonnull Container container, @Nonnull GridBag gc) {
             PsiFile psiFile = getPsiFile();
             if (psiFile != null) {
                 myAdditionalPanels = HectorComponentPanelsProvider.EP_NAME.getExtensionList(getProject()).stream()
-                    .map(hp -> hp.createConfigurable(psiFile)).filter(p -> p != null)
+                    .map(hp -> hp.createConfigurable(psiFile)).filter(Objects::nonNull)
                     .collect(Collectors.toList());
 
                 for (HectorComponentPanel p : myAdditionalPanels) {
@@ -645,9 +649,13 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             if (myAdditionalPanels.isEmpty()) {
                 return true;
             }
-            if (myAdditionalPanels.stream().allMatch(p -> p.canClose())) {
-                PsiFile psiFile = getPsiFile();
-                if (myAdditionalPanels.stream().filter(p -> p.isModified()).peek(TrafficLightRenderer::applyPanel).count() > 0) {
+            if (myAdditionalPanels.stream().allMatch(HectorComponentPanel::canClose)) {
+                long count = myAdditionalPanels.stream()
+                    .filter(UnnamedConfigurable::isModified)
+                    .peek(TrafficLightRenderer::applyPanel)
+                    .count();
+                if (count > 0) {
+                    PsiFile psiFile = getPsiFile();
                     if (psiFile != null) {
                         InjectedLanguageManager.getInstance(getProject()).dropFileCaches(psiFile);
                     }
@@ -660,7 +668,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
 
         @Override
         public void onClosePopup() {
-            myAdditionalPanels.forEach(p -> p.disposeUIResources());
+            myAdditionalPanels.forEach(UnnamedConfigurable::disposeUIResources);
             myAdditionalPanels = Collections.emptyList();
         }
 
@@ -670,6 +678,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         }
     }
 
+    @RequiredUIAccess
     private static void applyPanel(@Nonnull HectorComponentPanel panel) {
         try {
             panel.apply();
@@ -702,7 +711,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             result.add(DaemonEditorPopup.createGotoGroup());
 
             result.add(AnSeparator.create());
-            result.add(new ToggleAction(EditorBundle.message("iw.show.import.tooltip")) {
+            result.add(new ToggleAction(CodeEditorLocalize.iwShowImportTooltip()) {
                 @Override
                 public boolean isSelected(@Nonnull AnActionEvent e) {
                     PsiFile psiFile = getPsiFile();
@@ -710,6 +719,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                 }
 
                 @Override
+                @RequiredUIAccess
                 public void setSelected(@Nonnull AnActionEvent e, boolean state) {
                     PsiFile psiFile = getPsiFile();
                     if (psiFile != null) {
@@ -718,6 +728,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                 }
 
                 @Override
+                @RequiredUIAccess
                 public void update(@Nonnull AnActionEvent e) {
                     super.update(e);
                     e.getPresentation().setEnabled(myDaemonCodeAnalyzer.isAutohintsAvailable(getPsiFile()));

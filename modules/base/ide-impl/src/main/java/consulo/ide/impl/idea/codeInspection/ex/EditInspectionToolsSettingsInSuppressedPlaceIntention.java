@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
@@ -29,6 +30,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -52,12 +54,13 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
     }
 
     @Nullable
+    @RequiredReadAction
     private static String getSuppressedId(Editor editor, PsiFile file) {
         int offset = editor.getCaretModel().getOffset();
         PsiElement element = file.findElementAt(offset);
         while (element != null && !(element instanceof PsiFile)) {
             for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
-                final String suppressedIds = factory.getSuppressedInspectionIdsIn(element);
+                String suppressedIds = factory.getSuppressedInspectionIdsIn(element);
                 if (suppressedIds != null) {
                     String text = element.getText();
                     List<String> ids = StringUtil.split(suppressedIds, ",");
@@ -79,6 +82,7 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
     }
 
     @Override
+    @RequiredReadAction
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
         myId = getSuppressedId(editor, file);
         if (myId != null) {
@@ -92,20 +96,21 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
     }
 
     @Nullable
-    private InspectionToolWrapper getTool(final Project project, final PsiFile file) {
-        final InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(project);
-        final InspectionProfileImpl inspectionProfile = (InspectionProfileImpl)projectProfileManager.getInspectionProfile();
+    private InspectionToolWrapper getTool(Project project, PsiFile file) {
+        InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(project);
+        InspectionProfileImpl inspectionProfile = (InspectionProfileImpl)projectProfileManager.getInspectionProfile();
         return inspectionProfile.getToolById(myId, file);
     }
 
     @Override
+    @RequiredUIAccess
     public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         InspectionToolWrapper toolWrapper = getTool(project, file);
         if (toolWrapper == null) {
             return;
         }
-        final InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(project);
-        final InspectionProfileImpl inspectionProfile = (InspectionProfileImpl)projectProfileManager.getInspectionProfile();
+        InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(project);
+        InspectionProfileImpl inspectionProfile = (InspectionProfileImpl)projectProfileManager.getInspectionProfile();
         EditInspectionToolsSettingsAction.editToolSettings(project, inspectionProfile, false, toolWrapper.getShortName());
     }
 

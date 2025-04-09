@@ -53,25 +53,25 @@ public class FileReferenceHelperRegistrar {
      * @deprecated this method is broken, please avoid using it, use getHelpers() instead
      */
     @Deprecated
-    public static <T extends PsiFileSystemItem> FileReferenceHelper getHelper(@Nonnull final T psiFileSystemItem) {
-        final VirtualFile file = psiFileSystemItem.getVirtualFile();
+    public static <T extends PsiFileSystemItem> FileReferenceHelper getHelper(@Nonnull T psiFileSystemItem) {
+        VirtualFile file = psiFileSystemItem.getVirtualFile();
         if (file == null) {
             return null;
         }
-        final Project project = psiFileSystemItem.getProject();
+        Project project = psiFileSystemItem.getProject();
         return ContainerUtil.find(getHelpers(), fileReferenceHelper -> fileReferenceHelper.isMine(project, file));
     }
 
-    public static <T extends PsiFileSystemItem> List<FileReferenceHelper> getHelpers(@Nonnull final T psiFileSystemItem) {
-        final VirtualFile file = psiFileSystemItem.getVirtualFile();
+    public static <T extends PsiFileSystemItem> List<FileReferenceHelper> getHelpers(@Nonnull T psiFileSystemItem) {
+        VirtualFile file = psiFileSystemItem.getVirtualFile();
         if (file == null) {
             return null;
         }
-        final Project project = psiFileSystemItem.getProject();
+        Project project = psiFileSystemItem.getProject();
         return ContainerUtil.findAll(getHelpers(), fileReferenceHelper -> fileReferenceHelper.isMine(project, file));
     }
 
-    public static boolean areElementsEquivalent(@Nonnull final PsiFileSystemItem element1, @Nonnull final PsiFileSystemItem element2) {
+    public static boolean areElementsEquivalent(@Nonnull PsiFileSystemItem element1, @Nonnull PsiFileSystemItem element2) {
         return element2.getManager().areElementsEquivalent(element1, element2);
     }
 }

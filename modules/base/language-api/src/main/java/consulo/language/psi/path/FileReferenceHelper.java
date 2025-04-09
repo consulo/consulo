@@ -15,6 +15,7 @@
  */
 package consulo.language.psi.path;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
@@ -49,17 +50,19 @@ public abstract class FileReferenceHelper {
     //}
 
     @Nullable
-    public PsiFileSystemItem getPsiFileSystemItem(final Project project, @Nonnull final VirtualFile file) {
-        final PsiManager psiManager = PsiManager.getInstance(project);
+    @RequiredReadAction
+    public PsiFileSystemItem getPsiFileSystemItem(Project project, @Nonnull VirtualFile file) {
+        PsiManager psiManager = PsiManager.getInstance(project);
         return getPsiFileSystemItem(psiManager, file);
     }
 
+    @RequiredReadAction
     public static PsiFileSystemItem getPsiFileSystemItem(PsiManager psiManager, VirtualFile file) {
         return file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
     }
 
     @Nullable
-    public PsiFileSystemItem findRoot(final Project project, @Nonnull final VirtualFile file) {
+    public PsiFileSystemItem findRoot(Project project, @Nonnull VirtualFile file) {
         return null;
     }
 
@@ -69,9 +72,9 @@ public abstract class FileReferenceHelper {
     }
 
     @Nonnull
-    public abstract Collection<PsiFileSystemItem> getContexts(final Project project, @Nonnull final VirtualFile file);
+    public abstract Collection<PsiFileSystemItem> getContexts(Project project, @Nonnull VirtualFile file);
 
-    public abstract boolean isMine(final Project project, @Nonnull final VirtualFile file);
+    public abstract boolean isMine(Project project, @Nonnull VirtualFile file);
 
     public boolean isFallback() {
         return false;

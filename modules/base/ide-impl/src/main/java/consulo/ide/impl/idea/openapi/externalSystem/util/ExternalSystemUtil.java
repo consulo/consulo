@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.externalSystem.util;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
@@ -62,14 +61,13 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStruc
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ModuleDataService;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager;
 import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
-import consulo.project.ui.internal.ToolWindowManagerEx;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.project.Project;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -94,18 +92,17 @@ import java.util.function.Consumer;
 
 /**
  * @author Denis Zhdanov
- * @since 4/22/13 9:36 AM
+ * @since 2013-04-22
  */
 public class ExternalSystemUtil {
-
     private static final Logger LOG = Logger.getInstance(ExternalSystemUtil.class);
 
     private ExternalSystemUtil() {
     }
 
     @Nullable
-    public static VirtualFile refreshAndFindFileByIoFile(@Nonnull final File file) {
-        final Application app = Application.get();
+    public static VirtualFile refreshAndFindFileByIoFile(@Nonnull File file) {
+        Application app = Application.get();
         if (!app.isDispatchThread()) {
             assert !((ApplicationEx)app).holdsReadLock();
         }
@@ -113,6 +110,7 @@ public class ExternalSystemUtil {
     }
 
     @Nullable
+    @RequiredUIAccess
     public static VirtualFile findLocalFileByPath(String path) {
         VirtualFile result = StandardFileSystems.local().findFileByPath(path);
         if (result != null) {
@@ -125,12 +123,13 @@ public class ExternalSystemUtil {
     }
 
     @Nullable
-    private static VirtualFile findLocalFileByPathUnderWriteAction(final String path) {
+    @RequiredUIAccess
+    private static VirtualFile findLocalFileByPathUnderWriteAction(String path) {
         return ExternalSystemApiUtil.doWriteAction(() -> StandardFileSystems.local().refreshAndFindFileByPath(path));
     }
 
     @Nullable
-    private static VirtualFile findLocalFileByPathUnderReadAction(final String path) {
+    private static VirtualFile findLocalFileByPathUnderReadAction(String path) {
         return ReadAction.compute(() -> StandardFileSystems.local().findFileByPath(path));
     }
 
@@ -181,7 +180,7 @@ public class ExternalSystemUtil {
      * @deprecated use {@link  ExternalSystemUtil#refreshProjects(consulo.ide.impl.idea.openapi.externalSystem.importing.ImportSpecBuilder)}
      */
     @Deprecated
-    public static void refreshProjects(@Nonnull final Project project, @Nonnull final ProjectSystemId externalSystemId, boolean force) {
+    public static void refreshProjects(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId, boolean force) {
         refreshProjects(project, externalSystemId, force, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
     }
 
@@ -197,10 +196,10 @@ public class ExternalSystemUtil {
      */
     @Deprecated
     public static void refreshProjects(
-        @Nonnull final Project project,
-        @Nonnull final ProjectSystemId externalSystemId,
+        @Nonnull Project project,
+        @Nonnull ProjectSystemId externalSystemId,
         boolean force,
-        @Nonnull final ProgressExecutionMode progressExecutionMode
+        @Nonnull ProgressExecutionMode progressExecutionMode
     ) {
         refreshProjects(new ImportSpecBuilder(project, externalSystemId).forceWhenUptodate(force).use(progressExecutionMode));
     }
@@ -210,7 +209,7 @@ public class ExternalSystemUtil {
      *
      * @param specBuilder import specification builder
      */
-    public static void refreshProjects(@Nonnull final ImportSpecBuilder specBuilder) {
+    public static void refreshProjects(@Nonnull ImportSpecBuilder specBuilder) {
         ImportSpec spec = specBuilder.build();
 
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(spec.getExternalSystemId());
@@ -218,13 +217,13 @@ public class ExternalSystemUtil {
             return;
         }
         AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(spec.getProject());
-        final Collection<? extends ExternalProjectSettings> projectsSettings = settings.getLinkedProjectsSettings();
+        Collection<? extends ExternalProjectSettings> projectsSettings = settings.getLinkedProjectsSettings();
         if (projectsSettings.isEmpty()) {
             return;
         }
 
-        final ProjectDataManager projectDataManager = ServiceManager.getService(ProjectDataManager.class);
-        final int[] counter = new int[1];
+        ProjectDataManager projectDataManager = ServiceManager.getService(ProjectDataManager.class);
+        int[] counter = new int[1];
 
         ExternalProjectRefreshCallback callback =
             new MyMultiExternalProjectRefreshCallback(spec.getProject(), projectDataManager, counter, spec.getExternalSystemId());
@@ -291,20 +290,20 @@ public class ExternalSystemUtil {
      * @param externalSystemId id of the external system which project has been un-linked from ide project
      */
     public static void ruleOrphanModules(
-        @Nonnull final List<Module> orphanModules,
-        @Nonnull final Project project,
-        @Nonnull final ProjectSystemId externalSystemId
+        @Nonnull List<Module> orphanModules,
+        @Nonnull Project project,
+        @Nonnull ProjectSystemId externalSystemId
     ) {
         UIUtil.invokeLaterIfNeeded(() -> {
-            final JPanel content = new JPanel(new GridBagLayout());
+            JPanel content = new JPanel(new GridBagLayout());
             content.add(
                 new JLabel(ExternalSystemLocalize.orphanModulesText(externalSystemId.getReadableName()).get()),
                 ExternalSystemUiUtil.getFillLineConstraints(0)
             );
 
-            final CheckBoxList<Module> orphanModulesList = new CheckBoxList<>();
+            CheckBoxList<Module> orphanModulesList = new CheckBoxList<>();
             orphanModulesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            orphanModulesList.setItems(orphanModules, module -> module.getName());
+            orphanModulesList.setItems(orphanModules, Module::getName);
             for (Module module : orphanModules) {
                 orphanModulesList.setItemSelected(module, true);
             }
@@ -347,10 +346,10 @@ public class ExternalSystemUtil {
         });
     }
 
-    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Nullable
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     private static String extractDetails(@Nonnull Throwable e) {
-        final Throwable unwrapped = RemoteUtil.unwrap(e);
+        Throwable unwrapped = RemoteUtil.unwrap(e);
         if (unwrapped instanceof ExternalSystemException externalSystemException) {
             return externalSystemException.getOriginalReason();
         }
@@ -369,12 +368,12 @@ public class ExternalSystemUtil {
      * @return the most up-to-date gradle project (if any)
      */
     public static void refreshProject(
-        @Nonnull final Project project,
-        @Nonnull final ProjectSystemId externalSystemId,
-        @Nonnull final String externalProjectPath,
-        @Nonnull final ExternalProjectRefreshCallback callback,
-        final boolean isPreviewMode,
-        @Nonnull final ProgressExecutionMode progressExecutionMode
+        @Nonnull Project project,
+        @Nonnull ProjectSystemId externalSystemId,
+        @Nonnull String externalProjectPath,
+        @Nonnull ExternalProjectRefreshCallback callback,
+        boolean isPreviewMode,
+        @Nonnull ProgressExecutionMode progressExecutionMode
     ) {
         refreshProject(project, externalSystemId, externalProjectPath, callback, isPreviewMode, progressExecutionMode, true);
     }
@@ -392,23 +391,23 @@ public class ExternalSystemUtil {
      * @return the most up-to-date gradle project (if any)
      */
     public static void refreshProject(
-        @Nonnull final Project project,
-        @Nonnull final ProjectSystemId externalSystemId,
-        @Nonnull final String externalProjectPath,
-        @Nonnull final ExternalProjectRefreshCallback callback,
-        final boolean isPreviewMode,
-        @Nonnull final ProgressExecutionMode progressExecutionMode,
-        final boolean reportRefreshError
+        @Nonnull Project project,
+        @Nonnull ProjectSystemId externalSystemId,
+        @Nonnull String externalProjectPath,
+        @Nonnull ExternalProjectRefreshCallback callback,
+        boolean isPreviewMode,
+        @Nonnull ProgressExecutionMode progressExecutionMode,
+        boolean reportRefreshError
     ) {
         File projectFile = new File(externalProjectPath);
-        final String projectName;
+        String projectName;
         if (projectFile.isFile()) {
             projectName = projectFile.getParentFile().getName();
         }
         else {
             projectName = projectFile.getName();
         }
-        final ExternalSystemApiUtil.TaskUnderProgress refreshProjectStructureTask = indicator -> {
+        ExternalSystemApiUtil.TaskUnderProgress refreshProjectStructureTask = indicator -> {
             if (project.isDisposed()) {
                 return;
             }
@@ -432,7 +431,7 @@ public class ExternalSystemUtil {
                 return;
             }
 
-            final Throwable error = task.getError();
+            Throwable error = task.getError();
             if (error == null) {
                 ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
                 assert manager != null;
@@ -494,7 +493,7 @@ public class ExternalSystemUtil {
         };
 
         UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
-            final LocalizeValue title;
+            LocalizeValue title;
             switch (progressExecutionMode) {
                 case MODAL_SYNC:
                     title = ExternalSystemLocalize.progressImportText(projectName, externalSystemId.getReadableName());
@@ -526,6 +525,7 @@ public class ExternalSystemUtil {
         });
     }
 
+    @RequiredUIAccess
     public static void runTask(
         @Nonnull ExternalSystemTaskExecutionSettings taskSettings,
         @Nonnull String executorId,
@@ -535,13 +535,14 @@ public class ExternalSystemUtil {
         runTask(taskSettings, executorId, project, externalSystemId, null, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
     }
 
+    @RequiredUIAccess
     public static void runTask(
-        @Nonnull final ExternalSystemTaskExecutionSettings taskSettings,
-        @Nonnull final String executorId,
-        @Nonnull final Project project,
-        @Nonnull final ProjectSystemId externalSystemId,
-        @Nullable final TaskCallback callback,
-        @Nonnull final ProgressExecutionMode progressExecutionMode
+        @Nonnull ExternalSystemTaskExecutionSettings taskSettings,
+        @Nonnull String executorId,
+        @Nonnull Project project,
+        @Nonnull ProjectSystemId externalSystemId,
+        @Nullable TaskCallback callback,
+        @Nonnull ProgressExecutionMode progressExecutionMode
     ) {
         ExternalSystemApiUtil.runTask(taskSettings, executorId, project, externalSystemId, callback, progressExecutionMode);
     }
@@ -651,17 +652,18 @@ public class ExternalSystemUtil {
      */
     @SuppressWarnings("UnusedDeclaration")
     public static void linkExternalProject(
-        @Nonnull final ProjectSystemId externalSystemId,
-        @Nonnull final ExternalProjectSettings projectSettings,
-        @Nonnull final Project project,
-        @Nullable final Consumer<Boolean> executionResultCallback,
+        @Nonnull ProjectSystemId externalSystemId,
+        @Nonnull ExternalProjectSettings projectSettings,
+        @Nonnull Project project,
+        @Nullable Consumer<Boolean> executionResultCallback,
         boolean isPreviewMode,
-        @Nonnull final ProgressExecutionMode progressExecutionMode
+        @Nonnull ProgressExecutionMode progressExecutionMode
     ) {
         ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
-            @SuppressWarnings("unchecked")
             @Override
-            public void onSuccess(@Nullable final DataNode<ProjectData> externalProject) {
+            @RequiredUIAccess
+            @SuppressWarnings("unchecked")
+            public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
                 if (externalProject == null) {
                     if (executionResultCallback != null) {
                         executionResultCallback.accept(false);
@@ -670,7 +672,7 @@ public class ExternalSystemUtil {
                 }
                 AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, externalSystemId);
                 Set<ExternalProjectSettings> projects =
-                    ContainerUtilRt.<ExternalProjectSettings>newHashSet(systemSettings.getLinkedProjectsSettings());
+                    new HashSet<>(systemSettings.getLinkedProjectsSettings());
                 projects.add(projectSettings);
                 systemSettings.setLinkedProjectsSettings(projects);
                 ensureToolWindowInitialized(project, externalSystemId);
@@ -700,13 +702,14 @@ public class ExternalSystemUtil {
     }
 
     @Nullable
-    public static VirtualFile waitForTheFile(@Nullable final String path) {
+    @RequiredUIAccess
+    public static VirtualFile waitForTheFile(@Nullable String path) {
         if (path == null) {
             return null;
         }
 
-        final VirtualFile[] file = new VirtualFile[1];
-        final Application app = Application.get();
+        VirtualFile[] file = new VirtualFile[1];
+        Application app = Application.get();
         Runnable action = () -> app.runWriteAction(() -> {
             file[0] = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
         });
@@ -714,7 +717,7 @@ public class ExternalSystemUtil {
             action.run();
         }
         else {
-            app.invokeAndWait(action, IdeaModalityState.defaultModalityState());
+            app.invokeAndWait(action, app.getDefaultModalityState());
         }
         return file[0];
     }
@@ -741,7 +744,8 @@ public class ExternalSystemUtil {
         }
 
         @Override
-        public void onSuccess(@Nullable final DataNode<ProjectData> externalProject) {
+        @RequiredUIAccess
+        public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
             if (externalProject == null) {
                 return;
             }

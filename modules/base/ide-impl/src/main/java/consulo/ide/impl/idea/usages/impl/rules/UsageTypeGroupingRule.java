@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.usages.impl.rules;
 
-import consulo.virtualFileSystem.status.FileStatus;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.usage.rule.PsiElementUsage;
-import consulo.usage.rule.SingleParentUsageGroupingRule;
 import consulo.ui.image.Image;
 import consulo.usage.*;
-
+import consulo.usage.rule.PsiElementUsage;
+import consulo.usage.rule.SingleParentUsageGroupingRule;
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,22 +34,19 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
     @Nullable
     @Override
     protected UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
-        if (usage instanceof PsiElementUsage) {
-            PsiElementUsage elementUsage = (PsiElementUsage)usage;
-
+        if (usage instanceof PsiElementUsage elementUsage) {
             PsiElement element = elementUsage.getElement();
             UsageType usageType = getUsageType(element, targets);
 
-            if (usageType == null && element instanceof PsiFile && elementUsage instanceof UsageInfo2UsageAdapter) {
-                usageType = ((UsageInfo2UsageAdapter)elementUsage).getUsageType();
+            if (usageType == null && element instanceof PsiFile && elementUsage instanceof UsageInfo2UsageAdapter usageInfo2UsageAdapter) {
+                usageType = usageInfo2UsageAdapter.getUsageType();
             }
 
             if (usageType != null) {
                 return new UsageTypeGroup(usageType);
             }
 
-            if (usage instanceof ReadWriteAccessUsage) {
-                ReadWriteAccessUsage u = (ReadWriteAccessUsage)usage;
+            if (usage instanceof ReadWriteAccessUsage u) {
                 if (u.isAccessedForWriting()) {
                     return new UsageTypeGroup(UsageType.WRITE);
                 }
@@ -137,17 +133,14 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
             return getText(null).compareTo(usageGroup.getText(null));
         }
 
+        @Override
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof UsageTypeGroup)) {
-                return false;
-            }
-            final UsageTypeGroup usageTypeGroup = (UsageTypeGroup)o;
-            return myUsageType.equals(usageTypeGroup.myUsageType);
+            return o == this
+                || o instanceof UsageTypeGroup usageTypeGroup
+                && myUsageType.equals(usageTypeGroup.myUsageType);
         }
 
+        @Override
         public int hashCode() {
             return myUsageType.hashCode();
         }
