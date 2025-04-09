@@ -25,23 +25,23 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author irengrig
- *         Date: 2/28/11
- *         Time: 1:12 PM
+ * Date: 2/28/11
+ * Time: 1:12 PM
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsBaseContentProvider {
-  ExtensionPointName<VcsBaseContentProvider> EP_NAME = ExtensionPointName.create(VcsBaseContentProvider.class);
-
-  @Nullable
-  BaseContent getBaseRevision(@Nonnull VirtualFile file);
-
-  boolean isSupported(@Nonnull VirtualFile file);
-
-  interface BaseContent {
-    @Nonnull
-    VcsRevisionNumber getRevisionNumber();
+    ExtensionPointName<VcsBaseContentProvider> EP_NAME = ExtensionPointName.create(VcsBaseContentProvider.class);
 
     @Nullable
-    String loadContent();
-  }
+    BaseContent getBaseRevision(@Nonnull VirtualFile file);
+
+    boolean isSupported(@Nonnull VirtualFile file);
+
+    interface BaseContent {
+        @Nonnull
+        VcsRevisionNumber getRevisionNumber();
+
+        @Nullable
+        String loadContent();
+    }
 }

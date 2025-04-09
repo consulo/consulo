@@ -35,62 +35,62 @@ import javax.swing.event.DocumentEvent;
  * @author nik
  */
 public class ExtractArtifactDialog extends DialogWrapper implements IExtractArtifactDialog {
-  private JPanel myMainPanel;
-  private JTextField myNameField;
-  private JComboBox myTypeBox;
-  private final ArtifactEditorContext myContext;
+    private JPanel myMainPanel;
+    private JTextField myNameField;
+    private JComboBox myTypeBox;
+    private final ArtifactEditorContext myContext;
 
-  public ExtractArtifactDialog(ArtifactEditorContext context, LayoutTreeComponent treeComponent, String initialName) {
-    super(treeComponent.getLayoutTree(), true);
-    myContext = context;
-    setTitle(ProjectLocalize.dialogTitleExtractArtifact());
-    for (ArtifactType type : ArtifactType.EP_NAME.getExtensions()) {
-      myTypeBox.addItem(type);
+    public ExtractArtifactDialog(ArtifactEditorContext context, LayoutTreeComponent treeComponent, String initialName) {
+        super(treeComponent.getLayoutTree(), true);
+        myContext = context;
+        setTitle(ProjectLocalize.dialogTitleExtractArtifact());
+        for (ArtifactType type : ArtifactType.EP_NAME.getExtensions()) {
+            myTypeBox.addItem(type);
+        }
+        myTypeBox.setSelectedItem(PlainArtifactType.getInstance());
+        myTypeBox.setRenderer(new ArtifactTypeCellRenderer());
+        myNameField.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(DocumentEvent e) {
+                setOKActionEnabled(!StringUtil.isEmptyOrSpaces(getArtifactName()));
+            }
+        });
+        myNameField.setText(initialName);
+        init();
     }
-    myTypeBox.setSelectedItem(PlainArtifactType.getInstance());
-    myTypeBox.setRenderer(new ArtifactTypeCellRenderer());
-    myNameField.getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      protected void textChanged(DocumentEvent e) {
-        setOKActionEnabled(!StringUtil.isEmptyOrSpaces(getArtifactName()));
-      }
-    });
-    myNameField.setText(initialName);
-    init();
-  }
 
-  @Override
-  @NonNls
-  protected void doOKAction() {
-    final String artifactName = getArtifactName();
-    if (myContext.getArtifactModel().findArtifact(artifactName) != null) {
-      Messages.showErrorDialog(
-        myContext.getProject(),
-        "Artifact '" + artifactName + "' already exists!",
-        CommonLocalize.titleError().get()
-      );
-      return;
+    @Override
+    @NonNls
+    protected void doOKAction() {
+        final String artifactName = getArtifactName();
+        if (myContext.getArtifactModel().findArtifact(artifactName) != null) {
+            Messages.showErrorDialog(
+                myContext.getProject(),
+                "Artifact '" + artifactName + "' already exists!",
+                CommonLocalize.titleError().get()
+            );
+            return;
+        }
+        super.doOKAction();
     }
-    super.doOKAction();
-  }
 
-  @Override
-  protected JComponent createCenterPanel() {
-    return myMainPanel;
-  }
+    @Override
+    protected JComponent createCenterPanel() {
+        return myMainPanel;
+    }
 
-  @Override
-  public String getArtifactName() {
-    return myNameField.getText();
-  }
+    @Override
+    public String getArtifactName() {
+        return myNameField.getText();
+    }
 
-  @Override
-  public ArtifactType getArtifactType() {
-    return (ArtifactType)myTypeBox.getSelectedItem();
-  }
+    @Override
+    public ArtifactType getArtifactType() {
+        return (ArtifactType)myTypeBox.getSelectedItem();
+    }
 
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myNameField;
-  }
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return myNameField;
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ui.debugger;
 
 import consulo.annotation.component.ComponentScope;
@@ -24,11 +23,11 @@ import javax.swing.*;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UiDebuggerExtension {
-  ExtensionPointName<UiDebuggerExtension> EP_NAME = ExtensionPointName.create(UiDebuggerExtension.class);
+    ExtensionPointName<UiDebuggerExtension> EP_NAME = ExtensionPointName.create(UiDebuggerExtension.class);
 
-  JComponent getComponent();
+    JComponent getComponent();
 
-  String getName();
+    String getName();
 
-  void disposeUiResources();
+    void disposeUiResources();
 }

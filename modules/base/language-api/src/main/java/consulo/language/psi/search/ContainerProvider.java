@@ -28,8 +28,8 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ContainerProvider {
-  ExtensionPointName<ContainerProvider> EP_NAME = ExtensionPointName.create(ContainerProvider.class);
+    ExtensionPointName<ContainerProvider> EP_NAME = ExtensionPointName.create(ContainerProvider.class);
 
-  @Nullable
-  PsiElement getContainer(@Nonnull PsiElement item);
+    @Nullable
+    PsiElement getContainer(@Nonnull PsiElement item);
 }

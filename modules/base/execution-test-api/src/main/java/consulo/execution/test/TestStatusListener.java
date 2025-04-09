@@ -24,25 +24,25 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TestStatusListener {
-  public static final ExtensionPointName<TestStatusListener> EP_NAME = ExtensionPointName.create(TestStatusListener.class);
+    public static final ExtensionPointName<TestStatusListener> EP_NAME = ExtensionPointName.create(TestStatusListener.class);
 
-  public abstract void testSuiteFinished(@Nullable AbstractTestProxy root);
+    public abstract void testSuiteFinished(@Nullable AbstractTestProxy root);
 
-  public void testSuiteFinished(@Nullable AbstractTestProxy root, Project project) {
-    testSuiteFinished(root);
-  }
-
-  @Deprecated
-  @SuppressWarnings("UnusedDeclaration")
-  public static void notifySuiteFinished(AbstractTestProxy root) {
-    for (TestStatusListener statusListener : EP_NAME.getExtensionList()) {
-      statusListener.testSuiteFinished(root);
+    public void testSuiteFinished(@Nullable AbstractTestProxy root, Project project) {
+        testSuiteFinished(root);
     }
-  }
 
-  public static void notifySuiteFinished(@Nullable AbstractTestProxy root, Project project) {
-    for (TestStatusListener statusListener : EP_NAME.getExtensionList()) {
-      statusListener.testSuiteFinished(root, project);
+    @Deprecated
+    @SuppressWarnings("UnusedDeclaration")
+    public static void notifySuiteFinished(AbstractTestProxy root) {
+        for (TestStatusListener statusListener : EP_NAME.getExtensionList()) {
+            statusListener.testSuiteFinished(root);
+        }
     }
-  }
+
+    public static void notifySuiteFinished(@Nullable AbstractTestProxy root, Project project) {
+        for (TestStatusListener statusListener : EP_NAME.getExtensionList()) {
+            statusListener.testSuiteFinished(root, project);
+        }
+    }
 }

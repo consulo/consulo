@@ -20,35 +20,35 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.ListWithSelection;
 
 class FileInfo {
-  private final VirtualFile myFile;
-  private final ListWithSelection<HandleType> myHandleType = new ListWithSelection<HandleType>();
+    private final VirtualFile myFile;
+    private final ListWithSelection<HandleType> myHandleType = new ListWithSelection<HandleType>();
 
-  public FileInfo(VirtualFile file, Project project) {
-    myFile = file;
-    myHandleType.add(HandleType.USE_FILE_SYSTEM);
-    myHandleType.selectFirst();
-    for(HandleTypeFactory factory: HandleTypeFactory.EP_NAME.getExtensionList(project)) {
-      final HandleType handleType = factory.createHandleType(file);
-      if (handleType != null) {
-        myHandleType.add(handleType);
-        myHandleType.select(handleType);
-      }
+    public FileInfo(VirtualFile file, Project project) {
+        myFile = file;
+        myHandleType.add(HandleType.USE_FILE_SYSTEM);
+        myHandleType.selectFirst();
+        for (HandleTypeFactory factory : HandleTypeFactory.EP_NAME.getExtensionList(project)) {
+            final HandleType handleType = factory.createHandleType(file);
+            if (handleType != null) {
+                myHandleType.add(handleType);
+                myHandleType.select(handleType);
+            }
+        }
     }
-  }
 
-  public VirtualFile getFile() {
-    return myFile;
-  }
+    public VirtualFile getFile() {
+        return myFile;
+    }
 
-  public HandleType getSelectedHandleType() {
-    return myHandleType.getSelection();
-  }
+    public HandleType getSelectedHandleType() {
+        return myHandleType.getSelection();
+    }
 
-  public boolean hasVersionControl() {
-    return myHandleType.size() > 1;
-  }
+    public boolean hasVersionControl() {
+        return myHandleType.size() > 1;
+    }
 
-  public ListWithSelection<HandleType> getHandleType(){
-    return myHandleType;
-  }
+    public ListWithSelection<HandleType> getHandleType() {
+        return myHandleType;
+    }
 }

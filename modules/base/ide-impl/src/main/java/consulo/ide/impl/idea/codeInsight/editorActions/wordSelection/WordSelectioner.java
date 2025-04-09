@@ -26,19 +26,18 @@ import consulo.language.psi.PsiWhiteSpace;
 
 @ExtensionImpl
 public class WordSelectioner extends AbstractWordSelectioner {
-  private static final ExtensionPointName<WordSelectionerFilter> EP_NAME = ExtensionPointName.create(WordSelectionerFilter.class);
+    private static final ExtensionPointName<WordSelectionerFilter> EP_NAME = ExtensionPointName.create(WordSelectionerFilter.class);
 
-  @Override
-  public boolean canSelect(PsiElement e) {
-    if (e instanceof PsiComment || e instanceof PsiWhiteSpace) {
-      return false;
-
+    @Override
+    public boolean canSelect(PsiElement e) {
+        if (e instanceof PsiComment || e instanceof PsiWhiteSpace) {
+            return false;
+        }
+        for (WordSelectionerFilter filter : EP_NAME.getExtensionList()) {
+            if (!filter.canSelect(e)) {
+                return false;
+            }
+        }
+        return true;
     }
-    for (WordSelectionerFilter filter : EP_NAME.getExtensionList()) {
-      if (!filter.canSelect(e)) {
-        return false;
-      }
-    }
-    return true;
-  }
 }

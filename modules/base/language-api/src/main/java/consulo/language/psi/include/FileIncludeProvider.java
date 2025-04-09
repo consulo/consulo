@@ -26,6 +26,7 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.stub.FileContent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Consumer;
 
 /**
@@ -33,38 +34,38 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileIncludeProvider {
-  public static final ExtensionPointName<FileIncludeProvider> EP_NAME = ExtensionPointName.create(FileIncludeProvider.class);
+    public static final ExtensionPointName<FileIncludeProvider> EP_NAME = ExtensionPointName.create(FileIncludeProvider.class);
 
-  @Nonnull
-  public abstract String getId();
+    @Nonnull
+    public abstract String getId();
 
-  public abstract boolean acceptFile(VirtualFile file);
+    public abstract boolean acceptFile(VirtualFile file);
 
-  public abstract void registerFileTypesUsedForIndexing(@Nonnull Consumer<FileType> fileTypeSink);
+    public abstract void registerFileTypesUsedForIndexing(@Nonnull Consumer<FileType> fileTypeSink);
 
-  @Nonnull
-  public abstract FileIncludeInfo[] getIncludeInfos(FileContent content);
+    @Nonnull
+    public abstract FileIncludeInfo[] getIncludeInfos(FileContent content);
 
-  /**
-   * If all providers return {@code null} then {@code FileIncludeInfo} is resolved in a standard way using {@code FileReferenceSet}
-   */
-  @Nullable
-  public PsiFileSystemItem resolveIncludedFile(@Nonnull final FileIncludeInfo info, @Nonnull final PsiFile context) {
-    return null;
-  }
+    /**
+     * If all providers return {@code null} then {@code FileIncludeInfo} is resolved in a standard way using {@code FileReferenceSet}
+     */
+    @Nullable
+    public PsiFileSystemItem resolveIncludedFile(@Nonnull final FileIncludeInfo info, @Nonnull final PsiFile context) {
+        return null;
+    }
 
-  /**
-   * Override this method and increment returned value each time when you change the logic of your provider.
-   */
-  public int getVersion() {
-    return 0;
-  }
+    /**
+     * Override this method and increment returned value each time when you change the logic of your provider.
+     */
+    public int getVersion() {
+        return 0;
+    }
 
-  /**
-   * @return Possible name in included paths. For example if a provider returns FileIncludeInfos without file extensions
-   */
-  @Nonnull
-  public String getIncludeName(@Nonnull PsiFile file, @Nonnull String originalName) {
-    return originalName;
-  }
+    /**
+     * @return Possible name in included paths. For example if a provider returns FileIncludeInfos without file extensions
+     */
+    @Nonnull
+    public String getIncludeName(@Nonnull PsiFile file, @Nonnull String originalName) {
+        return originalName;
+    }
 }

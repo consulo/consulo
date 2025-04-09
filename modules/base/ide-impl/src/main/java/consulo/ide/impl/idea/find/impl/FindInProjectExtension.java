@@ -28,7 +28,7 @@ import consulo.find.FindModel;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FindInProjectExtension {
-  ExtensionList<FindInProjectExtension, Application> EP_NAME = ExtensionList.of(FindInProjectExtension.class);
+    ExtensionList<FindInProjectExtension, Application> EP_NAME = ExtensionList.of(FindInProjectExtension.class);
 
-  boolean initModelFromContext(FindModel model, DataContext dataContext);
+    boolean initModelFromContext(FindModel model, DataContext dataContext);
 }
