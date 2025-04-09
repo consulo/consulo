@@ -629,7 +629,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
             return comment;
         }
 
-        @RequiredReadAction
+        @RequiredWriteAction
         private void formatComment(SimpleReference<PsiComment> commentRef, CodeStyleManager codeStyleManager) {
             PsiComment comment = commentRef.get();
             RangeMarker commentMarker =

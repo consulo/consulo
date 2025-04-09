@@ -15,8 +15,7 @@
  */
 package consulo.content.bundle;
 
-import consulo.application.AllIcons;
-import consulo.project.localize.ProjectLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
@@ -25,46 +24,48 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Used as a plug for all SDKs which type cannot be determined (for example, plugin that registered a custom type has been deinstalled)
+ *
  * @author Eugene Zhuravlev
- *         Date: Dec 11, 2004
+ * @since 2004-12-11
  */
-public class UnknownSdkType extends SdkType{
-  public static UnknownSdkType getInstance(String typeName) {
-    return ourTypeNameToInstanceMap.computeIfAbsent(typeName, UnknownSdkType::new);
-  }
+public class UnknownSdkType extends SdkType {
+    public static UnknownSdkType getInstance(String typeName) {
+        return ourTypeNameToInstanceMap.computeIfAbsent(typeName, UnknownSdkType::new);
+    }
 
-  private static final Map<String, UnknownSdkType> ourTypeNameToInstanceMap = new ConcurrentHashMap<>();
+    private static final Map<String, UnknownSdkType> ourTypeNameToInstanceMap = new ConcurrentHashMap<>();
 
-  /**
-   * @param typeName the name of the SDK type that this SDK serves as a plug for
-   */
-  private UnknownSdkType(String typeName) {
-    super(typeName);
-  }
+    /**
+     * @param typeName the name of the SDK type that this SDK serves as a plug for
+     */
+    private UnknownSdkType(String typeName) {
+        super(typeName);
+    }
 
-  @Override
-  public boolean isValidSdkHome(String path) {
-    return false;
-  }
+    @Override
+    public boolean isValidSdkHome(String path) {
+        return false;
+    }
 
-  @Override
-  public String getVersionString(String sdkHome) {
-    return "";
-  }
+    @Override
+    public String getVersionString(String sdkHome) {
+        return "";
+    }
 
-  @Override
-  public String suggestSdkName(String currentSdkName, String sdkHome) {
-    return currentSdkName;
-  }
-  @Nonnull
-  @Override
-  public String getPresentableName() {
-    return ProjectLocalize.sdkUnknownName().get();
-  }
+    @Override
+    public String suggestSdkName(String currentSdkName, String sdkHome) {
+        return currentSdkName;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Actions.Help;
-  }
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return ProjectLocalize.sdkUnknownName().get();
+    }
+
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.actionsHelp();
+    }
 }

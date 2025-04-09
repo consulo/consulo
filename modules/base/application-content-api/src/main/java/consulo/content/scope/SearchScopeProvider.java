@@ -8,30 +8,31 @@ import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SearchScopeProvider {
-  ExtensionPointName<SearchScopeProvider> EP_NAME = ExtensionPointName.create(SearchScopeProvider.class);
+    ExtensionPointName<SearchScopeProvider> EP_NAME = ExtensionPointName.create(SearchScopeProvider.class);
 
-  @Nullable
-  default String getDisplayName() {
-    return null;
-  }
+    @Nullable
+    default String getDisplayName() {
+        return null;
+    }
 
-  @Nonnull
-  default List<SearchScope> getSearchScopes(@Nonnull Project project) {
-    return Collections.emptyList();
-  }
+    @Nonnull
+    default List<SearchScope> getSearchScopes(@Nonnull Project project) {
+        return Collections.emptyList();
+    }
 
-  /**
-   * General project scopes are added after 'Project', 'Everything' but before 'Production', 'Tests', etc.
-   *
-   * @param project
-   * @see PredefinedSearchScopeProvider
-   */
-  default List<SearchScope> getGeneralSearchScopes(@Nonnull Project project) {
-    return Collections.emptyList();
-  }
+    /**
+     * General project scopes are added after 'Project', 'Everything' but before 'Production', 'Tests', etc.
+     *
+     * @param project
+     * @see PredefinedSearchScopeProvider
+     */
+    default List<SearchScope> getGeneralSearchScopes(@Nonnull Project project) {
+        return Collections.emptyList();
+    }
 }

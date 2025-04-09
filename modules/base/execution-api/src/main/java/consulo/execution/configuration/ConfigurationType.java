@@ -31,50 +31,50 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConfigurationType extends PossiblyDumbAware {
-  ExtensionPointName<ConfigurationType> EP_NAME = ExtensionPointName.create(ConfigurationType.class);
+    ExtensionPointName<ConfigurationType> EP_NAME = ExtensionPointName.create(ConfigurationType.class);
 
-  /**
-   * Returns the display name of the configuration type. This is used, for example, to represent the configuration type in the run
-   * configurations tree, and also as the name of the action used to create the configuration.
-   *
-   * @return the display name of the configuration type.
-   */
-  @Nonnull
-  LocalizeValue getDisplayName();
+    /**
+     * Returns the display name of the configuration type. This is used, for example, to represent the configuration type in the run
+     * configurations tree, and also as the name of the action used to create the configuration.
+     *
+     * @return the display name of the configuration type.
+     */
+    @Nonnull
+    LocalizeValue getDisplayName();
 
-  /**
-   * Returns the description of the configuration type. You may return the same text as the display name of the configuration type.
-   *
-   * @return the description of the configuration type.
-   */
-  @Nonnull
-  default LocalizeValue getConfigurationTypeDescription() {
-    return getDisplayName();
-  }
+    /**
+     * Returns the description of the configuration type. You may return the same text as the display name of the configuration type.
+     *
+     * @return the description of the configuration type.
+     */
+    @Nonnull
+    default LocalizeValue getConfigurationTypeDescription() {
+        return getDisplayName();
+    }
 
-  /**
-   * Returns the 16x16 icon used to represent the configuration type.
-   *
-   * @return the icon
-   */
-  @Nullable
-  Image getIcon();
+    /**
+     * Returns the 16x16 icon used to represent the configuration type.
+     *
+     * @return the icon
+     */
+    @Nullable
+    Image getIcon();
 
-  /**
-   * Returns the ID of the configuration type. The ID is used to store run configuration settings in a project or workspace file and
-   * must not change between plugin versions.
-   *
-   * @return the configuration type ID.
-   */
-  @Nonnull
-  String getId();
+    /**
+     * Returns the ID of the configuration type. The ID is used to store run configuration settings in a project or workspace file and
+     * must not change between plugin versions.
+     *
+     * @return the configuration type ID.
+     */
+    @Nonnull
+    String getId();
 
-  /**
-   * Returns the configuration factories used by this configuration type. Normally each configuration type provides just a single factory.
-   * You can return multiple factories if your configurations can be created in multiple variants (for example, local and remote for an
-   * application server).
-   *
-   * @return the run configuration factories.
-   */
-  ConfigurationFactory[] getConfigurationFactories();
+    /**
+     * Returns the configuration factories used by this configuration type. Normally each configuration type provides just a single factory.
+     * You can return multiple factories if your configurations can be created in multiple variants (for example, local and remote for an
+     * application server).
+     *
+     * @return the run configuration factories.
+     */
+    ConfigurationFactory[] getConfigurationFactories();
 }

@@ -22,6 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 /**
@@ -29,24 +30,24 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface Compiler {
-  ExtensionPointName<Compiler> EP_NAME = ExtensionPointName.create(Compiler.class);
-  
-  /**
-   * Returns the description of the compiler. All registered compilers should have unique description.
-   *
-   * @return the description string.
-   */
-  @Nonnull
-  String getDescription();
+    ExtensionPointName<Compiler> EP_NAME = ExtensionPointName.create(Compiler.class);
 
-  /**
-   * Called before compilation starts. If at least one of registered compilers returned false, compilation won't start.
-   * 
-   * @param scope the scope on which the compilation is started.
-   * @return true if everything is ok, false otherwise
-   */
-  boolean validateConfiguration(CompileScope scope);
+    /**
+     * Returns the description of the compiler. All registered compilers should have unique description.
+     *
+     * @return the description string.
+     */
+    @Nonnull
+    String getDescription();
 
-  default void registerCompilableFileTypes(@Nonnull Consumer<FileType> fileTypeConsumer) {
-  }
+    /**
+     * Called before compilation starts. If at least one of registered compilers returned false, compilation won't start.
+     *
+     * @param scope the scope on which the compilation is started.
+     * @return true if everything is ok, false otherwise
+     */
+    boolean validateConfiguration(CompileScope scope);
+
+    default void registerCompilableFileTypes(@Nonnull Consumer<FileType> fileTypeConsumer) {
+    }
 }

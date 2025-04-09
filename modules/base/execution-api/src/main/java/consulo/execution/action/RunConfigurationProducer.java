@@ -83,7 +83,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
         final RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(context);
         Ref<PsiElement> ref = new Ref<>(context.getPsiLocation());
         try {
-            if (!setupConfigurationFromContext((T) settings.getConfiguration(), context, ref)) {
+            if (!setupConfigurationFromContext((T)settings.getConfiguration(), context, ref)) {
                 return null;
             }
         }
@@ -178,7 +178,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
             if (locationFromPsi != null) {
                 // replace with existing configuration if any
                 final RunManager runManager = RunManager.getInstance(context.getProject());
-                
+
                 if (preferExisting) {
                     final RunnerAndConfigurationSettings settings = findExistingConfiguration(context);
                     if (settings != null) {
@@ -203,9 +203,10 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
     @Nullable
     public RunnerAndConfigurationSettings findExistingConfiguration(ConfigurationContext context) {
         final RunManager runManager = RunManager.getInstance(context.getProject());
-        final List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(myConfigurationFactory.getType());
+        final List<RunnerAndConfigurationSettings> configurations =
+            runManager.getConfigurationSettingsList(myConfigurationFactory.getType());
         for (RunnerAndConfigurationSettings configurationSettings : configurations) {
-            if (isConfigurationFromContext((T) configurationSettings.getConfiguration(), context)) {
+            if (isConfigurationFromContext((T)configurationSettings.getConfiguration(), context)) {
                 return configurationSettings;
             }
         }
@@ -224,7 +225,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
     public static <T extends RunConfigurationProducer> T getInstance(Class<? extends T> aClass) {
         for (RunConfigurationProducer producer : EP_NAME.getExtensionList()) {
             if (aClass.isInstance(producer)) {
-                return (T) producer;
+                return (T)producer;
             }
         }
         assert false : aClass;
@@ -236,7 +237,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
         RunConfiguration configuration = myConfigurationFactory.createTemplateConfiguration(context.getProject());
         final Ref<PsiElement> ref = new Ref<>(context.getPsiLocation());
         try {
-            if (!setupConfigurationFromContext((T) configuration, context, ref)) {
+            if (!setupConfigurationFromContext((T)configuration, context, ref)) {
                 return null;
             }
         }

@@ -30,8 +30,8 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileEditorAssociateFinder {
-  ExtensionPointName<FileEditorAssociateFinder> EP_NAME = ExtensionPointName.create(FileEditorAssociateFinder.class);
+    ExtensionPointName<FileEditorAssociateFinder> EP_NAME = ExtensionPointName.create(FileEditorAssociateFinder.class);
 
-  @Nullable
-  VirtualFile getAssociatedFileToOpen(@Nonnull Project project, @Nonnull VirtualFile original);
+    @Nullable
+    VirtualFile getAssociatedFileToOpen(@Nonnull Project project, @Nonnull VirtualFile original);
 }

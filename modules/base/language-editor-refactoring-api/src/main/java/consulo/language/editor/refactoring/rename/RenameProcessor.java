@@ -43,7 +43,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.usage.*;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
@@ -136,7 +136,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
   @Override
   @RequiredUIAccess
-  public boolean preprocessUsages(@Nonnull final Ref<UsageInfo[]> refUsages) {
+  public boolean preprocessUsages(@Nonnull SimpleReference<UsageInfo[]> refUsages) {
     UsageInfo[] usagesIn = refUsages.get();
     MultiMap<PsiElement, String> conflicts = new MultiMap<>();
 

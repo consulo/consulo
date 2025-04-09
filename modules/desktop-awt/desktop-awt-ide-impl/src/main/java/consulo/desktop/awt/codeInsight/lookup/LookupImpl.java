@@ -1452,10 +1452,10 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         Point p = (itemBounds.intersects(visibleRect) || event == null)
             ? new Point(itemBounds.x + itemBounds.width, itemBounds.y)
             : SwingUtilities.convertPoint(
-                event.getComponent(),
-                new Point(0, event.getComponent().getHeight() + JBUIScale.scale(2)),
-                getComponent()
-            );
+            event.getComponent(),
+            new Point(0, event.getComponent().getHeight() + JBUIScale.scale(2)),
+            getComponent()
+        );
 
         listPopup.show(new RelativePoint(getComponent(), p));
     }

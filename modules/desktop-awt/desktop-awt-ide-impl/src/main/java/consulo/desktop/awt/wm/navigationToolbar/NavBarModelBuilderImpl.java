@@ -15,53 +15,65 @@ import java.util.List;
 import java.util.Set;
 
 public class NavBarModelBuilderImpl extends NavBarModelBuilder {
+    @Override
+    public void traverseToRoot(
+        @Nonnull PsiElement psiElement,
+        @Nonnull Set<VirtualFile> roots,
+        @Nonnull List<Object> model,
+        @Nullable NavBarModelExtension ownerExtension
+    ) {
+        List<NavBarModelExtension> extensions = NavBarModelExtension.EP_NAME.getExtensionList();
 
-  @Override
-  public void traverseToRoot(@Nonnull PsiElement psiElement, @Nonnull Set<VirtualFile> roots, @Nonnull List<Object> model, @Nullable NavBarModelExtension ownerExtension) {
+        for (PsiElement e = normalize(psiElement, ownerExtension), next = null; e != null;
+             e = normalize(next, ownerExtension), next = null) {
+            // check if we're running circles due to getParent()->normalize/adjust()
+            if (model.contains(e)) {
+                break;
+            }
+            model.add(e);
 
-    List<NavBarModelExtension> extensions = NavBarModelExtension.EP_NAME.getExtensionList();
+            // check if a root is reached
+            VirtualFile vFile = PsiUtilCore.getVirtualFile(e);
+            if (roots.contains(vFile)) {
+                break;
+            }
 
-    for (PsiElement e = normalize(psiElement, ownerExtension), next = null; e != null; e = normalize(next, ownerExtension), next = null) {
-      // check if we're running circles due to getParent()->normalize/adjust()
-      if (model.contains(e)) break;
-      model.add(e);
-
-      // check if a root is reached
-      VirtualFile vFile = PsiUtilCore.getVirtualFile(e);
-      if (roots.contains(vFile)) break;
-
-      for (NavBarModelExtension ext : extensions) {
-        PsiElement parent = ext.getParent(e);
-        if (parent != null && parent != e) {
-          //noinspection AssignmentToForLoopParameter
-          next = parent;
-          break;
+            for (NavBarModelExtension ext : extensions) {
+                PsiElement parent = ext.getParent(e);
+                if (parent != null && parent != e) {
+                    //noinspection AssignmentToForLoopParameter
+                    next = parent;
+                    break;
+                }
+            }
         }
-      }
     }
-  }
 
-  protected static PsiElement normalize(@Nullable PsiElement e) {
-    return NavBarModelExtensions.normalize(getOriginalElement(e));
-  }
-
-  @Nullable
-  protected static PsiElement normalize(@Nullable PsiElement e, NavBarModelExtension ownerExtension) {
-    PsiElement originalElement = getOriginalElement(e);
-    if (ownerExtension != null) {
-      return originalElement != null ? ownerExtension.adjustElement(originalElement) : null;
+    protected static PsiElement normalize(@Nullable PsiElement e) {
+        return NavBarModelExtensions.normalize(getOriginalElement(e));
     }
-    return NavBarModelExtensions.normalize(originalElement);
-  }
 
-  @Nullable
-  private static PsiElement getOriginalElement(@Nullable PsiElement e) {
-    if (e == null || !e.isValid()) return null;
+    @Nullable
+    protected static PsiElement normalize(@Nullable PsiElement e, NavBarModelExtension ownerExtension) {
+        PsiElement originalElement = getOriginalElement(e);
+        if (ownerExtension != null) {
+            return originalElement != null ? ownerExtension.adjustElement(originalElement) : null;
+        }
+        return NavBarModelExtensions.normalize(originalElement);
+    }
 
-    PsiFile containingFile = e.getContainingFile();
-    if (containingFile != null && containingFile.getVirtualFile() == null) return null;
+    @Nullable
+    private static PsiElement getOriginalElement(@Nullable PsiElement e) {
+        if (e == null || !e.isValid()) {
+            return null;
+        }
 
-    PsiElement orig = e.getOriginalElement();
-    return !(e instanceof PsiCompiledElement) && orig instanceof PsiCompiledElement ? e : orig;
-  }
+        PsiFile containingFile = e.getContainingFile();
+        if (containingFile != null && containingFile.getVirtualFile() == null) {
+            return null;
+        }
+
+        PsiElement orig = e.getOriginalElement();
+        return !(e instanceof PsiCompiledElement) && orig instanceof PsiCompiledElement ? e : orig;
+    }
 }

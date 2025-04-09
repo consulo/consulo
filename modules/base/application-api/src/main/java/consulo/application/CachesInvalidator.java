@@ -24,23 +24,23 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CachesInvalidator {
-  public static final ExtensionPointName<CachesInvalidator> EP_NAME = ExtensionPointName.create(CachesInvalidator.class);
+    public static final ExtensionPointName<CachesInvalidator> EP_NAME = ExtensionPointName.create(CachesInvalidator.class);
 
-  /**
-   * @return description of the files to be cleared, shown in the warning dialog to the user.
-   * When to use: when invalidation will lead to the loss of a potentially valuable to the user information, e.g. Local History.
-   * Do not use:  when caches are easily re-buildable and doesn't contain user's data (to avoid unnecessary confusion).
-   */
-  @Nonnull
-  public abstract LocalizeValue getDescription();
+    /**
+     * @return description of the files to be cleared, shown in the warning dialog to the user.
+     * When to use: when invalidation will lead to the loss of a potentially valuable to the user information, e.g. Local History.
+     * Do not use:  when caches are easily re-buildable and doesn't contain user's data (to avoid unnecessary confusion).
+     */
+    @Nonnull
+    public abstract LocalizeValue getDescription();
 
-  public boolean isEnabledByDefault() {
-    return true;
-  }
+    public boolean isEnabledByDefault() {
+        return true;
+    }
 
-  /**
-   * The method should not consume significant time.
-   * All the clearing operations should be executed after IDE relaunches.
-   */
-  public abstract void invalidateCaches();
+    /**
+     * The method should not consume significant time.
+     * All the clearing operations should be executed after IDE relaunches.
+     */
+    public abstract void invalidateCaches();
 }

@@ -71,8 +71,8 @@ public interface CreateFromTemplateHandler {
     }
 
     @Nonnull
-    default String checkAppendExtension(String fileName, final FileTemplate template) {
-        final String suggestedFileNameEnd = "." + template.getExtension();
+    default String checkAppendExtension(String fileName, FileTemplate template) {
+        String suggestedFileNameEnd = "." + template.getExtension();
 
         if (!fileName.endsWith(suggestedFileNameEnd)) {
             fileName += suggestedFileNameEnd;
@@ -80,7 +80,7 @@ public interface CreateFromTemplateHandler {
         return fileName;
     }
 
-    default boolean canCreate(final PsiDirectory[] dirs) {
+    default boolean canCreate(PsiDirectory[] dirs) {
         return true;
     }
 

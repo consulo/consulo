@@ -29,18 +29,18 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface EditorTabColorProvider {
-  ExtensionPointName<EditorTabColorProvider> EP_NAME = ExtensionPointName.create(EditorTabColorProvider.class);
+    ExtensionPointName<EditorTabColorProvider> EP_NAME = ExtensionPointName.create(EditorTabColorProvider.class);
 
-  @Nullable
-  ColorValue getEditorTabColor(Project project, VirtualFile file);
+    @Nullable
+    ColorValue getEditorTabColor(Project project, VirtualFile file);
 
-  @Nullable
-  default ColorValue getEditorTabColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
-    return getEditorTabColor(project, file);
-  }
+    @Nullable
+    default ColorValue getEditorTabColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
+        return getEditorTabColor(project, file);
+    }
 
-  @Nullable
-  default ColorValue getProjectViewColor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return null;
-  }
+    @Nullable
+    default ColorValue getProjectViewColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+        return null;
+    }
 }

@@ -54,137 +54,144 @@ import static consulo.execution.impl.internal.ui.RunContentManagerImpl.getRunCon
  * @since 2020-11-01
  */
 public class RunToolWindowManager {
-  private static final Logger LOG = Logger.getInstance(RunToolWindowManager.class);
+    private static final Logger LOG = Logger.getInstance(RunToolWindowManager.class);
 
-  private final Map<String, ContentManager> myToolwindowIdToContentManagerMap = new ConcurrentHashMap<>();
-  private final Map<String, Image> myToolwindowIdToBaseIconMap = new HashMap<>();
-  private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<>();
-  @Nonnull
-  private final Project myProject;
-  private final Provider<ToolWindowManager> myToolWindowManager;
-  private final Disposable myParentDisposable;
+    private final Map<String, ContentManager> myToolwindowIdToContentManagerMap = new ConcurrentHashMap<>();
+    private final Map<String, Image> myToolwindowIdToBaseIconMap = new HashMap<>();
+    private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<>();
+    @Nonnull
+    private final Project myProject;
+    private final Provider<ToolWindowManager> myToolWindowManager;
+    private final Disposable myParentDisposable;
 
-  public RunToolWindowManager(Project project, Provider<ToolWindowManager> toolWindowManager, Disposable parentDisposable) {
-    myProject = project;
-    myToolWindowManager = toolWindowManager;
-    myParentDisposable = parentDisposable;
-    project.getMessageBus().connect().subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
-      @RequiredUIAccess
-      @Override
-      public void stateChanged(ToolWindowManager tw) {
-        if (project.isDisposed()) {
-          return;
-        }
+    public RunToolWindowManager(Project project, Provider<ToolWindowManager> toolWindowManager, Disposable parentDisposable) {
+        myProject = project;
+        myToolWindowManager = toolWindowManager;
+        myParentDisposable = parentDisposable;
+        project.getMessageBus().connect().subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
+            @RequiredUIAccess
+            @Override
+            public void stateChanged(ToolWindowManager tw) {
+                if (project.isDisposed()) {
+                    return;
+                }
 
-        Set<String> currentWindows = new HashSet<>();
-        ContainerUtil.addAll(currentWindows, tw.getToolWindowIds());
-        myToolwindowIdZBuffer.retainAll(currentWindows);
+                Set<String> currentWindows = new HashSet<>();
+                ContainerUtil.addAll(currentWindows, tw.getToolWindowIds());
+                myToolwindowIdZBuffer.retainAll(currentWindows);
 
-        final String activeToolWindowId = tw.getActiveToolWindowId();
-        if (activeToolWindowId != null) {
-          if (myToolwindowIdZBuffer.remove(activeToolWindowId)) {
-            myToolwindowIdZBuffer.addFirst(activeToolWindowId);
-          }
-        }
-      }
-    });
-  }
-
-  public Image getImage(@Nonnull String toolWindowId) {
-    return myToolwindowIdToBaseIconMap.get(toolWindowId);
-  }
-
-  public List<String> getToolwindowIdZBuffer() {
-    return myToolwindowIdZBuffer;
-  }
-
-  public Set<Map.Entry<String, ContentManager>> entrySet() {
-    return myToolwindowIdToContentManagerMap.entrySet();
-  }
-
-  @Nullable
-  @RequiredUIAccess
-  public ContentManager get(@Nonnull String toolWindowId) {
-    // if project started disposing, return null
-    if (myProject.getDisposeState().get() != ThreeState.NO) {
-      return null;
+                final String activeToolWindowId = tw.getActiveToolWindowId();
+                if (activeToolWindowId != null) {
+                    if (myToolwindowIdZBuffer.remove(activeToolWindowId)) {
+                        myToolwindowIdZBuffer.addFirst(activeToolWindowId);
+                    }
+                }
+            }
+        });
     }
 
-    UIAccess.assertIsUIThread();
-    return myToolwindowIdToContentManagerMap.computeIfAbsent(toolWindowId, this::createToolWindow);
-  }
-
-  @RequiredUIAccess
-  private ContentManager createToolWindow(@Nonnull String toolWindowId) {
-    Executor executor =
-      Executor.EP_NAME.getExtensionList().stream().filter(it -> it.getToolWindowId().equals(toolWindowId)).findFirst().get();
-    return registerToolWindow(executor.getToolWindowId(), executor.getToolWindowIcon(), null);
-  }
-
-  @RequiredUIAccess
-  private ContentManager registerToolWindow(@Nonnull String toolWindowId, @Nonnull Image toolWindowIcon, @Nullable Executor executor) {
-    ToolWindowManager toolWindowManager = myToolWindowManager.get();
-
-    if (toolWindowManager.getToolWindow(toolWindowId) != null) {
-      throw new IllegalArgumentException("Already registered: " + toolWindowId);
+    public Image getImage(@Nonnull String toolWindowId) {
+        return myToolwindowIdToBaseIconMap.get(toolWindowId);
     }
 
-    final ToolWindow toolWindow =
-      toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, myParentDisposable, true);
-    final ContentManager contentManager = toolWindow.getContentManager();
-    contentManager.addDataProvider(new DataProvider() {
-      private int myInsideGetData = 0;
+    public List<String> getToolwindowIdZBuffer() {
+        return myToolwindowIdZBuffer;
+    }
 
-      @Override
-      public Object getData(@Nonnull Key<?> dataId) {
-        myInsideGetData++;
-        try {
-          if (HelpManager.HELP_ID == dataId) {
-            return executor != null ? executor.getHelpId() : null;
-          }
-          else {
-            return myInsideGetData == 1 ? DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(dataId) : null;
-          }
+    public Set<Map.Entry<String, ContentManager>> entrySet() {
+        return myToolwindowIdToContentManagerMap.entrySet();
+    }
+
+    @Nullable
+    @RequiredUIAccess
+    public ContentManager get(@Nonnull String toolWindowId) {
+        // if project started disposing, return null
+        if (myProject.getDisposeState().get() != ThreeState.NO) {
+            return null;
         }
-        finally {
-          myInsideGetData--;
+
+        UIAccess.assertIsUIThread();
+        return myToolwindowIdToContentManagerMap.computeIfAbsent(toolWindowId, this::createToolWindow);
+    }
+
+    @RequiredUIAccess
+    private ContentManager createToolWindow(@Nonnull String toolWindowId) {
+        Executor executor =
+            Executor.EP_NAME.getExtensionList().stream().filter(it -> it.getToolWindowId().equals(toolWindowId)).findFirst().get();
+        return registerToolWindow(executor.getToolWindowId(), executor.getToolWindowIcon(), null);
+    }
+
+    @RequiredUIAccess
+    private ContentManager registerToolWindow(@Nonnull String toolWindowId, @Nonnull Image toolWindowIcon, @Nullable Executor executor) {
+        ToolWindowManager toolWindowManager = myToolWindowManager.get();
+
+        if (toolWindowManager.getToolWindow(toolWindowId) != null) {
+            throw new IllegalArgumentException("Already registered: " + toolWindowId);
         }
-      }
-    });
 
-    toolWindow.setIcon(toolWindowIcon);
-    ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
-    initToolWindow(executor, toolWindowId, toolWindowIcon, contentManager);
+        final ToolWindow toolWindow =
+            toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, myParentDisposable, true);
+        final ContentManager contentManager = toolWindow.getContentManager();
+        contentManager.addDataProvider(new DataProvider() {
+            private int myInsideGetData = 0;
 
-    return contentManager;
-  }
+            @Override
+            public Object getData(@Nonnull Key<?> dataId) {
+                myInsideGetData++;
+                try {
+                    if (HelpManager.HELP_ID == dataId) {
+                        return executor != null ? executor.getHelpId() : null;
+                    }
+                    else {
+                        return myInsideGetData == 1 ? DataManager.getInstance()
+                            .getDataContext(contentManager.getComponent())
+                            .getData(dataId) : null;
+                    }
+                }
+                finally {
+                    myInsideGetData--;
+                }
+            }
+        });
 
-  private void initToolWindow(@Nullable final Executor executor, String toolWindowId, Image toolWindowIcon, ContentManager contentManager) {
-    myToolwindowIdToBaseIconMap.put(toolWindowId, toolWindowIcon);
-    contentManager.addContentManagerListener(new ContentManagerAdapter() {
-      @Override
-      public void selectionChanged(final ContentManagerEvent event) {
-        if (event.getOperation() == ContentManagerEvent.ContentOperation.add) {
-          Content content = event.getContent();
-          Executor contentExecutor = executor;
-          if (contentExecutor == null) {
-            // Content manager contains contents related with different executors.
-            // Try to get executor from content.
-            contentExecutor = getExecutorByContent(content);
-            // Must contain this user data since all content is added by this class.
-            LOG.assertTrue(contentExecutor != null);
-          }
-          myProject.getMessageBus()
-            .syncPublisher(RunContentWithExecutorListener.class)
-            .contentSelected(getRunContentDescriptorByContent(content), contentExecutor);
-        }
-      }
-    });
-    Disposer.register(contentManager, () -> {
-      myToolwindowIdToContentManagerMap.remove(toolWindowId).removeAllContents(true);
-      myToolwindowIdZBuffer.remove(toolWindowId);
-      myToolwindowIdToBaseIconMap.remove(toolWindowId);
-    });
-    myToolwindowIdZBuffer.addLast(toolWindowId);
-  }
+        toolWindow.setIcon(toolWindowIcon);
+        ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
+        initToolWindow(executor, toolWindowId, toolWindowIcon, contentManager);
+
+        return contentManager;
+    }
+
+    private void initToolWindow(
+        @Nullable final Executor executor,
+        String toolWindowId,
+        Image toolWindowIcon,
+        ContentManager contentManager
+    ) {
+        myToolwindowIdToBaseIconMap.put(toolWindowId, toolWindowIcon);
+        contentManager.addContentManagerListener(new ContentManagerAdapter() {
+            @Override
+            public void selectionChanged(final ContentManagerEvent event) {
+                if (event.getOperation() == ContentManagerEvent.ContentOperation.add) {
+                    Content content = event.getContent();
+                    Executor contentExecutor = executor;
+                    if (contentExecutor == null) {
+                        // Content manager contains contents related with different executors.
+                        // Try to get executor from content.
+                        contentExecutor = getExecutorByContent(content);
+                        // Must contain this user data since all content is added by this class.
+                        LOG.assertTrue(contentExecutor != null);
+                    }
+                    myProject.getMessageBus()
+                        .syncPublisher(RunContentWithExecutorListener.class)
+                        .contentSelected(getRunContentDescriptorByContent(content), contentExecutor);
+                }
+            }
+        });
+        Disposer.register(contentManager, () -> {
+            myToolwindowIdToContentManagerMap.remove(toolWindowId).removeAllContents(true);
+            myToolwindowIdZBuffer.remove(toolWindowId);
+            myToolwindowIdToBaseIconMap.remove(toolWindowId);
+        });
+        myToolwindowIdZBuffer.addLast(toolWindowId);
+    }
 }

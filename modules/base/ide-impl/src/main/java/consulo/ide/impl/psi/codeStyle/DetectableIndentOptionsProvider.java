@@ -132,8 +132,8 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     public TimeStampedIndentOptions getValidCachedIndentOptions(PsiFile file, Document document) {
         IndentOptions options = IndentOptions.retrieveFromAssociatedDocument(file);
         if (options instanceof TimeStampedIndentOptions) {
-            final IndentOptions defaultIndentOptions = getDefaultIndentOptions(file, document);
-            final TimeStampedIndentOptions cachedInDocument = (TimeStampedIndentOptions)options;
+            IndentOptions defaultIndentOptions = getDefaultIndentOptions(file, document);
+            TimeStampedIndentOptions cachedInDocument = (TimeStampedIndentOptions)options;
             if (!cachedInDocument.isOutdated(document, defaultIndentOptions)) {
                 return cachedInDocument;
             }
@@ -209,10 +209,10 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
         public AnAction[] getActions(@Nonnull PsiFile file) {
             IndentOptions indentOptions = getIndentOptions();
             List<AnAction> actions = new ArrayList<>();
-            final VirtualFile virtualFile = file.getVirtualFile();
-            final Project project = file.getProject();
-            final IndentOptions projectOptions = CodeStyle.getSettings(project).getIndentOptions(file.getFileType());
-            final String projectOptionsTip = StringUtil.capitalizeWords(IndentStatusBarUIContributor.getIndentInfo(projectOptions), true);
+            VirtualFile virtualFile = file.getVirtualFile();
+            Project project = file.getProject();
+            IndentOptions projectOptions = CodeStyle.getSettings(project).getIndentOptions(file.getFileType());
+            String projectOptionsTip = StringUtil.capitalizeWords(IndentStatusBarUIContributor.getIndentInfo(projectOptions), true);
             if (indentOptions instanceof TimeStampedIndentOptions) {
                 if (((TimeStampedIndentOptions)indentOptions).isDetected()) {
                     actions.add(DumbAwareAction.create(
@@ -238,8 +238,8 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
                 }
             }
             else if (myDiscardedOptions.containsKey(virtualFile)) {
-                final IndentOptions discardedOptions = myDiscardedOptions.get(virtualFile);
-                final Document document = PsiDocumentManager.getInstance(project).getDocument(file);
+                IndentOptions discardedOptions = myDiscardedOptions.get(virtualFile);
+                Document document = PsiDocumentManager.getInstance(project).getDocument(file);
                 if (document != null) {
                     actions.add(DumbAwareAction.create(
                         ApplicationLocalize.codeStyleIndentDetectorApply(

@@ -22,6 +22,7 @@ import consulo.execution.action.Location;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -29,9 +30,9 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TestLocationProvider {
-  @SuppressWarnings("deprecation")
-  ExtensionPointName<TestLocationProvider> EP_NAME = ExtensionPointName.create(TestLocationProvider.class);
+    @SuppressWarnings("deprecation")
+    ExtensionPointName<TestLocationProvider> EP_NAME = ExtensionPointName.create(TestLocationProvider.class);
 
-  @Nonnull
-  List<Location> getLocation(@Nonnull String protocolId, @Nonnull String locationData, Project project);
+    @Nonnull
+    List<Location> getLocation(@Nonnull String protocolId, @Nonnull String locationData, Project project);
 }

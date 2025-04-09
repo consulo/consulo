@@ -42,7 +42,7 @@ import consulo.util.io.URLUtil;
 import consulo.util.io.zip.ZipUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.webBrowser.*;
@@ -100,6 +100,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     }
 
     @Override
+    @RequiredUIAccess
     public void open(@Nonnull String url) {
         openOrBrowse(url, false);
     }
@@ -211,10 +212,10 @@ public class BrowserLauncherAppless extends BrowserLauncher {
 
             String jarUrl = StandardFileSystems.FILE_PROTOCOL_PREFIX + FileUtil.toSystemIndependentName(jarFile.getPath());
             String jarLocationHash = jarFile.getName() + "." + Integer.toHexString(jarUrl.hashCode());
-            final File outputDir = new File(getExtractedFilesDir(), jarLocationHash);
+            File outputDir = new File(getExtractedFilesDir(), jarLocationHash);
 
-            final String currentTimestamp = String.valueOf(new File(jarFile.getPath()).lastModified());
-            final File timestampFile = new File(outputDir, ".idea.timestamp");
+            String currentTimestamp = String.valueOf(new File(jarFile.getPath()).lastModified());
+            File timestampFile = new File(outputDir, ".idea.timestamp");
 
             String previousTimestamp = null;
             if (timestampFile.exists()) {
@@ -222,9 +223,9 @@ public class BrowserLauncherAppless extends BrowserLauncher {
             }
 
             if (!currentTimestamp.equals(previousTimestamp)) {
-                final Ref<Boolean> extract = new Ref<>();
+                SimpleReference<Boolean> extract = new SimpleReference<>();
                 Runnable r = () -> {
-                    final ConfirmExtractDialog dialog = new ConfirmExtractDialog();
+                    ConfirmExtractDialog dialog = new ConfirmExtractDialog();
                     if (dialog.isToBeShown()) {
                         dialog.show();
                         extract.set(dialog.isOK());
@@ -242,7 +243,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
                 }
 
                 boolean closeZip = true;
-                final ZipFile zipFile = new ZipFile(jarFile);
+                ZipFile zipFile = new ZipFile(jarFile);
                 try {
                     ZipEntry entry = zipFile.getEntry(pair.second);
                     if (entry == null) {
@@ -260,9 +261,9 @@ public class BrowserLauncherAppless extends BrowserLauncher {
 
                 Application.get().invokeLater(() -> new Task.Backgroundable(null, "Extracting files...", true) {
                     @Override
-                    public void run(@Nonnull final ProgressIndicator indicator) {
-                        final int size = zipFile.size();
-                        final int[] counter = new int[]{0};
+                    public void run(@Nonnull ProgressIndicator indicator) {
+                        int size = zipFile.size();
+                        int[] counter = new int[]{0};
 
                         class MyFilter implements FilenameFilter {
                             private final Set<File> myImportantDirs = Set.of(outputDir, new File(outputDir, "resources"));
@@ -388,11 +389,11 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     @Override
     @RequiredUIAccess
     public boolean browseUsingPath(
-        @Nullable final String url,
+        @Nullable String url,
         @Nullable String browserPath,
-        @Nullable final WebBrowser browser,
-        @Nullable final Project project,
-        @Nonnull final String[] additionalParameters
+        @Nullable WebBrowser browser,
+        @Nullable Project project,
+        @Nonnull String[] additionalParameters
     ) {
         Runnable launchTask = null;
         if (browserPath == null && browser != null) {
@@ -443,8 +444,8 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     private boolean doLaunch(
         @Nullable String url,
         @Nonnull List<String> command,
-        @Nullable final WebBrowser browser,
-        @Nullable final Project project,
+        @Nullable WebBrowser browser,
+        @Nullable Project project,
         @Nonnull String[] additionalParameters,
         @Nullable Runnable launchTask
     ) {

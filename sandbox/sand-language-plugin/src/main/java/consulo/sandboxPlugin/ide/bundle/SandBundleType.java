@@ -16,17 +16,18 @@
 package consulo.sandboxPlugin.ide.bundle;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.BundleType;
 import consulo.content.bundle.SdkType;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -34,52 +35,51 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 2014-05-12
  */
 @ExtensionImpl
 public class SandBundleType extends BundleType {
-  public static final Supplier<SandBundleType> INSTANCE = ExtensionInstance.from(SdkType.class);
+    public static final Supplier<SandBundleType> INSTANCE = ExtensionInstance.from(SdkType.class);
 
-  public SandBundleType() {
-    super("SAND_BUNDLE");
-  }
+    public SandBundleType() {
+        super("SAND_BUNDLE");
+    }
 
-  @Override
-  public boolean canCreatePredefinedSdks(@Nonnull Platform platform) {
-    return true;
-  }
+    @Override
+    public boolean canCreatePredefinedSdks(@Nonnull Platform platform) {
+        return true;
+    }
 
-  @Nonnull
-  @Override
-  public Set<String> getEnviromentVariables(@Nonnull Platform platform) {
-    return Set.of("TEMP");
-  }
+    @Nonnull
+    @Override
+    public Set<String> getEnviromentVariables(@Nonnull Platform platform) {
+        return Set.of("TEMP");
+    }
 
-  @Override
-  public void collectHomePaths(@Nonnull Platform platform, @Nonnull Consumer<Path> pathConsumer) {
+    @Override
+    public void collectHomePaths(@Nonnull Platform platform, @Nonnull Consumer<Path> pathConsumer) {
+    }
 
-  }
+    @Nullable
+    @Override
+    public String getVersionString(@Nonnull Platform platform, @Nonnull Path path) {
+        return "1";
+    }
 
-  @Nullable
-  @Override
-  public String getVersionString(@Nonnull Platform platform, @Nonnull Path path) {
-    return "1";
-  }
+    @Override
+    public boolean isRootTypeApplicable(OrderRootType type) {
+        return type == BinariesOrderRootType.getInstance();
+    }
 
-  @Override
-  public boolean isRootTypeApplicable(OrderRootType type) {
-    return type == BinariesOrderRootType.getInstance();
-  }
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return "Sand Bundle";
+    }
 
-  @Nonnull
-  @Override
-  public String getPresentableName() {
-    return "Sand Bundle";
-  }
-
-  @Nullable
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.Static;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.nodesStatic();
+    }
 }

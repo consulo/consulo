@@ -30,8 +30,8 @@ import java.util.Collection;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EditorLinePainter {
-  public static final ExtensionPointName<EditorLinePainter> EP_NAME = ExtensionPointName.create(EditorLinePainter.class);
+    public static final ExtensionPointName<EditorLinePainter> EP_NAME = ExtensionPointName.create(EditorLinePainter.class);
 
-  @Nullable
-  public abstract Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber);
+    @Nullable
+    public abstract Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber);
 }

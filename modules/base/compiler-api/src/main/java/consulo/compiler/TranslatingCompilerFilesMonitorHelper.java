@@ -26,14 +26,15 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 16.01.14
+ * @since 2014-01-16
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TranslatingCompilerFilesMonitorHelper {
-  ExtensionPointName<TranslatingCompilerFilesMonitorHelper> EP_NAME = ExtensionPointName.create(TranslatingCompilerFilesMonitorHelper.class);
+    ExtensionPointName<TranslatingCompilerFilesMonitorHelper> EP_NAME =
+        ExtensionPointName.create(TranslatingCompilerFilesMonitorHelper.class);
 
-  @Nullable
-  VirtualFile[] getRootsForModule(@Nonnull Module module);
+    @Nullable
+    VirtualFile[] getRootsForModule(@Nonnull Module module);
 
-  boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> oldExtension);
+    boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> oldExtension);
 }

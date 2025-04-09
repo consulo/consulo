@@ -191,7 +191,11 @@ public class NavBarModel {
             }
         }
 
-        List<Object> updatedModel = ReadAction.compute(() -> isValid(psiElement) ? myBuilder.createModel(psiElement, roots, ownerExtension) : Collections.emptyList());
+        List<Object> updatedModel = ReadAction.compute(
+            () -> isValid(psiElement)
+                ? myBuilder.createModel(psiElement, roots, ownerExtension)
+                : Collections.emptyList()
+        );
 
         setModel(ContainerUtil.reverse(updatedModel));
     }
@@ -233,7 +237,7 @@ public class NavBarModel {
 
     public void updateModel(final Object object) {
         if (object instanceof PsiElement) {
-            updateModel((PsiElement) object, null);
+            updateModel((PsiElement)object, null);
         }
         else if (object instanceof Module) {
             List<Object> l = new ArrayList<>();
@@ -255,13 +259,13 @@ public class NavBarModel {
 
     static boolean isValid(final Object object) {
         if (object instanceof Project) {
-            return !((Project) object).isDisposed();
+            return !((Project)object).isDisposed();
         }
         if (object instanceof Module) {
-            return !((Module) object).isDisposed();
+            return !((Module)object).isDisposed();
         }
         if (object instanceof PsiElement) {
-            return ReadAction.compute(() -> ((PsiElement) object).isValid()).booleanValue();
+            return ReadAction.compute(() -> ((PsiElement)object).isValid()).booleanValue();
         }
         return object != null;
     }
@@ -274,7 +278,7 @@ public class NavBarModel {
     protected List<Object> getChildren(final Object object) {
         final List<Object> result = new ArrayList<>();
         PairProcessor<Object, NavBarModelExtension> processor = (o, ext) -> {
-            ContainerUtil.addIfNotNull(result, o instanceof PsiElement && ext.normalizeChildren() ? normalize((PsiElement) o) : o);
+            ContainerUtil.addIfNotNull(result, o instanceof PsiElement && ext.normalizeChildren() ? normalize((PsiElement)o) : o);
             return true;
         };
 

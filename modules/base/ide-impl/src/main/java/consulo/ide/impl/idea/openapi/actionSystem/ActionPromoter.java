@@ -38,7 +38,7 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ActionPromoter {
-  ExtensionPointName<ActionPromoter> EP_NAME = ExtensionPointName.create(ActionPromoter.class);
+    ExtensionPointName<ActionPromoter> EP_NAME = ExtensionPointName.create(ActionPromoter.class);
 
-  List<AnAction> promote(List<AnAction> actions, DataContext context);
+    List<AnAction> promote(List<AnAction> actions, DataContext context);
 }

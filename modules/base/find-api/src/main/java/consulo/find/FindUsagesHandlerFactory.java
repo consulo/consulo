@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.find;
 
 import consulo.annotation.component.ComponentScope;
@@ -28,10 +27,10 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class FindUsagesHandlerFactory {
-  public static final ExtensionPointName<FindUsagesHandlerFactory> EP_NAME = ExtensionPointName.create(FindUsagesHandlerFactory.class);
+    public static final ExtensionPointName<FindUsagesHandlerFactory> EP_NAME = ExtensionPointName.create(FindUsagesHandlerFactory.class);
 
-  public abstract boolean canFindUsages(@Nonnull PsiElement element);
+    public abstract boolean canFindUsages(@Nonnull PsiElement element);
 
-  @Nullable
-  public abstract FindUsagesHandler createFindUsagesHandler(@Nonnull PsiElement element, final boolean forHighlightUsages);
+    @Nullable
+    public abstract FindUsagesHandler createFindUsagesHandler(@Nonnull PsiElement element, final boolean forHighlightUsages);
 }

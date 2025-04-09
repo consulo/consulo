@@ -25,14 +25,14 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 20:22/12.06.13
+ * @since 2013-06-12
  */
 @Deprecated
 @DeprecationInfo("Use consulo.compiler.ModuleAdditionalOutputDirectoriesProvider")
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface AdditionalOutputDirectoriesProvider {
-  ExtensionPointName<AdditionalOutputDirectoriesProvider> EP_NAME = ExtensionPointName.create(AdditionalOutputDirectoriesProvider.class);
+    ExtensionPointName<AdditionalOutputDirectoriesProvider> EP_NAME = ExtensionPointName.create(AdditionalOutputDirectoriesProvider.class);
 
-  @Nonnull
-  String[] getOutputDirectories(@Nonnull Project project, @Nonnull Module modules);
+    @Nonnull
+    String[] getOutputDirectories(@Nonnull Project project, @Nonnull Module modules);
 }

@@ -28,26 +28,29 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EditorFileSwapper {
-  public static final ExtensionPointName<EditorFileSwapper> EP_NAME = ExtensionPointName.create(EditorFileSwapper.class);
+    public static final ExtensionPointName<EditorFileSwapper> EP_NAME = ExtensionPointName.create(EditorFileSwapper.class);
 
-  @Nullable
-  public abstract Pair<VirtualFile, Integer> getFileToSwapTo(Project project, FileEditorWithProviderComposite editorWithProviderComposite);
+    @Nullable
+    public abstract Pair<VirtualFile, Integer> getFileToSwapTo(
+        Project project,
+        FileEditorWithProviderComposite editorWithProviderComposite
+    );
 
-  @Nullable
-  public static TextEditor findSinglePsiAwareEditor(@Nonnull FileEditor[] fileEditors) {
-    TextEditor res = null;
+    @Nullable
+    public static TextEditor findSinglePsiAwareEditor(@Nonnull FileEditor[] fileEditors) {
+        TextEditor res = null;
 
-    for (FileEditor fileEditor : fileEditors) {
-      if (fileEditor instanceof RealTextEditor) {
-        if (res == null) {
-          res = (TextEditor)fileEditor;
+        for (FileEditor fileEditor : fileEditors) {
+            if (fileEditor instanceof RealTextEditor) {
+                if (res == null) {
+                    res = (TextEditor)fileEditor;
+                }
+                else {
+                    return null;
+                }
+            }
         }
-        else {
-          return null;
-        }
-      }
+
+        return res;
     }
-
-    return res;
-  }
 }

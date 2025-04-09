@@ -30,19 +30,19 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GotoTargetRendererProvider {
-  ExtensionPointName<GotoTargetRendererProvider> EP_NAME = ExtensionPointName.create(GotoTargetRendererProvider.class);
+    ExtensionPointName<GotoTargetRendererProvider> EP_NAME = ExtensionPointName.create(GotoTargetRendererProvider.class);
 
-  interface Options {
-    boolean hasDifferentNames();
-  }
+    interface Options {
+        boolean hasDifferentNames();
+    }
 
-  @Nullable
-  default PsiElementListCellRenderer getRenderer(PsiElement element, @Nonnull Options options) {
-    return getRenderer(element);
-  }
+    @Nullable
+    default PsiElementListCellRenderer getRenderer(PsiElement element, @Nonnull Options options) {
+        return getRenderer(element);
+    }
 
-  @Nullable
-  default PsiElementListCellRenderer getRenderer(PsiElement element) {
-    throw new AbstractMethodError();
-  }
+    @Nullable
+    default PsiElementListCellRenderer getRenderer(PsiElement element) {
+        throw new AbstractMethodError();
+    }
 }

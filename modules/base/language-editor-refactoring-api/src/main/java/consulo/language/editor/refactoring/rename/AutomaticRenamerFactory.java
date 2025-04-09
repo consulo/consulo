@@ -47,5 +47,5 @@ public interface AutomaticRenamerFactory {
   default void setEnabled(boolean enabled) {
   }
 
-  AutomaticRenamer createRenamer(final PsiElement element, final String newName, final Collection<UsageInfo> usages);
+  AutomaticRenamer createRenamer(PsiElement element, String newName, Collection<UsageInfo> usages);
 }
