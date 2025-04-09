@@ -24,13 +24,12 @@ import consulo.project.Project;
 import java.io.File;
 
 /**
- * User: Irina.Chernushina
- * Date: 11/19/11
- * Time: 1:48 PM
+ * @author Irina.Chernushina
+ * @since 2011-11-19
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsAwareCheckoutListener {
-  ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create(VcsAwareCheckoutListener.class);
+    ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create(VcsAwareCheckoutListener.class);
 
-  boolean processCheckedOutDirectory(final Project project, final File directory, final VcsKey vcsKey);
+    boolean processCheckedOutDirectory(final Project project, final File directory, final VcsKey vcsKey);
 }

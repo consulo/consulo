@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.usage.rule;
 
 import consulo.annotation.component.ComponentScope;
@@ -25,8 +24,8 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileStructureGroupRuleProvider {
-  ExtensionPointName<FileStructureGroupRuleProvider> EP_NAME = ExtensionPointName.create(FileStructureGroupRuleProvider.class);
+    ExtensionPointName<FileStructureGroupRuleProvider> EP_NAME = ExtensionPointName.create(FileStructureGroupRuleProvider.class);
 
-  @Nullable
-  UsageGroupingRule getUsageGroupingRule(final Project project);
+    @Nullable
+    UsageGroupingRule getUsageGroupingRule(Project project);
 }

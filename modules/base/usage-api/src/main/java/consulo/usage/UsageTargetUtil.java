@@ -25,39 +25,47 @@ import java.util.Collections;
 import java.util.List;
 
 public class UsageTargetUtil {
-  public static UsageTarget[] findUsageTargets(DataProvider dataProvider) {
-    Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
-    PsiFile file = dataProvider.getDataUnchecked(PsiFile.KEY);
+    public static UsageTarget[] findUsageTargets(DataProvider dataProvider) {
+        Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
+        PsiFile file = dataProvider.getDataUnchecked(PsiFile.KEY);
 
-    List<UsageTarget> result = new ArrayList<>();
-    if (file != null && editor != null) {
-      UsageTarget[] targets = findUsageTargets(editor, file);
-      if (targets != null) Collections.addAll(result, targets);
-    }
-    PsiElement psiElement = dataProvider.getDataUnchecked(PsiElement.KEY);
-    if (psiElement != null) {
-      UsageTarget[] targets = findUsageTargets(psiElement);
-      if (targets != null)Collections.addAll(result, targets);
+        List<UsageTarget> result = new ArrayList<>();
+        if (file != null && editor != null) {
+            UsageTarget[] targets = findUsageTargets(editor, file);
+            if (targets != null) {
+                Collections.addAll(result, targets);
+            }
+        }
+        PsiElement psiElement = dataProvider.getDataUnchecked(PsiElement.KEY);
+        if (psiElement != null) {
+            UsageTarget[] targets = findUsageTargets(psiElement);
+            if (targets != null) {
+                Collections.addAll(result, targets);
+            }
+        }
+
+        return result.isEmpty() ? null : result.toArray(new UsageTarget[result.size()]);
     }
 
-    return result.isEmpty() ? null : result.toArray(new UsageTarget[result.size()]);
-  }
-
-  public static UsageTarget[] findUsageTargets(Editor editor, PsiFile file) {
-    List<UsageTarget> result = new ArrayList<>();
-    for (UsageTargetProvider provider : UsageTargetProvider.EP_NAME.getExtensionList()) {
-      UsageTarget[] targets = provider.getTargets(editor, file);
-      if (targets != null) Collections.addAll(result, targets);
+    public static UsageTarget[] findUsageTargets(Editor editor, PsiFile file) {
+        List<UsageTarget> result = new ArrayList<>();
+        for (UsageTargetProvider provider : UsageTargetProvider.EP_NAME.getExtensionList()) {
+            UsageTarget[] targets = provider.getTargets(editor, file);
+            if (targets != null) {
+                Collections.addAll(result, targets);
+            }
+        }
+        return result.isEmpty() ? null : result.toArray(new UsageTarget[result.size()]);
     }
-    return result.isEmpty() ? null : result.toArray(new UsageTarget[result.size()]);
-  }
 
-  public static UsageTarget[] findUsageTargets(PsiElement psiElement) {
-    List<UsageTarget> result = new ArrayList<>();
-    for (UsageTargetProvider provider : UsageTargetProvider.EP_NAME.getExtensionList()) {
-      UsageTarget[] targets = provider.getTargets(psiElement);
-      if (targets != null) Collections.addAll(result, targets);
+    public static UsageTarget[] findUsageTargets(PsiElement psiElement) {
+        List<UsageTarget> result = new ArrayList<>();
+        for (UsageTargetProvider provider : UsageTargetProvider.EP_NAME.getExtensionList()) {
+            UsageTarget[] targets = provider.getTargets(psiElement);
+            if (targets != null) {
+                Collections.addAll(result, targets);
+            }
+        }
+        return result.isEmpty() ? null : result.toArray(new UsageTarget[result.size()]);
     }
-    return result.isEmpty() ? null : result.toArray(new UsageTarget[result.size()]);
-  }
 }

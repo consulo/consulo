@@ -22,6 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -30,30 +31,29 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class WritingAccessProvider {
+    private static final ExtensionPointName<WritingAccessProvider> EP_NAME = ExtensionPointName.create(WritingAccessProvider.class);
 
-  private static final ExtensionPointName<WritingAccessProvider> EP_NAME = ExtensionPointName.create(WritingAccessProvider.class);
+    /**
+     * @param files files to be checked
+     * @return set of files that cannot be accessed
+     */
+    @Nonnull
+    public abstract Collection<VirtualFile> requestWriting(VirtualFile... files);
 
-  /**
-   * @param files files to be checked
-   * @return set of files that cannot be accessed
-   */
-  @Nonnull
-  public abstract Collection<VirtualFile> requestWriting(VirtualFile... files);
+    public abstract boolean isPotentiallyWritable(@Nonnull VirtualFile file);
 
-  public abstract boolean isPotentiallyWritable(@Nonnull VirtualFile file);
-
-  @Nonnull
-  public static List<WritingAccessProvider> getProvidersForProject(@Nullable ComponentManager project) {
-    return project == null ? List.of() : EP_NAME.getExtensionList(project);
-  }
-
-  public static boolean isPotentiallyWritable(@Nonnull VirtualFile file, @Nullable ComponentManager project) {
-    List<WritingAccessProvider> providers = getProvidersForProject(project);
-    for (WritingAccessProvider provider : providers) {
-      if (!provider.isPotentiallyWritable(file)) {
-        return false;
-      }
+    @Nonnull
+    public static List<WritingAccessProvider> getProvidersForProject(@Nullable ComponentManager project) {
+        return project == null ? List.of() : EP_NAME.getExtensionList(project);
     }
-    return true;
-  }
+
+    public static boolean isPotentiallyWritable(@Nonnull VirtualFile file, @Nullable ComponentManager project) {
+        List<WritingAccessProvider> providers = getProvidersForProject(project);
+        for (WritingAccessProvider provider : providers) {
+            if (!provider.isPotentiallyWritable(file)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

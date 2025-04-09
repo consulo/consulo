@@ -27,49 +27,58 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 21.08.14
+ * @since 2014-08-21
  */
 @ExtensionImpl
 public class ModuleOrderEntryType implements OrderEntryType<ModuleOrderEntryImpl> {
-  @Nonnull
-  public static ModuleOrderEntryType getInstance() {
-    return EP_NAME.findExtensionOrFail(ModuleOrderEntryType.class);
-  }
-
-  public static final String ID = "module";
-
-  public static final String MODULE_NAME_ATTR = "module-name";
-  private static final String EXPORTED_ATTR = "exported";
-  private static final String PRODUCTION_ON_TEST_ATTRIBUTE = "production-on-test";
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return ID;
-  }
-
-  @Nonnull
-  @Override
-  public ModuleOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
-    String moduleName = element.getAttributeValue(MODULE_NAME_ATTR);
-    if (moduleName == null) {
-      throw new InvalidDataException();
+    @Nonnull
+    public static ModuleOrderEntryType getInstance() {
+        return EP_NAME.findExtensionOrFail(ModuleOrderEntryType.class);
     }
-    DependencyScope dependencyScope = DependencyScope.readExternal(element);
-    boolean exported = element.getAttributeValue(EXPORTED_ATTR) != null;
-    boolean productionOnTestDependency = element.getAttributeValue(PRODUCTION_ON_TEST_ATTRIBUTE) != null;
-    return new ModuleOrderEntryImpl(moduleName, (ModuleRootLayerImpl)moduleRootLayer, dependencyScope, exported, productionOnTestDependency);
-  }
 
-  @Override
-  public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleOrderEntryImpl orderEntry) {
-    element.setAttribute(MODULE_NAME_ATTR, orderEntry.getModuleName());
-    if (orderEntry.isExported()) {
-      element.setAttribute(EXPORTED_ATTR, "");
+    public static final String ID = "module";
+
+    public static final String MODULE_NAME_ATTR = "module-name";
+    private static final String EXPORTED_ATTR = "exported";
+    private static final String PRODUCTION_ON_TEST_ATTRIBUTE = "production-on-test";
+
+    @Nonnull
+    @Override
+    public String getId() {
+        return ID;
     }
-    orderEntry.getScope().writeExternal(element);
-    if (orderEntry.isProductionOnTestDependency()) {
-      element.setAttribute(PRODUCTION_ON_TEST_ATTRIBUTE, "");
+
+    @Nonnull
+    @Override
+    public ModuleOrderEntryImpl loadOrderEntry(
+        @Nonnull Element element,
+        @Nonnull ModuleRootLayer moduleRootLayer
+    ) throws InvalidDataException {
+        String moduleName = element.getAttributeValue(MODULE_NAME_ATTR);
+        if (moduleName == null) {
+            throw new InvalidDataException();
+        }
+        DependencyScope dependencyScope = DependencyScope.readExternal(element);
+        boolean exported = element.getAttributeValue(EXPORTED_ATTR) != null;
+        boolean productionOnTestDependency = element.getAttributeValue(PRODUCTION_ON_TEST_ATTRIBUTE) != null;
+        return new ModuleOrderEntryImpl(
+            moduleName,
+            (ModuleRootLayerImpl)moduleRootLayer,
+            dependencyScope,
+            exported,
+            productionOnTestDependency
+        );
     }
-  }
+
+    @Override
+    public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleOrderEntryImpl orderEntry) {
+        element.setAttribute(MODULE_NAME_ATTR, orderEntry.getModuleName());
+        if (orderEntry.isExported()) {
+            element.setAttribute(EXPORTED_ATTR, "");
+        }
+        orderEntry.getScope().writeExternal(element);
+        if (orderEntry.isProductionOnTestDependency()) {
+            element.setAttribute(PRODUCTION_ON_TEST_ATTRIBUTE, "");
+        }
+    }
 }

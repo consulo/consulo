@@ -30,26 +30,29 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ModuleSourceOrderEntryType implements OrderEntryType<ModuleSourceOrderEntryImpl> {
-  public static final String ID = "sourceFolder";
+    public static final String ID = "sourceFolder";
 
-  @Nonnull
-  public static ModuleSourceOrderEntryType getInstance() {
-    return EP_NAME.findExtensionOrFail(ModuleSourceOrderEntryType.class);
-  }
+    @Nonnull
+    public static ModuleSourceOrderEntryType getInstance() {
+        return EP_NAME.findExtensionOrFail(ModuleSourceOrderEntryType.class);
+    }
 
-  @Nonnull
-  @Override
-  public String getId() {
-    return ID;
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return ID;
+    }
 
-  @Nonnull
-  @Override
-  public ModuleSourceOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
-    return new ModuleSourceOrderEntryImpl((ModuleRootLayerImpl)moduleRootLayer);
-  }
+    @Nonnull
+    @Override
+    public ModuleSourceOrderEntryImpl loadOrderEntry(
+        @Nonnull Element element,
+        @Nonnull ModuleRootLayer moduleRootLayer
+    ) throws InvalidDataException {
+        return new ModuleSourceOrderEntryImpl((ModuleRootLayerImpl)moduleRootLayer);
+    }
 
-  @Override
-  public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleSourceOrderEntryImpl orderEntry) {
-  }
+    @Override
+    public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleSourceOrderEntryImpl orderEntry) {
+    }
 }

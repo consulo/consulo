@@ -31,34 +31,35 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class WorkingContextProvider {
+    public static final ExtensionPointName<WorkingContextProvider> EP_NAME = ExtensionPointName.create(WorkingContextProvider.class);
 
-  public static final ExtensionPointName<WorkingContextProvider> EP_NAME = ExtensionPointName.create(WorkingContextProvider.class);
+    /**
+     * Short unique name.
+     * Should be valid as a tag name (for serialization purposes).
+     * No spaces, dots etc allowed.
+     *
+     * @return provider's name
+     */
+    @Nonnull
+    public abstract String getId();
 
-  /**
-   * Short unique name.
-   * Should be valid as a tag name (for serialization purposes).
-   * No spaces, dots etc allowed.
-   *
-   * @return provider's name
-   */
-  @Nonnull
-  public abstract String getId();
+    /**
+     * Short description (for UI)
+     *
+     * @return
+     */
+    @Nonnull
+    public abstract String getDescription();
 
-  /**
-   * Short description (for UI)
-   * @return
-   */
-  @Nonnull
-  public abstract String getDescription();
+    /**
+     * Saves a component's state.
+     * May delegate to {@link JDOMExternalizable#writeExternal(org.jdom.Element)}
+     *
+     * @param toElement
+     */
+    public abstract void saveContext(Element toElement) throws WriteExternalException;
 
-  /**
-   * Saves a component's state.
-   * May delegate to {@link JDOMExternalizable#writeExternal(org.jdom.Element)}
-   * @param toElement
-   */
-  public abstract void saveContext(Element toElement) throws WriteExternalException;
+    public abstract void loadContext(Element fromElement) throws InvalidDataException;
 
-  public abstract void loadContext(Element fromElement) throws InvalidDataException;
-
-  public abstract void clearContext();
+    public abstract void clearContext();
 }
