@@ -63,7 +63,7 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
                 }
                 catch (IndexNotReadyException ex) {
                     DumbService.getInstance(project)
-                        .showDumbModeNotification(ActionLocalize.actionHighlightusagesinfileNotReady().get());
+                        .showDumbModeNotification(ActionLocalize.actionHighlightusagesinfileNotReady());
                 }
             });
     }

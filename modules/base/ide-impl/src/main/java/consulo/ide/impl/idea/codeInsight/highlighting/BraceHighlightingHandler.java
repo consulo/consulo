@@ -181,7 +181,7 @@ public class BraceHighlightingHandler {
         return file != null && file.isValid() && !file.getProject().isDisposed();
     }
 
-    private static boolean isValidEditor(@Nonnull Editor editor) {
+    public static boolean isValidEditor(@Nonnull Editor editor) {
         Project editorProject = editor.getProject();
         return editorProject != null && !editorProject.isDisposed() && !editor.isDisposed() && editor.isShowing() && !editor.isViewer();
     }
@@ -206,7 +206,7 @@ public class BraceHighlightingHandler {
         else {
             PsiDocumentManager.getInstance(project).performForCommittedDocument(document, () -> {
                 if (!project.isDisposed() && !editor.isDisposed()) {
-                    BraceHighlighter.updateBraces(editor, alarm);
+                    BackgroundHighlighter.updateBraces(editor, alarm);
                 }
             });
         }

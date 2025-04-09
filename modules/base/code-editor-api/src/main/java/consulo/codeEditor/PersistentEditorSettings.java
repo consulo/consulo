@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -28,250 +27,254 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface PersistentEditorSettings {
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use injection")
-  static PersistentEditorSettings getInstance() {
-    return Application.get().getInstance(PersistentEditorSettings.class);
-  }
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use injection")
+    static PersistentEditorSettings getInstance() {
+        return Application.get().getInstance(PersistentEditorSettings.class);
+    }
 
-  boolean isRightMarginShown();
+    boolean isRightMarginShown();
 
-  void setRightMarginShown(boolean val);
+    void setRightMarginShown(boolean val);
 
-  boolean isLineNumbersShown();
+    boolean isLineNumbersShown();
 
-  void setLineNumbersShown(boolean val);
+    void setLineNumbersShown(boolean val);
 
-  boolean areGutterIconsShown();
+    boolean areGutterIconsShown();
 
-  void setGutterIconsShown(boolean val);
+    void setGutterIconsShown(boolean val);
 
-  int getAdditionalLinesCount();
+    int getAdditionalLinesCount();
 
-  void setAdditionalLinesCount(int additionalLinesCount);
+    void setAdditionalLinesCount(int additionalLinesCount);
 
-  int getAdditinalColumnsCount();
+    int getAdditinalColumnsCount();
 
-  void setAdditionalColumnsCount(int value);
+    void setAdditionalColumnsCount(int value);
 
-  boolean isLineMarkerAreaShown();
+    boolean isLineMarkerAreaShown();
 
-  void setLineMarkerAreaShown(boolean lineMarkerAreaShown);
+    void setLineMarkerAreaShown(boolean lineMarkerAreaShown);
 
-  boolean isFoldingOutlineShown();
+    boolean isFoldingOutlineShown();
 
-  void setFoldingOutlineShown(boolean val);
+    void setFoldingOutlineShown(boolean val);
 
-  /**
-   * @return {@code true} if breadcrumbs should be shown above the editor, {@code false} otherwise
-   */
-  boolean isBreadcrumbsAbove();
+    /**
+     * @return {@code true} if breadcrumbs should be shown above the editor, {@code false} otherwise
+     */
+    boolean isBreadcrumbsAbove();
 
-  /**
-   * @param value {@code true} if breadcrumbs should be shown above the editor, {@code false} otherwise
-   * @return {@code true} if an option was modified, {@code false} otherwise
-   */
-  boolean setBreadcrumbsAbove(boolean value);
+    /**
+     * @param value {@code true} if breadcrumbs should be shown above the editor, {@code false} otherwise
+     * @return {@code true} if an option was modified, {@code false} otherwise
+     */
+    boolean setBreadcrumbsAbove(boolean value);
 
-  /**
-   * @return {@code true} if breadcrumbs should be shown, {@code false} otherwise
-   */
-  boolean isBreadcrumbsShown();
+    /**
+     * @return {@code true} if breadcrumbs should be shown, {@code false} otherwise
+     */
+    boolean isBreadcrumbsShown();
 
-  /**
-   * @param value {@code true} if breadcrumbs should be shown, {@code false} otherwise
-   * @return {@code true} if an option was modified, {@code false} otherwise
-   */
-  boolean setBreadcrumbsShown(boolean value);
+    /**
+     * @param value {@code true} if breadcrumbs should be shown, {@code false} otherwise
+     * @return {@code true} if an option was modified, {@code false} otherwise
+     */
+    boolean setBreadcrumbsShown(boolean value);
 
-  /**
-   * @param languageID the language identifier to configure
-   * @return {@code true} if breadcrumbs should be shown for the specified language, {@code false} otherwise
-   */
-  boolean isBreadcrumbsShownFor(String languageID);
+    /**
+     * @param languageID the language identifier to configure
+     * @return {@code true} if breadcrumbs should be shown for the specified language, {@code false} otherwise
+     */
+    boolean isBreadcrumbsShownFor(String languageID);
 
-  boolean hasBreadcrumbSettings(String languageID);
+    boolean hasBreadcrumbSettings(String languageID);
 
-  /**
-   * @param languageID the language identifier to configure
-   * @param value      {@code true} if breadcrumbs should be shown for the specified language, {@code false} otherwise
-   * @return {@code true} if an option was modified, {@code false} otherwise
-   */
-  boolean setBreadcrumbsShownFor(String languageID, boolean value);
+    /**
+     * @param languageID the language identifier to configure
+     * @param value      {@code true} if breadcrumbs should be shown for the specified language, {@code false} otherwise
+     * @return {@code true} if an option was modified, {@code false} otherwise
+     */
+    boolean setBreadcrumbsShownFor(String languageID, boolean value);
 
-  boolean isBlockCursor();
+    boolean isBlockCursor();
 
-  void setBlockCursor(boolean val);
+    void setBlockCursor(boolean val);
 
-  boolean isCaretRowShown();
+    boolean isCaretRowShown();
 
-  int getBlockIndent();
+    int getBlockIndent();
 
-  void setBlockIndent(int blockIndent);
+    void setBlockIndent(int blockIndent);
 
-  boolean isSmartHome();
+    boolean isSmartHome();
 
-  void setSmartHome(boolean val);
+    void setSmartHome(boolean val);
 
-  default boolean isUseSoftWraps() {
-    return isUseSoftWraps(SoftWrapAppliancePlaces.MAIN_EDITOR);
-  }
+    default boolean isUseSoftWraps() {
+        return isUseSoftWraps(SoftWrapAppliancePlaces.MAIN_EDITOR);
+    }
 
-  boolean isUseSoftWraps(@Nonnull SoftWrapAppliancePlaces place);
+    boolean isUseSoftWraps(@Nonnull SoftWrapAppliancePlaces place);
 
-  default void setUseSoftWraps(boolean use) {
-    setUseSoftWraps(use, SoftWrapAppliancePlaces.MAIN_EDITOR);
-  }
+    default void setUseSoftWraps(boolean use) {
+        setUseSoftWraps(use, SoftWrapAppliancePlaces.MAIN_EDITOR);
+    }
 
-  void setUseSoftWraps(boolean use, @Nonnull SoftWrapAppliancePlaces place);
+    void setUseSoftWraps(boolean use, @Nonnull SoftWrapAppliancePlaces place);
 
-  boolean isUseCustomSoftWrapIndent();
+    boolean isUseCustomSoftWrapIndent();
 
-  void setUseCustomSoftWrapIndent(boolean use);
+    void setUseCustomSoftWrapIndent(boolean use);
 
-  int getCustomSoftWrapIndent();
+    int getCustomSoftWrapIndent();
 
-  void setCustomSoftWrapIndent(int indent);
+    void setCustomSoftWrapIndent(int indent);
 
-  boolean isVirtualSpace();
+    boolean isVirtualSpace();
 
-  void setVirtualSpace(boolean val);
+    void setVirtualSpace(boolean val);
 
-  boolean isCaretInsideTabs();
+    boolean isCaretInsideTabs();
 
-  void setCaretInsideTabs(boolean val);
+    void setCaretInsideTabs(boolean val);
 
-  boolean isBlinkCaret();
+    boolean isBlinkCaret();
 
-  void setBlinkCaret(boolean blinkCaret);
+    void setBlinkCaret(boolean blinkCaret);
 
-  int getBlinkPeriod();
+    int getBlinkPeriod();
 
-  void setBlinkPeriod(int blinkInterval);
+    void setBlinkPeriod(int blinkInterval);
 
 
-  boolean isEnsureNewLineAtEOF();
+    boolean isEnsureNewLineAtEOF();
 
-  void setEnsureNewLineAtEOF(boolean ensure);
+    void setEnsureNewLineAtEOF(boolean ensure);
 
-  String getStripTrailingSpaces(); // TODO: move to CodeEditorManager or something else
+    String getStripTrailingSpaces(); // TODO: move to CodeEditorManager or something else
 
-  void setStripTrailingSpaces(String stripTrailingSpaces);
+    void setStripTrailingSpaces(String stripTrailingSpaces);
 
-  boolean isShowQuickDocOnMouseOverElement();
+    boolean isShowQuickDocOnMouseOverElement();
 
-  void setShowQuickDocOnMouseOverElement(boolean show);
+    void setShowQuickDocOnMouseOverElement(boolean show);
 
-  @Deprecated
-  default int getQuickDocOnMouseOverElementDelayMillis() {
-    return getTooltipsDelay();
-  }
+    @Deprecated
+    default int getQuickDocOnMouseOverElementDelayMillis() {
+        return getTooltipsDelay();
+    }
 
-  int getTooltipsDelay();
+    int getTooltipsDelay();
 
-  void setTooltipsDelay(int delay);
+    void setTooltipsDelay(int delay);
 
-  @Deprecated
-  default void setQuickDocOnMouseOverElementDelayMillis(int delay) {
-    setTooltipsDelay(delay);
-  }
+    @Deprecated
+    default void setQuickDocOnMouseOverElementDelayMillis(int delay) {
+        setTooltipsDelay(delay);
+    }
 
-  boolean isShowIntentionBulb();
+    boolean isShowIntentionBulb();
 
-  void setShowIntentionBulb(boolean show);
+    void setShowIntentionBulb(boolean show);
 
-  boolean isRefrainFromScrolling();
+    boolean isRefrainFromScrolling();
 
-  void setRefrainFromScrolling(boolean b);
+    void setRefrainFromScrolling(boolean b);
 
-  boolean isWhitespacesShown();
+    boolean isWhitespacesShown();
 
-  void setWhitespacesShown(boolean val);
+    void setWhitespacesShown(boolean val);
 
-  boolean isLeadingWhitespacesShown();
+    boolean isLeadingWhitespacesShown();
 
-  void setLeadingWhitespacesShown(boolean val);
+    void setLeadingWhitespacesShown(boolean val);
 
-  boolean isInnerWhitespacesShown();
+    boolean isInnerWhitespacesShown();
 
-  void setInnerWhitespacesShown(boolean val);
+    void setInnerWhitespacesShown(boolean val);
 
-  boolean isTrailingWhitespacesShown();
+    boolean isTrailingWhitespacesShown();
 
-  void setTrailingWhitespacesShown(boolean val);
+    void setTrailingWhitespacesShown(boolean val);
 
-  boolean isAllSoftWrapsShown();
+    boolean isAllSoftWrapsShown();
 
-  void setAllSoftwrapsShown(boolean val);
+    void setAllSoftwrapsShown(boolean val);
 
-  boolean isIndentGuidesShown();
+    boolean isIndentGuidesShown();
 
-  void setIndentGuidesShown(boolean val);
+    void setIndentGuidesShown(boolean val);
 
-  boolean isSmoothScrolling();
+    boolean isSmoothScrolling();
 
-  void setSmoothScrolling(boolean val);
+    void setSmoothScrolling(boolean val);
 
-  boolean isCamelWords();
+    boolean isCamelWords();
 
-  void setCamelWords(boolean val);
+    void setCamelWords(boolean val);
 
-  boolean isAdditionalPageAtBottom();
+    boolean isAdditionalPageAtBottom();
 
-  void setAdditionalPageAtBottom(boolean val);
+    void setAdditionalPageAtBottom(boolean val);
 
-  boolean isDndEnabled();
+    boolean isDndEnabled();
 
-  void setDndEnabled(boolean val);
+    void setDndEnabled(boolean val);
 
-  boolean isWheelFontChangeEnabled();
+    boolean isWheelFontChangeEnabled();
 
-  void setWheelFontChangeEnabled(boolean val);
+    void setWheelFontChangeEnabled(boolean val);
 
-  boolean isMouseClickSelectionHonorsCamelWords();
+    boolean isMouseClickSelectionHonorsCamelWords();
 
-  void setMouseClickSelectionHonorsCamelWords(boolean val);
+    void setMouseClickSelectionHonorsCamelWords(boolean val);
 
-  boolean isVariableInplaceRenameEnabled();
+    boolean isVariableInplaceRenameEnabled();
 
-  void setVariableInplaceRenameEnabled(final boolean val);
+    void setVariableInplaceRenameEnabled(final boolean val);
 
-  boolean isPreselectRename();
+    boolean isPreselectRename();
 
-  void setPreselectRename(final boolean val);
+    void setPreselectRename(final boolean val);
 
-  boolean isShowInlineLocalDialog();
+    boolean isShowInlineLocalDialog();
 
-  void setShowInlineLocalDialog(final boolean val);
+    void setShowInlineLocalDialog(final boolean val);
 
-  boolean addCaretsOnDoubleCtrl();
+    boolean addCaretsOnDoubleCtrl();
 
-  void setAddCaretsOnDoubleCtrl(boolean val);
+    void setAddCaretsOnDoubleCtrl(boolean val);
 
-  BidiTextDirection getBidiTextDirection();
+    BidiTextDirection getBidiTextDirection();
 
-  void setBidiTextDirection(BidiTextDirection direction);
+    void setBidiTextDirection(BidiTextDirection direction);
 
-  boolean isShowParameterNameHints();
+    boolean isShowParameterNameHints();
 
-  void setShowParameterNameHints(boolean value);
+    void setShowParameterNameHints(boolean value);
 
-  int getMinParamNameLengthToShow();
+    int getMinParamNameLengthToShow();
 
-  void setMinParamNameLengthToShow(int value);
+    void setMinParamNameLengthToShow(int value);
 
-  int getMinArgsToShow();
+    int getMinArgsToShow();
 
-  void setMinArgsToShow(int minParamsToShow);
+    void setMinArgsToShow(int minParamsToShow);
 
-  boolean isKeepTrailingSpacesOnCaretLine();
+    boolean isKeepTrailingSpacesOnCaretLine();
 
-  void setKeepTrailingSpacesOnCaretLine(boolean keep);
+    void setKeepTrailingSpacesOnCaretLine(boolean keep);
 
-  boolean isShowInspectionWidget();
+    boolean isShowInspectionWidget();
 
-  void setShowInspectionWidget(boolean show);
+    void setShowInspectionWidget(boolean show);
 
-  boolean isFoldingEndingsShown();
+    boolean isFoldingEndingsShown();
+
+    boolean isHighlightSelectionOccurrences();
+
+    void setHighlightSelectionOccurrences(boolean val);
 }

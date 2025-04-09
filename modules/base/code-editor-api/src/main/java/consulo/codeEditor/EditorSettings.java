@@ -207,6 +207,10 @@ public interface EditorSettings {
     default void setSoftWrapAppliancePlace(SoftWrapAppliancePlaces softWrapAppliancePlace) {
     }
 
+    boolean isHighlightSelectionOccurrences();
+
+    void setHighlightSelectionOccurrences(boolean val);
+
     default SoftWrapAppliancePlaces getSoftWrapAppliancePlace() {
         return SoftWrapAppliancePlaces.MAIN_EDITOR;
     }
