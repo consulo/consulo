@@ -169,7 +169,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
 
     @Override
     public void fileStatusChanged(VirtualFile file) {
-        Application application = Application.get();
+        Application application = myProject.getApplication();
         if (!application.isDispatchThread() && !application.isUnitTestMode()) {
             application.invokeLater(() -> fileStatusChanged(file));
             return;

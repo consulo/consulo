@@ -31,9 +31,11 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
     private SkipDefaultValuesSerializationFilters myDefaultValuesFilter = new SkipDefaultValuesSerializationFilters();
     private final List<RemoteServer<?>> myServers = new CopyOnWriteArrayList<>();
     private final List<RemoteServerState> myUnknownServers = new ArrayList<>();
+    private final Application myApplication;
 
     @Inject
-    public RemoteServersManagerImpl() {
+    public RemoteServersManagerImpl(Application application) {
+        myApplication = application;
     }
 
     @Override
@@ -79,13 +81,13 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
     @Override
     public void addServer(RemoteServer<?> server) {
         myServers.add(server);
-        Application.get().getMessageBus().syncPublisher(RemoteServerListener.class).serverAdded(server);
+        myApplication.getMessageBus().syncPublisher(RemoteServerListener.class).serverAdded(server);
     }
 
     @Override
     public void removeServer(RemoteServer<?> server) {
         myServers.remove(server);
-        Application.get().getMessageBus().syncPublisher(RemoteServerListener.class).serverRemoved(server);
+        myApplication.getMessageBus().syncPublisher(RemoteServerListener.class).serverRemoved(server);
     }
 
     @Override
@@ -120,7 +122,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
         }
 
         if (!needsMigration.isEmpty()) {
-            Application.get().invokeLater(() -> {
+            myApplication.invokeLater(() -> {
                 for (CloudConfigurationBase nextConfig : needsMigration) {
                     nextConfig.migrateToPasswordSafe();
                 }

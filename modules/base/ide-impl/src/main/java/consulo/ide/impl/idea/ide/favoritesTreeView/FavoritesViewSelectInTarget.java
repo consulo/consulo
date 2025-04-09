@@ -52,7 +52,7 @@ public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
 
     @Override
     public String getToolWindowId() {
-        return ProjectUIViewLocalize.selectInFavorites().get();
+        return ToolWindowId.BOOKMARKS;
     }
 
     @Override
