@@ -61,6 +61,7 @@ import consulo.language.psi.resolve.RefResolveService;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.SmartList;
@@ -867,14 +868,15 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
         @Override
         @RequiredUIAccess
         public void run() {
-            Application app = myProject.getApplication();
-            app.assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
             Project project = myProject;
             DaemonCodeAnalyzerImpl dca;
             if (project == null || !project.isInitialized() || project.isDisposed() || PowerSaveMode.isEnabled() || (dca =
                 (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(project)).myDisposed) {
                 return;
             }
+
+            Application app = myProject.getApplication();
 
             Collection<FileEditor> activeEditors = dca.getSelectedEditors();
             boolean updateByTimerEnabled = dca.isUpdateByTimerEnabled();
