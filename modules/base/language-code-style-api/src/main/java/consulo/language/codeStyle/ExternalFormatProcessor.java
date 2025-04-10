@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
@@ -11,8 +12,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -52,7 +51,6 @@ public interface ExternalFormatProcessor {
     /**
      * @return the unique id for external formatter
      */
-    @NonNls
     @Nonnull
     String getId();
 
@@ -69,7 +67,7 @@ public interface ExternalFormatProcessor {
      * @return the external formatter with the unique id, if any
      */
     @Nonnull
-    static Optional<ExternalFormatProcessor> findExternalFormatter(@NonNls @Nonnull String externalFormatterId) {
+    static Optional<ExternalFormatProcessor> findExternalFormatter(@Nonnull String externalFormatterId) {
         return EP_NAME.getExtensionList().stream().filter(efp -> externalFormatterId.equals(efp.getId())).findFirst();
     }
 
@@ -115,24 +113,22 @@ public interface ExternalFormatProcessor {
      * @return the element after formatting
      */
     @Nonnull
+    @RequiredReadAction
     static PsiElement formatElement(@Nonnull PsiElement elementToFormat, @Nonnull TextRange range, boolean canChangeWhiteSpacesOnly) {
-        final PsiFile file = elementToFormat.getContainingFile();
-        final Document document = file.getViewProvider().getDocument();
+        PsiFile file = elementToFormat.getContainingFile();
+        Document document = file.getViewProvider().getDocument();
         if (document != null) {
-            final TextRange rangeAfterFormat = formatRangeInFile(file, range, canChangeWhiteSpacesOnly);
+            TextRange rangeAfterFormat = formatRangeInFile(file, range, canChangeWhiteSpacesOnly);
             if (rangeAfterFormat != null) {
                 PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
                 if (!elementToFormat.isValid()) {
                     PsiElement elementAtStart = file.findElementAt(rangeAfterFormat.getStartOffset());
-                    if (elementAtStart instanceof PsiWhiteSpace) {
-                        elementAtStart = PsiTreeUtil.nextLeaf(elementAtStart);
+                    if (elementAtStart instanceof PsiWhiteSpace whiteSpace) {
+                        elementAtStart = PsiTreeUtil.nextLeaf(whiteSpace);
                     }
                     if (elementAtStart != null) {
                         PsiElement parent = PsiTreeUtil.getParentOfType(elementAtStart, elementToFormat.getClass());
-                        if (parent != null) {
-                            return parent;
-                        }
-                        return elementAtStart;
+                        return parent != null ? parent : elementAtStart;
                     }
                 }
             }

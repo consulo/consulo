@@ -7,6 +7,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.ui.NotificationType;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
@@ -115,7 +116,13 @@ public abstract class JBPopupFactory {
      * @return the popup instance.
      */
     @Nonnull
-    public abstract ListPopup createConfirmation(String title, String yesText, String noText, Runnable onYes, int defaultOptionIndex);
+    public abstract ListPopup createConfirmation(
+        String title,
+        String yesText,
+        String noText,
+        @RequiredUIAccess Runnable onYes,
+        int defaultOptionIndex
+    );
 
     /**
      * Creates a popup allowing to choose one of two specified options and execute code when either of them is selected.

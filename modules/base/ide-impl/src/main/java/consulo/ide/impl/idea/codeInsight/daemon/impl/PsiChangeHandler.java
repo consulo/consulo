@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -55,6 +56,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
         EditorFactory.getInstance().getEventMulticaster().addDocumentListener(
             new DocumentListener() {
                 @Override
+                @RequiredReadAction
                 public void beforeDocumentChange(@Nonnull DocumentEvent e) {
                     Document document = e.getDocument();
                     PsiDocumentManagerImpl documentManager = (PsiDocumentManagerImpl)PsiDocumentManager.getInstance(myProject);
@@ -66,12 +68,15 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
                     }
                     if (document.getUserData(UPDATE_ON_COMMIT_ENGAGED) == null) {
                         document.putUserData(UPDATE_ON_COMMIT_ENGAGED, Boolean.TRUE);
-                        PsiDocumentManagerBase.addRunOnCommit(document, () -> {
-                            if (document.getUserData(UPDATE_ON_COMMIT_ENGAGED) != null) {
-                                updateChangesForDocument(document);
-                                document.putUserData(UPDATE_ON_COMMIT_ENGAGED, null);
+                        PsiDocumentManagerBase.addRunOnCommit(
+                            document,
+                            () -> {
+                                if (document.getUserData(UPDATE_ON_COMMIT_ENGAGED) != null) {
+                                    updateChangesForDocument(document);
+                                    document.putUserData(UPDATE_ON_COMMIT_ENGAGED, null);
+                                }
                             }
-                        });
+                        );
                     }
                 }
             },
@@ -193,7 +198,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
         String propertyName = event.getPropertyName();
         if (!propertyName.equals(PsiTreeChangeEvent.PROP_WRITABLE)) {
             Object oldValue = event.getOldValue();
-            if (oldValue instanceof VirtualFile && shouldBeIgnored((VirtualFile)oldValue)) {
+            if (oldValue instanceof VirtualFile virtualFile && shouldBeIgnored(virtualFile)) {
                 // ignore workspace.xml
                 return;
             }

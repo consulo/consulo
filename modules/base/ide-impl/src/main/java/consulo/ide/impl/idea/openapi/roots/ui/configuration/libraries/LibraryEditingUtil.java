@@ -15,16 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries;
 
-import consulo.application.AllIcons;
-import consulo.content.OrderRootType;
 import consulo.application.content.impl.internal.library.LibraryImpl;
+import consulo.content.OrderRootType;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.*;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.ide.impl.idea.util.ParameterizedRunnable;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.ClasspathPanel;
@@ -36,18 +34,19 @@ import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.library.ModuleAwareLibraryType;
 import consulo.module.content.library.ModuleLibraryTablePresentation;
-import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
-import consulo.util.lang.function.Condition;
+import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author nik
@@ -60,10 +59,10 @@ public class LibraryEditingUtil {
 
     public static boolean libraryAlreadyExists(LibraryTable.ModifiableModel table, String libraryName) {
         for (Iterator<Library> it = table.getLibraryIterator(); it.hasNext(); ) {
-            final Library library = it.next();
-            final String libName;
-            if (table instanceof LibrariesModifiableModel) {
-                libName = ((LibrariesModifiableModel)table).getLibraryEditor(library).getName();
+            Library library = it.next();
+            String libName;
+            if (table instanceof LibrariesModifiableModel librariesModifiableModel) {
+                libName = librariesModifiableModel.getLibraryEditor(library).getName();
             }
             else {
                 libName = library.getName();
@@ -75,7 +74,7 @@ public class LibraryEditingUtil {
         return false;
     }
 
-    public static String suggestNewLibraryName(LibraryTable.ModifiableModel table, final String baseName) {
+    public static String suggestNewLibraryName(LibraryTable.ModifiableModel table, String baseName) {
         String candidateName = baseName;
         int idx = 1;
         while (libraryAlreadyExists(table, candidateName)) {
@@ -84,46 +83,43 @@ public class LibraryEditingUtil {
         return candidateName;
     }
 
-    public static Condition<Library> getNotAddedLibrariesCondition(final ModuleRootModel rootModel) {
-        final OrderEntry[] orderEntries = rootModel.getOrderEntries();
-        final Set<Library> result = new HashSet<Library>(orderEntries.length);
+    public static Predicate<Library> getNotAddedLibrariesCondition(ModuleRootModel rootModel) {
+        OrderEntry[] orderEntries = rootModel.getOrderEntries();
+        Set<Library> result = new HashSet<>(orderEntries.length);
         for (OrderEntry orderEntry : orderEntries) {
-            if (orderEntry instanceof LibraryOrderEntry && orderEntry.isValid()) {
-                final LibraryImpl library = (LibraryImpl)((LibraryOrderEntry)orderEntry).getLibrary();
+            if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry && orderEntry.isValid()) {
+                LibraryImpl library = (LibraryImpl)libraryOrderEntry.getLibrary();
                 if (library != null) {
-                    final Library source = library.getSource();
+                    Library source = library.getSource();
                     result.add(source != null ? source : library);
                 }
             }
         }
-        return new Condition<Library>() {
-            @Override
-            public boolean value(Library library) {
-                if (result.contains(library)) {
+        return library -> {
+            if (result.contains(library)) {
+                return false;
+            }
+            if (library instanceof LibraryImpl libraryImpl) {
+                Library source = libraryImpl.getSource();
+                if (source != null && result.contains(source)) {
                     return false;
                 }
-                if (library instanceof LibraryImpl) {
-                    final Library source = ((LibraryImpl)library).getSource();
-                    if (source != null && result.contains(source)) {
-                        return false;
-                    }
-                }
-                return true;
             }
+            return true;
         };
     }
 
     public static void copyLibrary(LibraryEx from, Map<String, String> rootMapping, LibraryEx.ModifiableModelEx target) {
         target.setProperties(from.getProperties());
         for (OrderRootType type : OrderRootType.getAllTypes()) {
-            final String[] urls = from.getUrls(type);
+            String[] urls = from.getUrls(type);
             for (String url : urls) {
-                final String protocol = VirtualFileManager.extractProtocol(url);
+                String protocol = VirtualFileManager.extractProtocol(url);
                 if (protocol == null) {
                     continue;
                 }
-                final String fullPath = VirtualFileManager.extractPath(url);
-                final int sep = fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
+                String fullPath = VirtualFileManager.extractPath(url);
+                int sep = fullPath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
                 String localPath;
                 String pathInJar;
                 if (sep != -1) {
@@ -134,7 +130,7 @@ public class LibraryEditingUtil {
                     localPath = fullPath;
                     pathInJar = "";
                 }
-                final String targetPath = rootMapping.get(localPath);
+                String targetPath = rootMapping.get(localPath);
                 String targetUrl = targetPath != null ? VirtualFileManager.constructUrl(protocol, targetPath + pathInJar) : url;
 
                 if (from.isJarDirectory(url, type)) {
@@ -148,16 +144,16 @@ public class LibraryEditingUtil {
     }
 
     public static LibraryTablePresentation getLibraryTablePresentation(@Nonnull Project project, @Nonnull String level) {
-        if (level.equals(LibraryTableImplUtil.MODULE_LEVEL)) {
+        if (level.equals(LibraryEx.MODULE_LEVEL)) {
             return ModuleLibraryTablePresentation.INSTANCE;
         }
-        final LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(level, project);
+        LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(level, project);
         LOG.assertTrue(table != null, level);
         return table.getPresentation();
     }
 
     public static List<LibraryType> getSuitableTypes(ClasspathPanel classpathPanel) {
-        List<LibraryType> suitableTypes = new ArrayList<LibraryType>();
+        List<LibraryType> suitableTypes = new ArrayList<>();
         suitableTypes.add(null);
         for (LibraryType libraryType : LibraryType.EP_NAME.getExtensionList()) {
             if (libraryType.getCreateActionName() != null && isAvailable(libraryType, classpathPanel.getRootModel())) {
@@ -172,47 +168,42 @@ public class LibraryEditingUtil {
     }
 
     public static BaseListPopupStep<LibraryType> createChooseTypeStep(
-        final ClasspathPanel classpathPanel,
-        final ParameterizedRunnable<LibraryType> action
+        ClasspathPanel classpathPanel,
+        ParameterizedRunnable<LibraryType> action
     ) {
-        return new BaseListPopupStep<LibraryType>(IdeBundle.message("popup.title.select.library.type"), getSuitableTypes(classpathPanel)) {
+        return new BaseListPopupStep<LibraryType>(IdeLocalize.popupTitleSelectLibraryType().get(), getSuitableTypes(classpathPanel)) {
             @Nonnull
             @Override
             public String getTextFor(LibraryType value) {
                 String createActionName = value != null ? value.getCreateActionName() : null;
-                return createActionName != null ? createActionName : IdeBundle.message("create.default.library.type.action.name");
+                return createActionName != null ? createActionName : IdeLocalize.createDefaultLibraryTypeActionName().get();
             }
 
             @Override
             public Image getIconFor(LibraryType aValue) {
-                return aValue != null ? aValue.getIcon() : AllIcons.Nodes.PpLib;
+                return aValue != null ? aValue.getIcon() : PlatformIconGroup.nodesPplib();
             }
 
             @Override
-            public PopupStep onChosen(final LibraryType selectedValue, boolean finalChoice) {
+            public PopupStep onChosen(LibraryType selectedValue, boolean finalChoice) {
                 return doFinalStep(() -> action.run(selectedValue));
             }
         };
     }
 
-    public static List<Module> getSuitableModules(@Nonnull Project project, final @Nullable LibraryKind kind, @Nullable Library library) {
-        final List<Module> modules = new ArrayList<>();
+    public static List<Module> getSuitableModules(@Nonnull Project project, @Nullable LibraryKind kind, @Nullable Library library) {
+        List<Module> modules = new ArrayList<>();
         LibraryType type = kind == null ? null : LibraryType.findByKind(kind);
 
-        ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
+        ProjectStructureSettingsUtil util = ShowSettingsUtil.getInstance();
         ModulesConfigurator modulesModel = util.getModulesModel(project);
 
         for (Module module : modulesModel.getModules()) {
-            final ModuleRootModel rootModel = modulesModel.getRootModel(module);
+            ModuleRootModel rootModel = modulesModel.getRootModel(module);
 
-            if (type != null && !isAvailable(type, rootModel)) {
+            if (type != null && !isAvailable(type, rootModel)
+                || library != null && !getNotAddedLibrariesCondition(rootModel).test(library)) {
                 continue;
-            }
-            if (library != null) {
-
-                if (!getNotAddedLibrariesCondition(rootModel).value(library)) {
-                    continue;
-                }
             }
 
             modules.add(module);
@@ -220,6 +211,7 @@ public class LibraryEditingUtil {
         return modules;
     }
 
+    @RequiredUIAccess
     public static void showDialogAndAddLibraryToDependencies(
         @Nonnull Library library,
         @Nonnull Project project,
@@ -229,10 +221,8 @@ public class LibraryEditingUtil {
     }
 
     public static boolean isAvailable(LibraryType<?> type, ModuleRootModel moduleRootModel) {
-        if (type instanceof ModuleAwareLibraryType moduleAwareLibraryType) {
-            return moduleAwareLibraryType.isAvailable(moduleRootModel);
-        }
-
-        return type.isAvailable();
+        return type instanceof ModuleAwareLibraryType moduleAwareLibraryType
+            ? moduleAwareLibraryType.isAvailable(moduleRootModel)
+            : type.isAvailable();
     }
 }

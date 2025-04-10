@@ -51,9 +51,9 @@ public class GlobalInspectionContextUtil {
     public static boolean isToCheckFile(PsiFile file, @Nonnull InspectionTool tool, Tools tools, ProfileManager profileManager) {
         if (tools != null && file != null) {
             for (ScopeToolState state : tools.getTools()) {
-                final NamedScope namedScope = state.getScope(file.getProject());
-                if (namedScope == null || namedScope.getValue()
-                    .contains(file.getVirtualFile(), file.getProject(), profileManager.getScopesManager())) {
+                NamedScope namedScope = state.getScope(file.getProject());
+                if (namedScope == null
+                    || namedScope.getValue().contains(file.getVirtualFile(), file.getProject(), profileManager.getScopesManager())) {
                     if (state.isEnabled()) {
                         InspectionToolWrapper toolWrapper = state.getTool();
                         if (toolWrapper.getTool() == tool) {
@@ -67,7 +67,7 @@ public class GlobalInspectionContextUtil {
         return false;
     }
 
-    public static boolean canRunInspections(@Nonnull Project project, final boolean online) {
+    public static boolean canRunInspections(@Nonnull Project project, boolean online) {
         for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
             if (!factory.isProjectConfiguredToRunInspections(project, online)) {
                 return false;

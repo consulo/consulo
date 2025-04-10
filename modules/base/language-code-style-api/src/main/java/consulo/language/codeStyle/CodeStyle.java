@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.codeStyle.internal.CodeStyleCachingService;
@@ -21,7 +22,6 @@ import java.util.Objects;
  * Utility class for miscellaneous code style settings retrieving methods.
  */
 public class CodeStyle {
-
     private CodeStyle() {
     }
 
@@ -67,7 +67,7 @@ public class CodeStyle {
      */
     @Nonnull
     public static CodeStyleSettings getSettings(@Nonnull PsiFile file) {
-        final Project project = file.getProject();
+        Project project = file.getProject();
         CodeStyleSettings tempSettings = CodeStyleSettingsManager.getInstance(project).getTemporarySettings();
         if (tempSettings != null) {
             return tempSettings;
@@ -75,7 +75,7 @@ public class CodeStyle {
 
         //CodeStyleSettings result = FileCodeStyleProvider.EP_NAME.computeSafeIfAny(provider -> provider.getSettings(file));
         //if (result != null) {
-        //  return result;
+        //    return result;
         //}
 
         if (!file.isPhysical()) {
@@ -101,13 +101,15 @@ public class CodeStyle {
     }
 
     /**
-     * Returns language code style settings for the specified editor. If the editor has an associated document and PSI file, returns
-     * settings for the PSI file or {@code null} otherwise.
+     * Returns language code style settings for the specified document.
+     * If the document has PSI file, returns settings for the PSI file or {@code null} otherwise.
      *
-     * @param editor The editor to get settings for.
+     * @param project Current project.
+     * @param document The document to get settings for.
      * @return The language code style settings for the editor or {@code null}.
      */
     @Nullable
+    @RequiredReadAction
     public static CommonCodeStyleSettings getLanguageSettings(@Nullable Project project, @Nullable Document document) {
         if (project != null) {
             PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(Objects.requireNonNull(document));
@@ -139,6 +141,7 @@ public class CodeStyle {
      * @return The associated language settings.
      */
     @Nonnull
+    @RequiredReadAction
     public static CommonCodeStyleSettings getLanguageSettings(@Nonnull PsiFile file) {
         CodeStyleSettings rootSettings = getSettings(file);
         return rootSettings.getCommonSettings(file.getLanguage());
@@ -210,8 +213,8 @@ public class CodeStyle {
     }
 
     /**
-     * Set temporary settings for the project. Temporary settings will override any user settings until {@link #dropTemporarySettings(Project)}
-     * is called.
+     * Set temporary settings for the project. Temporary settings will override any user settings
+     * until {@link #dropTemporarySettings(Project)} is called.
      * <p>
      * <b>Note</b>
      * The method is supposed to be used in test's {@code setUp()} method. In production code use
@@ -310,10 +313,11 @@ public class CodeStyle {
      * @param settings The settings to use with the project.
      */
     //public static void setMainProjectSettings(@NotNull Project project, @NotNull CodeStyleSettings settings) {
-    //  @SuppressWarnings("deprecation") CodeStyleSettingsManager codeStyleSettingsManager = CodeStyleSettingsManager.getInstance(project);
-    //  codeStyleSettingsManager.setMainProjectCodeStyle(settings);
-    //  codeStyleSettingsManager.USE_PER_PROJECT_SETTINGS = true;
+    //    @SuppressWarnings("deprecation") CodeStyleSettingsManager codeStyleSettingsManager = CodeStyleSettingsManager.getInstance(project);
+    //    codeStyleSettingsManager.setMainProjectCodeStyle(settings);
+    //    codeStyleSettingsManager.USE_PER_PROJECT_SETTINGS = true;
     //}
+
     @Nonnull
     public static CodeStyleBean getBean(@Nonnull Project project, @Nonnull Language language) {
         LanguageCodeStyleSettingsProvider provider = LanguageCodeStyleSettingsProvider.forLanguage(language);

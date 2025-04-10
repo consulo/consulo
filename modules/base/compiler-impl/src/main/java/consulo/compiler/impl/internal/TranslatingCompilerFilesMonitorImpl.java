@@ -17,18 +17,18 @@ package consulo.compiler.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
+import consulo.application.AccessRule;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.compiler.*;
-import consulo.content.ContentIterator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.index.io.data.DataOutputStream;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -81,7 +81,6 @@ import java.util.function.Supplier;
 @Singleton
 @ServiceImpl
 public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements Disposable {
-
     private static final Logger LOG = Logger.getInstance(TranslatingCompilerFilesMonitorImpl.class);
 
     public static final boolean DEBUG_MODE = false;
@@ -95,10 +94,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     protected final IntObjectMap<IntSet> mySourcesToRecompile = IntMaps.newIntObjectHashMap();
 
     // Map: projectId -> Map{output path -> [sourceUrl; className]}
-    protected final SLRUCache<Integer, Outputs> myOutputsToDelete = new SLRUCache<Integer, Outputs>(3, 3) {
+    protected final SLRUCache<Integer, Outputs> myOutputsToDelete = new SLRUCache<>(3, 3) {
         @Override
         public Outputs getIfCached(Integer key) {
-            final Outputs value = super.getIfCached(key);
+            Outputs value = super.getIfCached(key);
             if (value != null) {
                 value.allocate();
             }
@@ -108,7 +107,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         @Nonnull
         @Override
         public Outputs get(Integer key) {
-            final Outputs value = super.get(key);
+            Outputs value = super.get(key);
             value.allocate();
             return value;
         }
@@ -143,10 +142,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
     };
 
-    private final SLRUCache<Project, File> myGeneratedDataPaths = new SLRUCache<Project, File>(8, 8) {
+    private final SLRUCache<Project, File> myGeneratedDataPaths = new SLRUCache<>(8, 8) {
         @Override
         @Nonnull
-        public File createValue(final Project project) {
+        public File createValue(Project project) {
             Disposer.register(project, () -> myGeneratedDataPaths.remove(project));
             return CompilerPaths.getGeneratedDataDirectory(project);
         }
@@ -163,7 +162,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     @Override
     public void suspendProject(Project project) {
-        final int projectId = getProjectId(project);
+        int projectId = getProjectId(project);
 
         synchronized (myDataLock) {
             if (!mySuspendedProjects.add(projectId)) {
@@ -205,7 +204,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     @Nullable
     public static VirtualFile getSourceFileByOutput(VirtualFile outputFile) {
-        final TranslationOutputFileInfo outputFileInfo = TranslationOutputFileInfo.loadOutputInfo(outputFile);
+        TranslationOutputFileInfo outputFileInfo = TranslationOutputFileInfo.loadOutputInfo(outputFile);
         if (outputFileInfo != null) {
             return outputFileInfo.getSourceFile();
         }
@@ -215,26 +214,26 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     @Override
     public void collectFiles(
         CompileContext context,
-        final TranslatingCompiler compiler,
+        TranslatingCompiler compiler,
         Iterator<VirtualFile> scopeSrcIterator,
         boolean forceCompile,
-        final boolean isRebuild,
+        boolean isRebuild,
         Collection<VirtualFile> toCompile,
         Collection<Trinity<File, String, Boolean>> toDelete
     ) {
-        final Project project = context.getProject();
-        final int projectId = getProjectId(project);
-        final CompilerManager configuration = CompilerManager.getInstance(project);
-        final boolean _forceCompile = forceCompile || isRebuild || myForceCompiling;
-        final Set<VirtualFile> selectedForRecompilation = new HashSet<>();
+        Project project = context.getProject();
+        int projectId = getProjectId(project);
+        CompilerManager configuration = CompilerManager.getInstance(project);
+        boolean _forceCompile = forceCompile || isRebuild || myForceCompiling;
+        Set<VirtualFile> selectedForRecompilation = new HashSet<>();
         synchronized (myDataLock) {
-            final IntSet pathsToRecompile = mySourcesToRecompile.get(projectId);
+            IntSet pathsToRecompile = mySourcesToRecompile.get(projectId);
             if (_forceCompile || pathsToRecompile != null && !pathsToRecompile.isEmpty()) {
                 if (DEBUG_MODE) {
                     System.out.println("Analysing potentially recompilable files for " + compiler.getDescription());
                 }
                 while (scopeSrcIterator.hasNext()) {
-                    final VirtualFile file = scopeSrcIterator.next();
+                    VirtualFile file = scopeSrcIterator.next();
                     if (!file.isValid()) {
                         if (LOG.isDebugEnabled() || DEBUG_MODE) {
                             LOG.debug("Skipping invalid file " + file.getPresentableUrl());
@@ -244,7 +243,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                         }
                         continue;
                     }
-                    final int fileId = getFileId(file);
+                    int fileId = getFileId(file);
                     if (_forceCompile) {
                         if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
                             toCompile.add(file);
@@ -285,18 +284,18 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             }
             // it is important that files to delete are collected after the files to compile (see what happens if forceCompile == true)
             if (!isRebuild) {
-                final Outputs outputs = myOutputsToDelete.get(projectId);
+                Outputs outputs = myOutputsToDelete.get(projectId);
                 try {
-                    final VirtualFileManager vfm = VirtualFileManager.getInstance();
-                    final LocalFileSystem lfs = LocalFileSystem.getInstance();
-                    final List<String> zombieEntries = new ArrayList<>();
-                    final Map<String, VirtualFile> srcFileCache = getFileCache(context);
+                    VirtualFileManager vfm = VirtualFileManager.getInstance();
+                    LocalFileSystem lfs = LocalFileSystem.getInstance();
+                    List<String> zombieEntries = new ArrayList<>();
+                    Map<String, VirtualFile> srcFileCache = getFileCache(context);
                     for (Map.Entry<String, SourceUrlClassNamePair> entry : outputs.getEntries()) {
-                        final String outputPath = entry.getKey();
-                        final SourceUrlClassNamePair classNamePair = entry.getValue();
-                        final String sourceUrl = classNamePair.getSourceUrl();
+                        String outputPath = entry.getKey();
+                        SourceUrlClassNamePair classNamePair = entry.getValue();
+                        String sourceUrl = classNamePair.getSourceUrl();
 
-                        final VirtualFile srcFile;
+                        VirtualFile srcFile;
                         if (srcFileCache.containsKey(sourceUrl)) {
                             srcFile = srcFileCache.get(sourceUrl);
                         }
@@ -305,7 +304,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                             srcFileCache.put(sourceUrl, srcFile);
                         }
 
-                        final boolean sourcePresent = srcFile != null;
+                        boolean sourcePresent = srcFile != null;
                         if (sourcePresent) {
                             if (!compiler.isCompilableFile(srcFile, context)) {
                                 continue; // do not collect files that were compiled by another compiler
@@ -313,7 +312,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                             if (!selectedForRecompilation.contains(srcFile)) {
                                 if (!isMarkedForRecompilation(projectId, getFileId(srcFile))) {
                                     if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                                        final String message =
+                                        String message =
                                             "Found zombie entry (output is marked, but source is present and up-to-date): " + outputPath;
                                         LOG.debug(message);
                                         if (DEBUG_MODE) {
@@ -327,10 +326,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                         }
                         if (lfs.findFileByPath(outputPath) != null) {
                             //noinspection UnnecessaryBoxing
-                            final File file = new File(outputPath);
-                            toDelete.add(new Trinity<>(file, classNamePair.getClassName(), Boolean.valueOf(sourcePresent)));
+                            File file = new File(outputPath);
+                            toDelete.add(new Trinity<>(file, classNamePair.getClassName(), sourcePresent));
                             if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                                final String message = "Found file to delete: " + file;
+                                String message = "Found file to delete: " + file;
                                 LOG.debug(message);
                                 if (DEBUG_MODE) {
                                     System.out.println(message);
@@ -339,7 +338,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                         }
                         else {
                             if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                                final String message = "Found zombie entry marked for deletion: " + outputPath;
+                                String message = "Found zombie entry marked for deletion: " + outputPath;
                                 LOG.debug(message);
                                 if (DEBUG_MODE) {
                                     System.out.println(message);
@@ -368,108 +367,104 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         return cache;
     }
 
-    public static int getFileId(final VirtualFile file) {
+    public static int getFileId(VirtualFile file) {
         return FileBasedIndex.getFileId(file);
     }
 
     @Override
     public void update(
-        final CompileContext context,
-        @Nullable final String outputRoot,
-        final Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
-        final VirtualFile[] filesToRecompile
+        CompileContext context,
+        @Nullable String outputRoot,
+        Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
+        VirtualFile[] filesToRecompile
     ) throws IOException {
         myForceCompiling = false;
-        final Project project = context.getProject();
-        final DependencyCache dependencyCache = ((CompileContextEx)context).getDependencyCache();
-        final int projectId = getProjectId(project);
+        Project project = context.getProject();
+        DependencyCache dependencyCache = ((CompileContextEx)context).getDependencyCache();
+        int projectId = getProjectId(project);
         if (!successfullyCompiled.isEmpty()) {
-            final LocalFileSystem lfs = LocalFileSystem.getInstance();
-            final IOException[] exceptions = {null};
+            LocalFileSystem lfs = LocalFileSystem.getInstance();
+            IOException[] exceptions = {null};
             // need read action here to ensure that no modifications were made to VFS while updating file attributes
-            ApplicationManager.getApplication().runReadAction(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        final Map<VirtualFile, TranslationSourceFileInfo> compiledSources = new HashMap<>();
-                        final Set<VirtualFile> forceRecompile = new HashSet<>();
+            Application.get().runReadAction(() -> {
+                try {
+                    Map<VirtualFile, TranslationSourceFileInfo> compiledSources = new HashMap<>();
+                    Set<VirtualFile> forceRecompile = new HashSet<>();
 
-                        for (TranslatingCompiler.OutputItem item : successfullyCompiled) {
-                            final VirtualFile sourceFile = item.getSourceFile();
-                            final boolean isSourceValid = sourceFile.isValid();
-                            TranslationSourceFileInfo srcInfo = compiledSources.get(sourceFile);
-                            if (isSourceValid && srcInfo == null) {
-                                srcInfo = TranslationSourceFileInfo.loadSourceInfo(sourceFile);
-                                if (srcInfo != null) {
-                                    srcInfo.clearPaths(projectId);
-                                }
-                                else {
-                                    srcInfo = new TranslationSourceFileInfo();
-                                }
-                                compiledSources.put(sourceFile, srcInfo);
+                    for (TranslatingCompiler.OutputItem item : successfullyCompiled) {
+                        VirtualFile sourceFile = item.getSourceFile();
+                        boolean isSourceValid = sourceFile.isValid();
+                        TranslationSourceFileInfo srcInfo = compiledSources.get(sourceFile);
+                        if (isSourceValid && srcInfo == null) {
+                            srcInfo = TranslationSourceFileInfo.loadSourceInfo(sourceFile);
+                            if (srcInfo != null) {
+                                srcInfo.clearPaths(projectId);
                             }
+                            else {
+                                srcInfo = new TranslationSourceFileInfo();
+                            }
+                            compiledSources.put(sourceFile, srcInfo);
+                        }
 
-                            final String outputPath = item.getOutputPath();
-                            if (outputPath != null) { // can be null for packageinfo
-                                final VirtualFile outputFile = lfs.findFileByPath(outputPath);
+                        String outputPath = item.getOutputPath();
+                        if (outputPath != null) { // can be null for packageinfo
+                            VirtualFile outputFile = lfs.findFileByPath(outputPath);
 
-                                //assert outputFile != null : "Virtual file was not found for \"" + outputPath + "\"";
+                            //assert outputFile != null : "Virtual file was not found for \"" + outputPath + "\"";
 
-                                if (outputFile != null) {
-                                    if (!sourceFile.equals(outputFile)) {
-                                        final String className =
-                                            outputRoot == null ? null : dependencyCache.relativePathToQName(
-                                                outputPath.substring(outputRoot.length()),
-                                                '/'
-                                            );
-                                        if (isSourceValid) {
-                                            srcInfo.addOutputPath(projectId, outputFile);
-                                            TranslationOutputFileInfo.saveOutputInfo(
-                                                outputFile,
-                                                new TranslationOutputFileInfo(sourceFile, className)
-                                            );
-                                        }
-                                        else {
-                                            markOutputPathForDeletion(projectId, outputFile, className, sourceFile.getUrl());
-                                        }
-                                    }
-                                }
-                                else {  // output file was not found
-                                    LOG.warn("TranslatingCompilerFilesMonitor.update():  Virtual file was not found for \"" + outputPath + "\"");
+                            if (outputFile != null) {
+                                if (!sourceFile.equals(outputFile)) {
+                                    String className = outputRoot == null ? null : dependencyCache.relativePathToQName(
+                                        outputPath.substring(outputRoot.length()),
+                                        '/'
+                                    );
                                     if (isSourceValid) {
-                                        forceRecompile.add(sourceFile);
+                                        srcInfo.addOutputPath(projectId, outputFile);
+                                        TranslationOutputFileInfo.saveOutputInfo(
+                                            outputFile,
+                                            new TranslationOutputFileInfo(sourceFile, className)
+                                        );
+                                    }
+                                    else {
+                                        markOutputPathForDeletion(projectId, outputFile, className, sourceFile.getUrl());
                                     }
                                 }
                             }
-                        }
-                        final long compilationStartStamp = ((CompileContextEx)context).getStartCompilationStamp();
-                        for (Map.Entry<VirtualFile, TranslationSourceFileInfo> entry : compiledSources.entrySet()) {
-                            final TranslationSourceFileInfo info = entry.getValue();
-                            final VirtualFile file = entry.getKey();
-
-                            final long fileStamp = file.getTimeStamp();
-                            info.updateTimestamp(projectId, fileStamp);
-                            TranslationSourceFileInfo.saveSourceInfo(file, info);
-                            if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                                final String message = "Unschedule recompilation (successfully compiled) " + file.getPresentableUrl();
-                                LOG.debug(message);
-                                if (DEBUG_MODE) {
-                                    System.out.println(message);
+                            else {  // output file was not found
+                                LOG.warn("TranslatingCompilerFilesMonitor.update():  Virtual file was not found for \"" + outputPath + "\"");
+                                if (isSourceValid) {
+                                    forceRecompile.add(sourceFile);
                                 }
                             }
-                            removeSourceForRecompilation(projectId, Math.abs(getFileId(file)));
-                            if (fileStamp > compilationStartStamp && !((CompileContextEx)context).isGenerated(file)
-                                || forceRecompile.contains(file)) {
-                                // changes were made during compilation, need to re-schedule compilation
-                                // it is important to invoke removeSourceForRecompilation() before this call to make sure
-                                // the corresponding output paths will be scheduled for deletion
-                                addSourceForRecompilation(projectId, file, info);
-                            }
                         }
                     }
-                    catch (IOException e) {
-                        exceptions[0] = e;
+                    long compilationStartStamp = ((CompileContextEx)context).getStartCompilationStamp();
+                    for (Map.Entry<VirtualFile, TranslationSourceFileInfo> entry : compiledSources.entrySet()) {
+                        TranslationSourceFileInfo info = entry.getValue();
+                        VirtualFile file = entry.getKey();
+
+                        long fileStamp = file.getTimeStamp();
+                        info.updateTimestamp(projectId, fileStamp);
+                        TranslationSourceFileInfo.saveSourceInfo(file, info);
+                        if (LOG.isDebugEnabled() || DEBUG_MODE) {
+                            String message = "Unschedule recompilation (successfully compiled) " + file.getPresentableUrl();
+                            LOG.debug(message);
+                            if (DEBUG_MODE) {
+                                System.out.println(message);
+                            }
+                        }
+                        removeSourceForRecompilation(projectId, Math.abs(getFileId(file)));
+                        if (fileStamp > compilationStartStamp && !((CompileContextEx)context).isGenerated(file)
+                            || forceRecompile.contains(file)) {
+                            // changes were made during compilation, need to re-schedule compilation
+                            // it is important to invoke removeSourceForRecompilation() before this call to make sure
+                            // the corresponding output paths will be scheduled for deletion
+                            addSourceForRecompilation(projectId, file, info);
+                        }
                     }
+                }
+                catch (IOException e) {
+                    exceptions[0] = e;
                 }
             });
             if (exceptions[0] != null) {
@@ -478,13 +473,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
 
         if (filesToRecompile.length > 0) {
-            ApplicationManager.getApplication().runReadAction(new Runnable() {
-                @Override
-                public void run() {
-                    for (VirtualFile file : filesToRecompile) {
-                        if (file.isValid()) {
-                            loadInfoAndAddSourceForRecompilation(projectId, file);
-                        }
+            Application.get().runReadAction(() -> {
+                for (VirtualFile file : filesToRecompile) {
+                    if (file.isValid()) {
+                        loadInfoAndAddSourceForRecompilation(projectId, file);
                     }
                 }
             });
@@ -501,16 +493,16 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         return new File(CompilerPaths.getCompilerSystemDirectory(), "file_paths.dat");
     }
 
-    private static Map<String, SourceUrlClassNamePair> loadPathsToDelete(@Nullable final File file) {
-        final Map<String, SourceUrlClassNamePair> map = new HashMap<>();
+    private static Map<String, SourceUrlClassNamePair> loadPathsToDelete(@Nullable File file) {
+        Map<String, SourceUrlClassNamePair> map = new HashMap<>();
         try {
             if (file != null && file.length() > 0) {
                 try (DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
-                    final int size = is.readInt();
+                    int size = is.readInt();
                     for (int i = 0; i < size; i++) {
-                        final String _outputPath = CompilerIOUtil.readString(is);
-                        final String srcUrl = CompilerIOUtil.readString(is);
-                        final String className = CompilerIOUtil.readString(is);
+                        String _outputPath = CompilerIOUtil.readString(is);
+                        String srcUrl = CompilerIOUtil.readString(is);
+                        String className = CompilerIOUtil.readString(is);
                         map.put(FileUtil.toSystemIndependentName(_outputPath), new SourceUrlClassNamePair(srcUrl, className));
                     }
                 }
@@ -539,16 +531,16 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         close();
     }
 
-    private static void savePathsToDelete(final File file, final Map<String, SourceUrlClassNamePair> outputs) {
+    private static void savePathsToDelete(File file, Map<String, SourceUrlClassNamePair> outputs) {
         try {
             FileUtil.createParentDirs(file);
-            final DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+            DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
             try {
                 if (outputs != null) {
                     os.writeInt(outputs.size());
                     for (Map.Entry<String, SourceUrlClassNamePair> entry : outputs.entrySet()) {
                         CompilerIOUtil.writeString(entry.getKey(), os);
-                        final SourceUrlClassNamePair pair = entry.getValue();
+                        SourceUrlClassNamePair pair = entry.getValue();
                         CompilerIOUtil.writeString(pair.getSourceUrl(), os);
                         CompilerIOUtil.writeString(pair.getClassName(), os);
                     }
@@ -577,16 +569,16 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     @Override
     public List<String> getCompiledClassNames(VirtualFile srcFile, Project project) {
-        final TranslationSourceFileInfo info = TranslationSourceFileInfo.loadSourceInfo(srcFile);
+        TranslationSourceFileInfo info = TranslationSourceFileInfo.loadSourceInfo(srcFile);
         if (info == null) {
             return Collections.emptyList();
         }
 
-        final ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<>();
 
-        info.processOutputPaths(getProjectId(project), new Proc() {
-            @Override
-            public boolean execute(int projectId, VirtualFile clsFile) {
+        info.processOutputPaths(
+            getProjectId(project),
+            (projectId, clsFile) -> {
                 if (clsFile != null) {
                     TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(clsFile);
                     if (outputInfo != null) {
@@ -595,41 +587,41 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                 }
                 return true;
             }
-        });
+        );
         return result;
     }
 
     @Override
     public void scanSourceContent(
-        final ProjectRef projRef,
-        final Collection<VirtualFile> roots,
-        final int totalRootCount,
-        final boolean isNewRoots
+        ProjectRef projRef,
+        Collection<VirtualFile> roots,
+        int totalRootCount,
+        boolean isNewRoots
     ) {
         if (roots.isEmpty()) {
             return;
         }
-        final int projectId = getProjectId(projRef.get());
+        int projectId = getProjectId(projRef.get());
         if (LOG.isDebugEnabled()) {
             LOG.debug("Scanning source content for project projectId=" + projectId + "; url=" + projRef.get().getPresentableUrl());
         }
 
-        final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(projRef.get()).getFileIndex();
-        final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(projRef.get()).getFileIndex();
+        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         int processed = 0;
         for (VirtualFile srcRoot : roots) {
             if (indicator != null) {
                 projRef.get();
-                indicator.setText2(srcRoot.getPresentableUrl());
+                indicator.setText2Value(LocalizeValue.ofNullable(srcRoot.getPresentableUrl()));
                 indicator.setFraction(++processed / (double)totalRootCount);
             }
             if (isNewRoots) {
-                fileIndex.iterateContentUnderDirectory(srcRoot, new ContentIterator() {
-                    @Override
-                    public boolean processFile(final VirtualFile file) {
+                fileIndex.iterateContentUnderDirectory(
+                    srcRoot,
+                    file -> {
                         if (!file.isDirectory()) {
                             if (!isMarkedForRecompilation(projectId, Math.abs(getFileId(file)))) {
-                                final TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
+                                TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
                                 if (srcInfo == null || srcInfo.getTimestamp(projectId) != file.getTimeStamp()) {
                                     addSourceForRecompilation(projectId, file, srcInfo);
                                 }
@@ -640,23 +632,23 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                         }
                         return true;
                     }
-                });
+                );
             }
             else {
-                final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+                FileTypeManager fileTypeManager = FileTypeManager.getInstance();
                 VirtualFileUtil.visitChildrenRecursively(srcRoot, new VirtualFileVisitor() {
                     @Override
                     public boolean visitFile(@Nonnull VirtualFile file) {
                         if (fileTypeManager.isFileIgnored(file)) {
                             return false;
                         }
-                        final int fileId = getFileId(file);
+                        int fileId = getFileId(file);
                         if (fileId > 0 /*file is valid*/) {
                             if (file.isDirectory()) {
                                 projRef.get();
                             }
                             else if (!isMarkedForRecompilation(projectId, fileId)) {
-                                final TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
+                                TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
                                 if (srcInfo != null) {
                                     addSourceForRecompilation(projectId, file, srcInfo);
                                 }
@@ -671,7 +663,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     @Override
     public void ensureInitializationCompleted(Project project, ProgressIndicator indicator) {
-        final int id = getProjectId(project);
+        int id = getProjectId(project);
         synchronized (myAsyncScanLock) {
             while (myInitInProgress.containsKey(id)) {
                 if (!project.isOpen() || project.isDisposed() || (indicator != null && indicator.isCanceled())) {
@@ -688,8 +680,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
     }
 
-    protected void markOldOutputRoots(final ProjectRef projRef, final Map<String, Couple<String>> currentLayout) {
-        final int projectId = getProjectId(projRef.get());
+    protected void markOldOutputRoots(ProjectRef projRef, Map<String, Couple<String>> currentLayout) {
+        int projectId = getProjectId(projRef.get());
 
         Set<VirtualFile> rootsToMark = new HashSet<>();
 
@@ -733,16 +725,16 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
     }
 
-    private void processOldOutputRoot(final int projectId, VirtualFile outputRoot) {
+    private void processOldOutputRoot(int projectId, VirtualFile outputRoot) {
         // recursively mark all corresponding sources for recompilation
         VirtualFileUtil.visitChildrenRecursively(outputRoot, new VirtualFileVisitor() {
             @Override
             public boolean visitFile(@Nonnull VirtualFile file) {
                 if (!file.isDirectory()) {
                     // todo: possible optimization - process only those outputs that are not marked for deletion yet
-                    final TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(file);
+                    TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(file);
                     if (outputInfo != null) {
-                        final VirtualFile srcFile = outputInfo.getSourceFile();
+                        VirtualFile srcFile = outputInfo.getSourceFile();
                         if (srcFile != null) {
                             loadInfoAndAddSourceForRecompilation(projectId, srcFile);
                         }
@@ -753,6 +745,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         });
     }
 
+    @RequiredReadAction
     public void runScan(ProgressIndicator indicator, Project project) {
         int projectId = getProjectId(project);
 
@@ -762,32 +755,29 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
         indicator.setIndeterminate(false);
 
-
-        final ProjectRef projRef = new ProjectRef(project);
+        ProjectRef projRef = new ProjectRef(project);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Initial sources scan for project hash=" + projectId + "; url=" + projRef.get().getPresentableUrl());
         }
         try {
-            final IntermediateOutputCompiler[] compilers =
+            IntermediateOutputCompiler[] compilers =
                 CompilerManager.getInstance(projRef.get()).getCompilers(IntermediateOutputCompiler.class);
 
-            final Set<VirtualFile> intermediateRoots = new HashSet<>();
+            Set<VirtualFile> intermediateRoots = new HashSet<>();
             if (compilers.length > 0) {
-                final Module[] modules = ReadAction.compute(() -> ModuleManager.getInstance(projRef.get()).getModules());
+                Module[] modules = AccessRule.read(() -> ModuleManager.getInstance(projRef.get()).getModules());
                 for (IntermediateOutputCompiler compiler : compilers) {
                     for (Module module : modules) {
                         if (module.isDisposed() || module.getModuleDirUrl() == null) {
                             continue;
                         }
-                        final VirtualFile outputRoot =
-                            LocalFileSystem.getInstance()
-                                .refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
+                        VirtualFile outputRoot = LocalFileSystem.getInstance()
+                            .refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
                         if (outputRoot != null) {
                             intermediateRoots.add(outputRoot);
                         }
-                        final VirtualFile testsOutputRoot =
-                            LocalFileSystem.getInstance()
-                                .refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
+                        VirtualFile testsOutputRoot = LocalFileSystem.getInstance()
+                            .refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
                         if (testsOutputRoot != null) {
                             intermediateRoots.add(testsOutputRoot);
                         }
@@ -795,14 +785,14 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                 }
             }
 
-            final List<VirtualFile> projectRoots = Arrays.asList(getRootsForScan(projRef.get()));
-            final int totalRootsCount = projectRoots.size() + intermediateRoots.size();
+            List<VirtualFile> projectRoots = Arrays.asList(getRootsForScan(projRef.get()));
+            int totalRootsCount = projectRoots.size() + intermediateRoots.size();
             scanSourceContent(projRef, projectRoots, totalRootsCount, true);
 
             if (!intermediateRoots.isEmpty()) {
-                final Consumer<VirtualFile> processor = file -> {
+                Consumer<VirtualFile> processor = file -> {
                     if (!isMarkedForRecompilation(projectId, Math.abs(getFileId(file)))) {
-                        final TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
+                        TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
                         if (srcInfo == null || srcInfo.getTimestamp(projectId) != file.getTimeStamp()) {
                             addSourceForRecompilation(projectId, file, srcInfo);
                         }
@@ -811,7 +801,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                 int processed = projectRoots.size();
                 for (VirtualFile root : intermediateRoots) {
                     projRef.get();
-                    indicator.setText2(root.getPresentableUrl());
+                    indicator.setText2Value(LocalizeValue.ofNullable(root.getPresentableUrl()));
                     indicator.setFraction(++processed / (double)totalRootsCount);
 
                     TranslationCompilerFilesMonitorVfsListener.processRecursively(root, false, processor);
@@ -827,7 +817,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
     }
 
-    protected void terminateAsyncScan(int projectId, final boolean clearCounter) {
+    protected void terminateAsyncScan(int projectId, boolean clearCounter) {
         synchronized (myAsyncScanLock) {
             Integer counter = ObjectUtil.notNull(myInitInProgress.remove(projectId), 0);
 
@@ -849,7 +839,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         startAsyncScan(getProjectId(project));
     }
 
-    protected void startAsyncScan(final int projectId) {
+    protected void startAsyncScan(int projectId) {
         synchronized (myAsyncScanLock) {
             int counter = myInitInProgress.getOrDefault(projectId, 0);
             counter = (counter > 0) ? counter + 1 : 1;
@@ -865,16 +855,13 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
 
         //optimization: if file is in content of some project it's definitely not ignored
-        boolean isInContent = ApplicationManager.getApplication().runReadAction(new Supplier<Boolean>() {
-            @Override
-            public Boolean get() {
-                for (Project project : projectManager.getOpenProjects()) {
-                    if (project.isInitialized() && ProjectRootManager.getInstance(project).getFileIndex().isInContent(file)) {
-                        return true;
-                    }
+        boolean isInContent = Application.get().runReadAction((Supplier<Boolean>)() -> {
+            for (Project project : projectManager.getOpenProjects()) {
+                if (project.isInitialized() && ProjectRootManager.getInstance(project).getFileIndex().isInContent(file)) {
+                    return true;
                 }
-                return false;
             }
+            return false;
         });
         if (isInContent) {
             return false;
@@ -890,16 +877,16 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         return false;
     }
 
-    public void loadInfoAndAddSourceForRecompilation(final int projectId, final VirtualFile srcFile) {
+    public void loadInfoAndAddSourceForRecompilation(int projectId, VirtualFile srcFile) {
         addSourceForRecompilation(projectId, srcFile, TranslationSourceFileInfo.loadSourceInfo(srcFile));
     }
 
     public void addSourceForRecompilation(
-        final int projectId,
-        final VirtualFile srcFile,
-        @Nullable final TranslationSourceFileInfo srcInfo
+        int projectId,
+        VirtualFile srcFile,
+        @Nullable TranslationSourceFileInfo srcInfo
     ) {
-        final boolean alreadyMarked;
+        boolean alreadyMarked;
         synchronized (myDataLock) {
             IntSet set = mySourcesToRecompile.get(projectId);
             if (set == null) {
@@ -908,7 +895,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             }
             alreadyMarked = !set.add(Math.abs(getFileId(srcFile)));
             if (!alreadyMarked && (LOG.isDebugEnabled() || DEBUG_MODE)) {
-                final String message = "Scheduled recompilation " + srcFile.getPresentableUrl();
+                String message = "Scheduled recompilation " + srcFile.getPresentableUrl();
                 LOG.debug(message);
                 if (DEBUG_MODE) {
                     System.out.println(message);
@@ -923,7 +910,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
     }
 
-    public void removeSourceForRecompilation(final int projectId, final int srcId) {
+    public void removeSourceForRecompilation(int projectId, int srcId) {
         synchronized (myDataLock) {
             IntSet set = mySourcesToRecompile.get(projectId);
             if (set != null) {
@@ -935,6 +922,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
     }
 
+    @RequiredReadAction
     protected VirtualFile[] getRootsForScan(Project project) {
         List<VirtualFile> list = new ArrayList<>();
         Module[] modules = ModuleManager.getInstance(project).getModules();
@@ -959,16 +947,16 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         return isMarkedForRecompilation(getProjectId(project), getFileId(file));
     }
 
-    private boolean isMarkedForRecompilation(int projectId, final int srcId) {
+    private boolean isMarkedForRecompilation(int projectId, int srcId) {
         synchronized (myDataLock) {
-            final IntSet set = mySourcesToRecompile.get(projectId);
+            IntSet set = mySourcesToRecompile.get(projectId);
             return set != null && set.contains(srcId);
         }
     }
 
     @FunctionalInterface
     public interface Proc {
-        boolean execute(final int projectId, VirtualFile outputPath);
+        boolean execute(int projectId, VirtualFile outputPath);
     }
 
     public class ScheduleOutputsForDeletionProc implements Proc {
@@ -977,7 +965,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         @Nullable
         private VirtualFile myRootBeingDeleted;
 
-        public ScheduleOutputsForDeletionProc(final String srcUrl) {
+        public ScheduleOutputsForDeletionProc(String srcUrl) {
             mySrcUrl = srcUrl;
             myFileSystem = LocalFileSystem.getInstance();
         }
@@ -987,14 +975,14 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
 
         @Override
-        public boolean execute(final int projectId, VirtualFile outFile) {
+        public boolean execute(int projectId, VirtualFile outFile) {
             if (outFile != null) { // not deleted yet
                 if (myRootBeingDeleted != null && VirtualFileUtil.isAncestor(myRootBeingDeleted, outFile, false)) {
                     unmarkOutputPathForDeletion(projectId, outFile.getPath());
                 }
                 else {
-                    final TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(outFile);
-                    final String classname = outputInfo != null ? outputInfo.getClassName() : null;
+                    TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(outFile);
+                    String classname = outputInfo != null ? outputInfo.getClassName() : null;
                     markOutputPathForDeletion(projectId, outFile, classname, mySrcUrl);
                 }
             }
@@ -1002,14 +990,14 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
     }
 
-    private void markOutputPathForDeletion(final int projectId, final VirtualFile outputPath, final String classname, final String srcUrl) {
-        final SourceUrlClassNamePair pair = new SourceUrlClassNamePair(srcUrl, classname);
+    private void markOutputPathForDeletion(int projectId, VirtualFile outputPath, String classname, String srcUrl) {
+        SourceUrlClassNamePair pair = new SourceUrlClassNamePair(srcUrl, classname);
         synchronized (myDataLock) {
-            final Outputs outputs = myOutputsToDelete.get(projectId);
+            Outputs outputs = myOutputsToDelete.get(projectId);
             try {
                 outputs.put(outputPath.getPath(), pair);
                 if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                    final String message = "ADD path to delete: " + outputPath + "; source: " + srcUrl;
+                    String message = "ADD path to delete: " + outputPath + "; source: " + srcUrl;
                     LOG.debug(message);
                     if (DEBUG_MODE) {
                         System.out.println(message);
@@ -1022,14 +1010,14 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
     }
 
-    public void unmarkOutputPathForDeletion(final int projectId, String outputPath) {
+    public void unmarkOutputPathForDeletion(int projectId, String outputPath) {
         synchronized (myDataLock) {
-            final Outputs outputs = myOutputsToDelete.get(projectId);
+            Outputs outputs = myOutputsToDelete.get(projectId);
             try {
-                final SourceUrlClassNamePair val = outputs.remove(outputPath);
+                SourceUrlClassNamePair val = outputs.remove(outputPath);
                 if (val != null) {
                     if (LOG.isDebugEnabled() || DEBUG_MODE) {
-                        final String message = "REMOVE path to delete: " + outputPath;
+                        String message = "REMOVE path to delete: " + outputPath;
                         LOG.debug(message);
                         if (DEBUG_MODE) {
                             System.out.println(message);
@@ -1076,7 +1064,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             if (myStoreFile == null) {
                 return null;
             }
-            final SourceUrlClassNamePair removed = myMap.remove(outputPath);
+            SourceUrlClassNamePair removed = myMap.remove(outputPath);
             myIsDirty |= removed != null;
             return removed;
         }

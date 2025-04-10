@@ -23,8 +23,6 @@ import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -39,7 +37,7 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
     private final String myId;
     private final String myPresentableName;
 
-    protected PackagingElementType(@Nonnull @NonNls String id, @Nonnull String presentableName) {
+    protected PackagingElementType(@Nonnull String id, @Nonnull String presentableName) {
         myId = id;
         myPresentableName = presentableName;
     }
@@ -69,7 +67,7 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
     @Nonnull
     public abstract E createEmpty(@Nonnull Project project);
 
-    protected static <T extends PackagingElementType<?>> T getInstance(final Class<T> aClass) {
+    protected static <T extends PackagingElementType<?>> T getInstance(Class<T> aClass) {
         for (PackagingElementType type : EP_NAME.getExtensionList()) {
             if (aClass.isInstance(type)) {
                 return aClass.cast(type);

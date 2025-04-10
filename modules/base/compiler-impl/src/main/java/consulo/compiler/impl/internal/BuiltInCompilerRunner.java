@@ -72,10 +72,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
     private static final FileProcessingCompilerAdapterFactory FILE_PROCESSING_COMPILER_ADAPTER_FACTORY = FileProcessingCompilerAdapter::new;
     private static final FileProcessingCompilerAdapterFactory FILE_PACKAGING_COMPILER_ADAPTER_FACTORY =
-        (context, compiler) -> new PackagingCompilerAdapter(
-            context,
-            (PackagingCompiler)compiler
-        );
+        (context, compiler) -> new PackagingCompilerAdapter(context, (PackagingCompiler)compiler);
 
     private static final Predicate<Compiler> SOURCE_PROCESSING_ONLY = compiler -> compiler instanceof SourceProcessingCompiler;
 
@@ -110,18 +107,18 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
         for (Compiler compiler : compilerManager.getCompilers(Compiler.class)) {
             try {
-                if (compiler instanceof GeneratingCompiler) {
-                    StateCache<ValidityState> cache = getGeneratingCompilerCache((GeneratingCompiler)compiler);
+                if (compiler instanceof GeneratingCompiler generatingCompiler) {
+                    StateCache<ValidityState> cache = getGeneratingCompilerCache(generatingCompiler);
                     Iterator<File> fileIterator = cache.getFilesIterator();
                     while (fileIterator.hasNext()) {
                         context.getProgressIndicator().checkCanceled();
                         compileDriver.deleteFile(fileIterator.next());
                     }
                 }
-                else if (compiler instanceof TranslatingCompiler) {
+                else if (compiler instanceof TranslatingCompiler translatingCompiler) {
                     List<Trinity<File, String, Boolean>> toDelete = new ArrayList<>();
                     Application.get().runReadAction(() -> TranslatingCompilerFilesMonitor.getInstance().collectFiles(context,
-                        (TranslatingCompiler)compiler,
+                        translatingCompiler,
                         Arrays.<VirtualFile>asList(allSources).iterator(),
                         true /*pass true to make sure that every source in scope file is processed*/,
                         false /*important! should pass false to enable collection of files to delete*/,

@@ -38,9 +38,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.ThreeState;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -57,6 +56,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ChangeDiffRequestProducer implements DiffRequestProducer {
     private static final Logger LOG = Logger.getInstance(ChangeDiffRequestProducer.class);
@@ -109,29 +109,16 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
             }
         }
 
-        if (!Comparing.equal(change1.getClass(), change2.getClass())) {
-            return false;
-        }
-        if (!isEquals(change1.getBeforeRevision(), change2.getBeforeRevision())) {
-            return false;
-        }
-        if (!isEquals(change1.getAfterRevision(), change2.getAfterRevision())) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(change1.getClass(), change2.getClass())
+            && isEquals(change1.getBeforeRevision(), change2.getBeforeRevision())
+            && isEquals(change1.getAfterRevision(), change2.getAfterRevision());
     }
 
     private static boolean isEquals(@Nullable ContentRevision revision1, @Nullable ContentRevision revision2) {
-        if (Comparing.equal(revision1, revision2)) {
-            return true;
-        }
-        if (revision1 instanceof CurrentContentRevision && revision2 instanceof CurrentContentRevision) {
-            VirtualFile vFile1 = ((CurrentContentRevision)revision1).getVirtualFile();
-            VirtualFile vFile2 = ((CurrentContentRevision)revision2).getVirtualFile();
-            return Comparing.equal(vFile1, vFile2);
-        }
-        return false;
+        return Objects.equals(revision1, revision2)
+            || revision1 instanceof CurrentContentRevision contentRevision1
+            && revision2 instanceof CurrentContentRevision contentRevision2
+            && Objects.equals(contentRevision1.getVirtualFile(), contentRevision2.getVirtualFile());
     }
 
     @Nullable
@@ -172,11 +159,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         if (bRev != null && bRev.getFile().isDirectory()) {
             return false;
         }
-        if (aRev != null && aRev.getFile().isDirectory()) {
-            return false;
-        }
-
-        return true;
+        return aRev == null || !aRev.getFile().isDirectory();
     }
 
     @Nonnull
@@ -188,10 +171,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         try {
             return loadCurrentContents(context, indicator);
         }
-        catch (ProcessCanceledException e) {
-            throw e;
-        }
-        catch (DiffRequestProducerException e) {
+        catch (ProcessCanceledException | DiffRequestProducerException e) {
             throw e;
         }
         catch (Exception e) {
@@ -283,36 +263,33 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
             if (project == null) {
                 throw new DiffRequestProducerException("Can't show merge conflict - project is unknown");
             }
-            final AbstractVcs vcs = ChangesUtil.getVcsForChange(change, project);
+            AbstractVcs vcs = ChangesUtil.getVcsForChange(change, project);
             if (vcs == null || vcs.getMergeProvider() == null) {
                 throw new DiffRequestProducerException("Can't show merge conflict - operation nos supported");
             }
             try {
                 // FIXME: loadRevisions() can call runProcessWithProgressSynchronously() inside
-                final Ref<Throwable> exceptionRef = new Ref<>();
-                final Ref<MergeData> mergeDataRef = new Ref<>();
-                final VirtualFile finalFile = file;
-                UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            mergeDataRef.set(vcs.getMergeProvider().loadRevisions(finalFile));
-                        }
-                        catch (VcsException e) {
-                            exceptionRef.set(e);
-                        }
+                SimpleReference<Throwable> exceptionRef = new SimpleReference<>();
+                SimpleReference<MergeData> mergeDataRef = new SimpleReference<>();
+                VirtualFile finalFile = file;
+                UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+                    try {
+                        mergeDataRef.set(vcs.getMergeProvider().loadRevisions(finalFile));
+                    }
+                    catch (VcsException e) {
+                        exceptionRef.set(e);
                     }
                 });
                 if (!exceptionRef.isNull()) {
                     Throwable e = exceptionRef.get();
-                    if (e instanceof VcsException) {
-                        throw (VcsException)e;
+                    if (e instanceof VcsException vcsException) {
+                        throw vcsException;
                     }
-                    if (e instanceof Error) {
-                        throw (Error)e;
+                    if (e instanceof Error error) {
+                        throw error;
                     }
-                    if (e instanceof RuntimeException) {
-                        throw (RuntimeException)e;
+                    if (e instanceof RuntimeException runtimeException) {
+                        throw runtimeException;
                     }
                     throw new RuntimeException(e);
                 }
@@ -338,11 +315,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
 
                 return request;
             }
-            catch (VcsException e) {
-                LOG.info(e);
-                throw new DiffRequestProducerException(e);
-            }
-            catch (IOException e) {
+            catch (VcsException | IOException e) {
                 LOG.info(e);
                 throw new DiffRequestProducerException(e);
             }
@@ -368,9 +341,9 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
             DiffContent content1 = createContent(project, bRev, context, indicator);
             DiffContent content2 = createContent(project, aRev, context, indicator);
 
-            final String userLeftRevisionTitle = (String)myChangeContext.get(DiffUserDataKeysEx.VCS_DIFF_LEFT_CONTENT_TITLE);
+            String userLeftRevisionTitle = (String)myChangeContext.get(DiffUserDataKeysEx.VCS_DIFF_LEFT_CONTENT_TITLE);
             String beforeRevisionTitle = userLeftRevisionTitle != null ? userLeftRevisionTitle : getRevisionTitle(bRev, "Base version");
-            final String userRightRevisionTitle = (String)myChangeContext.get(DiffUserDataKeysEx.VCS_DIFF_RIGHT_CONTENT_TITLE);
+            String userRightRevisionTitle = (String)myChangeContext.get(DiffUserDataKeysEx.VCS_DIFF_RIGHT_CONTENT_TITLE);
             String afterRevisionTitle = userRightRevisionTitle != null ? userRightRevisionTitle : getRevisionTitle(aRev, "Your version");
 
             SimpleDiffRequest request = new SimpleDiffRequest(title, content1, content2, beforeRevisionTitle, afterRevisionTitle);

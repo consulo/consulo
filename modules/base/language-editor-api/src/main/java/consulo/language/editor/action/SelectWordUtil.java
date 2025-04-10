@@ -16,7 +16,7 @@
 
 package consulo.language.editor.action;
 
-import consulo.application.util.function.Processor;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.document.util.TextRange;
@@ -28,12 +28,12 @@ import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author Mike
@@ -103,7 +103,7 @@ public class SelectWordUtil {
         if (isWordPartCondition.value(editorText.charAt(cursorOffset))) {
             int start = cursorOffset;
             int end = cursorOffset + 1;
-            final int textLen = editorText.length();
+            int textLen = editorText.length();
 
             while (start > 0 && isWordPartCondition.value(editorText.charAt(start - 1))
                 && !EditorActionUtil.isHumpBound(editorText, start, true)) {
@@ -178,12 +178,13 @@ public class SelectWordUtil {
         return null;
     }
 
+    @RequiredReadAction
     public static void processRanges(
         @Nullable PsiElement element,
         CharSequence text,
         int cursorOffset,
         Editor editor,
-        Processor<TextRange> consumer
+        Predicate<TextRange> consumer
     ) {
         if (element == null) {
             return;
@@ -229,11 +230,11 @@ public class SelectWordUtil {
     }
 
     private static void processInFile(
-        @Nonnull final PsiElement element,
-        final Processor<TextRange> consumer,
-        final CharSequence text,
-        final int cursorOffset,
-        final Editor editor
+        @Nonnull PsiElement element,
+        Predicate<TextRange> consumer,
+        CharSequence text,
+        int cursorOffset,
+        Editor editor
     ) {
         DumbService.getInstance(element.getProject()).withAlternativeResolveEnabled(() -> {
             PsiElement e = element;
@@ -248,7 +249,7 @@ public class SelectWordUtil {
 
     private static boolean processElement(
         @Nonnull PsiElement element,
-        Processor<TextRange> processor,
+        Predicate<TextRange> processor,
         CharSequence text,
         int cursorOffset,
         Editor editor
@@ -260,8 +261,8 @@ public class SelectWordUtil {
         List<ExtendWordSelectionHandler> availableSelectioners = new LinkedList<>();
         for (ExtendWordSelectionHandler selectioner : extendWordSelectionHandlers) {
             if (selectioner.canSelect(element)) {
-                int selectionerMinimalTextRange = selectioner instanceof ExtendWordSelectionHandlerBase
-                    ? ((ExtendWordSelectionHandlerBase)selectioner).getMinimalTextRangeLength(element, text, cursorOffset)
+                int selectionerMinimalTextRange = selectioner instanceof ExtendWordSelectionHandlerBase extendWordSelectionHandlerBase
+                    ? extendWordSelectionHandlerBase.getMinimalTextRangeLength(element, text, cursorOffset)
                     : 0;
                 minimalTextRangeLength = Math.max(minimalTextRangeLength, selectionerMinimalTextRange);
                 availableSelectioners.add(selectioner);
@@ -282,7 +283,7 @@ public class SelectWordUtil {
                     continue;
                 }
 
-                stop |= processor.process(range);
+                stop |= processor.test(range);
             }
         }
 

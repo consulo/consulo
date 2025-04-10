@@ -68,7 +68,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     @Nonnull
     @Override
     public PackagingElementType<?>[] getNonCompositeElementTypes() {
-        final List<PackagingElementType> elementTypes = new ArrayList<>();
+        List<PackagingElementType> elementTypes = new ArrayList<>();
         for (PackagingElementType elementType : getAllElementTypes()) {
             if (!(elementType instanceof CompositePackagingElementType)) {
                 elementTypes.add(elementType);
@@ -92,7 +92,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     @Nonnull
     @Override
     public CompositePackagingElementType<?>[] getCompositeElementTypes() {
-        final List<CompositePackagingElementType> elementTypes = new ArrayList<>();
+        List<CompositePackagingElementType> elementTypes = new ArrayList<>();
         for (PackagingElementType elementType : getAllElementTypes()) {
             if (elementType instanceof CompositePackagingElementType) {
                 elementTypes.add((CompositePackagingElementType)elementType);
@@ -166,7 +166,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
         @Nonnull String sourceFilePath,
         @Nullable String outputFileName
     ) {
-        final String fileName = PathUtil.getFileName(sourceFilePath);
+        String fileName = PathUtil.getFileName(sourceFilePath);
         if (outputFileName != null && outputFileName.equals(fileName)) {
             outputFileName = null;
         }
@@ -177,7 +177,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     private CompositePackagingElement<?> getOrCreateDirectoryOrArchive(
         @Nonnull CompositePackagingElement<?> root,
         @Nonnull String path,
-        final boolean directory
+        boolean directory
     ) {
         path = StringUtil.trimStart(StringUtil.trimEnd(path, "/"), "/");
         if (path.length() == 0) {
@@ -187,8 +187,8 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
         String lastName = path.substring(index + 1);
         String parentPath = index != -1 ? path.substring(0, index) : "";
 
-        final CompositePackagingElement<?> parent = getOrCreateDirectoryOrArchive(root, parentPath, true);
-        final CompositePackagingElement<?> last = directory ? createDirectory(lastName) : createZipArchive(lastName);
+        CompositePackagingElement<?> parent = getOrCreateDirectoryOrArchive(root, parentPath, true);
+        CompositePackagingElement<?> last = directory ? createDirectory(lastName) : createZipArchive(lastName);
         return parent.addOrFindChild(last);
     }
 
@@ -196,7 +196,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     @Nonnull
     @RequiredReadAction
     public PackagingElement<?> createModuleOutput(@Nonnull String moduleName, @Nonnull Project project) {
-        final NamedPointer<Module> pointer = myModulePointerManager.create(moduleName);
+        NamedPointer<Module> pointer = myModulePointerManager.create(moduleName);
         return ProductionModuleOutputElementType.getInstance().createElement(project, pointer);
     }
 
@@ -204,7 +204,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     @Nonnull
     @RequiredReadAction
     public PackagingElement<?> createModuleOutput(@Nonnull Module module) {
-        final NamedPointer<Module> modulePointer = myModulePointerManager.create(module);
+        NamedPointer<Module> modulePointer = myModulePointerManager.create(module);
         return ProductionModuleOutputElementType.getInstance().createElement(module.getProject(), modulePointer);
     }
 
@@ -219,22 +219,25 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     @Nonnull
     @Override
     public List<? extends PackagingElement<?>> createLibraryElements(@Nonnull Library library) {
-        final LibraryTable table = library.getTable();
-        final String libraryName = library.getName();
+        LibraryTable table = library.getTable();
+        String libraryName = library.getName();
         if (table != null) {
             return Collections.singletonList(createLibraryFiles(libraryName, table.getTableLevel(), null));
         }
         if (libraryName != null) {
-            final Module module = (Module)((LibraryEx)library).getModule();
+            Module module = (Module)((LibraryEx)library).getModule();
             if (module != null) {
                 return Collections.singletonList(createLibraryFiles(libraryName, LibraryEx.MODULE_LEVEL, module.getName()));
             }
         }
-        final List<PackagingElement<?>> elements = new ArrayList<>();
+        List<PackagingElement<?>> elements = new ArrayList<>();
         for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
-            final String path = FileUtil.toSystemIndependentName(VirtualFilePathUtil.getLocalPath(file));
-            elements.add(file.isDirectory() && file.isInLocalFileSystem() ? new DirectoryCopyPackagingElement(path) : new FileCopyPackagingElement(
-                path));
+            String path = FileUtil.toSystemIndependentName(VirtualFilePathUtil.getLocalPath(file));
+            elements.add(
+                file.isDirectory() && file.isInLocalFileSystem()
+                    ? new DirectoryCopyPackagingElement(path)
+                    : new FileCopyPackagingElement(path)
+            );
         }
         return elements;
     }
@@ -280,8 +283,8 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
             jarEntry.getFileSystem() instanceof ArchiveFileSystem,
             "Expected file from jar but file from " + jarEntry.getFileSystem() + " found"
         );
-        final String fullPath = jarEntry.getPath();
-        final int jarEnd = fullPath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
+        String fullPath = jarEntry.getPath();
+        int jarEnd = fullPath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
         return new ExtractedDirectoryPackagingElement(fullPath.substring(0, jarEnd), fullPath.substring(jarEnd + 1));
     }
 
@@ -328,8 +331,8 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
         }
         String rootName = relativeOutputPath.substring(0, slash);
         String pathTail = relativeOutputPath.substring(slash);
-        final DirectoryPackagingElement root = createDirectory(rootName);
-        final CompositePackagingElement<?> last = getOrCreateDirectory(root, pathTail);
+        DirectoryPackagingElement root = createDirectory(rootName);
+        CompositePackagingElement<?> last = getOrCreateDirectory(root, pathTail);
         last.addOrFindChildren(elements);
         return Collections.singletonList(root);
     }

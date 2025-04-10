@@ -34,8 +34,6 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.module.content.util.ProjectUtilCore;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -66,7 +64,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
         myListStack = new int[5];
         myListStackTop = -1;
         for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
-            final HTMLComposerExtension extension = factory.createHTMLComposerExtension(this);
+            HTMLComposerExtension extension = factory.createHTMLComposerExtension(this);
             if (extension != null) {
                 myExtensions.put(extension.getID(), extension);
                 myLanguageExtensions.put(extension.getLanguage(), extension);
@@ -88,10 +86,8 @@ public abstract class HTMLComposerBase extends HTMLComposer {
     }
 
     @RequiredReadAction
-    protected void genPageHeader(final StringBuffer buf, RefEntity refEntity) {
-        if (refEntity instanceof RefElement) {
-            RefElement refElement = (RefElement)refEntity;
-
+    protected void genPageHeader(StringBuffer buf, RefEntity refEntity) {
+        if (refEntity instanceof RefElement refElement) {
             appendHeading(buf, InspectionLocalize.inspectionOfflineViewToolDisplayNameTitle());
             buf.append(BR);
             appendAfterHeaderIndention(buf);
@@ -108,8 +104,8 @@ public abstract class HTMLComposerBase extends HTMLComposer {
     }
 
     @RequiredReadAction
-    private void appendLocation(final StringBuffer buf, final RefElement refElement) {
-        final HTMLComposerExtension extension = getLanguageExtension(refElement);
+    private void appendLocation(StringBuffer buf, RefElement refElement) {
+        HTMLComposerExtension extension = getLanguageExtension(refElement);
         if (extension != null) {
             extension.appendLocation(refElement, buf);
         }
@@ -122,14 +118,14 @@ public abstract class HTMLComposerBase extends HTMLComposer {
 
     @Nullable
     @RequiredReadAction
-    private HTMLComposerExtension getLanguageExtension(final RefElement refElement) {
-        final PsiElement element = refElement.getPsiElement();
+    private HTMLComposerExtension getLanguageExtension(RefElement refElement) {
+        PsiElement element = refElement.getPsiElement();
         return element != null ? myLanguageExtensions.get(element.getLanguage()) : null;
     }
 
     @RequiredReadAction
-    private void appendShortName(final StringBuffer buf, RefElement refElement) {
-        final HTMLComposerExtension extension = getLanguageExtension(refElement);
+    private void appendShortName(StringBuffer buf, RefElement refElement) {
+        HTMLComposerExtension extension = getLanguageExtension(refElement);
         if (extension != null) {
             extension.appendShortName(refElement, buf);
         }
@@ -138,7 +134,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
                 @RequiredReadAction
                 @Override
                 public void visitFile(@Nonnull RefFile file) {
-                    final PsiFile psiFile = file.getPsiElement();
+                    PsiFile psiFile = file.getPsiElement();
                     if (psiFile != null) {
                         buf.append(B_OPENING);
                         buf.append(psiFile.getName());
@@ -162,8 +158,8 @@ public abstract class HTMLComposerBase extends HTMLComposer {
             }
 
             String name = refEntity.getName();
-            if (refEntity instanceof RefElement) {
-                final HTMLComposerExtension extension = getLanguageExtension((RefElement)refEntity);
+            if (refEntity instanceof RefElement refElement) {
+                HTMLComposerExtension extension = getLanguageExtension(refElement);
                 if (extension != null) {
                     name = extension.getQualifiedName(refEntity);
                 }
@@ -178,24 +174,24 @@ public abstract class HTMLComposerBase extends HTMLComposer {
 
     @Override
     @RequiredReadAction
-    public void appendElementReference(final StringBuffer buf, RefElement refElement) {
+    public void appendElementReference(StringBuffer buf, RefElement refElement) {
         appendElementReference(buf, refElement, true);
     }
 
     @Override
-    public void appendElementReference(final StringBuffer buf, RefElement refElement, String linkText, @NonNls String frameName) {
-        final String url = refElement.getURL();
+    public void appendElementReference(StringBuffer buf, RefElement refElement, String linkText, String frameName) {
+        String url = refElement.getURL();
         if (url != null) {
             appendElementReference(buf, url, linkText, frameName);
         }
     }
 
     @Override
-    public void appendElementReference(final StringBuffer buf, String url, String linkText, @NonNls String frameName) {
+    public void appendElementReference(StringBuffer buf, String url, String linkText, String frameName) {
         buf.append(A_HREF_OPENING);
         buf.append(url);
         if (frameName != null) {
-            @NonNls final String target = "\" target=\"";
+            String target = "\" target=\"";
             buf.append(target);
             buf.append(frameName);
         }
@@ -205,7 +201,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
         buf.append(A_CLOSING);
     }
 
-    protected void appendQuickFix(@NonNls final StringBuffer buf, String text, int index) {
+    protected void appendQuickFix(StringBuffer buf, String text, int index) {
         if (myExporter == null) {
             buf.append("<a HREF=\"file://bred.txt#invoke:").append(index);
             buf.append("\">");
@@ -216,8 +212,8 @@ public abstract class HTMLComposerBase extends HTMLComposer {
 
     @Override
     @RequiredReadAction
-    public void appendElementReference(final StringBuffer buf, RefElement refElement, boolean isPackageIncluded) {
-        final HTMLComposerExtension extension = getLanguageExtension(refElement);
+    public void appendElementReference(StringBuffer buf, RefElement refElement, boolean isPackageIncluded) {
+        HTMLComposerExtension extension = getLanguageExtension(refElement);
 
         if (extension != null) {
             extension.appendReferencePresentation(refElement, buf, isPackageIncluded);
@@ -229,7 +225,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
 
             buf.append("\">");
             String refElementName = refElement.getName();
-            final PsiElement element = refElement.getPsiElement();
+            PsiElement element = refElement.getPsiElement();
             if (element != null) {
                 VirtualFile file = PsiUtilCore.getVirtualFile(element);
                 if (file != null) {
@@ -244,7 +240,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
 
     @Override
     public String composeNumereables(int n, String statement, String singleEnding, String multipleEnding) {
-        final StringBuilder buf = new StringBuilder();
+        StringBuilder buf = new StringBuilder();
         buf.append(n);
         buf.append(' ');
         buf.append(statement);
@@ -309,7 +305,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
         if (quickFixes != null) {
             boolean listStarted = false;
             for (int i = 0; i < quickFixes.length; i++) {
-                final String text = quickFixes[i];
+                String text = quickFixes[i];
                 if (text == null) {
                     continue;
                 }
@@ -331,14 +327,14 @@ public abstract class HTMLComposerBase extends HTMLComposer {
 
 
     @Override
-    public void startList(@NonNls final StringBuffer buf) {
+    public void startList(StringBuffer buf) {
         buf.append("<ul>");
         myListStackTop++;
         myListStack[myListStackTop] = 0;
     }
 
     @Override
-    public void doneList(@NonNls StringBuffer buf) {
+    public void doneList(StringBuffer buf) {
         buf.append("</ul>");
         if (myListStack[myListStackTop] != 0) {
             buf.append("<table cellpadding=\"0\" border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr></table>");
@@ -347,12 +343,12 @@ public abstract class HTMLComposerBase extends HTMLComposer {
     }
 
     @Override
-    public void startListItem(@NonNls StringBuffer buf) {
+    public void startListItem(StringBuffer buf) {
         myListStack[myListStackTop]++;
         buf.append("<li>");
     }
 
-    public static void doneListItem(@NonNls StringBuffer buf) {
+    public static void doneListItem(StringBuffer buf) {
         buf.append("</li>");
     }
 
@@ -367,7 +363,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getExtension(final Key<T> key) {
+    public <T> T getExtension(Key<T> key) {
         return (T)myExtensions.get(key);
     }
 }

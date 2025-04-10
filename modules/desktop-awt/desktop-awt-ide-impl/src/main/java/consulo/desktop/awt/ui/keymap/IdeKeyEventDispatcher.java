@@ -39,7 +39,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneEx;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.ide.impl.idea.ui.KeyStrokeAdapter;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -526,19 +526,19 @@ public final class IdeKeyEventDispatcher implements Disposable {
         if (keyCode == KeyEvent.VK_ALT || keyCode == 0) {
             return false; // Optimization
         }
-        final Container container = getContainer(focusOwner);
+        Container container = getContainer(focusOwner);
         return hasMnemonic(container, keyCode) || hasMnemonicInBalloons(container, keyCode);
     }
 
     @Nullable
-    private static Container getContainer(@Nullable final Component focusOwner) {
+    private static Container getContainer(@Nullable Component focusOwner) {
         if (focusOwner == null) {
             return null;
         }
         if (focusOwner.isLightweight()) {
             Container container = focusOwner.getParent();
             while (container != null) {
-                final Container parent = container.getParent();
+                Container parent = container.getParent();
                 if (parent instanceof JLayeredPane) {
                     break;
                 }
@@ -598,17 +598,17 @@ public final class IdeKeyEventDispatcher implements Disposable {
         @Nonnull
         @Override
         public AnActionEvent createEvent(
-            final InputEvent inputEvent,
-            @Nonnull final DataContext context,
-            @Nonnull final String place,
-            @Nonnull final Presentation presentation,
-            final ActionManager manager
+            InputEvent inputEvent,
+            @Nonnull DataContext context,
+            @Nonnull String place,
+            @Nonnull Presentation presentation,
+            ActionManager manager
         ) {
             return new AnActionEvent(inputEvent, context, place, presentation, manager, 0);
         }
 
         @Override
-        public void onUpdatePassed(final InputEvent inputEvent, @Nonnull final AnAction action, @Nonnull final AnActionEvent actionEvent) {
+        public void onUpdatePassed(InputEvent inputEvent, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent) {
             setState(KeyState.STATE_PROCESSED);
             setPressedWasProcessed(inputEvent.getID() == KeyEvent.KEY_PRESSED);
         }
@@ -618,10 +618,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
             e.consume();
 
             DataContext ctx = actionEvent.getDataContext();
-            if (action instanceof ActionGroup && !((ActionGroup)action).canBePerformed(ctx)) {
-                ActionGroup group = (ActionGroup)action;
-                JBPopupFactory.getInstance()
-                    .createActionGroupPopup(
+            if (action instanceof ActionGroup group && !group.canBePerformed(ctx)) {
+                JBPopupFactory.getInstance().createActionGroupPopup(
                         group.getTemplatePresentation().getText(),
                         group,
                         ctx,
@@ -641,7 +639,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
     };
 
     @RequiredUIAccess
-    public boolean processAction(final InputEvent e, @Nonnull ActionProcessor processor) {
+    public boolean processAction(InputEvent e, @Nonnull ActionProcessor processor) {
         ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
         Project project = myContext.getDataContext().getData(Project.KEY);
         boolean dumb = project != null && DumbService.getInstance(project).isDumb();
@@ -892,34 +890,37 @@ public final class IdeKeyEventDispatcher implements Disposable {
             @Nonnull List<Pair<AnAction, KeyStroke>> actions,
             DataContext ctx
         ) {
-            ContainerUtil.process(actions, pair -> {
-                String actionText = pair.getFirst().getTemplatePresentation().getText();
-                AbstractAction a = new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        cancel();
-                        invokeAction(pair.getFirst(), ctx);
-                    }
-                };
+            ContainerUtil.process(
+                actions,
+                pair -> {
+                    String actionText = pair.getFirst().getTemplatePresentation().getText();
+                    AbstractAction a = new AbstractAction() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            cancel();
+                            invokeAction(pair.getFirst(), ctx);
+                        }
+                    };
 
-                KeyStroke keyStroke = pair.getSecond();
-                if (keyStroke != null) {
-                    registerAction(actionText, keyStroke, a);
+                    KeyStroke keyStroke = pair.getSecond();
+                    if (keyStroke != null) {
+                        registerAction(actionText, keyStroke, a);
 
-                    if (keyStroke.getModifiers() == 0) {
-                        // do a little trick here, so if I will press Command+R and the second keystroke is just 'R',
-                        // I want to be able to hold the Command while pressing 'R'
+                        if (keyStroke.getModifiers() == 0) {
+                            // do a little trick here, so if I will press Command+R and the second keystroke is just 'R',
+                            // I want to be able to hold the Command while pressing 'R'
 
-                        KeyStroke additionalKeyStroke = KeyStroke.getKeyStroke(keyStroke.getKeyCode(), firstKeyStroke.getModifiers());
-                        String _existing = getActionForKeyStroke(additionalKeyStroke);
-                        if (_existing == null) {
-                            registerAction("__additional__" + actionText, additionalKeyStroke, a);
+                            KeyStroke additionalKeyStroke = KeyStroke.getKeyStroke(keyStroke.getKeyCode(), firstKeyStroke.getModifiers());
+                            String _existing = getActionForKeyStroke(additionalKeyStroke);
+                            if (_existing == null) {
+                                registerAction("__additional__" + actionText, additionalKeyStroke, a);
+                            }
                         }
                     }
-                }
 
-                return true;
-            });
+                    return true;
+                }
+            );
         }
 
         private static void invokeAction(@Nonnull AnAction action, DataContext ctx) {
@@ -944,14 +945,18 @@ public final class IdeKeyEventDispatcher implements Disposable {
         private static ListPopupStep buildStep(@Nonnull List<Pair<AnAction, KeyStroke>> actions, DataContext ctx) {
             return new BaseListPopupStep<Pair<AnAction, KeyStroke>>(
                 "Choose an action",
-                ContainerUtil.findAll(actions, pair -> {
-                    AnAction action = pair.getFirst();
-                    Presentation presentation = action.getTemplatePresentation().clone();
-                    AnActionEvent event = new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), 0);
+                ContainerUtil.findAll(
+                    actions,
+                    pair -> {
+                        AnAction action = pair.getFirst();
+                        Presentation presentation = action.getTemplatePresentation().clone();
+                        AnActionEvent event =
+                            new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), 0);
 
-                    ActionUtil.performDumbAwareUpdate(action, event, true);
-                    return presentation.isEnabled() && presentation.isVisible();
-                })
+                        ActionUtil.performDumbAwareUpdate(action, event, true);
+                        return presentation.isEnabled() && presentation.isVisible();
+                    }
+                )
             ) {
                 @Override
                 public PopupStep onChosen(Pair<AnAction, KeyStroke> selectedValue, boolean finalChoice) {

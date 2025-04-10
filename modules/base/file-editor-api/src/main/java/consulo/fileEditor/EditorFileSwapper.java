@@ -41,9 +41,9 @@ public abstract class EditorFileSwapper {
         TextEditor res = null;
 
         for (FileEditor fileEditor : fileEditors) {
-            if (fileEditor instanceof RealTextEditor) {
+            if (fileEditor instanceof RealTextEditor realTextEditor) {
                 if (res == null) {
-                    res = (TextEditor)fileEditor;
+                    res = realTextEditor;
                 }
                 else {
                     return null;

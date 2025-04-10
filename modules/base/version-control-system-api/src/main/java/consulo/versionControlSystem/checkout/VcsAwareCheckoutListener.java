@@ -31,5 +31,5 @@ import java.io.File;
 public interface VcsAwareCheckoutListener {
     ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create(VcsAwareCheckoutListener.class);
 
-    boolean processCheckedOutDirectory(final Project project, final File directory, final VcsKey vcsKey);
+    boolean processCheckedOutDirectory(Project project, File directory, VcsKey vcsKey);
 }

@@ -36,8 +36,8 @@ public class PreferredProducerFind {
     }
 
     @Nullable
-    public static RunnerAndConfigurationSettings createConfiguration(@Nonnull Location location, final ConfigurationContext context) {
-        final ConfigurationFromContext fromContext = findConfigurationFromContext(location, context);
+    public static RunnerAndConfigurationSettings createConfiguration(@Nonnull Location location, ConfigurationContext context) {
+        ConfigurationFromContext fromContext = findConfigurationFromContext(location, context);
         return fromContext != null ? fromContext.getConfigurationSettings() : null;
     }
 
@@ -45,21 +45,21 @@ public class PreferredProducerFind {
     @Deprecated
     @SuppressWarnings("deprecation")
     public static List<RuntimeConfigurationProducer> findPreferredProducers(
-        final Location location,
-        final ConfigurationContext context,
-        final boolean strict
+        Location location,
+        ConfigurationContext context,
+        boolean strict
     ) {
         if (location == null) {
             return null;
         }
-        final List<RuntimeConfigurationProducer> producers = findAllProducers(location, context);
+        List<RuntimeConfigurationProducer> producers = findAllProducers(location, context);
         if (producers.isEmpty()) {
             return null;
         }
         Collections.sort(producers, RuntimeConfigurationProducer.COMPARATOR);
 
         if (strict) {
-            final RuntimeConfigurationProducer first = producers.get(0);
+            RuntimeConfigurationProducer first = producers.get(0);
             for (Iterator<RuntimeConfigurationProducer> it = producers.iterator(); it.hasNext(); ) {
                 RuntimeConfigurationProducer producer = it.next();
                 if (producer != first && RuntimeConfigurationProducer.COMPARATOR.compare(producer, first) >= 0) {
@@ -76,11 +76,11 @@ public class PreferredProducerFind {
     private static List<RuntimeConfigurationProducer> findAllProducers(Location location, ConfigurationContext context) {
         //todo load configuration types if not already loaded
         ConfigurationType.EP_NAME.getExtensionList();
-        final List<RuntimeConfigurationProducer> configurationProducers =
+        List<RuntimeConfigurationProducer> configurationProducers =
             RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER.getExtensionList();
-        final ArrayList<RuntimeConfigurationProducer> producers = new ArrayList<>();
-        for (final RuntimeConfigurationProducer prototype : configurationProducers) {
-            final RuntimeConfigurationProducer producer;
+        ArrayList<RuntimeConfigurationProducer> producers = new ArrayList<>();
+        for (RuntimeConfigurationProducer prototype : configurationProducers) {
+            RuntimeConfigurationProducer producer;
             try {
                 producer = prototype.createProducer(location, context);
             }
@@ -97,25 +97,25 @@ public class PreferredProducerFind {
     }
 
     public static List<ConfigurationFromContext> getConfigurationsFromContext(
-        final Location location,
-        final ConfigurationContext context,
-        final boolean strict
+        Location location,
+        ConfigurationContext context,
+        boolean strict
     ) {
         return getConfigurationsFromContext(location, context, strict, true);
 
     }
 
     public static List<ConfigurationFromContext> getConfigurationsFromContext(
-        final Location location,
-        final ConfigurationContext context,
-        final boolean strict,
+        Location location,
+        ConfigurationContext context,
+        boolean strict,
         boolean preferExisting
     ) {
         if (location == null) {
             return null;
         }
 
-        final ArrayList<ConfigurationFromContext> configurationsFromContext = new ArrayList<>();
+        ArrayList<ConfigurationFromContext> configurationsFromContext = new ArrayList<>();
         for (RuntimeConfigurationProducer producer : findAllProducers(location, context)) {
             configurationsFromContext.add(new ConfigurationFromContextWrapper(producer));
         }
@@ -133,7 +133,7 @@ public class PreferredProducerFind {
         Collections.sort(configurationsFromContext, ConfigurationFromContext.COMPARATOR);
 
         if (strict) {
-            final ConfigurationFromContext first = configurationsFromContext.get(0);
+            ConfigurationFromContext first = configurationsFromContext.get(0);
             for (Iterator<ConfigurationFromContext> it = configurationsFromContext.iterator(); it.hasNext(); ) {
                 ConfigurationFromContext producer = it.next();
                 if (producer != first && ConfigurationFromContext.COMPARATOR.compare(producer, first) > 0) {
@@ -146,11 +146,8 @@ public class PreferredProducerFind {
     }
 
     @Nullable
-    private static ConfigurationFromContext findConfigurationFromContext(final Location location, final ConfigurationContext context) {
-        final List<ConfigurationFromContext> producers = getConfigurationsFromContext(location, context, true);
-        if (producers != null) {
-            return producers.get(0);
-        }
-        return null;
+    private static ConfigurationFromContext findConfigurationFromContext(Location location, ConfigurationContext context) {
+        List<ConfigurationFromContext> producers = getConfigurationsFromContext(location, context, true);
+        return producers != null ? producers.get(0) : null;
     }
 }

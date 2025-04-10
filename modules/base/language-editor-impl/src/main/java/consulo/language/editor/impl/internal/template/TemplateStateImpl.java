@@ -120,7 +120,7 @@ public class TemplateStateImpl implements TemplateState {
     private boolean mySelectionCalculated = false;
     private boolean myStarted;
 
-    TemplateStateImpl(@Nonnull Project project, @Nonnull final Editor editor) {
+    TemplateStateImpl(@Nonnull Project project, @Nonnull Editor editor) {
         myProject = project;
         myEditor = editor;
         myDocument = myEditor.getDocument();
@@ -170,8 +170,9 @@ public class TemplateStateImpl implements TemplateState {
             @Override
             public void beforeCommandFinished(CommandEvent event) {
                 if (started && !isDisposed()) {
+                    @RequiredUIAccess
                     Runnable runnable = () -> afterChangedUpdate();
-                    final LookupEx lookup = myEditor != null ? LookupManager.getActiveLookup(myEditor) : null;
+                    LookupEx lookup = myEditor != null ? LookupManager.getActiveLookup(myEditor) : null;
                     if (lookup != null) {
                         lookup.performGuardedChange(runnable);
                     }
@@ -216,7 +217,7 @@ public class TemplateStateImpl implements TemplateState {
 
     private boolean isCaretOutsideCurrentSegment() {
         if (myEditor != null && myCurrentSegmentNumber >= 0) {
-            final int offset = myEditor.getCaretModel().getOffset();
+            int offset = myEditor.getCaretModel().getOffset();
             return offset < mySegments.getSegmentStart(myCurrentSegmentNumber) || offset > mySegments.getSegmentEnd(myCurrentSegmentNumber);
         }
         return false;
@@ -229,7 +230,7 @@ public class TemplateStateImpl implements TemplateState {
     @Override
     public synchronized void dispose() {
         if (myLookupListener != null) {
-            final LookupEx lookup = myEditor != null ? LookupManager.getActiveLookup(myEditor) : null;
+            LookupEx lookup = myEditor != null ? LookupManager.getActiveLookup(myEditor) : null;
             if (lookup != null) {
                 lookup.removeLookupListener(myLookupListener);
             }
@@ -252,7 +253,7 @@ public class TemplateStateImpl implements TemplateState {
             return false;
         }
         if (ourLookupShown) {
-            final LookupEx lookup = LookupManager.getActiveLookup(myEditor);
+            LookupEx lookup = LookupManager.getActiveLookup(myEditor);
             if (lookup != null && !lookup.isFocused()) {
                 return true;
             }
@@ -263,7 +264,7 @@ public class TemplateStateImpl implements TemplateState {
 
     private void setCurrentVariableNumber(int variableNumber) {
         myCurrentVariableNumber = variableNumber;
-        final boolean isFinished = isFinished();
+        boolean isFinished = isFinished();
         if (myDocument != null) {
             ((DocumentEx)myDocument).setStripTrailingSpacesEnabled(isFinished);
         }
@@ -369,13 +370,13 @@ public class TemplateStateImpl implements TemplateState {
     @RequiredUIAccess
     public void start(
         @Nonnull TemplateImpl template,
-        @Nullable final BiPredicate<String, String> processor,
+        @Nullable BiPredicate<String, String> processor,
         @Nullable Map<String, String> predefinedVarValues
     ) {
         LOG.assertTrue(!myStarted, "Already started");
         myStarted = true;
 
-        final PsiFile file = getPsiFile();
+        PsiFile file = getPsiFile();
         myTemplate = template;
 
         myProcessor = processor;
@@ -433,14 +434,14 @@ public class TemplateStateImpl implements TemplateState {
         }
     }
 
-    private void preprocessTemplate(final PsiFile file, int caretOffset, final String textToInsert) {
+    private void preprocessTemplate(PsiFile file, int caretOffset, String textToInsert) {
         myProject.getApplication().getExtensionPoint(TemplatePreprocessor.class).forEachExtensionSafe(preprocessor -> {
             preprocessor.preprocessTemplate(myEditor, file, caretOffset, textToInsert, myTemplate.getTemplateText());
         });
     }
 
     @RequiredUIAccess
-    private void processAllExpressions(@Nonnull final TemplateImpl template) {
+    private void processAllExpressions(@Nonnull TemplateImpl template) {
         Application.get().runWriteAction(() -> {
             if (!template.isInline()) {
                 myDocument.insertString(myTemplateRange.getStartOffset(), template.getTemplateText());
@@ -484,20 +485,22 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     @RequiredUIAccess
-    private void doReformat(final TextRange range) {
+    private void doReformat(TextRange range) {
         RangeMarker rangeMarker = null;
         if (range != null) {
             rangeMarker = myDocument.createRangeMarker(range);
             rangeMarker.setGreedyToLeft(true);
             rangeMarker.setGreedyToRight(true);
         }
-        final RangeMarker finalRangeMarker = rangeMarker;
-        final Runnable action = () -> {
+        RangeMarker finalRangeMarker = rangeMarker;
+        Runnable action = () -> {
             IntList indices = initEmptyVariables();
             mySegments.setSegmentsGreedy(false);
             LOG.assertTrue(
                 myTemplateRange.isValid(),
-                "template key: " + myTemplate.getKey() + "; " + "template text" + myTemplate.getTemplateText() + "; " + "variable number: " + getCurrentVariableNumber()
+                "template key: " + myTemplate.getKey() + "; " +
+                    "template text" + myTemplate.getTemplateText() + "; " +
+                    "variable number: " + getCurrentVariableNumber()
             );
             reformat(finalRangeMarker);
             mySegments.setSegmentsGreedy(true);
@@ -520,7 +523,7 @@ public class TemplateStateImpl implements TemplateState {
     @RequiredUIAccess
     private void shortenReferences() {
         Application.get().runWriteAction(() -> {
-            final PsiFile file = getPsiFile();
+            PsiFile file = getPsiFile();
             if (file != null) {
                 IntList indices = initEmptyVariables();
                 mySegments.setSegmentsGreedy(false);
@@ -543,7 +546,7 @@ public class TemplateStateImpl implements TemplateState {
         LOG.assertTrue(myTemplate != null, presentTemplate(myPrevTemplate));
         if (myDocumentChanged) {
             if (myDocumentChangesTerminateTemplate || mySegments.isInvalid()) {
-                final int oldIndex = myCurrentVariableNumber;
+                int oldIndex = myCurrentVariableNumber;
                 setCurrentVariableNumber(-1);
                 currentVariableChanged(oldIndex);
                 fireTemplateCancelled();
@@ -603,15 +606,15 @@ public class TemplateStateImpl implements TemplateState {
 
         PsiDocumentManager.getInstance(myProject).commitDocument(myDocument);
 
-        final int currentSegmentNumber = getCurrentSegmentNumber();
+        int currentSegmentNumber = getCurrentSegmentNumber();
 
         lockSegmentAtTheSameOffsetIfAny();
 
         if (currentSegmentNumber < 0) {
             return;
         }
-        final int start = mySegments.getSegmentStart(currentSegmentNumber);
-        final int end = mySegments.getSegmentEnd(currentSegmentNumber);
+        int start = mySegments.getSegmentStart(currentSegmentNumber);
+        int end = mySegments.getSegmentEnd(currentSegmentNumber);
         if (end >= 0) {
             myEditor.getCaretModel().moveToOffset(end);
             myEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
@@ -628,7 +631,7 @@ public class TemplateStateImpl implements TemplateState {
             catch (IndexNotReadyException e) {
                 lookupItems = Collections.emptyList();
             }
-            final PsiFile psiFile = getPsiFile();
+            PsiFile psiFile = getPsiFile();
             if (!lookupItems.isEmpty()) {
                 if (((TemplateManagerImpl)TemplateManager.getInstance(myProject)).shouldSkipInTests()) {
                     insertSingleItem(lookupItems);
@@ -693,14 +696,14 @@ public class TemplateStateImpl implements TemplateState {
         return myTemplate.getExpressionAt(myCurrentVariableNumber);
     }
 
-    private void runLookup(final List<TemplateExpressionLookupElement> lookupItems, @Nullable String advertisingText) {
+    private void runLookup(List<TemplateExpressionLookupElement> lookupItems, @Nullable String advertisingText) {
         if (myEditor == null) {
             return;
         }
 
-        final LookupManager lookupManager = LookupManager.getInstance(myProject);
+        LookupManager lookupManager = LookupManager.getInstance(myProject);
 
-        final LookupEx lookup = lookupManager.showLookup(myEditor, lookupItems.toArray(new LookupElement[lookupItems.size()]));
+        LookupEx lookup = lookupManager.showLookup(myEditor, lookupItems.toArray(new LookupElement[lookupItems.size()]));
         if (lookup == null) {
             return;
         }
@@ -746,10 +749,10 @@ public class TemplateStateImpl implements TemplateState {
 
     // Hours spent fixing code : 3
     @RequiredUIAccess
-    void calcResults(final boolean isQuick) {
+    void calcResults(boolean isQuick) {
         if (myProcessor != null && myCurrentVariableNumber >= 0) {
-            final String variableName = myTemplate.getVariableNameAt(myCurrentVariableNumber);
-            final TextResult value = getVariableValue(variableName);
+            String variableName = myTemplate.getVariableNameAt(myCurrentVariableNumber);
+            TextResult value = getVariableValue(variableName);
             if (value != null && !value.getText().isEmpty()) {
                 if (!myProcessor.test(variableName, value.getText())) {
                     finishTemplateEditing(); // nextTab(); ?
@@ -775,16 +778,16 @@ public class TemplateStateImpl implements TemplateState {
                     calcedSegments.clear();
                     for (int i = myCurrentVariableNumber + 1; i < myTemplate.getVariableCount(); i++) {
                         String variableName = myTemplate.getVariableNameAt(i);
-                        final int segmentNumber = myTemplate.getVariableSegmentNumber(variableName);
+                        int segmentNumber = myTemplate.getVariableSegmentNumber(variableName);
                         if (segmentNumber < 0) {
                             continue;
                         }
-                        final Expression expression = myTemplate.getExpressionAt(i);
-                        final Expression defaultValue = myTemplate.getDefaultValueAt(i);
+                        Expression expression = myTemplate.getExpressionAt(i);
+                        Expression defaultValue = myTemplate.getDefaultValueAt(i);
                         String oldValue = getVariableValueText(variableName);
                         DumbService.getInstance(myProject)
                             .withAlternativeResolveEnabled(() -> recalcSegment(segmentNumber, isQuick, expression, defaultValue));
-                        final TextResult value = getVariableValue(variableName);
+                        TextResult value = getVariableValue(variableName);
                         assert value != null : "name=" + variableName + "\ntext=" + myTemplate.getTemplateText();
                         String newValue = value.getText();
                         if (!newValue.equals(oldValue)) {
@@ -861,13 +864,13 @@ public class TemplateStateImpl implements TemplateState {
             int currentSegmentEnd = mySegments.getSegmentEnd(currentSegment);
             for (int i = 0; i < mySegments.getSegmentsCount(); i++) {
                 if (i > currentSegment) {
-                    final int startOffset = mySegments.getSegmentStart(i);
+                    int startOffset = mySegments.getSegmentStart(i);
                     if (currentSegmentStart <= startOffset && startOffset < currentSegmentEnd) {
                         mySegments.replaceSegmentAt(i, currentSegmentEnd, Math.max(mySegments.getSegmentEnd(i), currentSegmentEnd), true);
                     }
                 }
                 else if (i < currentSegment) {
-                    final int endOffset = mySegments.getSegmentEnd(i);
+                    int endOffset = mySegments.getSegmentEnd(i);
                     if (currentSegmentStart < endOffset && endOffset <= currentSegmentEnd) {
                         mySegments.replaceSegmentAt(
                             i,
@@ -912,7 +915,7 @@ public class TemplateStateImpl implements TemplateState {
             }
         }
 
-        final boolean resultIsNullOrEmpty = result == null || result.equalsToText("", element);
+        boolean resultIsNullOrEmpty = result == null || result.equalsToText("", element);
 
         // do not update default value of neighbour segment
         if (resultIsNullOrEmpty &&
@@ -980,7 +983,7 @@ public class TemplateStateImpl implements TemplateState {
 
         myDocumentChangesTerminateTemplate = false;
 
-        final int oldVar = myCurrentVariableNumber;
+        int oldVar = myCurrentVariableNumber;
         int previousVariableNumber = getPreviousVariableNumber(oldVar);
         if (previousVariableNumber >= 0) {
             focusCurrentHighlighter(false);
@@ -1004,7 +1007,7 @@ public class TemplateStateImpl implements TemplateState {
 
         myDocumentChangesTerminateTemplate = false;
 
-        final int oldVar = myCurrentVariableNumber;
+        int oldVar = myCurrentVariableNumber;
         int nextVariableNumber = getNextVariableNumber(oldVar);
         if (nextVariableNumber == -1) {
             calcResults(false);
@@ -1046,7 +1049,7 @@ public class TemplateStateImpl implements TemplateState {
         mySegments.lockSegmentAtTheSameOffsetIfAny(getCurrentSegmentNumber());
     }
 
-    private ExpressionContext createExpressionContext(final int start) {
+    private ExpressionContext createExpressionContext(int start) {
         return new ExpressionContext() {
             @Override
             public Project getProject() {
@@ -1181,7 +1184,7 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     private void cleanupTemplateState(boolean brokenOff) {
-        final Editor editor = myEditor;
+        Editor editor = myEditor;
         fireBeforeTemplateFinished(brokenOff);
         if (!isDisposed()) {
             int oldVar = myCurrentVariableNumber;
@@ -1298,7 +1301,7 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     private void initTabStopHighlighters() {
-        final Set<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
         for (int i = 0; i < myTemplate.getVariableCount(); i++) {
             String variableName = myTemplate.getVariableNameAt(i);
             if (!vars.add(variableName)) {
@@ -1320,7 +1323,7 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     private RangeHighlighter getSegmentHighlighter(int segmentNumber, boolean isSelected, boolean isEnd) {
-        final TextAttributes lvAttr =
+        TextAttributes lvAttr =
             EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.LIVE_TEMPLATE_ATTRIBUTES);
         TextAttributes attributes = isSelected ? lvAttr : new TextAttributes();
         TextAttributes endAttributes = new TextAttributes();
@@ -1348,7 +1351,7 @@ public class TemplateStateImpl implements TemplateState {
         }
         RangeHighlighter segmentHighlighter = myTabStopHighlighters.get(myCurrentVariableNumber);
         if (segmentHighlighter != null) {
-            final int segmentNumber = getCurrentSegmentNumber();
+            int segmentNumber = getCurrentSegmentNumber();
             RangeHighlighter newSegmentHighlighter = getSegmentHighlighter(segmentNumber, toSelect, false);
             if (newSegmentHighlighter != null) {
                 segmentHighlighter.dispose();
@@ -1359,16 +1362,16 @@ public class TemplateStateImpl implements TemplateState {
 
     @RequiredReadAction
     private void reformat(RangeMarker rangeMarkerToReformat) {
-        final PsiFile file = getPsiFile();
+        PsiFile file = getPsiFile();
         if (file != null) {
             CodeStyleManager style = CodeStyleManager.getInstance(myProject);
-            DumbService.getInstance(myProject).withAlternativeResolveEnabled(() -> {
-                myProject.getApplication().getExtensionPoint(TemplateOptionalProcessor.class).forEachExtensionSafe(processor -> {
+            DumbService.getInstance(myProject).withAlternativeResolveEnabled(
+                () -> myProject.getApplication().getExtensionPoint(TemplateOptionalProcessor.class).forEachExtensionSafe(processor -> {
                     if (processor.isEnabled(myTemplate)) {
                         processor.processText(myProject, myTemplate, myDocument, myTemplateRange, myEditor);
                     }
-                });
-            });
+                })
+            );
             PsiDocumentManager.getInstance(myProject).doPostponedOperationsAndUnblockDocument(myDocument);
             // for Python, we need to indent the template even if reformatting is enabled, because otherwise indents would be broken
             // and reformat wouldn't be able to fix them
@@ -1426,11 +1429,11 @@ public class TemplateStateImpl implements TemplateState {
                         PsiDocumentManager.getInstance(myProject).commitDocument(myDocument);
                     }
                     if (endSegmentNumber >= 0) {
-                        final int offset = mySegments.getSegmentStart(endSegmentNumber);
-                        final int lineStart = myDocument.getLineStartOffset(myDocument.getLineNumber(offset));
+                        int offset = mySegments.getSegmentStart(endSegmentNumber);
+                        int lineStart = myDocument.getLineStartOffset(myDocument.getLineNumber(offset));
                         // if $END$ is at line start, put it at correct indentation
                         if (myDocument.getCharsSequence().subSequence(lineStart, offset).toString().trim().isEmpty()) {
-                            final int adjustedOffset = style.adjustLineIndent(file, offset);
+                            int adjustedOffset = style.adjustLineIndent(file, offset);
                             mySegments.replaceSegmentAt(endSegmentNumber, adjustedOffset, adjustedOffset);
                         }
                     }

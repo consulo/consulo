@@ -36,8 +36,7 @@ import java.util.Map;
 @Singleton
 @ServiceImpl
 public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
-    private final Map<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>> myCache =
-        new HashMap<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>>();
+    private final Map<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>> myCache = new HashMap<>();
 
     @Override
     public boolean processProperties(@Nonnull List<VirtualFile> files, @Nonnull LibraryPropertiesProcessor processor) {
@@ -55,7 +54,7 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
     public Pair<LibraryType<?>, LibraryProperties<?>> detectType(@Nonnull List<VirtualFile> files) {
         Pair<LibraryType<?>, LibraryProperties<?>> result = null;
         for (LibraryType<?> type : LibraryType.EP_NAME.getExtensions()) {
-            final LibraryProperties<?> properties = type.detect(files);
+            LibraryProperties<?> properties = type.detect(files);
             if (properties != null) {
                 if (result != null) {
                     return null;
@@ -76,11 +75,11 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
     }
 
     private static List<Pair<LibraryKind, LibraryProperties>> computeKinds(List<VirtualFile> files) {
-        final SmartList<Pair<LibraryKind, LibraryProperties>> result = new SmartList<Pair<LibraryKind, LibraryProperties>>();
-        final LibraryType<?>[] libraryTypes = LibraryType.EP_NAME.getExtensions();
-        final LibraryPresentationProvider[] presentationProviders = LibraryPresentationProvider.EP_NAME.getExtensions();
+        SmartList<Pair<LibraryKind, LibraryProperties>> result = new SmartList<>();
+        LibraryType<?>[] libraryTypes = LibraryType.EP_NAME.getExtensions();
+        LibraryPresentationProvider[] presentationProviders = LibraryPresentationProvider.EP_NAME.getExtensions();
         for (LibraryPresentation provider : ContainerUtil.concat(libraryTypes, presentationProviders)) {
-            final LibraryProperties properties = provider.detect(files);
+            LibraryProperties properties = provider.detect(files);
             if (properties != null) {
                 result.add(Pair.create(provider.getKind(), properties));
             }

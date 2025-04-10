@@ -31,8 +31,8 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 /**
- * User: anna
- * Date: 3/16/12
+ * @author anna
+ * @since 3/16/12
  */
 public class MyLookupExpression extends Expression {
     protected final String myName;
@@ -40,12 +40,12 @@ public class MyLookupExpression extends Expression {
     private final String myAdvertisementText;
 
     public MyLookupExpression(
-        final String name,
-        final LinkedHashSet<String> names,
+        String name,
+        LinkedHashSet<String> names,
         PsiNamedElement elementToRename,
-        final PsiElement nameSuggestionContext,
-        final boolean shouldSelectAll,
-        final String advertisement
+        PsiElement nameSuggestionContext,
+        boolean shouldSelectAll,
+        String advertisement
     ) {
         myName = name;
         myAdvertisementText = advertisement;
@@ -56,30 +56,30 @@ public class MyLookupExpression extends Expression {
         LinkedHashSet<String> names,
         PsiNamedElement elementToRename,
         PsiElement nameSuggestionContext,
-        final boolean shouldSelectAll
+        boolean shouldSelectAll
     ) {
         if (names == null) {
-            names = new LinkedHashSet<String>();
+            names = new LinkedHashSet<>();
             for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
-                final SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(elementToRename, nameSuggestionContext, names);
-                if (suggestedNameInfo != null && provider instanceof PreferrableNameSuggestionProvider
-                    && !((PreferrableNameSuggestionProvider)provider).shouldCheckOthers()) {
+                SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(elementToRename, nameSuggestionContext, names);
+                if (suggestedNameInfo != null && provider instanceof PreferrableNameSuggestionProvider nameSuggestionProvider
+                    && !nameSuggestionProvider.shouldCheckOthers()) {
                     break;
                 }
             }
         }
-        final LookupElement[] lookupElements = new LookupElement[names.size()];
-        final Iterator<String> iterator = names.iterator();
+        LookupElement[] lookupElements = new LookupElement[names.size()];
+        Iterator<String> iterator = names.iterator();
         for (int i = 0; i < lookupElements.length; i++) {
-            final String suggestion = iterator.next();
+            String suggestion = iterator.next();
             lookupElements[i] = LookupElementBuilder.create(suggestion).withInsertHandler((context, item) -> {
                 if (shouldSelectAll) {
                     return;
                 }
-                final Editor topLevelEditor = EditorWindow.getTopLevelEditor(context.getEditor());
-                final TemplateState templateState = TemplateManager.getInstance(context.getProject()).getTemplateState(topLevelEditor);
+                Editor topLevelEditor = EditorWindow.getTopLevelEditor(context.getEditor());
+                TemplateState templateState = TemplateManager.getInstance(context.getProject()).getTemplateState(topLevelEditor);
                 if (templateState != null) {
-                    final TextRange range = templateState.getCurrentVariableRange();
+                    TextRange range = templateState.getCurrentVariableRange();
                     if (range != null) {
                         topLevelEditor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), suggestion);
                     }
@@ -101,8 +101,8 @@ public class MyLookupExpression extends Expression {
 
     @Override
     public Result calculateResult(ExpressionContext context) {
-        final TemplateState templateState = TemplateManager.getInstance(context.getProject()).getTemplateState(context.getEditor());
-        final TextResult insertedValue =
+        TemplateState templateState = TemplateManager.getInstance(context.getProject()).getTemplateState(context.getEditor());
+        TextResult insertedValue =
             templateState != null ? templateState.getVariableValue(InplaceRefactoring.PRIMARY_VARIABLE_NAME) : null;
         if (insertedValue != null) {
             if (!insertedValue.getText().isEmpty()) {

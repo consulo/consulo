@@ -2,6 +2,7 @@
 
 package consulo.language.editor.impl.internal.highlight;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -118,6 +119,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     }
 
     @Nonnull
+    @RequiredReadAction
     private List<HighlightVisitor> filterVisitors(
         @Nonnull List<HighlightVisitorFactory> highlightVisitorFactories,
         @Nonnull PsiFile psiFile
@@ -125,18 +127,21 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         final List<HighlightVisitor> result = new ArrayList<>(highlightVisitorFactories.size());
         DumbService dumbService = DumbService.getInstance(myProject);
 
-        dumbService.forEachDumAwareness(highlightVisitorFactories, highlightVisitorFactory -> {
-            // skip rainbow visitor if not enabled
-            if (highlightVisitorFactory instanceof RainbowVisitorFactory
-                && !RainbowHighlighter.isRainbowEnabledWithInheritance(getColorsScheme(), psiFile.getLanguage())) {
-                return;
-            }
+        dumbService.forEachDumAwareness(
+            highlightVisitorFactories,
+            highlightVisitorFactory -> {
+                // skip rainbow visitor if not enabled
+                if (highlightVisitorFactory instanceof RainbowVisitorFactory
+                    && !RainbowHighlighter.isRainbowEnabledWithInheritance(getColorsScheme(), psiFile.getLanguage())) {
+                    return;
+                }
 
-            if (highlightVisitorFactory.suitableForFile(psiFile)) {
-                incVisitorUsageCount(1);
-                result.add(highlightVisitorFactory.createVisitor());
+                if (highlightVisitorFactory.suitableForFile(psiFile)) {
+                    incVisitorUsageCount(1);
+                    result.add(highlightVisitorFactory.createVisitor());
+                }
             }
-        });
+        );
 
         if (result.isEmpty()) {
             LOG.error("No visitors registered. list=" + result + "; all visitors are:" + myProject.getExtensionList(HighlightVisitorFactory.class));
@@ -150,6 +155,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     }
 
     @Nonnull
+    @RequiredReadAction
     public List<HighlightVisitor> getHighlightVisitors(@Nonnull PsiFile psiFile) {
         return filterVisitors(myHighlightVisitorProducer.get(), psiFile);
     }
@@ -166,6 +172,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     }
 
     @Override
+    @RequiredReadAction
     protected void collectInformationWithProgress(@Nonnull final ProgressIndicator progress) {
         final List<HighlightInfo> outsideResult = new ArrayList<>(100);
         final List<HighlightInfo> insideResult = new ArrayList<>(100);
@@ -297,6 +304,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         return new ArrayList<>(myHighlights);
     }
 
+    @RequiredReadAction
     private boolean collectHighlights(
         @Nonnull final List<? extends PsiElement> elements1,
         @Nonnull final List<? extends ProperTextRange> ranges1,
@@ -314,47 +322,52 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
 
         final int chunkSize = Math.max(1, (elements1.size() + elements2.size()) / 100); // one percent precision is enough
 
-        boolean success = analyzeByVisitors(visitors, holder, 0, () -> {
-            Stack<TextRange> nestedRange = new Stack<>();
-            Stack<List<HighlightInfo>> nestedInfos = new Stack<>();
-            runVisitors(
-                elements1,
-                ranges1,
-                chunkSize,
-                skipParentsSet,
-                holder,
-                insideResult,
-                outsideResult,
-                forceHighlightParents,
-                visitors,
-                nestedRange,
-                nestedInfos
-            );
-            final TextRange priorityIntersection = myPriorityRange.intersection(myRestrictRange);
-            if ((!elements1.isEmpty() || !insideResult.isEmpty()) && priorityIntersection != null) { // do not apply when there were no elements to highlight
-                myHighlightInfoProcessor.highlightsInsideVisiblePartAreProduced(
-                    myHighlightingSession,
-                    getEditor(),
+        boolean success = analyzeByVisitors(
+            visitors,
+            holder,
+            0,
+            () -> {
+                Stack<TextRange> nestedRange = new Stack<>();
+                Stack<List<HighlightInfo>> nestedInfos = new Stack<>();
+                runVisitors(
+                    elements1,
+                    ranges1,
+                    chunkSize,
+                    skipParentsSet,
+                    holder,
                     insideResult,
-                    myPriorityRange,
-                    myRestrictRange,
-                    getId()
+                    outsideResult,
+                    forceHighlightParents,
+                    visitors,
+                    nestedRange,
+                    nestedInfos
+                );
+                final TextRange priorityIntersection = myPriorityRange.intersection(myRestrictRange);
+                if ((!elements1.isEmpty() || !insideResult.isEmpty()) && priorityIntersection != null) { // do not apply when there were no elements to highlight
+                    myHighlightInfoProcessor.highlightsInsideVisiblePartAreProduced(
+                        myHighlightingSession,
+                        getEditor(),
+                        insideResult,
+                        myPriorityRange,
+                        myRestrictRange,
+                        getId()
+                    );
+                }
+                runVisitors(
+                    elements2,
+                    ranges2,
+                    chunkSize,
+                    skipParentsSet,
+                    holder,
+                    insideResult,
+                    outsideResult,
+                    forceHighlightParents,
+                    visitors,
+                    nestedRange,
+                    nestedInfos
                 );
             }
-            runVisitors(
-                elements2,
-                ranges2,
-                chunkSize,
-                skipParentsSet,
-                holder,
-                insideResult,
-                outsideResult,
-                forceHighlightParents,
-                visitors,
-                nestedRange,
-                nestedInfos
-            );
-        });
+        );
         List<HighlightInfoImpl> postInfos = new ArrayList<>(holder.size());
         // there can be extra highlights generated in PostHighlightVisitor
         for (int j = 0; j < holder.size(); j++) {
@@ -383,12 +396,14 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         if (i == visitors.size()) {
             action.run();
         }
-        else if (!visitors.get(i).analyze(getFile(), myUpdateAll, holder, () -> success[0] = analyzeByVisitors(visitors, holder, i + 1, action))) {
+        else if (!visitors.get(i)
+            .analyze(getFile(), myUpdateAll, holder, () -> success[0] = analyzeByVisitors(visitors, holder, i + 1, action))) {
             success[0] = false;
         }
         return success[0];
     }
 
+    @RequiredReadAction
     private void runVisitors(
         @Nonnull List<? extends PsiElement> elements,
         @Nonnull List<? extends ProperTextRange> ranges,
@@ -496,6 +511,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         advanceProgress(elements.size() - (nextLimit - chunkSize));
     }
 
+    @RequiredReadAction
     private static boolean hasSameRangeAsParent(PsiElement parent, PsiElement element) {
         return element.getStartOffsetInParent() == 0 && element.getTextLength() == parent.getTextLength();
     }
@@ -654,6 +670,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         return helper.shouldHighlightInEditor(file);
     }
 
+    @RequiredReadAction
     private void reportErrorsToWolf() {
         if (!getFile().getViewProvider().isPhysical()) {
             return; // e.g. errors in evaluate expression

@@ -26,7 +26,6 @@ import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.editor.template.event.TemplateEditingListener;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.util.lang.function.PairProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -47,13 +46,20 @@ public abstract class TemplateManager {
 
     public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener);
 
-    public abstract void startTemplate(@Nonnull final Editor editor,
-                                       @Nonnull final Template template,
-                                       boolean inSeparateCommand,
-                                       Map<String, String> predefinedVarValues,
-                                       @Nullable TemplateEditingListener listener);
+    public abstract void startTemplate(
+        @Nonnull Editor editor,
+        @Nonnull Template template,
+        boolean inSeparateCommand,
+        Map<String, String> predefinedVarValues,
+        @Nullable TemplateEditingListener listener
+    );
 
-    public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener, final BiPredicate<String, String> callback);
+    public abstract void startTemplate(
+        @Nonnull Editor editor,
+        @Nonnull Template template,
+        TemplateEditingListener listener,
+        BiPredicate<String, String> callback
+    );
 
     public abstract boolean startTemplate(@Nonnull Editor editor, char shortcutChar);
 
@@ -92,11 +98,21 @@ public abstract class TemplateManager {
     @Nonnull
     public abstract Set<TemplateContextType> getApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext);
 
-    public abstract Map<Template, String> findMatchingTemplates(final PsiFile file, Editor editor, @Nullable Character shortcutChar, TemplateSettings templateSettings);
+    public abstract Map<Template, String> findMatchingTemplates(
+        PsiFile file,
+        Editor editor,
+        @Nullable Character shortcutChar,
+        TemplateSettings templateSettings
+    );
 
     @Nullable
-    public abstract Runnable startNonCustomTemplates(final Map<Template, String> template2argument, final Editor editor, @Nullable final PairProcessor<String, String> processor);
+    public abstract Runnable startNonCustomTemplates(
+        Map<Template, String> template2argument,
+        Editor editor,
+        @Nullable BiPredicate<String, String> processor
+    );
 
+    @RequiredReadAction
     public boolean isApplicable(Template template, @Nonnull TemplateActionContext templateActionContext) {
         return isApplicable(template, getApplicableContextTypes(templateActionContext));
     }
@@ -105,6 +121,7 @@ public abstract class TemplateManager {
      * @deprecated use {@link #isApplicable(Template, TemplateActionContext)}
      */
     @Deprecated(forRemoval = true)
+    @RequiredReadAction
     public boolean isApplicable(PsiFile file, int offset, Template template) {
         return isApplicable(template, TemplateActionContext.expanding(file, offset));
     }

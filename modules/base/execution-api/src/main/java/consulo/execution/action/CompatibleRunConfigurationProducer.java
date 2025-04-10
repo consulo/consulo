@@ -18,8 +18,7 @@ package consulo.execution.action;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.language.psi.PsiElement;
-import consulo.util.lang.ref.Ref;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 public abstract class CompatibleRunConfigurationProducer<T extends RunConfiguration> extends RunConfigurationProducer<T> {
@@ -28,25 +27,25 @@ public abstract class CompatibleRunConfigurationProducer<T extends RunConfigurat
     }
 
     @Override
-    protected boolean setupConfigurationFromContext(T configuration, ConfigurationContext context, Ref<PsiElement> sourceElement) {
-        if (configuration == null || context == null || sourceElement == null || !isContextCompatible(context)) {
-            return false;
-        }
-        return setupConfigurationFromCompatibleContext(configuration, context, sourceElement);
+    protected boolean setupConfigurationFromContext(
+        T configuration,
+        ConfigurationContext context,
+        SimpleReference<PsiElement> sourceElement
+    ) {
+      return configuration != null && context != null && sourceElement != null && isContextCompatible(context)
+          && setupConfigurationFromCompatibleContext(configuration, context, sourceElement);
     }
 
     protected abstract boolean setupConfigurationFromCompatibleContext(
         @Nonnull T configuration,
         @Nonnull ConfigurationContext context,
-        @Nonnull Ref<PsiElement> sourceElement
+        @Nonnull SimpleReference<PsiElement> sourceElement
     );
 
     @Override
     public final boolean isConfigurationFromContext(T configuration, ConfigurationContext context) {
-        if (configuration == null || context == null || !isContextCompatible(context)) {
-            return false;
-        }
-        return isConfigurationFromCompatibleContext(configuration, context);
+        return configuration != null && context != null && isContextCompatible(context)
+            && isConfigurationFromCompatibleContext(configuration, context);
     }
 
     protected abstract boolean isConfigurationFromCompatibleContext(@Nonnull T configuration, @Nonnull ConfigurationContext context);

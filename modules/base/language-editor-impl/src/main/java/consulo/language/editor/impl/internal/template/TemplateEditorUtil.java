@@ -48,7 +48,7 @@ public class TemplateEditorUtil {
     }
 
     public static Editor createEditor(boolean isReadOnly, CharSequence text, @Nullable Map<TemplateContextType, Boolean> context) {
-        final Project project = DataManager.getInstance().getDataContext().getData(Project.KEY);
+        Project project = DataManager.getInstance().getDataContext().getData(Project.KEY);
         return createEditor(isReadOnly, createDocument(text, context, project), project);
     }
 
@@ -64,7 +64,7 @@ public class TemplateEditorUtil {
         return EditorFactory.getInstance().createDocument(text);
     }
 
-    private static Editor createEditor(boolean isReadOnly, final Document document, final Project project) {
+    private static Editor createEditor(boolean isReadOnly, Document document, Project project) {
         EditorFactory editorFactory = EditorFactory.getInstance();
         Editor editor = (isReadOnly ? editorFactory.createViewer(document, project) : editorFactory.createEditor(document, project));
 
@@ -107,7 +107,7 @@ public class TemplateEditorUtil {
 
     private final static TokenSet TOKENS_TO_MERGE = TokenSet.create(TemplateTokenType.TEXT);
 
-    private static SyntaxHighlighter createTemplateTextHighlighter(final SyntaxHighlighter original) {
+    private static SyntaxHighlighter createTemplateTextHighlighter(SyntaxHighlighter original) {
         return new TemplateHighlighter(original);
     }
 

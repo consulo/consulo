@@ -23,7 +23,7 @@ import consulo.configurable.ConfigurableHit;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.container.plugin.PluginManager;
-import consulo.externalService.plugin.PluginContants;
+import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.codeStyle.CodeStyle;
@@ -169,7 +169,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
                 words.addAll(getProcessedWordsWithoutStemming(description));
             }
             for (String word : words) {
-                addOption(word, null, plugin.getName(), PluginContants.CONFIGURABLE_ID, IdeLocalize.titlePlugins().get());
+                addOption(word, null, plugin.getName(), PluginsConfigurable.CONFIGURABLE_ID, IdeLocalize.titlePlugins().get());
             }
         });
 

@@ -42,7 +42,7 @@ public abstract class InspectionExtensionsFactory {
     public abstract RefManagerExtension createRefManagerExtension(RefManager refManager);
 
     @Nullable
-    public abstract HTMLComposerExtension createHTMLComposerExtension(final HTMLComposer composer);
+    public abstract HTMLComposerExtension createHTMLComposerExtension(HTMLComposer composer);
 
     public abstract boolean isToCheckMember(PsiElement element, String id);
 

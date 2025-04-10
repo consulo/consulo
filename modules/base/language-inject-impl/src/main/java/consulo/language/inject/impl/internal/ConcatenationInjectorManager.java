@@ -90,7 +90,7 @@ public final class ConcatenationInjectorManager extends SimpleModificationTracke
             return;
         }
 
-        final PsiFile containingFile = ((InjectionRegistrarImpl)registrar).getHostPsiFile();
+        PsiFile containingFile = ((InjectionRegistrarImpl)registrar).getHostPsiFile();
         Project project = containingFile.getProject();
         long modificationCount = PsiManager.getInstance(project).getModificationTracker().getModificationCount();
         Pair<PsiElement, PsiElement[]> pair = computeAnchorAndOperandsFunc.apply(context);
