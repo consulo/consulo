@@ -27,44 +27,52 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 public class GlobalInspectionContextUtil {
-  public static RefElement retrieveRefElement(@Nonnull PsiElement element, @Nonnull GlobalInspectionContext globalContext) {
-    PsiFile elementFile = element.getContainingFile();
-    RefElement refElement = globalContext.getRefManager().getReference(elementFile);
-    if (refElement == null) {
-      PsiElement context = InjectedLanguageManager.getInstance(elementFile.getProject()).getInjectionHost(elementFile);
-      if (context != null) refElement = globalContext.getRefManager().getReference(context.getContainingFile());
-    }
-    return refElement;
-  }
-
-
-  public static boolean isToCheckMember(@Nonnull RefElement owner, @Nonnull InspectionTool tool, Tools tools, ProfileManager profileManager) {
-    return isToCheckFile(owner.getContainingFile(), tool, tools, profileManager) && !owner.isSuppressed(tool.getShortName());
-  }
-
-  public static boolean isToCheckFile(PsiFile file, @Nonnull InspectionTool tool, Tools tools, ProfileManager profileManager) {
-    if (tools != null && file != null) {
-      for (ScopeToolState state : tools.getTools()) {
-        final NamedScope namedScope = state.getScope(file.getProject());
-        if (namedScope == null || namedScope.getValue().contains(file.getVirtualFile(), file.getProject(), profileManager.getScopesManager())) {
-          if (state.isEnabled()) {
-            InspectionToolWrapper toolWrapper = state.getTool();
-            if (toolWrapper.getTool() == tool) return true;
-          }
-          return false;
+    public static RefElement retrieveRefElement(@Nonnull PsiElement element, @Nonnull GlobalInspectionContext globalContext) {
+        PsiFile elementFile = element.getContainingFile();
+        RefElement refElement = globalContext.getRefManager().getReference(elementFile);
+        if (refElement == null) {
+            PsiElement context = InjectedLanguageManager.getInstance(elementFile.getProject()).getInjectionHost(elementFile);
+            if (context != null) {
+                refElement = globalContext.getRefManager().getReference(context.getContainingFile());
+            }
         }
-      }
+        return refElement;
     }
-    return false;
-  }
 
+    public static boolean isToCheckMember(
+        @Nonnull RefElement owner,
+        @Nonnull InspectionTool tool,
+        Tools tools,
+        ProfileManager profileManager
+    ) {
+        return isToCheckFile(owner.getContainingFile(), tool, tools, profileManager) && !owner.isSuppressed(tool.getShortName());
+    }
 
-  public static boolean canRunInspections(@Nonnull Project project, final boolean online) {
-    for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
-      if (!factory.isProjectConfiguredToRunInspections(project, online)) {
+    public static boolean isToCheckFile(PsiFile file, @Nonnull InspectionTool tool, Tools tools, ProfileManager profileManager) {
+        if (tools != null && file != null) {
+            for (ScopeToolState state : tools.getTools()) {
+                NamedScope namedScope = state.getScope(file.getProject());
+                if (namedScope == null
+                    || namedScope.getValue().contains(file.getVirtualFile(), file.getProject(), profileManager.getScopesManager())) {
+                    if (state.isEnabled()) {
+                        InspectionToolWrapper toolWrapper = state.getTool();
+                        if (toolWrapper.getTool() == tool) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
         return false;
-      }
     }
-    return true;
-  }
+
+    public static boolean canRunInspections(@Nonnull Project project, boolean online) {
+        for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
+            if (!factory.isProjectConfiguredToRunInspections(project, online)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -192,8 +192,8 @@ public abstract class DiffRequestProcessor implements Disposable {
         List<FrameDiffTool> tools = new ArrayList<>();
         for (DiffTool tool : myToolOrder) {
             try {
-                if (tool instanceof FrameDiffTool && tool.canShow(myContext, myActiveRequest)) {
-                    tools.add((FrameDiffTool)tool);
+                if (tool instanceof FrameDiffTool frameDiffTool && tool.canShow(myContext, myActiveRequest)) {
+                    tools.add(frameDiffTool);
                 }
             }
             catch (Throwable e) {
@@ -211,8 +211,8 @@ public abstract class DiffRequestProcessor implements Disposable {
         List<FrameDiffTool> tools = new ArrayList<>();
         for (DiffTool tool : myAvailableTools) {
             try {
-                if (tool instanceof FrameDiffTool && tool.canShow(myContext, myActiveRequest)) {
-                    tools.add((FrameDiffTool)tool);
+                if (tool instanceof FrameDiffTool frameDiffTool && tool.canShow(myContext, myActiveRequest)) {
+                    tools.add(frameDiffTool);
                 }
             }
             catch (Throwable e) {

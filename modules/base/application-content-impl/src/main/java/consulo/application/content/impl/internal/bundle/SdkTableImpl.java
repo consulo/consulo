@@ -62,14 +62,14 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     @Inject
     public SdkTableImpl(Application application, Provider<FileTypeRegistry> fileTypeRegistry) {
         myApplication = application;
-        final MessageBusConnection connection = myApplication.getMessageBus().connect();
+        MessageBusConnection connection = myApplication.getMessageBus().connect();
 
         // support external changes to sdk libraries (Endorsed Standards Override)
         connection.subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
             public void after(@Nonnull List<? extends VFileEvent> events) {
                 if (!events.isEmpty()) {
-                    final Set<Sdk> affected = new SmartHashSet<>();
+                    Set<Sdk> affected = new SmartHashSet<>();
                     for (VFileEvent event : events) {
                         addAffectedSdk(event, affected);
                     }
@@ -83,14 +83,14 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
             private void addAffectedSdk(VFileEvent event, Set<? super Sdk> affected) {
                 CharSequence fileName = null;
-                if (event instanceof VFileCreateEvent) {
-                    if (((VFileCreateEvent)event).isDirectory()) {
+                if (event instanceof VFileCreateEvent fileCreateEvent) {
+                    if (fileCreateEvent.isDirectory()) {
                         return;
                     }
-                    fileName = ((VFileCreateEvent)event).getChildName();
+                    fileName = fileCreateEvent.getChildName();
                 }
                 else {
-                    final VirtualFile file = event.getFile();
+                    VirtualFile file = event.getFile();
 
                     if (file != null && file.isValid()) {
                         if (file.isDirectory()) {
@@ -100,7 +100,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
                     }
                 }
                 if (fileName == null) {
-                    final String eventPath = event.getPath();
+                    String eventPath = event.getPath();
                     fileName = VirtualFileUtil.extractFileName(eventPath);
                 }
                 if (fileName != null) {
@@ -114,8 +114,8 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
                 for (Sdk sdk : mySdks) {
                     if (!affected.contains(sdk)) {
-                        final String homePath = sdk.getHomePath();
-                        final String eventPath = event.getPath();
+                        String homePath = sdk.getHomePath();
+                        String eventPath = event.getPath();
                         if (!StringUtil.isEmpty(homePath) && FileUtil.isAncestor(homePath, eventPath, true)) {
                             affected.add(sdk);
                         }
@@ -131,7 +131,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, len = mySdks.size(); i < len; ++i) {
             // avoid foreach, it instantiates ArrayList$Itr, this traversal happens very often
-            final Sdk jdk = mySdks.get(i);
+            Sdk jdk = mySdks.get(i);
             if (Comparing.strEqual(name, jdk.getName())) {
                 return jdk;
             }
@@ -153,9 +153,9 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     }
 
     @Override
-    public List<Sdk> getSdksOfType(final SdkTypeId type) {
+    public List<Sdk> getSdksOfType(SdkTypeId type) {
         List<Sdk> result = new ArrayList<>();
-        final Sdk[] sdks = getAllSdks();
+        Sdk[] sdks = getAllSdks();
         for (Sdk sdk : sdks) {
             if (sdk.getSdkType() == type) {
                 result.add(sdk);
@@ -206,8 +206,8 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     @RequiredWriteAction
     public void updateSdk(@Nonnull Sdk originalSdk, @Nonnull Sdk modifiedSdk) {
         myApplication.assertWriteAccessAllowed();
-        final String previousName = originalSdk.getName();
-        final String newName = modifiedSdk.getName();
+        String previousName = originalSdk.getName();
+        String newName = modifiedSdk.getName();
 
         boolean nameChanged = !previousName.equals(newName);
         if (nameChanged) {
@@ -232,7 +232,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     }
 
     public static SdkTypeId findSdkTypeByName(String sdkTypeName) {
-        for (final SdkType type : SdkType.EP_NAME.getExtensionList()) {
+        for (SdkType type : SdkType.EP_NAME.getExtensionList()) {
             if (type.getId().equals(sdkTypeName)) {
                 return type;
             }
@@ -243,7 +243,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     @Nonnull
     @Override
     @SuppressWarnings("deprecation")
-    public Sdk createSdk(final String name, final SdkTypeId sdkType) {
+    public Sdk createSdk(String name, SdkTypeId sdkType) {
         return new SdkImpl(this, name, sdkType);
     }
 
@@ -266,8 +266,8 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
         List<Element> children = element.getChildren(ELEMENT_SDK);
 
-        for (final Element child : children) {
-            final SdkImpl sdk = new SdkImpl(this, null, null);
+        for (Element child : children) {
+            SdkImpl sdk = new SdkImpl(this, null, null);
             sdk.readExternal(child, this);
             mySdks.add(sdk);
         }

@@ -118,9 +118,9 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     }
 
     public ArtifactImpl createCopy(EventDispatcher<ArtifactListener> dispatcher) {
-        final ArtifactImpl artifact = new ArtifactImpl(myName, myArtifactType, myBuildOnMake, myRootElement, myOutputPath, dispatcher);
+        ArtifactImpl artifact = new ArtifactImpl(myName, myArtifactType, myBuildOnMake, myRootElement, myOutputPath, dispatcher);
         for (Map.Entry<ArtifactPropertiesProvider, ArtifactProperties<?>> entry : myProperties.entrySet()) {
-            final ArtifactProperties newProperties = artifact.myProperties.get(entry.getKey());
+            ArtifactProperties newProperties = artifact.myProperties.get(entry.getKey());
             //noinspection unchecked
             newProperties.loadState(entry.getValue().getState());
         }
@@ -190,8 +190,8 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
         }
 
         String filePath;
-        if (myRootElement instanceof ArchivePackagingElement) {
-            filePath = myOutputPath + "/" + ((ArchivePackagingElement)myRootElement).getArchiveFileName();
+        if (myRootElement instanceof ArchivePackagingElement archivePackagingElement) {
+            filePath = myOutputPath + "/" + archivePackagingElement.getArchiveFileName();
         }
         else {
             filePath = myOutputPath;

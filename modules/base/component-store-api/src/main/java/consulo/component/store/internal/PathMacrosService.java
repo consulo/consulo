@@ -37,9 +37,9 @@ public abstract class PathMacrosService {
     public static final Pattern MACRO_PATTERN = Pattern.compile("\\$([\\w\\-\\.]+?)\\$");
 
     @Nonnull
-    public Set<String> getMacroNames(@Nonnull final Element e) {
+    public Set<String> getMacroNames(@Nonnull Element e) {
         return getMacroNames(e, new CompositePathMacroFilter(PathMacroFilter.EP_NAME.getExtensionList()), PathMacros.getInstance());
     }
 
-    public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull final PathMacros pathMacros);
+    public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros);
 }

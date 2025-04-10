@@ -36,7 +36,7 @@ import java.util.Set;
 public interface FavoritesListProvider extends Comparator<FavoritesTreeNodeDescriptor>, Comparable<FavoritesListProvider> {
     ExtensionPointName<FavoritesListProvider> EP_NAME = ExtensionPointName.create(FavoritesListProvider.class);
 
-    String getListName(final Project project);
+    String getListName(Project project);
 
     @Nullable
     String getCustomName(@Nonnull CommonActionsPanel.Buttons type);

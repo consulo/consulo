@@ -99,8 +99,9 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
             try {
                 ImportantFolderLocker locker = StartupUtil.getLocker();
 
-                BuiltInServer mainServer =
-                    locker instanceof ImportantFolderLockerViaBuiltInServer ? ((ImportantFolderLockerViaBuiltInServer)locker).getServer() : null;
+                BuiltInServer mainServer = locker instanceof ImportantFolderLockerViaBuiltInServer importantFolderLocker
+                    ? importantFolderLocker.getServer()
+                    : null;
                 if (mainServer == null || mainServer.getEventLoopGroup() instanceof OioEventLoopGroup) {
                     server = BuiltInServer.start(1, getDefaultPort(), PORTS_COUNT, false, null);
                 }

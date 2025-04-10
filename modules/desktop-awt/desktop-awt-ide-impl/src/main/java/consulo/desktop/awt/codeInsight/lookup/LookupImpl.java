@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.CollectConsumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.FileModificationService;
@@ -100,7 +100,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     private final JBList myList = new JBList<LookupElement>(new CollectionListModel<>()) {
         // 'myList' is focused when "Screen Reader" mode is enabled
         @Override
-        protected void processKeyEvent(@Nonnull final KeyEvent e) {
+        protected void processKeyEvent(@Nonnull KeyEvent e) {
             myEditor.getContentComponent().dispatchEvent(e); // let the editor handle actions properly for the lookup list
         }
 
@@ -110,7 +110,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             return new CompletionExtender(this);
         }
     };
-    final LookupCellRenderer myCellRenderer;
+    LookupCellRenderer myCellRenderer;
 
     private final List<LookupListener> myListeners = Lists.newLockFreeCopyOnWriteList();
     private final List<PrefixChangeListener> myPrefixChangeListeners = Lists.newLockFreeCopyOnWriteList();
@@ -175,7 +175,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
 
         myOffsets = new LookupOffsets(myEditor);
 
-        final CollectionListModel<LookupElement> model = getListModel();
+        CollectionListModel<LookupElement> model = getListModel();
         addEmptyItem(model);
         updateListHeight(model);
 
@@ -280,7 +280,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
 
     @RequiredUIAccess
     public void resort(boolean addAgain) {
-        final List<LookupElement> items = getItems();
+        List<LookupElement> items = getItems();
 
         withLock(() -> {
             myPresentableArranger.prefixChanged(this);
@@ -289,7 +289,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         });
 
         if (addAgain) {
-            for (final LookupElement item : items) {
+            for (LookupElement item : items) {
                 addItem(item, itemMatcher(item));
             }
         }
@@ -327,7 +327,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         }
     }
 
-    private static boolean containsDummyIdentifier(@Nullable final String s) {
+    private static boolean containsDummyIdentifier(@Nullable String s) {
         return s != null && s.contains(CompletionUtil.DUMMY_IDENTIFIER_TRIMMED);
     }
 
@@ -350,7 +350,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     public Collection<LookupElementAction> getActionsFor(LookupElement element) {
-        final CollectConsumer<LookupElementAction> consumer = new CollectConsumer<>();
+        CollectConsumer<LookupElementAction> consumer = new CollectConsumer<>();
         LookupActionProvider.EP_NAME.forEachExtensionSafe(it -> it.fillActions(element, this, consumer));
         if (!consumer.getResult().isEmpty()) {
             consumer.accept(new ShowHideIntentionIconLookupAction());
@@ -494,7 +494,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         updateListHeight(listModel);
 
         myList.setSelectedIndex(toSelect);
-        return !ContainerUtil.equalsIdentity(oldModel, items);
+        return !consulo.ide.impl.idea.util.containers.ContainerUtil.equalsIdentity(oldModel, items);
     }
 
     public boolean isSelectionVisible() {
@@ -522,7 +522,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     private void clearIfLookupAndArrangerPrefixesMatch() {
         boolean isCompletionArranger = myArranger instanceof CompletionLookupArrangerImpl;
         if (isCompletionArranger) {
-            final String lastLookupArrangersPrefix = ((CompletionLookupArrangerImpl)myArranger).getLastLookupPrefix();
+            String lastLookupArrangersPrefix = ((CompletionLookupArrangerImpl)myArranger).getLastLookupPrefix();
             if (lastLookupArrangersPrefix != null && !lastLookupArrangersPrefix.equals(getAdditionalPrefix())) {
                 LOG.trace("prefixes don't match, do not clear lookup additional prefix");
             }
@@ -552,7 +552,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     private static LookupElementPresentation renderItemApproximately(LookupElement item) {
-        final LookupElementPresentation p = new LookupElementPresentation();
+        LookupElementPresentation p = new LookupElementPresentation();
         item.renderElement(p);
         return p;
     }
@@ -560,32 +560,26 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     @Nonnull
     @Override
     public String itemPattern(@Nonnull LookupElement element) {
-        if (element instanceof EmptyLookupItem) {
-            return "";
-        }
-        return myPresentableArranger.itemPattern(element);
+        return element instanceof EmptyLookupItem ? "" : myPresentableArranger.itemPattern(element);
     }
 
     @Override
     @Nonnull
     public PrefixMatcher itemMatcher(@Nonnull LookupElement item) {
-        if (item instanceof EmptyLookupItem) {
-            return new CamelHumpMatcher("");
-        }
-        return myPresentableArranger.itemMatcher(item);
+        return item instanceof EmptyLookupItem ? new CamelHumpMatcher("") : myPresentableArranger.itemMatcher(item);
     }
 
     @Override
     @RequiredUIAccess
-    public void finishLookup(final char completionChar) {
+    public void finishLookup(char completionChar) {
         finishLookup(completionChar, (LookupElement)myList.getSelectedValue());
     }
 
     @RequiredUIAccess
     @Override
-    public void finishLookup(char completionChar, @Nullable final LookupElement item) {
+    public void finishLookup(char completionChar, @Nullable LookupElement item) {
         LOG.assertTrue(!Application.get().isWriteAccessAllowed(), "finishLookup should be called without a write action");
-        final PsiFile file = getPsiFile();
+        PsiFile file = getPsiFile();
         boolean writableOk = file == null || FileModificationService.getInstance().prepareFileForWrite(file);
         if (myDisposed) { // ensureFilesWritable could close us by showing a dialog
             return;
@@ -622,7 +616,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             return;
         }
 
-        final String prefix = itemPattern(item);
+        String prefix = itemPattern(item);
         boolean plainMatch = ContainerUtil.or(item.getAllLookupStrings(), s -> StringUtil.containsIgnoreCase(s, prefix));
         if (!plainMatch) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CAMEL_HUMPS);
@@ -660,24 +654,24 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         return myOffsets.getPrefixLength(item, this);
     }
 
-    protected void insertLookupString(LookupElement item, final int prefix) {
+    protected void insertLookupString(LookupElement item, int prefix) {
         insertLookupString(myProject, getTopLevelEditor(), item, itemMatcher(item), itemPattern(item), prefix);
     }
 
     public static void insertLookupString(
-        final Project project,
+        Project project,
         Editor editor,
         LookupElement item,
         PrefixMatcher matcher,
         String itemPattern,
-        final int prefixLength
+        int prefixLength
     ) {
-        final String lookupString = getCaseCorrectedLookupString(item, matcher, itemPattern);
+        String lookupString = getCaseCorrectedLookupString(item, matcher, itemPattern);
 
-        final Editor hostEditor = editor;
+        Editor hostEditor = editor;
         hostEditor.getCaretModel().runForEachCaret(__ -> {
             EditorModificationUtil.deleteSelectedText(hostEditor);
-            final int caretOffset = hostEditor.getCaretModel().getOffset();
+            int caretOffset = hostEditor.getCaretModel().getOffset();
 
             int offset = insertLookupInDocumentWindowIfNeeded(project, editor, caretOffset, prefixLength, lookupString);
             hostEditor.getCaretModel().moveToOffset(offset);
@@ -741,7 +735,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             return lookupString;
         }
 
-        final int length = prefix.length();
+        int length = prefix.length();
         if (length == 0 || !prefixMatcher.prefixMatches(prefix)) {
             return lookupString;
         }
@@ -749,7 +743,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         boolean isAllUpper = true;
         boolean sameCase = true;
         for (int i = 0; i < length && (isAllLower || isAllUpper || sameCase); i++) {
-            final char c = prefix.charAt(i);
+            char c = prefix.charAt(i);
             boolean isLower = Character.isLowerCase(c);
             boolean isUpper = Character.isUpperCase(c);
             // do not take this kind of symbols into account ('_', '@', etc.)
@@ -980,7 +974,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             this
         );
 
-        final EditorMouseListener mouseListener = new EditorMouseListener() {
+        EditorMouseListener mouseListener = new EditorMouseListener() {
             @Override
             @RequiredUIAccess
             public void mouseClicked(@Nonnull EditorMouseEvent e) {
@@ -1005,7 +999,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             new SelectionListener() {
                 @Override
                 @RequiredUIAccess
-                public void selectionChanged(@Nonnull final SelectionEvent e) {
+                public void selectionChanged(@Nonnull SelectionEvent e) {
                     if (myGuardedChanges == 0 && !myFinishing) {
                         hideLookup(false);
                     }
@@ -1050,7 +1044,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
             @Override
             public void valueChanged(@Nonnull ListSelectionEvent e) {
                 if (!myUpdating) {
-                    final LookupElement item = getCurrentItem();
+                    LookupElement item = getCurrentItem();
                     fireCurrentItemChanged(oldItem, item);
                     oldItem = item;
                 }
@@ -1121,7 +1115,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         return SwingUtilities.convertRectangle(myList, itemBounds, getComponent());
     }
 
-    private boolean fireBeforeItemSelected(@Nullable final LookupElement item, char completionChar) {
+    private boolean fireBeforeItemSelected(@Nullable LookupElement item, char completionChar) {
         boolean result = true;
         if (!myListeners.isEmpty()) {
             LookupEvent event = new LookupEvent(this, item, completionChar);
@@ -1139,7 +1133,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         return result;
     }
 
-    public void fireItemSelected(@Nullable final LookupElement item, char completionChar) {
+    public void fireItemSelected(@Nullable LookupElement item, char completionChar) {
         if (item != null && item.requiresCommittedDocuments()) {
             PsiDocumentManager.getInstance(myProject).commitAllDocuments();
         }
@@ -1157,7 +1151,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         }
     }
 
-    private void fireLookupCanceled(final boolean explicitly) {
+    private void fireLookupCanceled(boolean explicitly) {
         if (!myListeners.isEmpty()) {
             LookupEvent event = new LookupEvent(this, explicitly);
             for (LookupListener listener : myListeners) {
@@ -1189,11 +1183,11 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
 
     @Override
     @RequiredUIAccess
-    public void replacePrefix(final String presentPrefix, final String newPrefix) {
+    public void replacePrefix(String presentPrefix, String newPrefix) {
         if (!performGuardedChange(() -> {
             EditorModificationUtil.deleteSelectedText(myEditor);
             int offset = myEditor.getCaretModel().getOffset();
-            final int start = offset - presentPrefix.length();
+            int start = offset - presentPrefix.length();
             myEditor.getDocument().replaceString(start, offset, newPrefix);
             myOffsets.clearAdditionalPrefix();
             myEditor.getCaretModel().moveToOffset(start + newPrefix.length());
@@ -1322,7 +1316,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         doHide(true, explicitly);
     }
 
-    private void doHide(final boolean fireCanceled, final boolean explicitly) {
+    private void doHide(boolean fireCanceled, boolean explicitly) {
         if (myDisposed) {
             LOG.error(formatDisposeTrace());
         }
@@ -1385,7 +1379,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         LookupElement prevItem = getCurrentItem();
         myUpdating = true;
         try {
-            final boolean reused = mayCheckReused && checkReused();
+            boolean reused = mayCheckReused && checkReused();
             boolean selectionVisible = isSelectionVisible();
             boolean itemsChanged = updateList(onExplicitAction, reused);
             if (isVisible()) {

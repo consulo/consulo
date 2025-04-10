@@ -33,20 +33,21 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class InspectionExtensionsFactory {
-  public static final ExtensionPointName<InspectionExtensionsFactory> EP_NAME = ExtensionPointName.create(InspectionExtensionsFactory.class);
+    public static final ExtensionPointName<InspectionExtensionsFactory> EP_NAME =
+        ExtensionPointName.create(InspectionExtensionsFactory.class);
 
-  public abstract GlobalInspectionContextExtension createGlobalInspectionContextExtension();
+    public abstract GlobalInspectionContextExtension createGlobalInspectionContextExtension();
 
-  @Nullable
-  public abstract RefManagerExtension createRefManagerExtension(RefManager refManager);
+    @Nullable
+    public abstract RefManagerExtension createRefManagerExtension(RefManager refManager);
 
-  @Nullable
-  public abstract HTMLComposerExtension createHTMLComposerExtension(final HTMLComposer composer);
+    @Nullable
+    public abstract HTMLComposerExtension createHTMLComposerExtension(HTMLComposer composer);
 
-  public abstract boolean isToCheckMember(PsiElement element, String id);
+    public abstract boolean isToCheckMember(PsiElement element, String id);
 
-  @Nullable
-  public abstract String getSuppressedInspectionIdsIn(PsiElement element);
+    @Nullable
+    public abstract String getSuppressedInspectionIdsIn(PsiElement element);
 
-  public abstract boolean isProjectConfiguredToRunInspections(@Nonnull Project project, boolean online);
+    public abstract boolean isProjectConfiguredToRunInspections(@Nonnull Project project, boolean online);
 }

@@ -243,8 +243,8 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
 
     @Override
     public int compareTo(@Nonnull Object o) {
-        if (o instanceof String) {
-            return getLookupString().compareTo((String)o);
+        if (o instanceof String string) {
+            return getLookupString().compareTo(string);
         }
         if (!(o instanceof LookupItem)) {
             throw new RuntimeException("Trying to compare LookupItem with " + o.getClass() + "!!!");

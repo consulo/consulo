@@ -45,7 +45,7 @@ import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.externalService.impl.internal.PlatformOrPluginsNotificationGroupContributor;
-import consulo.externalService.plugin.PluginContants;
+import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
@@ -106,7 +106,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     @Override
     public StartupProgress createSplash(CommandLineArgs args) {
         if (!args.isNoSplash()) {
-            final SplashScreen splashScreen = getSplashScreen();
+            SplashScreen splashScreen = getSplashScreen();
             if (splashScreen == null) {
                 DesktopSplash splash = new DesktopSplash(false);
                 splash.show();
@@ -338,7 +338,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                                 IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
                                 ShowSettingsUtil.getInstance().showSettingsDialog(
                                     ideFrame == null ? null : ideFrame.getProject(),
-                                    PluginContants.CONFIGURABLE_ID,
+                                    PluginsConfigurable.CONFIGURABLE_ID,
                                     null
                                 );
                             }

@@ -150,16 +150,9 @@ public abstract class SdkType implements SdkTypeId {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SdkType)) {
-            return false;
-        }
-
-        final SdkType sdkType = (SdkType)o;
-
-        return myId.equals(sdkType.myId);
+        return o == this
+            || o instanceof SdkType sdkType
+            && myId.equals(sdkType.myId);
     }
 
     @Override
@@ -174,11 +167,11 @@ public abstract class SdkType implements SdkTypeId {
 
     @Nonnull
     public FileChooserDescriptor getHomeChooserDescriptor() {
-        final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
             @Override
             public void validateSelectedFiles(VirtualFile[] files) throws Exception {
                 if (files.length != 0) {
-                    final String selectedPath = files[0].getPath();
+                    String selectedPath = files[0].getPath();
                     boolean valid = isValidSdkHome(selectedPath);
                     if (!valid) {
                         valid = isValidSdkHome(adjustSelectedSdkHome(selectedPath));
@@ -197,11 +190,11 @@ public abstract class SdkType implements SdkTypeId {
     }
 
     @Nullable
-    public String getDefaultDocumentationUrl(final @Nonnull Sdk sdk) {
+    public String getDefaultDocumentationUrl(@Nonnull Sdk sdk) {
         return null;
     }
 
-    public boolean isRootTypeApplicable(final OrderRootType type) {
+    public boolean isRootTypeApplicable(OrderRootType type) {
         return false;
     }
 

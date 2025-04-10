@@ -50,7 +50,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.PairProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -83,13 +82,13 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
      */
     @TestOnly
     @Deprecated
-    public void setTemplateTesting(final boolean templateTesting) {
+    public void setTemplateTesting(boolean templateTesting) {
         myTemplateTesting = templateTesting;
     }
 
     @TestOnly
     public static void setTemplateTesting(Project project, Disposable parentDisposable) {
-        final TemplateManagerImpl instance = (TemplateManagerImpl)getInstance(project);
+        TemplateManagerImpl instance = (TemplateManagerImpl)getInstance(project);
         instance.myTemplateTesting = true;
         Disposer.register(parentDisposable, () -> instance.myTemplateTesting = false);
     }
@@ -131,6 +130,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }
 
     @Override
+    @RequiredReadAction
     public boolean startTemplate(@Nonnull Editor editor, char shortcutChar) {
         Runnable runnable = prepareTemplate(editor, shortcutChar, null);
         if (runnable != null) {
@@ -142,7 +142,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @Override
     @RequiredUIAccess
-    public void startTemplate(@Nonnull final Editor editor, @Nonnull Template template) {
+    public void startTemplate(@Nonnull Editor editor, @Nonnull Template template) {
         startTemplate(editor, template, null);
     }
 
@@ -158,22 +158,22 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         @Nonnull Editor editor,
         @Nonnull Template template,
         TemplateEditingListener listener,
-        final BiPredicate<String, String> processor
+        BiPredicate<String, String> processor
     ) {
         startTemplate(editor, null, template, true, listener, processor, null);
     }
 
     @RequiredUIAccess
     private void startTemplate(
-        final Editor editor,
-        final String selectionString,
-        final Template template,
+        Editor editor,
+        String selectionString,
+        Template template,
         boolean inSeparateCommand,
         TemplateEditingListener listener,
-        final BiPredicate<String, String> processor,
-        final Map<String, String> predefinedVarValues
+        BiPredicate<String, String> processor,
+        Map<String, String> predefinedVarValues
     ) {
-        final TemplateStateImpl templateState = initTemplateState(editor);
+        TemplateStateImpl templateState = initTemplateState(editor);
 
         //noinspection unchecked
         templateState.getProperties().put(ExpressionContext.SELECTION, selectionString);
@@ -211,15 +211,15 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @Override
     @RequiredUIAccess
-    public void startTemplate(@Nonnull final Editor editor, @Nonnull final Template template, TemplateEditingListener listener) {
+    public void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener) {
         startTemplate(editor, null, template, true, listener, null, null);
     }
 
     @Override
     @RequiredUIAccess
     public void startTemplate(
-        @Nonnull final Editor editor,
-        @Nonnull final Template template,
+        @Nonnull Editor editor,
+        @Nonnull Template template,
         boolean inSeparateCommand,
         Map<String, String> predefinedVarValues,
         TemplateEditingListener listener
@@ -265,7 +265,8 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }
 
     @Nullable
-    public Runnable prepareTemplate(final Editor editor, char shortcutChar, @Nullable final PairProcessor<String, String> processor) {
+    @RequiredReadAction
+    public Runnable prepareTemplate(Editor editor, char shortcutChar, @Nullable BiPredicate<String, String> processor) {
         if (editor.getSelectionModel().hasSelection()) {
             return null;
         }
@@ -337,14 +338,14 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     @Override
     @RequiredReadAction
     public Map<Template, String> findMatchingTemplates(
-        final PsiFile file,
+        PsiFile file,
         Editor editor,
         @Nullable Character shortcutChar,
         TemplateSettings templateSettings
     ) {
-        final Document document = editor.getDocument();
+        Document document = editor.getDocument();
         CharSequence text = document.getCharsSequence();
-        final int caretOffset = editor.getCaretModel().getOffset();
+        int caretOffset = editor.getCaretModel().getOffset();
 
         List<TemplateImpl> candidatesWithoutArgument = findMatchingTemplates(text, caretOffset, shortcutChar, templateSettings, false);
 
@@ -376,13 +377,13 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     @Override
     @Nullable
     public Runnable startNonCustomTemplates(
-        final Map<Template, String> template2argument,
-        final Editor editor,
-        @Nullable final PairProcessor<String, String> processor
+        Map<Template, String> template2argument,
+        Editor editor,
+        @Nullable BiPredicate<String, String> processor
     ) {
-        final int caretOffset = editor.getCaretModel().getOffset();
-        final Document document = editor.getDocument();
-        final CharSequence text = document.getCharsSequence();
+        int caretOffset = editor.getCaretModel().getOffset();
+        Document document = editor.getDocument();
+        CharSequence text = document.getCharsSequence();
 
         if (template2argument == null || template2argument.isEmpty()) {
             return null;
@@ -431,12 +432,12 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @RequiredUIAccess
     public void startTemplateWithPrefix(
-        final Editor editor,
-        final Template template,
-        @Nullable final PairProcessor<String, String> processor,
+        Editor editor,
+        Template template,
+        @Nullable BiPredicate<String, String> processor,
         @Nullable String argument
     ) {
-        final int caretOffset = editor.getCaretModel().getOffset();
+        int caretOffset = editor.getCaretModel().getOffset();
         String key = template.getKey();
         int startOffset = caretOffset - key.length();
         if (argument != null) {
@@ -451,14 +452,14 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     @RequiredUIAccess
     public void startTemplateWithPrefix(
-        final Editor editor,
-        final Template template,
-        final int templateStart,
-        @Nullable final PairProcessor<String, String> processor,
-        @Nullable final String argument
+        Editor editor,
+        Template template,
+        int templateStart,
+        @Nullable BiPredicate<String, String> processor,
+        @Nullable String argument
     ) {
-        final int caretOffset = editor.getCaretModel().getOffset();
-        final TemplateStateImpl templateState = initTemplateState(editor);
+        int caretOffset = editor.getCaretModel().getOffset();
+        TemplateStateImpl templateState = initTemplateState(editor);
         CommandProcessor.getInstance().newCommand()
             .project(myProject)
             .name(CodeInsightLocalize.insertCodeTemplateCommand())
@@ -549,7 +550,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     @Override
     @Nullable
     public Template getActiveTemplate(@Nonnull Editor editor) {
-        final TemplateStateImpl templateState = getTemplateStateImpl(editor);
+        TemplateStateImpl templateState = getTemplateStateImpl(editor);
         return templateState != null ? templateState.getTemplate() : null;
     }
 
@@ -591,8 +592,8 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     public List<Template> listApplicableTemplates(@Nonnull TemplateActionContext templateActionContext) {
         Set<TemplateContextType> contextTypes = getApplicableContextTypes(templateActionContext);
 
-        final ArrayList<Template> result = new ArrayList<>();
-        for (final Template template : TemplateSettingsImpl.getInstanceImpl().getTemplates()) {
+        ArrayList<Template> result = new ArrayList<>();
+        for (Template template : TemplateSettingsImpl.getInstanceImpl().getTemplates()) {
             if (!template.isDeactivated() && (!templateActionContext.isSurrounding() || template.isSelectionTemplate()) && isApplicable(
                 template,
                 contextTypes

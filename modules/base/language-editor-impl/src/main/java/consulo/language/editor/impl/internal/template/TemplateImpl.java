@@ -30,10 +30,7 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TemplateImpl implements Template, SchemeElement {
     private static record Segment(String name, int offset) {
@@ -421,7 +418,7 @@ public class TemplateImpl implements Template, SchemeElement {
         return false;
     }
 
-    public void setId(@Nullable final String id) {
+    public void setId(@Nullable String id) {
         myId = id;
     }
 
@@ -435,13 +432,13 @@ public class TemplateImpl implements Template, SchemeElement {
         return getTemplateContext().getDifference(defaultTemplate.getTemplateContext()).isEmpty();
     }
 
-    public void applyOptions(final Map<TemplateOptionalProcessor, Boolean> context) {
+    public void applyOptions(Map<TemplateOptionalProcessor, Boolean> context) {
         for (Map.Entry<TemplateOptionalProcessor, Boolean> entry : context.entrySet()) {
             entry.getKey().setEnabled(this, entry.getValue());
         }
     }
 
-    public void applyContext(final Map<TemplateContextType, Boolean> context) {
+    public void applyContext(Map<TemplateContextType, Boolean> context) {
         for (Map.Entry<TemplateContextType, Boolean> entry : context.entrySet()) {
             getTemplateContext().setEnabled(entry.getKey(), entry.getValue());
         }
@@ -460,56 +457,25 @@ public class TemplateImpl implements Template, SchemeElement {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof TemplateImpl)) {
+        if (!(o instanceof TemplateImpl template)) {
             return false;
         }
 
-        final TemplateImpl template = (TemplateImpl) o;
+        //noinspection SimplifiableIfStatement
         if (myId != null && template.myId != null && myId.equals(template.myId)) {
             return true;
         }
 
-        if (myIsToReformat != template.myIsToReformat) {
-            return false;
-        }
-
-        if (myShortcutChar != template.myShortcutChar) {
-            return false;
-        }
-
-        if (myDescription != null ? !myDescription.equals(template.myDescription) : template.myDescription != null) {
-            return false;
-        }
-
-        if (myGroupName != null ? !myGroupName.equals(template.myGroupName) : template.myGroupName != null) {
-            return false;
-        }
-
-        if (myKey != null ? !myKey.equals(template.myKey) : template.myKey != null) {
-            return false;
-        }
-
-        if (myString != null ? !myString.equals(template.myString) : template.myString != null) {
-            return false;
-        }
-
-        if (myTemplateText != null ? !myTemplateText.equals(template.myTemplateText) : template.myTemplateText != null) {
-            return false;
-        }
-
-        if (!new HashSet<>(myVariables).equals(new HashSet<>(template.myVariables))) {
-            return false;
-        }
-
-        if (isDeactivated != template.isDeactivated) {
-            return false;
-        }
-
-        if (!myOptions.equals(template.myOptions)) {
-            return false;
-        }
-
-        return true;
+        return myIsToReformat == template.myIsToReformat
+            && myShortcutChar == template.myShortcutChar
+            && Objects.equals(myDescription, template.myDescription)
+            && Objects.equals(myGroupName, template.myGroupName)
+            && Objects.equals(myKey, template.myKey)
+            && Objects.equals(myString, template.myString)
+            && Objects.equals(myTemplateText, template.myTemplateText)
+            && new HashSet<>(myVariables).equals(new HashSet<>(template.myVariables))
+            && isDeactivated == template.isDeactivated
+            && myOptions.equals(template.myOptions);
     }
 
     @Override

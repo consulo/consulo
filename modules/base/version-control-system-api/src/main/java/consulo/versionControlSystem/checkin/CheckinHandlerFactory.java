@@ -45,12 +45,12 @@ public abstract class CheckinHandlerFactory implements BaseCheckinHandlerFactory
      *
      * @param panel         the class which can be used to retrieve information about the files to be committed,
      *                      and to get or set the commit message.
-     * @param commitContext
+     * @param commitContext Context of the commit.
      * @return the handler instance.
      */
     @Override
     @Nullable
-    public abstract CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext);
+    public abstract CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext);
 
     @Override
     public BeforeCheckinDialogHandler createSystemReadyHandler(Project project) {

@@ -2,14 +2,13 @@
 
 package consulo.desktop.awt.wm.navigationToolbar;
 
-import consulo.application.ReadAction;
+import consulo.application.AccessRule;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.ui.UISettings;
 import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.navigationToolbar.NavBarModelListener;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.ide.navigationToolbar.NavBarModelExtensions;
 import consulo.language.psi.*;
@@ -21,12 +20,13 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.PairProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 import static consulo.language.psi.PsiUtilCore.findFileSystemItem;
 
@@ -46,7 +46,7 @@ public class NavBarModel {
 
     private final TreeAnchorizer myTreeAnchorizer;
 
-    public NavBarModel(final Project project) {
+    public NavBarModel(Project project) {
         this(project, project.getMessageBus().syncPublisher(NavBarModelListener.class), NavBarModelBuilder.getInstance());
     }
 
@@ -169,11 +169,10 @@ public class NavBarModel {
         return ObjectUtil.chooseNotNull(projectGrandChild, ObjectUtil.chooseNotNull(projectChild, project));
     }
 
-    protected void updateModel(final PsiElement psiElement, @Nullable NavBarModelExtension ownerExtension) {
-
-        final Set<VirtualFile> roots = new HashSet<>();
-        final ProjectRootManager projectRootManager = ProjectRootManager.getInstance(myProject);
-        final ProjectFileIndex projectFileIndex = projectRootManager.getFileIndex();
+    protected void updateModel(PsiElement psiElement, @Nullable NavBarModelExtension ownerExtension) {
+        Set<VirtualFile> roots = new HashSet<>();
+        ProjectRootManager projectRootManager = ProjectRootManager.getInstance(myProject);
+        ProjectFileIndex projectFileIndex = projectRootManager.getFileIndex();
 
         for (VirtualFile root : projectRootManager.getContentRoots()) {
             VirtualFile parent = root.getParent();
@@ -182,7 +181,7 @@ public class NavBarModel {
             }
         }
 
-        for (final NavBarModelExtension modelExtension : NavBarModelExtension.EP_NAME.getExtensionList()) {
+        for (NavBarModelExtension modelExtension : NavBarModelExtension.EP_NAME.getExtensionList()) {
             for (VirtualFile root : modelExtension.additionalRoots(psiElement.getProject())) {
                 VirtualFile parent = root.getParent();
                 if (parent == null || !projectFileIndex.isInContent(parent)) {
@@ -191,7 +190,7 @@ public class NavBarModel {
             }
         }
 
-        List<Object> updatedModel = ReadAction.compute(
+        List<Object> updatedModel = AccessRule.read(
             () -> isValid(psiElement)
                 ? myBuilder.createModel(psiElement, roots, ownerExtension)
                 : Collections.emptyList()
@@ -201,7 +200,7 @@ public class NavBarModel {
     }
 
     void revalidate() {
-        final List<Object> objects = new ArrayList<>();
+        List<Object> objects = new ArrayList<>();
         boolean update = false;
         for (Object o : myModel) {
             if (isValid(myTreeAnchorizer.retrieveElement(o))) {
@@ -235,9 +234,9 @@ public class NavBarModel {
         }
     }
 
-    public void updateModel(final Object object) {
-        if (object instanceof PsiElement) {
-            updateModel((PsiElement)object, null);
+    public void updateModel(Object object) {
+        if (object instanceof PsiElement psiElement) {
+            updateModel(psiElement, null);
         }
         else if (object instanceof Module) {
             List<Object> l = new ArrayList<>();
@@ -257,15 +256,15 @@ public class NavBarModel {
         myChanged = changed;
     }
 
-    static boolean isValid(final Object object) {
-        if (object instanceof Project) {
-            return !((Project)object).isDisposed();
+    static boolean isValid(Object object) {
+        if (object instanceof Project project) {
+            return !project.isDisposed();
         }
-        if (object instanceof Module) {
-            return !((Module)object).isDisposed();
+        if (object instanceof Module module) {
+            return !module.isDisposed();
         }
-        if (object instanceof PsiElement) {
-            return ReadAction.compute(() -> ((PsiElement)object).isValid()).booleanValue();
+        if (object instanceof PsiElement element) {
+            return AccessRule.read(() -> element.isValid());
         }
         return object != null;
     }
@@ -275,10 +274,10 @@ public class NavBarModel {
         return NavBarModelExtensions.normalize(child);
     }
 
-    protected List<Object> getChildren(final Object object) {
-        final List<Object> result = new ArrayList<>();
-        PairProcessor<Object, NavBarModelExtension> processor = (o, ext) -> {
-            ContainerUtil.addIfNotNull(result, o instanceof PsiElement && ext.normalizeChildren() ? normalize((PsiElement)o) : o);
+    protected List<Object> getChildren(Object object) {
+        List<Object> result = new ArrayList<>();
+        BiPredicate<Object, NavBarModelExtension> processor = (o, ext) -> {
+            ContainerUtil.addIfNotNull(result, o instanceof PsiElement element && ext.normalizeChildren() ? normalize(element) : o);
             return true;
         };
 
@@ -288,28 +287,28 @@ public class NavBarModel {
         return result;
     }
 
-    private boolean processChildren(Object object, @Nonnull Processor<Object> processor) {
-        return processChildrenWithExtensions(object, (o, ext) -> processor.process(o));
+    private boolean processChildren(Object object, @Nonnull Predicate<Object> processor) {
+        return processChildrenWithExtensions(object, (o, ext) -> processor.test(o));
     }
 
-    private boolean processChildrenWithExtensions(Object object, @Nonnull PairProcessor<Object, NavBarModelExtension> pairProcessor) {
+    private boolean processChildrenWithExtensions(Object object, @Nonnull BiPredicate<Object, NavBarModelExtension> pairProcessor) {
         if (!isValid(object)) {
             return true;
         }
-        final Object rootElement = size() > 1 ? getElement(1) : null;
+        Object rootElement = size() > 1 ? getElement(1) : null;
         if (rootElement != null && !isValid(rootElement)) {
             return true;
         }
 
         for (NavBarModelExtension modelExtension : NavBarModelExtension.EP_NAME.getExtensionList()) {
-            if (!modelExtension.processChildren(object, rootElement, o -> pairProcessor.process(o, modelExtension))) {
+            if (!modelExtension.processChildren(object, rootElement, o -> pairProcessor.test(o, modelExtension))) {
                 return false;
             }
         }
         return true;
     }
 
-    public Object get(final int index) {
+    public Object get(int index) {
         return myTreeAnchorizer.retrieveElement(myModel.get(index));
     }
 
@@ -323,7 +322,7 @@ public class NavBarModel {
         return -1;
     }
 
-    public void setSelectedIndex(final int selectedIndex) {
+    public void setSelectedIndex(int selectedIndex) {
         if (mySelectedIndex != selectedIndex) {
             mySelectedIndex = selectedIndex;
             myNotificator.selectionChanged();

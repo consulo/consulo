@@ -338,8 +338,8 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
             }
             catch (ExecutionException ex) {
                 Throwable cause = ex.getCause();
-                if (cause instanceof ProcessCanceledException) {
-                    throw (ProcessCanceledException)cause;
+                if (cause instanceof ProcessCanceledException processCanceledException) {
+                    throw processCanceledException;
                 }
 
                 LOG.error(ex);
