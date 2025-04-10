@@ -41,6 +41,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
@@ -48,12 +49,12 @@ import jakarta.annotation.Nonnull;
 public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
     @Override
     public Result preprocessEnter(
-        @Nonnull final PsiFile file,
-        @Nonnull final Editor editor,
-        @Nonnull Ref<Integer> caretOffsetRef,
-        @Nonnull final Ref<Integer> caretAdvanceRef,
-        @Nonnull final DataContext dataContext,
-        final EditorActionHandler originalHandler
+        @Nonnull PsiFile file,
+        @Nonnull Editor editor,
+        @Nonnull SimpleReference<Integer> caretOffsetRef,
+        @Nonnull SimpleReference<Integer> caretAdvanceRef,
+        @Nonnull DataContext dataContext,
+        EditorActionHandler originalHandler
     ) {
         int caretOffset = caretOffsetRef.get().intValue();
         int caretAdvance = caretAdvanceRef.get().intValue();
@@ -72,8 +73,8 @@ public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
                 quoteHandler.getConcatenatableStringTokenTypes() != null &&
                 quoteHandler.getConcatenatableStringTokenTypes().contains(token.getElementType())) {
                 TextRange range = token.getTextRange();
-                final char literalStart = token.getText().charAt(0);
-                final StringLiteralLexer lexer = new StringLiteralLexer(literalStart, token.getElementType());
+                char literalStart = token.getText().charAt(0);
+                StringLiteralLexer lexer = new StringLiteralLexer(literalStart, token.getElementType());
                 lexer.start(text, range.getStartOffset(), range.getEndOffset());
 
                 while (lexer.getTokenType() != null) {
@@ -93,7 +94,7 @@ public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
                     caretAdvance++;
                 }
 
-                final String insertedFragment = literalStart + " " + quoteHandler.getStringConcatenationOperatorRepresentation();
+                String insertedFragment = literalStart + " " + quoteHandler.getStringConcatenationOperatorRepresentation();
                 document.insertString(caretOffset, insertedFragment + " " + literalStart);
                 caretOffset += insertedFragment.length();
                 caretAdvance = 1;
@@ -112,9 +113,8 @@ public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
     }
 
     protected JavaLikeQuoteHandler getJavaLikeQuoteHandler(Editor editor, PsiElement psiAtOffset) {
-        final QuoteHandler fileTypeQuoteHandler = TypedHandler.getQuoteHandler(psiAtOffset.getContainingFile(), editor);
-        return fileTypeQuoteHandler instanceof JavaLikeQuoteHandler ?
-            (JavaLikeQuoteHandler)fileTypeQuoteHandler : null;
+        QuoteHandler fileTypeQuoteHandler = TypedHandler.getQuoteHandler(psiAtOffset.getContainingFile(), editor);
+        return fileTypeQuoteHandler instanceof JavaLikeQuoteHandler quoteHandler ? quoteHandler : null;
     }
 
     private static boolean isInStringLiteral(@Nonnull Editor editor, @Nonnull DataContext dataContext, int offset) {

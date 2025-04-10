@@ -18,13 +18,12 @@ package consulo.language.editor.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.component.extension.ExtensionPointName;
-import consulo.util.lang.ref.Ref;
+import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -59,12 +58,12 @@ public interface EnterHandlerDelegate {
      * @return One of <code>{@link Result} values.</code>
      */
     Result preprocessEnter(
-        @Nonnull final PsiFile file,
-        @Nonnull final Editor editor,
-        @Nonnull final Ref<Integer> caretOffset,
-        @Nonnull final Ref<Integer> caretAdvance,
-        @Nonnull final DataContext dataContext,
-        @Nullable final EditorActionHandler originalHandler
+        @Nonnull PsiFile file,
+        @Nonnull Editor editor,
+        @Nonnull SimpleReference<Integer> caretOffset,
+        @Nonnull SimpleReference<Integer> caretAdvance,
+        @Nonnull DataContext dataContext,
+        @Nullable EditorActionHandler originalHandler
     );
 
     /**

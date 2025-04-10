@@ -4,7 +4,7 @@ package consulo.execution.impl.internal.dashboard;
 import com.google.common.collect.Sets;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AppUIExecutor;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.MessageBusConnection;
@@ -18,7 +18,6 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.ConfigurationTypeUtil;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.RunProfile;
 import consulo.execution.dashboard.*;
 import consulo.execution.event.ExecutionListener;
 import consulo.execution.event.RunManagerListener;
@@ -43,6 +42,7 @@ import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.project.ui.wm.ToolWindowId;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
@@ -109,6 +109,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
 
         myContentManager.addContentManagerListener(new ContentManagerListener() {
             @Override
+            @RequiredUIAccess
             public void contentAdded(@Nonnull ContentManagerEvent event) {
                 initServiceContentListeners();
                 myContentManager.removeContentManagerListener(this);
@@ -215,7 +216,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
             public void processStarted(
                 @Nonnull String executorId,
                 @Nonnull ExecutionEnvironment env,
-                final @Nonnull ProcessHandler handler
+                @Nonnull ProcessHandler handler
             ) {
                 updateDashboardIfNeeded(env.getRunnerAndConfigurationSettings());
             }
@@ -230,12 +231,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
                 updateDashboardIfNeeded(env.getRunnerAndConfigurationSettings());
             }
         });
-        connection.subscribe(RunDashboardListener.class, new RunDashboardListener() {
-            @Override
-            public void configurationChanged(@Nonnull RunConfiguration configuration, boolean withStructure) {
-                updateDashboardIfNeeded(configuration, withStructure);
-            }
-        });
+        connection.subscribe(RunDashboardListener.class, this::updateDashboardIfNeeded);
         connection.subscribe(DumbModeListener.class, new DumbModeListener() {
             @Override
             public void exitDumbMode() {
@@ -289,10 +285,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
 
         RunConfiguration baseConfiguration = getBaseConfiguration(runConfiguration);
-        if (baseConfiguration != null) {
-            return isShown(baseConfiguration);
-        }
-        return false;
+        return baseConfiguration != null && isShown(baseConfiguration);
     }
 
     private boolean isShown(@Nonnull RunConfiguration runConfiguration) {
@@ -301,8 +294,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
 
     @Nullable
     private static RunConfiguration getBaseConfiguration(@Nonnull RunConfiguration runConfiguration) {
-        RunProfile runProfile = ExecutionManagerImpl.getDelegatedRunProfile(runConfiguration);
-        return runProfile instanceof RunConfiguration ? (RunConfiguration)runProfile : null;
+        return ExecutionManagerImpl.getDelegatedRunProfile(runConfiguration) instanceof RunConfiguration runProfile ? runProfile : null;
     }
 
     @Override
@@ -346,10 +338,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
             }
 
             RunConfiguration baseConfiguration = getBaseConfiguration(settings.getConfiguration());
-            if (baseConfiguration != null) {
-                return types.contains(baseConfiguration.getType().getId());
-            }
-            return false;
+            return baseConfiguration != null && types.contains(baseConfiguration.getType().getId());
         };
     }
 
@@ -459,7 +448,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         if (!(instance instanceof ExecutionManagerImpl)) {
             return Collections.emptyList();
         }
-        return ((ExecutionManagerImpl)instance).getDescriptors(s -> configuration.equals(s.getConfiguration()) ||
+        return instance.getDescriptors(s -> configuration.equals(s.getConfiguration()) ||
             configuration.equals(getBaseConfiguration(s.getConfiguration())));
     }
 
@@ -495,10 +484,10 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     }
 
     private void syncConfigurations() {
-        List<RunnerAndConfigurationSettings> settingsList =
-            ContainerUtil.filter(RunManager.getInstance(myProject).getAllSettings(), settings -> {
-                return isShowInDashboard(settings.getConfiguration());
-            });
+        List<RunnerAndConfigurationSettings> settingsList = ContainerUtil.filter(
+            RunManager.getInstance(myProject).getAllSettings(),
+            settings -> isShowInDashboard(settings.getConfiguration())
+        );
         List<List<RunDashboardServiceImpl>> result = new ArrayList<>();
         myServiceLock.writeLock().lock();
         try {
@@ -865,7 +854,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     private void initTypes() {
         syncConfigurations();
         initServiceContentListeners();
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+        Application.get().executeOnPooledThread(() -> {
             if (!myProject.isDisposed()) {
                 updateDashboard(true);
             }
@@ -947,6 +936,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         private volatile Content myPreviousSelection = null;
 
         @Override
+        @RequiredUIAccess
         public void selectionChanged(@Nonnull ContentManagerEvent event) {
             boolean onAdd = event.getOperation() == ContentManagerEvent.ContentOperation.add;
             Content content = event.getContent();
@@ -973,9 +963,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
                                 selectPreviousContent();
                             }
                         })
-                        .onError(t -> {
-                            selectPreviousContent();
-                        });
+                        .onError(t -> selectPreviousContent());
                 }
             }
             else {
@@ -986,13 +974,12 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         private void selectPreviousContent() {
             Content previousSelection = myPreviousSelection;
             if (previousSelection != null) {
-                AppUIExecutor.onUiThread().expireWith(previousSelection).submit(() -> {
-                    setSelectedContent(previousSelection);
-                });
+                AppUIExecutor.onUiThread().expireWith(previousSelection).submit(() -> setSelectedContent(previousSelection));
             }
         }
 
         @Override
+        @RequiredUIAccess
         public void contentAdded(@Nonnull ContentManagerEvent event) {
             Content content = event.getContent();
             addServiceContent(content);
@@ -1005,6 +992,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
 
         @Override
+        @RequiredUIAccess
         public void contentRemoved(@Nonnull ContentManagerEvent event) {
             Content content = event.getContent();
             if (myPreviousSelection == content) {

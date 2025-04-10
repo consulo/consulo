@@ -80,7 +80,7 @@ public class RunToolWindowManager {
                 ContainerUtil.addAll(currentWindows, tw.getToolWindowIds());
                 myToolwindowIdZBuffer.retainAll(currentWindows);
 
-                final String activeToolWindowId = tw.getActiveToolWindowId();
+                String activeToolWindowId = tw.getActiveToolWindowId();
                 if (activeToolWindowId != null) {
                     if (myToolwindowIdZBuffer.remove(activeToolWindowId)) {
                         myToolwindowIdZBuffer.addFirst(activeToolWindowId);
@@ -129,9 +129,9 @@ public class RunToolWindowManager {
             throw new IllegalArgumentException("Already registered: " + toolWindowId);
         }
 
-        final ToolWindow toolWindow =
+        ToolWindow toolWindow =
             toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, myParentDisposable, true);
-        final ContentManager contentManager = toolWindow.getContentManager();
+        ContentManager contentManager = toolWindow.getContentManager();
         contentManager.addDataProvider(new DataProvider() {
             private int myInsideGetData = 0;
 
@@ -162,7 +162,7 @@ public class RunToolWindowManager {
     }
 
     private void initToolWindow(
-        @Nullable final Executor executor,
+        @Nullable Executor executor,
         String toolWindowId,
         Image toolWindowIcon,
         ContentManager contentManager
@@ -170,7 +170,7 @@ public class RunToolWindowManager {
         myToolwindowIdToBaseIconMap.put(toolWindowId, toolWindowIcon);
         contentManager.addContentManagerListener(new ContentManagerAdapter() {
             @Override
-            public void selectionChanged(final ContentManagerEvent event) {
+            public void selectionChanged(ContentManagerEvent event) {
                 if (event.getOperation() == ContentManagerEvent.ContentOperation.add) {
                     Content content = event.getContent();
                     Executor contentExecutor = executor;

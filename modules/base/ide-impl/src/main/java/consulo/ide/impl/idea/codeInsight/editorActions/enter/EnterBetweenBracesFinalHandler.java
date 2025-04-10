@@ -1,22 +1,21 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
-import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.action.CodeDocumentationUtil;
-import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
-import consulo.language.Language;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.action.CodeDocumentationUtil;
 import consulo.language.editor.action.EnterBetweenBracesDelegate;
 import consulo.language.editor.action.EnterHandlerDelegateAdapter;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.project.Project;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -27,12 +26,12 @@ import jakarta.annotation.Nullable;
 public abstract class EnterBetweenBracesFinalHandler extends EnterHandlerDelegateAdapter {
     @Override
     public Result preprocessEnter(
-        @Nonnull final PsiFile file,
-        @Nonnull final Editor editor,
-        @Nonnull final Ref<Integer> caretOffsetRef,
-        @Nonnull final Ref<Integer> caretAdvance,
-        @Nonnull final DataContext dataContext,
-        final EditorActionHandler originalHandler
+        @Nonnull PsiFile file,
+        @Nonnull Editor editor,
+        @Nonnull SimpleReference<Integer> caretOffsetRef,
+        @Nonnull SimpleReference<Integer> caretAdvance,
+        @Nonnull DataContext dataContext,
+        EditorActionHandler originalHandler
     ) {
         if (!CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
             return Result.Continue;
@@ -42,15 +41,15 @@ public abstract class EnterBetweenBracesFinalHandler extends EnterHandlerDelegat
         CharSequence text = document.getCharsSequence();
         int caretOffset = caretOffsetRef.get().intValue();
 
-        final EnterBetweenBracesDelegate helper = getLanguageImplementation(EnterHandler.getLanguage(dataContext));
+        EnterBetweenBracesDelegate helper = getLanguageImplementation(EnterHandler.getLanguage(dataContext));
 
         if (!isApplicable(file, editor, text, caretOffset, helper)) {
             return Result.Continue;
         }
 
-        final int line = document.getLineNumber(caretOffset);
-        final int start = document.getLineStartOffset(line);
-        final CodeDocumentationUtil.CommentContext commentContext =
+        int line = document.getLineNumber(caretOffset);
+        int start = document.getLineStartOffset(line);
+        CodeDocumentationUtil.CommentContext commentContext =
             CodeDocumentationUtil.tryParseCommentContext(file, text, caretOffset, start);
 
         // special case: enter inside "()" or "{}"
@@ -92,7 +91,7 @@ public abstract class EnterBetweenBracesFinalHandler extends EnterHandlerDelegat
     @Nonnull
     protected EnterBetweenBracesDelegate getLanguageImplementation(@Nullable Language language) {
         if (language != null) {
-            final EnterBetweenBracesDelegate helper = EnterBetweenBracesDelegate.forLanguage(language);
+            EnterBetweenBracesDelegate helper = EnterBetweenBracesDelegate.forLanguage(language);
             if (helper != null) {
                 return helper;
             }

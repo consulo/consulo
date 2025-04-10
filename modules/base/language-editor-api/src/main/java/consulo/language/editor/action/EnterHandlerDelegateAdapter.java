@@ -4,21 +4,20 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiFile;
-import consulo.util.lang.ref.Ref;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 5/30/11 2:23 PM
+ * @since 2011-05-30
  */
 public class EnterHandlerDelegateAdapter implements EnterHandlerDelegate {
     @Override
     public Result preprocessEnter(
         @Nonnull PsiFile file,
         @Nonnull Editor editor,
-        @Nonnull Ref<Integer> caretOffset,
-        @Nonnull Ref<Integer> caretAdvance,
+        @Nonnull SimpleReference<Integer> caretOffset,
+        @Nonnull SimpleReference<Integer> caretAdvance,
         @Nonnull DataContext dataContext,
         EditorActionHandler originalHandler
     ) {

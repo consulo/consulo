@@ -16,19 +16,19 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.action.CodeDocumentationUtil;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.language.editor.action.EnterHandlerDelegateAdapter;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
-import consulo.util.lang.StringUtil;
-import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.action.CodeDocumentationUtil;
+import consulo.language.editor.action.EnterHandlerDelegateAdapter;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -37,7 +37,7 @@ import java.util.Set;
 
 /**
  * @author Denis Zhdanov
- * @since 1/20/11 12:32 PM
+ * @since 2011-01-20
  */
 @ExtensionImpl(id = "afterJavadoc", order = "after EnterBetweenBracesHandler")
 public class EnterAfterJavadocTagHandler extends EnterHandlerDelegateAdapter {
@@ -47,8 +47,8 @@ public class EnterAfterJavadocTagHandler extends EnterHandlerDelegateAdapter {
     public Result preprocessEnter(
         @Nonnull PsiFile file,
         @Nonnull Editor editor,
-        @Nonnull Ref<Integer> caretOffset,
-        @Nonnull Ref<Integer> caretAdvance,
+        @Nonnull SimpleReference<Integer> caretOffset,
+        @Nonnull SimpleReference<Integer> caretAdvance,
         @Nonnull DataContext dataContext,
         EditorActionHandler originalHandler
     ) {
