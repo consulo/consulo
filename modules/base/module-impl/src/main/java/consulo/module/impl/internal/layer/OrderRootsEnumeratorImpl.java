@@ -24,6 +24,7 @@ import consulo.content.base.SourcesOrderRootType;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.module.content.internal.ModuleRootsProcessor;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.OrderRootsEnumerator;

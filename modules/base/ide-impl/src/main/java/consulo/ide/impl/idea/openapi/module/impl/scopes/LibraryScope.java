@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.util.PathUtil;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.content.library.Library;
+import consulo.language.internal.LibraryScopeBase;
 import consulo.project.Project;
 
 /**

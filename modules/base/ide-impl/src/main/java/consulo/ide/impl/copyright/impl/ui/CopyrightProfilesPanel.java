@@ -20,9 +20,10 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.copyright.impl.options.ExternalOptionHelper;
-import consulo.ide.impl.idea.ide.actions.OpenProjectFileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.language.copyright.config.CopyrightManager;
@@ -182,22 +183,8 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
     });
     result.add(new AnAction("Import", "Import", PlatformIconGroup.actionsImport()) {
       public void actionPerformed(AnActionEvent event) {
-        final OpenProjectFileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
-          @Override
-          public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
-            return super.isFileVisible(file, showHiddenFiles) || canContainCopyright(file);
-          }
-
-          @RequiredUIAccess
-          @Override
-          public boolean isFileSelectable(VirtualFile file) {
-            return super.isFileSelectable(file) || canContainCopyright(file);
-          }
-
-          private boolean canContainCopyright(VirtualFile file) {
-            return !file.isDirectory() && "xml".equals(file.getExtension());
-          }
-        };
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
+        descriptor.withFileFilter(file -> "xml".equals(file.getExtension()));
         descriptor.setTitle("Choose file containing copyright notice");
         final VirtualFile file = IdeaFileChooser.chooseFile(descriptor, myProject, null);
         if (file == null) return;

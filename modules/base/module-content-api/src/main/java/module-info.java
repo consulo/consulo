@@ -23,6 +23,7 @@ module consulo.module.content.api {
         consulo.ide.api,
         consulo.ide.impl,
         consulo.module.impl,
+        consulo.language.api,
         consulo.language.impl,
         consulo.compiler.impl,
         consulo.compiler.artifact.impl,

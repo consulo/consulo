@@ -32,7 +32,7 @@ import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.scope.ModuleWithDependenciesScope;
-import consulo.module.impl.internal.layer.ModuleRootsProcessor;
+import consulo.module.content.internal.ModuleRootsProcessor;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.Comparing;

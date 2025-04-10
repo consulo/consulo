@@ -14,47 +14,47 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.module.impl.scopes;
+package consulo.language.internal;
 
-import consulo.module.Module;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.layer.orderEntry.*;
-import consulo.project.Project;
+import consulo.application.util.function.CommonProcessors;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.function.Condition;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.internal.ModuleRootsProcessor;
+import consulo.module.content.layer.orderEntry.*;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.application.util.function.CommonProcessors;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.content.LanguageContentFolderScopes;
-import consulo.module.impl.internal.layer.ModuleRootsProcessor;
-import consulo.content.base.BinariesOrderRootType;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author max
  */
 public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   private final ProjectFileIndex myIndex;
-  private final LinkedHashSet<VirtualFile> myEntries = new LinkedHashSet<VirtualFile>();
+  private final LinkedHashSet<VirtualFile> myEntries = new LinkedHashSet<>();
 
   private int myCachedHashCode = 0;
 
   public LibraryRuntimeClasspathScope(final Project project, final List<Module> modules) {
     super(project);
     myIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    final Set<Sdk> processedSdk = new HashSet<Sdk>();
-    final Set<Library> processedLibraries = new HashSet<Library>();
-    final Set<Module> processedModules = new HashSet<Module>();
-    final Condition<OrderEntry> condition = orderEntry -> {
+    final Set<Sdk> processedSdk = new HashSet<>();
+    final Set<Library> processedLibraries = new HashSet<>();
+    final Set<Module> processedModules = new HashSet<>();
+    final Predicate<OrderEntry> condition = orderEntry -> {
       if (orderEntry instanceof ModuleOrderEntry moduleOrderEntry) {
         final Module module = moduleOrderEntry.getModule();
         return module != null && !processedModules.contains(module);
@@ -94,10 +94,10 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
                             @Nonnull final Set<Module> processedModules,
                             @Nonnull final Set<Library> processedLibraries,
                             @Nonnull final Set<Sdk> processedSdk,
-                            Condition<OrderEntry> condition) {
+                            Predicate<OrderEntry> condition) {
     if (!processedModules.add(module)) return;
 
-    ModuleRootManager.getInstance(module).orderEntries().recursively().satisfying(condition).process(new RootPolicy<LinkedHashSet<VirtualFile>>() {
+    ModuleRootManager.getInstance(module).orderEntries().recursively().satisfying(condition).process(new RootPolicy<>() {
       @Override
       public LinkedHashSet<VirtualFile> visitLibraryOrderEntry(final LibraryOrderEntry libraryOrderEntry, final LinkedHashSet<VirtualFile> value) {
         final Library library = libraryOrderEntry.getLibrary();
@@ -129,7 +129,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
 
         ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(moduleRootManager);
         if (rootsProcessor != null) {
-          rootsProcessor.processFiles(moduleRootManager, LanguageContentFolderScopes.productionAndTest(), new CommonProcessors.CollectProcessor<VirtualFile>(set));
+          rootsProcessor.processFiles(moduleRootManager, LanguageContentFolderScopes.productionAndTest(), new CommonProcessors.CollectProcessor<>(set));
         }
         else {
           Collections.addAll(set, moduleRootManager.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest()));
@@ -188,7 +188,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
 
   @TestOnly
   public List<VirtualFile> getRoots() {
-    return new ArrayList<VirtualFile>(myEntries);
+    return new ArrayList<>(myEntries);
   }
 
   @Override

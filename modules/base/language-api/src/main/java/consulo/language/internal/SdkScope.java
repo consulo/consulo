@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.module.impl.scopes;
+package consulo.language.internal;
 
 import consulo.project.Project;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;

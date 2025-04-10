@@ -30,6 +30,7 @@ import consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl;
 import consulo.ide.impl.idea.util.indexing.FileBasedIndexProjectHandler;
 import consulo.ide.impl.idea.util.indexing.UnindexedFilesUpdater;
 import consulo.language.content.LanguageContentFolderScopes;
+import consulo.language.psi.scope.LibraryScopeCache;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.language.psi.stub.FileBasedIndex;

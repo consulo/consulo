@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.module.impl.scopes;
+package consulo.language.internal;
 
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
-import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.GlobalSearchScope;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,11 +38,12 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
   public LibraryScopeBase(Project project, VirtualFile[] classes, VirtualFile[] sources) {
     super(project);
     myIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    myEntries = new LinkedHashSet<VirtualFile>(classes.length + sources.length);
+    myEntries = new LinkedHashSet<>(classes.length + sources.length);
     Collections.addAll(myEntries, classes);
     Collections.addAll(myEntries, sources);
   }
 
+  @Override
   public boolean contains(@Nonnull VirtualFile file) {
     return myEntries.contains(getFileRoot(file));
   }
@@ -58,6 +59,7 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
     return null;
   }
 
+  @Override
   public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     final VirtualFile r1 = getFileRoot(file1);
     final VirtualFile r2 = getFileRoot(file2);
@@ -68,10 +70,12 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
     return 0;
   }
 
+  @Override
   public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return false;
   }
 
+  @Override
   public boolean isSearchInLibraries() {
     return true;
   }

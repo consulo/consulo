@@ -16,8 +16,8 @@
 package consulo.module.impl.internal.layer;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.util.function.Processor;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.module.content.internal.ModuleRootsProcessor;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.virtualFileSystem.VirtualFile;
