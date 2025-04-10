@@ -244,7 +244,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         if (e.parent != null) {
             ServiceViewItem parent = findItemSafe(e.parent, e.contributorClass);
             ServiceViewContributor<?> parentContributor =
-                parent instanceof ServiceNode ? ((ServiceNode)parent).getProvidingContributor() : null;
+                parent instanceof ServiceNode serviceNode ? serviceNode.getProvidingContributor() : null;
             if (parentContributor == null) {
                 LOG.debug("Parent not found; event: " + e);
                 return;
@@ -320,22 +320,22 @@ final class ServiceModel implements Disposable, InvokerSupplier {
 
     private void serviceChanged(ServiceEventListener.ServiceEvent e) {
         ServiceViewItem item = findItemSafe(e.target, e.contributorClass);
-        if (item instanceof ServiceNode) {
-            updateServiceViewDescriptor((ServiceNode)item, e.target);
+        if (item instanceof ServiceNode serviceNode) {
+            updateServiceViewDescriptor(serviceNode, e.target);
         }
     }
 
     private static void updateServiceViewDescriptor(ServiceNode node, Object target) {
         ServiceViewContributor<?> providingContributor = node.getProvidingContributor();
         if (providingContributor != null && !providingContributor.equals(target)) {
-            ((ServiceViewItem)node).setViewDescriptor(providingContributor.getViewDescriptor(node.myProject));
+            node.setViewDescriptor(providingContributor.getViewDescriptor(node.myProject));
             return;
         }
 
         //noinspection unchecked
         ServiceViewDescriptor viewDescriptor =
             ((ServiceViewContributor<Object>)node.getContributor()).getServiceDescriptor(node.myProject, target);
-        ((ServiceViewItem)node).setViewDescriptor(viewDescriptor);
+        node.setViewDescriptor(viewDescriptor);
     }
 
     private void serviceChildrenChanged(ServiceEventListener.ServiceEvent e) {
@@ -365,8 +365,8 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         }
 
         ServiceGroupNode group = null;
-        if (parent instanceof ServiceGroupNode) {
-            group = (ServiceGroupNode)parent;
+        if (parent instanceof ServiceGroupNode groupNode) {
+            group = groupNode;
             parent = group.getParent();
             while (parent instanceof ServiceGroupNode) {
                 parent = parent.getParent();
@@ -398,7 +398,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
             }
 
             groupParent.getChildren().remove(group);
-            group = groupParent instanceof ServiceGroupNode ? (ServiceGroupNode)groupParent : null;
+            group = groupParent instanceof ServiceGroupNode groupNode ? groupNode : null;
         }
     }
 
@@ -538,11 +538,10 @@ final class ServiceModel implements Disposable, InvokerSupplier {
             Comparator<Object> comparator = (Comparator<Object>)contributor;
             for (int i = 0; i < children.size(); i++) {
                 ServiceViewItem anchor = children.get(i);
-                if (anchor instanceof ServiceNode) {
-                    if (comparator.compare(child.getService(), ((ServiceNode)anchor).getService()) < 0) {
-                        children.add(i, child);
-                        return;
-                    }
+                if (anchor instanceof ServiceNode serviceNode
+                    && comparator.compare(child.getService(), serviceNode.getService()) < 0) {
+                    children.add(i, child);
+                    return;
                 }
             }
         }
@@ -553,15 +552,10 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         if (!children.isEmpty()) {
             for (int i = 0; i < children.size(); i++) {
                 ServiceViewItem anchor = children.get(i);
-                if (anchor instanceof ServiceNode) {
+                if (anchor instanceof ServiceNode
+                    || anchor instanceof ServiceGroupNode groupNode && compareGroups(child, groupNode) < 0) {
                     children.add(i, child);
                     return;
-                }
-                else if (anchor instanceof ServiceGroupNode) {
-                    if (compareGroups(child, (ServiceGroupNode)anchor) < 0) {
-                        children.add(i, child);
-                        return;
-                    }
                 }
             }
         }
@@ -661,7 +655,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         private void moveChildren(ServiceNode node) {
             List<ServiceViewItem> children = super.getChildren();
             children.clear();
-            List<ServiceViewItem> nodeChildren = ((ServiceViewItem)node).myChildren;
+            List<ServiceViewItem> nodeChildren = node.myChildren;
             children.addAll(nodeChildren);
             nodeChildren.clear();
             for (ServiceViewItem child : children) {
@@ -731,8 +725,8 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         @Override
         public T nextImpl() {
             if (myTop != null) {
-                if (myTop instanceof ServiceNode &&
-                    !((ServiceNode)myTop).isChildrenInitialized() && !((ServiceNode)myTop).isLoaded()) {
+                if (myTop instanceof ServiceNode serviceNode
+                    && !serviceNode.isChildrenInitialized() && !serviceNode.isLoaded()) {
                     myNotLoadedQueue.add(myTop);
                 }
                 else {
@@ -770,8 +764,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         @Override
         public T nextImpl() {
             if (myTop != null) {
-                if (!(myTop instanceof ServiceNode) ||
-                    ((ServiceNode)myTop).isChildrenInitialized() || ((ServiceNode)myTop).isLoaded()) {
+                if (!(myTop instanceof ServiceNode serviceNode && !serviceNode.isChildrenInitialized() && !serviceNode.isLoaded())) {
                     Iterable<? extends T> iterable = tree.apply(myTop);
                     if (iterable != null) {
                         JBIterable.from(iterable).map(ourNotNullizer::notNullize).addAllTo(myQueue);

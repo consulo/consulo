@@ -25,7 +25,6 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestLocationProvider;
 import consulo.execution.test.sm.runner.*;
-import consulo.execution.test.sm.ui.AttachToProcessListener;
 import consulo.execution.test.sm.ui.SMTRunnerConsoleView;
 import consulo.execution.test.sm.ui.SMTRunnerUIActionsHandler;
 import consulo.execution.test.sm.ui.SMTestRunnerResultsForm;
@@ -168,45 +167,42 @@ public class SMTestRunnerConnectionUtil {
         return testFrameworkName + ".Splitter.Proportion";
     }
 
-    public static void initConsoleView(@Nonnull final SMTRunnerConsoleView consoleView, @Nonnull final String testFrameworkName) {
-        consoleView.addAttachToProcessListener(new AttachToProcessListener() {
-            @Override
-            public void onAttachToProcess(@Nonnull ProcessHandler processHandler) {
-                TestConsoleProperties properties = consoleView.getProperties();
+    public static void initConsoleView(@Nonnull SMTRunnerConsoleView consoleView, @Nonnull String testFrameworkName) {
+        consoleView.addAttachToProcessListener(processHandler -> {
+            TestConsoleProperties properties = consoleView.getProperties();
 
-                TestProxyPrinterProvider printerProvider = null;
-                if (properties instanceof SMTRunnerConsoleProperties) {
-                    TestProxyFilterProvider filterProvider = ((SMTRunnerConsoleProperties)properties).getFilterProvider();
-                    if (filterProvider != null) {
-                        printerProvider = new TestProxyPrinterProvider(consoleView, filterProvider);
-                    }
+            TestProxyPrinterProvider printerProvider = null;
+            if (properties instanceof SMTRunnerConsoleProperties runnerConsoleProperties) {
+                TestProxyFilterProvider filterProvider = runnerConsoleProperties.getFilterProvider();
+                if (filterProvider != null) {
+                    printerProvider = new TestProxyPrinterProvider(consoleView, filterProvider);
                 }
-
-                SMTestLocator testLocator = FileUrlProvider.INSTANCE;
-                if (properties instanceof SMTRunnerConsoleProperties) {
-                    SMTestLocator customLocator = ((SMTRunnerConsoleProperties)properties).getTestLocator();
-                    if (customLocator != null) {
-                        testLocator = new CombinedTestLocator(customLocator);
-                    }
-                }
-
-                boolean idBasedTestTree = false;
-                if (properties instanceof SMTRunnerConsoleProperties) {
-                    idBasedTestTree = ((SMTRunnerConsoleProperties)properties).isIdBasedTestTree();
-                }
-
-                SMTestRunnerResultsForm resultsForm = consoleView.getResultsViewer();
-                attachEventsProcessors(
-                    properties,
-                    resultsForm,
-                    resultsForm.getStatisticsPane(),
-                    processHandler,
-                    testFrameworkName,
-                    testLocator,
-                    idBasedTestTree,
-                    printerProvider
-                );
             }
+
+            SMTestLocator testLocator = FileUrlProvider.INSTANCE;
+            if (properties instanceof SMTRunnerConsoleProperties runnerConsoleProperties) {
+                SMTestLocator customLocator = runnerConsoleProperties.getTestLocator();
+                if (customLocator != null) {
+                    testLocator = new CombinedTestLocator(customLocator);
+                }
+            }
+
+            boolean idBasedTestTree = false;
+            if (properties instanceof SMTRunnerConsoleProperties runnerConsoleProperties) {
+                idBasedTestTree = runnerConsoleProperties.isIdBasedTestTree();
+            }
+
+            SMTestRunnerResultsForm resultsForm = consoleView.getResultsViewer();
+            attachEventsProcessors(
+                properties,
+                resultsForm,
+                resultsForm.getStatisticsPane(),
+                processHandler,
+                testFrameworkName,
+                testLocator,
+                idBasedTestTree,
+                printerProvider
+            );
         });
         consoleView.setHelpId("reference.runToolWindow.testResultsTab");
         consoleView.initUI();
@@ -234,16 +230,16 @@ public class SMTestRunnerConnectionUtil {
         @Nullable TestProxyPrinterProvider printerProvider
     ) {
         // build messages consumer
-        final OutputToGeneralTestEventsConverter outputConsumer;
-        if (consoleProperties instanceof SMCustomMessagesParsing) {
-            outputConsumer = ((SMCustomMessagesParsing)consoleProperties).createTestEventsConverter(testFrameworkName, consoleProperties);
+        OutputToGeneralTestEventsConverter outputConsumer;
+        if (consoleProperties instanceof SMCustomMessagesParsing customMessagesParsing) {
+            outputConsumer = customMessagesParsing.createTestEventsConverter(testFrameworkName, consoleProperties);
         }
         else {
             outputConsumer = new OutputToGeneralTestEventsConverter(testFrameworkName, consoleProperties);
         }
 
         // events processor
-        final GeneralTestEventsProcessor eventsProcessor;
+        GeneralTestEventsProcessor eventsProcessor;
         if (idBasedTestTree) {
             eventsProcessor = new GeneralIdBasedToSMTRunnerEventsConvertor(
                 consoleProperties.getProject(),
@@ -265,7 +261,7 @@ public class SMTestRunnerConnectionUtil {
         }
 
         // UI actions
-        final SMTRunnerUIActionsHandler uiActionsHandler = new SMTRunnerUIActionsHandler(consoleProperties);
+        SMTRunnerUIActionsHandler uiActionsHandler = new SMTRunnerUIActionsHandler(consoleProperties);
 
         // subscribe to events
 
@@ -278,7 +274,7 @@ public class SMTestRunnerConnectionUtil {
 
         processHandler.addProcessListener(new ProcessAdapter() {
             @Override
-            public void processTerminated(final ProcessEvent event) {
+            public void processTerminated(ProcessEvent event) {
                 outputConsumer.flushBufferOnProcessTermination(event.getExitCode());
                 eventsProcessor.onFinishTesting();
 
@@ -287,13 +283,13 @@ public class SMTestRunnerConnectionUtil {
             }
 
             @Override
-            public void startNotified(final ProcessEvent event) {
+            public void startNotified(ProcessEvent event) {
                 eventsProcessor.onStartTesting();
                 outputConsumer.onStartTesting();
             }
 
             @Override
-            public void onTextAvailable(final ProcessEvent event, final Key outputType) {
+            public void onTextAvailable(ProcessEvent event, Key outputType) {
                 outputConsumer.process(event.getText(), outputType);
             }
         });
@@ -391,36 +387,33 @@ public class SMTestRunnerConnectionUtil {
      */
     @SuppressWarnings({"unused", "deprecation"})
     public static void initConsoleView(
-        @Nonnull final SMTRunnerConsoleView consoleView,
-        @Nonnull final String testFrameworkName,
-        @Nullable final TestLocationProvider locator,
-        final boolean idBasedTreeConstruction,
-        @Nullable final TestProxyFilterProvider filterProvider
+        @Nonnull SMTRunnerConsoleView consoleView,
+        @Nonnull String testFrameworkName,
+        @Nullable TestLocationProvider locator,
+        boolean idBasedTreeConstruction,
+        @Nullable TestProxyFilterProvider filterProvider
     ) {
-        consoleView.addAttachToProcessListener(new AttachToProcessListener() {
-            @Override
-            public void onAttachToProcess(@Nonnull ProcessHandler processHandler) {
-                TestConsoleProperties properties = consoleView.getProperties();
+        consoleView.addAttachToProcessListener(processHandler -> {
+            TestConsoleProperties properties = consoleView.getProperties();
 
-                SMTestLocator testLocator = new CompositeTestLocationProvider(locator);
+            SMTestLocator testLocator = new CompositeTestLocationProvider(locator);
 
-                TestProxyPrinterProvider printerProvider = null;
-                if (filterProvider != null) {
-                    printerProvider = new TestProxyPrinterProvider(consoleView, filterProvider);
-                }
-
-                SMTestRunnerResultsForm resultsForm = consoleView.getResultsViewer();
-                attachEventsProcessors(
-                    properties,
-                    resultsForm,
-                    resultsForm.getStatisticsPane(),
-                    processHandler,
-                    testFrameworkName,
-                    testLocator,
-                    idBasedTreeConstruction,
-                    printerProvider
-                );
+            TestProxyPrinterProvider printerProvider = null;
+            if (filterProvider != null) {
+                printerProvider = new TestProxyPrinterProvider(consoleView, filterProvider);
             }
+
+            SMTestRunnerResultsForm resultsForm = consoleView.getResultsViewer();
+            attachEventsProcessors(
+                properties,
+                resultsForm,
+                resultsForm.getStatisticsPane(),
+                processHandler,
+                testFrameworkName,
+                testLocator,
+                idBasedTreeConstruction,
+                printerProvider
+            );
         });
         consoleView.setHelpId("reference.runToolWindow.testResultsTab");
         consoleView.initUI();

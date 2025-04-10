@@ -6,10 +6,12 @@ import consulo.document.FileDocumentManager;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.impl.internal.service.ExternalSystemProcessingManager;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
+import consulo.externalSystem.importing.ImportSpecBuilder;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -35,19 +37,19 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
     @Override
     @RequiredUIAccess
     public void update(AnActionEvent e) {
-        final Project project = e.getDataContext().getData(Project.KEY);
+        Project project = e.getDataContext().getData(Project.KEY);
         if (project == null) {
             e.getPresentation().setEnabled(false);
             return;
         }
 
-        final List<ProjectSystemId> systemIds = getSystemIds(e);
+        List<ProjectSystemId> systemIds = getSystemIds(e);
         if (systemIds.isEmpty()) {
             e.getPresentation().setEnabled(false);
             return;
         }
 
-        final String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getReadableName().get(), ",");
+        String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getReadableName().get(), ",");
         e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshAllProjectsText(name));
         e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshAllProjectsDescription(name));
 
@@ -58,13 +60,13 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getDataContext().getData(Project.KEY);
+        Project project = e.getDataContext().getData(Project.KEY);
         if (project == null) {
             e.getPresentation().setEnabled(false);
             return;
         }
 
-        final List<ProjectSystemId> systemIds = getSystemIds(e);
+        List<ProjectSystemId> systemIds = getSystemIds(e);
         if (systemIds.isEmpty()) {
             e.getPresentation().setEnabled(false);
             return;
@@ -74,14 +76,18 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
         FileDocumentManager.getInstance().saveAllDocuments();
 
         for (ProjectSystemId externalSystemId : systemIds) {
-            ExternalSystemUtil.refreshProjects(project, externalSystemId, true);
+            ExternalSystemUtil.refreshProjects(
+                new ImportSpecBuilder(project, externalSystemId)
+                    .forceWhenUptodate(true)
+                    .use(ProgressExecutionMode.IN_BACKGROUND_ASYNC)
+            );
         }
     }
 
     private static List<ProjectSystemId> getSystemIds(AnActionEvent e) {
-        final List<ProjectSystemId> systemIds = new ArrayList<>();
+        List<ProjectSystemId> systemIds = new ArrayList<>();
 
-        final ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
+        ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
         if (externalSystemId != null) {
             systemIds.add(externalSystemId);
         }

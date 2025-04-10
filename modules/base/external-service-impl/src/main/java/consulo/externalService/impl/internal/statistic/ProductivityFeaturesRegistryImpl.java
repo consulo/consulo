@@ -76,16 +76,16 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
 
     private void loadFeaturesFromProviders(List<ProductivityFeaturesProvider> providers) {
         for (ProductivityFeaturesProvider provider : providers) {
-            final GroupDescriptor[] groupDescriptors = provider.getGroupDescriptors();
+            GroupDescriptor[] groupDescriptors = provider.getGroupDescriptors();
             if (groupDescriptors != null) {
                 for (GroupDescriptor groupDescriptor : groupDescriptors) {
                     myGroups.put(groupDescriptor.getId(), groupDescriptor);
                 }
             }
-            final FeatureDescriptor[] featureDescriptors = provider.getFeatureDescriptors();
+            FeatureDescriptor[] featureDescriptors = provider.getFeatureDescriptors();
             if (featureDescriptors != null) {
                 for (FeatureDescriptor featureDescriptor : featureDescriptors) {
-                    final FeatureDescriptor featureLoadedStatistics = myFeatures.get(featureDescriptor.getId());
+                    FeatureDescriptor featureLoadedStatistics = myFeatures.get(featureDescriptor.getId());
                     if (featureLoadedStatistics != null) {
                         featureDescriptor.copyStatistics(featureLoadedStatistics);
                     }

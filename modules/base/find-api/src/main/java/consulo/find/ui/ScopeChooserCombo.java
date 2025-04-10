@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.find.ui;
 
-import consulo.application.util.function.Processor;
 import consulo.component.util.WeighedItem;
 import consulo.content.scope.*;
 import consulo.dataContext.DataContext;
@@ -45,24 +44,24 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
         super(new MyComboBox());
     }
 
-    public ScopeChooserCombo(final Project project, boolean suggestSearchInLibs, boolean prevSearchWholeFiles, String preselect) {
+    public ScopeChooserCombo(Project project, boolean suggestSearchInLibs, boolean prevSearchWholeFiles, String preselect) {
         this();
         init(project, suggestSearchInLibs, prevSearchWholeFiles, preselect);
     }
 
-    public void init(final Project project, final String preselect) {
+    public void init(Project project, String preselect) {
         init(project, false, true, preselect);
     }
 
-    public void init(final Project project, final boolean suggestSearchInLibs, final boolean prevSearchWholeFiles, final String preselect) {
+    public void init(Project project, boolean suggestSearchInLibs, boolean prevSearchWholeFiles, String preselect) {
         init(project, suggestSearchInLibs, prevSearchWholeFiles, preselect, null);
     }
 
     public void init(
-        final Project project,
-        final boolean suggestSearchInLibs,
-        final boolean prevSearchWholeFiles,
-        final Object selection,
+        Project project,
+        boolean suggestSearchInLibs,
+        boolean prevSearchWholeFiles,
+        Object selection,
         @Nullable Predicate<? super ScopeDescriptor> scopeFilter
     ) {
         if (myProject != null) {
@@ -253,7 +252,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     }
 
     private static class ScopeSeparator extends ScopeDescriptor {
-        final String text;
+        String text;
 
         ScopeSeparator(@Nonnull String text) {
             super(null);
@@ -305,7 +304,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
         }
 
         @Override
-        public void setSelectedIndex(final int anIndex) {
+        public void setSelectedIndex(int anIndex) {
             Object item = getItemAt(anIndex);
             if (!(item instanceof ScopeSeparator)) {
                 super.setSelectedIndex(anIndex);

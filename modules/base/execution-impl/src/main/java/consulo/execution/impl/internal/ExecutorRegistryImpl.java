@@ -83,11 +83,11 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
 
         connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectClosed(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
                 // perform cleanup
                 synchronized (myInProgress) {
                     for (Iterator<Trinity<Project, String, String>> it = myInProgress.iterator(); it.hasNext(); ) {
-                        final Trinity<Project, String, String> trinity = it.next();
+                        Trinity<Project, String, String> trinity = it.next();
                         if (project.equals(trinity.first)) {
                             it.remove();
                         }
@@ -102,7 +102,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         Executor.EP_NAME.forEachExtensionSafe(this::initExecutor);
     }
 
-    synchronized void initExecutor(@Nonnull final Executor executor) {
+    synchronized void initExecutor(@Nonnull Executor executor) {
         if (myId2Executor.get(executor.getId()) != null) {
             LOG.error("Executor with id: \"" + executor.getId() + "\" was already registered!");
         }
@@ -119,7 +119,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         registerAction(executor.getContextActionId(), new RunContextAction(executor), RUN_CONTEXT_GROUP, myContextActionId2Action);
     }
 
-    private void registerAction(@Nonnull final String actionId, @Nonnull final AnAction anAction, @Nonnull final String groupId, @Nonnull final Map<String, AnAction> map) {
+    private void registerAction(@Nonnull String actionId, @Nonnull AnAction anAction, @Nonnull String groupId, @Nonnull Map<String, AnAction> map) {
         AnAction action = myActionManager.getAction(actionId);
         if (action == null) {
             myActionManager.registerAction(actionId, anAction);
@@ -130,7 +130,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         ((DefaultActionGroup) myActionManager.getAction(groupId)).add(action, Constraints.LAST, myActionManager);
     }
 
-    synchronized void deinitExecutor(@Nonnull final Executor executor) {
+    synchronized void deinitExecutor(@Nonnull Executor executor) {
         myExecutors.remove(executor);
         myId2Executor.remove(executor.getId());
         myContextActionIdSet.remove(executor.getContextActionId());
@@ -139,11 +139,11 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         unregisterAction(executor.getContextActionId(), RUN_CONTEXT_GROUP, myContextActionId2Action);
     }
 
-    private void unregisterAction(@Nonnull final String actionId, @Nonnull final String groupId, @Nonnull final Map<String, AnAction> map) {
-        final DefaultActionGroup group = (DefaultActionGroup) myActionManager.getAction(groupId);
+    private void unregisterAction(@Nonnull String actionId, @Nonnull String groupId, @Nonnull Map<String, AnAction> map) {
+        DefaultActionGroup group = (DefaultActionGroup) myActionManager.getAction(groupId);
         if (group != null) {
             group.remove(myActionManager.getAction(actionId));
-            final AnAction action = map.get(actionId);
+            AnAction action = map.get(actionId);
             if (action != null) {
                 myActionManager.unregisterAction(actionId);
                 map.remove(actionId);
@@ -158,7 +158,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
     }
 
     @Override
-    public Executor getExecutorById(final String executorId) {
+    public Executor getExecutorById(String executorId) {
         return myId2Executor.get(executorId);
     }
 
@@ -168,7 +168,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
     }
 
     @Override
-    public boolean isStarting(Project project, final String executorId, final String runnerId) {
+    public boolean isStarting(Project project, String executorId, String runnerId) {
         return myInProgress.contains(Trinity.create(project, executorId, runnerId));
     }
 

@@ -2,7 +2,6 @@
 package consulo.execution.impl.internal.dashboard;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.ReadAction;
 import consulo.component.util.WeighedItem;
 import consulo.dataContext.DataManager;
@@ -116,11 +115,10 @@ public final class RunDashboardServiceViewContributor
     @Override
     public ServiceViewDescriptor getGroupDescriptor(@Nonnull GroupingNode node) {
         RunDashboardGroup group = node.getGroup();
-        if (group instanceof FolderDashboardGroupingRule.FolderDashboardGroup) {
-            return new RunDashboardFolderGroupViewDescriptor(node);
+        return group instanceof FolderDashboardGroupingRule.FolderDashboardGroup
+            ? new RunDashboardFolderGroupViewDescriptor(node)
+            : new RunDashboardGroupViewDescriptor(node);
         }
-        return new RunDashboardGroupViewDescriptor(node);
-    }
 
     private static ActionGroup getToolbarActions(@Nullable RunContentDescriptor descriptor) {
         DefaultActionGroup actionGroup = new DefaultActionGroup();
@@ -139,12 +137,12 @@ public final class RunDashboardServiceViewContributor
         }
 
         if (leftToolbarActions != null) {
-            if (leftToolbarActions.size() == 1 && leftToolbarActions.get(0) instanceof ActionGroup) {
-                leftToolbarActions = Arrays.asList(((ActionGroup)leftToolbarActions.get(0)).getChildren(null));
+            if (leftToolbarActions.size() == 1 && leftToolbarActions.get(0) instanceof ActionGroup group) {
+                leftToolbarActions = Arrays.asList(group.getChildren(null));
             }
             for (AnAction action : leftToolbarActions) {
-                if (action instanceof MoreActionGroup) {
-                    actionGroup.add(getServicesMoreActionGroup((MoreActionGroup)action, descriptor));
+                if (action instanceof MoreActionGroup group) {
+                    actionGroup.add(getServicesMoreActionGroup(group, descriptor));
                 }
                 else if (!(action instanceof StopAction) && !(action instanceof FakeRerunAction) && !(action instanceof ExecutorAction)) {
                     actionGroup.add(action);
@@ -186,11 +184,11 @@ public final class RunDashboardServiceViewContributor
     @Nullable
     private static RunDashboardRunConfigurationNode getRunConfigurationNode(@Nonnull DnDEvent event, @Nonnull Project project) {
         Object object = event.getAttachedObject();
-        if (!(object instanceof DataProvider)) {
+        if (!(object instanceof DataProvider dataProvider)) {
             return null;
         }
 
-        Object data = ((DataProvider)object).getData(PlatformDataKeys.SELECTED_ITEMS);
+        Object data = dataProvider.getData(PlatformDataKeys.SELECTED_ITEMS);
         if (!(data instanceof Object[] items)) {
             return null;
         }
@@ -484,10 +482,7 @@ public final class RunDashboardServiceViewContributor
         @Override
         public int getWeight() {
             Object value = ((RunDashboardGroupImpl<?>)myGroup).getValue();
-            if (value instanceof WeighedItem) {
-                return ((WeighedItem)value).getWeight();
-            }
-            return 0;
+            return value instanceof WeighedItem weighedItem ? weighedItem.getWeight() : 0;
         }
 
         @Nullable
@@ -512,8 +507,8 @@ public final class RunDashboardServiceViewContributor
 
         private static String getId(GroupingNode node) {
             AbstractTreeNode<?> parent = (AbstractTreeNode<?>)node.getParent();
-            if (parent instanceof GroupingNode) {
-                return getId((GroupingNode)parent) + "/" + getId(node.getGroup());
+            if (parent instanceof GroupingNode groupingNode) {
+                return getId(groupingNode) + "/" + getId(node.getGroup());
             }
             return getId(node.getGroup());
         }
@@ -521,8 +516,8 @@ public final class RunDashboardServiceViewContributor
         private static String getId(RunDashboardGroup group) {
             if (group instanceof RunDashboardGroupImpl) {
                 Object value = ((RunDashboardGroupImpl<?>)group).getValue();
-                if (value instanceof ConfigurationType) {
-                    return ((ConfigurationType)value).getId();
+                if (value instanceof ConfigurationType configType) {
+                    return configType.getId();
                 }
             }
             return group.getName();
@@ -542,7 +537,7 @@ public final class RunDashboardServiceViewContributor
                 Project project = ((FolderDashboardGroupingRule.FolderDashboardGroup)myGroup).getProject();
                 List<RunDashboardManager.RunDashboardService> services = RunDashboardManager.getInstance(project).getRunConfigurations();
 
-                final RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(project);
+                RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(project);
                 runManager.fireBeginUpdate();
                 try {
                     for (RunDashboardManager.RunDashboardService service : services) {
@@ -636,8 +631,8 @@ public final class RunDashboardServiceViewContributor
                     if (!StringUtil.isEmpty(text)) {
                         return text;
                     }
-                    if (presentation instanceof PresentationData) {
-                        List<PresentableNodeDescriptor.ColoredFragment> fragments = ((PresentationData)presentation).getColoredText();
+                    if (presentation instanceof PresentationData presentationData) {
+                        List<PresentableNodeDescriptor.ColoredFragment> fragments = presentationData.getColoredText();
                         if (!fragments.isEmpty()) {
                             StringBuilder result = new StringBuilder();
                             for (PresentableNodeDescriptor.ColoredFragment fragment : fragments) {
@@ -652,7 +647,7 @@ public final class RunDashboardServiceViewContributor
                 @Nullable
                 @Override
                 public Runnable getRemover() {
-                    return service instanceof RunDashboardNode ? ((RunDashboardNode)service).getRemover() : null;
+                    return service instanceof RunDashboardNode runDashboardNode ? runDashboardNode.getRemover() : null;
                 }
 
                 @Override
@@ -668,7 +663,7 @@ public final class RunDashboardServiceViewContributor
         private final Project myProject;
 
         RunDashboardContributorViewDescriptor(@Nonnull Project project) {
-            super("Run Dashboard", AllIcons.Actions.Execute);
+            super("Run Dashboard", PlatformIconGroup.actionsExecute());
             myProject = project;
         }
 

@@ -99,9 +99,9 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         createTemplate(IdeLocalize.templateUnnamed().get(), PlainTextFileType.INSTANCE.getDefaultExtension(), "");
     }
 
-    private FileTemplate createTemplate(final @Nonnull String prefName, final @Nonnull String extension, final @Nonnull String content) {
-        final FileTemplate[] templates = myCurrentTab.getTemplates();
-        final FileTemplate newTemplate = FileTemplateImplUtil.createTemplate(prefName, extension, content, templates);
+    private FileTemplate createTemplate(@Nonnull String prefName, @Nonnull String extension, @Nonnull String content) {
+        FileTemplate[] templates = myCurrentTab.getTemplates();
+        FileTemplate newTemplate = FileTemplateImplUtil.createTemplate(prefName, extension, content, templates);
         myCurrentTab.addTemplate(newTemplate);
         myModified = true;
         myCurrentTab.selectTemplate(newTemplate);
@@ -118,13 +118,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         catch (ConfigurationException ignore) {
         }
 
-        final FileTemplate selected = myCurrentTab.getSelectedTemplate();
+        FileTemplate selected = myCurrentTab.getSelectedTemplate();
         if (selected == null) {
             return;
         }
 
-        final FileTemplate[] templates = myCurrentTab.getTemplates();
-        final Set<String> names = new HashSet<>();
+        FileTemplate[] templates = myCurrentTab.getTemplates();
+        Set<String> names = new HashSet<>();
         for (FileTemplate template : templates) {
             names.add(template.getName());
         }
@@ -133,7 +133,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         while (names.contains(name.get())) {
             name = IdeLocalize.templateCopyNOfT(++i, selected.getName());
         }
-        final FileTemplate newTemplate = new CustomFileTemplate(name.get(), selected.getExtension());
+        FileTemplate newTemplate = new CustomFileTemplate(name.get(), selected.getExtension());
         newTemplate.setText(selected.getText());
         newTemplate.setReformatCode(selected.isReformatCode());
         newTemplate.setLiveTemplateEnabled(selected.isLiveTemplateEnabled());
@@ -187,7 +187,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         };
         myCurrentTab = myTemplatesList;
 
-        final List<FileTemplateTab> allTabs = new ArrayList<>(Arrays.asList(myTemplatesList, myIncludesList, myCodeTemplatesList));
+        List<FileTemplateTab> allTabs = new ArrayList<>(Arrays.asList(myTemplatesList, myIncludesList, myCodeTemplatesList));
 
         List<FileTemplateGroupDescriptorFactory> factories = FileTemplateGroupDescriptorFactory.EP_NAME.getExtensionList();
         if (!factories.isEmpty()) {
@@ -292,7 +292,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
             @Override
             public void update(@Nonnull AnActionEvent e) {
                 super.update(e);
-                final FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
+                FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
                 e.getPresentation().setEnabled(selectedItem instanceof BundledFileTemplate && !selectedItem.isDefault());
             }
         };

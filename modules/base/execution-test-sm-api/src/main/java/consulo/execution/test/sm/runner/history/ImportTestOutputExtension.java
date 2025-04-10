@@ -38,16 +38,17 @@ public interface ImportTestOutputExtension {
     /**
      * When extension can parse xml file under reader, then it should return corresponding handler. Otherwise return null.
      * <p>
-     * When no custom extension accepts the xml, xml would be parsed as it was exported by IDEA itself {@link ImportTestOutputExtension#findHandler(Supplier, GeneralTestEventsProcessor)}
+     * When no custom extension accepts the xml, xml would be parsed as it was exported by IDEA itself
+     * {@link ImportTestOutputExtension#findHandler(Supplier, GeneralTestEventsProcessor)}
      *
      * @return handler if xml contains tests output in recognised format,
      * otherwise null
      */
     @Nullable
-    DefaultHandler createHandler(final Reader reader, GeneralTestEventsProcessor processor) throws IOException;
+    DefaultHandler createHandler(Reader reader, GeneralTestEventsProcessor processor) throws IOException;
 
     @Nonnull
-    static DefaultHandler findHandler(final Supplier<Reader> readerSupplier, GeneralTestEventsProcessor processor) {
+    static DefaultHandler findHandler(Supplier<Reader> readerSupplier, GeneralTestEventsProcessor processor) {
         for (ImportTestOutputExtension extension : EP_NAME.getExtensionList()) {
             Reader reader = readerSupplier.get();
             if (reader == null) {
