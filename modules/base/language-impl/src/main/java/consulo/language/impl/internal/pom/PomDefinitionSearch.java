@@ -17,15 +17,20 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class PomDefinitionSearch implements DefinitionsScopedSearchExecutor {
-  @Override
-  public boolean execute(@Nonnull DefinitionsScopedSearch.SearchParameters queryParameters, @Nonnull Processor<? super PsiElement> consumer) {
-    PsiElement queryParametersElement = queryParameters.getElement();
-    if (queryParametersElement instanceof PomTargetPsiElement) {
-      final PomTarget target = ((PomTargetPsiElement)queryParametersElement).getTarget();
-      if (target instanceof PsiTarget) {
-        if (!consumer.process(((PsiTarget)target).getNavigationElement())) return false;
-      }
+    @Override
+    public boolean execute(
+        @Nonnull DefinitionsScopedSearch.SearchParameters queryParameters,
+        @Nonnull Processor<? super PsiElement> consumer
+    ) {
+        PsiElement queryParametersElement = queryParameters.getElement();
+        if (queryParametersElement instanceof PomTargetPsiElement) {
+            final PomTarget target = ((PomTargetPsiElement)queryParametersElement).getTarget();
+            if (target instanceof PsiTarget) {
+                if (!consumer.process(((PsiTarget)target).getNavigationElement())) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
-    return true;
-  }
 }

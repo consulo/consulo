@@ -27,6 +27,7 @@ import consulo.usage.UsageView;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
+
 import java.util.Comparator;
 
 /**
@@ -34,29 +35,32 @@ import java.util.Comparator;
  */
 @Deprecated
 public abstract class ListBackgroundUpdaterTask extends BackgroundUpdaterTask {
+    protected AbstractPopup myPopup;
 
-  protected AbstractPopup myPopup;
-
-  /**
-   * @deprecated Use {@link #ListBackgroundUpdaterTask(Project, String, Comparator)}
-   */
-  @Deprecated
-  public ListBackgroundUpdaterTask(@Nullable final Project project, @Nonnull final String title) {
-    this(project, title, null);
-  }
-
-  public ListBackgroundUpdaterTask(@Nullable final Project project, @Nonnull final String title, @Nullable Comparator<PsiElement> comparator) {
-    super(project, title, comparator);
-  }
-
-  /**
-   * @deprecated please use {@link BackgroundUpdaterTask}
-   */
-  @Deprecated
-  public void init(@Nonnull AbstractPopup popup, @Nonnull Object component, @Nonnull Ref<UsageView> usageView) {
-    myPopup = popup;
-    if (component instanceof JBList) {
-      init((JBPopup)myPopup, new JBListUpdater((JBList)component), usageView);
+    /**
+     * @deprecated Use {@link #ListBackgroundUpdaterTask(Project, String, Comparator)}
+     */
+    @Deprecated
+    public ListBackgroundUpdaterTask(@Nullable final Project project, @Nonnull final String title) {
+        this(project, title, null);
     }
-  }
+
+    public ListBackgroundUpdaterTask(
+        @Nullable final Project project,
+        @Nonnull final String title,
+        @Nullable Comparator<PsiElement> comparator
+    ) {
+        super(project, title, comparator);
+    }
+
+    /**
+     * @deprecated please use {@link BackgroundUpdaterTask}
+     */
+    @Deprecated
+    public void init(@Nonnull AbstractPopup popup, @Nonnull Object component, @Nonnull Ref<UsageView> usageView) {
+        myPopup = popup;
+        if (component instanceof JBList) {
+            init((JBPopup)myPopup, new JBListUpdater((JBList)component), usageView);
+        }
+    }
 }

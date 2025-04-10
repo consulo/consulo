@@ -24,43 +24,47 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class CachesBasedRefSearcher extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> implements ReferencesSearchQueryExecutor {
-  public CachesBasedRefSearcher() {
-    super(true);
-  }
-
-  @Override
-  @RequiredReadAction
-  public void processQuery(@Nonnull ReferencesSearch.SearchParameters p, @Nonnull Processor<? super PsiReference> consumer) {
-    final PsiElement refElement = p.getElementToSearch();
-    boolean caseSensitive = refElement.getLanguage().isCaseSensitive();
-
-    String text = null;
-    if (refElement instanceof PsiFileSystemItem && !(refElement instanceof SyntheticFileSystemItem)) {
-      final VirtualFile vFile = ((PsiFileSystemItem)refElement).getVirtualFile();
-      if (vFile != null) {
-        String fileNameWithoutExtension = vFile.getNameWithoutExtension();
-        text = fileNameWithoutExtension.isEmpty() ? vFile.getName() : fileNameWithoutExtension;
-      }
-      // We must not look for file references with the file language's case-sensitivity, 
-      // since case-sensitivity of the references themselves depends either on file system 
-      // or on the rules of the language of reference
-      caseSensitive = false;
-    }
-    else if (refElement instanceof PsiNamedElement) {
-      text = ((PsiNamedElement)refElement).getName();
-      if (refElement instanceof PsiMetaOwner) {
-        final PsiMetaData metaData = ((PsiMetaOwner)refElement).getMetaData();
-        if (metaData != null) text = metaData.getName();
-      }
+    public CachesBasedRefSearcher() {
+        super(true);
     }
 
-    if (text == null && refElement instanceof PsiMetaOwner) {
-      final PsiMetaData metaData = ((PsiMetaOwner)refElement).getMetaData();
-      if (metaData != null) text = metaData.getName();
+    @Override
+    @RequiredReadAction
+    public void processQuery(@Nonnull ReferencesSearch.SearchParameters p, @Nonnull Processor<? super PsiReference> consumer) {
+        final PsiElement refElement = p.getElementToSearch();
+        boolean caseSensitive = refElement.getLanguage().isCaseSensitive();
+
+        String text = null;
+        if (refElement instanceof PsiFileSystemItem && !(refElement instanceof SyntheticFileSystemItem)) {
+            final VirtualFile vFile = ((PsiFileSystemItem)refElement).getVirtualFile();
+            if (vFile != null) {
+                String fileNameWithoutExtension = vFile.getNameWithoutExtension();
+                text = fileNameWithoutExtension.isEmpty() ? vFile.getName() : fileNameWithoutExtension;
+            }
+            // We must not look for file references with the file language's case-sensitivity,
+            // since case-sensitivity of the references themselves depends either on file system
+            // or on the rules of the language of reference
+            caseSensitive = false;
+        }
+        else if (refElement instanceof PsiNamedElement) {
+            text = ((PsiNamedElement)refElement).getName();
+            if (refElement instanceof PsiMetaOwner) {
+                final PsiMetaData metaData = ((PsiMetaOwner)refElement).getMetaData();
+                if (metaData != null) {
+                    text = metaData.getName();
+                }
+            }
+        }
+
+        if (text == null && refElement instanceof PsiMetaOwner) {
+            final PsiMetaData metaData = ((PsiMetaOwner)refElement).getMetaData();
+            if (metaData != null) {
+                text = metaData.getName();
+            }
+        }
+        if (StringUtil.isNotEmpty(text)) {
+            final SearchScope searchScope = p.getEffectiveSearchScope();
+            p.getOptimizer().searchWord(text, searchScope, caseSensitive, refElement);
+        }
     }
-    if (StringUtil.isNotEmpty(text)) {
-      final SearchScope searchScope = p.getEffectiveSearchScope();
-      p.getOptimizer().searchWord(text, searchScope, caseSensitive, refElement);
-    }
-  }
 }

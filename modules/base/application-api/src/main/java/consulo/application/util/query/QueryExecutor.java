@@ -14,11 +14,10 @@ import jakarta.annotation.Nonnull;
  */
 @FunctionalInterface
 public interface QueryExecutor<Result, Param> {
-
-  /**
-   * Find some results according to queryParameters and feed them to consumer. If consumer returns {@code false}, stop.
-   *
-   * @return {@code false} if the searching should be stopped immediately. This should happen only when consumer has returned {@code false}.
-   */
-  boolean execute(@Nonnull Param queryParameters, @Nonnull Processor<? super Result> consumer);
+    /**
+     * Find some results according to queryParameters and feed them to consumer. If consumer returns {@code false}, stop.
+     *
+     * @return {@code false} if the searching should be stopped immediately. This should happen only when consumer has returned {@code false}.
+     */
+    boolean execute(@Nonnull Param queryParameters, @Nonnull Processor<? super Result> consumer);
 }

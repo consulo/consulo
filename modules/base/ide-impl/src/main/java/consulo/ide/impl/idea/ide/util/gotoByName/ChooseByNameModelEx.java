@@ -22,24 +22,25 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public interface ChooseByNameModelEx extends ChooseByNameModel {
-  /**
-   * @deprecated use {@link #processNames(Processor, FindSymbolParameters)} instead
-   */
-  @Deprecated
-  default void processNames(@Nonnull Processor<? super String> processor, @Nonnull boolean inLibraries) {
-  }
+    /**
+     * @deprecated use {@link #processNames(Processor, FindSymbolParameters)} instead
+     */
+    @Deprecated
+    default void processNames(@Nonnull Processor<? super String> processor, @Nonnull boolean inLibraries) {
+    }
 
-  default void processNames(@Nonnull Processor<? super String> processor, @Nonnull FindSymbolParameters parameters) {
-    processNames(processor, parameters.isSearchInLibraries());
-  }
+    default void processNames(@Nonnull Processor<? super String> processor, @Nonnull FindSymbolParameters parameters) {
+        processNames(processor, parameters.isSearchInLibraries());
+    }
 
-  @Nonnull
-  default ChooseByNameItemProvider getItemProvider(@Nullable PsiElement context) {
-    return new DefaultChooseByNameItemProvider(context);
-  }
+    @Nonnull
+    default ChooseByNameItemProvider getItemProvider(@Nullable PsiElement context) {
+        return new DefaultChooseByNameItemProvider(context);
+    }
 
-  @Nonnull
-  static ChooseByNameItemProvider getItemProvider(@Nonnull ChooseByNameModel model, @Nullable PsiElement context) {
-    return model instanceof ChooseByNameModelEx ? ((ChooseByNameModelEx)model).getItemProvider(context) : new DefaultChooseByNameItemProvider(context);
-  }
+    @Nonnull
+    static ChooseByNameItemProvider getItemProvider(@Nonnull ChooseByNameModel model, @Nullable PsiElement context) {
+        return model instanceof ChooseByNameModelEx ? ((ChooseByNameModelEx)model).getItemProvider(context) : new DefaultChooseByNameItemProvider(
+            context);
+    }
 }

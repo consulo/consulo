@@ -22,12 +22,14 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public interface ChooseByNameItemProvider {
-  @Nonnull
-  List<String> filterNames(@Nonnull ChooseByNameBase base, @Nonnull String[] names, @Nonnull String pattern);
+    @Nonnull
+    List<String> filterNames(@Nonnull ChooseByNameBase base, @Nonnull String[] names, @Nonnull String pattern);
 
-  boolean filterElements(@Nonnull ChooseByNameBase base,
-                         @Nonnull String pattern,
-                         boolean everywhere,
-                         @Nonnull ProgressIndicator cancelled,
-                         @Nonnull Processor<Object> consumer);
+    boolean filterElements(
+        @Nonnull ChooseByNameBase base,
+        @Nonnull String pattern,
+        boolean everywhere,
+        @Nonnull ProgressIndicator cancelled,
+        @Nonnull Processor<Object> consumer
+    );
 }

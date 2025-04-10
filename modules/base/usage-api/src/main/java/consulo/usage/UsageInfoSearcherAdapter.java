@@ -23,32 +23,34 @@ import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 public abstract class UsageInfoSearcherAdapter implements UsageSearcher {
-  protected void processUsages(final @Nonnull Processor<Usage> processor, @Nonnull Project project) {
-    final Ref<UsageInfo[]> refUsages = new Ref<UsageInfo[]>();
-    final Ref<Boolean> dumbModeOccurred = new Ref<Boolean>();
-    ApplicationManager.getApplication().runReadAction(() -> {
-      try {
-        refUsages.set(findUsages());
-      }
-      catch (IndexNotReadyException e) {
-        dumbModeOccurred.set(true);
-      }
-    });
-    if (!dumbModeOccurred.isNull()) {
-      DumbService.getInstance(project).showDumbModeNotification("Usage search is not available until indices are ready");
-      return;
-    }
-    final Usage[] usages = ApplicationManager.getApplication().runReadAction((Supplier<Usage[]>)() -> UsageInfo2UsageAdapter.convert(refUsages.get()));
+    protected void processUsages(final @Nonnull Processor<Usage> processor, @Nonnull Project project) {
+        final Ref<UsageInfo[]> refUsages = new Ref<UsageInfo[]>();
+        final Ref<Boolean> dumbModeOccurred = new Ref<Boolean>();
+        ApplicationManager.getApplication().runReadAction(() -> {
+            try {
+                refUsages.set(findUsages());
+            }
+            catch (IndexNotReadyException e) {
+                dumbModeOccurred.set(true);
+            }
+        });
+        if (!dumbModeOccurred.isNull()) {
+            DumbService.getInstance(project).showDumbModeNotification("Usage search is not available until indices are ready");
+            return;
+        }
+        final Usage[] usages =
+            ApplicationManager.getApplication().runReadAction((Supplier<Usage[]>)() -> UsageInfo2UsageAdapter.convert(refUsages.get()));
 
-    for (final Usage usage : usages) {
-      ApplicationManager.getApplication().runReadAction(() -> {
-        processor.process(usage);
-      });
+        for (final Usage usage : usages) {
+            ApplicationManager.getApplication().runReadAction(() -> {
+                processor.process(usage);
+            });
+        }
     }
-  }
 
-  protected abstract UsageInfo[] findUsages();
+    protected abstract UsageInfo[] findUsages();
 }

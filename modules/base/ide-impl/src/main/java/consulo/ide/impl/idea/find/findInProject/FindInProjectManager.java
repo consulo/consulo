@@ -26,100 +26,108 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class FindInProjectManager {
-  private final Project myProject;
-  private volatile boolean myIsFindInProgress;
+    private final Project myProject;
+    private volatile boolean myIsFindInProgress;
 
-  public static FindInProjectManager getInstance(Project project) {
-    return ServiceManager.getService(project, FindInProjectManager.class);
-  }
-
-  @Inject
-  public FindInProjectManager(Project project) {
-    myProject = project;
-  }
-
-  /**
-   * @param model would be used for search if not null, otherwise shared (project-level) model would be used
-   */
-  public void findInProject(@Nonnull DataContext dataContext, @Nullable FindModel model) {
-
-    final FindManager findManager = FindManager.getInstance(myProject);
-    final FindModel findModel;
-    if (model != null) {
-      findModel = model.clone();
-    }
-    else {
-      findModel = findManager.getFindInProjectModel().clone();
-      findModel.setReplaceState(false);
-      initModel(findModel, dataContext);
+    public static FindInProjectManager getInstance(Project project) {
+        return ServiceManager.getService(project, FindInProjectManager.class);
     }
 
-    findManager.showFindDialog(findModel, () -> {
-      if (findModel.isReplaceState()) {
-        ReplaceInProjectManager.getInstance(myProject).replaceInPath(findModel);
-      }
-      else {
-        findInPath(findModel);
-      }
-    });
-  }
-
-  public void findInPath(@Nonnull FindModel findModel) {
-    startFindInProject(findModel);
-  }
-
-  @SuppressWarnings("WeakerAccess")
-  protected void initModel(@Nonnull FindModel findModel, @Nonnull DataContext dataContext) {
-    FindInProjectUtil.setDirectoryName(findModel, dataContext);
-
-    String text = dataContext.getData(PlatformDataKeys.PREDEFINED_TEXT);
-    if (text != null) {
-      FindModel.initStringToFindNoMultiline(findModel, text);
-    }
-    else {
-      FindInProjectUtil.initStringToFindFromDataContext(findModel, dataContext);
-    }
-  }
-
-  public void startFindInProject(@Nonnull FindModel findModel) {
-    if (findModel.getDirectoryName() != null && FindInProjectUtil.getDirectory(findModel) == null) {
-      return;
+    @Inject
+    public FindInProjectManager(Project project) {
+        myProject = project;
     }
 
-    UsageViewManager manager = UsageViewManager.getInstance(myProject);
+    /**
+     * @param model would be used for search if not null, otherwise shared (project-level) model would be used
+     */
+    public void findInProject(@Nonnull DataContext dataContext, @Nullable FindModel model) {
 
-    if (manager == null) return;
-    final FindManager findManager = FindManager.getInstance(myProject);
-    findManager.getFindInProjectModel().copyFrom(findModel);
-    final FindModel findModelCopy = findModel.clone();
-    final UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(findModelCopy);
-    final FindUsagesProcessPresentation processPresentation = FindInProjectUtil.setupProcessPresentation(myProject, presentation);
-    ConfigurableUsageTarget usageTarget = new FindInProjectUtil.StringUsageTarget(myProject, findModel);
+        final FindManager findManager = FindManager.getInstance(myProject);
+        final FindModel findModel;
+        if (model != null) {
+            findModel = model.clone();
+        }
+        else {
+            findModel = findManager.getFindInProjectModel().clone();
+            findModel.setReplaceState(false);
+            initModel(findModel, dataContext);
+        }
 
-    ((FindManagerImpl)FindManager.getInstance(myProject)).getFindUsagesManager().addToHistory(usageTarget);
+        findManager.showFindDialog(findModel, () -> {
+            if (findModel.isReplaceState()) {
+                ReplaceInProjectManager.getInstance(myProject).replaceInPath(findModel);
+            }
+            else {
+                findInPath(findModel);
+            }
+        });
+    }
 
-    manager.searchAndShowUsages(new UsageTarget[]{usageTarget}, () -> processor -> {
-      myIsFindInProgress = true;
+    public void findInPath(@Nonnull FindModel findModel) {
+        startFindInProject(findModel);
+    }
 
-      try {
-        Processor<UsageInfo> consumer = info -> {
-          Usage usage = UsageInfo2UsageAdapter.CONVERTER.apply(info);
-          usage.getPresentation().getIcon(); // cache icon
-          return processor.process(usage);
-        };
-        FindInProjectUtil.findUsages(findModelCopy, myProject, consumer, processPresentation);
-      }
-      finally {
-        myIsFindInProgress = false;
-      }
-    }, processPresentation, presentation, null);
-  }
+    @SuppressWarnings("WeakerAccess")
+    protected void initModel(@Nonnull FindModel findModel, @Nonnull DataContext dataContext) {
+        FindInProjectUtil.setDirectoryName(findModel, dataContext);
 
-  public boolean isWorkInProgress() {
-    return myIsFindInProgress;
-  }
+        String text = dataContext.getData(PlatformDataKeys.PREDEFINED_TEXT);
+        if (text != null) {
+            FindModel.initStringToFindNoMultiline(findModel, text);
+        }
+        else {
+            FindInProjectUtil.initStringToFindFromDataContext(findModel, dataContext);
+        }
+    }
 
-  public boolean isEnabled() {
-    return !myIsFindInProgress && !ReplaceInProjectManager.getInstance(myProject).isWorkInProgress();
-  }
+    public void startFindInProject(@Nonnull FindModel findModel) {
+        if (findModel.getDirectoryName() != null && FindInProjectUtil.getDirectory(findModel) == null) {
+            return;
+        }
+
+        UsageViewManager manager = UsageViewManager.getInstance(myProject);
+
+        if (manager == null) {
+            return;
+        }
+        final FindManager findManager = FindManager.getInstance(myProject);
+        findManager.getFindInProjectModel().copyFrom(findModel);
+        final FindModel findModelCopy = findModel.clone();
+        final UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(findModelCopy);
+        final FindUsagesProcessPresentation processPresentation = FindInProjectUtil.setupProcessPresentation(myProject, presentation);
+        ConfigurableUsageTarget usageTarget = new FindInProjectUtil.StringUsageTarget(myProject, findModel);
+
+        ((FindManagerImpl)FindManager.getInstance(myProject)).getFindUsagesManager().addToHistory(usageTarget);
+
+        manager.searchAndShowUsages(
+            new UsageTarget[]{usageTarget},
+            () -> processor -> {
+                myIsFindInProgress = true;
+
+                try {
+                    Processor<UsageInfo> consumer = info -> {
+                        Usage usage = UsageInfo2UsageAdapter.CONVERTER.apply(info);
+                        usage.getPresentation().getIcon(); // cache icon
+                        return processor.process(usage);
+                    };
+                    FindInProjectUtil.findUsages(findModelCopy, myProject, consumer, processPresentation);
+                }
+                finally {
+                    myIsFindInProgress = false;
+                }
+            },
+            processPresentation,
+            presentation,
+            null
+        );
+    }
+
+    public boolean isWorkInProgress() {
+        return myIsFindInProgress;
+    }
+
+    public boolean isEnabled() {
+        return !myIsFindInProgress && !ReplaceInProjectManager.getInstance(myProject).isWorkInProgress();
+    }
 }

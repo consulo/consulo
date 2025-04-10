@@ -25,63 +25,63 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @see DumbService
  */
 public abstract class QueryExecutorBase<Result, Params> implements QueryExecutor<Result, Params> {
-  private final boolean myRequireReadAction;
+    private final boolean myRequireReadAction;
 
-  /**
-   * @param requireReadAction whether {@link #processQuery(Object, Processor)} should be wrapped into a read action.
-   */
-  protected QueryExecutorBase(boolean requireReadAction) {
-    myRequireReadAction = requireReadAction;
-  }
-
-  /**
-   * Construct an instance that executes {@link #processQuery(Object, Processor)} as is, without wrapping into a read action.
-   */
-  protected QueryExecutorBase() {
-    this(false);
-  }
-
-  @Override
-  public final boolean execute(@Nonnull final Params queryParameters, @Nonnull final Processor<? super Result> consumer) {
-    final AtomicBoolean toContinue = new AtomicBoolean(true);
-    final Processor<Result> wrapper = result -> {
-      if (!toContinue.get()) {
-        return false;
-      }
-
-      if (!consumer.process(result)) {
-        toContinue.set(false);
-        return false;
-      }
-      return true;
-    };
-
-    if (myRequireReadAction && !ApplicationManager.getApplication().isReadAccessAllowed()) {
-      Runnable runnable = () -> {
-        if (!(queryParameters instanceof QueryParameters) || ((QueryParameters)queryParameters).isQueryValid()) {
-          processQuery(queryParameters, wrapper);
-        }
-      };
-
-      if (!DumbService.isDumbAware(this)) {
-        Project project = queryParameters instanceof QueryParameters ? ((QueryParameters)queryParameters).getProject() : null;
-        if (project != null) {
-          DumbService.getInstance(project).runReadActionInSmartMode(runnable);
-          return toContinue.get();
-        }
-      }
-
-      ApplicationManager.getApplication().runReadAction(runnable);
-    }
-    else {
-      processQuery(queryParameters, wrapper);
+    /**
+     * @param requireReadAction whether {@link #processQuery(Object, Processor)} should be wrapped into a read action.
+     */
+    protected QueryExecutorBase(boolean requireReadAction) {
+        myRequireReadAction = requireReadAction;
     }
 
-    return toContinue.get();
-  }
+    /**
+     * Construct an instance that executes {@link #processQuery(Object, Processor)} as is, without wrapping into a read action.
+     */
+    protected QueryExecutorBase() {
+        this(false);
+    }
 
-  /**
-   * Find some results according to queryParameters and feed them to consumer. If consumer returns false, stop.
-   */
-  public abstract void processQuery(@Nonnull Params queryParameters, @Nonnull Processor<? super Result> consumer);
+    @Override
+    public final boolean execute(@Nonnull final Params queryParameters, @Nonnull final Processor<? super Result> consumer) {
+        final AtomicBoolean toContinue = new AtomicBoolean(true);
+        final Processor<Result> wrapper = result -> {
+            if (!toContinue.get()) {
+                return false;
+            }
+
+            if (!consumer.process(result)) {
+                toContinue.set(false);
+                return false;
+            }
+            return true;
+        };
+
+        if (myRequireReadAction && !ApplicationManager.getApplication().isReadAccessAllowed()) {
+            Runnable runnable = () -> {
+                if (!(queryParameters instanceof QueryParameters) || ((QueryParameters)queryParameters).isQueryValid()) {
+                    processQuery(queryParameters, wrapper);
+                }
+            };
+
+            if (!DumbService.isDumbAware(this)) {
+                Project project = queryParameters instanceof QueryParameters ? ((QueryParameters)queryParameters).getProject() : null;
+                if (project != null) {
+                    DumbService.getInstance(project).runReadActionInSmartMode(runnable);
+                    return toContinue.get();
+                }
+            }
+
+            ApplicationManager.getApplication().runReadAction(runnable);
+        }
+        else {
+            processQuery(queryParameters, wrapper);
+        }
+
+        return toContinue.get();
+    }
+
+    /**
+     * Find some results according to queryParameters and feed them to consumer. If consumer returns false, stop.
+     */
+    public abstract void processQuery(@Nonnull Params queryParameters, @Nonnull Processor<? super Result> consumer);
 }
