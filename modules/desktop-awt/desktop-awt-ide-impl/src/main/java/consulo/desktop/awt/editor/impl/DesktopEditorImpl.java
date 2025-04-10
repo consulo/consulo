@@ -29,6 +29,7 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.editor.impl.view.EditorView;
 import consulo.desktop.awt.language.editor.LeftHandScrollbarLayout;
 import consulo.desktop.awt.language.editor.StatusComponentContainer;
+import consulo.desktop.awt.ui.ExperimentalUI;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.keymap.keyGesture.MacGestureSupportForEditor;
 import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
@@ -1210,8 +1211,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
         if (!Registry.is("editor.scale.gutter.icons")) {
             return 1f;
         }
+        float standardNormalizedLineHeight = ExperimentalUI.isNewUI() ? 18f : 16.0f;
         float normLineHeight = getLineHeight() / myScheme.getLineSpacing(); // normalized, as for 1.0f line spacing
-        return normLineHeight / JBUIScale.scale(16f);
+        return normLineHeight / JBUIScale.scale(standardNormalizedLineHeight);
     }
 
     @Override
