@@ -44,7 +44,6 @@ import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.internal.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.localize.UILocalize;

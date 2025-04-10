@@ -16,6 +16,7 @@
 package consulo.ide.newModule;
 
 import consulo.ide.IdeBundle;
+import consulo.ide.newModule.NewModuleWizardContextBase;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;

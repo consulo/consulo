@@ -2673,18 +2673,18 @@
         </group>
 
         <action id="ExternalSystem.RefreshAllProjects"
-                class="consulo.ide.impl.idea.openapi.externalSystem.action.RefreshAllExternalProjectsAction"
+                class="consulo.externalSystem.impl.internal.service.action.RefreshAllExternalProjectsAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
         <action id="ExternalSystem.RefreshProject"
-                class="consulo.ide.impl.idea.openapi.externalSystem.action.RefreshExternalProjectAction"
+                class="consulo.externalSystem.impl.internal.service.action.RefreshExternalProjectAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
         <action id="ExternalSystem.AttachProject"
-                class="consulo.ide.impl.idea.openapi.externalSystem.action.AttachExternalProjectAction"/>
+                class="consulo.externalSystem.impl.internal.service.action.AttachExternalProjectAction"/>
         <action id="ExternalSystem.DetachProject"
-                class="consulo.ide.impl.idea.openapi.externalSystem.action.DetachExternalProjectAction"
+                class="consulo.externalSystem.impl.internal.service.action.DetachExternalProjectAction"
                 use-shortcut-of="$Delete"/>
         <action id="ExternalSystem.OpenConfig"
-                class="consulo.ide.impl.idea.openapi.externalSystem.action.OpenExternalConfigAction"
+                class="consulo.externalSystem.impl.internal.service.action.OpenExternalConfigAction"
                 use-shortcut-of="EditSource"/>
 
         <!--Tool window actions-->

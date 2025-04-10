@@ -16,16 +16,15 @@
 
 package consulo.module.impl.internal.layer.orderEntry;
 
+import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.content.RootProvider;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.internal.LibraryEx;
-import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.content.library.Library;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.module.content.layer.orderEntry.DependencyScope;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleLibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.impl.internal.ProjectRootManagerImpl;
@@ -34,7 +33,6 @@ import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.module.impl.internal.layer.library.ModuleRootLayerLibraryOwner;
 import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -42,116 +40,114 @@ import jakarta.annotation.Nonnull;
  *
  * @author dsl
  */
-public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements LibraryOrderEntry, ClonableOrderEntry {
-  public static final Logger LOGGER = Logger.getInstance(ModuleLibraryOrderEntryImpl.class);
+public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements ModuleLibraryOrderEntry, ClonableOrderEntry {
+    private final Library myLibrary;
+    private boolean myExported;
 
-  private final Library myLibrary;
-  private boolean myExported;
-
-  public ModuleLibraryOrderEntryImpl(Library library, ModuleRootLayerImpl rootLayer, boolean isExported, DependencyScope scope, boolean init) {
-    super(ModuleLibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
-    myLibrary = library;
-    myExported = isExported;
-    myScope = scope;
-    Disposer.register(this, myLibrary);
-    if (init) {
-      init();
+    public ModuleLibraryOrderEntryImpl(Library library, ModuleRootLayerImpl rootLayer, boolean isExported, DependencyScope scope, boolean init) {
+        super(ModuleLibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
+        myLibrary = library;
+        myExported = isExported;
+        myScope = scope;
+        Disposer.register(this, myLibrary);
+        if (init) {
+            init();
+        }
     }
-  }
 
-  public ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
-    super(ModuleLibraryOrderEntryType.getInstance(), moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
-    myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, moduleRootLayer);
-    Disposer.register(this, myLibrary);
-    init();
-  }
-
-  @Override
-  protected RootProvider getRootProvider() {
-    return myLibrary.getRootProvider();
-  }
-
-  @Override
-  public Library getLibrary() {
-    return myLibrary;
-  }
-
-  @Override
-  public boolean isModuleLevel() {
-    return true;
-  }
-
-  @Override
-  public String getLibraryName() {
-    return myLibrary.getName();
-  }
-
-  @Override
-  public String getLibraryLevel() {
-    return LibraryTableImplUtil.MODULE_LEVEL;
-  }
-
-  @Nonnull
-  @Override
-  public String getPresentableName() {
-    final String name = myLibrary.getName();
-    if (name != null) {
-      return name;
+    public ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
+        super(ModuleLibraryOrderEntryType.getInstance(), moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
+        myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, moduleRootLayer);
+        Disposer.register(this, myLibrary);
+        init();
     }
-    else {
-      if (myLibrary instanceof LibraryEx && ((LibraryEx)myLibrary).isDisposed()) {
-        return "<unknown>";
-      }
 
-      final String[] urls = myLibrary.getUrls(BinariesOrderRootType.getInstance());
-      if (urls.length > 0) {
-        String url = urls[0];
-        return VirtualFilePathUtil.toPresentableUrl(url);
-      }
-      else {
-        return ProjectBundle.message("library.empty.library.item");
-      }
+    @Override
+    protected RootProvider getRootProvider() {
+        return myLibrary.getRootProvider();
     }
-  }
 
-  @Override
-  public boolean isValid() {
-    return !isDisposed() && myLibrary != null;
-  }
+    @Override
+    public Library getLibrary() {
+        return myLibrary;
+    }
 
-  @Override
-  public <R> R accept(RootPolicy<R> policy, R initialValue) {
-    return policy.visitLibraryOrderEntry(this, initialValue);
-  }
+    @Override
+    public boolean isModuleLevel() {
+        return true;
+    }
 
-  @Override
-  public boolean isSynthetic() {
-    return false;
-  }
+    @Override
+    public String getLibraryName() {
+        return myLibrary.getName();
+    }
 
-  @Override
-  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
-    return new ModuleLibraryOrderEntryImpl(((LibraryImpl)myLibrary).cloneLibrary(new ModuleRootLayerLibraryOwner(rootModel)), rootModel, myExported, myScope, true);
-  }
+    @Override
+    public String getLibraryLevel() {
+        return LibraryTableImplUtil.MODULE_LEVEL;
+    }
 
-  @Override
-  public boolean isExported() {
-    return myExported;
-  }
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        final String name = myLibrary.getName();
+        if (name != null) {
+            return name;
+        }
+        else {
+            if (myLibrary instanceof LibraryEx && ((LibraryEx) myLibrary).isDisposed()) {
+                return "<unknown>";
+            }
 
-  @Override
-  public void setExported(boolean value) {
-    myExported = value;
-  }
+            final String[] urls = myLibrary.getUrls(BinariesOrderRootType.getInstance());
+            if (urls.length > 0) {
+                String url = urls[0];
+                return VirtualFilePathUtil.toPresentableUrl(url);
+            }
+            else {
+                return ProjectBundle.message("library.empty.library.item");
+            }
+        }
+    }
 
-  @Override
-  @Nonnull
-  public DependencyScope getScope() {
-    return myScope;
-  }
+    @Override
+    public boolean isValid() {
+        return !isDisposed() && myLibrary != null;
+    }
 
-  @Override
-  public void setScope(@Nonnull DependencyScope scope) {
-    myScope = scope;
-  }
+    @Override
+    public <R> R accept(RootPolicy<R> policy, R initialValue) {
+        return policy.visitLibraryOrderEntry(this, initialValue);
+    }
+
+    @Override
+    public boolean isSynthetic() {
+        return false;
+    }
+
+    @Override
+    public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
+        return new ModuleLibraryOrderEntryImpl(((LibraryImpl) myLibrary).cloneLibrary(new ModuleRootLayerLibraryOwner(rootModel)), rootModel, myExported, myScope, true);
+    }
+
+    @Override
+    public boolean isExported() {
+        return myExported;
+    }
+
+    @Override
+    public void setExported(boolean value) {
+        myExported = value;
+    }
+
+    @Override
+    @Nonnull
+    public DependencyScope getScope() {
+        return myScope;
+    }
+
+    @Override
+    public void setScope(@Nonnull DependencyScope scope) {
+        myScope = scope;
+    }
 }

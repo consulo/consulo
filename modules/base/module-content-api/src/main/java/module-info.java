@@ -20,11 +20,13 @@ module consulo.module.content.api {
     exports consulo.module.content.layer.orderEntry;
 
     exports consulo.module.content.internal to
+        consulo.ide.api,
         consulo.ide.impl,
         consulo.module.impl,
         consulo.language.impl,
         consulo.compiler.impl,
         consulo.compiler.artifact.impl,
+        consulo.external.system.impl,
         consulo.module.ui.api,
         consulo.module.content.impl;
 }

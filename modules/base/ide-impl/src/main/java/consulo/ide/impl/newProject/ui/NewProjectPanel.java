@@ -23,6 +23,7 @@ import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.newModule.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.project.util.ProjectUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;

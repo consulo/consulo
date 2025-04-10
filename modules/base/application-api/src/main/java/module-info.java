@@ -47,6 +47,7 @@ module consulo.application.api {
         consulo.desktop.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl,
+        consulo.external.system.impl,
         consulo.document.impl,
         consulo.language.impl,
         consulo.application.impl,

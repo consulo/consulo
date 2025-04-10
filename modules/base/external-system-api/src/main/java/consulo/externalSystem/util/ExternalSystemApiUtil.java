@@ -17,6 +17,7 @@ package consulo.externalSystem.util;
 
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.ReadAction;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
@@ -40,22 +41,28 @@ import consulo.execution.runner.RunnerRegistry;
 import consulo.externalSystem.ExternalSystemAutoImportAware;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
-import consulo.externalSystem.model.DataNode;
-import consulo.externalSystem.model.ExternalSystemDataKeys;
-import consulo.externalSystem.model.Key;
-import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
+import consulo.externalSystem.model.*;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.model.project.LibraryData;
+import consulo.externalSystem.model.project.ModuleData;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
+import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
+import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.externalSystem.model.task.TaskCallback;
 import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
 import consulo.externalSystem.service.execution.ExternalSystemRunConfiguration;
 import consulo.externalSystem.service.module.extension.ExternalSystemModuleExtension;
+import consulo.externalSystem.service.notification.NotificationSource;
+import consulo.externalSystem.service.project.ExternalProjectRefreshCallback;
+import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
+import consulo.externalSystem.setting.ExternalProjectSettings;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.process.ExecutionException;
@@ -77,6 +84,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.rmi.RemoteUtil;
+import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.util.PathsList;
@@ -941,5 +949,29 @@ public class ExternalSystemApiUtil {
     @Nullable
     public static String getExternalProjectId(@Nullable Module module) {
         return getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_ID_KEY);
+    }
+
+    @Nullable
+    @RequiredUIAccess
+    public static VirtualFile findLocalFileByPath(String path) {
+        VirtualFile result = StandardFileSystems.local().findFileByPath(path);
+        if (result != null) {
+            return result;
+        }
+
+        return !Application.get().isReadAccessAllowed()
+            ? findLocalFileByPathUnderWriteAction(path)
+            : findLocalFileByPathUnderReadAction(path);
+    }
+
+    @Nullable
+    @RequiredUIAccess
+    private static VirtualFile findLocalFileByPathUnderWriteAction(String path) {
+        return ExternalSystemApiUtil.doWriteAction(() -> StandardFileSystems.local().refreshAndFindFileByPath(path));
+    }
+
+    @Nullable
+    private static VirtualFile findLocalFileByPathUnderReadAction(String path) {
+        return ReadAction.compute(() -> StandardFileSystems.local().findFileByPath(path));
     }
 }

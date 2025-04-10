@@ -21,11 +21,10 @@ import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.project.Project;
-import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import javax.swing.*;
+
 import java.util.List;
 
 /**
@@ -34,12 +33,18 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ExternalSystemInternalHelper {
-  <T> AWTPopupChooserBuilder<T> createPopupBuilder(JTree tree);
+    ExternalSystemTask createExecuteSystemTask(@Nonnull ProjectSystemId externalSystemId,
+                                               @Nonnull Project project,
+                                               @Nonnull List<ExternalTaskPojo> tasksToExecute,
+                                               @Nullable String vmOptions,
+                                               @Nullable String scriptParameters,
+                                               @Nullable String debuggerSetup);
 
-  ExternalSystemTask createExecuteSystemTask(@Nonnull ProjectSystemId externalSystemId,
-                                             @Nonnull Project project,
-                                             @Nonnull List<ExternalTaskPojo> tasksToExecute,
-                                             @Nullable String vmOptions,
-                                             @Nullable String scriptParameters,
-                                             @Nullable String debuggerSetup);
+    ExternalSystemResolveProjectTask createResolveProjectTask(@Nonnull ProjectSystemId externalSystemId,
+                                                @Nonnull Project project,
+                                                @Nonnull String projectPath,
+                                                boolean isPreviewMode);
+
+    @RequiredUIAccess
+    void ensureToolWindowInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId);
 }

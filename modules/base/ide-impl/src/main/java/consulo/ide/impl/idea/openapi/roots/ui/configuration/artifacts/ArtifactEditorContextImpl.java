@@ -15,31 +15,32 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.module.ModifiableModuleModel;
-import consulo.module.Module;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.module.content.layer.ModifiableRootModel;
-import consulo.module.content.layer.ModuleRootModel;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
 import consulo.application.content.impl.internal.library.LibraryImpl;
-import consulo.content.library.Library;
-import consulo.content.library.LibraryTable;
-import consulo.module.ui.awt.ChooseModulesDialog;
-import consulo.module.content.layer.ModulesProvider;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactModel;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ModifiableArtifactModel;
 import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.compiler.artifact.ui.awt.ChooseArtifactsDialog;
 import consulo.compiler.artifact.ui.ArtifactEditor;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.awt.ChooseArtifactsDialog;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
 import consulo.ide.impl.idea.util.ui.classpath.ChooseLibrariesFromTablesDialog;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.module.content.layer.ModulesProvider;
+import consulo.module.content.layer.orderEntry.ModuleLibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
+import consulo.module.ui.awt.ChooseModulesDialog;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -129,8 +130,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
         final ModuleRootModel rootModel = myParent.getModulesProvider().getRootModel(module);
         final String libraryName = library.getName();
         for (OrderEntry entry : rootModel.getOrderEntries()) {
-          if (entry instanceof ModuleLibraryOrderEntryImpl) {
-            final ModuleLibraryOrderEntryImpl libraryEntry = (ModuleLibraryOrderEntryImpl)entry;
+          if (entry instanceof ModuleLibraryOrderEntry libraryEntry) {
             if (libraryName != null && libraryName.equals(libraryEntry.getLibraryName())
                || libraryName == null && library.equals(libraryEntry.getLibrary())) {
               ShowSettingsUtil.getInstance().showProjectStructureDialog(myParent.getProject(), projectStructureSelector -> {

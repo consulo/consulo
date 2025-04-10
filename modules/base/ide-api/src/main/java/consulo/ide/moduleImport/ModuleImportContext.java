@@ -18,7 +18,6 @@ package consulo.ide.moduleImport;
 import consulo.disposer.Disposable;
 import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

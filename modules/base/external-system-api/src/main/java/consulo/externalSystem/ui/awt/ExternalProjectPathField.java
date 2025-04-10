@@ -22,7 +22,7 @@ import consulo.codeEditor.FoldingModel;
 import consulo.component.PropertiesComponent;
 import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.internal.ExternalSystemInternalHelper;
+import consulo.externalSystem.internal.ExternalSystemInternalAWTHelper;
 import consulo.externalSystem.internal.ui.ExternalSystemTasksTree;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
@@ -110,7 +110,7 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
                 }
             };
 
-            ExternalSystemInternalHelper helper = Application.get().getInstance(ExternalSystemInternalHelper.class);
+            ExternalSystemInternalAWTHelper helper = Application.get().getInstance(ExternalSystemInternalAWTHelper.class);
             JBPopup popup = helper.createPopupBuilder(tree)
                 .setItemChoosenCallback(treeSelectionCallback)
                 .setTitle(ExternalSystemBundle.message("run.configuration.title.choose.registered.project", externalSystemId.getDisplayName()))
