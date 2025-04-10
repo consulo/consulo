@@ -36,35 +36,41 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "inLineComment", order = "after inStringLiteral")
 public class EnterInLineCommentHandler extends EnterHandlerDelegateAdapter {
-  @Override
-  public Result preprocessEnter(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final Ref<Integer> caretOffsetRef, @Nonnull final Ref<Integer> caretAdvance,
-                                @Nonnull final DataContext dataContext, final EditorActionHandler originalHandler) {
-    int caretOffset = caretOffsetRef.get().intValue();
-    PsiElement psiAtOffset = file.findElementAt(caretOffset);
-    if (psiAtOffset != null && psiAtOffset.getTextOffset() < caretOffset) {
-      ASTNode token = psiAtOffset.getNode();
-      Document document = editor.getDocument();
-      CharSequence text = document.getText();
-      final Language language = psiAtOffset.getLanguage();
-      final Commenter languageCommenter = Commenter.forLanguage(language);
-      final CodeDocumentationAwareCommenter commenter = languageCommenter instanceof CodeDocumentationAwareCommenter
-                                                        ? (CodeDocumentationAwareCommenter)languageCommenter: null;
-      if (commenter != null && token.getElementType() == commenter.getLineCommentTokenType() ) {
-        final int offset = CharArrayUtil.shiftForward(text, caretOffset, " \t");
+    @Override
+    public Result preprocessEnter(
+        @Nonnull final PsiFile file,
+        @Nonnull final Editor editor,
+        @Nonnull final Ref<Integer> caretOffsetRef,
+        @Nonnull final Ref<Integer> caretAdvance,
+        @Nonnull final DataContext dataContext,
+        final EditorActionHandler originalHandler
+    ) {
+        int caretOffset = caretOffsetRef.get().intValue();
+        PsiElement psiAtOffset = file.findElementAt(caretOffset);
+        if (psiAtOffset != null && psiAtOffset.getTextOffset() < caretOffset) {
+            ASTNode token = psiAtOffset.getNode();
+            Document document = editor.getDocument();
+            CharSequence text = document.getText();
+            final Language language = psiAtOffset.getLanguage();
+            final Commenter languageCommenter = Commenter.forLanguage(language);
+            final CodeDocumentationAwareCommenter commenter = languageCommenter instanceof CodeDocumentationAwareCommenter
+                ? (CodeDocumentationAwareCommenter)languageCommenter : null;
+            if (commenter != null && token.getElementType() == commenter.getLineCommentTokenType()) {
+                final int offset = CharArrayUtil.shiftForward(text, caretOffset, " \t");
 
-        if (offset < document.getTextLength() && text.charAt(offset) != '\n') {
-          String prefix = commenter.getLineCommentPrefix();
-          assert prefix != null: "Line Comment type is set but Line Comment Prefix is null!";
-          if (!StringUtil.startsWith(text, offset, prefix)) {
-            if (text.charAt(caretOffset) != ' ' && !prefix.endsWith(" ")) {
-              prefix += " ";
+                if (offset < document.getTextLength() && text.charAt(offset) != '\n') {
+                    String prefix = commenter.getLineCommentPrefix();
+                    assert prefix != null : "Line Comment type is set but Line Comment Prefix is null!";
+                    if (!StringUtil.startsWith(text, offset, prefix)) {
+                        if (text.charAt(caretOffset) != ' ' && !prefix.endsWith(" ")) {
+                            prefix += " ";
+                        }
+                        document.insertString(caretOffset, prefix);
+                        return Result.Default;
+                    }
+                }
             }
-            document.insertString(caretOffset, prefix);
-            return Result.Default;
-          }
         }
-      }
+        return Result.Continue;
     }
-    return Result.Continue;
-  }
 }
