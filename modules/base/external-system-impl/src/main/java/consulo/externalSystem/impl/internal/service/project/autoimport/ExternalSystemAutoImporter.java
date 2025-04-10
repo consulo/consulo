@@ -22,7 +22,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.externalSystem.ExternalSystemAutoImportAware;
+import consulo.externalSystem.service.project.autoimport.ExternalSystemAutoImportAware;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.impl.internal.service.ExternalSystemProcessingManager;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;

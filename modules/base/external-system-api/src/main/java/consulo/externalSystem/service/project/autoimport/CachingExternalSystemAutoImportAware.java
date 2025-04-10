@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalSystem.impl.internal.service.project.autoimport;
+package consulo.externalSystem.service.project.autoimport;
 
-import consulo.externalSystem.ExternalSystemAutoImportAware;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

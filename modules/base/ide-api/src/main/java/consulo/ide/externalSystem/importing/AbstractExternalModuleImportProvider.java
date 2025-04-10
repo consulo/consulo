@@ -24,13 +24,14 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.externalSystem.internal.ExternalSystemInternalHelper;
-import consulo.externalSystem.internal.ExternalSystemResolveProjectTask;
+import consulo.externalSystem.service.ExternalSystemResolveProjectTask;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
+import consulo.externalSystem.service.ExternalSystemResolveProjectTaskFactory;
 import consulo.externalSystem.service.project.ExternalProjectRefreshCallback;
 import consulo.externalSystem.service.project.ExternalSystemProjectRefresher;
 import consulo.externalSystem.service.project.ProjectData;
@@ -147,7 +148,9 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
             systemSettings.copyFrom(myControl.getSystemSettings());
             systemSettings.setLinkedProjectsSettings(projects);
 
-            ExternalSystemInternalHelper internalHelper = Application.get().getInstance(ExternalSystemInternalHelper.class);
+            Application application = Application.get();
+            ExternalSystemInternalHelper internalHelper = application.getInstance(ExternalSystemInternalHelper.class);
+            ExternalSystemResolveProjectTaskFactory taskFactory = application.getInstance(ExternalSystemResolveProjectTaskFactory.class);
 
             if (externalProjectNode != null) {
                 internalHelper.ensureToolWindowInitialized(project, myExternalSystemId);
@@ -175,7 +178,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
                             if (project.isDisposed()) {
                                 return;
                             }
-                            ExternalSystemResolveProjectTask task = internalHelper.createResolveProjectTask(
+                            ExternalSystemResolveProjectTask task = taskFactory.createResolveProjectTask(
                                 myExternalSystemId,
                                 project,
                                 projectSettings.getExternalProjectPath(),

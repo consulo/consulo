@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalSystem.internal;
+package consulo.externalSystem.service;
 
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.task.ExternalSystemTask;

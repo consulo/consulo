@@ -20,7 +20,7 @@ import consulo.externalSystem.impl.internal.service.ExternalSystemExecuteTaskTas
 import consulo.externalSystem.impl.internal.service.ExternalSystemResolveProjectTaskImpl;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
 import consulo.externalSystem.internal.ExternalSystemInternalHelper;
-import consulo.externalSystem.internal.ExternalSystemResolveProjectTask;
+import consulo.externalSystem.service.ExternalSystemResolveProjectTask;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.model.task.ExternalSystemTask;
@@ -47,14 +47,6 @@ public class ExternalSystemInternalHelperImpl implements ExternalSystemInternalH
                                                       @Nullable String scriptParameters,
                                                       @Nullable String debuggerSetup) {
         return new ExternalSystemExecuteTaskTask(externalSystemId, project, tasksToExecute, vmOptions, scriptParameters, debuggerSetup);
-    }
-
-    @Override
-    public ExternalSystemResolveProjectTask createResolveProjectTask(@Nonnull ProjectSystemId externalSystemId,
-                                                                     @Nonnull Project project,
-                                                                     @Nonnull String projectPath,
-                                                                     boolean isPreviewMode) {
-        return new ExternalSystemResolveProjectTaskImpl(externalSystemId, project, projectPath, isPreviewMode);
     }
 
     @RequiredUIAccess

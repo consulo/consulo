@@ -3,7 +3,7 @@ package consulo.externalSystem.impl.internal.service;
 import consulo.application.Application;
 import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.impl.internal.service.remote.RemoteExternalSystemProjectResolver;
-import consulo.externalSystem.internal.ExternalSystemResolveProjectTask;
+import consulo.externalSystem.service.ExternalSystemResolveProjectTask;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;

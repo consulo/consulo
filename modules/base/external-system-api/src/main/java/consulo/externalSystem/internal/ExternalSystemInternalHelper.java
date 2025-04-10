@@ -40,11 +40,6 @@ public interface ExternalSystemInternalHelper {
                                                @Nullable String scriptParameters,
                                                @Nullable String debuggerSetup);
 
-    ExternalSystemResolveProjectTask createResolveProjectTask(@Nonnull ProjectSystemId externalSystemId,
-                                                @Nonnull Project project,
-                                                @Nonnull String projectPath,
-                                                boolean isPreviewMode);
-
     @RequiredUIAccess
     void ensureToolWindowInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId);
 }
