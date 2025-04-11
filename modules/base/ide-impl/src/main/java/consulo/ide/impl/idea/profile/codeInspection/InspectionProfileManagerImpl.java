@@ -24,7 +24,6 @@ import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.ide.ServiceManager;
-import consulo.util.collection.ArrayUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileConvertor;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
@@ -44,6 +43,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -93,7 +93,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
                 @Nonnull
                 @Override
                 public InspectionProfileImpl readScheme(@Nonnull Element element) {
-                    final InspectionProfileImpl profile = new InspectionProfileImpl(
+                    InspectionProfileImpl profile = new InspectionProfileImpl(
                         InspectionProfileLoadUtil.getProfileName(element),
                         myRegistrar,
                         InspectionProfileManagerImpl.this
@@ -129,17 +129,17 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
                 }
 
                 @Override
-                public void onSchemeAdded(@Nonnull final InspectionProfileImpl scheme) {
+                public void onSchemeAdded(@Nonnull InspectionProfileImpl scheme) {
                     updateProfileImpl(scheme);
                     fireProfileChanged(scheme);
                 }
 
                 @Override
-                public void onSchemeDeleted(@Nonnull final InspectionProfileImpl scheme) {
+                public void onSchemeDeleted(@Nonnull InspectionProfileImpl scheme) {
                 }
 
                 @Override
-                public void onCurrentSchemeChanged(final InspectionProfileImpl oldCurrentScheme) {
+                public void onCurrentSchemeChanged(InspectionProfileImpl oldCurrentScheme) {
                     Profile current = mySchemeManager.getCurrentScheme();
                     if (current != null) {
                         fireProfileChanged(oldCurrentScheme, current, null);
@@ -193,14 +193,14 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     }
 
     private void createDefaultProfile() {
-        final InspectionProfileImpl defaultProfile = (InspectionProfileImpl)createProfile();
+        InspectionProfileImpl defaultProfile = (InspectionProfileImpl)createProfile();
         defaultProfile.setBaseProfile(InspectionProfileImpl.getDefaultProfile(myRegistrar, this));
         addProfile(defaultProfile);
     }
 
     @Override
     public Profile loadProfile(@Nonnull String path) throws IOException, JDOMException {
-        final File file = new File(path);
+        File file = new File(path);
         if (file.exists()) {
             try {
                 return InspectionProfileLoadUtil.load(file, myRegistrar, this);
@@ -287,7 +287,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     }
 
     @Override
-    public Profile getProfile(@Nonnull final String name, boolean returnRootProfileIfNamedIsAbsent) {
+    public Profile getProfile(@Nonnull String name, boolean returnRootProfileIfNamedIsAbsent) {
         Profile found = mySchemeManager.findSchemeByName(name);
         if (found != null) {
             return found;
@@ -314,7 +314,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     }
 
     @Override
-    public void deleteProfile(@Nonnull final String profile) {
+    public void deleteProfile(@Nonnull String profile) {
         InspectionProfile found = mySchemeManager.findSchemeByName(profile);
         if (found != null) {
             mySchemeManager.removeScheme(found);
@@ -322,7 +322,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     }
 
     @Override
-    public void addProfile(@Nonnull final Profile profile) {
+    public void addProfile(@Nonnull Profile profile) {
         mySchemeManager.addNewScheme((InspectionProfile)profile, true);
     }
 
@@ -333,7 +333,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     }
 
     @Override
-    public Profile getProfile(@Nonnull final String name) {
+    public Profile getProfile(@Nonnull String name) {
         return getProfile(name, true);
     }
 }

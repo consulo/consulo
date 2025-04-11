@@ -35,7 +35,7 @@ final class IndexImporterMappingIndex<Key, Value, Input> implements SnapshotInpu
         if (index instanceof UpdatableSnapshotInputMappingIndex) {
             UpdatableSnapshotInputMappingIndex<Key, Value, Input> updatableIndex =
                 (UpdatableSnapshotInputMappingIndex<Key, Value, Input>)index;
-            return new UpdatableSnapshotInputMappingIndex<Key, Value, Input>() {
+            return new UpdatableSnapshotInputMappingIndex<>() {
                 @Nonnull
                 @Override
                 public Map<Key, Value> readData(int hashId) throws IOException {
@@ -89,7 +89,7 @@ final class IndexImporterMappingIndex<Key, Value, Input> implements SnapshotInpu
                 }
             };
         }
-        return new SnapshotInputMappingIndex<Key, Value, Input>() {
+        return new SnapshotInputMappingIndex<>() {
             @Nullable
             @Override
             public InputData<Key, Value> readData(@Nonnull Input content) throws IOException {

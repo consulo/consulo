@@ -1,23 +1,20 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.psi.impl.search;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Processor;
 import consulo.document.util.TextRange;
-import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.ide.impl.psi.impl.cache.CacheUtil;
-import consulo.language.psi.search.*;
-import consulo.language.psi.stub.todo.TodoCacheManager;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.file.FileViewProvider;
+import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.pattern.StringPattern;
@@ -25,6 +22,8 @@ import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.PsiBinaryFile;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.search.*;
+import consulo.language.psi.stub.todo.TodoCacheManager;
 import consulo.language.version.LanguageVersion;
 import consulo.project.util.query.QueryExecutorBase;
 import consulo.util.collection.primitive.ints.IntList;
@@ -32,10 +31,10 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.CharSequenceSubSequence;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,18 +49,19 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
     }
 
     @Override
+    @RequiredReadAction
     public void processQuery(
         @Nonnull IndexPatternSearch.SearchParameters queryParameters,
-        @Nonnull Processor<? super IndexPatternOccurrence> consumer
+        @Nonnull Predicate<? super IndexPatternOccurrence> consumer
     ) {
-        final PsiFile file = queryParameters.getFile();
+        PsiFile file = queryParameters.getFile();
         VirtualFile virtualFile = file.getVirtualFile();
         if (file instanceof PsiBinaryFile || file instanceof PsiCompiledElement || virtualFile == null) {
             return;
         }
 
-        final TodoCacheManager cacheManager = TodoCacheManager.getInstance(file.getProject());
-        final IndexPatternProvider patternProvider = queryParameters.getPatternProvider();
+        TodoCacheManager cacheManager = TodoCacheManager.getInstance(file.getProject());
+        IndexPatternProvider patternProvider = queryParameters.getPatternProvider();
         int count = patternProvider != null
             ? cacheManager.getTodoCount(virtualFile, patternProvider)
             : cacheManager.getTodoCount(virtualFile, queryParameters.getPattern());
@@ -70,13 +70,14 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
         }
     }
 
+    @RequiredReadAction
     protected static void executeImpl(
         IndexPatternSearch.SearchParameters queryParameters,
-        Processor<? super IndexPatternOccurrence> consumer
+        Predicate<? super IndexPatternOccurrence> consumer
     ) {
-        final IndexPatternProvider patternProvider = queryParameters.getPatternProvider();
-        final PsiFile file = queryParameters.getFile();
-        final CharSequence chars = file.getViewProvider().getContents();
+        IndexPatternProvider patternProvider = queryParameters.getPatternProvider();
+        PsiFile file = queryParameters.getFile();
+        CharSequence chars = file.getViewProvider().getContents();
         boolean multiLine = queryParameters.isMultiLine();
         List<CommentRange> commentRanges = findCommentTokenRanges(file, chars, queryParameters.getRange(), multiLine);
         IntList occurrences = IntLists.newArrayList(1);
@@ -109,12 +110,8 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
     private static final TokenSet COMMENT_TOKENS =
         TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT, CustomHighlighterTokenType.MULTI_LINE_COMMENT);
 
-    private static List<CommentRange> findCommentTokenRanges(
-        final PsiFile file,
-        final CharSequence chars,
-        final TextRange range,
-        final boolean multiLine
-    ) {
+    @RequiredReadAction
+    private static List<CommentRange> findCommentTokenRanges(PsiFile file, CharSequence chars, TextRange range, boolean multiLine) {
         if (file instanceof PsiPlainTextFile) {
             FileType fType = file.getFileType();
             if (fType instanceof CustomSyntaxTableFileType) {
@@ -128,10 +125,10 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
         }
         else {
             List<CommentRange> commentRanges = new ArrayList<>();
-            final FileViewProvider viewProvider = file.getViewProvider();
-            final Set<Language> relevantLanguages = viewProvider.getLanguages();
+            FileViewProvider viewProvider = file.getViewProvider();
+            Set<Language> relevantLanguages = viewProvider.getLanguages();
             for (Language lang : relevantLanguages) {
-                final SyntaxHighlighter syntaxHighlighter =
+                SyntaxHighlighter syntaxHighlighter =
                     SyntaxHighlighterFactory.getSyntaxHighlighter(lang, file.getProject(), file.getVirtualFile());
                 Lexer lexer = syntaxHighlighter.getHighlightingLexer();
                 TokenSet commentTokens = null;
@@ -145,7 +142,7 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
                     }
                 }
                 if (builderForFile == null) {
-                    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
+                    ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
                     if (parserDefinition != null) {
                         commentTokens = parserDefinition.getCommentTokens(file.getLanguageVersion());
                     }
@@ -173,12 +170,12 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
     }
 
     private static List<CommentRange> findComments(
-        final Lexer lexer,
-        final CharSequence chars,
-        final TextRange range,
-        final TokenSet commentTokens,
-        final IndexPatternBuilder builderForFile,
-        final boolean multiLine,
+        Lexer lexer,
+        CharSequence chars,
+        TextRange range,
+        TokenSet commentTokens,
+        IndexPatternBuilder builderForFile,
+        boolean multiLine,
         LanguageVersion languageVersion
     ) {
         List<CommentRange> commentRanges = new ArrayList<>();
@@ -205,9 +202,9 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
             boolean isComment = commentTokens.contains(tokenType) || CacheUtil.isInComments(tokenType, languageVersion);
 
             if (isComment) {
-                final int startDelta =
+                int startDelta =
                     builderForFile != null ? builderForFile.getCommentStartDelta(lexer.getTokenType(), lexer.getTokenSequence()) : 0;
-                final int endDelta = builderForFile != null ? builderForFile.getCommentEndDelta(lexer.getTokenType()) : 0;
+                int endDelta = builderForFile != null ? builderForFile.getCommentEndDelta(lexer.getTokenType()) : 0;
 
                 int start = lexer.getTokenStart() + startDelta;
                 int end = lexer.getTokenEnd() - endDelta;
@@ -248,7 +245,7 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
         int commentNum,
         PsiFile file,
         TextRange range,
-        Processor<? super IndexPatternOccurrence> consumer,
+        Predicate<? super IndexPatternOccurrence> consumer,
         IntList matches,
         boolean multiLine
     ) {
@@ -291,7 +288,7 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
                         matches.add(start);
                         IndexPatternOccurrenceImpl occurrence =
                             new IndexPatternOccurrenceImpl(file, start, end, indexPattern, additionalRanges);
-                        if (!consumer.process(occurrence)) {
+                        if (!consumer.test(occurrence)) {
                             return false;
                         }
                     }

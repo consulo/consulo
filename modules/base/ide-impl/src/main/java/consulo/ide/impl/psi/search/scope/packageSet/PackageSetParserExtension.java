@@ -34,7 +34,7 @@ public interface PackageSetParserExtension {
     ExtensionPointName<PackageSetParserExtension> EP_NAME = ExtensionPointName.create(PackageSetParserExtension.class);
 
     @Nullable
-    PackageSet parsePackageSet(Lexer lexer, final String scope, String modulePattern) throws ParsingException;
+    PackageSet parsePackageSet(Lexer lexer, String scope, String modulePattern) throws ParsingException;
 
     @Nullable
     String parseScope(Lexer lexer);

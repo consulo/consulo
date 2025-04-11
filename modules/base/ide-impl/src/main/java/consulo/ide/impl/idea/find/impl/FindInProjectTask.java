@@ -2,14 +2,13 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.ReadAction;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.internal.TooManyUsagesStatus;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.content.ContentIterator;
@@ -48,7 +47,6 @@ import consulo.usage.FindUsagesProcessPresentation;
 import consulo.usage.UsageInfo;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
@@ -83,7 +81,7 @@ class FindInProjectTask {
     private final VirtualFile myDirectory;
     private final ProjectFileIndex myProjectFileIndex;
     private final FileIndex myFileIndex;
-    private final Condition<VirtualFile> myFileMask;
+    private final Predicate<VirtualFile> myFileMask;
     private final ProgressIndicator myProgress;
     @Nullable
     private final Module myModule;
@@ -106,13 +104,13 @@ class FindInProjectTask {
         myPsiManager = PsiManager.getInstance(project);
 
         final String moduleName = findModel.getModuleName();
-        myModule = moduleName == null ? null : ReadAction.compute(() -> ModuleManager.getInstance(project).findModuleByName(moduleName));
+        myModule = moduleName == null ? null : AccessRule.read(() -> ModuleManager.getInstance(project).findModuleByName(moduleName));
         myProjectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
         myFileIndex = myModule == null ? myProjectFileIndex : ModuleRootManager.getInstance(myModule).getFileIndex();
 
-        Condition<CharSequence> patternCondition = FindInProjectUtil.createFileMaskCondition(findModel.getFileFilter());
+        Predicate<CharSequence> patternCondition = FindInProjectUtil.createFileMaskCondition(findModel.getFileFilter());
 
-        myFileMask = file -> file != null && patternCondition.value(file.getNameSequence());
+        myFileMask = file -> file != null && patternCondition.test(file.getNameSequence());
 
         final ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
         myProgress = progress != null ? progress : new EmptyProgressIndicator();
@@ -128,7 +126,7 @@ class FindInProjectTask {
         try {
             myProgress.setIndeterminate(true);
             myProgress.setTextValue(FindLocalize.progressTextScanningIndexedFiles());
-            Set<VirtualFile> filesForFastWordSearch = ReadAction.compute(this::getFilesForFastWordSearch);
+            Set<VirtualFile> filesForFastWordSearch = AccessRule.read(this::getFilesForFastWordSearch);
             myProgress.setIndeterminate(false);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Searching for " + myFindModel.getStringToFind() + " in " + filesForFastWordSearch.size() + " indexed files");
@@ -195,7 +193,7 @@ class FindInProjectTask {
         AtomicInteger occurrenceCount = new AtomicInteger();
         AtomicInteger processedFileCount = new AtomicInteger();
         Map<VirtualFile, Set<UsageInfo>> usagesBeingProcessed = new ConcurrentHashMap<>();
-        Processor<VirtualFile> processor = virtualFile -> {
+        Predicate<VirtualFile> processor = virtualFile -> {
             if (!virtualFile.isValid()) {
                 return true;
             }
@@ -226,7 +224,7 @@ class FindInProjectTask {
             ));
             myProgress.setText2Value(FindLocalize.findSearchingForStringInFileOccurrencesProgress(occurrenceCount));
 
-            Pair.NonNull<PsiFile, VirtualFile> pair = ReadAction.compute(() -> findFile(virtualFile));
+            Pair.NonNull<PsiFile, VirtualFile> pair = AccessRule.read(() -> findFile(virtualFile));
             if (pair == null) {
                 return true;
             }
@@ -278,7 +276,11 @@ class FindInProjectTask {
                             Application.get().getName()
                         );
                         UsageLimitUtil.Result ret =
-                            UsageLimitUtil.showTooManyUsagesWarning(myProject, message.get(), processPresentation.getUsageViewPresentation());
+                            UsageLimitUtil.showTooManyUsagesWarning(
+                                myProject,
+                                message.get(),
+                                processPresentation.getUsageViewPresentation()
+                            );
                         if (ret == UsageLimitUtil.Result.ABORT) {
                             myProgress.cancel();
                         }
@@ -314,7 +316,7 @@ class FindInProjectTask {
             public boolean processFile(@Nonnull final VirtualFile virtualFile) {
                 Application.get().runReadAction(() -> {
                     ProgressManager.checkCanceled();
-                    if (virtualFile.isDirectory() || !virtualFile.isValid() || !myFileMask.value(virtualFile) || globalCustomScope != null && !globalCustomScope.contains(
+                    if (virtualFile.isDirectory() || !virtualFile.isValid() || !myFileMask.test(virtualFile) || globalCustomScope != null && !globalCustomScope.contains(
                         virtualFile)) {
                         return;
                     }
@@ -373,7 +375,7 @@ class FindInProjectTask {
         else {
             boolean success = myFileIndex.iterateContent(iterator);
             if (success && globalCustomScope != null && globalCustomScope.isSearchInLibraries()) {
-                final VirtualFile[] librarySources = ReadAction.compute(() -> {
+                final VirtualFile[] librarySources = AccessRule.read(() -> {
                     OrderEnumerator enumerator =
                         myModule == null ? OrderEnumerator.orderEntries(myProject) : OrderEnumerator.orderEntries(myModule);
                     return enumerator.withoutModuleSourceEntries().withoutDepModules().getSourceRoots();
@@ -408,7 +410,7 @@ class FindInProjectTask {
     private Set<VirtualFile> getFilesForFastWordSearch() {
         final Set<VirtualFile> resultFiles = new CompactVirtualFileSet();
         for (VirtualFile file : myFilesToScanInitially) {
-            if (myFileMask.value(file)) {
+            if (myFileMask.test(file)) {
                 resultFiles.add(file);
             }
         }
@@ -416,7 +418,7 @@ class FindInProjectTask {
         for (FindInProjectSearchEngine.FindInProjectSearcher searcher : mySearchers) {
             Collection<VirtualFile> virtualFiles = searcher.searchForOccurrences();
             for (VirtualFile file : virtualFiles) {
-                if (myFileMask.value(file)) {
+                if (myFileMask.test(file)) {
                     resultFiles.add(file);
                 }
             }

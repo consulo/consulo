@@ -2,6 +2,8 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.internal.ApplicationEx;
@@ -31,6 +33,7 @@ import consulo.language.editor.action.JoinRawLinesHandlerDelegate;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
@@ -54,7 +57,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
     }
 
     @Override
-    public void doExecute(@Nonnull final Editor editor, @Nullable Caret caret, final DataContext dataContext) {
+    public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
         assert caret != null;
 
         if (editor.isViewer() || !EditorModificationUtil.requestWriting(editor)) {
@@ -65,13 +68,13 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
             myOriginalHandler.execute(editor, caret, dataContext);
             return;
         }
-        final DocumentEx doc = (DocumentEx)editor.getDocument();
-        final Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(Project.KEY);
+        DocumentEx doc = (DocumentEx)editor.getDocument();
+        Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(Project.KEY);
         if (project == null) {
             return;
         }
 
-        final PsiDocumentManager docManager = PsiDocumentManager.getInstance(project);
+        PsiDocumentManager docManager = PsiDocumentManager.getInstance(project);
         PsiFile psiFile = docManager.getPsiFile(doc);
 
         if (psiFile == null) {
@@ -116,22 +119,17 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
     }
 
     private static class JoinLineProcessor {
-        private final
         @Nonnull
-        DocumentEx myDoc;
-        private final
+        private final DocumentEx myDoc;
         @Nonnull
-        PsiFile myFile;
+        private final PsiFile myFile;
         private int myLine;
-        private final
         @Nonnull
-        PsiDocumentManager myManager;
-        private final
+        private final PsiDocumentManager myManager;
         @Nonnull
-        CodeStyleManager myStyleManager;
-        private final
+        private final CodeStyleManager myStyleManager;
         @Nonnull
-        ProgressIndicator myIndicator;
+        private final ProgressIndicator myIndicator;
         int myCaretRestoreOffset = CANNOT_JOIN;
 
         JoinLineProcessor(@Nonnull DocumentEx doc, @Nonnull PsiFile file, int line, @Nonnull ProgressIndicator indicator) {
@@ -149,17 +147,18 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
             positionCaret(editor, caret);
         }
 
+        @RequiredWriteAction
         private void doProcess(int lineCount) {
             List<RangeMarker> markers = new ArrayList<>();
             try {
-                myIndicator.setText2("Converting end-of-line comments");
+                myIndicator.setText2Value(LocalizeValue.localizeTODO("Converting end-of-line comments"));
                 convertEndComments(lineCount);
-                myIndicator.setText2("Removing line-breaks");
+                myIndicator.setText2Value(LocalizeValue.localizeTODO("Removing line-breaks"));
                 int newCount = processRawJoiners(lineCount);
                 DocumentUtil.executeInBulk(myDoc, newCount > 100, () -> removeLineBreaks(newCount, markers));
-                myIndicator.setText2("Postprocessing");
+                myIndicator.setText2Value(LocalizeValue.localizeTODO("Postprocessing"));
                 List<RangeMarker> unprocessed = processNonRawJoiners(markers);
-                myIndicator.setText2("Adjusting white-space");
+                myIndicator.setText2Value(LocalizeValue.localizeTODO("Adjusting white-space"));
                 adjustWhiteSpace(unprocessed);
             }
             finally {
@@ -167,6 +166,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
             }
         }
 
+        @RequiredWriteAction
         private void convertEndComments(int lineCount) {
             List<PsiComment> endComments = new ArrayList<>();
             CharSequence text = myDoc.getCharsSequence();
@@ -180,8 +180,8 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
                     PsiComment comment = getCommentElement(myFile.findElementAt(lastNonSpaceOffset - 1));
                     if (comment != null) {
                         int nextStart = CharArrayUtil.shiftForward(text, myDoc.getLineStartOffset(line + 1), " \t\n");
-                        if (nextStart < text.length() && myDoc.getLineNumber(nextStart) <= myLine + lineCount && getCommentElement(myFile.findElementAt(
-                            nextStart)) == null) {
+                        if (nextStart < text.length() && myDoc.getLineNumber(nextStart) <= myLine + lineCount
+                            && getCommentElement(myFile.findElementAt(nextStart)) == null) {
                             endComments.add(comment);
                         }
                     }
@@ -224,8 +224,8 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
                 if (end < finalOffset && start > 0 && text.charAt(start - 1) != '\n') {
                     // Skip raw joiners if either of first or last lines is empty
                     for (JoinLinesHandlerDelegate delegate : list) {
-                        if (delegate instanceof JoinRawLinesHandlerDelegate) {
-                            rawJoiner = (JoinRawLinesHandlerDelegate)delegate;
+                        if (delegate instanceof JoinRawLinesHandlerDelegate rj) {
+                            rawJoiner = rj;
                             rc = rawJoiner.tryJoinRawLines(myDoc, myFile, start, end);
                             if (rc != CANNOT_JOIN) {
                                 myCaretRestoreOffset = checkOffset(rc, delegate, myDoc);
@@ -365,6 +365,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
             myManager.commitDocument(myDoc);
         }
 
+        @RequiredReadAction
         private int[] getSpacesToAdd(List<RangeMarker> markers) {
             int size = markers.size();
             int[] spacesToAdd = new int[size];
@@ -434,15 +435,14 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
         }
     }
 
+    @RequiredWriteAction
     private static boolean tryConvertEndOfLineComment(PsiElement commentElement) {
-        Commenter commenter = Commenter.forLanguage(commentElement.getLanguage());
-        if (commenter instanceof CodeDocumentationAwareCommenter) {
-            CodeDocumentationAwareCommenter docCommenter = (CodeDocumentationAwareCommenter)commenter;
-            String lineCommentPrefix = commenter.getLineCommentPrefix();
-            String blockCommentPrefix = commenter.getBlockCommentPrefix();
-            String blockCommentSuffix = commenter.getBlockCommentSuffix();
-            if (commentElement.getNode()
-                .getElementType() == docCommenter.getLineCommentTokenType() && blockCommentPrefix != null && blockCommentSuffix != null && lineCommentPrefix != null) {
+        if (Commenter.forLanguage(commentElement.getLanguage()) instanceof CodeDocumentationAwareCommenter docCommenter) {
+            String lineCommentPrefix = docCommenter.getLineCommentPrefix();
+            String blockCommentPrefix = docCommenter.getBlockCommentPrefix();
+            String blockCommentSuffix = docCommenter.getBlockCommentSuffix();
+            if (commentElement.getNode().getElementType() == docCommenter.getLineCommentTokenType()
+                && blockCommentPrefix != null && blockCommentSuffix != null && lineCommentPrefix != null) {
                 String commentText = StringUtil.trimStart(commentElement.getText(), lineCommentPrefix);
                 String suffix = docCommenter.getBlockCommentSuffix();
                 if (suffix != null && suffix.length() > 1) {
@@ -464,7 +464,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
         return false;
     }
 
-    private static PsiComment getCommentElement(@Nullable final PsiElement element) {
+    private static PsiComment getCommentElement(@Nullable PsiElement element) {
         return PsiTreeUtil.getParentOfType(element, PsiComment.class, false);
     }
 }

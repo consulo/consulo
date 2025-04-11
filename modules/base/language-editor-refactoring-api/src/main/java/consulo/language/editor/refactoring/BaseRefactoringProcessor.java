@@ -2,11 +2,10 @@
 
 package consulo.language.editor.refactoring;
 
+import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.ReadAction;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
@@ -53,6 +52,7 @@ import org.jetbrains.annotations.TestOnly;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class BaseRefactoringProcessor implements Runnable {
@@ -176,7 +176,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
         Runnable findUsagesRunnable = () -> {
             try {
-                refUsages.set(ReadAction.compute(this::findUsages));
+                refUsages.set(AccessRule.read(this::findUsages));
             }
             catch (UnknownReferenceTypeException e) {
                 refErrorLanguage.set(e.getElementLanguage());
@@ -271,7 +271,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         PsiElementUsageTarget[] targets = PsiElementUsageTargetFactory.getInstance().create(elements);
         Supplier<UsageSearcher> factory = () -> new UsageInfoSearcherAdapter() {
             @Override
-            public void generate(@Nonnull Processor<Usage> processor) {
+            public void generate(@Nonnull Predicate<Usage> processor) {
                 myProject.getApplication().runReadAction(() -> {
                     for (int i = 0; i < elements.length; i++) {
                         elements[i] = targets[i].getElement();
@@ -522,7 +522,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
             Map<RefactoringHelper, Object> preparedData = new LinkedHashMap<>();
             Runnable prepareHelpersRunnable = () -> {
                 for (RefactoringHelper helper : RefactoringHelper.EP_NAME.getExtensionList()) {
-                    Object operation = ReadAction.compute(() -> helper.prepareOperation(writableUsageInfos));
+                    Object operation = AccessRule.read(() -> helper.prepareOperation(writableUsageInfos));
                     preparedData.put(helper, operation);
                 }
             };

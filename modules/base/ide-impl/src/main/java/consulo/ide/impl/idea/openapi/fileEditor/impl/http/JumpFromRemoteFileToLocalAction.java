@@ -15,24 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
-import consulo.application.CommonBundle;
-import consulo.application.AllIcons;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.ide.ui.FileAppearanceService;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FilenameIndex;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.project.Project;
-import consulo.ide.ui.FileAppearanceService;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileState;
-import consulo.language.psi.search.FilenameIndex;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -47,25 +49,27 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
     private final Project myProject;
 
     public JumpFromRemoteFileToLocalAction(HttpVirtualFile file, Project project) {
-        super("Find Local File", "", AllIcons.General.AutoscrollToSource);
+        super(LocalizeValue.localizeTODO("Find Local File"), LocalizeValue.empty(), PlatformIconGroup.generalAutoscrolltosource());
         myFile = file;
         myProject = project;
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
-        final RemoteFileState state = myFile.getFileInfo().getState();
+        RemoteFileState state = myFile.getFileInfo().getState();
         e.getPresentation().setEnabled(state == RemoteFileState.DOWNLOADED);
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
-        final String url = myFile.getUrl();
-        final String fileName = myFile.getName();
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        String url = myFile.getUrl();
+        String fileName = myFile.getName();
         Collection<VirtualFile> files = findLocalFiles(myProject, url, fileName);
 
         if (files.isEmpty()) {
-            Messages.showErrorDialog(myProject, "Cannot find local file for '" + url + "'", CommonBundle.getErrorTitle());
+            Messages.showErrorDialog(myProject, "Cannot find local file for '" + url + "'", CommonLocalize.titleError().get());
             return;
         }
 
@@ -73,30 +77,35 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
             navigateToFile(myProject, ContainerUtil.getFirstItem(files, null));
         }
         else {
-            final JList list = new JBList(VfsUtilCore.toVirtualFileArray(files));
-            list.setCellRenderer(new ColoredListCellRenderer() {
+            JList<VirtualFile> list = new JBList<>(VfsUtilCore.toVirtualFileArray(files));
+            list.setCellRenderer(new ColoredListCellRenderer<>() {
                 @Override
-                protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                    FileAppearanceService.getInstance().getRenderForVirtualFile((VirtualFile)value).accept(this);
+                protected void customizeCellRenderer(
+                    @Nonnull JList<? extends VirtualFile> list,
+                    VirtualFile value,
+                    int index,
+                    boolean selected,
+                    boolean hasFocus
+                ) {
+                    FileAppearanceService.getInstance().getRenderForVirtualFile(value).accept(this);
                 }
             });
             new PopupChooserBuilder(list)
                 .setTitle("Select Target File")
                 .setMovable(true)
-                .setItemChoosenCallback(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (Object value : list.getSelectedValues()) {
-                            navigateToFile(myProject, (VirtualFile)value);
-                        }
+                .setItemChoosenCallback(() -> {
+                    for (Object value : list.getSelectedValues()) {
+                        navigateToFile(myProject, (VirtualFile)value);
                     }
-                }).createPopup().showUnderneathOf(e.getInputEvent().getComponent());
+                })
+                .createPopup()
+                .showUnderneathOf(e.getInputEvent().getComponent());
         }
     }
 
     public static Collection<VirtualFile> findLocalFiles(Project project, String url, String fileName) {
         for (LocalFileFinder finder : LocalFileFinder.EP_NAME.getExtensions()) {
-            final VirtualFile file = finder.findLocalFile(url, project);
+            VirtualFile file = finder.findLocalFile(url, project);
             if (file != null) {
                 return Collections.singletonList(file);
             }

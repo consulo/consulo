@@ -1,17 +1,15 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Processor;
 import consulo.application.util.matcher.FixingLayoutMatcher;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.navigation.GotoFileContributor;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -24,16 +22,20 @@ import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FList;
 import consulo.util.collection.JBIterable;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -56,26 +58,28 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
     }
 
     @Override
+    @RequiredReadAction
     public boolean filterElementsWithWeights(
         @Nonnull ChooseByNameBase base,
         @Nonnull FindSymbolParameters parameters,
         @Nonnull ProgressIndicator indicator,
-        @Nonnull Processor<FoundItemDescriptor<?>> consumer
+        @Nonnull Predicate<FoundItemDescriptor<?>> consumer
     ) {
         return ProgressManager.getInstance().computePrioritized(() -> doFilterElements(base, parameters, indicator, consumer));
     }
 
+    @RequiredReadAction
     private boolean doFilterElements(
         @Nonnull ChooseByNameBase base,
         @Nonnull FindSymbolParameters parameters,
         @Nonnull ProgressIndicator indicator,
-        @Nonnull Processor<FoundItemDescriptor<?>> consumer
+        @Nonnull Predicate<FoundItemDescriptor<?>> consumer
     ) {
         long start = System.currentTimeMillis();
         try {
             String pattern = parameters.getCompletePattern();
             PsiFileSystemItem absolute = getFileByAbsolutePath(pattern);
-            if (absolute != null && !consumer.process(new FoundItemDescriptor<>(absolute, EXACT_MATCH_DEGREE))) {
+            if (absolute != null && !consumer.test(new FoundItemDescriptor<>(absolute, EXACT_MATCH_DEGREE))) {
                 return true;
             }
 
@@ -96,10 +100,11 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         }
     }
 
+    @RequiredReadAction
     private boolean processItemsForPattern(
         @Nonnull ChooseByNameBase base,
         @Nonnull FindSymbolParameters parameters,
-        @Nonnull Processor<FoundItemDescriptor<?>> consumer,
+        @Nonnull Predicate<FoundItemDescriptor<?>> consumer,
         @Nonnull ProgressIndicator indicator
     ) {
         String sanitized = getSanitizedPattern(parameters.getCompletePattern(), myModel);
@@ -107,7 +112,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         NameGrouper grouper = new NameGrouper(sanitized.substring(qualifierEnd), indicator);
         processNames(FindSymbolParameters.simple(myProject, true), grouper::processName);
 
-        Ref<Boolean> hasSuggestions = Ref.create(false);
+        SimpleReference<Boolean> hasSuggestions = SimpleReference.create(false);
         DirectoryPathMatcher dirMatcher = DirectoryPathMatcher.root(myModel, sanitized.substring(0, qualifierEnd));
         while (dirMatcher != null) {
             int index = grouper.index;
@@ -130,7 +135,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
      * Invoke contributors directly, as multi-threading isn't of much value in Goto File,
      * and filling {@link ContributorsBasedGotoByModel#myContributorToItsSymbolsMap} is expensive for the default contributor.
      */
-    private void processNames(@Nonnull FindSymbolParameters parameters, @Nonnull Processor<? super String> nameProcessor) {
+    private void processNames(@Nonnull FindSymbolParameters parameters, @Nonnull Predicate<? super String> nameProcessor) {
         List<GotoFileContributor> contributors =
             DumbService.getDumbAwareExtensions(myProject, myProject.getApplication().getExtensionPoint(GotoFileContributor.class));
         for (GotoFileContributor contributor : contributors) {
@@ -195,7 +200,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         }
         if (matching.size() > 1) {
             Comparator<FoundItemDescriptor<PsiFileSystemItem>> comparator =
-                Comparator.comparing((FoundItemDescriptor<PsiFileSystemItem> res) -> res.getWeight()).reversed();
+                Comparator.comparing((Function<FoundItemDescriptor<PsiFileSystemItem>,Integer>)FoundItemDescriptor::getWeight).reversed();
             Collections.sort(matching, comparator);
         }
         return matching;
@@ -236,6 +241,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         return JBIterable.from(sortedNames).flatMap(nameGroup -> getItemsForNames(indicator, adjusted, nameGroup));
     }
 
+    @RequiredReadAction
     private Iterable<FoundItemDescriptor<PsiFileSystemItem>> getItemsForNames(
         @Nonnull ProgressIndicator indicator,
         FindSymbolParameters parameters,
@@ -260,9 +266,9 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         }
 
         if (group.size() > 1) {
-            Collections.sort(group, Comparator.<PsiFileSystemItem, Integer>comparing(nesting::get).
-                thenComparing(getPathProximityComparator()).
-                thenComparing(myModel::getFullName));
+            Collections.sort(group, Comparator.<PsiFileSystemItem, Integer>comparing(nesting::get)
+                .thenComparing(getPathProximityComparator())
+                .thenComparing(myModel::getFullName));
         }
         return ContainerUtil.map(group, item -> new FoundItemDescriptor<>(item, matchDegrees.get(item)));
     }
@@ -277,7 +283,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         for (int i = namePattern.length(); i > 0; i--) {
             char c = namePattern.charAt(i - 1);
             if (Character.isLetterOrDigit(c)) {
-                namePos = StringUtil.lastIndexOfIgnoreCase(candidateName, c, namePos - 1);
+                namePos = consulo.ide.impl.idea.openapi.util.text.StringUtil.lastIndexOfIgnoreCase(candidateName, c, namePos - 1);
                 if (namePos < 0) {
                     return i;
                 }
@@ -360,10 +366,11 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
             return false;
         }
 
+        @RequiredReadAction
         boolean processFiles(
             @Nonnull FindSymbolParameters parameters,
-            @Nonnull Processor<FoundItemDescriptor<?>> processor,
-            @Nonnull Ref<Boolean> hasSuggestions,
+            @Nonnull Predicate<FoundItemDescriptor<?>> processor,
+            @Nonnull SimpleReference<Boolean> hasSuggestions,
             @Nonnull DirectoryPathMatcher dirMatcher
         ) {
             MinusculeMatcher qualifierMatcher = getQualifiedNameMatcher(parameters.getLocalPatternName());
@@ -390,9 +397,9 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
                     );
 
                 matchedFiles = moveDirectoriesToEnd(matchedFiles);
-                Processor<FoundItemDescriptor<PsiFileSystemItem>> trackingProcessor = res -> {
+                Predicate<FoundItemDescriptor<PsiFileSystemItem>> trackingProcessor = res -> {
                     hasSuggestions.set(true);
-                    return processor.process(res);
+                    return processor.test(res);
                 };
                 if (!ContainerUtil.process(matchedFiles, trackingProcessor)) {
                     return false;
@@ -439,7 +446,8 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         sorted.sort(comparator);
 
         List result = new ArrayList<>();
-        ContainerUtil.groupAndRuns(sorted, (n1, n2) -> comparator.compare(n1, n2) == 0, ts -> result.add(ts));
+        consulo.ide.impl.idea.util.containers.ContainerUtil
+            .groupAndRuns(sorted, (n1, n2) -> comparator.compare(n1, n2) == 0, result::add);
         return result;
     }
 }

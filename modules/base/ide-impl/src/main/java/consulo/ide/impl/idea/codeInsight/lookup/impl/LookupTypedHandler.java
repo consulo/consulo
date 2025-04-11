@@ -31,6 +31,7 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -39,8 +40,9 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
     private static final Logger LOG = Logger.getInstance(LookupTypedHandler.class);
 
     @Override
+    @RequiredUIAccess
     public void execute(@Nonnull Editor originalEditor, char charTyped, @Nonnull DataContext dataContext) {
-        final Project project = dataContext.getData(Project.KEY);
+        Project project = dataContext.getData(Project.KEY);
         PsiFile file = project == null ? null : PsiUtilBase.getPsiFileInEditor(originalEditor, project);
 
         if (file == null) {
@@ -73,14 +75,9 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
         }
     }
 
-    private static boolean beforeCharTyped(
-        final char charTyped,
-        Project project,
-        final Editor originalEditor,
-        final Editor editor,
-        PsiFile file
-    ) {
-        final LookupEx lookup = LookupManager.getActiveLookup(originalEditor);
+    @RequiredUIAccess
+    private static boolean beforeCharTyped(char charTyped, Project project, Editor originalEditor, Editor editor, PsiFile file) {
+        LookupEx lookup = LookupManager.getActiveLookup(originalEditor);
         if (lookup == null) {
             return false;
         }
@@ -89,7 +86,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
             return false;
         }
 
-        final CharFilter.Result result = getLookupAction(charTyped, lookup);
+        CharFilter.Result result = getLookupAction(charTyped, lookup);
         if (lookup.isLookupDisposed()) {
             return false;
         }
@@ -106,7 +103,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
             }
             lookup.appendPrefix(charTyped);
             if (lookup.isStartCompletionWhenNothingMatches() && lookup.getItems().isEmpty()) {
-                final CompletionProgressIndicator completion = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
+                CompletionProgressIndicator completion = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
                 if (completion != null) {
                     completion.scheduleRestart();
                 }
@@ -121,7 +118,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
                 modificationStamp
             );
 
-            final CompletionProgressIndicator completion = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
+            CompletionProgressIndicator completion = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
             if (completion != null) {
                 completion.prefixUpdated();
             }
@@ -148,7 +145,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
 
     private static boolean completeTillTypedCharOccurrence(char charTyped, LookupEx lookup, LookupElement item) {
         PrefixMatcher matcher = lookup.itemMatcher(item);
-        final String oldPrefix = matcher.getPrefix() + lookup.getAdditionalPrefix();
+        String oldPrefix = matcher.getPrefix() + lookup.getAdditionalPrefix();
         PrefixMatcher expanded = matcher.cloneWithPrefix(oldPrefix + charTyped);
         if (expanded.prefixMatches(item)) {
             for (String s : item.getAllLookupStrings()) {
@@ -159,7 +156,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
                         if (i < 0) {
                             break;
                         }
-                        final String newPrefix = s.substring(0, i + 1);
+                        String newPrefix = s.substring(0, i + 1);
                         if (expanded.prefixMatches(newPrefix)) {
                             lookup.replacePrefix(oldPrefix, newPrefix);
                             return true;
@@ -171,12 +168,9 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
         return false;
     }
 
-    static CharFilter.Result getLookupAction(final char charTyped, final LookupEx lookup) {
+    static CharFilter.Result getLookupAction(char charTyped, LookupEx lookup) {
         CharFilter.Result filtersDecision = getFilterDecision(charTyped, lookup);
-        if (filtersDecision != null) {
-            return filtersDecision;
-        }
-        return CharFilter.Result.HIDE_LOOKUP;
+        return filtersDecision != null ? filtersDecision : CharFilter.Result.HIDE_LOOKUP;
     }
 
     @Nullable

@@ -20,21 +20,19 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.action.TypeDeclarationProvider;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -56,7 +54,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
     @RequiredUIAccess
     @Override
-    public void update(final AnActionEvent event) {
+    public void update(AnActionEvent event) {
         if (!TypeDeclarationProvider.EP_NAME.hasAnyExtensions()) {
             event.getPresentation().setVisible(false);
         }
@@ -67,7 +65,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
         int offset = editor.getCaretModel().getOffset();
@@ -81,7 +79,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
         else {
             editor.showPopupInBestPositionFor(PopupNavigationUtil.getPsiElementPopup(
                 symbolTypes,
-                CodeInsightBundle.message("choose.type.popup.title")
+                CodeInsightLocalize.chooseTypePopupTitle().get()
             ));
         }
     }
@@ -104,7 +102,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
     @Nullable
     @RequiredReadAction
     public static PsiElement findSymbolType(Editor editor, int offset) {
-        final PsiElement[] psiElements = findSymbolTypes(editor, offset);
+        PsiElement[] psiElements = findSymbolTypes(editor, offset);
         if (psiElements != null && psiElements.length > 0) {
             return psiElements[0];
         }
@@ -114,7 +112,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
     @Nullable
     @RequiredReadAction
     public static PsiElement[] findSymbolTypes(Editor editor, int offset) {
-        Set<String> flags = ContainerUtil.newHashSet(
+        Set<String> flags = Set.of(
             TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED,
             TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED,
             TargetElementUtilExtender.LOOKUP_ITEM_ACCEPTED
@@ -122,17 +120,17 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
         PsiElement targetElement = TargetElementUtil.findTargetElement(editor, flags, offset);
 
         if (targetElement != null) {
-            final PsiElement[] symbolType = getSymbolTypeDeclarations(targetElement, editor, offset);
+            PsiElement[] symbolType = getSymbolTypeDeclarations(targetElement, editor, offset);
             return symbolType == null ? PsiElement.EMPTY_ARRAY : symbolType;
         }
 
-        final PsiReference psiReference = TargetElementUtil.findReference(editor, offset);
-        if (psiReference instanceof PsiPolyVariantReference) {
-            final ResolveResult[] results = ((PsiPolyVariantReference)psiReference).multiResolve(false);
-            Set<PsiElement> types = new HashSet<PsiElement>();
+        PsiReference psiReference = TargetElementUtil.findReference(editor, offset);
+        if (psiReference instanceof PsiPolyVariantReference polyVariantReference) {
+            ResolveResult[] results = polyVariantReference.multiResolve(false);
+            Set<PsiElement> types = new HashSet<>();
 
             for (ResolveResult r : results) {
-                final PsiElement[] declarations = getSymbolTypeDeclarations(r.getElement(), editor, offset);
+                PsiElement[] declarations = getSymbolTypeDeclarations(r.getElement(), editor, offset);
                 if (declarations != null) {
                     for (PsiElement declaration : declarations) {
                         assert declaration != null;
@@ -151,7 +149,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
     @Nullable
     @RequiredReadAction
-    private static PsiElement[] getSymbolTypeDeclarations(final PsiElement targetElement, Editor editor, int offset) {
+    private static PsiElement[] getSymbolTypeDeclarations(PsiElement targetElement, Editor editor, int offset) {
         for (TypeDeclarationProvider provider : TypeDeclarationProvider.EP_NAME.getExtensionList()) {
             PsiElement[] result = provider.getSymbolTypeDeclarations(targetElement, editor, offset);
             if (result != null) {

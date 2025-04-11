@@ -17,15 +17,15 @@
 package consulo.ide.impl.psi.search.scope.packageSet;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.lexer.Lexer;
-import consulo.component.extension.Extensions;
 import consulo.ide.impl.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import consulo.ide.impl.psi.search.scope.packageSet.lexer.ScopesLexer;
 import consulo.content.scope.ComplementPackageSet;
 import consulo.content.scope.PackageSet;
 import consulo.content.scope.PackageSetFactory;
 import consulo.content.scope.ParsingException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 
@@ -53,7 +53,7 @@ public class PackageSetFactoryImpl extends PackageSetFactory {
         public PackageSet parse() throws ParsingException {
             PackageSet set = parseUnion();
             if (myLexer.getTokenType() != null) {
-                error(AnalysisScopeBundle.message("error.packageset.token.expectations", getTokenText()));
+                error(AnalysisScopeLocalize.errorPackagesetTokenExpectations(getTokenText()));
             }
             return set;
         }
@@ -102,27 +102,27 @@ public class PackageSetFactoryImpl extends PackageSetFactory {
 
         private PackageSet parsePattern() throws ParsingException {
             String scope = null;
-            for (PackageSetParserExtension extension : Extensions.getExtensions(PackageSetParserExtension.EP_NAME)) {
+            for (PackageSetParserExtension extension : PackageSetParserExtension.EP_NAME.getExtensions()) {
                 scope = extension.parseScope(myLexer);
                 if (scope != null) {
                     break;
                 }
             }
             if (scope == null) {
-                error("Unknown scope type");
+                error(LocalizeValue.localizeTODO("Unknown scope type"));
             }
             String modulePattern = parseModulePattern();
 
             if (myLexer.getTokenType() == ScopeTokenTypes.COLON) {
                 myLexer.advance();
             }
-            for (PackageSetParserExtension extension : Extensions.getExtensions(PackageSetParserExtension.EP_NAME)) {
-                final PackageSet packageSet = extension.parsePackageSet(myLexer, scope, modulePattern);
+            for (PackageSetParserExtension extension : PackageSetParserExtension.EP_NAME.getExtensions()) {
+                PackageSet packageSet = extension.parsePackageSet(myLexer, scope, modulePattern);
                 if (packageSet != null) {
                     return packageSet;
                 }
             }
-            error("Unknown scope type");
+            error(LocalizeValue.localizeTODO("Unknown scope type"));
             return null; //not reachable
         }
 
@@ -138,19 +138,18 @@ public class PackageSetFactoryImpl extends PackageSetFactory {
                 return null;
             }
             myLexer.advance();
-            StringBuffer pattern = new StringBuffer();
+            StringBuilder pattern = new StringBuilder();
             while (true) {
-                if (myLexer.getTokenType() == ScopeTokenTypes.RBRACKET ||
-                    myLexer.getTokenType() == null) {
+                if (myLexer.getTokenType() == ScopeTokenTypes.RBRACKET || myLexer.getTokenType() == null) {
                     myLexer.advance();
                     break;
                 }
                 else if (myLexer.getTokenType() == ScopeTokenTypes.ASTERISK) {
                     pattern.append("*");
                 }
-                else if (myLexer.getTokenType() == ScopeTokenTypes.IDENTIFIER ||
-                    myLexer.getTokenType() == ScopeTokenTypes.WHITE_SPACE ||
-                    myLexer.getTokenType() == ScopeTokenTypes.INTEGER_LITERAL) {
+                else if (myLexer.getTokenType() == ScopeTokenTypes.IDENTIFIER
+                    || myLexer.getTokenType() == ScopeTokenTypes.WHITE_SPACE
+                    || myLexer.getTokenType() == ScopeTokenTypes.INTEGER_LITERAL) {
                     pattern.append(getTokenText());
                 }
                 else if (myLexer.getTokenType() == ScopeTokenTypes.DOT) {
@@ -169,13 +168,13 @@ public class PackageSetFactoryImpl extends PackageSetFactory {
                     pattern.append(":");
                 }
                 else {
-                    error(AnalysisScopeBundle.message("error.packageset.token.expectations", getTokenText()));
+                    error(AnalysisScopeLocalize.errorPackagesetTokenExpectations(getTokenText()));
                     break;
                 }
                 myLexer.advance();
             }
             if (pattern.length() == 0) {
-                error(AnalysisScopeBundle.message("error.packageset.pattern.expectations"));
+                error(AnalysisScopeLocalize.errorPackagesetPatternExpectations());
             }
             return pattern.toString();
         }
@@ -186,16 +185,17 @@ public class PackageSetFactoryImpl extends PackageSetFactory {
 
             PackageSet result = parseUnion();
             if (myLexer.getTokenType() != ScopeTokenTypes.RPARENTH) {
-                error(AnalysisScopeBundle.message("error.packageset.rparen.expected"));
+                error(AnalysisScopeLocalize.errorPackagesetRparenExpected());
             }
             myLexer.advance();
 
             return result;
         }
 
-        private void error(String message) throws ParsingException {
+        private void error(LocalizeValue message) throws ParsingException {
             throw new ParsingException(
-                AnalysisScopeBundle.message("error.packageset.position.parsing.error", message, (myLexer.getTokenStart() + 1)));
+                AnalysisScopeLocalize.errorPackagesetPositionParsingError(message, (myLexer.getTokenStart() + 1)).get()
+            );
         }
     }
 }
