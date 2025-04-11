@@ -747,6 +747,10 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     private void checkIfDisposed() {
+        if (myProject.getDisposeState().get() == ThreeState.UNSURE) {
+            throw new ProcessCanceledException();
+        }
+
         if (myUpdater.isStopped()) {
             throw new ProcessCanceledException();
         }
