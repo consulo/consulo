@@ -21,7 +21,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.find.FindUsagesOptions;
 import consulo.language.psi.PsiElement;
 import consulo.usage.Usage;
-import consulo.application.util.function.Processor;
+
+import java.util.function.Predicate;
 
 /**
  * @author gregsh
@@ -30,5 +31,5 @@ import consulo.application.util.function.Processor;
 public abstract class CustomUsageSearcher {
     public static final ExtensionPointName<CustomUsageSearcher> EP_NAME = ExtensionPointName.create(CustomUsageSearcher.class);
 
-    public abstract void processElementUsages(PsiElement element, Processor<Usage> processor, FindUsagesOptions options);
+    public abstract void processElementUsages(PsiElement element, Predicate<Usage> processor, FindUsagesOptions options);
 }

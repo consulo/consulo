@@ -15,11 +15,11 @@
  */
 package consulo.usage;
 
-import consulo.application.util.function.Processor;
+import java.util.function.Predicate;
 
 /**
  * @author max
  */
 public interface UsageSearcher {
-  void generate(Processor<Usage> processor);
+    void generate(Predicate<Usage> processor);
 }

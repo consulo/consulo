@@ -22,7 +22,7 @@ package consulo.application.dumb;
  * @see DumbAware
  */
 public interface PossiblyDumbAware {
-  default boolean isDumbAware() {
-    return this instanceof DumbAware;
-  }
+    default boolean isDumbAware() {
+        return this instanceof DumbAware;
+    }
 }

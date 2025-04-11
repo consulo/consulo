@@ -36,25 +36,25 @@ public interface PatchEP {
     String getName();
 
     /**
-     * @param path          - before path, if exist, otherwise after path
-     * @param commitContext
+     * @param path          before path, if exist, otherwise after path
+     * @param commitContext context of the commit
      */
     @Nullable
-    CharSequence provideContent(@Nonnull final String path, CommitContext commitContext);
+    CharSequence provideContent(@Nonnull String path, CommitContext commitContext);
 
     /**
-     * @param path          - before path, if exist, otherwise after path
-     * @param commitContext
+     * @param path          before path, if exist, otherwise after path
+     * @param commitContext context of the commit
      */
-    void consumeContent(@Nonnull final String path, @Nonnull final CharSequence content, CommitContext commitContext);
+    void consumeContent(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext);
 
     /**
-     * @param path          - before path, if exist, otherwise after path
-     * @param commitContext
+     * @param path          before path, if exist, otherwise after path
+     * @param commitContext context of the commit
      */
     void consumeContentBeforePatchApplied(
-        @Nonnull final String path,
-        @Nonnull final CharSequence content,
+        @Nonnull String path,
+        @Nonnull CharSequence content,
         CommitContext commitContext
     );
 }

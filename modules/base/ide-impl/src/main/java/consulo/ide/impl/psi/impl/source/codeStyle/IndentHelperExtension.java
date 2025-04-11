@@ -37,5 +37,5 @@ public interface IndentHelperExtension {
     boolean isAvailable(@Nonnull PsiFile file);
 
     @RequiredReadAction
-    int getIndentInner(@Nonnull PsiFile file, @Nonnull final ASTNode element, boolean includeNonSpace, int recursionLevel);
+    int getIndentInner(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace, int recursionLevel);
 }

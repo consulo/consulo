@@ -249,7 +249,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             @Override
             @RequiredUIAccess
             protected PsiElement[] getSelectedElements() {
-                final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
+                AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
                 return viewPane == null ? PsiElement.EMPTY_ARRAY : viewPane.getSelectedPSIElements();
             }
         };
@@ -312,7 +312,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     public List<AnAction> getActions(boolean originalProvider) {
         List<AnAction> result = new ArrayList<>();
 
-        DefaultActionGroup views = new DefaultActionGroup("Change View", true);
+        DefaultActionGroup views = new DefaultActionGroup(LocalizeValue.localizeTODO("Change View"), true);
 
         ChangeViewAction lastHeader = null;
         for (int i = 0; i < myContentManager.getContentCount(); i++) {
@@ -373,7 +373,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     @Override
     @RequiredUIAccess
-    public synchronized void addProjectPane(@Nonnull final ProjectViewPane pane) {
+    public synchronized void addProjectPane(@Nonnull ProjectViewPane pane) {
         myUninitializedPanes.add((AbstractProjectViewPane)pane);
         SelectInTarget selectInTarget = pane.createSelectInTarget();
         if (selectInTarget != null) {
@@ -412,7 +412,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         for (AbstractProjectViewPane pane : myUninitializedPanes) {
             doAddPane(pane);
         }
-        final Content[] contents = getContentManager().getContents();
+        Content[] contents = getContentManager().getContents();
         for (int i = 1; i < contents.length; i++) {
             Content content = contents[i];
             Content prev = contents[i - 1];
@@ -428,8 +428,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
         // try to find saved selected view...
         for (Content content : contents) {
-            final String id = content.getUserData(ID_KEY);
-            final String subId = content.getUserData(SUB_ID_KEY);
+            String id = content.getUserData(ID_KEY);
+            String subId = content.getUserData(SUB_ID_KEY);
             if (id != null && id.equals(mySavedPaneId) && StringUtil.equals(subId, mySavedPaneSubId)) {
                 selectID = id;
                 selectSubID = subId;
@@ -454,10 +454,10 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
 
     @RequiredUIAccess
-    private void doAddPane(@Nonnull final AbstractProjectViewPane newPane) {
+    private void doAddPane(@Nonnull AbstractProjectViewPane newPane) {
         myProject.getApplication().assertIsDispatchThread();
         int index;
-        final ContentManager manager = getContentManager();
+        ContentManager manager = getContentManager();
         for (index = 0; index < manager.getContentCount(); index++) {
             Content content = manager.getContent(index);
             String id = content.getUserData(ID_KEY);
@@ -474,20 +474,20 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
                 break;
             }
         }
-        final String id = newPane.getId();
+        String id = newPane.getId();
         myId2Pane.put(id, newPane);
         String[] subIds = newPane.getSubIds();
         subIds = subIds.length == 0 ? new String[]{null} : subIds;
         boolean first = true;
         for (String subId : subIds) {
-            final LocalizeValue title = subId != null ? newPane.getPresentableSubIdName(subId) : newPane.getTitle();
-            final Content content = getContentManager().getFactory().createContent(getComponent(), title.get(), false);
+            LocalizeValue title = subId != null ? newPane.getPresentableSubIdName(subId) : newPane.getTitle();
+            Content content = getContentManager().getFactory().createContent(getComponent(), title.get(), false);
             content.setTabName(title.get());
             content.putUserData(ID_KEY, id);
             content.putUserData(SUB_ID_KEY, subId);
             content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
             content.setPreferredFocusedComponent(() -> {
-                final AbstractProjectViewPane current = getCurrentProjectViewPane();
+                AbstractProjectViewPane current = getCurrentProjectViewPane();
                 return current != null ? current.getComponentToFocus() : null;
             });
             content.setBusyObject(this);
@@ -507,7 +507,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             if (currentPane != newPane) {
                 currentPane.saveExpandedPaths();
             }
-            final PsiElement[] elements = currentPane.getSelectedPSIElements();
+            PsiElement[] elements = currentPane.getSelectedPSIElements();
             if (elements.length > 0) {
                 selectedPsiElement = elements[0];
             }
@@ -529,7 +529,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
         newPane.restoreExpandedPaths();
         if (selectedPsiElement != null && newSubId != null) {
-            final VirtualFile virtualFile = PsiUtilCore.getVirtualFile(selectedPsiElement);
+            VirtualFile virtualFile = PsiUtilCore.getVirtualFile(selectedPsiElement);
             ProjectViewSelectInTarget target = virtualFile == null ? null : getProjectViewSelectInTarget(newPane);
             if (target != null && target.isSubIdSelectable(newSubId, new SelectInContext() {
                 @Override
@@ -940,7 +940,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         views.remove(getCurrentProjectViewPane());
         Collections.sort(views, PANE_WEIGHT_COMPARATOR);
 
-        JList list = new JBList(ArrayUtil.toObjectArray(views));
+        JList<AbstractProjectViewPane> list = new JBList(ArrayUtil.toObjectArray(views));
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -958,7 +958,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             if (list.getSelectedIndex() < 0) {
                 return;
             }
-            AbstractProjectViewPane pane = (AbstractProjectViewPane)list.getSelectedValue();
+            AbstractProjectViewPane pane = list.getSelectedValue();
             changeView(pane.getId());
         };
 
@@ -1233,7 +1233,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
                 return null;
             }
             Object userObject = parent.getUserObject();
-            if (userObject instanceof LibraryGroupNode) {
+            if (userObject instanceof LibraryGroupNode libraryGroupNode) {
                 userObject = node.getUserObject();
                 if (userObject instanceof NamedLibraryElementNode namedLibraryElementNode) {
                     NamedLibraryElement element = namedLibraryElementNode.getValue();
@@ -2136,7 +2136,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     private class FoldersAlwaysOnTopAction extends ToggleAction implements DumbAware {
         private FoldersAlwaysOnTopAction() {
-            super("Folders Always on Top");
+            super(LocalizeValue.localizeTODO("Folders Always on Top"));
         }
 
         @Override

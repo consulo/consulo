@@ -16,19 +16,22 @@
 
 package consulo.ide.impl.idea.codeInsight.navigation;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.psi.search.ContainerProvider;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.navigation.ItemPresentation;
-import consulo.navigation.NavigationItem;
-import consulo.codeEditor.Editor;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
-import consulo.language.editor.TargetElementUtil;
+import consulo.language.psi.search.ContainerProvider;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,13 +47,14 @@ public class GotoImplementationHandler extends GotoTargetHandler {
 
     @Override
     @Nullable
+    @RequiredReadAction
     public GotoData getSourceAndTargetElements(@Nonnull Editor editor, PsiFile file) {
         int offset = editor.getCaretModel().getOffset();
         PsiElement source = TargetElementUtil.findTargetElement(editor, ImplementationSearcher.getFlags(), offset);
         if (source == null) {
             return null;
         }
-        final PsiReference reference = TargetElementUtil.findReference(editor, offset);
+        PsiReference reference = TargetElementUtil.findReference(editor, offset);
         PsiElement[] targets = new ImplementationSearcher.FirstImplementationsSearcher() {
             @Override
             protected boolean accept(PsiElement element) {
@@ -68,6 +72,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
         GotoData gotoData = new GotoData(source, targets, Collections.emptyList());
         gotoData.listUpdaterTask = new ImplementationsUpdaterTask(gotoData, editor, offset, reference) {
             @Override
+            @RequiredUIAccess
             public void onFinished() {
                 super.onFinished();
                 PsiElement oneElement = getTheOnlyOneElement();
@@ -81,7 +86,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
 
     private static PsiElement getContainer(PsiElement refElement) {
         for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensionList()) {
-            final PsiElement container = provider.getContainer(refElement);
+            PsiElement container = provider.getContainer(refElement);
             if (container != null) {
                 return container;
             }
@@ -116,7 +121,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
     @Nonnull
     @Override
     protected String getNotFoundMessage(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-        return CodeInsightBundle.message("goto.implementation.notFound");
+        return CodeInsightLocalize.gotoImplementationNotfound().get();
     }
 
     private class ImplementationsUpdaterTask extends ListBackgroundUpdaterTask {
@@ -126,7 +131,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
         private final Map<Object, PsiElementListCellRenderer> renderers = new HashMap<>();
         private final PsiReference myReference;
 
-        ImplementationsUpdaterTask(@Nonnull GotoData gotoData, @Nonnull Editor editor, int offset, final PsiReference reference) {
+        ImplementationsUpdaterTask(@Nonnull GotoData gotoData, @Nonnull Editor editor, int offset, PsiReference reference) {
             super(gotoData.source.getProject(), ImplementationSearcher.SEARCHING_FOR_IMPLEMENTATIONS);
             myEditor = editor;
             myOffset = offset;
@@ -135,7 +140,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
         }
 
         @Override
-        public void run(@Nonnull final ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
             super.run(indicator);
             for (PsiElement element : myGotoData.targets) {
                 if (!updateComponent(element, createComparator(renderers, myGotoData))) {
@@ -159,6 +164,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
         }
 
         @Override
+        @RequiredReadAction
         public String getCaption(int size) {
             return getChooserTitle(myGotoData.source, ((PsiNamedElement)myGotoData.source).getName(), size, isFinished());
         }

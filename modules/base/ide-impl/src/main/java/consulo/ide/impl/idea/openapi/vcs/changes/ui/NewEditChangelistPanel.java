@@ -27,14 +27,15 @@ import consulo.language.editor.ui.SoftWrapsEditorCustomization;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.spellchecker.editor.SpellcheckingEditorCustomizationProvider;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.EditChangelistSupport;
 import consulo.versionControlSystem.change.LocalChangeList;
-
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -52,14 +53,15 @@ public abstract class NewEditChangelistPanel extends JPanel {
     private Consumer<LocalChangeList> myConsumer;
     protected final Project myProject;
 
-    public NewEditChangelistPanel(final Project project) {
+    @RequiredUIAccess
+    public NewEditChangelistPanel(Project project) {
         super(new GridBagLayout());
         myProject = project;
-        final GridBagConstraints gb = new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+        GridBagConstraints gb = new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
             JBUI.insets(1), 0, 0
         );
 
-        final JLabel nameLabel = new JLabel(VcsBundle.message("edit.changelist.name"));
+        JLabel nameLabel = new JLabel(VcsLocalize.editChangelistName().get());
         add(nameLabel, gb);
         ++gb.gridx;
         gb.fill = GridBagConstraints.HORIZONTAL;
@@ -67,7 +69,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
         ComponentWithTextFieldWrapper componentWithTextField = createComponentWithTextField(project);
         myNameTextField = componentWithTextField.getEditorTextField();
         myNameTextField.setOneLineMode(true);
-        myNameTextField.setText("New changelist");
+        myNameTextField.setText(LocalizeValue.localizeTODO("New changelist").get());
         myNameTextField.selectAll();
         add(componentWithTextField.myComponent, gb);
         nameLabel.setLabelFor(myNameTextField);
@@ -77,7 +79,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
 
         gb.weightx = 0;
         gb.fill = GridBagConstraints.NONE;
-        final JLabel commentLabel = new JLabel(VcsBundle.message("edit.changelist.description"));
+        JLabel commentLabel = new JLabel(VcsLocalize.editChangelistDescription().get());
         add(commentLabel, gb);
         ++gb.gridx;
         gb.weightx = 1;
@@ -93,9 +95,9 @@ public abstract class NewEditChangelistPanel extends JPanel {
         gb.gridwidth = 2;
         gb.weighty = 0;
         myAdditionalControlsPanel = new JPanel();
-        final BoxLayout layout = new BoxLayout(myAdditionalControlsPanel, BoxLayout.X_AXIS);
+        BoxLayout layout = new BoxLayout(myAdditionalControlsPanel, BoxLayout.X_AXIS);
         myAdditionalControlsPanel.setLayout(layout);
-        myMakeActiveCheckBox = new JCheckBox(VcsBundle.message("new.changelist.make.active.checkbox"));
+        myMakeActiveCheckBox = new JCheckBox(VcsLocalize.newChangelistMakeActiveCheckbox().get());
         myAdditionalControlsPanel.add(myMakeActiveCheckBox);
         add(myAdditionalControlsPanel, gb);
     }
@@ -104,7 +106,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
         return myMakeActiveCheckBox;
     }
 
-    public void init(final LocalChangeList initial) {
+    public void init(LocalChangeList initial) {
         myMakeActiveCheckBox.setSelected(VcsConfiguration.getInstance(myProject).MAKE_NEW_CHANGELIST_ACTIVE);
         for (EditChangelistSupport support : EditChangelistSupport.EP_NAME.getExtensionList(myProject)) {
             support.installSearch(myNameTextField, myDescriptionTextArea);
@@ -119,14 +121,14 @@ public abstract class NewEditChangelistPanel extends JPanel {
         nameChangedImpl(myProject, initial);
     }
 
-    protected void nameChangedImpl(final Project project, final LocalChangeList initial) {
+    protected void nameChangedImpl(Project project, LocalChangeList initial) {
         String name = getChangeListName();
         if (name == null || name.trim().length() == 0) {
-            nameChanged("Cannot create new changelist with empty name.");
+            nameChanged(LocalizeValue.localizeTODO("Cannot create new changelist with empty name.").get());
         }
         else if ((initial == null || !name.equals(initial.getName()))
             && ChangeListManager.getInstance(project).findChangeList(name) != null) {
-            nameChanged(VcsBundle.message("new.changelist.duplicate.name.error"));
+            nameChanged(VcsLocalize.newChangelistDuplicateNameError().get());
         }
         else {
             nameChanged(null);
@@ -139,6 +141,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
         }
     }
 
+    @RequiredUIAccess
     public void setChangeListName(String s) {
         myNameTextField.setText(s);
     }
@@ -147,6 +150,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
         return myNameTextField.getText();
     }
 
+    @RequiredUIAccess
     public void setDescription(String s) {
         myDescriptionTextArea.setText(s);
     }
@@ -159,6 +163,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
         return this;
     }
 
+    @Override
     public void requestFocus() {
         IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myNameTextField);
     }
@@ -170,7 +175,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
     protected abstract void nameChanged(String errorMessage);
 
     protected ComponentWithTextFieldWrapper createComponentWithTextField(Project project) {
-        final EditorTextField editorTextField = createEditorField(project, 1);
+        EditorTextField editorTextField = createEditorField(project, 1);
         return new ComponentWithTextFieldWrapper(editorTextField) {
             @Nonnull
             @Override
@@ -180,11 +185,11 @@ public abstract class NewEditChangelistPanel extends JPanel {
         };
     }
 
-    private static EditorTextField createEditorField(final Project project, final int defaultLines) {
-        final EditorTextFieldProvider service = ServiceManager.getService(project, EditorTextFieldProvider.class);
-        final EditorTextField editorField;
+    private static EditorTextField createEditorField(Project project, int defaultLines) {
+        EditorTextFieldProvider service = ServiceManager.getService(project, EditorTextFieldProvider.class);
+        EditorTextField editorField;
 
-        final Set<Consumer<EditorEx>> editorFeatures = new HashSet<>();
+        Set<Consumer<EditorEx>> editorFeatures = new HashSet<>();
         SpellcheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(true).ifPresent(editorFeatures::add);
 
         if (defaultLines == 1) {
@@ -195,7 +200,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
             editorFeatures.add(SoftWrapsEditorCustomization.ENABLED);
         }
         editorField = service.getEditorField(PlainTextLanguage.INSTANCE, project, editorFeatures);
-        final int height = editorField.getFontMetrics(editorField.getFont()).getHeight();
+        int height = editorField.getFontMetrics(editorField.getFont()).getHeight();
         editorField.getComponent().setMinimumSize(new Dimension(100, (int)(height * 1.3)));
         return editorField;
     }

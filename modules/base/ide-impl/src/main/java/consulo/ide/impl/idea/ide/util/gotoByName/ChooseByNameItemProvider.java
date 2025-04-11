@@ -16,18 +16,20 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface ChooseByNameItemProvider {
-  @Nonnull
-  List<String> filterNames(@Nonnull ChooseByNameBase base, @Nonnull String[] names, @Nonnull String pattern);
+    @Nonnull
+    List<String> filterNames(@Nonnull ChooseByNameBase base, @Nonnull String[] names, @Nonnull String pattern);
 
-  boolean filterElements(@Nonnull ChooseByNameBase base,
-                         @Nonnull String pattern,
-                         boolean everywhere,
-                         @Nonnull ProgressIndicator cancelled,
-                         @Nonnull Processor<Object> consumer);
+    boolean filterElements(
+        @Nonnull ChooseByNameBase base,
+        @Nonnull String pattern,
+        boolean everywhere,
+        @Nonnull ProgressIndicator cancelled,
+        @Nonnull Predicate<Object> consumer
+    );
 }

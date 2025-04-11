@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.preview;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -37,6 +38,7 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -103,7 +105,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
         }, this);
     }
 
-    private void registerListeners(final Editor editor) {
+    private void registerListeners(Editor editor) {
         if (editor.isOneLineMode()) {
             return;
         }
@@ -155,6 +157,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
     }
 
     @Nonnull
+    @RequiredReadAction
     private static Collection<PsiElement> getPsiElementsAt(Point point, Editor editor) {
         if (editor.isDisposed()) {
             return Collections.emptySet();
@@ -165,15 +168,15 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
             return Collections.emptySet();
         }
 
-        final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-        final Document document = editor.getDocument();
+        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+        Document document = editor.getDocument();
         PsiFile psiFile = documentManager.getPsiFile(document);
         if (psiFile == null || psiFile instanceof PsiCompiledElement || !psiFile.isValid()) {
             return Collections.emptySet();
         }
 
-        final Set<PsiElement> elements = Collections.newSetFromMap(ContainerUtil.createWeakMap());
-        final int offset = editor.logicalPositionToOffset(editor.xyToLogicalPosition(point));
+        Set<PsiElement> elements = Collections.newSetFromMap(ContainerUtil.createWeakMap());
+        int offset = editor.logicalPositionToOffset(editor.xyToLogicalPosition(point));
         if (documentManager.isCommitted(document)) {
             ContainerUtil.addIfNotNull(elements, InjectedLanguageUtil.findElementAtNoCommit(psiFile, offset));
         }
@@ -191,6 +194,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseMoved(@Nonnull EditorMouseEvent event) {
         Editor editor = event.getEditor();
         if (editor.isOneLineMode()) {
@@ -243,6 +247,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
         }
 
         @Override
+        @RequiredReadAction
         public void run() {
             Collection<PsiElement> elements = getPsiElementsAt(point, editor);
             if (elements.equals(myElements)) {

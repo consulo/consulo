@@ -16,20 +16,18 @@
 
 package consulo.ide.impl.idea.codeInsight.navigation;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.progress.ProgressManager;
+import consulo.codeEditor.Editor;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.JBListWithHintProvider;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.progress.ProgressManager;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.application.util.function.Computable;
-import consulo.codeEditor.Editor;
-import consulo.ide.navigation.GotoTargetRendererProvider;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.ide.navigation.GotoTargetRendererProvider;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
@@ -38,21 +36,22 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.util.EditSourceUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
 import consulo.usage.UsageView;
-import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -60,6 +59,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Supplier;
 
 public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     private static final Logger LOG = Logger.getInstance(GotoTargetHandler.class);
@@ -72,6 +72,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     }
 
     @Override
+    @RequiredUIAccess
     public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed(getFeatureUsedKey());
 
@@ -82,24 +83,25 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
             }
         }
         catch (IndexNotReadyException e) {
-            DumbService.getInstance(project).showDumbModeNotification("Navigation is not available here during index update");
+            DumbService.getInstance(project)
+                .showDumbModeNotification(LocalizeValue.localizeTODO("Navigation is not available here during index update"));
         }
     }
 
-    @NonNls
     protected abstract String getFeatureUsedKey();
 
     @Nullable
     protected abstract GotoData getSourceAndTargetElements(Editor editor, PsiFile file);
 
+    @RequiredUIAccess
     private void show(
-        @Nonnull final Project project,
+        @Nonnull Project project,
         @Nonnull Editor editor,
         @Nonnull PsiFile file,
-        @Nonnull final GotoData gotoData
+        @Nonnull GotoData gotoData
     ) {
-        final PsiElement[] targets = gotoData.targets;
-        final List<AdditionalAction> additionalActions = gotoData.additionalActions;
+        PsiElement[] targets = gotoData.targets;
+        List<AdditionalAction> additionalActions = gotoData.additionalActions;
 
         if (targets.length == 0 && additionalActions.isEmpty()) {
             HintManager.getInstance().showErrorHint(editor, getNotFoundMessage(project, editor, file));
@@ -116,8 +118,8 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
             gotoData.renderers.put(eachTarget, createRenderer(gotoData, eachTarget));
         }
 
-        final String name = ((PsiNamedElement)gotoData.source).getName();
-        final String title = getChooserTitle(gotoData.source, name, targets.length, finished);
+        String name = ((PsiNamedElement)gotoData.source).getName();
+        String title = getChooserTitle(gotoData.source, name, targets.length, finished);
 
         if (shouldSortTargets()) {
             Arrays.sort(targets, createComparator(gotoData.renderers, gotoData));
@@ -127,10 +129,10 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         Collections.addAll(allElements, targets);
         allElements.addAll(additionalActions);
 
-        final JBListWithHintProvider<Object> list = new JBListWithHintProvider<Object>(new CollectionListModel<>(allElements)) {
+        JBListWithHintProvider<Object> list = new JBListWithHintProvider<Object>(new CollectionListModel<>(allElements)) {
             @Override
-            protected PsiElement getPsiElementForHint(final Object selectedValue) {
-                return selectedValue instanceof PsiElement ? (PsiElement)selectedValue : null;
+            protected PsiElement getPsiElementForHint(Object selectedValue) {
+                return selectedValue instanceof PsiElement element ? element : null;
             }
         };
 
@@ -142,10 +144,10 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
                 if (value == null) {
                     return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 }
-                if (value instanceof AdditionalAction) {
+                if (value instanceof AdditionalAction additionalAction) {
                     return myActionElementRenderer.getListCellRendererComponent(
                         list,
-                        (AdditionalAction)value,
+                        additionalAction,
                         index,
                         isSelected,
                         cellHasFocus
@@ -156,19 +158,19 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
             }
         });
 
-        final Runnable runnable = () -> {
+        Runnable runnable = () -> {
             int[] ids = list.getSelectedIndices();
             if (ids == null || ids.length == 0) {
                 return;
             }
             Object[] selectedElements = list.getSelectedValues();
             for (Object element : selectedElements) {
-                if (element instanceof AdditionalAction) {
-                    ((AdditionalAction)element).execute();
+                if (element instanceof AdditionalAction additionalAction) {
+                    additionalAction.execute();
                 }
                 else {
                     Navigatable nav =
-                        element instanceof Navigatable ? (Navigatable)element : EditSourceUtil.getDescriptor((PsiElement)element);
+                        element instanceof Navigatable navigatable ? navigatable : EditSourceUtil.getDescriptor((PsiElement)element);
                     try {
                         if (nav != null && nav.canNavigate()) {
                             navigateToElement(nav);
@@ -181,28 +183,28 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
             }
         };
 
-        final PopupChooserBuilder<?> builder = new PopupChooserBuilder(list);
+        PopupChooserBuilder<?> builder = new PopupChooserBuilder(list);
         builder.setFilteringEnabled(o -> {
-            if (o instanceof AdditionalAction) {
-                return ((AdditionalAction)o).getText();
+            if (o instanceof AdditionalAction additionalAction) {
+                return additionalAction.getText();
             }
             return getRenderer(o, gotoData.renderers, gotoData).getElementText((PsiElement)o);
         });
 
-        final Ref<UsageView> usageView = new Ref<>();
-        final JBPopup popup = builder.
-            setTitle(title).
-            setItemChoosenCallback(runnable).
-            setMovable(true).
-            setCancelCallback(() -> {
+        SimpleReference<UsageView> usageView = new SimpleReference<>();
+        JBPopup popup = builder
+            .setTitle(title)
+            .setItemChoosenCallback(runnable)
+            .setMovable(true)
+            .setCancelCallback(() -> {
                 HintUpdateSupply.hideHint(list);
-                final ListBackgroundUpdaterTask task = gotoData.listUpdaterTask;
+                ListBackgroundUpdaterTask task = gotoData.listUpdaterTask;
                 if (task != null) {
                     task.cancelTask();
                 }
                 return true;
-            }).
-            setCouldPin(popup1 -> {
+            })
+            .setCouldPin(popup1 -> {
                 usageView.set(FindUtil.showInUsageView(
                     gotoData.source,
                     gotoData.targets,
@@ -211,9 +213,9 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
                 ));
                 popup1.cancel();
                 return false;
-            }).
-            setAdText(getAdText(gotoData.source, targets.length)).
-            createPopup();
+            })
+            .setAdText(getAdText(gotoData.source, targets.length))
+            .createPopup();
 
         builder.getScrollPane().setBorder(null);
         builder.getScrollPane().setViewportBorder(null);
@@ -244,10 +246,10 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
 
     @Nonnull
     protected Comparator<PsiElement> createComparator(
-        final Map<Object, PsiElementListCellRenderer> targetsWithRenderers,
-        final GotoData gotoData
+        Map<Object, PsiElementListCellRenderer> targetsWithRenderers,
+        GotoData gotoData
     ) {
-        return new Comparator<PsiElement>() {
+        return new Comparator<>() {
             @Override
             public int compare(PsiElement o1, PsiElement o2) {
                 return getComparingObject(o1).compareTo(getComparingObject(o2));
@@ -325,6 +327,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         protected final Set<String> myNames;
         public Map<Object, PsiElementListCellRenderer> renderers = new HashMap<>();
 
+        @RequiredReadAction
         public GotoData(@Nonnull PsiElement source, @Nonnull PsiElement[] targets, @Nonnull List<AdditionalAction> additionalActions) {
             this.source = source;
             this.targets = targets;
@@ -332,8 +335,8 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
 
             myNames = new HashSet<>();
             for (PsiElement target : targets) {
-                if (target instanceof PsiNamedElement) {
-                    myNames.add(((PsiNamedElement)target).getName());
+                if (target instanceof PsiNamedElement namedElement) {
+                    myNames.add(namedElement.getName());
                     if (myNames.size() > 1) {
                         break;
                     }
@@ -348,15 +351,14 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
             return hasDifferentNames;
         }
 
-        public boolean addTarget(final PsiElement element) {
+        public boolean addTarget(PsiElement element) {
             if (ArrayUtil.find(targets, element) > -1) {
                 return false;
             }
             targets = ArrayUtil.append(targets, element);
             renderers.put(element, createRenderer(this, element));
-            if (!hasDifferentNames && element instanceof PsiNamedElement) {
-                final String name =
-                    ApplicationManager.getApplication().runReadAction((Computable<String>)() -> ((PsiNamedElement)element).getName());
+            if (!hasDifferentNames && element instanceof PsiNamedElement namedElement) {
+                String name = Application.get().runReadAction((Supplier<String>)() -> namedElement.getName());
                 myNames.add(name);
                 hasDifferentNames = myNames.size() > 1;
             }
@@ -370,9 +372,10 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
 
     private static class DefaultPsiElementListCellRenderer extends PsiElementListCellRenderer {
         @Override
-        public String getElementText(final PsiElement element) {
-            if (element instanceof PsiNamedElement) {
-                String name = ((PsiNamedElement)element).getName();
+        @RequiredReadAction
+        public String getElementText(PsiElement element) {
+            if (element instanceof PsiNamedElement namedElement) {
+                String name = namedElement.getName();
                 if (name != null) {
                     return name;
                 }
@@ -381,9 +384,9 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         }
 
         @Override
-        protected String getContainerText(final PsiElement element, final String name) {
-            if (element instanceof NavigationItem) {
-                final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+        protected String getContainerText(PsiElement element, String name) {
+            if (element instanceof NavigationItem navigationItem) {
+                ItemPresentation presentation = navigationItem.getPresentation();
                 return presentation != null ? presentation.getLocationString() : null;
             }
 
