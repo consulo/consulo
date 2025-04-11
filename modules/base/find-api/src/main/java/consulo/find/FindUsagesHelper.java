@@ -15,9 +15,9 @@
  */
 package consulo.find;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.Processor;
+import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ProcessCanceledException;
 import consulo.document.util.TextRange;
@@ -31,50 +31,46 @@ import consulo.language.psi.search.PsiSearchHelper;
 import consulo.logging.Logger;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfoFactory;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class FindUsagesHelper {
     private static final Logger LOG = Logger.getInstance(FindUsagesHelper.class);
 
+    @RequiredReadAction
     public static boolean processUsagesInText(
-        @Nonnull final PsiElement element,
+        @Nonnull PsiElement element,
         @Nonnull Collection<String> stringToSearch,
         @Nonnull GlobalSearchScope searchScope,
-        @Nonnull Processor<UsageInfo> processor
+        @Nonnull Predicate<UsageInfo> processor
     ) {
-        final TextRange elementTextRange = ApplicationManager.getApplication().runReadAction((Supplier<TextRange>)() -> {
-            if (!element.isValid() || element instanceof PsiCompiledElement) {
+        TextRange elementTextRange = Application.get().runReadAction(
+            (Supplier<TextRange>)() -> !element.isValid() || element instanceof PsiCompiledElement ? null : element.getTextRange()
+        );
+        @RequiredReadAction
+        UsageInfoFactory factory = (usage, startOffset, endOffset) -> {
+            if (elementTextRange != null && usage.getContainingFile() == element.getContainingFile() && elementTextRange.contains(
+                startOffset) && elementTextRange.contains(endOffset)) {
                 return null;
             }
-            return element.getTextRange();
-        });
-        UsageInfoFactory factory = new UsageInfoFactory() {
-            @Override
-            public UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset) {
-                if (elementTextRange != null && usage.getContainingFile() == element.getContainingFile() && elementTextRange.contains(
-                    startOffset) && elementTextRange.contains(endOffset)) {
-                    return null;
-                }
 
-                PsiReference someReference = usage.findReferenceAt(startOffset);
-                if (someReference != null) {
-                    PsiElement refElement = someReference.getElement();
-                    for (PsiReference ref : PsiReferenceService.getService()
-                        .getReferences(refElement, new PsiReferenceService.Hints(element, null))) {
-                        if (element.getManager().areElementsEquivalent(ref.resolve(), element)) {
-                            TextRange range = ref.getRangeInElement()
-                                .shiftRight(refElement.getTextRange().getStartOffset() - usage.getTextRange().getStartOffset());
-                            return new UsageInfo(usage, range.getStartOffset(), range.getEndOffset(), true);
-                        }
+            PsiReference someReference = usage.findReferenceAt(startOffset);
+            if (someReference != null) {
+                PsiElement refElement = someReference.getElement();
+                for (PsiReference ref : PsiReferenceService.getService()
+                    .getReferences(refElement, new PsiReferenceService.Hints(element, null))) {
+                    if (element.getManager().areElementsEquivalent(ref.resolve(), element)) {
+                        TextRange range = ref.getRangeInElement()
+                            .shiftRight(refElement.getTextRange().getStartOffset() - usage.getTextRange().getStartOffset());
+                        return new UsageInfo(usage, range.getStartOffset(), range.getEndOffset(), true);
                     }
                 }
-
-                return new UsageInfo(usage, startOffset, endOffset, true);
             }
+
+            return new UsageInfo(usage, startOffset, endOffset, true);
         };
         for (String s : stringToSearch) {
             if (!processTextOccurrences(element, s, searchScope, processor, factory)) {
@@ -84,16 +80,17 @@ public class FindUsagesHelper {
         return true;
     }
 
+    @RequiredReadAction
     public static String getHelpID(PsiElement element) {
         return FindUsagesProvider.forLanguage(element.getLanguage()).getHelpId(element);
     }
 
     public static boolean processTextOccurrences(
-        @Nonnull final PsiElement element,
+        @Nonnull PsiElement element,
         @Nonnull String stringToSearch,
         @Nonnull GlobalSearchScope searchScope,
-        @Nonnull final Processor<UsageInfo> processor,
-        @Nonnull final UsageInfoFactory factory
+        @Nonnull Predicate<UsageInfo> processor,
+        @Nonnull UsageInfoFactory factory
     ) {
         ThrowableComputable<PsiSearchHelper, RuntimeException> action1 = () -> PsiSearchHelper.getInstance(element.getProject());
         PsiSearchHelper helper = AccessRule.read(action1);
@@ -102,7 +99,7 @@ public class FindUsagesHelper {
                 try {
                     ThrowableComputable<UsageInfo, RuntimeException> action = () -> factory.createUsageInfo(psiFile, startOffset, endOffset);
                     UsageInfo usageInfo = AccessRule.read(action);
-                    return usageInfo == null || processor.process(usageInfo);
+                    return usageInfo == null || processor.test(usageInfo);
                 }
                 catch (ProcessCanceledException e) {
                     throw e;

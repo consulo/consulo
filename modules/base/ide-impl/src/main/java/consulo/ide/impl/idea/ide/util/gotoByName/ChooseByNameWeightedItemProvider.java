@@ -1,10 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
+import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Predicate;
 
 public interface ChooseByNameWeightedItemProvider extends ChooseByNameItemProvider {
     /**
@@ -26,6 +27,6 @@ public interface ChooseByNameWeightedItemProvider extends ChooseByNameItemProvid
         @Nonnull String pattern,
         boolean everywhere,
         @Nonnull ProgressIndicator indicator,
-        @Nonnull Processor<FoundItemDescriptor<?>> consumer
+        @Nonnull Predicate<FoundItemDescriptor<?>> consumer
     );
 }

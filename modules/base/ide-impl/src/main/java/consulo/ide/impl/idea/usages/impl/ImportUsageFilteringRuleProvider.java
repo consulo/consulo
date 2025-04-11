@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.usages.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.project.Project;
 import consulo.usage.RuleAction;
-import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageView;
+import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.ImportFilteringRule;
 import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageFilteringRuleProvider;
@@ -42,8 +42,8 @@ import java.util.List;
 public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvider {
     @Override
     @Nonnull
-    public UsageFilteringRule[] getActiveRules(@Nonnull final Project project) {
-        final List<UsageFilteringRule> rules = new ArrayList<>();
+    public UsageFilteringRule[] getActiveRules(@Nonnull Project project) {
+        List<UsageFilteringRule> rules = new ArrayList<>();
         if (!ImportFilteringUsageViewSetting.getInstance().SHOW_IMPORTS) {
             rules.addAll(ImportFilteringRule.EP_NAME.getExtensionList());
         }
@@ -52,10 +52,10 @@ public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvi
 
     @Override
     @Nonnull
-    public AnAction[] createFilteringActions(@Nonnull final UsageView view) {
+    public AnAction[] createFilteringActions(@Nonnull UsageView view) {
         if (view.getPresentation().isCodeUsages()) {
-            final JComponent component = view.getComponent();
-            final ShowImportsAction showImportsAction = new ShowImportsAction(view);
+            JComponent component = view.getComponent();
+            ShowImportsAction showImportsAction = new ShowImportsAction(view);
             showImportsAction.registerCustomShortcutSet(
                 new CustomShortcutSet(KeyStroke.getKeyStroke(
                     KeyEvent.VK_I,
@@ -73,7 +73,7 @@ public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvi
 
     private static class ShowImportsAction extends RuleAction {
         private ShowImportsAction(UsageView view) {
-            super(view, UsageViewBundle.message("action.show.import.statements"), AllIcons.Actions.ShowImportStatements);
+            super(view, UsageLocalize.actionShowImportStatements(), PlatformIconGroup.actionsShowimportstatements());
         }
 
         @Override

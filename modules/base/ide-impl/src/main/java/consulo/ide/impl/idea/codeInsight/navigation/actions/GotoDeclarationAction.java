@@ -15,35 +15,34 @@
  */
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.impl.action.BaseCodeInsightAction;
-import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.navigation.GotoDeclarationHandler;
-import consulo.language.editor.ui.PopupNavigationUtil;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
-import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
-import consulo.language.psi.util.EditSourceUtil;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.language.editor.inject.EditorWindow;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.codeEditor.EditorPopupHelper;
-import consulo.language.editor.TargetElementUtil;
-import consulo.language.editor.TargetElementUtilExtender;
-import consulo.language.editor.ui.navigation.GotoDeclarationHandlerEx;
 import consulo.component.extension.ExtensionException;
 import consulo.component.extension.Extensions;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.TargetElementUtilExtender;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.language.editor.navigation.GotoDeclarationHandler;
+import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
+import consulo.language.editor.ui.PopupNavigationUtil;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
+import consulo.language.editor.ui.navigation.GotoDeclarationHandlerEx;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.util.EditSourceUtil;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.DumbService;
@@ -54,13 +53,13 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.JBPopup;
-
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -84,7 +83,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
 
     @RequiredUIAccess
     @Override
-    public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
         DumbService.getInstance(project).setAlternativeResolveEnabled(true);
@@ -128,39 +127,32 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         @Nullable GotoDeclarationHandler declarationHandler,
         @Nonnull PsiElement[] elements
     ) {
-        if (declarationHandler instanceof GotoDeclarationHandlerEx) {
-            return ((GotoDeclarationHandlerEx)declarationHandler).createRender(elements);
-        }
-        return null;
+        return declarationHandler instanceof GotoDeclarationHandlerEx handlerEx ? handlerEx.createRender(elements) : null;
     }
 
+    @RequiredReadAction
     public static PsiNameIdentifierOwner findElementToShowUsagesOf(@Nonnull Editor editor, int offset) {
         PsiElement elementAt =
             TargetElementUtil.findTargetElement(editor, ContainerUtil.newHashSet(TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED), offset);
-        if (elementAt instanceof PsiNameIdentifierOwner) {
-            return (PsiNameIdentifierOwner)elementAt;
-        }
-        return null;
+        return elementAt instanceof PsiNameIdentifierOwner nameIdentifierOwner ? nameIdentifierOwner : null;
     }
 
+    @RequiredUIAccess
     private static void chooseAmbiguousTarget(
-        final Editor editor,
+        Editor editor,
         int offset,
         PsiElement[] elements,
         @Nullable PsiElementListCellRenderer<PsiElement> render
     ) {
-        PsiElementProcessor<PsiElement> navigateProcessor = new PsiElementProcessor<PsiElement>() {
-            @Override
-            public boolean execute(@Nonnull final PsiElement element) {
-                gotoTargetElement(element);
-                return true;
-            }
+        PsiElementProcessor<PsiElement> navigateProcessor = element -> {
+            gotoTargetElement(element);
+            return true;
         };
         boolean found = chooseAmbiguousTarget(
             editor,
             offset,
             navigateProcessor,
-            CodeInsightBundle.message("declaration.navigation.title"),
+            CodeInsightLocalize.declarationNavigationTitle().get(),
             elements,
             render
         );
@@ -170,12 +162,13 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
 
     private static void gotoTargetElement(PsiElement element) {
-        Navigatable navigatable = element instanceof Navigatable ? (Navigatable)element : EditSourceUtil.getDescriptor(element);
+        Navigatable navigatable = element instanceof Navigatable nav ? nav : EditSourceUtil.getDescriptor(element);
         if (navigatable != null && navigatable.canNavigate()) {
             navigatable.navigate(true);
         }
     }
 
+    @RequiredReadAction
     public static boolean chooseAmbiguousTarget(
         @Nonnull Editor editor,
         int offset,
@@ -187,6 +180,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
 
     // returns true if processor is run or is going to be run after showing popup
+    @RequiredReadAction
     public static boolean chooseAmbiguousTarget(
         @Nonnull Editor editor,
         int offset,
@@ -199,10 +193,10 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
             return false;
         }
 
-        final PsiReference reference = TargetElementUtil.findReference(editor, offset);
+        PsiReference reference = TargetElementUtil.findReference(editor, offset);
 
         if (elements == null || elements.length == 0) {
-            final Collection<PsiElement> candidates = suggestCandidates(reference);
+            Collection<PsiElement> candidates = suggestCandidates(reference);
             elements = PsiUtilCore.toPsiElementArray(candidates);
         }
 
@@ -219,13 +213,13 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
                 title = titlePattern;
             }
             else {
-                final TextRange range = reference.getRangeInElement();
-                final String elementText = reference.getElement().getText();
+                TextRange range = reference.getRangeInElement();
+                String elementText = reference.getElement().getText();
                 LOG.assertTrue(
                     range.getStartOffset() >= 0 && range.getEndOffset() <= elementText.length(),
                     Arrays.toString(elements) + ";" + reference
                 );
-                final String refText = range.substring(elementText);
+                String refText = range.substring(elementText);
                 title = MessageFormat.format(titlePattern, refText);
             }
 
@@ -240,11 +234,9 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         return false;
     }
 
-    private static Collection<PsiElement> suggestCandidates(final PsiReference reference) {
-        if (reference == null) {
-            return Collections.emptyList();
-        }
-        return TargetElementUtil.getTargetCandidates(reference);
+    @RequiredReadAction
+    private static Collection<PsiElement> suggestCandidates(PsiReference reference) {
+        return reference == null ? Collections.emptyList() : TargetElementUtil.getTargetCandidates(reference);
     }
 
     @Override
@@ -253,13 +245,15 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
 
     @Nullable
+    @RequiredReadAction
     public static PsiElement findTargetElement(Project project, Editor editor, int offset) {
-        final Pair<PsiElement[], GotoDeclarationHandler> pair = findAllTargetElementsInfo(project, editor, offset);
+        Pair<PsiElement[], GotoDeclarationHandler> pair = findAllTargetElementsInfo(project, editor, offset);
         PsiElement[] targets = pair.getFirst();
         return targets.length == 1 ? targets[0] : null;
     }
 
     @Nonnull
+    @RequiredReadAction
     public static Pair<PsiElement[], GotoDeclarationHandler> findAllTargetElementsInfo(Project project, Editor editor, int offset) {
         if (TargetElementUtil.inVirtualSpace(editor, offset)) {
             return Pair.create(PsiElement.EMPTY_ARRAY, null);
@@ -270,28 +264,27 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
 
     @Nullable
+    @RequiredReadAction
     public static PsiElement[] findTargetElementsNoVS(Project project, Editor editor, int offset, boolean lookupAccepted) {
         return findTargetElementsNoVSWithHandler(project, editor, offset, lookupAccepted).getFirst();
     }
 
     @Nonnull
+    @RequiredReadAction
     public static Pair<PsiElement[], GotoDeclarationHandler> findTargetElementsNoVSWithHandler(
         Project project,
         Editor editor,
         int offset,
         boolean lookupAccepted
     ) {
-        final Document document = editor.getDocument();
+        Document document = editor.getDocument();
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
         if (file == null) {
             return Pair.empty();
         }
 
-        if (file instanceof PsiCompiledElement) {
-            PsiElement mirror = ((PsiCompiledElement)file).getMirror();
-            if (mirror instanceof PsiFile) {
-                file = (PsiFile)mirror;
-            }
+        if (file instanceof PsiCompiledElement compiledElement && compiledElement.getMirror() instanceof PsiFile mirrorFile) {
+            file = mirrorFile;
         }
 
         PsiElement elementAt = file.findElementAt(TargetElementUtil.adjustOffset(file, document, offset));
@@ -324,8 +317,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         }
 
         // if no references found in injected fragment, try outer document
-        if (editor instanceof EditorWindow) {
-            EditorWindow window = (EditorWindow)editor;
+        if (editor instanceof EditorWindow window) {
             return findTargetElementsNoVSWithHandler(
                 project,
                 window.getDelegate(),
@@ -337,14 +329,13 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         return Pair.empty();
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(final AnActionEvent event) {
-        InputEvent inputEvent = event.getInputEvent();
-        if (inputEvent instanceof MouseEvent) {
-            Component component = inputEvent.getComponent();
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        if (event.getInputEvent() instanceof MouseEvent mouseEvent) {
+            Component component = mouseEvent.getComponent();
             if (component != null) {
-                Point point = ((MouseEvent)inputEvent).getPoint();
+                Point point = mouseEvent.getPoint();
                 Component componentAt = SwingUtilities.getDeepestComponentAt(component, point.x, point.y);
                 if (componentAt instanceof EditorGutterComponentEx) {
                     event.getPresentation().setEnabled(false);

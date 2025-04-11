@@ -1,9 +1,8 @@
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameItemProvider;
@@ -11,13 +10,10 @@ import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.SimpleChooseByNameModel;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.psi.PsiManager;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.Task;
@@ -26,15 +22,18 @@ import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.impl.internal.action.ConfigureServersAction;
 import consulo.task.impl.internal.action.TaskSearchSupport;
 import consulo.task.util.TaskUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.util.lang.ref.Ref;
-
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author Evgeny Zakrevsky
@@ -44,21 +43,22 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
     public static final String ID = "tasks.goto";
 
     public GotoTaskAction() {
-        getTemplatePresentation().setText("Open Task...");
-        getTemplatePresentation().setIcon(IconUtil.getAddIcon());
+        getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Open Task..."));
+        getTemplatePresentation().setIcon(PlatformIconGroup.generalAdd());
     }
 
     @Override
+    @RequiredUIAccess
     protected void gotoActionPerformed(final AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
+        if (project != null) {
+            perform(project);
         }
-        perform(project);
     }
 
+    @RequiredUIAccess
     void perform(final Project project) {
-        final Ref<Boolean> shiftPressed = Ref.create(false);
+        final SimpleReference<Boolean> shiftPressed = SimpleReference.create(false);
 
         final ChooseByNamePopup popup = ChooseByNamePopup.createPopup(
             project,
@@ -67,7 +67,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
                 @Nonnull
                 @Override
                 public List<String> filterNames(@Nonnull ChooseByNameBase base, @Nonnull String[] names, @Nonnull String pattern) {
-                    return ContainerUtil.emptyList();
+                    return Collections.emptyList();
                 }
 
                 @Override
@@ -76,10 +76,10 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
                     @Nonnull String pattern,
                     boolean everywhere,
                     @Nonnull ProgressIndicator cancelled,
-                    @Nonnull Processor<Object> consumer
+                    @Nonnull Predicate<Object> consumer
                 ) {
                     CREATE_NEW_TASK_ACTION.setTaskName(pattern);
-                    if (!consumer.process(CREATE_NEW_TASK_ACTION)) {
+                    if (!consumer.test(CREATE_NEW_TASK_ACTION)) {
                         return false;
                     }
 
@@ -111,16 +111,18 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
 
         popup.setShowListForEmptyPattern(true);
         popup.setSearchInAnyPlace(true);
-        popup.setAdText("<html>Press SHIFT to merge with current context<br/>" +
+        popup.setAdText(LocalizeValue.localizeTODO("<html>Press SHIFT to merge with current context<br/>" +
             "Pressing " +
             KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_QUICK_JAVADOC)) +
-            " would show task description and comments</html>");
+            " would show task description and comments</html>").get());
         popup.registerAction("shiftPressed", KeyStroke.getKeyStroke("shift pressed SHIFT"), new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 shiftPressed.set(true);
             }
         });
         popup.registerAction("shiftReleased", KeyStroke.getKeyStroke("released SHIFT"), new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 shiftPressed.set(false);
             }
@@ -141,7 +143,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
         popup.setMaximumListSizeLimit(10);
         popup.setListSizeIncreasing(10);
 
-        showNavigationPopup(new GotoActionCallback<Object>() {
+        showNavigationPopup(new GotoActionCallback<>() {
             @Override
             public void elementChosen(ChooseByNamePopup popup, Object element) {
                 TaskManager taskManager = TaskManager.getManager(project);
@@ -165,13 +167,13 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
 
     private static boolean processTasks(
         List<Task> tasks,
-        Processor<Object> consumer,
+        Predicate<Object> consumer,
         ProgressIndicator cancelled,
         PsiManager psiManager
     ) {
         for (Task task : tasks) {
             cancelled.checkCanceled();
-            if (!consumer.process(new TaskPsiElement(psiManager, task))) {
+            if (!consumer.test(new TaskPsiElement(psiManager, task))) {
                 return false;
             }
         }
@@ -183,7 +185,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
         if (hint != null) {
             hint.cancel();
         }
-        ApplicationManager.getApplication().invokeLater(() -> new OpenTaskDialog(project, task).show());
+        Application.get().invokeLater(() -> new OpenTaskDialog(project, task).show());
     }
 
     private static class GotoTaskPopupModel extends SimpleChooseByNameModel {
@@ -220,6 +222,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
             return null;
         }
 
+        @Nonnull
         @Override
         public LocalizeValue getCheckBoxName() {
             return LocalizeValue.localizeTODO("Include closed tasks");
@@ -240,7 +243,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
         private String taskName;
 
         public String getActionText() {
-            return "Create New Task \'" + taskName + "\'";
+            return LocalizeValue.localizeTODO("Create New Task \'" + taskName + "\'").get();
         }
 
         public void setTaskName(final String taskName) {

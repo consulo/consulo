@@ -50,7 +50,7 @@ public interface ChooseByNameModel {
     String[] getNames(boolean checkBoxState);
 
     @Nonnull
-    Object[] getElementsByName(String name, boolean checkBoxState, final String pattern);
+    Object[] getElementsByName(String name, boolean checkBoxState, String pattern);
 
     @Nullable
     String getElementName(Object element);

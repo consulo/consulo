@@ -1,37 +1,37 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.application.AccessRule;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.NotNullLazyValue;
+import consulo.application.util.matcher.Matcher;
+import consulo.application.util.matcher.NameUtil;
+import consulo.application.util.matcher.WordPrefixMatcher;
+import consulo.application.util.registry.Registry;
+import consulo.configurable.SearchableOptionsRegistrar;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
+import consulo.ide.impl.idea.ide.ui.OptionsTopHitProvider;
 import consulo.ide.impl.idea.ide.ui.search.ActionFromOptionDescriptorProvider;
 import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
-import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrarImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
+import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
-import consulo.application.ReadAction;
-import consulo.dataContext.DataContext;
-import consulo.logging.Logger;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
-import consulo.application.util.NotNullLazyValue;
-import consulo.application.util.registry.Registry;
-import consulo.util.lang.StringUtil;
-import consulo.application.util.matcher.NameUtil;
-import consulo.application.util.matcher.WordPrefixMatcher;
-import consulo.ui.ex.action.QuickActionProvider;
 import consulo.ide.impl.idea.util.CollectConsumer;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.JBIterable;
-import consulo.application.util.matcher.Matcher;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-
+import consulo.ui.ex.action.QuickActionProvider;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.JBIterable;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import static consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel.*;
 
@@ -45,7 +45,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
 
     public GotoActionItemProvider(GotoActionModel model) {
         myModel = model;
-        myIntentions = NotNullLazyValue.createValue(() -> ReadAction.compute(() -> myModel.getAvailableIntentions()));
+        myIntentions = NotNullLazyValue.createValue(() -> AccessRule.read(myModel::getAvailableIntentions));
     }
 
     @Nonnull
@@ -56,46 +56,31 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
 
     @Override
     public boolean filterElements(
-        @Nonnull final ChooseByNameBase base,
-        @Nonnull final String pattern,
+        @Nonnull ChooseByNameBase base,
+        @Nonnull String pattern,
         boolean everywhere,
         @Nonnull ProgressIndicator cancelled,
-        @Nonnull final Processor<Object> consumer
+        @Nonnull Predicate<Object> consumer
     ) {
-        return filterElements(pattern, value -> {
-            if (!everywhere && value.value instanceof GotoActionModel.ActionWrapper && !((ActionWrapper)value.value).isAvailable()) {
-                return true;
-            }
-            return consumer.process(value);
-        });
+        return filterElements(
+            pattern,
+            value -> !everywhere && value.value instanceof ActionWrapper actionWrapper && !actionWrapper.isAvailable()
+                || consumer.test(value)
+        );
     }
 
-    public boolean filterElements(@Nonnull String pattern, @Nonnull Processor<? super MatchedValue> consumer) {
+    public boolean filterElements(@Nonnull String pattern, @Nonnull Predicate<? super MatchedValue> consumer) {
         DataContext dataContext = DataManager.getInstance().getDataContext(myModel.getContextComponent());
 
-        if (!processAbbreviations(pattern, consumer, dataContext)) {
-            return false;
-        }
-        if (!processIntentions(pattern, consumer, dataContext)) {
-            return false;
-        }
-        if (!processActions(pattern, consumer, dataContext)) {
-            return false;
-        }
-        if (Registry.is("goto.action.skip.tophits.and.options")) {
-            return true;
-        }
-        if (!processTopHits(pattern, consumer, dataContext)) {
-            return false;
-        }
-        if (!processOptions(pattern, consumer, dataContext)) {
-            return false;
+        return processAbbreviations(pattern, consumer, dataContext)
+            && processIntentions(pattern, consumer, dataContext)
+            && processActions(pattern, consumer, dataContext)
+            && (Registry.is("goto.action.skip.tophits.and.options")
+            || processTopHits(pattern, consumer, dataContext)
+            && processOptions(pattern, consumer, dataContext));
         }
 
-        return true;
-    }
-
-    private boolean processAbbreviations(@Nonnull String pattern, Processor<? super MatchedValue> consumer, DataContext context) {
+    private boolean processAbbreviations(@Nonnull String pattern, Predicate<? super MatchedValue> consumer, DataContext context) {
         List<String> actionIds = AbbreviationManager.getInstance().findActions(pattern);
         JBIterable<MatchedValue> wrappers = JBIterable.from(actionIds).filterMap(myActionManager::getAction).transform(action -> {
             ActionWrapper wrapper = wrapAnAction(action, context);
@@ -110,43 +95,42 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
         return processItems(pattern, wrappers, consumer);
     }
 
-    private boolean processTopHits(String pattern, Processor<? super MatchedValue> consumer, DataContext dataContext) {
+    private boolean processTopHits(String pattern, Predicate<? super MatchedValue> consumer, DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
-        final CollectConsumer<Object> collector = new CollectConsumer<>();
+        CollectConsumer<Object> collector = new CollectConsumer<>();
         for (SearchTopHitProvider provider : SearchTopHitProvider.EP_NAME.getExtensionList()) {
-            if (provider instanceof consulo.ide.impl.idea.ide.ui.OptionsTopHitProvider.CoveredByToggleActions) {
+            if (provider instanceof OptionsTopHitProvider.CoveredByToggleActions) {
                 continue;
             }
-            if (provider instanceof consulo.ide.impl.idea.ide.ui.OptionsTopHitProvider && !((consulo.ide.impl.idea.ide.ui.OptionsTopHitProvider)provider).isEnabled(
-                project)) {
+            if (provider instanceof OptionsTopHitProvider topHitProvider && !topHitProvider.isEnabled(project)) {
                 continue;
             }
-            if (provider instanceof consulo.ide.impl.idea.ide.ui.OptionsTopHitProvider && !StringUtil.startsWith(pattern, "#")) {
-                String prefix = "#" + ((consulo.ide.impl.idea.ide.ui.OptionsTopHitProvider)provider).getId() + " ";
+            if (provider instanceof OptionsTopHitProvider topHitProvider && !StringUtil.startsWith(pattern, "#")) {
+                String prefix = "#" + topHitProvider.getId() + " ";
                 provider.consumeTopHits(prefix + pattern, collector, project);
             }
             provider.consumeTopHits(pattern, collector, project);
         }
-        final Collection<Object> result = collector.getResult();
-        final List<Comparable> c = new ArrayList<Comparable>();
+        Collection<Object> result = collector.getResult();
+        List<Comparable> c = new ArrayList<>();
         for (Object o : result) {
-            if (o instanceof Comparable) {
-                c.add((Comparable)o);
+            if (o instanceof Comparable comparable) {
+                c.add(comparable);
             }
         }
         return processItems(pattern, JBIterable.from(c), consumer);
     }
 
-    private boolean processOptions(String pattern, Processor<? super MatchedValue> consumer, DataContext dataContext) {
+    private boolean processOptions(String pattern, Predicate<? super MatchedValue> consumer, DataContext dataContext) {
         Map<String, String> map = myModel.getConfigurablesNames();
         SearchableOptionsRegistrarImpl registrar = (SearchableOptionsRegistrarImpl)SearchableOptionsRegistrar.getInstance();
 
         List<Object> options = new ArrayList<>();
-        final Set<String> words = registrar.getProcessedWords(pattern);
+        Set<String> words = registrar.getProcessedWords(pattern);
         Set<OptionDescription> optionDescriptions = null;
-        final String actionManagerName = "ActionManager";
+        String actionManagerName = "ActionManager";
         for (String word : words) {
-            final Set<OptionDescription> descriptions = registrar.getAcceptableDescriptions(word);
+            Set<OptionDescription> descriptions = registrar.getAcceptableDescriptions(word);
             if (descriptions != null) {
                 descriptions.removeIf(description -> actionManagerName.equals(description.getPath()));
                 if (!descriptions.isEmpty()) {
@@ -178,7 +162,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
             Set<String> currentHits = new HashSet<>();
             for (Iterator<OptionDescription> iterator = optionDescriptions.iterator(); iterator.hasNext(); ) {
                 OptionDescription description = iterator.next();
-                final String hit = description.getHit();
+                String hit = description.getHit();
                 if (hit == null || !currentHits.add(hit.trim())) {
                     iterator.remove();
                 }
@@ -196,7 +180,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
         return processItems(pattern, JBIterable.from(options), consumer);
     }
 
-    private boolean processActions(String pattern, Processor<? super MatchedValue> consumer, DataContext dataContext) {
+    private boolean processActions(String pattern, Predicate<? super MatchedValue> consumer, DataContext dataContext) {
         Set<String> ids = ((ActionManagerImpl)myActionManager).getActionIds();
         JBIterable<AnAction> actions = JBIterable.from(ids).filterMap(myActionManager::getAction);
         Matcher matcher = buildMatcher(pattern);
@@ -223,7 +207,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
             : NameUtil.buildMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE);
     }
 
-    private boolean processIntentions(String pattern, Processor<? super MatchedValue> consumer, DataContext dataContext) {
+    private boolean processIntentions(String pattern, Predicate<? super MatchedValue> consumer, DataContext dataContext) {
         Matcher matcher = buildMatcher(pattern);
         Map<String, ApplyIntentionAction> intentionMap = myIntentions.getValue();
         JBIterable<ActionWrapper> intentions = JBIterable.from(intentionMap.keySet()).filterMap(intentionText -> {
@@ -244,11 +228,12 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
 
     private static final Logger LOG = Logger.getInstance(GotoActionItemProvider.class);
 
-    private static boolean processItems(String pattern, JBIterable<?> items, Processor<? super MatchedValue> consumer) {
-        List<MatchedValue> matched =
-            ContainerUtil.newArrayList(items.map(o -> o instanceof MatchedValue ? (MatchedValue)o : new MatchedValue(o, pattern)));
+    private static boolean processItems(String pattern, JBIterable<?> items, Predicate<? super MatchedValue> consumer) {
+        List<MatchedValue> matched = ContainerUtil.newArrayList(
+            items.map(o -> o instanceof MatchedValue matchedValue ? matchedValue : new MatchedValue(o, pattern))
+        );
         try {
-            Collections.sort(matched, (o1, o2) -> o1.compareWeights(o2));
+            Collections.sort(matched, MatchedValue::compareWeights);
         }
         catch (IllegalArgumentException e) {
             LOG.error("Comparison method violates its general contract with pattern '" + pattern + "'", e);

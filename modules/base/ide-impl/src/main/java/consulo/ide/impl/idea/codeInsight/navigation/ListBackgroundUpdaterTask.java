@@ -24,6 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.usage.UsageView;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
@@ -41,13 +42,13 @@ public abstract class ListBackgroundUpdaterTask extends BackgroundUpdaterTask {
      * @deprecated Use {@link #ListBackgroundUpdaterTask(Project, String, Comparator)}
      */
     @Deprecated
-    public ListBackgroundUpdaterTask(@Nullable final Project project, @Nonnull final String title) {
+    public ListBackgroundUpdaterTask(@Nullable Project project, @Nonnull String title) {
         this(project, title, null);
     }
 
     public ListBackgroundUpdaterTask(
-        @Nullable final Project project,
-        @Nonnull final String title,
+        @Nullable Project project,
+        @Nonnull String title,
         @Nullable Comparator<PsiElement> comparator
     ) {
         super(project, title, comparator);
@@ -57,7 +58,7 @@ public abstract class ListBackgroundUpdaterTask extends BackgroundUpdaterTask {
      * @deprecated please use {@link BackgroundUpdaterTask}
      */
     @Deprecated
-    public void init(@Nonnull AbstractPopup popup, @Nonnull Object component, @Nonnull Ref<UsageView> usageView) {
+    public void init(@Nonnull AbstractPopup popup, @Nonnull Object component, @Nonnull SimpleReference<UsageView> usageView) {
         myPopup = popup;
         if (component instanceof JBList) {
             init((JBPopup)myPopup, new JBListUpdater((JBList)component), usageView);

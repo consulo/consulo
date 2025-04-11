@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
@@ -8,7 +9,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ReadActionProcessor;
 import consulo.application.util.concurrent.JobLauncher;
-import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.component.ProcessCanceledException;
 import consulo.component.util.PluginExceptionUtil;
@@ -33,6 +33,7 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Predicate;
 
 /**
  * Contributor-based goto model
@@ -55,7 +56,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
 
     @Override
     public boolean isDumbAware() {
-        return ContainerUtil.find(getContributorList(), o -> DumbService.isDumbAware(o)) != null;
+        return ContainerUtil.find(getContributorList(), DumbService::isDumbAware) != null;
     }
 
     @Nonnull
@@ -72,12 +73,13 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
         ContainerUtil.createConcurrentWeakMap();
 
     @Override
-    public void processNames(@Nonnull Processor<? super String> nameProcessor, @Nonnull FindSymbolParameters parameters) {
+    public void processNames(@Nonnull Predicate<? super String> nameProcessor, @Nonnull FindSymbolParameters parameters) {
         long start = System.currentTimeMillis();
         List<? extends ChooseByNameContributor> contributors = filterDumb(getContributorList());
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-        Processor<ChooseByNameContributor> processor = new ReadActionProcessor<ChooseByNameContributor>() {
+        Predicate<ChooseByNameContributor> processor = new ReadActionProcessor<>() {
             @Override
+            @RequiredReadAction
             public boolean processInReadAction(@Nonnull ChooseByNameContributor contributor) {
                 try {
                     if (!myProject.isDisposed()) {
@@ -113,21 +115,25 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     public void processContributorNames(
         @Nonnull ChooseByNameContributor contributor,
         @Nonnull FindSymbolParameters parameters,
-        @Nonnull Processor<? super String> nameProcessor
+        @Nonnull Predicate<? super String> nameProcessor
     ) {
         TIntHashSet filter = new TIntHashSet(1000);
-        if (contributor instanceof ChooseByNameContributorEx) {
-            ((ChooseByNameContributorEx)contributor).processNames(s -> {
-                if (nameProcessor.process(s)) {
-                    filter.add(s.hashCode());
-                }
-                return true;
-            }, parameters.getSearchScope(), parameters.getIdFilter());
+        if (contributor instanceof ChooseByNameContributorEx chooseByNameContributorEx) {
+            chooseByNameContributorEx.processNames(
+                s -> {
+                    if (nameProcessor.test(s)) {
+                        filter.add(s.hashCode());
+                    }
+                    return true;
+                },
+                parameters.getSearchScope(),
+                parameters.getIdFilter()
+            );
         }
         else {
             String[] names = contributor.getNames(myProject, parameters.isSearchInLibraries());
             for (String element : names) {
-                if (nameProcessor.process(element)) {
+                if (nameProcessor.test(element)) {
                     filter.add(element.hashCode());
                 }
             }
@@ -141,8 +147,8 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
 
     @Nonnull
     @Override
-    public String[] getNames(final boolean checkBoxState) {
-        final Set<String> allNames = new HashSet<>();
+    public String[] getNames(boolean checkBoxState) {
+        Set<String> allNames = new HashSet<>();
 
         Collection<String> result = Collections.synchronizedCollection(allNames);
         processNames(Processors.cancelableCollectProcessor(result), FindSymbolParameters.simple(myProject, checkBoxState));
@@ -168,14 +174,14 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
 
     @Nonnull
     public Object[] getElementsByName(
-        @Nonnull final String name,
-        @Nonnull final FindSymbolParameters parameters,
-        @Nonnull final ProgressIndicator canceled
+        @Nonnull String name,
+        @Nonnull FindSymbolParameters parameters,
+        @Nonnull ProgressIndicator canceled
     ) {
         long elementByNameStarted = System.currentTimeMillis();
-        final List<NavigationItem> items = Collections.synchronizedList(new ArrayList<>());
+        List<NavigationItem> items = Collections.synchronizedList(new ArrayList<>());
 
-        Processor<ChooseByNameContributor> processor = contributor -> {
+        Predicate<ChooseByNameContributor> processor = contributor -> {
             if (myProject.isDisposed()) {
                 return true;
             }
@@ -187,14 +193,18 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
                 boolean searchInLibraries = parameters.isSearchInLibraries();
                 long contributorStarted = System.currentTimeMillis();
 
-                if (contributor instanceof ChooseByNameContributorEx) {
-                    ((ChooseByNameContributorEx)contributor).processElementsWithName(name, item -> {
-                        canceled.checkCanceled();
-                        if (acceptItem(item)) {
-                            items.add(item);
-                        }
-                        return true;
-                    }, parameters);
+                if (contributor instanceof ChooseByNameContributorEx chooseByNameContributorEx) {
+                    chooseByNameContributorEx.processElementsWithName(
+                        name,
+                        item -> {
+                            canceled.checkCanceled();
+                            if (acceptItem(item)) {
+                                items.add(item);
+                            }
+                            return true;
+                        },
+                        parameters
+                    );
 
                     if (LOG.isDebugEnabled()) {
                         LOG.debug(System.currentTimeMillis() - contributorStarted + "," + contributor + ",");
@@ -214,8 +224,9 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
                             );
                             continue;
                         }
-                        VirtualFile file =
-                            item instanceof PsiElement && !(item instanceof PomTargetPsiElement) ? PsiUtilCore.getVirtualFile((PsiElement)item) : null;
+                        VirtualFile file = item instanceof PsiElement element && !(item instanceof PomTargetPsiElement)
+                            ? PsiUtilCore.getVirtualFile(element)
+                            : null;
                         if (file != null && !parameters.getSearchScope().contains(file)) {
                             continue;
                         }
@@ -259,16 +270,16 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
      */
     @Nonnull
     @Override
-    public Object[] getElementsByName(@Nonnull final String name, final boolean checkBoxState, @Nonnull final String pattern) {
+    public Object[] getElementsByName(@Nonnull String name, boolean checkBoxState, @Nonnull String pattern) {
         return getElementsByName(name, FindSymbolParameters.wrap(pattern, myProject, checkBoxState), new ProgressIndicatorBase());
     }
 
     @Override
     public String getElementName(@Nonnull Object element) {
-        if (!(element instanceof NavigationItem)) {
-            throw new AssertionError(element + " of " + element.getClass() + " in " + this + " of " + getClass());
+        if (element instanceof NavigationItem navigationItem) {
+            return navigationItem.getName();
         }
-        return ((NavigationItem)element).getName();
+        throw new AssertionError(element + " of " + element.getClass() + " in " + this + " of " + getClass());
     }
 
     @Override

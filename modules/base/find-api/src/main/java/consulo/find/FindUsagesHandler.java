@@ -15,10 +15,10 @@
  */
 package consulo.find;
 
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.AccessRule;
+import consulo.application.Application;
 import consulo.application.util.ReadActionProcessor;
-import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -43,6 +43,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -69,13 +70,34 @@ public abstract class FindUsagesHandler {
     @Deprecated
     public AbstractFindUsagesDialog getFindUsagesDialog(boolean isSingleFile, boolean toShowInNewTab, boolean mustOpenInNewTab) {
         @SuppressWarnings("deprecation") DataContext ctx = DataManager.getInstance().getDataContext();
-        return new CommonFindUsagesDialog(myPsiElement, getProject(), getFindUsagesOptions(ctx), toShowInNewTab, mustOpenInNewTab, isSingleFile, this);
+        return new CommonFindUsagesDialog(
+            myPsiElement,
+            getProject(),
+            getFindUsagesOptions(ctx),
+            toShowInNewTab,
+            mustOpenInNewTab,
+            isSingleFile,
+            this
+        );
     }
 
     @Nonnull
     @RequiredUIAccess
-    public AbstractFindUsagesDialogDescriptor createFindUsagesDialogDescriptor(DataContext ctx, boolean isSingleFile, boolean toShowInNewTab, boolean mustOpenInNewTab) {
-        return new CommonFindUsagesDialogDescriptor(myPsiElement, getProject(), getFindUsagesOptions(ctx), toShowInNewTab, mustOpenInNewTab, isSingleFile, this);
+    public AbstractFindUsagesDialogDescriptor createFindUsagesDialogDescriptor(
+        DataContext ctx,
+        boolean isSingleFile,
+        boolean toShowInNewTab,
+        boolean mustOpenInNewTab
+    ) {
+        return new CommonFindUsagesDialogDescriptor(
+            myPsiElement,
+            getProject(),
+            getFindUsagesOptions(ctx),
+            toShowInNewTab,
+            mustOpenInNewTab,
+            isSingleFile,
+            this
+        );
     }
 
     @Nonnull
@@ -100,10 +122,11 @@ public abstract class FindUsagesHandler {
 
     @Nullable
     public String getHelpId() {
-        return ReadAction.compute(() -> FindUsagesHelper.getHelpID(myPsiElement));
+        return AccessRule.read(() -> FindUsagesHelper.getHelpID(myPsiElement));
     }
 
     @Nonnull
+    @RequiredReadAction
     public static FindUsagesOptions createFindUsagesOptions(@Nonnull Project project, @Nullable final DataContext dataContext) {
         FindUsagesOptions findUsagesOptions = new FindUsagesOptions(project, dataContext);
         findUsagesOptions.isUsages = true;
@@ -123,14 +146,21 @@ public abstract class FindUsagesHandler {
         return options;
     }
 
-    public boolean processElementUsages(@Nonnull final PsiElement element,
-                                        @Nonnull final Processor<UsageInfo> processor,
-                                        @Nonnull final FindUsagesOptions options) {
-        final ReadActionProcessor<PsiReference> refProcessor = new ReadActionProcessor<PsiReference>() {
+    public boolean processElementUsages(
+        @Nonnull final PsiElement element,
+        @Nonnull final Predicate<UsageInfo> processor,
+        @Nonnull final FindUsagesOptions options
+    ) {
+        final ReadActionProcessor<PsiReference> refProcessor = new ReadActionProcessor<>() {
             @Override
             public boolean processInReadAction(final PsiReference ref) {
                 TextRange rangeInElement = ref.getRangeInElement();
-                return processor.process(new UsageInfo(ref.getElement(), rangeInElement.getStartOffset(), rangeInElement.getEndOffset(), false));
+                return processor.test(new UsageInfo(
+                    ref.getElement(),
+                    rangeInElement.getStartOffset(),
+                    rangeInElement.getEndOffset(),
+                    false
+                ));
             }
         };
 
@@ -140,7 +170,8 @@ public abstract class FindUsagesHandler {
 
         if (options.isUsages) {
             boolean success =
-                ReferencesSearch.search(new ReferencesSearch.SearchParameters(element, scope, false, options.fastTrack)).forEach(refProcessor);
+                ReferencesSearch.search(new ReferencesSearch.SearchParameters(element, scope, false, options.fastTrack))
+                    .forEach(refProcessor);
             if (!success) {
                 return false;
             }
@@ -148,29 +179,29 @@ public abstract class FindUsagesHandler {
 
         if (searchText) {
             if (options.fastTrack != null) {
-                options.fastTrack.searchCustom(consumer -> processUsagesInText(element, processor, (GlobalSearchScope) scope));
+                options.fastTrack.searchCustom(consumer -> processUsagesInText(element, processor, (GlobalSearchScope)scope));
             }
             else {
-                return processUsagesInText(element, processor, (GlobalSearchScope) scope);
+                return processUsagesInText(element, processor, (GlobalSearchScope)scope);
             }
         }
         return true;
     }
 
-    public boolean processUsagesInText(@Nonnull final PsiElement element,
-                                       @Nonnull Processor<UsageInfo> processor,
-                                       @Nonnull GlobalSearchScope searchScope) {
-        Collection<String> stringToSearch = ApplicationManager.getApplication().runReadAction((Supplier<Collection<String>>) () -> getStringsToSearch(element));
-        if (stringToSearch == null) {
-            return true;
+    public boolean processUsagesInText(
+        @Nonnull final PsiElement element,
+        @Nonnull Predicate<UsageInfo> processor,
+        @Nonnull GlobalSearchScope searchScope
+    ) {
+        Collection<String> stringToSearch =
+            Application.get().runReadAction((Supplier<Collection<String>>)() -> getStringsToSearch(element));
+        return stringToSearch == null || FindUsagesHelper.processUsagesInText(element, stringToSearch, searchScope, processor);
         }
-        return FindUsagesHelper.processUsagesInText(element, stringToSearch, searchScope, processor);
-    }
 
     @Nullable
     protected Collection<String> getStringsToSearch(@Nonnull final PsiElement element) {
         if (element instanceof PsiNamedElement) {
-            return ContainerUtil.createMaybeSingletonList(((PsiNamedElement) element).getName());
+            return ContainerUtil.createMaybeSingletonList(((PsiNamedElement)element).getName());
         }
 
         return Collections.singleton(element.getText());
@@ -208,7 +239,12 @@ public abstract class FindUsagesHandler {
         @RequiredUIAccess
         @Nonnull
         @Override
-        public AbstractFindUsagesDialogDescriptor createFindUsagesDialogDescriptor(DataContext ctx, boolean isSingleFile, boolean toShowInNewTab, boolean mustOpenInNewTab) {
+        public AbstractFindUsagesDialogDescriptor createFindUsagesDialogDescriptor(
+            DataContext ctx,
+            boolean isSingleFile,
+            boolean toShowInNewTab,
+            boolean mustOpenInNewTab
+        ) {
             throw new IncorrectOperationException();
         }
 
@@ -243,16 +279,20 @@ public abstract class FindUsagesHandler {
         }
 
         @Override
-        public boolean processElementUsages(@Nonnull PsiElement element,
-                                            @Nonnull Processor<UsageInfo> processor,
-                                            @Nonnull FindUsagesOptions options) {
+        public boolean processElementUsages(
+            @Nonnull PsiElement element,
+            @Nonnull Predicate<UsageInfo> processor,
+            @Nonnull FindUsagesOptions options
+        ) {
             throw new IncorrectOperationException();
         }
 
         @Override
-        public boolean processUsagesInText(@Nonnull PsiElement element,
-                                           @Nonnull Processor<UsageInfo> processor,
-                                           @Nonnull GlobalSearchScope searchScope) {
+        public boolean processUsagesInText(
+            @Nonnull PsiElement element,
+            @Nonnull Predicate<UsageInfo> processor,
+            @Nonnull GlobalSearchScope searchScope
+        ) {
             throw new IncorrectOperationException();
         }
 

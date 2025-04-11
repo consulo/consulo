@@ -15,14 +15,13 @@
  */
 package consulo.language.editor.ui.navigation;
 
-import consulo.application.ReadAction;
+import consulo.application.AccessRule;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
 import consulo.usage.Usage;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfo2UsageAdapter;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -36,10 +35,7 @@ public abstract class BackgroundUpdaterTask extends BackgroundUpdaterTaskBase<Ps
     protected static Comparator<PsiElement> createComparatorWrapper(@Nonnull Comparator<? super PsiElement> comparator) {
         return (o1, o2) -> {
             int diff = comparator.compare(o1, o2);
-            if (diff == 0) {
-                return ReadAction.compute(() -> PsiUtilCore.compareElementsByPosition(o1, o2));
-            }
-            return diff;
+            return diff == 0 ? AccessRule.read(() -> PsiUtilCore.compareElementsByPosition(o1, o2)) : Integer.valueOf(diff);
         };
     }
 

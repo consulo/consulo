@@ -20,7 +20,6 @@ import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -61,21 +60,19 @@ import consulo.usage.Usage;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageView;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class ShowImplementationsAction extends AnAction implements PopupAction {
-    @NonNls
     public static final String CODEASSISTS_QUICKDEFINITION_LOOKUP_FEATURE = "codeassists.quickdefinition.lookup";
-    @NonNls
     public static final String CODEASSISTS_QUICKDEFINITION_FEATURE = "codeassists.quickdefinition";
 
     private static final Logger LOG = Logger.getInstance(ShowImplementationsAction.class);
@@ -89,18 +86,19 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         performForContext(e.getDataContext(), true);
     }
 
     @TestOnly
-    @RequiredReadAction
+    @RequiredUIAccess
     public void performForContext(DataContext dataContext) {
         performForContext(dataContext, true);
     }
 
     @Override
+    @RequiredUIAccess
     public void update(final AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -251,6 +249,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         };
     }
 
+    @RequiredUIAccess
     private void updateElementImplementations(final PsiElement element, final Editor editor, @Nonnull Project project, final PsiFile file) {
         PsiElement[] impls = {};
         String text = "";
@@ -268,6 +267,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         showImplementations(impls, project, text, editor, file, element, false, false);
     }
 
+    @RequiredUIAccess
     protected void showImplementations(
         @Nonnull PsiElement[] impls,
         @Nonnull final Project project,
@@ -299,7 +299,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
             }
         }
 
-        final Ref<UsageView> usageView = new Ref<>();
+        final SimpleReference<UsageView> usageView = new SimpleReference<>();
         final LocalizeValue title = CodeInsightLocalize.implementationViewTitle(text);
         JBPopup popup = SoftReference.dereference(myPopupRef);
         if (popup != null && popup.isVisible() && popup instanceof AbstractPopup) {
@@ -364,7 +364,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         @Nonnull ImplementationViewComponent component,
         String title,
         @Nonnull AbstractPopup popup,
-        @Nonnull Ref<UsageView> usageView
+        @Nonnull SimpleReference<UsageView> usageView
     ) {
         final ImplementationsUpdaterTask updaterTask = SoftReference.dereference(myTaskRef);
         if (updaterTask != null) {
@@ -386,6 +386,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     }
 
     @Nonnull
+    @RequiredReadAction
     private static PsiElement[] getSelfAndImplementations(
         Editor editor,
         @Nonnull PsiElement element,
@@ -444,7 +445,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         for (int i = 1; i < targetElements.length; i++) {
             final PsiElement targetElement = targetElements[i];
             if (Application.get().runReadAction(
-                (Computable<Boolean>)() -> PsiTreeUtil.isAncestor(targetElement, targetElements[0], true))
+                (Supplier<Boolean>)() -> PsiTreeUtil.isAncestor(targetElement, targetElements[0], true))
             ) {
                 unique.remove(targetElements[0]);
                 break;
@@ -472,6 +473,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         }
 
         @Override
+        @RequiredUIAccess
         public void replaceModel(@Nonnull List<? extends PsiElement> data) {
             final PsiElement[] elements = myComponent.getElements();
             final int startIdx = elements.length - myIncludeSelfIdx;
@@ -524,6 +526,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         }
 
         @Override
+        @RequiredReadAction
         public void run(@Nonnull final ProgressIndicator indicator) {
             super.run(indicator);
             final ImplementationSearcher.BackgroundableImplementationSearcher implementationSearcher =
@@ -563,6 +566,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         }
 
         @Override
+        @RequiredUIAccess
         public void onSuccess() {
             if (!cancelTask()) {
                 myComponent.update(myElements, myComponent.getIndex());

@@ -15,22 +15,22 @@
  */
 package consulo.usage;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.util.function.Processor;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class UsageInfoSearcherAdapter implements UsageSearcher {
-    protected void processUsages(final @Nonnull Processor<Usage> processor, @Nonnull Project project) {
-        final Ref<UsageInfo[]> refUsages = new Ref<UsageInfo[]>();
-        final Ref<Boolean> dumbModeOccurred = new Ref<Boolean>();
-        ApplicationManager.getApplication().runReadAction(() -> {
+    protected void processUsages(@Nonnull Predicate<Usage> processor, @Nonnull Project project) {
+        SimpleReference<UsageInfo[]> refUsages = new SimpleReference<>();
+        SimpleReference<Boolean> dumbModeOccurred = new SimpleReference<>();
+        Application app = project.getApplication();
+        app.runReadAction(() -> {
             try {
                 refUsages.set(findUsages());
             }
@@ -42,13 +42,10 @@ public abstract class UsageInfoSearcherAdapter implements UsageSearcher {
             DumbService.getInstance(project).showDumbModeNotification("Usage search is not available until indices are ready");
             return;
         }
-        final Usage[] usages =
-            ApplicationManager.getApplication().runReadAction((Supplier<Usage[]>)() -> UsageInfo2UsageAdapter.convert(refUsages.get()));
+        Usage[] usages = app.runReadAction((Supplier<Usage[]>)() -> UsageInfo2UsageAdapter.convert(refUsages.get()));
 
-        for (final Usage usage : usages) {
-            ApplicationManager.getApplication().runReadAction(() -> {
-                processor.process(usage);
-            });
+        for (Usage usage : usages) {
+            app.runReadAction((Supplier<Boolean>)() -> processor.test(usage));
         }
     }
 

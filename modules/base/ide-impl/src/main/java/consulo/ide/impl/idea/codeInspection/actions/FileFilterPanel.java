@@ -23,17 +23,17 @@ import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.ui.ex.awt.TitledSeparator;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Predicate;
 
 /**
  * @author Dmitry Avdeev
- * Date: 10/11/11
+ * Date: 2011-10-11
  */
 class FileFilterPanel {
     private JCheckBox myUseFileMask;
@@ -49,16 +49,16 @@ class FileFilterPanel {
         if (!myUseFileMask.isSelected()) {
             return null;
         }
-        String text = (String) myFileMask.getSelectedItem();
+        String text = (String)myFileMask.getSelectedItem();
         if (text == null) {
             return null;
         }
 
-        final Condition<CharSequence> patternCondition = FindInProjectUtil.createFileMaskCondition(text);
+        Predicate<CharSequence> patternCondition = FindInProjectUtil.createFileMaskCondition(text);
         return new GlobalSearchScope() {
             @Override
             public boolean contains(@Nonnull VirtualFile file) {
-                return patternCondition.value(file.getNameSequence());
+                return patternCondition.test(file.getNameSequence());
             }
 
             @Override
@@ -101,12 +101,61 @@ class FileFilterPanel {
         myPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         myUseFileMask = new JCheckBox();
         this.$$$loadButtonText$$$(myUseFileMask, FindBundle.message("find.filter.file.mask.checkbox"));
-        myPanel.add(myUseFileMask, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
+        myPanel.add(
+            myUseFileMask,
+            new GridConstraints(
+                1,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                1,
+                false
+            )
+        );
         myFileMask = new JComboBox();
-        myPanel.add(myFileMask, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final TitledSeparator titledSeparator1 = new TitledSeparator();
+        myPanel.add(
+            myFileMask,
+            new GridConstraints(1,
+                1,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        TitledSeparator titledSeparator1 = new TitledSeparator();
         titledSeparator1.setText(FindBundle.message("find.filter.file.name.group"));
-        myPanel.add(titledSeparator1, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        myPanel.add(
+            titledSeparator1,
+            new GridConstraints(0,
+                0,
+                1,
+                2,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
     }
 
     /**

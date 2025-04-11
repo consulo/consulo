@@ -3,9 +3,10 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import consulo.language.psi.search.FindSymbolParameters;
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Predicate;
 
 /**
  * @author gregsh
@@ -26,7 +27,7 @@ public interface ChooseByNameInScopeItemProvider extends ChooseByNameWeightedIte
         @Nonnull ChooseByNameBase base,
         @Nonnull FindSymbolParameters parameters,
         @Nonnull ProgressIndicator indicator,
-        @Nonnull Processor<Object> consumer
+        @Nonnull Predicate<Object> consumer
     );
 
     /**
@@ -46,6 +47,6 @@ public interface ChooseByNameInScopeItemProvider extends ChooseByNameWeightedIte
         @Nonnull ChooseByNameBase base,
         @Nonnull FindSymbolParameters parameters,
         @Nonnull ProgressIndicator indicator,
-        @Nonnull Processor<FoundItemDescriptor<?>> consumer
+        @Nonnull Predicate<FoundItemDescriptor<?>> consumer
     );
 }

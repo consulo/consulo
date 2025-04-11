@@ -1,20 +1,18 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.JobLauncher;
-import consulo.application.util.function.Processor;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.ide.impl.idea.util.SynchronizedCollectConsumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.util.proximity.PsiProximityComparator;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
@@ -24,15 +22,17 @@ import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.stub.IdFilter;
 import consulo.logging.Logger;
 import consulo.project.content.scope.ProjectAwareSearchScope;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FList;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemProvider {
@@ -50,13 +50,13 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         @Nonnull String pattern,
         boolean everywhere,
         @Nonnull ProgressIndicator indicator,
-        @Nonnull Processor<Object> consumer
+        @Nonnull Predicate<Object> consumer
     ) {
         return filterElementsWithWeights(
             base,
             createParameters(base, pattern, everywhere),
             indicator,
-            res -> consumer.process(res.getItem())
+            res -> consumer.test(res.getItem())
         );
     }
 
@@ -65,9 +65,9 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         @Nonnull ChooseByNameBase base,
         @Nonnull FindSymbolParameters parameters,
         @Nonnull ProgressIndicator indicator,
-        @Nonnull Processor<Object> consumer
+        @Nonnull Predicate<Object> consumer
     ) {
-        return filterElementsWithWeights(base, parameters, indicator, res -> consumer.process(res.getItem()));
+        return filterElementsWithWeights(base, parameters, indicator, res -> consumer.test(res.getItem()));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         @Nonnull String pattern,
         boolean everywhere,
         @Nonnull ProgressIndicator indicator,
-        @Nonnull Processor<FoundItemDescriptor<?>> consumer
+        @Nonnull Predicate<FoundItemDescriptor<?>> consumer
     ) {
         return filterElementsWithWeights(base, createParameters(base, pattern, everywhere), indicator, consumer);
     }
@@ -86,7 +86,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         @Nonnull ChooseByNameBase base,
         @Nonnull FindSymbolParameters parameters,
         @Nonnull ProgressIndicator indicator,
-        @Nonnull Processor<FoundItemDescriptor<?>> consumer
+        @Nonnull Predicate<FoundItemDescriptor<?>> consumer
     ) {
         return ProgressManager.getInstance().computePrioritized(() -> filterElements(
             base,
@@ -112,14 +112,14 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         boolean everywhere,
         @Nonnull ProgressIndicator indicator,
         @Nullable PsiElement context,
-        @Nonnull Processor<Object> consumer
+        @Nonnull Predicate<Object> consumer
     ) {
         return filterElements(
             base,
             indicator,
             context,
             null,
-            res -> consumer.process(res.getItem()),
+            res -> consumer.test(res.getItem()),
             createParameters(base, pattern, everywhere)
         );
     }
@@ -129,7 +129,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         @Nonnull ProgressIndicator indicator,
         @Nullable PsiElement context,
         @Nullable Supplier<String[]> allNamesProducer,
-        @Nonnull Processor<FoundItemDescriptor<?>> consumer,
+        @Nonnull Predicate<FoundItemDescriptor<?>> consumer,
         @Nonnull FindSymbolParameters parameters
     ) {
         boolean everywhere = parameters.isSearchInLibraries();
@@ -273,7 +273,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         boolean everywhere,
         @Nonnull ProgressIndicator indicator,
         @Nullable PsiElement context,
-        @Nonnull Processor<FoundItemDescriptor<?>> consumer,
+        @Nonnull Predicate<FoundItemDescriptor<?>> consumer,
         boolean preferStartMatches,
         List<? extends MatchResult> namesList,
         FindSymbolParameters parameters
@@ -281,7 +281,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         List<Pair<Object, MatchResult>> sameNameElements = new SmartList<>();
 
         ChooseByNameModel model = base.getModel();
-        Comparator<Pair<Object, MatchResult>> weightComparator = new Comparator<Pair<Object, MatchResult>>() {
+        Comparator<Pair<Object, MatchResult>> weightComparator = new Comparator<>() {
             @SuppressWarnings("unchecked")
             final Comparator<Object> modelComparator =
                 model instanceof Comparator ? (Comparator<Object>)model : new PathProximityComparator(context);
@@ -319,10 +319,9 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
                 }
             }
             else if (elements.length == 1) {
-                if (matchQualifiedName(model, fullMatcher, elements[0]) != null) {
-                    if (!consumer.process(new FoundItemDescriptor<>(elements[0], result.matchingDegree))) {
-                        return false;
-                    }
+                if (matchQualifiedName(model, fullMatcher, elements[0]) != null
+                    && !consumer.test(new FoundItemDescriptor<>(elements[0], result.matchingDegree))) {
+                    return false;
                 }
             }
         }
@@ -330,6 +329,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
     }
 
     @Nonnull
+    @RequiredReadAction
     protected PathProximityComparator getPathProximityComparator() {
         return new PathProximityComparator(myContext == null ? null : myContext.getElement());
     }
@@ -411,7 +411,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         @Nonnull final Consumer<? super MatchResult> consumer
     ) {
         MinusculeMatcher matcher = buildPatternMatcher(pattern);
-        Processor<String> processor = name -> {
+        Predicate<String> processor = name -> {
             ProgressManager.checkCanceled();
             MatchResult result = matches(base, pattern, matcher, name);
             if (result != null) {

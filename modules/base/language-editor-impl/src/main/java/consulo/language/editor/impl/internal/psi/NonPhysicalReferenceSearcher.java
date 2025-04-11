@@ -2,20 +2,20 @@
 package consulo.language.editor.impl.internal.psi;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.fileEditor.FileEditorManager;
-import consulo.language.scratch.ScratchFileService;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.search.ReferencesSearchQueryExecutor;
 import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearchQueryExecutor;
+import consulo.language.scratch.ScratchFileService;
 import consulo.project.Project;
 import consulo.project.util.query.QueryExecutorBase;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Predicate;
 
 /**
  * @author Gregory.Shrago
@@ -31,7 +31,7 @@ public class NonPhysicalReferenceSearcher extends QueryExecutorBase<PsiReference
     @Override
     public void processQuery(
         @Nonnull ReferencesSearch.SearchParameters queryParameters,
-        @Nonnull Processor<? super PsiReference> consumer
+        @Nonnull Predicate<? super PsiReference> consumer
     ) {
         final SearchScope scope = queryParameters.getScopeDeterminedByUser();
         final PsiElement element = queryParameters.getElementToSearch();

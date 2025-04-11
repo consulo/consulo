@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
@@ -31,17 +32,17 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public final class IndentHelperImpl extends IndentHelper {
-    //----------------------------------------------------------------------------------------------------
-
     public static final int INDENT_FACTOR = 10000; // "indent" is indent_level * INDENT_FACTOR + spaces
 
     @Override
+    @RequiredReadAction
     public int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element) {
         return getIndent(file, element, false);
     }
 
     @Override
-    public int getIndent(@Nonnull PsiFile file, @Nonnull final ASTNode element, boolean includeNonSpace) {
+    @RequiredReadAction
+    public int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace) {
         for (IndentHelperExtension extension : IndentHelperExtension.EP_NAME.getExtensionList()) {
             if (extension.isAvailable(file)) {
                 return extension.getIndentInner(file, element, includeNonSpace, 0);

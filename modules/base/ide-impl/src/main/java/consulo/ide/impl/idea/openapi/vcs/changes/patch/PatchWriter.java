@@ -37,7 +37,7 @@ public class PatchWriter {
     }
 
     public static void writePatches(
-        @Nonnull final Project project,
+        @Nonnull Project project,
         String fileName,
         @Nullable String basePath,
         List<FilePatch> patches,
@@ -46,7 +46,7 @@ public class PatchWriter {
     ) throws IOException {
         Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), charset);
         try {
-            final String lineSeparator = CodeStyleFacade.getInstance(project).getLineSeparator();
+            String lineSeparator = CodeStyleFacade.getInstance(project).getLineSeparator();
             UnifiedDiffWriter.write(
                 project,
                 basePath,

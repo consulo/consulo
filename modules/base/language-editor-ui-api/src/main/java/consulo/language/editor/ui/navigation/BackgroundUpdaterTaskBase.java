@@ -2,28 +2,28 @@
 package consulo.language.editor.ui.navigation;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.GenericListComponentUpdater;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
-import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
 
 public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     protected JBPopup myPopup;
     private GenericListComponentUpdater<T> myUpdater;
-    private Ref<? extends UsageView> myUsageView;
+    private SimpleReference<? extends UsageView> myUsageView;
     private final Collection<T> myData;
 
     private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
@@ -43,7 +43,11 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
         return myUpdater;
     }
 
-    public void init(@Nonnull JBPopup popup, @Nonnull GenericListComponentUpdater<T> updater, @Nonnull Ref<? extends UsageView> usageView) {
+    public void init(
+        @Nonnull JBPopup popup,
+        @Nonnull GenericListComponentUpdater<T> updater,
+        @Nonnull SimpleReference<? extends UsageView> usageView
+    ) {
         myPopup = popup;
         myUpdater = updater;
         myUsageView = usageView;
@@ -94,26 +98,30 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
                 return true;
             }
             myData.add(element);
-            if (comparator != null && myData instanceof List) {
-                Collections.sort((List)myData, comparator);
+            if (comparator != null && myData instanceof List list) {
+                Collections.sort(list, comparator);
             }
         }
 
-        myAlarm.addRequest(() -> {
-            myAlarm.cancelAllRequests();
-            refreshModelImmediately();
-        }, 200, modalityState);
+        myAlarm.addRequest(
+            () -> {
+                myAlarm.cancelAllRequests();
+                refreshModelImmediately();
+            },
+            200,
+            modalityState
+        );
         return true;
     }
 
     private boolean tryAppendUsage(@Nonnull T element) {
-        final UsageView view = myUsageView.get();
+        UsageView view = myUsageView.get();
         if (view != null && !view.isDisposed()) {
             Usage usage = createUsage(element);
             if (usage == null) {
                 return false;
             }
-            ApplicationManager.getApplication().runReadAction(() -> view.appendUsage(usage));
+            Application.get().runReadAction(() -> view.appendUsage(usage));
             return true;
         }
         return false;
@@ -137,15 +145,20 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
             }
         }
 
-        myAlarm.addRequest(() -> {
-            myAlarm.cancelAllRequests();
-            refreshModelImmediately();
-        }, 200, Application.get().getModalityStateForComponent(myPopup.getContent()));
+        myAlarm.addRequest(
+            () -> {
+                myAlarm.cancelAllRequests();
+                refreshModelImmediately();
+            },
+            200,
+            Application.get().getModalityStateForComponent(myPopup.getContent())
+        );
         return true;
     }
 
+    @RequiredUIAccess
     private void refreshModelImmediately() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myCanceled) {
             return;
         }
@@ -174,6 +187,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     }
 
     @Override
+    @RequiredUIAccess
     public void onSuccess() {
         myFinished = true;
         refreshModelImmediately();
@@ -181,6 +195,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     }
 
     @Override
+    @RequiredUIAccess
     public void onFinished() {
         myAlarm.cancelAllRequests();
         myFinished = true;

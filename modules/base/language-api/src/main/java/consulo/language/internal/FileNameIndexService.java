@@ -28,6 +28,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface FileNameIndexService {
@@ -39,10 +40,10 @@ public interface FileNameIndexService {
         @Nullable IdFilter idFilter
     );
 
-    void processAllFileNames(@Nonnull Processor<? super String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter);
+    void processAllFileNames(@Nonnull Predicate<? super String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter);
 
     @Nonnull
     Collection<VirtualFile> getFilesWithFileType(@Nonnull FileType type, @Nonnull SearchScope scope);
 
-    boolean processFilesWithFileType(@Nonnull FileType type, @Nonnull Processor<? super VirtualFile> processor, @Nonnull SearchScope scope);
+    boolean processFilesWithFileType(@Nonnull FileType type, @Nonnull Predicate<? super VirtualFile> processor, @Nonnull SearchScope scope);
 }

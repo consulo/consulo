@@ -5,22 +5,23 @@ package consulo.ide.impl.idea.find.findInProject;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
-import consulo.ide.impl.idea.find.impl.FindManagerImpl;
-import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.application.util.function.Processor;
 import consulo.dataContext.DataContext;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
+import consulo.ide.impl.idea.find.impl.FindManagerImpl;
+import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.*;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import java.util.function.Predicate;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -41,10 +42,10 @@ public class FindInProjectManager {
     /**
      * @param model would be used for search if not null, otherwise shared (project-level) model would be used
      */
+    @RequiredUIAccess
     public void findInProject(@Nonnull DataContext dataContext, @Nullable FindModel model) {
-
-        final FindManager findManager = FindManager.getInstance(myProject);
-        final FindModel findModel;
+        FindManager findManager = FindManager.getInstance(myProject);
+        FindModel findModel;
         if (model != null) {
             findModel = model.clone();
         }
@@ -54,14 +55,17 @@ public class FindInProjectManager {
             initModel(findModel, dataContext);
         }
 
-        findManager.showFindDialog(findModel, () -> {
-            if (findModel.isReplaceState()) {
-                ReplaceInProjectManager.getInstance(myProject).replaceInPath(findModel);
+        findManager.showFindDialog(
+            findModel,
+            () -> {
+                if (findModel.isReplaceState()) {
+                    ReplaceInProjectManager.getInstance(myProject).replaceInPath(findModel);
+                }
+                else {
+                    findInPath(findModel);
+                }
             }
-            else {
-                findInPath(findModel);
-            }
-        });
+        );
     }
 
     public void findInPath(@Nonnull FindModel findModel) {
@@ -91,11 +95,11 @@ public class FindInProjectManager {
         if (manager == null) {
             return;
         }
-        final FindManager findManager = FindManager.getInstance(myProject);
+        FindManager findManager = FindManager.getInstance(myProject);
         findManager.getFindInProjectModel().copyFrom(findModel);
-        final FindModel findModelCopy = findModel.clone();
-        final UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(findModelCopy);
-        final FindUsagesProcessPresentation processPresentation = FindInProjectUtil.setupProcessPresentation(myProject, presentation);
+        FindModel findModelCopy = findModel.clone();
+        UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(findModelCopy);
+        FindUsagesProcessPresentation processPresentation = FindInProjectUtil.setupProcessPresentation(myProject, presentation);
         ConfigurableUsageTarget usageTarget = new FindInProjectUtil.StringUsageTarget(myProject, findModel);
 
         ((FindManagerImpl)FindManager.getInstance(myProject)).getFindUsagesManager().addToHistory(usageTarget);
@@ -106,10 +110,10 @@ public class FindInProjectManager {
                 myIsFindInProgress = true;
 
                 try {
-                    Processor<UsageInfo> consumer = info -> {
+                    Predicate<UsageInfo> consumer = info -> {
                         Usage usage = UsageInfo2UsageAdapter.CONVERTER.apply(info);
                         usage.getPresentation().getIcon(); // cache icon
-                        return processor.process(usage);
+                        return processor.test(usage);
                     };
                     FindInProjectUtil.findUsages(findModelCopy, myProject, consumer, processPresentation);
                 }

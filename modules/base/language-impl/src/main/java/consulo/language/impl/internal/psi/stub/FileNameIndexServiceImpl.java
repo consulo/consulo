@@ -2,7 +2,6 @@
 package consulo.language.impl.internal.psi.stub;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.language.internal.FileNameIndexService;
 import consulo.language.psi.stub.FileBasedIndex;
@@ -10,14 +9,14 @@ import consulo.language.psi.stub.IdFilter;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 @Singleton
 @ServiceImpl
@@ -46,7 +45,7 @@ public final class FileNameIndexServiceImpl implements FileNameIndexService {
     }
 
     @Override
-    public void processAllFileNames(@Nonnull Processor<? super String> processor, @Nonnull SearchScope scope, IdFilter filter) {
+    public void processAllFileNames(@Nonnull Predicate<? super String> processor, @Nonnull SearchScope scope, IdFilter filter) {
         myIndex.processAllKeys(FilenameIndexImpl.NAME, processor, scope, filter);
     }
 
@@ -59,9 +58,9 @@ public final class FileNameIndexServiceImpl implements FileNameIndexService {
     @Override
     public boolean processFilesWithFileType(
         @Nonnull FileType fileType,
-        @Nonnull Processor<? super VirtualFile> processor,
+        @Nonnull Predicate<? super VirtualFile> processor,
         @Nonnull SearchScope scope
     ) {
-        return myIndex.processValues(FileTypeIndexImpl.NAME, fileType, null, (file, value) -> processor.process(file), scope);
+        return myIndex.processValues(FileTypeIndexImpl.NAME, fileType, null, (file, value) -> processor.test(file), scope);
     }
 }
