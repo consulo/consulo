@@ -474,7 +474,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             }
             else {
                 myContext.setHoldingFilter(true);
-                myHits = myIndex.getConfigurables(myBuildConfigurables, type == DocumentEvent.EventType.CHANGE, myFiltered, text, myProject);
+                Configurable[] buildConfigurables = Objects.requireNonNullElse(myBuildConfigurables, Configurable.EMPTY_ARRAY);
+                myHits = myIndex.getConfigurables(buildConfigurables, type == DocumentEvent.EventType.CHANGE, myFiltered, text, myProject);
                 myFiltered = myHits.getAll();
             }
 
