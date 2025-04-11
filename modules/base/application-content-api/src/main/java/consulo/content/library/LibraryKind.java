@@ -15,18 +15,18 @@
  */
 package consulo.content.library;
 
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author nik
  */
 public class LibraryKind {
   private final String myKindId;
-  private static final Map<String, LibraryKind> ourAllKinds = new HashMap<String, LibraryKind>();
+  private static final Map<String, LibraryKind> ourAllKinds = new ConcurrentHashMap<>();
 
   /**
    * @param kindId must be unique among all {@link consulo.ide.impl.idea.openapi.roots.libraries.LibraryType} and {@link consulo.ide.impl.idea.openapi.roots.libraries.LibraryPresentationProvider} implementations
