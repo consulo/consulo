@@ -32,5 +32,5 @@ public abstract class FindUsagesHandlerFactory {
     public abstract boolean canFindUsages(@Nonnull PsiElement element);
 
     @Nullable
-    public abstract FindUsagesHandler createFindUsagesHandler(@Nonnull PsiElement element, final boolean forHighlightUsages);
+    public abstract FindUsagesHandler createFindUsagesHandler(@Nonnull PsiElement element, boolean forHighlightUsages);
 }

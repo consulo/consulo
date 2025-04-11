@@ -75,10 +75,11 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     }
 
     @Override
+    @RequiredUIAccess
     public void importData(
-        @Nonnull final Collection<DataNode<ModuleData>> toImport,
-        @Nonnull final Project project,
-        final boolean synchronous
+        @Nonnull Collection<DataNode<ModuleData>> toImport,
+        @Nonnull Project project,
+        boolean synchronous
     ) {
         if (toImport.isEmpty()) {
             return;
@@ -92,7 +93,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
             @RequiredUIAccess
             @Override
             public void execute() {
-                final Collection<DataNode<ModuleData>> toCreate = filterExistingModules(toImport, project);
+                Collection<DataNode<ModuleData>> toCreate = filterExistingModules(toImport, project);
                 if (!toCreate.isEmpty()) {
                     createModules(toCreate, project);
                 }
@@ -107,12 +108,12 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     }
 
     @RequiredUIAccess
-    private void createModules(@Nonnull final Collection<DataNode<ModuleData>> toCreate, @Nonnull final Project project) {
-        final Map<DataNode<ModuleData>, Module> moduleMappings = new HashMap<>();
+    private void createModules(@Nonnull Collection<DataNode<ModuleData>> toCreate, @Nonnull Project project) {
+        Map<DataNode<ModuleData>, Module> moduleMappings = new HashMap<>();
         project.getApplication().runWriteAction(new Runnable() {
             @Override
             public void run() {
-                final ModuleManager moduleManager = ModuleManager.getInstance(project);
+                ModuleManager moduleManager = ModuleManager.getInstance(project);
                 for (DataNode<ModuleData> module : toCreate) {
                     importModule(moduleManager, module);
                 }
@@ -121,15 +122,15 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
             @RequiredWriteAction
             private void importModule(@Nonnull ModuleManager moduleManager, @Nonnull DataNode<ModuleData> module) {
                 ModuleData moduleData = module.getData();
-                final Module created = moduleManager.newModule(moduleData.getExternalName(), moduleData.getModuleDirPath());
+                Module created = moduleManager.newModule(moduleData.getExternalName(), moduleData.getModuleDirPath());
 
                 // Ensure that the dependencies are clear (used to be not clear when manually removing the module and importing it via gradle)
-                final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(created);
-                final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
+                ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(created);
+                ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
 
                 setModuleOptions(created, moduleRootModel, module);
 
-                RootPolicy<Object> visitor = new RootPolicy<Object>() {
+                RootPolicy<Object> visitor = new RootPolicy<>() {
                     @Override
                     public Object visitLibraryOrderEntry(LibraryOrderEntry libraryOrderEntry, Object value) {
                         moduleRootModel.removeOrderEntry(libraryOrderEntry);
@@ -198,7 +199,8 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     }
 
     @Override
-    public void removeData(@Nonnull final Collection<? extends Module> modules, @Nonnull final Project project, boolean synchronous) {
+    @RequiredUIAccess
+    public void removeData(@Nonnull Collection<? extends Module> modules, @Nonnull Project project, boolean synchronous) {
         if (modules.isEmpty()) {
             return;
         }
@@ -245,15 +247,15 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
         }
 
         @Override
+        @RequiredUIAccess
         public void run() {
             myFuture.cancel(false);
             if (!myProject.isInitialized()) {
-                myFuture = AppExecutorUtil.getAppScheduledExecutorService()
-                    .schedule(
-                        new ImportModulesTask(myProject, myModules, mySynchronous),
-                        PROJECT_INITIALISATION_DELAY_MS,
-                        TimeUnit.MILLISECONDS
-                    );
+                myFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(
+                    new ImportModulesTask(myProject, myModules, mySynchronous),
+                    PROJECT_INITIALISATION_DELAY_MS,
+                    TimeUnit.MILLISECONDS
+                );
                 return;
             }
 
@@ -263,15 +265,14 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
     @RequiredUIAccess
     private static void setModuleOptions(
-        @Nonnull final Module module,
-        @Nullable final ModifiableRootModel originalModel,
-        @Nonnull final DataNode<ModuleData> moduleDataNode
+        @Nonnull Module module,
+        @Nullable ModifiableRootModel originalModel,
+        @Nonnull DataNode<ModuleData> moduleDataNode
     ) {
-
         ModuleData moduleData = moduleDataNode.getData();
         module.putUserData(MODULE_DATA_KEY, moduleData);
 
-        final ProjectData projectData = moduleDataNode.getData(ProjectKeys.PROJECT);
+        ProjectData projectData = moduleDataNode.getData(ProjectKeys.PROJECT);
         if (projectData == null) {
             throw new IllegalArgumentException("projectData is null");
         }

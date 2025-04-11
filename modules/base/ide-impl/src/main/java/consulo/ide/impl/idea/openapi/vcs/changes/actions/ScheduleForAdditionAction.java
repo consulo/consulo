@@ -50,6 +50,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -79,7 +80,7 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
   public static boolean addUnversioned(
     @Nonnull Project project,
     @Nonnull List<VirtualFile> files,
-    @Nonnull Condition<FileStatus> unversionedFileCondition,
+    @Nonnull Predicate<FileStatus> unversionedFileCondition,
     @Nullable ChangesBrowserBase browser
   ) {
     boolean result = true;

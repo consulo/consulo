@@ -48,10 +48,10 @@ public class FileTemplateUtil {
     @Deprecated
     @RequiredUIAccess
     public static PsiElement createFromTemplate(
-        @Nonnull final FileTemplate template,
-        @Nullable final String fileName,
+        @Nonnull FileTemplate template,
+        @Nullable String fileName,
         @Nullable Properties props,
-        @Nonnull final PsiDirectory directory
+        @Nonnull PsiDirectory directory
     ) throws Exception {
         Map<String, Object> map;
         if (props != null) {
@@ -67,10 +67,10 @@ public class FileTemplateUtil {
     @Nonnull
     @RequiredUIAccess
     public static PsiElement createFromTemplate(
-        @Nonnull final FileTemplate template,
-        @Nullable final String fileName,
+        @Nonnull FileTemplate template,
+        @Nullable String fileName,
         @Nullable Map<String, Object> props,
-        @Nonnull final PsiDirectory directory
+        @Nonnull PsiDirectory directory
     ) throws Exception {
         Map<String, Object> map;
         if (props != null) {
@@ -86,10 +86,10 @@ public class FileTemplateUtil {
     @DeprecationInfo("Use #createFromTemplate with Map parameter")
     @RequiredUIAccess
     public static PsiElement createFromTemplate(
-        @Nonnull final FileTemplate template,
+        @Nonnull FileTemplate template,
         @Nullable String fileName,
         @Nullable Properties props,
-        @Nonnull final PsiDirectory directory,
+        @Nonnull PsiDirectory directory,
         @Nullable ClassLoader classLoader
     ) throws Exception {
         Map<String, Object> map;
@@ -105,13 +105,13 @@ public class FileTemplateUtil {
 
     @RequiredUIAccess
     public static PsiElement createFromTemplate(
-        @Nonnull final FileTemplate template,
+        @Nonnull FileTemplate template,
         @Nullable String fileName,
         @Nullable Map<String, Object> additionalProperties,
-        @Nonnull final PsiDirectory directory,
+        @Nonnull PsiDirectory directory,
         @Nullable ClassLoader classLoader
     ) throws Exception {
-        final Project project = directory.getProject();
+        Project project = directory.getProject();
 
         Map<String, Object> properties = new HashMap<>();
         FileTemplateManager.getInstance(project).fillDefaultVariables(properties);
@@ -123,7 +123,7 @@ public class FileTemplateUtil {
         FileTemplateManager.getInstance(project).addRecentName(template.getName());
         fillDefaultProperties(properties, directory);
 
-        final CreateFromTemplateHandler handler = findHandler(template);
+        CreateFromTemplateHandler handler = findHandler(template);
         if (fileName != null && properties.get(FileTemplate.ATTRIBUTE_NAME) == null) {
             properties.put(FileTemplate.ATTRIBUTE_NAME, fileName);
         }
@@ -142,12 +142,12 @@ public class FileTemplateUtil {
 
         handler.prepareProperties(properties);
 
-        final String fileName_ = fileName;
+        String fileName_ = fileName;
         String mergedText = ClassLoaderUtil.runWithClassLoader(
             classLoader != null ? classLoader : FileTemplateUtil.class.getClassLoader(),
             (ThrowableComputable<String, IOException>)() -> template.getText(properties)
         );
-        final String templateText = StringUtil.convertLineSeparators(mergedText);
+        String templateText = StringUtil.convertLineSeparators(mergedText);
         return CommandProcessor.getInstance().<PsiElement>newCommand()
             .project(project)
             .name(handler.commandName(template))
@@ -157,7 +157,7 @@ public class FileTemplateUtil {
     }
 
     @Nonnull
-    public static CreateFromTemplateHandler findHandler(final FileTemplate template) {
+    public static CreateFromTemplateHandler findHandler(FileTemplate template) {
         CreateFromTemplateHandler templateHandler =
             CreateFromTemplateHandler.EP_NAME.computeSafeIfAny(it -> it.handlesTemplate(template) ? it : null);
         if (templateHandler != null) {
@@ -166,7 +166,7 @@ public class FileTemplateUtil {
         throw new IllegalArgumentException("DefaultCreateFromTemplateHandler not registered");
     }
 
-    public static void fillDefaultProperties(final Map<String, Object> props, final PsiDirectory directory) {
+    public static void fillDefaultProperties(Map<String, Object> props, PsiDirectory directory) {
         DefaultTemplatePropertiesProvider.EP_NAME.forEachExtensionSafe(it -> it.fillProperties(directory, props));
     }
 
@@ -182,7 +182,7 @@ public class FileTemplateUtil {
     }
 
     @Deprecated
-    public static void putAll(final Map<String, Object> props, final Properties p) {
+    public static void putAll(Map<String, Object> props, Properties p) {
         for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements(); ) {
             String s = (String)e.nextElement();
             props.put(s, p.getProperty(s));
@@ -190,7 +190,7 @@ public class FileTemplateUtil {
     }
 
     @Nonnull
-    public static Map<String, Object> convert2Map(final Properties p) {
+    public static Map<String, Object> convert2Map(Properties p) {
         Map<String, Object> map = new HashMap<>();
         for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements(); ) {
             String s = (String)e.nextElement();

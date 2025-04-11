@@ -66,7 +66,8 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
         }
     }
 
-    public void importLibrary(@Nonnull final LibraryData toImport, @Nonnull final Project project, boolean synchronous) {
+    @RequiredUIAccess
+    public void importLibrary(@Nonnull LibraryData toImport, @Nonnull Project project, boolean synchronous) {
         Map<OrderRootType, Collection<File>> libraryFiles = prepareLibraryFiles(toImport);
 
         Library library = ProjectStructureHelper.findIdeLibrary(toImport, project);
@@ -81,7 +82,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     public Map<OrderRootType, Collection<File>> prepareLibraryFiles(@Nonnull LibraryData data) {
         Map<OrderRootType, Collection<File>> result = new HashMap<>();
         for (LibraryPathType pathType : LibraryPathType.values()) {
-            final Set<String> paths = data.getPaths(pathType);
+            Set<String> paths = data.getPaths(pathType);
             if (paths.isEmpty()) {
                 continue;
             }
@@ -90,40 +91,44 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
         return result;
     }
 
+    @RequiredUIAccess
     public void importLibrary(
-        @Nonnull final String libraryName,
-        @Nonnull final Map<OrderRootType, Collection<File>> libraryFiles,
-        @Nonnull final Project project,
+        @Nonnull String libraryName,
+        @Nonnull Map<OrderRootType, Collection<File>> libraryFiles,
+        @Nonnull Project project,
         boolean synchronous
     ) {
-        ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
-            @RequiredUIAccess
-            @Override
-            public void execute() {
-                // Is assumed to be called from the EDT.
-                final LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
-                final LibraryTable.ModifiableModel projectLibraryModel = libraryTable.getModifiableModel();
-                final Library intellijLibrary;
-                try {
-                    intellijLibrary = projectLibraryModel.createLibrary(libraryName);
-                }
-                finally {
-                    projectLibraryModel.commit();
-                }
-                final Library.ModifiableModel libraryModel = intellijLibrary.getModifiableModel();
-                try {
-                    registerPaths(libraryFiles, libraryModel, libraryName);
-                }
-                finally {
-                    libraryModel.commit();
+        ExternalSystemApiUtil.executeProjectChangeAction(
+            synchronous,
+            new DisposeAwareProjectChange(project) {
+                @Override
+                @RequiredUIAccess
+                public void execute() {
+                    // Is assumed to be called from the EDT.
+                    LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
+                    LibraryTable.ModifiableModel projectLibraryModel = libraryTable.getModifiableModel();
+                    Library intellijLibrary;
+                    try {
+                        intellijLibrary = projectLibraryModel.createLibrary(libraryName);
+                    }
+                    finally {
+                        projectLibraryModel.commit();
+                    }
+                    Library.ModifiableModel libraryModel = intellijLibrary.getModifiableModel();
+                    try {
+                        registerPaths(libraryFiles, libraryModel, libraryName);
+                    }
+                    finally {
+                        libraryModel.commit();
+                    }
                 }
             }
-        });
+        );
     }
 
     @SuppressWarnings("MethodMayBeStatic")
     public void registerPaths(
-        @Nonnull final Map<OrderRootType, Collection<File>> libraryFiles,
+        @Nonnull Map<OrderRootType, Collection<File>> libraryFiles,
         @Nonnull Library.ModifiableModel model,
         @Nonnull String libraryName
     ) {
@@ -163,45 +168,50 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     }
 
     @Override
-    public void removeData(@Nonnull final Collection<? extends Library> libraries, @Nonnull final Project project, boolean synchronous) {
+    @RequiredUIAccess
+    public void removeData(@Nonnull Collection<? extends Library> libraries, @Nonnull Project project, boolean synchronous) {
         if (libraries.isEmpty()) {
             return;
         }
-        ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
-            @RequiredUIAccess
-            @Override
-            public void execute() {
-                final LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
-                final LibraryTable.ModifiableModel model = libraryTable.getModifiableModel();
-                try {
-                    for (Library library : libraries) {
-                        String libraryName = library.getName();
-                        if (libraryName != null) {
-                            Library libraryToRemove = model.getLibraryByName(libraryName);
-                            if (libraryToRemove != null) {
-                                model.removeLibrary(libraryToRemove);
+        ExternalSystemApiUtil.executeProjectChangeAction(
+            synchronous,
+            new DisposeAwareProjectChange(project) {
+                @Override
+                @RequiredUIAccess
+                public void execute() {
+                    LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
+                    LibraryTable.ModifiableModel model = libraryTable.getModifiableModel();
+                    try {
+                        for (Library library : libraries) {
+                            String libraryName = library.getName();
+                            if (libraryName != null) {
+                                Library libraryToRemove = model.getLibraryByName(libraryName);
+                                if (libraryToRemove != null) {
+                                    model.removeLibrary(libraryToRemove);
+                                }
                             }
                         }
                     }
-                }
-                finally {
-                    model.commit();
+                    finally {
+                        model.commit();
+                    }
                 }
             }
-        });
+        );
     }
 
+    @RequiredUIAccess
     public void syncPaths(
-        @Nonnull final LibraryData externalLibrary,
-        @Nonnull final Library ideLibrary,
-        @Nonnull final Project project,
+        @Nonnull LibraryData externalLibrary,
+        @Nonnull Library ideLibrary,
+        @Nonnull Project project,
         boolean synchronous
     ) {
         if (externalLibrary.isUnresolved()) {
             return;
         }
-        final Map<OrderRootType, Set<String>> toRemove = new HashMap<>();
-        final Map<OrderRootType, Set<String>> toAdd = new HashMap<>();
+        Map<OrderRootType, Set<String>> toRemove = new HashMap<>();
+        Map<OrderRootType, Set<String>> toAdd = new HashMap<>();
         for (LibraryPathType pathType : LibraryPathType.values()) {
             OrderRootType ideType = myLibraryPathTypeMapper.map(pathType);
             HashSet<String> toAddPerType = new HashSet<>(externalLibrary.getPaths(pathType));
@@ -220,28 +230,31 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
         if (toRemove.isEmpty() && toAdd.isEmpty()) {
             return;
         }
-        ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
-            @RequiredUIAccess
-            @Override
-            public void execute() {
-                Library.ModifiableModel model = ideLibrary.getModifiableModel();
-                try {
-                    for (Map.Entry<OrderRootType, Set<String>> entry : toRemove.entrySet()) {
-                        for (String path : entry.getValue()) {
-                            model.removeRoot(path, entry.getKey());
+        ExternalSystemApiUtil.executeProjectChangeAction(
+            synchronous,
+            new DisposeAwareProjectChange(project) {
+                @RequiredUIAccess
+                @Override
+                public void execute() {
+                    Library.ModifiableModel model = ideLibrary.getModifiableModel();
+                    try {
+                        for (Map.Entry<OrderRootType, Set<String>> entry : toRemove.entrySet()) {
+                            for (String path : entry.getValue()) {
+                                model.removeRoot(path, entry.getKey());
+                            }
+                        }
+
+                        for (Map.Entry<OrderRootType, Set<String>> entry : toAdd.entrySet()) {
+                            Map<OrderRootType, Collection<File>> roots = new HashMap<>();
+                            roots.put(entry.getKey(), ContainerUtil.map(entry.getValue(), File::new));
+                            registerPaths(roots, model, externalLibrary.getInternalName());
                         }
                     }
-
-                    for (Map.Entry<OrderRootType, Set<String>> entry : toAdd.entrySet()) {
-                        Map<OrderRootType, Collection<File>> roots = new HashMap<>();
-                        roots.put(entry.getKey(), ContainerUtil.map(entry.getValue(), File::new));
-                        registerPaths(roots, model, externalLibrary.getInternalName());
+                    finally {
+                        model.commit();
                     }
                 }
-                finally {
-                    model.commit();
-                }
             }
-        });
+        );
     }
 }

@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractModuleNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractProjectNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ModuleGroupNode;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNode;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.PsiCopyPasteManager;
@@ -178,7 +178,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
     @Override
     @Nonnull
-    public LocalizeValue getPresentableSubIdName(@Nonnull final String subId) {
+    public LocalizeValue getPresentableSubIdName(@Nonnull String subId) {
         throw new IllegalStateException("should not call");
     }
 
@@ -225,7 +225,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         };
     }
 
-    public void expand(@Nullable final Object[] path, final boolean requestFocus) {
+    public void expand(@Nullable Object[] path, boolean requestFocus) {
         if (getTreeBuilder() == null || path == null) {
             return;
         }
@@ -286,14 +286,14 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     public abstract void select(Object element, VirtualFile file, boolean requestFocus);
 
     @Override
-    public void selectModule(@Nonnull Module module, final boolean requestFocus) {
+    public void selectModule(@Nonnull Module module, boolean requestFocus) {
         doSelectModuleOrGroup(module, requestFocus);
     }
 
     @RequiredUIAccess
-    private void doSelectModuleOrGroup(@Nonnull Object toSelect, final boolean requestFocus) {
+    private void doSelectModuleOrGroup(@Nonnull Object toSelect, boolean requestFocus) {
         ToolWindowManager windowManager = ToolWindowManager.getInstance(myProject);
-        final Runnable runnable = () -> {
+        Runnable runnable = () -> {
             if (requestFocus) {
                 ProjectView projectView = ProjectView.getInstance(myProject);
                 if (projectView != null) {
@@ -343,7 +343,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         if (paths == null) {
             return Collections.emptyList();
         }
-        final ArrayList<T> result = new ArrayList<>();
+        ArrayList<T> result = new ArrayList<>();
         for (TreePath path : paths) {
             T userObject = TreeUtil.getLastUserObject(nodeClass, path);
             if (userObject != null) {
@@ -369,7 +369,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             if (paths == null) {
                 return null;
             }
-            final ArrayList<Navigatable> navigatables = new ArrayList<>();
+            ArrayList<Navigatable> navigatables = new ArrayList<>();
             for (TreePath path : paths) {
                 Object node = path.getLastPathComponent();
                 Object userObject = TreeUtil.getUserObject(node);
@@ -412,7 +412,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
 
     public final Object getSelectedElement() {
-        final Object[] elements = getSelectedElements();
+        Object[] elements = getSelectedElements();
         return elements.length == 1 ? elements[0] : null;
     }
 
@@ -458,7 +458,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
     @Nullable
     @RequiredReadAction
-    protected Module getNodeModule(@Nullable final Object element) {
+    protected Module getNodeModule(@Nullable Object element) {
         if (element instanceof PsiElement psiElement) {
             return ModuleUtilCore.findModuleForPsiElement(psiElement);
         }
@@ -662,9 +662,9 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             return directories.toArray(PsiDirectory.EMPTY_ARRAY);
         }
 
-        final PsiElement[] elements = getSelectedPSIElements();
+        PsiElement[] elements = getSelectedPSIElements();
         if (elements.length == 1) {
-            final PsiElement element = elements[0];
+            PsiElement element = elements[0];
             if (element instanceof PsiDirectory directory) {
                 return new PsiDirectory[]{directory};
             }
@@ -672,16 +672,16 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
                 return directoryContainer.getDirectories();
             }
             else {
-                final PsiFile containingFile = element.getContainingFile();
+                PsiFile containingFile = element.getContainingFile();
                 if (containingFile != null) {
-                    final PsiDirectory psiDirectory = containingFile.getContainingDirectory();
+                    PsiDirectory psiDirectory = containingFile.getContainingDirectory();
                     if (psiDirectory != null) {
                         return new PsiDirectory[]{psiDirectory};
                     }
-                    final VirtualFile file = containingFile.getVirtualFile();
+                    VirtualFile file = containingFile.getVirtualFile();
                     if (file instanceof VirtualFileWindow virtualFileWindow) {
-                        final VirtualFile delegate = virtualFileWindow.getDelegate();
-                        final PsiFile delegatePsiFile = containingFile.getManager().findFile(delegate);
+                        VirtualFile delegate = virtualFileWindow.getDelegate();
+                        PsiFile delegatePsiFile = containingFile.getManager().findFile(delegate);
                         if (delegatePsiFile != null && delegatePsiFile.getContainingDirectory() != null) {
                             return new PsiDirectory[]{delegatePsiFile.getContainingDirectory()};
                         }
@@ -706,14 +706,14 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     @Nonnull
     protected PsiDirectory[] getSelectedDirectoriesInAmbiguousCase(Object userObject) {
         if (userObject instanceof AbstractModuleNode moduleNode) {
-            final Module module = moduleNode.getValue();
+            Module module = moduleNode.getValue();
             if (module != null) {
-                final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-                final VirtualFile[] sourceRoots = moduleRootManager.getSourceRoots();
+                ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+                VirtualFile[] sourceRoots = moduleRootManager.getSourceRoots();
                 List<PsiDirectory> dirs = new ArrayList<>(sourceRoots.length);
-                final PsiManager psiManager = PsiManager.getInstance(myProject);
-                for (final VirtualFile sourceRoot : sourceRoots) {
-                    final PsiDirectory directory = psiManager.findDirectory(sourceRoot);
+                PsiManager psiManager = PsiManager.getInstance(myProject);
+                for (VirtualFile sourceRoot : sourceRoots) {
+                    PsiDirectory directory = psiManager.findDirectory(sourceRoot);
                     if (directory != null) {
                         dirs.add(directory);
                     }
@@ -775,7 +775,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     protected void beforeDnDLeave() {
     }
 
-    public void setTreeBuilder(final AbstractTreeBuilder treeBuilder) {
+    public void setTreeBuilder(AbstractTreeBuilder treeBuilder) {
         if (treeBuilder != null) {
             Disposer.register(this, treeBuilder);
 // needs refactoring for project view first
@@ -798,15 +798,15 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             if ((action.getActionId() & DnDConstants.ACTION_COPY_OR_MOVE) == 0) {
                 return false;
             }
-            final Object[] elements = getSelectedElements();
-            final PsiElement[] psiElements = getSelectedPSIElements();
+            Object[] elements = getSelectedElements();
+            PsiElement[] psiElements = getSelectedPSIElements();
             DataContext dataContext = DataManager.getInstance().getDataContext(myTree);
             return psiElements.length > 0 || canDragElements(elements, dataContext, action.getActionId());
         }
 
         @Override
         public DnDDragStartBean startDragging(DnDAction action, Point dragOrigin) {
-            final PsiElement[] psiElements = getSelectedPSIElements();
+            PsiElement[] psiElements = getSelectedPSIElements();
             TreePath[] paths = getSelectionPaths();
             return new DnDDragStartBean(new TransferableWrapper() {
 
@@ -836,20 +836,20 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         @Nullable
         @Override
         public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
-            final TreePath[] paths = getSelectionPaths();
+            TreePath[] paths = getSelectionPaths();
             if (paths == null) {
                 return null;
             }
 
-            final int count = paths.length;
+            int count = paths.length;
 
-            final JLabel label = new JLabel(String.format("%s item%s", count, count == 1 ? "" : "s"));
+            JLabel label = new JLabel(String.format("%s item%s", count, count == 1 ? "" : "s"));
             label.setOpaque(true);
             label.setForeground(myTree.getForeground());
             label.setBackground(myTree.getBackground());
             label.setFont(myTree.getFont());
             label.setSize(label.getPreferredSize());
-            final BufferedImage image = UIUtil.createImage(label.getWidth(), label.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            BufferedImage image = UIUtil.createImage(label.getWidth(), label.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
             Graphics2D g2 = (Graphics2D)image.getGraphics();
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
@@ -888,8 +888,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         }
         ActionCallback ready = myTreeBuilder.getUi().getReady(requestor);
         AsyncResult<Void> result = new AsyncResult<>();
-        ready.doWhenDone(() -> result.setDone());
-        ready.doWhenRejected((er) -> result.reject(er));
+        ready.doWhenDone(result::setDone);
+        ready.doWhenRejected(result::reject);
         return result;
     }
 
@@ -931,7 +931,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             TreeVisitor visitor = createVisitor(object);
             ContainerUtil.addIfNotNull(list, visitor);
         }
-        return ContainerUtil.immutableList(list);
+        return Collections.unmodifiableList(list);
     }
 
     @Nullable

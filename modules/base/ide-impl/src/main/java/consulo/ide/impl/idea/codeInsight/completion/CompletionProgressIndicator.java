@@ -3,7 +3,6 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
@@ -27,7 +26,7 @@ import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
 import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.completion.*;
@@ -45,6 +44,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceRange;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -104,7 +104,8 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     private final Set<Pair<Integer, ElementPattern<String>>> myRestartingPrefixConditions = ContainerUtil.newConcurrentSet();
     private final LookupListener myLookupListener = new LookupListener() {
         @Override
-        public void lookupCanceled(@Nonnull final LookupEvent event) {
+        @RequiredUIAccess
+        public void lookupCanceled(@Nonnull LookupEvent event) {
             finishCompletionProcess(true);
         }
     };
@@ -223,10 +224,10 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         Document document = initContext.getEditor().getDocument();
         if (!initContext.getOffsetMap().wasModified(CompletionInitializationContext.IDENTIFIER_END_OFFSET)) {
             try {
-                final int selectionEndOffset = initContext.getSelectionEndOffset();
-                final PsiReference reference = TargetElementUtil.findReference(myEditor, selectionEndOffset);
+                int selectionEndOffset = initContext.getSelectionEndOffset();
+                PsiReference reference = TargetElementUtil.findReference(myEditor, selectionEndOffset);
                 if (reference != null) {
-                    final int replacementOffset = findReplacementOffset(selectionEndOffset, reference);
+                    int replacementOffset = findReplacementOffset(selectionEndOffset, reference);
                     if (replacementOffset > document.getTextLength()) {
                         LOG.error(
                             "Invalid replacementOffset: " + replacementOffset + " returned by reference " + reference +
@@ -258,7 +259,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
     private void addDefaultAdvertisements(CompletionParameters parameters) {
         if (DumbService.isDumb(getProject())) {
-            addAdvertisement("Results might be incomplete while indexing is in progress", AllIcons.General.Warning);
+            addAdvertisement("Results might be incomplete while indexing is in progress", PlatformIconGroup.generalWarning());
             return;
         }
 
@@ -316,7 +317,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
     @RequiredReadAction
     private static int findReplacementOffset(int selectionEndOffset, PsiReference reference) {
-        final List<TextRange> ranges = ReferenceRange.getAbsoluteRanges(reference);
+        List<TextRange> ranges = ReferenceRange.getAbsoluteRanges(reference);
         for (TextRange range : ranges) {
             if (range.contains(selectionEndOffset)) {
                 return range.getEndOffset();
@@ -350,7 +351,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     private void trackModifiers() {
         assert !isAutopopupCompletion();
 
-        final JComponent contentComponent = myEditor.getContentComponent();
+        JComponent contentComponent = myEditor.getContentComponent();
         contentComponent.addKeyListener(new ModifierTracker(contentComponent));
     }
 
@@ -620,7 +621,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
         GuiUtils.invokeLaterIfNeeded(
             () -> {
-                final CompletionPhase phase = CompletionServiceImpl.getCompletionPhase();
+                CompletionPhase phase = CompletionServiceImpl.getCompletionPhase();
                 if (!(phase instanceof CompletionPhase.BgCalculation) || phase.indicator != this) {
                     return;
                 }
@@ -645,7 +646,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
                 if (myCount == 0) {
                     myLookup.hideLookup(false);
                     if (!isAutopopupCompletion()) {
-                        final CompletionProgressIndicator current = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
+                        CompletionProgressIndicator current = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
                         LOG.assertTrue(current == null, current + "!=" + this);
 
                         handleEmptyLookup(!((CompletionPhase.BgCalculation)phase).modifiersChanged);
@@ -665,7 +666,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     private boolean hideAutopopupIfMeaningless() {
         if (!myLookup.isLookupDisposed() && isAutopopupCompletion() && !myLookup.isSelectionTouched() && !myLookup.isCalculating()) {
             myLookup.refreshUi(true, false);
-            final List<LookupElement> items = myLookup.getItems();
+            List<LookupElement> items = myLookup.getItems();
 
             for (LookupElement item : items) {
                 if (!isAlreadyInTheEditor(item)) {
@@ -750,18 +751,18 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     @Override
     @RequiredUIAccess
     public void prefixUpdated() {
-        final int caretOffset = myEditor.getCaretModel().getOffset();
+        int caretOffset = myEditor.getCaretModel().getOffset();
         if (caretOffset < myStartCaret) {
             scheduleRestart();
             myRestartingPrefixConditions.clear();
             return;
         }
 
-        final CharSequence text = myEditor.getDocument().getCharsSequence();
+        CharSequence text = myEditor.getDocument().getCharsSequence();
         for (Pair<Integer, ElementPattern<String>> pair : myRestartingPrefixConditions) {
             int start = pair.first;
             if (caretOffset >= start && start >= 0 && caretOffset <= text.length()) {
-                final String newPrefix = text.subSequence(start, caretOffset).toString();
+                String newPrefix = text.subSequence(start, caretOffset).toString();
                 if (pair.second.accepts(newPrefix)) {
                     scheduleRestart();
                     myRestartingPrefixConditions.clear();
@@ -786,7 +787,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
         cancel();
 
-        final CompletionProgressIndicator current = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
+        CompletionProgressIndicator current = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
         if (this != current) {
             LOG.error(current + "!=" + this);
         }
@@ -837,9 +838,9 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
     @RequiredUIAccess
     private static LightweightHintImpl showErrorHint(Project project, Editor editor, String text) {
-        final LightweightHintImpl[] result = {null};
-        final EditorHintListener listener = (project1, hint, flags) -> result[0] = hint;
-        final MessageBusConnection connection = project.getMessageBus().connect();
+        LightweightHintImpl[] result = {null};
+        EditorHintListener listener = (project1, hint, flags) -> result[0] = hint;
+        MessageBusConnection connection = project.getMessageBus().connect();
         connection.subscribe(EditorHintListener.class, listener);
         assert text != null;
         HintManager.getInstance().showInformationHint(editor, StringUtil.escapeXmlEntities(text), HintManager.UNDER);
@@ -949,10 +950,10 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         }
 
         private void processModifier(KeyEvent e) {
-            final int code = e.getKeyCode();
+            int code = e.getKeyCode();
             if (code == KeyEvent.VK_CONTROL || code == KeyEvent.VK_META || code == KeyEvent.VK_ALT || code == KeyEvent.VK_SHIFT) {
                 myContentComponent.removeKeyListener(this);
-                final CompletionPhase phase = CompletionServiceImpl.getCompletionPhase();
+                CompletionPhase phase = CompletionServiceImpl.getCompletionPhase();
                 if (phase instanceof CompletionPhase.BgCalculation bgCalculation) {
                     bgCalculation.modifiersChanged = true;
                 }
