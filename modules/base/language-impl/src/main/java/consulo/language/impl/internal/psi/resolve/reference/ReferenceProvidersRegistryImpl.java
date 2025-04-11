@@ -23,7 +23,7 @@ import consulo.language.psi.*;
 import consulo.language.util.ProcessingContext;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.collection.FactoryMap;
+import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ControlFlowException;
 import jakarta.annotation.Nonnull;
@@ -39,49 +39,51 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
     private static final Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> PRIORITY_COMPARATOR = (o1, o2) -> Comparing
         .compare(o2.priority, o1.priority);
 
-    private final Map<Language, PsiReferenceRegistrarImpl> myRegistrars = FactoryMap.create(language -> {
-        PsiReferenceRegistrarImpl registrar = new PsiReferenceRegistrarImpl();
-        for (PsiReferenceContributor contributor : PsiReferenceContributor.forLanguage(language)) {
-            try {
-                contributor.registerReferenceProviders(registrar);
-            }
-            catch (Throwable e) {
-                if (e instanceof ControlFlowException) {
-                    ControlFlowException.rethrow(e);
-                }
-                LOG.error(e);
-            }
-        }
-
-        List<PsiReferenceProviderByPattern> referenceProviderBeans = PsiReferenceProviderByPattern.forLanguage(language);
-        for (final PsiReferenceProviderByPattern provider : referenceProviderBeans) {
-            try {
-                final ElementPattern<PsiElement> pattern = provider.getElementPattern();
-                registrar.registerReferenceProvider(pattern, new PsiReferenceProvider() {
-                    @Nonnull
-                    @Override
-                    public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
-                        return provider.getReferencesByElement(element, context);
-                    }
-                });
-            }
-            catch (Throwable e) {
-                if (e instanceof ControlFlowException) {
-                    ControlFlowException.rethrow(e);
-                }
-
-                LOG.error(e);
-            }
-        }
-        return registrar;
-    });
+    private final Map<Language, PsiReferenceRegistrarImpl> myRegistrars = new ConcurrentHashMap<>();
 
     @Override
-    public PsiReferenceRegistrarImpl getRegistrar(Language language) {
-        return myRegistrars.get(language);
+    public PsiReferenceRegistrarImpl getRegistrar(Language in) {
+        return myRegistrars.computeIfAbsent(in, language -> {
+            PsiReferenceRegistrarImpl registrar = new PsiReferenceRegistrarImpl();
+            for (PsiReferenceContributor contributor : PsiReferenceContributor.forLanguage(language)) {
+                try {
+                    contributor.registerReferenceProviders(registrar);
+                }
+                catch (Throwable e) {
+                    if (e instanceof ControlFlowException) {
+                        throw ControlFlowException.rethrow(e);
+                    }
+                    LOG.error(e);
+                }
+            }
+
+            List<PsiReferenceProviderByPattern> referenceProviderBeans = PsiReferenceProviderByPattern.forLanguage(language);
+            for (final PsiReferenceProviderByPattern provider : referenceProviderBeans) {
+                try {
+                    final ElementPattern<PsiElement> pattern = provider.getElementPattern();
+                    registrar.registerReferenceProvider(pattern, new PsiReferenceProvider() {
+                        @Nonnull
+                        @Override
+                        public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
+                            return provider.getReferencesByElement(element, context);
+                        }
+                    });
+                }
+                catch (Throwable e) {
+                    if (e instanceof ControlFlowException) {
+                        throw ControlFlowException.rethrow(e);
+                    }
+
+                    LOG.error(e);
+                }
+            }
+
+            return registrar;
+        }) ;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public PsiReference[] doGetReferencesFromProviders(PsiElement context, PsiReferenceService.Hints hints) {
         List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> providersForContextLanguage = getRegistrar(context.getLanguage()).getPairsByElement(context, hints);
 
@@ -99,11 +101,11 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
         }
 
         List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> list = ContainerUtil.concat(providersForContextLanguage, providersForAllLanguages);
-        @SuppressWarnings("unchecked") ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>[] providers = list.toArray(new ProviderBinding.ProviderInfo[list.size()]);
+        ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>[] providers = list.toArray(new ProviderBinding.ProviderInfo[list.size()]);
 
         Arrays.sort(providers, PRIORITY_COMPARATOR);
 
-        List<PsiReference> result = new ArrayList<PsiReference>();
+        List<PsiReference> result = new ArrayList<>();
         final double maxPriority = providers[0].priority;
         next:
         for (ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> trinity : providers) {
