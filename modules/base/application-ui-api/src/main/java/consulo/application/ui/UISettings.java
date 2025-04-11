@@ -137,7 +137,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean ENABLE_ALPHA_MODE = false;
   public int ALPHA_MODE_DELAY = 1500;
   public float ALPHA_MODE_RATIO = 0.5f;
-  public int MAX_CLIPBOARD_CONTENTS = 5;
+  public int MAX_CLIPBOARD_CONTENTS = 25;
   public boolean SHOW_ICONS_IN_MENUS = true;
   public boolean DISABLE_MNEMONICS = Platform.current().os().isMac(); // IDEADEV-33409, should be disabled by default on MacOS
   public boolean DISABLE_MNEMONICS_IN_CONTROLS = false;
