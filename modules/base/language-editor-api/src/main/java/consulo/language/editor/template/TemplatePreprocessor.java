@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template;
 
 import consulo.annotation.component.ComponentScope;
@@ -27,7 +26,7 @@ import consulo.language.psi.PsiFile;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplatePreprocessor {
-  ExtensionPointName<TemplatePreprocessor> EP_NAME = ExtensionPointName.create(TemplatePreprocessor.class);
+    ExtensionPointName<TemplatePreprocessor> EP_NAME = ExtensionPointName.create(TemplatePreprocessor.class);
 
-  void preprocessTemplate(final Editor editor, final PsiFile file, int caretOffset, final String textToInsert, final String templateText);
+    void preprocessTemplate(final Editor editor, final PsiFile file, int caretOffset, final String textToInsert, final String templateText);
 }

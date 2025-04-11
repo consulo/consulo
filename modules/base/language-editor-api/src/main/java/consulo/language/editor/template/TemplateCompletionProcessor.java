@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template;
 
 import consulo.annotation.component.ComponentScope;
@@ -26,7 +25,7 @@ import consulo.component.extension.ExtensionPointName;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplateCompletionProcessor {
-  ExtensionPointName<TemplateCompletionProcessor> EP_NAME = ExtensionPointName.create(TemplateCompletionProcessor.class);
+    ExtensionPointName<TemplateCompletionProcessor> EP_NAME = ExtensionPointName.create(TemplateCompletionProcessor.class);
 
-  boolean nextTabOnItemSelected(ExpressionContext context, final LookupElement item);
+    boolean nextTabOnItemSelected(ExpressionContext context, final LookupElement item);
 }

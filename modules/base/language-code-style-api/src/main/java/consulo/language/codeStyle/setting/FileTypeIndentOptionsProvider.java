@@ -35,21 +35,22 @@ import jakarta.annotation.Nonnull;
 /**
  * Allows to specify indent options for specific file types as opposed to languages. For a language it is highly recommended to use
  * <code>LanguageCodeStyleSettingsProvider</code>.
+ *
  * @see LanguageCodeStyleSettingsProvider
  * @see CodeStyleSettings#getIndentOptions(FileType)
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileTypeIndentOptionsProvider {
-  ExtensionPointName<FileTypeIndentOptionsProvider> EP_NAME = ExtensionPointName.create(FileTypeIndentOptionsProvider.class);
-  
-  CommonCodeStyleSettings.IndentOptions createIndentOptions();
+    ExtensionPointName<FileTypeIndentOptionsProvider> EP_NAME = ExtensionPointName.create(FileTypeIndentOptionsProvider.class);
 
-  FileType getFileType();
+    CommonCodeStyleSettings.IndentOptions createIndentOptions();
 
-  IndentOptionsEditor createOptionsEditor();
+    FileType getFileType();
 
-  @Nonnull
-  String getPreviewText();
+    IndentOptionsEditor createOptionsEditor();
 
-  void prepareForReformat(final PsiFile psiFile);
+    @Nonnull
+    String getPreviewText();
+
+    void prepareForReformat(final PsiFile psiFile);
 }

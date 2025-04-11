@@ -44,6 +44,7 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,144 +54,169 @@ import java.util.Map;
 @State(name = "HighlightingSettingsPerFile", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
 public class HighlightingSettingsPerFile extends HighlightingLevelManager implements PersistentStateComponent<Element> {
-  private static final String SETTING_TAG = "setting";
-  private static final String ROOT_ATT_PREFIX = "root";
-  private static final String FILE_ATT = "file";
+    private static final String SETTING_TAG = "setting";
+    private static final String ROOT_ATT_PREFIX = "root";
+    private static final String FILE_ATT = "file";
 
-  public static HighlightingSettingsPerFile getInstance(Project project) {
-    return (HighlightingSettingsPerFile)project.getInstance(HighlightingLevelManager.class);
-  }
-
-  private final Map<VirtualFile, FileHighlightingSetting[]> myHighlightSettings = new HashMap<VirtualFile, FileHighlightingSetting[]>();
-
-  private final MessageBus myBus;
-
-  @Inject
-  public HighlightingSettingsPerFile(@Nonnull Project project) {
-    myBus = project.getMessageBus();
-  }
-
-  @Nonnull
-  public FileHighlightingSetting getHighlightingSettingForRoot(@Nonnull PsiElement root) {
-    final PsiFile containingFile = root.getContainingFile();
-    final VirtualFile virtualFile = containingFile.getVirtualFile();
-    FileHighlightingSetting[] fileHighlightingSettings = myHighlightSettings.get(virtualFile);
-    final int index = PsiUtilBase.getRootIndex(root);
-
-    if (fileHighlightingSettings == null || fileHighlightingSettings.length <= index) {
-      return getDefaultHighlightingSetting(root.getProject(), virtualFile);
+    public static HighlightingSettingsPerFile getInstance(Project project) {
+        return (HighlightingSettingsPerFile)project.getInstance(HighlightingLevelManager.class);
     }
-    return fileHighlightingSettings[index];
-  }
 
-  @Nonnull
-  private static FileHighlightingSetting getDefaultHighlightingSetting(@Nonnull Project project, final VirtualFile virtualFile) {
-    if (virtualFile != null) {
-      List<DefaultHighlightingSettingProvider> filtered = DumbService.getInstance(project).filterByDumbAwareness(DefaultHighlightingSettingProvider.EP_NAME.getExtensionList());
-      for (DefaultHighlightingSettingProvider p : filtered) {
-        FileHighlightingSetting setting = p.getDefaultSetting(project, virtualFile);
-        if (setting != null) {
-          return setting;
+    private final Map<VirtualFile, FileHighlightingSetting[]> myHighlightSettings = new HashMap<VirtualFile, FileHighlightingSetting[]>();
+
+    private final MessageBus myBus;
+
+    @Inject
+    public HighlightingSettingsPerFile(@Nonnull Project project) {
+        myBus = project.getMessageBus();
+    }
+
+    @Nonnull
+    public FileHighlightingSetting getHighlightingSettingForRoot(@Nonnull PsiElement root) {
+        final PsiFile containingFile = root.getContainingFile();
+        final VirtualFile virtualFile = containingFile.getVirtualFile();
+        FileHighlightingSetting[] fileHighlightingSettings = myHighlightSettings.get(virtualFile);
+        final int index = PsiUtilBase.getRootIndex(root);
+
+        if (fileHighlightingSettings == null || fileHighlightingSettings.length <= index) {
+            return getDefaultHighlightingSetting(root.getProject(), virtualFile);
         }
-      }
-    }
-    return FileHighlightingSetting.FORCE_HIGHLIGHTING;
-  }
-
-  @Nonnull
-  private static FileHighlightingSetting[] getDefaults(@Nonnull PsiFile file) {
-    final int rootsCount = file.getViewProvider().getLanguages().size();
-    final FileHighlightingSetting[] fileHighlightingSettings = new FileHighlightingSetting[rootsCount];
-    for (int i = 0; i < fileHighlightingSettings.length; i++) {
-      fileHighlightingSettings[i] = FileHighlightingSetting.FORCE_HIGHLIGHTING;
-    }
-    return fileHighlightingSettings;
-  }
-
-  public void setHighlightingSettingForRoot(@Nonnull PsiElement root, @Nonnull FileHighlightingSetting setting) {
-    final PsiFile containingFile = root.getContainingFile();
-    final VirtualFile virtualFile = containingFile.getVirtualFile();
-    if (virtualFile == null) return;
-    FileHighlightingSetting[] defaults = myHighlightSettings.get(virtualFile);
-    int rootIndex = PsiUtilBase.getRootIndex(root);
-    if (defaults != null && rootIndex >= defaults.length) defaults = null;
-    if (defaults == null) defaults = getDefaults(containingFile);
-    defaults[rootIndex] = setting;
-    boolean toRemove = true;
-    for (FileHighlightingSetting aDefault : defaults) {
-      if (aDefault != FileHighlightingSetting.NONE) toRemove = false;
-    }
-    if (toRemove) {
-      myHighlightSettings.remove(virtualFile);
-    }
-    else {
-      myHighlightSettings.put(virtualFile, defaults);
+        return fileHighlightingSettings[index];
     }
 
-    myBus.syncPublisher(FileHighlightingSettingListener.class).settingChanged(root, setting);
-  }
-
-  @Override
-  public void loadState(Element element) {
-    List children = element.getChildren(SETTING_TAG);
-    for (final Object aChildren : children) {
-      final Element child = (Element)aChildren;
-      final String url = child.getAttributeValue(FILE_ATT);
-      if (url == null) continue;
-      final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(url);
-      if (fileByUrl != null) {
-        final List<FileHighlightingSetting> settings = new ArrayList<FileHighlightingSetting>();
-        int index = 0;
-        while (child.getAttributeValue(ROOT_ATT_PREFIX + index) != null) {
-          final String attributeValue = child.getAttributeValue(ROOT_ATT_PREFIX + index++);
-          settings.add(Enum.valueOf(FileHighlightingSetting.class, attributeValue));
+    @Nonnull
+    private static FileHighlightingSetting getDefaultHighlightingSetting(@Nonnull Project project, final VirtualFile virtualFile) {
+        if (virtualFile != null) {
+            List<DefaultHighlightingSettingProvider> filtered =
+                DumbService.getInstance(project).filterByDumbAwareness(DefaultHighlightingSettingProvider.EP_NAME.getExtensionList());
+            for (DefaultHighlightingSettingProvider p : filtered) {
+                FileHighlightingSetting setting = p.getDefaultSetting(project, virtualFile);
+                if (setting != null) {
+                    return setting;
+                }
+            }
         }
-        myHighlightSettings.put(fileByUrl, settings.toArray(new FileHighlightingSetting[settings.size()]));
-      }
+        return FileHighlightingSetting.FORCE_HIGHLIGHTING;
     }
-  }
 
-  @Override
-  public Element getState() {
-    final Element element = new Element("state");
-    for (Map.Entry<VirtualFile, FileHighlightingSetting[]> entry : myHighlightSettings.entrySet()) {
-      final Element child = new Element(SETTING_TAG);
-
-      final VirtualFile vFile = entry.getKey();
-      if (!vFile.isValid()) continue;
-      child.setAttribute(FILE_ATT, vFile.getUrl());
-      for (int i = 0; i < entry.getValue().length; i++) {
-        final FileHighlightingSetting fileHighlightingSetting = entry.getValue()[i];
-        child.setAttribute(ROOT_ATT_PREFIX + i, fileHighlightingSetting.toString());
-      }
-      element.addContent(child);
+    @Nonnull
+    private static FileHighlightingSetting[] getDefaults(@Nonnull PsiFile file) {
+        final int rootsCount = file.getViewProvider().getLanguages().size();
+        final FileHighlightingSetting[] fileHighlightingSettings = new FileHighlightingSetting[rootsCount];
+        for (int i = 0; i < fileHighlightingSettings.length; i++) {
+            fileHighlightingSettings[i] = FileHighlightingSetting.FORCE_HIGHLIGHTING;
+        }
+        return fileHighlightingSettings;
     }
-    return element;
-  }
 
-  @Override
-  public boolean shouldHighlight(@Nonnull PsiElement psiRoot) {
-    final FileHighlightingSetting settingForRoot = getHighlightingSettingForRoot(psiRoot);
-    return settingForRoot != FileHighlightingSetting.SKIP_HIGHLIGHTING;
-  }
+    public void setHighlightingSettingForRoot(@Nonnull PsiElement root, @Nonnull FileHighlightingSetting setting) {
+        final PsiFile containingFile = root.getContainingFile();
+        final VirtualFile virtualFile = containingFile.getVirtualFile();
+        if (virtualFile == null) {
+            return;
+        }
+        FileHighlightingSetting[] defaults = myHighlightSettings.get(virtualFile);
+        int rootIndex = PsiUtilBase.getRootIndex(root);
+        if (defaults != null && rootIndex >= defaults.length) {
+            defaults = null;
+        }
+        if (defaults == null) {
+            defaults = getDefaults(containingFile);
+        }
+        defaults[rootIndex] = setting;
+        boolean toRemove = true;
+        for (FileHighlightingSetting aDefault : defaults) {
+            if (aDefault != FileHighlightingSetting.NONE) {
+                toRemove = false;
+            }
+        }
+        if (toRemove) {
+            myHighlightSettings.remove(virtualFile);
+        }
+        else {
+            myHighlightSettings.put(virtualFile, defaults);
+        }
 
-  @Override
-  public boolean shouldInspect(@Nonnull PsiElement psiRoot) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return true;
+        myBus.syncPublisher(FileHighlightingSettingListener.class).settingChanged(root, setting);
+    }
 
-    if (!shouldHighlight(psiRoot)) return false;
-    final Project project = psiRoot.getProject();
-    final VirtualFile virtualFile = psiRoot.getContainingFile().getVirtualFile();
-    if (virtualFile == null || !virtualFile.isValid()) return false;
+    @Override
+    public void loadState(Element element) {
+        List children = element.getChildren(SETTING_TAG);
+        for (final Object aChildren : children) {
+            final Element child = (Element)aChildren;
+            final String url = child.getAttributeValue(FILE_ATT);
+            if (url == null) {
+                continue;
+            }
+            final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(url);
+            if (fileByUrl != null) {
+                final List<FileHighlightingSetting> settings = new ArrayList<FileHighlightingSetting>();
+                int index = 0;
+                while (child.getAttributeValue(ROOT_ATT_PREFIX + index) != null) {
+                    final String attributeValue = child.getAttributeValue(ROOT_ATT_PREFIX + index++);
+                    settings.add(Enum.valueOf(FileHighlightingSetting.class, attributeValue));
+                }
+                myHighlightSettings.put(fileByUrl, settings.toArray(new FileHighlightingSetting[settings.size()]));
+            }
+        }
+    }
 
-    if (ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile)) return false;
+    @Override
+    public Element getState() {
+        final Element element = new Element("state");
+        for (Map.Entry<VirtualFile, FileHighlightingSetting[]> entry : myHighlightSettings.entrySet()) {
+            final Element child = new Element(SETTING_TAG);
 
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    if (ProjectScopes.getLibrariesScope(project).contains(virtualFile) && !fileIndex.isInContent(virtualFile)) return false;
+            final VirtualFile vFile = entry.getKey();
+            if (!vFile.isValid()) {
+                continue;
+            }
+            child.setAttribute(FILE_ATT, vFile.getUrl());
+            for (int i = 0; i < entry.getValue().length; i++) {
+                final FileHighlightingSetting fileHighlightingSetting = entry.getValue()[i];
+                child.setAttribute(ROOT_ATT_PREFIX + i, fileHighlightingSetting.toString());
+            }
+            element.addContent(child);
+        }
+        return element;
+    }
 
-    if (RawFileLoaderHelper.isTooLargeForIntelligence(virtualFile)) return false;
+    @Override
+    public boolean shouldHighlight(@Nonnull PsiElement psiRoot) {
+        final FileHighlightingSetting settingForRoot = getHighlightingSettingForRoot(psiRoot);
+        return settingForRoot != FileHighlightingSetting.SKIP_HIGHLIGHTING;
+    }
 
-    final FileHighlightingSetting settingForRoot = getHighlightingSettingForRoot(psiRoot);
-    return settingForRoot != FileHighlightingSetting.SKIP_INSPECTION;
-  }
+    @Override
+    public boolean shouldInspect(@Nonnull PsiElement psiRoot) {
+        if (ApplicationManager.getApplication().isUnitTestMode()) {
+            return true;
+        }
+
+        if (!shouldHighlight(psiRoot)) {
+            return false;
+        }
+        final Project project = psiRoot.getProject();
+        final VirtualFile virtualFile = psiRoot.getContainingFile().getVirtualFile();
+        if (virtualFile == null || !virtualFile.isValid()) {
+            return false;
+        }
+
+        if (ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile)) {
+            return false;
+        }
+
+        final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+        if (ProjectScopes.getLibrariesScope(project).contains(virtualFile) && !fileIndex.isInContent(virtualFile)) {
+            return false;
+        }
+
+        if (RawFileLoaderHelper.isTooLargeForIntelligence(virtualFile)) {
+            return false;
+        }
+
+        final FileHighlightingSetting settingForRoot = getHighlightingSettingForRoot(psiRoot);
+        return settingForRoot != FileHighlightingSetting.SKIP_INSPECTION;
+    }
 }
