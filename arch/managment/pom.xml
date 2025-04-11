@@ -47,7 +47,7 @@
         <jaxb.version>4.0.0</jaxb.version>
         <jetty.version>11.0.15</jetty.version>
         <swt.version>3.120.0</swt.version>
-        <flatlaf.version>3.6-SNAPSHOT</flatlaf.version>
+        <flatlaf.version>3.6</flatlaf.version>
 
         <vaadin.flow.version>24.5.2</vaadin.flow.version>
 
@@ -958,14 +958,6 @@
         <repository>
             <id>consulo</id>
             <url>https://maven.consulo.io/repository/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>interval:60</updatePolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>flatlaf</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>interval:60</updatePolicy>
