@@ -15,6 +15,7 @@
  */
 package consulo.util.collection;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.ObjectUtil;
 
@@ -29,6 +30,8 @@ import java.util.function.Supplier;
  * NOT THREAD SAFE.
  * For thread-safe alternative please use {@link ConcurrentFactoryMap}
  */
+@Deprecated
+@DeprecationInfo("Use map#compureIfAbsent() method")
 public abstract class FactoryMap<K, V> implements Map<K, V> {
   private Map<K, V> myMap;
 
@@ -42,7 +45,6 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
 
   private FactoryMap(boolean safe) {
   }
-
 
   @Nonnull
   protected Map<K, V> createMap() {
