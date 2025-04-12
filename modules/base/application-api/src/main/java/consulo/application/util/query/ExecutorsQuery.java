@@ -14,34 +14,33 @@ import java.util.List;
  * @author max
  */
 public final class ExecutorsQuery<Result, Parameter> extends AbstractQuery<Result> {
-  private static final Logger LOG = Logger.getInstance(ExecutorsQuery.class);
+    private static final Logger LOG = Logger.getInstance(ExecutorsQuery.class);
 
-  private final List<? extends QueryExecutor<Result, Parameter>> myExecutors;
-  private final Parameter myParameters;
+    private final List<? extends QueryExecutor<Result, Parameter>> myExecutors;
+    private final Parameter myParameters;
 
-  public ExecutorsQuery(@Nonnull final Parameter params, @Nonnull List<? extends QueryExecutor<Result, Parameter>> executors) {
-    myParameters = params;
-    myExecutors = executors;
-  }
-
-  @Override
-  protected boolean processResults(@Nonnull final Processor<? super Result> consumer) {
-    for (QueryExecutor<Result, Parameter> executor : myExecutors) {
-      try {
-        ProgressManager.checkCanceled();
-        if (!executor.execute(myParameters, consumer)) {
-          return false;
-        }
-      }
-      catch (ProcessCanceledException | IndexNotReadyException e) {
-        throw e;
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
+    public ExecutorsQuery(@Nonnull final Parameter params, @Nonnull List<? extends QueryExecutor<Result, Parameter>> executors) {
+        myParameters = params;
+        myExecutors = executors;
     }
 
-    return true;
-  }
+    @Override
+    protected boolean processResults(@Nonnull final Processor<? super Result> consumer) {
+        for (QueryExecutor<Result, Parameter> executor : myExecutors) {
+            try {
+                ProgressManager.checkCanceled();
+                if (!executor.execute(myParameters, consumer)) {
+                    return false;
+                }
+            }
+            catch (ProcessCanceledException | IndexNotReadyException e) {
+                throw e;
+            }
+            catch (Exception e) {
+                LOG.error(e);
+            }
+        }
 
+        return true;
+    }
 }

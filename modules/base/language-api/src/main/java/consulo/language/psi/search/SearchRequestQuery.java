@@ -12,21 +12,21 @@ import jakarta.annotation.Nonnull;
  * @author peter
  */
 public class SearchRequestQuery extends AbstractQuery<PsiReference> {
-  private final Project myProject;
-  private final SearchRequestCollector myRequests;
+    private final Project myProject;
+    private final SearchRequestCollector myRequests;
 
-  public SearchRequestQuery(@Nonnull Project project, @Nonnull SearchRequestCollector requests) {
-    myProject = project;
-    myRequests = requests;
-  }
+    public SearchRequestQuery(@Nonnull Project project, @Nonnull SearchRequestCollector requests) {
+        myProject = project;
+        myRequests = requests;
+    }
 
-  @Override
-  protected boolean processResults(@Nonnull Processor<? super PsiReference> consumer) {
-    return PsiSearchHelper.getInstance(myProject).processRequests(myRequests, consumer);
-  }
+    @Override
+    protected boolean processResults(@Nonnull Processor<? super PsiReference> consumer) {
+        return PsiSearchHelper.getInstance(myProject).processRequests(myRequests, consumer);
+    }
 
-  @Override
-  public String toString() {
-    return myRequests.toString();
-  }
+    @Override
+    public String toString() {
+        return myRequests.toString();
+    }
 }

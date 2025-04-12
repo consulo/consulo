@@ -27,16 +27,16 @@ import java.util.function.Supplier;
  * @author cdr
  */
 public abstract class ReadActionProcessor<T> implements Processor<T> {
-  @Override
-  public boolean process(final T t) {
-    return ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> processInReadAction(t));
-  }
+    @Override
+    public boolean process(final T t) {
+        return ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> processInReadAction(t));
+    }
 
-  @RequiredReadAction
-  public abstract boolean processInReadAction(T t);
+    @RequiredReadAction
+    public abstract boolean processInReadAction(T t);
 
-  @Nonnull
-  public static <T> Processor<T> wrapInReadAction(@Nonnull final Processor<T> processor) {
-    return t -> ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> processor.process(t));
-  }
+    @Nonnull
+    public static <T> Processor<T> wrapInReadAction(@Nonnull final Processor<T> processor) {
+        return t -> ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> processor.process(t));
+    }
 }
