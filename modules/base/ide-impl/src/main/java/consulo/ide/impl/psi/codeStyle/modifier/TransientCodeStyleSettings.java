@@ -1,21 +1,21 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.codeStyle.modifier;
 
-import consulo.language.codeStyle.CodeStyle;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.ModificationTracker;
 import consulo.document.util.TextRange;
-import consulo.language.psi.PsiFile;
+import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.FileIndentOptionsProvider;
-import consulo.application.util.function.Processor;
+import consulo.language.psi.PsiFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Contain temporarily modified code style settings if there are on-the-fly code style modifications on top of initial project settings for
@@ -56,11 +56,12 @@ public final class TransientCodeStyleSettings extends CodeStyleSettings {
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public IndentOptions getIndentOptionsByFile(
         @Nullable PsiFile file,
         @Nullable TextRange formatRange,
         boolean ignoreDocOptions,
-        @Nullable Processor<FileIndentOptionsProvider> providerProcessor
+        @Nullable Predicate<FileIndentOptionsProvider> providerProcessor
     ) {
         if (file != null && file.isValid()) {
             FileType fileType = file.getFileType();
@@ -94,5 +95,4 @@ public final class TransientCodeStyleSettings extends CodeStyleSettings {
     public List<Object> getDependencies() {
         return myDependencies;
     }
-
 }

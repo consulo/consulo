@@ -28,5 +28,5 @@ import consulo.language.psi.PsiFile;
 public interface TemplatePreprocessor {
     ExtensionPointName<TemplatePreprocessor> EP_NAME = ExtensionPointName.create(TemplatePreprocessor.class);
 
-    void preprocessTemplate(final Editor editor, final PsiFile file, int caretOffset, final String textToInsert, final String templateText);
+    void preprocessTemplate(Editor editor, PsiFile file, int caretOffset, String textToInsert, String templateText);
 }

@@ -27,5 +27,5 @@ import consulo.component.extension.ExtensionPointName;
 public interface TemplateCompletionProcessor {
     ExtensionPointName<TemplateCompletionProcessor> EP_NAME = ExtensionPointName.create(TemplateCompletionProcessor.class);
 
-    boolean nextTabOnItemSelected(ExpressionContext context, final LookupElement item);
+    boolean nextTabOnItemSelected(ExpressionContext context, LookupElement item);
 }

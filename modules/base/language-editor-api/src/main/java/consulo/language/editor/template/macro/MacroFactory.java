@@ -33,7 +33,7 @@ public class MacroFactory {
     }
 
     public static Macro[] getMacros() {
-        final Collection<? extends Macro> values = myMacroTable.values();
+        Collection<? extends Macro> values = myMacroTable.values();
         return values.toArray(new Macro[values.size()]);
     }
 

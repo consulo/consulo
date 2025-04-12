@@ -79,7 +79,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @return a PSI file instance with given text, or null for default implementation using provider's language.
      */
     @Nullable
-    public PsiFile createFileFromText(final Project project, final String text) {
+    public PsiFile createFileFromText(Project project, String text) {
         return null;
     }
 
@@ -106,7 +106,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
 
     @Nonnull
     public static Language[] getLanguagesWithCodeStyleSettings() {
-        final ArrayList<Language> languages = new ArrayList<>();
+        ArrayList<Language> languages = new ArrayList<>();
         for (LanguageCodeStyleSettingsProvider provider : EP_NAME.getExtensionList()) {
             languages.add(provider.getLanguage());
         }
@@ -115,12 +115,12 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
 
     @Nullable
     public static String getCodeSample(Language lang, @Nonnull SettingsType settingsType) {
-        final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
+        LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         return provider != null ? provider.getCodeSample(settingsType) : null;
     }
 
     public static int getRightMargin(Language lang, @Nonnull SettingsType settingsType) {
-        final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
+        LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         return provider != null ? provider.getRightMargin(settingsType) : -1;
     }
 
@@ -131,7 +131,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @return Found provider or {@code null} if it doesn't exist neither for the language itself nor for any of its base languages.
      */
     @Nullable
-    public static LanguageCodeStyleSettingsProvider findUsingBaseLanguage(@Nonnull final Language language) {
+    public static LanguageCodeStyleSettingsProvider findUsingBaseLanguage(@Nonnull Language language) {
         for (Language currLang = language; currLang != null; currLang = currLang.getBaseLanguage()) {
             LanguageCodeStyleSettingsProvider curr = forLanguage(currLang);
             if (curr != null) {
@@ -161,13 +161,13 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
 
     @Nullable
     public static CommonCodeStyleSettings getDefaultCommonSettings(Language lang) {
-        final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
+        LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         return provider != null ? provider.getDefaultCommonSettings() : null;
     }
 
     @Nullable
     public static String getFileExt(Language lang) {
-        final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
+        LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         return provider != null ? provider.getFileExt() : null;
     }
 
@@ -181,19 +181,19 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      */
     @Nonnull
     public static String getLanguageName(Language lang) {
-        final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
+        LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         String providerLangName = provider != null ? provider.getLanguageName() : null;
         return providerLangName != null ? providerLangName : lang.getDisplayName();
     }
 
     @Nullable
-    public static PsiFile createFileFromText(final Language language, final Project project, final String text) {
-        final LanguageCodeStyleSettingsProvider provider = forLanguage(language);
+    public static PsiFile createFileFromText(Language language, Project project, String text) {
+        LanguageCodeStyleSettingsProvider provider = forLanguage(language);
         return provider != null ? provider.createFileFromText(project, text) : null;
     }
 
     @Nullable
-    public static LanguageCodeStyleSettingsProvider forLanguage(final Language language) {
+    public static LanguageCodeStyleSettingsProvider forLanguage(Language language) {
         for (LanguageCodeStyleSettingsProvider provider : EP_NAME.getExtensionList()) {
             if (provider.getLanguage().equals(language)) {
                 return provider;
@@ -316,7 +316,6 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
                 " doesn't implement createSettingsPage()"
         );
     }
-
 
     /**
      * @return A list of providers implementing {@link #createSettingsPage(CodeStyleSettings, CodeStyleSettings)}

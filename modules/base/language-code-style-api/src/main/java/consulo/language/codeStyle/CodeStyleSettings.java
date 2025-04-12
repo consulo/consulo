@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.util.function.Processor;
 import consulo.component.extension.ExtensionException;
 import consulo.component.persist.UnknownElementCollector;
 import consulo.component.persist.UnknownElementWriter;
@@ -34,15 +34,14 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+import org.jetbrains.annotations.TestOnly;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -71,12 +70,9 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
 
     private final ClassMap<CustomCodeStyleSettings> myCustomSettings = new ClassMap<>();
 
-    @NonNls
     private static final String REPEAT_ANNOTATIONS = "REPEAT_ANNOTATIONS";
-    @NonNls
     private static final String ADDITIONAL_INDENT_OPTIONS = "ADDITIONAL_INDENT_OPTIONS";
 
-    @NonNls
     private static final String FILETYPE = "fileType";
     private CommonCodeStyleSettingsManager myCommonSettingsManager = new CommonCodeStyleSettingsManager(this);
 
@@ -103,13 +99,11 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         if (loadExtensions) {
             Application application = Application.get();
 
-            application.getExtensionPoint(CodeStyleSettingsProvider.class).forEachExtensionSafe(provider -> {
-                addCustomSettings(provider.createCustomSettings(this));
-            });
+            application.getExtensionPoint(CodeStyleSettingsProvider.class)
+                .forEachExtensionSafe(provider -> addCustomSettings(provider.createCustomSettings(this)));
 
-            application.getExtensionPoint(LanguageCodeStyleSettingsProvider.class).forEachExtensionSafe(provider -> {
-                addCustomSettings(provider.createCustomSettings(this));
-            });
+            application.getExtensionPoint(LanguageCodeStyleSettingsProvider.class)
+                .forEachExtensionSafe(provider -> addCustomSettings(provider.createCustomSettings(this)));
         }
     }
 
@@ -130,7 +124,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         PARAMETER_TYPE_TO_NAME.addPair("*Exception", "e");
     }
 
-    private static void initGeneralLocalVariable(@NonNls TypeToNameMap map) {
+    private static void initGeneralLocalVariable(TypeToNameMap map) {
         map.addPair("int", "i");
         map.addPair("byte", "b");
         map.addPair("char", "c");
@@ -182,7 +176,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         synchronized (myCustomSettings) {
             myCustomSettings.clear();
 
-            for (final CustomCodeStyleSettings settings : from.getCustomSettingsValues()) {
+            for (CustomCodeStyleSettings settings : from.getCustomSettingsValues()) {
                 addCustomSettings((CustomCodeStyleSettings)settings.clone());
             }
 
@@ -308,7 +302,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @deprecated Use JavaCodeStyleSettings.PARAMETER_TYPE_TO_NAME
      */
     @Deprecated
-    @NonNls
     public final TypeToNameMap PARAMETER_TYPE_TO_NAME = new TypeToNameMap();
     /**
      * @deprecated Use JavaCodeStyleSettings.LOCAL_VARIABLE_TYPE_TO_NAME
@@ -751,19 +744,16 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @deprecated Use HtmlCodeStyleSettings
      */
     @Deprecated
-    @NonNls
     public String HTML_ELEMENTS_TO_INSERT_NEW_LINE_BEFORE = "body,div,p,form,h1,h2,h3";
     /**
      * @deprecated Use HtmlCodeStyleSettings
      */
     @Deprecated
-    @NonNls
     public String HTML_ELEMENTS_TO_REMOVE_NEW_LINE_BEFORE = "br";
     /**
      * @deprecated Use HtmlCodeStyleSettings
      */
     @Deprecated
-    @NonNls
     public String HTML_DO_NOT_INDENT_CHILDREN_OF = "html,body,thead,tbody,tfoot";
     /**
      * @deprecated Use HtmlCodeStyleSettings
@@ -774,13 +764,11 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @deprecated Use HtmlCodeStyleSettings
      */
     @Deprecated
-    @NonNls
     public String HTML_KEEP_WHITESPACES_INSIDE = "span,pre,textarea";
     /**
      * @deprecated Use HtmlCodeStyleSettings
      */
     @Deprecated
-    @NonNls
     public String HTML_INLINE_ELEMENTS =
         "a,abbr,acronym,b,basefont,bdo,big,br,cite,cite,code,dfn,em,font,i,img,input,kbd," +
             "label,q,s,samp,select,span,strike,strong,sub,sup,textarea,tt,u,var";
@@ -788,7 +776,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @deprecated Use HtmlCodeStyleSettings
      */
     @Deprecated
-    @NonNls
     public String HTML_DONT_ADD_BREAKS_IF_INLINE_CONTENT = "title,h1,h2,h3,h4,h5,h6,p";
     /**
      * @deprecated Use HtmlCodeStyleSettings
@@ -1005,7 +992,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     }
 
     private static CommonCodeStyleSettings.IndentOptions getDefaultIndentOptions(FileType fileType) {
-        for (final FileTypeIndentOptionsProvider provider : FileTypeIndentOptionsProvider.EP_NAME.getExtensionList()) {
+        for (FileTypeIndentOptionsProvider provider : FileTypeIndentOptionsProvider.EP_NAME.getExtensionList()) {
             if (provider.getFileType().equals(fileType)) {
                 return getFileTypeIndentOptions(provider);
             }
@@ -1098,11 +1085,12 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @see FileIndentOptionsProvider
      */
     @Nonnull
+    @RequiredReadAction
     public CommonCodeStyleSettings.IndentOptions getIndentOptionsByFile(
         @Nullable PsiFile file,
         @Nullable TextRange formatRange,
         boolean ignoreDocOptions,
-        @Nullable Processor<FileIndentOptionsProvider> providerProcessor
+        @Nullable Predicate<FileIndentOptionsProvider> providerProcessor
     ) {
         if (file != null && file.isValid()) {
             boolean isFullReformat = isFileFullyCoveredByRange(file, formatRange);
@@ -1111,7 +1099,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
                 if (options != null) {
                     FileIndentOptionsProvider provider = options.getFileIndentOptionsProvider();
                     if (providerProcessor != null && provider != null) {
-                        providerProcessor.process(provider);
+                        providerProcessor.test(provider);
                     }
                     return options;
                 }
@@ -1122,7 +1110,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
                     CommonCodeStyleSettings.IndentOptions indentOptions = provider.getIndentOptions(this, file);
                     if (indentOptions != null) {
                         if (providerProcessor != null) {
-                            providerProcessor.process(provider);
+                            providerProcessor.test(provider);
                         }
                         indentOptions.setFileIndentOptionsProvider(provider);
                         logIndentOptions(file, provider, indentOptions);
@@ -1146,34 +1134,29 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         }
     }
 
+    @RequiredReadAction
     private static boolean isFileFullyCoveredByRange(@Nonnull PsiFile file, @Nullable TextRange formatRange) {
         return formatRange != null && file.getTextRange().equals(formatRange);
     }
 
+    @RequiredReadAction
     private static void logIndentOptions(
         @Nonnull PsiFile file,
         @Nonnull FileIndentOptionsProvider provider,
         @Nonnull CommonCodeStyleSettings.IndentOptions options
     ) {
-        LOG.debug("Indent options returned by " +
-            provider.getClass().getName() +
-            " for " +
-            file.getName() +
-            ": indent size=" +
-            options.INDENT_SIZE +
-            ", use tabs=" +
-            options.USE_TAB_CHARACTER +
-            ", tab size=" +
-            options.TAB_SIZE);
+        LOG.debug(
+            "Indent options returned by " + provider.getClass().getName() +
+                " for " + file.getName() +
+                ": indent size=" + options.INDENT_SIZE +
+                ", use tabs=" + options.USE_TAB_CHARACTER +
+                ", tab size=" + options.TAB_SIZE
+        );
     }
 
     @Nullable
     private CommonCodeStyleSettings.IndentOptions getLanguageIndentOptions(@Nullable FileType fileType) {
-        if (!(fileType instanceof LanguageFileType)) {
-            return null;
-        }
-        Language lang = ((LanguageFileType)fileType).getLanguage();
-        return getIndentOptions(lang);
+        return fileType instanceof LanguageFileType languageFileType ? getIndentOptions(languageFileType.getLanguage()) : null;
     }
 
     /**
@@ -1241,11 +1224,11 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         }
 
         @Override
-        public void readExternal(@NonNls Element element) throws InvalidDataException {
+        public void readExternal(Element element) throws InvalidDataException {
             myPatterns.clear();
             myNames.clear();
-            for (final Object o : element.getChildren("pair")) {
-                @NonNls Element e = (Element)o;
+            for (Object o : element.getChildren("pair")) {
+                Element e = (Element)o;
 
                 String pattern = e.getAttributeValue("type");
                 String name = e.getAttributeValue("name");
@@ -1254,7 +1237,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
                 }
                 myPatterns.add(pattern);
                 myNames.add(name);
-
             }
         }
 
@@ -1263,7 +1245,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
             for (int i = 0; i < myPatterns.size(); i++) {
                 String pattern = myPatterns.get(i);
                 String name = myNames.get(i);
-                @NonNls Element element = new Element("pair");
+                Element element = new Element("pair");
                 parentNode.addContent(element);
                 element.setAttribute("type", pattern);
                 element.setAttribute("name", name);
@@ -1280,11 +1262,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
 
         @Override
         public boolean equals(Object other) {
-            if (other instanceof TypeToNameMap) {
-                TypeToNameMap otherMap = (TypeToNameMap)other;
-                return myPatterns.equals(otherMap.myPatterns) && myNames.equals(otherMap.myNames);
-            }
-            return false;
+            return other instanceof TypeToNameMap otherMap && myPatterns.equals(otherMap.myPatterns) && myNames.equals(otherMap.myNames);
         }
 
         @Override
@@ -1302,7 +1280,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
 
     private void registerAdditionalIndentOptions(FileType fileType, CommonCodeStyleSettings.IndentOptions options) {
         boolean exist = false;
-        for (final FileType existing : myAdditionalIndentOptions.keySet()) {
+        for (FileType existing : myAdditionalIndentOptions.keySet()) {
             if (Comparing.strEqual(existing.getDefaultExtension(), fileType.getDefaultExtension())) {
                 exist = true;
                 break;
@@ -1317,7 +1295,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     private void loadAdditionalIndentOptions() {
         synchronized (myAdditionalIndentOptions) {
             myLoadedAdditionalIndentOptions = true;
-            for (final FileTypeIndentOptionsProvider provider : FileTypeIndentOptionsProvider.EP_NAME.getExtensionList()) {
+            for (FileTypeIndentOptionsProvider provider : FileTypeIndentOptionsProvider.EP_NAME.getExtensionList()) {
                 if (!myAdditionalIndentOptions.containsKey(provider.getFileType())) {
                     registerAdditionalIndentOptions(provider.getFileType(), getFileTypeIndentOptions(provider));
                 }
@@ -1346,7 +1324,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     private static class TempFileType implements FileType {
         private final String myExtension;
 
-        private TempFileType(@Nonnull final String extension) {
+        private TempFileType(@Nonnull String extension) {
             myExtension = extension;
         }
 
@@ -1515,26 +1493,19 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof CodeStyleSettings)) {
-            return false;
-        }
-        if (!ReflectionUtil.comparePublicNonFinalFields(this, obj)) {
-            return false;
-        }
-        if (!mySoftMargins.equals(((CodeStyleSettings)obj).mySoftMargins)) {
-            return false;
-        }
-        if (!myExcludedFiles.equals(((CodeStyleSettings)obj).getExcludedFiles())) {
-            return false;
-        }
-        if (!OTHER_INDENT_OPTIONS.equals(((CodeStyleSettings)obj).OTHER_INDENT_OPTIONS)) {
-            return false;
-        }
-        if (!myCommonSettingsManager.equals(((CodeStyleSettings)obj).myCommonSettingsManager)) {
-            return false;
-        }
+        return obj == this
+            || obj instanceof CodeStyleSettings that
+            && ReflectionUtil.comparePublicNonFinalFields(this, obj)
+            && mySoftMargins.equals(that.mySoftMargins)
+            && myExcludedFiles.equals(that.getExcludedFiles())
+            && OTHER_INDENT_OPTIONS.equals(that.OTHER_INDENT_OPTIONS)
+            && myCommonSettingsManager.equals(that.myCommonSettingsManager)
+            && equalsCustomSettings(that);
+    }
+
+    private boolean equalsCustomSettings(CodeStyleSettings that) {
         for (CustomCodeStyleSettings customSettings : myCustomSettings.values()) {
-            if (!customSettings.equals(((CodeStyleSettings)obj).getCustomSettings(customSettings.getClass()))) {
+            if (!customSettings.equals(that.getCustomSettings(customSettings.getClass()))) {
                 return false;
             }
         }
@@ -1568,7 +1539,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     @SuppressWarnings("deprecation")
     public void resetDeprecatedFields() {
         CodeStyleSettings defaults = getDefaults();
-        ReflectionUtil.copyFields(this.getClass().getFields(), defaults, this, new DifferenceFilter<CodeStyleSettings>(this, defaults) {
+        ReflectionUtil.copyFields(this.getClass().getFields(), defaults, this, new DifferenceFilter<>(this, defaults) {
             @Override
             public boolean test(@Nonnull Field field) {
                 return field.getAnnotation(Deprecated.class) != null;

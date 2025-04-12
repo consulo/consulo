@@ -52,5 +52,5 @@ public interface FileTypeIndentOptionsProvider {
     @Nonnull
     String getPreviewText();
 
-    void prepareForReformat(final PsiFile psiFile);
+    void prepareForReformat(PsiFile psiFile);
 }

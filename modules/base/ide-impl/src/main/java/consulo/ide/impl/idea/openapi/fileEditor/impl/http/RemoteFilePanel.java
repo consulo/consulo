@@ -70,10 +70,10 @@ public class RemoteFilePanel implements PropertyChangeListener {
     private final MergingUpdateQueue myProgressUpdatesQueue;
     private final MyDownloadingListener myDownloadingListener;
     private final EventDispatcher<PropertyChangeListener> myDispatcher = EventDispatcher.create(PropertyChangeListener.class);
-    private @Nullable
-    TextEditor myFileEditor;
+    @Nullable
+    private TextEditor myFileEditor;
 
-    public RemoteFilePanel(final Project project, final HttpVirtualFile virtualFile) {
+    public RemoteFilePanel(Project project, HttpVirtualFile virtualFile) {
         myProject = project;
         myVirtualFile = virtualFile;
         myErrorLabel.setIcon(TargetAWT.to(PlatformIconGroup.generalError()));
@@ -81,7 +81,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
         myProgressUpdatesQueue = new MergingUpdateQueue("downloading progress updates", 300, false, myMainPanel);
         initToolbar(project);
 
-        final RemoteFileInfo remoteFileInfo = virtualFile.getFileInfo();
+        RemoteFileInfo remoteFileInfo = virtualFile.getFileInfo();
         myDownloadingListener = new MyDownloadingListener();
         remoteFileInfo.addDownloadingListener(myDownloadingListener);
         myCancelButton.addActionListener(e -> remoteFileInfo.cancelDownloading());
@@ -183,7 +183,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
 
     private class MyDownloadingListener implements FileDownloadingListener {
         @Override
-        public void fileDownloaded(final VirtualFile localFile) {
+        public void fileDownloaded(VirtualFile localFile) {
             switchEditor();
         }
 
@@ -206,7 +206,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
         }
 
         @Override
-        public void errorOccurred(@Nonnull final String errorMessage) {
+        public void errorOccurred(@Nonnull String errorMessage) {
             Application.get().invokeLater(() -> {
                 myErrorLabel.setText(errorMessage);
                 showCard(ERROR_CARD);
@@ -214,7 +214,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
         }
 
         @Override
-        public void progressMessageChanged(final boolean indeterminate, @Nonnull final String message) {
+        public void progressMessageChanged(boolean indeterminate, @Nonnull String message) {
             myProgressUpdatesQueue.queue(new Update("progress text") {
                 @Override
                 public void run() {
@@ -224,7 +224,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
         }
 
         @Override
-        public void progressFractionChanged(final double fraction) {
+        public void progressFractionChanged(double fraction) {
             myProgressUpdatesQueue.queue(new Update("fraction") {
                 @Override
                 public void run() {

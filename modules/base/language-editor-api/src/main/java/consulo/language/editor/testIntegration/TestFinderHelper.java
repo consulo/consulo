@@ -73,7 +73,7 @@ public class TestFinderHelper {
         return TestFinder.EP_NAME.getExtensionList();
     }
 
-    public static Integer calcTestNameProximity(final String className, final String testName) {
+    public static Integer calcTestNameProximity(String className, String testName) {
         int posProximity = testName.indexOf(className);
         int sizeProximity = testName.length() - className.length();
 
@@ -81,20 +81,20 @@ public class TestFinderHelper {
     }
 
     public static List<PsiElement> getSortedElements(
-        final List<Pair<? extends PsiNamedElement, Integer>> elementsWithWeights,
-        final boolean weightsAscending
+        List<Pair<? extends PsiNamedElement, Integer>> elementsWithWeights,
+        boolean weightsAscending
     ) {
         return getSortedElements(elementsWithWeights, weightsAscending, null);
     }
 
     public static List<PsiElement> getSortedElements(
-        final List<Pair<? extends PsiNamedElement, Integer>> elementsWithWeights,
-        final boolean weightsAscending,
-        @Nullable final Comparator<PsiElement> sameNameComparator
+        List<Pair<? extends PsiNamedElement, Integer>> elementsWithWeights,
+        boolean weightsAscending,
+        @Nullable Comparator<PsiElement> sameNameComparator
     ) {
-        Collections.sort(elementsWithWeights, new Comparator<>() {
-            @Override
-            public int compare(Pair<? extends PsiNamedElement, Integer> o1, Pair<? extends PsiNamedElement, Integer> o2) {
+        Collections.sort(
+            elementsWithWeights,
+            (o1, o2) -> {
                 int result = weightsAscending ? o1.second.compareTo(o2.second) : o2.second.compareTo(o1.second);
                 if (result == 0) {
                     result = Comparing.compare(o1.first.getName(), o2.first.getName());
@@ -105,9 +105,9 @@ public class TestFinderHelper {
 
                 return result;
             }
-        });
+        );
 
-        final List<PsiElement> result = new ArrayList<>(elementsWithWeights.size());
+        List<PsiElement> result = new ArrayList<>(elementsWithWeights.size());
         for (Pair<? extends PsiNamedElement, Integer> each : elementsWithWeights) {
             result.add(each.first);
         }

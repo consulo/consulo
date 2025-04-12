@@ -1,7 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.impl.internal.highlight;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.MarkupModel;
@@ -26,8 +27,8 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -37,21 +38,21 @@ import java.util.List;
 public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     @Override
     public void highlightsInsideVisiblePartAreProduced(
-        @Nonnull final HighlightingSession session,
+        @Nonnull HighlightingSession session,
         @Nullable Editor editor,
-        @Nonnull final List<? extends HighlightInfo> infos,
+        @Nonnull List<? extends HighlightInfo> infos,
         @Nonnull TextRange priorityRange,
         @Nonnull TextRange restrictRange,
-        final int groupId
+        int groupId
     ) {
-        final PsiFile psiFile = session.getPsiFile();
-        final Project project = psiFile.getProject();
-        final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
+        PsiFile psiFile = session.getPsiFile();
+        Project project = psiFile.getProject();
+        Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
         if (document == null) {
             return;
         }
-        final long modificationStamp = document.getModificationStamp();
-        final TextRange priorityIntersection = priorityRange.intersection(restrictRange);
+        long modificationStamp = document.getModificationStamp();
+        TextRange priorityIntersection = priorityRange.intersection(restrictRange);
         List<? extends HighlightInfo> infoCopy = new ArrayList<>(infos);
         ((HighlightingSessionImpl)session).applyInEDT(() -> {
             if (modificationStamp != document.getModificationStamp()) {
@@ -87,6 +88,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
         });
     }
 
+    @RequiredUIAccess
     public static void repaintErrorStripeAndIcon(@Nonnull Editor editor, @Nonnull Project project) {
         EditorMarkupModel markup = (EditorMarkupModel)editor.getMarkupModel();
         markup.repaintTrafficLightIcon();
@@ -94,21 +96,22 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     }
 
     @Override
+    @RequiredUIAccess
     public void highlightsOutsideVisiblePartAreProduced(
-        @Nonnull final HighlightingSession session,
+        @Nonnull HighlightingSession session,
         @Nullable Editor editor,
-        @Nonnull final List<? extends HighlightInfo> infos,
-        @Nonnull final TextRange priorityRange,
-        @Nonnull final TextRange restrictedRange,
-        final int groupId
+        @Nonnull List<? extends HighlightInfo> infos,
+        @Nonnull TextRange priorityRange,
+        @Nonnull TextRange restrictedRange,
+        int groupId
     ) {
-        final PsiFile psiFile = session.getPsiFile();
-        final Project project = psiFile.getProject();
-        final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
+        PsiFile psiFile = session.getPsiFile();
+        Project project = psiFile.getProject();
+        Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
         if (document == null) {
             return;
         }
-        final long modificationStamp = document.getModificationStamp();
+        long modificationStamp = document.getModificationStamp();
         ((HighlightingSessionImpl)session).applyInEDT(() -> {
             if (project.isDisposed() || modificationStamp != document.getModificationStamp()) {
                 return;
@@ -134,6 +137,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     }
 
     @Override
+    @RequiredReadAction
     public void allHighlightsForRangeAreProduced(
         @Nonnull HighlightingSession session,
         @Nonnull TextRange elementRange,
@@ -143,14 +147,15 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
         killAbandonedHighlightsUnder(psiFile, elementRange, infos, session);
     }
 
+    @RequiredReadAction
     private static void killAbandonedHighlightsUnder(
         @Nonnull PsiFile psiFile,
-        @Nonnull final TextRange range,
-        @Nullable final List<? extends HighlightInfo> infos,
-        @Nonnull final HighlightingSession highlightingSession
+        @Nonnull TextRange range,
+        @Nullable List<? extends HighlightInfo> infos,
+        @Nonnull HighlightingSession highlightingSession
     ) {
-        final Project project = psiFile.getProject();
-        final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
+        Project project = psiFile.getProject();
+        Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
         if (document == null) {
             return;
         }
@@ -201,8 +206,8 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
 
     private final Alarm repaintIconAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
-    private void repaintTrafficIcon(@Nonnull final PsiFile file, @Nullable Editor editor, double progress) {
-        if (ApplicationManager.getApplication().isCommandLine()) {
+    private void repaintTrafficIcon(@Nonnull PsiFile file, @Nullable Editor editor, double progress) {
+        if (Application.get().isCommandLine()) {
             return;
         }
 

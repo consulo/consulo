@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi.search;
 
+import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.ReadAction;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
@@ -41,10 +41,8 @@ public class SearchRequestCollector {
         boolean caseSensitive,
         @Nonnull PsiElement searchTarget
     ) {
-        final short searchContext = (short)(UsageSearchContext.IN_CODE |
-            UsageSearchContext.IN_FOREIGN_LANGUAGES |
-            UsageSearchContext.IN_COMMENTS |
-            (searchTarget instanceof PsiFileSystemItem ? UsageSearchContext.IN_STRINGS : 0));
+        short searchContext = (short)(UsageSearchContext.IN_CODE | UsageSearchContext.IN_FOREIGN_LANGUAGES | UsageSearchContext.IN_COMMENTS
+            | (searchTarget instanceof PsiFileSystemItem ? UsageSearchContext.IN_STRINGS : 0));
         searchWord(word, searchScope, searchContext, caseSensitive, searchTarget);
     }
 
@@ -80,17 +78,16 @@ public class SearchRequestCollector {
         }
 
         Collection<PsiSearchRequest> requests = null;
-        if (searchTarget != null && searchScope instanceof GlobalSearchScope && ((searchContext & UsageSearchContext.IN_CODE) != 0 || searchContext == UsageSearchContext.ANY)) {
-
-            SearchScope restrictedCodeUsageSearchScope = ReadAction.compute(
-                () -> ScopeOptimizer.calculateOverallRestrictedUseScope(
-                    Application.get().getExtensionList(ScopeOptimizer.class),
-                    searchTarget
-                )
-            );
+        if (searchTarget != null && searchScope instanceof GlobalSearchScope
+            && ((searchContext & UsageSearchContext.IN_CODE) != 0 || searchContext == UsageSearchContext.ANY)) {
+            SearchScope restrictedCodeUsageSearchScope = AccessRule.read(() -> ScopeOptimizer.calculateOverallRestrictedUseScope(
+                Application.get().getExtensionList(ScopeOptimizer.class),
+                searchTarget
+            ));
             if (restrictedCodeUsageSearchScope != null) {
                 short exceptCodeSearchContext = searchContext == UsageSearchContext.ANY
-                    ? UsageSearchContext.IN_COMMENTS | UsageSearchContext.IN_STRINGS | UsageSearchContext.IN_FOREIGN_LANGUAGES | UsageSearchContext.IN_PLAIN_TEXT
+                    ? UsageSearchContext.IN_COMMENTS | UsageSearchContext.IN_STRINGS
+                    | UsageSearchContext.IN_FOREIGN_LANGUAGES | UsageSearchContext.IN_PLAIN_TEXT
                     : (short)(searchContext ^ UsageSearchContext.IN_CODE);
                 SearchScope searchCodeUsageEffectiveScope = searchScope.intersectWith(restrictedCodeUsageSearchScope);
                 requests = Arrays.asList(
@@ -127,16 +124,16 @@ public class SearchRequestCollector {
         searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), searchTarget, processor);
     }
 
-    private static String getContainerName(@Nonnull final PsiElement target) {
-        return ReadAction.compute(() -> {
+    private static String getContainerName(@Nonnull PsiElement target) {
+        return AccessRule.read(() -> {
             PsiElement container = getContainer(target);
-            return container instanceof PsiNamedElement ? ((PsiNamedElement)container).getName() : null;
+            return container instanceof PsiNamedElement namedElement ? namedElement.getName() : null;
         });
     }
 
     private static PsiElement getContainer(@Nonnull PsiElement refElement) {
         for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensionList()) {
-            final PsiElement container = provider.getContainer(refElement);
+            PsiElement container = provider.getContainer(refElement);
             if (container != null) {
                 return container;
             }
@@ -162,10 +159,8 @@ public class SearchRequestCollector {
     }
 
     private static boolean makesSenseToSearch(@Nonnull String word, @Nonnull SearchScope searchScope) {
-        if (searchScope instanceof LocalSearchScope && ((LocalSearchScope)searchScope).getScope().length == 0) {
-            return false;
-        }
-        return searchScope != GlobalSearchScope.EMPTY_SCOPE && !StringUtil.isEmpty(word);
+        return !(searchScope instanceof LocalSearchScope localSearchScope && localSearchScope.getScope().length == 0)
+            && searchScope != GlobalSearchScope.EMPTY_SCOPE && !StringUtil.isEmpty(word);
     }
 
     public void searchQuery(@Nonnull QuerySearchRequest request) {
@@ -190,7 +185,7 @@ public class SearchRequestCollector {
     @Nonnull
     private <T> List<T> takeRequests(@Nonnull List<? extends T> list) {
         synchronized (lock) {
-            final List<T> requests = new ArrayList<>(list);
+            List<T> requests = new ArrayList<>(list);
             list.clear();
             return requests;
         }

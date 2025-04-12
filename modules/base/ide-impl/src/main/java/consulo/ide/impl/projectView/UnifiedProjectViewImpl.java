@@ -84,7 +84,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
     private final class MyDataProvider implements Function<Key<?>, Object> {
         @Nullable
         private Object getSelectedNodeElement() {
-            final AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
+            AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
             if (currentProjectViewPane == null) { // can happen if not initialized yet
                 return null;
             }
@@ -100,9 +100,9 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         @Override
         @RequiredReadAction
         public Object apply(@Nonnull Key<?> dataId) {
-            final AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
+            AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
             if (currentProjectViewPane != null) {
-                final Object paneSpecificData = currentProjectViewPane.getData(dataId);
+                Object paneSpecificData = currentProjectViewPane.getData(dataId);
                 if (paneSpecificData != null) {
                     return paneSpecificData;
                 }
@@ -134,7 +134,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
                 if (virtualFiles == null || virtualFiles.length <= 1) {
                     return null;
                 }
-                final Set<Module> modules = new HashSet<>();
+                Set<Module> modules = new HashSet<>();
                 for (VirtualFile virtualFile : virtualFiles) {
                     modules.add(ModuleUtilCore.findModuleForFile(virtualFile, myProject));
                 }
@@ -144,43 +144,43 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
                 return null;
             }
             //if (PlatformDataKeys.CUT_PROVIDER == dataId) {
-            //  return myCopyPasteDelegator.getCutProvider();
+            //    return myCopyPasteDelegator.getCutProvider();
             //}
             //if (PlatformDataKeys.COPY_PROVIDER == dataId) {
-            //  return myCopyPasteDelegator.getCopyProvider();
+            //    return myCopyPasteDelegator.getCopyProvider();
             //}
             //if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
-            //  return myCopyPasteDelegator.getPasteProvider();
+            //    return myCopyPasteDelegator.getPasteProvider();
             //}
             //if (LangDataKeys.IDE_VIEW == dataId) {
-            //  return myIdeView;
+            //    return myIdeView;
             //}
             //if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
-            //  final Module[] modules = getSelectedModules();
-            //  if (modules != null) {
-            //    return myDeleteModuleProvider;
-            //  }
-            //  final LibraryOrderEntry orderEntry = getSelectedLibrary();
-            //  if (orderEntry != null) {
-            //    return new DeleteProvider() {
-            //      @Override
-            //      public void deleteElement(@NotNull DataContext dataContext) {
-            //        detachLibrary(orderEntry, myProject);
-            //      }
+            //    Module[] modules = getSelectedModules();
+            //    if (modules != null) {
+            //        return myDeleteModuleProvider;
+            //    }
+            //    LibraryOrderEntry orderEntry = getSelectedLibrary();
+            //    if (orderEntry != null) {
+            //        return new DeleteProvider() {
+            //            @Override
+            //            public void deleteElement(@NotNull DataContext dataContext) {
+            //                detachLibrary(orderEntry, myProject);
+            //            }
             //
-            //      @Override
-            //      public boolean canDeleteElement(@NotNull DataContext dataContext) {
-            //        return true;
-            //      }
-            //    };
-            //  }
-            //  return myDeletePSIElementProvider;
+            //            @Override
+            //            public boolean canDeleteElement(@NotNull DataContext dataContext) {
+            //                return true;
+            //            }
+            //        };
+            //    }
+            //    return myDeletePSIElementProvider;
             //}
             if (HelpManager.HELP_ID == dataId) {
                 return HelpID.PROJECT_VIEWS;
             }
             //if (ProjectViewImpl.DATA_KEY == dataId) {
-            //  return ProjectViewImpl.this;
+            //    return ProjectViewImpl.this;
             //}
             if (PlatformDataKeys.PROJECT_CONTEXT == dataId) {
                 Object selected = getSelectedNodeElement();
@@ -206,20 +206,20 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
                 return getSelectedModules();
             }
             if (ModuleGroup.ARRAY_DATA_KEY == dataId) {
-                final List<ModuleGroup> selectedElements = getSelectedElements(ModuleGroup.class);
+                List<ModuleGroup> selectedElements = getSelectedElements(ModuleGroup.class);
                 return selectedElements.isEmpty() ? null : selectedElements.toArray(new ModuleGroup[selectedElements.size()]);
             }
             if (LibraryGroupElement.ARRAY_DATA_KEY == dataId) {
-                final List<LibraryGroupElement> selectedElements = getSelectedElements(LibraryGroupElement.class);
+                List<LibraryGroupElement> selectedElements = getSelectedElements(LibraryGroupElement.class);
                 return selectedElements.isEmpty() ? null : selectedElements.toArray(new LibraryGroupElement[selectedElements.size()]);
             }
             if (NamedLibraryElement.ARRAY_DATA_KEY == dataId) {
-                final List<NamedLibraryElement> selectedElements = getSelectedElements(NamedLibraryElement.class);
+                List<NamedLibraryElement> selectedElements = getSelectedElements(NamedLibraryElement.class);
                 return selectedElements.isEmpty() ? null : selectedElements.toArray(new NamedLibraryElement[selectedElements.size()]);
             }
 
             //if (QuickActionProvider.KEY == dataId) {
-            //  return ProjectViewImpl.this;
+            //    return ProjectViewImpl.this;
             //}
 
             return null;
@@ -227,7 +227,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
 
         @Nullable
         private LibraryOrderEntry getSelectedLibrary() {
-            final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
+            AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             DefaultMutableTreeNode node = viewPane != null ? viewPane.getSelectedNode() : null;
             if (node == null) {
                 return null;
@@ -262,8 +262,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         }
 
         @RequiredUIAccess
-        private void detachLibrary(@Nonnull final LibraryOrderEntry orderEntry, @Nonnull Project project) {
-            final Module module = orderEntry.getOwnerModule();
+        private void detachLibrary(@Nonnull LibraryOrderEntry orderEntry, @Nonnull Project project) {
+            Module module = orderEntry.getOwnerModule();
             LocalizeValue message = IdeLocalize.detachLibraryFromModule(orderEntry.getPresentableName(), module.getName());
             LocalizeValue title = IdeLocalize.detachLibrary();
             int ret = Messages.showOkCancelDialog(project, message.get(), title.get(), UIUtil.getQuestionIcon());
@@ -293,11 +293,11 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         @Nullable
         @RequiredReadAction
         private Module[] getSelectedModules() {
-            final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
+            AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             if (viewPane == null) {
                 return null;
             }
-            final Object[] elements = viewPane.getSelectedElements();
+            Object[] elements = viewPane.getSelectedElements();
             ArrayList<Module> result = new ArrayList<>();
             for (Object element : elements) {
                 if (element instanceof Module module) {
@@ -418,11 +418,11 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
     @SuppressWarnings("unchecked")
     private <T> List<T> getSelectedElements(@Nonnull Class<T> klass) {
         List<T> result = new ArrayList<>();
-        final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
+        AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
         if (viewPane == null) {
             return result;
         }
-        final Object[] elements = viewPane.getSelectedElements();
+        Object[] elements = viewPane.getSelectedElements();
         for (Object element : elements) {
             //element still valid
             if (element != null && klass.isAssignableFrom(element.getClass())) {

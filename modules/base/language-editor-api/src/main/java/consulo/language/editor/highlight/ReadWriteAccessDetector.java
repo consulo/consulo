@@ -32,7 +32,7 @@ public abstract class ReadWriteAccessDetector {
     public static final ExtensionPointName<ReadWriteAccessDetector> EP_NAME = ExtensionPointName.create(ReadWriteAccessDetector.class);
 
     @Nullable
-    public static ReadWriteAccessDetector findDetector(final PsiElement element) {
+    public static ReadWriteAccessDetector findDetector(PsiElement element) {
         ReadWriteAccessDetector detector = null;
         for (ReadWriteAccessDetector accessDetector : EP_NAME.getExtensionList()) {
             if (accessDetector.isReadWriteAccessible(element)) {
@@ -61,7 +61,7 @@ public abstract class ReadWriteAccessDetector {
 
     public abstract boolean isDeclarationWriteAccess(PsiElement element);
 
-    public abstract Access getReferenceAccess(final PsiElement referencedElement, PsiReference reference);
+    public abstract Access getReferenceAccess(PsiElement referencedElement, PsiReference reference);
 
     public abstract Access getExpressionAccess(PsiElement expression);
 }
