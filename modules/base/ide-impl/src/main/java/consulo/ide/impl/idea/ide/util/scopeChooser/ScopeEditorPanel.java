@@ -557,7 +557,7 @@ public class ScopeEditorPanel {
         myCurrentProgress = progress;
         Runnable updateModel = () -> {
             ProcessCanceledException[] ex = new ProcessCanceledException[1];
-            Application.get().runReadAction(() -> {
+            myProject.getApplication().runReadAction(() -> {
                 if (myProject.isDisposed()) {
                     return;
                 }
