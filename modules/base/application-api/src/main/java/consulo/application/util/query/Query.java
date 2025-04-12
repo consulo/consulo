@@ -1,13 +1,11 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util.query;
 
-import consulo.application.util.function.Processor;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -42,10 +40,10 @@ public interface Query<Result> extends Iterable<Result> {
      * @return {@code true} if the search was completed normally,
      * {@code false} if the occurrence processing was cancelled by the processor.
      */
-    boolean forEach(@Nonnull Processor<? super Result> consumer);
+    boolean forEach(@Nonnull Predicate<? super Result> consumer);
 
     @Nonnull
-    default AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<? super Result> consumer) {
+    default AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super Result> consumer) {
         return AsyncUtil.wrapBoolean(forEach(consumer));
     }
 
@@ -57,7 +55,7 @@ public interface Query<Result> extends Iterable<Result> {
     /**
      * Checks whether predicate is satisfied for every result of this query.
      * This operation short-circuits once predicate returns false.
-     * Technically it's equivalent to {@link #forEach(Processor)}, but has better name.
+     * Technically it's equivalent to {@link #forEach(Predicate)}, but has better name.
      * Use this method only if your predicate is stateless and side-effect free.
      *
      * @param predicate predicate to test on query results

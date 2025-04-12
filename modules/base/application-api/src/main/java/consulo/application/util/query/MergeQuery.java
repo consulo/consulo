@@ -5,10 +5,10 @@
  */
 package consulo.application.util.query;
 
-import consulo.application.util.function.Processor;
 import consulo.util.concurrent.*;
-
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Predicate;
 
 public class MergeQuery<T> extends AbstractQuery<T> {
     private final Query<? extends T> myQuery1;
@@ -20,18 +20,18 @@ public class MergeQuery<T> extends AbstractQuery<T> {
     }
 
     @Override
-    protected boolean processResults(@Nonnull Processor<? super T> consumer) {
+    protected boolean processResults(@Nonnull Predicate<? super T> consumer) {
         return delegateProcessResults(myQuery1, consumer) && delegateProcessResults(myQuery2, consumer);
     }
 
     @Nonnull
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull final Processor<? super T> consumer) {
-        final AsyncFutureResult<Boolean> result = AsyncFutureFactory.getInstance().createAsyncFutureResult();
+    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super T> consumer) {
+        AsyncFutureResult<Boolean> result = AsyncFutureFactory.getInstance().createAsyncFutureResult();
 
         AsyncFuture<Boolean> fq = myQuery1.forEachAsync(consumer);
 
-        fq.addConsumer(SameThreadExecutor.INSTANCE, new DefaultResultConsumer<Boolean>(result) {
+        fq.addConsumer(SameThreadExecutor.INSTANCE, new DefaultResultConsumer<>(result) {
             @Override
             public void onSuccess(Boolean value) {
                 if (value) {

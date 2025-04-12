@@ -1,8 +1,9 @@
 package consulo.ide.impl.idea.model.search.impl;
 
-import consulo.application.util.function.Processor;
 import consulo.application.util.query.Query;
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Predicate;
 
 // from kotlin
 public final class XQuery<B, R> extends AbstractDecomposableQuery<R> {
@@ -16,7 +17,8 @@ public final class XQuery<B, R> extends AbstractDecomposableQuery<R> {
         this.transformation = transformation;
     }
 
-    protected boolean processResults(@Nonnull Processor<? super R> consumer) {
+    @Override
+    protected boolean processResults(@Nonnull Predicate<? super R> consumer) {
         return baseQuery.forEach(baseValue -> {
             for (XResult<? extends R> result : transformation.apply(baseValue)) {
                 if (!result.process(consumer)) {
@@ -29,6 +31,7 @@ public final class XQuery<B, R> extends AbstractDecomposableQuery<R> {
     }
 
     @Nonnull
+    @Override
     public Requests<R> decompose() {
         return RequestsKt.andThen(RequestsKt.decompose(baseQuery), transformation);
     }

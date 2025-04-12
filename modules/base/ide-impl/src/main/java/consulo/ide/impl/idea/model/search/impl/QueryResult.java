@@ -1,11 +1,11 @@
 package consulo.ide.impl.idea.model.search.impl;
 
-import consulo.application.util.function.Processor;
 import consulo.application.util.query.Query;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 // from kotlin
 public final class QueryResult<X> extends XResult<X> {
@@ -17,7 +17,7 @@ public final class QueryResult<X> extends XResult<X> {
     }
 
     @Override
-    public boolean process(@Nonnull Processor<? super X> processor) {
+    public boolean process(@Nonnull Predicate<? super X> processor) {
         return getQuery().forEach(processor);
     }
 

@@ -1,20 +1,19 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util.query;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.ReadActionProcessor;
 import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.util.collection.UnmodifiableIterator;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author peter
@@ -24,8 +23,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
 
     // some clients rely on the (accidental) order of found result
     // to discourage them, randomize the results sometimes to induce errors caused by the order reliance
-    private static final boolean RANDOMIZE =
-        ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isInternal();
+    private static final boolean RANDOMIZE = Application.get().isUnitTestMode() || Application.get().isInternal();
     private static final Comparator<Object> CRAZY_ORDER =
         (o1, o2) -> -Integer.compare(System.identityHashCode(o1), System.identityHashCode(o2));
 
@@ -34,7 +32,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     public Collection<Result> findAll() {
         assertNotProcessing();
         List<Result> result = new ArrayList<>();
-        Processor<Result> processor = Processors.cancelableCollectProcessor(result);
+        Predicate<Result> processor = Processors.cancelableCollectProcessor(result);
         forEach(processor);
         if (RANDOMIZE && result.size() > 1) {
             result.sort(CRAZY_ORDER);
@@ -53,7 +51,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     @Nullable
     public Result findFirst() {
         assertNotProcessing();
-        final CommonProcessors.FindFirstProcessor<Result> processor = new CommonProcessors.FindFirstProcessor<>();
+        CommonProcessors.FindFirstProcessor<Result> processor = new CommonProcessors.FindFirstProcessor<>();
         forEach(processor);
         return processor.getFoundValue();
     }
@@ -67,37 +65,37 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     public Result[] toArray(@Nonnull Result[] a) {
         assertNotProcessing();
 
-        final Collection<Result> all = findAll();
+        Collection<Result> all = findAll();
         return all.toArray(a);
     }
 
     @Nonnull
     @Override
     public Query<Result> allowParallelProcessing() {
-        return new AbstractQuery<Result>() {
+        return new AbstractQuery<>() {
             @Override
-            protected boolean processResults(@Nonnull Processor<? super Result> consumer) {
+            protected boolean processResults(@Nonnull Predicate<? super Result> consumer) {
                 return AbstractQuery.this.doProcessResults(consumer);
             }
         };
     }
 
     @Nonnull
-    private Processor<Result> threadSafeProcessor(@Nonnull Processor<? super Result> consumer) {
+    private Predicate<Result> threadSafeProcessor(@Nonnull Predicate<? super Result> consumer) {
         Object lock = ObjectUtil.sentinel("AbstractQuery lock");
         return e -> {
             synchronized (lock) {
-                return consumer.process(e);
+                return consumer.test(e);
             }
         };
     }
 
     @Override
-    public boolean forEach(@Nonnull Processor<? super Result> consumer) {
+    public boolean forEach(@Nonnull Predicate<? super Result> consumer) {
         return doProcessResults(threadSafeProcessor(consumer));
     }
 
-    private boolean doProcessResults(@Nonnull Processor<? super Result> consumer) {
+    private boolean doProcessResults(@Nonnull Predicate<? super Result> consumer) {
         assertNotProcessing();
 
         myIsProcessing.set(true);
@@ -111,19 +109,19 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
 
     @Nonnull
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<? super Result> consumer) {
+    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super Result> consumer) {
         return AsyncUtil.wrapBoolean(forEach(consumer));
     }
 
     /**
      * Assumes consumer being capable of processing results in parallel
      */
-    protected abstract boolean processResults(@Nonnull Processor<? super Result> consumer);
+    protected abstract boolean processResults(@Nonnull Predicate<? super Result> consumer);
 
     /**
      * Should be called only from {@link #processResults} implementations to delegate to another query
      */
-    protected static <T> boolean delegateProcessResults(@Nonnull Query<T> query, @Nonnull Processor<? super T> consumer) {
+    protected static <T> boolean delegateProcessResults(@Nonnull Query<T> query, @Nonnull Predicate<? super T> consumer) {
         if (query instanceof AbstractQuery) {
             return ((AbstractQuery<T>)query).doProcessResults(consumer);
         }
@@ -131,10 +129,10 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     }
 
     @Nonnull
-    public static <T> Query<T> wrapInReadAction(@Nonnull final Query<? extends T> query) {
-        return new AbstractQuery<T>() {
+    public static <T> Query<T> wrapInReadAction(@Nonnull Query<? extends T> query) {
+        return new AbstractQuery<>() {
             @Override
-            protected boolean processResults(@Nonnull Processor<? super T> consumer) {
+            protected boolean processResults(@Nonnull Predicate<? super T> consumer) {
                 return AbstractQuery.delegateProcessResults(query, ReadActionProcessor.wrapInReadAction(consumer));
             }
         };

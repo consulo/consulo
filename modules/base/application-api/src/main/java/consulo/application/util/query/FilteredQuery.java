@@ -2,45 +2,44 @@
 
 package consulo.application.util.query;
 
-import consulo.application.util.function.Processor;
 import consulo.util.concurrent.AsyncFuture;
-import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Predicate;
 
 /**
  * @author max
  */
 public class FilteredQuery<T> extends AbstractQuery<T> {
     private final Query<T> myOriginal;
-    private final Condition<? super T> myFilter;
+    private final Predicate<? super T> myFilter;
 
-    public FilteredQuery(@Nonnull Query<T> original, @Nonnull Condition<? super T> filter) {
+    public FilteredQuery(@Nonnull Query<T> original, @Nonnull Predicate<? super T> filter) {
         myOriginal = original;
         myFilter = filter;
     }
 
     @Override
-    protected boolean processResults(@Nonnull Processor<? super T> consumer) {
+    protected boolean processResults(@Nonnull Predicate<? super T> consumer) {
         return delegateProcessResults(myOriginal, new MyProcessor(consumer));
     }
 
     @Nonnull
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<? super T> consumer) {
+    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super T> consumer) {
         return myOriginal.forEachAsync(new MyProcessor(consumer));
     }
 
-    private class MyProcessor implements Processor<T> {
-        private final Processor<? super T> myConsumer;
+    private class MyProcessor implements Predicate<T> {
+        private final Predicate<? super T> myConsumer;
 
-        MyProcessor(@Nonnull Processor<? super T> consumer) {
+        MyProcessor(@Nonnull Predicate<? super T> consumer) {
             myConsumer = consumer;
         }
 
         @Override
-        public boolean process(final T t) {
-            return !myFilter.value(t) || myConsumer.process(t);
+        public boolean test(T t) {
+            return !myFilter.test(t) || myConsumer.test(t);
         }
     }
 }

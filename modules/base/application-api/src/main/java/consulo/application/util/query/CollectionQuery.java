@@ -11,6 +11,7 @@ import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 /**
  * @author max
@@ -18,7 +19,7 @@ import java.util.Iterator;
 public class CollectionQuery<T> implements Query<T> {
     private final Collection<T> myCollection;
 
-    public CollectionQuery(@Nonnull final Collection<T> collection) {
+    public CollectionQuery(@Nonnull Collection<T> collection) {
         myCollection = collection;
     }
 
@@ -30,24 +31,24 @@ public class CollectionQuery<T> implements Query<T> {
 
     @Override
     public T findFirst() {
-        final Iterator<T> i = iterator();
+        Iterator<T> i = iterator();
         return i.hasNext() ? i.next() : null;
     }
 
     @Override
-    public boolean forEach(@Nonnull final Processor<? super T> consumer) {
+    public boolean forEach(@Nonnull Predicate<? super T> consumer) {
         return ContainerUtil.process(myCollection, consumer);
     }
 
     @Nonnull
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<? super T> consumer) {
+    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super T> consumer) {
         return AsyncUtil.wrapBoolean(forEach(consumer));
     }
 
     @Nonnull
     @Override
-    public T[] toArray(@Nonnull final T[] a) {
+    public T[] toArray(@Nonnull T[] a) {
         return findAll().toArray(a);
     }
 

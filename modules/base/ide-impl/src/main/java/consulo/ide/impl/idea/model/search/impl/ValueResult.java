@@ -1,9 +1,9 @@
 package consulo.ide.impl.idea.model.search.impl;
 
-import consulo.application.util.function.Processor;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 // from kotlin
 public final class ValueResult<X> extends XResult<X> {
@@ -15,8 +15,8 @@ public final class ValueResult<X> extends XResult<X> {
     }
 
     @Override
-    public boolean process(@Nonnull Processor<? super X> processor) {
-        return processor.process(getValue());
+    public boolean process(@Nonnull Predicate<? super X> processor) {
+        return processor.test(getValue());
     }
 
     @Override
