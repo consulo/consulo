@@ -29,39 +29,39 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ReadWriteAccessDetector {
-  public static final ExtensionPointName<ReadWriteAccessDetector> EP_NAME = ExtensionPointName.create(ReadWriteAccessDetector.class);
+    public static final ExtensionPointName<ReadWriteAccessDetector> EP_NAME = ExtensionPointName.create(ReadWriteAccessDetector.class);
 
-  @Nullable
-  public static ReadWriteAccessDetector findDetector(final PsiElement element) {
-    ReadWriteAccessDetector detector = null;
-    for (ReadWriteAccessDetector accessDetector : EP_NAME.getExtensionList()) {
-      if (accessDetector.isReadWriteAccessible(element)) {
-        detector = accessDetector;
-        break;
-      }
-    }
-    return detector;
-  }
-
-  public enum Access {
-    Read,
-    Write,
-    ReadWrite;
-
-    public boolean isReferencedForRead() {
-      return this == Read || this == ReadWrite;
+    @Nullable
+    public static ReadWriteAccessDetector findDetector(PsiElement element) {
+        ReadWriteAccessDetector detector = null;
+        for (ReadWriteAccessDetector accessDetector : EP_NAME.getExtensionList()) {
+            if (accessDetector.isReadWriteAccessible(element)) {
+                detector = accessDetector;
+                break;
+            }
+        }
+        return detector;
     }
 
-    public boolean isReferencedForWrite() {
-      return this == Write || this == ReadWrite;
+    public enum Access {
+        Read,
+        Write,
+        ReadWrite;
+
+        public boolean isReferencedForRead() {
+            return this == Read || this == ReadWrite;
+        }
+
+        public boolean isReferencedForWrite() {
+            return this == Write || this == ReadWrite;
+        }
     }
-  }
 
-  public abstract boolean isReadWriteAccessible(PsiElement element);
+    public abstract boolean isReadWriteAccessible(PsiElement element);
 
-  public abstract boolean isDeclarationWriteAccess(PsiElement element);
+    public abstract boolean isDeclarationWriteAccess(PsiElement element);
 
-  public abstract Access getReferenceAccess(final PsiElement referencedElement, PsiReference reference);
+    public abstract Access getReferenceAccess(PsiElement referencedElement, PsiReference reference);
 
-  public abstract Access getExpressionAccess(PsiElement expression);
+    public abstract Access getExpressionAccess(PsiElement expression);
 }

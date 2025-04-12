@@ -16,6 +16,7 @@
 
 package consulo.language.editor.moveUpDown;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
@@ -28,60 +29,65 @@ import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.HashSet;
 
 public class MethodUpDownUtil {
-  private MethodUpDownUtil() {
-  }
-
-  public static int[] getNavigationOffsets(PsiFile file, final int caretOffset) {
-    for (MethodNavigationOffsetProvider provider : MethodNavigationOffsetProvider.EP_NAME.getExtensionList(file.getProject().getApplication())) {
-      final int[] offsets = provider.getMethodNavigationOffsets(file, caretOffset);
-      if (offsets != null && offsets.length > 0) {
-        return offsets;
-      }
+    private MethodUpDownUtil() {
     }
 
-    Collection<PsiElement> array = new HashSet<PsiElement>();
-    addNavigationElements(array, file);
-    return offsetsFromElements(array);
-  }
+    @RequiredReadAction
+    public static int[] getNavigationOffsets(PsiFile file, int caretOffset) {
+        for (MethodNavigationOffsetProvider provider
+            : MethodNavigationOffsetProvider.EP_NAME.getExtensionList(file.getProject().getApplication())) {
+            int[] offsets = provider.getMethodNavigationOffsets(file, caretOffset);
+            if (offsets != null && offsets.length > 0) {
+                return offsets;
+            }
+        }
 
-  public static int[] offsetsFromElements(final Collection<PsiElement> array) {
-    IntList offsets = IntLists.newArrayList(array.size());
-    for (PsiElement element : array) {
-      int offset = element.getTextOffset();
-      assert offset >= 0 : element + " (" + element.getClass() + "); offset: " + offset;
-      offsets.add(offset);
+        Collection<PsiElement> array = new HashSet<>();
+        addNavigationElements(array, file);
+        return offsetsFromElements(array);
     }
-    offsets.sort();
-    return offsets.toArray();
-  }
 
-  private static void addNavigationElements(Collection<PsiElement> array, PsiFile element) {
-    StructureViewBuilder structureViewBuilder = PsiStructureViewFactory.createBuilderForFile(element);
-    if (structureViewBuilder instanceof TreeBasedStructureViewBuilder) {
-      TreeBasedStructureViewBuilder builder = (TreeBasedStructureViewBuilder)structureViewBuilder;
-      StructureViewModel model = builder.createStructureViewModel(null);
-      try {
-        addStructureViewElements(model.getRoot(), array, element);
-      }
-      finally {
-        model.dispose();
-      }
+    public static int[] offsetsFromElements(Collection<PsiElement> array) {
+        IntList offsets = IntLists.newArrayList(array.size());
+        for (PsiElement element : array) {
+            int offset = element.getTextOffset();
+            assert offset >= 0 : element + " (" + element.getClass() + "); offset: " + offset;
+            offsets.add(offset);
+        }
+        offsets.sort();
+        return offsets.toArray();
     }
-  }
 
-  private static void addStructureViewElements(final TreeElement parent, final Collection<PsiElement> array, @Nonnull PsiFile file) {
-    for (TreeElement treeElement : parent.getChildren()) {
-      Object value = ((StructureViewTreeElement)treeElement).getValue();
-      if (value instanceof PsiElement) {
-        PsiElement element = (PsiElement)value;
-        if (array.contains(element) || !file.equals(element.getContainingFile())) continue;
-        array.add(element);
-      }
-      addStructureViewElements(treeElement, array, file);
+    @RequiredReadAction
+    private static void addNavigationElements(Collection<PsiElement> array, PsiFile element) {
+        StructureViewBuilder structureViewBuilder = PsiStructureViewFactory.createBuilderForFile(element);
+        if (structureViewBuilder instanceof TreeBasedStructureViewBuilder) {
+            TreeBasedStructureViewBuilder builder = (TreeBasedStructureViewBuilder)structureViewBuilder;
+            StructureViewModel model = builder.createStructureViewModel(null);
+            try {
+                addStructureViewElements(model.getRoot(), array, element);
+            }
+            finally {
+                model.dispose();
+            }
+        }
     }
-  }
+
+    private static void addStructureViewElements(TreeElement parent, Collection<PsiElement> array, @Nonnull PsiFile file) {
+        for (TreeElement treeElement : parent.getChildren()) {
+            Object value = ((StructureViewTreeElement)treeElement).getValue();
+            if (value instanceof PsiElement element) {
+                if (array.contains(element) || !file.equals(element.getContainingFile())) {
+                    continue;
+                }
+                array.add(element);
+            }
+            addStructureViewElements(treeElement, array, file);
+        }
+    }
 }

@@ -134,9 +134,9 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
 
     @Override
     @RequiredUIAccess
-    public void execute(@Nonnull final Editor originalEditor, final char charTyped, @Nonnull final DataContext dataContext) {
-        final Project project = dataContext.getData(Project.KEY);
-        final PsiFile originalFile;
+    public void execute(@Nonnull Editor originalEditor, char charTyped, @Nonnull DataContext dataContext) {
+        Project project = dataContext.getData(Project.KEY);
+        PsiFile originalFile;
 
         if (project == null || (originalFile = PsiUtilBase.getPsiFileInEditor(originalEditor, project)) == null) {
             if (myOriginalHandler != null) {
@@ -149,8 +149,8 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
             return;
         }
 
-        final PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
-        final Document originalDocument = originalEditor.getDocument();
+        PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
+        Document originalDocument = originalEditor.getDocument();
         originalEditor.getCaretModel().runForEachCaret(caret -> {
             if (psiDocumentManager.isDocumentBlockedByPsi(originalDocument)) {
                 psiDocumentManager.doPostponedOperationsAndUnblockDocument(originalDocument); // to clean up after previous caret processing
@@ -160,12 +160,12 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
             PsiFile file = editor == originalEditor ? originalFile : psiDocumentManager.getPsiFile(editor.getDocument());
 
 
-            final List<TypedHandlerDelegate> delegates = TypedHandlerDelegate.EP_NAME.getExtensionList();
+            List<TypedHandlerDelegate> delegates = TypedHandlerDelegate.EP_NAME.getExtensionList();
 
             if (caret == originalEditor.getCaretModel().getPrimaryCaret()) {
                 boolean handled = false;
                 for (TypedHandlerDelegate delegate : delegates) {
-                    final TypedHandlerDelegate.Result result = delegate.checkAutoPopup(charTyped, project, editor, file);
+                    TypedHandlerDelegate.Result result = delegate.checkAutoPopup(charTyped, project, editor, file);
                     handled = result == TypedHandlerDelegate.Result.STOP;
                     if (result != TypedHandlerDelegate.Result.CONTINUE) {
                         break;
@@ -184,7 +184,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
             }
 
             for (TypedHandlerDelegate delegate : delegates) {
-                final TypedHandlerDelegate.Result result = delegate.beforeSelectionRemoved(charTyped, project, editor, file);
+                TypedHandlerDelegate.Result result = delegate.beforeSelectionRemoved(charTyped, project, editor, file);
                 if (result == TypedHandlerDelegate.Result.STOP) {
                     return;
                 }
@@ -198,7 +198,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
             FileType fileType = getFileType(file, editor);
 
             for (TypedHandlerDelegate delegate : delegates) {
-                final TypedHandlerDelegate.Result result = delegate.beforeCharTyped(charTyped, project, editor, file, fileType);
+                TypedHandlerDelegate.Result result = delegate.beforeCharTyped(charTyped, project, editor, file, fileType);
                 if (result == TypedHandlerDelegate.Result.STOP) {
                     return;
                 }
@@ -241,7 +241,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
             }
 
             for (TypedHandlerDelegate delegate : delegates) {
-                final TypedHandlerDelegate.Result result = delegate.charTyped(charTyped, project, editor, file);
+                TypedHandlerDelegate.Result result = delegate.charTyped(charTyped, project, editor, file);
                 if (result == TypedHandlerDelegate.Result.STOP) {
                     return;
                 }
@@ -285,9 +285,9 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
 
     @RequiredReadAction
     private static boolean isAutoPopup(@Nonnull Editor editor, @Nonnull PsiFile file, char charTyped) {
-        final int offset = editor.getCaretModel().getOffset() - 1;
+        int offset = editor.getCaretModel().getOffset() - 1;
         if (offset >= 0) {
-            final PsiElement element = file.findElementAt(offset);
+            PsiElement element = file.findElementAt(offset);
             if (element != null) {
                 for (CompletionContributor contributor
                     : CompletionContributor.forLanguageHonorDumbness(element.getLanguage(), file.getProject())) {
@@ -308,14 +308,14 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         if (element == null) {
             return false;
         }
-        final ParserDefinition definition = ParserDefinition.forLanguage(element.getLanguage());
+        ParserDefinition definition = ParserDefinition.forLanguage(element.getLanguage());
         if (definition != null) {
-            final TokenSet stringLiteralElements = definition.getStringLiteralElements(element.getLanguageVersion());
-            final ASTNode node = element.getNode();
+            TokenSet stringLiteralElements = definition.getStringLiteralElements(element.getLanguageVersion());
+            ASTNode node = element.getNode();
             if (node == null) {
                 return false;
             }
-            final IElementType elementType = node.getElementType();
+            IElementType elementType = node.getElementType();
             if (stringLiteralElements.contains(elementType)) {
                 return true;
             }
@@ -331,12 +331,12 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
     }
 
     @Nonnull
-    public static Editor injectedEditorIfCharTypedIsSignificant(final char charTyped, @Nonnull Editor editor, @Nonnull PsiFile oldFile) {
+    public static Editor injectedEditorIfCharTypedIsSignificant(char charTyped, @Nonnull Editor editor, @Nonnull PsiFile oldFile) {
         return injectedEditorIfCharTypedIsSignificant((int)charTyped, editor, oldFile);
     }
 
     @Nonnull
-    public static Editor injectedEditorIfCharTypedIsSignificant(final int charTyped, @Nonnull Editor editor, @Nonnull PsiFile oldFile) {
+    public static Editor injectedEditorIfCharTypedIsSignificant(int charTyped, @Nonnull Editor editor, @Nonnull PsiFile oldFile) {
         int offset = editor.getCaretModel().getOffset();
         // even for uncommitted document try to retrieve injected fragment that has been there recently
         // we are assuming here that when user is (even furiously) typing, injected language would not change
@@ -379,7 +379,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
             return;
         }
         IElementType braceTokenType = (IElementType)iterator.getTokenType();
-        final CharSequence fileText = editor.getDocument().getCharsSequence();
+        CharSequence fileText = editor.getDocument().getCharsSequence();
         if (!braceMatcher.isLBraceToken(iterator, fileText, fileType)) {
             return;
         }
@@ -463,8 +463,8 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         int lparenthOffset = BraceMatchingUtil.findLeftmostLParen(iterator, lparenTokenType, text, fileType);
 
         if (lparenthOffset < 0) {
-            if (braceMatcher instanceof NontrivialBraceMatcher) {
-                for (IElementType t : ((NontrivialBraceMatcher)braceMatcher).getOppositeBraceTokenTypes(tokenType)) {
+            if (braceMatcher instanceof NontrivialBraceMatcher nontrivialBraceMatcher) {
+                for (IElementType t : nontrivialBraceMatcher.getOppositeBraceTokenTypes(tokenType)) {
                     if (t == lparenTokenType) {
                         continue;
                     }
@@ -494,14 +494,14 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         if (!CodeInsightSettings.getInstance().AUTOINSERT_PAIR_QUOTE) {
             return false;
         }
-        final QuoteHandler quoteHandler = getQuoteHandler(file, editor);
+        QuoteHandler quoteHandler = getQuoteHandler(file, editor);
         if (quoteHandler == null) {
             return false;
         }
 
         int offset = editor.getCaretModel().getOffset();
 
-        final Document document = editor.getDocument();
+        Document document = editor.getDocument();
         CharSequence chars = document.getCharsSequence();
         int length = document.getTextLength();
         if (isTypingEscapeQuote(editor, quoteHandler, offset)) {
@@ -519,9 +519,9 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
 
         if (!iterator.atEnd()) {
             IElementType tokenType = (IElementType)iterator.getTokenType();
-            if (quoteHandler instanceof JavaLikeQuoteHandler) {
+            if (quoteHandler instanceof JavaLikeQuoteHandler javaLikeQuoteHandler) {
                 try {
-                    if (!((JavaLikeQuoteHandler)quoteHandler).isAppropriateElementTypeForLiteral(tokenType)) {
+                    if (!javaLikeQuoteHandler.isAppropriateElementTypeForLiteral(tokenType)) {
                         return false;
                     }
                 }
@@ -534,14 +534,13 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         type(editor, quote);
         offset = editor.getCaretModel().getOffset();
 
-        if (quoteHandler instanceof MultiCharQuoteHandler) {
-            CharSequence closingQuote = getClosingQuote(editor, (MultiCharQuoteHandler)quoteHandler, offset);
-            if (closingQuote != null && hasNonClosedLiterals(editor, quoteHandler, offset - 1)) {
-                if (offset == document.getTextLength()
-                    || !Character.isUnicodeIdentifierPart(document.getCharsSequence().charAt(offset))) { //any better heuristic or an API?
-                    ((MultiCharQuoteHandler)quoteHandler).insertClosingQuote(editor, offset, file, closingQuote);
-                    return true;
-                }
+        if (quoteHandler instanceof MultiCharQuoteHandler multiCharQuoteHandler) {
+            CharSequence closingQuote = getClosingQuote(editor, multiCharQuoteHandler, offset);
+            if (closingQuote != null && hasNonClosedLiterals(editor, multiCharQuoteHandler, offset - 1)
+                && (offset == document.getTextLength()
+                || !Character.isUnicodeIdentifierPart(document.getCharsSequence().charAt(offset)))) { //any better heuristic or an API?
+                multiCharQuoteHandler.insertClosingQuote(editor, offset, file, closingQuote);
+                return true;
             }
         }
 
@@ -642,9 +641,9 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
     }
 
     @RequiredUIAccess
-    private static void indentBrace(@Nonnull final Project project, @Nonnull final Editor editor, final char braceChar) {
-        final int offset = editor.getCaretModel().getOffset() - 1;
-        final Document document = editor.getDocument();
+    private static void indentBrace(@Nonnull Project project, @Nonnull Editor editor, char braceChar) {
+        int offset = editor.getCaretModel().getOffset() - 1;
+        Document document = editor.getDocument();
         CharSequence chars = document.getCharsSequence();
         if (offset < 0 || chars.charAt(offset) != braceChar) {
             return;
@@ -655,7 +654,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
             PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
             documentManager.commitDocument(document);
 
-            final PsiFile file = documentManager.getPsiFile(document);
+            PsiFile file = documentManager.getPsiFile(document);
             if (file == null || !file.isWritable()) {
                 return;
             }
@@ -667,10 +666,10 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
             EditorHighlighter highlighter = editor.getHighlighter();
             HighlighterIterator iterator = highlighter.createIterator(offset);
 
-            final FileType fileType = file.getFileType();
+            FileType fileType = file.getFileType();
             BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
             boolean rBraceToken = braceMatcher.isRBraceToken(iterator, chars, fileType);
-            final boolean isBrace = braceMatcher.isLBraceToken(iterator, chars, fileType) || rBraceToken;
+            boolean isBrace = braceMatcher.isLBraceToken(iterator, chars, fileType) || rBraceToken;
             int lBraceOffset = -1;
 
             if (CodeInsightSettings.getInstance().REFORMAT_BLOCK_ON_RBRACE && rBraceToken
@@ -686,7 +685,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
                 DefaultRawTypedHandler handler = ((TypedActionImpl)TypedAction.getInstance()).getDefaultRawTypedHandler();
                 handler.beginUndoablePostProcessing();
 
-                final int finalLBraceOffset = lBraceOffset;
+                int finalLBraceOffset = lBraceOffset;
                 Application.get().runWriteAction(() -> {
                     try {
                         int newOffset;

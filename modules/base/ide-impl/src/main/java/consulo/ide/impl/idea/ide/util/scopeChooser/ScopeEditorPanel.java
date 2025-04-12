@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.ProcessCanceledException;
-import consulo.component.extension.Extensions;
 import consulo.configurable.ConfigurationException;
 import consulo.content.scope.*;
 import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
 import consulo.ide.impl.idea.packageDependencies.ui.*;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.tree.SmartExpander;
 import consulo.ide.impl.psi.search.scope.packageSet.IntersectionPackageSet;
 import consulo.ide.impl.psi.search.scope.packageSet.UnionPackageSet;
@@ -98,7 +98,7 @@ public class ScopeEditorPanel {
     private PanelProgressIndicator myCurrentProgress;
     private NamedScopesHolder myHolder;
 
-    public ScopeEditorPanel(Project project, final NamedScopesHolder holder) {
+    public ScopeEditorPanel(Project project, NamedScopesHolder holder) {
         myProject = project;
         myHolder = holder;
 
@@ -189,7 +189,7 @@ public class ScopeEditorPanel {
         if (!myIsInUpdate) {
             myUpdateAlarm.cancel(false);
             myTextChanged = true;
-            final String text = myPatternField.getText();
+            String text = myPatternField.getText();
             myCurrentScope = new InvalidPackageSet(text);
             try {
                 if (!StringUtil.isEmpty(text)) {
@@ -212,26 +212,18 @@ public class ScopeEditorPanel {
         if (currentScope instanceof InvalidPackageSet) {
             return true;
         }
-        if (currentScope instanceof UnionPackageSet) {
-            if (invalidScopeInside(((UnionPackageSet)currentScope).getFirstSet())) {
-                return true;
-            }
-            if (invalidScopeInside(((UnionPackageSet)currentScope).getSecondSet())) {
+        if (currentScope instanceof UnionPackageSet unionPackageSet) {
+            if (invalidScopeInside(unionPackageSet.getFirstSet()) || invalidScopeInside(unionPackageSet.getSecondSet())) {
                 return true;
             }
         }
-        if (currentScope instanceof IntersectionPackageSet) {
-            if (invalidScopeInside(((IntersectionPackageSet)currentScope).getFirstSet())) {
-                return true;
-            }
-            if (invalidScopeInside(((IntersectionPackageSet)currentScope).getSecondSet())) {
+        if (currentScope instanceof IntersectionPackageSet intersectionPackageSet) {
+            if (invalidScopeInside(intersectionPackageSet.getFirstSet()) || invalidScopeInside(intersectionPackageSet.getSecondSet())) {
                 return true;
             }
         }
-        if (currentScope instanceof ComplementPackageSet) {
-            return invalidScopeInside(((ComplementPackageSet)currentScope).getComplementarySet());
-        }
-        return false;
+        return currentScope instanceof ComplementPackageSet complementPackageSet
+            && invalidScopeInside(complementPackageSet.getComplementarySet());
     }
 
     private void showErrorMessage() {
@@ -241,16 +233,16 @@ public class ScopeEditorPanel {
     }
 
     private JComponent createActionsPanel() {
-        final JButton include = new JButton(IdeLocalize.buttonInclude().get());
-        final JButton includeRec = new JButton(IdeLocalize.buttonIncludeRecursively().get());
-        final JButton exclude = new JButton(IdeLocalize.buttonExclude().get());
-        final JButton excludeRec = new JButton(IdeLocalize.buttonExcludeRecursively().get());
+        JButton include = new JButton(IdeLocalize.buttonInclude().get());
+        JButton includeRec = new JButton(IdeLocalize.buttonIncludeRecursively().get());
+        JButton exclude = new JButton(IdeLocalize.buttonExclude().get());
+        JButton excludeRec = new JButton(IdeLocalize.buttonExcludeRecursively().get());
         myPackageTree.getSelectionModel().addTreeSelectionListener(e -> {
-            final boolean recursiveEnabled = isButtonEnabled(true, e.getPaths(), e);
+            boolean recursiveEnabled = isButtonEnabled(true, e.getPaths(), e);
             includeRec.setEnabled(recursiveEnabled);
             excludeRec.setEnabled(recursiveEnabled);
 
-            final boolean nonRecursiveEnabled = isButtonEnabled(false, e.getPaths(), e);
+            boolean nonRecursiveEnabled = isButtonEnabled(false, e.getPaths(), e);
             include.setEnabled(nonRecursiveEnabled);
             exclude.setEnabled(nonRecursiveEnabled);
         });
@@ -275,7 +267,7 @@ public class ScopeEditorPanel {
                 if (!e.isAddedPath(path)) {
                     continue;
                 }
-                final PackageDependenciesNode node = (PackageDependenciesNode)path.getLastPathComponent();
+                PackageDependenciesNode node = (PackageDependenciesNode)path.getLastPathComponent();
                 if (PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType())
                     .createPackageSet(node, rec) != null) {
                     return true;
@@ -286,10 +278,10 @@ public class ScopeEditorPanel {
     }
 
     boolean isButtonEnabled(boolean rec) {
-        final TreePath[] paths = myPackageTree.getSelectionPaths();
+        TreePath[] paths = myPackageTree.getSelectionPaths();
         if (paths != null) {
             for (TreePath path : paths) {
-                final PackageDependenciesNode node = (PackageDependenciesNode)path.getLastPathComponent();
+                PackageDependenciesNode node = (PackageDependenciesNode)path.getLastPathComponent();
                 if (PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType())
                     .createPackageSet(node, rec) != null) {
                     return true;
@@ -300,7 +292,7 @@ public class ScopeEditorPanel {
     }
 
     private void excludeSelected(boolean recurse) {
-        final ArrayList<PackageSet> selected = getSelectedSets(recurse);
+        ArrayList<PackageSet> selected = getSelectedSets(recurse);
         if (selected == null || selected.isEmpty()) {
             return;
         }
@@ -314,8 +306,8 @@ public class ScopeEditorPanel {
                     : new IntersectionPackageSet(myCurrentScope, new ComplementPackageSet(set));
             }
             else {
-                final boolean[] append = {true};
-                final PackageSet simplifiedScope = processComplementaryScope(myCurrentScope, set, false, append);
+                boolean[] append = {true};
+                PackageSet simplifiedScope = processComplementaryScope(myCurrentScope, set, false, append);
                 if (!append[0]) {
                     myCurrentScope = simplifiedScope;
                 }
@@ -331,7 +323,7 @@ public class ScopeEditorPanel {
     }
 
     private void includeSelected(boolean recurse) {
-        final ArrayList<PackageSet> selected = getSelectedSets(recurse);
+        ArrayList<PackageSet> selected = getSelectedSets(recurse);
         if (selected == null || selected.isEmpty()) {
             return;
         }
@@ -343,8 +335,8 @@ public class ScopeEditorPanel {
                 myCurrentScope = StringUtil.isEmpty(myCurrentScope.getText()) ? set : new UnionPackageSet(myCurrentScope, set);
             }
             else {
-                final boolean[] append = {true};
-                final PackageSet simplifiedScope = processComplementaryScope(myCurrentScope, set, true, append);
+                boolean[] append = {true};
+                PackageSet simplifiedScope = processComplementaryScope(myCurrentScope, set, true, append);
                 if (!append[0]) {
                     myCurrentScope = simplifiedScope;
                 }
@@ -363,9 +355,9 @@ public class ScopeEditorPanel {
         boolean checkComplementSet,
         boolean[] append
     ) {
-        final String text = added.getText();
-        if (current instanceof ComplementPackageSet &&
-            Comparing.strEqual(((ComplementPackageSet)current).getComplementarySet().getText(), text)) {
+        String text = added.getText();
+        if (current instanceof ComplementPackageSet complementPackageSet &&
+            Comparing.strEqual(complementPackageSet.getComplementarySet().getText(), text)) {
             if (checkComplementSet) {
                 append[0] = false;
             }
@@ -378,10 +370,9 @@ public class ScopeEditorPanel {
             return null;
         }
 
-        if (current instanceof UnionPackageSet) {
-            final PackageSet left = processComplementaryScope(((UnionPackageSet)current).getFirstSet(), added, checkComplementSet, append);
-            final PackageSet right =
-                processComplementaryScope(((UnionPackageSet)current).getSecondSet(), added, checkComplementSet, append);
+        if (current instanceof UnionPackageSet unionPackageSet) {
+            PackageSet left = processComplementaryScope(unionPackageSet.getFirstSet(), added, checkComplementSet, append);
+            PackageSet right = processComplementaryScope(unionPackageSet.getSecondSet(), added, checkComplementSet, append);
             if (left == null) {
                 return right;
             }
@@ -391,11 +382,9 @@ public class ScopeEditorPanel {
             return new UnionPackageSet(left, right);
         }
 
-        if (current instanceof IntersectionPackageSet) {
-            final PackageSet left =
-                processComplementaryScope(((IntersectionPackageSet)current).getFirstSet(), added, checkComplementSet, append);
-            final PackageSet right =
-                processComplementaryScope(((IntersectionPackageSet)current).getSecondSet(), added, checkComplementSet, append);
+        if (current instanceof IntersectionPackageSet intersectionPackageSet) {
+            PackageSet left = processComplementaryScope(intersectionPackageSet.getFirstSet(), added, checkComplementSet, append);
+            PackageSet right = processComplementaryScope(intersectionPackageSet.getSecondSet(), added, checkComplementSet, append);
             if (left == null) {
                 return right;
             }
@@ -414,10 +403,10 @@ public class ScopeEditorPanel {
         if (rows == null) {
             return null;
         }
-        final ArrayList<PackageSet> result = new ArrayList<>();
+        ArrayList<PackageSet> result = new ArrayList<>();
         for (int row : rows) {
-            final PackageDependenciesNode node = (PackageDependenciesNode)myPackageTree.getPathForRow(row).getLastPathComponent();
-            final PackageSet set = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType())
+            PackageDependenciesNode node = (PackageDependenciesNode)myPackageTree.getPathForRow(row).getLastPathComponent();
+            PackageSet set = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType())
                 .createPackageSet(node, recursively);
             if (set != null) {
                 result.add(set);
@@ -426,18 +415,19 @@ public class ScopeEditorPanel {
         return result;
     }
 
+    @RequiredReadAction
     private JComponent createTreeToolbar() {
-        final DefaultActionGroup group = new DefaultActionGroup();
-        final Runnable update = () -> rebuild(true);
+        DefaultActionGroup group = new DefaultActionGroup();
+        Runnable update = () -> rebuild(true);
         group.add(new FlattenPackagesAction(update));
-        final PatternDialectProvider[] dialectProviders = Extensions.getExtensions(PatternDialectProvider.EP_NAME);
+        PatternDialectProvider[] dialectProviders = PatternDialectProvider.EP_NAME.getExtensions();
         for (PatternDialectProvider provider : dialectProviders) {
             for (AnAction action : provider.createActions(myProject, update)) {
                 group.add(action);
             }
         }
         group.add(new ShowFilesAction(update));
-        final Module[] modules = ModuleManager.getInstance(myProject).getModules();
+        Module[] modules = ModuleManager.getInstance(myProject).getModules();
         if (modules.length > 1) {
             group.add(new ShowModulesAction(update));
             group.add(new ShowModuleGroupsAction(update));
@@ -452,11 +442,11 @@ public class ScopeEditorPanel {
         return toolbar.getComponent();
     }
 
-    private void rebuild(final boolean updateText, @Nullable final Runnable runnable, final boolean requestFocus, final int delayMillis) {
+    private void rebuild(boolean updateText, @Nullable Runnable runnable, boolean requestFocus, int delayMillis) {
         myUpdateAlarm.cancel(false);
-        final Runnable request = () -> ApplicationManager.getApplication().executeOnPooledThread((Runnable)() -> {
+        Runnable request = () -> Application.get().executeOnPooledThread((Runnable)() -> {
             if (updateText) {
-                final String text = myCurrentScope != null ? myCurrentScope.getText() : null;
+                String text = myCurrentScope != null ? myCurrentScope.getText() : null;
                 SwingUtilities.invokeLater(() -> {
                     try {
                         myIsInUpdate = true;
@@ -483,7 +473,7 @@ public class ScopeEditorPanel {
         myUpdateAlarm = AppExecutorUtil.getAppScheduledExecutorService().schedule(request, delayMillis, TimeUnit.MILLISECONDS);
     }
 
-    private void rebuild(final boolean updateText) {
+    private void rebuild(boolean updateText) {
         rebuild(updateText, null, true, 300);
     }
 
@@ -515,39 +505,45 @@ public class ScopeEditorPanel {
     }
 
     private ActionGroup createTreePopupActions() {
-        final DefaultActionGroup actionGroup = new DefaultActionGroup();
+        DefaultActionGroup actionGroup = new DefaultActionGroup();
         actionGroup.add(new AnAction(IdeLocalize.buttonInclude()) {
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 includeSelected(false);
             }
         });
         actionGroup.add(new AnAction(IdeLocalize.buttonIncludeRecursively()) {
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 includeSelected(true);
             }
 
             @Override
-            public void update(AnActionEvent e) {
+            @RequiredUIAccess
+            public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(isButtonEnabled(true));
             }
         });
 
         actionGroup.add(new AnAction(IdeLocalize.buttonExclude()) {
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 excludeSelected(false);
             }
         });
         actionGroup.add(new AnAction(IdeLocalize.buttonExcludeRecursively()) {
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 excludeSelected(true);
             }
 
             @Override
-            public void update(AnActionEvent e) {
+            @RequiredUIAccess
+            public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(isButtonEnabled(true));
             }
         });
@@ -555,19 +551,19 @@ public class ScopeEditorPanel {
         return actionGroup;
     }
 
-    private void updateTreeModel(final boolean requestFocus) throws ProcessCanceledException {
+    private void updateTreeModel(boolean requestFocus) throws ProcessCanceledException {
         PanelProgressIndicator progress = createProgressIndicator(requestFocus);
         progress.setBordersVisible(false);
         myCurrentProgress = progress;
         Runnable updateModel = () -> {
-            final ProcessCanceledException[] ex = new ProcessCanceledException[1];
-            ApplicationManager.getApplication().runReadAction(() -> {
+            ProcessCanceledException[] ex = new ProcessCanceledException[1];
+            myProject.getApplication().runReadAction(() -> {
                 if (myProject.isDisposed()) {
                     return;
                 }
                 try {
                     myTreeExpansionMonitor.freeze();
-                    final TreeModel model = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType())
+                    TreeModel model = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType())
                         .createTreeModel(myProject, myTreeMarker);
                     ((PackageDependenciesNode)model.getRoot()).sortChildren();
                     if (myErrorMessage == null) {
@@ -601,7 +597,7 @@ public class ScopeEditorPanel {
         ProgressManager.getInstance().runProcess(updateModel, progress);
     }
 
-    protected PanelProgressIndicator createProgressIndicator(final boolean requestFocus) {
+    protected PanelProgressIndicator createProgressIndicator(boolean requestFocus) {
         return new MyPanelProgressIndicator(myProject.getUIAccess().getScheduler(), requestFocus);
     }
 
@@ -628,7 +624,7 @@ public class ScopeEditorPanel {
         rebuild(false, runnable, false, 0);
     }
 
-    private void setToComponent(JComponent cmp, final boolean requestFocus) {
+    private void setToComponent(JComponent cmp, boolean requestFocus) {
         myMatchingCountPanel.removeAll();
         myMatchingCountPanel.add(cmp, BorderLayout.CENTER);
         myMatchingCountPanel.revalidate();
@@ -654,7 +650,7 @@ public class ScopeEditorPanel {
 
         @Override
         public void customizeCellRenderer(
-            JTree tree,
+            @Nonnull JTree tree,
             Object value,
             boolean selected,
             boolean expanded,
@@ -662,16 +658,15 @@ public class ScopeEditorPanel {
             int row,
             boolean hasFocus
         ) {
-            if (value instanceof PackageDependenciesNode) {
-                PackageDependenciesNode node = (PackageDependenciesNode)value;
+            if (value instanceof PackageDependenciesNode node) {
                 setIcon(node.getIcon());
 
-                setForeground(selected && hasFocus ? UIUtil.getTreeSelectionForeground() : UIUtil.getTreeForeground());
+                setForeground(selected && hasFocus ? UIUtil.getTreeSelectionForeground(true) : UIUtil.getTreeForeground());
                 if (!(selected && hasFocus) && node.hasMarked() && !DependencyUISettings.getInstance().UI_FILTER_LEGALS) {
                     setForeground(node.hasUnmarked() ? PARTIAL_INCLUDED : WHOLE_INCLUDED);
                 }
                 append(node.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-                final String locationString = node.getComment();
+                String locationString = node.getComment();
                 if (!StringUtil.isEmpty(locationString)) {
                     append(" (" + locationString + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
                 }
@@ -682,18 +677,19 @@ public class ScopeEditorPanel {
     private final class ChooseScopeTypeAction extends ComboBoxAction {
         private final Runnable myUpdate;
 
-        public ChooseScopeTypeAction(final Runnable update) {
+        public ChooseScopeTypeAction(Runnable update) {
             myUpdate = update;
         }
 
         @Override
         @Nonnull
         public DefaultActionGroup createPopupActionGroup(JComponent component) {
-            final DefaultActionGroup group = new DefaultActionGroup();
-            for (final PatternDialectProvider provider : PatternDialectProvider.EP_NAME.getExtensionList()) {
+            DefaultActionGroup group = new DefaultActionGroup();
+            for (PatternDialectProvider provider : PatternDialectProvider.EP_NAME.getExtensionList()) {
                 group.add(new AnAction(provider.getDisplayName()) {
                     @Override
-                    public void actionPerformed(final AnActionEvent e) {
+                    @RequiredUIAccess
+                    public void actionPerformed(@Nonnull AnActionEvent e) {
                         DependencyUISettings.getInstance().setScopeType(provider.getId());
                         myUpdate.run();
                     }
@@ -702,11 +698,11 @@ public class ScopeEditorPanel {
             return group;
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(@Nonnull final AnActionEvent e) {
+        @RequiredUIAccess
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
-            final PatternDialectProvider provider = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType());
+            PatternDialectProvider provider = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType());
             e.getPresentation().setText(provider.getDisplayName());
             e.getPresentation().setIcon(provider.getIcon());
         }
@@ -715,22 +711,22 @@ public class ScopeEditorPanel {
     private final class FilterLegalsAction extends ToggleAction {
         private final Runnable myUpdate;
 
-        public FilterLegalsAction(final Runnable update) {
+        public FilterLegalsAction(Runnable update) {
             super(
                 IdeLocalize.actionShowIncludedOnly(),
                 IdeLocalize.actionDescriptionShowIncludedOnly(),
-                AllIcons.General.Filter
+                PlatformIconGroup.generalFilter()
             );
             myUpdate = update;
         }
 
         @Override
-        public boolean isSelected(AnActionEvent event) {
+        public boolean isSelected(@Nonnull AnActionEvent event) {
             return DependencyUISettings.getInstance().UI_FILTER_LEGALS;
         }
 
         @Override
-        public void setSelected(AnActionEvent event, boolean flag) {
+        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
             DependencyUISettings.getInstance().UI_FILTER_LEGALS = flag;
             UIUtil.setEnabled(myLegendPanel, !flag, true);
             myUpdate.run();
@@ -751,11 +747,13 @@ public class ScopeEditorPanel {
             setToComponent(myMatchingCountLabel, myRequestFocus);
         }
 
+        @Nonnull
         @Override
         public LocalizeValue getTextValue() { //just show non-blocking progress
             return LocalizeValue.empty();
         }
 
+        @Nonnull
         @Override
         public LocalizeValue getText2Value() {
             return LocalizeValue.empty();

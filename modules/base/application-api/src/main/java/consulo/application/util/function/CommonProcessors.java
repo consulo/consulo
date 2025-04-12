@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.IntFunction;
+import java.util.function.Predicate;
 
 /**
  * @author max
@@ -41,7 +42,7 @@ public class CommonProcessors {
     }
 
     public CollectProcessor() {
-      myCollection = new ArrayList<T>();
+      myCollection = new ArrayList<>();
     }
 
     @Override
@@ -75,15 +76,15 @@ public class CommonProcessors {
   }
 
   @Nonnull
-  public static <T> Processor<T> notNullProcessor(@Nonnull final Processor<T> processor) {
-    return processor::process;
+  public static <T> Processor<T> notNullProcessor(@Nonnull final Predicate<T> processor) {
+    return processor::test;
   }
 
   public static class CollectUniquesProcessor<T> implements Processor<T> {
     private final Set<T> myCollection;
 
     public CollectUniquesProcessor() {
-      myCollection = new HashSet<T>();
+      myCollection = new HashSet<>();
     }
 
     @Override
@@ -111,12 +112,12 @@ public class CommonProcessors {
 
   public static class UniqueProcessor<T> implements Processor<T> {
     private final Set<T> processed;
-    private final Processor<T> myDelegate;
+    private final Predicate<T> myDelegate;
 
-    public UniqueProcessor(Processor<T> delegate) {
-      this(delegate, ContainerUtil.<T>canonicalStrategy());
+    public UniqueProcessor(Predicate<T> delegate) {
+      this(delegate, HashingStrategy.canonical());
     }
-    public UniqueProcessor(Processor<T> delegate, HashingStrategy<T> strategy) {
+    public UniqueProcessor(Predicate<T> delegate, HashingStrategy<T> strategy) {
       myDelegate = delegate;
       processed = Sets.newHashSet(strategy);
     }
@@ -128,7 +129,7 @@ public class CommonProcessors {
           return true;
         }
       }
-      return myDelegate.process(t);
+      return myDelegate.test(t);
     }
   }
 
@@ -178,7 +179,6 @@ public class CommonProcessors {
   }
 
   public static class FindFirstProcessor<T> extends FindProcessor<T> {
-
     @Override
     protected boolean accept(T t) {
       return true;

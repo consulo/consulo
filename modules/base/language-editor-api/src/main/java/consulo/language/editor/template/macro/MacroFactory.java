@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template.macro;
 
 import consulo.util.collection.ContainerUtil;
@@ -23,27 +22,27 @@ import java.util.Collection;
 import java.util.List;
 
 public class MacroFactory {
-  private static final MultiMap<String, Macro> myMacroTable = init();
+    private static final MultiMap<String, Macro> myMacroTable = init();
 
-  public static Macro createMacro(String name) {
-    return ContainerUtil.getFirstItem(myMacroTable.get(name));
-  }
-
-  public static List<Macro> getMacros(String name) {
-    return (List<Macro>)myMacroTable.get(name);
-  }
-
-  public static Macro[] getMacros() {
-    final Collection<? extends Macro> values = myMacroTable.values();
-    return values.toArray(new Macro[values.size()]);
-  }
-
-  private static MultiMap<String, Macro> init() {
-    MultiMap<String, Macro> result = MultiMap.create();
-    for (Macro macro : Macro.EP_NAME.getExtensionList()) {
-      result.putValue(macro.getName(), macro);
+    public static Macro createMacro(String name) {
+        return ContainerUtil.getFirstItem(myMacroTable.get(name));
     }
-    return result;
-  }
+
+    public static List<Macro> getMacros(String name) {
+        return (List<Macro>)myMacroTable.get(name);
+    }
+
+    public static Macro[] getMacros() {
+        Collection<? extends Macro> values = myMacroTable.values();
+        return values.toArray(new Macro[values.size()]);
+    }
+
+    private static MultiMap<String, Macro> init() {
+        MultiMap<String, Macro> result = MultiMap.create();
+        for (Macro macro : Macro.EP_NAME.getExtensionList()) {
+            result.putValue(macro.getName(), macro);
+        }
+        return result;
+    }
 }
 

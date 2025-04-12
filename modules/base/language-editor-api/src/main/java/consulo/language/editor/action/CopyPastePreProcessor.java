@@ -31,17 +31,17 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CopyPastePreProcessor {
-  ExtensionPointName<CopyPastePreProcessor> EP_NAME = ExtensionPointName.create(CopyPastePreProcessor.class);
+    ExtensionPointName<CopyPastePreProcessor> EP_NAME = ExtensionPointName.create(CopyPastePreProcessor.class);
 
-  /**
-   * @param file
-   * @param startOffsets
-   * @param endOffsets
-   * @param text
-   * @return null if no preprocession is to be applied
-   */
-  @Nullable
-  String preprocessOnCopy(final PsiFile file, final int[] startOffsets, final int[] endOffsets, String text);
+    /**
+     * @param file
+     * @param startOffsets
+     * @param endOffsets
+     * @param text
+     * @return null if no preprocession is to be applied
+     */
+    @Nullable
+    String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text);
 
-  String preprocessOnPaste(final Project project, final PsiFile file, final Editor editor, String text, final RawText rawText);
+    String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText);
 }
