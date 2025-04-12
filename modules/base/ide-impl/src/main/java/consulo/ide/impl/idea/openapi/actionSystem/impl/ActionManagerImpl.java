@@ -15,6 +15,7 @@ import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -191,32 +192,37 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             String actionGroupClassName = ActionGroup.class.getName();
             for (List<InjectingBinding> bindingList : holder.getBindings().values()) {
                 for (InjectingBinding binding : bindingList) {
-                    if (!InjectingBindingHolder.isValid(binding, profiles)) {
-                        continue;
-                    }
+                    try {
+                        if (!InjectingBindingHolder.isValid(binding, profiles)) {
+                            continue;
+                        }
 
-                    Class<?> actionImplClass = binding.getImplClass();
-                    ActionImpl actionImpl = actionImplClass.getAnnotation(ActionImpl.class);
+                        Class<?> actionImplClass = binding.getImplClass();
+                        ActionImpl actionImpl = actionImplClass.getAnnotation(ActionImpl.class);
 
-                    boolean isGroup = actionGroupClassName.equals(binding.getApiClassName());
-                    if (isGroup) {
-                        InjectingBindingActionGroupStub groupStub = new InjectingBindingActionGroupStub(actionImpl, binding);
-                        registerAction(actionImpl.id(), groupStub, groupStub.getPluginId());
+                        boolean isGroup = actionGroupClassName.equals(binding.getApiClassName());
+                        if (isGroup) {
+                            InjectingBindingActionGroupStub groupStub = new InjectingBindingActionGroupStub(actionImpl, binding);
+                            registerAction(actionImpl.id(), groupStub, groupStub.getPluginId());
 
-                        bindings.add(groupStub);
-                    }
-                    else {
-                        InjectingBindingActionStub actionStub = new InjectingBindingActionStub(actionImpl, binding);
-                        registerAction(actionImpl.id(), actionStub, actionStub.getPluginId());
+                            bindings.add(groupStub);
+                        }
+                        else {
+                            InjectingBindingActionStub actionStub = new InjectingBindingActionStub(actionImpl, binding);
+                            registerAction(actionImpl.id(), actionStub, actionStub.getPluginId());
 
-                        if (actionImpl.parents().length > 0) {
-                            bindings.add(actionStub);
+                            if (actionImpl.parents().length > 0) {
+                                bindings.add(actionStub);
+                            }
+                        }
+
+                        ActionRef[] shortcutRefs = actionImpl.shortcutFrom();
+                        if (shortcutRefs.length > 0) {
+                            shortcutRegisters.add(Map.entry(actionImpl.id(), shortcutRefs[0]));
                         }
                     }
-
-                    ActionRef[] shortcutRefs = actionImpl.shortcutFrom();
-                    if (shortcutRefs.length > 0) {
-                        shortcutRegisters.add(Map.entry(actionImpl.id(), shortcutRefs[0]));
+                    catch (Throwable t) {
+                        PluginExceptionUtil.logPluginError(LOG, "Failed to build: " + binding, t, binding.getClass());
                     }
                 }
             }
