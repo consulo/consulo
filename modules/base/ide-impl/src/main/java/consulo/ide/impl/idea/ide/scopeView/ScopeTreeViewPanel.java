@@ -44,13 +44,13 @@ import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.packageDependencies.ui.*;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.util.DirectoryChooserUtil;
-import consulo.project.ui.view.tree.ApplicationFileColorManager;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.util.EditorHelper;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
+import consulo.language.editor.wolfAnalyzer.ProblemScopeHolder;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
@@ -65,6 +65,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
+import consulo.project.ui.view.tree.ApplicationFileColorManager;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -888,33 +889,21 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
   private class MyProblemListener implements ProblemListener {
     @Override
     public void problemsAppeared(@Nonnull VirtualFile file) {
-      addNode(file, DefaultScopesProvider.getInstance(myProject).getProblemsScope().getName());
+      addNode(file, myProject.getInstance(ProblemScopeHolder.class).getProblemsScope().getName());
     }
 
     @Override
     public void problemsDisappeared(@Nonnull VirtualFile file) {
-      removeNode(file, DefaultScopesProvider.getInstance(myProject).getProblemsScope().getName());
+      removeNode(file, myProject.getInstance(ProblemScopeHolder.class).getProblemsScope().getName());
     }
   }
 
   private void addNode(VirtualFile file, final String scopeName) {
-    queueUpdate(file, new Function<>() {
-      @Override
-      @Nullable
-      public DefaultMutableTreeNode apply(final PsiFile psiFile) {
-        return myBuilder.addFileNode(psiFile);
-      }
-    }, scopeName);
+    queueUpdate(file, psiFile -> myBuilder.addFileNode(psiFile), scopeName);
   }
 
   private void removeNode(VirtualFile file, final String scopeName) {
-    queueUpdate(file, new Function<>() {
-      @Override
-      @Nullable
-      public DefaultMutableTreeNode apply(final PsiFile psiFile) {
-        return myBuilder.removeNode(psiFile, psiFile.getContainingDirectory());
-      }
-    }, scopeName);
+    queueUpdate(file, psiFile -> myBuilder.removeNode(psiFile, psiFile.getContainingDirectory()), scopeName);
   }
 
   private void queueUpdate(final VirtualFile fileToRefresh,

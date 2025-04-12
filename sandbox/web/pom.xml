@@ -242,6 +242,11 @@
             <artifactId>consulo-external-system-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-copyright-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <!--TODO [VISTALL] temp dependency-->
         <dependency>

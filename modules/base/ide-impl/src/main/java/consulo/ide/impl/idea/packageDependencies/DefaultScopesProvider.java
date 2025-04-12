@@ -17,21 +17,15 @@ package consulo.ide.impl.idea.packageDependencies;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.internal.scope.CustomScopesProvider;
-import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
-import consulo.content.scope.NamedScopesHolder;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;
-import consulo.language.editor.scope.NonProjectFilesScope;
 import consulo.ide.impl.psi.search.scope.ProjectFilesScope;
-import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
-import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
+import consulo.language.editor.scope.NonProjectFilesScope;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -42,8 +36,6 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class DefaultScopesProvider implements CustomScopesProvider {
-  private final NamedScope myProblemsScope;
-  private final Project myProject;
   private final List<NamedScope> myScopes;
 
   public static DefaultScopesProvider getInstance(Project project) {
@@ -52,17 +44,7 @@ public class DefaultScopesProvider implements CustomScopesProvider {
 
   @Inject
   public DefaultScopesProvider(Project project) {
-    myProject = project;
-    final NamedScope projectScope = new ProjectFilesScope();
-    final NamedScope nonProjectScope = new NonProjectFilesScope();
-    final String text = FilePatternPackageSet.SCOPE_FILE + ":*//*";
-    myProblemsScope = new NamedScope(IdeBundle.message("predefined.scope.problems.name"), new AbstractPackageSet(text) {
-      @Override
-      public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
-        return project == myProject && WolfTheProblemSolver.getInstance(project).isProblemFile(file);
-      }
-    });
-    myScopes = List.of(projectScope, getAllScope(), nonProjectScope, new ScratchesNamedScope());
+      myScopes = List.of(new ProjectFilesScope(), getAllScope(), new NonProjectFilesScope(), new ScratchesNamedScope());
   }
 
   @Nullable
@@ -83,9 +65,5 @@ public class DefaultScopesProvider implements CustomScopesProvider {
 
   public static NamedScope getAllScope() {
     return AllScopeHolderImpl.ALL;
-  }
-
-  public NamedScope getProblemsScope() {
-    return myProblemsScope;
   }
 }

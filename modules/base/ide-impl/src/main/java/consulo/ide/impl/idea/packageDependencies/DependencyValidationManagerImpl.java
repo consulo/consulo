@@ -23,13 +23,14 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.content.internal.scope.CustomScopesProvider;
 import consulo.content.scope.*;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.packageDependency.DependencyRule;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
@@ -40,54 +41,46 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 
 @Singleton
 @State(name = "DependencyValidationManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)})
 @ServiceImpl
-public class DependencyValidationManagerImpl extends DependencyValidationManager {
+public class DependencyValidationManagerImpl extends DependencyValidationManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(DependencyValidationManagerImpl.class);
 
-  private final List<DependencyRule> myRules = new ArrayList<DependencyRule>();
+  private final List<DependencyRule> myRules = new ArrayList<>();
   private final NamedScopeManager myNamedScopeManager;
 
   private boolean mySkipImportStatements;
   private boolean mySkipImportStatementsWasSpecified;
 
-  @NonNls
   private static final String DENY_RULE_KEY = "deny_rule";
-  @NonNls
   private static final String FROM_SCOPE_KEY = "from_scope";
-  @NonNls
   private static final String TO_SCOPE_KEY = "to_scope";
-  @NonNls
   private static final String IS_DENY_KEY = "is_deny";
-  @NonNls
   private static final String UNNAMED_SCOPE = "unnamed_scope";
-  @NonNls
   private static final String VALUE = "value";
 
-  private final Map<String, PackageSet> myUnnamedScopes = new HashMap<String, PackageSet>();
+  private final Map<String, PackageSet> myUnnamedScopes = new HashMap<>();
 
   @Inject
   public DependencyValidationManagerImpl(final Project project, NamedScopeManager namedScopeManager) {
     super(project);
     myNamedScopeManager = namedScopeManager;
-    namedScopeManager.addScopeListener(new ScopeListener() {
-      @Override
-      public void scopesChanged() {
-        reloadScopes();
-      }
-    });
+    namedScopeManager.addScopeListener(this::reloadScopes, this);
+  }
+
+  @Override
+  public void dispose() {
   }
 
   @Override
   @Nonnull
   public List<NamedScope> getPredefinedScopes() {
-    final List<NamedScope> predefinedScopes = new ArrayList<NamedScope>();
-    final CustomScopesProvider[] scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensions(myProject);
+    final List<NamedScope> predefinedScopes = new ArrayList<>();
+    final List<CustomScopesProvider> scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensionList(myProject);
     for (CustomScopesProvider scopesProvider : scopesProviders) {
       scopesProvider.acceptScopes(predefinedScopes::add);
     }
@@ -96,7 +89,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
   @Override
   public NamedScope getPredefinedScope(@Nonnull String name) {
-    final CustomScopesProvider[] scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensions(myProject);
+    final List<CustomScopesProvider> scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensionList(myProject);
     for (CustomScopesProvider scopesProvider : scopesProviders) {
       final NamedScope scope = scopesProvider.getCustomScope(name);
       if (scope != null) {
@@ -112,7 +105,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  @jakarta.annotation.Nullable
+  @Nullable
   public DependencyRule getViolatorDependencyRule(@Nonnull PsiFile from, @Nonnull PsiFile to) {
     for (DependencyRule dependencyRule : myRules) {
       if (dependencyRule.isForbiddenToUse(from, to)) return dependencyRule;
@@ -124,7 +117,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   @Override
   @Nonnull
   public DependencyRule[] getViolatorDependencyRules(@Nonnull PsiFile from, @Nonnull PsiFile to) {
-    ArrayList<DependencyRule> result = new ArrayList<DependencyRule>();
+    ArrayList<DependencyRule> result = new ArrayList<>();
     for (DependencyRule dependencyRule : myRules) {
       if (dependencyRule.isForbiddenToUse(from, to)) {
         result.add(dependencyRule);
@@ -136,7 +129,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   @Nonnull
   @Override
   public DependencyRule[] getApplicableRules(@Nonnull PsiFile file) {
-    ArrayList<DependencyRule> result = new ArrayList<DependencyRule>();
+    ArrayList<DependencyRule> result = new ArrayList<>();
     for (DependencyRule dependencyRule : myRules) {
       if (dependencyRule.isApplicable(file)) {
         result.add(dependencyRule);
@@ -271,8 +264,8 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  @jakarta.annotation.Nullable
-  public NamedScope getScope(@jakarta.annotation.Nullable final String name) {
+  @Nullable
+  public NamedScope getScope(@Nullable final String name) {
     final NamedScope scope = super.getScope(name);
     if (scope == null) {
       final PackageSet packageSet = myUnnamedScopes.get(name);
@@ -287,7 +280,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     return scope;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static Element writeRule(DependencyRule rule) {
     NamedScope fromScope = rule.getFromScope();
     NamedScope toScope = rule.getToScope();
@@ -338,7 +331,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
       @Override
       public void run() {
         if (getProject().isDisposed()) return;
-        List<Pair<NamedScope, NamedScopesHolder>> scopeList = new ArrayList<Pair<NamedScope, NamedScopesHolder>>();
+        List<Pair<NamedScope, NamedScopesHolder>> scopeList = new ArrayList<>();
         addScopesToList(scopeList, DependencyValidationManagerImpl.this);
         addScopesToList(scopeList, myNamedScopeManager);
         myScopes.clear();

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
+import consulo.language.editor.impl.action.BaseAnalysisAction;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;

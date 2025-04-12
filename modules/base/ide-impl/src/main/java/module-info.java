@@ -169,11 +169,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.compiler.resourceCompiler;
   exports consulo.ide.impl.compiler.setting;
   exports consulo.ide.impl.configurationStore.vcs;
-  exports consulo.ide.impl.copyright.impl;
-  exports consulo.ide.impl.copyright.impl.actions;
-  exports consulo.ide.impl.copyright.impl.options;
-  exports consulo.ide.impl.copyright.impl.pattern;
-  exports consulo.ide.impl.copyright.impl.ui;
   exports consulo.ide.impl.desktop;
   exports consulo.ide.impl.desktop.awt.graphics;
   exports consulo.ide.impl.diagram.actions;

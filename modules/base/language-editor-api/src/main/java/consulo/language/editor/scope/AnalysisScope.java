@@ -49,6 +49,7 @@ import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -69,6 +70,8 @@ import java.util.function.Supplier;
  */
 public class AnalysisScope {
   private static final Logger LOG = Logger.getInstance(AnalysisScope.class);
+
+  public static final Key<AnalysisScope> KEY = Key.of(AnalysisScope.class);
 
   public static final int PROJECT = 1;
   public static final int DIRECTORY = 2;

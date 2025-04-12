@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.packageDependencies.actions;
 
-import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
+import consulo.language.editor.impl.action.BaseAnalysisAction;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;

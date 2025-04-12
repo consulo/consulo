@@ -148,6 +148,7 @@
     <module>modules/base/language-editor-refactoring-api</module>
     <module>modules/base/language-editor-refactoring-impl</module>
     <module>modules/base/language-copyright-api</module>
+    <module>modules/base/language-copyright-impl</module>
     <module>modules/base/language-inject-advanced-api</module>
     <module>modules/base/language-inject-advanced-impl</module>
     <module>modules/base/web-browser-api</module>

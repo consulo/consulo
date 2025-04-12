@@ -80,6 +80,7 @@
                 <include>consulo:consulo-compiler-impl</include>
                 <include>consulo:consulo-language-editor-api</include>
                 <include>consulo:consulo-language-copyright-api</include>
+                <include>consulo:consulo-language-copyright-impl</include>
                 <include>consulo:consulo-undo-redo-api</include>
                 <include>consulo:consulo-language-impl</include>
                 <include>consulo:consulo-document-impl</include>

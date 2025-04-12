@@ -17,16 +17,16 @@ package consulo.ide.impl.idea.ide.util.scopeChooser;
 
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;
-import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
+import consulo.language.editor.wolfAnalyzer.ProblemScopeHolder;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBComboBoxTableCellEditorComponent;
 import consulo.ui.ex.awt.ListCellRendererWrapper;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -160,7 +160,7 @@ public class PackageSetChooserCombo extends ComponentWithBrowseButton<JComponent
     for (PackageSet unnamedScope : manager.getUnnamedScopes().values()) {
       model.add(new NamedScope.UnnamedScope(unnamedScope));
     }
-    model.remove(DefaultScopesProvider.getInstance(myProject).getProblemsScope());
+    model.remove(myProject.getInstance(ProblemScopeHolder.class).getProblemsScope());
     return model.toArray(new NamedScope[model.size()]);
   }
 

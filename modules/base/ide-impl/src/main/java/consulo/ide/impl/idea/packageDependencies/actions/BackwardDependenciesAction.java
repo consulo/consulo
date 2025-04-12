@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.packageDependencies.actions;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposer;
 import consulo.find.ui.ScopeChooserCombo;
-import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
+import consulo.language.editor.impl.action.BaseAnalysisAction;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
