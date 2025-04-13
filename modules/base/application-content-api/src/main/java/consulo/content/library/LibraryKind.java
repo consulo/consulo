@@ -16,7 +16,7 @@
 package consulo.content.library;
 
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
+import jakarta.annotation.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,9 +29,9 @@ public class LibraryKind {
   private static final Map<String, LibraryKind> ourAllKinds = new ConcurrentHashMap<>();
 
   /**
-   * @param kindId must be unique among all {@link consulo.ide.impl.idea.openapi.roots.libraries.LibraryType} and {@link consulo.ide.impl.idea.openapi.roots.libraries.LibraryPresentationProvider} implementations
+   * @param kindId must be unique among all {@link LibraryType} and {@link LibraryPresentationProvider} implementations
    */
-  public LibraryKind(@Nonnull @NonNls String kindId) {
+  public LibraryKind(@Nonnull String kindId) {
     myKindId = kindId;
     if (ourAllKinds.containsKey(kindId)) {
       throw new IllegalArgumentException("Kind " + kindId + " is not unique");
@@ -52,11 +52,13 @@ public class LibraryKind {
    * @param kindId must be unique among all {@link LibraryType} and {@link LibraryPresentationProvider} implementations
    * @return new {@link LibraryKind} instance
    */
-  public static LibraryKind create(@Nonnull @NonNls String kindId) {
+  @Nonnull
+  public static LibraryKind create(@Nonnull String kindId) {
     return new LibraryKind(kindId);
   }
 
-  public static LibraryKind findById(String kindId) {
-    return ourAllKinds.get(kindId);
+  @Nullable
+  public static LibraryKind findById(@Nullable String kindId) {
+    return kindId == null ? null : ourAllKinds.get(kindId);
   }
 }
