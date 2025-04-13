@@ -8,51 +8,53 @@ import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 /**
  * @author max
  */
 public class CollectionQuery<T> implements Query<T> {
-  private final Collection<T> myCollection;
+    private final Collection<T> myCollection;
 
-  public CollectionQuery(@Nonnull final Collection<T> collection) {
-    myCollection = collection;
-  }
+    public CollectionQuery(@Nonnull Collection<T> collection) {
+        myCollection = collection;
+    }
 
-  @Override
-  @Nonnull
-  public Collection<T> findAll() {
-    return myCollection;
-  }
+    @Override
+    @Nonnull
+    public Collection<T> findAll() {
+        return myCollection;
+    }
 
-  @Override
-  public T findFirst() {
-    final Iterator<T> i = iterator();
-    return i.hasNext() ? i.next() : null;
-  }
+    @Override
+    public T findFirst() {
+        Iterator<T> i = iterator();
+        return i.hasNext() ? i.next() : null;
+    }
 
-  @Override
-  public boolean forEach(@Nonnull final Processor<? super T> consumer) {
-    return ContainerUtil.process(myCollection, consumer);
-  }
+    @Override
+    public boolean forEach(@Nonnull Predicate<? super T> consumer) {
+        return ContainerUtil.process(myCollection, consumer);
+    }
 
-  @Nonnull
-  @Override
-  public AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<? super T> consumer) {
-    return AsyncUtil.wrapBoolean(forEach(consumer));
-  }
+    @Nonnull
+    @Override
+    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super T> consumer) {
+        return AsyncUtil.wrapBoolean(forEach(consumer));
+    }
 
-  @Nonnull
-  @Override
-  public T[] toArray(@Nonnull final T[] a) {
-    return findAll().toArray(a);
-  }
+    @Nonnull
+    @Override
+    public T[] toArray(@Nonnull T[] a) {
+        return findAll().toArray(a);
+    }
 
-  @Nonnull
-  @Override
-  public Iterator<T> iterator() {
-    return myCollection.iterator();
-  }
+    @Nonnull
+    @Override
+    public Iterator<T> iterator() {
+        return myCollection.iterator();
+    }
 }

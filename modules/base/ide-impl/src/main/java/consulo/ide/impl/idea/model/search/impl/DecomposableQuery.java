@@ -5,7 +5,7 @@ import jakarta.annotation.Nonnull;
 
 // from kotlin
 public interface DecomposableQuery<R> extends Query<R> {
-  @Nonnull
-  Requests<R> decompose();
+    @Nonnull
+    Requests<R> decompose();
 }
 
