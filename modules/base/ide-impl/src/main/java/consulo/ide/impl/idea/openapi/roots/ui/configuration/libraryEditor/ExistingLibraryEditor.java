@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.content.OrderRootType;
 import consulo.content.internal.LibraryEx;
+import consulo.content.internal.LibraryKindRegistry;
 import consulo.content.library.*;
 import consulo.disposer.Disposable;
 import consulo.content.base.BinariesOrderRootType;
@@ -59,9 +60,9 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
 
   @Override
   public LibraryType<?> getType() {
-    final LibraryKind kind = ((LibraryEx)myLibrary).getKind();
+    final LibraryKind kind = myLibrary.getKind();
     if (kind != null) {
-      return LibraryType.findByKind(kind);
+      return LibraryKindRegistry.getInstance().findLibraryTypeByKindId(kind.getKindId());
     }
     return detectType();
   }

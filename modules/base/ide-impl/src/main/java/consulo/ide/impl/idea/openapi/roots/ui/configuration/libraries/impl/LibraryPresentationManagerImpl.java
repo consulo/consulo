@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.content.base.BinariesOrderRootType;
+import consulo.content.internal.LibraryKindRegistry;
 import consulo.content.library.*;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.setting.module.LibrariesConfigurator;
@@ -52,7 +53,7 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
             }
             myPresentationProviders = providers;
         }
-        return (LibraryPresentationProvider<P>)myPresentationProviders.get(kind);
+        return (LibraryPresentationProvider<P>) myPresentationProviders.get(kind);
     }
 
     @Nonnull
@@ -66,7 +67,10 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
     public Image getCustomIcon(@Nonnull Library library, LibrariesConfigurator context) {
         LibraryKind kind = library.getKind();
         if (kind != null) {
-            return LibraryType.findByKind(kind).getIcon();
+            LibraryType<?> type = LibraryKindRegistry.getInstance().findLibraryTypeByKindId(kind.getKindId());
+            if (type != null) {
+                return type.getIcon();
+            }
         }
         List<Image> icons = getCustomIcons(library, context);
         if (icons.size() == 1) {

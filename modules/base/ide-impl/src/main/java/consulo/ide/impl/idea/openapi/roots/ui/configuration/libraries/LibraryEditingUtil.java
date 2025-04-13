@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries;
 import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.content.OrderRootType;
 import consulo.content.internal.LibraryEx;
+import consulo.content.internal.LibraryKindRegistry;
 import consulo.content.library.*;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator;
@@ -193,7 +194,7 @@ public class LibraryEditingUtil {
 
     public static List<Module> getSuitableModules(@Nonnull Project project, @Nullable LibraryKind kind, @Nullable Library library) {
         List<Module> modules = new ArrayList<>();
-        LibraryType type = kind == null ? null : LibraryType.findByKind(kind);
+        LibraryType type = kind == null ? null : LibraryKindRegistry.getInstance().findLibraryTypeByKindId(kind.getKindId());
 
         ProjectStructureSettingsUtil util = ShowSettingsUtil.getInstance();
         ModulesConfigurator modulesModel = util.getModulesModel(project);

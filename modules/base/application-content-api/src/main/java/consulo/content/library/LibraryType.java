@@ -53,7 +53,7 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
 
     @Nonnull
     @Override
-    public PersistentLibraryKind<P> getKind() {
+    public final PersistentLibraryKind<P> getKind() {
         return myKind;
     }
 
@@ -107,14 +107,5 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
      */
     public OrderRootType[] getExternalRootTypes() {
         return getDefaultExternalRootTypes();
-    }
-
-    public static LibraryType findByKind(LibraryKind kind) {
-        for (LibraryType type : EP_NAME.getExtensionList()) {
-            if (type.getKind() == kind) {
-                return type;
-            }
-        }
-        throw new IllegalArgumentException("Library with kind " + kind + " is not registered");
     }
 }

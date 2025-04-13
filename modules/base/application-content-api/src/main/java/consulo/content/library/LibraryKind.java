@@ -16,49 +16,35 @@
 package consulo.content.library;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author nik
  */
 public class LibraryKind {
-  private final String myKindId;
-  private static final Map<String, LibraryKind> ourAllKinds = new ConcurrentHashMap<>();
+    private final String myKindId;
 
-  /**
-   * @param kindId must be unique among all {@link LibraryType} and {@link LibraryPresentationProvider} implementations
-   */
-  public LibraryKind(@Nonnull String kindId) {
-    myKindId = kindId;
-    if (ourAllKinds.containsKey(kindId)) {
-      throw new IllegalArgumentException("Kind " + kindId + " is not unique");
+    /**
+     * @param kindId must be unique among all {@link LibraryType} and {@link LibraryPresentationProvider} implementations
+     */
+    public LibraryKind(@Nonnull String kindId) {
+        myKindId = kindId;
     }
-    ourAllKinds.put(kindId, this);
-  }
 
-  public final String getKindId() {
-    return myKindId;
-  }
+    public final String getKindId() {
+        return myKindId;
+    }
 
-  @Override
-  public String toString() {
-    return "LibraryKind:" + myKindId;
-  }
+    @Override
+    public String toString() {
+        return "LibraryKind:" + myKindId;
+    }
 
-  /**
-   * @param kindId must be unique among all {@link LibraryType} and {@link LibraryPresentationProvider} implementations
-   * @return new {@link LibraryKind} instance
-   */
-  @Nonnull
-  public static LibraryKind create(@Nonnull String kindId) {
-    return new LibraryKind(kindId);
-  }
-
-  @Nullable
-  public static LibraryKind findById(@Nullable String kindId) {
-    return kindId == null ? null : ourAllKinds.get(kindId);
-  }
+    /**
+     * @param kindId must be unique among all {@link LibraryType} and {@link LibraryPresentationProvider} implementations
+     * @return new {@link LibraryKind} instance
+     */
+    @Nonnull
+    public static LibraryKind create(@Nonnull String kindId) {
+        return new LibraryKind(kindId);
+    }
 }

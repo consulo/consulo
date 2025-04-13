@@ -8,6 +8,7 @@ import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.internal.LibraryEx;
+import consulo.content.internal.LibraryKindRegistry;
 import consulo.content.library.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -109,7 +110,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   @Nullable
   private static PersistentLibraryKind<?> findPersistentLibraryKind(@Nonnull Element element) {
     String typeString = element.getAttributeValue(LIBRARY_TYPE_ATTR);
-    LibraryKind kind = LibraryKind.findById(typeString);
+    LibraryKind kind = LibraryKindRegistry.getInstance().findKindById(typeString);
     if (kind != null && !(kind instanceof PersistentLibraryKind<?>)) {
       LOG.error("Cannot load non-persistable library kind: " + typeString);
       return null;
@@ -275,7 +276,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     final String typeId = element.getAttributeValue(LIBRARY_TYPE_ATTR);
     if (typeId == null) return;
 
-    myKind = (PersistentLibraryKind<?>)LibraryKind.findById(typeId);
+    myKind = (PersistentLibraryKind<?>) LibraryKindRegistry.getInstance().findKindById(typeId);
     if (myKind == null) return;
 
     myProperties = myKind.createDefaultProperties();
