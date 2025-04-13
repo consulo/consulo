@@ -20,4 +20,6 @@ module consulo.language.copyright.impl {
     requires forms.rt;
 
     opens consulo.language.copyright.impl.internal.pattern to velocity.engine.core;
+
+    opens consulo.language.copyright.impl.internal.action to consulo.util.xml.serializer;
 }
