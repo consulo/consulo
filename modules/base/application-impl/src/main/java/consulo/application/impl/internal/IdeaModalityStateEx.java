@@ -3,18 +3,16 @@ package consulo.application.impl.internal;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.ui.ModalityState;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.collection.Maps;
 import consulo.util.collection.WeakList;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class IdeaModalityStateEx extends IdeaModalityState {
   private final WeakList<Object> myModalEntities = new WeakList<>();
-  private static final Set<Object> ourTransparentEntities = Collections.newSetFromMap(Maps.newConcurrentWeakHashMap());
 
   public IdeaModalityStateEx() {
   }
@@ -54,13 +52,13 @@ public class IdeaModalityStateEx extends IdeaModalityState {
 
     List<Object> otherEntities = ((IdeaModalityStateEx)anotherState).getModalEntities();
     for (Object entity : getModalEntities()) {
-      if (!otherEntities.contains(entity) && !ourTransparentEntities.contains(entity))
+      if (!otherEntities.contains(entity))
         return true; // I have entity which is absent in anotherState
     }
     return false;
   }
 
-  @NonNls
+  @Override
   public String toString() {
     return this == nonModal() ? "ModalityState.NON_MODAL" : "ModalityState:{" + StringUtil.join(getModalEntities(),
                                                                                                it -> "[" + it + "]",
@@ -69,16 +67,5 @@ public class IdeaModalityStateEx extends IdeaModalityState {
 
   void removeModality(Object modalEntity) {
     myModalEntities.remove(modalEntity);
-  }
-
-  void markTransparent() {
-    Object element = ContainerUtil.getLastItem(getModalEntities(), null);
-    if (element != null) {
-      ourTransparentEntities.add(element);
-    }
-  }
-
-  static void unmarkTransparent(@Nonnull Object modalEntity) {
-    ourTransparentEntities.remove(modalEntity);
   }
 }
