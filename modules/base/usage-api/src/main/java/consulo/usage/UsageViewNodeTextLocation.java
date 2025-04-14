@@ -33,34 +33,37 @@ import jakarta.annotation.Nonnull;
  * @author peter
  */
 public class UsageViewNodeTextLocation extends ElementDescriptionLocation {
-  private UsageViewNodeTextLocation() { }
-
-  public static final UsageViewNodeTextLocation INSTANCE = new UsageViewNodeTextLocation();
-
-  @Override
-  public ElementDescriptionProvider getDefaultProvider() {
-    return DEFAULT_PROVIDER;
-  }
-
-  private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
-    @Override
-    public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
-      if (!(location instanceof UsageViewNodeTextLocation)) return null;
-
-      if (element instanceof PsiMetaOwner) {
-        final PsiMetaData metaData = ((PsiMetaOwner)element).getMetaData();
-        if (metaData instanceof PsiPresentableMetaData) {
-          return ((PsiPresentableMetaData)metaData).getTypeName() + " " + DescriptiveNameUtil.getMetaDataName(metaData);
-        }
-      }
-
-      if (element instanceof PsiFile) {
-        return ((PsiFile)element).getName();
-      }
-
-      Language language = element.getLanguage();
-      FindUsagesProvider provider = FindUsagesProvider.forLanguage(language);
-      return provider.getNodeText(element, true);
+    private UsageViewNodeTextLocation() {
     }
-  };
+
+    public static final UsageViewNodeTextLocation INSTANCE = new UsageViewNodeTextLocation();
+
+    @Override
+    public ElementDescriptionProvider getDefaultProvider() {
+        return DEFAULT_PROVIDER;
+    }
+
+    private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
+        @Override
+        public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
+            if (!(location instanceof UsageViewNodeTextLocation)) {
+                return null;
+            }
+
+            if (element instanceof PsiMetaOwner) {
+                final PsiMetaData metaData = ((PsiMetaOwner)element).getMetaData();
+                if (metaData instanceof PsiPresentableMetaData) {
+                    return ((PsiPresentableMetaData)metaData).getTypeName() + " " + DescriptiveNameUtil.getMetaDataName(metaData);
+                }
+            }
+
+            if (element instanceof PsiFile) {
+                return ((PsiFile)element).getName();
+            }
+
+            Language language = element.getLanguage();
+            FindUsagesProvider provider = FindUsagesProvider.forLanguage(language);
+            return provider.getNodeText(element, true);
+        }
+    };
 }

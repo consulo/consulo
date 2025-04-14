@@ -24,44 +24,44 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class TextChunk {
-  public static final TextChunk[] EMPTY_ARRAY = new TextChunk[0];
+    public static final TextChunk[] EMPTY_ARRAY = new TextChunk[0];
 
-  private final AttributesFlyweight myAttributes;
-  private final String myText;
-  private final UsageType myType;
+    private final AttributesFlyweight myAttributes;
+    private final String myText;
+    private final UsageType myType;
 
-  public TextChunk(@Nonnull TextAttributes attributes, @Nonnull String text) {
-    this(attributes, text, null);
-  }
+    public TextChunk(@Nonnull TextAttributes attributes, @Nonnull String text) {
+        this(attributes, text, null);
+    }
 
-  public TextChunk(@Nonnull TextAttributes attributes, @Nonnull String text, @Nullable UsageType type) {
-    myAttributes = attributes.getFlyweight();
-    myText = text;
-    myType = type;
-  }
+    public TextChunk(@Nonnull TextAttributes attributes, @Nonnull String text, @Nullable UsageType type) {
+        myAttributes = attributes.getFlyweight();
+        myText = text;
+        myType = type;
+    }
 
-  @Nonnull
-  public TextAttributes getAttributes() {
-    return TextAttributes.fromFlyweight(myAttributes);
-  }
+    @Nonnull
+    public TextAttributes getAttributes() {
+        return TextAttributes.fromFlyweight(myAttributes);
+    }
 
-  @Nonnull
-  public String getText() {
-    return myText;
-  }
+    @Nonnull
+    public String getText() {
+        return myText;
+    }
 
-  public String toString() {
-    return getText();
-  }
+    public String toString() {
+        return getText();
+    }
 
-  public @Nullable UsageType getType() {
-    return myType;
-  }
+    public @Nullable UsageType getType() {
+        return myType;
+    }
 
-  @Nonnull
-  public SimpleTextAttributes getSimpleAttributesIgnoreBackground() {
-    SimpleTextAttributes simples = TextAttributesUtil.fromTextAttributes(getAttributes());
-    simples = new SimpleTextAttributes(null, simples.getFgColor(), simples.getWaveColor(), simples.getStyle());
-    return simples;
-  }
+    @Nonnull
+    public SimpleTextAttributes getSimpleAttributesIgnoreBackground() {
+        SimpleTextAttributes simples = TextAttributesUtil.fromTextAttributes(getAttributes());
+        simples = new SimpleTextAttributes(null, simples.getFgColor(), simples.getWaveColor(), simples.getStyle());
+        return simples;
+    }
 }

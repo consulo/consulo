@@ -25,12 +25,11 @@ import jakarta.annotation.Nonnull;
  * @author Maxim.Mossienko
  */
 public class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> extends PsiElementUsageGroupBase<T> {
+    public PsiNamedElementUsageGroupBase(@Nonnull T element, Image icon) {
+        super(element, icon);
+    }
 
-  public PsiNamedElementUsageGroupBase(@Nonnull T element, Image icon) {
-    super(element, icon);
-  }
-
-  public PsiNamedElementUsageGroupBase(@Nonnull T element) {
-    super(element);
-  }
+    public PsiNamedElementUsageGroupBase(@Nonnull T element) {
+        super(element);
+    }
 }

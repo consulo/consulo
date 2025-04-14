@@ -32,73 +32,77 @@ import jakarta.annotation.Nonnull;
  * Created by Maxim.Mossienko on 7/31/2014.
  */
 public class SyntaxHighlighterOverEditorHighlighter implements SyntaxHighlighter {
-  private final Lexer lexer;
-  private LayeredHighlighterIterator layeredHighlighterIterator = null;
-  private final SyntaxHighlighter highlighter;
+    private final Lexer lexer;
+    private LayeredHighlighterIterator layeredHighlighterIterator = null;
+    private final SyntaxHighlighter highlighter;
 
-  public SyntaxHighlighterOverEditorHighlighter(SyntaxHighlighter _highlighter, VirtualFile file, Project project) {
-    if (file.getFileType() == PlainTextFileType.INSTANCE) { // optimization for large files, PlainTextSyntaxHighlighterFactory is slow
-      highlighter = new DefaultSyntaxHighlighter();
-      lexer = highlighter.getHighlightingLexer();
-    } else {
-      highlighter = _highlighter;
-      LayeredLexer.ourDisableLayersFlag.set(Boolean.TRUE);
-      EditorHighlighter editorHighlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(project, file);
-
-      try {
-        if (editorHighlighter instanceof LayeredLexerEditorHighlighter) {
-          lexer = new LexerEditorHighlighterLexer(editorHighlighter, false);
+    public SyntaxHighlighterOverEditorHighlighter(SyntaxHighlighter _highlighter, VirtualFile file, Project project) {
+        if (file.getFileType() == PlainTextFileType.INSTANCE) { // optimization for large files, PlainTextSyntaxHighlighterFactory is slow
+            highlighter = new DefaultSyntaxHighlighter();
+            lexer = highlighter.getHighlightingLexer();
         }
         else {
-          lexer = highlighter.getHighlightingLexer();
+            highlighter = _highlighter;
+            LayeredLexer.ourDisableLayersFlag.set(Boolean.TRUE);
+            EditorHighlighter editorHighlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(project, file);
+
+            try {
+                if (editorHighlighter instanceof LayeredLexerEditorHighlighter) {
+                    lexer = new LexerEditorHighlighterLexer(editorHighlighter, false);
+                }
+                else {
+                    lexer = highlighter.getHighlightingLexer();
+                }
+            }
+            finally {
+                LayeredLexer.ourDisableLayersFlag.set(null);
+            }
         }
-      }
-      finally {
-        LayeredLexer.ourDisableLayersFlag.set(null);
-      }
     }
-  }
 
-  @Nonnull
-  @Override
-  public Lexer getHighlightingLexer() {
-    return lexer;
-  }
+    @Nonnull
+    @Override
+    public Lexer getHighlightingLexer() {
+        return lexer;
+    }
 
-  @Nonnull
-  @Override
-  public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-    final SyntaxHighlighter activeSyntaxHighlighter =
+    @Nonnull
+    @Override
+    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+        final SyntaxHighlighter activeSyntaxHighlighter =
             layeredHighlighterIterator != null ? layeredHighlighterIterator.getActiveSyntaxHighlighter() : highlighter;
-    return activeSyntaxHighlighter.getTokenHighlights(tokenType);
-  }
-
-  public void restart(@Nonnull CharSequence text) {
-    lexer.start(text);
-
-    if (lexer instanceof LexerEditorHighlighterLexer) {
-      HighlighterIterator iterator = ((LexerEditorHighlighterLexer)lexer).getHighlighterIterator();
-      if (iterator instanceof LayeredHighlighterIterator) {
-        layeredHighlighterIterator = (LayeredHighlighterIterator)iterator;
-      } else {
-        layeredHighlighterIterator = null;
-      }
+        return activeSyntaxHighlighter.getTokenHighlights(tokenType);
     }
-  }
 
-  public void resetPosition(int startOffset) {
-    if (lexer instanceof LexerEditorHighlighterLexer) {
-      ((LexerEditorHighlighterLexer)lexer).resetPosition(startOffset);
+    public void restart(@Nonnull CharSequence text) {
+        lexer.start(text);
 
-      HighlighterIterator iterator = ((LexerEditorHighlighterLexer)lexer).getHighlighterIterator();
-      if (iterator instanceof LayeredHighlighterIterator) {
-        layeredHighlighterIterator = (LayeredHighlighterIterator)iterator;
-      } else {
-        layeredHighlighterIterator = null;
-      }
-    } else {
-      CharSequence text = lexer.getBufferSequence();
-      lexer.start(text, startOffset, text.length());
+        if (lexer instanceof LexerEditorHighlighterLexer) {
+            HighlighterIterator iterator = ((LexerEditorHighlighterLexer)lexer).getHighlighterIterator();
+            if (iterator instanceof LayeredHighlighterIterator) {
+                layeredHighlighterIterator = (LayeredHighlighterIterator)iterator;
+            }
+            else {
+                layeredHighlighterIterator = null;
+            }
+        }
     }
-  }
+
+    public void resetPosition(int startOffset) {
+        if (lexer instanceof LexerEditorHighlighterLexer) {
+            ((LexerEditorHighlighterLexer)lexer).resetPosition(startOffset);
+
+            HighlighterIterator iterator = ((LexerEditorHighlighterLexer)lexer).getHighlighterIterator();
+            if (iterator instanceof LayeredHighlighterIterator) {
+                layeredHighlighterIterator = (LayeredHighlighterIterator)iterator;
+            }
+            else {
+                layeredHighlighterIterator = null;
+            }
+        }
+        else {
+            CharSequence text = lexer.getBufferSequence();
+            lexer.start(text, startOffset, text.length());
+        }
+    }
 }

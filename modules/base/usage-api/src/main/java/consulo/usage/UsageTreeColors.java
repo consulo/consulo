@@ -18,13 +18,13 @@ package consulo.usage;
 import consulo.colorScheme.TextAttributesKey;
 
 public interface UsageTreeColors {
-  TextAttributesKey INVALID_PREFIX = TextAttributesKey.createTextAttributesKey("$INVALID_PREFIX");
-  TextAttributesKey READONLY_PREFIX = TextAttributesKey.createTextAttributesKey("$READ_ONLY_PREFIX");
-  TextAttributesKey HAS_READ_ONLY_CHILD = TextAttributesKey.createTextAttributesKey("$HAS_READ_ONLY_CHILD");
-  TextAttributesKey TEXT_NODE = TextAttributesKey.createTextAttributesKey("$TEXT_NODE");
-  TextAttributesKey NUMBER_OF_USAGES = TextAttributesKey.createTextAttributesKey("$NUMBER_OF_USAGES");
-  TextAttributesKey USAGE_LOCATION = TextAttributesKey.createTextAttributesKey("$NUMBER_OF_USAGES");
-  TextAttributesKey OCCURENCE = TextAttributesKey.createTextAttributesKey("$OCCURENCE");
-  TextAttributesKey SELECTED_OCCURENCE = TextAttributesKey.createTextAttributesKey("$SELECTED_OCCURENCE");
-  TextAttributesKey EXCLUDED_NODE = TextAttributesKey.createTextAttributesKey("$EXCLUDED_NODE");
+    TextAttributesKey INVALID_PREFIX = TextAttributesKey.createTextAttributesKey("$INVALID_PREFIX");
+    TextAttributesKey READONLY_PREFIX = TextAttributesKey.createTextAttributesKey("$READ_ONLY_PREFIX");
+    TextAttributesKey HAS_READ_ONLY_CHILD = TextAttributesKey.createTextAttributesKey("$HAS_READ_ONLY_CHILD");
+    TextAttributesKey TEXT_NODE = TextAttributesKey.createTextAttributesKey("$TEXT_NODE");
+    TextAttributesKey NUMBER_OF_USAGES = TextAttributesKey.createTextAttributesKey("$NUMBER_OF_USAGES");
+    TextAttributesKey USAGE_LOCATION = TextAttributesKey.createTextAttributesKey("$NUMBER_OF_USAGES");
+    TextAttributesKey OCCURENCE = TextAttributesKey.createTextAttributesKey("$OCCURENCE");
+    TextAttributesKey SELECTED_OCCURENCE = TextAttributesKey.createTextAttributesKey("$SELECTED_OCCURENCE");
+    TextAttributesKey EXCLUDED_NODE = TextAttributesKey.createTextAttributesKey("$EXCLUDED_NODE");
 }

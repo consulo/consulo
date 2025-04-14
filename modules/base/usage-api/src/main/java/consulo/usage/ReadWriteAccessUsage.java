@@ -20,7 +20,7 @@ package consulo.usage;
  * Date: Jan 17, 2005
  */
 public interface ReadWriteAccessUsage extends Usage {
-  boolean isAccessedForWriting();
+    boolean isAccessedForWriting();
 
-  boolean isAccessedForReading();
+    boolean isAccessedForReading();
 }

@@ -21,5 +21,5 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author max
  */
 public interface UsageInFiles {
-  VirtualFile[] getFiles();
+    VirtualFile[] getFiles();
 }

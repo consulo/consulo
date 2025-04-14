@@ -23,16 +23,16 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public interface UsageGroup extends Comparable<UsageGroup>, Navigatable {
-  @Nullable
-  Image getIcon();
+    @Nullable
+    Image getIcon();
 
-  @Nonnull
-  String getText(@Nullable UsageView view);
+    @Nonnull
+    String getText(@Nullable UsageView view);
 
-  @Nullable
-  FileStatus getFileStatus();
+    @Nullable
+    FileStatus getFileStatus();
 
-  boolean isValid();
+    boolean isValid();
 
-  void update();
+    void update();
 }

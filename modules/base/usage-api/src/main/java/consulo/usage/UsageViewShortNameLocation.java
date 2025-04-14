@@ -30,30 +30,34 @@ import jakarta.annotation.Nonnull;
  * @author yole
  */
 public class UsageViewShortNameLocation extends ElementDescriptionLocation {
-  private UsageViewShortNameLocation() {
-  }
-
-  public static final UsageViewShortNameLocation INSTANCE = new UsageViewShortNameLocation();
-
-  @Override
-  public ElementDescriptionProvider getDefaultProvider() {
-    return DEFAULT_PROVIDER;
-  }
-
-  private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
-    @Override
-    public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
-      if (!(location instanceof UsageViewShortNameLocation)) return null;
-
-      if (element instanceof PsiMetaOwner) {
-        PsiMetaData metaData = ((PsiMetaOwner)element).getMetaData();
-        if (metaData != null) return DescriptiveNameUtil.getMetaDataName(metaData);
-      }
-
-      if (element instanceof PsiNamedElement) {
-        return ((PsiNamedElement)element).getName();
-      }
-      return "";
+    private UsageViewShortNameLocation() {
     }
-  };
+
+    public static final UsageViewShortNameLocation INSTANCE = new UsageViewShortNameLocation();
+
+    @Override
+    public ElementDescriptionProvider getDefaultProvider() {
+        return DEFAULT_PROVIDER;
+    }
+
+    private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
+        @Override
+        public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
+            if (!(location instanceof UsageViewShortNameLocation)) {
+                return null;
+            }
+
+            if (element instanceof PsiMetaOwner) {
+                PsiMetaData metaData = ((PsiMetaOwner)element).getMetaData();
+                if (metaData != null) {
+                    return DescriptiveNameUtil.getMetaDataName(metaData);
+                }
+            }
+
+            if (element instanceof PsiNamedElement) {
+                return ((PsiNamedElement)element).getName();
+            }
+            return "";
+        }
+    };
 }

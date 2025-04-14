@@ -22,34 +22,38 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 17, 2005
+ * Date: Jan 17, 2005
  */
 public class ReadWriteAccessUsageInfo2UsageAdapter extends UsageInfo2UsageAdapter implements ReadWriteAccessUsage {
-  private final boolean myAccessedForReading;
-  private final boolean myAccessedForWriting;
+    private final boolean myAccessedForReading;
+    private final boolean myAccessedForWriting;
 
-  public ReadWriteAccessUsageInfo2UsageAdapter(@Nonnull UsageInfo usageInfo, final boolean accessedForReading, final boolean accessedForWriting) {
-    super(usageInfo);
-    myAccessedForReading = accessedForReading;
-    myAccessedForWriting = accessedForWriting;
-    if (myAccessedForReading && myAccessedForWriting) {
-      myIcon = AllIcons.Nodes.Rw_access;
+    public ReadWriteAccessUsageInfo2UsageAdapter(
+        @Nonnull UsageInfo usageInfo,
+        final boolean accessedForReading,
+        final boolean accessedForWriting
+    ) {
+        super(usageInfo);
+        myAccessedForReading = accessedForReading;
+        myAccessedForWriting = accessedForWriting;
+        if (myAccessedForReading && myAccessedForWriting) {
+            myIcon = AllIcons.Nodes.Rw_access;
+        }
+        else if (myAccessedForWriting) {
+            myIcon = AllIcons.Nodes.Write_access;           // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
+        }
+        else if (myAccessedForReading) {
+            myIcon = AllIcons.Nodes.Read_access;            // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
+        }
     }
-    else if (myAccessedForWriting) {
-      myIcon = AllIcons.Nodes.Write_access;           // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
-    }
-    else if (myAccessedForReading){
-      myIcon = AllIcons.Nodes.Read_access;            // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
-    }
-  }
 
-  @Override
-  public boolean isAccessedForWriting() {
-    return myAccessedForWriting;
-  }
+    @Override
+    public boolean isAccessedForWriting() {
+        return myAccessedForWriting;
+    }
 
-  @Override
-  public boolean isAccessedForReading() {
-    return myAccessedForReading;
-  }
+    @Override
+    public boolean isAccessedForReading() {
+        return myAccessedForReading;
+    }
 }

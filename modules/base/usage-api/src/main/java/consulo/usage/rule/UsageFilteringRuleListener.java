@@ -24,5 +24,5 @@ import consulo.annotation.component.TopicAPI;
  */
 @TopicAPI(ComponentScope.PROJECT)
 public interface UsageFilteringRuleListener {
-  void rulesChanged();
+    void rulesChanged();
 }

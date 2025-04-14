@@ -20,16 +20,16 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public interface UsageViewDescriptor {
-  /**
-   * @return an array of elements whose usages were searched or {@link PsiElement#EMPTY_ARRAY} if not available
-   */
-  @Nonnull
-  PsiElement[] getElements();
+    /**
+     * @return an array of elements whose usages were searched or {@link PsiElement#EMPTY_ARRAY} if not available
+     */
+    @Nonnull
+    PsiElement[] getElements();
 
-  String getProcessedElementsHeader();
+    String getProcessedElementsHeader();
 
-  String getCodeReferencesText(int usagesCount, int filesCount);
+    String getCodeReferencesText(int usagesCount, int filesCount);
 
-  @Nullable
-  String getCommentReferencesText(int usagesCount, int filesCount);
+    @Nullable
+    String getCommentReferencesText(int usagesCount, int filesCount);
 }

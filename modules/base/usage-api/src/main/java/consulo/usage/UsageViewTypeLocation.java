@@ -32,43 +32,45 @@ import jakarta.annotation.Nonnull;
  * @author peter
  */
 public class UsageViewTypeLocation extends ElementDescriptionLocation {
-  private UsageViewTypeLocation() {
-  }
-
-  public static final UsageViewTypeLocation INSTANCE = new UsageViewTypeLocation();
-
-  @Override
-  public ElementDescriptionProvider getDefaultProvider() {
-    return DEFAULT_PROVIDER;
-  }
-
-  private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
-    @Override
-    public String getElementDescription(@Nonnull final PsiElement psiElement, @Nonnull final ElementDescriptionLocation location) {
-      if (!(location instanceof UsageViewTypeLocation)) return null;
-
-      if (psiElement instanceof PsiMetaOwner) {
-        final PsiMetaData metaData = ((PsiMetaOwner)psiElement).getMetaData();
-        if (metaData instanceof PsiPresentableMetaData) {
-          return ((PsiPresentableMetaData)metaData).getTypeName();
-        }
-      }
-
-      if (psiElement instanceof PsiFile) {
-        return LangBundle.message("terms.file");
-      }
-      if (psiElement instanceof PsiDirectory) {
-        return LangBundle.message("terms.directory");
-      }
-
-      final Language lang = psiElement.getLanguage();
-      FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
-      final String type = provider.getType(psiElement);
-      if (StringUtil.isNotEmpty(type)) {
-        return type;
-      }
-
-      return TypePresentationService.getInstance().getTypeNameOrStub(psiElement);
+    private UsageViewTypeLocation() {
     }
-  };
+
+    public static final UsageViewTypeLocation INSTANCE = new UsageViewTypeLocation();
+
+    @Override
+    public ElementDescriptionProvider getDefaultProvider() {
+        return DEFAULT_PROVIDER;
+    }
+
+    private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
+        @Override
+        public String getElementDescription(@Nonnull final PsiElement psiElement, @Nonnull final ElementDescriptionLocation location) {
+            if (!(location instanceof UsageViewTypeLocation)) {
+                return null;
+            }
+
+            if (psiElement instanceof PsiMetaOwner) {
+                final PsiMetaData metaData = ((PsiMetaOwner)psiElement).getMetaData();
+                if (metaData instanceof PsiPresentableMetaData) {
+                    return ((PsiPresentableMetaData)metaData).getTypeName();
+                }
+            }
+
+            if (psiElement instanceof PsiFile) {
+                return LangBundle.message("terms.file");
+            }
+            if (psiElement instanceof PsiDirectory) {
+                return LangBundle.message("terms.directory");
+            }
+
+            final Language lang = psiElement.getLanguage();
+            FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
+            final String type = provider.getType(psiElement);
+            if (StringUtil.isNotEmpty(type)) {
+                return type;
+            }
+
+            return TypePresentationService.getInstance().getTypeNameOrStub(psiElement);
+        }
+    };
 }

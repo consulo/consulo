@@ -22,5 +22,5 @@ import consulo.usage.Usage;
  * @author max
  */
 public interface UsageInLibrary extends Usage {
-  OrderEntry getLibraryEntry();
+    OrderEntry getLibraryEntry();
 }

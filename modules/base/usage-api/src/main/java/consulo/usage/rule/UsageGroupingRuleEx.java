@@ -22,18 +22,19 @@ import consulo.util.collection.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * @deprecated override {@link UsageGroupingRule#getParentGroupsFor(Usage, UsageTarget[])} instead.
  */
 public interface UsageGroupingRuleEx extends UsageGroupingRule {
-  @Nullable
-  UsageGroup groupUsage(@Nonnull Usage usage, @Nonnull UsageTarget[] targets);
+    @Nullable
+    UsageGroup groupUsage(@Nonnull Usage usage, @Nonnull UsageTarget[] targets);
 
-  @Nonnull
-  @Override
-  default List<UsageGroup> getParentGroupsFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
-    return ContainerUtil.createMaybeSingletonList(groupUsage(usage, targets));
-  }
+    @Nonnull
+    @Override
+    default List<UsageGroup> getParentGroupsFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
+        return ContainerUtil.createMaybeSingletonList(groupUsage(usage, targets));
+    }
 }

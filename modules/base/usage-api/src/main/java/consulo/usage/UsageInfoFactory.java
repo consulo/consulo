@@ -20,6 +20,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public interface UsageInfoFactory {
-  @Nullable
-  UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset);
+    @Nullable
+    UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset);
 }

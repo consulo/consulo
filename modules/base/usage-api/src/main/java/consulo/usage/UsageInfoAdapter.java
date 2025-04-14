@@ -4,13 +4,13 @@ package consulo.usage;
 import jakarta.annotation.Nonnull;
 
 public interface UsageInfoAdapter extends Usage, MergeableUsage {
-  @Nonnull
-  String getPath();
+    @Nonnull
+    String getPath();
 
-  int getLine();
+    int getLine();
 
-  int getNavigationOffset();
+    int getNavigationOffset();
 
-  @Nonnull
-  UsageInfo[] getMergedInfos();
+    @Nonnull
+    UsageInfo[] getMergedInfos();
 }
