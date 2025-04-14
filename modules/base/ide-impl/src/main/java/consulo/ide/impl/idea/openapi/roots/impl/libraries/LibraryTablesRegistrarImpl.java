@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.project.Project;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
 import consulo.disposer.Disposable;
-import jakarta.inject.Singleton;
-
+import consulo.project.Project;
+import consulo.project.content.library.ProjectLibraryTable;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceImpl
@@ -30,7 +30,7 @@ public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implement
   @Override
   @Nonnull
   public LibraryTable getLibraryTable(@Nonnull Project project) {
-    return ProjectLibraryTableImpl.getInstance(project);
+    return ProjectLibraryTable.getInstance(project);
   }
 
   @Override

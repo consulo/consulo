@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.impl.libraries;
+package consulo.application.content.impl.internal.library;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.content.library.*;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.List;
@@ -76,8 +75,8 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
 
     private static List<Pair<LibraryKind, LibraryProperties>> computeKinds(List<VirtualFile> files) {
         SmartList<Pair<LibraryKind, LibraryProperties>> result = new SmartList<>();
-        LibraryType<?>[] libraryTypes = LibraryType.EP_NAME.getExtensions();
-        LibraryPresentationProvider[] presentationProviders = LibraryPresentationProvider.EP_NAME.getExtensions();
+        List<LibraryType> libraryTypes = LibraryType.EP_NAME.getExtensionList();
+        List<LibraryPresentationProvider> presentationProviders = LibraryPresentationProvider.EP_NAME.getExtensionList();
         for (LibraryPresentation provider : ContainerUtil.concat(libraryTypes, presentationProviders)) {
             LibraryProperties properties = provider.detect(files);
             if (properties != null) {
