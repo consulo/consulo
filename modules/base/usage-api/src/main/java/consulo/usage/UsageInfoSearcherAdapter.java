@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.usage.localize.UsageLocalize;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
@@ -39,7 +40,7 @@ public abstract class UsageInfoSearcherAdapter implements UsageSearcher {
             }
         });
         if (!dumbModeOccurred.isNull()) {
-            DumbService.getInstance(project).showDumbModeNotification("Usage search is not available until indices are ready");
+            DumbService.getInstance(project).showDumbModeNotification(UsageLocalize.notificationUsageSearchIsNotAvailableUntilIndicesAreReady());
             return;
         }
         Usage[] usages = app.runReadAction((Supplier<Usage[]>)() -> UsageInfo2UsageAdapter.convert(refUsages.get()));

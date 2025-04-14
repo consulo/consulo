@@ -15,6 +15,7 @@
  */
 package consulo.usage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -26,12 +27,14 @@ import jakarta.annotation.Nullable;
 public class NonCodeUsageInfo extends MoveRenameUsageInfo {
     public final String newText;
 
+    @RequiredReadAction
     private NonCodeUsageInfo(@Nonnull PsiElement element, int startOffset, int endOffset, PsiElement referencedElement, String newText) {
         super(element, null, startOffset, endOffset, referencedElement, true);
         this.newText = newText;
     }
 
     @Nullable
+    @RequiredReadAction
     public static NonCodeUsageInfo create(
         @Nonnull PsiFile file,
         int startOffset,
@@ -62,10 +65,12 @@ public class NonCodeUsageInfo extends MoveRenameUsageInfo {
 
     @Override
     @Nullable
+    @RequiredReadAction
     public PsiReference getReference() {
         return null;
     }
 
+    @RequiredReadAction
     public NonCodeUsageInfo replaceElement(PsiElement newElement) {
         return new NonCodeUsageInfo(
             newElement,

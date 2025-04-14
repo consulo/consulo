@@ -50,7 +50,7 @@ public class UsageAdapter implements Usage {
     }
 
     @Override
-    public void navigate(final boolean requestFocus) {
+    public void navigate(boolean requestFocus) {
     }
 
     @Override

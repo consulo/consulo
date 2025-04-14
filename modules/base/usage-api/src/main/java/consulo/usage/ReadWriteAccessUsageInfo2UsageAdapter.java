@@ -15,35 +15,29 @@
  */
 package consulo.usage;
 
-import consulo.application.AllIcons;
-import consulo.usage.ReadWriteAccessUsage;
-import consulo.usage.UsageInfo;
+import consulo.platform.base.icon.PlatformIconGroup;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jan 17, 2005
+ * @since 2005-01-17
  */
 public class ReadWriteAccessUsageInfo2UsageAdapter extends UsageInfo2UsageAdapter implements ReadWriteAccessUsage {
     private final boolean myAccessedForReading;
     private final boolean myAccessedForWriting;
 
-    public ReadWriteAccessUsageInfo2UsageAdapter(
-        @Nonnull UsageInfo usageInfo,
-        final boolean accessedForReading,
-        final boolean accessedForWriting
-    ) {
+    public ReadWriteAccessUsageInfo2UsageAdapter(@Nonnull UsageInfo usageInfo, boolean accessedForReading, boolean accessedForWriting) {
         super(usageInfo);
         myAccessedForReading = accessedForReading;
         myAccessedForWriting = accessedForWriting;
         if (myAccessedForReading && myAccessedForWriting) {
-            myIcon = AllIcons.Nodes.Rw_access;
+            myIcon = PlatformIconGroup.nodesRw_access();
         }
         else if (myAccessedForWriting) {
-            myIcon = AllIcons.Nodes.Write_access;           // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
+            myIcon = PlatformIconGroup.nodesWrite_access(); // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
         }
         else if (myAccessedForReading) {
-            myIcon = AllIcons.Nodes.Read_access;            // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
+            myIcon = PlatformIconGroup.nodesRead_access();  // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
         }
     }
 

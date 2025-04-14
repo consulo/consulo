@@ -15,11 +15,12 @@
  */
 package consulo.usage;
 
-import consulo.util.lang.Comparing;
+import consulo.usage.localize.UsageLocalize;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -30,16 +31,16 @@ public class UsageViewPresentation {
     private String myScopeText = ""; // Default value. to be overwritten in most cases.
     private String myContextText = "";
     private String myUsagesString;
-    private String myTargetsNodeText = UsageViewBundle.message("node.targets"); // Default value. to be overwritten in most cases.
-    private String myNonCodeUsagesString = UsageViewBundle.message("node.non.code.usages");
-    private String myCodeUsagesString = UsageViewBundle.message("node.found.usages");
-    private String myUsagesInGeneratedCodeString = UsageViewBundle.message("node.usages.in.generated.code");
+    private String myTargetsNodeText = UsageLocalize.nodeTargets().get(); // Default value. to be overwritten in most cases.
+    private String myNonCodeUsagesString = UsageLocalize.nodeNonCodeUsages().get();
+    private String myCodeUsagesString = UsageLocalize.nodeFoundUsages().get();
+    private String myUsagesInGeneratedCodeString = UsageLocalize.nodeUsagesInGeneratedCode().get();
     private boolean myShowReadOnlyStatusAsRed = false;
     private boolean myShowCancelButton = false;
     private boolean myOpenInNewTab = true;
     private boolean myCodeUsages = true;
     private boolean myUsageTypeFilteringAvailable;
-    private String myUsagesWord = UsageViewBundle.message("usage.name");
+    private String myUsagesWord = UsageLocalize.usageName().get();
 
     private String myTabName;
     private String myToolwindowTitle;
@@ -142,7 +143,7 @@ public class UsageViewPresentation {
         return myCodeUsages;
     }
 
-    public void setCodeUsages(final boolean codeUsages) {
+    public void setCodeUsages(boolean codeUsages) {
         myCodeUsages = codeUsages;
     }
 
@@ -159,7 +160,7 @@ public class UsageViewPresentation {
         return myTabName;
     }
 
-    public void setTabName(final String tabName) {
+    public void setTabName(String tabName) {
         myTabName = tabName;
     }
 
@@ -167,7 +168,7 @@ public class UsageViewPresentation {
         return myToolwindowTitle;
     }
 
-    public void setToolwindowTitle(final String toolwindowTitle) {
+    public void setToolwindowTitle(String toolwindowTitle) {
         myToolwindowTitle = toolwindowTitle;
     }
 
@@ -246,80 +247,29 @@ public class UsageViewPresentation {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof UsageViewPresentation)) {
-            return false;
-        }
-
-        UsageViewPresentation that = (UsageViewPresentation)o;
-
-        if (myCodeUsages != that.myCodeUsages) {
-            return false;
-        }
-        if (myDetachedMode != that.myDetachedMode) {
-            return false;
-        }
-        if (myMergeDupLinesAvailable != that.myMergeDupLinesAvailable) {
-            return false;
-        }
-        if (myOpenInNewTab != that.myOpenInNewTab) {
-            return false;
-        }
-        if (myShowCancelButton != that.myShowCancelButton) {
-            return false;
-        }
-        if (myShowReadOnlyStatusAsRed != that.myShowReadOnlyStatusAsRed) {
-            return false;
-        }
-        if (myUsageTypeFilteringAvailable != that.myUsageTypeFilteringAvailable) {
-            return false;
-        }
-        if (myExcludeAvailable != that.myExcludeAvailable) {
-            return false;
-        }
-        if (myCodeUsagesString != null ? !myCodeUsagesString.equals(that.myCodeUsagesString) : that.myCodeUsagesString != null) {
-            return false;
-        }
-        if (myDynamicCodeUsagesString != null ? !myDynamicCodeUsagesString.equals(that.myDynamicCodeUsagesString) : that.myDynamicCodeUsagesString != null) {
-            return false;
-        }
-        if (myNonCodeUsagesString != null ? !myNonCodeUsagesString.equals(that.myNonCodeUsagesString) : that.myNonCodeUsagesString != null) {
-            return false;
-        }
-        if (myScopeText != null ? !myScopeText.equals(that.myScopeText) : that.myScopeText != null) {
-            return false;
-        }
-        if (myTabName != null ? !myTabName.equals(that.myTabName) : that.myTabName != null) {
-            return false;
-        }
-        if (myTabText != null ? !myTabText.equals(that.myTabText) : that.myTabText != null) {
-            return false;
-        }
-        if (myTargetsNodeText != null ? !myTargetsNodeText.equals(that.myTargetsNodeText) : that.myTargetsNodeText != null) {
-            return false;
-        }
-        if (myToolwindowTitle != null ? !myToolwindowTitle.equals(that.myToolwindowTitle) : that.myToolwindowTitle != null) {
-            return false;
-        }
-        if (myUsagesInGeneratedCodeString != null ? !myUsagesInGeneratedCodeString.equals(that.myUsagesInGeneratedCodeString) : that.myUsagesInGeneratedCodeString != null) {
-            return false;
-        }
-        if (myUsagesString != null ? !myUsagesString.equals(that.myUsagesString) : that.myUsagesString != null) {
-            return false;
-        }
-        if (myUsagesWord != null ? !myUsagesWord.equals(that.myUsagesWord) : that.myUsagesWord != null) {
-            return false;
-        }
-        if (!arePatternsEqual(mySearchPattern, that.mySearchPattern)) {
-            return false;
-        }
-        if (!arePatternsEqual(myReplacePattern, that.myReplacePattern)) {
-            return false;
-        }
-
-        return true;
+        return this == o
+            || o instanceof UsageViewPresentation that
+            && myCodeUsages == that.myCodeUsages
+            && myDetachedMode == that.myDetachedMode
+            && myMergeDupLinesAvailable == that.myMergeDupLinesAvailable
+            && myOpenInNewTab == that.myOpenInNewTab
+            && myShowCancelButton == that.myShowCancelButton
+            && myShowReadOnlyStatusAsRed == that.myShowReadOnlyStatusAsRed
+            && myUsageTypeFilteringAvailable == that.myUsageTypeFilteringAvailable
+            && myExcludeAvailable == that.myExcludeAvailable
+            && Objects.equals(myCodeUsagesString, that.myCodeUsagesString)
+            && Objects.equals(myDynamicCodeUsagesString, that.myDynamicCodeUsagesString)
+            && Objects.equals(myNonCodeUsagesString, that.myNonCodeUsagesString)
+            && Objects.equals(myScopeText, that.myScopeText)
+            && Objects.equals(myTabName, that.myTabName)
+            && Objects.equals(myTabText, that.myTabText)
+            && Objects.equals(myTargetsNodeText, that.myTargetsNodeText)
+            && Objects.equals(myToolwindowTitle, that.myToolwindowTitle)
+            && Objects.equals(myUsagesInGeneratedCodeString, that.myUsagesInGeneratedCodeString)
+            && Objects.equals(myUsagesString, that.myUsagesString)
+            && Objects.equals(myUsagesWord, that.myUsagesWord)
+            && arePatternsEqual(mySearchPattern, that.mySearchPattern)
+            && arePatternsEqual(myReplacePattern, that.myReplacePattern);
     }
 
     public static boolean arePatternsEqual(Pattern p1, Pattern p2) {
@@ -329,7 +279,8 @@ public class UsageViewPresentation {
         if (p2 == null) {
             return false;
         }
-        return Comparing.equal(p1.pattern(), p2.pattern()) && p1.flags() == p2.flags();
+        return Objects.equals(p1.pattern(), p2.pattern())
+            && p1.flags() == p2.flags();
     }
 
     public static int getHashCode(Pattern pattern) {

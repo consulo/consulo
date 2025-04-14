@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 20-Apr-22
+ * @since 2022-04-20
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface UsagePreviewPanelFactory {

@@ -15,6 +15,7 @@
  */
 package consulo.usage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
@@ -30,15 +31,18 @@ public class MoveRenameUsageInfo extends UsageInfo {
     private PsiReference myReference;
     private RangeMarker myReferenceRangeMarker = null;
 
+    @RequiredReadAction
     public MoveRenameUsageInfo(PsiReference reference, PsiElement referencedElement) {
         this(reference.getElement(), reference, referencedElement);
     }
 
+    @RequiredReadAction
     public MoveRenameUsageInfo(PsiElement element, PsiReference reference, PsiElement referencedElement) {
         super(element);
         init(element, reference, referencedElement);
     }
 
+    @RequiredReadAction
     public MoveRenameUsageInfo(
         PsiElement element,
         PsiReference reference,
@@ -51,8 +55,9 @@ public class MoveRenameUsageInfo extends UsageInfo {
         init(element, reference, referencedElement);
     }
 
-    private void init(final PsiElement element, PsiReference reference, final PsiElement referencedElement) {
-        final Project project = element.getProject();
+    @RequiredReadAction
+    private void init(PsiElement element, PsiReference reference, PsiElement referencedElement) {
+        Project project = element.getProject();
         myReferencedElement = referencedElement;
         if (referencedElement != null) {
             myReferencedElementPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(referencedElement);
@@ -62,7 +67,7 @@ public class MoveRenameUsageInfo extends UsageInfo {
         }
         PsiFile containingFile = element.getContainingFile();
         if (reference == null) {
-            final TextRange textRange = element.getTextRange();
+            TextRange textRange = element.getTextRange();
             if (textRange != null) {
                 reference = containingFile.findReferenceAt(textRange.getStartOffset());
             }
@@ -81,7 +86,8 @@ public class MoveRenameUsageInfo extends UsageInfo {
         }
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
+    @RequiredReadAction
     public PsiElement getUpToDateReferencedElement() {
         return myReferencedElementPointer == null ? null : myReferencedElementPointer.getElement();
     }
@@ -93,9 +99,10 @@ public class MoveRenameUsageInfo extends UsageInfo {
 
     @Override
     @Nullable
+    @RequiredReadAction
     public PsiReference getReference() {
         if (myReference != null) {
-            final PsiElement element = myReference.getElement();
+            PsiElement element = myReference.getElement();
             if (element != null && element.isValid()) {
                 return myReference;
             }
@@ -104,17 +111,17 @@ public class MoveRenameUsageInfo extends UsageInfo {
         if (myReferenceRangeMarker == null) {
             return null;
         }
-        final PsiElement element = getElement();
+        PsiElement element = getElement();
         if (element == null) {
             return null;
         }
-        final int start = myReferenceRangeMarker.getStartOffset() - element.getTextRange().getStartOffset();
-        final int end = myReferenceRangeMarker.getEndOffset() - element.getTextRange().getStartOffset();
-        final PsiReference reference = element.findReferenceAt(start);
+        int start = myReferenceRangeMarker.getStartOffset() - element.getTextRange().getStartOffset();
+        int end = myReferenceRangeMarker.getEndOffset() - element.getTextRange().getStartOffset();
+        PsiReference reference = element.findReferenceAt(start);
         if (reference == null) {
             return null;
         }
-        final TextRange rangeInElement = reference.getRangeInElement();
+        TextRange rangeInElement = reference.getRangeInElement();
         if (rangeInElement.getStartOffset() != start || rangeInElement.getEndOffset() != end) {
             return null;
         }

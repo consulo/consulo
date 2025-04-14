@@ -18,7 +18,7 @@ package consulo.usage;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -91,27 +91,22 @@ public abstract class UsageViewManager {
     @Nullable
     public abstract UsageView getSelectedUsageView();
 
-    public static boolean isSelfUsage(@Nonnull final Usage usage, @Nonnull final UsageTarget[] searchForTarget) {
-        if (!(usage instanceof PsiElementUsage)) {
+    public static boolean isSelfUsage(@Nonnull Usage usage, @Nonnull UsageTarget[] searchForTarget) {
+        if (!(usage instanceof PsiElementUsage elementUsage)) {
             return false;
         }
-        return ApplicationManager.getApplication().runReadAction(new Supplier<Boolean>() {
-            @Override
-            public Boolean get() {
-                final PsiElement element = ((PsiElementUsage)usage).getElement();
-                if (element == null) {
-                    return false;
-                }
-
-                for (UsageTarget ut : searchForTarget) {
-                    if (ut instanceof PsiElementUsageTarget) {
-                        if (isSelfUsage(element, ((PsiElementUsageTarget)ut).getElement())) {
-                            return true;
-                        }
-                    }
-                }
+        return Application.get().runReadAction((Supplier<Boolean>)() -> {
+            PsiElement element = elementUsage.getElement();
+            if (element == null) {
                 return false;
             }
+
+            for (UsageTarget ut : searchForTarget) {
+                if (ut instanceof PsiElementUsageTarget elementUt && isSelfUsage(element, elementUt.getElement())) {
+                    return true;
+                }
+            }
+            return false;
         });
     }
 

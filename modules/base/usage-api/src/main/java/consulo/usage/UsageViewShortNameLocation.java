@@ -19,12 +19,9 @@ package consulo.usage;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
-import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -40,24 +37,18 @@ public class UsageViewShortNameLocation extends ElementDescriptionLocation {
         return DEFAULT_PROVIDER;
     }
 
-    private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
-        @Override
-        public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
-            if (!(location instanceof UsageViewShortNameLocation)) {
-                return null;
-            }
-
-            if (element instanceof PsiMetaOwner) {
-                PsiMetaData metaData = ((PsiMetaOwner)element).getMetaData();
-                if (metaData != null) {
-                    return DescriptiveNameUtil.getMetaDataName(metaData);
-                }
-            }
-
-            if (element instanceof PsiNamedElement) {
-                return ((PsiNamedElement)element).getName();
-            }
-            return "";
+    private static final ElementDescriptionProvider DEFAULT_PROVIDER = (element, location) -> {
+        if (!(location instanceof UsageViewShortNameLocation)) {
+            return null;
         }
+
+        if (element instanceof PsiMetaOwner metaOwner) {
+            PsiMetaData metaData = metaOwner.getMetaData();
+            if (metaData != null) {
+                return DescriptiveNameUtil.getMetaDataName(metaData);
+            }
+        }
+
+        return element instanceof PsiNamedElement namedElement ? namedElement.getName() : "";
     };
 }

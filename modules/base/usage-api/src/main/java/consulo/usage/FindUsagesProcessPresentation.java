@@ -17,8 +17,6 @@ package consulo.usage;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -51,7 +49,7 @@ public class FindUsagesProcessPresentation {
 
     public void addNotFoundAction(@Nonnull Action action) {
         if (myNotFoundActions == null) {
-            myNotFoundActions = new ArrayList<Action>();
+            myNotFoundActions = new ArrayList<>();
         }
         myNotFoundActions.add(action);
     }
@@ -65,7 +63,7 @@ public class FindUsagesProcessPresentation {
         return myShowNotFoundMessage;
     }
 
-    public void setShowNotFoundMessage(final boolean showNotFoundMessage) {
+    public void setShowNotFoundMessage(boolean showNotFoundMessage) {
         myShowNotFoundMessage = showNotFoundMessage;
     }
 
@@ -73,7 +71,7 @@ public class FindUsagesProcessPresentation {
         return myShowPanelIfOnlyOneUsage;
     }
 
-    public void setShowPanelIfOnlyOneUsage(final boolean showPanelIfOnlyOneUsage) {
+    public void setShowPanelIfOnlyOneUsage(boolean showPanelIfOnlyOneUsage) {
         myShowPanelIfOnlyOneUsage = showPanelIfOnlyOneUsage;
     }
 

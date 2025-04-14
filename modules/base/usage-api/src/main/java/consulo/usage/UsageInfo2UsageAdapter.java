@@ -15,6 +15,8 @@
  */
 package consulo.usage;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
@@ -42,9 +44,12 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
+import consulo.usage.localize.UsageLocalize;
 import consulo.usage.util.ChunkExtractor;
 import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageInFile;
@@ -84,7 +89,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     private volatile Reference<TextChunk[]> myTextChunks; // allow to be gced and recreated on-demand because it requires a lot of memory
     private volatile UsageType myUsageType;
 
-    public UsageInfo2UsageAdapter(@Nonnull final UsageInfo usageInfo) {
+    public UsageInfo2UsageAdapter(@Nonnull UsageInfo usageInfo) {
         myUsageInfo = usageInfo;
         myMergedUsageInfos = usageInfo;
 
@@ -119,7 +124,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         myModificationStamp = getCurrentModificationStamp();
     }
 
-    private static int getLineNumber(@Nonnull Document document, final int startOffset) {
+    private static int getLineNumber(@Nonnull Document document, int startOffset) {
         if (document.getTextLength() == 0) {
             return 0;
         }
@@ -129,6 +134,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return document.getLineNumber(startOffset);
     }
 
+    @RequiredReadAction
     @Nonnull
     private TextChunk[] initChunks() {
         PsiFile psiFile = getPsiFile();
@@ -140,7 +146,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
             if (element == null) {
                 chunks = new TextChunk[]{new TextChunk(
                     TextAttributesUtil.toTextAttributes(SimpleTextAttributes.ERROR_ATTRIBUTES),
-                    UsageViewBundle.message("node.invalid")
+                    UsageLocalize.nodeInvalid().get()
                 )};
             }
             else {
@@ -161,6 +167,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return this;
     }
 
+    @RequiredReadAction
     @Override
     public boolean isValid() {
         PsiElement element = getElement();
@@ -181,8 +188,9 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return psiFile == null || psiFile.isValid() && !psiFile.isWritable();
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     public FileEditorLocation getLocation() {
         VirtualFile virtualFile = getFile();
         if (virtualFile == null) {
@@ -201,6 +209,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
+    @RequiredReadAction
     public void selectInEditor() {
         if (!isValid()) {
             return;
@@ -213,6 +222,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
+    @RequiredReadAction
     public void highlightInEditor() {
         if (!isValid()) {
             return;
@@ -225,11 +235,13 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         }
     }
 
+    @RequiredReadAction
     private Segment getFirstSegment() {
         return getUsageInfo().getSegment();
     }
 
     // must iterate in start offset order
+    @RequiredReadAction
     public boolean processRangeMarkers(@Nonnull Processor<Segment> processor) {
         for (UsageInfo usageInfo : getMergedInfos()) {
             Segment segment = usageInfo.getSegment();
@@ -240,14 +252,11 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return true;
     }
 
+    @RequiredReadAction
     public Document getDocument() {
         PsiFile file = getUsageInfo().getFile();
-        if (file == null) {
-            return null;
-        }
-        return PsiDocumentManager.getInstance(getProject()).getDocument(file);
+        return file == null ? null : PsiDocumentManager.getInstance(getProject()).getDocument(file);
     }
-
 
     @Override
     public void navigate(boolean focus) {
@@ -271,6 +280,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return canNavigate();
     }
 
+    @RequiredReadAction
     private OpenFileDescriptor getDescriptor() {
         VirtualFile file = getFile();
         if (file == null) {
@@ -289,6 +299,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
+    @RequiredReadAction
     public int getNavigationOffset() {
         Document document = getDocument();
         if (document == null) {
@@ -305,6 +316,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return offset;
     }
 
+    @RequiredReadAction
     private Segment getNavigationRange() {
         Document document = getDocument();
         if (document == null) {
@@ -346,6 +358,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
+    @RequiredReadAction
     public Module getModule() {
         if (!isValid()) {
             return null;
@@ -361,6 +374,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
+    @RequiredReadAction
     public OrderEntry getLibraryEntry() {
         if (!isValid()) {
             return null;
@@ -391,6 +405,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return getUsageInfo().getVirtualFile();
     }
 
+    @RequiredReadAction
     private PsiFile getPsiFile() {
         return getUsageInfo().getFile();
     }
@@ -424,17 +439,20 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
+    @RequiredUIAccess
     public void reset() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myMergedUsageInfos = myUsageInfo;
         initChunks();
     }
 
     @Override
+    @RequiredReadAction
     public final PsiElement getElement() {
         return getUsageInfo().getElement();
     }
 
+    @RequiredReadAction
     public PsiReference getReference() {
         return getElement().getReference();
     }
@@ -451,13 +469,14 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
 
     // by start offset
     @Override
-    public int compareTo(@Nonnull final UsageInfo2UsageAdapter o) {
+    public int compareTo(@Nonnull UsageInfo2UsageAdapter o) {
         return getUsageInfo().compareToByStartOffset(o.getUsageInfo());
     }
 
     @Override
+    @RequiredWriteAction
     public void rename(String newName) throws IncorrectOperationException {
-        final PsiReference reference = getUsageInfo().getReference();
+        PsiReference reference = getUsageInfo().getReference();
         assert reference != null : this;
         reference.handleElementRename(newName);
     }
@@ -473,7 +492,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
-    public void calcData(final Key<?> key, final DataSink sink) {
+    public void calcData(Key<?> key, DataSink sink) {
         if (key == UsageView.USAGE_INFO_KEY) {
             sink.put(UsageView.USAGE_INFO_KEY, getUsageInfo());
         }
@@ -492,16 +511,18 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
 
     private long myModificationStamp;
 
+    @RequiredReadAction
     private long getCurrentModificationStamp() {
-        final PsiFile containingFile = getPsiFile();
+        PsiFile containingFile = getPsiFile();
         return containingFile == null ? -1L : containingFile.getViewProvider().getModificationStamp();
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public TextChunk[] getText() {
         TextChunk[] chunks = SoftReference.dereference(myTextChunks);
-        final long currentModificationStamp = getCurrentModificationStamp();
+        long currentModificationStamp = getCurrentModificationStamp();
         boolean isModified = currentModificationStamp != myModificationStamp;
         if (chunks == null || isValid() && isModified) {
             // the check below makes sense only for valid PsiElement
@@ -511,13 +532,14 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return chunks;
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public String getPlainText() {
         int startOffset = getNavigationOffset();
-        final PsiElement element = getElement();
+        PsiElement element = getElement();
         if (element != null && startOffset != -1) {
-            final Document document = getDocument();
+            Document document = getDocument();
             if (document != null) {
                 int lineNumber = document.getLineNumber(startOffset);
                 int lineStart = document.getLineStartOffset(lineNumber);
@@ -536,10 +558,11 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
                 return s;
             }
         }
-        return UsageViewBundle.message("node.invalid");
+        return UsageLocalize.nodeInvalid().get();
     }
 
     @Override
+    @RequiredReadAction
     public Image getIcon() {
         Image icon = myIcon;
         if (icon == null) {
@@ -559,42 +582,44 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Nullable
+    @RequiredReadAction
     public UsageType getUsageType() {
         UsageType usageType = myUsageType;
 
-        if (usageType == null) {
-            usageType = UsageType.UNCLASSIFIED;
-            PsiFile file = getPsiFile();
+        if (usageType != null) {
+            return usageType;
+        }
 
-            if (file != null) {
-                Segment segment = getFirstSegment();
+        usageType = UsageType.UNCLASSIFIED;
+        PsiFile file = getPsiFile();
 
-                if (segment != null) {
-                    Document document = PsiDocumentManager.getInstance(getProject()).getDocument(file);
-                    if (document != null) {
-                        ChunkExtractor extractor = ChunkExtractor.getExtractor(file);
-                        SmartList<TextChunk> chunks = new SmartList<>();
-                        extractor.createTextChunks(
-                            this,
-                            document.getCharsSequence(),
-                            segment.getStartOffset(),
-                            segment.getEndOffset(),
-                            false,
-                            chunks
-                        );
+        if (file != null) {
+            Segment segment = getFirstSegment();
+            if (segment != null) {
+                Document document = PsiDocumentManager.getInstance(getProject()).getDocument(file);
+                if (document != null) {
+                    ChunkExtractor extractor = ChunkExtractor.getExtractor(file);
+                    SmartList<TextChunk> chunks = new SmartList<>();
+                    extractor.createTextChunks(
+                        this,
+                        document.getCharsSequence(),
+                        segment.getStartOffset(),
+                        segment.getEndOffset(),
+                        false,
+                        chunks
+                    );
 
-                        for (TextChunk chunk : chunks) {
-                            UsageType chunkUsageType = chunk.getType();
-                            if (chunkUsageType != null) {
-                                usageType = chunkUsageType;
-                                break;
-                            }
+                    for (TextChunk chunk : chunks) {
+                        UsageType chunkUsageType = chunk.getType();
+                        if (chunkUsageType != null) {
+                            usageType = chunkUsageType;
+                            break;
                         }
                     }
                 }
             }
-            myUsageType = usageType;
         }
+        myUsageType = usageType;
         return usageType;
     }
 }

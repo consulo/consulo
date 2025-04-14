@@ -33,16 +33,13 @@ public class UsageViewLongNameLocation extends ElementDescriptionLocation {
         return DEFAULT_PROVIDER;
     }
 
-    private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
-        @Override
-        public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
-            if (location instanceof UsageViewLongNameLocation) {
-                if (element instanceof PsiDirectory) {
-                    return PsiPackageHelper.getInstance(element.getProject()).getQualifiedName((PsiDirectory)element, true);
-                }
-                return "";
+    private static final ElementDescriptionProvider DEFAULT_PROVIDER = (element, location) -> {
+        if (location instanceof UsageViewLongNameLocation) {
+            if (element instanceof PsiDirectory directory) {
+                return PsiPackageHelper.getInstance(element.getProject()).getQualifiedName(directory, true);
             }
-            return null;
+            return "";
         }
+        return null;
     };
 }

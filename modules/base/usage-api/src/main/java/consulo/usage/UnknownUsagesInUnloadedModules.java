@@ -15,30 +15,48 @@
  */
 package consulo.usage;
 
-import consulo.application.AllIcons;
+import consulo.localize.LocalizeValue;
+import consulo.module.ModuleDescription;
 import consulo.module.UnloadedModuleDescription;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.ObjectUtil;
-
+import consulo.usage.localize.UsageLocalize;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * @author nik
  */
 public class UnknownUsagesInUnloadedModules extends UsageAdapter implements Usage {
-    private final String myExplanationText;
+    private final LocalizeValue myExplanationText;
+
+    private static final int LISTED_MODULES_LIMIT = 10;
 
     public UnknownUsagesInUnloadedModules(Collection<UnloadedModuleDescription> unloadedModules) {
-        String modulesText = unloadedModules.size() > 1
-            ? unloadedModules.size() + " unloaded modules"
-            : "unloaded module '" + ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(unloadedModules)).getName() + "'";
-        myExplanationText = "There may be usages in " + modulesText + "." +
-            " Load all modules and repeat refactoring to ensure that all the usages will be updated.";
+        int n = unloadedModules.size();
+        LocalizeValue modulesText;
+        if (n == 1) {
+            String theName = unloadedModules.iterator().next().getName();
+            modulesText = UsageLocalize.messagePartUnloadedModule0(theName);
+        }
+        else if (n <= LISTED_MODULES_LIMIT) {
+            String listStr = StringUtil.join(unloadedModules, ModuleDescription::getName, ", ");
+            modulesText = UsageLocalize.messagePartSmallNumberOfUnloadedModules(n, listStr);
+        }
+        else {
+            String listStr = unloadedModules.stream()
+                .limit(LISTED_MODULES_LIMIT)
+                .map(ModuleDescription::getName)
+                .collect(Collectors.joining(", "));
+            modulesText = UsageLocalize.messagePartLargeNumberOfUnloadedModules(n, listStr, n - LISTED_MODULES_LIMIT);
+        }
+
+        myExplanationText = UsageLocalize.messageThereMayBeUsagesIn0LoadAllModulesAndRepeat(modulesText);
     }
 
     @Nonnull
@@ -50,19 +68,19 @@ public class UnknownUsagesInUnloadedModules extends UsageAdapter implements Usag
             public TextChunk[] getText() {
                 return new TextChunk[]{new TextChunk(
                     TextAttributesUtil.toTextAttributes(SimpleTextAttributes.REGULAR_ATTRIBUTES),
-                    myExplanationText
+                    myExplanationText.get()
                 )};
             }
 
             @Nonnull
             @Override
             public String getPlainText() {
-                return myExplanationText;
+                return myExplanationText.get();
             }
 
             @Override
             public Image getIcon() {
-                return AllIcons.General.Warning;
+                return PlatformIconGroup.generalWarning();
             }
 
             @Override

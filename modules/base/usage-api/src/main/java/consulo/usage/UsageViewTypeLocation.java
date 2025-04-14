@@ -17,16 +17,17 @@
 package consulo.usage;
 
 import consulo.application.presentation.TypePresentationService;
-import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.language.findUsage.FindUsagesProvider;
-import consulo.language.psi.*;
+import consulo.language.localize.LanguageLocalize;
+import consulo.language.psi.ElementDescriptionLocation;
+import consulo.language.psi.ElementDescriptionProvider;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.meta.PsiPresentableMetaData;
 import consulo.util.lang.StringUtil;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -42,35 +43,32 @@ public class UsageViewTypeLocation extends ElementDescriptionLocation {
         return DEFAULT_PROVIDER;
     }
 
-    private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
-        @Override
-        public String getElementDescription(@Nonnull final PsiElement psiElement, @Nonnull final ElementDescriptionLocation location) {
-            if (!(location instanceof UsageViewTypeLocation)) {
-                return null;
-            }
-
-            if (psiElement instanceof PsiMetaOwner) {
-                final PsiMetaData metaData = ((PsiMetaOwner)psiElement).getMetaData();
-                if (metaData instanceof PsiPresentableMetaData) {
-                    return ((PsiPresentableMetaData)metaData).getTypeName();
-                }
-            }
-
-            if (psiElement instanceof PsiFile) {
-                return LangBundle.message("terms.file");
-            }
-            if (psiElement instanceof PsiDirectory) {
-                return LangBundle.message("terms.directory");
-            }
-
-            final Language lang = psiElement.getLanguage();
-            FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
-            final String type = provider.getType(psiElement);
-            if (StringUtil.isNotEmpty(type)) {
-                return type;
-            }
-
-            return TypePresentationService.getInstance().getTypeNameOrStub(psiElement);
+    private static final ElementDescriptionProvider DEFAULT_PROVIDER = (psiElement, location) -> {
+        if (!(location instanceof UsageViewTypeLocation)) {
+            return null;
         }
+
+        if (psiElement instanceof PsiMetaOwner metaOwner) {
+            PsiMetaData metaData = metaOwner.getMetaData();
+            if (metaData instanceof PsiPresentableMetaData presentableMetaData) {
+                return presentableMetaData.getTypeName();
+            }
+        }
+
+        if (psiElement instanceof PsiFile) {
+            return LanguageLocalize.termsFile().get();
+        }
+        if (psiElement instanceof PsiDirectory) {
+            return LanguageLocalize.termsDirectory().get();
+        }
+
+        Language lang = psiElement.getLanguage();
+        FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
+        String type = provider.getType(psiElement);
+        if (StringUtil.isNotEmpty(type)) {
+            return type;
+        }
+
+        return TypePresentationService.getInstance().getTypeNameOrStub(psiElement);
     };
 }

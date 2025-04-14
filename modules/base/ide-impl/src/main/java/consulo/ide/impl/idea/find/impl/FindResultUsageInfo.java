@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.find.FindSearchContext;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
@@ -42,6 +43,7 @@ public class FindResultUsageInfo extends UsageInfo {
     private static final Key<Long> DOCUMENT_TIMESTAMP_KEY = Key.create("FindResultUsageInfo.DOCUMENT_TIMESTAMP_KEY");
 
     @Override
+    @RequiredReadAction
     public boolean isValid() {
         if (!super.isValid()) {
             return false;
@@ -108,10 +110,12 @@ public class FindResultUsageInfo extends UsageInfo {
         return ret;
     }
 
+    @RequiredReadAction
     private PsiFile getPsiFile() {
         return (PsiFile)getElement();
     }
 
+    @RequiredReadAction
     public FindResultUsageInfo(
         @Nonnull FindManager finder,
         @Nonnull PsiFile file,

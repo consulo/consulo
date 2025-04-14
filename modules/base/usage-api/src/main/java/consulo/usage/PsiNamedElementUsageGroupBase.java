@@ -15,6 +15,7 @@
  */
 package consulo.usage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.navigation.NavigationItem;
 import consulo.language.psi.PsiNamedElement;
 import consulo.ui.image.Image;
@@ -29,6 +30,7 @@ public class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & Navigatio
         super(element, icon);
     }
 
+    @RequiredReadAction
     public PsiNamedElementUsageGroupBase(@Nonnull T element) {
         super(element);
     }

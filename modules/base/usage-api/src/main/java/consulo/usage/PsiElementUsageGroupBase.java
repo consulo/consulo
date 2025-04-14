@@ -24,11 +24,13 @@ import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.navigation.NavigationItem;
 import consulo.ui.image.Image;
+import consulo.usage.localize.UsageLocalize;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.status.FileStatus;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.Objects;
 
 /**
  * @author Maxim.Mossienko
@@ -39,19 +41,20 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     private final Image myIcon;
 
     public PsiElementUsageGroupBase(@Nonnull T element, Image icon) {
-        String myName = element.getName();
-        if (myName == null) {
-            myName = "<anonymous>";
-        }
-        this.myName = myName;
         myElementPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
-
+        myName = getPresentationName(element);
         myIcon = icon;
     }
 
     @RequiredReadAction
     public PsiElementUsageGroupBase(@Nonnull T element) {
         this(element, IconDescriptorUpdaters.getIcon(element, 0));
+    }
+
+    @Nonnull
+    private static <T extends PsiElement & NavigationItem> String getPresentationName(@Nonnull T element) {
+        String name = element.getName();
+        return name != null ? name : UsageLocalize.usageElementWithoutName().get();
     }
 
     @Override
@@ -80,7 +83,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     @Override
     @RequiredReadAction
     public boolean isValid() {
-        final T element = getElement();
+        T element = getElement();
         return element != null && element.isValid();
     }
 
@@ -109,35 +112,33 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     }
 
     @Override
-    public int compareTo(@Nonnull final UsageGroup o) {
-        String name;
-        if (o instanceof NamedPresentably) {
-            name = ((NamedPresentably)o).getPresentableName();
-        }
-        else {
-            name = o.getText(null);
-        }
+    public int compareTo(@Nonnull UsageGroup o) {
+        String name = o instanceof NamedPresentably namedPresentably ? namedPresentably.getPresentableName() : o.getText(null);
         return myName.compareToIgnoreCase(name);
     }
 
+    @Override
     @RequiredReadAction
-    public boolean equals(final Object obj) {
-        if (!(obj instanceof PsiElementUsageGroupBase)) {
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof PsiElementUsageGroupBase group)) {
             return false;
         }
-        PsiElementUsageGroupBase group = (PsiElementUsageGroupBase)obj;
         if (isValid() && group.isValid()) {
             return getElement().getManager().areElementsEquivalent(getElement(), group.getElement());
         }
-        return Comparing.equal(myName, ((PsiElementUsageGroupBase)obj).myName);
+        return Objects.equals(myName, group.myName);
     }
 
+    @Override
     public int hashCode() {
         return myName.hashCode();
     }
 
     @RequiredReadAction
-    public void calcData(final Key<?> key, final DataSink sink) {
+    public void calcData(Key<?> key, DataSink sink) {
         if (!isValid()) {
             return;
         }

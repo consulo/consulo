@@ -153,7 +153,7 @@ public class UsageViewSettings implements PersistentStateComponent<UsageViewSett
     }
 
     @Override
-    public void loadState(final UsageViewSettings object) {
+    public void loadState(UsageViewSettings object) {
         XmlSerializerUtil.copyBean(object, this);
     }
 }

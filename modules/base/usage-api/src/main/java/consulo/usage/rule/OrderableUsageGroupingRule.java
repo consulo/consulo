@@ -20,5 +20,6 @@
 package consulo.usage.rule;
 
 public interface OrderableUsageGroupingRule extends UsageGroupingRule {
+    @Override
     int getRank();
 }
