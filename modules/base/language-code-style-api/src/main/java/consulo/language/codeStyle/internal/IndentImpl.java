@@ -44,6 +44,7 @@ public class IndentImpl extends Indent {
     return myType;
   }
 
+  @Override
   public int getSpaces() {
     return mySpaces;
   }
@@ -51,7 +52,8 @@ public class IndentImpl extends Indent {
   /**
    * @return    {@code 'isAbsolute'} property value as defined during {@link IndentImpl} object construction
    */
-  boolean isAbsolute(){
+  @Override
+  public boolean isAbsolute(){
     return myIsAbsolute;
   }
 
@@ -63,6 +65,7 @@ public class IndentImpl extends Indent {
    *
    * @return      flag that indicates if this indent should anchor direct parent that lays on a different line
    */
+  @Override
   public boolean isRelativeToDirectParent() {
     return myRelativeToDirectParent;
   }
@@ -76,6 +79,7 @@ public class IndentImpl extends Indent {
    * @return      {@code true} if current indent object is configured to enforce indent for sub-blocks of composite block
    *              that doesn't start new line; {@code false} otherwise
    */
+  @Override
   public boolean isEnforceIndentToChildren() {
     return myEnforceIndentToChildren;
   }
