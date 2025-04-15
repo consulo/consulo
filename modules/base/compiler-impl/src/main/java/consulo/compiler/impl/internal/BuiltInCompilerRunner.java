@@ -35,8 +35,10 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.image.Image;
 import consulo.util.collection.Chunk;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Sets;
@@ -93,8 +95,14 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         return LocalizeValue.localizeTODO("BuiltIn");
     }
 
+    @Nonnull
     @Override
-    public boolean isAvailable(CompileContextEx context) {
+    public Image getBuildIcon() {
+        return PlatformIconGroup.actionsCompile();
+    }
+
+    @Override
+    public boolean isAvailable() {
         return true;
     }
 

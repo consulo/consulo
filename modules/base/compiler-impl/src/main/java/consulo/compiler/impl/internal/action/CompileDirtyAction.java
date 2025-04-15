@@ -17,38 +17,52 @@ package consulo.compiler.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.compiler.CompilerManager;
+import consulo.compiler.CompilerRunner;
 import consulo.compiler.action.CompileActionBase;
+import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "CompileDirty")
 public class CompileDirtyAction extends CompileActionBase {
-
-  @RequiredUIAccess
-  protected void doAction(DataContext dataContext, Project project) {
-    CompilerManager.getInstance(project).make(null);
-  }
-
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.actionsCompile();
-  }
-
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent event){
-    super.update(event);
-    Presentation presentation = event.getPresentation();
-    if (!presentation.isEnabled()) {
-      return;
+    public CompileDirtyAction() {
+        super(ActionLocalize.actionCompiledirtyText(), ActionLocalize.actionCompiledirtyDescription(), PlatformIconGroup.actionsCompile());
     }
-    presentation.setEnabled(event.getData(Project.KEY) != null);
-  }
+
+    @Override
+    @RequiredUIAccess
+    protected void doAction(DataContext dataContext, Project project) {
+        CompilerManager.getInstance(project).make(null);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
+        super.update(event);
+        Presentation presentation = event.getPresentation();
+        if (!presentation.isEnabled()) {
+            return;
+        }
+
+        Project project = event.getData(Project.KEY);
+        presentation.setEnabled(project != null);
+
+        if (project != null) {
+            ExtensionPoint<CompilerRunner> point = project.getExtensionPoint(CompilerRunner.class);
+            CompilerRunner runner = point.findFirstSafe(CompilerRunner::isAvailable);
+            if (runner != null) {
+                presentation.setIcon(runner.getBuildIcon());
+            } else {
+                presentation.setIcon(PlatformIconGroup.actionsCompile());
+            }
+        } else {
+            presentation.setIcon(PlatformIconGroup.actionsCompile());
+        }
+    }
 }

@@ -330,6 +330,8 @@ public abstract class AnAction implements PossiblyDumbAware {
      * Icon from template presentation, without creating presentation. Don't use constructor if registering it via @ActionImpl
      */
     @Nullable
+    @Deprecated
+    @DeprecationInfo("Use creating via constructor")
     protected Image getTemplateIcon() {
         return null;
     }

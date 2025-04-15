@@ -18,7 +18,7 @@ package consulo.compiler;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
-
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -27,17 +27,27 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface CompilerRunner {
-  @Nonnull
-  LocalizeValue getName();
+    @Nonnull
+    LocalizeValue getName();
 
-  boolean isAvailable(CompileContextEx context);
+    @Nonnull
+    Image getBuildIcon();
 
-  default void cleanUp(CompileDriver compileDriver, CompileContextEx context) {
-  }
+    default boolean isAvailable() {
+        return isAvailable(null);
+    }
 
-  boolean build(CompileDriver compileDriver,
-                CompileContextEx context,
-                boolean isRebuild,
-                boolean forceCompile,
-                boolean onlyCheckStatus) throws ExitException;
+    @Deprecated
+    default boolean isAvailable(CompileContextEx context) {
+        return false;
+    }
+
+    default void cleanUp(CompileDriver compileDriver, CompileContextEx context) {
+    }
+
+    boolean build(CompileDriver compileDriver,
+                  CompileContextEx context,
+                  boolean isRebuild,
+                  boolean forceCompile,
+                  boolean onlyCheckStatus) throws ExitException;
 }
