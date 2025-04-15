@@ -16,6 +16,7 @@
 
 package consulo.language.editor.refactoring.rename;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
@@ -59,6 +60,7 @@ public class RenameHandlerRegistry {
         myDefaultElementRenameHandler = new PsiElementRenameHandler();
     }
 
+    @RequiredReadAction
     public boolean hasAvailableHandler(DataContext dataContext) {
         for (RenameHandler renameHandler : RenameHandler.EP_NAME.getExtensionList()) {
             if (renameHandler.isAvailableOnDataContext(dataContext)) {
@@ -76,7 +78,7 @@ public class RenameHandlerRegistry {
     @Nullable
     @RequiredUIAccess
     public RenameHandler getRenameHandler(DataContext dataContext) {
-        final Map<LocalizeValue, RenameHandler> availableHandlers = new TreeMap<>();
+        Map<LocalizeValue, RenameHandler> availableHandlers = new TreeMap<>();
         RenameHandler.EP_NAME.forEachExtensionSafe(renameHandler -> {
             if (renameHandler.isRenaming(dataContext)) {
                 availableHandlers.put(getHandlerTitle(renameHandler), renameHandler);
@@ -106,8 +108,8 @@ public class RenameHandlerRegistry {
         }
 
         if (availableHandlers.size() > 1) {
-            final LocalizeValue[] variants = availableHandlers.keySet().toArray(LocalizeValue[]::new);
-            final HandlersChooser chooser = new HandlersChooser(dataContext.getData(Project.KEY), variants);
+            LocalizeValue[] variants = availableHandlers.keySet().toArray(LocalizeValue[]::new);
+            HandlersChooser chooser = new HandlersChooser(dataContext.getData(Project.KEY), variants);
             chooser.show();
             if (chooser.isOK()) {
                 return availableHandlers.get(chooser.getSelection());
@@ -147,13 +149,13 @@ public class RenameHandlerRegistry {
         @Override
         @RequiredUIAccess
         protected JComponent createNorthPanel() {
-            final VerticalLayout radioPanel = VerticalLayout.create();
+            VerticalLayout radioPanel = VerticalLayout.create();
 
             ValueGroup<Boolean> bg = ValueGroups.boolGroup();
             boolean selected = true;
             int rIdx = 0;
-            for (final LocalizeValue renamer : myRenamers) {
-                final RadioButton rb = RadioButton.create(renamer, selected);
+            for (LocalizeValue renamer : myRenamers) {
+                RadioButton rb = RadioButton.create(renamer, selected);
                 myRButtons[rIdx++] = rb;
                 ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> listener = event -> {
                     if (rb.getValueOrError()) {
@@ -168,13 +170,13 @@ public class RenameHandlerRegistry {
 
             RadioUpDownListener.registerListener(myRButtons);
 
-            return (JComponent) TargetAWT.to(LabeledLayout.create(RefactoringLocalize.whatWouldYouLikeToDo(), radioPanel));
+            return (JComponent)TargetAWT.to(LabeledLayout.create(RefactoringLocalize.whatWouldYouLikeToDo(), radioPanel));
         }
 
         @Override
         @RequiredUIAccess
         public JComponent getPreferredFocusedComponent() {
-            return (JComponent) TargetAWT.to(myRButtons[0]);
+            return (JComponent)TargetAWT.to(myRButtons[0]);
         }
 
         public LocalizeValue getSelection() {

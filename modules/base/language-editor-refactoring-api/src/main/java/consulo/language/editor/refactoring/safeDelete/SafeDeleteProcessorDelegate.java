@@ -39,7 +39,7 @@ public interface SafeDeleteProcessorDelegate {
     boolean handlesElement(PsiElement element);
 
     @Nullable
-    NonCodeUsageSearchInfo findUsages(final PsiElement element, final PsiElement[] allElementsToDelete, List<UsageInfo> result);
+    NonCodeUsageSearchInfo findUsages(PsiElement element, PsiElement[] allElementsToDelete, List<UsageInfo> result);
 
     /**
      * Called before the refactoring dialog is shown. Returns the list of elements for which the
@@ -52,17 +52,17 @@ public interface SafeDeleteProcessorDelegate {
      * @return additional elements to search for usages, or null if the user has cancelled the refactoring.
      */
     @Nullable
-    Collection<? extends PsiElement> getElementsToSearch(final PsiElement element, final Collection<PsiElement> allElementsToDelete);
+    Collection<? extends PsiElement> getElementsToSearch(PsiElement element, Collection<PsiElement> allElementsToDelete);
 
     @Nullable
     Collection<PsiElement> getAdditionalElementsToDelete(
         PsiElement element,
-        final Collection<PsiElement> allElementsToDelete,
-        final boolean askUser
+        Collection<PsiElement> allElementsToDelete,
+        boolean askUser
     );
 
     @Nullable
-    Collection<String> findConflicts(final PsiElement element, final PsiElement[] allElementsToDelete);
+    Collection<String> findConflicts(PsiElement element, PsiElement[] allElementsToDelete);
 
     /**
      * Called after the user has confirmed the refactoring. Can filter out some of the usages
@@ -78,11 +78,11 @@ public interface SafeDeleteProcessorDelegate {
 
     void prepareForDeletion(PsiElement element) throws IncorrectOperationException;
 
-    boolean isToSearchInComments(final PsiElement element);
+    boolean isToSearchInComments(PsiElement element);
 
-    void setToSearchInComments(final PsiElement element, boolean enabled);
+    void setToSearchInComments(PsiElement element, boolean enabled);
 
-    boolean isToSearchForTextOccurrences(final PsiElement element);
+    boolean isToSearchForTextOccurrences(PsiElement element);
 
-    void setToSearchForTextOccurrences(final PsiElement element, boolean enabled);
+    void setToSearchForTextOccurrences(PsiElement element, boolean enabled);
 }

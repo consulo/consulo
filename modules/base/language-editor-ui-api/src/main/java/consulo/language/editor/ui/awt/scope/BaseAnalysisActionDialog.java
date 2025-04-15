@@ -50,13 +50,14 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
      * @deprecated Use {@link BaseAnalysisActionDialog#BaseAnalysisActionDialog(String, String, Project, List, AnalysisUIOptions, boolean, boolean)} instead.
      */
     @Deprecated
+    @RequiredUIAccess
     public BaseAnalysisActionDialog(
         @Nonnull String title,
         @Nonnull String scopeTitle,
         @Nonnull Project project,
-        @Nonnull final AnalysisScope scope,
-        final String moduleName,
-        final boolean rememberScope,
+        @Nonnull AnalysisScope scope,
+        String moduleName,
+        boolean rememberScope,
         @Nonnull AnalysisUIOptions analysisUIOptions,
         @Nullable PsiElement context
     ) {
@@ -88,25 +89,27 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
         );
     }
 
+    @RequiredUIAccess
     public BaseAnalysisActionDialog(
         @Nonnull String title,
         @Nonnull String scopeTitle,
         @Nonnull Project project,
         @Nonnull List<? extends ModelScopeItem> items,
         @Nonnull AnalysisUIOptions options,
-        final boolean rememberScope
+        boolean rememberScope
     ) {
         this(title, scopeTitle, project, items, options, rememberScope, ModuleUtilCore.hasTestSourceRoots(project));
     }
 
+    @RequiredUIAccess
     public BaseAnalysisActionDialog(
         @Nonnull String title,
         @Nonnull String scopeTitle,
         @Nonnull Project project,
         @Nonnull List<? extends ModelScopeItem> items,
         @Nonnull AnalysisUIOptions options,
-        final boolean rememberScope,
-        final boolean showInspectTestSource
+        boolean rememberScope,
+        boolean showInspectTestSource
     ) {
         super(true);
         myScopeTitle = scopeTitle;
@@ -132,10 +135,16 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
         myAnalyzeInjectedCode = CheckBox.create(AnalysisScopeLocalize.scopeOptionAnalyzeInjectedCode());
         myAnalyzeInjectedCode.setValue(myOptions.ANALYZE_INJECTED_CODE);
         myAnalyzeInjectedCode.setVisible(false);
-//
-//    JPanel panel = new BaseAnalysisActionDialogUI().panel(myScopeTitle, myViewItems, myInspectTestSource,
-//                                                          myAnalyzeInjectedCode, radioButtons, myDisposable,
-//                                                          getAdditionalActionSettings(myProject));
+
+//        JPanel panel = new BaseAnalysisActionDialogUI().panel(
+//            myScopeTitle,
+//            myViewItems,
+//            myInspectTestSource,
+//            myAnalyzeInjectedCode,
+//            radioButtons,
+//            myDisposable,
+//            getAdditionalActionSettings(myProject)
+//        );
 
         VerticalLayout layout = VerticalLayout.create();
         ValueGroup<Boolean> group = ValueGroups.boolGroup();

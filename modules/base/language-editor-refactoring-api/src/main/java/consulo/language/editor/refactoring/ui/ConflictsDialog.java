@@ -38,7 +38,6 @@ import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,7 +79,7 @@ public class ConflictsDialog extends DialogWrapper {
         myProject = project;
         myDoRefactoringRunnable = doRefactoringRunnable;
         myCanShowConflictsInView = canShowConflictsInView;
-        final LinkedHashSet<String> conflicts = new LinkedHashSet<String>();
+        LinkedHashSet<String> conflicts = new LinkedHashSet<>();
 
         for (String conflict : conflictDescriptions.values()) {
             conflicts.add(conflict);
@@ -113,7 +112,7 @@ public class ConflictsDialog extends DialogWrapper {
     @Override
     @Nonnull
     protected Action[] createActions() {
-        final Action okAction = getOKAction();
+        Action okAction = getOKAction();
         boolean showUsagesButton = myElementConflictDescription != null && myCanShowConflictsInView;
 
         if (showUsagesButton || !okAction.isEnabled()) {
@@ -136,7 +135,7 @@ public class ConflictsDialog extends DialogWrapper {
 
         panel.add(new JLabel(RefactoringLocalize.theFollowingProblemsWereFound().get()), BorderLayout.NORTH);
 
-        @NonNls StringBuilder buf = new StringBuilder();
+        StringBuilder buf = new StringBuilder();
         for (String description : myConflictDescriptions) {
             buf.append(description);
             buf.append("<br><br>");
@@ -183,16 +182,16 @@ public class ConflictsDialog extends DialogWrapper {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            final UsageViewPresentation presentation = new UsageViewPresentation();
-            final String codeUsagesString = "Conflicts";
+            UsageViewPresentation presentation = new UsageViewPresentation();
+            String codeUsagesString = "Conflicts";
             presentation.setCodeUsagesString(codeUsagesString);
             presentation.setTabName(codeUsagesString);
             presentation.setTabText(codeUsagesString);
             presentation.setShowCancelButton(true);
 
-            final Usage[] usages = new Usage[myElementConflictDescription.size()];
+            Usage[] usages = new Usage[myElementConflictDescription.size()];
             int i = 0;
-            for (final PsiElement element : myElementConflictDescription.keySet()) {
+            for (PsiElement element : myElementConflictDescription.keySet()) {
                 if (element == null) {
                     usages[i++] = new DescriptionOnlyUsage();
                     continue;
@@ -201,7 +200,7 @@ public class ConflictsDialog extends DialogWrapper {
                 boolean isWrite = false;
                 for (ReadWriteAccessDetector detector : ReadWriteAccessDetector.EP_NAME.getExtensionList()) {
                     if (detector.isReadWriteAccessible(element)) {
-                        final ReadWriteAccessDetector.Access access = detector.getExpressionAccess(element);
+                        ReadWriteAccessDetector.Access access = detector.getExpressionAccess(element);
                         isRead = access != ReadWriteAccessDetector.Access.Write;
                         isWrite = access != ReadWriteAccessDetector.Access.Read;
                         break;
@@ -212,19 +211,19 @@ public class ConflictsDialog extends DialogWrapper {
                     @Nonnull
                     @Override
                     public UsagePresentation getPresentation() {
-                        final UsagePresentation usagePresentation = super.getPresentation();
+                        UsagePresentation usagePresentation = super.getPresentation();
                         return MyShowConflictsInUsageViewAction.this.getPresentation(usagePresentation, element);
                     }
                 } : new UsageInfo2UsageAdapter(new UsageInfo(element)) {
                     @Nonnull
                     @Override
                     public UsagePresentation getPresentation() {
-                        final UsagePresentation usagePresentation = super.getPresentation();
+                        UsagePresentation usagePresentation = super.getPresentation();
                         return MyShowConflictsInUsageViewAction.this.getPresentation(usagePresentation, element);
                     }
                 };
             }
-            final UsageView usageView = UsageViewManager.getInstance(myProject).showUsages(UsageTarget.EMPTY_ARRAY, usages, presentation);
+            UsageView usageView = UsageViewManager.getInstance(myProject).showUsages(UsageTarget.EMPTY_ARRAY, usages, presentation);
             if (myDoRefactoringRunnable != null) {
                 usageView.addPerformOperationAction(
                     myDoRefactoringRunnable,
@@ -238,23 +237,22 @@ public class ConflictsDialog extends DialogWrapper {
             close(SHOW_CONFLICTS_EXIT_CODE);
         }
 
-        private UsagePresentation getPresentation(final UsagePresentation usagePresentation, PsiElement element) {
-            final Collection<String> elementConflicts = new LinkedHashSet<String>(myElementConflictDescription.get(element));
-            final String conflictDescription =
+        private UsagePresentation getPresentation(UsagePresentation usagePresentation, PsiElement element) {
+            Collection<String> elementConflicts = new LinkedHashSet<>(myElementConflictDescription.get(element));
+            String conflictDescription =
                 " (" + Pattern.compile("<[^<>]*>").matcher(StringUtil.join(elementConflicts, "\n")).replaceAll("") + ")";
             return new UsagePresentation() {
                 @Override
                 @Nonnull
                 public TextChunk[] getText() {
-                    final TextChunk[] chunks = usagePresentation.getText();
-                    return ArrayUtil
-                        .append(
-                            chunks,
-                            new TextChunk(
-                                TextAttributesUtil.toTextAttributes(SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES),
-                                conflictDescription
-                            )
-                        );
+                    TextChunk[] chunks = usagePresentation.getText();
+                    return ArrayUtil.append(
+                        chunks,
+                        new TextChunk(
+                            TextAttributesUtil.toTextAttributes(SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES),
+                            conflictDescription
+                        )
+                    );
                 }
 
                 @Override
@@ -277,7 +275,7 @@ public class ConflictsDialog extends DialogWrapper {
 
         private class DescriptionOnlyUsage implements Usage {
             private final String myConflictDescription = Pattern.compile("<[^<>]*>")
-                .matcher(StringUtil.join(new LinkedHashSet<String>(myElementConflictDescription.get(null)), "\n"))
+                .matcher(StringUtil.join(new LinkedHashSet<>(myElementConflictDescription.get(null)), "\n"))
                 .replaceAll("");
 
             @Override

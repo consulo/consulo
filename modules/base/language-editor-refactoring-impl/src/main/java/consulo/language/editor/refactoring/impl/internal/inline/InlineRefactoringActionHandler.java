@@ -52,7 +52,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
         if (dataContext == null) {
             dataContext = DataManager.getInstance().getDataContext();
         }
-        final Editor editor = dataContext.getData(Editor.KEY);
+        Editor editor = dataContext.getData(Editor.KEY);
         for (InlineActionHandler handler : InlineActionHandler.EP_NAME.getExtensionList()) {
             if (handler.canInlineElement(elements[0])) {
                 handler.inlineElement(project, editor, elements[0]);
@@ -65,7 +65,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull final Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
 
         PsiElement element = dataContext.getData(PsiElement.KEY);
@@ -92,7 +92,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
 
     @RequiredUIAccess
     public static boolean invokeInliner(@Nullable Editor editor, PsiElement element) {
-        final List<InlineHandler> handlers = InlineHandler.forLanguage(element.getLanguage());
+        List<InlineHandler> handlers = InlineHandler.forLanguage(element.getLanguage());
         for (InlineHandler handler : handlers) {
             if (GenericInlineHandlerImpl.invoke(element, editor, handler)) {
                 return true;

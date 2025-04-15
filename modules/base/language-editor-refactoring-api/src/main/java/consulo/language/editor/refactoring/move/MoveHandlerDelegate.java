@@ -36,7 +36,7 @@ import java.util.Set;
 public abstract class MoveHandlerDelegate {
     public static final ExtensionPointName<MoveHandlerDelegate> EP_NAME = ExtensionPointName.create(MoveHandlerDelegate.class);
 
-    public boolean canMove(PsiElement[] elements, @Nullable final PsiElement targetContainer) {
+    public boolean canMove(PsiElement[] elements, @Nullable PsiElement targetContainer) {
         return targetContainer == null || isValidTarget(targetContainer, elements);
     }
 
@@ -44,15 +44,15 @@ public abstract class MoveHandlerDelegate {
         return false;
     }
 
-    public boolean isValidTarget(final PsiElement psiElement, PsiElement[] sources) {
+    public boolean isValidTarget(PsiElement psiElement, PsiElement[] sources) {
         return false;
     }
 
     public void doMove(
-        final Project project,
-        final PsiElement[] elements,
-        @Nullable final PsiElement targetContainer,
-        @Nullable final MoveCallback callback
+        Project project,
+        PsiElement[] elements,
+        @Nullable PsiElement targetContainer,
+        @Nullable MoveCallback callback
     ) {
     }
 
@@ -66,11 +66,11 @@ public abstract class MoveHandlerDelegate {
     }
 
     public boolean tryToMove(
-        final PsiElement element,
-        final Project project,
-        final DataContext dataContext,
-        @Nullable final PsiReference reference,
-        final Editor editor
+        PsiElement element,
+        Project project,
+        DataContext dataContext,
+        @Nullable PsiReference reference,
+        Editor editor
     ) {
         return false;
     }

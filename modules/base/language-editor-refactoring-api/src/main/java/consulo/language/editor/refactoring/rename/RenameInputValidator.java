@@ -32,5 +32,5 @@ public interface RenameInputValidator {
 
     ElementPattern<? extends PsiElement> getPattern();
 
-    boolean isInputValid(final String newName, final PsiElement element, final ProcessingContext context);
+    boolean isInputValid(String newName, PsiElement element, ProcessingContext context);
 }

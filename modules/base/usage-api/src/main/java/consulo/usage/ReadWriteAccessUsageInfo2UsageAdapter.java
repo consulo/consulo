@@ -34,10 +34,10 @@ public class ReadWriteAccessUsageInfo2UsageAdapter extends UsageInfo2UsageAdapte
             myIcon = PlatformIconGroup.nodesRw_access();
         }
         else if (myAccessedForWriting) {
-            myIcon = PlatformIconGroup.nodesWrite_access(); // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
+            myIcon = PlatformIconGroup.nodesWrite_access();
         }
         else if (myAccessedForReading) {
-            myIcon = PlatformIconGroup.nodesRead_access();  // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
+            myIcon = PlatformIconGroup.nodesRead_access();
         }
     }
 

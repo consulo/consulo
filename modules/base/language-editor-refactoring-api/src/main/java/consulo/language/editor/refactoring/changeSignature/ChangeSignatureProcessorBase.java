@@ -134,11 +134,12 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
     }
 
     @Override
+    @RequiredReadAction
     protected void performRefactoring(@Nonnull UsageInfo[] usages) {
         RefactoringTransaction transaction = getTransaction();
-        final RefactoringElementListener elementListener =
+        RefactoringElementListener elementListener =
             transaction == null ? null : transaction.getElementListener(myChangeInfo.getMethod());
-        final String fqn = QualifiedNameProviderUtil.elementToFqn(myChangeInfo.getMethod(), null);
+        String fqn = QualifiedNameProviderUtil.elementToFqn(myChangeInfo.getMethod(), null);
         if (fqn != null) {
             UndoableAction action = new BasicUndoableAction() {
                 @Override
@@ -155,11 +156,11 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
             ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
         }
         try {
-            final List<ChangeSignatureUsageProcessor> processors = ChangeSignatureUsageProcessor.EP_NAME.getExtensionList();
+            List<ChangeSignatureUsageProcessor> processors = ChangeSignatureUsageProcessor.EP_NAME.getExtensionList();
 
-            final ResolveSnapshotProvider resolveSnapshotProvider =
+            ResolveSnapshotProvider resolveSnapshotProvider =
                 myChangeInfo.isParameterNamesChanged() ? ResolveSnapshotProvider.forLanguage(myChangeInfo.getMethod().getLanguage()) : null;
-            final List<ResolveSnapshotProvider.ResolveSnapshot> snapshots = new ArrayList<>();
+            List<ResolveSnapshotProvider.ResolveSnapshot> snapshots = new ArrayList<>();
             for (ChangeSignatureUsageProcessor processor : processors) {
                 if (resolveSnapshotProvider != null) {
                     processor.registerConflictResolvers(snapshots, resolveSnapshotProvider, usages, myChangeInfo);
@@ -196,7 +197,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
                     }
                 }
             }
-            final PsiElement method = myChangeInfo.getMethod();
+            PsiElement method = myChangeInfo.getMethod();
             LOG.assertTrue(method.isValid());
             if (elementListener != null && myChangeInfo.isNameChanged()) {
                 elementListener.elementRenamed(method);

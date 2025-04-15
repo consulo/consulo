@@ -1636,3 +1636,7 @@ checkbox.search.in.non.java.files:
   text: S&earch for non-code usages
 extract.method.replace.duplicate.command.name:
   text: Replace duplicate
+safe.delete.not.available.indexing:
+  text: Safe delete refactoring is not available while indexing is in progress
+refactoring.indexing.warning.title:
+  text: Indexing

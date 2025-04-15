@@ -48,9 +48,9 @@ public interface TextEditorHighlightingPassFactory {
          * @return the id of the new pass which e.g. can be used as an anchor for the other pass.
          */
         default int registerTextEditorHighlightingPass(
-            final TextEditorHighlightingPassFactory factory,
-            final Anchor anchor,
-            final int anchorPassId,
+            TextEditorHighlightingPassFactory factory,
+            Anchor anchor,
+            int anchorPassId,
             boolean needAdditionalIntentionsPass
         ) {
             int[] ids = null;
@@ -82,7 +82,7 @@ public interface TextEditorHighlightingPassFactory {
 
         int registerTextEditorHighlightingPass(
             @Nonnull TextEditorHighlightingPassFactory factory,
-            @Nullable final int[] runAfterCompletionOf,
+            @Nullable int[] runAfterCompletionOf,
             @Nullable int[] runAfterStartingOf,
             boolean runIntentionsPassAfter,
             int forcedPassId
@@ -94,5 +94,5 @@ public interface TextEditorHighlightingPassFactory {
     void register(@Nonnull Registrar registrar);
 
     @Nullable
-    TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor);
+    TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor);
 }

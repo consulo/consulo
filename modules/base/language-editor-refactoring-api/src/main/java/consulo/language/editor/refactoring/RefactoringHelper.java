@@ -27,9 +27,9 @@ import consulo.usage.UsageInfo;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface RefactoringHelper<T> {
-  ExtensionPointName<RefactoringHelper> EP_NAME = ExtensionPointName.create(RefactoringHelper.class);
+    ExtensionPointName<RefactoringHelper> EP_NAME = ExtensionPointName.create(RefactoringHelper.class);
 
-  T prepareOperation(UsageInfo[] usages);
+    T prepareOperation(UsageInfo[] usages);
 
-  void performOperation(final Project project, T operationData);
+    void performOperation(Project project, T operationData);
 }
