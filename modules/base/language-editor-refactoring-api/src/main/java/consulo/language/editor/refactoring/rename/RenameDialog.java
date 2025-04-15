@@ -110,7 +110,7 @@ public class RenameDialog extends RefactoringDialog {
     @RequiredUIAccess
     public static void showRenameDialog(DataContext dataContext, RenameDialog dialog) {
         if (Application.get().isUnitTestMode()) {
-            final String name = dataContext.getData(PsiElementRenameHandler.DEFAULT_NAME);
+            String name = dataContext.getData(PsiElementRenameHandler.DEFAULT_NAME);
             //noinspection TestOnlyProblems
             dialog.performRename(name);
             dialog.close(OK_EXIT_CODE);
@@ -121,6 +121,7 @@ public class RenameDialog extends RefactoringDialog {
     }
 
     @Nonnull
+    @RequiredReadAction
     protected String getLabelText() {
         return RefactoringLocalize.rename0AndItsUsagesTo(getFullName()).get();
     }
@@ -151,7 +152,7 @@ public class RenameDialog extends RefactoringDialog {
 
     @RequiredReadAction
     protected String getFullName() {
-        final String name = DescriptiveNameUtil.getDescriptiveName(myPsiElement);
+        String name = DescriptiveNameUtil.getDescriptiveName(myPsiElement);
         return (UsageViewUtil.getType(myPsiElement) + " " + name).trim();
     }
 
@@ -181,8 +182,8 @@ public class RenameDialog extends RefactoringDialog {
     }
 
     public String[] getSuggestedNames() {
-        final LinkedHashSet<String> result = new LinkedHashSet<>();
-        final String initialName = VariableInplaceRenameHandler.getInitialName();
+        LinkedHashSet<String> result = new LinkedHashSet<>();
+        String initialName = VariableInplaceRenameHandler.getInitialName();
         if (initialName != null) {
             result.add(initialName);
         }
@@ -306,6 +307,7 @@ public class RenameDialog extends RefactoringDialog {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doHelpAction() {
         HelpManager.getInstance().invokeHelp(myHelpID);
     }
@@ -314,12 +316,12 @@ public class RenameDialog extends RefactoringDialog {
     protected void doAction() {
         LOG.assertTrue(myPsiElement.isValid());
 
-        final String newName = getNewName();
+        String newName = getNewName();
         performRename(newName);
     }
 
-    public void performRename(final String newName) {
-        final RenamePsiElementProcessor elementProcessor = RenamePsiElementProcessor.forElement(myPsiElement);
+    public void performRename(String newName) {
+        RenamePsiElementProcessor elementProcessor = RenamePsiElementProcessor.forElement(myPsiElement);
         elementProcessor.setToSearchInComments(myPsiElement, isSearchInComments());
         if (myCbSearchTextOccurences.isEnabled()) {
             elementProcessor.setToSearchForTextOccurrences(myPsiElement, isSearchInNonJavaFiles());
@@ -328,7 +330,7 @@ public class RenameDialog extends RefactoringDialog {
             mySuggestedNameInfo.nameChosen(newName);
         }
 
-        final RenameProcessor processor = createRenameProcessor(newName);
+        RenameProcessor processor = createRenameProcessor(newName);
 
         for (Map.Entry<AutomaticRenamerFactory, CheckBox> e : myAutomaticRenamers.entrySet()) {
             e.getKey().setEnabled(e.getValue().getValue());
@@ -359,7 +361,7 @@ public class RenameDialog extends RefactoringDialog {
         if (!areButtonsValid()) {
             throw new ConfigurationException(LanguageLocalize.dialogMessageValidIdentifier(getNewName()));
         }
-        final Function<String, String> inputValidator = RenameInputValidatorRegistry.getInputErrorValidator(myPsiElement);
+        Function<String, String> inputValidator = RenameInputValidatorRegistry.getInputErrorValidator(myPsiElement);
         if (inputValidator != null) {
             setErrorText(inputValidator.apply(getNewName()));
         }
@@ -367,7 +369,7 @@ public class RenameDialog extends RefactoringDialog {
 
     @Override
     protected boolean areButtonsValid() {
-        final String newName = getNewName();
+        String newName = getNewName();
         return RenameUtil.isValidName(myProject, myPsiElement, newName);
     }
 

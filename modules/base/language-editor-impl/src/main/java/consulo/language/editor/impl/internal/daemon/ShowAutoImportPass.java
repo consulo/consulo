@@ -2,8 +2,8 @@
 
 package consulo.language.editor.impl.internal.daemon;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
@@ -23,6 +23,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
@@ -40,9 +42,10 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     private final int myEndOffset;
     private final boolean hasDirtyTextRange;
 
-    ShowAutoImportPass(@Nonnull Project project, @Nonnull final PsiFile file, @Nonnull Editor editor) {
+    @RequiredUIAccess
+    ShowAutoImportPass(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull Editor editor) {
         super(project, editor.getDocument(), false);
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         myEditor = editor;
 
@@ -61,19 +64,20 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
 
     @Override
     public void doApplyInformationToEditor() {
-        myProject.getUIAccess().give(() -> showImports());
+        myProject.getUIAccess().give(this::showImports);
     }
 
+    @RequiredUIAccess
     private void showImports() {
-        Application application = ApplicationManager.getApplication();
-        application.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
+        Application application = Application.get();
         if (!application.isHeadlessEnvironment() && !myEditor.getContentComponent().hasFocus()) {
             return;
         }
         if (DumbService.isDumb(myProject) || !myFile.isValid()) {
             return;
         }
-        if (myEditor.isDisposed() || myEditor instanceof EditorWindow && !((EditorWindow)myEditor).isValid()) {
+        if (myEditor.isDisposed() || myEditor instanceof EditorWindow editorWindow && !editorWindow.isValid()) {
             return;
         }
 
@@ -96,7 +100,8 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
         }
     }
 
-    private void importUnambiguousImports(final int caretOffset) {
+    @RequiredReadAction
+    private void importUnambiguousImports(int caretOffset) {
         if (!DaemonCodeAnalyzerSettings.getInstance().isImportHintEnabled()) {
             return;
         }
@@ -105,15 +110,23 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
         }
 
         Document document = myEditor.getDocument();
-        final List<HighlightInfoImpl> infos = new ArrayList<>();
-        DaemonCodeAnalyzerEx.processHighlights(document, myProject, null, 0, document.getTextLength(), i -> {
-            HighlightInfoImpl info = (HighlightInfoImpl)i;
+        List<HighlightInfoImpl> infos = new ArrayList<>();
+        DaemonCodeAnalyzerEx.processHighlights(
+            document,
+            myProject,
+            null,
+            0,
+            document.getTextLength(),
+            i -> {
+                HighlightInfoImpl info = (HighlightInfoImpl)i;
 
-            if (info.hasHint() && info.getSeverity() == HighlightSeverity.ERROR && !info.getFixTextRange().containsOffset(caretOffset)) {
-                infos.add(info);
+                if (info.hasHint() && info.getSeverity() == HighlightSeverity.ERROR && !info.getFixTextRange()
+                    .containsOffset(caretOffset)) {
+                    infos.add(info);
+                }
+                return true;
             }
-            return true;
-        });
+        );
 
         List<ReferenceImporter> importers = ReferenceImporter.EP_NAME.getExtensionList();
         for (HighlightInfoImpl info : infos) {
@@ -132,29 +145,38 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     }
 
     @Nonnull
+    @RequiredReadAction
     private static List<HighlightInfoImpl> getVisibleHighlights(
-        final int startOffset,
-        final int endOffset,
+        int startOffset,
+        int endOffset,
         @Nonnull Project project,
         @Nonnull Editor editor,
         boolean isDirty
     ) {
-        final List<HighlightInfoImpl> highlights = new ArrayList<>();
+        List<HighlightInfoImpl> highlights = new ArrayList<>();
         int offset = editor.getCaretModel().getOffset();
-        DaemonCodeAnalyzerEx.processHighlights(editor.getDocument(), project, null, startOffset, endOffset, i -> {
-            HighlightInfoImpl info = (HighlightInfoImpl)i;
-            //no changes after escape => suggest imports under caret only
-            if (!isDirty && !info.getFixTextRange().contains(offset)) {
+        DaemonCodeAnalyzerEx.processHighlights(
+            editor.getDocument(),
+            project,
+            null,
+            startOffset,
+            endOffset,
+            i -> {
+                HighlightInfoImpl info = (HighlightInfoImpl)i;
+                //no changes after escape => suggest imports under caret only
+                if (!isDirty && !info.getFixTextRange().contains(offset)) {
+                    return true;
+                }
+                if (info.hasHint() && !editor.getFoldingModel().isOffsetCollapsed(info.startOffset)) {
+                    highlights.add(info);
+                }
                 return true;
             }
-            if (info.hasHint() && !editor.getFoldingModel().isOffsetCollapsed(info.startOffset)) {
-                highlights.add(info);
-            }
-            return true;
-        });
+        );
         return highlights;
     }
 
+    @RequiredReadAction
     private boolean showAddImportHint(@Nonnull HighlightInfoImpl info) {
         if (!DaemonCodeAnalyzerSettings.getInstance().isImportHintEnabled()) {
             return false;

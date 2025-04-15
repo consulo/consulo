@@ -17,13 +17,13 @@
 package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.application.HelpManager;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringSettings;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.DeleteUtil;
 import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
@@ -38,201 +38,212 @@ import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Function;
 
 /**
  * @author dsl
  */
 public class SafeDeleteDialog extends DialogWrapper {
-  private final Project myProject;
-  private final PsiElement[] myElements;
-  private final Callback myCallback;
+    private final Project myProject;
+    private final PsiElement[] myElements;
+    private final Callback myCallback;
 
-  private StateRestoringCheckBoxWrapper myCbSearchInComments;
-  private StateRestoringCheckBoxWrapper myCbSearchTextOccurrences;
+    private StateRestoringCheckBoxWrapper myCbSearchInComments;
+    private StateRestoringCheckBoxWrapper myCbSearchTextOccurrences;
 
-  private CheckBox myCbSafeDelete;
+    private CheckBox myCbSafeDelete;
 
-  private final SafeDeleteProcessorDelegate myDelegate;
+    private final SafeDeleteProcessorDelegate myDelegate;
 
-  public interface Callback {
-    void run(SafeDeleteDialog dialog);
-  }
+    public interface Callback {
+        void run(SafeDeleteDialog dialog);
+    }
 
-  public SafeDeleteDialog(Project project, PsiElement[] elements, Callback callback) {
-    super(project, true);
-    myProject = project;
-    myElements = elements;
-    myCallback = callback;
-    myDelegate = getDelegate();
-    setTitle(SafeDeleteHandler.REFACTORING_NAME.get());
-    init();
-  }
+    public SafeDeleteDialog(Project project, PsiElement[] elements, Callback callback) {
+        super(project, true);
+        myProject = project;
+        myElements = elements;
+        myCallback = callback;
+        myDelegate = getDelegate();
+        setTitle(SafeDeleteHandler.REFACTORING_NAME);
+        init();
+    }
 
-  public boolean isSearchInComments() {
-    return myCbSearchInComments.getValue();
-  }
+    public boolean isSearchInComments() {
+        return myCbSearchInComments.getValue();
+    }
 
-  public boolean isSearchForTextOccurences() {
-    return myCbSearchTextOccurrences != null && myCbSearchTextOccurrences.getValue();
-  }
+    public boolean isSearchForTextOccurences() {
+        return myCbSearchTextOccurrences != null && myCbSearchTextOccurrences.getValue();
+    }
 
-  @Override
-  @Nonnull
-  protected Action[] createActions() {
-    return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
-  }
+    @Override
+    @Nonnull
+    protected Action[] createActions() {
+        return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
+    }
 
-  @Override
-  protected void doHelpAction() {
-    HelpManager.getInstance().invokeHelp("refactoring.safeDelete");
-  }
+    @Override
+    protected void doHelpAction() {
+        HelpManager.getInstance().invokeHelp("refactoring.safeDelete");
+    }
 
-  @Override
-  @RequiredUIAccess
-  protected JComponent createNorthPanel() {
-    final JPanel panel = new JPanel(new GridBagLayout());
-    final GridBagConstraints gbc = new GridBagConstraints();
+    @Override
+    @RequiredUIAccess
+    protected JComponent createNorthPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
-    String message = isDelete()
-      ? RefactoringBundle.message("prompt.delete.elements")
-      : RefactoringBundle.message("search.for.usages.and.delete.elements");
-    final String warningMessage = DeleteUtil.generateWarningMessage(message, myElements);
+        Function<Object, LocalizeValue> messageTemplate = isDelete()
+            ? RefactoringLocalize::promptDeleteElements
+            : RefactoringLocalize::searchForUsagesAndDeleteElements;
+        LocalizeValue warningMessage = DeleteUtil.generateWarningMessage(messageTemplate, myElements);
 
-    gbc.insets = JBUI.insets(4, 8);
-    gbc.weighty = 1;
-    gbc.weightx = 1;
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.gridwidth = 2;
-    gbc.fill = GridBagConstraints.BOTH;
-    gbc.anchor = GridBagConstraints.WEST;
-    panel.add(new JLabel(warningMessage), gbc);
+        gbc.insets = JBUI.insets(4, 8);
+        gbc.weighty = 1;
+        gbc.weightx = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel(warningMessage.get()), gbc);
 
-    if (isDelete()) {
-      gbc.gridy++;
-      gbc.gridx = 0;
-      gbc.weightx = 0.0;
-      gbc.gridwidth = 1;
-      gbc.insets = JBUI.insets(4, 8, 0, 8);
-      myCbSafeDelete = CheckBox.create(RefactoringLocalize.checkboxSafeDeleteWithUsageSearch());
-      panel.add(TargetAWT.to(myCbSafeDelete), gbc);
-      myCbSafeDelete.addValueListener(e -> {
-        updateControls(myCbSearchInComments);
+        if (isDelete()) {
+            gbc.gridy++;
+            gbc.gridx = 0;
+            gbc.weightx = 0.0;
+            gbc.gridwidth = 1;
+            gbc.insets = JBUI.insets(4, 8, 0, 8);
+            myCbSafeDelete = CheckBox.create(RefactoringLocalize.checkboxSafeDeleteWithUsageSearch());
+            panel.add(TargetAWT.to(myCbSafeDelete), gbc);
+            myCbSafeDelete.addValueListener(e -> {
+                updateControls(myCbSearchInComments);
+                updateControls(myCbSearchTextOccurrences);
+            });
+        }
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = 0.0;
+        gbc.gridwidth = 1;
+        myCbSearchInComments = new StateRestoringCheckBoxWrapper(RefactoringLocalize.searchInCommentsAndStrings());
+        panel.add(TargetAWT.to(myCbSearchInComments.getComponent()), gbc);
+
+        if (needSearchForTextOccurrences()) {
+            gbc.gridx++;
+            myCbSearchTextOccurrences = new StateRestoringCheckBoxWrapper(RefactoringLocalize.searchForTextOccurrences());
+            panel.add(TargetAWT.to(myCbSearchTextOccurrences.getComponent()), gbc);
+        }
+
+        RefactoringSettings refactoringSettings = RefactoringSettings.getInstance();
+        if (myCbSafeDelete != null) {
+            myCbSafeDelete.setValue(refactoringSettings.SAFE_DELETE_WHEN_DELETE);
+        }
+        myCbSearchInComments.setValue(
+            myDelegate != null
+                ? myDelegate.isToSearchInComments(myElements[0])
+                : refactoringSettings.SAFE_DELETE_SEARCH_IN_COMMENTS
+        );
+        if (myCbSearchTextOccurrences != null) {
+            myCbSearchTextOccurrences.setValue(
+                myDelegate != null
+                    ? myDelegate.isToSearchForTextOccurrences(myElements[0])
+                    : refactoringSettings.SAFE_DELETE_SEARCH_IN_NON_JAVA
+            );
+        }
         updateControls(myCbSearchTextOccurrences);
-      });
+        updateControls(myCbSearchInComments);
+        return panel;
     }
 
-    gbc.gridy++;
-    gbc.gridx = 0;
-    gbc.weightx = 0.0;
-    gbc.gridwidth = 1;
-    myCbSearchInComments = new StateRestoringCheckBoxWrapper(RefactoringLocalize.searchInCommentsAndStrings());
-    panel.add(TargetAWT.to(myCbSearchInComments.getComponent()), gbc);
-
-    if (needSearchForTextOccurrences()) {
-      gbc.gridx++;
-      myCbSearchTextOccurrences = new StateRestoringCheckBoxWrapper(RefactoringLocalize.searchForTextOccurrences());
-      panel.add(TargetAWT.to(myCbSearchTextOccurrences.getComponent()), gbc);
-    }
-
-    final RefactoringSettings refactoringSettings = RefactoringSettings.getInstance();
-    if (myCbSafeDelete != null) {
-      myCbSafeDelete.setValue(refactoringSettings.SAFE_DELETE_WHEN_DELETE);
-    }
-    myCbSearchInComments.setValue(myDelegate != null ? myDelegate.isToSearchInComments(myElements[0]) : refactoringSettings.SAFE_DELETE_SEARCH_IN_COMMENTS);
-    if (myCbSearchTextOccurrences != null) {
-      myCbSearchTextOccurrences.setValue(myDelegate != null ? myDelegate.isToSearchForTextOccurrences(myElements[0]) : refactoringSettings.SAFE_DELETE_SEARCH_IN_NON_JAVA);
-    }
-    updateControls(myCbSearchTextOccurrences);
-    updateControls(myCbSearchInComments);
-    return panel;
-  }
-
-  @RequiredUIAccess
-  private void updateControls(@Nullable StateRestoringCheckBoxWrapper checkBox) {
-    if (checkBox == null) return;
-    if (myCbSafeDelete == null || myCbSafeDelete.getValue()) {
-      checkBox.makeSelectable();
-    }
-    else {
-      checkBox.makeUnselectable(false);
-    }
-  }
-
-  protected boolean isDelete() {
-    return false;
-  }
-
-  @Nullable
-  private SafeDeleteProcessorDelegate getDelegate() {
-    if (myElements.length == 1) {
-      for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
-        if (delegate.handlesElement(myElements[0])) {
-          return delegate;
+    @RequiredUIAccess
+    private void updateControls(@Nullable StateRestoringCheckBoxWrapper checkBox) {
+        if (checkBox == null) {
+            return;
         }
-      }
-    }
-    return null;
-  }
-
-  @Override
-  protected JComponent createCenterPanel() {
-    return null;
-  }
-
-  private boolean needSearchForTextOccurrences() {
-    for (PsiElement element : myElements) {
-      if (TextOccurrencesUtil.isSearchTextOccurencesEnabled(element)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-
-  @Override
-  @RequiredUIAccess
-  protected void doOKAction() {
-    if (DumbService.isDumb(myProject)) {
-      Messages.showMessageDialog(
-        myProject,
-        "Safe delete refactoring is not available while indexing is in progress",
-        "Indexing",
-        null
-      );
-      return;
-    }
-
-    RefactoringInternalHelper.getInstance().disableWriteChecksDuring(() -> {
-      if (myCallback != null && isSafeDelete()) {
-        myCallback.run(this);
-      }
-      else {
-        super.doOKAction();
-      }
-    });
-
-    final RefactoringSettings refactoringSettings = RefactoringSettings.getInstance();
-    if (myCbSafeDelete != null) {
-      refactoringSettings.SAFE_DELETE_WHEN_DELETE = myCbSafeDelete.getValue();
-    }
-    if (isSafeDelete()) {
-      if (myDelegate == null) {
-        refactoringSettings.SAFE_DELETE_SEARCH_IN_COMMENTS = isSearchInComments();
-        if (myCbSearchTextOccurrences != null) {
-          refactoringSettings.SAFE_DELETE_SEARCH_IN_NON_JAVA = isSearchForTextOccurences();
+        if (myCbSafeDelete == null || myCbSafeDelete.getValue()) {
+            checkBox.makeSelectable();
         }
-      } else {
-        myDelegate.setToSearchInComments(myElements[0], isSearchInComments());
-
-        if (myCbSearchTextOccurrences != null) {
-          myDelegate.setToSearchForTextOccurrences(myElements[0], isSearchForTextOccurences());
+        else {
+            checkBox.makeUnselectable(false);
         }
-      }
     }
-  }
 
-  private boolean isSafeDelete() {
-    return !isDelete() || myCbSafeDelete.getValue();
-  }
+    protected boolean isDelete() {
+        return false;
+    }
+
+    @Nullable
+    private SafeDeleteProcessorDelegate getDelegate() {
+        if (myElements.length == 1) {
+            for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
+                if (delegate.handlesElement(myElements[0])) {
+                    return delegate;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    protected JComponent createCenterPanel() {
+        return null;
+    }
+
+    private boolean needSearchForTextOccurrences() {
+        for (PsiElement element : myElements) {
+            if (TextOccurrencesUtil.isSearchTextOccurencesEnabled(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void doOKAction() {
+        if (DumbService.isDumb(myProject)) {
+            Messages.showMessageDialog(
+                myProject,
+                RefactoringLocalize.safeDeleteNotAvailableIndexing().get(),
+                RefactoringLocalize.refactoringIndexingWarningTitle().get(),
+                null
+            );
+            return;
+        }
+
+        RefactoringInternalHelper.getInstance().disableWriteChecksDuring(() -> {
+            if (myCallback != null && isSafeDelete()) {
+                myCallback.run(this);
+            }
+            else {
+                super.doOKAction();
+            }
+        });
+
+        RefactoringSettings refactoringSettings = RefactoringSettings.getInstance();
+        if (myCbSafeDelete != null) {
+            refactoringSettings.SAFE_DELETE_WHEN_DELETE = myCbSafeDelete.getValue();
+        }
+        if (isSafeDelete()) {
+            if (myDelegate == null) {
+                refactoringSettings.SAFE_DELETE_SEARCH_IN_COMMENTS = isSearchInComments();
+                if (myCbSearchTextOccurrences != null) {
+                    refactoringSettings.SAFE_DELETE_SEARCH_IN_NON_JAVA = isSearchForTextOccurences();
+                }
+            }
+            else {
+                myDelegate.setToSearchInComments(myElements[0], isSearchInComments());
+
+                if (myCbSearchTextOccurrences != null) {
+                    myDelegate.setToSearchForTextOccurrences(myElements[0], isSearchForTextOccurences());
+                }
+            }
+        }
+    }
+
+    private boolean isSafeDelete() {
+        return !isDelete() || myCbSafeDelete.getValue();
+    }
 }

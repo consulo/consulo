@@ -25,6 +25,7 @@ import consulo.project.Project;
 import consulo.usage.UsageInfo;
 
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -33,51 +34,55 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SafeDeleteProcessorDelegate {
-  ExtensionPointName<SafeDeleteProcessorDelegate> EP_NAME = ExtensionPointName.create(SafeDeleteProcessorDelegate.class);
+    ExtensionPointName<SafeDeleteProcessorDelegate> EP_NAME = ExtensionPointName.create(SafeDeleteProcessorDelegate.class);
 
-  boolean handlesElement(PsiElement element);
+    boolean handlesElement(PsiElement element);
 
-  @Nullable
-  NonCodeUsageSearchInfo findUsages(final PsiElement element, final PsiElement[] allElementsToDelete, List<UsageInfo> result);
+    @Nullable
+    NonCodeUsageSearchInfo findUsages(PsiElement element, PsiElement[] allElementsToDelete, List<UsageInfo> result);
 
-  /**
-   * Called before the refactoring dialog is shown. Returns the list of elements for which the
-   * usages should be searched for the specified element selected by the user for deletion.
-   * May show UI to ask the user if some additional elements should be deleted along with the
-   * specified selected element.
-   *
-   * @param element             an element selected for deletion.
-   * @param allElementsToDelete all elements selected for deletion.
-   * @return additional elements to search for usages, or null if the user has cancelled the refactoring.
-   */
-  @Nullable
-  Collection<? extends PsiElement> getElementsToSearch(final PsiElement element, final Collection<PsiElement> allElementsToDelete);
+    /**
+     * Called before the refactoring dialog is shown. Returns the list of elements for which the
+     * usages should be searched for the specified element selected by the user for deletion.
+     * May show UI to ask the user if some additional elements should be deleted along with the
+     * specified selected element.
+     *
+     * @param element             an element selected for deletion.
+     * @param allElementsToDelete all elements selected for deletion.
+     * @return additional elements to search for usages, or null if the user has cancelled the refactoring.
+     */
+    @Nullable
+    Collection<? extends PsiElement> getElementsToSearch(PsiElement element, Collection<PsiElement> allElementsToDelete);
 
-  @Nullable
-  Collection<PsiElement> getAdditionalElementsToDelete(PsiElement element, final Collection<PsiElement> allElementsToDelete, final boolean askUser);
+    @Nullable
+    Collection<PsiElement> getAdditionalElementsToDelete(
+        PsiElement element,
+        Collection<PsiElement> allElementsToDelete,
+        boolean askUser
+    );
 
-  @Nullable
-  Collection<String> findConflicts(final PsiElement element, final PsiElement[] allElementsToDelete);
+    @Nullable
+    Collection<String> findConflicts(PsiElement element, PsiElement[] allElementsToDelete);
 
-  /**
-   * Called after the user has confirmed the refactoring. Can filter out some of the usages
-   * found by the refactoring. May show UI to ask the user if some of the usages should
-   * be excluded.
-   *
-   * @param project the project where the refactoring happens.
-   * @param usages  all usages to be processed by the refactoring.
-   * @return the filtered list of usages, or null if the user has cancelled the refactoring.
-   */
-  @Nullable
-  UsageInfo[] preprocessUsages(Project project, UsageInfo[] usages);
+    /**
+     * Called after the user has confirmed the refactoring. Can filter out some of the usages
+     * found by the refactoring. May show UI to ask the user if some of the usages should
+     * be excluded.
+     *
+     * @param project the project where the refactoring happens.
+     * @param usages  all usages to be processed by the refactoring.
+     * @return the filtered list of usages, or null if the user has cancelled the refactoring.
+     */
+    @Nullable
+    UsageInfo[] preprocessUsages(Project project, UsageInfo[] usages);
 
-  void prepareForDeletion(PsiElement element) throws IncorrectOperationException;
+    void prepareForDeletion(PsiElement element) throws IncorrectOperationException;
 
-  boolean isToSearchInComments(final PsiElement element);
+    boolean isToSearchInComments(PsiElement element);
 
-  void setToSearchInComments(final PsiElement element, boolean enabled);
+    void setToSearchInComments(PsiElement element, boolean enabled);
 
-  boolean isToSearchForTextOccurrences(final PsiElement element);
+    boolean isToSearchForTextOccurrences(PsiElement element);
 
-  void setToSearchForTextOccurrences(final PsiElement element, boolean enabled);
+    void setToSearchForTextOccurrences(PsiElement element, boolean enabled);
 }

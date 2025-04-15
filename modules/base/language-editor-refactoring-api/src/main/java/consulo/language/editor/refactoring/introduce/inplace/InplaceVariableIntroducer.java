@@ -51,8 +51,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 3/15/11
+ * @author anna
+ * @since 2011-03-15
  */
 public abstract class InplaceVariableIntroducer<E extends PsiElement> extends InplaceRefactoring {
     protected E myExpr;
@@ -74,8 +74,8 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
         myTitle = title;
         myOccurrences = occurrences;
         if (expr != null) {
-            final ASTNode node = expr.getNode();
-            final ASTNode astNode =
+            ASTNode node = expr.getNode();
+            ASTNode astNode =
                 TokenSeparatorGenerator.forLanguage(expr.getLanguage()).generateWhitespaceBetweenTokens(node.getTreePrev(), node);
             if (astNode != null) {
                 CommandProcessor.getInstance().newCommand()
@@ -190,11 +190,11 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
         private final SmartPsiElementPointer<PsiNamedElement> myPointer;
 
         public MyIntroduceLookupExpression(
-            final String initialName,
-            final LinkedHashSet<String> names,
-            final PsiNamedElement elementToRename,
-            final boolean shouldSelectAll,
-            final String advertisementText
+            String initialName,
+            LinkedHashSet<String> names,
+            PsiNamedElement elementToRename,
+            boolean shouldSelectAll,
+            String advertisementText
         ) {
             super(initialName, names, elementToRename, elementToRename, shouldSelectAll, advertisementText);
             myPointer = SmartPointerManager.getInstance(elementToRename.getProject()).createSmartPsiElementPointer(elementToRename);
@@ -219,22 +219,22 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
             }
 
             TemplateState templateState = TemplateManager.getInstance(psiVariable.getProject()).getTemplateState(editor);
-            final TextResult insertedValue = templateState != null ? templateState.getVariableValue(PRIMARY_VARIABLE_NAME) : null;
+            TextResult insertedValue = templateState != null ? templateState.getVariableValue(PRIMARY_VARIABLE_NAME) : null;
             if (insertedValue != null) {
-                final String text = insertedValue.getText();
+                String text = insertedValue.getText();
                 if (!text.isEmpty() && !Comparing.strEqual(text, name)) {
-                    final LinkedHashSet<String> names = new LinkedHashSet<>();
+                    LinkedHashSet<String> names = new LinkedHashSet<>();
                     names.add(text);
                     for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
-                        final SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(psiVariable, psiVariable, names);
+                        SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(psiVariable, psiVariable, names);
                         if (suggestedNameInfo != null
                             && provider instanceof PreferrableNameSuggestionProvider nameSuggestionProvider
                             && !nameSuggestionProvider.shouldCheckOthers()) {
                             break;
                         }
                     }
-                    final LookupElement[] items = new LookupElement[names.size()];
-                    final Iterator<String> iterator = names.iterator();
+                    LookupElement[] items = new LookupElement[names.size()];
+                    Iterator<String> iterator = names.iterator();
                     for (int i = 0; i < items.length; i++) {
                         items[i] = LookupElementBuilder.create(iterator.next());
                     }

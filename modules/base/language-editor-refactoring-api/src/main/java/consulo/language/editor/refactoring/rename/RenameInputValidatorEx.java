@@ -20,10 +20,10 @@ import consulo.project.Project;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
- * Date: 3/14/11
+ * @author anna
+ * @since 2011-03-14
  */
 public interface RenameInputValidatorEx extends RenameInputValidator {
-  @Nullable
-  String getErrorMessage(String newName, Project project);
+    @Nullable
+    String getErrorMessage(String newName, Project project);
 }

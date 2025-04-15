@@ -27,7 +27,6 @@ import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.move.fileOrDirectory.MoveFilesOrDirectoriesUtil;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
@@ -38,7 +37,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -70,12 +68,12 @@ public class MoveHandler implements RefactoringActionHandler {
             if (tryToMoveElement(element, project, dataContext, null, editor)) {
                 return;
             }
-            final TextRange range = element.getTextRange();
+            TextRange range = element.getTextRange();
             if (range != null) {
                 int relative = offset - range.getStartOffset();
-                final PsiReference reference = element.findReferenceAt(relative);
+                PsiReference reference = element.findReferenceAt(relative);
                 if (reference != null) {
-                    final PsiElement refElement = reference.resolve();
+                    PsiElement refElement = reference.resolve();
                     if (refElement != null && tryToMoveElement(refElement, project, dataContext, reference, editor)) {
                         return;
                     }
@@ -87,11 +85,11 @@ public class MoveHandler implements RefactoringActionHandler {
     }
 
     private static boolean tryToMoveElement(
-        final PsiElement element,
-        final Project project,
-        final DataContext dataContext,
-        final PsiReference reference,
-        final Editor editor
+        PsiElement element,
+        Project project,
+        DataContext dataContext,
+        PsiReference reference,
+        Editor editor
     ) {
         for (MoveHandlerDelegate delegate : MoveHandlerDelegate.EP_NAME.getExtensionList()) {
             if (delegate.tryToMove(element, project, dataContext, reference, editor)) {
@@ -108,8 +106,8 @@ public class MoveHandler implements RefactoringActionHandler {
     @Override
     @RequiredUIAccess
     public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
-        final PsiElement targetContainer = dataContext == null ? null : dataContext.getData(LangDataKeys.TARGET_PSI_ELEMENT);
-        final Set<PsiElement> filesOrDirs = new HashSet<>();
+        PsiElement targetContainer = dataContext == null ? null : dataContext.getData(LangDataKeys.TARGET_PSI_ELEMENT);
+        Set<PsiElement> filesOrDirs = new HashSet<>();
         for (MoveHandlerDelegate delegate : MoveHandlerDelegate.EP_NAME.getExtensionList()) {
             if (delegate.canMove(dataContext) && delegate.isValidTarget(targetContainer, elements)) {
                 delegate.collectFilesOrDirsFromContext(dataContext, filesOrDirs);
@@ -121,7 +119,7 @@ public class MoveHandler implements RefactoringActionHandler {
                     filesOrDirs.add(element);
                 }
                 else {
-                    final PsiFile containingFile = element.getContainingFile();
+                    PsiFile containingFile = element.getContainingFile();
                     if (containingFile != null) {
                         filesOrDirs.add(containingFile);
                     }
@@ -160,7 +158,7 @@ public class MoveHandler implements RefactoringActionHandler {
      * May replace some elements with others which actulaly shall be moved (e.g. directory->package)
      */
     @Nullable
-    public static PsiElement[] adjustForMove(Project project, final PsiElement[] sourceElements, final PsiElement targetElement) {
+    public static PsiElement[] adjustForMove(Project project, PsiElement[] sourceElements, PsiElement targetElement) {
         for (MoveHandlerDelegate delegate : MoveHandlerDelegate.EP_NAME.getExtensionList()) {
             if (delegate.canMove(sourceElements, targetElement)) {
                 return delegate.adjustForMove(project, sourceElements, targetElement);
@@ -183,7 +181,7 @@ public class MoveHandler implements RefactoringActionHandler {
         return false;
     }
 
-    public static boolean isValidTarget(final PsiElement psiElement, PsiElement[] elements) {
+    public static boolean isValidTarget(PsiElement psiElement, PsiElement[] elements) {
         if (psiElement != null) {
             for (MoveHandlerDelegate delegate : MoveHandlerDelegate.EP_NAME.getExtensionList()) {
                 if (delegate.isValidTarget(psiElement, elements)) {

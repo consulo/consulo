@@ -21,7 +21,6 @@ import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
 import consulo.ide.localize.IdeLocalize;
@@ -172,7 +171,7 @@ public class DeleteHandler {
         }
         else {
             @SuppressWarnings({"UnresolvedPropertyKey"})
-            String warningMessage = DeleteUtil.generateWarningMessage(IdeBundle.message("prompt.delete.elements"), elements);
+            String warningMessage = DeleteUtil.generateWarningMessage(IdeLocalize::promptDeleteElements, elements).get();
 
             boolean anyDirectories = false;
             String directoryName = null;

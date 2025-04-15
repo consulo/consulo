@@ -61,37 +61,39 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
         invoke(project, elements, dataContext.getData(Module.KEY), true, null);
     }
 
-    public static void invoke(final Project project, PsiElement[] elements, boolean checkDelegates) {
+    @RequiredUIAccess
+    public static void invoke(Project project, PsiElement[] elements, boolean checkDelegates) {
         invoke(project, elements, checkDelegates, null);
     }
 
+    @RequiredUIAccess
     public static void invoke(
-        final Project project,
+        Project project,
         PsiElement[] elements,
         boolean checkDelegates,
-        @Nullable final Runnable successRunnable
+        @Nullable Runnable successRunnable
     ) {
         invoke(project, elements, null, checkDelegates, successRunnable);
     }
 
     @RequiredUIAccess
     public static void invoke(
-        final Project project,
+        Project project,
         PsiElement[] elements,
         @Nullable Module module,
         boolean checkDelegates,
-        @Nullable final Runnable successRunnable
+        @Nullable Runnable successRunnable
     ) {
         for (PsiElement element : elements) {
             if (!SafeDeleteProcessor.validElement(element)) {
                 return;
             }
         }
-        final PsiElement[] temptoDelete = PsiTreeUtil.filterAncestors(elements);
+        PsiElement[] temptoDelete = PsiTreeUtil.filterAncestors(elements);
         Set<PsiElement> elementsSet = new HashSet<>(Arrays.asList(temptoDelete));
         Set<PsiElement> fullElementsSet = new LinkedHashSet<>();
 
@@ -125,7 +127,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
             return;
         }
 
-        final PsiElement[] elementsToDelete = PsiUtilCore.toPsiElementArray(fullElementsSet);
+        PsiElement[] elementsToDelete = PsiUtilCore.toPsiElementArray(fullElementsSet);
 
         if (project.getApplication().isUnitTestMode()) {
             RefactoringSettings settings = RefactoringSettings.getInstance();
@@ -142,7 +144,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
             }
         }
         else {
-            final SafeDeleteDialog.Callback callback = dialog -> SafeDeleteProcessor.createInstance(
+            SafeDeleteDialog.Callback callback = dialog -> SafeDeleteProcessor.createInstance(
                 project,
                 () -> {
                     if (successRunnable != null) {

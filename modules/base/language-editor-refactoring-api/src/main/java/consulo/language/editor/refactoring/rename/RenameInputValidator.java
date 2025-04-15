@@ -28,9 +28,9 @@ import consulo.language.util.ProcessingContext;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface RenameInputValidator {
-  ExtensionPointName<RenameInputValidator> EP_NAME = ExtensionPointName.create(RenameInputValidator.class);
+    ExtensionPointName<RenameInputValidator> EP_NAME = ExtensionPointName.create(RenameInputValidator.class);
 
-  ElementPattern<? extends PsiElement> getPattern();
+    ElementPattern<? extends PsiElement> getPattern();
 
-  boolean isInputValid(final String newName, final PsiElement element, final ProcessingContext context);
+    boolean isInputValid(String newName, PsiElement element, ProcessingContext context);
 }
