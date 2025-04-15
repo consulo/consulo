@@ -24,6 +24,6 @@ import jakarta.annotation.Nullable;
  * Date: 3/14/11
  */
 public interface RenameInputValidatorEx extends RenameInputValidator {
-  @Nullable
-  String getErrorMessage(String newName, Project project);
+    @Nullable
+    String getErrorMessage(String newName, Project project);
 }

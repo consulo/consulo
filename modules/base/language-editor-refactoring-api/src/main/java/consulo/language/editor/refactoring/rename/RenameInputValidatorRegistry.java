@@ -24,37 +24,40 @@ import consulo.language.util.ProcessingContext;
 import consulo.util.lang.function.Condition;
 
 import jakarta.annotation.Nullable;
+
 import java.util.function.Function;
 
 public class RenameInputValidatorRegistry {
-  private RenameInputValidatorRegistry() {
-  }
-
-  @Nullable
-  public static Condition<String> getInputValidator(final PsiElement element) {
-    for(final RenameInputValidator validator: RenameInputValidator.EP_NAME.getExtensionList()) {
-      final ProcessingContext context = new ProcessingContext();
-      if (validator.getPattern().accepts(element, context)) {
-        return new Condition<String>() {
-          @Override
-          public boolean value(final String s) {
-            return validator.isInputValid(s, element, context);
-          }
-        };
-      }
+    private RenameInputValidatorRegistry() {
     }
-    return null;
-  }
 
-  @Nullable
-  public static Function<String, String> getInputErrorValidator(final PsiElement element) {
-    for(final RenameInputValidator validator: RenameInputValidator.EP_NAME.getExtensionList()) {
-      if (!(validator instanceof RenameInputValidatorEx)) continue;
-      final ProcessingContext context = new ProcessingContext();
-      if (validator.getPattern().accepts(element, context)) {
-        return newName -> ((RenameInputValidatorEx)validator).getErrorMessage(newName, element.getProject());
-      }
+    @Nullable
+    public static Condition<String> getInputValidator(final PsiElement element) {
+        for (final RenameInputValidator validator : RenameInputValidator.EP_NAME.getExtensionList()) {
+            final ProcessingContext context = new ProcessingContext();
+            if (validator.getPattern().accepts(element, context)) {
+                return new Condition<String>() {
+                    @Override
+                    public boolean value(final String s) {
+                        return validator.isInputValid(s, element, context);
+                    }
+                };
+            }
+        }
+        return null;
     }
-    return null;
-  }
+
+    @Nullable
+    public static Function<String, String> getInputErrorValidator(final PsiElement element) {
+        for (final RenameInputValidator validator : RenameInputValidator.EP_NAME.getExtensionList()) {
+            if (!(validator instanceof RenameInputValidatorEx)) {
+                continue;
+            }
+            final ProcessingContext context = new ProcessingContext();
+            if (validator.getPattern().accepts(element, context)) {
+                return newName -> ((RenameInputValidatorEx)validator).getErrorMessage(newName, element.getProject());
+            }
+        }
+        return null;
+    }
 }

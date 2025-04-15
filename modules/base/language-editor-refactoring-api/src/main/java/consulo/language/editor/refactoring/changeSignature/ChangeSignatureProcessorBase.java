@@ -45,165 +45,176 @@ import java.util.*;
  * @author Maxim.Medvedev
  */
 public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProcessor {
-  private static final Logger LOG = Logger.getInstance(ChangeSignatureProcessorBase.class);
+    private static final Logger LOG = Logger.getInstance(ChangeSignatureProcessorBase.class);
 
-  protected final ChangeInfo myChangeInfo;
-  protected final PsiManager myManager;
+    protected final ChangeInfo myChangeInfo;
+    protected final PsiManager myManager;
 
-  protected ChangeSignatureProcessorBase(Project project, ChangeInfo changeInfo) {
-    super(project);
-    myChangeInfo = changeInfo;
-    myManager = PsiManager.getInstance(project);
-  }
-
-  protected ChangeSignatureProcessorBase(Project project, @Nullable Runnable prepareSuccessfulCallback, ChangeInfo changeInfo) {
-    super(project, prepareSuccessfulCallback);
-    myChangeInfo = changeInfo;
-    myManager = PsiManager.getInstance(project);
-  }
-
-  @Override
-  @Nonnull
-  protected UsageInfo[] findUsages() {
-    List<UsageInfo> infos = new ArrayList<>();
-
-    for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensionList()) {
-      ContainerUtil.addAll(infos, processor.findUsages(myChangeInfo));
+    protected ChangeSignatureProcessorBase(Project project, ChangeInfo changeInfo) {
+        super(project);
+        myChangeInfo = changeInfo;
+        myManager = PsiManager.getInstance(project);
     }
-    infos = filterUsages(infos);
-    return infos.toArray(new UsageInfo[infos.size()]);
-  }
 
-  protected List<UsageInfo> filterUsages(List<UsageInfo> infos) {
-    Map<PsiElement, MoveRenameUsageInfo> moveRenameInfos = new HashMap<>();
-    Set<PsiElement> usedElements = new HashSet<>();
-
-    List<UsageInfo> result = new ArrayList<>(infos.size() / 2);
-    for (UsageInfo info : infos) {
-      LOG.assertTrue(info != null, getClass());
-      PsiElement element = info.getElement();
-      if (info instanceof MoveRenameUsageInfo moveRenameUsageInfo) {
-        if (usedElements.contains(element)) continue;
-        moveRenameInfos.put(element, moveRenameUsageInfo);
-      }
-      else {
-        moveRenameInfos.remove(element);
-        usedElements.add(element);
-        if (!(info instanceof PossiblyIncorrectUsage possiblyIncorrectUsage && !possiblyIncorrectUsage.isCorrect())) {
-          result.add(info);
-        }
-      }
+    protected ChangeSignatureProcessorBase(Project project, @Nullable Runnable prepareSuccessfulCallback, ChangeInfo changeInfo) {
+        super(project, prepareSuccessfulCallback);
+        myChangeInfo = changeInfo;
+        myManager = PsiManager.getInstance(project);
     }
-    result.addAll(moveRenameInfos.values());
-    return result;
-  }
 
+    @Override
+    @Nonnull
+    protected UsageInfo[] findUsages() {
+        List<UsageInfo> infos = new ArrayList<>();
 
-  @Override
-  protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
-    for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensionList()) {
-      if (processor.shouldPreviewUsages(myChangeInfo, usages)) return true;
+        for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensionList()) {
+            ContainerUtil.addAll(infos, processor.findUsages(myChangeInfo));
+        }
+        infos = filterUsages(infos);
+        return infos.toArray(new UsageInfo[infos.size()]);
     }
-    return super.isPreviewUsages(usages);
-  }
 
-  @Nullable
-  @Override
-  protected String getRefactoringId() {
-    return "refactoring.changeSignature";
-  }
+    protected List<UsageInfo> filterUsages(List<UsageInfo> infos) {
+        Map<PsiElement, MoveRenameUsageInfo> moveRenameInfos = new HashMap<>();
+        Set<PsiElement> usedElements = new HashSet<>();
 
-  @Nullable
-  @Override
-  protected RefactoringEventData getBeforeData() {
-    RefactoringEventData data = new RefactoringEventData();
-    data.addElement(getChangeInfo().getMethod());
-    return data;
-  }
-
-  @Nullable
-  @Override
-  protected RefactoringEventData getAfterData(@Nonnull UsageInfo[] usages) {
-    RefactoringEventData data = new RefactoringEventData();
-    data.addElement(getChangeInfo().getMethod());
-    return data;
-  }
-
-  @Override
-  protected void performRefactoring(@Nonnull UsageInfo[] usages) {
-    RefactoringTransaction transaction = getTransaction();
-    final RefactoringElementListener elementListener = transaction == null ? null : transaction.getElementListener(myChangeInfo.getMethod());
-    final String fqn = QualifiedNameProviderUtil.elementToFqn(myChangeInfo.getMethod(), null);
-    if (fqn != null) {
-      UndoableAction action = new BasicUndoableAction() {
-        @Override
-        public void undo() {
-          if (elementListener instanceof UndoRefactoringElementListener undoRefactoringElementListener) {
-            undoRefactoringElementListener.undoElementMovedOrRenamed(myChangeInfo.getMethod(), fqn);
-          }
+        List<UsageInfo> result = new ArrayList<>(infos.size() / 2);
+        for (UsageInfo info : infos) {
+            LOG.assertTrue(info != null, getClass());
+            PsiElement element = info.getElement();
+            if (info instanceof MoveRenameUsageInfo moveRenameUsageInfo) {
+                if (usedElements.contains(element)) {
+                    continue;
+                }
+                moveRenameInfos.put(element, moveRenameUsageInfo);
+            }
+            else {
+                moveRenameInfos.remove(element);
+                usedElements.add(element);
+                if (!(info instanceof PossiblyIncorrectUsage possiblyIncorrectUsage && !possiblyIncorrectUsage.isCorrect())) {
+                    result.add(info);
+                }
+            }
         }
-
-        @Override
-        public void redo() {
-        }
-      };
-      ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
+        result.addAll(moveRenameInfos.values());
+        return result;
     }
-    try {
-      final List<ChangeSignatureUsageProcessor> processors = ChangeSignatureUsageProcessor.EP_NAME.getExtensionList();
 
-      final ResolveSnapshotProvider resolveSnapshotProvider =
-        myChangeInfo.isParameterNamesChanged() ? ResolveSnapshotProvider.forLanguage(myChangeInfo.getMethod().getLanguage()) : null;
-      final List<ResolveSnapshotProvider.ResolveSnapshot> snapshots = new ArrayList<>();
-      for (ChangeSignatureUsageProcessor processor : processors) {
-        if (resolveSnapshotProvider != null) {
-          processor.registerConflictResolvers(snapshots, resolveSnapshotProvider, usages, myChangeInfo);
+
+    @Override
+    protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
+        for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensionList()) {
+            if (processor.shouldPreviewUsages(myChangeInfo, usages)) {
+                return true;
+            }
         }
-      }
-
-      for (UsageInfo usage : usages) {
-        for (ChangeSignatureUsageProcessor processor : processors) {
-          if (processor.processUsage(myChangeInfo, usage, true, usages)) break;
-        }
-      }
-
-      LOG.assertTrue(myChangeInfo.getMethod().isValid());
-      for (ChangeSignatureUsageProcessor processor : processors) {
-        if (processor.processPrimaryMethod(myChangeInfo)) break;
-      }
-
-      for (UsageInfo usage : usages) {
-        for (ChangeSignatureUsageProcessor processor : processors) {
-          if (processor.processUsage(myChangeInfo, usage, false, usages)) break;
-        }
-      }
-
-      if (!snapshots.isEmpty()) {
-        for (ParameterInfo parameterInfo : myChangeInfo.getNewParameters()) {
-          for (ResolveSnapshotProvider.ResolveSnapshot snapshot : snapshots) {
-            snapshot.apply(parameterInfo.getName());
-          }
-        }
-      }
-      final PsiElement method = myChangeInfo.getMethod();
-      LOG.assertTrue(method.isValid());
-      if (elementListener != null && myChangeInfo.isNameChanged()) {
-        elementListener.elementRenamed(method);
-      }
+        return super.isPreviewUsages(usages);
     }
-    catch (IncorrectOperationException e) {
-      LOG.error(e);
+
+    @Nullable
+    @Override
+    protected String getRefactoringId() {
+        return "refactoring.changeSignature";
     }
-  }
 
-  @Nonnull
-  @Override
-  @RequiredReadAction
-  protected String getCommandName() {
-    return RefactoringLocalize.changingSignatureOf0(DescriptiveNameUtil.getDescriptiveName(myChangeInfo.getMethod())).get();
-  }
+    @Nullable
+    @Override
+    protected RefactoringEventData getBeforeData() {
+        RefactoringEventData data = new RefactoringEventData();
+        data.addElement(getChangeInfo().getMethod());
+        return data;
+    }
 
-  public ChangeInfo getChangeInfo() {
-    return myChangeInfo;
-  }
+    @Nullable
+    @Override
+    protected RefactoringEventData getAfterData(@Nonnull UsageInfo[] usages) {
+        RefactoringEventData data = new RefactoringEventData();
+        data.addElement(getChangeInfo().getMethod());
+        return data;
+    }
+
+    @Override
+    protected void performRefactoring(@Nonnull UsageInfo[] usages) {
+        RefactoringTransaction transaction = getTransaction();
+        final RefactoringElementListener elementListener =
+            transaction == null ? null : transaction.getElementListener(myChangeInfo.getMethod());
+        final String fqn = QualifiedNameProviderUtil.elementToFqn(myChangeInfo.getMethod(), null);
+        if (fqn != null) {
+            UndoableAction action = new BasicUndoableAction() {
+                @Override
+                public void undo() {
+                    if (elementListener instanceof UndoRefactoringElementListener undoRefactoringElementListener) {
+                        undoRefactoringElementListener.undoElementMovedOrRenamed(myChangeInfo.getMethod(), fqn);
+                    }
+                }
+
+                @Override
+                public void redo() {
+                }
+            };
+            ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
+        }
+        try {
+            final List<ChangeSignatureUsageProcessor> processors = ChangeSignatureUsageProcessor.EP_NAME.getExtensionList();
+
+            final ResolveSnapshotProvider resolveSnapshotProvider =
+                myChangeInfo.isParameterNamesChanged() ? ResolveSnapshotProvider.forLanguage(myChangeInfo.getMethod().getLanguage()) : null;
+            final List<ResolveSnapshotProvider.ResolveSnapshot> snapshots = new ArrayList<>();
+            for (ChangeSignatureUsageProcessor processor : processors) {
+                if (resolveSnapshotProvider != null) {
+                    processor.registerConflictResolvers(snapshots, resolveSnapshotProvider, usages, myChangeInfo);
+                }
+            }
+
+            for (UsageInfo usage : usages) {
+                for (ChangeSignatureUsageProcessor processor : processors) {
+                    if (processor.processUsage(myChangeInfo, usage, true, usages)) {
+                        break;
+                    }
+                }
+            }
+
+            LOG.assertTrue(myChangeInfo.getMethod().isValid());
+            for (ChangeSignatureUsageProcessor processor : processors) {
+                if (processor.processPrimaryMethod(myChangeInfo)) {
+                    break;
+                }
+            }
+
+            for (UsageInfo usage : usages) {
+                for (ChangeSignatureUsageProcessor processor : processors) {
+                    if (processor.processUsage(myChangeInfo, usage, false, usages)) {
+                        break;
+                    }
+                }
+            }
+
+            if (!snapshots.isEmpty()) {
+                for (ParameterInfo parameterInfo : myChangeInfo.getNewParameters()) {
+                    for (ResolveSnapshotProvider.ResolveSnapshot snapshot : snapshots) {
+                        snapshot.apply(parameterInfo.getName());
+                    }
+                }
+            }
+            final PsiElement method = myChangeInfo.getMethod();
+            LOG.assertTrue(method.isValid());
+            if (elementListener != null && myChangeInfo.isNameChanged()) {
+                elementListener.elementRenamed(method);
+            }
+        }
+        catch (IncorrectOperationException e) {
+            LOG.error(e);
+        }
+    }
+
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    protected String getCommandName() {
+        return RefactoringLocalize.changingSignatureOf0(DescriptiveNameUtil.getDescriptiveName(myChangeInfo.getMethod())).get();
+    }
+
+    public ChangeInfo getChangeInfo() {
+        return myChangeInfo;
+    }
 }
