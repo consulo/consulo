@@ -21,6 +21,6 @@ import jakarta.annotation.Nonnull;
  * @author traff
  */
 public interface NamedPresentably {
-  @Nonnull
-  String getPresentableName();
+    @Nonnull
+    String getPresentableName();
 }

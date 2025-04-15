@@ -17,10 +17,10 @@ package consulo.usage;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jan 17, 2005
+ * @since 2005-01-17
  */
 public interface ReadWriteAccessUsage extends Usage {
-  boolean isAccessedForWriting();
+    boolean isAccessedForWriting();
 
-  boolean isAccessedForReading();
+    boolean isAccessedForReading();
 }

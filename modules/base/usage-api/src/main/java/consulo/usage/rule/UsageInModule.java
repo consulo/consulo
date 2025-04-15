@@ -22,5 +22,5 @@ import consulo.usage.Usage;
  * @author max
  */
 public interface UsageInModule extends Usage {
-  Module getModule();
+    Module getModule();
 }

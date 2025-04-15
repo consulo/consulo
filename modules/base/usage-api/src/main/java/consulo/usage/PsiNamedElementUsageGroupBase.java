@@ -15,6 +15,7 @@
  */
 package consulo.usage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.navigation.NavigationItem;
 import consulo.language.psi.PsiNamedElement;
 import consulo.ui.image.Image;
@@ -25,12 +26,12 @@ import jakarta.annotation.Nonnull;
  * @author Maxim.Mossienko
  */
 public class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> extends PsiElementUsageGroupBase<T> {
+    public PsiNamedElementUsageGroupBase(@Nonnull T element, Image icon) {
+        super(element, icon);
+    }
 
-  public PsiNamedElementUsageGroupBase(@Nonnull T element, Image icon) {
-    super(element, icon);
-  }
-
-  public PsiNamedElementUsageGroupBase(@Nonnull T element) {
-    super(element);
-  }
+    @RequiredReadAction
+    public PsiNamedElementUsageGroupBase(@Nonnull T element) {
+        super(element);
+    }
 }

@@ -20,49 +20,46 @@ import consulo.fileEditor.FileEditorLocation;
 import jakarta.annotation.Nonnull;
 
 public class UsageAdapter implements Usage {
-  @Override
-  @Nonnull
-  public UsagePresentation getPresentation() {
-    throw new IllegalAccessError();
-  }
+    @Override
+    @Nonnull
+    public UsagePresentation getPresentation() {
+        throw new IllegalAccessError();
+    }
 
-  @Override
-  public boolean isValid() {
-    return false;
-  }
+    @Override
+    public boolean isValid() {
+        return false;
+    }
 
-  @Override
-  public boolean isReadOnly() {
-    return false;
-  }
+    @Override
+    public boolean isReadOnly() {
+        return false;
+    }
 
-  @Override
-  public FileEditorLocation getLocation() {
-    return null;
-  }
+    @Override
+    public FileEditorLocation getLocation() {
+        return null;
+    }
 
-  @Override
-  public void selectInEditor() {
+    @Override
+    public void selectInEditor() {
+    }
 
-  }
+    @Override
+    public void highlightInEditor() {
+    }
 
-  @Override
-  public void highlightInEditor() {
+    @Override
+    public void navigate(boolean requestFocus) {
+    }
 
-  }
+    @Override
+    public boolean canNavigate() {
+        return false;
+    }
 
-  @Override
-  public void navigate(final boolean requestFocus) {
-
-  }
-
-  @Override
-  public boolean canNavigate() {
-    return false;
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return false;
-  }
+    @Override
+    public boolean canNavigateToSource() {
+        return false;
+    }
 }

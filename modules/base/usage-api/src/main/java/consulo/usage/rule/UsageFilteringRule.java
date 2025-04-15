@@ -20,16 +20,16 @@ import consulo.usage.UsageTarget;
 import jakarta.annotation.Nonnull;
 
 public interface UsageFilteringRule {
-  UsageFilteringRule[] EMPTY_ARRAY = new UsageFilteringRule[0];
+    UsageFilteringRule[] EMPTY_ARRAY = new UsageFilteringRule[0];
 
-  default boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
-    return isVisible(usage);
-  }
+    default boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
+        return isVisible(usage);
+    }
 
-  /**
-   * @deprecated implement {@link #isVisible(Usage, UsageTarget[])} instead
-   */
-  default boolean isVisible(@Nonnull Usage usage) {
-    throw new UnsupportedOperationException();
-  }
+    /**
+     * @deprecated implement {@link #isVisible(Usage, UsageTarget[])} instead
+     */
+    default boolean isVisible(@Nonnull Usage usage) {
+        throw new UnsupportedOperationException();
+    }
 }

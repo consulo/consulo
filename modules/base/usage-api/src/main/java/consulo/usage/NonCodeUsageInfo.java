@@ -15,6 +15,7 @@
  */
 package consulo.usage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -24,45 +25,59 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class NonCodeUsageInfo extends MoveRenameUsageInfo {
-  public final String newText;
+    public final String newText;
 
-  private NonCodeUsageInfo(@Nonnull PsiElement element, int startOffset, int endOffset, PsiElement referencedElement, String newText){
-    super(element, null, startOffset, endOffset, referencedElement, true);
-    this.newText = newText;
-  }
-
-  @Nullable
-  public static NonCodeUsageInfo create(@Nonnull PsiFile file,
-                                        int startOffset,
-                                        int endOffset,
-                                        PsiElement referencedElement,
-                                        String newText) {
-    PsiElement element = file.findElementAt(startOffset);
-    while(element != null){
-      TextRange range = element.getTextRange();
-      if (range.getEndOffset() < endOffset){
-        element = element.getParent();
-      }
-      else{
-        break;
-      }
+    @RequiredReadAction
+    private NonCodeUsageInfo(@Nonnull PsiElement element, int startOffset, int endOffset, PsiElement referencedElement, String newText) {
+        super(element, null, startOffset, endOffset, referencedElement, true);
+        this.newText = newText;
     }
 
-    if (element == null) return null;
+    @Nullable
+    @RequiredReadAction
+    public static NonCodeUsageInfo create(
+        @Nonnull PsiFile file,
+        int startOffset,
+        int endOffset,
+        PsiElement referencedElement,
+        String newText
+    ) {
+        PsiElement element = file.findElementAt(startOffset);
+        while (element != null) {
+            TextRange range = element.getTextRange();
+            if (range.getEndOffset() < endOffset) {
+                element = element.getParent();
+            }
+            else {
+                break;
+            }
+        }
 
-    int elementStart = element.getTextRange().getStartOffset();
-    startOffset -= elementStart;
-    endOffset -= elementStart;
-    return new NonCodeUsageInfo(element, startOffset, endOffset, referencedElement, newText);
-  }
+        if (element == null) {
+            return null;
+        }
 
-  @Override
-  @Nullable
-  public PsiReference getReference() {
-    return null;
-  }
+        int elementStart = element.getTextRange().getStartOffset();
+        startOffset -= elementStart;
+        endOffset -= elementStart;
+        return new NonCodeUsageInfo(element, startOffset, endOffset, referencedElement, newText);
+    }
 
-  public NonCodeUsageInfo replaceElement(PsiElement newElement) {
-    return new NonCodeUsageInfo(newElement, getRangeInElement().getStartOffset(), getRangeInElement().getEndOffset(), getReferencedElement(), newText);
-  }
+    @Override
+    @Nullable
+    @RequiredReadAction
+    public PsiReference getReference() {
+        return null;
+    }
+
+    @RequiredReadAction
+    public NonCodeUsageInfo replaceElement(PsiElement newElement) {
+        return new NonCodeUsageInfo(
+            newElement,
+            getRangeInElement().getStartOffset(),
+            getRangeInElement().getEndOffset(),
+            getReferencedElement(),
+            newText
+        );
+    }
 }

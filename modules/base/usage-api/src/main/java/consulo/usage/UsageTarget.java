@@ -27,28 +27,30 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public interface UsageTarget extends NavigationItem {
-  UsageTarget[] EMPTY_ARRAY = new UsageTarget[0];
-  /**
-   * Should open usage view and look for usages
-   */
-  void findUsages();
+    UsageTarget[] EMPTY_ARRAY = new UsageTarget[0];
 
-  /**
-   * Should look for usages in one specific editor. This typicaly shows other kind of dialog and doesn't
-   * result in usage view display.
-   */
-  void findUsagesInEditor(@Nonnull FileEditor editor);
+    /**
+     * Should open usage view and look for usages
+     */
+    void findUsages();
 
-  void highlightUsages(@Nonnull PsiFile file, @Nonnull Editor editor, boolean clearHighlights);
+    /**
+     * Should look for usages in one specific editor. This typicaly shows other kind of dialog and doesn't
+     * result in usage view display.
+     */
+    void findUsagesInEditor(@Nonnull FileEditor editor);
 
-  boolean isValid();
-  boolean isReadOnly();
+    void highlightUsages(@Nonnull PsiFile file, @Nonnull Editor editor, boolean clearHighlights);
 
-  /**
-   * @return the files this usage target is in. Might be null if usage target is not file-based
-   */
-  @Nullable
-  VirtualFile[] getFiles();
+    boolean isValid();
 
-  void update();
+    boolean isReadOnly();
+
+    /**
+     * @return the files this usage target is in. Might be null if usage target is not file-based
+     */
+    @Nullable
+    VirtualFile[] getFiles();
+
+    void update();
 }

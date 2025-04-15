@@ -27,7 +27,7 @@ import jakarta.annotation.Nullable;
 @Deprecated
 @DeprecationInfo("Use UsageTypeProvider")
 public interface UsageTypeProviderEx extends UsageTypeProvider {
-  @Override
-  @Nullable
-  UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets);
+    @Override
+    @Nullable
+    UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets);
 }

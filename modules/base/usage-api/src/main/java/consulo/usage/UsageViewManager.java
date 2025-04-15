@@ -18,7 +18,7 @@ package consulo.usage;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,67 +33,84 @@ import java.util.function.Supplier;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class UsageViewManager {
-  public static UsageViewManager getInstance (Project project) {
-    return project.getInstance(UsageViewManager.class);
-  }
+    public static UsageViewManager getInstance(Project project) {
+        return project.getInstance(UsageViewManager.class);
+    }
 
-  @Nonnull
-  public abstract UsageView createUsageView(@Nonnull UsageTarget[] targets, @Nonnull Usage[] usages, @Nonnull UsageViewPresentation presentation, Supplier<UsageSearcher> usageSearcherFactory);
+    @Nonnull
+    public abstract UsageView createUsageView(
+        @Nonnull UsageTarget[] targets,
+        @Nonnull Usage[] usages,
+        @Nonnull UsageViewPresentation presentation,
+        Supplier<UsageSearcher> usageSearcherFactory
+    );
 
-  @Nonnull
-  public abstract UsageView showUsages(@Nonnull UsageTarget[] searchedFor, @Nonnull Usage[] foundUsages, @Nonnull UsageViewPresentation presentation, Supplier<UsageSearcher> factory);
+    @Nonnull
+    public abstract UsageView showUsages(
+        @Nonnull UsageTarget[] searchedFor,
+        @Nonnull Usage[] foundUsages,
+        @Nonnull UsageViewPresentation presentation,
+        Supplier<UsageSearcher> factory
+    );
 
-  @Nonnull
-  public abstract UsageView showUsages(@Nonnull UsageTarget[] searchedFor, @Nonnull Usage[] foundUsages, @Nonnull UsageViewPresentation presentation);
+    @Nonnull
+    public abstract UsageView showUsages(
+        @Nonnull UsageTarget[] searchedFor,
+        @Nonnull Usage[] foundUsages,
+        @Nonnull UsageViewPresentation presentation
+    );
 
-  /**
-   * @return returns null in case of no usages found or usage view not shown for one usage
-   */
-  @Nullable
-  public abstract UsageView searchAndShowUsages(@Nonnull UsageTarget[] searchFor,
-                                                @Nonnull Supplier<UsageSearcher> searcherFactory,
-                                                boolean showPanelIfOnlyOneUsage,
-                                                boolean showNotFoundMessage,
-                                                @Nonnull UsageViewPresentation presentation,
-                                                @Nullable UsageViewStateListener listener);
+    /**
+     * @return returns null in case of no usages found or usage view not shown for one usage
+     */
+    @Nullable
+    public abstract UsageView searchAndShowUsages(
+        @Nonnull UsageTarget[] searchFor,
+        @Nonnull Supplier<UsageSearcher> searcherFactory,
+        boolean showPanelIfOnlyOneUsage,
+        boolean showNotFoundMessage,
+        @Nonnull UsageViewPresentation presentation,
+        @Nullable UsageViewStateListener listener
+    );
 
-  public interface UsageViewStateListener {
-    void usageViewCreated(@Nonnull UsageView usageView);
+    public interface UsageViewStateListener {
+        void usageViewCreated(@Nonnull UsageView usageView);
 
-    @RequiredUIAccess
-    void findingUsagesFinished(UsageView usageView);
-  }
+        @RequiredUIAccess
+        void findingUsagesFinished(UsageView usageView);
+    }
 
-  public abstract void searchAndShowUsages(@Nonnull UsageTarget[] searchFor,
-                                           @Nonnull Supplier<UsageSearcher> searcherFactory,
-                                           @Nonnull FindUsagesProcessPresentation processPresentation,
-                                           @Nonnull UsageViewPresentation presentation,
-                                           @Nullable UsageViewStateListener listener);
+    public abstract void searchAndShowUsages(
+        @Nonnull UsageTarget[] searchFor,
+        @Nonnull Supplier<UsageSearcher> searcherFactory,
+        @Nonnull FindUsagesProcessPresentation processPresentation,
+        @Nonnull UsageViewPresentation presentation,
+        @Nullable UsageViewStateListener listener
+    );
 
-  @Nullable
-  public abstract UsageView getSelectedUsageView();
+    @Nullable
+    public abstract UsageView getSelectedUsageView();
 
-  public static boolean isSelfUsage(@Nonnull final Usage usage, @Nonnull final UsageTarget[] searchForTarget) {
-    if (!(usage instanceof PsiElementUsage)) return false;
-    return ApplicationManager.getApplication().runReadAction(new Supplier<Boolean>() {
-      @Override
-      public Boolean get() {
-        final PsiElement element = ((PsiElementUsage)usage).getElement();
-        if (element == null) return false;
-
-        for (UsageTarget ut : searchForTarget) {
-          if (ut instanceof PsiElementUsageTarget) {
-            if (isSelfUsage(element, ((PsiElementUsageTarget)ut).getElement())) {
-              return true;
-            }
-          }
+    public static boolean isSelfUsage(@Nonnull Usage usage, @Nonnull UsageTarget[] searchForTarget) {
+        if (!(usage instanceof PsiElementUsage elementUsage)) {
+            return false;
         }
-        return false;
-      }
-    });
-  }
+        return Application.get().runReadAction((Supplier<Boolean>)() -> {
+            PsiElement element = elementUsage.getElement();
+            if (element == null) {
+                return false;
+            }
 
-  private static boolean isSelfUsage(@Nonnull PsiElement element, PsiElement psiElement) {
-    return element.getParent() == psiElement; // self usage might be configurable
-  }
+            for (UsageTarget ut : searchForTarget) {
+                if (ut instanceof PsiElementUsageTarget elementUt && isSelfUsage(element, elementUt.getElement())) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
+    private static boolean isSelfUsage(@Nonnull PsiElement element, PsiElement psiElement) {
+        return element.getParent() == psiElement; // self usage might be configurable
+    }
 }

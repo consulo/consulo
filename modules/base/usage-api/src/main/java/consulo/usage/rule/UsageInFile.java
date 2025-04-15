@@ -22,5 +22,5 @@ import consulo.usage.Usage;
  * @author max
  */
 public interface UsageInFile extends Usage {
-  VirtualFile getFile();
+    VirtualFile getFile();
 }

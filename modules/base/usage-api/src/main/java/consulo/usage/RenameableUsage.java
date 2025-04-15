@@ -21,6 +21,5 @@ import consulo.language.util.IncorrectOperationException;
  * @author peter
  */
 public interface RenameableUsage extends Usage {
-  void rename(String newName) throws IncorrectOperationException;
-
+    void rename(String newName) throws IncorrectOperationException;
 }

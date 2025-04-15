@@ -21,6 +21,7 @@ import consulo.disposer.Disposable;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.List;
 
@@ -29,13 +30,13 @@ import java.util.List;
  * Examples: Preview, Data flow, Call hierarchy
  */
 public interface UsageContextPanel extends Disposable {
-  /** usage selection changes, panel should update its view for the newly select usages
-   *
-   * @param infos  null means there are no usages to show
-   */
-  void updateLayout(@Nullable List<? extends UsageInfo> infos);
+    /**
+     * usage selection changes, panel should update its view for the newly select usages
+     *
+     * @param infos null means there are no usages to show
+     */
+    void updateLayout(@Nullable List<? extends UsageInfo> infos);
 
-  @Nonnull
-  JComponent createComponent();
-
+    @Nonnull
+    JComponent createComponent();
 }

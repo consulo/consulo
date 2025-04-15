@@ -23,6 +23,7 @@ import consulo.util.collection.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -31,32 +32,32 @@ import java.util.List;
  * During indexing, only instances that implement {@link DumbAware} are executed.
  */
 public interface UsageGroupingRule {
-  UsageGroupingRule[] EMPTY_ARRAY = new UsageGroupingRule[0];
+    UsageGroupingRule[] EMPTY_ARRAY = new UsageGroupingRule[0];
 
-  /**
-   * Return list of nested parent groups for a usage. The specified usage will be placed into the last group from the list, that group
-   * will be placed under the next to last group, etc.
-   * <p>If the rule returns at most one parent group extend {@link SingleParentUsageGroupingRule} and override
-   * {@link SingleParentUsageGroupingRule#getParentGroupFor getParentGroupFor} instead.</p>
-   */
-  @Nonnull
-  default List<UsageGroup> getParentGroupsFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
-    return ContainerUtil.createMaybeSingletonList(groupUsage(usage));
-  }
+    /**
+     * Return list of nested parent groups for a usage. The specified usage will be placed into the last group from the list, that group
+     * will be placed under the next to last group, etc.
+     * <p>If the rule returns at most one parent group extend {@link SingleParentUsageGroupingRule} and override
+     * {@link SingleParentUsageGroupingRule#getParentGroupFor getParentGroupFor} instead.</p>
+     */
+    @Nonnull
+    default List<UsageGroup> getParentGroupsFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
+        return ContainerUtil.createMaybeSingletonList(groupUsage(usage));
+    }
 
-  /**
-   * Override this method to change order in which rules are applied. Rules with smaller ranks are applied earlier, i.e. parent groups
-   * returned by them will be placed closer to the tree root.
-   */
-  default int getRank() {
-    return Integer.MAX_VALUE;
-  }
+    /**
+     * Override this method to change order in which rules are applied. Rules with smaller ranks are applied earlier, i.e. parent groups
+     * returned by them will be placed closer to the tree root.
+     */
+    default int getRank() {
+        return Integer.MAX_VALUE;
+    }
 
-  /**
-   * @deprecated extend {@link SingleParentUsageGroupingRule} and override {@link SingleParentUsageGroupingRule#getParentGroupFor getParentGroupFor} instead
-   */
-  @Nullable
-  default UsageGroup groupUsage(@Nonnull Usage usage) {
-    throw new UnsupportedOperationException();
-  }
+    /**
+     * @deprecated extend {@link SingleParentUsageGroupingRule} and override {@link SingleParentUsageGroupingRule#getParentGroupFor getParentGroupFor} instead
+     */
+    @Nullable
+    default UsageGroup groupUsage(@Nonnull Usage usage) {
+        throw new UnsupportedOperationException();
+    }
 }

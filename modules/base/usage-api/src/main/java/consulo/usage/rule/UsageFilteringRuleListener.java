@@ -20,9 +20,9 @@ import consulo.annotation.component.TopicAPI;
 
 /**
  * @author VISTALL
- * @since 28-Jun-22
+ * @since 2022-06-28
  */
 @TopicAPI(ComponentScope.PROJECT)
 public interface UsageFilteringRuleListener {
-  void rulesChanged();
+    void rulesChanged();
 }

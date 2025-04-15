@@ -21,46 +21,39 @@ import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
-import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.meta.PsiPresentableMetaData;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class UsageViewNodeTextLocation extends ElementDescriptionLocation {
-  private UsageViewNodeTextLocation() { }
-
-  public static final UsageViewNodeTextLocation INSTANCE = new UsageViewNodeTextLocation();
-
-  @Override
-  public ElementDescriptionProvider getDefaultProvider() {
-    return DEFAULT_PROVIDER;
-  }
-
-  private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
-    @Override
-    public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
-      if (!(location instanceof UsageViewNodeTextLocation)) return null;
-
-      if (element instanceof PsiMetaOwner) {
-        final PsiMetaData metaData = ((PsiMetaOwner)element).getMetaData();
-        if (metaData instanceof PsiPresentableMetaData) {
-          return ((PsiPresentableMetaData)metaData).getTypeName() + " " + DescriptiveNameUtil.getMetaDataName(metaData);
-        }
-      }
-
-      if (element instanceof PsiFile) {
-        return ((PsiFile)element).getName();
-      }
-
-      Language language = element.getLanguage();
-      FindUsagesProvider provider = FindUsagesProvider.forLanguage(language);
-      return provider.getNodeText(element, true);
+    private UsageViewNodeTextLocation() {
     }
-  };
+
+    public static final UsageViewNodeTextLocation INSTANCE = new UsageViewNodeTextLocation();
+
+    @Override
+    public ElementDescriptionProvider getDefaultProvider() {
+        return DEFAULT_PROVIDER;
+    }
+
+    private static final ElementDescriptionProvider DEFAULT_PROVIDER = (element, location) -> {
+        if (!(location instanceof UsageViewNodeTextLocation)) {
+            return null;
+        }
+
+        if (element instanceof PsiMetaOwner metaOwner && metaOwner.getMetaData() instanceof PsiPresentableMetaData presentableMetaData) {
+            return presentableMetaData.getTypeName() + " " + DescriptiveNameUtil.getMetaDataName(presentableMetaData);
+        }
+
+        if (element instanceof PsiFile file) {
+            return file.getName();
+        }
+
+        Language language = element.getLanguage();
+        FindUsagesProvider provider = FindUsagesProvider.forLanguage(language);
+        return provider.getNodeText(element, true);
+    };
 }

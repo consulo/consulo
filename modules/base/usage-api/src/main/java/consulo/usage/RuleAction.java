@@ -27,44 +27,44 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 19, 2005
+ * Date: 2005-01-19
  */
 public abstract class RuleAction extends ToggleAction implements DumbAware {
-  private final UsageView myView;
-  private boolean myState;
+    private final UsageView myView;
+    private boolean myState;
 
-  public RuleAction(@Nonnull UsageView view, @Nonnull LocalizeValue text, @Nonnull Image icon) {
-    super(text, LocalizeValue.empty(), icon);
-    myView = view;
-    myState = getOptionValue();
-  }
-
-  @Deprecated
-  public RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Image icon) {
-    super(text, null, icon);
-    myView = view;
-    myState = getOptionValue();
-  }
-
-  protected abstract boolean getOptionValue();
-
-  protected abstract void setOptionValue(boolean value);
-
-  @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
-    return myState;
-  }
-
-  @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    setOptionValue(state);
-    myState = state;
-
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
+    public RuleAction(@Nonnull UsageView view, @Nonnull LocalizeValue text, @Nonnull Image icon) {
+        super(text, LocalizeValue.empty(), icon);
+        myView = view;
+        myState = getOptionValue();
     }
 
-    myView.select();
-  }
+    @Deprecated
+    public RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Image icon) {
+        super(text, null, icon);
+        myView = view;
+        myState = getOptionValue();
+    }
+
+    protected abstract boolean getOptionValue();
+
+    protected abstract void setOptionValue(boolean value);
+
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        return myState;
+    }
+
+    @Override
+    public void setSelected(AnActionEvent e, boolean state) {
+        setOptionValue(state);
+        myState = state;
+
+        Project project = e.getData(Project.KEY);
+        if (project != null) {
+            project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
+        }
+
+        myView.select();
+    }
 }

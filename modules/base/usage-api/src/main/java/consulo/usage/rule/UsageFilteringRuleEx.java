@@ -24,5 +24,6 @@ import jakarta.annotation.Nonnull;
  * @deprecated implement {@link UsageFilteringRule#isVisible(Usage, UsageTarget[])} instead
  */
 public interface UsageFilteringRuleEx extends UsageFilteringRule {
-  boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets);
+    @Override
+    boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets);
 }

@@ -17,7 +17,7 @@ package consulo.usage;
 
 /**
  * @author VISTALL
- * @since 20-Apr-22
+ * @since 2022-04-20
  */
 public interface UsagePreviewPanel extends UsageContextPanel {
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.usage;
 
 import consulo.language.psi.*;
@@ -24,26 +23,23 @@ import jakarta.annotation.Nonnull;
  * @author yole
  */
 public class UsageViewLongNameLocation extends ElementDescriptionLocation {
-  private UsageViewLongNameLocation() {
-  }
-
-  public static final UsageViewLongNameLocation INSTANCE = new UsageViewLongNameLocation();
-
-  @Override
-  public ElementDescriptionProvider getDefaultProvider() {
-    return DEFAULT_PROVIDER;
-  }
-
-  private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
-    @Override
-    public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
-      if (location instanceof UsageViewLongNameLocation) {
-        if (element instanceof PsiDirectory) {
-          return PsiPackageHelper.getInstance(element.getProject()).getQualifiedName((PsiDirectory)element, true);
-        }
-        return "";
-      }
-      return null;
+    private UsageViewLongNameLocation() {
     }
-  };
+
+    public static final UsageViewLongNameLocation INSTANCE = new UsageViewLongNameLocation();
+
+    @Override
+    public ElementDescriptionProvider getDefaultProvider() {
+        return DEFAULT_PROVIDER;
+    }
+
+    private static final ElementDescriptionProvider DEFAULT_PROVIDER = (element, location) -> {
+        if (location instanceof UsageViewLongNameLocation) {
+            if (element instanceof PsiDirectory directory) {
+                return PsiPackageHelper.getInstance(element.getProject()).getQualifiedName(directory, true);
+            }
+            return "";
+        }
+        return null;
+    };
 }

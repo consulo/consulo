@@ -24,14 +24,14 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public interface UsagePresentation {
-  @Nonnull
-  TextChunk[] getText();
+    @Nonnull
+    TextChunk[] getText();
 
-  @Nonnull
-  String getPlainText();
+    @Nonnull
+    String getPlainText();
 
-  @Nullable
-  Image getIcon();
+    @Nullable
+    Image getIcon();
 
-  String getTooltipText();
+    String getTooltipText();
 }

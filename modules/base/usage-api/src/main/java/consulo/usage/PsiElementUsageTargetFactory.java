@@ -24,23 +24,23 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 20-Apr-22
+ * @since 2022-04-20
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface PsiElementUsageTargetFactory {
-  static PsiElementUsageTargetFactory getInstance() {
-    return Application.get().getInstance(PsiElementUsageTargetFactory.class);
-  }
-
-  @Nonnull
-  PsiElementUsageTarget create(PsiElement element);
-
-  @Nonnull
-  default PsiElementUsageTarget[] create(PsiElement[] elements) {
-    PsiElementUsageTarget[] targets = new PsiElementUsageTarget[elements.length];
-    for (int i = 0; i < elements.length; i++) {
-      targets[i] = create(elements[i]);
+    static PsiElementUsageTargetFactory getInstance() {
+        return Application.get().getInstance(PsiElementUsageTargetFactory.class);
     }
-    return targets;
-  }
+
+    @Nonnull
+    PsiElementUsageTarget create(PsiElement element);
+
+    @Nonnull
+    default PsiElementUsageTarget[] create(PsiElement[] elements) {
+        PsiElementUsageTarget[] targets = new PsiElementUsageTarget[elements.length];
+        for (int i = 0; i < elements.length; i++) {
+            targets[i] = create(elements[i]);
+        }
+        return targets;
+    }
 }

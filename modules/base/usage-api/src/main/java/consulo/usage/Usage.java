@@ -25,19 +25,19 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public interface Usage extends Navigatable {
-  Usage[] EMPTY_ARRAY = new Usage[0];
+    Usage[] EMPTY_ARRAY = new Usage[0];
 
-  @Nonnull
-  UsagePresentation getPresentation();
+    @Nonnull
+    UsagePresentation getPresentation();
 
-  boolean isValid();
+    boolean isValid();
 
-  boolean isReadOnly();
+    boolean isReadOnly();
 
-  @Nullable
-  FileEditorLocation getLocation();
+    @Nullable
+    FileEditorLocation getLocation();
 
-  void selectInEditor();
+    void selectInEditor();
 
-  void highlightInEditor();
+    void highlightInEditor();
 }

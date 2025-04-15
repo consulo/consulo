@@ -10,18 +10,18 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public interface UsageViewEx extends UsageView {
-  boolean searchHasBeenCancelled();
+    boolean searchHasBeenCancelled();
 
-  void cancelCurrentSearch();
+    void cancelCurrentSearch();
 
-  void associateProgress(@Nonnull ProgressIndicator indicator);
+    void associateProgress(@Nonnull ProgressIndicator indicator);
 
-  void waitForUpdateRequestsCompletion();
+    void waitForUpdateRequestsCompletion();
 
-  @Nonnull
-  CompletableFuture<?> appendUsagesInBulk(@Nonnull Collection<? extends Usage> usages);
+    @Nonnull
+    CompletableFuture<?> appendUsagesInBulk(@Nonnull Collection<? extends Usage> usages);
 
-  void setSearchInProgress(boolean searchInProgress);
+    void setSearchInProgress(boolean searchInProgress);
 
-  void searchFinished();
+    void searchFinished();
 }

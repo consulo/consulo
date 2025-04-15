@@ -24,19 +24,19 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 20-Apr-22
+ * @since 2022-04-20
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface UsagePreviewPanelFactory {
-  static UsagePreviewPanelFactory getInstance() {
-    return Application.get().getInstance(UsagePreviewPanelFactory.class);
-  }
+    static UsagePreviewPanelFactory getInstance() {
+        return Application.get().getInstance(UsagePreviewPanelFactory.class);
+    }
 
-  @Nonnull
-  default UsagePreviewPanel createPreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
-    return createPreviewPanel(project, presentation, false);
-  }
+    @Nonnull
+    default UsagePreviewPanel createPreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
+        return createPreviewPanel(project, presentation, false);
+    }
 
-  @Nonnull
-  UsagePreviewPanel createPreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation, boolean isEditor);
+    @Nonnull
+    UsagePreviewPanel createPreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation, boolean isEditor);
 }

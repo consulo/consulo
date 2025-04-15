@@ -17,10 +17,9 @@ package consulo.usage;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,95 +31,97 @@ import java.util.function.Supplier;
  * @author max
  */
 public class FindUsagesProcessPresentation {
-  public static final String NAME_WITH_MNEMONIC_KEY = "NameWithMnemonic";
-  private final UsageViewPresentation myUsageViewPresentation;
+    public static final String NAME_WITH_MNEMONIC_KEY = "NameWithMnemonic";
+    private final UsageViewPresentation myUsageViewPresentation;
 
-  private List<Action> myNotFoundActions;
-  private boolean myShowPanelIfOnlyOneUsage;
-  private boolean myShowNotFoundMessage;
-  private Supplier<ProgressIndicator> myProgressIndicatorFactory;
-  private Collection<VirtualFile> myLargeFiles;
-  private boolean myShowFindOptionsPrompt = true;
-  private Runnable mySearchWithProjectFiles;
-  private boolean myCanceled;
+    private List<Action> myNotFoundActions;
+    private boolean myShowPanelIfOnlyOneUsage;
+    private boolean myShowNotFoundMessage;
+    private Supplier<ProgressIndicator> myProgressIndicatorFactory;
+    private Collection<VirtualFile> myLargeFiles;
+    private boolean myShowFindOptionsPrompt = true;
+    private Runnable mySearchWithProjectFiles;
+    private boolean myCanceled;
 
-  public FindUsagesProcessPresentation(@Nonnull UsageViewPresentation presentation) {
-    myUsageViewPresentation = presentation;
-  }
+    public FindUsagesProcessPresentation(@Nonnull UsageViewPresentation presentation) {
+        myUsageViewPresentation = presentation;
+    }
 
-  public void addNotFoundAction(@Nonnull Action action) {
-    if (myNotFoundActions == null) myNotFoundActions = new ArrayList<Action>();
-    myNotFoundActions.add(action);
-  }
+    public void addNotFoundAction(@Nonnull Action action) {
+        if (myNotFoundActions == null) {
+            myNotFoundActions = new ArrayList<>();
+        }
+        myNotFoundActions.add(action);
+    }
 
-  @Nonnull
-  public List<Action> getNotFoundActions() {
-    return myNotFoundActions == null ? Collections.<Action>emptyList() : myNotFoundActions;
-  }
+    @Nonnull
+    public List<Action> getNotFoundActions() {
+        return myNotFoundActions == null ? Collections.<Action>emptyList() : myNotFoundActions;
+    }
 
-  public boolean isShowNotFoundMessage() {
-    return myShowNotFoundMessage;
-  }
+    public boolean isShowNotFoundMessage() {
+        return myShowNotFoundMessage;
+    }
 
-  public void setShowNotFoundMessage(final boolean showNotFoundMessage) {
-    myShowNotFoundMessage = showNotFoundMessage;
-  }
+    public void setShowNotFoundMessage(boolean showNotFoundMessage) {
+        myShowNotFoundMessage = showNotFoundMessage;
+    }
 
-  public boolean isShowPanelIfOnlyOneUsage() {
-    return myShowPanelIfOnlyOneUsage;
-  }
+    public boolean isShowPanelIfOnlyOneUsage() {
+        return myShowPanelIfOnlyOneUsage;
+    }
 
-  public void setShowPanelIfOnlyOneUsage(final boolean showPanelIfOnlyOneUsage) {
-    myShowPanelIfOnlyOneUsage = showPanelIfOnlyOneUsage;
-  }
+    public void setShowPanelIfOnlyOneUsage(boolean showPanelIfOnlyOneUsage) {
+        myShowPanelIfOnlyOneUsage = showPanelIfOnlyOneUsage;
+    }
 
-  public Supplier<ProgressIndicator> getProgressIndicatorFactory() {
-    return myProgressIndicatorFactory;
-  }
+    public Supplier<ProgressIndicator> getProgressIndicatorFactory() {
+        return myProgressIndicatorFactory;
+    }
 
-  public void setProgressIndicatorFactory(@Nonnull Supplier<ProgressIndicator> progressIndicatorFactory) {
-    myProgressIndicatorFactory = progressIndicatorFactory;
-  }
+    public void setProgressIndicatorFactory(@Nonnull Supplier<ProgressIndicator> progressIndicatorFactory) {
+        myProgressIndicatorFactory = progressIndicatorFactory;
+    }
 
-  @Nullable
-  public Runnable searchIncludingProjectFileUsages() {
-    return mySearchWithProjectFiles;
-  }
+    @Nullable
+    public Runnable searchIncludingProjectFileUsages() {
+        return mySearchWithProjectFiles;
+    }
 
-  public void projectFileUsagesFound(@Nonnull Runnable searchWithProjectFiles) {
-    mySearchWithProjectFiles = searchWithProjectFiles;
-  }
+    public void projectFileUsagesFound(@Nonnull Runnable searchWithProjectFiles) {
+        mySearchWithProjectFiles = searchWithProjectFiles;
+    }
 
-  public void setLargeFilesWereNotScanned(@Nonnull Collection<VirtualFile> largeFiles) {
-    myLargeFiles = largeFiles;
-  }
+    public void setLargeFilesWereNotScanned(@Nonnull Collection<VirtualFile> largeFiles) {
+        myLargeFiles = largeFiles;
+    }
 
-  @Nonnull
-  public Collection<VirtualFile> getLargeFiles() {
-    return myLargeFiles == null ? Collections.<VirtualFile>emptyList() : myLargeFiles;
-  }
+    @Nonnull
+    public Collection<VirtualFile> getLargeFiles() {
+        return myLargeFiles == null ? Collections.<VirtualFile>emptyList() : myLargeFiles;
+    }
 
-  public boolean isShowFindOptionsPrompt() {
-    return myShowFindOptionsPrompt;
-  }
+    public boolean isShowFindOptionsPrompt() {
+        return myShowFindOptionsPrompt;
+    }
 
-  @Nonnull
-  public UsageViewPresentation getUsageViewPresentation() {
-    return myUsageViewPresentation;
-  }
+    @Nonnull
+    public UsageViewPresentation getUsageViewPresentation() {
+        return myUsageViewPresentation;
+    }
 
-  public void setShowFindOptionsPrompt(boolean showFindOptionsPrompt) {
-    myShowFindOptionsPrompt = showFindOptionsPrompt;
-  }
+    public void setShowFindOptionsPrompt(boolean showFindOptionsPrompt) {
+        myShowFindOptionsPrompt = showFindOptionsPrompt;
+    }
 
 
-  public void setCanceled(boolean canceled) {
-    myCanceled = canceled;
-  }
+    public void setCanceled(boolean canceled) {
+        myCanceled = canceled;
+    }
 
-  public boolean isCanceled() {
-    return myCanceled;
-  }
+    public boolean isCanceled() {
+        return myCanceled;
+    }
 }
 
 

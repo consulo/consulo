@@ -22,7 +22,7 @@ import consulo.usage.Usage;
  * @author max
  */
 public interface PsiElementUsage extends Usage {
-  PsiElement getElement();
+    PsiElement getElement();
 
-  boolean isNonCodeUsage();
+    boolean isNonCodeUsage();
 }

@@ -21,5 +21,5 @@ import consulo.language.psi.PsiElement;
  * @author max
  */
 public interface PsiElementUsageTarget extends ConfigurableUsageTarget {
-  PsiElement getElement();
+    PsiElement getElement();
 }

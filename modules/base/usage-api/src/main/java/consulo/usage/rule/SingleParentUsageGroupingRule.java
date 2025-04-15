@@ -22,29 +22,30 @@ import consulo.util.collection.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * @author nik
  */
 public abstract class SingleParentUsageGroupingRule implements UsageGroupingRule {
-  /**
-   * @return a group a specific usage should be placed into, or null, if this rule doesn't apply to this kind of usages.
-   */
-  @Nullable
-  protected abstract UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets);
+    /**
+     * @return a group a specific usage should be placed into, or null, if this rule doesn't apply to this kind of usages.
+     */
+    @Nullable
+    protected abstract UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets);
 
-  @Nonnull
-  @Override
-  public final List<UsageGroup> getParentGroupsFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
-    return ContainerUtil.createMaybeSingletonList(getParentGroupFor(usage, targets));
-  }
+    @Nonnull
+    @Override
+    public final List<UsageGroup> getParentGroupsFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
+        return ContainerUtil.createMaybeSingletonList(getParentGroupFor(usage, targets));
+    }
 
-  /**
-   * @deprecated override {@link #getParentGroupFor(Usage, UsageTarget[])} instead
-   */
-  @Override
-  public UsageGroup groupUsage(@Nonnull Usage usage) {
-    return getParentGroupFor(usage, UsageTarget.EMPTY_ARRAY);
-  }
+    /**
+     * @deprecated override {@link #getParentGroupFor(Usage, UsageTarget[])} instead
+     */
+    @Override
+    public UsageGroup groupUsage(@Nonnull Usage usage) {
+        return getParentGroupFor(usage, UsageTarget.EMPTY_ARRAY);
+    }
 }

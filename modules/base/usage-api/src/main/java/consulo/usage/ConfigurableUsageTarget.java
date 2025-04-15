@@ -20,10 +20,10 @@ import consulo.ui.ex.action.KeyboardShortcut;
 import jakarta.annotation.Nonnull;
 
 public interface ConfigurableUsageTarget extends UsageTarget {
-  void showSettings();
+    void showSettings();
 
-  KeyboardShortcut getShortcut();
+    KeyboardShortcut getShortcut();
 
-  @Nonnull
-  String getLongDescriptiveName();
+    @Nonnull
+    String getLongDescriptiveName();
 }
