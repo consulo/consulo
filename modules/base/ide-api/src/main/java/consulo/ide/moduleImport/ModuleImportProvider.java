@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 30-Jan-17
+ * @since 2017-01-30
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ModuleImportProvider<C extends ModuleImportContext> {

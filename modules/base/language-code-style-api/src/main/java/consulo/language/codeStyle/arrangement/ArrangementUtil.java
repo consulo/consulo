@@ -37,7 +37,7 @@ import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Mo
 
 /**
  * @author Denis Zhdanov
- * @since 7/17/12 11:24 AM
+ * @since 2012-07-17
  */
 public class ArrangementUtil {
     private static final Logger LOG = Logger.getInstance(ArrangementUtil.class);

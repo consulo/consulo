@@ -24,9 +24,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: angus
- * Date: 3/6/12
- * Time: 1:37 PM
+ * @author angus
+ * @since 2012-03-06
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileEditorAssociateFinder {

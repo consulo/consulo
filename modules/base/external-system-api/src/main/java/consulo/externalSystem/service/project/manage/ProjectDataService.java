@@ -47,7 +47,7 @@ import java.util.Collection;
  * @param <E> target external project data type
  * @param <I> target ide project data type
  * @author Denis Zhdanov
- * @since 4/12/13 3:59 PM
+ * @since 2013-04-12
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ProjectDataService<E, I> {

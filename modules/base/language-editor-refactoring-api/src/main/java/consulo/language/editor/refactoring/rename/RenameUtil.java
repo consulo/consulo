@@ -17,7 +17,7 @@
 package consulo.language.editor.refactoring.rename;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
@@ -41,6 +41,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UndoableAction;
@@ -52,12 +53,12 @@ import consulo.usage.UsageInfoFactory;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class RenameUtil {
     private static final Logger LOG = Logger.getInstance(RenameUtil.class);
@@ -68,20 +69,20 @@ public class RenameUtil {
     @Nonnull
     @RequiredReadAction
     public static UsageInfo[] findUsages(
-        final PsiElement element,
-        final String newName,
+        PsiElement element,
+        String newName,
         boolean searchInStringsAndComments,
         boolean searchForTextOccurrences,
         Map<? extends PsiElement, String> allRenames
     ) {
-        final List<UsageInfo> result = Collections.synchronizedList(new ArrayList<UsageInfo>());
+        List<UsageInfo> result = Collections.synchronizedList(new ArrayList<UsageInfo>());
 
         PsiManager manager = element.getManager();
         GlobalSearchScope projectScope = GlobalSearchScope.projectScope(manager.getProject());
         RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
 
         Collection<PsiReference> refs = processor.findReferences(element, searchInStringsAndComments);
-        for (final PsiReference ref : refs) {
+        for (PsiReference ref : refs) {
             if (ref == null) {
                 LOG.error("null reference from processor " + processor);
                 continue;
@@ -99,13 +100,13 @@ public class RenameUtil {
 
         processor.findCollisions(element, newName, allRenames, result);
 
-        final PsiElement searchForInComments = processor.getElementToSearchInStringsAndComments(element);
+        PsiElement searchForInComments = processor.getElementToSearchInStringsAndComments(element);
 
         if (searchInStringsAndComments && searchForInComments != null) {
             String stringToSearch =
                 ElementDescriptionUtil.getElementDescription(searchForInComments, NonCodeSearchDescriptionLocation.STRINGS_AND_COMMENTS);
             if (stringToSearch.length() > 0) {
-                final String stringToReplace = getStringToReplace(element, newName, false, processor);
+                String stringToReplace = getStringToReplace(element, newName, false, processor);
                 UsageInfoFactory factory = new NonCodeUsageInfoFactory(searchForInComments, stringToReplace);
                 TextOccurrencesUtil.addUsagesInStringsAndComments(searchForInComments, stringToSearch, result, factory);
             }
@@ -115,11 +116,11 @@ public class RenameUtil {
             String stringToSearch =
                 ElementDescriptionUtil.getElementDescription(searchForInComments, NonCodeSearchDescriptionLocation.NON_JAVA);
             if (stringToSearch.length() > 0) {
-                final String stringToReplace = getStringToReplace(element, newName, true, processor);
+                String stringToReplace = getStringToReplace(element, newName, true, processor);
                 addTextOccurrence(searchForInComments, result, projectScope, stringToSearch, stringToReplace);
             }
 
-            final Pair<String, String> additionalStringToSearch = processor.getTextOccurrenceSearchStrings(searchForInComments, newName);
+            Pair<String, String> additionalStringToSearch = processor.getTextOccurrenceSearchStrings(searchForInComments, newName);
             if (additionalStringToSearch != null && additionalStringToSearch.first.length() > 0) {
                 addTextOccurrence(
                     searchForInComments,
@@ -135,32 +136,30 @@ public class RenameUtil {
     }
 
     private static void addTextOccurrence(
-        final PsiElement element,
-        final List<UsageInfo> result,
-        final GlobalSearchScope projectScope,
-        final String stringToSearch,
-        final String stringToReplace
+        PsiElement element,
+        List<UsageInfo> result,
+        GlobalSearchScope projectScope,
+        String stringToSearch,
+        String stringToReplace
     ) {
-        UsageInfoFactory factory = new UsageInfoFactory() {
-            @Override
-            public UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset) {
-                TextRange textRange = usage.getTextRange();
-                int start = textRange == null ? 0 : textRange.getStartOffset();
-                return NonCodeUsageInfo.create(usage.getContainingFile(), start + startOffset, start + endOffset, element, stringToReplace);
-            }
+        @RequiredReadAction
+        UsageInfoFactory factory = (usage, startOffset, endOffset) -> {
+            TextRange textRange = usage.getTextRange();
+            int start = textRange == null ? 0 : textRange.getStartOffset();
+            return NonCodeUsageInfo.create(usage.getContainingFile(), start + startOffset, start + endOffset, element, stringToReplace);
         };
         TextOccurrencesUtil.addTextOccurences(element, stringToSearch, projectScope, result, factory);
     }
 
 
     public static void buildPackagePrefixChangedMessage(
-        final VirtualFile[] virtualFiles,
+        VirtualFile[] virtualFiles,
         StringBuffer message,
-        final String qualifiedName
+        String qualifiedName
     ) {
         if (virtualFiles.length > 0) {
             message.append(RefactoringLocalize.packageOccursInPackagePrefixesOfTheFollowingSourceFoldersN(qualifiedName).get());
-            for (final VirtualFile virtualFile : virtualFiles) {
+            for (VirtualFile virtualFile : virtualFiles) {
                 message.append(virtualFile.getPresentableUrl()).append("\n");
             }
             message.append(RefactoringLocalize.thesePackagePrefixesWillBeChanged().get());
@@ -171,10 +170,10 @@ public class RenameUtil {
         PsiElement element,
         String newName,
         boolean nonJava,
-        final RenamePsiElementProcessor theProcessor
+        RenamePsiElementProcessor theProcessor
     ) {
         if (element instanceof PsiMetaOwner psiMetaOwner) {
-            final PsiMetaData metaData = psiMetaOwner.getMetaData();
+            PsiMetaData metaData = psiMetaOwner.getMetaData();
             if (metaData != null) {
                 return metaData.getName();
             }
@@ -202,15 +201,16 @@ public class RenameUtil {
         }
     }
 
+    @RequiredUIAccess
     public static void doRename(
-        final PsiElement element,
+        PsiElement element,
         String newName,
         UsageInfo[] usages,
-        final Project project,
-        @Nullable final RefactoringElementListener listener
+        Project project,
+        @Nullable RefactoringElementListener listener
     ) throws IncorrectOperationException {
-        final RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
-        final String fqn = element instanceof PsiFile file ? file.getVirtualFile().getPath()
+        RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
+        String fqn = element instanceof PsiFile file ? file.getVirtualFile().getPath()
             : QualifiedNameProviderUtil.elementToFqn(element, null);
         if (fqn != null) {
             UndoableAction action = new BasicUndoableAction() {
@@ -230,26 +230,24 @@ public class RenameUtil {
         processor.renameElement(element, newName, usages, listener);
     }
 
-    public static void showErrorMessage(final IncorrectOperationException e, final PsiElement element, final Project project) {
+    public static void showErrorMessage(IncorrectOperationException e, PsiElement element, @Nonnull Project project) {
         // may happen if the file or package cannot be renamed. e.g. locked by another application
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (project.getApplication().isUnitTestMode()) {
             throw new RuntimeException(e);
             //LOG.error(e);
             //return;
         }
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                final String helpID = RenamePsiElementProcessor.forElement(element).getHelpID(element);
-                String message = e.getMessage();
-                if (StringUtil.isEmpty(message)) {
-                    message = RefactoringLocalize.renameNotSupported().get();
-                }
-                CommonRefactoringUtil.showErrorMessage(RefactoringLocalize.renameTitle().get(), message, helpID, project);
+        project.getApplication().invokeLater(() -> {
+            String helpID = RenamePsiElementProcessor.forElement(element).getHelpID(element);
+            String message = e.getMessage();
+            if (StringUtil.isEmpty(message)) {
+                message = RefactoringLocalize.renameNotSupported().get();
             }
+            CommonRefactoringUtil.showErrorMessage(RefactoringLocalize.renameTitle().get(), message, helpID, project);
         });
     }
 
+    @RequiredWriteAction
     public static void doRenameGenericNamedElement(
         @Nonnull PsiElement namedElement, String newName, UsageInfo[] usages,
         @Nullable RefactoringElementListener listener
@@ -282,7 +280,7 @@ public class RenameUtil {
 
         if (hasBindables) {
             for (UsageInfo usage : usages) {
-                final PsiReference ref = usage.getReference();
+                PsiReference ref = usage.getReference();
                 if (ref instanceof BindablePsiReference) {
                     try {
                         ref.bindToElement(namedElement);
@@ -298,6 +296,7 @@ public class RenameUtil {
         }
     }
 
+    @RequiredWriteAction
     public static void rename(UsageInfo info, String newName) throws IncorrectOperationException {
         if (info.getElement() == null) {
             return;
@@ -311,7 +310,7 @@ public class RenameUtil {
 
     @Nullable
     public static List<UnresolvableCollisionUsageInfo> removeConflictUsages(Set<UsageInfo> usages) {
-        final List<UnresolvableCollisionUsageInfo> result = new ArrayList<UnresolvableCollisionUsageInfo>();
+        List<UnresolvableCollisionUsageInfo> result = new ArrayList<>();
         for (Iterator<UsageInfo> iterator = usages.iterator(); iterator.hasNext(); ) {
             UsageInfo usageInfo = iterator.next();
             if (usageInfo instanceof UnresolvableCollisionUsageInfo unresolvableCollisionUsageInfo) {
@@ -322,6 +321,7 @@ public class RenameUtil {
         return result.isEmpty() ? null : result;
     }
 
+    @RequiredReadAction
     public static void addConflictDescriptions(UsageInfo[] usages, MultiMap<PsiElement, String> conflicts) {
         for (UsageInfo usage : usages) {
             if (usage instanceof UnresolvableCollisionUsageInfo unresolvableCollisionUsageInfo) {
@@ -330,10 +330,11 @@ public class RenameUtil {
         }
     }
 
+    @RequiredWriteAction
     public static void renameNonCodeUsages(@Nonnull Project project, @Nonnull NonCodeUsageInfo[] usages) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
-        Map<Document, List<UsageOffset>> docsToOffsetsMap = new HashMap<Document, List<UsageOffset>>();
-        final PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
+        Map<Document, List<UsageOffset>> docsToOffsetsMap = new HashMap<>();
+        PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
         for (NonCodeUsageInfo usage : usages) {
             PsiElement element = usage.getElement();
 
@@ -345,21 +346,21 @@ public class RenameUtil {
                 continue;
             }
 
-            final ProperTextRange rangeInElement = usage.getRangeInElement();
+            ProperTextRange rangeInElement = usage.getRangeInElement();
             if (rangeInElement == null) {
                 continue;
             }
 
-            final PsiFile containingFile = element.getContainingFile();
-            final Document document = psiDocumentManager.getDocument(containingFile);
+            PsiFile containingFile = element.getContainingFile();
+            Document document = psiDocumentManager.getDocument(containingFile);
 
-            final Segment segment = usage.getSegment();
+            Segment segment = usage.getSegment();
             LOG.assertTrue(segment != null);
             int fileOffset = segment.getStartOffset();
 
             List<UsageOffset> list = docsToOffsetsMap.get(document);
             if (list == null) {
-                list = new ArrayList<UsageOffset>();
+                list = new ArrayList<>();
                 docsToOffsetsMap.put(document, list);
             }
 
@@ -381,13 +382,14 @@ public class RenameUtil {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
     }
 
-    public static boolean isValidName(final Project project, final PsiElement psiElement, final String newName) {
+    @RequiredReadAction
+    public static boolean isValidName(Project project, PsiElement psiElement, String newName) {
         if (newName == null || newName.length() == 0) {
             return false;
         }
-        final Condition<String> inputValidator = RenameInputValidatorRegistry.getInputValidator(psiElement);
+        Predicate<String> inputValidator = RenameInputValidatorRegistry.getInputValidator(psiElement);
         if (inputValidator != null) {
-            return inputValidator.value(newName);
+            return inputValidator.test(newName);
         }
         if (psiElement instanceof PsiFile || psiElement instanceof PsiDirectory) {
             return newName.indexOf('\\') < 0 && newName.indexOf('/') < 0;
@@ -396,10 +398,10 @@ public class RenameUtil {
             return !StringUtil.isEmptyOrSpaces(newName);
         }
 
-        final PsiFile file = psiElement.getContainingFile();
-        final Language elementLanguage = psiElement.getLanguage();
+        PsiFile file = psiElement.getContainingFile();
+        Language elementLanguage = psiElement.getLanguage();
 
-        final Language fileLanguage = file == null ? null : file.getLanguage();
+        Language fileLanguage = file == null ? null : file.getLanguage();
         Language language =
             fileLanguage == null ? elementLanguage : fileLanguage.isKindOf(elementLanguage) ? fileLanguage : elementLanguage;
 
@@ -418,7 +420,7 @@ public class RenameUtil {
         }
 
         @Override
-        public int compareTo(final UsageOffset o) {
+        public int compareTo(UsageOffset o) {
             return startOffset - o.startOffset;
         }
     }

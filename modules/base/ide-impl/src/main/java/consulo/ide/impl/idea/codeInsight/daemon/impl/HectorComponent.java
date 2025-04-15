@@ -57,8 +57,8 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * User: anna
- * Date: Jun 27, 2005
+ * @author anna
+ * @since 2005-06-27
  */
 public class HectorComponent extends JPanel {
     private static final Logger LOG = Logger.getInstance(HectorComponent.class);

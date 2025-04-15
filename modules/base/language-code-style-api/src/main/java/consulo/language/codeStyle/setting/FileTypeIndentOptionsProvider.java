@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Maxim.Mossienko
- * Date: Nov 28, 2006
- * Time: 4:33:11 PM
- */
 package consulo.language.codeStyle.setting;
 
 import consulo.annotation.component.ComponentScope;
@@ -38,6 +31,9 @@ import jakarta.annotation.Nonnull;
  *
  * @see LanguageCodeStyleSettingsProvider
  * @see CodeStyleSettings#getIndentOptions(FileType)
+ *
+ * @author Maxim.Mossienko
+ * @since 2006-11-28
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileTypeIndentOptionsProvider {

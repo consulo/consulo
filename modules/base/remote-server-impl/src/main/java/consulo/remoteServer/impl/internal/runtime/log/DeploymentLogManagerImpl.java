@@ -79,8 +79,8 @@ public class DeploymentLogManagerImpl implements DeploymentLogManager {
     public @Nonnull LoggingHandler findOrCreateAdditionalLog(@Nonnull String presentableName) {
         synchronized (myAdditionalLoggingHandlers) {
             for (LoggingHandlerBase next : myAdditionalLoggingHandlers) {
-                if (next instanceof LoggingHandler && presentableName.equals(next.getPresentableName())) {
-                    return (LoggingHandler)next;
+                if (next instanceof LoggingHandler loggingHandler && presentableName.equals(next.getPresentableName())) {
+                    return loggingHandler;
                 }
             }
             return addAdditionalLog(presentableName);

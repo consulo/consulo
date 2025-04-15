@@ -16,6 +16,7 @@
 
 package consulo.language.impl.ast;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TreeCopyHandler;
 import consulo.language.ast.TreeGenerator;
@@ -43,7 +44,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChangeUtil {
-
     public static void encodeInformation(TreeElement element) {
         encodeInformation(element, element);
     }
@@ -92,7 +92,7 @@ public class ChangeUtil {
         }
 
         for (TreeCopyHandler handler : TreeCopyHandler.EP_NAME.getExtensionList()) {
-            final TreeElement handled = (TreeElement)handler.decodeInformation(element, state);
+            TreeElement handled = (TreeElement)handler.decodeInformation(element, state);
             if (handled != null) {
                 return handled;
             }
@@ -116,9 +116,9 @@ public class ChangeUtil {
         return copyElement(original, treeParent == null ? null : treeParent.getPsi(), table);
     }
 
-    public static TreeElement copyElement(TreeElement original, final PsiElement context, CharTable table) {
-        final TreeElement element = (TreeElement)original.clone();
-        final PsiManager manager = original.getManager();
+    public static TreeElement copyElement(TreeElement original, PsiElement context, CharTable table) {
+        TreeElement element = (TreeElement)original.clone();
+        PsiManager manager = original.getManager();
         DummyHolderFactory.createHolder(manager, element, context, table).getTreeElement();
         encodeInformation(element, original);
         TreeUtil.clearCaches(element);
@@ -126,11 +126,11 @@ public class ChangeUtil {
         return element;
     }
 
-    private static void saveIndentationToCopy(final TreeElement original, final TreeElement element) {
+    private static void saveIndentationToCopy(TreeElement original, TreeElement element) {
         if (original == null || element == null || CodeEditUtil.isNodeGenerated(original)) {
             return;
         }
-        final int indentation = CodeEditUtil.getOldIndentation(original);
+        int indentation = CodeEditUtil.getOldIndentation(original);
         if (indentation < 0) {
             CodeEditUtil.saveWhitespacesInfo(original);
         }
@@ -140,10 +140,11 @@ public class ChangeUtil {
         }
     }
 
+    @RequiredReadAction
     public static TreeElement copyToElement(PsiElement original) {
-        final DummyHolder holder = DummyHolderFactory.createHolder(original.getManager(), null, original.getLanguage());
-        final FileElement holderElement = holder.getTreeElement();
-        final TreeElement treeElement = generateTreeElement(original, holderElement.getCharTable(), original.getManager());
+        DummyHolder holder = DummyHolderFactory.createHolder(original.getManager(), null, original.getLanguage());
+        FileElement holderElement = holder.getTreeElement();
+        TreeElement treeElement = generateTreeElement(original, holderElement.getCharTable(), original.getManager());
         //  TreeElement treePrev = treeElement.getTreePrev(); // This is hack to support bug used in formater
         holderElement.rawAddChildren(treeElement);
         TreeUtil.clearCaches(holderElement);
@@ -153,11 +154,7 @@ public class ChangeUtil {
     }
 
     @Nullable
-    public static TreeElement generateTreeElement(
-        @Nullable PsiElement original,
-        @Nonnull CharTable table,
-        @Nonnull final PsiManager manager
-    ) {
+    public static TreeElement generateTreeElement(@Nullable PsiElement original, @Nonnull CharTable table, @Nonnull PsiManager manager) {
         if (original == null) {
             return null;
         }
@@ -167,7 +164,7 @@ public class ChangeUtil {
         }
         else {
             for (TreeGenerator generator : TreeGenerator.EP_NAME.getExtensionList()) {
-                final TreeElement element = (TreeElement)generator.generateTreeFor(original, table, manager);
+                TreeElement element = (TreeElement)generator.generateTreeFor(original, table, manager);
                 if (element != null) {
                     return element;
                 }
@@ -176,22 +173,22 @@ public class ChangeUtil {
         }
     }
 
-    public static void prepareAndRunChangeAction(final ChangeAction action, final TreeElement changedElement) {
-        final FileElement changedFile = TreeUtil.getFileElement(changedElement);
-        final PsiManager manager = changedFile.getManager();
-        final PomModel model = PomManager.getModel(manager.getProject());
-        final TreeAspect treeAspect = model.getModelAspect(TreeAspect.class);
+    public static void prepareAndRunChangeAction(ChangeAction action, TreeElement changedElement) {
+        FileElement changedFile = TreeUtil.getFileElement(changedElement);
+        PsiManager manager = changedFile.getManager();
+        PomModel model = PomManager.getModel(manager.getProject());
+        TreeAspect treeAspect = model.getModelAspect(TreeAspect.class);
         model.runTransaction(new PomTransactionBase(changedElement.getPsi(), treeAspect) {
             @Override
             public PomModelEvent runInner() {
-                final PomModelEvent event = new PomModelEvent(model);
-                final TreeChangeEvent destinationTreeChange = new TreeChangeEventImpl(treeAspect, changedFile);
+                PomModelEvent event = new PomModelEvent(model);
+                TreeChangeEvent destinationTreeChange = new TreeChangeEventImpl(treeAspect, changedFile);
                 event.registerChangeSet(treeAspect, destinationTreeChange);
                 action.makeChange(destinationTreeChange);
 
                 changedElement.clearCaches();
-                if (changedElement instanceof CompositeElement) {
-                    ((CompositeElement)changedElement).subtreeChanged();
+                if (changedElement instanceof CompositeElement compositeElement) {
+                    compositeElement.subtreeChanged();
                 }
                 return event;
             }

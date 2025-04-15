@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 28-Aug-2009
- */
 package consulo.execution.test.action;
 
 import consulo.annotation.component.ComponentScope;
@@ -27,6 +22,10 @@ import consulo.execution.test.TestConsoleProperties;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author anna
+ * @since 2009-08-28
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ToggleModelActionProvider {
     ExtensionPointName<ToggleModelActionProvider> EP_NAME = ExtensionPointName.create(ToggleModelActionProvider.class);

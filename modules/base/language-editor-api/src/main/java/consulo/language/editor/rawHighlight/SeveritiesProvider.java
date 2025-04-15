@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 17-Jun-2009
- */
 package consulo.language.editor.rawHighlight;
 
 import consulo.annotation.component.ComponentScope;
@@ -31,6 +26,10 @@ import consulo.ui.color.ColorValue;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * @author anna
+ * @since 2009-01-17
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SeveritiesProvider {
   public static final ExtensionPointName<SeveritiesProvider> EP_NAME = ExtensionPointName.create(SeveritiesProvider.class);

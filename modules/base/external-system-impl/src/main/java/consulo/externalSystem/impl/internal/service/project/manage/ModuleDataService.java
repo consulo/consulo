@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
  * Encapsulates functionality of importing gradle module to the intellij project.
  *
  * @author Denis Zhdanov
- * @since 2/7/12 2:49 PM
+ * @since 2012-02-07
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 @ExtensionImpl

@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 24.11.2006
- * Time: 15:29:45
- */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
 import consulo.project.Project;
@@ -39,6 +32,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author yole
+ * @since 2006-11-24
+ */
 public class UnifiedDiffWriter {
     private static final String INDEX_SIGNATURE = "Index: {0}{1}";
     public static final String ADDITIONAL_PREFIX = "IDEA additional info:";

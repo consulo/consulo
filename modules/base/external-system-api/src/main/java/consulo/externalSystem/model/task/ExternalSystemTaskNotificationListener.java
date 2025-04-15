@@ -9,7 +9,7 @@ import jakarta.annotation.Nonnull;
  * Defines contract for callback to listen external task notifications.
  *
  * @author Denis Zhdanov
- * @since 11/10/11 11:57 AM
+ * @since 2011-11-10
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExternalSystemTaskNotificationListener {

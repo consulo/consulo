@@ -32,7 +32,7 @@ import java.util.LinkedHashSet;
 
 /**
  * @author anna
- * @since 3/16/12
+ * @since 2012-03-16
  */
 public class MyLookupExpression extends Expression {
     protected final String myName;

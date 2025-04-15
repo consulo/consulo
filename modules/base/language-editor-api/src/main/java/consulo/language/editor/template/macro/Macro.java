@@ -26,43 +26,40 @@ import consulo.language.editor.template.Result;
 import consulo.language.editor.template.context.TemplateContextType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * A macro which can be used in live templates.
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class Macro {
-  public static final ExtensionPointName<Macro> EP_NAME = ExtensionPointName.create(Macro.class);
-  
-  @NonNls
-  public abstract String getName();
+    public static final ExtensionPointName<Macro> EP_NAME = ExtensionPointName.create(Macro.class);
 
-  /**
-   * @return a presentable string that will be shown in the combobox in Edit Template Variables dialog
-   */
-  public abstract String getPresentableName();
+    public abstract String getName();
 
-  @NonNls
-  @Nonnull
-  public String getDefaultValue() {
-    return "";
-  }
+    /**
+     * @return a presentable string that will be shown in the combobox in Edit Template Variables dialog
+     */
+    public abstract String getPresentableName();
 
-  @Nullable
-  public abstract Result calculateResult(@Nonnull Expression[] params, ExpressionContext context);
+    @Nonnull
+    public String getDefaultValue() {
+        return "";
+    }
 
-  @Nullable
-  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
-    return null;
-  }
+    @Nullable
+    public abstract Result calculateResult(@Nonnull Expression[] params, ExpressionContext context);
 
-  @Nullable
-  public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
-    return null;
-  }
+    @Nullable
+    public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+        return null;
+    }
 
-  public boolean isAcceptableInContext(TemplateContextType context) {
-    return true;
-  }
+    @Nullable
+    public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
+        return null;
+    }
+
+    public boolean isAcceptableInContext(TemplateContextType context) {
+        return true;
+    }
 }

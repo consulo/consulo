@@ -15,9 +15,9 @@
  */
 package consulo.externalSystem.util;
 
+import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
-import consulo.application.ReadAction;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
@@ -73,6 +73,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.rmi.RemoteUtil;
 import consulo.virtualFileSystem.StandardFileSystems;
@@ -95,7 +96,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author Denis Zhdanov
- * @since 4/1/13 1:31 PM
+ * @since 2013-04-01
  */
 public class ExternalSystemApiUtil {
 
@@ -963,6 +964,6 @@ public class ExternalSystemApiUtil {
 
     @Nullable
     private static VirtualFile findLocalFileByPathUnderReadAction(String path) {
-        return ReadAction.compute(() -> StandardFileSystems.local().findFileByPath(path));
+        return AccessRule.read(() -> StandardFileSystems.local().findFileByPath(path));
     }
 }

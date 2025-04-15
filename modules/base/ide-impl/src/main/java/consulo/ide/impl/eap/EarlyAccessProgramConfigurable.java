@@ -16,28 +16,19 @@
 package consulo.ide.impl.eap;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
-import consulo.configurable.*;
-import consulo.ide.IdeBundle;
 import consulo.application.Application;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.application.eap.EarlyAccessProgramManager;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.util.lang.StringUtil;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.LightColors;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.CustomLineBorder;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.VerticalLayoutPanel;
+import consulo.configurable.*;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
-
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.*;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -49,7 +40,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 16:30/15.10.13
+ * @since 2013-10-15
  */
 @ExtensionImpl
 public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, Configurable.NoScroll {
@@ -74,10 +65,10 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
         return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
     }
 
-    @Nls
+    @Nonnull
     @Override
     public String getDisplayName() {
-        return IdeBundle.message("eap.configurable.name");
+        return IdeLocalize.eapConfigurableName().get();
     }
 
     @RequiredUIAccess
@@ -151,10 +142,10 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
         panel.setBackground(LightColors.RED);
         panel.setBorder(new CompoundBorder(JBUI.Borders.customLine(JBColor.GRAY), JBUI.Borders.empty(5)));
 
-        JBLabel warnLabel = new JBLabel("WARNING", AllIcons.General.BalloonWarning, SwingConstants.LEFT);
+        JBLabel warnLabel = new JBLabel("WARNING", PlatformIconGroup.generalBalloonwarning(), SwingConstants.LEFT);
         warnLabel.setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, warnLabel.getFont()).deriveFont(Font.BOLD));
         panel.addComponent(warnLabel);
-        JTextArea textArea = new JTextArea(IdeBundle.message("eap.configurable.warning.text"));
+        JTextArea textArea = new JTextArea(IdeLocalize.eapConfigurableWarningText().get());
         textArea.setLineWrap(true);
         textArea.setFont(JBUI.Fonts.label());
         textArea.setOpaque(false);

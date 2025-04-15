@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  * That makes it relatively easy to add a new external system integration.
  *
  * @author Denis Zhdanov
- * @since 4/4/13 4:05 PM
+ * @since 2013-04-04
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExternalSystemManager<ProjectSettings extends ExternalProjectSettings, SettingsListener extends ExternalSystemSettingsListener<ProjectSettings>, Settings extends AbstractExternalSystemSettings<Settings, ProjectSettings, SettingsListener>, LocalSettings extends AbstractExternalSystemLocalSettings, ExecutionSettings extends ExternalSystemExecutionSettings> {

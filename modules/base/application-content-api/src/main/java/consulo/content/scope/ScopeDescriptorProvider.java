@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 16-Jan-2008
- */
 package consulo.content.scope;
 
 import consulo.annotation.component.ComponentScope;
@@ -26,6 +21,10 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author anna
+ * @since 2008-01-16
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ScopeDescriptorProvider {
     ExtensionPointName<ScopeDescriptorProvider> EP_NAME = ExtensionPointName.create(ScopeDescriptorProvider.class);

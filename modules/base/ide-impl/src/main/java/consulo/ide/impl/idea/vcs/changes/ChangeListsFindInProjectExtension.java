@@ -31,7 +31,7 @@ import consulo.util.collection.ContainerUtil;
 
 /**
  * @author VISTALL
- * @since 12/12/2021
+ * @since 2021-12-12
  */
 @ExtensionImpl
 public class ChangeListsFindInProjectExtension implements FindInProjectExtension {

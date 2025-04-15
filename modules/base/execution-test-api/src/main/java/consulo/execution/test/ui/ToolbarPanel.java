@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 25-May-2007
- */
 package consulo.execution.test.ui;
 
 import consulo.application.dumb.DumbAware;
@@ -41,6 +36,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * @author anna
+ * @since 2007-05-25
+ */
 public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposable {
     protected final TestTreeExpander myTreeExpander = new TestTreeExpander();
     protected final FailedTestsNavigator myOccurenceNavigator;

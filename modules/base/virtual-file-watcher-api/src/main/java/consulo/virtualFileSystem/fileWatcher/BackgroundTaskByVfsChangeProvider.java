@@ -25,12 +25,11 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 1:15/07.10.13
+ * @since 2013-10-07
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class BackgroundTaskByVfsChangeProvider {

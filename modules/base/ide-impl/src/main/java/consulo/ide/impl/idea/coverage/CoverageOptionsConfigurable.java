@@ -16,15 +16,14 @@ import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * User: anna
- * Date: 12/16/10
+ * @author anna
+ * @since 2010-12-16
  */
 @ExtensionImpl
 public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOptionsConfigurable.Panel>
@@ -115,10 +114,10 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 
-    @Nls
+    @Nonnull
     @Override
     public String getDisplayName() {
-        return "Coverage";
+        return LocalizeValue.localizeTODO("Coverage").get();
     }
 
     @RequiredUIAccess
