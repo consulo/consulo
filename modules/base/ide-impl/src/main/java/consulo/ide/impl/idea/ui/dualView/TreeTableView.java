@@ -15,19 +15,18 @@
  */
 package consulo.ide.impl.idea.ui.dualView;
 
+import consulo.ide.impl.idea.ui.HighlightableCellRenderer;
+import consulo.ide.impl.idea.ui.treeStructure.treetable.ListTreeTableModelOnColumns;
+import consulo.logging.Logger;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.SortableColumnModel;
+import consulo.ui.ex.awt.table.ItemsProvider;
+import consulo.ui.ex.awt.table.SelectionProvider;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableCellRenderer;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.ui.ex.awt.tree.table.TreeTableTree;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.ui.HighlightableCellRenderer;
-import consulo.ui.ex.awt.table.ItemsProvider;
-import consulo.ui.ex.awt.table.SelectionProvider;
-import consulo.ide.impl.idea.ui.treeStructure.treetable.*;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.SortableColumnModel;
-import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -42,154 +41,173 @@ import java.util.Collections;
 import java.util.List;
 
 public class TreeTableView extends TreeTable implements ItemsProvider, SelectionProvider {
-  private static final Logger LOG = Logger.getInstance(TreeTableView.class);
-  public TreeTableView(ListTreeTableModelOnColumns treeTableModel) {
-    super(treeTableModel);
-    setRootVisible(false);
+    private static final Logger LOG = Logger.getInstance(TreeTableView.class);
 
-    setTreeCellRenderer(new TreeCellRenderer() {
-      private final TreeCellRenderer myBaseRenderer = new HighlightableCellRenderer();
-      public Component getTreeCellRendererComponent(JTree tree1,
-                                                    Object value,
-                                                    boolean selected,
-                                                    boolean expanded,
-                                                    boolean leaf,
-                                                    int row,
-                                                    boolean hasFocus) {
-        JComponent result = (JComponent)myBaseRenderer.getTreeCellRendererComponent(tree1, value, selected, expanded, leaf, row, hasFocus);
-        result.setOpaque(!selected);
-        return result;
-      }
-    });
+    public TreeTableView(ListTreeTableModelOnColumns treeTableModel) {
+        super(treeTableModel);
+        setRootVisible(false);
 
-    setSizes();
-  }
+        setTreeCellRenderer(new TreeCellRenderer() {
+            private final TreeCellRenderer myBaseRenderer = new HighlightableCellRenderer();
 
-  public void setTableModel(TreeTableModel treeTableModel) {
-    super.setTableModel(treeTableModel);
-    LOG.assertTrue(treeTableModel instanceof SortableColumnModel);
-  }
+            @Override
+            public Component getTreeCellRendererComponent(
+                JTree tree1,
+                Object value,
+                boolean selected,
+                boolean expanded,
+                boolean leaf,
+                int row,
+                boolean hasFocus
+            ) {
+                JComponent result =
+                    (JComponent)myBaseRenderer.getTreeCellRendererComponent(tree1, value, selected, expanded, leaf, row, hasFocus);
+                result.setOpaque(!selected);
+                return result;
+            }
+        });
 
-  private void setSizes() {
-    ColumnInfo[] columns = ((ListTreeTableModelOnColumns)getTableModel()).getColumns();
-    for (int i = 0; i < columns.length; i++) {
-      ColumnInfo columnInfo = columns[i];
-      TableColumn column = getColumnModel().getColumn(i);
-      if (columnInfo.getWidth(this) > 0) {
-        int width = columnInfo.getWidth(this);
-        column.setMaxWidth(width);
-        column.setMinWidth(width);
-      }
-      else {
-        final String preferredValue = columnInfo.getPreferredStringValue();
-        if (preferredValue != null) {
-          int width = getFontMetrics(getFont()).stringWidth(preferredValue) + columnInfo.getAdditionalWidth();
-          column.setPreferredWidth(width);
+        setSizes();
+    }
+
+    @Override
+    public void setTableModel(TreeTableModel treeTableModel) {
+        super.setTableModel(treeTableModel);
+        LOG.assertTrue(treeTableModel instanceof SortableColumnModel);
+    }
+
+    private void setSizes() {
+        ColumnInfo[] columns = ((ListTreeTableModelOnColumns)getTableModel()).getColumns();
+        for (int i = 0; i < columns.length; i++) {
+            ColumnInfo columnInfo = columns[i];
+            TableColumn column = getColumnModel().getColumn(i);
+            if (columnInfo.getWidth(this) > 0) {
+                int width = columnInfo.getWidth(this);
+                column.setMaxWidth(width);
+                column.setMinWidth(width);
+            }
+            else {
+                String preferredValue = columnInfo.getPreferredStringValue();
+                if (preferredValue != null) {
+                    int width = getFontMetrics(getFont()).stringWidth(preferredValue) + columnInfo.getAdditionalWidth();
+                    column.setPreferredWidth(width);
+                }
+            }
         }
-      }
-    }
-  }
-
-  public TableCellEditor getCellEditor(int row, int column) {
-    TableCellEditor editor = getColumnInfo(column).getEditor(getRowElement(row));
-    return editor == null ? super.getCellEditor(row, column) : editor;
-  }
-
-  public TreeTableCellRenderer createTableRenderer(TreeTableModel treeTableModel) {
-    return new TreeTableCellRenderer(TreeTableView.this, getTree()) {
-      public Component getTableCellRendererComponent(JTable table,
-                                                     Object value,
-                                                     boolean isSelected,
-                                                     boolean hasFocus,
-                                                     int row,
-                                                     int column) {
-        JComponent component = (JComponent)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        component.setOpaque(isSelected);
-        return component;
-      }
-    };
-  }
-
-
-  ListTreeTableModelOnColumns getTreeViewModel() {
-    return (ListTreeTableModelOnColumns)getTableModel();
-  }
-
-  public List<DualTreeElement> getFlattenItems() {
-    List<DualTreeElement> items = getTreeViewModel().getItems();
-    return ContainerUtil.findAll(items, new Condition<DualTreeElement>() {
-      public boolean value(final DualTreeElement object) {
-        return object.shouldBeInTheFlatView();
-      }
-    });
-  }
-
-  public TableCellRenderer getCellRenderer(int row, int column) {
-    TableCellRenderer renderer = getColumnInfo(column).getRenderer(getRowElement(row));
-    final TableCellRenderer baseRenderer = renderer == null ? super.getCellRenderer(row, column) : renderer;
-    return new CellRendererWrapper(baseRenderer);
-  }
-
-  protected Object getRowElement(final int row) {
-    return getTree().getPathForRow(row).getLastPathComponent();
-  }
-
-  protected final ColumnInfo<Object,?> getColumnInfo(final int column) {
-    return getTreeViewModel().getColumnInfos()[convertColumnIndexToModel(column)];
-  }
-
-  public List getItems() {
-    return getTreeViewModel().getItems();
-  }
-
-  public List getSelection() {
-    final TreeTableTree tree = getTree();
-    if (tree == null) return Collections.emptyList();
-    final int[] rows = getSelectedRows();
-    final ArrayList result = new ArrayList();
-    for (int row : rows) {
-      final TreePath pathForRow = tree.getPathForRow(row);
-      if (pathForRow != null) result.add(pathForRow.getLastPathComponent());
-    }
-    return result;
-  }
-
-  public void addSelection(Object item) {
-    getTree().setExpandsSelectedPaths(true);
-    DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)item;
-    addSelectedPath(new TreePath(treeNode.getPath()));
-  }
-
-  public static class CellRendererWrapper implements TableCellRenderer {
-    private final TableCellRenderer myBaseRenderer;
-
-    public CellRendererWrapper(final TableCellRenderer baseRenderer) {
-      myBaseRenderer = baseRenderer;
     }
 
-    public TableCellRenderer getBaseRenderer() {
-      return myBaseRenderer;
+    @Override
+    public TableCellEditor getCellEditor(int row, int column) {
+        TableCellEditor editor = getColumnInfo(column).getEditor(getRowElement(row));
+        return editor == null ? super.getCellEditor(row, column) : editor;
     }
 
-    public Component getTableCellRendererComponent(JTable table,
-                                                   Object value,
-                                                   boolean isSelected,
-                                                   boolean hasFocus,
-                                                   int row,
-                                                   int column) {
-      final JComponent rendererComponent = (JComponent)myBaseRenderer.getTableCellRendererComponent(
-        table, value, isSelected, hasFocus, row, column);
-      if (isSelected) {
-        rendererComponent.setBackground(table.getSelectionBackground());
-        rendererComponent.setForeground(table.getSelectionForeground());
-      }
-      else {
-        final Color bg = table.getBackground();
-        rendererComponent.setBackground(bg);
-        rendererComponent.setForeground(table.getForeground());
-      }
-      rendererComponent.setOpaque(isSelected);
-      return rendererComponent;
+    @Override
+    public TreeTableCellRenderer createTableRenderer(TreeTableModel treeTableModel) {
+        return new TreeTableCellRenderer(TreeTableView.this, getTree()) {
+            @Override
+            public Component getTableCellRendererComponent(
+                JTable table,
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int column
+            ) {
+                JComponent component = (JComponent)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                component.setOpaque(isSelected);
+                return component;
+            }
+        };
     }
-  }
+
+
+    ListTreeTableModelOnColumns getTreeViewModel() {
+        return (ListTreeTableModelOnColumns)getTableModel();
+    }
+
+    public List<DualTreeElement> getFlattenItems() {
+        List<DualTreeElement> items = getTreeViewModel().getItems();
+        return ContainerUtil.findAll(items, DualTreeElement::shouldBeInTheFlatView);
+    }
+
+    @Override
+    public TableCellRenderer getCellRenderer(int row, int column) {
+        TableCellRenderer renderer = getColumnInfo(column).getRenderer(getRowElement(row));
+        TableCellRenderer baseRenderer = renderer == null ? super.getCellRenderer(row, column) : renderer;
+        return new CellRendererWrapper(baseRenderer);
+    }
+
+    protected Object getRowElement(int row) {
+        return getTree().getPathForRow(row).getLastPathComponent();
+    }
+
+    protected final ColumnInfo<Object, ?> getColumnInfo(int column) {
+        return getTreeViewModel().getColumnInfos()[convertColumnIndexToModel(column)];
+    }
+
+    @Override
+    public List getItems() {
+        return getTreeViewModel().getItems();
+    }
+
+    @Override
+    public List getSelection() {
+        TreeTableTree tree = getTree();
+        if (tree == null) {
+            return Collections.emptyList();
+        }
+        int[] rows = getSelectedRows();
+        ArrayList result = new ArrayList();
+        for (int row : rows) {
+            TreePath pathForRow = tree.getPathForRow(row);
+            if (pathForRow != null) {
+                result.add(pathForRow.getLastPathComponent());
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void addSelection(Object item) {
+        getTree().setExpandsSelectedPaths(true);
+        DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)item;
+        addSelectedPath(new TreePath(treeNode.getPath()));
+    }
+
+    public static class CellRendererWrapper implements TableCellRenderer {
+        private final TableCellRenderer myBaseRenderer;
+
+        public CellRendererWrapper(TableCellRenderer baseRenderer) {
+            myBaseRenderer = baseRenderer;
+        }
+
+        public TableCellRenderer getBaseRenderer() {
+            return myBaseRenderer;
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(
+            JTable table,
+            Object value,
+            boolean isSelected,
+            boolean hasFocus,
+            int row,
+            int column
+        ) {
+            JComponent rendererComponent = (JComponent)myBaseRenderer.getTableCellRendererComponent(
+                table, value, isSelected, hasFocus, row, column);
+            if (isSelected) {
+                rendererComponent.setBackground(table.getSelectionBackground());
+                rendererComponent.setForeground(table.getSelectionForeground());
+            }
+            else {
+                Color bg = table.getBackground();
+                rendererComponent.setBackground(bg);
+                rendererComponent.setForeground(table.getForeground());
+            }
+            rendererComponent.setOpaque(isSelected);
+            return rendererComponent;
+        }
+    }
 }

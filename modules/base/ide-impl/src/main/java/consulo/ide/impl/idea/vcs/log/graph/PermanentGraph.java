@@ -24,6 +24,7 @@ import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * PermanentGraph is created once per repository, and forever until the log is refreshed. <br/>
@@ -49,7 +50,7 @@ public interface PermanentGraph<Id> {
   Set<Id> getContainingBranches(@Nonnull Id commit);
 
   @Nonnull
-  Condition<Id> getContainedInBranchCondition(@Nonnull Collection<Id> currentBranchHead);
+  Predicate<Id> getContainedInBranchCondition(@Nonnull Collection<Id> currentBranchHead);
 
   enum SortType {
     Normal("Off", "Sort commits topologically and by date"),

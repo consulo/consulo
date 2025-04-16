@@ -15,44 +15,43 @@
  */
 package consulo.ide.impl.idea.find.findUsages;
 
-import consulo.util.lang.function.Condition;
-import consulo.usage.ConfigurableUsageTarget;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.usage.ConfigurableUsageTarget;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 
 public class UsageHistory {
-  // the last element is the most recent
-  private final List<ConfigurableUsageTarget> myHistory = ContainerUtil.createLockFreeCopyOnWriteList();
+    // the last element is the most recent
+    private final List<ConfigurableUsageTarget> myHistory = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  public void add(@Nonnull ConfigurableUsageTarget usageTarget) {
-    final String descriptiveName = usageTarget.getLongDescriptiveName();
-    ContainerUtil.retainAll(myHistory, new Condition<ConfigurableUsageTarget>() {
-      @Override
-      public boolean value(ConfigurableUsageTarget existing) {
-        return !existing.getLongDescriptiveName().equals(descriptiveName);
-      }
-    });
-    myHistory.add(usageTarget);
+    public void add(@Nonnull ConfigurableUsageTarget usageTarget) {
+        String descriptiveName = usageTarget.getLongDescriptiveName();
+        ContainerUtil.retainAll(
+            myHistory,
+            existing -> !existing.getLongDescriptiveName().equals(descriptiveName)
+        );
+        myHistory.add(usageTarget);
 
-    // todo configure history depth limit
-    if (myHistory.size() > 15) {
-      myHistory.remove(0);
+        // todo configure history depth limit
+        if (myHistory.size() > 15) {
+            myHistory.remove(0);
+        }
     }
-  }
 
-  @Nonnull
-  public List<ConfigurableUsageTarget> getAll() {
-    removeInvalidElementsFromHistory();
-    return Collections.unmodifiableList(myHistory);
-  }
-
-  private void removeInvalidElementsFromHistory() {
-    for (ConfigurableUsageTarget target : myHistory) {
-      if (!target.isValid()) myHistory.remove(target);
+    @Nonnull
+    public List<ConfigurableUsageTarget> getAll() {
+        removeInvalidElementsFromHistory();
+        return Collections.unmodifiableList(myHistory);
     }
-  }
+
+    private void removeInvalidElementsFromHistory() {
+        for (ConfigurableUsageTarget target : myHistory) {
+            if (!target.isValid()) {
+                myHistory.remove(target);
+            }
+        }
+    }
 
 }
