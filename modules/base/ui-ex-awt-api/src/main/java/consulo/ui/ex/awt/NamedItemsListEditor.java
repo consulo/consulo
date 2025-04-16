@@ -51,332 +51,346 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
-  public interface Cloner<T> {
-    T cloneOf(T t);
+    public interface Cloner<T> {
+        T cloneOf(T t);
 
-    T copyOf(T t);
-  }
-
-  public interface Namer<T> {
-    String getName(T t);
-
-    boolean canRename(T item);
-
-    void setName(T t, String name);
-  }
-
-  private final Namer<T> myNamer;
-  private final Supplier<T> myFactory;
-  private final Cloner<T> myCloner;
-  private final List<T> myItems = new ArrayList<T>();
-  private final HashingStrategy<T> myComparer;
-  private List<T> myResultItems;
-  private final List<T> myOriginalItems;
-  private boolean myShowIcons;
-
-  protected NamedItemsListEditor(Namer<T> namer,
-                                 Supplier<T> factory,
-                                 Cloner<T> cloner,
-                                 HashingStrategy<T> comparer,
-                                 List<T> items,
-                                 Provider<MasterDetailsStateService> masterDetailsStateService) {
-    this(namer, factory, cloner, comparer, items, true, masterDetailsStateService);
-  }
-
-  protected NamedItemsListEditor(Namer<T> namer,
-                                 Supplier<T> factory,
-                                 Cloner<T> cloner,
-                                 HashingStrategy<T> comparer,
-                                 List<T> items,
-                                 boolean initInConstructor,
-                                 Provider<MasterDetailsStateService> masterDetailsStateService) {
-    super(masterDetailsStateService);
-    myNamer = namer;
-    myFactory = factory;
-    myCloner = cloner;
-    myComparer = comparer;
-
-    myOriginalItems = items;
-    myResultItems = items;
-    if (initInConstructor) {
-      reset();
-      initTree();
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    myResultItems = myOriginalItems;
-    myItems.clear();
-
-    clearChildren();
-    for (T item : myOriginalItems) {
-      addNewNode(myCloner.cloneOf(item));
+        T copyOf(T t);
     }
 
-    super.reset();
-  }
+    public interface Namer<T> {
+        String getName(T t);
 
-  @Override
-  protected void processRemovedItems() {
-  }
+        boolean canRename(T item);
 
-  @Override
-  protected boolean wasObjectStored(Object editableObject) {
-    return true;
-  }
-
-  protected String subjDisplayName() {
-    return "item";
-  }
-
-  @Nullable
-  public String askForProfileName(String titlePattern) {
-    String title = MessageFormat.format(titlePattern, subjDisplayName());
-    return Messages.showInputDialog("New " + subjDisplayName() + " name:", title, Messages.getQuestionIcon(), "", new InputValidator() {
-      @Override
-      public boolean checkInput(String s) {
-        return s.length() > 0 && findByName(s) == null;
-      }
-
-      @Override
-      public boolean canClose(String s) {
-        return checkInput(s);
-      }
-    });
-  }
-
-  @Nullable
-  private T findByName(String name) {
-    for (T item : myItems) {
-      if (Comparing.equal(name, myNamer.getName(item))) return item;
+        void setName(T t, String name);
     }
 
-    return null;
-  }
+    private final Namer<T> myNamer;
+    private final Supplier<T> myFactory;
+    private final Cloner<T> myCloner;
+    private final List<T> myItems = new ArrayList<T>();
+    private final HashingStrategy<T> myComparer;
+    private List<T> myResultItems;
+    private final List<T> myOriginalItems;
+    private boolean myShowIcons;
 
-  @Override
-  @Nullable
-  protected ArrayList<AnAction> createActions(boolean fromPopup) {
-    ArrayList<AnAction> result = new ArrayList<AnAction>();
-    result.add(new AddAction());
-
-    result.add(new MyDeleteAction(forAll(new Condition<Object>() {
-      @Override
-      @SuppressWarnings({"unchecked"})
-      public boolean value(Object o) {
-        return canDelete((T)((MyNode)o).getConfigurable().getEditableObject());
-      }
-    })));
-
-    result.add(new CopyAction());
-
-    return result;
-  }
-
-  private void addNewNode(T item) {
-    addNode(new MyNode(new ItemConfigurable(item)), myRoot);
-    myItems.add(item);
-  }
-
-  protected boolean canDelete(T item) {
-    return true;
-  }
-
-  protected abstract UnnamedConfigurable createConfigurable(T item);
-
-  @Override
-  protected void onItemDeleted(Object item) {
-    myItems.remove((T)item);
-  }
-
-  protected void setDisplayName(T item, String name) {
-    myNamer.setName(item, name);
-  }
-
-  public void setShowIcons(boolean showIcons) {
-    myShowIcons = showIcons;
-  }
-
-  @Nullable
-  protected UnnamedConfigurable getItemConfigurable(final T item) {
-    final Ref<UnnamedConfigurable> result = new Ref<UnnamedConfigurable>();
-    TreeUtil.traverse((TreeNode)myTree.getModel().getRoot(), node -> {
-      final MasterDetailsConfigurable configurable = (MasterDetailsConfigurable)((DefaultMutableTreeNode)node).getUserObject();
-      if (configurable.getEditableObject() == item) {
-        result.set(((ItemConfigurable)configurable).myConfigurable);
-        return false;
-      }
-      else {
-        return true;
-      }
-    });
-    return result.get();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    super.disposeUIResources();    //To change body of overridden methods use File | Settings | File Templates.
-  }
-
-  private class ItemConfigurable extends NamedConfigurable {
-    private final T myItem;
-    private final UnnamedConfigurable myConfigurable;
-
-    public ItemConfigurable(T item) {
-      super(myNamer.canRename(item), TREE_UPDATER);
-      myItem = item;
-      myConfigurable = createConfigurable(item);
+    protected NamedItemsListEditor(
+        Namer<T> namer,
+        Supplier<T> factory,
+        Cloner<T> cloner,
+        HashingStrategy<T> comparer,
+        List<T> items,
+        Provider<MasterDetailsStateService> masterDetailsStateService
+    ) {
+        this(namer, factory, cloner, comparer, items, true, masterDetailsStateService);
     }
 
-    @Override
-    public void setDisplayName(String name) {
-      NamedItemsListEditor.this.setDisplayName(myItem, name);
+    protected NamedItemsListEditor(
+        Namer<T> namer,
+        Supplier<T> factory,
+        Cloner<T> cloner,
+        HashingStrategy<T> comparer,
+        List<T> items,
+        boolean initInConstructor,
+        Provider<MasterDetailsStateService> masterDetailsStateService
+    ) {
+        super(masterDetailsStateService);
+        myNamer = namer;
+        myFactory = factory;
+        myCloner = cloner;
+        myComparer = comparer;
+
+        myOriginalItems = items;
+        myResultItems = items;
+        if (initInConstructor) {
+            reset();
+            initTree();
+        }
     }
 
-    @Override
-    public Object getEditableObject() {
-      return myItem;
-    }
-
-    @Override
-    public String getBannerSlogan() {
-      return myNamer.getName(myItem);
-    }
-
-    @Override
-    public Component createOptionsPanel(Disposable uiDisposable) {
-      return TargetAWT.wrap(myConfigurable.createComponent(uiDisposable));
-    }
-    
-    @Override
-    public String getDisplayName() {
-      return myNamer.getName(myItem);
-    }
-
-    @Override
-    public Image getIcon() {
-      if (myShowIcons && myConfigurable instanceof Iconable) {
-        return ((Iconable)myConfigurable).getIcon(0);
-      }
-      return null;
-    }
-
-    @Override
-    public boolean isModified() {
-      return myConfigurable.isModified();
-    }
-
-    @Override
-    public void apply() throws ConfigurationException {
-      myConfigurable.apply();
-    }
-
+    @RequiredUIAccess
     @Override
     public void reset() {
-      myConfigurable.reset();
+        myResultItems = myOriginalItems;
+        myItems.clear();
+
+        clearChildren();
+        for (T item : myOriginalItems) {
+            addNewNode(myCloner.cloneOf(item));
+        }
+
+        super.reset();
     }
 
+    @Override
+    protected void processRemovedItems() {
+    }
+
+    @Override
+    protected boolean wasObjectStored(Object editableObject) {
+        return true;
+    }
+
+    protected String subjDisplayName() {
+        return "item";
+    }
+
+    @Nullable
+    public String askForProfileName(String titlePattern) {
+        String title = MessageFormat.format(titlePattern, subjDisplayName());
+        return Messages.showInputDialog("New " + subjDisplayName() + " name:", title, Messages.getQuestionIcon(), "", new InputValidator() {
+            @Override
+            public boolean checkInput(String s) {
+                return s.length() > 0 && findByName(s) == null;
+            }
+
+            @Override
+            public boolean canClose(String s) {
+                return checkInput(s);
+            }
+        });
+    }
+
+    @Nullable
+    private T findByName(String name) {
+        for (T item : myItems) {
+            if (Comparing.equal(name, myNamer.getName(item))) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    @Nullable
+    protected ArrayList<AnAction> createActions(boolean fromPopup) {
+        ArrayList<AnAction> result = new ArrayList<AnAction>();
+        result.add(new AddAction());
+
+        result.add(new MyDeleteAction(forAll(new Condition<Object>() {
+            @Override
+            @SuppressWarnings({"unchecked"})
+            public boolean value(Object o) {
+                return canDelete((T)((MyNode)o).getConfigurable().getEditableObject());
+            }
+        })));
+
+        result.add(new CopyAction());
+
+        return result;
+    }
+
+    private void addNewNode(T item) {
+        addNode(new MyNode(new ItemConfigurable(item)), myRoot);
+        myItems.add(item);
+    }
+
+    protected boolean canDelete(T item) {
+        return true;
+    }
+
+    protected abstract UnnamedConfigurable createConfigurable(T item);
+
+    @Override
+    protected void onItemDeleted(Object item) {
+        myItems.remove((T)item);
+    }
+
+    protected void setDisplayName(T item, String name) {
+        myNamer.setName(item, name);
+    }
+
+    public void setShowIcons(boolean showIcons) {
+        myShowIcons = showIcons;
+    }
+
+    @Nullable
+    protected UnnamedConfigurable getItemConfigurable(final T item) {
+        final Ref<UnnamedConfigurable> result = new Ref<UnnamedConfigurable>();
+        TreeUtil.traverse((TreeNode)myTree.getModel().getRoot(), node -> {
+            final MasterDetailsConfigurable configurable = (MasterDetailsConfigurable)((DefaultMutableTreeNode)node).getUserObject();
+            if (configurable.getEditableObject() == item) {
+                result.set(((ItemConfigurable)configurable).myConfigurable);
+                return false;
+            }
+            else {
+                return true;
+            }
+        });
+        return result.get();
+    }
+
+    @RequiredUIAccess
     @Override
     public void disposeUIResources() {
-      myConfigurable.disposeUIResources();
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    if (myResultItems.size() != myItems.size()) return true;
-
-    for (int i = 0; i < myItems.size(); i++) {
-      if (!myComparer.equals(myItems.get(i), myResultItems.get(i))) return true;
+        super.disposeUIResources();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    return super.isModified();
-  }
+    private class ItemConfigurable extends NamedConfigurable {
+        private final T myItem;
+        private final UnnamedConfigurable myConfigurable;
 
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-    super.apply();
-    myResultItems = myItems;
-  }
+        public ItemConfigurable(T item) {
+            super(myNamer.canRename(item), TREE_UPDATER);
+            myItem = item;
+            myConfigurable = createConfigurable(item);
+        }
 
-  protected List<T> getCurrentItems() {
-    return Collections.unmodifiableList(myItems);
-  }
+        @Override
+        public void setDisplayName(String name) {
+            NamedItemsListEditor.this.setDisplayName(myItem, name);
+        }
 
-  public List<T> getItems() {
-    return myResultItems;
-  }
+        @Override
+        public Object getEditableObject() {
+            return myItem;
+        }
 
-  public T getSelectedItem() {
-    return (T)getSelectedObject();
-  }
+        @Override
+        public String getBannerSlogan() {
+            return myNamer.getName(myItem);
+        }
 
+        @Override
+        public Component createOptionsPanel(Disposable uiDisposable) {
+            return TargetAWT.wrap(myConfigurable.createComponent(uiDisposable));
+        }
 
-  private class CopyAction extends DumbAwareAction {
-    public CopyAction() {
-      super("Copy", "Copy", PlatformIconGroup.actionsCopy());
-      registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
+        @Override
+        public String getDisplayName() {
+            return myNamer.getName(myItem);
+        }
+
+        @Override
+        public Image getIcon() {
+            if (myShowIcons && myConfigurable instanceof Iconable) {
+                return ((Iconable)myConfigurable).getIcon(0);
+            }
+            return null;
+        }
+
+        @Override
+        public boolean isModified() {
+            return myConfigurable.isModified();
+        }
+
+        @Override
+        public void apply() throws ConfigurationException {
+            myConfigurable.apply();
+        }
+
+        @Override
+        public void reset() {
+            myConfigurable.reset();
+        }
+
+        @Override
+        public void disposeUIResources() {
+            myConfigurable.disposeUIResources();
+        }
     }
 
+    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent event) {
-      final String profileName = askForProfileName("Copy {0}");
-      if (profileName == null) return;
+    public boolean isModified() {
+        if (myResultItems.size() != myItems.size()) {
+            return true;
+        }
 
-      final T clone = myCloner.copyOf((T)getSelectedObject());
-      myNamer.setName(clone, profileName);
-      addNewNode(clone);
-      selectNodeInTree(clone);
-      onItemCloned(clone);
+        for (int i = 0; i < myItems.size(); i++) {
+            if (!myComparer.equals(myItems.get(i), myResultItems.get(i))) {
+                return true;
+            }
+        }
+
+        return super.isModified();
     }
 
-
+    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent event) {
-      super.update(event);
-      event.getPresentation().setEnabled(getSelectedObject() != null);
-    }
-  }
-
-  protected void onItemCloned(T clone) {
-  }
-
-  private class AddAction extends DumbAwareAction {
-    public AddAction() {
-      super("Add", "Add", PlatformIconGroup.generalAdd());
-      registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
+    public void apply() throws ConfigurationException {
+        super.apply();
+        myResultItems = myItems;
     }
 
-    @Override
-    public void actionPerformed(AnActionEvent event) {
-      final T newItem = createItem();
-      if (newItem != null) {
-        onItemCreated(newItem);
-      }
+    protected List<T> getCurrentItems() {
+        return Collections.unmodifiableList(myItems);
     }
-  }
 
-  public void selectItem(T item) {
-    selectNodeInTree(findByName(myNamer.getName(item)));
-  }
+    public List<T> getItems() {
+        return myResultItems;
+    }
 
-  @Nullable
-  protected T createItem() {
-    final String name = askForProfileName("Create new {0}");
-    if (name == null) return null;
-    final T newItem = myFactory.get();
-    myNamer.setName(newItem, name);
-    return newItem;
-  }
+    public T getSelectedItem() {
+        return (T)getSelectedObject();
+    }
 
-  protected void onItemCreated(T newItem) {
-    addNewNode(newItem);
-    selectNodeInTree(newItem);
-  }
+
+    private class CopyAction extends DumbAwareAction {
+        public CopyAction() {
+            super("Copy", "Copy", PlatformIconGroup.actionsCopy());
+            registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
+        }
+
+        @Override
+        public void actionPerformed(AnActionEvent event) {
+            final String profileName = askForProfileName("Copy {0}");
+            if (profileName == null) {
+                return;
+            }
+
+            final T clone = myCloner.copyOf((T)getSelectedObject());
+            myNamer.setName(clone, profileName);
+            addNewNode(clone);
+            selectNodeInTree(clone);
+            onItemCloned(clone);
+        }
+
+
+        @Override
+        public void update(AnActionEvent event) {
+            super.update(event);
+            event.getPresentation().setEnabled(getSelectedObject() != null);
+        }
+    }
+
+    protected void onItemCloned(T clone) {
+    }
+
+    private class AddAction extends DumbAwareAction {
+        public AddAction() {
+            super("Add", "Add", PlatformIconGroup.generalAdd());
+            registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
+        }
+
+        @Override
+        public void actionPerformed(AnActionEvent event) {
+            final T newItem = createItem();
+            if (newItem != null) {
+                onItemCreated(newItem);
+            }
+        }
+    }
+
+    public void selectItem(T item) {
+        selectNodeInTree(findByName(myNamer.getName(item)));
+    }
+
+    @Nullable
+    protected T createItem() {
+        final String name = askForProfileName("Create new {0}");
+        if (name == null) {
+            return null;
+        }
+        final T newItem = myFactory.get();
+        myNamer.setName(newItem, name);
+        return newItem;
+    }
+
+    protected void onItemCreated(T newItem) {
+        addNewNode(newItem);
+        selectNodeInTree(newItem);
+    }
 
 }

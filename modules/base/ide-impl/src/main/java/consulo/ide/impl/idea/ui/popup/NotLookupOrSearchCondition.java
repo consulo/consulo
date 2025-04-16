@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ui.popup;
 
 import consulo.component.ComponentManager;
@@ -29,15 +28,15 @@ import java.awt.*;
  * @author yole
  */
 public class NotLookupOrSearchCondition implements Condition<ComponentManager> {
-  public static NotLookupOrSearchCondition INSTANCE = new NotLookupOrSearchCondition();
+    public static NotLookupOrSearchCondition INSTANCE = new NotLookupOrSearchCondition();
 
-  private NotLookupOrSearchCondition() {
-  }
+    private NotLookupOrSearchCondition() {
+    }
 
-  @Override
-  public boolean value(final ComponentManager project) {
-    final Component focusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent((Project)project);
-    boolean fromQuickSearch =  focusedComponent != null && focusedComponent.getParent() instanceof ChooseByNameBase.JPanelProvider;
-    return !fromQuickSearch && LookupManager.getInstance((Project)project).getActiveLookup() == null;
-  }
+    @Override
+    public boolean value(final ComponentManager project) {
+        final Component focusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent((Project)project);
+        boolean fromQuickSearch = focusedComponent != null && focusedComponent.getParent() instanceof ChooseByNameBase.JPanelProvider;
+        return !fromQuickSearch && LookupManager.getInstance((Project)project).getActiveLookup() == null;
+    }
 }

@@ -26,24 +26,24 @@ import java.util.Collections;
  * @author yole
  */
 public class NonCodeUsageSearchInfo {
-  private final Condition<PsiElement> myInsideDeletedCondition;
-  private final Collection<PsiElement> myElementsToSearch;
+    private final Condition<PsiElement> myInsideDeletedCondition;
+    private final Collection<PsiElement> myElementsToSearch;
 
-  public NonCodeUsageSearchInfo(final Condition<PsiElement> insideDeletedCondition, final Collection<PsiElement> elementsToSearch) {
-    myInsideDeletedCondition = insideDeletedCondition;
-    myElementsToSearch = elementsToSearch;
-  }
+    public NonCodeUsageSearchInfo(final Condition<PsiElement> insideDeletedCondition, final Collection<PsiElement> elementsToSearch) {
+        myInsideDeletedCondition = insideDeletedCondition;
+        myElementsToSearch = elementsToSearch;
+    }
 
-  public NonCodeUsageSearchInfo(final Condition<PsiElement> insideDeletedCondition, final PsiElement elementToSearch) {
-    myInsideDeletedCondition = insideDeletedCondition;
-    myElementsToSearch = Collections.singletonList(elementToSearch);
-  }
+    public NonCodeUsageSearchInfo(final Condition<PsiElement> insideDeletedCondition, final PsiElement elementToSearch) {
+        myInsideDeletedCondition = insideDeletedCondition;
+        myElementsToSearch = Collections.singletonList(elementToSearch);
+    }
 
-  public Condition<PsiElement> getInsideDeletedCondition() {
-    return myInsideDeletedCondition;
-  }
+    public Condition<PsiElement> getInsideDeletedCondition() {
+        return myInsideDeletedCondition;
+    }
 
-  public Collection<PsiElement> getElementsToSearch() {
-    return myElementsToSearch;
-  }
+    public Collection<PsiElement> getElementsToSearch() {
+        return myElementsToSearch;
+    }
 }

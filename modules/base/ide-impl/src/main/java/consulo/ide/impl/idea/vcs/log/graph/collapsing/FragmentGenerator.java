@@ -28,136 +28,160 @@ import java.util.Set;
 
 public class FragmentGenerator {
 
-  public static class GreenFragment {
-    @Nullable private final Integer myUpRedNode;
-    @Nullable private final Integer myDownRedNode;
-    @Nonnull
-    private final Set<Integer> myMiddleGreenNodes;
+    public static class GreenFragment {
+        @Nullable
+        private final Integer myUpRedNode;
+        @Nullable
+        private final Integer myDownRedNode;
+        @Nonnull
+        private final Set<Integer> myMiddleGreenNodes;
 
-    private GreenFragment(@Nullable Integer upRedNode, @Nullable Integer downRedNode, @Nonnull Set<Integer> middleGreenNodes) {
-      myUpRedNode = upRedNode;
-      myDownRedNode = downRedNode;
-      myMiddleGreenNodes = middleGreenNodes;
+        private GreenFragment(@Nullable Integer upRedNode, @Nullable Integer downRedNode, @Nonnull Set<Integer> middleGreenNodes) {
+            myUpRedNode = upRedNode;
+            myDownRedNode = downRedNode;
+            myMiddleGreenNodes = middleGreenNodes;
+        }
+
+        @Nullable
+        public Integer getUpRedNode() {
+            return myUpRedNode;
+        }
+
+        @Nullable
+        public Integer getDownRedNode() {
+            return myDownRedNode;
+        }
+
+        @Nonnull
+        public Set<Integer> getMiddleGreenNodes() {
+            return myMiddleGreenNodes;
+        }
+    }
+
+    @Nonnull
+    private final LiteLinearGraph myGraph;
+    @Nonnull
+    private final Condition<Integer> myRedNodes;
+
+    public FragmentGenerator(@Nonnull LiteLinearGraph graph, @Nonnull Condition<Integer> redNodes) {
+        myGraph = graph;
+        myRedNodes = redNodes;
+    }
+
+    @Nonnull
+    public Set<Integer> getMiddleNodes(final int upNode, final int downNode, boolean strict) {
+        Set<Integer> downWalk = getWalkNodes(
+            upNode,
+            false,
+            new Condition<Integer>() {
+                @Override
+                public boolean value(Integer integer) {
+                    return integer > downNode;
+                }
+            }
+        );
+        Set<Integer> upWalk = getWalkNodes(
+            downNode,
+            true,
+            new Condition<Integer>() {
+                @Override
+                public boolean value(Integer integer) {
+                    return integer < upNode;
+                }
+            }
+        );
+
+        downWalk.retainAll(upWalk);
+        if (strict) {
+            downWalk.remove(upNode);
+            downWalk.remove(downNode);
+        }
+        return downWalk;
     }
 
     @Nullable
-    public Integer getUpRedNode() {
-      return myUpRedNode;
-    }
+    public Integer getNearRedNode(int startNode, int maxWalkSize, boolean isUp) {
+        if (myRedNodes.value(startNode)) {
+            return startNode;
+        }
 
-    @Nullable
-    public Integer getDownRedNode() {
-      return myDownRedNode;
+        TreeSetNodeIterator walker = new TreeSetNodeIterator(startNode, isUp);
+        while (walker.notEmpty()) {
+            Integer next = walker.pop();
+
+            if (myRedNodes.value(next)) {
+                return next;
+            }
+
+            if (maxWalkSize < 0) {
+                return null;
+            }
+            maxWalkSize--;
+
+            walker.addAll(getNodes(next, isUp));
+        }
+
+        return null;
     }
 
     @Nonnull
-    public Set<Integer> getMiddleGreenNodes() {
-      return myMiddleGreenNodes;
-    }
-  }
+    public GreenFragment getGreenFragmentForCollapse(int startNode, int maxWalkSize) {
+        if (myRedNodes.value(startNode)) {
+            return new GreenFragment(null, null, Collections.<Integer>emptySet());
+        }
+        Integer upRedNode = getNearRedNode(startNode, maxWalkSize, true);
+        Integer downRedNode = getNearRedNode(startNode, maxWalkSize, false);
 
-  @Nonnull
-  private final LiteLinearGraph myGraph;
-  @Nonnull
-  private final Condition<Integer> myRedNodes;
+        Set<Integer> upPart = upRedNode != null
+            ? getMiddleNodes(upRedNode, startNode, false)
+            : getWalkNodes(startNode, true, createStopFunction(maxWalkSize));
 
-  public FragmentGenerator(@Nonnull LiteLinearGraph graph, @Nonnull Condition<Integer> redNodes) {
-    myGraph = graph;
-    myRedNodes = redNodes;
-  }
+        Set<Integer> downPart = downRedNode != null
+            ? getMiddleNodes(startNode, downRedNode, false)
+            : getWalkNodes(startNode, false, createStopFunction(maxWalkSize));
 
-  @Nonnull
-  public Set<Integer> getMiddleNodes(final int upNode, final int downNode, boolean strict) {
-    Set<Integer> downWalk = getWalkNodes(upNode, false, new Condition<Integer>() {
-      @Override
-      public boolean value(Integer integer) {
-        return integer > downNode;
-      }
-    });
-    Set<Integer> upWalk = getWalkNodes(downNode, true, new Condition<Integer>() {
-      @Override
-      public boolean value(Integer integer) {
-        return integer < upNode;
-      }
-    });
+        Set<Integer> middleNodes = ContainerUtil.union(upPart, downPart);
+        if (upRedNode != null) {
+            middleNodes.remove(upRedNode);
+        }
+        if (downRedNode != null) {
+            middleNodes.remove(downRedNode);
+        }
 
-    downWalk.retainAll(upWalk);
-    if (strict) {
-      downWalk.remove(upNode);
-      downWalk.remove(downNode);
-    }
-    return downWalk;
-  }
-
-  @Nullable
-  public Integer getNearRedNode(int startNode, int maxWalkSize, boolean isUp) {
-    if (myRedNodes.value(startNode)) return startNode;
-
-    TreeSetNodeIterator walker = new TreeSetNodeIterator(startNode, isUp);
-    while (walker.notEmpty()) {
-      Integer next = walker.pop();
-
-      if (myRedNodes.value(next)) return next;
-
-      if (maxWalkSize < 0) return null;
-      maxWalkSize--;
-
-      walker.addAll(getNodes(next, isUp));
+        return new GreenFragment(upRedNode, downRedNode, middleNodes);
     }
 
-    return null;
-  }
+    @Nonnull
+    private Set<Integer> getWalkNodes(int startNode, boolean isUp, Condition<Integer> stopFunction) {
+        Set<Integer> walkNodes = new HashSet<>();
 
-  @Nonnull
-  public GreenFragment getGreenFragmentForCollapse(int startNode, int maxWalkSize) {
-    if (myRedNodes.value(startNode)) return new GreenFragment(null, null, Collections.<Integer>emptySet());
-    Integer upRedNode = getNearRedNode(startNode, maxWalkSize, true);
-    Integer downRedNode = getNearRedNode(startNode, maxWalkSize, false);
+        TreeSetNodeIterator walker = new TreeSetNodeIterator(startNode, isUp);
+        while (walker.notEmpty()) {
+            Integer next = walker.pop();
+            if (!stopFunction.value(next)) {
+                walkNodes.add(next);
+                walker.addAll(getNodes(next, isUp));
+            }
+        }
 
-    Set<Integer> upPart =
-      upRedNode != null ? getMiddleNodes(upRedNode, startNode, false) : getWalkNodes(startNode, true, createStopFunction(maxWalkSize));
-
-    Set<Integer> downPart =
-      downRedNode != null ? getMiddleNodes(startNode, downRedNode, false) : getWalkNodes(startNode, false, createStopFunction(maxWalkSize));
-
-    Set<Integer> middleNodes = ContainerUtil.union(upPart, downPart);
-    if (upRedNode != null) middleNodes.remove(upRedNode);
-    if (downRedNode != null) middleNodes.remove(downRedNode);
-
-    return new GreenFragment(upRedNode, downRedNode, middleNodes);
-  }
-
-  @Nonnull
-  private Set<Integer> getWalkNodes(int startNode, boolean isUp, Condition<Integer> stopFunction) {
-    Set<Integer> walkNodes = new HashSet<>();
-
-    TreeSetNodeIterator walker = new TreeSetNodeIterator(startNode, isUp);
-    while (walker.notEmpty()) {
-      Integer next = walker.pop();
-      if (!stopFunction.value(next)) {
-        walkNodes.add(next);
-        walker.addAll(getNodes(next, isUp));
-      }
+        return walkNodes;
     }
 
-    return walkNodes;
-  }
+    @Nonnull
+    private List<Integer> getNodes(int nodeIndex, boolean isUp) {
+        return myGraph.getNodes(nodeIndex, LiteLinearGraph.NodeFilter.filter(isUp));
+    }
 
-  @Nonnull
-  private List<Integer> getNodes(int nodeIndex, boolean isUp) {
-    return myGraph.getNodes(nodeIndex, LiteLinearGraph.NodeFilter.filter(isUp));
-  }
+    @Nonnull
+    private static Condition<Integer> createStopFunction(final int maxNodeCount) {
+        return new Condition<Integer>() {
+            private int count = maxNodeCount;
 
-  @Nonnull
-  private static Condition<Integer> createStopFunction(final int maxNodeCount) {
-    return new Condition<Integer>() {
-      private int count = maxNodeCount;
-
-      @Override
-      public boolean value(Integer integer) {
-        count--;
-        return count < 0;
-      }
-    };
-  }
+            @Override
+            public boolean value(Integer integer) {
+                count--;
+                return count < 0;
+            }
+        };
+    }
 }

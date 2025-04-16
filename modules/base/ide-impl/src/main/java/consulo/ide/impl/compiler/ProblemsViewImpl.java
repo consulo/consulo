@@ -38,195 +38,210 @@ import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: 9/18/12
+ * Date: 9/18/12
  */
 @Singleton
 @ServiceImpl
 public class ProblemsViewImpl extends ProblemsView {
-  public static final Logger LOGGER = Logger.getInstance(ProblemsViewImpl.class);
+    public static final Logger LOGGER = Logger.getInstance(ProblemsViewImpl.class);
 
-  private static class TempMessage {
-    final int type;
-    @Nonnull
-    final String[] text;
-    @Nullable
-    final String groupName;
-    @Nullable
-    final Navigatable navigatable;
-    @Nullable
-    final String exportTextPrefix;
-    @Nullable
-    final String rendererTextPrefix;
+    private static class TempMessage {
+        final int type;
+        @Nonnull
+        final String[] text;
+        @Nullable
+        final String groupName;
+        @Nullable
+        final Navigatable navigatable;
+        @Nullable
+        final String exportTextPrefix;
+        @Nullable
+        final String rendererTextPrefix;
 
-    private TempMessage(int type,
-                        @Nonnull String[] text,
-                        @Nullable String groupName,
-                        @Nullable Navigatable navigatable,
-                        @Nullable String exportTextPrefix,
-                        @Nullable String rendererTextPrefix) {
-      this.type = type;
-      this.text = text;
-      this.groupName = groupName;
-      this.navigatable = navigatable;
-      this.exportTextPrefix = exportTextPrefix;
-      this.rendererTextPrefix = rendererTextPrefix;
-    }
-  }
-
-  private static final Key<Boolean> ourViewKey = Key.create("ProblemsViewImpl");
-
-  private List<TempMessage> myTempMessages = new CopyOnWriteArrayList<>();
-
-  @Nullable
-  private ProblemsViewPanel myPanel;
-
-  private final ExecutorService myViewUpdater = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ProblemsView pool");
-
-  private final Project myProject;
-
-  @Inject
-  public ProblemsViewImpl(final Project project) {
-    myProject = project;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void clearOldMessages() {
-    myTempMessages.clear();
-
-    final ProblemsViewPanel panel = myPanel;
-    if (panel != null) {
-      myViewUpdater.execute(new Runnable() {
-        @Override
-        public void run() {
-          panel.clearMessages();
+        private TempMessage(
+            int type,
+            @Nonnull String[] text,
+            @Nullable String groupName,
+            @Nullable Navigatable navigatable,
+            @Nullable String exportTextPrefix,
+            @Nullable String rendererTextPrefix
+        ) {
+            this.type = type;
+            this.text = text;
+            this.groupName = groupName;
+            this.navigatable = navigatable;
+            this.exportTextPrefix = exportTextPrefix;
+            this.rendererTextPrefix = rendererTextPrefix;
         }
-      });
     }
-  }
 
+    private static final Key<Boolean> ourViewKey = Key.create("ProblemsViewImpl");
 
-  @RequiredUIAccess
-  @Override
-  public void addMessage(final int type,
-                         @Nonnull final String[] text,
-                         @Nullable final String groupName,
-                         @Nullable final Navigatable navigatable,
-                         @Nullable final String exportTextPrefix,
-                         @Nullable final String rendererTextPrefix) {
-    final TempMessage message = new TempMessage(type, text, groupName, navigatable, exportTextPrefix, rendererTextPrefix);
+    private List<TempMessage> myTempMessages = new CopyOnWriteArrayList<>();
 
-    myTempMessages.add(message);
+    @Nullable
+    private ProblemsViewPanel myPanel;
 
-    final ProblemsViewPanel panel = myPanel;
-    if (panel != null) {
-      myViewUpdater.execute(new Runnable() {
-        @Override
-        public void run() {
-          addMessage(panel, message);
+    private final ExecutorService myViewUpdater = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ProblemsView pool");
+
+    private final Project myProject;
+
+    @Inject
+    public ProblemsViewImpl(final Project project) {
+        myProject = project;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void clearOldMessages() {
+        myTempMessages.clear();
+
+        final ProblemsViewPanel panel = myPanel;
+        if (panel != null) {
+            myViewUpdater.execute(new Runnable() {
+                @Override
+                public void run() {
+                    panel.clearMessages();
+                }
+            });
         }
-      });
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void showOrHide(final boolean hide) {
-    ToolWindow toolWindow = MessageView.getInstance(myProject).getToolWindow();
-    // dont try hide if toolwindow closed
-    if (hide && !toolWindow.isVisible()) {
-      return;
     }
 
-    final ContentManager contentManager = toolWindow.getContentManager();
-    Content[] contents = contentManager.getContents();
-    Content content = ContainerUtil.find(contents, new Condition<Content>() {
-      @Override
-      public boolean value(Content content) {
-        return content.getUserData(ourViewKey) != null;
-      }
-    });
 
-    if (content == null && hide) {
-      return;
+    @RequiredUIAccess
+    @Override
+    public void addMessage(
+        final int type,
+        @Nonnull final String[] text,
+        @Nullable final String groupName,
+        @Nullable final Navigatable navigatable,
+        @Nullable final String exportTextPrefix,
+        @Nullable final String rendererTextPrefix
+    ) {
+        final TempMessage message = new TempMessage(type, text, groupName, navigatable, exportTextPrefix, rendererTextPrefix);
+
+        myTempMessages.add(message);
+
+        final ProblemsViewPanel panel = myPanel;
+        if (panel != null) {
+            myViewUpdater.execute(new Runnable() {
+                @Override
+                public void run() {
+                    addMessage(panel, message);
+                }
+            });
+        }
     }
 
-    if (hide) {
-      contentManager.removeContent(content, true);
-    }
-    else {
-      if (content == null) {
-        ProblemsViewPanel problemsViewPanel = new ProblemsViewPanel(myProject);
-        for (TempMessage tempMessage : myTempMessages) {
-          addMessage(problemsViewPanel, tempMessage);
+    @RequiredUIAccess
+    @Override
+    public void showOrHide(final boolean hide) {
+        ToolWindow toolWindow = MessageView.getInstance(myProject).getToolWindow();
+        // dont try hide if toolwindow closed
+        if (hide && !toolWindow.isVisible()) {
+            return;
         }
 
-        content = ContentFactory.getInstance().createContent(myPanel = problemsViewPanel, "Compilation", false);
-        content.putUserData(ourViewKey, Boolean.TRUE);
+        final ContentManager contentManager = toolWindow.getContentManager();
+        Content[] contents = contentManager.getContents();
+        Content content = ContainerUtil.find(
+            contents,
+            new Condition<Content>() {
+                @Override
+                public boolean value(Content content) {
+                    return content.getUserData(ourViewKey) != null;
+                }
+            }
+        );
 
-        contentManager.addContent(content);
-      }
-
-      contentManager.setSelectedContent(content, true);
-      toolWindow.show(EmptyRunnable.getInstance());
-    }
-  }
-
-  private static void addMessage(ProblemsViewPanel problemsViewPanel, TempMessage tempMessage) {
-    if (tempMessage.navigatable != null) {
-      problemsViewPanel.addMessage(tempMessage.type, tempMessage.text, tempMessage.groupName, tempMessage.navigatable, tempMessage.exportTextPrefix,
-                                   tempMessage.rendererTextPrefix, null);
-    }
-    else {
-      problemsViewPanel.addMessage(tempMessage.type, tempMessage.text, null, -1, -1, null);
-    }
-  }
-
-  @Override
-  public void selectFirstMessage() {
-    final ProblemsViewPanel panel = myPanel;
-    if (panel != null) {
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          panel.selectFirstMessage();
+        if (content == null && hide) {
+            return;
         }
-      });
-    }
-  }
 
-  @Override
-  public boolean isHideWarnings() {
-    return !ErrorTreeViewConfiguration.getInstance(myProject).SHOW_WARNINGS;
-  }
+        if (hide) {
+            contentManager.removeContent(content, true);
+        }
+        else {
+            if (content == null) {
+                ProblemsViewPanel problemsViewPanel = new ProblemsViewPanel(myProject);
+                for (TempMessage tempMessage : myTempMessages) {
+                    addMessage(problemsViewPanel, tempMessage);
+                }
 
-  @Override
-  public void setProgress(String text, float fraction) {
-    ProblemsViewPanel panel = myPanel;
-    if (panel != null) {
-      panel.setProgress(text, fraction);
-    }
-  }
+                content = ContentFactory.getInstance().createContent(myPanel = problemsViewPanel, "Compilation", false);
+                content.putUserData(ourViewKey, Boolean.TRUE);
 
-  @Override
-  public void setProgress(String text) {
-    ProblemsViewPanel panel = myPanel;
-    if (panel != null) {
-      panel.setProgressText(text);
-    }
-  }
+                contentManager.addContent(content);
+            }
 
-  @Override
-  public void clearProgress() {
-    ProblemsViewPanel panel = myPanel;
-    if (panel != null) {
-      panel.clearProgressData();
+            contentManager.setSelectedContent(content, true);
+            toolWindow.show(EmptyRunnable.getInstance());
+        }
     }
-  }
+
+    private static void addMessage(ProblemsViewPanel problemsViewPanel, TempMessage tempMessage) {
+        if (tempMessage.navigatable != null) {
+            problemsViewPanel.addMessage(
+                tempMessage.type,
+                tempMessage.text,
+                tempMessage.groupName,
+                tempMessage.navigatable,
+                tempMessage.exportTextPrefix,
+                tempMessage.rendererTextPrefix,
+                null
+            );
+        }
+        else {
+            problemsViewPanel.addMessage(tempMessage.type, tempMessage.text, null, -1, -1, null);
+        }
+    }
+
+    @Override
+    public void selectFirstMessage() {
+        final ProblemsViewPanel panel = myPanel;
+        if (panel != null) {
+            UIUtil.invokeLaterIfNeeded(new Runnable() {
+                @Override
+                public void run() {
+                    panel.selectFirstMessage();
+                }
+            });
+        }
+    }
+
+    @Override
+    public boolean isHideWarnings() {
+        return !ErrorTreeViewConfiguration.getInstance(myProject).SHOW_WARNINGS;
+    }
+
+    @Override
+    public void setProgress(String text, float fraction) {
+        ProblemsViewPanel panel = myPanel;
+        if (panel != null) {
+            panel.setProgress(text, fraction);
+        }
+    }
+
+    @Override
+    public void setProgress(String text) {
+        ProblemsViewPanel panel = myPanel;
+        if (panel != null) {
+            panel.setProgressText(text);
+        }
+    }
+
+    @Override
+    public void clearProgress() {
+        ProblemsViewPanel panel = myPanel;
+        if (panel != null) {
+            panel.clearProgressData();
+        }
+    }
 }

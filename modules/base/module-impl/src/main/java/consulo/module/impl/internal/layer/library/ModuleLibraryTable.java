@@ -35,6 +35,7 @@ import consulo.util.lang.function.Condition;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.function.Function;
@@ -43,136 +44,138 @@ import java.util.function.Function;
  * @author dsl
  */
 public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.ModifiableModelEx {
-  private static final ModuleLibraryOrderEntryCondition MODULE_LIBRARY_ORDER_ENTRY_FILTER = new ModuleLibraryOrderEntryCondition();
-  private static final OrderEntryToLibraryConvertor ORDER_ENTRY_TO_LIBRARY_CONVERTOR = new OrderEntryToLibraryConvertor();
-  private final ModuleRootLayerImpl myRootLayer;
+    private static final ModuleLibraryOrderEntryCondition MODULE_LIBRARY_ORDER_ENTRY_FILTER = new ModuleLibraryOrderEntryCondition();
+    private static final OrderEntryToLibraryConvertor ORDER_ENTRY_TO_LIBRARY_CONVERTOR = new OrderEntryToLibraryConvertor();
+    private final ModuleRootLayerImpl myRootLayer;
 
-  public ModuleLibraryTable(ModuleRootLayerImpl rootLayer) {
-    myRootLayer = rootLayer;
-  }
+    public ModuleLibraryTable(ModuleRootLayerImpl rootLayer) {
+        myRootLayer = rootLayer;
+    }
 
-  @Override
-  @Nonnull
-  public Library[] getLibraries() {
-    final ArrayList<Library> result = new ArrayList<Library>();
-    final Iterator<Library> libraryIterator = getLibraryIterator();
-    ContainerUtil.addAll(result, libraryIterator);
-    return result.toArray(new Library[result.size()]);
-  }
+    @Override
+    @Nonnull
+    public Library[] getLibraries() {
+        final ArrayList<Library> result = new ArrayList<Library>();
+        final Iterator<Library> libraryIterator = getLibraryIterator();
+        ContainerUtil.addAll(result, libraryIterator);
+        return result.toArray(new Library[result.size()]);
+    }
 
-  @Override
-  public Library createLibrary() {
-    return createLibrary(null);
-  }
+    @Override
+    public Library createLibrary() {
+        return createLibrary(null);
+    }
 
-  @Override
-  public Library createLibrary(String name) {
-    return createLibrary(name, null);
-  }
+    @Override
+    public Library createLibrary(String name) {
+        return createLibrary(name, null);
+    }
 
-  @Override
-  public Library createLibrary(String name, @Nullable PersistentLibraryKind kind) {
-    final ModuleLibraryOrderEntryImpl orderEntry = new ModuleLibraryOrderEntryImpl(name, kind, myRootLayer);
-    myRootLayer.addOrderEntry(orderEntry);
-    return orderEntry.getLibrary();
-  }
+    @Override
+    public Library createLibrary(String name, @Nullable PersistentLibraryKind kind) {
+        final ModuleLibraryOrderEntryImpl orderEntry = new ModuleLibraryOrderEntryImpl(name, kind, myRootLayer);
+        myRootLayer.addOrderEntry(orderEntry);
+        return orderEntry.getLibrary();
+    }
 
-  @Override
-  public void removeLibrary(@Nonnull Library library) {
-    final Iterator<OrderEntry> orderIterator = myRootLayer.getOrderIterator();
-    while (orderIterator.hasNext()) {
-      OrderEntry orderEntry = orderIterator.next();
-      if (orderEntry instanceof LibraryOrderEntry) {
-        final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)orderEntry;
-        if (libraryOrderEntry.isModuleLevel()) {
-          if (library.equals(libraryOrderEntry.getLibrary())) {
-            myRootLayer.removeOrderEntry(orderEntry);
-            //Disposer.dispose(library);
-            return;
-          }
+    @Override
+    public void removeLibrary(@Nonnull Library library) {
+        final Iterator<OrderEntry> orderIterator = myRootLayer.getOrderIterator();
+        while (orderIterator.hasNext()) {
+            OrderEntry orderEntry = orderIterator.next();
+            if (orderEntry instanceof LibraryOrderEntry) {
+                final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)orderEntry;
+                if (libraryOrderEntry.isModuleLevel()) {
+                    if (library.equals(libraryOrderEntry.getLibrary())) {
+                        myRootLayer.removeOrderEntry(orderEntry);
+                        //Disposer.dispose(library);
+                        return;
+                    }
+                }
+            }
         }
-      }
     }
-  }
 
-  @Override
-  @Nonnull
-  public Iterator<Library> getLibraryIterator() {
-    FilteringIterator<OrderEntry, LibraryOrderEntry> filteringIterator = new FilteringIterator<OrderEntry, LibraryOrderEntry>(myRootLayer.getOrderIterator(), MODULE_LIBRARY_ORDER_ENTRY_FILTER);
-    return new ConvertingIterator<>(filteringIterator, ORDER_ENTRY_TO_LIBRARY_CONVERTOR);
-  }
-
-  @Override
-  public String getTableLevel() {
-    return LibraryTableImplUtil.MODULE_LEVEL;
-  }
-
-  @Override
-  public LibraryTablePresentation getPresentation() {
-    return ModuleLibraryTablePresentation.INSTANCE;
-  }
-
-  @Override
-  public boolean isEditable() {
-    return true;
-  }
-
-  @Override
-  @Nullable
-  public Library getLibraryByName(@Nonnull String name) {
-    final Iterator<Library> libraryIterator = getLibraryIterator();
-    while (libraryIterator.hasNext()) {
-      Library library = libraryIterator.next();
-      if (name.equals(library.getName())) return library;
-    }
-    return null;
-  }
-
-  @Override
-  public void addListener(Listener listener) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addListener(Listener listener, Disposable parentDisposable) {
-    throw new UnsupportedOperationException("Method addListener is not yet implemented in " + getClass().getName());
-  }
-
-  @Override
-  public void removeListener(Listener listener) {
-    throw new UnsupportedOperationException();
-  }
-
-  public Module getModule() {
-    return myRootLayer.getModule();
-  }
-
-
-  private static class ModuleLibraryOrderEntryCondition implements Condition<OrderEntry> {
     @Override
-    public boolean value(OrderEntry entry) {
-      return entry instanceof LibraryOrderEntry && ((LibraryOrderEntry)entry).isModuleLevel() && ((LibraryOrderEntry)entry).getLibrary() != null;
+    @Nonnull
+    public Iterator<Library> getLibraryIterator() {
+        FilteringIterator<OrderEntry, LibraryOrderEntry> filteringIterator =
+            new FilteringIterator<OrderEntry, LibraryOrderEntry>(myRootLayer.getOrderIterator(), MODULE_LIBRARY_ORDER_ENTRY_FILTER);
+        return new ConvertingIterator<>(filteringIterator, ORDER_ENTRY_TO_LIBRARY_CONVERTOR);
     }
-  }
 
-  private static class OrderEntryToLibraryConvertor implements Function<LibraryOrderEntry, Library> {
     @Override
-    public Library apply(LibraryOrderEntry o) {
-      return o.getLibrary();
+    public String getTableLevel() {
+        return LibraryTableImplUtil.MODULE_LEVEL;
     }
-  }
 
-  @Override
-  public void commit() {
-  }
+    @Override
+    public LibraryTablePresentation getPresentation() {
+        return ModuleLibraryTablePresentation.INSTANCE;
+    }
 
-  @Override
-  public boolean isChanged() {
-    return myRootLayer.getRootModel().isChanged();
-  }
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
 
-  @Override
-  public ModifiableModel getModifiableModel() {
-    return this;
-  }
+    @Override
+    @Nullable
+    public Library getLibraryByName(@Nonnull String name) {
+        final Iterator<Library> libraryIterator = getLibraryIterator();
+        while (libraryIterator.hasNext()) {
+            Library library = libraryIterator.next();
+            if (name.equals(library.getName())) {
+                return library;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void addListener(Listener listener) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addListener(Listener listener, Disposable parentDisposable) {
+        throw new UnsupportedOperationException("Method addListener is not yet implemented in " + getClass().getName());
+    }
+
+    @Override
+    public void removeListener(Listener listener) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Module getModule() {
+        return myRootLayer.getModule();
+    }
+
+    private static class ModuleLibraryOrderEntryCondition implements Condition<OrderEntry> {
+        @Override
+        public boolean value(OrderEntry entry) {
+            return entry instanceof LibraryOrderEntry && ((LibraryOrderEntry)entry).isModuleLevel() && ((LibraryOrderEntry)entry).getLibrary() != null;
+        }
+    }
+
+    private static class OrderEntryToLibraryConvertor implements Function<LibraryOrderEntry, Library> {
+        @Override
+        public Library apply(LibraryOrderEntry o) {
+            return o.getLibrary();
+        }
+    }
+
+    @Override
+    public void commit() {
+    }
+
+    @Override
+    public boolean isChanged() {
+        return myRootLayer.getRootModel().isChanged();
+    }
+
+    @Override
+    public ModifiableModel getModifiableModel() {
+        return this;
+    }
 }
