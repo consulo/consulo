@@ -3,8 +3,9 @@
 package consulo.ide.impl.idea.execution.impl;
 
 import com.google.common.base.CharMatcher;
+import consulo.application.AccessRule;
+import consulo.application.Application;
 import consulo.application.HelpManager;
-import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -72,10 +73,9 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -92,7 +92,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiPredicate;
 
 public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableConsoleView, DataProvider, OccurenceNavigator {
-    @NonNls
     private static final String CONSOLE_VIEW_POPUP_MENU = "ConsoleView.PopupMenu";
     private static final Logger LOG = Logger.getInstance(ConsoleViewImpl.class);
 
@@ -238,19 +237,22 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
                 });
             }
         });
-        myProject.getApplication().getMessageBus().connect(this).subscribe(EditorColorsListener.class, scheme -> {
-            UIAccess.assertIsUIThread();
-            if (isDisposed() || myEditor == null) {
-                return;
-            }
-            MarkupModel model = DocumentMarkupModel.forDocument(myEditor.getDocument(), project, false);
-            for (RangeHighlighter tokenMarker : model.getAllHighlighters()) {
-                ConsoleViewContentType contentType = tokenMarker.getUserData(CONTENT_TYPE);
-                if (contentType != null && tokenMarker instanceof RangeHighlighterEx) {
-                    tokenMarker.setTextAttributes(contentType.getAttributes());
+        myProject.getApplication().getMessageBus().connect(this).subscribe(
+            EditorColorsListener.class,
+            scheme -> {
+                UIAccess.assertIsUIThread();
+                if (isDisposed() || myEditor == null) {
+                    return;
+                }
+                MarkupModel model = DocumentMarkupModel.forDocument(myEditor.getDocument(), project, false);
+                for (RangeHighlighter tokenMarker : model.getAllHighlighters()) {
+                    ConsoleViewContentType contentType = tokenMarker.getUserData(CONTENT_TYPE);
+                    if (contentType != null && tokenMarker instanceof RangeHighlighterEx) {
+                        tokenMarker.setTextAttributes(contentType.getAttributes());
+                    }
                 }
             }
-        });
+        );
     }
 
     private static synchronized void initTypedHandler() {
@@ -279,6 +281,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         myCancelStickToEnd = false;
     }
 
+    @Override
     @RequiredUIAccess
     public void foldImmediately() {
         UIAccess.assertIsUIThread();
@@ -423,7 +426,11 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         if (myJLayeredPane == null) {
             getComponent();
         }
-        mySpareTimeAlarm.addRequest(() -> performWhenNoDeferredOutput(runnable), 100, IdeaModalityState.stateForComponent(myJLayeredPane));
+        mySpareTimeAlarm.addRequest(
+            () -> performWhenNoDeferredOutput(runnable),
+            100,
+            Application.get().getModalityStateForComponent(myJLayeredPane)
+        );
     }
 
     @Override
@@ -688,7 +695,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         boolean shouldStickToEnd = !myCancelStickToEnd && isStickingToEnd();
         myCancelStickToEnd = false; // Cancel only needs to last for one update. Next time, isStickingToEnd() will be false.
 
-        Ref<CharSequence> addedTextRef = Ref.create();
+        SimpleReference<CharSequence> addedTextRef = SimpleReference.create();
         List<TokenBuffer.TokenInfo> deferredTokens;
         Document document = myEditor.getDocument();
 
@@ -973,7 +980,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
     @Nonnull
     private EditorEx createConsoleEditor() {
-        return ReadAction.compute(() -> {
+        return AccessRule.read(() -> {
             EditorEx editor = doCreateConsoleEditor();
             LOG.assertTrue(UndoUtil.isUndoDisabledFor(editor.getDocument()));
             editor.installPopupHandler(new ContextMenuPopupHandler() {

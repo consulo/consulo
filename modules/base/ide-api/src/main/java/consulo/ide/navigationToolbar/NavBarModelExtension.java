@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 04-Feb-2008
- */
 package consulo.ide.navigationToolbar;
 
 import consulo.annotation.component.ComponentScope;
@@ -42,6 +37,7 @@ import java.util.function.Predicate;
  * method, for which the order is reverse.
  *
  * @author anna
+ * @since 2008-02-04
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface NavBarModelExtension {

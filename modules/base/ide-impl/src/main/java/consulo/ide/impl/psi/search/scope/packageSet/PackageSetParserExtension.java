@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 25-Jan-2008
- */
 package consulo.ide.impl.psi.search.scope.packageSet;
 
 import consulo.annotation.component.ComponentScope;
@@ -29,6 +24,10 @@ import consulo.content.scope.ParsingException;
 
 import jakarta.annotation.Nullable;
 
+/**
+ * @author anna
+ * @since 2008-01-25
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PackageSetParserExtension {
     ExtensionPointName<PackageSetParserExtension> EP_NAME = ExtensionPointName.create(PackageSetParserExtension.class);

@@ -23,6 +23,7 @@ import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.PathMacroProtocolProvider;
 import consulo.component.macro.ReplacePathToMacroMap;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
@@ -57,7 +58,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 23:16/06.10.13
+ * @since 2013-10-06
  */
 public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsChangeTask {
     private static final Logger LOG = Logger.getInstance(BackgroundTaskByVfsChangeTaskImpl.class);
@@ -179,13 +180,14 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
 
                     VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(substitute);
                     if (fileByPath != null) {
-                        uiAccess.give(() -> ProgressManager.getInstance()
-                            .runProcessWithProgressSynchronously(
+                        uiAccess.give(
+                            () -> ProgressManager.getInstance().runProcessWithProgressSynchronously(
                                 () -> fileByPath.refresh(false, true),
-                                "Refreshing Files...",
+                                LocalizeValue.localizeTODO("Refreshing Files...").get(),
                                 false,
                                 myProject
-                            ));
+                            )
+                        );
                     }
                 }
             });

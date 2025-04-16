@@ -22,11 +22,9 @@ import consulo.language.psi.PsiElement;
 
 import jakarta.annotation.Nonnull;
 
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Sep 10, 2007
- * Time: 1:58:08 PM
+/**
+ * @author cdr
+ * @since 2007-09-10
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ConcatenationAwareInjector {

@@ -17,9 +17,12 @@ package consulo.util.collection;
 
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.impl.map.*;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
@@ -282,5 +285,11 @@ public final class Maps {
         return removeEldestEntryFunc.test(this);
       }
     };
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <K, V> Map<K, V> notNullize(@Nullable Map<K, V> map) {
+    return map == null ? Collections.emptyMap() : map;
   }
 }

@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 15.11.2006
- * Time: 18:05:20
- */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
-import consulo.project.Project;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.LineTokenizer;
-import consulo.util.lang.StringUtil;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -37,8 +28,11 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author yole
+ * @since 2006-11-15
+ */
 public class PatchReader {
-    @NonNls
     public static final String NO_NEWLINE_SIGNATURE = UnifiedDiffWriter.NO_NEWLINE_SIGNATURE;
     private final List<String> myLines;
     private final PatchReader.PatchContentParser myPatchContentParser;
@@ -50,22 +44,14 @@ public class PatchReader {
         UNIFIED
     }
 
-    @NonNls
     private static final String CONTEXT_HUNK_PREFIX = "***************";
-    @NonNls
     private static final String CONTEXT_FILE_PREFIX = "*** ";
-    @NonNls
     private static final String UNIFIED_BEFORE_HUNK_PREFIX = "--- ";
-    @NonNls
     private static final String UNIFIED_AFTER_HUNK_PREFIX = "+++ ";
 
-    @NonNls
     private static final Pattern ourUnifiedHunkStartPattern = Pattern.compile("@@ -(\\d+)(,(\\d+))? \\+(\\d+)(,(\\d+))? @@.*");
-    @NonNls
     private static final Pattern ourContextBeforeHunkStartPattern = Pattern.compile("\\*\\*\\* (\\d+),(\\d+) \\*\\*\\*\\*");
-    @NonNls
     private static final Pattern ourContextAfterHunkStartPattern = Pattern.compile("--- (\\d+),(\\d+) ----");
-    @NonNls
     private static final Pattern ourEmptyRevisionInfoPattern = Pattern.compile("\\(\\s*revision\\s*\\)");
 
     public PatchReader(CharSequence patchContent) {
@@ -202,8 +188,7 @@ public class PatchReader {
         }
         else {
             Map<String, Map<String, CharSequence>> additionalInfo =
-                ContainerUtil.filter(myAdditionalInfoParser.getResultMap(), path -> paths == null || paths
-                    .contains(path));
+                ContainerUtil.filter(myAdditionalInfoParser.getResultMap(), path -> paths == null || paths.contains(path));
             result = () -> additionalInfo;
         }
 
@@ -240,10 +225,7 @@ public class PatchReader {
 
         @Override
         public boolean testIsStart(String start) {
-            if (myIgnoreMode || mySyntaxException != null) {
-                return false;  // stop on first error
-            }
-            return start != null && start.contains(UnifiedDiffWriter.ADDITIONAL_PREFIX);
+            return !(myIgnoreMode || mySyntaxException != null) && start != null && start.contains(UnifiedDiffWriter.ADDITIONAL_PREFIX);
         }
 
         @Override

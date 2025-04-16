@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 10.02.15
+ * @since 2015-02-10
  */
 @ExtensionImpl(id = "default", order = "first")
 public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider {

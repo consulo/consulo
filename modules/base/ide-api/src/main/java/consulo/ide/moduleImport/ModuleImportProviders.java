@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 30-Jan-17
+ * @since 2017-01-30
  */
 public class ModuleImportProviders {
     @Nonnull

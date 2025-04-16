@@ -68,7 +68,7 @@ public class UsageInfoToUsageConverter {
                 return Collections.emptyList();
             }
 
-            final SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(primaryElements[0].getProject());
+            SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(primaryElements[0].getProject());
             return ContainerUtil.mapNotNull(primaryElements, smartPointerManager::createSmartPsiElementPointer);
         }
 
@@ -133,7 +133,7 @@ public class UsageInfoToUsageConverter {
         PsiElement usageElement = usageInfo.getElement();
         for (ReadWriteAccessDetector detector : ReadWriteAccessDetector.EP_NAME.getExtensionList()) {
             if (isReadWriteAccessibleElements(primaryElements, detector)) {
-                final ReadWriteAccessDetector.Access rwAccess = detector.getExpressionAccess(usageElement);
+                ReadWriteAccessDetector.Access rwAccess = detector.getExpressionAccess(usageElement);
                 return new ReadWriteAccessUsageInfo2UsageAdapter(
                     usageInfo,
                     rwAccess != ReadWriteAccessDetector.Access.Write,
@@ -156,7 +156,7 @@ public class UsageInfoToUsageConverter {
 
     @Nonnull
     @RequiredReadAction
-    public static Usage[] convert(@Nonnull final PsiElement[] primaryElements, @Nonnull UsageInfo[] usageInfos) {
+    public static Usage[] convert(@Nonnull PsiElement[] primaryElements, @Nonnull UsageInfo[] usageInfos) {
         return ContainerUtil.map(usageInfos, info -> convert(primaryElements, info), new Usage[usageInfos.length]);
     }
 

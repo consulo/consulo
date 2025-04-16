@@ -34,7 +34,7 @@ import java.util.*;
 
 /**
  * @author Denis Zhdanov
- * @since 2/15/12 11:32 AM
+ * @since 2012-02-15
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 @ExtensionImpl

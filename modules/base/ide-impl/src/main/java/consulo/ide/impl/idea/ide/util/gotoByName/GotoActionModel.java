@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import com.google.common.annotations.VisibleForTesting;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
@@ -26,18 +26,16 @@ import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ToggleSwitch;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -48,11 +46,13 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StyleManager;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -91,7 +91,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         Map<String, String> map = new HashMap<>();
         for (Configurable configurable : BaseShowSettingsUtil.buildConfigurables(getProject())) {
             if (configurable instanceof SearchableConfigurable) {
-                map.put(((SearchableConfigurable)configurable).getId(), configurable.getDisplayName());
+                map.put(configurable.getId(), configurable.getDisplayName());
             }
         }
         return map;
@@ -267,8 +267,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         private static int getTypeWeight(@Nonnull Object value) {
             if (value instanceof ActionWrapper) {
                 ActionWrapper actionWrapper = (ActionWrapper)value;
-                if ((ApplicationManager.getApplication().isDispatchThread()
-                    || actionWrapper.hasPresentation()) && actionWrapper.isAvailable()) {
+                if ((UIAccess.isUIThread() || actionWrapper.hasPresentation()) && actionWrapper.isAvailable()) {
                     return 0;
                 }
                 return 2;
@@ -367,13 +366,13 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     @Override
     @Nonnull
     public String[] getNames(boolean checkBoxState) {
-        return ArrayUtilRt.EMPTY_STRING_ARRAY;
+        return ArrayUtil.EMPTY_STRING_ARRAY;
     }
 
     @Override
     @Nonnull
     public Object[] getElementsByName(@Nonnull String id, boolean checkBoxState, @Nonnull String pattern) {
-        return ArrayUtilRt.EMPTY_OBJECT_ARRAY;
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
     @Nonnull
@@ -406,7 +405,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             mapping.addPath(path);
         }
 
-        List<ActionGroup> newPath = ContainerUtil.append(path, group);
+        List<ActionGroup> newPath = consulo.ide.impl.idea.util.containers.ContainerUtil.append(path, group);
         for (AnAction action : actions) {
             if (action == null || action instanceof AnSeparator) {
                 continue;
@@ -432,7 +431,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return getElementName(element);
     }
 
-    @NonNls
     @Override
     public String getHelpId() {
         return "procedures.navigating.goto.action";
@@ -441,7 +439,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     @Override
     @Nonnull
     public String[] getSeparators() {
-        return ArrayUtilRt.EMPTY_STRING_ARRAY;
+        return ArrayUtil.EMPTY_STRING_ARRAY;
     }
 
     @Nullable
@@ -506,14 +504,18 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     private void updateOnEdt(Runnable update) {
         Semaphore semaphore = new Semaphore(1);
         ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
-        ApplicationManager.getApplication().invokeLater(() -> {
-            try {
-                update.run();
-            }
-            finally {
-                semaphore.up();
-            }
-        }, myModality, () -> indicator != null && indicator.isCanceled());
+        Application.get().invokeLater(
+            () -> {
+                try {
+                    update.run();
+                }
+                finally {
+                    semaphore.up();
+                }
+            },
+            myModality,
+            () -> indicator != null && indicator.isCanceled()
+        );
 
         while (!semaphore.waitFor(10)) {
             if (indicator != null && indicator.isCanceled()) {
@@ -606,7 +608,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
 
         @Nonnull
         public List<String> getAllGroupNames() {
-            return ContainerUtil.map(myPaths, path -> getPathName(path));
+            return ContainerUtil.map(myPaths, this::getPathName);
         }
 
         @Nullable
@@ -744,7 +746,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
                     myGroupMapping.updateBeforeShow(myDataContext);
                 }
             };
-            if (ApplicationManager.getApplication().isDispatchThread()) {
+            if (UIAccess.isUIThread()) {
                 r.run();
             }
             else {
@@ -806,6 +808,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
 
         @Nonnull
         @Override
+        @RequiredUIAccess
         public Component getListCellRendererComponent(
             @Nonnull JList list,
             Object matchedValue,
@@ -928,7 +931,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             //  return value.getHit() + " = " + value.getValue();
             //}
             String hit = StringUtil.defaultIfEmpty(value.getHit(), value.getOption());
-            return StringUtil.unescapeXmlEntities(StringUtil.notNullize(hit))
+            return consulo.ide.impl.idea.openapi.util.text.StringUtil.unescapeXmlEntities(StringUtil.notNullize(hit))
                 .replace(BundleBase.MNEMONIC_STRING, "")
                 .replace("  ", " "); // avoid extra spaces from mnemonics and xml conversion
         }

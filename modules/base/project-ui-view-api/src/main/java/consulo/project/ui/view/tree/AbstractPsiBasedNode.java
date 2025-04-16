@@ -48,7 +48,7 @@ import java.util.Objects;
 public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value> implements ValidateableNode, StatePreservingNavigatable {
     private static final Logger LOG = Logger.getInstance(AbstractPsiBasedNode.class);
 
-    protected AbstractPsiBasedNode(final Project project, @Nonnull Value value, final ViewSettings viewSettings) {
+    protected AbstractPsiBasedNode(Project project, @Nonnull Value value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
 
@@ -69,7 +69,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
     @Nonnull
     private Collection<? extends AbstractTreeNode> doGetChildren() {
-        final PsiElement psiElement = extractPsiFromValue();
+        PsiElement psiElement = extractPsiFromValue();
         if (psiElement == null) {
             return new ArrayList<>();
         }
@@ -78,27 +78,27 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
             return Collections.emptyList();
         }
 
-        final Collection<AbstractTreeNode> children = getChildrenImpl();
+        Collection<AbstractTreeNode> children = getChildrenImpl();
         return children != null ? children : Collections.emptyList();
     }
 
     @Override
     public boolean isValid() {
-        final PsiElement psiElement = extractPsiFromValue();
+        PsiElement psiElement = extractPsiFromValue();
         return psiElement != null && psiElement.isValid();
     }
 
     protected boolean isMarkReadOnly() {
-        final TreeNode parent = getParent();
+        TreeNode parent = getParent();
         if (parent == null) {
             return false;
         }
         if (parent instanceof AbstractPsiBasedNode) {
-            final PsiElement psiElement = ((AbstractPsiBasedNode<?>)parent).extractPsiFromValue();
+            PsiElement psiElement = ((AbstractPsiBasedNode<?>)parent).extractPsiFromValue();
             return psiElement instanceof PsiDirectory;
         }
 
-        final Object parentValue = parent.getValue();
+        Object parentValue = parent.getValue();
         return parentValue instanceof PsiDirectory || parentValue instanceof Module;
     }
 
@@ -127,7 +127,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     // Should be called in atomic action
 
     @Override
-    public void update(@Nonnull final PresentationData data) {
+    public void update(@Nonnull PresentationData data) {
         ProjectViewInternalHelper.getInstance().disallowTreeLoading(() -> doUpdate(data));
     }
 
@@ -137,7 +137,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
                 return;
             }
 
-            final PsiElement value = extractPsiFromValue();
+            PsiElement value = extractPsiFromValue();
             LOG.assertTrue(value.isValid());
 
             int flags = getIconableFlags();
@@ -175,7 +175,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
         IconDescriptor iconDescriptor = new IconDescriptor(original);
 
-        final Bookmark bookmarkAtFile = BookmarkManager.getInstance(project).findFileBookmark(file);
+        Bookmark bookmarkAtFile = BookmarkManager.getInstance(project).findFileBookmark(file);
         if (bookmarkAtFile != null) {
             iconDescriptor.setRightIcon(bookmarkAtFile.getIcon(false));
         }
@@ -205,23 +205,23 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
 
     @Override
-    public boolean contains(@Nonnull final VirtualFile file) {
-        final PsiElement psiElement = extractPsiFromValue();
+    public boolean contains(@Nonnull VirtualFile file) {
+        PsiElement psiElement = extractPsiFromValue();
         if (psiElement == null || !psiElement.isValid()) {
             return false;
         }
 
-        final PsiFile containingFile = psiElement.getContainingFile();
+        PsiFile containingFile = psiElement.getContainingFile();
         if (containingFile == null) {
             return false;
         }
-        final VirtualFile valueFile = containingFile.getVirtualFile();
+        VirtualFile valueFile = containingFile.getVirtualFile();
         return file.equals(valueFile);
     }
 
     @Nullable
     public NavigationItem getNavigationItem() {
-        final PsiElement psiElement = extractPsiFromValue();
+        PsiElement psiElement = extractPsiFromValue();
         return psiElement instanceof NavigationItem navigationItem ? navigationItem : null;
     }
 
@@ -244,13 +244,13 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
     @Override
     public boolean canNavigate() {
-        final NavigationItem item = getNavigationItem();
+        NavigationItem item = getNavigationItem();
         return item != null && item.canNavigate();
     }
 
     @Override
     public boolean canNavigateToSource() {
-        final NavigationItem item = getNavigationItem();
+        NavigationItem item = getNavigationItem();
         return item != null && item.canNavigateToSource();
     }
 
@@ -261,7 +261,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
     @Override
     public boolean validate() {
-        final PsiElement psiElement = extractPsiFromValue();
+        PsiElement psiElement = extractPsiFromValue();
         if (psiElement == null || !psiElement.isValid()) {
             setValue(null);
         }

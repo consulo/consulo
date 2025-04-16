@@ -4,12 +4,11 @@ package consulo.ide.impl.psi.codeStyle.modifier;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.language.codeStyle.CodeStyleStatusBarUIContributor;
-import consulo.project.Project;
 import consulo.component.util.ModificationTracker;
-import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettings;
-import org.jetbrains.annotations.Nls;
+import consulo.language.codeStyle.CodeStyleStatusBarUIContributor;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -48,7 +47,6 @@ public interface CodeStyleSettingsModifier {
     /**
      * @return The name of the modifier to be shown in UI.
      */
-    @Nls(capitalization = Nls.Capitalization.Title)
     String getName();
 
     /**

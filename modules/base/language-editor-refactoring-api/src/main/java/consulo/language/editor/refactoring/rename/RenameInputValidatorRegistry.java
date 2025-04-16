@@ -21,18 +21,17 @@ package consulo.language.editor.refactoring.rename;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
-import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nullable;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class RenameInputValidatorRegistry {
     private RenameInputValidatorRegistry() {
     }
 
     @Nullable
-    public static Condition<String> getInputValidator(PsiElement element) {
+    public static Predicate<String> getInputValidator(PsiElement element) {
         for (RenameInputValidator validator : RenameInputValidator.EP_NAME.getExtensionList()) {
             ProcessingContext context = new ProcessingContext();
             if (validator.getPattern().accepts(element, context)) {

@@ -42,12 +42,12 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.*;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author dsl
@@ -78,10 +78,12 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         return new SafeDeleteUsageViewDescriptor(myElements);
     }
 
+    @RequiredReadAction
     private static boolean isInside(PsiElement place, PsiElement[] ancestors) {
         return isInside(place, Arrays.asList(ancestors));
     }
 
+    @RequiredReadAction
     private static boolean isInside(PsiElement place, Collection<? extends PsiElement> ancestors) {
         for (PsiElement element : ancestors) {
             if (isInside(place, element)) {
@@ -132,8 +134,9 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         return isAncestor;
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     protected UsageInfo[] findUsages() {
         List<UsageInfo> usages = Collections.synchronizedList(new ArrayList<UsageInfo>());
         for (PsiElement element : myElements) {
@@ -171,7 +174,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         return UsageViewUtil.removeDuplicatedUsages(result);
     }
 
-    public static Condition<PsiElement> getDefaultInsideDeletedCondition(PsiElement[] elements) {
+    public static Predicate<PsiElement> getDefaultInsideDeletedCondition(PsiElement[] elements) {
         return usage -> !(usage instanceof PsiFile) && isInside(usage, elements);
     }
 
@@ -295,6 +298,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         );
     }
 
+    @RequiredReadAction
     private UsageView showUsages(UsageInfo[] usages, UsageViewPresentation presentation, UsageViewManager manager) {
         for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
             if (delegate instanceof SafeDeleteProcessorDelegateBase safeDeleteProcessorDelegateBase) {
@@ -376,6 +380,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
         return myPreviewNonCodeUsages && UsageViewUtil.reportNonRegularUsages(usages, myProject)
             || super.isPreviewUsages(filterToBeDeleted(usages));
@@ -449,12 +454,12 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     public static void addNonCodeUsages(
         PsiElement element,
         List<UsageInfo> usages,
-        @Nullable Condition<PsiElement> insideElements,
+        @Nullable Predicate<PsiElement> insideElements,
         boolean searchNonJava,
         boolean searchInCommentsAndStrings
     ) {
         UsageInfoFactory nonCodeUsageFactory = (usage, startOffset, endOffset) -> {
-            if (insideElements != null && insideElements.value(usage)) {
+            if (insideElements != null && insideElements.test(usage)) {
                 return null;
             }
             return new SafeDeleteReferenceSimpleDeleteUsageInfo(usage, element, startOffset, endOffset, true, false);

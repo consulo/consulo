@@ -56,6 +56,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FilenameIndex;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
@@ -84,7 +85,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -212,15 +212,15 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
         myCurrentFile = currentFile;
         myProject = project;
         setModal(modal);
-        setOKButtonText("&Build PSI Tree");
-        setCancelButtonText("&Close");
+        setOKButtonText(LocalizeValue.localizeTODO("&Build PSI Tree"));
+        setCancelButtonText(LocalizeValue.localizeTODO("&Close"));
         Disposer.register(myProject, getDisposable());
         EditorEx editor = null;
         if (myCurrentFile == null) {
-            setTitle("PSI Viewer");
+            setTitle(LocalizeValue.localizeTODO("PSI Viewer"));
         }
         else {
-            setTitle("PSI Context Viewer: " + myCurrentFile.getName());
+            setTitle(LocalizeValue.localizeTODO("PSI Context Viewer: " + myCurrentFile.getName()));
             myFileType = myCurrentFile.getLanguage().getDisplayName();
             if (currentEditor != null) {
                 myInitText = currentEditor.getSelectionModel().getSelectedText();
@@ -468,17 +468,20 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
 
         registerKeyboardAction(e -> focusRefs(), KeyStroke.getKeyStroke(KeyEvent.VK_R, mask));
 
-        registerKeyboardAction(e -> {
-            if (myRefs.isFocusOwner()) {
-                focusBlockTree();
-            }
-            else if (myPsiTree.isFocusOwner()) {
-                focusRefs();
-            }
-            else if (myBlockTree.isFocusOwner()) {
-                focusTree();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
+        registerKeyboardAction(
+            e -> {
+                if (myRefs.isFocusOwner()) {
+                    focusBlockTree();
+                }
+                else if (myPsiTree.isFocusOwner()) {
+                    focusRefs();
+                }
+                else if (myBlockTree.isFocusOwner()) {
+                    focusTree();
+                }
+            },
+            KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)
+        );
     }
 
     private void registerKeyboardAction(ActionListener actionListener, KeyStroke keyStroke) {
@@ -795,7 +798,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     }
 
     @Override
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
         if (Navigatable.KEY == dataId) {
             String fqn = null;
             if (myPsiTree.hasFocus()) {
@@ -905,11 +908,14 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
         }
         if (currentBlockNode != null) {
             myIgnoreBlockTreeSelectionMarker++;
-            myBlockTreeBuilder.select(currentBlockNode, () -> {
-                // hope this is always called!
-                assert myIgnoreBlockTreeSelectionMarker > 0;
-                myIgnoreBlockTreeSelectionMarker--;
-            });
+            myBlockTreeBuilder.select(
+                currentBlockNode,
+                () -> {
+                    // hope this is always called!
+                    assert myIgnoreBlockTreeSelectionMarker > 0;
+                    myIgnoreBlockTreeSelectionMarker--;
+                }
+            );
         }
         else {
             myIgnoreBlockTreeSelectionMarker++;
@@ -1067,6 +1073,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     }
 
     @Nullable
+    @RequiredReadAction
     private PsiFile getContainingFileForClass(String fqn) {
         String filename = fqn;
         if (fqn.contains(".")) {
@@ -1105,6 +1112,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
         private final TextAttributes myAttributes =
             new TextAttributes(StandardColors.WHITE, SELECTION_BG_COLOR, StandardColors.RED, EffectType.BOXED, Font.PLAIN);
 
+        @RequiredReadAction
         private void navigate() {
             Object value = myRefs.getSelectedValue();
             if (value instanceof String fqn) {
@@ -1116,6 +1124,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
         }
 
         @Override
+        @RequiredReadAction
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 navigate();
@@ -1123,6 +1132,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
         }
 
         @Override
+        @RequiredReadAction
         public void mouseClicked(MouseEvent e) {
             if (e.getClickCount() > 1) {
                 navigate();
@@ -1304,7 +1314,6 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
 
         @Override
         public void beforeDocumentChange(DocumentEvent event) {
-
         }
 
         @Override
