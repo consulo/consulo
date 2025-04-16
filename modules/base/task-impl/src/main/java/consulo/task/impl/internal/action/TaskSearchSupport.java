@@ -23,8 +23,6 @@ import consulo.task.Task;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -38,41 +36,39 @@ public class TaskSearchSupport {
     private TaskSearchSupport() {
     }
 
-    public static List<Task> getLocalAndCachedTasks(final TaskManager myManager, String pattern, final boolean withClosed) {
-        List<Task> tasks = new ArrayList<Task>();
+    public static List<Task> getLocalAndCachedTasks(TaskManager myManager, String pattern, boolean withClosed) {
+        List<Task> tasks = new ArrayList<>();
         ContainerUtil.addAll(tasks, myManager.getLocalTasks(withClosed));
-        ContainerUtil.addAll(tasks, ContainerUtil.filter(myManager.getCachedIssues(withClosed), new Condition<Task>() {
-            @Override
-            public boolean value(final Task task) {
-                return myManager.findTask(task.getId()) == null;
-            }
-        }));
+        ContainerUtil.addAll(
+            tasks,
+            ContainerUtil.filter(myManager.getCachedIssues(withClosed), task -> myManager.findTask(task.getId()) == null)
+        );
         List<Task> filteredTasks = filterTasks(pattern, tasks);
         ContainerUtil.sort(filteredTasks, TaskManagerImpl.TASK_UPDATE_COMPARATOR);
         return filteredTasks;
     }
 
-    public static List<Task> filterTasks(final String pattern, final List<Task> tasks) {
-        final Matcher matcher = getMatcher(pattern);
+    public static List<Task> filterTasks(String pattern, List<Task> tasks) {
+        Matcher matcher = getMatcher(pattern);
         return ContainerUtil.mapNotNull(tasks, task -> matcher.matches(task.getId()) || matcher.matches(task.getSummary()) ? task : null);
     }
 
     @Nonnull
     public static List<Task> getRepositoriesTasks(
-        final TaskManager manager,
+        TaskManager manager,
         String pattern,
         int max,
         int since,
         boolean forceRequest,
-        final boolean withClosed,
-        @Nonnull final ProgressIndicator cancelled
+        boolean withClosed,
+        @Nonnull ProgressIndicator cancelled
     ) {
         List<Task> tasks = new ArrayList<>(manager.getIssues(pattern, since, max, withClosed, cancelled, forceRequest));
         tasks.sort(TaskManagerImpl.TASK_UPDATE_COMPARATOR);
         return tasks;
     }
 
-    public static List<Task> getItems(final TaskManager myManager, String pattern, boolean cached, boolean autopopup) {
+    public static List<Task> getItems(TaskManager myManager, String pattern, boolean cached, boolean autopopup) {
         return filterTasks(pattern, getTasks(pattern, cached, autopopup, myManager));
     }
 
@@ -90,7 +86,7 @@ public class TaskSearchSupport {
         return NameUtil.buildMatcher(builder.toString(), NameUtil.MatchingCaseSensitivity.NONE);
     }
 
-    private static List<Task> getTasks(String pattern, boolean cached, boolean autopopup, final TaskManager myManager) {
+    private static List<Task> getTasks(String pattern, boolean cached, boolean autopopup, TaskManager myManager) {
         return cached ? myManager.getCachedIssues() : myManager.getIssues(pattern, !autopopup);
     }
 }

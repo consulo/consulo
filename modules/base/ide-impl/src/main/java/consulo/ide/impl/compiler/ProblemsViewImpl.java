@@ -16,28 +16,26 @@
 package consulo.ide.impl.compiler;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.compiler.ProblemsView;
 import consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.EmptyRunnable;
-import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.project.ui.view.MessageView;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.project.ui.view.MessageView;
-import consulo.application.util.concurrent.SequentialTaskExecutor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
+import consulo.util.lang.EmptyRunnable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -45,7 +43,7 @@ import java.util.concurrent.ExecutorService;
 
 /**
  * @author Eugene Zhuravlev
- * Date: 9/18/12
+ * Date: 2012-09-18
  */
 @Singleton
 @ServiceImpl
@@ -94,7 +92,7 @@ public class ProblemsViewImpl extends ProblemsView {
     private final Project myProject;
 
     @Inject
-    public ProblemsViewImpl(final Project project) {
+    public ProblemsViewImpl(Project project) {
         myProject = project;
     }
 
@@ -103,14 +101,9 @@ public class ProblemsViewImpl extends ProblemsView {
     public void clearOldMessages() {
         myTempMessages.clear();
 
-        final ProblemsViewPanel panel = myPanel;
+        ProblemsViewPanel panel = myPanel;
         if (panel != null) {
-            myViewUpdater.execute(new Runnable() {
-                @Override
-                public void run() {
-                    panel.clearMessages();
-                }
-            });
+            myViewUpdater.execute(panel::clearMessages);
         }
     }
 
@@ -118,48 +111,35 @@ public class ProblemsViewImpl extends ProblemsView {
     @RequiredUIAccess
     @Override
     public void addMessage(
-        final int type,
-        @Nonnull final String[] text,
-        @Nullable final String groupName,
-        @Nullable final Navigatable navigatable,
-        @Nullable final String exportTextPrefix,
-        @Nullable final String rendererTextPrefix
+        int type,
+        @Nonnull String[] text,
+        @Nullable String groupName,
+        @Nullable Navigatable navigatable,
+        @Nullable String exportTextPrefix,
+        @Nullable String rendererTextPrefix
     ) {
-        final TempMessage message = new TempMessage(type, text, groupName, navigatable, exportTextPrefix, rendererTextPrefix);
+        TempMessage message = new TempMessage(type, text, groupName, navigatable, exportTextPrefix, rendererTextPrefix);
 
         myTempMessages.add(message);
 
-        final ProblemsViewPanel panel = myPanel;
+        ProblemsViewPanel panel = myPanel;
         if (panel != null) {
-            myViewUpdater.execute(new Runnable() {
-                @Override
-                public void run() {
-                    addMessage(panel, message);
-                }
-            });
+            myViewUpdater.execute(() -> addMessage(panel, message));
         }
     }
 
     @RequiredUIAccess
     @Override
-    public void showOrHide(final boolean hide) {
+    public void showOrHide(boolean hide) {
         ToolWindow toolWindow = MessageView.getInstance(myProject).getToolWindow();
         // dont try hide if toolwindow closed
         if (hide && !toolWindow.isVisible()) {
             return;
         }
 
-        final ContentManager contentManager = toolWindow.getContentManager();
+        ContentManager contentManager = toolWindow.getContentManager();
         Content[] contents = contentManager.getContents();
-        Content content = ContainerUtil.find(
-            contents,
-            new Condition<Content>() {
-                @Override
-                public boolean value(Content content) {
-                    return content.getUserData(ourViewKey) != null;
-                }
-            }
-        );
+        Content content = ContainerUtil.find(contents, content1 -> content1.getUserData(ourViewKey) != null);
 
         if (content == null && hide) {
             return;
@@ -205,14 +185,9 @@ public class ProblemsViewImpl extends ProblemsView {
 
     @Override
     public void selectFirstMessage() {
-        final ProblemsViewPanel panel = myPanel;
+        ProblemsViewPanel panel = myPanel;
         if (panel != null) {
-            UIUtil.invokeLaterIfNeeded(new Runnable() {
-                @Override
-                public void run() {
-                    panel.selectFirstMessage();
-                }
-            });
+            UIUtil.invokeLaterIfNeeded(panel::selectFirstMessage);
         }
     }
 

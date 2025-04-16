@@ -34,8 +34,8 @@ public class NotLookupOrSearchCondition implements Condition<ComponentManager> {
     }
 
     @Override
-    public boolean value(final ComponentManager project) {
-        final Component focusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent((Project)project);
+    public boolean value(ComponentManager project) {
+        Component focusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent((Project)project);
         boolean fromQuickSearch = focusedComponent != null && focusedComponent.getParent() instanceof ChooseByNameBase.JPanelProvider;
         return !fromQuickSearch && LookupManager.getInstance((Project)project).getActiveLookup() == null;
     }

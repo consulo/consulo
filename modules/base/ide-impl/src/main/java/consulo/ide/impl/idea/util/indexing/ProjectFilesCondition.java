@@ -16,11 +16,12 @@
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.content.scope.SearchScope;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 
-class ProjectFilesCondition implements Condition<VirtualFile> {
+import java.util.function.Predicate;
+
+class ProjectFilesCondition implements Predicate<VirtualFile> {
     private static final int MAX_FILES_TO_UPDATE_FROM_OTHER_PROJECT = 2;
     private final VirtualFile myRestrictedTo;
     private final SearchScope myFilter;
@@ -42,7 +43,7 @@ class ProjectFilesCondition implements Condition<VirtualFile> {
     }
 
     @Override
-    public boolean value(VirtualFile file) {
+    public boolean test(VirtualFile file) {
         int fileId = ((VirtualFileWithId)file).getId();
         if (myIndexableFilesFilter != null && fileId > 0 && !myIndexableFilesFilter.containsFileId(fileId)) {
             if (myFilesFromOtherProjects >= MAX_FILES_TO_UPDATE_FROM_OTHER_PROJECT) {

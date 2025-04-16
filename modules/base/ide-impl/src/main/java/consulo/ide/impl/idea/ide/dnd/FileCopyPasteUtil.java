@@ -15,16 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.dnd;
 
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.logging.Logger;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.dnd.DnDEvent;
 import consulo.ui.ex.awt.dnd.DnDNativeTarget;
-import consulo.util.lang.function.Condition;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,24 +41,24 @@ public class FileCopyPasteUtil {
     private FileCopyPasteUtil() {
     }
 
-    public static DataFlavor createDataFlavor(@Nonnull final String mimeType) {
+    public static DataFlavor createDataFlavor(@Nonnull String mimeType) {
         return createDataFlavor(mimeType, null, false);
     }
 
-    public static DataFlavor createDataFlavor(@Nonnull final String mimeType, @Nullable final Class<?> klass) {
+    public static DataFlavor createDataFlavor(@Nonnull String mimeType, @Nullable Class<?> klass) {
         return createDataFlavor(mimeType, klass, false);
     }
 
-    public static DataFlavor createDataFlavor(@Nonnull final String mimeType, @Nullable final Class<?> klass, final boolean register) {
+    public static DataFlavor createDataFlavor(@Nonnull String mimeType, @Nullable Class<?> klass, boolean register) {
         try {
-            final DataFlavor flavor = klass != null
+            DataFlavor flavor = klass != null
                 ? new DataFlavor(mimeType + ";class=" + klass.getName(), null, klass.getClassLoader())
                 : new DataFlavor(mimeType);
 
             if (register) {
-                final FlavorMap map = SystemFlavorMap.getDefaultFlavorMap();
-                if (map instanceof SystemFlavorMap) {
-                    ((SystemFlavorMap)map).addUnencodedNativeForFlavor(flavor, mimeType);
+                FlavorMap map = SystemFlavorMap.getDefaultFlavorMap();
+                if (map instanceof SystemFlavorMap systemFlavorMap) {
+                    systemFlavorMap.addUnencodedNativeForFlavor(flavor, mimeType);
                 }
             }
 
@@ -73,7 +71,7 @@ public class FileCopyPasteUtil {
         }
     }
 
-    public static DataFlavor createJvmDataFlavor(@Nonnull final Class<?> klass) {
+    public static DataFlavor createJvmDataFlavor(@Nonnull Class<?> klass) {
         return createDataFlavor(DataFlavor.javaJVMLocalObjectMimeType, klass, false);
     }
 
@@ -101,20 +99,12 @@ public class FileCopyPasteUtil {
     }
 
     @Nullable
-    public static List<File> getFileList(@Nonnull final Transferable transferable) {
+    public static List<File> getFileList(@Nonnull Transferable transferable) {
         try {
             if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-                @SuppressWarnings({"unchecked"}) final List<File> fileList =
+                @SuppressWarnings({"unchecked"}) List<File> fileList =
                     (List<File>)transferable.getTransferData(DataFlavor.javaFileListFlavor);
-                return ContainerUtil.filter(
-                    fileList,
-                    new Condition<File>() {
-                        @Override
-                        public boolean value(File file) {
-                            return !StringUtil.isEmptyOrSpaces(file.getPath());
-                        }
-                    }
-                );
+                return ContainerUtil.filter(fileList, file -> !StringUtil.isEmptyOrSpaces(file.getPath()));
             }
             else {
                 return LinuxDragAndDropSupport.getFiles(transferable);
@@ -129,11 +119,11 @@ public class FileCopyPasteUtil {
     @Nonnull
     public static List<File> getFileListFromAttachedObject(Object attached) {
         List<File> result;
-        if (attached instanceof TransferableWrapper) {
-            result = ((TransferableWrapper)attached).asFileList();
+        if (attached instanceof TransferableWrapper transferableWrapper) {
+            result = transferableWrapper.asFileList();
         }
-        else if (attached instanceof DnDNativeTarget.EventInfo) {
-            result = getFileList(((DnDNativeTarget.EventInfo)attached).getTransferable());
+        else if (attached instanceof DnDNativeTarget.EventInfo eventInfo) {
+            result = getFileList(eventInfo.getTransferable());
         }
         else {
             result = null;

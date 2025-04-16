@@ -34,10 +34,8 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -89,7 +87,7 @@ public final class LanguageUtil {
 
     @Nullable
     public static Language getFileTypeLanguage(@Nullable FileType fileType) {
-        return fileType instanceof LanguageFileType ? ((LanguageFileType)fileType).getLanguage() : null;
+        return fileType instanceof LanguageFileType languageFileType ? languageFileType.getLanguage() : null;
     }
 
     @Nullable
@@ -120,30 +118,25 @@ public final class LanguageUtil {
     }
 
     @Nonnull
-    public static Language[] getLanguageDialects(@Nonnull final Language base) {
-        final List<Language> list = ContainerUtil.findAll(
+    public static Language[] getLanguageDialects(@Nonnull Language base) {
+        List<Language> list = ContainerUtil.findAll(
             Language.getRegisteredLanguages(),
-            new Condition<Language>() {
-                @Override
-                public boolean value(final Language language) {
-                    return language.getBaseLanguage() == base;
-                }
-            }
+            language -> language.getBaseLanguage() == base
         );
         return list.toArray(new Language[list.size()]);
     }
 
-    public static boolean isInTemplateLanguageFile(@Nullable final PsiElement element) {
+    public static boolean isInTemplateLanguageFile(@Nullable PsiElement element) {
         if (element == null) {
             return false;
         }
 
-        final PsiFile psiFile = element.getContainingFile();
+        PsiFile psiFile = element.getContainingFile();
         if (psiFile == null) {
             return false;
         }
 
-        final Language language = psiFile.getViewProvider().getBaseLanguage();
+        Language language = psiFile.getViewProvider().getBaseLanguage();
         return language instanceof TemplateLanguage;
     }
 
@@ -160,10 +153,7 @@ public final class LanguageUtil {
         if (language instanceof TemplateLanguage) {
             return false;
         }
-        if (ParserDefinition.forLanguage(language) == null) {
-            return false;
-        }
-        return true;
+        return ParserDefinition.forLanguage(language) != null;
     }
 
     public static boolean isFileLanguage(@Nonnull Language language) {
@@ -200,12 +190,12 @@ public final class LanguageUtil {
     @Nonnull
     @RequiredReadAction
     public static Language getRootLanguage(@Nonnull PsiElement element) {
-        final FileViewProvider provider = element.getContainingFile().getViewProvider();
-        final Set<Language> languages = provider.getLanguages();
+        FileViewProvider provider = element.getContainingFile().getViewProvider();
+        Set<Language> languages = provider.getLanguages();
         if (languages.size() > 1) {
             PsiElement current = element;
             while (current != null) {
-                final Language language = current.getLanguage();
+                Language language = current.getLanguage();
                 if (languages.contains(language)) {
                     return language;
                 }

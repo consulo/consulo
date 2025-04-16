@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion.impl;
 
+import consulo.ide.impl.idea.codeInsight.lookup.CachingComparingClassifier;
+import consulo.ide.impl.idea.codeInsight.lookup.ClassifierFactory;
 import consulo.language.editor.completion.CompletionSorter;
-import consulo.ide.impl.idea.codeInsight.lookup.*;
 import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -39,9 +39,9 @@ public class CompletionSorterImpl extends CompletionSorter {
         myHashCode = myMembers.hashCode();
     }
 
-    public static ClassifierFactory<LookupElement> weighingFactory(final LookupElementWeigher weigher) {
-        final String id = weigher.toString();
-        return new ClassifierFactory<LookupElement>(id) {
+    public static ClassifierFactory<LookupElement> weighingFactory(LookupElementWeigher weigher) {
+        String id = weigher.toString();
+        return new ClassifierFactory<>(id) {
             @Override
             public Classifier<LookupElement> createClassifier(Classifier<LookupElement> next) {
                 return new CachingComparingClassifier(next, weigher);
@@ -50,7 +50,7 @@ public class CompletionSorterImpl extends CompletionSorter {
     }
 
     @Override
-    public CompletionSorterImpl weighBefore(@Nonnull final String beforeId, LookupElementWeigher... weighers) {
+    public CompletionSorterImpl weighBefore(@Nonnull String beforeId, LookupElementWeigher... weighers) {
         if (weighers.length == 0) {
             return this;
         }
@@ -63,7 +63,7 @@ public class CompletionSorterImpl extends CompletionSorter {
     }
 
     @Override
-    public CompletionSorterImpl weighAfter(@Nonnull final String afterId, LookupElementWeigher... weighers) {
+    public CompletionSorterImpl weighAfter(@Nonnull String afterId, LookupElementWeigher... weighers) {
         if (weighers.length == 0) {
             return this;
         }
@@ -77,7 +77,7 @@ public class CompletionSorterImpl extends CompletionSorter {
     }
 
     @Override
-    public CompletionSorterImpl weigh(final LookupElementWeigher weigher) {
+    public CompletionSorterImpl weigh(LookupElementWeigher weigher) {
         return withClassifier(weighingFactory(weigher));
     }
 
@@ -89,45 +89,26 @@ public class CompletionSorterImpl extends CompletionSorter {
         @Nonnull String anchorId,
         boolean beforeAnchor, ClassifierFactory<LookupElement> classifierFactory
     ) {
-        final int i = idIndex(anchorId);
+        int i = idIndex(anchorId);
         return enhanced(classifierFactory, beforeAnchor ? Math.max(0, i) : i + 1);
     }
 
     private CompletionSorterImpl enhanced(ClassifierFactory<LookupElement> classifierFactory, int index) {
-        final List<ClassifierFactory<LookupElement>> copy = new ArrayList<ClassifierFactory<LookupElement>>(myMembers);
+        List<ClassifierFactory<LookupElement>> copy = new ArrayList<>(myMembers);
         copy.add(index, classifierFactory);
         return new CompletionSorterImpl(copy);
     }
 
 
-    private int idIndex(final String id) {
-        return ContainerUtil.indexOf(
-            myMembers,
-            new Condition<ClassifierFactory<LookupElement>>() {
-                @Override
-                public boolean value(ClassifierFactory<LookupElement> factory) {
-                    return id.equals(factory.getId());
-                }
-            }
-        );
+    private int idIndex(String id) {
+        return ContainerUtil.indexOf(myMembers, factory -> id.equals(factory.getId()));
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof CompletionSorterImpl)) {
-            return false;
-        }
-
-        CompletionSorterImpl that = (CompletionSorterImpl)o;
-
-        if (!myMembers.equals(that.myMembers)) {
-            return false;
-        }
-
-        return true;
+        return this == o
+            || o instanceof CompletionSorterImpl that
+            && myMembers.equals(that.myMembers);
     }
 
     @Override
@@ -136,8 +117,8 @@ public class CompletionSorterImpl extends CompletionSorter {
     }
 
     private static Classifier<LookupElement> createClassifier(
-        final int index,
-        final List<ClassifierFactory<LookupElement>> components,
+        int index,
+        List<ClassifierFactory<LookupElement>> components,
         Classifier<LookupElement> tail
     ) {
         if (index == components.size()) {

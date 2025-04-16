@@ -1,41 +1,31 @@
 package consulo.ide.impl.idea.tasks.timeTracking;
 
-import consulo.application.AllIcons;
+import consulo.application.util.DateFormatUtil;
 import consulo.disposer.Disposable;
-import consulo.localize.LocalizeValue;
-import consulo.project.Project;
-import consulo.ui.ex.awt.SimpleToolWindowPanel;
-import consulo.util.lang.Comparing;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
-import consulo.util.lang.function.Condition;
-import consulo.task.LocalTask;
-import consulo.task.event.TaskListenerAdapter;
-import consulo.task.TaskManager;
-import consulo.task.TaskRepository;
 import consulo.ide.impl.idea.tasks.actions.GotoTaskAction;
 import consulo.ide.impl.idea.tasks.actions.SwitchTaskAction;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.table.TableView;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.task.LocalTask;
+import consulo.task.TaskManager;
+import consulo.task.TaskRepository;
+import consulo.task.event.TaskListenerAdapter;
+import consulo.task.icon.TaskIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.image.ImageEffects;
-import consulo.task.TasksIcons;
-
+import consulo.util.lang.Comparing;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Comparator;
 
 /**
@@ -51,13 +41,13 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
     private final TableView<LocalTask> myTable;
     private final TaskManager myTaskManager;
 
-    public TasksToolWindowPanel(final Project project, final boolean vertical) {
+    public TasksToolWindowPanel(Project project, boolean vertical) {
         super(vertical);
         myProject = project;
         myTimeTrackingManager = TimeTrackingManager.getInstance(project);
         myTaskManager = TaskManager.getManager(project);
 
-        myTable = new TableView<LocalTask>(createListModel());
+        myTable = new TableView<>(createListModel());
         myTableModel = myTable.getListTableModel();
         updateTable();
 
@@ -66,36 +56,31 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
         myTaskManager.addTaskListener(new TaskListenerAdapter() {
             @Override
-            public void taskDeactivated(final LocalTask task) {
+            public void taskDeactivated(LocalTask task) {
                 myTable.repaint();
             }
 
             @Override
-            public void taskActivated(final LocalTask task) {
+            public void taskActivated(LocalTask task) {
                 myTable.repaint();
             }
 
             @Override
-            public void taskAdded(final LocalTask task) {
+            public void taskAdded(LocalTask task) {
                 updateTable();
             }
 
             @Override
-            public void taskRemoved(final LocalTask task) {
+            public void taskRemoved(LocalTask task) {
                 updateTable();
             }
         }, this);
 
-        myTimer = new Timer(TimeTrackingManager.TIME_TRACKING_TIME_UNIT, new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                myTable.repaint();
-            }
-        });
+        myTimer = new Timer(TimeTrackingManager.TIME_TRACKING_TIME_UNIT, e -> myTable.repaint());
         myTimer.start();
     }
 
-    private static SimpleTextAttributes getAttributes(final boolean isClosed, final boolean isActive, final boolean isSelected) {
+    private static SimpleTextAttributes getAttributes(boolean isClosed, boolean isActive, boolean isSelected) {
         return new SimpleTextAttributes(
             isActive ? SimpleTextAttributes.STYLE_BOLD : SimpleTextAttributes.STYLE_PLAIN,
             isSelected
@@ -106,12 +91,12 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
         );
     }
 
-    private static String formatDuration(final long milliseconds) {
-        final int second = 1000;
-        final int minute = 60 * second;
-        final int hour = 60 * minute;
-        final int day = 24 * hour;
-        final int days = (int)milliseconds / day;
+    private static String formatDuration(long milliseconds) {
+        int second = 1000;
+        int minute = 60 * second;
+        int hour = 60 * minute;
+        int day = 24 * hour;
+        int days = (int)milliseconds / day;
         String daysString = days != 0 ? days + "d " : "";
 
         return daysString + String.format(
@@ -124,14 +109,15 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
     private JComponent createToolbar() {
         DefaultActionGroup group = new DefaultActionGroup();
-        final AnAction action = ActionManager.getInstance().getAction(GotoTaskAction.ID);
+        AnAction action = ActionManager.getInstance().getAction(GotoTaskAction.ID);
         assert action instanceof GotoTaskAction;
-        final GotoTaskAction gotoTaskAction = (GotoTaskAction)action;
+        GotoTaskAction gotoTaskAction = (GotoTaskAction)action;
         group.add(gotoTaskAction);
         group.add(
-            new AnAction("Remove Task", "Remove Task", IconUtil.getRemoveIcon()) {
+            new AnAction("Remove Task", "Remove Task", PlatformIconGroup.generalRemove()) {
                 @Override
-                public void actionPerformed(final AnActionEvent e) {
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull AnActionEvent e) {
                     for (LocalTask localTask : myTable.getSelectedObjects()) {
                         SwitchTaskAction.removeTask(myProject, localTask, myTaskManager);
                     }
@@ -139,14 +125,14 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
             }
         );
         group.add(
-            new ToggleAction("Show closed tasks", "Show closed tasks", AllIcons.Actions.Checked) {
+            new ToggleAction("Show closed tasks", "Show closed tasks", PlatformIconGroup.actionsChecked()) {
                 @Override
-                public boolean isSelected(final AnActionEvent e) {
+                public boolean isSelected(@Nonnull AnActionEvent e) {
                     return myTimeTrackingManager.getState().showClosedTasks;
                 }
 
                 @Override
-                public void setSelected(final AnActionEvent e, final boolean state) {
+                public void setSelected(@Nonnull AnActionEvent e, boolean state) {
                     myTimeTrackingManager.getState().showClosedTasks = state;
                     updateTable();
                 }
@@ -157,10 +143,11 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
         if (timeManagementExist()) {
             group.add(
-                new AnAction("Post work item to bugtracker", "Post work item to bugtracker", AllIcons.Actions.Export) {
+                new AnAction("Post work item to bugtracker", "Post work item to bugtracker", PlatformIconGroup.actionsExport()) {
                     @Override
-                    public void actionPerformed(final AnActionEvent e) {
-                        final LocalTask localTask = myTable.getSelectedObject();
+                    @RequiredUIAccess
+                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                        LocalTask localTask = myTable.getSelectedObject();
                         if (localTask == null) {
                             return;
                         }
@@ -168,13 +155,14 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
                     }
 
                     @Override
-                    public void update(final AnActionEvent e) {
-                        final LocalTask localTask = myTable.getSelectedObject();
+                    @RequiredUIAccess
+                    public void update(@Nonnull AnActionEvent e) {
+                        LocalTask localTask = myTable.getSelectedObject();
                         if (localTask == null) {
                             e.getPresentation().setEnabled(false);
                         }
                         else {
-                            final TaskRepository repository = localTask.getRepository();
+                            TaskRepository repository = localTask.getRepository();
                             e.getPresentation().setEnabled(repository != null && repository.isSupported(TaskRepository.TIME_MANAGEMENT));
                         }
                     }
@@ -185,22 +173,22 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
                 new ToggleAction(
                     "Show time spent from last post of work item",
                     "Show time spent from last post of work item",
-                    TasksIcons.Clock
+                    TaskIconGroup.clock()
                 ) {
                     @Override
-                    public boolean isSelected(final AnActionEvent e) {
+                    public boolean isSelected(@Nonnull AnActionEvent e) {
                         return myTimeTrackingManager.getState().showSpentTimeFromLastPost;
                     }
 
                     @Override
-                    public void setSelected(final AnActionEvent e, final boolean state) {
+                    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
                         myTimeTrackingManager.getState().showSpentTimeFromLastPost = state;
                         myTable.repaint();
                     }
                 }
             );
         }
-        final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, myVertical);
+        ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, myVertical);
         actionToolBar.setTargetComponent(this);
         return actionToolBar.getComponent();
     }
@@ -208,74 +196,59 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
     private void updateTable() {
         myTableModel.setItems(ContainerUtil.filter(
             myTaskManager.getLocalTasks(),
-            new Condition<LocalTask>() {
-                @Override
-                public boolean value(final LocalTask task) {
-                    return task.isActive() ||
-                        (task.getTotalTimeSpent() != 0 &&
-                            (myTimeTrackingManager.getState().showClosedTasks ||
-                                !myTaskManager.isLocallyClosed(task)));
-                }
-            }
+            task -> task.isActive()
+                || (task.getTotalTimeSpent() != 0
+                && (myTimeTrackingManager.getState().showClosedTasks || !myTaskManager.isLocallyClosed(task)))
         ));
     }
 
     private ListTableModel<LocalTask> createListModel() {
-        final ColumnInfo<LocalTask, String> task = new ColumnInfo<LocalTask, String>("Task") {
-
+        ColumnInfo<LocalTask, String> task = new ColumnInfo<>("Task") {
             @Nullable
             @Override
-            public String valueOf(final LocalTask task) {
+            public String valueOf(LocalTask task) {
                 return task.getPresentableName();
             }
 
             @Nullable
             @Override
-            public TableCellRenderer getRenderer(final LocalTask task) {
-                return new TableCellRenderer() {
-                    @Override
-                    public Component getTableCellRendererComponent(
-                        final JTable table,
-                        final Object value,
-                        final boolean isSelected,
-                        final boolean hasFocus,
-                        final int row,
-                        final int column
-                    ) {
-                        JPanel panel = new JPanel(new BorderLayout());
-                        panel.setBackground(UIUtil.getTableBackground(isSelected));
-                        final SimpleColoredComponent component = new SimpleColoredComponent();
-                        final boolean isClosed = task.isClosed() || myTaskManager.isLocallyClosed(task);
-                        final boolean isActive = task.isActive();
-                        final boolean isRunning = myTimeTrackingManager.getState().autoMode ? isActive : isActive && task.isRunning();
-                        component.append((String)value, getAttributes(isClosed, isActive, isSelected));
-                        component.setIcon(isRunning
-                            ? ImageEffects.layered(task.getIcon(), AllIcons.Nodes.RunnableMark)
-                            : isClosed && !isActive ? ImageEffects.transparent(task.getIcon()) : task.getIcon());
-                        component.setOpaque(false);
-                        panel.add(component, BorderLayout.CENTER);
-                        panel.setOpaque(true);
-                        return panel;
-                    }
+            public TableCellRenderer getRenderer(LocalTask task) {
+                return (table, value, isSelected, hasFocus, row, column) -> {
+                    JPanel panel = new JPanel(new BorderLayout());
+                    panel.setBackground(UIUtil.getTableBackground(isSelected));
+                    SimpleColoredComponent component = new SimpleColoredComponent();
+                    boolean isClosed = task.isClosed() || myTaskManager.isLocallyClosed(task);
+                    boolean isActive = task.isActive();
+                    boolean isRunning = myTimeTrackingManager.getState().autoMode ? isActive : isActive && task.isRunning();
+                    component.append((String)value, getAttributes(isClosed, isActive, isSelected));
+                    component.setIcon(
+                        isRunning
+                            ? ImageEffects.layered(task.getIcon(), PlatformIconGroup.nodesRunnablemark())
+                            : isClosed && !isActive
+                            ? ImageEffects.transparent(task.getIcon())
+                            : task.getIcon()
+                    );
+                    component.setOpaque(false);
+                    panel.add(component, BorderLayout.CENTER);
+                    panel.setOpaque(true);
+                    return panel;
                 };
             }
 
             @Nullable
             @Override
             public Comparator<LocalTask> getComparator() {
-                return new Comparator<LocalTask>() {
-                    public int compare(LocalTask o1, LocalTask o2) {
-                        int i = Comparing.compare(o2.getUpdated(), o1.getUpdated());
-                        return i == 0 ? Comparing.compare(o2.getCreated(), o1.getCreated()) : i;
-                    }
+                return (o1, o2) -> {
+                    int i = Comparing.compare(o2.getUpdated(), o1.getUpdated());
+                    return i == 0 ? Comparing.compare(o2.getCreated(), o1.getCreated()) : i;
                 };
             }
         };
 
-        final ColumnInfo<LocalTask, String> spentTime = new ColumnInfo<LocalTask, String>("Time Spent") {
+        ColumnInfo<LocalTask, String> spentTime = new ColumnInfo<>("Time Spent") {
             @Nullable
             @Override
-            public String valueOf(final LocalTask task) {
+            public String valueOf(LocalTask task) {
                 long timeSpent =
                     myTimeTrackingManager.getState().showSpentTimeFromLastPost ? task.getTimeSpentFromLastPost() : task.getTotalTimeSpent();
                 if (task.isActive()) {
@@ -286,48 +259,35 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
             @Nullable
             @Override
-            public TableCellRenderer getRenderer(final LocalTask task) {
-                return new TableCellRenderer() {
-                    @Override
-                    public Component getTableCellRendererComponent(
-                        final JTable table,
-                        final Object value,
-                        final boolean isSelected,
-                        final boolean hasFocus,
-                        final int row,
-                        final int column
-                    ) {
-                        JPanel panel = new JPanel(new BorderLayout());
-                        panel.setBackground(UIUtil.getTableBackground(isSelected));
-                        final SimpleColoredComponent component = new SimpleColoredComponent();
-                        final boolean isClosed = task.isClosed() || myTaskManager.isLocallyClosed(task);
-                        final boolean isActive = task.isActive();
-                        component.append((String)value, getAttributes(isClosed, isActive, isSelected));
-                        component.setOpaque(false);
-                        panel.add(component, BorderLayout.CENTER);
-                        panel.setOpaque(true);
-                        return panel;
-                    }
+            public TableCellRenderer getRenderer(LocalTask task) {
+                return (table, value, isSelected, hasFocus, row, column) -> {
+                    JPanel panel = new JPanel(new BorderLayout());
+                    panel.setBackground(UIUtil.getTableBackground(isSelected));
+                    SimpleColoredComponent component = new SimpleColoredComponent();
+                    boolean isClosed = task.isClosed() || myTaskManager.isLocallyClosed(task);
+                    boolean isActive = task.isActive();
+                    component.append((String)value, getAttributes(isClosed, isActive, isSelected));
+                    component.setOpaque(false);
+                    panel.add(component, BorderLayout.CENTER);
+                    panel.setOpaque(true);
+                    return panel;
                 };
             }
 
             @Nullable
             @Override
             public Comparator<LocalTask> getComparator() {
-                return new Comparator<LocalTask>() {
-                    @Override
-                    public int compare(final LocalTask o1, final LocalTask o2) {
-                        final long timeSpent1 =
-                            myTimeTrackingManager.getState().showSpentTimeFromLastPost ? o1.getTimeSpentFromLastPost() : o1.getTotalTimeSpent();
-                        final long timeSpent2 =
-                            myTimeTrackingManager.getState().showSpentTimeFromLastPost ? o2.getTimeSpentFromLastPost() : o2.getTotalTimeSpent();
-                        return Comparing.compare(timeSpent1, timeSpent2);
-                    }
+                return (o1, o2) -> {
+                    long timeSpent1 =
+                        myTimeTrackingManager.getState().showSpentTimeFromLastPost ? o1.getTimeSpentFromLastPost() : o1.getTotalTimeSpent();
+                    long timeSpent2 =
+                        myTimeTrackingManager.getState().showSpentTimeFromLastPost ? o2.getTimeSpentFromLastPost() : o2.getTotalTimeSpent();
+                    return Comparing.compare(timeSpent1, timeSpent2);
                 };
             }
         };
 
-        return new ListTableModel<LocalTask>((new ColumnInfo[]{task, spentTime}));
+        return new ListTableModel<>((new ColumnInfo[]{task, spentTime}));
     }
 
     private boolean timeManagementExist() {
@@ -347,28 +307,30 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
     private class StartStopAction extends AnAction {
         @Override
-        public void update(final AnActionEvent e) {
+        @RequiredUIAccess
+        public void update(@Nonnull AnActionEvent e) {
             if (myTimeTrackingManager.getState().autoMode) {
                 e.getPresentation().setEnabled(false);
-                e.getPresentation().setIcon(TasksIcons.StartTimer);
+                e.getPresentation().setIcon(TaskIconGroup.starttimer());
                 e.getPresentation().setText("Start timer for active task");
             }
             else {
                 e.getPresentation().setEnabled(true);
                 if (myTaskManager.getActiveTask().isRunning()) {
-                    e.getPresentation().setIcon(TasksIcons.StopTimer);
+                    e.getPresentation().setIcon(TaskIconGroup.stoptimer());
                     e.getPresentation().setText("Stop timer for active task");
                 }
                 else {
-                    e.getPresentation().setIcon(TasksIcons.StartTimer);
+                    e.getPresentation().setIcon(TaskIconGroup.starttimer());
                     e.getPresentation().setText("Start timer for active task");
                 }
             }
         }
 
         @Override
-        public void actionPerformed(final AnActionEvent e) {
-            final LocalTask activeTask = myTaskManager.getActiveTask();
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            LocalTask activeTask = myTaskManager.getActiveTask();
             if (activeTask.isRunning()) {
                 activeTask.setRunning(false);
             }
@@ -384,12 +346,12 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
         }
 
         @Override
-        public boolean isSelected(final AnActionEvent e) {
+        public boolean isSelected(@Nonnull AnActionEvent e) {
             return myTimeTrackingManager.getState().autoMode;
         }
 
         @Override
-        public void setSelected(final AnActionEvent e, final boolean state) {
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             myTimeTrackingManager.setAutoMode(state);
             updateTable();
         }

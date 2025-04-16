@@ -15,14 +15,14 @@
  */
 package consulo.versionControlSystem.distributed.branch;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FactoryMap;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
@@ -56,23 +56,21 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
     }
 
     @Override
-    public TaskInfo startNewTask(@Nonnull final String taskName) {
+    public TaskInfo startNewTask(@Nonnull String taskName) {
         List<R> repositories = myRepositoryManager.getRepositories();
-        List<R> problems = ContainerUtil.filter(repositories, new Condition<R>() {
-            @Override
-            public boolean value(R repository) {
-                return hasBranch(repository, new TaskInfo(taskName, Collections.emptyList()));
-            }
-        });
+        List<R> problems = ContainerUtil.filter(
+            repositories,
+            repository -> hasBranch(repository, new TaskInfo(taskName, Collections.emptyList()))
+        );
         List<R> map = new ArrayList<>();
         if (!problems.isEmpty()) {
-            if (ApplicationManager.getApplication().isUnitTestMode() ||
-                Messages.showDialog(myProject,
+            if (Application.get().isUnitTestMode()
+                || Messages.showDialog(myProject,
                     "<html>The following repositories already have specified " + myBranchType + "<b>" + taskName + "</b>:<br>" +
                         StringUtil.join(problems, "<br>") + ".<br>" +
                         "Do you want to checkout existing " + myBranchType + "?", StringUtil.capitalize(myBranchType) + " Already Exists",
                     new String[]{Messages.YES_BUTTON, Messages.NO_BUTTON}, 0,
-                    Messages.getWarningIcon()
+                    UIUtil.getWarningIcon()
                 ) == 0) {
                 checkout(taskName, problems, null);
                 map.addAll(problems);
@@ -84,12 +82,12 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
         }
 
         map.addAll(repositories);
-        return new TaskInfo(taskName, ContainerUtil.map(map, r -> r.getPresentableUrl()));
+        return new TaskInfo(taskName, ContainerUtil.map(map, Repository::getPresentableUrl));
     }
 
     @Override
     public void switchToTask(@Nonnull TaskInfo taskInfo, @Nullable Runnable invokeAfter) {
-        final String branchName = taskInfo.getName();
+        String branchName = taskInfo.getName();
         List<R> repositories = new ArrayList<>(getRepositories(taskInfo.getRepositories()));
         List<R> notFound = ContainerUtil.filter(repositories, repository -> !hasBranch(repository, taskInfo));
         if (!notFound.isEmpty()) {
@@ -102,13 +100,12 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
     }
 
     @Override
-    public void closeTask(@Nonnull final TaskInfo taskInfo, @Nonnull TaskInfo original) {
-        checkout(original.getName(), getRepositories(original.getRepositories()), new Runnable() {
-            @Override
-            public void run() {
-                mergeAndClose(taskInfo.getName(), getRepositories(taskInfo.getRepositories()));
-            }
-        });
+    public void closeTask(@Nonnull TaskInfo taskInfo, @Nonnull TaskInfo original) {
+        checkout(
+            original.getName(),
+            getRepositories(original.getRepositories()),
+            () -> mergeAndClose(taskInfo.getName(), getRepositories(taskInfo.getRepositories()))
+        );
     }
 
     @Override
@@ -160,7 +157,7 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
 
     @Nonnull
     private List<R> getRepositories(@Nonnull Collection<String> urls) {
-        final List<R> repositories = myRepositoryManager.getRepositories();
+        List<R> repositories = myRepositoryManager.getRepositories();
         return ContainerUtil.mapNotNull(
             urls,
             s -> ContainerUtil.find(repositories, repository -> s.equals(repository.getPresentableUrl()))

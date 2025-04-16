@@ -51,19 +51,19 @@ public class Conditions {
         return (Condition<T>)(value ? TRUE : FALSE);
     }
 
-    public static <T> Condition<T> instanceOf(final Class<?> clazz) {
+    public static <T> Condition<T> instanceOf(Class<?> clazz) {
         return t -> clazz.isInstance(t);
     }
 
-    public static <T> Condition<T> notInstanceOf(final Class<?> clazz) {
+    public static <T> Condition<T> notInstanceOf(Class<?> clazz) {
         return t -> !clazz.isInstance(t);
     }
 
-    public static Condition<Class> assignableTo(final Class clazz) {
+    public static Condition<Class> assignableTo(Class clazz) {
         return t -> clazz.isAssignableFrom(t);
     }
 
-    public static <T> Condition<T> instanceOf(final Class<?>... clazz) {
+    public static <T> Condition<T> instanceOf(Class<?>... clazz) {
         return t -> {
             for (Class<?> aClass : clazz) {
                 if (aClass.isInstance(t)) {
@@ -74,15 +74,15 @@ public class Conditions {
         };
     }
 
-    public static <T> Condition<T> is(final T option) {
+    public static <T> Condition<T> is(T option) {
         return equalTo(option);
     }
 
-    public static <T> Condition<T> equalTo(final Object option) {
+    public static <T> Condition<T> equalTo(Object option) {
         return t -> Comparing.equal(t, option);
     }
 
-    public static <T> Condition<T> notEqualTo(final Object option) {
+    public static <T> Condition<T> notEqualTo(Object option) {
         return t -> !Comparing.equal(t, option);
     }
 
@@ -90,7 +90,7 @@ public class Conditions {
         return oneOf(Arrays.asList(options));
     }
 
-    public static <T> Condition<T> oneOf(final Collection<? extends T> options) {
+    public static <T> Condition<T> oneOf(Collection<? extends T> options) {
         return t -> options.contains(t);
     }
 
@@ -135,7 +135,7 @@ public class Conditions {
         return new Or<>(c1, c2);
     }
 
-    public static <A, B> Condition<A> compose(final Function<? super A, B> fun, final Condition<? super B> condition) {
+    public static <A, B> Condition<A> compose(Function<? super A, B> fun, Condition<? super B> condition) {
         return o -> condition.value(fun.apply(o));
     }
 
@@ -196,8 +196,8 @@ public class Conditions {
 
         @Override
         public final boolean value(T object) {
-            final int key = object.hashCode();
-            final Pair<SoftReference<T>, Boolean> entry = myCache.get(key);
+            int key = object.hashCode();
+            Pair<SoftReference<T>, Boolean> entry = myCache.get(key);
             if (entry == null || entry.first.get() != object) {
                 boolean value = myCondition.value(object);
                 myCache.put(key, Pair.create(new SoftReference<>(object), value));

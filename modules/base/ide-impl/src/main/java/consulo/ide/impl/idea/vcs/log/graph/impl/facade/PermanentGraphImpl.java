@@ -20,11 +20,8 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.log.graph.GraphColorManager;
 import consulo.ide.impl.idea.vcs.log.graph.GraphCommitImpl;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
-import consulo.versionControlSystem.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import consulo.ide.impl.idea.vcs.log.graph.collapsing.BranchFilterController;
 import consulo.ide.impl.idea.vcs.log.graph.collapsing.CollapsedController;
@@ -33,29 +30,31 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek.BekSorter;
 import consulo.ide.impl.idea.vcs.log.graph.impl.permanent.*;
 import consulo.ide.impl.idea.vcs.log.graph.linearBek.LinearBekController;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import consulo.util.lang.function.Condition;
+import consulo.versionControlSystem.log.graph.GraphColorManager;
 import consulo.versionControlSystem.log.graph.GraphCommit;
-
+import consulo.versionControlSystem.log.graph.VisibleGraph;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, PermanentGraphInfo<CommitId> {
 
     @Nonnull
     public static <CommitId> PermanentGraphImpl<CommitId> newInstance(
         @Nonnull List<? extends GraphCommit<CommitId>> graphCommits,
-        @Nonnull final GraphColorManager<CommitId> graphColorManager,
+        @Nonnull GraphColorManager<CommitId> graphColorManager,
         @Nonnull Set<CommitId> branchesCommitId
     ) {
         PermanentLinearGraphBuilder<CommitId> permanentLinearGraphBuilder = PermanentLinearGraphBuilder.newInstance(graphCommits);
         NotLoadedCommitsIdsGenerator<CommitId> idsGenerator = new NotLoadedCommitsIdsGenerator<>();
         PermanentLinearGraphImpl linearGraph = permanentLinearGraphBuilder.build(idsGenerator);
 
-        final PermanentCommitsInfoImpl<CommitId> commitIdPermanentCommitsInfo =
+        PermanentCommitsInfoImpl<CommitId> commitIdPermanentCommitsInfo =
             PermanentCommitsInfoImpl.newInstance(graphCommits, idsGenerator.getNotLoadedCommits());
 
         GraphLayoutImpl permanentGraphLayout = GraphLayoutBuilder.build(linearGraph, (nodeIndex1, nodeIndex2) -> {
@@ -181,15 +180,15 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
 
     @Nonnull
     @Override
-    public Condition<CommitId> getContainedInBranchCondition(@Nonnull final Collection<CommitId> heads) {
-        List<Integer> headIds = ContainerUtil.map(heads, head -> myPermanentCommitsInfo.getNodeId(head));
+    public Predicate<CommitId> getContainedInBranchCondition(@Nonnull Collection<CommitId> heads) {
+        List<Integer> headIds = ContainerUtil.map(heads, myPermanentCommitsInfo::getNodeId);
         if (!heads.isEmpty() && ContainerUtil.getFirstItem(heads) instanceof Integer) {
-            final IntSet branchNodes = IntSets.newHashSet();
+            IntSet branchNodes = IntSets.newHashSet();
             myReachableNodes.walk(headIds, node -> branchNodes.add((Integer)myPermanentCommitsInfo.getCommitId(node)));
             return new IntContainedInBranchCondition<>(branchNodes);
         }
         else {
-            final Set<CommitId> branchNodes = new HashSet<>();
+            Set<CommitId> branchNodes = new HashSet<>();
             myReachableNodes.walk(headIds, node -> branchNodes.add(myPermanentCommitsInfo.getCommitId(node)));
             return new ContainedInBranchCondition<>(branchNodes);
         }
@@ -237,7 +236,7 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
         }
     }
 
-    private static class IntContainedInBranchCondition<CommitId> implements Condition<CommitId> {
+    private static class IntContainedInBranchCondition<CommitId> implements Predicate<CommitId> {
         private final IntSet myBranchNodes;
 
         public IntContainedInBranchCondition(IntSet branchNodes) {
@@ -245,12 +244,12 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
         }
 
         @Override
-        public boolean value(CommitId commitId) {
+        public boolean test(CommitId commitId) {
             return myBranchNodes.contains((Integer)commitId);
         }
     }
 
-    private static class ContainedInBranchCondition<CommitId> implements Condition<CommitId> {
+    private static class ContainedInBranchCondition<CommitId> implements Predicate<CommitId> {
         private final Set<CommitId> myBranchNodes;
 
         public ContainedInBranchCondition(Set<CommitId> branchNodes) {
@@ -258,7 +257,7 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
         }
 
         @Override
-        public boolean value(CommitId commitId) {
+        public boolean test(CommitId commitId) {
             return myBranchNodes.contains(commitId);
         }
     }

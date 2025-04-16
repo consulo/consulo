@@ -35,8 +35,8 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Provider;
 
@@ -68,12 +68,13 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     private final Namer<T> myNamer;
     private final Supplier<T> myFactory;
     private final Cloner<T> myCloner;
-    private final List<T> myItems = new ArrayList<T>();
+    private final List<T> myItems = new ArrayList<>();
     private final HashingStrategy<T> myComparer;
     private List<T> myResultItems;
     private final List<T> myOriginalItems;
     private boolean myShowIcons;
 
+    @RequiredUIAccess
     protected NamedItemsListEditor(
         Namer<T> namer,
         Supplier<T> factory,
@@ -85,6 +86,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         this(namer, factory, cloner, comparer, items, true, masterDetailsStateService);
     }
 
+    @RequiredUIAccess
     protected NamedItemsListEditor(
         Namer<T> namer,
         Supplier<T> factory,
@@ -136,19 +138,28 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     }
 
     @Nullable
+    @RequiredUIAccess
     public String askForProfileName(String titlePattern) {
         String title = MessageFormat.format(titlePattern, subjDisplayName());
-        return Messages.showInputDialog("New " + subjDisplayName() + " name:", title, Messages.getQuestionIcon(), "", new InputValidator() {
-            @Override
-            public boolean checkInput(String s) {
-                return s.length() > 0 && findByName(s) == null;
-            }
+        return Messages.showInputDialog(
+            "New " + subjDisplayName() + " name:",
+            title,
+            UIUtil.getQuestionIcon(),
+            "",
+            new InputValidator() {
+                @Override
+                @RequiredUIAccess
+                public boolean checkInput(String s) {
+                    return s.length() > 0 && findByName(s) == null;
+                }
 
-            @Override
-            public boolean canClose(String s) {
-                return checkInput(s);
+                @Override
+                @RequiredUIAccess
+                public boolean canClose(String s) {
+                    return checkInput(s);
+                }
             }
-        });
+        );
     }
 
     @Nullable
@@ -165,22 +176,17 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     @Override
     @Nullable
     protected ArrayList<AnAction> createActions(boolean fromPopup) {
-        ArrayList<AnAction> result = new ArrayList<AnAction>();
+        ArrayList<AnAction> result = new ArrayList<>();
         result.add(new AddAction());
 
-        result.add(new MyDeleteAction(forAll(new Condition<Object>() {
-            @Override
-            @SuppressWarnings({"unchecked"})
-            public boolean value(Object o) {
-                return canDelete((T)((MyNode)o).getConfigurable().getEditableObject());
-            }
-        })));
+        result.add(new MyDeleteAction(forAll(o -> canDelete((T)((MyNode)o).getConfigurable().getEditableObject()))));
 
         result.add(new CopyAction());
 
         return result;
     }
 
+    @RequiredUIAccess
     private void addNewNode(T item) {
         addNode(new MyNode(new ItemConfigurable(item)), myRoot);
         myItems.add(item);
@@ -193,6 +199,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     protected abstract UnnamedConfigurable createConfigurable(T item);
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void onItemDeleted(Object item) {
         myItems.remove((T)item);
     }
@@ -206,18 +213,21 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     }
 
     @Nullable
-    protected UnnamedConfigurable getItemConfigurable(final T item) {
-        final Ref<UnnamedConfigurable> result = new Ref<UnnamedConfigurable>();
-        TreeUtil.traverse((TreeNode)myTree.getModel().getRoot(), node -> {
-            final MasterDetailsConfigurable configurable = (MasterDetailsConfigurable)((DefaultMutableTreeNode)node).getUserObject();
-            if (configurable.getEditableObject() == item) {
-                result.set(((ItemConfigurable)configurable).myConfigurable);
-                return false;
+    protected UnnamedConfigurable getItemConfigurable(T item) {
+        final SimpleReference<UnnamedConfigurable> result = new SimpleReference<>();
+        TreeUtil.traverse(
+            (TreeNode)myTree.getModel().getRoot(),
+            node -> {
+                MasterDetailsConfigurable configurable = (MasterDetailsConfigurable)((DefaultMutableTreeNode)node).getUserObject();
+                if (configurable.getEditableObject() == item) {
+                    result.set(((ItemConfigurable)configurable).myConfigurable);
+                    return false;
+                }
+                else {
+                    return true;
+                }
             }
-            else {
-                return true;
-            }
-        });
+        );
         return result.get();
     }
 
@@ -231,6 +241,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         private final T myItem;
         private final UnnamedConfigurable myConfigurable;
 
+        @RequiredUIAccess
         public ItemConfigurable(T item) {
             super(myNamer.canRename(item), TREE_UPDATER);
             myItem = item;
@@ -252,8 +263,10 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
             return myNamer.getName(myItem);
         }
 
+        @Nonnull
         @Override
-        public Component createOptionsPanel(Disposable uiDisposable) {
+        @RequiredUIAccess
+        public Component createOptionsPanel(@Nonnull Disposable uiDisposable) {
             return TargetAWT.wrap(myConfigurable.createComponent(uiDisposable));
         }
 
@@ -264,28 +277,29 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
 
         @Override
         public Image getIcon() {
-            if (myShowIcons && myConfigurable instanceof Iconable) {
-                return ((Iconable)myConfigurable).getIcon(0);
-            }
-            return null;
+            return myShowIcons && myConfigurable instanceof Iconable iconable ? iconable.getIcon(0) : null;
         }
 
         @Override
+        @RequiredUIAccess
         public boolean isModified() {
             return myConfigurable.isModified();
         }
 
         @Override
+        @RequiredUIAccess
         public void apply() throws ConfigurationException {
             myConfigurable.apply();
         }
 
         @Override
+        @RequiredUIAccess
         public void reset() {
             myConfigurable.reset();
         }
 
         @Override
+        @RequiredUIAccess
         public void disposeUIResources() {
             myConfigurable.disposeUIResources();
         }
@@ -322,6 +336,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         return myResultItems;
     }
 
+    @SuppressWarnings("unchecked")
     public T getSelectedItem() {
         return (T)getSelectedObject();
     }
@@ -334,13 +349,15 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         }
 
         @Override
-        public void actionPerformed(AnActionEvent event) {
-            final String profileName = askForProfileName("Copy {0}");
+        @RequiredUIAccess
+        @SuppressWarnings("unchecked")
+        public void actionPerformed(@Nonnull AnActionEvent event) {
+            String profileName = askForProfileName("Copy {0}");
             if (profileName == null) {
                 return;
             }
 
-            final T clone = myCloner.copyOf((T)getSelectedObject());
+            T clone = myCloner.copyOf((T)getSelectedObject());
             myNamer.setName(clone, profileName);
             addNewNode(clone);
             selectNodeInTree(clone);
@@ -349,7 +366,8 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
 
 
         @Override
-        public void update(AnActionEvent event) {
+        @RequiredUIAccess
+        public void update(@Nonnull AnActionEvent event) {
             super.update(event);
             event.getPresentation().setEnabled(getSelectedObject() != null);
         }
@@ -365,8 +383,9 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         }
 
         @Override
-        public void actionPerformed(AnActionEvent event) {
-            final T newItem = createItem();
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent event) {
+            T newItem = createItem();
             if (newItem != null) {
                 onItemCreated(newItem);
             }
@@ -378,19 +397,20 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     }
 
     @Nullable
+    @RequiredUIAccess
     protected T createItem() {
-        final String name = askForProfileName("Create new {0}");
+        String name = askForProfileName("Create new {0}");
         if (name == null) {
             return null;
         }
-        final T newItem = myFactory.get();
+        T newItem = myFactory.get();
         myNamer.setName(newItem, name);
         return newItem;
     }
 
+    @RequiredUIAccess
     protected void onItemCreated(T newItem) {
         addNewNode(newItem);
         selectNodeInTree(newItem);
     }
-
 }

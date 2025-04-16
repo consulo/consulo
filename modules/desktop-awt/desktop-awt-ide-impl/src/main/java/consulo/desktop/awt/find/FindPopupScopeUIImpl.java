@@ -15,6 +15,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.SimpleListCellRenderer;
@@ -23,17 +24,16 @@ import consulo.ui.ex.awt.internal.ComboBoxStyle;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 class FindPopupScopeUIImpl implements FindPopupScopeUI {
     static final ScopeType PROJECT = new ScopeType("Project", FindLocalize.findPopupScopeProject());
@@ -54,6 +54,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
     private FindPopupDirectoryChooser myDirectoryChooser;
     private ScopeChooserCombo myScopeCombo;
 
+    @RequiredUIAccess
     FindPopupScopeUIImpl(@Nonnull FindPopupPanel panel) {
         myHelper = panel.getHelper();
         myProject = panel.getProject();
@@ -68,6 +69,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
         );
     }
 
+    @RequiredUIAccess
     public void initComponents() {
         Module[] modules = ModuleManager.getInstance(myProject).getModules();
         String[] names = new String[modules.length];
@@ -94,31 +96,37 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
             myHelper.getModel().getCustomScopeName(),
             FindSettings.getInstance().getDefaultScopeName()
         );
-        myScopeCombo.init(myProject, true, true, selection, new Condition<ScopeDescriptor>() {
-            //final String projectFilesScopeName = PsiBundle.message("psi.search.scope.project");
-            final String moduleFilesScopeName;
+        myScopeCombo.init(
+            myProject,
+            true,
+            true,
+            selection,
+            new Predicate<>() {
+                //final String projectFilesScopeName = PsiBundle.message("psi.search.scope.project");
+                final String moduleFilesScopeName;
 
-            {
-                String moduleScopeName = PsiBundle.message("search.scope.module", "");
-                final int ind = moduleScopeName.indexOf(' ');
-                moduleFilesScopeName = moduleScopeName.substring(0, ind + 1);
-            }
-
-            @Override
-            public boolean value(ScopeDescriptor descriptor) {
-                String display = descriptor.getDisplayName();
-                if (display == null) {
-                    if (descriptor.getClass() != ScopeDescriptor.class) {
-                        display = descriptor.getClass().getSimpleName();
-                    }
-                    else {
-                        SearchScope scope = descriptor.getScope();
-                        display = scope == null ? "?" : scope.getClass().getSimpleName();
-                    }
+                {
+                    String moduleScopeName = PsiBundle.message("search.scope.module", "");
+                    int ind = moduleScopeName.indexOf(' ');
+                    moduleFilesScopeName = moduleScopeName.substring(0, ind + 1);
                 }
-                return /*!projectFilesScopeName.equals(display) &&*/ !display.startsWith(moduleFilesScopeName);
+
+                @Override
+                public boolean test(ScopeDescriptor descriptor) {
+                    String display = descriptor.getDisplayName();
+                    if (display == null) {
+                        if (descriptor.getClass() != ScopeDescriptor.class) {
+                            display = descriptor.getClass().getSimpleName();
+                        }
+                        else {
+                            SearchScope scope = descriptor.getScope();
+                            display = scope == null ? "?" : scope.getClass().getSimpleName();
+                        }
+                    }
+                    return /*!projectFilesScopeName.equals(display) &&*/ !display.startsWith(moduleFilesScopeName);
+                }
             }
-        });
+        );
         myScopeCombo.setBrowseListener(new ScopeChooserCombo.BrowseListener() {
 
             private FindModel myModelSnapshot;
@@ -187,7 +195,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
 
     @Override
     public boolean hideAllPopups() {
-        final JComboBox[] candidates = {myModuleComboBox, myScopeCombo.getComboBox(), myDirectoryChooser.getComboBox()};
+        JComboBox[] candidates = {myModuleComboBox, myScopeCombo.getComboBox(), myDirectoryChooser.getComboBox()};
         for (JComboBox candidate : candidates) {
             if (candidate.isPopupVisible()) {
                 candidate.hidePopup();
@@ -202,7 +210,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
     public ScopeType initByModel(@Nonnull FindModel findModel) {
         myDirectoryChooser.initByModel(findModel);
 
-        final String dirName = findModel.getDirectoryName();
+        String dirName = findModel.getDirectoryName();
         if (!StringUtil.isEmptyOrSpaces(dirName)) {
             VirtualFile dir = LocalFileSystem.getInstance().findFileByPath(dirName);
             if (dir != null) {

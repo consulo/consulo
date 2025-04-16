@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.LiteLinearGraph;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -25,6 +24,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class FragmentGenerator {
 
@@ -61,35 +61,17 @@ public class FragmentGenerator {
     @Nonnull
     private final LiteLinearGraph myGraph;
     @Nonnull
-    private final Condition<Integer> myRedNodes;
+    private final Predicate<Integer> myRedNodes;
 
-    public FragmentGenerator(@Nonnull LiteLinearGraph graph, @Nonnull Condition<Integer> redNodes) {
+    public FragmentGenerator(@Nonnull LiteLinearGraph graph, @Nonnull Predicate<Integer> redNodes) {
         myGraph = graph;
         myRedNodes = redNodes;
     }
 
     @Nonnull
-    public Set<Integer> getMiddleNodes(final int upNode, final int downNode, boolean strict) {
-        Set<Integer> downWalk = getWalkNodes(
-            upNode,
-            false,
-            new Condition<Integer>() {
-                @Override
-                public boolean value(Integer integer) {
-                    return integer > downNode;
-                }
-            }
-        );
-        Set<Integer> upWalk = getWalkNodes(
-            downNode,
-            true,
-            new Condition<Integer>() {
-                @Override
-                public boolean value(Integer integer) {
-                    return integer < upNode;
-                }
-            }
-        );
+    public Set<Integer> getMiddleNodes(int upNode, int downNode, boolean strict) {
+        Set<Integer> downWalk = getWalkNodes(upNode, false, integer -> integer > downNode);
+        Set<Integer> upWalk = getWalkNodes(downNode, true, integer -> integer < upNode);
 
         downWalk.retainAll(upWalk);
         if (strict) {
@@ -101,7 +83,7 @@ public class FragmentGenerator {
 
     @Nullable
     public Integer getNearRedNode(int startNode, int maxWalkSize, boolean isUp) {
-        if (myRedNodes.value(startNode)) {
+        if (myRedNodes.test(startNode)) {
             return startNode;
         }
 
@@ -109,7 +91,7 @@ public class FragmentGenerator {
         while (walker.notEmpty()) {
             Integer next = walker.pop();
 
-            if (myRedNodes.value(next)) {
+            if (myRedNodes.test(next)) {
                 return next;
             }
 
@@ -126,7 +108,7 @@ public class FragmentGenerator {
 
     @Nonnull
     public GreenFragment getGreenFragmentForCollapse(int startNode, int maxWalkSize) {
-        if (myRedNodes.value(startNode)) {
+        if (myRedNodes.test(startNode)) {
             return new GreenFragment(null, null, Collections.<Integer>emptySet());
         }
         Integer upRedNode = getNearRedNode(startNode, maxWalkSize, true);
@@ -152,13 +134,13 @@ public class FragmentGenerator {
     }
 
     @Nonnull
-    private Set<Integer> getWalkNodes(int startNode, boolean isUp, Condition<Integer> stopFunction) {
+    private Set<Integer> getWalkNodes(int startNode, boolean isUp, Predicate<Integer> stopFunction) {
         Set<Integer> walkNodes = new HashSet<>();
 
         TreeSetNodeIterator walker = new TreeSetNodeIterator(startNode, isUp);
         while (walker.notEmpty()) {
             Integer next = walker.pop();
-            if (!stopFunction.value(next)) {
+            if (!stopFunction.test(next)) {
                 walkNodes.add(next);
                 walker.addAll(getNodes(next, isUp));
             }
@@ -173,12 +155,12 @@ public class FragmentGenerator {
     }
 
     @Nonnull
-    private static Condition<Integer> createStopFunction(final int maxNodeCount) {
-        return new Condition<Integer>() {
+    private static Predicate<Integer> createStopFunction(int maxNodeCount) {
+        return new Predicate<>() {
             private int count = maxNodeCount;
 
             @Override
-            public boolean value(Integer integer) {
+            public boolean test(Integer integer) {
                 count--;
                 return count < 0;
             }

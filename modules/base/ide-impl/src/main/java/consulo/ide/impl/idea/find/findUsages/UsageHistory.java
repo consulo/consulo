@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.idea.find.findUsages;
 
-import consulo.util.lang.function.Condition;
-import consulo.usage.ConfigurableUsageTarget;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.usage.ConfigurableUsageTarget;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
@@ -28,15 +27,10 @@ public class UsageHistory {
     private final List<ConfigurableUsageTarget> myHistory = ContainerUtil.createLockFreeCopyOnWriteList();
 
     public void add(@Nonnull ConfigurableUsageTarget usageTarget) {
-        final String descriptiveName = usageTarget.getLongDescriptiveName();
+        String descriptiveName = usageTarget.getLongDescriptiveName();
         ContainerUtil.retainAll(
             myHistory,
-            new Condition<ConfigurableUsageTarget>() {
-                @Override
-                public boolean value(ConfigurableUsageTarget existing) {
-                    return !existing.getLongDescriptiveName().equals(descriptiveName);
-                }
-            }
+            existing -> !existing.getLongDescriptiveName().equals(descriptiveName)
         );
         myHistory.add(usageTarget);
 

@@ -18,10 +18,10 @@ package consulo.ide.impl.idea.vcs.log.data;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.util.SequentialLimitedLifoExecutor;
 import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SLRUMap;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
@@ -34,6 +34,7 @@ import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Provides capabilities to asynchronously calculate "contained in branches" information.
@@ -59,7 +60,7 @@ public class ContainingBranchesGetter {
     ContainingBranchesGetter(@Nonnull VcsLogDataImpl logData, @Nonnull Disposable parentDisposable) {
         myLogData = logData;
         myTaskExecutor = new SequentialLimitedLifoExecutor<>(parentDisposable, 10, task -> {
-            final List<String> branches = task.getContainingBranches(myLogData);
+            List<String> branches = task.getContainingBranches(myLogData);
             Application.get().invokeLater(() -> {
                 // if cache is cleared (because of log refresh) during this task execution,
                 // this will put obsolete value into the old instance we don't care anymore
@@ -131,7 +132,7 @@ public class ContainingBranchesGetter {
     }
 
     @Nonnull
-    public Condition<CommitId> getContainedInBranchCondition(@Nonnull final String branchName, @Nonnull final VirtualFile root) {
+    public Condition<CommitId> getContainedInBranchCondition(@Nonnull String branchName, @Nonnull VirtualFile root) {
         LOG.assertTrue(EventQueue.isDispatchThread());
 
         DataPack dataPack = myLogData.getDataPack();
@@ -234,12 +235,12 @@ public class ContainingBranchesGetter {
 
     private class ContainedInBranchCondition implements Condition<CommitId> {
         @Nonnull
-        private final Condition<Integer> myCondition;
+        private final Predicate<Integer> myCondition;
         @Nonnull
         private final String myBranch;
         private volatile boolean isDisposed = false;
 
-        public ContainedInBranchCondition(@Nonnull Condition<Integer> condition, @Nonnull String branch) {
+        public ContainedInBranchCondition(@Nonnull Predicate<Integer> condition, @Nonnull String branch) {
             myCondition = condition;
             myBranch = branch;
         }
@@ -251,7 +252,7 @@ public class ContainingBranchesGetter {
 
         @Override
         public boolean value(CommitId commitId) {
-            return !isDisposed && myCondition.value(myLogData.getCommitIndex(commitId.getHash(), commitId.getRoot()));
+            return !isDisposed && myCondition.test(myLogData.getCommitIndex(commitId.getHash(), commitId.getRoot()));
         }
 
         public void dispose() {

@@ -16,6 +16,7 @@
 
 package consulo.language.inject.advanced;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -23,11 +24,10 @@ import consulo.language.Language;
 import consulo.language.editor.completion.CompletionUtilCore;
 import consulo.language.psi.*;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.PairProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -68,18 +68,20 @@ public class TemporaryPlacesRegistry {
         }
 
         @Override
+        @RequiredUIAccess
         public boolean addInjectionInPlace(Language language, PsiLanguageInjectionHost host) {
             addHostWithUndo(host, InjectedLanguage.create(language.getID()));
             return true;
         }
 
         @Override
+        @RequiredUIAccess
         public boolean removeInjectionInPlace(PsiLanguageInjectionHost psiElement) {
             return removeHostWithUndo(myProject, psiElement);
         }
     };
 
-    public static TemporaryPlacesRegistry getInstance(final Project project) {
+    public static TemporaryPlacesRegistry getInstance(Project project) {
         return project.getInstance(TemporaryPlacesRegistry.class);
     }
 
@@ -95,8 +97,9 @@ public class TemporaryPlacesRegistry {
             return myTempPlaces;
         }
         myPsiModificationCounter = modificationCount;
-        final List<TempPlace> placesToRemove = ContainerUtil.findAll(myTempPlaces, new Condition<TempPlace>() {
-            public boolean value(final TempPlace place) {
+        List<TempPlace> placesToRemove = ContainerUtil.findAll(
+            myTempPlaces,
+            place -> {
                 PsiLanguageInjectionHost element = place.elementPointer.getElement();
                 if (element == null) {
                     return true;
@@ -106,13 +109,14 @@ public class TemporaryPlacesRegistry {
                     return false;
                 }
             }
-        });
+        );
         if (!placesToRemove.isEmpty()) {
             myTempPlaces.removeAll(placesToRemove);
         }
         return myTempPlaces;
     }
 
+    @RequiredReadAction
     private void addInjectionPlace(TempPlace place) {
         PsiLanguageInjectionHost element = place.elementPointer.getElement();
         if (element == null) {
@@ -132,7 +136,8 @@ public class TemporaryPlacesRegistry {
         }
     }
 
-    public boolean removeHostWithUndo(final Project project, final PsiLanguageInjectionHost host) {
+    @RequiredUIAccess
+    public boolean removeHostWithUndo(Project project, PsiLanguageInjectionHost host) {
         InjectedLanguage prevLanguage = host.getUserData(LanguageInjectionSupport.TEMPORARY_INJECTED_LANGUAGE);
         if (prevLanguage == null) {
             return false;
@@ -146,17 +151,16 @@ public class TemporaryPlacesRegistry {
             nextPlace,
             place,
             Collections.<PsiElement>emptyList(),
-            new PairProcessor<TempPlace, TempPlace>() {
-                public boolean process(final TempPlace add, final TempPlace remove) {
-                    addInjectionPlace(add);
-                    return true;
-                }
+            (add, remove) -> {
+                addInjectionPlace(add);
+                return true;
             }
         );
         return true;
     }
 
-    public void addHostWithUndo(final PsiLanguageInjectionHost host, final InjectedLanguage language) {
+    @RequiredUIAccess
+    public void addHostWithUndo(PsiLanguageInjectionHost host, InjectedLanguage language) {
         InjectedLanguage prevLanguage = host.getUserData(LanguageInjectionSupport.TEMPORARY_INJECTED_LANGUAGE);
         SmartPointerManager manager = SmartPointerManager.getInstance(myProject);
         SmartPsiElementPointer<PsiLanguageInjectionHost> pointer = manager.createSmartPsiElementPointer(host);
@@ -167,11 +171,9 @@ public class TemporaryPlacesRegistry {
             place,
             prevPlace,
             Collections.<PsiElement>emptyList(),
-            new PairProcessor<TempPlace, TempPlace>() {
-                public boolean process(TempPlace add, final TempPlace remove) {
-                    addInjectionPlace(add);
-                    return true;
-                }
+            (add, remove) -> {
+                addInjectionPlace(add);
+                return true;
             }
         );
     }
@@ -181,6 +183,7 @@ public class TemporaryPlacesRegistry {
     }
 
     @Nullable
+    @RequiredReadAction
     public InjectedLanguage getLanguageFor(@Nonnull PsiLanguageInjectionHost host, PsiFile containingFile) {
         PsiLanguageInjectionHost originalHost = CompletionUtilCore.getOriginalElement(host, containingFile);
         PsiLanguageInjectionHost injectionHost = originalHost == null ? host : originalHost;

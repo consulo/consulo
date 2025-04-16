@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.vcs.log.paint;
 
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.Pair;
-import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.EdgePrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.NodePrintElement;
-import consulo.versionControlSystem.log.graph.PrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.TerminalEdgePrintElement;
+import consulo.ui.ex.JBColor;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Couple;
+import consulo.versionControlSystem.log.graph.PrintElement;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -170,7 +169,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
 
         g2.drawLine(x1, y1, x2, y2);
         if (hasArrow) {
-            Pair<Integer, Integer> rotate1 = rotate(
+            Couple<Integer> rotate1 = rotate(
                 x1,
                 y1,
                 startArrowX,
@@ -179,7 +178,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
                 Math.sqrt(1 - ARROW_ANGLE_COS2),
                 ARROW_LENGTH * getRowHeight()
             );
-            Pair<Integer, Integer> rotate2 = rotate(
+            Couple<Integer> rotate2 = rotate(
                 x1,
                 y1,
                 startArrowX,
@@ -194,7 +193,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
     }
 
     @Nonnull
-    private static Pair<Integer, Integer> rotate(
+    private static Couple<Integer> rotate(
         double x,
         double y,
         double centerX,
@@ -213,7 +212,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
         double rotateX = scaleX * cos - scaleY * sin;
         double rotateY = scaleX * sin + scaleY * cos;
 
-        return Pair.create((int)Math.round(rotateX + centerX), (int)Math.round(rotateY + centerY));
+        return Couple.of((int)Math.round(rotateX + centerX), (int)Math.round(rotateY + centerY));
     }
 
     private void paintCircle(@Nonnull Graphics2D g2, int position, @Nonnull Color color, boolean select) {
@@ -274,15 +273,7 @@ public class SimpleGraphCellPainter implements GraphCellPainter {
             }
         }
 
-        List<PrintElement> selected = ContainerUtil.filter(
-            printElements,
-            new Condition<PrintElement>() {
-                @Override
-                public boolean value(PrintElement printElement) {
-                    return printElement.isSelected();
-                }
-            }
-        );
+        List<PrintElement> selected = ContainerUtil.filter(printElements, PrintElement::isSelected);
         for (PrintElement printElement : selected) {
             drawElement(g2, printElement, true);
         }

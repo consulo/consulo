@@ -175,7 +175,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
      * @see TreeTraversal#unique(Function)
      */
     @Nonnull
-    public final Self unique(@Nonnull final Function<? super T, Object> identity) {
+    public final Self unique(@Nonnull Function<? super T, Object> identity) {
         return interceptTraversal(traversal -> traversal.unique(identity));
     }
 
@@ -187,7 +187,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
      * @see TreeTraversal#onRange(Condition)
      */
     @Nonnull
-    public Self onRange(@Nonnull final Condition<? super T> rangeCondition) {
+    public Self onRange(@Nonnull Condition<? super T> rangeCondition) {
         return interceptTraversal(traversal -> traversal.onRange(rangeCondition));
     }
 
@@ -353,7 +353,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
             return new Meta<T>(roots, traversal, expand, regard, this.filter, forceIgnore, forceDisregard, newTransform);
         }
 
-        TreeTraversal.GuidedIt.Guide<T> createChildrenGuide(final T parent) {
+        TreeTraversal.GuidedIt.Guide<T> createChildrenGuide(T parent) {
             return new TreeTraversal.GuidedIt.Guide<T>() {
                 final Condition<? super T> expand = buildExpandConditionForChildren(parent);
 
@@ -389,8 +389,8 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
                 Condition impl = JBIterable.Stateful.copy(c.impl);
                 if (impl != (invert ? Condition.TRUE : Condition.FALSE)) {
                     copy = new Cond<Object>(invert ? Conditions.not(impl) : impl, copy);
-                    if (impl instanceof EdgeFilter) {
-                        ((EdgeFilter)impl).edgeSource = parent;
+                    if (impl instanceof EdgeFilter edgeFilter) {
+                        edgeFilter.edgeSource = parent;
                     }
                 }
                 if (c.next == null) {
