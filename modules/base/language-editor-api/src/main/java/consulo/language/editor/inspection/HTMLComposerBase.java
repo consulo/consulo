@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Dec 22, 2001
- * Time: 4:54:17 PM
- * To change template for new interface use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.inspection;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -42,6 +33,7 @@ import java.util.Map;
 
 /**
  * @author max
+ * @since 2007-12-22
  */
 public abstract class HTMLComposerBase extends HTMLComposer {
     public static final String BR = "<br>";

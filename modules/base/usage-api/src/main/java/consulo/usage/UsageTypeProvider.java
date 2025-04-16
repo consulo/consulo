@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 01.11.2006
- * Time: 17:15:24
- */
 package consulo.usage;
 
 import consulo.annotation.component.ComponentScope;
@@ -30,6 +23,10 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author yole
+ * @since 2006-11-01
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageTypeProvider {
     ExtensionPointName<UsageTypeProvider> EP_NAME = ExtensionPointName.create(UsageTypeProvider.class);

@@ -1,7 +1,3 @@
-/*
- * User: anna
- * Date: 13-Feb-2008
- */
 package consulo.execution.coverage;
 
 import com.intellij.rt.coverage.data.ProjectData;
@@ -13,6 +9,10 @@ import jakarta.annotation.Nullable;
 
 import java.io.File;
 
+/**
+ * @author anna
+ * @since 2008-02-13
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CoverageRunner {
     public static final ExtensionPointName<CoverageRunner> EP_NAME = ExtensionPointName.create(CoverageRunner.class);

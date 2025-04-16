@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.*;
 
 /**
- * User: anna
- * Date: 2014-11-27
+ * @author anna
+ * @since 2014-11-27
  */
 public class CoverageSuiteChooserDialog extends DialogWrapper {
     private static final String LOCAL = "Local";

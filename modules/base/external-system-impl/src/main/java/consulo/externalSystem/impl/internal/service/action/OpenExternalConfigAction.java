@@ -2,7 +2,7 @@ package consulo.externalSystem.impl.internal.service.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
-import consulo.externalSystem.ExternalSystemBundle;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
@@ -22,16 +22,15 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
- * @since 7/16/13 2:19 PM
+ * @since 2013-07-16
  */
 public class OpenExternalConfigAction extends AnAction implements DumbAware {
-
     public OpenExternalConfigAction() {
-        getTemplatePresentation().setText(ExternalSystemBundle.message("action.open.config.text", "external"));
-        getTemplatePresentation().setDescription(ExternalSystemBundle.message("action.open.config.description", "external"));
+        super(ExternalSystemLocalize.actionOpenConfigText("external"), ExternalSystemLocalize.actionOpenConfigDescription("external"));
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
         ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
         if (externalSystemId == null) {
@@ -39,9 +38,8 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
             return;
         }
 
-        e.getPresentation().setText(ExternalSystemBundle.message("action.open.config.text", externalSystemId.getReadableName()));
-        e.getPresentation()
-            .setDescription(ExternalSystemBundle.message("action.open.config.description", externalSystemId.getReadableName()));
+        e.getPresentation().setTextValue(ExternalSystemLocalize.actionOpenConfigText(externalSystemId.getReadableName()));
+        e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionOpenConfigDescription(externalSystemId.getReadableName()));
         e.getPresentation().setIcon(ExternalSystemUiUtil.getUiAware(externalSystemId).getProjectIcon());
 
         VirtualFile config = getExternalConfig(e.getDataContext());

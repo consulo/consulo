@@ -25,8 +25,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author irengrig
- * Date: 7/11/11
- * Time: 11:43 AM
+ * @since 2011-07-11
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface PatchEP {

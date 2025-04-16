@@ -1,0 +1,74 @@
+indexes.reloading:
+    text: Indexes reloading...
+psi.scanning.files.progress:
+    text: Scanning files...
+psi.search.for.word.progress:
+    text: Searching for {0} in {1,choice,1# file|1<{1} files}...
+psi.search.in.non.java.files.progress:
+    text: Analyzing non-code usages...
+psi.search.scope.project.and.libraries:
+    text: Project and Libraries
+search.scope.module:
+    text: Module ''{0}''
+search.scope.module.runtime:
+    text: Module ''{0}'' runtime scope
+terms.directory:
+    text: directory
+terms.file:
+    text: file
+indexes.preparing.to.shutdown.message:
+    text: Preparing Indexes to Shutdown...
+indexable.files.provider.indexing.library.name:
+    text: Indexing library ''{0}''
+indexable.files.provider.indexing.module.name:
+    text: Indexing module ''{0}''
+indexable.files.provider.indexing.fileOrDir.name:
+    text: Indexing ''{0}''
+indexable.files.provider.indexing.internal.module.name:
+    text: Indexing
+indexable.files.provider.indexing.sdk:
+    text: Indexing {0} ''{1}''
+indexable.files.provider.indexing.sdk.unnamed:
+    text: SDK
+indexable.files.provider.indexing.additional.dependencies:
+    text: Indexing dependencies
+indexable.files.provider.indexing.named.provider:
+    text: Indexing ''{0}''
+indexable.files.provider.scanning.files.contributor:
+    text: Scanning ''{0}''
+indexable.files.provider.scanning.library.name:
+    text: Scanning library ''{0}''
+indexable.files.provider.scanning.module.name:
+    text: Scanning module ''{0}''
+indexable.files.provider.scanning.fileOrDir.name:
+    text: Scanning ''{0}''
+indexable.files.provider.scanning.internal.module.name:
+    text: Scanning
+indexable.files.provider.scanning.sdk:
+    text: Scanning {0} ''{1}''
+indexable.files.provider.scanning.additional.dependencies:
+    text: Scanning dependencies
+index.rebuild.notification.title:
+    text: Index rebuild
+index.corrupted.notification.text:
+    text: Index files on disk are corrupted. Indexes will be rebuilt.
+index.format.changed.notification.text:
+    text: Index file format has changed for {0} indexes. These indexes will be rebuilt.
+progress.indexing:
+    text: Updating indexes
+progress.indexing.scanning:
+    text: Scanning files to index...
+progress.indexing.updating:
+    text: Indexing...
+progress.indexing.started.as.suspended:
+    text: Press the button to start indexing
+toggled.dumb.mode:
+    text: Running dumb mode...
+removing.indexable.set.project.handler:
+    text: Flushing indexes for project files
+index.content.diagnostic.dumping:
+    text: Dumping indexed file paths and other metadata...
+index.content.diagnostic.reading:
+    text: Reading indexed files metadata...
+notification.group.ide.caches:
+    text: IDE caches corruption detected

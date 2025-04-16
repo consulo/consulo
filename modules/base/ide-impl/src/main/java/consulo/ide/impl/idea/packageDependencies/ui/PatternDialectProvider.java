@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 16-Jan-2008
- */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.annotation.component.ComponentScope;
@@ -37,6 +32,10 @@ import jakarta.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author anna
+ * @since 2008-01-16
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PatternDialectProvider {
     private static final ExtensionPointCacheKey<PatternDialectProvider, Map<String, PatternDialectProvider>> CACHE_KEY =

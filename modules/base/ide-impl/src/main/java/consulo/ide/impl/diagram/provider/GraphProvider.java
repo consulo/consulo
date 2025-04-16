@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 23:48/15.10.13
+ * @since 2013-10-15
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GraphProvider {

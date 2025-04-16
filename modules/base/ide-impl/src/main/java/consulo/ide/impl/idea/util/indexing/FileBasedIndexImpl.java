@@ -4,7 +4,9 @@ package consulo.ide.impl.idea.util.indexing;
 import com.google.common.annotations.VisibleForTesting;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.*;
+import consulo.application.AccessRule;
+import consulo.application.Application;
+import consulo.application.HeavyProcessLatch;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
@@ -12,7 +14,6 @@ import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.NotNullLazyValue;
-import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
@@ -37,14 +38,13 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFSImpl;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.ThrowableConvertor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.hash.FileContentHashIndex;
 import consulo.ide.impl.idea.util.indexing.hash.FileContentHashIndexExtension;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtension;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtensionLocator;
+import consulo.ide.impl.localize.IndexingLocalize;
 import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import consulo.ide.impl.psi.stubs.SerializationManagerEx;
 import consulo.index.io.*;
@@ -52,10 +52,6 @@ import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.file.FileTypeManager;
-import consulo.project.*;
-import consulo.util.lang.ref.SimpleReference;
-import consulo.virtualFileSystem.fileType.FileTypeEvent;
-import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.language.impl.internal.psi.PsiDocumentTransactionListener;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
@@ -72,14 +68,14 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.*;
 import consulo.language.psi.stub.gist.GistManager;
 import consulo.logging.Logger;
+import consulo.project.*;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.util.collection.SmartFMap;
-import consulo.util.collection.SmartList;
+import consulo.util.collection.*;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntSet;
@@ -89,9 +85,12 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeEvent;
+import consulo.virtualFileSystem.fileType.FileTypeListener;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -102,6 +101,7 @@ import java.io.*;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
+import java.util.Stack;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -120,7 +120,8 @@ import java.util.stream.Stream;
 @Singleton
 @ServiceImpl
 public final class FileBasedIndexImpl extends FileBasedIndex {
-    static final NotificationGroup NOTIFICATIONS = new NotificationGroup("Indexing", NotificationDisplayType.BALLOON, false);
+    static final NotificationGroup NOTIFICATIONS =
+        new NotificationGroup("ideCaches", IndexingLocalize.notificationGroupIdeCaches(), NotificationDisplayType.BALLOON, false);
 
     private static final ThreadLocal<VirtualFile> ourIndexedFile = new ThreadLocal<>();
     private static final ThreadLocal<VirtualFile> ourFileToBeIndexed = new ThreadLocal<>();
@@ -146,7 +147,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     private final NotNullLazyValue<ChangedFilesCollector> myChangedFilesCollector =
         NotNullLazyValue.createValue(() -> AsyncEventSupport.EP_NAME.findExtensionOrFail(ChangedFilesCollector.class));
 
-    List<IndexableFileSet> myIndexableSets = ContainerUtil.createLockFreeCopyOnWriteList();
+    List<IndexableFileSet> myIndexableSets = Lists.newLockFreeCopyOnWriteList();
     private final Map<IndexableFileSet, Project> myIndexableSetToProjectMap = new HashMap<>();
 
     private final MessageBusConnection myConnection;
@@ -309,7 +310,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         }
     }
 
-    boolean processChangedFiles(@Nonnull Project project, @Nonnull Processor<? super VirtualFile> processor) {
+    boolean processChangedFiles(@Nonnull Project project, @Nonnull Predicate<? super VirtualFile> processor) {
         // avoid missing files when events are processed concurrently
         Stream<VirtualFile> stream = Stream.concat(
             getChangedFilesCollector().getEventMerger().getChangedFiles(),
@@ -318,7 +319,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         return stream
             .filter(filesToBeIndexedForProjectCondition(project))
             .distinct()
-            .mapToInt(f -> processor.process(f) ? 1 : 0)
+            .mapToInt(f -> processor.test(f) ? 1 : 0)
             .allMatch(success -> success == 1);
     }
 
@@ -327,11 +328,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     static boolean belongsToScope(VirtualFile file, VirtualFile restrictedTo, SearchScope filter) {
-        if (!(file instanceof VirtualFileWithId) || !file.isValid()) {
-            return false;
-        }
-
-        return (restrictedTo == null || Comparing.equal(file, restrictedTo))
+        return file instanceof VirtualFileWithId && file.isValid()
+            && (restrictedTo == null || Comparing.equal(file, restrictedTo))
             && (filter == null || restrictedTo != null || filter.accept(file));
     }
 
@@ -745,7 +743,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             GlobalSearchScope.fileScope(project, virtualFile),
             index -> index.getIndexedFileData(fileId)
         );
-        return ContainerUtil.notNullize(map);
+        return Maps.notNullize(map);
     }
 
     private static final ThreadLocal<Integer> myUpToDateCheckState = new ThreadLocal<>();
@@ -917,6 +915,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
 
     @Override
+    @RequiredReadAction
     public <K, V> boolean processValues(
         @Nonnull ID<K, V> indexId,
         @Nonnull K dataKey,
@@ -1802,7 +1801,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                             currentBytes = content.getBytes();
                         }
                         catch (IOException e) {
-                            currentBytes = ArrayUtilRt.EMPTY_BYTE_ARRAY;
+                            currentBytes = ArrayUtil.EMPTY_BYTE_ARRAY;
                         }
                         fc = new FileContentImpl(file, currentBytes);
 
@@ -2269,7 +2268,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                 ProgressManager.checkCanceled();
                 return true;
             });
-  }
+        }
     }
 
     private boolean shouldIndexFile(Project project, @Nonnull VirtualFile file, @Nonnull ID<?, ?> indexId) {
@@ -2282,18 +2281,13 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     private boolean isTooLarge(@Nonnull VirtualFile file) {
-        if (RawFileLoaderHelper.isTooLargeForIntelligence(file)) {
-            return !myNoLimitCheckTypes.contains(file.getFileType()) || RawFileLoaderHelper.isTooLargeForContentLoading(file);
-        }
-        return false;
+        return RawFileLoaderHelper.isTooLargeForIntelligence(file)
+            && (!myNoLimitCheckTypes.contains(file.getFileType()) || RawFileLoaderHelper.isTooLargeForContentLoading(file));
     }
 
     private boolean isTooLarge(@Nonnull VirtualFile file, long contentSize) {
-        if (RawFileLoaderHelper.isTooLargeForIntelligence(file, contentSize)) {
-            return !myNoLimitCheckTypes.contains(file.getFileType())
-                || RawFileLoaderHelper.isTooLargeForContentLoading(file, contentSize);
-        }
-        return false;
+        return RawFileLoaderHelper.isTooLargeForIntelligence(file, contentSize)
+            && (!myNoLimitCheckTypes.contains(file.getFileType()) || RawFileLoaderHelper.isTooLargeForContentLoading(file, contentSize));
     }
 
     @Nonnull
@@ -2563,21 +2557,24 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                 String rebuildNotification = null;
 
                 if (currentVersionCorrupted) {
-                    rebuildNotification = "Index files on disk are corrupted. Indices will be rebuilt.";
+                    rebuildNotification = IndexingLocalize.indexCorruptedNotificationText().get();
                 }
                 else if (!changedIndicesText.isEmpty()) {
-                    rebuildNotification =
-                        "Index file format has changed for " + changedIndicesText + " indices. These indices will be rebuilt.";
+                    rebuildNotification = IndexingLocalize.indexFormatChangedNotificationText(changedIndicesText).get();
                 }
 
-                registrationResultSink
-                    .logChangedAndFullyBuiltIndices(
-                        LOG,
-                        "Indices to be rebuilt after version change:",
-                        currentVersionCorrupted ? "Indices to be rebuilt after corruption:" : "Indices to be built:"
-                    );
+                registrationResultSink.logChangedAndFullyBuiltIndices(
+                    LOG,
+                    "Indices to be rebuilt after version change:",
+                    currentVersionCorrupted ? "Indices to be rebuilt after corruption:" : "Indices to be built:"
+                );
                 if (rebuildNotification != null && !myApplication.isHeadlessEnvironment() && Registry.is("ide.showIndexRebuildMessage")) {
-                    NOTIFICATIONS.createNotification("Index Rebuild", rebuildNotification, NotificationType.INFORMATION, null)
+                    NOTIFICATIONS.createNotification(
+                            IndexingLocalize.indexRebuildNotificationTitle().get(),
+                            rebuildNotification,
+                            NotificationType.INFORMATION,
+                            null
+                        )
                         .notify(null);
                 }
 

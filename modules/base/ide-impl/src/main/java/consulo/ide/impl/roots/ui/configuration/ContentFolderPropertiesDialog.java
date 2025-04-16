@@ -40,7 +40,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 05.02.14
+ * @since 2014-02-05
  */
 public class ContentFolderPropertiesDialog extends DialogWrapper {
     private static class Item {
@@ -147,7 +147,7 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
             myItems.add(new Item(provider, entry.getKey(), entry.getValue()));
         }
 
-        setTitle(ProjectLocalize.modulePathsPropertiesTooltip().get());
+        setTitle(ProjectLocalize.modulePathsPropertiesTooltip());
 
         init();
     }

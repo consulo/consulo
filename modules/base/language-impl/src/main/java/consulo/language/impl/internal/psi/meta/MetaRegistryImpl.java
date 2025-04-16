@@ -41,9 +41,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * User: ik
- * Date: 07.05.2003
- * Time: 3:31:09
+ * @author ik
+ * @since 2003-05-07
  */
 @Singleton
 @ServiceImpl

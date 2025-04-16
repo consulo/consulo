@@ -27,11 +27,11 @@ import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class CompletionLookupArrangerImpl extends LookupArranger implements CompletionLookupArranger {
     private static final Logger LOG = Logger.getInstance(CompletionLookupArrangerImpl.class);
@@ -402,12 +402,12 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     private static void addSomeItems(
         LinkedHashSet<? super LookupElement> model,
         Iterator<? extends LookupElement> iterator,
-        Condition<? super LookupElement> stopWhen
+        Predicate<? super LookupElement> stopWhen
     ) {
         while (iterator.hasNext()) {
             LookupElement item = iterator.next();
             model.add(item);
-            if (stopWhen.value(item)) {
+            if (stopWhen.test(item)) {
                 break;
             }
         }

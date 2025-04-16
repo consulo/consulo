@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 20-Dec-2007
- */
 package consulo.language.editor.inspection;
 
 import consulo.annotation.component.ComponentScope;
@@ -31,6 +26,10 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author anna
+ * @since 2007-12-20
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class InspectionExtensionsFactory {
     public static final ExtensionPointName<InspectionExtensionsFactory> EP_NAME =

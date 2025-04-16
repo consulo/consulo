@@ -25,8 +25,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author irengrig
- * Date: 2/28/11
- * Time: 1:12 PM
+ * @since 2011-02-28
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsBaseContentProvider {

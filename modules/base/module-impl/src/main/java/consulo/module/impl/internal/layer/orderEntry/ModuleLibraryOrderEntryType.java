@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 21.08.14
+ * @since 2014-08-21
  */
 @ExtensionImpl
 public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibraryOrderEntryImpl> {

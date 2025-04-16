@@ -24,7 +24,7 @@ import consulo.find.FindModel;
 
 /**
  * @author VISTALL
- * @since 12/12/2021
+ * @since 2021-12-12
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FindInProjectExtension {

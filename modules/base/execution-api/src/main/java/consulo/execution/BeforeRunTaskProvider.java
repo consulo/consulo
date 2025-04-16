@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Vladislav.Kaznacheev
- * Date: Jul 4, 2007
- * Time: 12:33:18 AM
- */
 package consulo.execution;
 
 import consulo.annotation.component.ComponentScope;
@@ -39,6 +32,10 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author Vladislav.Kaznacheev
+ * @since 2007-07-04
+ */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     public static final ExtensionPointName<BeforeRunTaskProvider> EP_NAME = ExtensionPointName.create(BeforeRunTaskProvider.class);

@@ -17,10 +17,10 @@
 package consulo.language.editor.refactoring.rename;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import consulo.language.editor.refactoring.event.RefactoringEventData;
@@ -47,7 +47,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -73,6 +72,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     private final List<AutomaticRenamer> myRenamers = new ArrayList<>();
     private final List<UnresolvableCollisionUsageInfo> mySkippedUsages = new ArrayList<>();
 
+    @RequiredReadAction
     public RenameProcessor(
         Project project,
         @Nonnull PsiElement element,
@@ -191,16 +191,14 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                 }
                 myAllRenames.putAll(renames);
                 Runnable runnable = () -> {
-                    for (final Map.Entry<PsiElement, String> entry : renames.entrySet()) {
-                        ThrowableComputable<UsageInfo[], RuntimeException> action =
-                            () -> RenameUtil.findUsages(
-                                entry.getKey(),
-                                entry.getValue(),
-                                mySearchInComments,
-                                mySearchTextOccurrences,
-                                myAllRenames
-                            );
-                        UsageInfo[] usages = AccessRule.read(action);
+                    for (Map.Entry<PsiElement, String> entry : renames.entrySet()) {
+                        UsageInfo[] usages = AccessRule.read(() -> RenameUtil.findUsages(
+                            entry.getKey(),
+                            entry.getValue(),
+                            mySearchInComments,
+                            mySearchTextOccurrences,
+                            myAllRenames
+                        ));
                         Collections.addAll(variableUsages, usages);
                     }
                 };
@@ -250,6 +248,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         LOG.assertTrue(!(element instanceof PsiCompiledElement), element);
     }
 
+    @RequiredReadAction
     private void assertValidName(PsiElement element, String newName) {
         LOG.assertTrue(RenameUtil.isValidName(myProject, element, newName), "element: " + element + ", newName: " + newName);
     }
@@ -293,6 +292,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         myAllRenames.put(element, newName);
     }
 
+    @RequiredReadAction
     private void setNewName(@Nonnull String newName) {
         myNewName = newName;
         myAllRenames.put(myPrimaryElement, newName);
@@ -361,6 +361,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
         return myForceShowPreview || super.isPreviewUsages(usages) || UsageViewUtil.reportNonRegularUsages(usages, myProject);
     }
@@ -388,6 +389,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     }
 
     @Override
+    @RequiredUIAccess
     public void performRefactoring(@Nonnull UsageInfo[] usages) {
         List<Runnable> postRenameCallbacks = new ArrayList<>();
 
@@ -425,40 +427,43 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         if (!mySkippedUsages.isEmpty()) {
             Application application = myProject.getApplication();
             if (!application.isUnitTestMode() && !application.isHeadlessEnvironment()) {
-                application.invokeLater(() -> {
-                    IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
-                    if (ideFrame != null) {
-
-                        StatusBar statusBar = ideFrame.getStatusBar();
-                        HyperlinkListener listener = e -> {
-                            if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
-                                return;
-                            }
-                            Messages.showMessageDialog(
-                                "<html>Following usages were safely skipped:<br>" +
-                                    StringUtil.join(
-                                        mySkippedUsages,
-                                        unresolvableCollisionUsageInfo -> unresolvableCollisionUsageInfo.getDescription(),
-                                        "<br>"
-                                    ) +
-                                    "</html>",
-                                "Not All Usages Were Renamed",
-                                null
+                application.invokeLater(
+                    () -> {
+                        IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
+                        if (ideFrame != null) {
+                            StatusBar statusBar = ideFrame.getStatusBar();
+                            HyperlinkListener listener = e -> {
+                                if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
+                                    return;
+                                }
+                                Messages.showMessageDialog(
+                                    "<html>Following usages were safely skipped:<br>" +
+                                        StringUtil.join(
+                                            mySkippedUsages,
+                                            unresolvableCollisionUsageInfo -> unresolvableCollisionUsageInfo.getDescription(),
+                                            "<br>"
+                                        ) +
+                                        "</html>",
+                                    LocalizeValue.localizeTODO("Not All Usages Were Renamed").get(),
+                                    null
+                                );
+                            };
+                            statusBar.notifyProgressByBalloon(
+                                NotificationType.WARNING,
+                                "<html><body>Unable to rename certain usages. <a href=\"\">Browse</a></body></html>",
+                                null,
+                                listener
                             );
-                        };
-                        statusBar.notifyProgressByBalloon(
-                            NotificationType.WARNING,
-                            "<html><body>Unable to rename certain usages. <a href=\"\">Browse</a></body></html>",
-                            null,
-                            listener
-                        );
-                    }
-                }, Application.get().getNoneModalityState());
+                        }
+                    },
+                    Application.get().getNoneModalityState()
+                );
             }
         }
     }
 
     @Override
+    @RequiredWriteAction
     protected void performPsiSpoilingRefactoring() {
         RenameUtil.renameNonCodeUsages(myProject, myNonCodeUsages);
     }
@@ -469,6 +474,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         return myCommandName;
     }
 
+    @RequiredReadAction
     public static MultiMap<PsiElement, UsageInfo> classifyUsages(Collection<? extends PsiElement> elements, UsageInfo[] usages) {
         MultiMap<PsiElement, UsageInfo> result = new MultiMap<>();
         for (UsageInfo usage : usages) {
@@ -494,7 +500,6 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                         result.putValue(indirect, usage);
                     }
                 }
-
             }
         }
         return result;
