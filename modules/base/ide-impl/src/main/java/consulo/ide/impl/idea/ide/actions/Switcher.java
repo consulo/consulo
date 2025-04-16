@@ -362,7 +362,7 @@ public class Switcher extends AnAction implements DumbAware {
             descriptions = new JPanel(new BorderLayout());
 
             pathLabel.setBorder(JBCurrentTheme.Advertiser.border());
-            pathLabel.setForeground(JBCurrentTheme.Advertiser.foreground());
+            pathLabel.setForeground(UIUtil.getLabelForeground());
             pathLabel.setOpaque(true);
 
             descriptions.setBorder(new CustomLineBorder(JBColor.border(), JBUI.insetsTop(1)));
@@ -569,7 +569,7 @@ public class Switcher extends AnAction implements DumbAware {
                     ),
                     20 * 20
                 ));
-                pane.setBorder(JBUI.Borders.customLineLeft(JBCurrentTheme.Popup.separatorColor()));
+                pane.setBorder(JBUI.Borders.customLineLeft(JBColor.border()));
                 this.add(pane, BorderLayout.CENTER);
                 if (selectionIndex > -1) {
                     files.setSelectedIndex(selectionIndex);

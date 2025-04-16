@@ -15,20 +15,20 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.util.lang.function.Condition;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.BiDirectionalEnumerator;
+import consulo.util.collection.HashingStrategy;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsRef;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import static consulo.ide.impl.idea.util.containers.ContainerUtil.canonicalStrategy;
+import java.util.function.Predicate;
 
 public class InMemoryStorage implements VcsLogStorage {
-    private final BiDirectionalEnumerator<CommitId> myCommitIdEnumerator = new BiDirectionalEnumerator<>(1, canonicalStrategy());
-    private final BiDirectionalEnumerator<VcsRef> myRefsEnumerator = new BiDirectionalEnumerator<>(1, canonicalStrategy());
+    private final BiDirectionalEnumerator<CommitId> myCommitIdEnumerator = new BiDirectionalEnumerator<>(1, HashingStrategy.canonical());
+    private final BiDirectionalEnumerator<VcsRef> myRefsEnumerator = new BiDirectionalEnumerator<>(1, HashingStrategy.canonical());
 
     @Override
     public int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root) {
@@ -47,10 +47,10 @@ public class InMemoryStorage implements VcsLogStorage {
 
     @Nullable
     @Override
-    public CommitId findCommitId(@Nonnull final Condition<CommitId> condition) {
-        final CommitId[] result = new CommitId[]{null};
+    public CommitId findCommitId(@Nonnull Predicate<CommitId> condition) {
+        CommitId[] result = new CommitId[]{null};
         myCommitIdEnumerator.forEachValue(commitId -> {
-            if (condition.value(commitId)) {
+            if (condition.test(commitId)) {
                 result[0] = commitId;
             }
         });

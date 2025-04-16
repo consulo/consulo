@@ -23,6 +23,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static consulo.util.lang.function.Conditions.not;
 
@@ -66,7 +67,7 @@ public abstract class TreeTraversal {
         @Nonnull Iterable<? extends T> roots,
         @Nonnull Function<T, ? extends Iterable<? extends T>> tree
     ) {
-        return new JBIterable<T>() {
+        return new JBIterable<>() {
             @Nonnull
             @Override
             public Iterator<T> iterator() {
@@ -110,13 +111,13 @@ public abstract class TreeTraversal {
                 @Nonnull Iterable<? extends T> roots,
                 @Nonnull Function<T, ? extends Iterable<? extends T>> tree
             ) {
-                class WrappedTree implements Condition<T>, Function<T, Iterable<? extends T>> {
+                class WrappedTree implements Predicate<T>, Function<T, Iterable<? extends T>> {
                     HashSet<Object> visited;
 
                     @Override
-                    public boolean value(T e) {
+                    public boolean test(T e) {
                         if (visited == null) {
-                            visited = new HashSet<Object>();
+                            visited = new HashSet<>();
                         }
                         //noinspection unchecked
                         return visited.add(((Function<T, Object>)identity).apply(e));
@@ -144,7 +145,7 @@ public abstract class TreeTraversal {
      * stops when the {@code rangeCondition} return false after that.
      */
     @Nonnull
-    public TreeTraversal onRange(@Nonnull Condition<?> rangeCondition) {
+    public TreeTraversal onRange(@Nonnull Predicate<?> rangeCondition) {
         TreeTraversal original = this;
         return new TreeTraversal(original.toString() + " (ON_RANGE)") {
             @Nonnull
@@ -153,8 +154,8 @@ public abstract class TreeTraversal {
                 @Nonnull Iterable<? extends T> roots,
                 @Nonnull Function<T, ? extends Iterable<? extends T>> tree
             ) {
-                Condition<? super T> inRangeCondition = (Condition<? super T>)rangeCondition;
-                Condition<? super T> notInRangeCondition = (Condition<? super T>)not(rangeCondition);
+                Predicate<? super T> inRangeCondition = (Predicate<? super T>)rangeCondition;
+                Predicate<? super T> notInRangeCondition = (Predicate<? super T>)not(rangeCondition);
                 class WrappedTree implements Function<T, Iterable<? extends T>> {
                     @Override
                     public Iterable<? extends T> apply(T t) {
@@ -264,7 +265,7 @@ public abstract class TreeTraversal {
                 @Nonnull Function<T, ? extends Iterable<? extends T>> tree
             ) {
                 //noinspection unchecked
-                return new GuidedItImpl<T>(roots, tree, (GuidedIt.Guide<T>)guide);
+                return new GuidedItImpl<>(roots, tree, (GuidedIt.Guide<T>)guide);
             }
         };
     }
@@ -281,7 +282,7 @@ public abstract class TreeTraversal {
         @Nonnull
         @Override
         public <T> It<T> createIterator(@Nonnull Iterable<? extends T> roots, @Nonnull Function<T, ? extends Iterable<? extends T>> tree) {
-            return new PreOrderIt<T>(roots, tree);
+            return new PreOrderIt<>(roots, tree);
         }
     };
 
@@ -297,7 +298,7 @@ public abstract class TreeTraversal {
         @Nonnull
         @Override
         public <T> It<T> createIterator(@Nonnull Iterable<? extends T> roots, @Nonnull Function<T, ? extends Iterable<? extends T>> tree) {
-            return new PostOrderIt<T>(roots, tree);
+            return new PostOrderIt<>(roots, tree);
         }
     };
 
@@ -311,7 +312,7 @@ public abstract class TreeTraversal {
         @Nonnull
         @Override
         public <T> It<T> createIterator(@Nonnull Iterable<? extends T> roots, @Nonnull Function<T, ? extends Iterable<? extends T>> tree) {
-            return new LeavesDfsIt<T>(roots, tree);
+            return new LeavesDfsIt<>(roots, tree);
         }
     };
 
@@ -328,7 +329,7 @@ public abstract class TreeTraversal {
         @Nonnull
         @Override
         public <T> It<T> createIterator(@Nonnull Iterable<? extends T> roots, @Nonnull Function<T, ? extends Iterable<? extends T>> tree) {
-            return new InterleavedIt<T>(roots, tree);
+            return new InterleavedIt<>(roots, tree);
         }
     };
 
@@ -344,7 +345,7 @@ public abstract class TreeTraversal {
         @Nonnull
         @Override
         public <T> It<T> createIterator(@Nonnull Iterable<? extends T> roots, @Nonnull Function<T, ? extends Iterable<? extends T>> tree) {
-            return new PlainBfsIt<T>(roots, tree);
+            return new PlainBfsIt<>(roots, tree);
         }
     };
 
@@ -359,7 +360,7 @@ public abstract class TreeTraversal {
         @Nonnull
         @Override
         public <T> It<T> createIterator(@Nonnull Iterable<? extends T> roots, @Nonnull Function<T, ? extends Iterable<? extends T>> tree) {
-            return new TracingBfsIt<T>(roots, tree);
+            return new TracingBfsIt<>(roots, tree);
         }
     };
 
@@ -372,7 +373,7 @@ public abstract class TreeTraversal {
         @Nonnull
         @Override
         public <T> It<T> createIterator(@Nonnull Iterable<? extends T> roots, @Nonnull Function<T, ? extends Iterable<? extends T>> tree) {
-            return new LeavesBfsIt<T>(roots, tree);
+            return new LeavesBfsIt<>(roots, tree);
         }
     };
 
@@ -530,7 +531,7 @@ public abstract class TreeTraversal {
     // -----------------------------------------------------------------------------
 
     private static final class PlainBfsIt<T> extends It<T> {
-        final ArrayDeque<T> queue = new ArrayDeque<T>();
+        final ArrayDeque<T> queue = new ArrayDeque<>();
         P1<T> top;
 
         PlainBfsIt(@Nonnull Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
@@ -553,7 +554,7 @@ public abstract class TreeTraversal {
     }
 
     private static final class LeavesBfsIt<T> extends TracingIt<T> {
-        final ArrayDeque<T> queue = new ArrayDeque<T>();
+        final ArrayDeque<T> queue = new ArrayDeque<>();
 
         LeavesBfsIt(@Nonnull Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
             super(tree);
@@ -576,8 +577,8 @@ public abstract class TreeTraversal {
     }
 
     private final static class TracingBfsIt<T> extends TracingIt<T> {
-        final ArrayDeque<T> queue = new ArrayDeque<T>();
-        final Map<T, T> paths = Maps.newHashMap(ContainerUtil.<T>identityStrategy());
+        final ArrayDeque<T> queue = new ArrayDeque<>();
+        final Map<T, T> paths = Maps.newHashMap(HashingStrategy.identity());
         P1<T> top;
 
         TracingBfsIt(@Nonnull Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
@@ -641,6 +642,7 @@ public abstract class TreeTraversal {
             this.guide = guide;
         }
 
+        @Override
         public GuidedIt<T> queueNext(T child) {
             if (child != null) {
                 last = last.add(P1.create(child));
@@ -648,6 +650,7 @@ public abstract class TreeTraversal {
             return this;
         }
 
+        @Override
         public GuidedIt<T> queueLast(T child) {
             if (child != null) {
                 first = first.addBefore(P1.create(child));
@@ -655,6 +658,7 @@ public abstract class TreeTraversal {
             return this;
         }
 
+        @Override
         public GuidedIt<T> result(T node) {
             curResult = node;
             return this;
@@ -750,7 +754,7 @@ public abstract class TreeTraversal {
     private static final class P1<T> extends P<T, P1<T>> {
 
         static <T> P1<T> create(T node) {
-            return create(new P1<T>(), node);
+            return create(new P1<>(), node);
         }
 
         static <T> P1<T> create(Iterable<? extends T> it) {
@@ -786,7 +790,7 @@ public abstract class TreeTraversal {
         P2<T> next, prev;
 
         static <T> P2<T> create(T node) {
-            return create(new P2<T>(), node);
+            return create(new P2<>(), node);
         }
 
         static <T> P2<T> create(Iterable<? extends T> it) {

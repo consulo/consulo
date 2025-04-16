@@ -15,30 +15,29 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.application.util.function.Computable;
-import consulo.util.lang.Pair;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.log.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
-import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
-import consulo.versionControlSystem.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogHashFilterImpl;
+import consulo.logging.Logger;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Pair;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.log.*;
+import consulo.versionControlSystem.log.graph.GraphCommit;
+import consulo.versionControlSystem.log.graph.VisibleGraph;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.versionControlSystem.util.StopWatch;
-import consulo.logging.Logger;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 class VisiblePackBuilder {
-
     private static final Logger LOG = Logger.getInstance(VisiblePackBuilder.class);
 
     @Nonnull
@@ -180,10 +179,13 @@ class VisiblePackBuilder {
         @Nonnull Collection<String> hashes,
         @Nonnull PermanentGraph.SortType sortType
     ) {
-        final Set<Integer> indices = ContainerUtil.map2SetNotNull(hashes, partOfHash -> {
-            CommitId commitId = myHashMap.findCommitId(new CommitIdByStringCondition(partOfHash));
-            return commitId != null ? myHashMap.getCommitIndex(commitId.getHash(), commitId.getRoot()) : null;
-        });
+        final Set<Integer> indices = ContainerUtil.map2SetNotNull(
+            hashes,
+            partOfHash -> {
+                CommitId commitId = myHashMap.findCommitId(new CommitIdByStringCondition(partOfHash));
+                return commitId != null ? myHashMap.getCommitIndex(commitId.getHash(), commitId.getRoot()) : null;
+            }
+        );
         VisibleGraph<Integer> visibleGraph = dataPack.getPermanentGraph().createVisibleGraph(sortType, null, indices);
         return new VisiblePack(
             dataPack,
@@ -291,7 +293,7 @@ class VisiblePackBuilder {
         if (details != null) {
             return details;
         }
-        return UIUtil.invokeAndWaitIfNeeded((Computable<VcsCommitMetadata>)() -> myCommitDetailsGetter.getCommitDataIfAvailable(commitIndex));
+        return UIUtil.invokeAndWaitIfNeeded((Supplier<VcsCommitMetadata>)() -> myCommitDetailsGetter.getCommitDataIfAvailable(commitIndex));
     }
 
     @Nonnull
@@ -316,10 +318,7 @@ class VisiblePackBuilder {
             VcsLogFilterCollection rootSpecificCollection = filterCollection;
             if (rootSpecificCollection.getStructureFilter() != null) {
                 rootSpecificCollection = new VcsLogFilterCollectionBuilder(filterCollection)
-                    .with(new VcsLogStructureFilterImpl(ContainerUtil.newHashSet(VcsLogUtil.getFilteredFilesForRoot(
-                        root,
-                        filterCollection
-                    ))))
+                    .with(new VcsLogStructureFilterImpl(new HashSet<FilePath>(VcsLogUtil.getFilteredFilesForRoot(root, filterCollection))))
                     .build();
             }
 

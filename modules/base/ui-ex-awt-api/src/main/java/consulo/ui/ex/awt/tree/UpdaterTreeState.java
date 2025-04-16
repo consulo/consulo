@@ -5,10 +5,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -17,11 +14,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class UpdaterTreeState {
     private final AbstractTreeUi myUi;
     private final Map<Object, Object> myToSelect = new WeakHashMap<>();
-    private Map<Object, Condition> myAdjustedSelection = new WeakHashMap<>();
+    private Map<Object, Predicate> myAdjustedSelection = new WeakHashMap<>();
     private final Map<Object, Object> myToExpand = new WeakHashMap<>();
     private int myProcessingCount;
 
@@ -147,7 +145,7 @@ public class UpdaterTreeState {
         final Object[] toExpand = getToExpand();
 
 
-        final Map<Object, Condition> adjusted = new WeakHashMap<>(myAdjustedSelection);
+        final Map<Object, Predicate> adjusted = new WeakHashMap<>(myAdjustedSelection);
 
         clearSelection();
         clearExpansion();
@@ -233,16 +231,16 @@ public class UpdaterTreeState {
         }
     }
 
-    private ActionCallback processAdjusted(final Map<Object, Condition> adjusted, final Set<Object> originallySelected) {
+    private ActionCallback processAdjusted(final Map<Object, Predicate> adjusted, final Set<Object> originallySelected) {
         final ActionCallback result = new ActionCallback();
 
         final Set<Object> allSelected = myUi.getSelectedElements();
 
         Set<Object> toSelect = new HashSet<>();
-        for (Map.Entry<Object, Condition> entry : adjusted.entrySet()) {
-            Condition condition = entry.getValue();
+        for (Map.Entry<Object, Predicate> entry : adjusted.entrySet()) {
+            Predicate condition = entry.getValue();
             Object key = entry.getKey();
-            if (condition.value(key)) {
+            if (condition.test(key)) {
                 continue;
             }
 
@@ -265,7 +263,7 @@ public class UpdaterTreeState {
                 public void perform() {
                     final Set<Object> hangByParent = new HashSet<>();
                     processUnsuccessfulSelections(newSelection, o -> {
-                        if (myUi.isInStructure(o) && !adjusted.get(o).value(o)) {
+                        if (myUi.isInStructure(o) && !adjusted.get(o).test(o)) {
                             hangByParent.add(o);
                         }
                         else {
@@ -353,14 +351,13 @@ public class UpdaterTreeState {
         myToSelect.put(element, element);
     }
 
-    void addAdjustedSelection(final Object element, Condition isExpired, @Nullable Object adjustmentCause) {
+    void addAdjustedSelection(final Object element, Predicate isExpired, @Nullable Object adjustmentCause) {
         myAdjustedSelection.put(element, isExpired);
         if (adjustmentCause != null) {
             myAdjustmentCause2Adjustment.put(adjustmentCause, element);
         }
     }
 
-    @NonNls
     @Override
     public String toString() {
         return "UpdaterState toSelect " + myToSelect + " toExpand=" + myToExpand + " processingNow=" + isProcessingNow() + " canRun=" + myCanRunRestore;

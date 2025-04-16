@@ -15,26 +15,24 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import consulo.component.ProcessCanceledException;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
-import consulo.disposer.Disposer;
-import consulo.util.lang.ref.Ref;
-import consulo.versionControlSystem.log.*;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.CommonProcessors;
-import consulo.index.io.data.IOUtil;
-import consulo.index.io.KeyDescriptor;
-import consulo.index.io.PersistentEnumeratorBase;
+import consulo.component.ProcessCanceledException;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
-import consulo.versionControlSystem.log.base.HashImpl;
 import consulo.ide.impl.idea.vcs.log.impl.VcsRefImpl;
 import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.PersistentEnumeratorBase;
+import consulo.index.io.data.IOUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
-
+import consulo.util.lang.ref.SimpleReference;
+import consulo.versionControlSystem.log.*;
+import consulo.versionControlSystem.log.base.HashImpl;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,6 +41,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -139,14 +138,14 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
 
     @Override
     @Nullable
-    public CommitId findCommitId(@Nonnull final Condition<CommitId> condition) {
+    public CommitId findCommitId(@Nonnull final Predicate<CommitId> condition) {
         checkDisposed();
         try {
-            final Ref<CommitId> hashRef = Ref.create();
-            myCommitIdEnumerator.iterateData(new CommonProcessors.FindProcessor<CommitId>() {
+            final SimpleReference<CommitId> hashRef = SimpleReference.create();
+            myCommitIdEnumerator.iterateData(new CommonProcessors.FindProcessor<>() {
                 @Override
                 protected boolean accept(CommitId commitId) {
-                    boolean matches = condition.value(commitId);
+                    boolean matches = condition.test(commitId);
                     if (matches) {
                         hashRef.set(commitId);
                     }
@@ -186,6 +185,7 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
         }
     }
 
+    @Override
     public void flush() {
         checkDisposed();
         myCommitIdEnumerator.force();
@@ -256,7 +256,7 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
 
         @Nullable
         @Override
-        public CommitId findCommitId(@Nonnull Condition<CommitId> string) {
+        public CommitId findCommitId(@Nonnull Predicate<CommitId> string) {
             return null;
         }
 

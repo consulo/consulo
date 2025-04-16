@@ -166,7 +166,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
     public ComponentPopupBuilder setDimensionServiceKey(final ComponentManager project, final String key, final boolean useForXYLocation) {
         myDimensionServiceKey = key;
         myUseDimServiceForXYLocation = useForXYLocation;
-        myProject = (Project) project;
+        myProject = (Project)project;
         return this;
     }
 
@@ -221,14 +221,15 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
     @Override
     @Nonnull
     public ComponentPopupBuilder setProject(ComponentManager project) {
-        myProject = (Project) project;
+        myProject = (Project)project;
         return this;
     }
 
     @Override
     @Nonnull
     public JBPopup createPopup() {
-        AbstractPopup popup = new AbstractPopup().init(myProject,
+        AbstractPopup popup = new AbstractPopup().init(
+            myProject,
             myComponent,
             myPreferredFocusedComponent,
             myRequestFocus,
@@ -266,7 +267,8 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
             myCancelOnWindowDeactivation,
             myKeyEventHandler,
             myHeaderLeftActions,
-            myHeaderRightActions);
+            myHeaderRightActions
+        );
 
         popup.setNormalWindowLevel(myNormalWindowLevel);
         popup.setOkHandler(myOkHandler);
@@ -280,8 +282,11 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setRequestFocusCondition(@Nonnull ComponentManager project, @Nonnull Condition<? super ComponentManager> condition) {
-        myRequestFocus = condition.value(project);
+    public ComponentPopupBuilder setRequestFocusCondition(
+        @Nonnull ComponentManager project,
+        @Nonnull Predicate<? super ComponentManager> condition
+    ) {
+        myRequestFocus = condition.test(project);
         return this;
     }
 

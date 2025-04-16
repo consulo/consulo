@@ -7,10 +7,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,13 +39,16 @@ public interface ComponentPopupBuilder {
     ComponentPopupBuilder setFocusable(boolean focusable);
 
     @Nonnull
-    ComponentPopupBuilder setRequestFocusCondition(@Nonnull ComponentManager project, @Nonnull Condition<? super ComponentManager> condition);
+    ComponentPopupBuilder setRequestFocusCondition(
+        @Nonnull ComponentManager project,
+        @Nonnull Predicate<? super ComponentManager> condition
+    );
 
     /**
      * @see consulo.application.ui.DimensionService
      */
     @Nonnull
-    ComponentPopupBuilder setDimensionServiceKey(@Nullable ComponentManager project, @NonNls String key, boolean useForXYLocation);
+    ComponentPopupBuilder setDimensionServiceKey(@Nullable ComponentManager project, String key, boolean useForXYLocation);
 
     @Nonnull
     ComponentPopupBuilder setCancelCallback(@Nonnull Supplier<Boolean> shouldProceed);

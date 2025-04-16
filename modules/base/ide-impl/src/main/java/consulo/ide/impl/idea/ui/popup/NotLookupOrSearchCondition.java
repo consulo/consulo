@@ -16,25 +16,25 @@
 package consulo.ide.impl.idea.ui.popup;
 
 import consulo.component.ComponentManager;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
-import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.project.Project;
+import consulo.project.ui.internal.WindowManagerEx;
 
 import java.awt.*;
+import java.util.function.Predicate;
 
 /**
  * @author yole
  */
-public class NotLookupOrSearchCondition implements Condition<ComponentManager> {
+public class NotLookupOrSearchCondition implements Predicate<ComponentManager> {
     public static NotLookupOrSearchCondition INSTANCE = new NotLookupOrSearchCondition();
 
     private NotLookupOrSearchCondition() {
     }
 
     @Override
-    public boolean value(ComponentManager project) {
+    public boolean test(ComponentManager project) {
         Component focusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent((Project)project);
         boolean fromQuickSearch = focusedComponent != null && focusedComponent.getParent() instanceof ChooseByNameBase.JPanelProvider;
         return !fromQuickSearch && LookupManager.getInstance((Project)project).getActiveLookup() == null;

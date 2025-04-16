@@ -35,7 +35,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
@@ -108,7 +108,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
     }
 
     @Override
-    public void updateNotifications(@Nonnull final VirtualFile file) {
+    public void updateNotifications(@Nonnull VirtualFile file) {
         myProject.getApplication().getLastUIAccess().giveIfNeed(() -> {
             ProgressIndicator indicator = getCurrentProgress(file);
             if (indicator != null) {
@@ -121,7 +121,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
             }
 
             indicator = new ProgressIndicatorBase();
-            final ReadTask task = createTask(indicator, file);
+            ReadTask task = createTask(indicator, file);
             if (task == null) {
                 return;
             }
@@ -133,10 +133,10 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
     }
 
     @Nullable
-    private ReadTask createTask(@Nonnull final ProgressIndicator indicator, @Nonnull final VirtualFile file) {
+    private ReadTask createTask(@Nonnull ProgressIndicator indicator, @Nonnull VirtualFile file) {
         List<FileEditor> editors = ContainerUtil.filter(
             myFileEditorManager.getAllEditors(file),
-            editor -> !(editor instanceof TextEditor) || AsyncEditorLoader.isEditorLoaded(((TextEditor)editor).getEditor())
+            editor -> !(editor instanceof TextEditor textEditor && !AsyncEditorLoader.isEditorLoaded(textEditor.getEditor()))
         );
 
         if (editors.isEmpty()) {
@@ -166,13 +166,13 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
                     return null;
                 }
 
-                final List<EditorNotificationProvider> providers =
+                List<EditorNotificationProvider> providers =
                     DumbService.getInstance(myProject).filterByDumbAwareness(myProject.getExtensionList(EditorNotificationProvider.class));
 
-                final List<Runnable> updates = new ArrayList<>();
-                for (final FileEditor editor : editors) {
-                    for (final EditorNotificationProvider provider : providers) {
-                        final EditorNotificationBuilder builder =
+                List<Runnable> updates = new ArrayList<>();
+                for (FileEditor editor : editors) {
+                    for (EditorNotificationProvider provider : providers) {
+                        EditorNotificationBuilder builder =
                             provider.buildNotification(file, editor, myEditorNotificationBuilderFactory::newBuilder);
                         updates.add(() -> updateNotification(editor, provider.getId(), (EditorNotificationBuilderEx)builder));
                     }

@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.util.lang.function.Condition;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsRef;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.function.Predicate;
 
 /**
  * Storage for various Log objects like CommitId or VcsRef
@@ -55,7 +56,7 @@ public interface VcsLogStorage {
      * @return matching commit or null if no commit matches the given condition
      */
     @Nullable
-    CommitId findCommitId(@Nonnull Condition<CommitId> condition);
+    CommitId findCommitId(@Nonnull Predicate<CommitId> condition);
 
     /**
      * Returns an integer index that is a unique identifier for a reference.

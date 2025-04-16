@@ -19,13 +19,11 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.function.Processor;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.util.EmptyConsumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.*;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.ui.filter.VcsLogTextFilterImpl;
@@ -36,9 +34,9 @@ import consulo.index.io.*;
 import consulo.index.io.data.IOUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
@@ -53,6 +51,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 import static consulo.ide.impl.idea.vcs.log.data.index.VcsLogFullDetailsIndex.INDEX;
@@ -223,19 +222,17 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
     }
 
     @Nonnull
-    private <T> IntSet filter(@Nonnull PersistentMap<Integer, T> map, @Nonnull Condition<T> condition) {
+    private <T> IntSet filter(@Nonnull PersistentMap<Integer, T> map, @Nonnull Predicate<T> condition) {
         IntSet result = IntSets.newHashSet();
         if (myIndexStorage == null) {
             return result;
         }
         try {
-            Processor<Integer> processor = integer -> {
+            Predicate<Integer> processor = integer -> {
                 try {
                     T value = map.get(integer);
-                    if (value != null) {
-                        if (condition.value(value)) {
-                            result.add(integer);
-                        }
+                    if (value != null && condition.test(value)) {
+                        result.add(integer);
                     }
                 }
                 catch (IOException e) {

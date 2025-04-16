@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.project.Project;
@@ -53,6 +53,7 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
     @Nonnull
     private final JPanel myContainer = new JBPanel(new BorderLayout());
 
+    @RequiredUIAccess
     public VcsLogContentProvider(@Nonnull Project project, @Nonnull VcsProjectLog projectLog) {
         myProject = project;
         myProjectLog = projectLog;
@@ -60,11 +61,13 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(ProjectLogListener.class, new ProjectLogListener() {
             @Override
+            @RequiredUIAccess
             public void logCreated() {
                 addLogUi();
             }
 
             @Override
+            @RequiredUIAccess
             public void logDisposed() {
                 myContainer.removeAll();
                 closeLogTabs();
@@ -82,6 +85,7 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent initContent() {
         myProjectLog.createLog();
         return myContainer;
@@ -93,11 +97,13 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
         closeLogTabs();
     }
 
+    @RequiredUIAccess
     public static void openAnotherLogTab(@Nonnull VcsLogManager logManager, @Nonnull Project project) {
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
         openLogTab(logManager, project, generateShortName(toolWindow), null);
     }
 
+    @RequiredUIAccess
     public static VcsLogUiImpl openLogTab(
         @Nonnull VcsLogManager logManager,
         @Nonnull Project project,

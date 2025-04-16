@@ -16,17 +16,17 @@
 package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.inject.VirtualFileWindow;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiValuesMap;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
@@ -42,6 +42,7 @@ import java.util.*;
 @State(name = "ReadonlyStatusHandler", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
 public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements PersistentStateComponent<ReadonlyStatusHandlerImpl.State> {
+    @Nonnull
     private final Project myProject;
     private final List<WritingAccessProvider> myAccessProviders;
 
@@ -52,7 +53,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
     private State myState = new State();
 
     @Inject
-    public ReadonlyStatusHandlerImpl(Project project) {
+    public ReadonlyStatusHandlerImpl(@Nonnull Project project) {
         myProject = project;
         myAccessProviders = myProject.isDefault() ? List.of() : WritingAccessProvider.getProvidersForProject(myProject);
     }
@@ -68,16 +69,17 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
     }
 
     @Override
+    @RequiredUIAccess
     public OperationStatus ensureFilesWritable(@Nonnull VirtualFile... files) {
         if (files.length == 0) {
             return new OperationStatusImpl(VirtualFile.EMPTY_ARRAY);
         }
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
-        Set<VirtualFile> realFiles = new HashSet<VirtualFile>(files.length);
+        Set<VirtualFile> realFiles = new HashSet<>(files.length);
         for (VirtualFile file : files) {
-            if (file instanceof VirtualFileWindow) {
-                file = ((VirtualFileWindow)file).getDelegate();
+            if (file instanceof VirtualFileWindow virtualFileWindow) {
+                file = virtualFileWindow.getDelegate();
             }
             if (file != null) {
                 realFiles.add(file);
@@ -85,7 +87,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
         }
         files = VfsUtilCore.toVirtualFileArray(realFiles);
 
-        for (final WritingAccessProvider accessProvider : myAccessProviders) {
+        for (WritingAccessProvider accessProvider : myAccessProviders) {
             Collection<VirtualFile> denied = ContainerUtil.filter(files, virtualFile -> !accessProvider.isPotentiallyWritable(virtualFile));
 
             if (denied.isEmpty()) {
@@ -96,12 +98,12 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
             }
         }
 
-        final FileInfo[] fileInfos = createFileInfos(files);
+        FileInfo[] fileInfos = createFileInfos(files);
         if (fileInfos.length == 0) { // if all files are already writable
             return createResultStatus(files);
         }
 
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (myProject.getApplication().isUnitTestMode()) {
             return createResultStatus(files);
         }
 
@@ -119,8 +121,8 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
         return createResultStatus(files);
     }
 
-    private static OperationStatus createResultStatus(final VirtualFile[] files) {
-        List<VirtualFile> readOnlyFiles = new ArrayList<VirtualFile>();
+    private static OperationStatus createResultStatus(VirtualFile[] files) {
+        List<VirtualFile> readOnlyFiles = new ArrayList<>();
         for (VirtualFile file : files) {
             if (file.exists()) {
                 if (!file.isWritable()) {
@@ -133,8 +135,8 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
     }
 
     private FileInfo[] createFileInfos(VirtualFile[] files) {
-        List<FileInfo> fileInfos = new ArrayList<FileInfo>();
-        for (final VirtualFile file : files) {
+        List<FileInfo> fileInfos = new ArrayList<>();
+        for (VirtualFile file : files) {
             if (file != null && !file.isWritable() && file.isInLocalFileSystem()) {
                 fileInfos.add(new FileInfo(file, myProject));
             }
@@ -142,9 +144,9 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
         return fileInfos.toArray(new FileInfo[fileInfos.size()]);
     }
 
-    public static void processFiles(final List<FileInfo> fileInfos, @Nullable String changelist) {
+    public static void processFiles(List<FileInfo> fileInfos, @Nullable String changelist) {
         FileInfo[] copy = fileInfos.toArray(new FileInfo[fileInfos.size()]);
-        MultiValuesMap<HandleType, VirtualFile> handleTypeToFile = new MultiValuesMap<HandleType, VirtualFile>();
+        MultiValuesMap<HandleType, VirtualFile> handleTypeToFile = new MultiValuesMap<>();
         for (FileInfo fileInfo : copy) {
             handleTypeToFile.put(fileInfo.getSelectedHandleType(), fileInfo.getFile());
         }
@@ -164,7 +166,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
 
         private final VirtualFile[] myReadonlyFiles;
 
-        OperationStatusImpl(final VirtualFile[] readonlyFiles) {
+        OperationStatusImpl(VirtualFile[] readonlyFiles) {
             myReadonlyFiles = readonlyFiles;
         }
 
@@ -190,10 +192,10 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
                         buf.append(file.getPresentableUrl());
                     }
 
-                    return CommonBundle.message("failed.to.make.the.following.files.writable.error.message", buf.toString());
+                    return CommonLocalize.failedToMakeTheFollowingFilesWritableErrorMessage(buf.toString()).get();
                 }
                 else {
-                    return CommonBundle.message("failed.to.make.file.writeable.error.message", myReadonlyFiles[0].getPresentableUrl());
+                    return CommonLocalize.failedToMakeFileWriteableErrorMessage(myReadonlyFiles[0].getPresentableUrl()).get();
                 }
             }
             throw new RuntimeException("No readonly files");

@@ -19,14 +19,14 @@
  */
 package consulo.ide.impl.idea.ui.speedSearch;
 
-import consulo.util.lang.StringUtil;
-import consulo.application.util.function.Computable;
 import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.util.lang.function.Condition;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @param <T> list elements generic type
@@ -37,7 +37,7 @@ public class NameFilteringListModel<T> extends FilteringListModel<T> {
     private final Function<? super T, String> myNamer;
     private int myFullMatchIndex = -1;
     private int myStartsWithIndex = -1;
-    private final Computable<String> myPattern;
+    private final Supplier<String> myPattern;
 
     /**
      * @deprecated explicitly sets model for a list. Use other constructors instead.
@@ -46,7 +46,7 @@ public class NameFilteringListModel<T> extends FilteringListModel<T> {
     public NameFilteringListModel(
         JList<T> list,
         Function<? super T, String> namer,
-        Condition<? super String> filter,
+        Predicate<? super String> filter,
         SpeedSearchSupply speedSearch
     ) {
         this(list.getModel(), namer, filter, () -> StringUtil.notNullize(speedSearch.getEnteredPrefix()));
@@ -56,13 +56,13 @@ public class NameFilteringListModel<T> extends FilteringListModel<T> {
     public NameFilteringListModel(
         ListModel<T> model,
         Function<? super T, String> namer,
-        Condition<? super String> filter,
-        Computable<String> pattern
+        Predicate<? super String> filter,
+        Supplier<String> pattern
     ) {
         super(model);
         myPattern = pattern;
         myNamer = namer;
-        setFilter(namer != null ? t -> filter.value(namer.apply(t)) : null);
+        setFilter(namer != null ? t -> filter.test(namer.apply(t)) : null);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class NameFilteringListModel<T> extends FilteringListModel<T> {
         if (myNamer != null) {
             String name = myNamer.apply(elt);
             if (name != null) {
-                String filterString = StringUtil.toUpperCase(myPattern.compute());
+                String filterString = StringUtil.toUpperCase(myPattern.get());
                 String candidateString = StringUtil.toUpperCase(name);
                 int index = getSize() - 1;
 
