@@ -33,14 +33,7 @@ public interface CompilerRunner {
     @Nonnull
     Image getBuildIcon();
 
-    default boolean isAvailable() {
-        return isAvailable(null);
-    }
-
-    @Deprecated
-    default boolean isAvailable(CompileContextEx context) {
-        return false;
-    }
+    boolean isAvailable();
 
     default void cleanUp(CompileDriver compileDriver, CompileContextEx context) {
     }

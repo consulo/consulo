@@ -787,7 +787,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
 
       try {
         for (CompilerRunner compilerRunner : myProject.getExtensionList(CompilerRunner.class)) {
-          if (compilerRunner.isAvailable(context)) {
+          if (compilerRunner.isAvailable()) {
             didSomething = compilerRunner.build(this, context, isRebuild, forceCompile, onlyCheckStatus);
             break;
           }
@@ -946,7 +946,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         else { // refresh is still required
           try {
             for (CompilerRunner compilerRunner : myProject.getExtensionList(CompilerRunner.class)) {
-              if (compilerRunner.isAvailable(context)) {
+              if (compilerRunner.isAvailable()) {
                 compilerRunner.cleanUp(this, context);
                 break;
               }
