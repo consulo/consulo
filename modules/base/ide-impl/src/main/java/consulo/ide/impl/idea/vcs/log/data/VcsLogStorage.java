@@ -31,51 +31,51 @@ import jakarta.annotation.Nullable;
  */
 public interface VcsLogStorage {
 
-  /**
-   * Returns an integer index that is a unique identifier for a commit with specified hash and root.
-   *
-   * @param hash commit hash
-   * @param root root of the repository for the commit
-   * @return a commit index
-   */
-  int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root);
+    /**
+     * Returns an integer index that is a unique identifier for a commit with specified hash and root.
+     *
+     * @param hash commit hash
+     * @param root root of the repository for the commit
+     * @return a commit index
+     */
+    int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root);
 
-  /**
-   * Returns a commit for a specified index or null if this index does not correspond to any commit.
-   *
-   * @param commitIndex index of a commit
-   * @return commit identified by this index or null
-   */
-  @Nullable
-  CommitId getCommitId(int commitIndex);
+    /**
+     * Returns a commit for a specified index or null if this index does not correspond to any commit.
+     *
+     * @param commitIndex index of a commit
+     * @return commit identified by this index or null
+     */
+    @Nullable
+    CommitId getCommitId(int commitIndex);
 
-  /**
-   * Iterates over known commit ids to find the first one which satisfies given condition.
-   *
-   * @return matching commit or null if no commit matches the given condition
-   */
-  @Nullable
-  CommitId findCommitId(@Nonnull Condition<CommitId> condition);
+    /**
+     * Iterates over known commit ids to find the first one which satisfies given condition.
+     *
+     * @return matching commit or null if no commit matches the given condition
+     */
+    @Nullable
+    CommitId findCommitId(@Nonnull Condition<CommitId> condition);
 
-  /**
-   * Returns an integer index that is a unique identifier for a reference.
-   *
-   * @param ref reference
-   * @return a reference index
-   */
-  int getRefIndex(@Nonnull VcsRef ref);
+    /**
+     * Returns an integer index that is a unique identifier for a reference.
+     *
+     * @param ref reference
+     * @return a reference index
+     */
+    int getRefIndex(@Nonnull VcsRef ref);
 
-  /**
-   * Returns a reference for a specified index or null if this index does not correspond to any reference.
-   *
-   * @param refIndex index of a reference
-   * @return reference identified by this index or null
-   */
-  @Nullable
-  VcsRef getVcsRef(int refIndex);
+    /**
+     * Returns a reference for a specified index or null if this index does not correspond to any reference.
+     *
+     * @param refIndex index of a reference
+     * @return reference identified by this index or null
+     */
+    @Nullable
+    VcsRef getVcsRef(int refIndex);
 
-  /**
-   * Forces data in the storage to be written on disk.
-   */
-  void flush();
+    /**
+     * Forces data in the storage to be written on disk.
+     */
+    void flush();
 }
