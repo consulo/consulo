@@ -39,7 +39,7 @@ public final class Maps {
      * or corresponding value if entry already exists.
      */
     @Nonnull
-    public static <K, V> V cacheOrGet(@Nonnull Map<K, V> map, @Nonnull final K key, @Nonnull final V defaultValue) {
+    public static <K, V> V cacheOrGet(@Nonnull Map<K, V> map, @Nonnull K key, @Nonnull V defaultValue) {
         V v = map.get(key);
         if (v != null) {
             return v;
@@ -53,7 +53,7 @@ public final class Maps {
      * or corresponding value if entry already exists.
      */
     @Nonnull
-    public static <K, V> V cacheOrGet(@Nonnull ConcurrentMap<K, V> map, @Nonnull final K key, @Nonnull final V defaultValue) {
+    public static <K, V> V cacheOrGet(@Nonnull ConcurrentMap<K, V> map, @Nonnull K key, @Nonnull V defaultValue) {
         return cacheOrGet((Map<K, V>)map, key, defaultValue);
     }
 
@@ -246,7 +246,7 @@ public final class Maps {
         int initialCapacity,
         float loadFactor,
         int concurrencyLevel,
-        @Nonnull final HashingStrategy<K> hashingStrategy
+        @Nonnull HashingStrategy<K> hashingStrategy
     ) {
         return new ConcurrentWeakKeySoftValueHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
     }
@@ -297,7 +297,7 @@ public final class Maps {
         int initialCapacity,
         float loadFactor,
         int concurrencyLevel,
-        @Nonnull final HashingStrategy<K> hashingStrategy
+        @Nonnull HashingStrategy<K> hashingStrategy
     ) {
         return new consulo.util.collection.impl.map.ConcurrentSoftKeySoftValueHashMap<K, V>(
             initialCapacity,

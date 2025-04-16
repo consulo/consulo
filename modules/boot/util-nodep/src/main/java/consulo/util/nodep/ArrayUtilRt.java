@@ -55,18 +55,16 @@ public class ArrayUtilRt {
      * <code>equals</code> of arrays elements to compare <code>obj</code> with
      * these elements.
      */
-    public static <T> int find(final T[] src, final T obj) {
+    public static <T> int find(T[] src, T obj) {
         for (int i = 0; i < src.length; i++) {
-            final T o = src[i];
+            T o = src[i];
             if (o == null) {
                 if (obj == null) {
                     return i;
                 }
             }
-            else {
-                if (o.equals(obj)) {
-                    return i;
-                }
+            else if (o.equals(obj)) {
+                return i;
             }
         }
         return -1;

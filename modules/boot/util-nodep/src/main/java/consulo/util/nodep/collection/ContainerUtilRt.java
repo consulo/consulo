@@ -31,11 +31,11 @@ public class ContainerUtilRt {
     private static final int ARRAY_COPY_THRESHOLD = 20;
 
     public static <K, V> Map<K, V> newHashMap() {
-        return new HashMap<K, V>();
+        return new HashMap<>();
     }
 
     public static <K, V> Map<K, V> newHashMap(Map<? extends K, ? extends V> map) {
-        return new HashMap<K, V>(map);
+        return new HashMap<>(map);
     }
 
     public static <K, V> Map<K, V> newHashMap(List<K> keys, List<V> values) {
@@ -50,6 +50,7 @@ public class ContainerUtilRt {
         return map;
     }
 
+    @SafeVarargs
     public static <K, V> Map<K, V> newHashMap(Pair<K, ? extends V> first, Pair<K, ? extends V>... entries) {
         Map<K, V> map = newHashMap(entries.length + 1);
         map.put(first.getFirst(), first.getSecond());
@@ -60,27 +61,27 @@ public class ContainerUtilRt {
     }
 
     public static <K, V> Map<K, V> newHashMap(int initialCapacity) {
-        return new HashMap<K, V>(initialCapacity);
+        return new HashMap<>(initialCapacity);
     }
 
     public static <K extends Comparable, V> TreeMap<K, V> newTreeMap() {
-        return new TreeMap<K, V>();
+        return new TreeMap<>();
     }
 
     public static <K extends Comparable, V> TreeMap<K, V> newTreeMap(Map<K, V> map) {
-        return new TreeMap<K, V>(map);
+        return new TreeMap<>(map);
     }
 
     public static <K, V> Map<K, V> newLinkedHashMap() {
-        return new LinkedHashMap<K, V>();
+        return new LinkedHashMap<>();
     }
 
     public static <K, V> Map<K, V> newLinkedHashMap(int capacity) {
-        return new LinkedHashMap<K, V>(capacity);
+        return new LinkedHashMap<>(capacity);
     }
 
     public static <K, V> Map<K, V> newLinkedHashMap(Map<K, V> map) {
-        return new LinkedHashMap<K, V>(map);
+        return new LinkedHashMap<>(map);
     }
 
     public static <K, V> Map<K, V> newLinkedHashMap(Pair<K, V> first, Pair<K, V>[] entries) {
@@ -93,11 +94,12 @@ public class ContainerUtilRt {
     }
 
     public static <T> LinkedList<T> newLinkedList() {
-        return new LinkedList<T>();
+        return new LinkedList<>();
     }
 
+    @SafeVarargs
     public static <T> LinkedList<T> newLinkedList(T... elements) {
-        final LinkedList<T> list = newLinkedList();
+        LinkedList<T> list = newLinkedList();
         Collections.addAll(list, elements);
         return list;
     }
@@ -107,9 +109,10 @@ public class ContainerUtilRt {
     }
 
     public static <T> ArrayList<T> newArrayList() {
-        return new ArrayList<T>();
+        return new ArrayList<>();
     }
 
+    @SafeVarargs
     public static <T> ArrayList<T> newArrayList(T... elements) {
         ArrayList<T> list = newArrayListWithCapacity(elements.length);
         Collections.addAll(list, elements);
@@ -119,13 +122,13 @@ public class ContainerUtilRt {
     public static <T> ArrayList<T> newArrayList(Iterable<? extends T> elements) {
         if (elements instanceof Collection) {
             @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
-            return new ArrayList<T>(collection);
+            return new ArrayList<>(collection);
         }
         return copy(ContainerUtilRt.<T>newArrayList(), elements);
     }
 
     public static <T> ArrayList<T> newArrayListWithCapacity(int size) {
-        return new ArrayList<T>(size);
+        return new ArrayList<>(size);
     }
 
     private static <T, C extends Collection<T>> C copy(C collection, Iterable<? extends T> elements) {
@@ -136,21 +139,22 @@ public class ContainerUtilRt {
     }
 
     public static <T> HashSet<T> newHashSet() {
-        return new HashSet<T>();
+        return new HashSet<>();
     }
 
     public static <T> HashSet<T> newHashSet(int initialCapacity) {
-        return new HashSet<T>(initialCapacity);
+        return new HashSet<>(initialCapacity);
     }
 
+    @SafeVarargs
     public static <T> HashSet<T> newHashSet(T... elements) {
-        return new HashSet<T>(Arrays.asList(elements));
+        return new HashSet<>(Arrays.asList(elements));
     }
 
     public static <T> HashSet<T> newHashSet(Iterable<? extends T> elements) {
         if (elements instanceof Collection) {
             @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
-            return new HashSet<T>(collection);
+            return new HashSet<>(collection);
         }
         return newHashSet(elements.iterator());
     }
@@ -162,9 +166,10 @@ public class ContainerUtilRt {
     }
 
     public static <T> Set<T> newLinkedHashSet() {
-        return new LinkedHashSet<T>();
+        return new LinkedHashSet<>();
     }
 
+    @SafeVarargs
     public static <T> Set<T> newLinkedHashSet(T... elements) {
         return newLinkedHashSet(Arrays.asList(elements));
     }
@@ -172,15 +177,16 @@ public class ContainerUtilRt {
     public static <T> Set<T> newLinkedHashSet(Iterable<? extends T> elements) {
         if (elements instanceof Collection) {
             @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
-            return new LinkedHashSet<T>(collection);
+            return new LinkedHashSet<>(collection);
         }
         return copy(ContainerUtilRt.<T>newLinkedHashSet(), elements);
     }
 
     public static <T> TreeSet<T> newTreeSet() {
-        return new TreeSet<T>();
+        return new TreeSet<>();
     }
 
+    @SafeVarargs
     public static <T> TreeSet<T> newTreeSet(T... elements) {
         TreeSet<T> set = newTreeSet();
         Collections.addAll(set, elements);
@@ -192,7 +198,7 @@ public class ContainerUtilRt {
     }
 
     public static <T> TreeSet<T> newTreeSet(Comparator<? super T> comparator) {
-        return new TreeSet<T>(comparator);
+        return new TreeSet<>(comparator);
     }
 
     /**
@@ -209,8 +215,8 @@ public class ContainerUtilRt {
         if (collection.isEmpty()) {
             return Collections.emptyList();
         }
-        List<V> list = new ArrayList<V>(collection.size());
-        for (final T t : collection) {
+        List<V> list = new ArrayList<>(collection.size());
+        for (T t : collection) {
             list.add(mapper.fun(t));
         }
         return list;
@@ -230,15 +236,15 @@ public class ContainerUtilRt {
         if (collection.isEmpty()) {
             return Collections.emptySet();
         }
-        Set<V> set = new HashSet<V>(collection.size());
-        for (final T t : collection) {
+        Set<V> set = new HashSet<>(collection.size());
+        for (T t : collection) {
             set.add(mapper.fun(t));
         }
         return set;
     }
 
     public static <T> T[] toArray(List<T> collection, T[] array) {
-        final int length = array.length;
+        int length = array.length;
         if (length < ARRAY_COPY_THRESHOLD && array.length >= collection.size()) {
             for (int i = 0; i < collection.size(); i++) {
                 array[i] = collection.get(i);
@@ -253,7 +259,7 @@ public class ContainerUtilRt {
      * from calling JNI {@link System#arraycopy(Object, int, Object, int, int)}
      */
     public static <T> T[] toArray(Collection<T> c, T[] sample) {
-        final int size = c.size();
+        int size = c.size();
         if (size == sample.length && size < ARRAY_COPY_THRESHOLD) {
             int i = 0;
             for (T t : c) {

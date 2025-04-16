@@ -28,7 +28,7 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 16/01/2021
+ * @since 2021-01-16
  */
 public final class Sets {
     private static CollectionFactory ourFactory = CollectionFactory.get();

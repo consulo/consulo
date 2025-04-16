@@ -29,7 +29,7 @@ import static consulo.util.collection.ContainerUtil.swapElements;
 
 /**
  * @author VISTALL
- * @since 10/01/2022
+ * @since 2022-01-10
  */
 public final class Lists {
     /**
@@ -66,12 +66,13 @@ public final class Lists {
         return list == null ? List.of() : list;
     }
 
-    public static <T> void weightSort(List<T> list, final ToIntFunction<T> weighterFunc) {
+    public static <T> void weightSort(List<T> list, ToIntFunction<T> weighterFunc) {
         quickSort(list, (o1, o2) -> weighterFunc.applyAsInt(o2) - weighterFunc.applyAsInt(o1));
     }
 
     @Nonnull
     @Contract(pure = true)
+    @SafeVarargs
     public static <T> List<T> append(@Nonnull List<? extends T> list, @Nonnull T... values) {
         return ContainerUtil.concat(list, List.of(values));
     }
@@ -172,7 +173,7 @@ public final class Lists {
     @Nonnull
     @Contract(pure = true)
     public static <T> List<T> packNullables(@Nonnull T... elements) {
-        List<T> list = new ArrayList<T>();
+        List<T> list = new ArrayList<>();
         for (T element : elements) {
             addIfNotNull(list, element);
         }
@@ -191,12 +192,12 @@ public final class Lists {
 
     @Nonnull
     @Contract(pure = true)
-    public static <T> Iterable<T> iterateBackward(@Nonnull final List<? extends T> list) {
-        return new Iterable<T>() {
+    public static <T> Iterable<T> iterateBackward(@Nonnull List<? extends T> list) {
+        return new Iterable<>() {
             @Nonnull
             @Override
             public Iterator<T> iterator() {
-                return new Iterator<T>() {
+                return new Iterator<>() {
                     private final ListIterator<? extends T> it = list.listIterator(list.size());
 
                     @Override

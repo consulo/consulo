@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.util;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -38,9 +39,10 @@ public class ArrayUtilRt {
     public static final Runnable[] EMPTY_RUNNABLE_ARRAY = new Runnable[0];
 
     @Nonnull
-    public static String[] toStringArray(@jakarta.annotation.Nullable Collection<String> collection) {
+    public static String[] toStringArray(@Nullable Collection<String> collection) {
         return collection == null || collection.isEmpty()
-            ? EMPTY_STRING_ARRAY : ContainerUtilRt.toArray(collection, new String[collection.size()]);
+            ? EMPTY_STRING_ARRAY
+            : ContainerUtilRt.toArray(collection, new String[collection.size()]);
     }
 
     /**
@@ -51,18 +53,16 @@ public class ArrayUtilRt {
      * <code>equals</code> of arrays elements to compare <code>obj</code> with
      * these elements.
      */
-    public static <T> int find(@Nonnull final T[] src, final T obj) {
+    public static <T> int find(@Nonnull T[] src, T obj) {
         for (int i = 0; i < src.length; i++) {
-            final T o = src[i];
+            T o = src[i];
             if (o == null) {
                 if (obj == null) {
                     return i;
                 }
             }
-            else {
-                if (o.equals(obj)) {
-                    return i;
-                }
+            else if (o.equals(obj)) {
+                return i;
             }
         }
         return -1;
