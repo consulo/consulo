@@ -33,77 +33,79 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.swing.*;
 
 public class CopyHandler {
-  private CopyHandler() {
-  }
+    private CopyHandler() {
+    }
 
-  public static boolean canCopy(PsiElement[] elements) {
-    if (elements.length > 0) {
-      for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
-        if (delegate instanceof CopyHandlerDelegateBase copyHandlerDelegate
-          ? copyHandlerDelegate.canCopy(elements, true) : delegate.canCopy(elements)) {
-          return true;
+    public static boolean canCopy(PsiElement[] elements) {
+        if (elements.length > 0) {
+            for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
+                if (delegate instanceof CopyHandlerDelegateBase copyHandlerDelegate
+                    ? copyHandlerDelegate.canCopy(elements, true) : delegate.canCopy(elements)) {
+                    return true;
+                }
+            }
         }
-      }
+        return false;
     }
-    return false;
-  }
 
 
-  public static void doCopy(PsiElement[] elements, PsiDirectory defaultTargetDirectory) {
-    if (elements.length == 0) return;
-    for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
-      if (delegate.canCopy(elements)) {
-        delegate.doCopy(elements, defaultTargetDirectory);
-        break;
-      }
-    }
-  }
-
-  public static boolean canClone(PsiElement[] elements) {
-    if (elements.length > 0) {
-      for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
-        if (delegate instanceof CopyHandlerDelegateBase copyDelegate
-          ? copyDelegate.canCopy(elements, true) : delegate.canCopy(elements)) {
-          return !(delegate instanceof CopyHandlerDelegateBase copyDelegate && copyDelegate.forbidToClone(elements, true));
+    public static void doCopy(PsiElement[] elements, PsiDirectory defaultTargetDirectory) {
+        if (elements.length == 0) {
+            return;
         }
-      }
-    }
-    return false;
-  }
-
-  public static void doClone(PsiElement element) {
-    PsiElement[] elements = new PsiElement[]{element};
-    for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
-      if (delegate.canCopy(elements)) {
-        if (delegate instanceof CopyHandlerDelegateBase && ((CopyHandlerDelegateBase)delegate).forbidToClone(elements, false)) {
-          return;
+        for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
+            if (delegate.canCopy(elements)) {
+                delegate.doCopy(elements, defaultTargetDirectory);
+                break;
+            }
         }
-        delegate.doClone(element);
-        break;
-      }
     }
-  }
 
-  public static void updateSelectionInActiveProjectView(PsiElement newElement, Project project, boolean selectInActivePanel) {
-    String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
-    if (id != null) {
-      ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(id);
-      Content selectedContent = window.getContentManager().getSelectedContent();
-      if (selectedContent != null) {
-        JComponent component = selectedContent.getComponent();
-        if (component instanceof TwoPaneIdeView twoPaneIdeView) {
-          twoPaneIdeView.selectElement(newElement, selectInActivePanel);
-          return;
+    public static boolean canClone(PsiElement[] elements) {
+        if (elements.length > 0) {
+            for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
+                if (delegate instanceof CopyHandlerDelegateBase copyDelegate
+                    ? copyDelegate.canCopy(elements, true) : delegate.canCopy(elements)) {
+                    return !(delegate instanceof CopyHandlerDelegateBase copyDelegate && copyDelegate.forbidToClone(elements, true));
+                }
+            }
         }
-      }
+        return false;
     }
-    if (ToolWindowId.PROJECT_VIEW.equals(id)) {
-      ProjectView.getInstance(project).selectPsiElement(newElement, true);
+
+    public static void doClone(PsiElement element) {
+        PsiElement[] elements = new PsiElement[]{element};
+        for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
+            if (delegate.canCopy(elements)) {
+                if (delegate instanceof CopyHandlerDelegateBase && ((CopyHandlerDelegateBase)delegate).forbidToClone(elements, false)) {
+                    return;
+                }
+                delegate.doClone(element);
+                break;
+            }
+        }
     }
-    else if (ToolWindowId.STRUCTURE_VIEW.equals(id)) {
-      VirtualFile virtualFile = newElement.getContainingFile().getVirtualFile();
-      FileEditor editor = FileEditorManager.getInstance(newElement.getProject()).getSelectedEditor(virtualFile);
-      StructureViewFactoryEx.getInstanceEx(project).getStructureViewWrapper().selectCurrentElement(editor, virtualFile, true);
+
+    public static void updateSelectionInActiveProjectView(PsiElement newElement, Project project, boolean selectInActivePanel) {
+        String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
+        if (id != null) {
+            ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(id);
+            Content selectedContent = window.getContentManager().getSelectedContent();
+            if (selectedContent != null) {
+                JComponent component = selectedContent.getComponent();
+                if (component instanceof TwoPaneIdeView twoPaneIdeView) {
+                    twoPaneIdeView.selectElement(newElement, selectInActivePanel);
+                    return;
+                }
+            }
+        }
+        if (ToolWindowId.PROJECT_VIEW.equals(id)) {
+            ProjectView.getInstance(project).selectPsiElement(newElement, true);
+        }
+        else if (ToolWindowId.STRUCTURE_VIEW.equals(id)) {
+            VirtualFile virtualFile = newElement.getContainingFile().getVirtualFile();
+            FileEditor editor = FileEditorManager.getInstance(newElement.getProject()).getSelectedEditor(virtualFile);
+            StructureViewFactoryEx.getInstanceEx(project).getStructureViewWrapper().selectCurrentElement(editor, virtualFile, true);
+        }
     }
-  }
 }
