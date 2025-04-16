@@ -16,18 +16,13 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.util.text.CharArrayCharSequence;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.HashingStrategy;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -40,34 +35,22 @@ import java.util.function.IntFunction;
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use consulo.util.collection.ArrayUtil")
 public class ArrayUtil extends ArrayUtilRt {
-    public static final short[] EMPTY_SHORT_ARRAY = ArrayUtilRt.EMPTY_SHORT_ARRAY;
-    public static final char[] EMPTY_CHAR_ARRAY = ArrayUtilRt.EMPTY_CHAR_ARRAY;
-    public static final byte[] EMPTY_BYTE_ARRAY = ArrayUtilRt.EMPTY_BYTE_ARRAY;
-    public static final int[] EMPTY_INT_ARRAY = ArrayUtilRt.EMPTY_INT_ARRAY;
-    public static final boolean[] EMPTY_BOOLEAN_ARRAY = ArrayUtilRt.EMPTY_BOOLEAN_ARRAY;
-    public static final Object[] EMPTY_OBJECT_ARRAY = ArrayUtilRt.EMPTY_OBJECT_ARRAY;
-    public static final String[] EMPTY_STRING_ARRAY = ArrayUtilRt.EMPTY_STRING_ARRAY;
-    public static final Class[] EMPTY_CLASS_ARRAY = ArrayUtilRt.EMPTY_CLASS_ARRAY;
-    public static final long[] EMPTY_LONG_ARRAY = ArrayUtilRt.EMPTY_LONG_ARRAY;
-    public static final Collection[] EMPTY_COLLECTION_ARRAY = ArrayUtilRt.EMPTY_COLLECTION_ARRAY;
-    public static final File[] EMPTY_FILE_ARRAY = ArrayUtilRt.EMPTY_FILE_ARRAY;
-    public static final Runnable[] EMPTY_RUNNABLE_ARRAY = ArrayUtilRt.EMPTY_RUNNABLE_ARRAY;
-    public static final CharSequence EMPTY_CHAR_SEQUENCE = new CharArrayCharSequence(EMPTY_CHAR_ARRAY);
+    public static final short[] EMPTY_SHORT_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_SHORT_ARRAY;
+    public static final char[] EMPTY_CHAR_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_CHAR_ARRAY;
+    public static final byte[] EMPTY_BYTE_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_BYTE_ARRAY;
+    public static final int[] EMPTY_INT_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_INT_ARRAY;
+    public static final boolean[] EMPTY_BOOLEAN_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_BOOLEAN_ARRAY;
+    public static final Object[] EMPTY_OBJECT_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_OBJECT_ARRAY;
+    public static final String[] EMPTY_STRING_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_STRING_ARRAY;
+    public static final Class[] EMPTY_CLASS_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_CLASS_ARRAY;
+    public static final long[] EMPTY_LONG_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_LONG_ARRAY;
+    public static final Collection[] EMPTY_COLLECTION_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_COLLECTION_ARRAY;
+    public static final File[] EMPTY_FILE_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_FILE_ARRAY;
+    public static final Runnable[] EMPTY_RUNNABLE_ARRAY = consulo.util.collection.ArrayUtil.EMPTY_RUNNABLE_ARRAY;
+    public static final CharSequence EMPTY_CHAR_SEQUENCE = consulo.util.collection.ArrayUtil.EMPTY_CHAR_SEQUENCE;
 
-    public static final ArrayFactory<String> STRING_ARRAY_FACTORY = new ArrayFactory<>() {
-        @Nonnull
-        @Override
-        public String[] create(int count) {
-            return newStringArray(count);
-        }
-    };
-    public static final ArrayFactory<Object> OBJECT_ARRAY_FACTORY = new ArrayFactory<>() {
-        @Nonnull
-        @Override
-        public Object[] create(int count) {
-            return newObjectArray(count);
-        }
-    };
+    public static final ArrayFactory<String> STRING_ARRAY_FACTORY = consulo.util.collection.ArrayUtil.STRING_ARRAY_FACTORY;
+    public static final ArrayFactory<Object> OBJECT_ARRAY_FACTORY = consulo.util.collection.ArrayUtil.OBJECT_ARRAY_FACTORY;
 
     private ArrayUtil() {
     }
@@ -75,80 +58,31 @@ public class ArrayUtil extends ArrayUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static byte[] realloc(@Nonnull byte[] array, int newSize) {
-        if (newSize == 0) {
-            return EMPTY_BYTE_ARRAY;
-        }
-
-        int oldSize = array.length;
-        if (oldSize == newSize) {
-            return array;
-        }
-
-        byte[] result = new byte[newSize];
-        System.arraycopy(array, 0, result, 0, Math.min(oldSize, newSize));
-        return result;
+        return consulo.util.collection.ArrayUtil.realloc(array, newSize);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static short[] realloc(@Nonnull short[] array, int newSize) {
-        if (newSize == 0) {
-            return ArrayUtilRt.EMPTY_SHORT_ARRAY;
-        }
-
-        int oldSize = array.length;
-        return oldSize == newSize ? array : Arrays.copyOf(array, newSize);
+        return consulo.util.collection.ArrayUtil.realloc(array, newSize);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static boolean[] realloc(@Nonnull boolean[] array, int newSize) {
-        if (newSize == 0) {
-            return EMPTY_BOOLEAN_ARRAY;
-        }
-
-        int oldSize = array.length;
-        if (oldSize == newSize) {
-            return array;
-        }
-
-        boolean[] result = new boolean[newSize];
-        System.arraycopy(array, 0, result, 0, Math.min(oldSize, newSize));
-        return result;
+        return consulo.util.collection.ArrayUtil.realloc(array, newSize);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static long[] realloc(@Nonnull long[] array, int newSize) {
-        if (newSize == 0) {
-            return EMPTY_LONG_ARRAY;
-        }
-
-        int oldSize = array.length;
-        if (oldSize == newSize) {
-            return array;
-        }
-
-        long[] result = new long[newSize];
-        System.arraycopy(array, 0, result, 0, Math.min(oldSize, newSize));
-        return result;
+        return consulo.util.collection.ArrayUtil.realloc(array, newSize);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static int[] realloc(@Nonnull int[] array, int newSize) {
-        if (newSize == 0) {
-            return EMPTY_INT_ARRAY;
-        }
-
-        int oldSize = array.length;
-        if (oldSize == newSize) {
-            return array;
-        }
-
-        int[] result = new int[newSize];
-        System.arraycopy(array, 0, result, 0, Math.min(oldSize, newSize));
-        return result;
+        return consulo.util.collection.ArrayUtil.realloc(array, newSize);
     }
 
     @Nonnull
@@ -171,138 +105,79 @@ public class ArrayUtil extends ArrayUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static long[] append(@Nonnull long[] array, long value) {
-        array = realloc(array, array.length + 1);
-        array[array.length - 1] = value;
-        return array;
+        return consulo.util.collection.ArrayUtil.append(array, value);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static int[] append(@Nonnull int[] array, int value) {
-        array = realloc(array, array.length + 1);
-        array[array.length - 1] = value;
-        return array;
+        return consulo.util.collection.ArrayUtil.append(array, value);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] insert(@Nonnull T[] array, int index, T value) {
-        T[] result = newArray(getComponentType(array), array.length + 1);
-        System.arraycopy(array, 0, result, 0, index);
-        result[index] = value;
-        System.arraycopy(array, index, result, index + 1, array.length - index);
-        return result;
+        return consulo.util.collection.ArrayUtil.insert(array, index, value);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static int[] insert(@Nonnull int[] array, int index, int value) {
-        int[] result = new int[array.length + 1];
-        System.arraycopy(array, 0, result, 0, index);
-        result[index] = value;
-        System.arraycopy(array, index, result, index + 1, array.length - index);
-        return result;
+        return consulo.util.collection.ArrayUtil.insert(array, index, value);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static byte[] append(@Nonnull byte[] array, byte value) {
-        array = realloc(array, array.length + 1);
-        array[array.length - 1] = value;
-        return array;
+        return consulo.util.collection.ArrayUtil.append(array, value);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static boolean[] append(@Nonnull boolean[] array, boolean value) {
-        array = realloc(array, array.length + 1);
-        array[array.length - 1] = value;
-        return array;
+        return consulo.util.collection.ArrayUtil.append(array, value);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static char[] realloc(@Nonnull char[] array, int newSize) {
-        if (newSize == 0) {
-            return EMPTY_CHAR_ARRAY;
-        }
-
-        int oldSize = array.length;
-        if (oldSize == newSize) {
-            return array;
-        }
-
-        char[] result = new char[newSize];
-        System.arraycopy(array, 0, result, 0, Math.min(oldSize, newSize));
-        return result;
+        return consulo.util.collection.ArrayUtil.realloc(array, newSize);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] toObjectArray(@Nonnull Collection<? extends T> collection, @Nonnull Class<T> aClass) {
-        T[] array = newArray(aClass, collection.size());
-        return collection.toArray(array);
+        return consulo.util.collection.ArrayUtil.toObjectArray(collection, aClass);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] toObjectArray(@Nonnull Class<T> aClass, @Nonnull Object... source) {
-        T[] array = newArray(aClass, source.length);
-        //noinspection SuspiciousSystemArraycopy
-        System.arraycopy(source, 0, array, 0, array.length);
-        return array;
+        return consulo.util.collection.ArrayUtil.toObjectArray(aClass, source);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static Object[] toObjectArray(@Nonnull Collection<?> collection) {
-        if (collection.isEmpty()) {
-            return EMPTY_OBJECT_ARRAY;
-        }
-        //noinspection SSBasedInspection
-        return collection.toArray(new Object[collection.size()]);
+        return consulo.util.collection.ArrayUtil.toObjectArray(collection);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static int[] toIntArray(@Nonnull Collection<Integer> list) {
-        int[] ret = newIntArray(list.size());
-        int i = 0;
-        for (Integer e : list) {
-            ret[i++] = e;
-        }
-        return ret;
+        return consulo.util.collection.ArrayUtil.toIntArray(list);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static int[] toIntArray(@Nonnull byte[] byteArray) {
-        int[] ret = newIntArray(byteArray.length);
-        for (int i = 0; i < byteArray.length; i++) {
-            ret[i] = byteArray[i];
-        }
-        return ret;
+        return consulo.util.collection.ArrayUtil.toIntArray(byteArray);
     }
-
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] mergeArrays(@Nonnull T[] a1, @Nonnull T[] a2) {
-        if (a1.length == 0) {
-            return a2;
-        }
-        if (a2.length == 0) {
-            return a1;
-        }
-
-        Class<T> class1 = getComponentType(a1);
-        Class<T> class2 = getComponentType(a2);
-        Class<T> aClass = class1.isAssignableFrom(class2) ? class1 : class2;
-
-        T[] result = newArray(aClass, a1.length + a2.length);
-        System.arraycopy(a1, 0, result, 0, a1.length);
-        System.arraycopy(a2, 0, result, a1.length, a2.length);
-        return result;
+        return consulo.util.collection.ArrayUtil.mergeArrays(a1, a2);
     }
 
     @Nonnull
@@ -312,19 +187,7 @@ public class ArrayUtil extends ArrayUtilRt {
         @Nonnull Collection<? extends T> c2,
         @Nonnull ArrayFactory<T> factory
     ) {
-        T[] res = factory.create(c1.size() + c2.size());
-
-        int i = 0;
-
-        for (T t : c1) {
-            res[i++] = t;
-        }
-
-        for (T t : c2) {
-            res[i++] = t;
-        }
-
-        return res;
+        return consulo.util.collection.ArrayUtil.mergeCollections(c1, c2, factory);
     }
 
     @Nonnull
@@ -345,37 +208,19 @@ public class ArrayUtil extends ArrayUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static String[] mergeArrays(@Nonnull String[] a1, @Nonnull String... a2) {
-        return mergeArrays(a1, a2, STRING_ARRAY_FACTORY);
+        return consulo.util.collection.ArrayUtil.mergeArrays(a1, a2);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static int[] mergeArrays(@Nonnull int[] a1, @Nonnull int[] a2) {
-        if (a1.length == 0) {
-            return a2;
-        }
-        if (a2.length == 0) {
-            return a1;
-        }
-        int[] result = new int[a1.length + a2.length];
-        System.arraycopy(a1, 0, result, 0, a1.length);
-        System.arraycopy(a2, 0, result, a1.length, a2.length);
-        return result;
+        return consulo.util.collection.ArrayUtil.mergeArrays(a1, a2);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static byte[] mergeArrays(@Nonnull byte[] a1, @Nonnull byte[] a2) {
-        if (a1.length == 0) {
-            return a2;
-        }
-        if (a2.length == 0) {
-            return a1;
-        }
-        byte[] result = new byte[a1.length + a2.length];
-        System.arraycopy(a1, 0, result, 0, a1.length);
-        System.arraycopy(a2, 0, result, a1.length, a2.length);
-        return result;
+        return consulo.util.collection.ArrayUtil.mergeArrays(a1, a2);
     }
 
     /**
@@ -427,8 +272,7 @@ public class ArrayUtil extends ArrayUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] append(@Nonnull T[] src, @Nullable T element) {
-        //noinspection unchecked
-        return append(src, element, (Class<T>)src.getClass().getComponentType());
+        return consulo.util.collection.ArrayUtil.append(src, element);
     }
 
     @Nonnull
@@ -441,51 +285,31 @@ public class ArrayUtil extends ArrayUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] prepend(T element, @Nonnull T[] array, @Nonnull Class<T> type) {
-        int length = array.length;
-        T[] result = newArray(type, length + 1);
-        System.arraycopy(array, 0, result, 1, length);
-        result[0] = element;
-        return result;
+        return consulo.util.collection.ArrayUtil.prepend(element, array, type);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] prepend(T element, @Nonnull T[] src, @Nonnull ArrayFactory<T> factory) {
-        int length = src.length;
-        T[] result = factory.create(length + 1);
-        System.arraycopy(src, 0, result, 1, length);
-        result[0] = element;
-        return result;
+        return consulo.util.collection.ArrayUtil.prepend(element, src, factory);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static byte[] prepend(byte element, @Nonnull byte[] array) {
-        int length = array.length;
-        byte[] result = new byte[length + 1];
-        result[0] = element;
-        System.arraycopy(array, 0, result, 1, length);
-        return result;
+        return consulo.util.collection.ArrayUtil.prepend(element, array);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] append(@Nonnull T[] src, T element, @Nonnull ArrayFactory<T> factory) {
-        int length = src.length;
-        T[] result = factory.create(length + 1);
-        System.arraycopy(src, 0, result, 0, length);
-        result[length] = element;
-        return result;
+        return consulo.util.collection.ArrayUtil.append(src, element, factory);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] append(@Nonnull T[] src, @Nullable T element, @Nonnull Class<T> componentType) {
-        int length = src.length;
-        T[] result = newArray(componentType, length + 1);
-        System.arraycopy(src, 0, result, 0, length);
-        result[length] = element;
-        return result;
+        return consulo.util.collection.ArrayUtil.append(src, element, componentType);
     }
 
     /**
@@ -498,558 +322,290 @@ public class ArrayUtil extends ArrayUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] remove(@Nonnull T[] src, int idx) {
-        int length = src.length;
-        if (idx < 0 || idx >= length) {
-            throw new IllegalArgumentException("invalid index: " + idx);
-        }
-        T[] result = newArray(getComponentType(src), length - 1);
-        System.arraycopy(src, 0, result, 0, idx);
-        System.arraycopy(src, idx + 1, result, idx, length - idx - 1);
-        return result;
+        return consulo.util.collection.ArrayUtil.remove(src, idx);
     }
 
     @Nonnull
     public static <T> T[] newArray(@Nonnull Class<T> type, int length) {
-        //noinspection unchecked
-        return (T[])Array.newInstance(type, length);
+        return consulo.util.collection.ArrayUtil.newArray(type, length);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] remove(@Nonnull T[] src, int idx, @Nonnull IntFunction<T[]> factory) {
-        int length = src.length;
-        if (idx < 0 || idx >= length) {
-            throw new IllegalArgumentException("invalid index: " + idx);
-        }
-        T[] result = factory.apply(length - 1);
-        System.arraycopy(src, 0, result, 0, idx);
-        System.arraycopy(src, idx + 1, result, idx, length - idx - 1);
-        return result;
+        return consulo.util.collection.ArrayUtil.remove(src, idx, factory);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] remove(@Nonnull T[] src, T element) {
-        int idx = find(src, element);
-        return idx == -1 ? src : remove(src, idx);
+        return consulo.util.collection.ArrayUtil.remove(src, element);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] remove(@Nonnull T[] src, T element, @Nonnull IntFunction<T[]> factory) {
-        int idx = find(src, element);
-        return idx == -1 ? src : remove(src, idx, factory);
+        return consulo.util.collection.ArrayUtil.remove(src, element, factory);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static int[] remove(@Nonnull int[] src, int idx) {
-        int length = src.length;
-        if (idx < 0 || idx >= length) {
-            throw new IllegalArgumentException("invalid index: " + idx);
-        }
-        int[] result = newIntArray(src.length - 1);
-        System.arraycopy(src, 0, result, 0, idx);
-        System.arraycopy(src, idx + 1, result, idx, length - idx - 1);
-        return result;
+        return consulo.util.collection.ArrayUtil.remove(src, idx);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static short[] remove(@Nonnull short[] src, int idx) {
-        int length = src.length;
-        if (idx < 0 || idx >= length) {
-            throw new IllegalArgumentException("invalid index: " + idx);
-        }
-        short[] result = src.length == 1 ? EMPTY_SHORT_ARRAY : new short[src.length - 1];
-        System.arraycopy(src, 0, result, 0, idx);
-        System.arraycopy(src, idx + 1, result, idx, length - idx - 1);
-        return result;
+        return consulo.util.collection.ArrayUtil.remove(src, idx);
     }
 
     @Contract(pure = true)
     public static int find(@Nonnull int[] src, int obj) {
-        return indexOf(src, obj);
+        return consulo.util.collection.ArrayUtil.find(src, obj);
     }
 
     @Contract(pure = true)
     public static <T> int find(@Nonnull T[] src, T obj) {
-        return ArrayUtilRt.find(src, obj);
+        return consulo.util.collection.ArrayUtil.find(src, obj);
     }
 
     @Contract(pure = true)
     public static boolean startsWith(@Nonnull byte[] array, @Nonnull byte[] prefix) {
-        //noinspection ArrayEquality
-        if (array == prefix) {
-            return true;
-        }
-        int length = prefix.length;
-        if (array.length < length) {
-            return false;
-        }
-
-        for (int i = 0; i < length; i++) {
-            if (array[i] != prefix[i]) {
-                return false;
-            }
-        }
-
-        return true;
+        return consulo.util.collection.ArrayUtil.startsWith(array, prefix);
     }
 
     @Contract(pure = true)
     public static <E> boolean startsWith(@Nonnull E[] array, @Nonnull E[] subArray) {
-        //noinspection ArrayEquality
-        if (array == subArray) {
-            return true;
-        }
-        int length = subArray.length;
-        if (array.length < length) {
-            return false;
-        }
-
-        for (int i = 0; i < length; i++) {
-            if (!Comparing.equal(array[i], subArray[i])) {
-                return false;
-            }
-        }
-
-        return true;
+        return consulo.util.collection.ArrayUtil.startsWith(array, subArray);
     }
 
     @Contract(pure = true)
     public static boolean startsWith(@Nonnull byte[] array, int start, @Nonnull byte[] subArray) {
-        int length = subArray.length;
-        if (array.length - start < length) {
-            return false;
-        }
-
-        for (int i = 0; i < length; i++) {
-            if (array[start + i] != subArray[i]) {
-                return false;
-            }
-        }
-
-        return true;
+        return consulo.util.collection.ArrayUtil.startsWith(array, start, subArray);
     }
 
     @Contract(pure = true)
     public static <T> boolean equals(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull HashingStrategy<? super T> comparator) {
-        //noinspection ArrayEquality
-        if (a1 == a2) {
-            return true;
-        }
-
-        int length = a2.length;
-        if (a1.length != length) {
-            return false;
-        }
-
-        for (int i = 0; i < length; i++) {
-            if (!comparator.equals(a1[i], a2[i])) {
-                return false;
-            }
-        }
-        return true;
+        return consulo.util.collection.ArrayUtil.equals(a1, a2, comparator);
     }
 
     @Contract(pure = true)
     public static <T> boolean equals(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull Comparator<? super T> comparator) {
-        //noinspection ArrayEquality
-        if (a1 == a2) {
-            return true;
-        }
-        int length = a2.length;
-        if (a1.length != length) {
-            return false;
-        }
-
-        for (int i = 0; i < length; i++) {
-            if (comparator.compare(a1[i], a2[i]) != 0) {
-                return false;
-            }
-        }
-        return true;
+        return consulo.util.collection.ArrayUtil.equals(a1, a2, comparator);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] reverseArray(@Nonnull T[] array) {
-        T[] newArray = array.clone();
-        for (int i = 0; i < array.length; i++) {
-            newArray[array.length - i - 1] = array[i];
-        }
-        return newArray;
+        return consulo.util.collection.ArrayUtil.reverseArray(array);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static int[] reverseArray(@Nonnull int[] array) {
-        int[] newArray = array.clone();
-        for (int i = 0; i < array.length; i++) {
-            newArray[array.length - i - 1] = array[i];
-        }
-        return newArray;
+        return consulo.util.collection.ArrayUtil.reverseArray(array);
     }
 
     @Contract(pure = true)
     public static int lexicographicCompare(@Nonnull int[] obj1, @Nonnull int[] obj2) {
-        for (int i = 0; i < Math.min(obj1.length, obj2.length); i++) {
-            int res = Integer.compare(obj1[i], obj2[i]);
-            if (res != 0) {
-                return res;
-            }
-        }
-        return Integer.compare(obj1.length, obj2.length);
+        return consulo.util.collection.ArrayUtil.lexicographicCompare(obj1, obj2);
     }
 
     @Contract(pure = true)
     public static int lexicographicCompare(@Nonnull String[] obj1, @Nonnull String[] obj2) {
-        for (int i = 0; i < Math.max(obj1.length, obj2.length); i++) {
-            String o1 = i < obj1.length ? obj1[i] : null;
-            String o2 = i < obj2.length ? obj2[i] : null;
-            if (o1 == null) {
-                return -1;
-            }
-            if (o2 == null) {
-                return 1;
-            }
-            int res = o1.compareToIgnoreCase(o2);
-            if (res != 0) {
-                return res;
-            }
-        }
-        return 0;
+        return consulo.util.collection.ArrayUtil.lexicographicCompare(obj1, obj2);
     }
 
     //must be Comparables
     @Contract(pure = true)
     public static <T> int lexicographicCompare(@Nonnull T[] obj1, @Nonnull T[] obj2) {
-        for (int i = 0; i < Math.max(obj1.length, obj2.length); i++) {
-            T o1 = i < obj1.length ? obj1[i] : null;
-            T o2 = i < obj2.length ? obj2[i] : null;
-            if (o1 == null) {
-                return -1;
-            }
-            if (o2 == null) {
-                return 1;
-            }
-            //noinspection unchecked
-            int res = ((Comparable)o1).compareTo(o2);
-            if (res != 0) {
-                return res;
-            }
-        }
-        return 0;
+        return consulo.util.collection.ArrayUtil.lexicographicCompare(obj1, obj2);
     }
 
     public static <T> void swap(@Nonnull T[] array, int i1, int i2) {
-        T t = array[i1];
-        array[i1] = array[i2];
-        array[i2] = t;
+        consulo.util.collection.ArrayUtil.swap(array, i1, i2);
     }
 
     public static void swap(@Nonnull int[] array, int i1, int i2) {
-        int t = array[i1];
-        array[i1] = array[i2];
-        array[i2] = t;
+        consulo.util.collection.ArrayUtil.swap(array, i1, i2);
     }
 
     public static void swap(@Nonnull boolean[] array, int i1, int i2) {
-        boolean t = array[i1];
-        array[i1] = array[i2];
-        array[i2] = t;
+        consulo.util.collection.ArrayUtil.swap(array, i1, i2);
     }
 
     public static void swap(@Nonnull char[] array, int i1, int i2) {
-        char t = array[i1];
-        array[i1] = array[i2];
-        array[i2] = t;
+        consulo.util.collection.ArrayUtil.swap(array, i1, i2);
     }
 
     public static <T> void rotateLeft(@Nonnull T[] array, int i1, int i2) {
-        T t = array[i1];
-        System.arraycopy(array, i1 + 1, array, i1, i2 - i1);
-        array[i2] = t;
+        consulo.util.collection.ArrayUtil.rotateLeft(array, i1, i2);
     }
 
     public static <T> void rotateRight(@Nonnull T[] array, int i1, int i2) {
-        T t = array[i2];
-        System.arraycopy(array, i1, array, i1 + 1, i2 - i1);
-        array[i1] = t;
+        consulo.util.collection.ArrayUtil.rotateRight(array, i1, i2);
     }
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull Object[] objects, @Nullable Object object) {
-        return indexOf(objects, object, 0, objects.length);
+        return consulo.util.collection.ArrayUtil.indexOf(objects, object);
     }
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull Object[] objects, Object object, int start, int end) {
-        if (object == null) {
-            for (int i = start; i < end; i++) {
-                if (objects[i] == null) {
-                    return i;
-                }
-            }
-        }
-        else {
-            for (int i = start; i < end; i++) {
-                if (object.equals(objects[i])) {
-                    return i;
-                }
-            }
-        }
-        return -1;
+        return consulo.util.collection.ArrayUtil.indexOf(objects, object, start, end);
     }
 
     @Contract(pure = true)
     public static <T> int indexOf(@Nonnull List<T> objects, T object, @Nonnull HashingStrategy<T> comparator) {
-        for (int i = 0; i < objects.size(); i++) {
-            if (comparator.equals(objects.get(i), object)) {
-                return i;
-            }
-        }
-        return -1;
+        return consulo.util.collection.ArrayUtil.indexOf(objects, object, comparator);
     }
 
     @Contract(pure = true)
     public static <T> int indexOf(@Nonnull List<T> objects, T object, @Nonnull Comparator<T> comparator) {
-        for (int i = 0; i < objects.size(); i++) {
-            if (comparator.compare(objects.get(i), object) == 0) {
-                return i;
-            }
-        }
-        return -1;
+        return consulo.util.collection.ArrayUtil.indexOf(objects, object, comparator);
     }
 
     @Contract(pure = true)
     public static <T> int indexOf(@Nonnull T[] objects, T object, @Nonnull HashingStrategy<T> comparator) {
-        for (int i = 0; i < objects.length; i++) {
-            if (comparator.equals(objects[i], object)) {
-                return i;
-            }
-        }
-        return -1;
+        return consulo.util.collection.ArrayUtil.indexOf(objects, object, comparator);
     }
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull long[] ints, long value) {
-        for (int i = 0; i < ints.length; i++) {
-            if (ints[i] == value) {
-                return i;
-            }
-        }
-
-        return -1;
+        return consulo.util.collection.ArrayUtil.indexOf(ints, value);
     }
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull int[] ints, int value) {
-        for (int i = 0; i < ints.length; i++) {
-            if (ints[i] == value) {
-                return i;
-            }
-        }
-
-        return -1;
+        return consulo.util.collection.ArrayUtil.indexOf(ints, value);
     }
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull short[] ints, short value) {
-        for (int i = 0; i < ints.length; i++) {
-            if (ints[i] == value) {
-                return i;
-            }
-        }
-
-        return -1;
+        return consulo.util.collection.ArrayUtil.indexOf(ints, value);
     }
 
     @Contract(pure = true)
     public static <T> int lastIndexOf(@Nonnull T[] src, T obj) {
-        for (int i = src.length - 1; i >= 0; i--) {
-            T o = src[i];
-            if (o == null) {
-                if (obj == null) {
-                    return i;
-                }
-            }
-            else if (o.equals(obj)) {
-                return i;
-            }
-        }
-        return -1;
+        return consulo.util.collection.ArrayUtil.lastIndexOf(src, obj);
     }
 
     @Contract(pure = true)
     public static int lastIndexOf(@Nonnull int[] src, int obj) {
-        for (int i = src.length - 1; i >= 0; i--) {
-            int o = src[i];
-            if (o == obj) {
-                return i;
-            }
-        }
-        return -1;
+        return consulo.util.collection.ArrayUtil.lastIndexOf(src, obj);
     }
 
     @Contract(pure = true)
     public static <T> int lastIndexOf(@Nonnull T[] src, T obj, @Nonnull HashingStrategy<? super T> comparator) {
-        for (int i = src.length - 1; i >= 0; i--) {
-            T o = src[i];
-            if (comparator.equals(obj, o)) {
-                return i;
-            }
-        }
-        return -1;
+        return consulo.util.collection.ArrayUtil.lastIndexOf(src, obj, comparator);
     }
 
     @Contract(pure = true)
     public static <T> int lastIndexOf(@Nonnull List<T> src, T obj, @Nonnull HashingStrategy<? super T> comparator) {
-        for (int i = src.size() - 1; i >= 0; i--) {
-            T o = src.get(i);
-            if (comparator.equals(obj, o)) {
-                return i;
-            }
-        }
-        return -1;
+        return consulo.util.collection.ArrayUtil.lastIndexOf(src, obj, comparator);
     }
 
     @Contract(pure = true)
     public static int lastIndexOfNot(@Nonnull int[] src, int obj) {
-        for (int i = src.length - 1; i >= 0; i--) {
-            int o = src[i];
-            if (o != obj) {
-                return i;
-            }
-        }
-        return -1;
+        return consulo.util.collection.ArrayUtil.lastIndexOfNot(src, obj);
     }
 
     @Contract(pure = true)
     @SafeVarargs
     public static <T> boolean contains(@Nullable T o, @Nonnull T... objects) {
-        return indexOf(objects, o) >= 0;
+        return consulo.util.collection.ArrayUtil.contains(o, objects);
     }
 
     @Contract(pure = true)
     public static boolean contains(@Nullable String s, @Nonnull String... strings) {
-        if (s == null) {
-            for (String str : strings) {
-                if (str == null) {
-                    return true;
-                }
-            }
-        }
-        else {
-            for (String str : strings) {
-                if (s.equals(str)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return consulo.util.collection.ArrayUtil.contains(s, strings);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static int[] newIntArray(int count) {
-        return count == 0 ? EMPTY_INT_ARRAY : new int[count];
+        return consulo.util.collection.ArrayUtil.newIntArray(count);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static long[] newLongArray(int count) {
-        return count == 0 ? EMPTY_LONG_ARRAY : new long[count];
+        return consulo.util.collection.ArrayUtil.newLongArray(count);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static String[] newStringArray(int count) {
-        return count == 0 ? EMPTY_STRING_ARRAY : new String[count];
+        return consulo.util.collection.ArrayUtil.newStringArray(count);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static Object[] newObjectArray(int count) {
-        return count == 0 ? EMPTY_OBJECT_ARRAY : new Object[count];
+        return consulo.util.collection.ArrayUtil.newObjectArray(count);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <E> E[] ensureExactSize(int count, @Nonnull E[] sample) {
-        if (count == sample.length) {
-            return sample;
-        }
-        return newArray(getComponentType(sample), count);
+        return consulo.util.collection.ArrayUtil.ensureExactSize(count, sample);
     }
 
     @Nullable
     @Contract(pure = true)
     public static <T> T getFirstElement(@Nullable T[] array) {
-        return array != null && array.length > 0 ? array[0] : null;
+        return consulo.util.collection.ArrayUtil.getFirstElement(array);
     }
 
     @Nullable
     @Contract(pure = true)
     public static <T> T getLastElement(@Nullable T[] array) {
-        return array != null && array.length > 0 ? array[array.length - 1] : null;
+        return consulo.util.collection.ArrayUtil.getLastElement(array);
     }
 
     @Contract(pure = true)
     public static int getLastElement(@Nullable int[] array, int defaultValue) {
-        return array == null || array.length == 0 ? defaultValue : array[array.length - 1];
+        return consulo.util.collection.ArrayUtil.getLastElement(array, defaultValue);
     }
 
     @Contract(value = "null -> true", pure = true)
     public static <T> boolean isEmpty(@Nullable T[] array) {
-        return array == null || array.length == 0;
+        return consulo.util.collection.ArrayUtil.isEmpty(array);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static String[] toStringArray(@Nullable Collection<String> collection) {
-        return ArrayUtilRt.toStringArray(collection);
+        return consulo.util.collection.ArrayUtil.toStringArray(collection);
     }
 
     public static <T> void copy(@Nonnull Collection<? extends T> src, @Nonnull T[] dst, int dstOffset) {
-        int i = dstOffset;
-        for (T t : src) {
-            dst[i++] = t;
-        }
+        consulo.util.collection.ArrayUtil.copy(src, dst, dstOffset);
     }
 
     @Nullable
     @Contract("null -> null; !null -> !null")
     public static <T> T[] copyOf(@Nullable T[] original) {
-        if (original == null) {
-            return null;
-        }
-        return Arrays.copyOf(original, original.length);
+        return consulo.util.collection.ArrayUtil.copyOf(original);
     }
 
     @Nullable
     @Contract("null -> null; !null -> !null")
     public static boolean[] copyOf(@Nullable boolean[] original) {
-        if (original == null) {
-            return null;
-        }
-        return Arrays.copyOf(original, original.length);
+        return consulo.util.collection.ArrayUtil.copyOf(original);
     }
 
     @Nullable
     @Contract("null -> null; !null -> !null")
     public static int[] copyOf(@Nullable int[] original) {
-        if (original == null) {
-            return null;
-        }
-        return Arrays.copyOf(original, original.length);
+        return consulo.util.collection.ArrayUtil.copyOf(original);
     }
 
     @Nonnull
     public static <T> T[] stripTrailingNulls(@Nonnull T[] array) {
-        return array.length != 0 && array[array.length - 1] == null ? Arrays.copyOf(array, trailingNullsIndex(array)) : array;
+        return consulo.util.collection.ArrayUtil.stripTrailingNulls(array);
     }
 
     private static <T> int trailingNullsIndex(@Nonnull T[] array) {
@@ -1061,44 +617,20 @@ public class ArrayUtil extends ArrayUtilRt {
         return 0;
     }
 
-    // calculates average of the median values in the selected part of the array. E.g. for part=3 returns average in the middle third.
     public static long averageAmongMedians(@Nonnull long[] time, int part) {
-        assert part >= 1;
-        int n = time.length;
-        Arrays.sort(time);
-        long total = 0;
-        for (int i = n / 2 - n / part / 2; i < n / 2 + n / part / 2; i++) {
-            total += time[i];
-        }
-        int middlePartLength = n / part;
-        return middlePartLength == 0 ? 0 : total / middlePartLength;
+        return consulo.util.collection.ArrayUtil.averageAmongMedians(time, part);
     }
 
     public static long averageAmongMedians(@Nonnull int[] time, int part) {
-        assert part >= 1;
-        int n = time.length;
-        Arrays.sort(time);
-        long total = 0;
-        for (int i = n / 2 - n / part / 2; i < n / 2 + n / part / 2; i++) {
-            total += time[i];
-        }
-        int middlePartLength = n / part;
-        return middlePartLength == 0 ? 0 : total / middlePartLength;
+        return consulo.util.collection.ArrayUtil.averageAmongMedians(time, part);
     }
 
     public static int min(int[] values) {
-        int min = Integer.MAX_VALUE;
-        for (int value : values) {
-            if (value < min) {
-                min = value;
-            }
-        }
-        return min;
+        return consulo.util.collection.ArrayUtil.min(values);
     }
 
     @Nonnull
     public static <T> Class<T> getComponentType(@Nonnull T[] collection) {
-        //noinspection unchecked
-        return (Class<T>)collection.getClass().getComponentType();
+        return consulo.util.collection.ArrayUtil.getComponentType(collection);
     }
 }

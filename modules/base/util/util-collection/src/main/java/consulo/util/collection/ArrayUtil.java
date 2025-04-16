@@ -799,7 +799,7 @@ public class ArrayUtil {
 
     @Contract(pure = true)
     public static <T> int indexOf(@Nonnull List<T> objects, T object, @Nonnull HashingStrategy<T> comparator) {
-        for (int i = 0; i < objects.size(); i++) {
+        for (int i = 0, n = objects.size(); i < n; i++) {
             if (comparator.equals(objects.get(i), object)) {
                 return i;
             }
@@ -809,7 +809,7 @@ public class ArrayUtil {
 
     @Contract(pure = true)
     public static <T> int indexOf(@Nonnull List<T> objects, T object, @Nonnull Comparator<T> comparator) {
-        for (int i = 0; i < objects.size(); i++) {
+        for (int i = 0, n = objects.size(); i < n; i++) {
             if (comparator.compare(objects.get(i), object) == 0) {
                 return i;
             }
@@ -819,7 +819,7 @@ public class ArrayUtil {
 
     @Contract(pure = true)
     public static <T> int indexOf(@Nonnull T[] objects, T object, @Nonnull HashingStrategy<T> comparator) {
-        for (int i = 0; i < objects.length; i++) {
+        for (int i = 0, n = objects.length; i < n; i++) {
             if (comparator.equals(objects[i], object)) {
                 return i;
             }
@@ -829,7 +829,7 @@ public class ArrayUtil {
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull long[] ints, long value) {
-        for (int i = 0; i < ints.length; i++) {
+        for (int i = 0, n = ints.length; i < n; i++) {
             if (ints[i] == value) {
                 return i;
             }
@@ -840,7 +840,7 @@ public class ArrayUtil {
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull int[] ints, int value) {
-        for (int i = 0; i < ints.length; i++) {
+        for (int i = 0, n = ints.length; i < n; i++) {
             if (ints[i] == value) {
                 return i;
             }
@@ -851,7 +851,7 @@ public class ArrayUtil {
 
     @Contract(pure = true)
     public static int indexOf(@Nonnull short[] ints, short value) {
-        for (int i = 0; i < ints.length; i++) {
+        for (int i = 0, n = ints.length; i < n; i++) {
             if (ints[i] == value) {
                 return i;
             }
@@ -972,10 +972,7 @@ public class ArrayUtil {
     @Nonnull
     @Contract(pure = true)
     public static <E> E[] ensureExactSize(int count, @Nonnull E[] sample) {
-        if (count == sample.length) {
-            return sample;
-        }
-        return newArray(getComponentType(sample), count);
+        return count == sample.length ? sample : newArray(getComponentType(sample), count);
     }
 
     @Nullable
@@ -1016,28 +1013,19 @@ public class ArrayUtil {
     @Nullable
     @Contract("null -> null; !null -> !null")
     public static <T> T[] copyOf(@Nullable T[] original) {
-        if (original == null) {
-            return null;
-        }
-        return Arrays.copyOf(original, original.length);
+        return original == null ? null : Arrays.copyOf(original, original.length);
     }
 
     @Nullable
     @Contract("null -> null; !null -> !null")
     public static boolean[] copyOf(@Nullable boolean[] original) {
-        if (original == null) {
-            return null;
-        }
-        return Arrays.copyOf(original, original.length);
+        return original == null ? null : Arrays.copyOf(original, original.length);
     }
 
     @Nullable
     @Contract("null -> null; !null -> !null")
     public static int[] copyOf(@Nullable int[] original) {
-        if (original == null) {
-            return null;
-        }
-        return Arrays.copyOf(original, original.length);
+        return original == null ? null : Arrays.copyOf(original, original.length);
     }
 
     @Nonnull
