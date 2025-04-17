@@ -17,60 +17,64 @@ package consulo.ide.impl.idea.vcs.log.ui;
 
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ui.ex.JBColor;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class CurrentBranchHighlighter implements VcsLogHighlighter {
-  private static final JBColor CURRENT_BRANCH_BG = new JBColor(new Color(228, 250, 255), new Color(63, 71, 73));
-  private static final String HEAD = "HEAD";
-  @Nonnull
-  private final VcsLogData myLogData;
-  @Nonnull
-  private final VcsLogUi myLogUi;
-  @Nonnull
-  private final Map<VirtualFile, Condition<CommitId>> myConditions = new HashMap<>();
-  @Nullable private String mySingleFilteredBranch;
+    private static final JBColor CURRENT_BRANCH_BG = new JBColor(new Color(228, 250, 255), new Color(63, 71, 73));
+    private static final String HEAD = "HEAD";
+    @Nonnull
+    private final VcsLogData myLogData;
+    @Nonnull
+    private final VcsLogUi myLogUi;
+    @Nonnull
+    private final Map<VirtualFile, Predicate<CommitId>> myConditions = new HashMap<>();
+    @Nullable
+    private String mySingleFilteredBranch;
 
-  public CurrentBranchHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
-    myLogData = logData;
-    myLogUi = logUi;
-  }
-
-  @Nonnull
-  @Override
-  public VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails details, boolean isSelected) {
-    if (isSelected || !myLogUi.isHighlighterEnabled(CurrentBranchHighlighterFactory.ID)) return VcsCommitStyle.DEFAULT;
-    Condition<CommitId> condition = myConditions.get(details.getRoot());
-    if (condition == null) {
-      VcsLogProvider provider = myLogData.getLogProvider(details.getRoot());
-      String currentBranch = provider.getCurrentBranch(details.getRoot());
-      if (!HEAD.equals(mySingleFilteredBranch) && currentBranch != null && !(currentBranch.equals(mySingleFilteredBranch))) {
-        condition = ((VcsLogDataImpl)myLogData).getContainingBranchesGetter().getContainedInBranchCondition(currentBranch, details.getRoot());
-        myConditions.put(details.getRoot(), condition);
-      }
-      else {
-        condition = Conditions.alwaysFalse();
-      }
+    public CurrentBranchHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
+        myLogData = logData;
+        myLogUi = logUi;
     }
-    if (condition != null && condition.value(new CommitId(details.getId(), details.getRoot()))) {
-      return VcsCommitStyleFactory.background(CURRENT_BRANCH_BG);
-    }
-    return VcsCommitStyle.DEFAULT;
-  }
 
-  @Override
-  public void update(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened) {
-    VcsLogBranchFilter branchFilter = dataPack.getFilters().getBranchFilter();
-    mySingleFilteredBranch = branchFilter == null ? null : VcsLogUtil.getSingleFilteredBranch(branchFilter, dataPack.getRefs());
-    myConditions.clear();
-  }
+    @Nonnull
+    @Override
+    public VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails details, boolean isSelected) {
+        if (isSelected || !myLogUi.isHighlighterEnabled(CurrentBranchHighlighterFactory.ID)) {
+            return VcsCommitStyle.DEFAULT;
+        }
+        Predicate<CommitId> condition = myConditions.get(details.getRoot());
+        if (condition == null) {
+            VcsLogProvider provider = myLogData.getLogProvider(details.getRoot());
+            String currentBranch = provider.getCurrentBranch(details.getRoot());
+            if (!HEAD.equals(mySingleFilteredBranch) && currentBranch != null && !(currentBranch.equals(mySingleFilteredBranch))) {
+                condition = ((VcsLogDataImpl)myLogData).getContainingBranchesGetter()
+                    .getContainedInBranchCondition(currentBranch, details.getRoot());
+                myConditions.put(details.getRoot(), condition);
+            }
+            else {
+                condition = Conditions.alwaysFalse();
+            }
+        }
+        if (condition != null && condition.test(new CommitId(details.getId(), details.getRoot()))) {
+            return VcsCommitStyleFactory.background(CURRENT_BRANCH_BG);
+        }
+        return VcsCommitStyle.DEFAULT;
+    }
+
+    @Override
+    public void update(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened) {
+        VcsLogBranchFilter branchFilter = dataPack.getFilters().getBranchFilter();
+        mySingleFilteredBranch = branchFilter == null ? null : VcsLogUtil.getSingleFilteredBranch(branchFilter, dataPack.getRefs());
+        myConditions.clear();
+    }
 }

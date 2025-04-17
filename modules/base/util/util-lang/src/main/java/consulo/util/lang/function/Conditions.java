@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author max
@@ -52,7 +53,7 @@ public class Conditions {
     }
 
     public static <T> Condition<T> instanceOf(Class<?> clazz) {
-        return t -> clazz.isInstance(t);
+        return clazz::isInstance;
     }
 
     public static <T> Condition<T> notInstanceOf(Class<?> clazz) {
@@ -60,7 +61,7 @@ public class Conditions {
     }
 
     public static Condition<Class> assignableTo(Class clazz) {
-        return t -> clazz.isAssignableFrom(t);
+        return clazz::isAssignableFrom;
     }
 
     public static <T> Condition<T> instanceOf(Class<?>... clazz) {
@@ -91,10 +92,10 @@ public class Conditions {
     }
 
     public static <T> Condition<T> oneOf(Collection<? extends T> options) {
-        return t -> options.contains(t);
+        return options::contains;
     }
 
-    public static <T> Condition<T> not(Condition<T> c) {
+    public static <T> Condition<T> not(Predicate<T> c) {
         if (c == TRUE) {
             return alwaysFalse();
         }
@@ -102,7 +103,8 @@ public class Conditions {
             return alwaysTrue();
         }
         if (c instanceof Not) {
-            return ((Not)c).c;
+            Predicate c1 = ((Not)c).c;
+            return c1 instanceof Condition cond ? cond : c1::test;
         }
         return new Not<>(c);
     }
@@ -135,62 +137,62 @@ public class Conditions {
         return new Or<>(c1, c2);
     }
 
-    public static <A, B> Condition<A> compose(Function<? super A, B> fun, Condition<? super B> condition) {
-        return o -> condition.value(fun.apply(o));
+    public static <A, B> Condition<A> compose(Function<? super A, B> fun, Predicate<? super B> condition) {
+        return o -> condition.test(fun.apply(o));
     }
 
-    public static <T> Condition<T> cached(Condition<T> c) {
+    public static <T> Condition<T> cached(Predicate<T> c) {
         return new SoftRefCache<>(c);
     }
 
     private static class Not<T> implements Condition<T> {
-        final Condition<T> c;
+        final Predicate<T> c;
 
-        Not(Condition<T> c) {
+        Not(Predicate<T> c) {
             this.c = c;
         }
 
         @Override
         public boolean value(T value) {
-            return !c.value(value);
+            return !c.test(value);
         }
     }
 
     private static class And<T> implements Condition<T> {
-        final Condition<? super T> c1;
-        final Condition<? super T> c2;
+        final Predicate<? super T> c1;
+        final Predicate<? super T> c2;
 
-        And(Condition<? super T> c1, Condition<? super T> c2) {
+        And(Predicate<? super T> c1, Predicate<? super T> c2) {
             this.c1 = c1;
             this.c2 = c2;
         }
 
         @Override
         public boolean value(T object) {
-            return c1.value(object) && c2.value(object);
+            return c1.test(object) && c2.test(object);
         }
     }
 
     private static class Or<T> implements Condition<T> {
-        final Condition<? super T> c1;
-        final Condition<? super T> c2;
+        final Predicate<? super T> c1;
+        final Predicate<? super T> c2;
 
-        Or(Condition<? super T> c1, Condition<? super T> c2) {
+        Or(Predicate<? super T> c1, Predicate<? super T> c2) {
             this.c1 = c1;
             this.c2 = c2;
         }
 
         @Override
         public boolean value(T object) {
-            return c1.value(object) || c2.value(object);
+            return c1.test(object) || c2.test(object);
         }
     }
 
     private static class SoftRefCache<T> implements Condition<T> {
         private final HashMap<Integer, Pair<SoftReference<T>, Boolean>> myCache = new HashMap<>();
-        private final Condition<T> myCondition;
+        private final Predicate<T> myCondition;
 
-        public SoftRefCache(Condition<T> condition) {
+        public SoftRefCache(Predicate<T> condition) {
             myCondition = condition;
         }
 
@@ -199,7 +201,7 @@ public class Conditions {
             int key = object.hashCode();
             Pair<SoftReference<T>, Boolean> entry = myCache.get(key);
             if (entry == null || entry.first.get() != object) {
-                boolean value = myCondition.value(object);
+                boolean value = myCondition.test(object);
                 myCache.put(key, Pair.create(new SoftReference<>(object), value));
                 return value;
             }

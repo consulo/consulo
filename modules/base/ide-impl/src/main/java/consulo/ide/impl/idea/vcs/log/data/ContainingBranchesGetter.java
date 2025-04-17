@@ -17,13 +17,11 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.application.Application;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.util.SequentialLimitedLifoExecutor;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SLRUMap;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.log.*;
@@ -132,7 +130,7 @@ public class ContainingBranchesGetter {
     }
 
     @Nonnull
-    public Condition<CommitId> getContainedInBranchCondition(@Nonnull String branchName, @Nonnull VirtualFile root) {
+    public Predicate<CommitId> getContainedInBranchCondition(@Nonnull String branchName, @Nonnull VirtualFile root) {
         LOG.assertTrue(EventQueue.isDispatchThread());
 
         DataPack dataPack = myLogData.getDataPack();
@@ -167,7 +165,6 @@ public class ContainingBranchesGetter {
         return new SLRUMap<>(1000, 1000);
     }
 
-    @CalledInAny
     @Nonnull
     public List<String> getContainingBranchesSynchronously(@Nonnull VirtualFile root, @Nonnull Hash hash) {
         return doGetContainingBranches(myLogData.getDataPack(), root, hash);
@@ -233,7 +230,7 @@ public class ContainingBranchesGetter {
         }
     }
 
-    private class ContainedInBranchCondition implements Condition<CommitId> {
+    private class ContainedInBranchCondition implements Predicate<CommitId> {
         @Nonnull
         private final Predicate<Integer> myCondition;
         @Nonnull
@@ -251,7 +248,7 @@ public class ContainingBranchesGetter {
         }
 
         @Override
-        public boolean value(CommitId commitId) {
+        public boolean test(CommitId commitId) {
             return !isDisposed && myCondition.test(myLogData.getCommitIndex(commitId.getHash(), commitId.getRoot()));
         }
 

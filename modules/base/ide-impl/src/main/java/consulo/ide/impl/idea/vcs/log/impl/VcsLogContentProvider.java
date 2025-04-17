@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.project.Project;
@@ -44,100 +44,110 @@ import java.util.List;
  * Delegates to the VcsLogManager.
  */
 public class VcsLogContentProvider implements ChangesViewContentProvider {
-  public static final String TAB_NAME = "Log";
+    public static final String TAB_NAME = "Log";
 
-  @Nonnull
-  private final Project myProject;
-  @Nonnull
-  private final VcsProjectLog myProjectLog;
-  @Nonnull
-  private final JPanel myContainer = new JBPanel(new BorderLayout());
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final VcsProjectLog myProjectLog;
+    @Nonnull
+    private final JPanel myContainer = new JBPanel(new BorderLayout());
 
-  public VcsLogContentProvider(@Nonnull Project project, @Nonnull VcsProjectLog projectLog) {
-    myProject = project;
-    myProjectLog = projectLog;
+    @RequiredUIAccess
+    public VcsLogContentProvider(@Nonnull Project project, @Nonnull VcsProjectLog projectLog) {
+        myProject = project;
+        myProjectLog = projectLog;
 
-    MessageBusConnection connection = project.getMessageBus().connect(project);
-    connection.subscribe(ProjectLogListener.class, new ProjectLogListener() {
-      @Override
-      public void logCreated() {
-        addLogUi();
-      }
+        MessageBusConnection connection = project.getMessageBus().connect(project);
+        connection.subscribe(ProjectLogListener.class, new ProjectLogListener() {
+            @Override
+            @RequiredUIAccess
+            public void logCreated() {
+                addLogUi();
+            }
 
-      @Override
-      public void logDisposed() {
+            @Override
+            @RequiredUIAccess
+            public void logDisposed() {
+                myContainer.removeAll();
+                closeLogTabs();
+            }
+        });
+
+        if (myProjectLog.getLogManager() != null) {
+            addLogUi();
+        }
+    }
+
+    @RequiredUIAccess
+    private void addLogUi() {
+        myContainer.add(myProjectLog.initMainLog(TAB_NAME), BorderLayout.CENTER);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public JComponent initContent() {
+        myProjectLog.createLog();
+        return myContainer;
+    }
+
+    @Override
+    public void disposeContent() {
         myContainer.removeAll();
         closeLogTabs();
-      }
-    });
-
-    if (myProjectLog.getLogManager() != null) {
-      addLogUi();
     }
-  }
 
-  @RequiredUIAccess
-  private void addLogUi() {
-    myContainer.add(myProjectLog.initMainLog(TAB_NAME), BorderLayout.CENTER);
-  }
+    @RequiredUIAccess
+    public static void openAnotherLogTab(@Nonnull VcsLogManager logManager, @Nonnull Project project) {
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
+        openLogTab(logManager, project, generateShortName(toolWindow), null);
+    }
 
-  @Override
-  public JComponent initContent() {
-    myProjectLog.createLog();
-    return myContainer;
-  }
+    @RequiredUIAccess
+    public static VcsLogUiImpl openLogTab(
+        @Nonnull VcsLogManager logManager,
+        @Nonnull Project project,
+        @Nonnull String shortName,
+        @Nullable VcsLogFilter filter
+    ) {
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
 
-  @Override
-  public void disposeContent() {
-    myContainer.removeAll();
-    closeLogTabs();
-  }
+        String name = ContentUtilEx.getFullName(TAB_NAME, shortName);
 
-  public static void openAnotherLogTab(@Nonnull VcsLogManager logManager, @Nonnull Project project) {
-    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
-    openLogTab(logManager, project, generateShortName(toolWindow), null);
-  }
+        VcsLogUiImpl logUi = logManager.createLogUi(name, name, filter);
 
-  public static VcsLogUiImpl openLogTab(@Nonnull VcsLogManager logManager,
-                                        @Nonnull Project project,
-                                        @Nonnull String shortName,
-                                        @Nullable VcsLogFilter filter) {
-    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
-
-    String name = ContentUtilEx.getFullName(TAB_NAME, shortName);
-
-    VcsLogUiImpl logUi = logManager.createLogUi(name, name, filter);
-
-    ContentUtilEx
+        ContentUtilEx
             .addTabbedContent(toolWindow.getContentManager(), new VcsLogPanel(logManager, logUi), TAB_NAME, shortName, true, logUi);
-    toolWindow.activate(null);
+        toolWindow.activate(null);
 
-    logManager.scheduleInitialization();
-    return logUi;
-  }
-
-  @Nonnull
-  private static String generateShortName(@Nonnull ToolWindow toolWindow) {
-    TabbedContent tabbedContent = ContentUtilEx.findTabbedContent(toolWindow.getContentManager(), TAB_NAME);
-    if (tabbedContent != null) {
-      return String.valueOf(tabbedContent.getTabs().size() + 1);
+        logManager.scheduleInitialization();
+        return logUi;
     }
-    else {
-      List<Content> contents = ContainerUtil.filter(toolWindow.getContentManager().getContents(),
-                                                    content -> TAB_NAME.equals(content.getUserData(Content.TAB_GROUP_NAME_KEY)));
-      return String.valueOf(contents.size() + 1);
-    }
-  }
 
-  private void closeLogTabs() {
-    ToolWindow toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.VCS);
-
-    if (toolWindow != null) {
-      for (Content content : toolWindow.getContentManager().getContents()) {
-        if (ContentUtilEx.isContentTab(content, TAB_NAME)) {
-          ContentsUtil.closeContentTab(toolWindow.getContentManager(), content);
+    @Nonnull
+    private static String generateShortName(@Nonnull ToolWindow toolWindow) {
+        TabbedContent tabbedContent = ContentUtilEx.findTabbedContent(toolWindow.getContentManager(), TAB_NAME);
+        if (tabbedContent != null) {
+            return String.valueOf(tabbedContent.getTabs().size() + 1);
         }
-      }
+        else {
+            List<Content> contents = ContainerUtil.filter(
+                toolWindow.getContentManager().getContents(),
+                content -> TAB_NAME.equals(content.getUserData(Content.TAB_GROUP_NAME_KEY))
+            );
+            return String.valueOf(contents.size() + 1);
+        }
     }
-  }
+
+    private void closeLogTabs() {
+        ToolWindow toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.VCS);
+
+        if (toolWindow != null) {
+            for (Content content : toolWindow.getContentManager().getContents()) {
+                if (ContentUtilEx.isContentTab(content, TAB_NAME)) {
+                    ContentsUtil.closeContentTab(toolWindow.getContentManager(), content);
+                }
+            }
+        }
+    }
 }
