@@ -115,8 +115,9 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
                 RemoteServer<? extends ServerConfiguration> nextServer = createConfiguration(type, server);
                 myServers.add(nextServer);
                 ServerConfiguration nextConfig = nextServer.getConfiguration();
-                if (nextConfig instanceof CloudConfigurationBase && ((CloudConfigurationBase<?>)nextConfig).shouldMigrateToPasswordSafe()) {
-                    needsMigration.add((CloudConfigurationBase<?>)nextConfig);
+                if (nextConfig instanceof CloudConfigurationBase cloudConfigurationBase
+                    && cloudConfigurationBase.shouldMigrateToPasswordSafe()) {
+                    needsMigration.add(cloudConfigurationBase);
                 }
             }
         }

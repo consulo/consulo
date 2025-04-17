@@ -261,16 +261,17 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         return true;
     }
 
+    @RequiredReadAction
     private void showUsages(UsageInfo[] usages) {
         UsageViewPresentation presentation = new UsageViewPresentation();
-        presentation.setTabText(RefactoringLocalize.safeDeleteTitle().get());
-        presentation.setTargetsNodeText(RefactoringLocalize.attemptingToDeleteTargetsNodeText().get());
+        presentation.setTabText(RefactoringLocalize.safeDeleteTitle());
+        presentation.setTargetsNodeText(RefactoringLocalize.attemptingToDeleteTargetsNodeText());
         presentation.setShowReadOnlyStatusAsRed(true);
         presentation.setShowCancelButton(true);
-        presentation.setCodeUsagesString(RefactoringLocalize.referencesFoundInCode().get());
-        presentation.setUsagesInGeneratedCodeString(RefactoringLocalize.referencesFoundInGeneratedCode().get());
-        presentation.setNonCodeUsagesString(RefactoringLocalize.occurrencesFoundInCommentsStringsAndNonJavaFiles().get());
-        presentation.setUsagesString(RefactoringLocalize.usageviewUsagestext().get());
+        presentation.setCodeUsagesString(RefactoringLocalize.referencesFoundInCode());
+        presentation.setUsagesInGeneratedCodeString(RefactoringLocalize.referencesFoundInGeneratedCode());
+        presentation.setNonCodeUsagesString(RefactoringLocalize.occurrencesFoundInCommentsStringsAndNonJavaFiles());
+        presentation.setUsagesString(RefactoringLocalize.usageviewUsagestext());
 
         UsageViewManager manager = UsageViewManager.getInstance(myProject);
         UsageView usageView = showUsages(usages, presentation, manager);
@@ -482,6 +483,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isToBeChanged(@Nonnull UsageInfo usageInfo) {
         if (usageInfo instanceof SafeDeleteReferenceUsageInfo safeDeleteReferenceUsageInfo) {
             return safeDeleteReferenceUsageInfo.isSafeDelete() && super.isToBeChanged(usageInfo);

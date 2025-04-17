@@ -26,11 +26,10 @@ import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.TwoPaneIdeView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.virtualFileSystem.VirtualFile;
-
-import javax.swing.*;
 
 public class CopyHandler {
     private CopyHandler() {
@@ -64,8 +63,10 @@ public class CopyHandler {
     public static boolean canClone(PsiElement[] elements) {
         if (elements.length > 0) {
             for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
-                if (delegate instanceof CopyHandlerDelegateBase copyDelegate
-                    ? copyDelegate.canCopy(elements, true) : delegate.canCopy(elements)) {
+                boolean canCopy = delegate instanceof CopyHandlerDelegateBase copyDelegate
+                    ? copyDelegate.canCopy(elements, true)
+                    : delegate.canCopy(elements);
+                if (canCopy) {
                     return !(delegate instanceof CopyHandlerDelegateBase copyDelegate && copyDelegate.forbidToClone(elements, true));
                 }
             }
@@ -77,7 +78,8 @@ public class CopyHandler {
         PsiElement[] elements = new PsiElement[]{element};
         for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
             if (delegate.canCopy(elements)) {
-                if (delegate instanceof CopyHandlerDelegateBase && ((CopyHandlerDelegateBase)delegate).forbidToClone(elements, false)) {
+                if (delegate instanceof CopyHandlerDelegateBase copyHandlerDelegateBase
+                    && copyHandlerDelegateBase.forbidToClone(elements, false)) {
                     return;
                 }
                 delegate.doClone(element);
@@ -86,17 +88,15 @@ public class CopyHandler {
         }
     }
 
+    @RequiredUIAccess
     public static void updateSelectionInActiveProjectView(PsiElement newElement, Project project, boolean selectInActivePanel) {
         String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
         if (id != null) {
             ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(id);
             Content selectedContent = window.getContentManager().getSelectedContent();
-            if (selectedContent != null) {
-                JComponent component = selectedContent.getComponent();
-                if (component instanceof TwoPaneIdeView twoPaneIdeView) {
-                    twoPaneIdeView.selectElement(newElement, selectInActivePanel);
-                    return;
-                }
+            if (selectedContent != null && selectedContent.getComponent() instanceof TwoPaneIdeView twoPaneIdeView) {
+                twoPaneIdeView.selectElement(newElement, selectInActivePanel);
+                return;
             }
         }
         if (ToolWindowId.PROJECT_VIEW.equals(id)) {

@@ -56,20 +56,14 @@ public class TemplateContext {
 
     private static boolean differsFromDefault(@Nullable TemplateContext defaultContext, String context, boolean myStateInContext) {
         Boolean defaultStateInContext = defaultContext == null ? null : defaultContext.myContextStates.get(context);
-        if (defaultStateInContext == null) {
-            return true;
-        }
-        return myStateInContext != defaultStateInContext;
+        return defaultStateInContext == null || myStateInContext != defaultStateInContext;
     }
 
     public boolean isEnabled(TemplateContextType contextType) {
         Boolean storedValue = isEnabledBare(contextType);
         if (storedValue == null) {
             TemplateContextType baseContextType = contextType.getBaseContextType();
-            if (baseContextType != null && !(baseContextType instanceof EverywhereContextType)) {
-                return isEnabled(baseContextType);
-            }
-            return false;
+            return baseContextType != null && !(baseContextType instanceof EverywhereContextType) && isEnabled(baseContextType);
         }
         return storedValue;
     }
@@ -87,7 +81,7 @@ public class TemplateContext {
     }
 
     public void setDefaultContext(@Nonnull TemplateContext defContext) {
-        HashMap<String, Boolean> copy = new HashMap<String, Boolean>(myContextStates);
+        HashMap<String, Boolean> copy = new HashMap<>(myContextStates);
         myContextStates.clear();
         myContextStates.putAll(defContext.myContextStates);
         myContextStates.putAll(copy);
@@ -96,8 +90,7 @@ public class TemplateContext {
     public void readTemplateContext(Element element) throws InvalidDataException {
         List options = element.getChildren("option");
         for (Object e : options) {
-            if (e instanceof Element) {
-                Element option = (Element)e;
+            if (e instanceof Element option) {
                 String name = option.getAttributeValue("name");
                 String value = option.getAttributeValue("value");
                 if (name != null && value != null) {

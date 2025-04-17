@@ -177,8 +177,8 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
         assert !isDisposed();
         assertCanRemoveFrom(contentFolder, myContentFolders);
         myContentFolders.remove(contentFolder);
-        if (contentFolder instanceof Disposable) {
-            Disposer.dispose((Disposable)contentFolder);
+        if (contentFolder instanceof Disposable disposable) {
+            Disposer.dispose(disposable);
         }
     }
 
@@ -211,8 +211,8 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
 
         ContentEntryImpl cloned = new ContentEntryImpl(myRoot.getUrl(), rootModel);
         for (ContentFolder contentFolder : myContentFolders) {
-            if (contentFolder instanceof ClonableContentFolder) {
-                ContentFolderImpl folder = (ContentFolderImpl)((ClonableContentFolder)contentFolder).cloneFolder(cloned);
+            if (contentFolder instanceof ClonableContentFolder clonableContentFolder) {
+                ContentFolderImpl folder = (ContentFolderImpl)clonableContentFolder.cloneFolder(cloned);
                 cloned.addFolderInternal(folder);
             }
         }

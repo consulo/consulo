@@ -29,17 +29,18 @@ public class CustomRegionStructureUtil {
         @Nonnull PsiElement rootElement,
         @Nonnull Collection<StructureViewTreeElement> originalElements
     ) {
-        if (rootElement instanceof PsiFileEx && !((PsiFileEx)rootElement).isContentsLoaded() || rootElement instanceof StubBasedPsiElement && ((StubBasedPsiElement)rootElement).getStub() != null) {
+        if (rootElement instanceof PsiFileEx psiFileEx && !psiFileEx.isContentsLoaded()
+            || rootElement instanceof StubBasedPsiElement stubBasedElement && stubBasedElement.getStub() != null) {
             return originalElements;
         }
         List<StructureViewTreeElement> physicalElements = ContainerUtil.filter(originalElements, element -> {
             Object value = element.getValue();
-            return !(value instanceof StubBasedPsiElement) || ((StubBasedPsiElement)value).getStub() == null;
+            return !(value instanceof StubBasedPsiElement stubBasedPsiElement && stubBasedPsiElement.getStub() != null);
         });
-        Set<TextRange> childrenRanges = ContainerUtil.map2SetNotNull(physicalElements, element -> {
-            Object value = element.getValue();
-            return value instanceof PsiElement ? getTextRange((PsiElement)value) : null;
-        });
+        Set<TextRange> childrenRanges = ContainerUtil.map2SetNotNull(
+            physicalElements,
+            element -> element.getValue() instanceof PsiElement value ? getTextRange(value) : null
+        );
         Collection<CustomRegionTreeElement> customRegions = collectCustomRegions(rootElement, childrenRanges);
         if (customRegions.size() > 0) {
             List<StructureViewTreeElement> result = new ArrayList<>(customRegions);
@@ -70,8 +71,8 @@ public class CustomRegionStructureUtil {
         PsiElement first = element.getFirstChild();
         if (!(element instanceof PsiFile) && first instanceof PsiComment && !first.textContains('\n')) {
             PsiElement next = first.getNextSibling();
-            if (next instanceof PsiWhiteSpace) {
-                next = next.getNextSibling();
+            if (next instanceof PsiWhiteSpace whiteSpace) {
+                next = whiteSpace.getNextSibling();
             }
             if (next != null) {
                 return new TextRange(next.getTextRange().getStartOffset(), element.getTextRange().getEndOffset());
@@ -152,8 +153,8 @@ public class CustomRegionStructureUtil {
         Language language = element.getLanguage();
         if (!Language.ANY.is(language)) {
             for (FoldingBuilder builder : FoldingBuilder.forLanguage(language)) {
-                if (builder instanceof CustomFoldingBuilder) {
-                    return ((CustomFoldingBuilder)builder).isCustomFoldingCandidate(element);
+                if (builder instanceof CustomFoldingBuilder customFoldingBuilder) {
+                    return customFoldingBuilder.isCustomFoldingCandidate(element);
                 }
             }
         }

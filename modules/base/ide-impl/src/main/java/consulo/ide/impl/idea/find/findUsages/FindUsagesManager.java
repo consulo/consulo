@@ -621,10 +621,10 @@ public class FindUsagesManager {
         presentation.setScopeText(scopeString);
         String usagesString = generateUsagesString(options);
         presentation.setUsagesString(usagesString);
-        String title =
-            FindLocalize.findUsagesOfElementInScopePanelTitle(usagesString, UsageViewUtil.getLongName(psiElement), scopeString).get();
+        LocalizeValue title =
+            FindLocalize.findUsagesOfElementInScopePanelTitle(usagesString, UsageViewUtil.getLongName(psiElement), scopeString);
         presentation.setTabText(title);
-        presentation.setTabName(FindLocalize.findUsagesOfElementTabName(usagesString, UsageViewUtil.getShortName(psiElement)).get());
+        presentation.setTabName(FindLocalize.findUsagesOfElementTabName(usagesString, UsageViewUtil.getShortName(psiElement)));
         presentation.setTargetsNodeText(StringUtil.capitalize(UsageViewUtil.getType(psiElement)));
         presentation.setOpenInNewTab(toOpenInNewTab);
         return presentation;

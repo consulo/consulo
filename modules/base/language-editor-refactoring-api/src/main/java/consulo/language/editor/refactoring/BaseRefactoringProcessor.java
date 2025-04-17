@@ -2,6 +2,7 @@
 
 package consulo.language.editor.refactoring;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.internal.ApplicationEx;
@@ -134,8 +135,8 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         Set<UnloadedModuleDescription> unloadedModulesInUseScope = new LinkedHashSet<>();
         for (PsiElement element : descriptor.getElements()) {
             SearchScope useScope = element.getUseScope();
-            if (useScope instanceof GlobalSearchScope) {
-                unloadedModulesInUseScope.addAll(((GlobalSearchScope)useScope).getUnloadedModulesBelongingToScope());
+            if (useScope instanceof GlobalSearchScope globalSearchScope) {
+                unloadedModulesInUseScope.addAll(globalSearchScope.getUnloadedModulesBelongingToScope());
             }
         }
         return unloadedModulesInUseScope;
@@ -340,11 +341,11 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     @Nonnull
     private static UsageViewPresentation createPresentation(@Nonnull UsageViewDescriptor descriptor, @Nonnull Usage[] usages) {
         UsageViewPresentation presentation = new UsageViewPresentation();
-        presentation.setTabText(RefactoringLocalize.usageviewTabtext().get());
+        presentation.setTabText(RefactoringLocalize.usageviewTabtext());
         presentation.setTargetsNodeText(descriptor.getProcessedElementsHeader());
         presentation.setShowReadOnlyStatusAsRed(true);
         presentation.setShowCancelButton(true);
-        presentation.setUsagesString(RefactoringLocalize.usageviewUsagestext().get());
+        presentation.setUsagesString(RefactoringLocalize.usageviewUsagestext());
         int codeUsageCount = 0;
         int nonCodeUsageCount = 0;
         int dynamicUsagesCount = 0;
@@ -353,14 +354,13 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         Set<PsiFile> dynamicUsagesCodeFiles = new HashSet<>();
 
         for (Usage usage : usages) {
-            if (usage instanceof PsiElementUsage) {
-                PsiElementUsage elementUsage = (PsiElementUsage)usage;
+            if (usage instanceof PsiElementUsage elementUsage) {
                 PsiElement element = elementUsage.getElement();
                 if (element == null) {
                     continue;
                 }
                 PsiFile containingFile = element.getContainingFile();
-                if (usage instanceof UsageInfo2UsageAdapter && ((UsageInfo2UsageAdapter)usage).getUsageInfo().isDynamicUsage()) {
+                if (elementUsage instanceof UsageInfo2UsageAdapter usageAdapter && usageAdapter.getUsageInfo().isDynamicUsage()) {
                     dynamicUsagesCount++;
                     dynamicUsagesCodeFiles.add(containingFile);
                 }
@@ -602,6 +602,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         }
     }
 
+    @RequiredReadAction
     protected boolean isToBeChanged(@Nonnull UsageInfo usageInfo) {
         return usageInfo.isWritable();
     }

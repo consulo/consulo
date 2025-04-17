@@ -42,14 +42,14 @@ import java.util.Set;
 public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements PossiblyDumbAware {
     private CustomFoldingProvider myDefaultProvider;
     private static final RegistryValue myMaxLookupDepth = Registry.get("custom.folding.max.lookup.depth");
-    private static final ThreadLocal<Set<ASTNode>> ourCustomRegionElements = new ThreadLocal<Set<ASTNode>>();
+    private static final ThreadLocal<Set<ASTNode>> ourCustomRegionElements = new ThreadLocal<>();
 
     @RequiredReadAction
     @Nonnull
     @Override
     public final FoldingDescriptor[] buildFoldRegions(@Nonnull PsiElement root, @Nonnull Document document, boolean quick) {
-        List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
-        ourCustomRegionElements.set(new HashSet<ASTNode>());
+        List<FoldingDescriptor> descriptors = new ArrayList<>();
+        ourCustomRegionElements.set(new HashSet<>());
         try {
             if (CustomFoldingProvider.EP_NAME.hasAnyExtensions()) {
                 myDefaultProvider = null;

@@ -134,10 +134,7 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
     }
 
     private static boolean isDocumentModified(VirtualFile virtualFile) {
-        if (virtualFile.isDirectory()) {
-            return false;
-        }
-        return FileDocumentManager.getInstance().isFileModified(virtualFile);
+        return !virtualFile.isDirectory() && FileDocumentManager.getInstance().isFileModified(virtualFile);
     }
 
     @Override

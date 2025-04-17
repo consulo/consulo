@@ -93,9 +93,8 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         if (parent == null) {
             return false;
         }
-        if (parent instanceof AbstractPsiBasedNode) {
-            PsiElement psiElement = ((AbstractPsiBasedNode<?>)parent).extractPsiFromValue();
-            return psiElement instanceof PsiDirectory;
+        if (parent instanceof AbstractPsiBasedNode abstractPsiBasedNode) {
+            return abstractPsiBasedNode.extractPsiFromValue() instanceof PsiDirectory;
         }
 
         Object parentValue = parent.getValue();

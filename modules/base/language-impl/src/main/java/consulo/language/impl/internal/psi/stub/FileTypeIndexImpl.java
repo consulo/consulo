@@ -96,11 +96,11 @@ public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> impl
 
     @Override
     public boolean equals(FileType val1, FileType val2) {
-        if (val1 instanceof SubstitutedFileType) {
-            val1 = ((SubstitutedFileType)val1).getOriginalFileType();
+        if (val1 instanceof SubstitutedFileType subsVal1) {
+            val1 = subsVal1.getOriginalFileType();
         }
-        if (val2 instanceof SubstitutedFileType) {
-            val2 = ((SubstitutedFileType)val2).getOriginalFileType();
+        if (val2 instanceof SubstitutedFileType subsVal2) {
+            val2 = subsVal2.getOriginalFileType();
         }
         return Comparing.equal(val1, val2);
     }

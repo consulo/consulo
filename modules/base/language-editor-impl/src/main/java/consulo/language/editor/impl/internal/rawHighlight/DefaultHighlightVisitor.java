@@ -96,8 +96,8 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
         if (myRunAnnotators) {
             runAnnotators(element);
         }
-        if (element instanceof PsiErrorElement && myHighlightErrorElements) {
-            visitErrorElement((PsiErrorElement)element);
+        if (element instanceof PsiErrorElement errorElement && myHighlightErrorElements) {
+            visitErrorElement(errorElement);
         }
     }
 
