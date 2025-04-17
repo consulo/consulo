@@ -175,7 +175,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
                 }
                 return false;
             });
-            app.invokeLater(() -> errorsFoundConsumer.accept(errorsFound), Application.get().getAnyModalityState());
+            app.invokeLater(() -> errorsFoundConsumer.accept(errorsFound), app.getAnyModalityState());
         });
     }
 }

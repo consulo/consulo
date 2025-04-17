@@ -5,17 +5,17 @@ import consulo.remoteServer.runtime.ServerConnection;
 import consulo.remoteServer.runtime.ui.RemoteServersView;
 import consulo.remoteServer.runtime.ui.ServersTreeNodeSelector;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Predicate;
 
 @Singleton
 @ServiceImpl
 public class RemoteServersViewImpl extends RemoteServersView {
-    private final List<Pair<ServersTreeNodeSelector, Condition<ServerConnection<?>>>> mySelectors = new CopyOnWriteArrayList<>();
+    private final List<Pair<ServersTreeNodeSelector, Predicate<ServerConnection<?>>>> mySelectors = new CopyOnWriteArrayList<>();
 
     @Override
     public void showServerConnection(@Nonnull ServerConnection<?> connection) {
@@ -26,8 +26,8 @@ public class RemoteServersViewImpl extends RemoteServersView {
     }
 
     private ServersTreeNodeSelector findSelector(ServerConnection<?> connection) {
-        for (Pair<ServersTreeNodeSelector, Condition<ServerConnection<?>>> pair : mySelectors) {
-            if (pair.second.value(connection)) {
+        for (Pair<ServersTreeNodeSelector, Predicate<ServerConnection<?>>> pair : mySelectors) {
+            if (pair.second.test(connection)) {
                 return pair.first;
             }
         }
@@ -45,7 +45,7 @@ public class RemoteServersViewImpl extends RemoteServersView {
     @Override
     public void registerTreeNodeSelector(
         @Nonnull ServersTreeNodeSelector selector,
-        @Nonnull Condition<ServerConnection<?>> condition
+        @Nonnull Predicate<ServerConnection<?>> condition
     ) {
         mySelectors.add(Pair.create(selector, condition));
     }

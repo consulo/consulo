@@ -546,7 +546,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             myActiveStack.push(id);
         }
 
-        if (autoFocusContents && Application.get().isActive()) {
+        if (autoFocusContents && myProject.getApplication().isActive()) {
             requestFocusInToolWindow(id, forcedFocusRequest);
         }
     }

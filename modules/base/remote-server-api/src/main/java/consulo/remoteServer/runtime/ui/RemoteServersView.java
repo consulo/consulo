@@ -5,8 +5,9 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.remoteServer.runtime.ServerConnection;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Predicate;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class RemoteServersView {
@@ -20,6 +21,6 @@ public abstract class RemoteServersView {
 
     public abstract void registerTreeNodeSelector(
         @Nonnull ServersTreeNodeSelector selector,
-        @Nonnull Condition<ServerConnection<?>> condition
+        @Nonnull Predicate<ServerConnection<?>> condition
     );
 }
