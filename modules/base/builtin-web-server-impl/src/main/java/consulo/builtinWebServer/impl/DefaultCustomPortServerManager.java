@@ -18,26 +18,35 @@ package consulo.builtinWebServer.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.builtinWebServer.custom.CustomPortServerManagerBase;
+import consulo.builtinWebServer.localize.BuiltInServerLocalize;
 import consulo.project.ui.notification.NotificationType;
+import jakarta.inject.Inject;
 
 @ExtensionImpl
 public final class DefaultCustomPortServerManager extends CustomPortServerManagerBase {
-  @Override
-  public void cannotBind(Exception e, int port) {
-    BuiltInServerManagerImpl.NOTIFICATION_GROUP.createNotification(
-            "Cannot start built-in HTTP server on custom port " + port + ". " +
-            "Please ensure that port is free (or check your firewall settings) and restart " + Application.get().getName(),
-            NotificationType.ERROR).notify(null);
-  }
+    private final Application myApplication;
 
-  @Override
-  public int getPort() {
-    int port = BuiltInServerOptions.getInstance().builtInServerPort;
-    return port == BuiltInServerOptions.DEFAULT_PORT ? -1 : port;
-  }
+    @Inject
+    public DefaultCustomPortServerManager(Application application) {
+        myApplication = application;
+    }
 
-  @Override
-  public boolean isAvailableExternally() {
-    return BuiltInServerOptions.getInstance().builtInServerAvailableExternally;
-  }
+    @Override
+    public void cannotBind(Exception e, int port) {
+        BuiltInServerManagerImpl.NOTIFICATION_GROUP.createNotification(
+            BuiltInServerLocalize.notificationContentCannotStartBuiltInHttpServerOnCustomPort(port, myApplication.getName()).get(),
+            NotificationType.ERROR
+        ).notify(null);
+    }
+
+    @Override
+    public int getPort() {
+        int port = BuiltInServerOptions.getInstance().builtInServerPort;
+        return port == BuiltInServerOptions.DEFAULT_PORT ? -1 : port;
+    }
+
+    @Override
+    public boolean isAvailableExternally() {
+        return BuiltInServerOptions.getInstance().builtInServerAvailableExternally;
+    }
 }

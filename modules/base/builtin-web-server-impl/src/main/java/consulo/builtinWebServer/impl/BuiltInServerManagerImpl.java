@@ -10,6 +10,7 @@ import consulo.builtinWebServer.custom.CustomPortServerManager;
 import consulo.builtinWebServer.impl.http.BuiltInServer;
 import consulo.builtinWebServer.impl.http.ImportantFolderLockerViaBuiltInServer;
 import consulo.builtinWebServer.impl.http.SubServer;
+import consulo.builtinWebServer.localize.BuiltInServerLocalize;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -44,7 +45,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     private static final Logger LOG = Logger.getInstance(BuiltInServerManager.class);
 
     public static final NotificationGroup NOTIFICATION_GROUP =
-        new NotificationGroup("Built-in Server", NotificationDisplayType.STICKY_BALLOON, true);
+        new NotificationGroup("builtInServer", BuiltInServerLocalize.settingBuiltinServerCategoryLabel(), NotificationDisplayType.STICKY_BALLOON, true);
 
     public static final String PROPERTY_RPC_PORT = "consulo.rpc.port";
     private static final int PORTS_COUNT = 20;
@@ -113,9 +114,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
             catch (Throwable e) {
                 LOG.info(e);
                 NOTIFICATION_GROUP.createNotification(
-                    "Cannot start internal HTTP server. Git integration, Some plugins may operate with errors. " +
-                        "Please check your firewall settings and restart " +
-                        Application.get().getName(),
+                    BuiltInServerLocalize.notificationContentCannotStartInternalHttpServerAndAskForRestart0(myApplication.getName()).get(),
                     NotificationType.ERROR
                 ).notify(null);
                 return;

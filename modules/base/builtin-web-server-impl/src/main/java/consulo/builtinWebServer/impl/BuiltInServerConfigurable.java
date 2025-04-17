@@ -15,17 +15,16 @@
  */
 package consulo.builtinWebServer.impl;
 
+import consulo.builtinWebServer.localize.BuiltInServerLocalize;
 import consulo.configurable.Configurable;
-import consulo.disposer.Disposable;
-import consulo.localize.LocalizeValue;
 import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.disposer.Disposable;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -33,34 +32,38 @@ import jakarta.annotation.Nonnull;
  * @since 2020-11-27
  */
 public class BuiltInServerConfigurable extends SimpleConfigurableByProperties implements Configurable {
-  @Override
-  public String getDisplayName() {
-    return "Built-in server";
-  }
+    @Override
+    public String getDisplayName() {
+        return BuiltInServerLocalize.settingBuiltinServerCategoryLabel().get();
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
-    BuiltInServerOptions options = BuiltInServerOptions.getInstance();
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+        BuiltInServerOptions options = BuiltInServerOptions.getInstance();
 
-    VerticalLayout root = VerticalLayout.create();
-    IntBox portBox = IntBox.create().withRange(0, Short.MAX_VALUE & 0xFFFF);
-    propertyBuilder.add(portBox, () -> options.builtInServerPort, it -> options.builtInServerPort = it);
-    root.add(LabeledBuilder.simple(LocalizeValue.localizeTODO("Port"), portBox));
+        VerticalLayout root = VerticalLayout.create();
+        IntBox portBox = IntBox.create().withRange(0, Short.MAX_VALUE & 0xFFFF);
+        propertyBuilder.add(portBox, () -> options.builtInServerPort, it -> options.builtInServerPort = it);
+        root.add(LabeledBuilder.simple(BuiltInServerLocalize.settingValueBuiltinServerPortLabel(), portBox));
 
-    CheckBox canAcceptExternalConnectionsBox = CheckBox.create(LocalizeValue.localizeTODO("Can accept external connections"));
-    propertyBuilder.add(canAcceptExternalConnectionsBox, () -> options.builtInServerAvailableExternally, it -> options.builtInServerAvailableExternally = it);
-    root.add(canAcceptExternalConnectionsBox);
+        CheckBox canAcceptExternalConnectionsBox = CheckBox.create(BuiltInServerLocalize.settingValueCanAcceptExternalConnections());
+        propertyBuilder.add(
+            canAcceptExternalConnectionsBox,
+            () -> options.builtInServerAvailableExternally,
+            it -> options.builtInServerAvailableExternally = it
+        );
+        root.add(canAcceptExternalConnectionsBox);
 
-    CheckBox allowUnsignedRequestsBox = CheckBox.create(LocalizeValue.localizeTODO("Allow unsigned requests"));
-    propertyBuilder.add(allowUnsignedRequestsBox, () -> options.allowUnsignedRequests, it -> options.allowUnsignedRequests = it);
-    root.add(allowUnsignedRequestsBox);
-    return root;
-  }
+        CheckBox allowUnsignedRequestsBox = CheckBox.create(BuiltInServerLocalize.settingValueBuiltinServerAllowUnsignedRequests());
+        propertyBuilder.add(allowUnsignedRequestsBox, () -> options.allowUnsignedRequests, it -> options.allowUnsignedRequests = it);
+        root.add(allowUnsignedRequestsBox);
+        return root;
+    }
 
-  @Override
-  protected void afterApply() {
-    BuiltInServerOptions.onBuiltInServerPortChanged();
-  }
+    @Override
+    protected void afterApply() {
+        BuiltInServerOptions.onBuiltInServerPortChanged();
+    }
 }

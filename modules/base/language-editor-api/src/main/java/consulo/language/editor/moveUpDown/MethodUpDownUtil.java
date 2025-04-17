@@ -17,7 +17,6 @@
 package consulo.language.editor.moveUpDown;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
@@ -27,7 +26,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
@@ -65,9 +63,7 @@ public class MethodUpDownUtil {
 
     @RequiredReadAction
     private static void addNavigationElements(Collection<PsiElement> array, PsiFile element) {
-        StructureViewBuilder structureViewBuilder = PsiStructureViewFactory.createBuilderForFile(element);
-        if (structureViewBuilder instanceof TreeBasedStructureViewBuilder) {
-            TreeBasedStructureViewBuilder builder = (TreeBasedStructureViewBuilder)structureViewBuilder;
+        if (PsiStructureViewFactory.createBuilderForFile(element) instanceof TreeBasedStructureViewBuilder builder) {
             StructureViewModel model = builder.createStructureViewModel(null);
             try {
                 addStructureViewElements(model.getRoot(), array, element);

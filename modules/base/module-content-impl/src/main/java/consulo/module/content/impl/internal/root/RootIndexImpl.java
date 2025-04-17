@@ -177,10 +177,10 @@ public class RootIndexImpl implements RootIndex {
     @Override
     @Nonnull
     public OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info) {
-        if (!(info instanceof DirectoryInfoImpl)) {
+        if (!(info instanceof DirectoryInfoImpl infoImpl)) {
             return OrderEntry.EMPTY_ARRAY;
         }
-        OrderEntry[] entries = getOrderEntries().get(((DirectoryInfoImpl)info).getRoot());
+        OrderEntry[] entries = getOrderEntries().get(infoImpl.getRoot());
         return entries == null ? OrderEntry.EMPTY_ARRAY : entries;
     }
 

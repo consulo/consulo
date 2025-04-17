@@ -51,8 +51,8 @@ public final class DeployToServerConfigurationType<C extends ServerConfiguration
      */
     public @Nonnull ConfigurationFactory getFactoryForType(@Nullable DeploymentSourceType<?> sourceType) {
         ConfigurationFactory result = null;
-        if (sourceType instanceof SingletonDeploymentSourceType &&
-            myServerType.getSingletonDeploymentSourceTypes().contains(sourceType)) {
+        if (sourceType instanceof SingletonDeploymentSourceType
+            && myServerType.getSingletonDeploymentSourceTypes().contains(sourceType)) {
             result = myPerTypeFactories.get(sourceType.getId());
         }
         if (result == null) {

@@ -343,6 +343,7 @@ public class RenameDialog extends RefactoringDialog {
         invokeRefactoring(processor);
     }
 
+    @RequiredReadAction
     protected RenameProcessor createRenameProcessor(String newName) {
         return new RenameProcessor(
             getProject(),
@@ -368,6 +369,7 @@ public class RenameDialog extends RefactoringDialog {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean areButtonsValid() {
         String newName = getNewName();
         return RenameUtil.isValidName(myProject, myPsiElement, newName);

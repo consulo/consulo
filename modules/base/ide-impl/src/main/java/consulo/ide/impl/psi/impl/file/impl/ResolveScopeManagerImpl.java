@@ -100,8 +100,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
                 if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
                     modulesLibraryUsedIn.add(entry.getOwnerModule());
                 }
-                else if (entry instanceof LibraryOrderEntry) {
-                    lib = (LibraryOrderEntry)entry;
+                else if (entry instanceof LibraryOrderEntry lib) {
                     modulesLibraryUsedIn.add(entry.getOwnerModule());
                 }
                 else if (entry instanceof ModuleOrderEntry) {
@@ -143,8 +142,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
 
         VirtualFile vFile;
         PsiFile contextFile;
-        if (element instanceof PsiDirectory) {
-            vFile = ((PsiDirectory)element).getVirtualFile();
+        if (element instanceof PsiDirectory directory) {
+            vFile = directory.getVirtualFile();
             contextFile = null;
         }
         else {
@@ -165,8 +164,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
             if (contextFile == null) {
                 return GlobalSearchScope.allScope(myProject);
             }
-            else if (contextFile instanceof FileResolveScopeProvider) {
-                return ((FileResolveScopeProvider)contextFile).getFileResolveScope();
+            else if (contextFile instanceof FileResolveScopeProvider fileResolveScopeProvider) {
+                return fileResolveScopeProvider.getFileResolveScope();
             }
             vFile = contextFile.getOriginalFile().getVirtualFile();
         }
@@ -208,8 +207,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     private Pair<GlobalSearchScope, VirtualFile> getDefaultResultScopeInfo(@Nonnull PsiElement element) {
         VirtualFile vFile;
         GlobalSearchScope allScope = GlobalSearchScope.allScope(myManager.getProject());
-        if (element instanceof PsiDirectory) {
-            vFile = ((PsiDirectory)element).getVirtualFile();
+        if (element instanceof PsiDirectory directory) {
+            vFile = directory.getVirtualFile();
         }
         else {
             PsiFile containingFile = element.getContainingFile();

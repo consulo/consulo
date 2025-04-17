@@ -339,7 +339,7 @@ public class FindInProjectUtil {
     }
 
     @Nonnull
-    private static String getTitleForScope(@Nonnull FindModel findModel) {
+    private static LocalizeValue getTitleForScope(@Nonnull FindModel findModel) {
         LocalizeValue scopeName;
         if (findModel.isProjectScope()) {
             scopeName = FindLocalize.findScopeProjectTitle();
@@ -354,9 +354,9 @@ public class FindInProjectUtil {
             scopeName = FindLocalize.findScopeDirectoryTitle(findModel.getDirectoryName());
         }
 
-        String result = scopeName.get();
+        LocalizeValue result = scopeName;
         if (findModel.getFileFilter() != null) {
-            result += " " + FindLocalize.findScopeFilesWithMask(findModel.getFileFilter()).get();
+            result = LocalizeValue.localizeTODO(result + " " + FindLocalize.findScopeFilesWithMask(findModel.getFileFilter()));
         }
 
         return result;
@@ -379,10 +379,8 @@ public class FindInProjectUtil {
     }
 
     public static void setupViewPresentation(UsageViewPresentation presentation, boolean toOpenInNewTab, @Nonnull FindModel findModel) {
-        String scope = getTitleForScope(findModel);
-        if (!scope.isEmpty()) {
-            scope = Character.toLowerCase(scope.charAt(0)) + scope.substring(1);
-        }
+        LocalizeValue scope = getTitleForScope(findModel);
+        scope = scope.map((localizeManager, value) -> Character.toLowerCase(value.charAt(0)) + value.substring(1));
         String stringToFind = findModel.getStringToFind();
         presentation.setScopeText(scope);
         if (stringToFind.isEmpty()) {
@@ -396,12 +394,12 @@ public class FindInProjectUtil {
             if (searchContext != FindSearchContext.ANY) {
                 contextText = FindLocalize.findContextPresentationScopeLabel(searchContext.getName());
             }
-            presentation.setTabText(FindLocalize.findUsageViewTabText(stringToFind, contextText).get());
-            presentation.setToolwindowTitle(FindLocalize.findUsageViewToolwindowTitle(stringToFind, scope, contextText).get());
-            presentation.setUsagesString(FindLocalize.findUsageViewUsagesText(stringToFind).get());
-            presentation.setUsagesWord(FindLocalize.occurrence().get());
-            presentation.setCodeUsagesString(FindLocalize.foundOccurrences().get());
-            presentation.setContextText(contextText.get());
+            presentation.setTabText(FindLocalize.findUsageViewTabText(stringToFind, contextText));
+            presentation.setToolwindowTitle(FindLocalize.findUsageViewToolwindowTitle(stringToFind, scope, contextText));
+            presentation.setUsagesString(FindLocalize.findUsageViewUsagesText(stringToFind));
+            presentation.setUsagesWord(FindLocalize.occurrence());
+            presentation.setCodeUsagesString(FindLocalize.foundOccurrences());
+            presentation.setContextText(contextText);
         }
         presentation.setOpenInNewTab(toOpenInNewTab);
         presentation.setCodeUsages(false);

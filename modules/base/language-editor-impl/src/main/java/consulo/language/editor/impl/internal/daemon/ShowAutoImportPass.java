@@ -207,8 +207,8 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
         List<HintAction> hintActions = new SmartList<>();
         for (Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> pair : list) {
             IntentionAction action = pair.getFirst().getAction();
-            if (action instanceof HintAction) {
-                hintActions.add((HintAction)action);
+            if (action instanceof HintAction hintAction) {
+                hintActions.add(hintAction);
             }
         }
         return hintActions;
