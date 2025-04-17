@@ -24,12 +24,13 @@ import consulo.annotation.DeprecationInfo;
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
 public interface Fragment {
-  TextDiffTypeEnum getType();
-  TextRange getRange(FragmentSide side);
+    TextDiffTypeEnum getType();
 
-  Fragment shift(TextRange range1, TextRange range2, int startingLine1, int startingLine2);
+    TextRange getRange(FragmentSide side);
 
-  void highlight(FragmentHighlighter fragmentHighlighter);
+    Fragment shift(TextRange range1, TextRange range2, int startingLine1, int startingLine2);
 
-  Fragment getSubfragmentAt(int offset, FragmentSide side, Condition<Fragment> condition);
+    void highlight(FragmentHighlighter fragmentHighlighter);
+
+    Fragment getSubfragmentAt(int offset, FragmentSide side, Condition<Fragment> condition);
 }

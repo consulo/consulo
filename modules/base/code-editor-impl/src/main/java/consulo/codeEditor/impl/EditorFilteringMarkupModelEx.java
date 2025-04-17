@@ -82,8 +82,21 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
 
     @Nonnull
     @Override
-    public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
-        return new FilteringMarkupIterator<>(myDelegate.overlappingIterator(startOffset, endOffset, onlyRenderedInGutter, onlyRenderedInScrollBar), this::isAvailable);
+    public MarkupIterator<RangeHighlighterEx> overlappingIterator(
+        int startOffset,
+        int endOffset,
+        boolean onlyRenderedInGutter,
+        boolean onlyRenderedInScrollBar
+    ) {
+        return new FilteringMarkupIterator<>(
+            myDelegate.overlappingIterator(
+                startOffset,
+                endOffset,
+                onlyRenderedInGutter,
+                onlyRenderedInScrollBar
+            ),
+            this::isAvailable
+        );
     }
 
     @Override
@@ -113,7 +126,11 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     }
 
     @Override
-    public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleOrColorChanged) {
+    public void fireAttributesChanged(
+        @Nonnull RangeHighlighterEx segmentHighlighter,
+        boolean renderersChanged,
+        boolean fontStyleOrColorChanged
+    ) {
         myDelegate.fireAttributesChanged(segmentHighlighter, renderersChanged, fontStyleOrColorChanged);
     }
 
@@ -134,19 +151,38 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     }
 
     @Override
-    public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
+    public void addRangeHighlighter(
+        @Nonnull RangeHighlighterEx marker,
+        int start,
+        int end,
+        boolean greedyToLeft,
+        boolean greedyToRight,
+        int layer
+    ) {
         myDelegate.addRangeHighlighter(marker, start, end, greedyToLeft, greedyToRight, layer);
     }
 
     @Override
     @Nonnull
-    public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, @Nullable TextAttributes textAttributes, @Nonnull HighlighterTargetArea targetArea) {
+    public RangeHighlighter addRangeHighlighter(
+        int startOffset,
+        int endOffset,
+        int layer,
+        @Nullable TextAttributes textAttributes,
+        @Nonnull HighlighterTargetArea targetArea
+    ) {
         return myDelegate.addRangeHighlighter(startOffset, endOffset, layer, textAttributes, targetArea);
     }
 
     @Nonnull
     @Override
-    public RangeHighlighter addRangeHighlighter(@Nullable TextAttributesKey textAttributesKey, int startOffset, int endOffset, int layer, @Nonnull HighlighterTargetArea targetArea) {
+    public RangeHighlighter addRangeHighlighter(
+        @Nullable TextAttributesKey textAttributesKey,
+        int startOffset,
+        int endOffset,
+        int layer,
+        @Nonnull HighlighterTargetArea targetArea
+    ) {
         return myDelegate.addRangeHighlighter(textAttributesKey, startOffset, endOffset, layer, targetArea);
     }
 
@@ -158,14 +194,24 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
 
     @Override
     @Nonnull
-    public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
-                                                                     int endOffset,
-                                                                     int layer,
-                                                                     TextAttributes textAttributes,
-                                                                     @Nonnull HighlighterTargetArea targetArea,
-                                                                     boolean isPersistent,
-                                                                     Consumer<? super RangeHighlighterEx> changeAttributesAction) {
-        return myDelegate.addRangeHighlighterAndChangeAttributes(startOffset, endOffset, layer, textAttributes, targetArea, isPersistent, changeAttributesAction);
+    public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(
+        int startOffset,
+        int endOffset,
+        int layer,
+        TextAttributes textAttributes,
+        @Nonnull HighlighterTargetArea targetArea,
+        boolean isPersistent,
+        Consumer<? super RangeHighlighterEx> changeAttributesAction
+    ) {
+        return myDelegate.addRangeHighlighterAndChangeAttributes(
+            startOffset,
+            endOffset,
+            layer,
+            textAttributes,
+            targetArea,
+            isPersistent,
+            changeAttributesAction
+        );
     }
 
     @Override
@@ -174,7 +220,10 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     }
 
     @Override
-    public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+    public void changeAttributesInBatch(
+        @Nonnull RangeHighlighterEx highlighter,
+        @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction
+    ) {
         myDelegate.changeAttributesInBatch(highlighter, changeAttributesAction);
     }
 

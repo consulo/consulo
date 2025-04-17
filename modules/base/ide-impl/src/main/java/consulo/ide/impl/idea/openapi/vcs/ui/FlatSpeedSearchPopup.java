@@ -29,70 +29,82 @@ import jakarta.annotation.Nullable;
 
 public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
 
-  public FlatSpeedSearchPopup(String title,
-                              @Nonnull ActionGroup actionGroup,
-                              @Nonnull DataContext dataContext,
-                              @Nullable Condition<AnAction> preselectActionCondition, boolean showDisableActions) {
-    super(title, actionGroup, dataContext, false, false, showDisableActions, false, null, -1, preselectActionCondition, null);
-  }
-
-  protected FlatSpeedSearchPopup(@Nullable WizardPopup parent, @Nonnull ListPopupStep step, @Nonnull DataContext dataContext, @Nullable Object value) {
-    super(parent, step, null, dataContext, null, -1);
-    setParentValue(value);
-  }
-
-  @Override
-  public final boolean shouldBeShowing(Object value) {
-    if (!super.shouldBeShowing(value)) return false;
-    if (!(value instanceof PopupFactoryImpl.ActionItem)) return true;
-    return shouldBeShowing(((PopupFactoryImpl.ActionItem)value).getAction());
-  }
-
-  protected boolean shouldBeShowing(@Nonnull AnAction action) {
-    return getSpeedSearch().isHoldingFilter() || !isSpeedsearchAction(action);
-  }
-
-  @Nonnull
-  public static AnAction createSpeedSearchWrapper(@Nonnull AnAction child) {
-    return new MySpeedSearchAction(child);
-  }
-
-  @Nonnull
-  public static ActionGroup createSpeedSearchActionGroupWrapper(@Nonnull ActionGroup child) {
-    return new MySpeedSearchActionGroup(child);
-  }
-
-  protected static boolean isSpeedsearchAction(@Nonnull AnAction action) {
-    return action instanceof SpeedsearchAction;
-  }
-
-  protected static <T> T getSpecificAction(Object value, @Nonnull Class<T> clazz) {
-    if (value instanceof PopupFactoryImpl.ActionItem) {
-      AnAction action = ((PopupFactoryImpl.ActionItem)value).getAction();
-      if (clazz.isInstance(action)) {
-        return clazz.cast(action);
-      }
-      else if (action instanceof EmptyAction.MyDelegatingActionGroup) {
-        ActionGroup group = ((EmptyAction.MyDelegatingActionGroup)action).getDelegate();
-        return clazz.isInstance(group) ? clazz.cast(group) : null;
-      }
+    public FlatSpeedSearchPopup(
+        String title,
+        @Nonnull ActionGroup actionGroup,
+        @Nonnull DataContext dataContext,
+        @Nullable Condition<AnAction> preselectActionCondition,
+        boolean showDisableActions
+    ) {
+        super(title, actionGroup, dataContext, false, false, showDisableActions, false, null, -1, preselectActionCondition, null);
     }
-    return null;
-  }
 
-  public interface SpeedsearchAction {
-  }
-
-  private static class MySpeedSearchAction extends EmptyAction.MyDelegatingAction implements SpeedsearchAction, DumbAware {
-
-    MySpeedSearchAction(@Nonnull AnAction action) {
-      super(action);
+    protected FlatSpeedSearchPopup(
+        @Nullable WizardPopup parent,
+        @Nonnull ListPopupStep step,
+        @Nonnull DataContext dataContext,
+        @Nullable Object value
+    ) {
+        super(parent, step, null, dataContext, null, -1);
+        setParentValue(value);
     }
-  }
 
-  private static class MySpeedSearchActionGroup extends EmptyAction.MyDelegatingActionGroup implements SpeedsearchAction, DumbAware {
-    MySpeedSearchActionGroup(@Nonnull ActionGroup actionGroup) {
-      super(actionGroup);
+    @Override
+    public final boolean shouldBeShowing(Object value) {
+        if (!super.shouldBeShowing(value)) {
+            return false;
+        }
+        if (!(value instanceof PopupFactoryImpl.ActionItem)) {
+            return true;
+        }
+        return shouldBeShowing(((PopupFactoryImpl.ActionItem)value).getAction());
     }
-  }
+
+    protected boolean shouldBeShowing(@Nonnull AnAction action) {
+        return getSpeedSearch().isHoldingFilter() || !isSpeedsearchAction(action);
+    }
+
+    @Nonnull
+    public static AnAction createSpeedSearchWrapper(@Nonnull AnAction child) {
+        return new MySpeedSearchAction(child);
+    }
+
+    @Nonnull
+    public static ActionGroup createSpeedSearchActionGroupWrapper(@Nonnull ActionGroup child) {
+        return new MySpeedSearchActionGroup(child);
+    }
+
+    protected static boolean isSpeedsearchAction(@Nonnull AnAction action) {
+        return action instanceof SpeedsearchAction;
+    }
+
+    protected static <T> T getSpecificAction(Object value, @Nonnull Class<T> clazz) {
+        if (value instanceof PopupFactoryImpl.ActionItem) {
+            AnAction action = ((PopupFactoryImpl.ActionItem)value).getAction();
+            if (clazz.isInstance(action)) {
+                return clazz.cast(action);
+            }
+            else if (action instanceof EmptyAction.MyDelegatingActionGroup) {
+                ActionGroup group = ((EmptyAction.MyDelegatingActionGroup)action).getDelegate();
+                return clazz.isInstance(group) ? clazz.cast(group) : null;
+            }
+        }
+        return null;
+    }
+
+    public interface SpeedsearchAction {
+    }
+
+    private static class MySpeedSearchAction extends EmptyAction.MyDelegatingAction implements SpeedsearchAction, DumbAware {
+
+        MySpeedSearchAction(@Nonnull AnAction action) {
+            super(action);
+        }
+    }
+
+    private static class MySpeedSearchActionGroup extends EmptyAction.MyDelegatingActionGroup implements SpeedsearchAction, DumbAware {
+        MySpeedSearchActionGroup(@Nonnull ActionGroup actionGroup) {
+            super(actionGroup);
+        }
+    }
 }

@@ -869,15 +869,15 @@ public class DiffImplUtil {
             CommandProcessor.getInstance().<R>newCommand()
                 .inWriteAction();
 
-            return ((WrappableRunnableCommandBuilder<R, ?>)commandBuilder).innerWrap(runnable -> {
-                CommandDescriptor descriptor = commandBuilder.build(runnable);
-                if (!makeWritable(descriptor.project(), descriptor.document())) {
-                    VirtualFile file = FileDocumentManager.getInstance().getFile(descriptor.document());
-                    LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
-                    return;
-                }
-                runnable.run();
-            });
+        return ((WrappableRunnableCommandBuilder<R, ?>)commandBuilder).innerWrap(runnable -> {
+            CommandDescriptor descriptor = commandBuilder.build(runnable);
+            if (!makeWritable(descriptor.project(), descriptor.document())) {
+                VirtualFile file = FileDocumentManager.getInstance().getFile(descriptor.document());
+                LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
+                return;
+            }
+            runnable.run();
+        });
     }
 
     @Deprecated(forRemoval = true)

@@ -27,76 +27,78 @@ import consulo.util.lang.function.Condition;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 public abstract class ToolWindowManagerEx extends ToolWindowManager {
-  @RequiredUIAccess
-  public abstract void initToolWindow(@Nonnull ToolWindowFactory toolWindowFactory);
+    @RequiredUIAccess
+    public abstract void initToolWindow(@Nonnull ToolWindowFactory toolWindowFactory);
 
-  public static ToolWindowManagerEx getInstanceEx(final Project project) {
-    return (ToolWindowManagerEx)getInstance(project);
-  }
+    public static ToolWindowManagerEx getInstanceEx(final Project project) {
+        return (ToolWindowManagerEx)getInstance(project);
+    }
 
-  @Deprecated
-  @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
-  public abstract void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l);
+    @Deprecated
+    @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
+    public abstract void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l);
 
-  @Deprecated
-  @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
-  public abstract void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l, @Nonnull Disposable parentDisposable);
+    @Deprecated
+    @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
+    public abstract void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l, @Nonnull Disposable parentDisposable);
 
-  @Deprecated
-  @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
-  public abstract void removeToolWindowManagerListener(@Nonnull ToolWindowManagerListener l);
+    @Deprecated
+    @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
+    public abstract void removeToolWindowManagerListener(@Nonnull ToolWindowManagerListener l);
 
-  /**
-   * @return <code>ID</code> of tool window that was activated last time.
-   */
-  @Nullable
-  @RequiredUIAccess
-  public String getLastActiveToolWindowId() {
-    return getLastActiveToolWindowId(null);
-  }
+    /**
+     * @return <code>ID</code> of tool window that was activated last time.
+     */
+    @Nullable
+    @RequiredUIAccess
+    public String getLastActiveToolWindowId() {
+        return getLastActiveToolWindowId(null);
+    }
 
-  /**
-   * @return layout of tool windows.
-   */
-  @RequiredUIAccess
-  @Nonnull
-  public abstract ToolWindowLayout getLayout();
+    /**
+     * @return layout of tool windows.
+     */
+    @RequiredUIAccess
+    @Nonnull
+    public abstract ToolWindowLayout getLayout();
 
-  public abstract void setLayoutToRestoreLater(ToolWindowLayout layout);
+    public abstract void setLayoutToRestoreLater(ToolWindowLayout layout);
 
-  public abstract ToolWindowLayout getLayoutToRestoreLater();
+    public abstract ToolWindowLayout getLayoutToRestoreLater();
 
-  /**
-   * Copied <code>layout</code> into internal layout and rearranges tool windows.
-   */
-  @RequiredUIAccess
-  public abstract void setLayout(@Nonnull ToolWindowLayout layout);
+    /**
+     * Copied <code>layout</code> into internal layout and rearranges tool windows.
+     */
+    @RequiredUIAccess
+    public abstract void setLayout(@Nonnull ToolWindowLayout layout);
 
-  public abstract void clearSideStack();
+    public abstract void clearSideStack();
 
-  @RequiredUIAccess
-  public abstract void hideToolWindow(@Nonnull String id, boolean hideSide);
+    @RequiredUIAccess
+    public abstract void hideToolWindow(@Nonnull String id, boolean hideSide);
 
-  @RequiredUIAccess
-  public void hideToolWindow(final String id, final boolean hideSide, final boolean moveFocus) {
-    hideToolWindow(id, hideSide);
-  }
+    @RequiredUIAccess
+    public void hideToolWindow(final String id, final boolean hideSide, final boolean moveFocus) {
+        hideToolWindow(id, hideSide);
+    }
 
-  public abstract List<String> getIdsOn(@Nonnull ToolWindowAnchor anchor);
+    public abstract List<String> getIdsOn(@Nonnull ToolWindowAnchor anchor);
 
-  // TODO [VISTALL] AWT & Swing dependency
-  // region AWT & Swing dependency
-  /**
-   * @return <code>ID</code> of tool window which was last activated among tool windows satisfying the current condition
-   */
-  @Nullable
-  @RequiredUIAccess
-  @Deprecated
-  public String getLastActiveToolWindowId(@Nullable Condition<javax.swing.JComponent> condition) {
-    return null;
-  }
-  // endregion
+    // TODO [VISTALL] AWT & Swing dependency
+    // region AWT & Swing dependency
+
+    /**
+     * @return <code>ID</code> of tool window which was last activated among tool windows satisfying the current condition
+     */
+    @Nullable
+    @RequiredUIAccess
+    @Deprecated
+    public String getLastActiveToolWindowId(@Nullable Condition<javax.swing.JComponent> condition) {
+        return null;
+    }
+    // endregion
 }

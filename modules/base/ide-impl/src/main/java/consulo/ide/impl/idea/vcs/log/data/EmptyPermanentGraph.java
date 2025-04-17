@@ -30,41 +30,44 @@ import java.util.Set;
 
 public class EmptyPermanentGraph implements PermanentGraph<Integer> {
 
-  private static final PermanentGraph<Integer> INSTANCE = new EmptyPermanentGraph();
+    private static final PermanentGraph<Integer> INSTANCE = new EmptyPermanentGraph();
 
-  @Nonnull
-  public static PermanentGraph<Integer> getInstance() {
-    return INSTANCE;
-  }
+    @Nonnull
+    public static PermanentGraph<Integer> getInstance() {
+        return INSTANCE;
+    }
 
-  @Nonnull
-  @Override
-  public VisibleGraph<Integer> createVisibleGraph(@Nonnull SortType sortType, @Nullable Set<Integer> headsOfVisibleBranches,
-                                                  @Nullable Set<Integer> filter) {
-    return EmptyVisibleGraph.getInstance();
-  }
+    @Nonnull
+    @Override
+    public VisibleGraph<Integer> createVisibleGraph(
+        @Nonnull SortType sortType,
+        @Nullable Set<Integer> headsOfVisibleBranches,
+        @Nullable Set<Integer> filter
+    ) {
+        return EmptyVisibleGraph.getInstance();
+    }
 
-  @Nonnull
-  @Override
-  public List<GraphCommit<Integer>> getAllCommits() {
-    return Collections.emptyList();
-  }
+    @Nonnull
+    @Override
+    public List<GraphCommit<Integer>> getAllCommits() {
+        return Collections.emptyList();
+    }
 
-  @Nonnull
-  @Override
-  public List<Integer> getChildren(@Nonnull Integer commit) {
-    return Collections.emptyList();
-  }
+    @Nonnull
+    @Override
+    public List<Integer> getChildren(@Nonnull Integer commit) {
+        return Collections.emptyList();
+    }
 
-  @Nonnull
-  @Override
-  public Set<Integer> getContainingBranches(@Nonnull Integer commit) {
-    return Collections.emptySet();
-  }
+    @Nonnull
+    @Override
+    public Set<Integer> getContainingBranches(@Nonnull Integer commit) {
+        return Collections.emptySet();
+    }
 
-  @Nonnull
-  @Override
-  public Condition<Integer> getContainedInBranchCondition(@Nonnull Collection<Integer> currentBranchHead) {
-    return Conditions.alwaysFalse();
-  }
+    @Nonnull
+    @Override
+    public Condition<Integer> getContainedInBranchCondition(@Nonnull Collection<Integer> currentBranchHead) {
+        return Conditions.alwaysFalse();
+    }
 }

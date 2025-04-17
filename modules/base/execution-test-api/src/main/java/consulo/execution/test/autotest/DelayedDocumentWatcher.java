@@ -42,135 +42,141 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class DelayedDocumentWatcher implements AutoTestWatcher {
+    // All instance fields are be accessed from EDT
+    private final Project myProject;
+    private final Alarm myAlarm;
+    private final int myDelayMillis;
+    private final Consumer<Integer> myModificationStampConsumer;
+    private final Condition<VirtualFile> myChangedFileFilter;
+    private final MyDocumentAdapter myListener;
+    private final Runnable myAlarmRunnable;
 
-  // All instance fields are be accessed from EDT
-  private final Project myProject;
-  private final Alarm myAlarm;
-  private final int myDelayMillis;
-  private final Consumer<Integer> myModificationStampConsumer;
-  private final Condition<VirtualFile> myChangedFileFilter;
-  private final MyDocumentAdapter myListener;
-  private final Runnable myAlarmRunnable;
+    private final Set<VirtualFile> myChangedFiles = new HashSet<>();
+    private boolean myDocumentSavingInProgress = false;
+    private MessageBusConnection myConnection;
+    private int myModificationStamp = 0;
+    private Disposable myListenerDisposable;
 
-  private final Set<VirtualFile> myChangedFiles = new HashSet<>();
-  private boolean myDocumentSavingInProgress = false;
-  private MessageBusConnection myConnection;
-  private int myModificationStamp = 0;
-  private Disposable myListenerDisposable;
+    public DelayedDocumentWatcher(
+        @Nonnull Project project,
+        int delayMillis,
+        @Nonnull Consumer<Integer> modificationStampConsumer,
+        @Nullable Condition<VirtualFile> changedFileFilter
+    ) {
+        myProject = project;
+        myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
+        myDelayMillis = delayMillis;
+        myModificationStampConsumer = modificationStampConsumer;
+        myChangedFileFilter = changedFileFilter;
+        myListener = new MyDocumentAdapter();
+        myAlarmRunnable = new MyRunnable();
+    }
 
-  public DelayedDocumentWatcher(@Nonnull Project project, int delayMillis, @Nonnull Consumer<Integer> modificationStampConsumer, @Nullable Condition<VirtualFile> changedFileFilter) {
-    myProject = project;
-    myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
-    myDelayMillis = delayMillis;
-    myModificationStampConsumer = modificationStampConsumer;
-    myChangedFileFilter = changedFileFilter;
-    myListener = new MyDocumentAdapter();
-    myAlarmRunnable = new MyRunnable();
-  }
+    @Nonnull
+    public Project getProject() {
+        return myProject;
+    }
 
-  @Nonnull
-  public Project getProject() {
-    return myProject;
-  }
-
-  public void activate() {
-    if (myConnection == null) {
-      myListenerDisposable = Disposable.newDisposable();
-      Disposer.register(myProject, myListenerDisposable);
-      EditorFactory.getInstance().getEventMulticaster().addDocumentListener(myListener, myListenerDisposable);
-      myConnection = ApplicationManager.getApplication().getMessageBus().connect(myProject);
-      myConnection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
-        @Override
-        public void beforeAllDocumentsSaving() {
-          myDocumentSavingInProgress = true;
-          ApplicationManager.getApplication().invokeLater(() -> myDocumentSavingInProgress = false, Application.get().getAnyModalityState());
+    public void activate() {
+        if (myConnection == null) {
+            myListenerDisposable = Disposable.newDisposable();
+            Disposer.register(myProject, myListenerDisposable);
+            EditorFactory.getInstance().getEventMulticaster().addDocumentListener(myListener, myListenerDisposable);
+            myConnection = ApplicationManager.getApplication().getMessageBus().connect(myProject);
+            myConnection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
+                @Override
+                public void beforeAllDocumentsSaving() {
+                    myDocumentSavingInProgress = true;
+                    ApplicationManager.getApplication()
+                        .invokeLater(() -> myDocumentSavingInProgress = false, Application.get().getAnyModalityState());
+                }
+            });
         }
-      });
     }
-  }
 
-  public void deactivate() {
-    if (myConnection != null) {
-      if (myListenerDisposable != null) {
-        Disposer.dispose(myListenerDisposable);
-        myListenerDisposable = null;
-      }
-      myConnection.disconnect();
-      myConnection = null;
+    public void deactivate() {
+        if (myConnection != null) {
+            if (myListenerDisposable != null) {
+                Disposer.dispose(myListenerDisposable);
+                myListenerDisposable = null;
+            }
+            myConnection.disconnect();
+            myConnection = null;
+        }
     }
-  }
 
-  public boolean isUpToDate(int modificationStamp) {
-    return myModificationStamp == modificationStamp;
-  }
+    public boolean isUpToDate(int modificationStamp) {
+        return myModificationStamp == modificationStamp;
+    }
 
-  private class MyDocumentAdapter extends DocumentAdapter {
-    @Override
-    public void documentChanged(DocumentEvent event) {
-      if (myDocumentSavingInProgress) {
+    private class MyDocumentAdapter extends DocumentAdapter {
+        @Override
+        public void documentChanged(DocumentEvent event) {
+            if (myDocumentSavingInProgress) {
         /* When {@link FileDocumentManager#saveAllDocuments} is called,
            {@link consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper} can change a document.
            These needless 'documentChanged' events should be filtered out.
          */
-        return;
-      }
-      final Document document = event.getDocument();
-      final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-      if (file == null) {
-        return;
-      }
-      if (!myChangedFiles.contains(file)) {
-        if (ProjectCoreUtil.isProjectOrWorkspaceFile(file)) {
-          return;
-        }
-        if (myChangedFileFilter != null && !myChangedFileFilter.value(file)) {
-          return;
-        }
-
-        myChangedFiles.add(file);
-      }
-
-      myAlarm.cancelRequest(myAlarmRunnable);
-      myAlarm.addRequest(myAlarmRunnable, myDelayMillis);
-      myModificationStamp++;
-    }
-  }
-
-  private class MyRunnable implements Runnable {
-    @Override
-    public void run() {
-      final int oldModificationStamp = myModificationStamp;
-      asyncCheckErrors(myChangedFiles, errorsFound -> {
-        if (myModificationStamp != oldModificationStamp) {
-          // 'documentChanged' event was raised during async checking files for errors
-          // Do nothing in that case, this method will be invoked subsequently.
-          return;
-        }
-        if (errorsFound) {
-          // Do nothing, if some changed file has syntax errors.
-          // This method will be invoked subsequently, when syntax errors are fixed.
-          return;
-        }
-        myChangedFiles.clear();
-        myModificationStampConsumer.accept(myModificationStamp);
-      });
-    }
-  }
-
-  private void asyncCheckErrors(@Nonnull final Collection<VirtualFile> files, @Nonnull final Consumer<Boolean> errorsFoundConsumer) {
-    ApplicationManager.getApplication().executeOnPooledThread(() -> {
-      final boolean errorsFound = ApplicationManager.getApplication().runReadAction(new Supplier<Boolean>() {
-        @Override
-        public Boolean get() {
-          for (VirtualFile file : files) {
-            if (PsiErrorElementUtil.hasErrors(myProject, file)) {
-              return true;
+                return;
             }
-          }
-          return false;
+            final Document document = event.getDocument();
+            final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+            if (file == null) {
+                return;
+            }
+            if (!myChangedFiles.contains(file)) {
+                if (ProjectCoreUtil.isProjectOrWorkspaceFile(file)) {
+                    return;
+                }
+                if (myChangedFileFilter != null && !myChangedFileFilter.value(file)) {
+                    return;
+                }
+
+                myChangedFiles.add(file);
+            }
+
+            myAlarm.cancelRequest(myAlarmRunnable);
+            myAlarm.addRequest(myAlarmRunnable, myDelayMillis);
+            myModificationStamp++;
         }
-      });
-      ApplicationManager.getApplication().invokeLater(() -> errorsFoundConsumer.accept(errorsFound), Application.get().getAnyModalityState());
-    });
-  }
+    }
+
+    private class MyRunnable implements Runnable {
+        @Override
+        public void run() {
+            final int oldModificationStamp = myModificationStamp;
+            asyncCheckErrors(myChangedFiles, errorsFound -> {
+                if (myModificationStamp != oldModificationStamp) {
+                    // 'documentChanged' event was raised during async checking files for errors
+                    // Do nothing in that case, this method will be invoked subsequently.
+                    return;
+                }
+                if (errorsFound) {
+                    // Do nothing, if some changed file has syntax errors.
+                    // This method will be invoked subsequently, when syntax errors are fixed.
+                    return;
+                }
+                myChangedFiles.clear();
+                myModificationStampConsumer.accept(myModificationStamp);
+            });
+        }
+    }
+
+    private void asyncCheckErrors(@Nonnull final Collection<VirtualFile> files, @Nonnull final Consumer<Boolean> errorsFoundConsumer) {
+        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            final boolean errorsFound = ApplicationManager.getApplication().runReadAction(new Supplier<Boolean>() {
+                @Override
+                public Boolean get() {
+                    for (VirtualFile file : files) {
+                        if (PsiErrorElementUtil.hasErrors(myProject, file)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            });
+            ApplicationManager.getApplication()
+                .invokeLater(() -> errorsFoundConsumer.accept(errorsFound), Application.get().getAnyModalityState());
+        });
+    }
 }

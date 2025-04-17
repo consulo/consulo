@@ -18,6 +18,8 @@ public abstract class RemoteServersView {
 
     public abstract void showDeployment(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName);
 
-    public abstract void registerTreeNodeSelector(@Nonnull ServersTreeNodeSelector selector,
-                                                  @Nonnull Condition<ServerConnection<?>> condition);
+    public abstract void registerTreeNodeSelector(
+        @Nonnull ServersTreeNodeSelector selector,
+        @Nonnull Condition<ServerConnection<?>> condition
+    );
 }

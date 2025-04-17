@@ -26,30 +26,34 @@ import java.util.Iterator;
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
 public interface FragmentList {
-  FragmentList shift(TextRange rangeShift1, TextRange rangeShift2,
-                            int startLine1, int startLine2);
+    FragmentList shift(
+        TextRange rangeShift1,
+        TextRange rangeShift2,
+        int startLine1,
+        int startLine2
+    );
 
-  FragmentList EMPTY = new FragmentList() {
-    public FragmentList shift(TextRange rangeShift1, TextRange rangeShift2, int startLine1, int startLine2) {
-      return EMPTY;
-    }
+    FragmentList EMPTY = new FragmentList() {
+        public FragmentList shift(TextRange rangeShift1, TextRange rangeShift2, int startLine1, int startLine2) {
+            return EMPTY;
+        }
 
-    public boolean isEmpty() {
-      return true;
-    }
+        public boolean isEmpty() {
+            return true;
+        }
 
-    public Iterator<Fragment> iterator() {
-      return EmptyIterator.getInstance();
-    }
+        public Iterator<Fragment> iterator() {
+            return EmptyIterator.getInstance();
+        }
 
-    public Fragment getFragmentAt(int offset, FragmentSide side, Condition<Fragment> condition) {
-      return null;
-    }
-  };
+        public Fragment getFragmentAt(int offset, FragmentSide side, Condition<Fragment> condition) {
+            return null;
+        }
+    };
 
-  boolean isEmpty();
+    boolean isEmpty();
 
-  Iterator<Fragment> iterator();
+    Iterator<Fragment> iterator();
 
-  Fragment getFragmentAt(int offset, FragmentSide side, Condition<Fragment> condition);
+    Fragment getFragmentAt(int offset, FragmentSide side, Condition<Fragment> condition);
 }

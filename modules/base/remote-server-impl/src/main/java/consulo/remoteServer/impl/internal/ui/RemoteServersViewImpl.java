@@ -43,8 +43,10 @@ public class RemoteServersViewImpl extends RemoteServersView {
     }
 
     @Override
-    public void registerTreeNodeSelector(@Nonnull ServersTreeNodeSelector selector,
-                                         @Nonnull Condition<ServerConnection<?>> condition) {
+    public void registerTreeNodeSelector(
+        @Nonnull ServersTreeNodeSelector selector,
+        @Nonnull Condition<ServerConnection<?>> condition
+    ) {
         mySelectors.add(Pair.create(selector, condition));
     }
 }

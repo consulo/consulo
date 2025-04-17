@@ -28,49 +28,60 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class LogFilesManager {
-  private final LogConsoleManager myManager;
+    private final LogConsoleManager myManager;
 
-  public LogFilesManager(@Nonnull LogConsoleManager manager) {
-    myManager = manager;
-  }
-
-  public void addLogConsoles(@Nonnull RunConfigurationBase runConfiguration, @Nullable ProcessHandler startedProcess) {
-    for (LogFileOptions logFileOptions : runConfiguration.getAllLogFiles()) {
-      if (logFileOptions.isEnabled()) {
-        addConfigurationConsoles(logFileOptions, Conditions.<String>alwaysTrue(), logFileOptions.getPaths(), runConfiguration);
-      }
-    }
-    runConfiguration.createAdditionalTabComponents(myManager, startedProcess);
-  }
-
-  private void addConfigurationConsoles(@Nonnull LogFileOptions logFile, @Nonnull Condition<String> shouldInclude, @Nonnull Set<String> paths, @Nonnull RunConfigurationBase runConfiguration) {
-    if (paths.isEmpty()) {
-      return;
+    public LogFilesManager(@Nonnull LogConsoleManager manager) {
+        myManager = manager;
     }
 
-    TreeMap<String, String> titleToPath = new TreeMap<String, String>();
-    if (paths.size() == 1) {
-      String path = paths.iterator().next();
-      if (shouldInclude.value(path)) {
-        titleToPath.put(logFile.getName(), path);
-      }
-    }
-    else {
-      for (String path : paths) {
-        if (shouldInclude.value(path)) {
-          String title = new File(path).getName();
-          if (titleToPath.containsKey(title)) {
-            title = path;
-          }
-          titleToPath.put(title, path);
+    public void addLogConsoles(@Nonnull RunConfigurationBase runConfiguration, @Nullable ProcessHandler startedProcess) {
+        for (LogFileOptions logFileOptions : runConfiguration.getAllLogFiles()) {
+            if (logFileOptions.isEnabled()) {
+                addConfigurationConsoles(logFileOptions, Conditions.<String>alwaysTrue(), logFileOptions.getPaths(), runConfiguration);
+            }
         }
-      }
+        runConfiguration.createAdditionalTabComponents(myManager, startedProcess);
     }
 
-    for (String title : titleToPath.keySet()) {
-      String path = titleToPath.get(title);
-      assert path != null;
-      myManager.addLogConsole(title, path, logFile.getCharset(), logFile.isSkipContent() ? new File(path).length() : 0, runConfiguration);
+    private void addConfigurationConsoles(
+        @Nonnull LogFileOptions logFile,
+        @Nonnull Condition<String> shouldInclude,
+        @Nonnull Set<String> paths,
+        @Nonnull RunConfigurationBase runConfiguration
+    ) {
+        if (paths.isEmpty()) {
+            return;
+        }
+
+        TreeMap<String, String> titleToPath = new TreeMap<String, String>();
+        if (paths.size() == 1) {
+            String path = paths.iterator().next();
+            if (shouldInclude.value(path)) {
+                titleToPath.put(logFile.getName(), path);
+            }
+        }
+        else {
+            for (String path : paths) {
+                if (shouldInclude.value(path)) {
+                    String title = new File(path).getName();
+                    if (titleToPath.containsKey(title)) {
+                        title = path;
+                    }
+                    titleToPath.put(title, path);
+                }
+            }
+        }
+
+        for (String title : titleToPath.keySet()) {
+            String path = titleToPath.get(title);
+            assert path != null;
+            myManager.addLogConsole(
+                title,
+                path,
+                logFile.getCharset(),
+                logFile.isSkipContent() ? new File(path).length() : 0,
+                runConfiguration
+            );
+        }
     }
-  }
 }
