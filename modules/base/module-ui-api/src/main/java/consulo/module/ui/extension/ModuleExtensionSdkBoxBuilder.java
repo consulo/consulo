@@ -26,158 +26,164 @@ import consulo.module.ui.awt.SdkComboBox;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.image.Image;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.util.Collections;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 15.03.2015
+ * @since 2015-03-15
  */
 public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
-  @Nonnull
-  public static <T extends MutableModuleExtensionWithSdk<?>> ModuleExtensionSdkBoxBuilder createAndDefine(@Nonnull T extension, @Nullable Runnable updater) {
-    ModuleExtensionSdkBoxBuilder<T> builder = create(extension, updater);
-    builder.sdkTypeClass(extension.getSdkTypeClass());
-    builder.sdkPointerFunc(dom -> dom.getInheritableSdk());
-    return builder;
-  }
-
-  @Nonnull
-  public static <T extends MutableModuleExtension<?>> ModuleExtensionSdkBoxBuilder<T> create(@Nonnull T extension, @Nullable Runnable updater) {
-    return new ModuleExtensionSdkBoxBuilder<>(extension).laterUpdater(updater);
-  }
-
-  @Nonnull
-  private Function<T, MutableModuleInheritableNamedPointer<Sdk>> mySdkPointerFunction;
-  @Nonnull
-  private Condition<SdkTypeId> mySdkFilter = Conditions.alwaysTrue();
-
-  private final T myMutableModuleExtension;
-
-  private String myLabelText = "SDK";
-
-  private Image myNullItemIcon = null;
-
-  private String myNullItemName = ProjectBundle.message("sdk.combo.box.item");
-
-  private Runnable myLaterUpdater;
-
-  private BiConsumer<Sdk, Sdk> myPostConsumer;
-
-  private ModuleExtensionSdkBoxBuilder(@Nonnull T mutableModuleExtension) {
-    myMutableModuleExtension = mutableModuleExtension;
-  }
-
-  @Nonnull
-  @UsedInPlugin
-  public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@Nonnull final Class<? extends SdkTypeId> clazz) {
-    mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
-    return this;
-  }
-
-  @Nonnull
-  @UsedInPlugin
-  public ModuleExtensionSdkBoxBuilder<T> sdkTypes(@Nonnull final Set<SdkType> sdkTypes) {
-    mySdkFilter = sdkTypes::contains;
-    return this;
-  }
-
-  @Nonnull
-  @UsedInPlugin
-  public ModuleExtensionSdkBoxBuilder<T> sdkType(@Nonnull final SdkType sdkType) {
-    return sdkTypes(Collections.singleton(sdkType));
-  }
-
-  @Nonnull
-  @UsedInPlugin
-  public ModuleExtensionSdkBoxBuilder<T> sdkPointerFunc(@Nonnull Function<T, MutableModuleInheritableNamedPointer<Sdk>> function) {
-    mySdkPointerFunction = function;
-    return this;
-  }
-
-  @Nonnull
-  @UsedInPlugin
-  public ModuleExtensionSdkBoxBuilder<T> labelText(@Nonnull String labelText) {
-    myLabelText = labelText;
-    return this;
-  }
-
-  @Nonnull
-  @UsedInPlugin
-  public ModuleExtensionSdkBoxBuilder<T> laterUpdater(@Nullable Runnable runnable) {
-    myLaterUpdater = runnable;
-    return this;
-  }
-
-  @Nonnull
-  @UsedInPlugin
-  public ModuleExtensionSdkBoxBuilder<T> postConsumer(@Nonnull BiConsumer<Sdk, Sdk> consumer) {
-    myPostConsumer = consumer;
-    return this;
-  }
-
-  @Nonnull
-  @UsedInPlugin
-  public ModuleExtensionSdkBoxBuilder<T> nullItem(@Nullable String name, @Nullable Image icon) {
-    myNullItemName = name;
-    myNullItemIcon = icon;
-    return this;
-  }
-
-  @Nonnull
-  @RequiredReadAction
-  public JComponent build() {
-    final SdkModel projectSdksModel = SdkModelFactory.getInstance().getOrCreateModel();
-
-    final SdkComboBox comboBox = new SdkComboBox(projectSdksModel, mySdkFilter, null, myNullItemName, myNullItemIcon);
-
-    comboBox.insertModuleItems(myMutableModuleExtension, mySdkPointerFunction);
-
-    final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = mySdkPointerFunction.apply(myMutableModuleExtension);
-    assert inheritableSdk != null;
-    if (inheritableSdk.isNull()) {
-      comboBox.setSelectedNoneSdk();
-    }
-    else {
-      final String sdkInheritModuleName = inheritableSdk.getModuleName();
-      if (sdkInheritModuleName != null) {
-        final Module sdkInheritModule = inheritableSdk.getModule();
-        if (sdkInheritModule == null) {
-          comboBox.addInvalidModuleItem(sdkInheritModuleName);
-        }
-        comboBox.setSelectedModule(sdkInheritModuleName);
-      }
-      else {
-        comboBox.setSelectedSdk(inheritableSdk.getName());
-      }
+    @Nonnull
+    public static <T extends MutableModuleExtensionWithSdk<?>> ModuleExtensionSdkBoxBuilder createAndDefine(
+        @Nonnull T extension,
+        @Nullable Runnable updater
+    ) {
+        ModuleExtensionSdkBoxBuilder<T> builder = create(extension, updater);
+        builder.sdkTypeClass(extension.getSdkTypeClass());
+        builder.sdkPointerFunc(dom -> dom.getInheritableSdk());
+        return builder;
     }
 
-    comboBox.addItemListener(e -> {
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        Sdk oldValue = inheritableSdk.get();
+    @Nonnull
+    public static <T extends MutableModuleExtension<?>> ModuleExtensionSdkBoxBuilder<T> create(
+        @Nonnull T extension,
+        @Nullable Runnable updater
+    ) {
+        return new ModuleExtensionSdkBoxBuilder<>(extension).laterUpdater(updater);
+    }
 
-        inheritableSdk.set(comboBox.getSelectedModuleName(), comboBox.getSelectedSdkName());
+    @Nonnull
+    private Function<T, MutableModuleInheritableNamedPointer<Sdk>> mySdkPointerFunction;
+    @Nonnull
+    private Predicate<SdkTypeId> mySdkFilter = Conditions.alwaysTrue();
 
-        if (myPostConsumer != null) {
-          Sdk sdk = inheritableSdk.get();
-          myPostConsumer.accept(oldValue, sdk);
+    private final T myMutableModuleExtension;
+
+    private String myLabelText = "SDK";
+
+    private Image myNullItemIcon = null;
+
+    private String myNullItemName = ProjectBundle.message("sdk.combo.box.item");
+
+    private Runnable myLaterUpdater;
+
+    private BiConsumer<Sdk, Sdk> myPostConsumer;
+
+    private ModuleExtensionSdkBoxBuilder(@Nonnull T mutableModuleExtension) {
+        myMutableModuleExtension = mutableModuleExtension;
+    }
+
+    @Nonnull
+    @UsedInPlugin
+    public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@Nonnull final Class<? extends SdkTypeId> clazz) {
+        mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
+        return this;
+    }
+
+    @Nonnull
+    @UsedInPlugin
+    public ModuleExtensionSdkBoxBuilder<T> sdkTypes(@Nonnull final Set<SdkType> sdkTypes) {
+        mySdkFilter = sdkTypes::contains;
+        return this;
+    }
+
+    @Nonnull
+    @UsedInPlugin
+    public ModuleExtensionSdkBoxBuilder<T> sdkType(@Nonnull final SdkType sdkType) {
+        return sdkTypes(Collections.singleton(sdkType));
+    }
+
+    @Nonnull
+    @UsedInPlugin
+    public ModuleExtensionSdkBoxBuilder<T> sdkPointerFunc(@Nonnull Function<T, MutableModuleInheritableNamedPointer<Sdk>> function) {
+        mySdkPointerFunction = function;
+        return this;
+    }
+
+    @Nonnull
+    @UsedInPlugin
+    public ModuleExtensionSdkBoxBuilder<T> labelText(@Nonnull String labelText) {
+        myLabelText = labelText;
+        return this;
+    }
+
+    @Nonnull
+    @UsedInPlugin
+    public ModuleExtensionSdkBoxBuilder<T> laterUpdater(@Nullable Runnable runnable) {
+        myLaterUpdater = runnable;
+        return this;
+    }
+
+    @Nonnull
+    @UsedInPlugin
+    public ModuleExtensionSdkBoxBuilder<T> postConsumer(@Nonnull BiConsumer<Sdk, Sdk> consumer) {
+        myPostConsumer = consumer;
+        return this;
+    }
+
+    @Nonnull
+    @UsedInPlugin
+    public ModuleExtensionSdkBoxBuilder<T> nullItem(@Nullable String name, @Nullable Image icon) {
+        myNullItemName = name;
+        myNullItemIcon = icon;
+        return this;
+    }
+
+    @Nonnull
+    @RequiredReadAction
+    public JComponent build() {
+        final SdkModel projectSdksModel = SdkModelFactory.getInstance().getOrCreateModel();
+
+        final SdkComboBox comboBox = new SdkComboBox(projectSdksModel, mySdkFilter, null, myNullItemName, myNullItemIcon);
+
+        comboBox.insertModuleItems(myMutableModuleExtension, mySdkPointerFunction);
+
+        final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = mySdkPointerFunction.apply(myMutableModuleExtension);
+        assert inheritableSdk != null;
+        if (inheritableSdk.isNull()) {
+            comboBox.setSelectedNoneSdk();
+        }
+        else {
+            final String sdkInheritModuleName = inheritableSdk.getModuleName();
+            if (sdkInheritModuleName != null) {
+                final Module sdkInheritModule = inheritableSdk.getModule();
+                if (sdkInheritModule == null) {
+                    comboBox.addInvalidModuleItem(sdkInheritModuleName);
+                }
+                comboBox.setSelectedModule(sdkInheritModuleName);
+            }
+            else {
+                comboBox.setSelectedSdk(inheritableSdk.getName());
+            }
         }
 
-        if (myLaterUpdater != null) {
-          SwingUtilities.invokeLater(myLaterUpdater);
-        }
-      }
-    });
+        comboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                Sdk oldValue = inheritableSdk.get();
 
-    return LabeledComponent.left(comboBox, myLabelText);
-  }
+                inheritableSdk.set(comboBox.getSelectedModuleName(), comboBox.getSelectedSdkName());
+
+                if (myPostConsumer != null) {
+                    Sdk sdk = inheritableSdk.get();
+                    myPostConsumer.accept(oldValue, sdk);
+                }
+
+                if (myLaterUpdater != null) {
+                    SwingUtilities.invokeLater(myLaterUpdater);
+                }
+            }
+        });
+
+        return LabeledComponent.left(comboBox, myLabelText);
+    }
 }

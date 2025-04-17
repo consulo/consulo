@@ -15,51 +15,62 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.fragments;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.diff.impl.highlighting.FragmentSide;
 import consulo.ide.impl.idea.openapi.diff.impl.util.TextDiffTypeEnum;
-import consulo.util.lang.function.Condition;
-import consulo.document.util.TextRange;
-import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
+
+import java.util.function.Predicate;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
 public class InlineFragment implements Fragment {
-  private static final Logger LOG = Logger.getInstance(InlineFragment.class);
-  private final TextRange myRange1;
-  private final TextRange myRange2;
-  private final TextDiffTypeEnum myType;
+    private static final Logger LOG = Logger.getInstance(InlineFragment.class);
+    private final TextRange myRange1;
+    private final TextRange myRange2;
+    private final TextDiffTypeEnum myType;
 
-  public InlineFragment(TextDiffTypeEnum type, TextRange range1, TextRange range2) {
-    myType = type;
-    myRange1 = range1;
-    myRange2 = range2;
-  }
+    public InlineFragment(TextDiffTypeEnum type, TextRange range1, TextRange range2) {
+        myType = type;
+        myRange1 = range1;
+        myRange2 = range2;
+    }
 
-  public TextDiffTypeEnum getType() {
-    return myType;
-  }
+    @Override
+    public TextDiffTypeEnum getType() {
+        return myType;
+    }
 
-  public TextRange getRange(FragmentSide side) {
-    if (side == FragmentSide.SIDE1) return myRange1;
-    if (side == FragmentSide.SIDE2) return myRange2;
-    throw new IllegalArgumentException(String.valueOf(side));
-  }
+    @Override
+    public TextRange getRange(FragmentSide side) {
+        if (side == FragmentSide.SIDE1) {
+            return myRange1;
+        }
+        if (side == FragmentSide.SIDE2) {
+            return myRange2;
+        }
+        throw new IllegalArgumentException(String.valueOf(side));
+    }
 
-  public Fragment shift(TextRange range1, TextRange range2, int startingLine1, int startingLine2) {
-    return new InlineFragment(myType,
-                              LineFragment.shiftRange(range1, myRange1),
-                              LineFragment.shiftRange(range2, myRange2));
-  }
+    @Override
+    public Fragment shift(TextRange range1, TextRange range2, int startingLine1, int startingLine2) {
+        return new InlineFragment(
+            myType,
+            LineFragment.shiftRange(range1, myRange1),
+            LineFragment.shiftRange(range2, myRange2)
+        );
+    }
 
-  public void highlight(FragmentHighlighter fragmentHighlighter) {
-    fragmentHighlighter.highlightInline(this);
-  }
+    @Override
+    public void highlight(FragmentHighlighter fragmentHighlighter) {
+        fragmentHighlighter.highlightInline(this);
+    }
 
-  public Fragment getSubfragmentAt(int offset, FragmentSide side, Condition<Fragment> condition) {
-    LOG.assertTrue(getRange(side).getStartOffset() <= offset &&
-                   offset < getRange(side).getEndOffset() &&
-                   condition.value(this));
-    return this;
-  }
+    @Override
+    public Fragment getSubfragmentAt(int offset, FragmentSide side, Predicate<Fragment> condition) {
+        LOG.assertTrue(getRange(side).getStartOffset() <= offset
+            && offset < getRange(side).getEndOffset() && condition.test(this));
+        return this;
+    }
 }

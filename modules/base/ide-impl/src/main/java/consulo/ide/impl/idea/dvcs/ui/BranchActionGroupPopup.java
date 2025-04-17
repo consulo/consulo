@@ -1,12 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.dvcs.ui;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.dvcs.DvcsImplIcons;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.vcs.ui.FlatSpeedSearchPopup;
@@ -14,14 +12,16 @@ import consulo.ide.impl.idea.openapi.vcs.ui.PopupListElementRendererWithIcon;
 import consulo.ide.impl.idea.ui.popup.KeepingPopupOpenAction;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ui.ex.awt.popup.ListPopupModel;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.popup.ListPopupModel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
@@ -30,7 +30,6 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.distributed.DvcsBundle;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -42,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_VGAP;
@@ -67,7 +67,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     public BranchActionGroupPopup(
         @Nonnull String title,
         @Nonnull Project project,
-        @Nonnull Condition<AnAction> preselectActionCondition,
+        @Nonnull Predicate<AnAction> preselectActionCondition,
         @Nonnull ActionGroup actions,
         @Nullable String dimensionKey
     ) {
@@ -105,8 +105,11 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
                 return myToolbarActions.toArray(AnAction.EMPTY_ARRAY);
             }
         };
-        AnAction restoreSizeButton = new AnAction(DvcsBundle.message("action.BranchActionGroupPopup.Anonymous.text.restore.size"), null, AllIcons.General.CollapseComponent) {
+        AnAction restoreSizeButton = new AnAction(DvcsBundle.message("action.BranchActionGroupPopup.Anonymous.text.restore.size"), null,
+            PlatformIconGroup.generalCollapsecomponent()
+        ) {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 ProjectWindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, null);
                 myInternalSizeChanged = true;
@@ -114,6 +117,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
             }
 
             @Override
+            @RequiredUIAccess
             public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(myUserSizeChanged);
             }
@@ -130,7 +134,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
                 return true;
             }
         };
-        settingsGroup.getTemplatePresentation().setIcon(AllIcons.General.GearPlain);
+        settingsGroup.getTemplatePresentation().setIcon(PlatformIconGroup.generalGearplain());
 
         myToolbarActions.add(restoreSizeButton);
         myToolbarActions.add(settingsGroup);
@@ -336,10 +340,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
         if (getSpeedSearch().isHoldingFilter()) {
             return !(action instanceof MoreAction);
         }
-        if (action instanceof MoreHideableActionGroup) {
-            return ((MoreHideableActionGroup) action).shouldBeShown();
-        }
-        return true;
+        return !(action instanceof MoreHideableActionGroup moreHideableActionGroup) || moreHideableActionGroup.shouldBeShown();
     }
 
     @Override
@@ -392,9 +393,9 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
 
         private static Image chooseUpdateIndicatorIcon(@Nonnull BranchActionGroup branchActionGroup) {
             if (branchActionGroup.hasIncomingCommits()) {
-                return branchActionGroup.hasOutgoingCommits() ? DvcsImplIcons.IncomingOutgoing : DvcsImplIcons.Incoming;
+                return branchActionGroup.hasOutgoingCommits() ? PlatformIconGroup.dvcsIncomingoutgoing() : PlatformIconGroup.dvcsIncoming();
             }
-            return branchActionGroup.hasOutgoingCommits() ? DvcsImplIcons.Outgoing : null;
+            return branchActionGroup.hasOutgoingCommits() ? PlatformIconGroup.dvcsOutgoing() : null;
         }
 
         private void updateInfoComponent(@Nonnull ErrorLabel infoLabel, @Nullable String infoText, boolean isSelected) {
@@ -497,6 +498,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             setExpanded(!myIsExpanded);
             InputEvent event = e.getInputEvent();

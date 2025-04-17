@@ -15,7 +15,6 @@
  */
 package consulo.diff.impl.internal.util;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.*;
@@ -47,7 +46,6 @@ import consulo.document.DocumentReferenceManager;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
-import consulo.undoRedo.internal.builder.WrappableRunnableCommandBuilder;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
@@ -58,6 +56,7 @@ import consulo.language.file.light.LightVirtualFile;
 import consulo.language.plain.PlainTextFileType;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ModalityState;
@@ -71,13 +70,13 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.image.Image;
 import consulo.undoRedo.*;
 import consulo.undoRedo.builder.RunnableCommandBuilder;
+import consulo.undoRedo.internal.builder.WrappableRunnableCommandBuilder;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
@@ -88,6 +87,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public class DiffImplUtil {
     private static final Logger LOG = Logger.getInstance(DiffImplUtil.class);
@@ -137,7 +137,7 @@ public class DiffImplUtil {
             return highlighterFactory.createEditorHighlighter(syntaxHighlighter, EditorColorsManager.getInstance().getGlobalScheme());
         }
         if (file != null) {
-            if ((type == null || type == PlainTextFileType.INSTANCE) || file.getFileType() == type || file instanceof LightVirtualFile) {
+            if (type == null || type == PlainTextFileType.INSTANCE || file.getFileType() == type || file instanceof LightVirtualFile) {
                 return highlighterFactory.createEditorHighlighter(project, file);
             }
         }
@@ -217,7 +217,7 @@ public class DiffImplUtil {
     // Scrolling
     //
 
-    public static void moveCaret(@Nullable final Editor editor, int line) {
+    public static void moveCaret(@Nullable Editor editor, int line) {
         if (editor == null) {
             return;
         }
@@ -225,11 +225,11 @@ public class DiffImplUtil {
         editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(line, 0));
     }
 
-    public static void scrollEditor(@Nullable final Editor editor, int line, boolean animated) {
+    public static void scrollEditor(@Nullable Editor editor, int line, boolean animated) {
         scrollEditor(editor, line, 0, animated);
     }
 
-    public static void scrollEditor(@Nullable final Editor editor, int line, int column, boolean animated) {
+    public static void scrollEditor(@Nullable Editor editor, int line, int column, boolean animated) {
         if (editor == null) {
             return;
         }
@@ -262,12 +262,12 @@ public class DiffImplUtil {
 
     @Nonnull
     public static Image getArrowIcon(@Nonnull Side sourceSide) {
-        return sourceSide.select(AllIcons.Diff.ArrowRight, AllIcons.Diff.Arrow);
+        return sourceSide.select(PlatformIconGroup.diffArrowright(), PlatformIconGroup.diffArrow());
     }
 
     @Nonnull
     public static Image getArrowDownIcon(@Nonnull Side sourceSide) {
-        return sourceSide.select(AllIcons.Diff.ArrowRightDown, AllIcons.Diff.ArrowLeftDown);
+        return sourceSide.select(PlatformIconGroup.diffArrowright(), PlatformIconGroup.diffArrowleftdown());
     }
 
     //
@@ -401,8 +401,8 @@ public class DiffImplUtil {
         }
 
         // ==-, =-=, -==
-        final ThreeSide side1 = chunks.get(0) != null ? ThreeSide.LEFT : ThreeSide.BASE;
-        final ThreeSide side2 = chunks.get(2) != null ? ThreeSide.RIGHT : ThreeSide.BASE;
+        ThreeSide side1 = chunks.get(0) != null ? ThreeSide.LEFT : ThreeSide.BASE;
+        ThreeSide side2 = chunks.get(2) != null ? ThreeSide.RIGHT : ThreeSide.BASE;
         CharSequence chunk1 = side1.select(chunks);
         CharSequence chunk2 = side2.select(chunks);
 
@@ -437,7 +437,7 @@ public class DiffImplUtil {
 
     @Nonnull
     public static <T> int[] getSortedIndexes(@Nonnull List<T> values, @Nonnull Comparator<T> comparator) {
-        final List<Integer> indexes = new ArrayList<>(values.size());
+        List<Integer> indexes = new ArrayList<>(values.size());
         for (int i = 0; i < values.size(); i++) {
             indexes.add(i);
         }
@@ -769,12 +769,12 @@ public class DiffImplUtil {
 
     @Nonnull
     public static MergeConflictType getMergeType(
-        @Nonnull Condition<ThreeSide> emptiness,
+        @Nonnull Predicate<ThreeSide> emptiness,
         @Nonnull BiPredicate<ThreeSide, ThreeSide> equality
     ) {
-        boolean isLeftEmpty = emptiness.value(ThreeSide.LEFT);
-        boolean isBaseEmpty = emptiness.value(ThreeSide.BASE);
-        boolean isRightEmpty = emptiness.value(ThreeSide.RIGHT);
+        boolean isLeftEmpty = emptiness.test(ThreeSide.LEFT);
+        boolean isBaseEmpty = emptiness.test(ThreeSide.BASE);
+        boolean isRightEmpty = emptiness.test(ThreeSide.RIGHT);
         assert !isLeftEmpty || !isBaseEmpty || !isRightEmpty;
 
         if (isBaseEmpty) {
@@ -869,15 +869,15 @@ public class DiffImplUtil {
             CommandProcessor.getInstance().<R>newCommand()
                 .inWriteAction();
 
-            return ((WrappableRunnableCommandBuilder<R, ?>)commandBuilder).innerWrap(runnable -> {
-                CommandDescriptor descriptor = commandBuilder.build(runnable);
-                if (!makeWritable(descriptor.project(), descriptor.document())) {
-                    VirtualFile file = FileDocumentManager.getInstance().getFile(descriptor.document());
-                    LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
-                    return;
-                }
-                runnable.run();
-            });
+        return ((WrappableRunnableCommandBuilder<R, ?>)commandBuilder).innerWrap(runnable -> {
+            CommandDescriptor descriptor = commandBuilder.build(runnable);
+            if (!makeWritable(descriptor.project(), descriptor.document())) {
+                VirtualFile file = FileDocumentManager.getInstance().getFile(descriptor.document());
+                LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
+                return;
+            }
+            runnable.run();
+        });
     }
 
     @Deprecated(forRemoval = true)
@@ -1002,14 +1002,11 @@ public class DiffImplUtil {
     @Nullable
     public static VirtualFile getVirtualFile(@Nonnull ContentDiffRequest request, @Nonnull Side currentSide) {
         List<DiffContent> contents = request.getContents();
-        DiffContent content1 = currentSide.select(contents);
-        DiffContent content2 = currentSide.other().select(contents);
-
-        if (content1 instanceof FileContent) {
-            return ((FileContent)content1).getFile();
+        if (currentSide.select(contents) instanceof FileContent content1) {
+            return content1.getFile();
         }
-        if (content2 instanceof FileContent) {
-            return ((FileContent)content2).getFile();
+        if (currentSide.other().select(contents) instanceof FileContent content2) {
+            return content2.getFile();
         }
         return null;
     }
@@ -1017,14 +1014,11 @@ public class DiffImplUtil {
     @Nullable
     public static VirtualFile getVirtualFile(@Nonnull ContentDiffRequest request, @Nonnull ThreeSide currentSide) {
         List<DiffContent> contents = request.getContents();
-        DiffContent content1 = currentSide.select(contents);
-        DiffContent content2 = ThreeSide.BASE.select(contents);
-
-        if (content1 instanceof FileContent) {
-            return ((FileContent)content1).getFile();
+        if (currentSide.select(contents) instanceof FileContent content1) {
+            return content1.getFile();
         }
-        if (content2 instanceof FileContent) {
-            return ((FileContent)content2).getFile();
+        if (ThreeSide.BASE.select(contents) instanceof FileContent content2) {
+            return content2.getFile();
         }
         return null;
     }
@@ -1066,11 +1060,11 @@ public class DiffImplUtil {
             return tools;
         }
 
-        final List<Class<? extends DiffTool>> suppressedTools = new ArrayList<>();
+        List<Class<? extends DiffTool>> suppressedTools = new ArrayList<>();
         for (T tool : tools) {
             try {
-                if (tool instanceof SuppressiveDiffTool) {
-                    suppressedTools.addAll(((SuppressiveDiffTool)tool).getSuppressedTools());
+                if (tool instanceof SuppressiveDiffTool suppressiveDiffTool) {
+                    suppressedTools.addAll(suppressiveDiffTool.getSuppressedTools());
                 }
             }
             catch (Throwable e) {

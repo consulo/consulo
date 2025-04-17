@@ -28,52 +28,65 @@ import java.util.function.Consumer;
  * @author max
  */
 public interface MarkupModelEx extends MarkupModel {
-  void dispose();
+    void dispose();
 
-  @Nullable
-  RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes);
+    @Nullable
+    RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes);
 
-  void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged);
+    void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged);
 
-  void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter);
+    void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter);
 
-  void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter);
+    void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter);
 
-  boolean containsHighlighter(@Nonnull RangeHighlighter highlighter);
+    boolean containsHighlighter(@Nonnull RangeHighlighter highlighter);
 
-  void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer);
+    void addRangeHighlighter(
+        @Nonnull RangeHighlighterEx marker,
+        int start,
+        int end,
+        boolean greedyToLeft,
+        boolean greedyToRight,
+        int layer
+    );
 
-  void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener);
+    void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener);
 
-  void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes);
+    void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes);
 
-  boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor);
+    boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor);
 
-  boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor);
+    boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor);
 
-  @Nonnull
-  MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset);
+    @Nonnull
+    MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset);
 
-  @Nonnull
-  MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset,
-                                                         int endOffset,
-                                                         boolean onlyRenderedInGutter,
-                                                         boolean onlyRenderedInScrollBar);
+    @Nonnull
+    MarkupIterator<RangeHighlighterEx> overlappingIterator(
+        int startOffset,
+        int endOffset,
+        boolean onlyRenderedInGutter,
+        boolean onlyRenderedInScrollBar
+    );
 
-  // optimization: creates highlighter and fires only one event: highlighterCreated
-  @Nonnull
-  RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
-                                                            int endOffset,
-                                                            int layer,
-                                                            TextAttributes textAttributes,
-                                                            @Nonnull HighlighterTargetArea targetArea,
-                                                            boolean isPersistent,
-                                                            Consumer<? super RangeHighlighterEx> changeAttributesAction);
+    // optimization: creates highlighter and fires only one event: highlighterCreated
+    @Nonnull
+    RangeHighlighterEx addRangeHighlighterAndChangeAttributes(
+        int startOffset,
+        int endOffset,
+        int layer,
+        TextAttributes textAttributes,
+        @Nonnull HighlighterTargetArea targetArea,
+        boolean isPersistent,
+        Consumer<? super RangeHighlighterEx> changeAttributesAction
+    );
 
-  // runs change attributes action and fires highlighterChanged event if there were changes
-  void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter,
-                               @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction);
+    // runs change attributes action and fires highlighterChanged event if there were changes
+    void changeAttributesInBatch(
+        @Nonnull RangeHighlighterEx highlighter,
+        @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction
+    );
 
-  default void setErrorStripeVisible(boolean value) {
-  }
+    default void setErrorStripeVisible(boolean value) {
+    }
 }
