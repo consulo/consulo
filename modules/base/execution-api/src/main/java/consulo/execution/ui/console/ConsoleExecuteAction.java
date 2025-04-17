@@ -87,7 +87,8 @@ public class ConsoleExecuteAction extends DumbAwareAction {
     public final void update(@Nonnull AnActionEvent e) {
         EditorEx editor = myConsoleView.getConsoleEditor();
         boolean enabled = !editor.isRendererMode() && isEnabled()
-            && (myExecuteActionHandler.isEmptyCommandExecutionAllowed() || !StringUtil.isEmptyOrSpaces(editor.getDocument().getCharsSequence()));
+            && (myExecuteActionHandler.isEmptyCommandExecutionAllowed()
+            || !StringUtil.isEmptyOrSpaces(editor.getDocument().getCharsSequence()));
         if (enabled) {
             Lookup lookup = LookupManager.getActiveLookup(editor);
             // we should check getCurrentItem() also - fast typing could produce outdated lookup, such lookup reports isCompletion() true
