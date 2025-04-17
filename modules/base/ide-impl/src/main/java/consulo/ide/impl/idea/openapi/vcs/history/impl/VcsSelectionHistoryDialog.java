@@ -15,24 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history.impl;
 
-import consulo.application.AllIcons;
 import consulo.application.HelpManager;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.progress.ProgressManager;
 import consulo.dataContext.DataProvider;
+import consulo.diff.Block;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffManager;
 import consulo.diff.DiffRequestPanel;
 import consulo.diff.content.DiffContent;
+import consulo.diff.request.LoadingDiffRequest;
 import consulo.diff.request.MessageDiffRequest;
 import consulo.diff.request.NoDiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
+import consulo.diff.util.IntPair;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.diff.Block;
-import consulo.diff.request.LoadingDiffRequest;
-import consulo.diff.util.IntPair;
-import consulo.ide.impl.idea.openapi.vcs.CalledInBackground;
 import consulo.ide.impl.idea.openapi.vcs.VcsActions;
 import consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
@@ -40,9 +38,8 @@ import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListen
 import consulo.ide.impl.idea.openapi.vcs.history.CurrentRevision;
 import consulo.ide.impl.idea.openapi.vcs.history.FileHistoryPanelImpl;
 import consulo.ide.impl.idea.openapi.vcs.history.StandardDiffFromHistoryHandler;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -53,6 +50,8 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awt.util.Update;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Conditions;
 import consulo.versionControlSystem.*;
@@ -62,7 +61,6 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
@@ -108,7 +106,6 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     private final VirtualFile myFile;
     @Nonnull
     private final AbstractVcs myActiveVcs;
-    @NonNls
     private final String myHelpId;
 
     private final List<VcsFileRevision> myRevisions = new ArrayList<>();
@@ -155,7 +152,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         myComments.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
 
         JRootPane rootPane = ((RootPaneContainer)getFrame()).getRootPane();
-        final VcsDependentHistoryComponents components = vcsHistoryProvider.getUICustomization(session, rootPane);
+        VcsDependentHistoryComponents components = vcsHistoryProvider.getUICustomization(session, rootPane);
 
         ColumnInfo[] defaultColumns = new ColumnInfo[]{
             new FileHistoryPanelImpl.RevisionColumnInfo(null),
@@ -182,8 +179,8 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         mySplitter.setFirstComponent(myDiffPanel.getComponent());
         mySplitter.setSecondComponent(createBottomPanel(components.getDetailsComponent()));
 
-        final ListSelectionListener selectionListener = e -> {
-            final VcsFileRevision revision;
+        ListSelectionListener selectionListener = e -> {
+            VcsFileRevision revision;
             if (myList.getSelectedRowCount() == 1 && !myList.isEmpty()) {
                 revision = myList.getItems().get(myList.getSelectedRow());
                 String message = IssueLinkHtmlRenderer.formatTextIntoHtml(myProject, revision.getCommitMessage());
@@ -201,14 +198,14 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         };
         myList.getSelectionModel().addListSelectionListener(selectionListener);
 
-        final VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
+        VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
         myChangesOnlyCheckBox.setSelected(configuration.SHOW_ONLY_CHANGED_IN_SELECTION_DIFF);
         myChangesOnlyCheckBox.addActionListener(e -> {
             configuration.SHOW_ONLY_CHANGED_IN_SELECTION_DIFF = myChangesOnlyCheckBox.isSelected();
             updateRevisionsList();
         });
 
-        final DefaultActionGroup popupActions = new DefaultActionGroup();
+        DefaultActionGroup popupActions = new DefaultActionGroup();
         popupActions.add(new MyDiffAction());
         popupActions.add(new MyDiffLocalAction());
         popupActions.add(ShowAllAffectedGenericAction.getInstance());
@@ -445,7 +442,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         super.dispose();
     }
 
-    private JComponent createBottomPanel(final JComponent addComp) {
+    private JComponent createBottomPanel(JComponent addComp) {
         JBSplitter splitter = new JBSplitter(true, COMMENTS_SPLITTER_PROPORTION_KEY, COMMENTS_SPLITTER_PROPORTION);
         splitter.setDividerWidth(4);
 
@@ -468,19 +465,19 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         return splitter;
     }
 
-    private JComponent createComments(final JComponent addComp) {
+    private JComponent createComments(JComponent addComp) {
         JPanel panel = new JPanel(new BorderLayout(4, 4));
         panel.add(new JLabel("Commit ReflectionMessage:"), BorderLayout.NORTH);
         panel.add(ScrollPaneFactory.createScrollPane(myComments), BorderLayout.CENTER);
 
-        final Splitter splitter = new Splitter(false);
+        Splitter splitter = new Splitter(false);
         splitter.setFirstComponent(panel);
         splitter.setSecondComponent(addComp);
         return splitter;
     }
 
     @Override
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
         if (Project.KEY == dataId) {
             return myProject;
         }
@@ -506,13 +503,13 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
     private class MyDiffAction extends DumbAwareAction {
         public MyDiffAction() {
-            super(VcsLocalize.actionNameCompare(), VcsLocalize.actionDescriptionCompare(), AllIcons.Actions.Diff);
+            super(VcsLocalize.actionNameCompare(), VcsLocalize.actionDescriptionCompare(), PlatformIconGroup.actionsDiff());
             setShortcutSet(CommonShortcuts.getDiff());
         }
 
         @Override
         @RequiredUIAccess
-        public void update(final AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(
                 myList.getSelectedRowCount() > 1 || myList.getSelectedRowCount() == 1 && myList.getSelectedObject() != myLocalRevision
             );
@@ -542,14 +539,14 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
             super(
                 VcsLocalize.showDiffWithLocalActionText(),
                 VcsLocalize.showDiffWithLocalActionDescription(),
-                AllIcons.Actions.DiffWithCurrent
+                PlatformIconGroup.actionsDiffwithcurrent()
             );
             setShortcutSet(ActionManager.getInstance().getAction("Vcs.ShowDiffWithLocal").getShortcutSet());
         }
 
         @Override
         @RequiredUIAccess
-        public void update(final AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myList.getSelectedRowCount() == 1 && myList.getSelectedObject() != myLocalRevision);
         }
 
@@ -650,10 +647,8 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
             });
         }
 
-        @CalledInBackground
         protected abstract void notifyError(@Nonnull VcsException e);
 
-        @CalledInBackground
         protected abstract void notifyUpdate();
 
         @Nonnull

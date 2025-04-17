@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
@@ -27,7 +27,7 @@ import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.concurrent.Promise;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -127,7 +127,7 @@ public class ActionUpdater {
     }
 
     private static <T> T callAction(AnAction action, String operation, Supplier<T> call) {
-        if (isUpdateInBackground(action) || ApplicationManager.getApplication().isDispatchThread()) {
+        if (isUpdateInBackground(action) || Application.get().isDispatchThread()) {
             return call.get();
         }
 
@@ -275,7 +275,7 @@ public class ActionUpdater {
             }
 
             LOG.error("action is null: i=" + nullIndex + " group=" + group + " group id=" + myActionManager.getId(group));
-            return ContainerUtil.filter(children, Conditions.notNull());
+            return ContainerUtil.filter(children, Predicates.notNull());
         });
     }
 
@@ -288,8 +288,7 @@ public class ActionUpdater {
         if (!presentation.isVisible() || (!presentation.isEnabled() && hideDisabled)) { // don't create invisible items in the menu
             return Collections.emptyList();
         }
-        if (child instanceof ActionGroup) {
-            ActionGroup actionGroup = (ActionGroup) child;
+        if (child instanceof ActionGroup actionGroup) {
             JBIterable<AnAction> childrenIterable = iterateGroupChildren(actionGroup, strategy);
             if (!presentation.isVisible() || (!presentation.isEnabled() && hideDisabled)) {
                 return Collections.emptyList();
@@ -396,8 +395,9 @@ public class ActionUpdater {
     private static List<AnAction> removeUnnecessarySeparators(List<? extends AnAction> visible) {
         List<AnAction> result = new ArrayList<>();
         for (AnAction child : visible) {
-            if (child instanceof AnSeparator) {
-                if (!StringUtil.isEmpty(((AnSeparator) child).getText()) || (!result.isEmpty() && !(result.get(result.size() - 1) instanceof AnSeparator))) {
+            if (child instanceof AnSeparator separator) {
+                if (!StringUtil.isEmpty(separator.getText()) || (!result.isEmpty()
+                    && !(result.get(result.size() - 1) instanceof AnSeparator))) {
                     result.add(child);
                 }
             }
@@ -443,15 +443,13 @@ public class ActionUpdater {
             if (anAction instanceof AnSeparator) {
                 continue;
             }
-            final Project project = getDataContext(anAction).getData(Project.KEY);
+            Project project = getDataContext(anAction).getData(Project.KEY);
             if (project != null && DumbService.getInstance(project).isDumb() && !anAction.isDumbAware()) {
                 continue;
             }
 
             Presentation presentation = orDefault(anAction, update(anAction, strategy));
-            if (anAction instanceof ActionGroup) {
-                ActionGroup childGroup = (ActionGroup) anAction;
-
+            if (anAction instanceof ActionGroup childGroup) {
                 // popup menu must be visible itself
                 if (childGroup.isPopup()) {
                     if ((checkVisible && !presentation.isVisible()) || (checkEnabled && !presentation.isEnabled())) {
@@ -497,12 +495,12 @@ public class ActionUpdater {
 
     // returns false if exception was thrown and handled
     boolean doUpdate(boolean isInModalContext, AnAction action, AnActionEvent e) {
-        if (ApplicationManager.getApplication().isDisposed()) {
+        if (Application.get().isDisposed()) {
             return false;
         }
 
         long startTime = System.currentTimeMillis();
-        final boolean result;
+        boolean result;
         try {
             result = !ActionUtil.performDumbAwareUpdate(action, e, false);
         }

@@ -1,5 +1,6 @@
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.*;
 import consulo.language.parser.PsiBuilder;
@@ -10,15 +11,14 @@ import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ThreadLocalCachedValue;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.ref.Ref;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static consulo.util.lang.function.Conditions.compose;
 
@@ -113,21 +113,21 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
     }
 
     private UserDataHolder getUserDataHolder() {
-        return api instanceof LighterASTApi ? ((LighterASTApi)api).builder : (UserDataHolder)api.parents(getRoot()).last();
+        return api instanceof LighterASTApi lighterASTApi ? lighterASTApi.builder : (UserDataHolder)api.parents(getRoot()).last();
     }
 
     @Nonnull
-    public SyntaxTraverser<T> expandTypes(@Nonnull Condition<? super IElementType> c) {
+    public SyntaxTraverser<T> expandTypes(@Nonnull Predicate<? super IElementType> c) {
         return super.expand(compose(api.TO_TYPE, c));
     }
 
     @Nonnull
-    public SyntaxTraverser<T> filterTypes(@Nonnull Condition<? super IElementType> c) {
+    public SyntaxTraverser<T> filterTypes(@Nonnull Predicate<? super IElementType> c) {
         return super.filter(compose(api.TO_TYPE, c));
     }
 
     @Nonnull
-    public SyntaxTraverser<T> forceDisregardTypes(@Nonnull Condition<? super IElementType> c) {
+    public SyntaxTraverser<T> forceDisregardTypes(@Nonnull Predicate<? super IElementType> c) {
         return super.forceDisregard(compose(api.TO_TYPE, c));
     }
 
@@ -145,7 +145,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
     }
 
     @Nonnull
-    public final SyntaxTraverser<T> onRange(@Nonnull final TextRange range) {
+    public final SyntaxTraverser<T> onRange(@Nonnull TextRange range) {
         return onRange(e -> api.rangeOf(e).intersects(range));
     }
 
@@ -171,11 +171,11 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
         }
 
         @Nonnull
-        public JBIterable<T> parents(@Nullable final T element) {
-            return JBIterable.generate(element, t -> parent(t));
+        public JBIterable<T> parents(@Nullable T element) {
+            return JBIterable.generate(element, this::parent);
         }
 
-        public final Function<T, IElementType> TO_TYPE = new Function<T, IElementType>() {
+        public final Function<T, IElementType> TO_TYPE = new Function<>() {
             @Override
             public IElementType apply(T t) {
                 return typeOf(t);
@@ -187,7 +187,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
             }
         };
 
-        public final Function<T, CharSequence> TO_TEXT = new Function<T, CharSequence>() {
+        public final Function<T, CharSequence> TO_TEXT = new Function<>() {
             @Override
             public CharSequence apply(T t) {
                 return textOf(t);
@@ -199,7 +199,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
             }
         };
 
-        public final Function<T, TextRange> TO_RANGE = new Function<T, TextRange>() {
+        public final Function<T, TextRange> TO_RANGE = new Function<>() {
             @Override
             public TextRange apply(T t) {
                 return rangeOf(t);
@@ -241,7 +241,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
             return JBIterable.generate(node, TO_NEXT);
         }
 
-        private final Function<T, T> TO_NEXT = new Function<T, T>() {
+        private final Function<T, T> TO_NEXT = new Function<>() {
             @Override
             public T apply(T t) {
                 return next(t);
@@ -260,24 +260,28 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
         static final ApiEx<PsiElement> INSTANCE_REV = new PsiApi() {
             @Nullable
             @Override
+            @RequiredReadAction
             public PsiElement previous(@Nonnull PsiElement node) {
                 return super.next(node);
             }
 
             @Nullable
             @Override
+            @RequiredReadAction
             public PsiElement next(@Nonnull PsiElement node) {
                 return super.previous(node);
             }
 
             @Nullable
             @Override
+            @RequiredReadAction
             public PsiElement last(@Nonnull PsiElement node) {
                 return super.first(node);
             }
 
             @Nullable
             @Override
+            @RequiredReadAction
             public PsiElement first(@Nonnull PsiElement node) {
                 return super.last(node);
             }
@@ -285,24 +289,28 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
         @Nullable
         @Override
+        @RequiredReadAction
         public PsiElement first(@Nonnull PsiElement node) {
             return node.getFirstChild();
         }
 
         @Nullable
         @Override
+        @RequiredReadAction
         public PsiElement last(@Nonnull PsiElement node) {
             return node.getLastChild();
         }
 
         @Nullable
         @Override
+        @RequiredReadAction
         public PsiElement next(@Nonnull PsiElement node) {
             return node.getNextSibling();
         }
 
         @Nullable
         @Override
+        @RequiredReadAction
         public PsiElement previous(@Nonnull PsiElement node) {
             return node.getPrevSibling();
         }
@@ -316,12 +324,14 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
         @Nonnull
         @Override
+        @RequiredReadAction
         public TextRange rangeOf(@Nonnull PsiElement node) {
             return node.getTextRange();
         }
 
         @Nonnull
         @Override
+        @RequiredReadAction
         public CharSequence textOf(@Nonnull PsiElement node) {
             return node.getText();
         }
@@ -399,18 +409,18 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
         @Nonnull
         @Override
-        public JBIterable<? extends T> children(@Nonnull final T node) {
-            return new JBIterable<T>() {
+        public JBIterable<? extends T> children(@Nonnull T node) {
+            return new JBIterable<>() {
                 @Override
                 public Iterator<T> iterator() {
                     FlyweightCapableTreeStructure<T> structure = getStructure();
-                    Ref<T[]> ref = Ref.create();
+                    SimpleReference<T[]> ref = SimpleReference.create();
                     int count = structure.getChildren(node, ref);
                     if (count == 0) {
                         return Iterators.empty();
                     }
                     T[] array = ref.get();
-                    LinkedList<T> list = new LinkedList<T>();
+                    LinkedList<T> list = new LinkedList<>();
                     for (int i = 0; i < count; i++) {
                         T child = array[i];
                         IElementType childType = typeOf(child);
@@ -437,7 +447,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
             }
         };
 
-        public LighterASTApi(final PsiBuilder builder) {
+        public LighterASTApi(PsiBuilder builder) {
             this.builder = builder;
         }
 

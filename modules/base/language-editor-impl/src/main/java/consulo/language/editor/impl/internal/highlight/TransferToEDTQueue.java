@@ -16,19 +16,16 @@
 package consulo.language.editor.impl.internal.highlight;
 
 import consulo.application.util.Semaphore;
-import consulo.application.util.function.Processor;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Queue;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
 
 /**
  * Allows to process elements in the EDT.
@@ -46,18 +43,18 @@ public class TransferToEDTQueue<T> {
      * It is not recommended to block EDT longer,
      * because people feel that UI is laggy.
      *
-     * @see #TransferToEDTQueue(String, Processor, Condition, int)
+     * @see #TransferToEDTQueue(String, Predicate, Predicate, int)
      * @see #createRunnableMerger(String, int)
      */
     public static final int DEFAULT_THRESHOLD = 30;
     @SuppressWarnings({"FieldCanBeLocal", "UnusedDeclaration"})
     private final String myName;
-    private final Processor<T> myProcessor;
+    private final Predicate<T> myProcessor;
     private volatile boolean stopped;
     private final BooleanSupplier myShutUpCondition;
     private final int myMaxUnitOfWorkThresholdMs; //-1 means indefinite
 
-    private final Queue<T> myQueue = new Queue<T>(10); // guarded by myQueue
+    private final Queue<T> myQueue = new Queue<>(10); // guarded by myQueue
     private final AtomicBoolean invokeLaterScheduled = new AtomicBoolean();
     private final Runnable myUpdateRunnable = new Runnable() {
         @Override
@@ -86,13 +83,13 @@ public class TransferToEDTQueue<T> {
         }
     };
 
-    public TransferToEDTQueue(@Nonnull @NonNls String name, @Nonnull Processor<T> processor, @Nonnull BooleanSupplier shutUpCondition) {
+    public TransferToEDTQueue(@Nonnull String name, @Nonnull Predicate<T> processor, @Nonnull BooleanSupplier shutUpCondition) {
         this(name, processor, shutUpCondition, DEFAULT_THRESHOLD);
     }
 
     public TransferToEDTQueue(
-        @Nonnull @NonNls String name,
-        @Nonnull Processor<T> processor,
+        @Nonnull String name,
+        @Nonnull Predicate<T> processor,
         @Nonnull BooleanSupplier shutUpCondition,
         int maxUnitOfWorkThresholdMs
     ) {
@@ -102,15 +99,20 @@ public class TransferToEDTQueue<T> {
         myMaxUnitOfWorkThresholdMs = maxUnitOfWorkThresholdMs;
     }
 
-    public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull @NonNls String name) {
+    public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull String name) {
         return createRunnableMerger(name, DEFAULT_THRESHOLD);
     }
 
-    public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull @NonNls String name, int maxUnitOfWorkThresholdMs) {
-        return new TransferToEDTQueue<Runnable>(name, runnable -> {
-            runnable.run();
-            return true;
-        }, () -> false, maxUnitOfWorkThresholdMs);
+    public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull String name, int maxUnitOfWorkThresholdMs) {
+        return new TransferToEDTQueue<>(
+            name,
+            runnable -> {
+                runnable.run();
+                return true;
+            },
+            () -> false,
+            maxUnitOfWorkThresholdMs
+        );
     }
 
     private boolean isEmpty() {
@@ -125,7 +127,7 @@ public class TransferToEDTQueue<T> {
         if (thing == null) {
             return false;
         }
-        if (!myProcessor.process(thing)) {
+        if (!myProcessor.test(thing)) {
             stop();
             return false;
         }
@@ -147,10 +149,10 @@ public class TransferToEDTQueue<T> {
     }
 
     public boolean offerIfAbsent(@Nonnull T thing) {
-        return offerIfAbsent(thing, ContainerUtil.<T>canonicalStrategy());
+        return offerIfAbsent(thing, HashingStrategy.canonical());
     }
 
-    public boolean offerIfAbsent(@Nonnull final T thing, @Nonnull final HashingStrategy<T> equality) {
+    public boolean offerIfAbsent(@Nonnull T thing, @Nonnull HashingStrategy<T> equality) {
         synchronized (myQueue) {
             boolean absent = myQueue.process(t -> !equality.equals(t, thing));
             if (absent) {
@@ -203,14 +205,9 @@ public class TransferToEDTQueue<T> {
 
     // blocks until all elements in the queue are processed
     public void waitFor() {
-        final Semaphore semaphore = new Semaphore();
+        Semaphore semaphore = new Semaphore();
         semaphore.down();
-        schedule(new Runnable() {
-            @Override
-            public void run() {
-                semaphore.up();
-            }
-        });
+        schedule(semaphore::up);
         semaphore.waitFor();
     }
 }

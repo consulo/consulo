@@ -42,8 +42,8 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.function.Predicates;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -62,15 +62,15 @@ public class ShowRunningListAction extends AnAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         if (project == null || project.isDisposed()) {
             return;
         }
-        final Ref<Pair<? extends JComponent, String>> stateRef = new Ref<>();
-        final Ref<Balloon> balloonRef = new Ref<>();
+        SimpleReference<Pair<? extends JComponent, String>> stateRef = new SimpleReference<>();
+        SimpleReference<Balloon> balloonRef = new SimpleReference<>();
 
-        final Timer timer = UIUtil.createNamedTimer("runningLists", 250);
+        Timer timer = UIUtil.createNamedTimer("runningLists", 250);
         ActionListener actionListener = actionEvent -> {
             Balloon balloon = balloonRef.get();
             if (project.isDisposed() || (balloon != null && balloon.isDisposed())) {
@@ -141,8 +141,8 @@ public class ShowRunningListAction extends AnAction {
         StringBuilder state = new StringBuilder();
         for (int i = 0; i < projects.size(); i++) {
             Project project = projects.get(i);
-            final ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
-            List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(Condition.TRUE);
+            ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
+            List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(Predicates.alwaysTrue());
 
             if (!runningDescriptors.isEmpty() && projects.size() > 1) {
                 state.append(project.getName());
@@ -156,7 +156,8 @@ public class ShowRunningListAction extends AnAction {
                         .append("@").append(System.identityHashCode(executor.getIcon())).append(";");
                     ProcessHandler processHandler = descriptor.getProcessHandler();
                     Image icon = (processHandler instanceof KillableProcessHandler && processHandler.isProcessTerminating())
-                        ? ExecutionIconGroup.actionKillprocess() : executor.getIcon();
+                        ? ExecutionIconGroup.actionKillprocess()
+                        : executor.getIcon();
                     JLabel label = new JLabel(
                         "<html><body><a href=\"\">" + descriptor.getDisplayName() + "</a></body></html>",
                         TargetAWT.to(icon),
@@ -189,7 +190,7 @@ public class ShowRunningListAction extends AnAction {
         Project[] projects = ProjectManager.getInstance().getOpenProjects();
         for (Project project : projects) {
             boolean enabled = project != null && !project.isDisposed()
-                && !ExecutionManagerImpl.getInstance(project).getRunningDescriptors(Condition.TRUE).isEmpty();
+                && !ExecutionManagerImpl.getInstance(project).getRunningDescriptors(Predicates.alwaysTrue()).isEmpty();
             e.getPresentation().setEnabled(enabled);
             if (enabled) {
                 break;

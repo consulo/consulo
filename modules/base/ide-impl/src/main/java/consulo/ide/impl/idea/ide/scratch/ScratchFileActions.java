@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
 import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
@@ -21,6 +20,7 @@ import consulo.language.scratch.RootType;
 import consulo.language.scratch.ScratchFileService;
 import consulo.language.util.LanguageUtil;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,18 +36,17 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static consulo.util.lang.function.Conditions.not;
 import static consulo.util.lang.function.Conditions.notNull;
@@ -66,9 +65,8 @@ public class ScratchFileActions {
 
 
     public static class NewFileAction extends DumbAwareAction {
-        private static final Image ICON = ImageEffects.layered(AllIcons.FileTypes.Text, AllIcons.Actions.Scratch);
+        private static final Image ICON = ImageEffects.layered(PlatformIconGroup.filetypesText(), PlatformIconGroup.actionsScratch());
 
-        @NonNls
         private static final String ACTION_ID = "NewScratchFile";
 
         private final NotNullLazyValue<LocalizeValue> myActionText =
@@ -156,6 +154,7 @@ public class ScratchFileActions {
     }
 
     @Nonnull
+    @RequiredReadAction
     static ScratchFileCreationHelper.Context createContext(@Nonnull AnActionEvent e, @Nonnull Project project) {
         PsiFile file = e.getData(PsiFile.KEY);
         Editor editor = e.getData(Editor.KEY);
@@ -177,7 +176,7 @@ public class ScratchFileActions {
         return context;
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     static PsiFile doCreateNewScratch(@Nonnull Project project, @Nonnull ScratchFileCreationHelper.Context context) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed("scratch");
         Language language = Objects.requireNonNull(context.language);
@@ -264,7 +263,7 @@ public class ScratchFileActions {
                 return;
             }
 
-            Condition<VirtualFile> isScratch = fileFilter(project);
+            Predicate<VirtualFile> isScratch = fileFilter(project);
             if (!files.filter(not(isScratch)).isEmpty()) {
                 e.getPresentation().setEnabledAndVisible(false);
                 return;
@@ -281,6 +280,7 @@ public class ScratchFileActions {
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             JBIterable<VirtualFile> files = JBIterable.of(e.getData(VirtualFile.KEY_OF_ARRAY)).filter(fileFilter(project));
@@ -291,14 +291,14 @@ public class ScratchFileActions {
         }
 
         @Nonnull
-        protected Condition<VirtualFile> fileFilter(Project project) {
+        protected Predicate<VirtualFile> fileFilter(Project project) {
             return file -> !file.isDirectory() && ScratchRootType.getInstance().containsFile(file);
         }
 
         @Nonnull
         protected Function<VirtualFile, Language> fileLanguage(@Nonnull Project project) {
             return new Function<>() {
-                final ScratchFileService fileService = ScratchFileService.getInstance();
+                ScratchFileService fileService = ScratchFileService.getInstance();
 
                 @Override
                 public Language apply(VirtualFile file) {

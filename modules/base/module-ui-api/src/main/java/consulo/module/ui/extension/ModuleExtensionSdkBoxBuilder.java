@@ -26,7 +26,7 @@ import consulo.module.ui.awt.SdkComboBox;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.image.Image;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -65,7 +65,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
     @Nonnull
     private Function<T, MutableModuleInheritableNamedPointer<Sdk>> mySdkPointerFunction;
     @Nonnull
-    private Predicate<SdkTypeId> mySdkFilter = Conditions.alwaysTrue();
+    private Predicate<SdkTypeId> mySdkFilter = Predicates.alwaysTrue();
 
     private final T myMutableModuleExtension;
 
@@ -85,21 +85,21 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
     @Nonnull
     @UsedInPlugin
-    public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@Nonnull final Class<? extends SdkTypeId> clazz) {
+    public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@Nonnull Class<? extends SdkTypeId> clazz) {
         mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
         return this;
     }
 
     @Nonnull
     @UsedInPlugin
-    public ModuleExtensionSdkBoxBuilder<T> sdkTypes(@Nonnull final Set<SdkType> sdkTypes) {
+    public ModuleExtensionSdkBoxBuilder<T> sdkTypes(@Nonnull Set<SdkType> sdkTypes) {
         mySdkFilter = sdkTypes::contains;
         return this;
     }
 
     @Nonnull
     @UsedInPlugin
-    public ModuleExtensionSdkBoxBuilder<T> sdkType(@Nonnull final SdkType sdkType) {
+    public ModuleExtensionSdkBoxBuilder<T> sdkType(@Nonnull SdkType sdkType) {
         return sdkTypes(Collections.singleton(sdkType));
     }
 
@@ -142,21 +142,21 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
     @Nonnull
     @RequiredReadAction
     public JComponent build() {
-        final SdkModel projectSdksModel = SdkModelFactory.getInstance().getOrCreateModel();
+        SdkModel projectSdksModel = SdkModelFactory.getInstance().getOrCreateModel();
 
-        final SdkComboBox comboBox = new SdkComboBox(projectSdksModel, mySdkFilter, null, myNullItemName, myNullItemIcon);
+        SdkComboBox comboBox = new SdkComboBox(projectSdksModel, mySdkFilter, null, myNullItemName, myNullItemIcon);
 
         comboBox.insertModuleItems(myMutableModuleExtension, mySdkPointerFunction);
 
-        final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = mySdkPointerFunction.apply(myMutableModuleExtension);
+        MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = mySdkPointerFunction.apply(myMutableModuleExtension);
         assert inheritableSdk != null;
         if (inheritableSdk.isNull()) {
             comboBox.setSelectedNoneSdk();
         }
         else {
-            final String sdkInheritModuleName = inheritableSdk.getModuleName();
+            String sdkInheritModuleName = inheritableSdk.getModuleName();
             if (sdkInheritModuleName != null) {
-                final Module sdkInheritModule = inheritableSdk.getModule();
+                Module sdkInheritModule = inheritableSdk.getModule();
                 if (sdkInheritModule == null) {
                     comboBox.addInvalidModuleItem(sdkInheritModuleName);
                 }

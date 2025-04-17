@@ -40,7 +40,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -120,11 +120,11 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
                 if (element == null) {
                     return;
                 }
-                if (element instanceof PsiDirectoryContainer) {
-                    dir = ((PsiDirectoryContainer)element).getDirectories()[0];
+                if (element instanceof PsiDirectoryContainer directoryContainer) {
+                    dir = directoryContainer.getDirectories()[0];
                 }
-                else if (element instanceof PsiDirectory) {
-                    dir = (PsiDirectory)element;
+                else if (element instanceof PsiDirectory directory) {
+                    dir = directory;
                 }
                 else {
                     file = element.getContainingFile();
@@ -277,7 +277,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         }
         catch (PatternSyntaxException e) {
             LOG.info("Error while processing file mask: ", e);
-            return Conditions.alwaysTrue();
+            return Predicates.alwaysTrue();
         }
     }
 

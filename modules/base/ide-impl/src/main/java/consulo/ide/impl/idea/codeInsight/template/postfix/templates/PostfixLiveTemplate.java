@@ -32,7 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
@@ -315,7 +315,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         @Nonnull Disposable parentDisposable
     ) {
         if (file.getFileType().isBinary()) {
-            return Conditions.alwaysFalse();
+            return Predicates.alwaysFalse();
         }
 
         int currentOffset = editor.getCaretModel().getOffset();
@@ -327,13 +327,13 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         PsiFile copyFile = copyFile(file, fileContentWithoutKey);
         Document copyDocument = copyFile.getViewProvider().getDocument();
         if (copyDocument == null) {
-            return Conditions.alwaysFalse();
+            return Predicates.alwaysFalse();
         }
 
         copyFile = provider.preCheck(copyFile, editor, newOffset);
         copyDocument = copyFile.getViewProvider().getDocument();
         if (copyDocument == null) {
-            return Conditions.alwaysFalse();
+            return Predicates.alwaysFalse();
         }
 
         // The copy document doesn't contain live template key.

@@ -17,6 +17,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.webBrowser.*;
@@ -324,7 +325,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     @Override
     @Nonnull
     public List<WebBrowser> getActiveBrowsers() {
-        return getBrowsers(Conditions.alwaysTrue(), true);
+        return getBrowsers(Predicates.alwaysTrue(), true);
     }
 
     @Override
@@ -358,14 +359,14 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     public WebBrowser addBrowser(
-        final @Nonnull UUID id,
-        final @Nonnull BrowserFamily family,
-        final @Nonnull String name,
-        final @Nullable String path,
-        final boolean active,
-        final BrowserSpecificSettings specificSettings
+        @Nonnull UUID id,
+        @Nonnull BrowserFamily family,
+        @Nonnull String name,
+        @Nullable String path,
+        boolean active,
+        BrowserSpecificSettings specificSettings
     ) {
-        final ConfigurableWebBrowser browser = new ConfigurableWebBrowser(id, family, name, path, active, specificSettings);
+        ConfigurableWebBrowser browser = new ConfigurableWebBrowser(id, family, name, path, active, specificSettings);
         browsers.add(browser);
         incModificationCount();
         return browser;

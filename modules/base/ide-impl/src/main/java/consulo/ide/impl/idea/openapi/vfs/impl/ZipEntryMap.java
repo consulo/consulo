@@ -17,8 +17,7 @@ package consulo.ide.impl.idea.openapi.vfs.impl;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.util.lang.function.Condition;
-
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -196,8 +195,8 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
         @Override
         public final Iterator<Entry<String, ArchiveHandler.EntryInfo>> iterator() {
             return ContainerUtil.mapIterator(
-                ContainerUtil.iterate(entries, Condition.NOT_NULL).iterator(),
-                (Function<ArchiveHandler.EntryInfo, Entry<String, ArchiveHandler.EntryInfo>>)entry -> new SimpleEntry<String, ArchiveHandler.EntryInfo>(
+                ContainerUtil.iterate(entries, Predicates.notNull()).iterator(),
+                (Function<ArchiveHandler.EntryInfo, Entry<String, ArchiveHandler.EntryInfo>>)entry -> new SimpleEntry<>(
                     getRelativePath(entry),
                     entry
                 )
@@ -224,6 +223,6 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
     @Nonnull
     @Override
     public Collection<ArchiveHandler.EntryInfo> values() {
-        return ContainerUtil.filter(entries, Condition.NOT_NULL);
+        return ContainerUtil.filter(entries, Predicates.notNull());
     }
 }

@@ -40,7 +40,7 @@ import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -198,7 +198,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                 () -> dataContext,
                 null,
                 true,
-                Conditions.alwaysFalse(),
+                Predicates.alwaysFalse(),
                 false,
                 true,
                 null

@@ -46,6 +46,7 @@ import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.Conditions;
 import consulo.util.lang.function.Predicates;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.lazy.LazyValue;

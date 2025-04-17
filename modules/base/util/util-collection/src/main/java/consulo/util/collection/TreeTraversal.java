@@ -18,6 +18,7 @@ package consulo.util.collection;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Functions;
 
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -404,7 +405,7 @@ public abstract class TreeTraversal {
             if (last == null) {
                 throw new NoSuchElementException();
             }
-            return _transform(JBIterable.generate(last, P.<T>toPrev()).transform(P.<T>toNode()).filter(Condition.NOT_NULL));
+            return _transform(JBIterable.generate(last, P.<T>toPrev()).transform(P.<T>toNode()).filter(Predicates.notNull()));
         }
     }
 
@@ -705,7 +706,7 @@ public abstract class TreeTraversal {
             return p;
         }
 
-        final Iterator<? extends T> iterator(@Nonnull Function<? super T, ? extends Iterable<? extends T>> tree) {
+        Iterator<? extends T> iterator(@Nonnull Function<? super T, ? extends Iterable<? extends T>> tree) {
             if (it != null) {
                 return it;
             }
@@ -714,7 +715,7 @@ public abstract class TreeTraversal {
             return it;
         }
 
-        final Iterable<? extends T> iterable(@Nonnull Function<? super T, ? extends Iterable<? extends T>> tree) {
+        Iterable<? extends T> iterable(@Nonnull Function<? super T, ? extends Iterable<? extends T>> tree) {
             return itle != null ? itle : JBIterable.from(itle = tree.apply(node));
         }
 

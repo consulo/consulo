@@ -305,9 +305,9 @@ public final class TreeUtil {
     @Nullable
     public static DefaultMutableTreeNode findNode(
         @Nonnull DefaultMutableTreeNode aRoot,
-        @Nonnull Condition<? super DefaultMutableTreeNode> condition
+        @Nonnull Predicate<? super DefaultMutableTreeNode> condition
     ) {
-        if (condition.value(aRoot)) {
+        if (condition.test(aRoot)) {
             return aRoot;
         }
         else {
@@ -2043,10 +2043,10 @@ public final class TreeUtil {
             if (node instanceof LoadingNode) {
                 return true;
             }
-            if (!(node instanceof DefaultMutableTreeNode)) {
+            if (!(node instanceof DefaultMutableTreeNode defMutableTreeNode)) {
                 return false;
             }
-            node = ((DefaultMutableTreeNode)node).getUserObject();
+            node = defMutableTreeNode.getUserObject();
         }
         return false;
     }

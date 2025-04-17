@@ -17,7 +17,7 @@ package consulo.execution.configuration.log;
 
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.process.ProcessHandler;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -36,7 +36,7 @@ public class LogFilesManager {
     public void addLogConsoles(@Nonnull RunConfigurationBase runConfiguration, @Nullable ProcessHandler startedProcess) {
         for (LogFileOptions logFileOptions : runConfiguration.getAllLogFiles()) {
             if (logFileOptions.isEnabled()) {
-                addConfigurationConsoles(logFileOptions, Conditions.<String>alwaysTrue(), logFileOptions.getPaths(), runConfiguration);
+                addConfigurationConsoles(logFileOptions, Predicates.<String>alwaysTrue(), logFileOptions.getPaths(), runConfiguration);
             }
         }
         runConfiguration.createAdditionalTabComponents(myManager, startedProcess);
