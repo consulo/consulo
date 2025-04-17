@@ -15,13 +15,11 @@
  */
 package consulo.util.collection;
 
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -37,7 +35,8 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
     private boolean myCurrentIsValid;
     private Dom myCurrent;
     private Boolean myCurrentPassedFilter;
-    public static final Predicate NOT_NULL = Objects::nonNull;
+    @Deprecated
+    public static final Predicate NOT_NULL = Predicates.notNull();
 
     public FilteringIterator(@Nonnull Iterator<Dom> delegate, @Nonnull Predicate<? super Dom> condition) {
         myDelegate = delegate;
@@ -118,24 +117,23 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
     }
 
     public static <T> Iterator<T> skipNulls(Iterator<T> iterator) {
-        return create(iterator, NOT_NULL);
+        return create(iterator, Predicates.notNull());
     }
 
+    @SuppressWarnings("unchecked")
     public static <Dom, T extends Dom> Iterator<T> create(Iterator<Dom> iterator, Predicate<? super Dom> condition) {
-        if (condition == Condition.TRUE || condition == Conditions.TRUE) {
-            return (Iterator<T>)iterator;
-        }
-        return new FilteringIterator<>(iterator, condition);
+        return condition == Predicates.alwaysTrue() ? (Iterator<T>)iterator : new FilteringIterator<>(iterator, condition);
     }
 
     public static <T> Predicate<T> alwaysTrueCondition(Class<T> aClass) {
-        return Conditions.alwaysTrue();
+        return Predicates.alwaysTrue();
     }
 
-    public static <T> InstanceOf<T> instanceOf(final Class<? extends T> aClass) {
+    public static <T> InstanceOf<T> instanceOf(Class<? extends T> aClass) {
         return new InstanceOf<>(aClass);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Iterator<T> createInstanceOf(Iterator<?> iterator, Class<T> aClass) {
         return create((Iterator<T>)iterator, instanceOf(aClass));
     }

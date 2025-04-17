@@ -28,12 +28,12 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Predicate;
 
 public abstract class ComboBoxAction extends AnAction implements CustomComponentAction {
     private String myPopupTitle;
@@ -52,7 +52,10 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
                 button = (ComboBoxButton)UIUtil.uiTraverser()
                     .withRoot(rootPane)
                     .bfsTraversal()
-                    .filter(component -> component instanceof ComboBoxButton && ((ComboBoxButton)component).getComboBoxAction() == ComboBoxAction.this)
+                    .filter(
+                        component -> component instanceof ComboBoxButton comboBoxButton
+                            && comboBoxButton.getComboBoxAction() == ComboBoxAction.this
+                    )
                     .first();
             }
             if (button == null) {
@@ -65,7 +68,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
     @Nonnull
     @Override
-    public JComponent createCustomComponent(Presentation presentation, String place) {
+    public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
         NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
         panel.setBorder(JBUI.Borders.empty(0, 4));
         ComboBoxButton button = createComboBoxButton(presentation);
@@ -120,9 +123,8 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
         return myPopupTitle;
     }
 
-
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
     }
 
@@ -150,7 +152,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
         return 1;
     }
 
-    public Condition<AnAction> getPreselectCondition() {
+    public Predicate<AnAction> getPreselectCondition() {
         return null;
     }
 }

@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.tools;
 
-import consulo.application.AllIcons;
 import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.KeymapExtension;
@@ -31,13 +31,12 @@ import java.util.function.Predicate;
  * @author traff
  */
 public abstract class BaseToolKeymapExtension implements KeymapExtension {
-
     @Override
-    public KeymapGroup createGroup(final Predicate<AnAction> filtered, final ComponentManager project) {
-        final ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
+    public KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project) {
+        ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
         String[] ids = actionManager.getActionIds(getActionIdPrefix());
         Arrays.sort(ids);
-        KeymapGroupImpl group = new KeymapGroupImpl(getGroupName(), AllIcons.Nodes.KeymapTools);
+        KeymapGroupImpl group = new KeymapGroupImpl(getGroupName(), PlatformIconGroup.nodesKeymaptools());
 
 
         HashMap<String, KeymapGroupImpl> toolGroupNameToGroup = new HashMap<>();
@@ -54,7 +53,7 @@ public abstract class BaseToolKeymapExtension implements KeymapExtension {
 
             KeymapGroupImpl subGroup = toolGroupNameToGroup.get(groupName);
             if (subGroup == null) {
-                subGroup = new KeymapGroupImpl(groupName, null, null);
+                subGroup = new KeymapGroupImpl(groupName);
                 toolGroupNameToGroup.put(groupName, subGroup);
                 if (groupName != null) {
                     group.addGroup(subGroup);

@@ -32,10 +32,12 @@ import consulo.diff.request.DiffRequest;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
+import consulo.platform.LineSeparator;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
@@ -65,11 +67,11 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 04-Jul-24
+ * @since 2024-07-04
  */
 public class AWTDiffUtil {
     @Nonnull
-    public static List<JComponent> createSyncHeightComponents(@Nonnull final List<JComponent> components) {
+    public static List<JComponent> createSyncHeightComponents(@Nonnull List<JComponent> components) {
         if (!ContainerUtil.exists(components, Condition.NOT_NULL)) {
             return components;
         }
@@ -96,16 +98,16 @@ public class AWTDiffUtil {
     }
 
     @Nonnull
-    static JComponent createSeparatorPanel(@Nonnull consulo.platform.LineSeparator separator) {
+    static JComponent createSeparatorPanel(@Nonnull LineSeparator separator) {
         JLabel label = new JLabel(separator.name());
         Color color;
-        if (separator == consulo.platform.LineSeparator.CRLF) {
+        if (separator == LineSeparator.CRLF) {
             color = JBColor.RED;
         }
-        else if (separator == consulo.platform.LineSeparator.LF) {
+        else if (separator == LineSeparator.LF) {
             color = JBColor.BLUE;
         }
-        else if (separator == consulo.platform.LineSeparator.CR) {
+        else if (separator == LineSeparator.CR) {
             color = JBColor.MAGENTA;
         }
         else {
@@ -120,10 +122,7 @@ public class AWTDiffUtil {
     }
 
     public static boolean isFocusedComponent(@Nullable Project project, @Nullable Component component) {
-        if (component == null) {
-            return false;
-        }
-        return ProjectIdeFocusManager.getInstance(project).getFocusedDescendantFor(component) != null;
+        return component != null && ProjectIdeFocusManager.getInstance(project).getFocusedDescendantFor(component) != null;
     }
 
     public static void requestFocus(@Nullable Project project, @Nullable Component component) {
@@ -207,7 +206,7 @@ public class AWTDiffUtil {
         }
 
         Charset charset = equalCharsets ? null : ((DocumentContent)content).getCharset();
-        consulo.platform.LineSeparator separator = equalSeparators ? null : ((DocumentContent)content).getLineSeparator();
+        LineSeparator separator = equalSeparators ? null : ((DocumentContent)content).getLineSeparator();
         boolean isReadOnly = editor == null || editor.isViewer() || !DiffImplUtil.canMakeWritable(editor.getDocument());
 
         return createTitle(title, charset, separator, isReadOnly);
@@ -222,7 +221,7 @@ public class AWTDiffUtil {
     public static JComponent createTitle(
         @Nonnull String title,
         @Nullable Charset charset,
-        @Nullable consulo.platform.LineSeparator separator,
+        @Nullable LineSeparator separator,
         boolean readOnly
     ) {
         if (readOnly) {
@@ -328,8 +327,8 @@ public class AWTDiffUtil {
 
         Component component = window;
         while (component != null) {
-            if (component instanceof Window) {
-                closeWindow((Window)component, modalOnly);
+            if (component instanceof Window parentWindow) {
+                closeWindow(parentWindow, modalOnly);
             }
 
             component = recursive ? component.getParent() : null;
@@ -349,8 +348,8 @@ public class AWTDiffUtil {
             return;
         }
 
-        if (window instanceof DialogWrapperDialog) {
-            ((DialogWrapperDialog)window).getDialogWrapper().doCancelAction();
+        if (window instanceof DialogWrapperDialog dialogWrapper) {
+            dialogWrapper.getDialogWrapper().doCancelAction();
             return;
         }
 
@@ -359,6 +358,7 @@ public class AWTDiffUtil {
     }
 
     @Nonnull
+    @RequiredUIAccess
     public static WindowWrapper.Mode getWindowMode(@Nonnull DiffDialogHints hints) {
         WindowWrapper.Mode mode = hints.getMode();
         if (mode == null) {
@@ -468,8 +468,8 @@ public class AWTDiffUtil {
 
         @Override
         public void doLayout() {
-            final Dimension size = getSize();
-            final Dimension preferredSize = myComponent.getPreferredSize();
+            Dimension size = getSize();
+            Dimension preferredSize = myComponent.getPreferredSize();
 
             Insets insets = getInsets();
             JBInsets.removeFrom(size, insets);

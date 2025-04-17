@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.ide.impl.idea.application.options.colors.OptionsPanelImpl.ColorDescriptionPanel;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.util.lang.function.Condition;
+import consulo.ide.impl.idea.application.options.colors.OptionsPanelImpl.ColorDescriptionPanel;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class CompositeColorDescriptionPanel extends JPanel implements ColorDescriptionPanel {
     @Nonnull
     protected final List<ColorDescriptionPanel> myDescriptionPanels = new ArrayList<>();
     @Nonnull
-    protected final List<Condition<? super EditorSchemeAttributeDescriptor>> myConditions = new ArrayList<>();
+    protected final List<Predicate<? super EditorSchemeAttributeDescriptor>> myConditions = new ArrayList<>();
 
     @Nonnull
     private final List<Listener> myListeners = new ArrayList<>();
@@ -40,7 +39,7 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
 
     public void addDescriptionPanel(
         @Nonnull ColorDescriptionPanel descriptionPanel,
-        @Nonnull Condition<? super EditorSchemeAttributeDescriptor> condition
+        @Nonnull Predicate<? super EditorSchemeAttributeDescriptor> condition
     ) {
         myDescriptionPanels.add(descriptionPanel);
         myConditions.add(condition);
@@ -73,7 +72,7 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
     @Override
     public void resetDefault() {
         if (myActive != null) {
-            final PaintLocker locker = new PaintLocker(this);
+            PaintLocker locker = new PaintLocker(this);
             try {
                 setPreferredSize(getSize());// froze [this] size
                 remove(myActive.getPanel());
@@ -92,7 +91,7 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
         JComponent newPanel = myActive == null ? null : myActive.getPanel();
 
         if (oldPanel != newPanel) {
-            final PaintLocker locker = new PaintLocker(this);
+            PaintLocker locker = new PaintLocker(this);
             try {
                 if (oldPanel != null) {
                     remove(oldPanel);
@@ -114,9 +113,9 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
     @Nullable
     private ColorDescriptionPanel getPanelForDescriptor(@Nonnull EditorSchemeAttributeDescriptor descriptor) {
         for (int i = myConditions.size() - 1; i >= 0; i--) {
-            Condition<? super EditorSchemeAttributeDescriptor> condition = myConditions.get(i);
+            Predicate<? super EditorSchemeAttributeDescriptor> condition = myConditions.get(i);
             ColorDescriptionPanel panel = myDescriptionPanels.get(i);
-            if (condition.value(descriptor)) {
+            if (condition.test(descriptor)) {
                 return panel;
             }
         }

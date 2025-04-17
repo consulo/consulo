@@ -29,7 +29,6 @@ import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -37,8 +36,8 @@ import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 
 /**
- * User: anna
- * Date: Mar 18, 2005
+ * @author anna
+ * @since 2005-03-18
  */
 public class ActionUrl implements JDOMExternalizable {
     public static final int ADDED = 1;
@@ -52,30 +51,21 @@ public class ActionUrl implements JDOMExternalizable {
     private int myActionType;
     private int myAbsolutePosition;
 
-
     public int myInitialPosition = -1;
 
-    @NonNls
     private static final String IS_GROUP = "is_group";
-    @NonNls
     private static final String SEPARATOR = "seperator";
-    @NonNls
     private static final String IS_ACTION = "is_action";
-    @NonNls
     private static final String VALUE = "value";
-    @NonNls
     private static final String PATH = "path";
-    @NonNls
     private static final String ACTION_TYPE = "action_type";
-    @NonNls
     private static final String POSITION = "position";
-
 
     public ActionUrl() {
         myGroupPath = new ArrayList<>();
     }
 
-    public ActionUrl(final ArrayList<String> groupPath, final Object component, final int actionType, final int position) {
+    public ActionUrl(ArrayList<String> groupPath, Object component, int actionType, int position) {
         myGroupPath = groupPath;
         myComponent = component;
         myActionType = actionType;
@@ -103,7 +93,7 @@ public class ActionUrl implements JDOMExternalizable {
             return ActionManager.getInstance().getAction(actionId);
         }
         if (myComponent instanceof KeymapGroupImpl keymapGroup) {
-            final String id = keymapGroup.getId();
+            String id = keymapGroup.getId();
             if (id == null || id.length() == 0) {
                 return keymapGroup.constructActionGroup(true);
             }
@@ -116,7 +106,7 @@ public class ActionUrl implements JDOMExternalizable {
         return myActionType;
     }
 
-    public void setActionType(final int actionType) {
+    public void setActionType(int actionType) {
         myActionType = actionType;
     }
 
@@ -124,7 +114,7 @@ public class ActionUrl implements JDOMExternalizable {
         return myAbsolutePosition;
     }
 
-    public void setAbsolutePosition(final int absolutePosition) {
+    public void setAbsolutePosition(int absolutePosition) {
         myAbsolutePosition = absolutePosition;
     }
 
@@ -132,16 +122,17 @@ public class ActionUrl implements JDOMExternalizable {
         return myInitialPosition;
     }
 
-    public void setInitialPosition(final int initialPosition) {
+    public void setInitialPosition(int initialPosition) {
         myInitialPosition = initialPosition;
     }
 
+    @Override
     public void readExternal(Element element) throws InvalidDataException {
         myGroupPath = new ArrayList<>();
         for (Object o : element.getChildren(PATH)) {
             myGroupPath.add(((Element)o).getAttributeValue(VALUE));
         }
-        final String attributeValue = element.getAttributeValue(VALUE);
+        String attributeValue = element.getAttributeValue(VALUE);
         if (element.getAttributeValue(IS_ACTION) != null) {
             myComponent = attributeValue;
         }
@@ -149,7 +140,7 @@ public class ActionUrl implements JDOMExternalizable {
             myComponent = AnSeparator.getInstance();
         }
         else if (element.getAttributeValue(IS_GROUP) != null) {
-            final AnAction action = ActionManager.getInstance().getAction(attributeValue);
+            AnAction action = ActionManager.getInstance().getAction(attributeValue);
             myComponent = action instanceof ActionGroup actionGroup
                 ? ActionsTreeUtil.createGroup(actionGroup, true, null)
                 : new KeymapGroupImpl(attributeValue, attributeValue, null);
@@ -159,6 +150,7 @@ public class ActionUrl implements JDOMExternalizable {
         DefaultJDOMExternalizer.readExternal(this, element);
     }
 
+    @Override
     public void writeExternal(Element element) throws WriteExternalException {
         for (String s : myGroupPath) {
             Element path = new Element(PATH);
@@ -173,7 +165,7 @@ public class ActionUrl implements JDOMExternalizable {
             element.setAttribute(SEPARATOR, Boolean.TRUE.toString());
         }
         else if (myComponent instanceof KeymapGroupImpl keymapGroup) {
-            final String groupId = keymapGroup.getId() != null && keymapGroup.getId().length() != 0
+            String groupId = keymapGroup.getId() != null && keymapGroup.getId().length() != 0
                 ? keymapGroup.getId() : keymapGroup.getName();
             element.setAttribute(VALUE, groupId != null ? groupId : "");
             element.setAttribute(IS_GROUP, Boolean.TRUE.toString());
@@ -205,12 +197,12 @@ public class ActionUrl implements JDOMExternalizable {
     }
 
     private static void addPathToActionsTree(JTree tree, ActionUrl url) {
-        final TreePath treePath = CustomizationUtil.getTreePath(tree, url);
+        TreePath treePath = CustomizationUtil.getTreePath(tree, url);
         if (treePath == null) {
             return;
         }
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)treePath.getLastPathComponent();
-        final int absolutePosition = url.getAbsolutePosition();
+        int absolutePosition = url.getAbsolutePosition();
         if (node.getChildCount() >= absolutePosition && absolutePosition >= 0) {
             if (url.getComponent() instanceof KeymapGroupImpl keymapGroup) {
                 node.insert(ActionsTreeUtil.createNode(keymapGroup), absolutePosition);
@@ -225,12 +217,12 @@ public class ActionUrl implements JDOMExternalizable {
         if (url.myComponent == null) {
             return;
         }
-        final TreePath treePath = CustomizationUtil.getTreePath(tree, url);
+        TreePath treePath = CustomizationUtil.getTreePath(tree, url);
         if (treePath == null) {
             return;
         }
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)treePath.getLastPathComponent();
-        final int absolutePosition = url.getAbsolutePosition();
+        int absolutePosition = url.getAbsolutePosition();
         if (node.getChildCount() > absolutePosition && absolutePosition >= 0) {
             DefaultMutableTreeNode child = (DefaultMutableTreeNode)node.getChildAt(absolutePosition);
             if (child.getUserObject().equals(url.getComponent())) {
@@ -240,27 +232,26 @@ public class ActionUrl implements JDOMExternalizable {
     }
 
     private static void movePathInActionsTree(JTree tree, ActionUrl url) {
-        final TreePath treePath = CustomizationUtil.getTreePath(tree, url);
+        TreePath treePath = CustomizationUtil.getTreePath(tree, url);
         if (treePath != null) {
             if (treePath.getLastPathComponent() != null) {
-                final DefaultMutableTreeNode parent = ((DefaultMutableTreeNode)treePath.getLastPathComponent());
-                final int absolutePosition = url.getAbsolutePosition();
-                final int initialPosition = url.getInitialPosition();
-                if (parent.getChildCount() > absolutePosition && absolutePosition >= 0) {
-                    if (parent.getChildCount() > initialPosition && initialPosition >= 0) {
-                        final DefaultMutableTreeNode child = (DefaultMutableTreeNode)parent.getChildAt(initialPosition);
-                        if (child.getUserObject().equals(url.getComponent())) {
-                            parent.remove(child);
-                            parent.insert(child, absolutePosition);
-                        }
+                DefaultMutableTreeNode parent = ((DefaultMutableTreeNode)treePath.getLastPathComponent());
+                int absolutePosition = url.getAbsolutePosition();
+                int initialPosition = url.getInitialPosition();
+                if (parent.getChildCount() > absolutePosition && absolutePosition >= 0
+                    && parent.getChildCount() > initialPosition && initialPosition >= 0) {
+                    DefaultMutableTreeNode child = (DefaultMutableTreeNode)parent.getChildAt(initialPosition);
+                    if (child.getUserObject().equals(url.getComponent())) {
+                        parent.remove(child);
+                        parent.insert(child, absolutePosition);
                     }
                 }
             }
         }
     }
 
-    public static ArrayList<String> getGroupPath(final TreePath treePath) {
-        final ArrayList<String> result = new ArrayList<>();
+    public static ArrayList<String> getGroupPath(TreePath treePath) {
+        ArrayList<String> result = new ArrayList<>();
         for (int i = 0; i < treePath.getPath().length - 1; i++) {
             Object o = ((DefaultMutableTreeNode)treePath.getPath()[i]).getUserObject();
             if (o instanceof KeymapGroupImpl keymapGroup) {
@@ -270,6 +261,7 @@ public class ActionUrl implements JDOMExternalizable {
         return result;
     }
 
+    @Override
     public boolean equals(Object object) {
         if (!(object instanceof ActionUrl)) {
             return false;
@@ -280,17 +272,18 @@ public class ActionUrl implements JDOMExternalizable {
         return Comparing.equal(comp, thatComp) && myGroupPath.equals(url.myGroupPath) && myAbsolutePosition == url.getAbsolutePosition();
     }
 
+    @Override
     public int hashCode() {
         int result = myComponent != null ? myComponent.hashCode() : 0;
         result += 29 * myGroupPath.hashCode();
         return result;
     }
 
-    public void setComponent(final Object object) {
+    public void setComponent(Object object) {
         myComponent = object;
     }
 
-    public void setGroupPath(final ArrayList<String> groupPath) {
+    public void setGroupPath(ArrayList<String> groupPath) {
         myGroupPath = groupPath;
     }
 }

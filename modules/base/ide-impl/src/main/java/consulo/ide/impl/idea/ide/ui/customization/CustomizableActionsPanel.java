@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.ui.customization;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
@@ -31,6 +30,7 @@ import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -65,8 +65,8 @@ import java.util.List;
 import java.util.*;
 
 /**
- * User: anna
- * Date: Mar 17, 2005
+ * @author anna
+ * @since 2005-03-17
  */
 public class CustomizableActionsPanel implements Disposable {
     private static final Logger LOG = Logger.getInstance(CustomizableActionsPanel.class);
@@ -90,8 +90,8 @@ public class CustomizableActionsPanel implements Disposable {
     public CustomizableActionsPanel() {
         myPanel = new JPanel(new BorderLayout());
 
-        KeymapGroupImpl rootGroup = new KeymapGroupImpl("root", null, null);
-        final DefaultMutableTreeNode root = new DefaultMutableTreeNode(rootGroup);
+        KeymapGroupImpl rootGroup = new KeymapGroupImpl("root");
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(rootGroup);
         myModel = new DefaultTreeModel(root);
         myActionsTree = new Tree(myModel);
 
@@ -100,16 +100,16 @@ public class CustomizableActionsPanel implements Disposable {
         UIUtil.setLineStyleAngled(myActionsTree);
         myActionsTree.setCellRenderer(new MyTreeCellRenderer());
 
-        final ActionManager actionManager = ActionManager.getInstance();
+        ActionManager actionManager = ActionManager.getInstance();
         myActionsTree.getSelectionModel().addTreeSelectionListener(e -> {
-            final TreePath[] selectionPaths = myActionsTree.getSelectionPaths();
-            final boolean isSingleSelection = selectionPaths != null && selectionPaths.length == 1;
+            TreePath[] selectionPaths = myActionsTree.getSelectionPaths();
+            boolean isSingleSelection = selectionPaths != null && selectionPaths.length == 1;
             myAddActionButton.setEnabled(isSingleSelection);
             if (isSingleSelection) {
-                final DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPaths[0].getLastPathComponent();
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPaths[0].getLastPathComponent();
                 String actionId = getActionId(node);
                 if (actionId != null) {
-                    final AnAction action = actionManager.getAction(actionId);
+                    AnAction action = actionManager.getAction(actionId);
                     myEditIconButton.setEnabled(action != null && action.getTemplatePresentation() != null);
                 }
                 else {
@@ -136,19 +136,19 @@ public class CustomizableActionsPanel implements Disposable {
 
         myAddActionButton = Button.create(IdeLocalize.buttonAddActionAfter());
         myAddActionButton.addClickListener(e -> {
-            final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
-            final TreePath selectionPath = myActionsTree.getLeadSelectionPath();
+            List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
+            TreePath selectionPath = myActionsTree.getLeadSelectionPath();
             if (selectionPath != null) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
-                final FindAvailableActionsDialog dlg = new FindAvailableActionsDialog();
+                FindAvailableActionsDialog dlg = new FindAvailableActionsDialog();
                 dlg.show();
                 if (dlg.isOK()) {
-                    final Set<Object> toAdd = dlg.getTreeSelectedActionIds();
+                    Set<Object> toAdd = dlg.getTreeSelectedActionIds();
                     if (toAdd == null) {
                         return;
                     }
-                    for (final Object o : toAdd) {
-                        final ActionUrl url = new ActionUrl(
+                    for (Object o : toAdd) {
+                        ActionUrl url = new ActionUrl(
                             ActionUrl.getGroupPath(new TreePath(node.getPath())),
                             o,
                             ActionUrl.ADDED,
@@ -171,8 +171,8 @@ public class CustomizableActionsPanel implements Disposable {
         myEditIconButton = Button.create(IdeLocalize.buttonEditActionIcon());
         myEditIconButton.addClickListener(e -> {
             myRestoreAllDefaultButton.setEnabled(true);
-            final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
-            final TreePath selectionPath = myActionsTree.getLeadSelectionPath();
+            List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
+            TreePath selectionPath = myActionsTree.getLeadSelectionPath();
             if (selectionPath != null) {
                 EditIconDialog dlg = new EditIconDialog((DefaultMutableTreeNode)selectionPath.getLastPathComponent());
                 dlg.show();
@@ -185,11 +185,11 @@ public class CustomizableActionsPanel implements Disposable {
 
         myAddSeparatorButton = Button.create(IdeLocalize.buttonAddSeparator());
         myAddSeparatorButton.addClickListener(e -> {
-            final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
-            final TreePath selectionPath = myActionsTree.getLeadSelectionPath();
+            List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
+            TreePath selectionPath = myActionsTree.getLeadSelectionPath();
             if (selectionPath != null) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
-                final ActionUrl url = new ActionUrl(
+                ActionUrl url = new ActionUrl(
                     ActionUrl.getGroupPath(selectionPath),
                     AnSeparator.getInstance(),
                     ActionUrl.ADDED,
@@ -204,11 +204,11 @@ public class CustomizableActionsPanel implements Disposable {
 
         myRemoveActionButton = Button.create(IdeLocalize.buttonRemove());
         myRemoveActionButton.addClickListener(e -> {
-            final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
-            final TreePath[] selectionPath = myActionsTree.getSelectionPaths();
+            List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
+            TreePath[] selectionPath = myActionsTree.getSelectionPaths();
             if (selectionPath != null) {
                 for (TreePath treePath : selectionPath) {
-                    final ActionUrl url = CustomizationUtil.getActionUrl(treePath, ActionUrl.DELETED);
+                    ActionUrl url = CustomizationUtil.getActionUrl(treePath, ActionUrl.DELETED);
                     ActionUrl.changePathInActionsTree(myActionsTree, url);
                     addCustomizedAction(url);
                 }
@@ -219,12 +219,12 @@ public class CustomizableActionsPanel implements Disposable {
 
         myMoveActionUpButton = Button.create(IdeLocalize.buttonMoveUpU());
         myMoveActionUpButton.addClickListener(e -> {
-            final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
-            final TreePath[] selectionPath = myActionsTree.getSelectionPaths();
+            List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
+            TreePath[] selectionPath = myActionsTree.getSelectionPaths();
             if (selectionPath != null) {
                 for (TreePath treePath : selectionPath) {
-                    final ActionUrl url = CustomizationUtil.getActionUrl(treePath, ActionUrl.MOVE);
-                    final int absolutePosition = url.getAbsolutePosition();
+                    ActionUrl url = CustomizationUtil.getActionUrl(treePath, ActionUrl.MOVE);
+                    int absolutePosition = url.getAbsolutePosition();
                     url.setInitialPosition(absolutePosition);
                     url.setAbsolutePosition(absolutePosition - 1);
                     ActionUrl.changePathInActionsTree(myActionsTree, url);
@@ -240,13 +240,13 @@ public class CustomizableActionsPanel implements Disposable {
 
         myMoveActionDownButton = Button.create(IdeLocalize.buttonMoveDownD());
         myMoveActionDownButton.addClickListener(e -> {
-            final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
-            final TreePath[] selectionPath = myActionsTree.getSelectionPaths();
+            List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
+            TreePath[] selectionPath = myActionsTree.getSelectionPaths();
             if (selectionPath != null) {
                 for (int i = selectionPath.length - 1; i >= 0; i--) {
                     TreePath treePath = selectionPath[i];
-                    final ActionUrl url = CustomizationUtil.getActionUrl(treePath, ActionUrl.MOVE);
-                    final int absolutePosition = url.getAbsolutePosition();
+                    ActionUrl url = CustomizationUtil.getActionUrl(treePath, ActionUrl.MOVE);
+                    int absolutePosition = url.getAbsolutePosition();
                     url.setInitialPosition(absolutePosition);
                     url.setAbsolutePosition(absolutePosition + 1);
                     ActionUrl.changePathInActionsTree(myActionsTree, url);
@@ -269,13 +269,13 @@ public class CustomizableActionsPanel implements Disposable {
 
         myRestoreDefaultButton = Button.create(LocalizeValue.localizeTODO("Restore Default"));
         myRestoreDefaultButton.addClickListener(e -> {
-            final List<ActionUrl> otherActions = new ArrayList<>(mySelectedSchema.getActions());
+            List<ActionUrl> otherActions = new ArrayList<>(mySelectedSchema.getActions());
             otherActions.removeAll(findActionsUnderSelection());
             mySelectedSchema.copyFrom(new CustomActionsSchemaImpl(Application.get()));
             for (ActionUrl otherAction : otherActions) {
                 mySelectedSchema.addAction(otherAction);
             }
-            final List<TreePath> treePaths = TreeUtil.collectExpandedPaths(myActionsTree);
+            List<TreePath> treePaths = TreeUtil.collectExpandedPaths(myActionsTree);
             patchActionsTreeCorrespondingToSchema(root);
             restorePathsAfterTreeOptimization(treePaths);
             myRestoreDefaultButton.setEnabled(false);
@@ -311,18 +311,18 @@ public class CustomizableActionsPanel implements Disposable {
     }
 
     private List<ActionUrl> findActionsUnderSelection() {
-        final ArrayList<ActionUrl> actions = new ArrayList<>();
-        final TreePath[] selectionPaths = myActionsTree.getSelectionPaths();
+        ArrayList<ActionUrl> actions = new ArrayList<>();
+        TreePath[] selectionPaths = myActionsTree.getSelectionPaths();
         if (selectionPaths != null) {
             for (TreePath path : selectionPaths) {
-                final ActionUrl selectedUrl = CustomizationUtil.getActionUrl(path, ActionUrl.MOVE);
-                final ArrayList<String> selectedGroupPath = new ArrayList<>(selectedUrl.getGroupPath());
-                final Object component = selectedUrl.getComponent();
+                ActionUrl selectedUrl = CustomizationUtil.getActionUrl(path, ActionUrl.MOVE);
+                ArrayList<String> selectedGroupPath = new ArrayList<>(selectedUrl.getGroupPath());
+                Object component = selectedUrl.getComponent();
                 if (component instanceof KeymapGroupImpl keymapGroup) {
                     selectedGroupPath.add(keymapGroup.getName());
                     for (ActionUrl action : mySelectedSchema.getActions()) {
-                        final ArrayList<String> groupPath = action.getGroupPath();
-                        final int idx = Collections.indexOfSubList(groupPath, selectedGroupPath);
+                        ArrayList<String> groupPath = action.getGroupPath();
+                        int idx = Collections.indexOfSubList(groupPath, selectedGroupPath);
                         if (idx > -1) {
                             actions.add(action);
                         }
@@ -333,6 +333,7 @@ public class CustomizableActionsPanel implements Disposable {
         return actions;
     }
 
+    @RequiredUIAccess
     private void addCustomizedAction(ActionUrl url) {
         mySelectedSchema.addAction(url);
         myRestoreAllDefaultButton.setEnabled(true);
@@ -340,24 +341,25 @@ public class CustomizableActionsPanel implements Disposable {
 
     @RequiredUIAccess
     private void editToolbarIcon(String actionId, DefaultMutableTreeNode node) {
-        final AnAction anAction = ActionManager.getInstance().getAction(actionId);
+        AnAction anAction = ActionManager.getInstance().getAction(actionId);
         if (isToolbarAction(node) && anAction.getTemplatePresentation() != null && anAction.getTemplatePresentation().getIcon() == null) {
-            final int exitCode = Messages.showOkCancelDialog(
+            int exitCode = Messages.showOkCancelDialog(
                 IdeLocalize.errorAddingActionWithoutIconToToolbar().get(),
                 IdeLocalize.titleUnableToAddActionWithoutIconToToolbar().get(),
                 UIUtil.getInformationIcon()
             );
             if (exitCode == Messages.OK) {
                 mySelectedSchema.addIconCustomization(actionId, null);
-                anAction.getTemplatePresentation().setIcon(AllIcons.Toolbar.Unknown);
+                anAction.getTemplatePresentation().setIcon(PlatformIconGroup.toolbarUnknown());
                 anAction.setDefaultIcon(false);
-                node.setUserObject(Pair.create(actionId, AllIcons.Toolbar.Unknown));
+                node.setUserObject(Pair.create(actionId, PlatformIconGroup.toolbarUnknown()));
                 myActionsTree.repaint();
                 setCustomizationSchemaForCurrentProjects();
             }
         }
     }
 
+    @RequiredUIAccess
     private void setButtonsDisabled() {
         myRemoveActionButton.setEnabled(false);
         myAddActionButton.setEnabled(false);
@@ -368,12 +370,12 @@ public class CustomizableActionsPanel implements Disposable {
     }
 
     private static boolean isMoveSupported(JTree tree, int dir) {
-        final TreePath[] selectionPaths = tree.getSelectionPaths();
+        TreePath[] selectionPaths = tree.getSelectionPaths();
         if (selectionPaths != null) {
             DefaultMutableTreeNode parent = null;
             for (TreePath treePath : selectionPaths) {
                 if (treePath.getLastPathComponent() != null) {
-                    final DefaultMutableTreeNode node = (DefaultMutableTreeNode)treePath.getLastPathComponent();
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode)treePath.getLastPathComponent();
                     if (parent == null) {
                         parent = (DefaultMutableTreeNode)node.getParent();
                     }
@@ -403,27 +405,27 @@ public class CustomizableActionsPanel implements Disposable {
     }
 
     private static void setCustomizationSchemaForCurrentProjects() {
-        final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         for (Project project : openProjects) {
-            final IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(project);
+            IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(project);
             if (frame != null) {
                 frame.updateView();
             }
 
-            //final FavoritesManager favoritesView = FavoritesManager.getInstance(project);
-            //final String[] availableFavoritesLists = favoritesView.getAvailableFavoritesLists();
+            //FavoritesManager favoritesView = FavoritesManager.getInstance(project);
+            //String[] availableFavoritesLists = favoritesView.getAvailableFavoritesLists();
             //for (String favoritesList : availableFavoritesLists) {
-            //  favoritesView.getFavoritesTreeViewPanel(favoritesList).updateTreePopupHandler();
+            //    favoritesView.getFavoritesTreeViewPanel(favoritesList).updateTreePopupHandler();
             //}
         }
-        final IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(null);
+        IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(null);
         if (frame != null) {
             frame.updateView();
         }
     }
 
     public void apply() throws ConfigurationException {
-        final List<TreePath> treePaths = TreeUtil.collectExpandedPaths(myActionsTree);
+        List<TreePath> treePaths = TreeUtil.collectExpandedPaths(myActionsTree);
         if (mySelectedSchema != null) {
             CustomizationUtil.optimizeSchema(myActionsTree, mySelectedSchema);
         }
@@ -432,12 +434,13 @@ public class CustomizableActionsPanel implements Disposable {
         setCustomizationSchemaForCurrentProjects();
     }
 
-    private void restorePathsAfterTreeOptimization(final List<TreePath> treePaths) {
-        for (final TreePath treePath : treePaths) {
+    private void restorePathsAfterTreeOptimization(List<TreePath> treePaths) {
+        for (TreePath treePath : treePaths) {
             myActionsTree.expandPath(CustomizationUtil.getPathByUserObjects(myActionsTree, treePath));
         }
     }
 
+    @RequiredUIAccess
     public void reset() {
         Application application = Application.get();
 
@@ -456,7 +459,7 @@ public class CustomizableActionsPanel implements Disposable {
         root.removeAllChildren();
         if (mySelectedSchema != null) {
             mySelectedSchema.fillActionGroups(root);
-            for (final ActionUrl actionUrl : mySelectedSchema.getActions()) {
+            for (ActionUrl actionUrl : mySelectedSchema.getActions()) {
                 ActionUrl.changePathInActionsTree(myActionsTree, actionUrl);
             }
         }
@@ -486,7 +489,7 @@ public class CustomizableActionsPanel implements Disposable {
                 if (userObject instanceof KeymapGroupImpl group) {
                     String name = group.getName();
                     setText(name != null ? name : group.getId());
-                    icon = ObjectUtil.notNull(group.getIcon(), AllIcons.Nodes.Folder);
+                    icon = ObjectUtil.notNull(group.getIcon(), PlatformIconGroup.nodesFolder());
                 }
                 else if (userObject instanceof String actionId) {
                     AnAction action = ActionManager.getInstance().getAction(actionId);
@@ -510,7 +513,7 @@ public class CustomizableActionsPanel implements Disposable {
                 }
                 else if (userObject instanceof QuickList quickList) {
                     setText(quickList.getDisplayName());
-                    icon = AllIcons.Actions.QuickList;
+                    icon = PlatformIconGroup.actionsQuicklist();
                 }
                 else {
                     throw new IllegalArgumentException("unknown userObject: " + userObject);
@@ -557,7 +560,7 @@ public class CustomizableActionsPanel implements Disposable {
             return false;
         }
 
-        final AnAction action = ActionManager.getInstance().getAction(actionId);
+        AnAction action = ActionManager.getInstance().getAction(actionId);
         if (action != null && action.getTemplatePresentation() != null) {
             if (StringUtil.isNotEmpty(path)) {
                 Image image = null;
@@ -583,7 +586,7 @@ public class CustomizableActionsPanel implements Disposable {
             else {
                 node.setUserObject(Pair.create(actionId, null));
                 mySelectedSchema.removeIconCustomization(actionId);
-                final DefaultMutableTreeNode nodeOnToolbar = findNodeOnToolbar(actionId);
+                DefaultMutableTreeNode nodeOnToolbar = findNodeOnToolbar(actionId);
                 if (nodeOnToolbar != null) {
                     editToolbarIcon(actionId, nodeOnToolbar);
                     node.setUserObject(nodeOnToolbar.getUserObject());
@@ -598,8 +601,9 @@ public class CustomizableActionsPanel implements Disposable {
         TextFieldWithBrowseButton textField = new TextFieldWithBrowseButton();
         textField.setPreferredSize(new Dimension(200, textField.getPreferredSize().height));
         textField.setMinimumSize(new Dimension(200, textField.getPreferredSize().height));
-        final FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(true, false, false, false, false, false) {
+        FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(true, false, false, false, false, false) {
             @Override
+            @RequiredUIAccess
             public boolean isFileSelectable(VirtualFile file) {
                 //noinspection HardCodedStringLiteral
                 return file.getName().endsWith(".png");
@@ -624,14 +628,15 @@ public class CustomizableActionsPanel implements Disposable {
             setTitle(IdeLocalize.titleChooseActionIcon());
             init();
             myNode = node;
-            final String actionId = getActionId(node);
+            String actionId = getActionId(node);
             if (actionId != null) {
-                final String iconPath = mySelectedSchema.getIconPath(actionId);
+                String iconPath = mySelectedSchema.getIconPath(actionId);
                 myTextField.setText(FileUtil.toSystemDependentName(iconPath));
             }
         }
 
         @Override
+        @RequiredUIAccess
         public JComponent getPreferredFocusedComponent() {
             return myTextField.getChildComponent();
         }
@@ -656,11 +661,11 @@ public class CustomizableActionsPanel implements Disposable {
                 if (!doSetIcon(myNode, myTextField.getText(), getContentPane())) {
                     return;
                 }
-                final Object userObject = myNode.getUserObject();
+                Object userObject = myNode.getUserObject();
                 if (userObject instanceof Pair pair) {
                     String actionId = (String)pair.first;
-                    final AnAction action = ActionManager.getInstance().getAction(actionId);
-                    final Image icon = (Image)pair.second;
+                    AnAction action = ActionManager.getInstance().getAction(actionId);
+                    Image icon = (Image)pair.second;
                     action.getTemplatePresentation().setIcon(icon);
                     action.setDefaultIcon(icon == null);
                     editToolbarIcon(actionId, myNode);
@@ -674,10 +679,10 @@ public class CustomizableActionsPanel implements Disposable {
 
     @Nullable
     private DefaultMutableTreeNode findNodeOnToolbar(String actionId) {
-        final TreeNode toolbar = ((DefaultMutableTreeNode)myModel.getRoot()).getChildAt(1);
+        TreeNode toolbar = ((DefaultMutableTreeNode)myModel.getRoot()).getChildAt(1);
         for (int i = 0; i < toolbar.getChildCount(); i++) {
-            final DefaultMutableTreeNode child = (DefaultMutableTreeNode)toolbar.getChildAt(i);
-            final String childId = getActionId(child);
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode)toolbar.getChildAt(i);
+            String childId = getActionId(child);
             if (childId != null && childId.equals(actionId)) {
                 return child;
             }
@@ -706,12 +711,12 @@ public class CustomizableActionsPanel implements Disposable {
             myTree = new Tree();
             myTree.setModel(model);
             myTree.setCellRenderer(new MyTreeCellRenderer());
-            final ActionManager actionManager = ActionManager.getInstance();
+            ActionManager actionManager = ActionManager.getInstance();
 
             mySetIconButton = new JButton(IdeLocalize.buttonSetIcon().get());
             mySetIconButton.setEnabled(false);
             mySetIconButton.addActionListener(e -> {
-                final TreePath selectionPath = myTree.getSelectionPath();
+                TreePath selectionPath = myTree.getSelectionPath();
                 if (selectionPath != null) {
                     doSetIcon((DefaultMutableTreeNode)selectionPath.getLastPathComponent(), myTextField.getText(), getContentPane());
                     myTree.repaint();
@@ -726,7 +731,7 @@ public class CustomizableActionsPanel implements Disposable {
             });
             JPanel northPanel = new JPanel(new BorderLayout());
             northPanel.add(myTextField, BorderLayout.CENTER);
-            final JLabel label = new JLabel(IdeLocalize.labelIconPath().get());
+            JLabel label = new JLabel(IdeLocalize.labelIconPath().get());
             label.setLabelFor(myTextField.getChildComponent());
             northPanel.add(label, BorderLayout.WEST);
             northPanel.add(mySetIconButton, BorderLayout.EAST);
@@ -737,12 +742,12 @@ public class CustomizableActionsPanel implements Disposable {
             panel.add(ScrollPaneFactory.createScrollPane(myTree), BorderLayout.CENTER);
             myTree.getSelectionModel().addTreeSelectionListener(e -> {
                 enableSetIconButton(actionManager);
-                final TreePath selectionPath = myTree.getSelectionPath();
+                TreePath selectionPath = myTree.getSelectionPath();
                 if (selectionPath != null) {
-                    final DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
-                    final String actionId = getActionId(node);
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
+                    String actionId = getActionId(node);
                     if (actionId != null) {
-                        final String iconPath = mySelectedSchema.getIconPath(actionId);
+                        String iconPath = mySelectedSchema.getIconPath(actionId);
                         myTextField.setText(FileUtil.toSystemDependentName(iconPath));
                     }
                 }
@@ -753,32 +758,35 @@ public class CustomizableActionsPanel implements Disposable {
         @Override
         @RequiredUIAccess
         protected void doOKAction() {
-            final ActionManager actionManager = ActionManager.getInstance();
-            TreeUtil.traverseDepth((TreeNode)myModel.getRoot(), node -> {
-                if (node instanceof DefaultMutableTreeNode mutableNode) {
-                    final Object userObject = mutableNode.getUserObject();
-                    if (userObject instanceof Pair pair) {
-                        String actionId = (String)pair.first;
-                        final AnAction action = actionManager.getAction(actionId);
-                        Image icon = (Image)pair.second;
-                        action.getTemplatePresentation().setIcon(icon);
-                        action.setDefaultIcon(icon == null);
-                        editToolbarIcon(actionId, mutableNode);
+            ActionManager actionManager = ActionManager.getInstance();
+            TreeUtil.traverseDepth(
+                (TreeNode)myModel.getRoot(),
+                node -> {
+                    if (node instanceof DefaultMutableTreeNode mutableNode) {
+                        Object userObject = mutableNode.getUserObject();
+                        if (userObject instanceof Pair pair) {
+                            String actionId = (String)pair.first;
+                            AnAction action = actionManager.getAction(actionId);
+                            Image icon = (Image)pair.second;
+                            action.getTemplatePresentation().setIcon(icon);
+                            action.setDefaultIcon(icon == null);
+                            editToolbarIcon(actionId, mutableNode);
+                        }
                     }
+                    return true;
                 }
-                return true;
-            });
+            );
             super.doOKAction();
             setCustomizationSchemaForCurrentProjects();
         }
 
         protected void enableSetIconButton(ActionManager actionManager) {
-            final TreePath selectionPath = myTree.getSelectionPath();
+            TreePath selectionPath = myTree.getSelectionPath();
             Object userObject = null;
             if (selectionPath != null) {
                 userObject = ((DefaultMutableTreeNode)selectionPath.getLastPathComponent()).getUserObject();
                 if (userObject instanceof String actionId) {
-                    final AnAction action = actionManager.getAction(actionId);
+                    AnAction action = actionManager.getAction(actionId);
                     if (action != null && action.getTemplatePresentation() != null && action.getTemplatePresentation().getIcon() != null) {
                         mySetIconButton.setEnabled(true);
                         return;

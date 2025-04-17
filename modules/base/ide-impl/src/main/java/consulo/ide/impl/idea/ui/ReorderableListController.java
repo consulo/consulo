@@ -15,32 +15,35 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.application.AllIcons;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.SortedListModel;
 import consulo.ui.ex.awt.util.ListUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
-import consulo.util.lang.function.Condition;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
  * @author dyoma
  */
 public abstract class ReorderableListController<T> {
-    private final JList myList;
-    private static final Image REMOVE_ICON = IconUtil.getRemoveIcon();
+    private final JList<T> myList;
+    private static final Image REMOVE_ICON = PlatformIconGroup.generalRemove();
 
-    protected ReorderableListController(final JList list) {
+    protected ReorderableListController(JList<T> list) {
         myList = list;
     }
 
@@ -48,70 +51,75 @@ public abstract class ReorderableListController<T> {
         return myList;
     }
 
-    public RemoveActionDescription addRemoveAction(final String actionName) {
-        final RemoveActionDescription description = new RemoveActionDescription(actionName);
+    public RemoveActionDescription addRemoveAction(String actionName) {
+        RemoveActionDescription description = new RemoveActionDescription(actionName);
         addActionDescription(description);
         return description;
     }
 
     protected abstract void addActionDescription(ActionDescription description);
 
-    public AddActionDescription addAddAction(final String actionName, final Supplier<T> creator, final boolean createShortcut) {
-        final AddActionDescription description = new AddActionDescription(actionName, creator, createShortcut);
+    public AddActionDescription addAddAction(String actionName, Supplier<T> creator, boolean createShortcut) {
+        AddActionDescription description = new AddActionDescription(actionName, creator, createShortcut);
         addActionDescription(description);
         return description;
     }
 
     public AddMultipleActionDescription addAddMultipleAction(
-        final String actionName,
-        final Supplier<Collection<T>> creator,
-        final boolean createShortcut
+        String actionName,
+        Supplier<Collection<T>> creator,
+        boolean createShortcut
     ) {
-        final AddMultipleActionDescription description = new AddMultipleActionDescription(actionName, creator, createShortcut);
+        AddMultipleActionDescription description = new AddMultipleActionDescription(actionName, creator, createShortcut);
         addActionDescription(description);
         return description;
     }
 
-    public CopyActionDescription addCopyAction(final String actionName, final Convertor<T, T> copier, final Condition<T> enableCondition) {
-        final CopyActionDescription description = new CopyActionDescription(actionName, copier, enableCondition);
+    public CopyActionDescription addCopyAction(String actionName, Function<T, T> copier, Predicate<T> enableCondition) {
+        CopyActionDescription description = new CopyActionDescription(actionName, copier, enableCondition);
         addActionDescription(description);
         return description;
     }
 
     public void addMoveUpAction() {
-        addAction(new AnAction(UIBundle.message("move.up.action.name"), null, IconUtil.getMoveUpIcon()) {
+        addAction(new AnAction(UILocalize.moveUpActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsMoveup()) {
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 ListUtil.moveSelectedItemsUp(myList);
             }
 
             @Override
-            public void update(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(ListUtil.canMoveSelectedItemsUp(myList));
             }
         });
     }
 
     public void addMoveDownAction() {
-        addAction(new AnAction(UIBundle.message("move.down.action.name"), null, AllIcons.Actions.MoveDown) {
+        addAction(new AnAction(UILocalize.moveDownActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsMovedown()) {
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 ListUtil.moveSelectedItemsDown(myList);
             }
 
             @Override
-            public void update(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(ListUtil.canMoveSelectedItemsDown(myList));
             }
         });
     }
 
-    public void addAction(final AnAction action) {
+    public void addAction(AnAction action) {
         addActionDescription(new FixedActionDescription(action));
     }
 
-    private void handleNewElement(final T element) {
-        final ListModel listModel = myList.getModel();
+    @SuppressWarnings("unchecked")
+    private void handleNewElement(T element) {
+        ListModel listModel = myList.getModel();
         if (listModel instanceof SortedListModel) {
             ((SortedListModel<T>)listModel).add(element);
         }
@@ -122,10 +130,10 @@ public abstract class ReorderableListController<T> {
         ScrollingUtil.selectItem(myList, element);
     }
 
-    public static <T> ReorderableListController<T> create(final JList list, final DefaultActionGroup actionGroup) {
-        return new ReorderableListController<T>(list) {
+    public static <T> ReorderableListController<T> create(JList<T> list, DefaultActionGroup actionGroup) {
+        return new ReorderableListController<>(list) {
             @Override
-            protected void addActionDescription(final ActionDescription description) {
+            protected void addActionDescription(ActionDescription description) {
                 actionGroup.add(description.createAction(list));
             }
         };
@@ -140,16 +148,15 @@ public abstract class ReorderableListController<T> {
     }
 
     public static abstract class CustomActionDescription<V> extends ActionDescription {
-        private final ArrayList<ActionNotification<V>> myPostHandlers = new ArrayList<ActionNotification<V>>(1);
+        private final ArrayList<ActionNotification<V>> myPostHandlers = new ArrayList<>(1);
         private boolean myShowText = false;
 
-        public void addPostHandler(final ActionNotification<V> runnable) {
+        public void addPostHandler(ActionNotification<V> runnable) {
             myPostHandlers.add(runnable);
         }
 
-        protected void runPostHandlers(final V change) {
-            for (Iterator<ActionNotification<V>> iterator = myPostHandlers.iterator(); iterator.hasNext(); ) {
-                final ActionNotification<V> runnable = iterator.next();
+        protected void runPostHandlers(V change) {
+            for (ActionNotification<V> runnable : myPostHandlers) {
                 runnable.afterActionPerformed(change);
             }
         }
@@ -157,17 +164,17 @@ public abstract class ReorderableListController<T> {
         @Override
         public abstract CustomActionDescription.BaseAction createAction(JComponent component);
 
-        BaseAction createAction(final ActionBehaviour behaviour) {
-            return myShowText ?
-                new ActionWithText(this, getActionName(), null, getActionIcon(), behaviour) :
-                new BaseAction(this, getActionName(), null, getActionIcon(), behaviour);
+        BaseAction<V> createAction(ActionBehaviour<V> behaviour) {
+            return myShowText
+                ? new ActionWithText<>(this, getActionName(), null, getActionIcon(), behaviour)
+                : new BaseAction<>(this, getActionName(), null, getActionIcon(), behaviour);
         }
 
         protected abstract Image getActionIcon();
 
         protected abstract String getActionName();
 
-        public void setShowText(final boolean showText) {
+        public void setShowText(boolean showText) {
             myShowText = showText;
         }
 
@@ -176,11 +183,11 @@ public abstract class ReorderableListController<T> {
             private final CustomActionDescription<V> myCustomActionDescription;
 
             public BaseAction(
-                final CustomActionDescription<V> customActionDescription,
-                final String text,
-                final String description,
-                final Image icon,
-                final ActionBehaviour<V> behaviour
+                CustomActionDescription<V> customActionDescription,
+                String text,
+                String description,
+                Image icon,
+                ActionBehaviour<V> behaviour
             ) {
                 super(text, description, icon);
                 myBehaviour = behaviour;
@@ -188,8 +195,9 @@ public abstract class ReorderableListController<T> {
             }
 
             @Override
-            public void actionPerformed(final AnActionEvent e) {
-                final V change = myBehaviour.performAction(e);
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                V change = myBehaviour.performAction(e);
                 if (change == null) {
                     return;
                 }
@@ -197,17 +205,19 @@ public abstract class ReorderableListController<T> {
             }
 
             @Override
-            public void update(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void update(@Nonnull AnActionEvent e) {
                 myBehaviour.updateAction(e);
             }
         }
 
-        private static class ActionWithText<V> extends BaseAction {
+        private static class ActionWithText<V> extends BaseAction<V> {
             public ActionWithText(
-                final CustomActionDescription<V> customActionDescription, final String text,
-                final String description,
-                final Image icon,
-                final ActionBehaviour<V> behaviour
+                CustomActionDescription<V> customActionDescription,
+                String text,
+                String description,
+                Image icon,
+                ActionBehaviour<V> behaviour
             ) {
                 super(customActionDescription, text, description, icon, behaviour);
             }
@@ -227,31 +237,32 @@ public abstract class ReorderableListController<T> {
 
     public class RemoveActionDescription extends CustomActionDescription<List<T>> {
         private final String myActionName;
-        private Condition<List<T>> myConfirmation;
-        private Condition<T> myEnableCondition;
+        private Predicate<List<T>> myConfirmation;
+        private Predicate<T> myEnableCondition;
 
-        public RemoveActionDescription(final String actionName) {
+        public RemoveActionDescription(String actionName) {
             myActionName = actionName;
         }
 
         @Override
-        public BaseAction createAction(final JComponent component) {
-            final ActionBehaviour<List<T>> behaviour = new ActionBehaviour<List<T>>() {
+        public BaseAction createAction(JComponent component) {
+            ActionBehaviour<List<T>> behaviour = new ActionBehaviour<>() {
                 @Override
-                public List<T> performAction(final AnActionEvent e) {
-                    if (myConfirmation != null && !myConfirmation.value((List<T>)myList.getSelectedValuesList())) {
+                @SuppressWarnings("unchecked")
+                public List<T> performAction(AnActionEvent e) {
+                    if (myConfirmation != null && !myConfirmation.test((List<T>)myList.getSelectedValuesList())) {
                         return Collections.emptyList();
                     }
                     return ListUtil.removeSelectedItems(myList, myEnableCondition);
                 }
 
                 @Override
-                public void updateAction(final AnActionEvent e) {
+                public void updateAction(AnActionEvent e) {
                     e.getPresentation().setEnabled(ListUtil.canRemoveSelectedItems(myList, myEnableCondition));
                 }
             };
-            final BaseAction action = createAction(behaviour);
-            action.registerCustomShortcutSet(CommonShortcuts.DELETE, component);
+            BaseAction action = createAction(behaviour);
+            action.registerCustomShortcutSet(CommonShortcuts.getDelete(), component);
             return action;
         }
 
@@ -265,11 +276,11 @@ public abstract class ReorderableListController<T> {
             return myActionName;
         }
 
-        public void setConfirmation(final Condition<List<T>> confirmation) {
+        public void setConfirmation(Predicate<List<T>> confirmation) {
             myConfirmation = confirmation;
         }
 
-        public void setEnableCondition(final Condition<T> enableCondition) {
+        public void setEnableCondition(Predicate<T> enableCondition) {
             myEnableCondition = enableCondition;
         }
 
@@ -282,35 +293,35 @@ public abstract class ReorderableListController<T> {
         private final String myActionDescription;
         private final Supplier<V> myAddHandler;
         private final boolean myCreateShortcut;
-        private Image myIcon = AllIcons.General.Add;
+        private Image myIcon = PlatformIconGroup.generalAdd();
 
-        public AddActionDescriptionBase(final String actionDescription, final Supplier<V> addHandler, final boolean createShortcut) {
+        public AddActionDescriptionBase(String actionDescription, Supplier<V> addHandler, boolean createShortcut) {
             myActionDescription = actionDescription;
             myAddHandler = addHandler;
             myCreateShortcut = createShortcut;
         }
 
         @Override
-        public BaseAction createAction(final JComponent component) {
-            final ActionBehaviour<V> behaviour = new ActionBehaviour<V>() {
+        public BaseAction createAction(JComponent component) {
+            ActionBehaviour<V> behaviour = new ActionBehaviour<>() {
                 @Override
-                public V performAction(final AnActionEvent e) {
+                public V performAction(AnActionEvent e) {
                     return addInternal(myAddHandler.get());
                 }
 
                 @Override
-                public void updateAction(final AnActionEvent e) {
+                public void updateAction(AnActionEvent e) {
                 }
             };
-            final BaseAction action = createAction(behaviour);
+            BaseAction action = createAction(behaviour);
             if (myCreateShortcut) {
-                action.registerCustomShortcutSet(CommonShortcuts.INSERT, component);
+                action.registerCustomShortcutSet(CommonShortcuts.getInsert(), component);
             }
             return action;
         }
 
         @Nullable
-        protected abstract V addInternal(final V v);
+        protected abstract V addInternal(V v);
 
         @Override
         public Image getActionIcon() {
@@ -322,18 +333,18 @@ public abstract class ReorderableListController<T> {
             return myActionDescription;
         }
 
-        public void setIcon(final Image icon) {
+        public void setIcon(Image icon) {
             myIcon = icon;
         }
     }
 
     public class AddActionDescription extends AddActionDescriptionBase<T> {
-        public AddActionDescription(final String actionDescription, final Supplier<T> addHandler, final boolean createShortcut) {
+        public AddActionDescription(String actionDescription, Supplier<T> addHandler, boolean createShortcut) {
             super(actionDescription, addHandler, createShortcut);
         }
 
         @Override
-        protected T addInternal(final T t) {
+        protected T addInternal(T t) {
             if (t != null) {
                 handleNewElement(t);
             }
@@ -343,15 +354,15 @@ public abstract class ReorderableListController<T> {
 
     public class AddMultipleActionDescription extends AddActionDescriptionBase<Collection<T>> {
         public AddMultipleActionDescription(
-            final String actionDescription,
-            final Supplier<Collection<T>> addHandler,
-            final boolean createShortcut
+            String actionDescription,
+            Supplier<Collection<T>> addHandler,
+            boolean createShortcut
         ) {
             super(actionDescription, addHandler, createShortcut);
         }
 
         @Override
-        protected Collection<T> addInternal(final Collection<T> t) {
+        protected Collection<T> addInternal(Collection<T> t) {
             if (t != null) {
                 for (T element : t) {
                     handleNewElement(element);
@@ -362,12 +373,12 @@ public abstract class ReorderableListController<T> {
     }
 
     public class CopyActionDescription extends CustomActionDescription<T> {
-        private final Convertor<T, T> myCopier;
-        private final Condition<T> myEnabled;
+        private final Function<T, T> myCopier;
+        private final Predicate<T> myEnabled;
         private final String myActionName;
         private boolean myVisibleWhenDisabled;
 
-        public CopyActionDescription(final String actionName, final Convertor<T, T> copier, final Condition<T> enableCondition) {
+        public CopyActionDescription(String actionName, Function<T, T> copier, Predicate<T> enableCondition) {
             myActionName = actionName;
             myCopier = copier;
             myEnabled = enableCondition;
@@ -375,24 +386,26 @@ public abstract class ReorderableListController<T> {
         }
 
         @Override
-        public BaseAction createAction(final JComponent component) {
-            final ActionBehaviour<T> behaviour = new ActionBehaviour<T>() {
+        public BaseAction createAction(JComponent component) {
+            ActionBehaviour<T> behaviour = new ActionBehaviour<>() {
                 @Override
-                public T performAction(final AnActionEvent e) {
-                    final T newElement = myCopier.convert((T)myList.getSelectedValue());
+                @SuppressWarnings("unchecked")
+                public T performAction(AnActionEvent e) {
+                    T newElement = myCopier.apply((T)myList.getSelectedValue());
                     handleNewElement(newElement);
                     return newElement;
                 }
 
                 @Override
-                public void updateAction(final AnActionEvent e) {
-                    final boolean applicable = myList.getSelectedIndices().length == 1;
-                    final Presentation presentation = e.getPresentation();
+                @SuppressWarnings("unchecked")
+                public void updateAction(AnActionEvent e) {
+                    boolean applicable = myList.getSelectedIndices().length == 1;
+                    Presentation presentation = e.getPresentation();
                     if (!applicable) {
                         presentation.setEnabled(applicable);
                         return;
                     }
-                    final boolean enabled = myEnabled.value((T)myList.getSelectedValue());
+                    boolean enabled = myEnabled.test((T)myList.getSelectedValue());
                     presentation.setEnabled(enabled);
                     presentation.setVisible(enabled || myVisibleWhenDisabled);
                 }
@@ -410,7 +423,7 @@ public abstract class ReorderableListController<T> {
             return myActionName;
         }
 
-        public void setVisibleWhenDisabled(final boolean visible) {
+        public void setVisibleWhenDisabled(boolean visible) {
             myVisibleWhenDisabled = visible;
         }
     }
@@ -418,14 +431,13 @@ public abstract class ReorderableListController<T> {
     private static class FixedActionDescription extends ActionDescription {
         private final AnAction myAction;
 
-        public FixedActionDescription(final AnAction action) {
+        public FixedActionDescription(AnAction action) {
             myAction = action;
         }
 
         @Override
-        public AnAction createAction(final JComponent component) {
+        public AnAction createAction(JComponent component) {
             return myAction;
         }
     }
-
 }

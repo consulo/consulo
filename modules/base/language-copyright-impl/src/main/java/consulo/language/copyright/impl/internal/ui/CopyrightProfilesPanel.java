@@ -37,6 +37,7 @@ import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
@@ -55,7 +56,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CopyrightProfilesPanel extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
-
     private final Project myProject;
     private final CopyrightManager myManager;
     private final AtomicBoolean myInitialized = new AtomicBoolean(false);
@@ -78,9 +78,10 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         return "Copyright.UI";
     }
 
+    @Override
     protected void processRemovedItems() {
         Map<String, CopyrightProfile> profiles = getAllProfiles();
-        final List<CopyrightProfile> deleted = new ArrayList<CopyrightProfile>();
+        List<CopyrightProfile> deleted = new ArrayList<>();
         for (CopyrightProfile profile : myManager.getCopyrights()) {
             if (!profiles.containsValue(profile)) {
                 deleted.add(profile);
@@ -91,11 +92,13 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         }
     }
 
+    @Override
     protected boolean wasObjectStored(Object o) {
-        return myManager.getCopyrights().contains((CopyrightProfile)o);
+        return myManager.getCopyrights().contains(o);
     }
 
     @Nls
+    @Override
     public String getDisplayName() {
         return "Copyright Profiles";
     }
@@ -106,12 +109,13 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         }
     }
 
+    @Override
     @RequiredUIAccess
     public void apply() throws ConfigurationException {
-        final Set<String> profiles = new HashSet<String>();
+        Set<String> profiles = new HashSet<>();
         for (int i = 0; i < myRoot.getChildCount(); i++) {
             MyNode node = (MyNode)myRoot.getChildAt(i);
-            final String profileName = ((CopyrightConfigurable)node.getConfigurable()).getEditableObject().getName();
+            String profileName = ((CopyrightConfigurable)node.getConfigurable()).getEditableObject().getName();
             if (profiles.contains(profileName)) {
                 selectNodeInTree(profileName);
                 throw new ConfigurationException("Duplicate copyright profile name: \'" + profileName + "\'");
@@ -122,7 +126,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
     }
 
     public Map<String, CopyrightProfile> getAllProfiles() {
-        final Map<String, CopyrightProfile> profiles = new HashMap<String, CopyrightProfile>();
+        Map<String, CopyrightProfile> profiles = new HashMap<>();
         if (!myInitialized.get()) {
             for (CopyrightProfile profile : myManager.getCopyrights()) {
                 profiles.put(profile.getName(), profile);
@@ -131,7 +135,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         else {
             for (int i = 0; i < myRoot.getChildCount(); i++) {
                 MyNode node = (MyNode)myRoot.getChildAt(i);
-                final CopyrightProfile copyrightProfile = ((CopyrightConfigurable)node.getConfigurable()).getEditableObject();
+                CopyrightProfile copyrightProfile = ((CopyrightConfigurable)node.getConfigurable()).getEditableObject();
                 profiles.put(copyrightProfile.getName(), copyrightProfile);
             }
         }
@@ -146,6 +150,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
     }
 
     @Nullable
+    @Override
     protected ArrayList<AnAction> createActions(boolean fromPopup) {
         ArrayList<AnAction> result = new ArrayList<AnAction>();
         result.add(new AnAction("Add", "Add", PlatformIconGroup.generalAdd()) {
@@ -153,12 +158,14 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
                 registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
             }
 
-            public void actionPerformed(AnActionEvent event) {
-                final String name = askForProfileName("Create Copyright Profile", "");
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent event) {
+                String name = askForProfileName("Create Copyright Profile", "");
                 if (name == null) {
                     return;
                 }
-                final CopyrightProfile copyrightProfile = new CopyrightProfile(name);
+                CopyrightProfile copyrightProfile = new CopyrightProfile(name);
                 addProfileNode(copyrightProfile);
             }
         });
@@ -168,33 +175,39 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
                 registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
             }
 
-            public void actionPerformed(AnActionEvent event) {
-                final String profileName = askForProfileName("Copy Copyright Profile", "");
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent event) {
+                String profileName = askForProfileName("Copy Copyright Profile", "");
                 if (profileName == null) {
                     return;
                 }
-                final CopyrightProfile clone = new CopyrightProfile();
+                CopyrightProfile clone = new CopyrightProfile();
                 clone.copyFrom((CopyrightProfile)getSelectedObject());
                 clone.setName(profileName);
                 addProfileNode(clone);
             }
 
-            public void update(AnActionEvent event) {
+            @Override
+            @RequiredUIAccess
+            public void update(@Nonnull AnActionEvent event) {
                 super.update(event);
                 event.getPresentation().setEnabled(getSelectedObject() != null);
             }
         });
         result.add(new AnAction("Import", "Import", PlatformIconGroup.actionsImport()) {
-            public void actionPerformed(AnActionEvent event) {
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent event) {
                 FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
                 descriptor.withFileFilter(file -> "xml".equals(file.getExtension()));
                 descriptor.setTitle("Choose file containing copyright notice");
-                final VirtualFile file = IdeaFileChooser.chooseFile(descriptor, myProject, null);
+                VirtualFile file = IdeaFileChooser.chooseFile(descriptor, myProject, null);
                 if (file == null) {
                     return;
                 }
 
-                final List<CopyrightProfile> copyrightProfiles = ExternalOptionHelper.loadOptions(VirtualFileUtil.virtualToIoFile(file));
+                List<CopyrightProfile> copyrightProfiles = ExternalOptionHelper.loadOptions(VirtualFileUtil.virtualToIoFile(file));
                 if (copyrightProfiles == null) {
                     return;
                 }
@@ -206,12 +219,8 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
                         JBPopupFactory.getInstance()
                             .createListPopup(new BaseListPopupStep<CopyrightProfile>("Choose profile to import", copyrightProfiles) {
                                 @Override
-                                public PopupStep onChosen(final CopyrightProfile selectedValue, boolean finalChoice) {
-                                    return doFinalStep(new Runnable() {
-                                        public void run() {
-                                            importProfile(selectedValue);
-                                        }
-                                    });
+                                public PopupStep onChosen(CopyrightProfile selectedValue, boolean finalChoice) {
+                                    return doFinalStep(() -> importProfile(selectedValue));
                                 }
 
                                 @Nonnull
@@ -227,8 +236,9 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
                 }
             }
 
+            @RequiredUIAccess
             private void importProfile(CopyrightProfile copyrightProfile) {
-                final String profileName = askForProfileName("Import copyright profile", copyrightProfile.getName());
+                String profileName = askForProfileName("Import copyright profile", copyrightProfile.getName());
                 if (profileName == null) {
                     return;
                 }
@@ -242,17 +252,22 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
 
 
     @Nullable
+    @RequiredUIAccess
     private String askForProfileName(String title, String initialName) {
         return Messages.showInputDialog(
             "New copyright profile name:",
             title,
-            Messages.getQuestionIcon(),
+            UIUtil.getQuestionIcon(),
             initialName,
             new InputValidator() {
+                @Override
+                @RequiredUIAccess
                 public boolean checkInput(String s) {
                     return !getAllProfiles().containsKey(s) && s.length() > 0;
                 }
 
+                @Override
+                @RequiredUIAccess
                 public boolean canClose(String s) {
                     return checkInput(s);
                 }
@@ -261,15 +276,16 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
     }
 
     private void addProfileNode(CopyrightProfile copyrightProfile) {
-        final CopyrightConfigurable copyrightConfigurable = new CopyrightConfigurable(myProject, copyrightProfile, TREE_UPDATER);
+        CopyrightConfigurable copyrightConfigurable = new CopyrightConfigurable(myProject, copyrightProfile, TREE_UPDATER);
         copyrightConfigurable.setModified(true);
-        final MyNode node = new MyNode(copyrightConfigurable);
+        MyNode node = new MyNode(copyrightConfigurable);
         addNode(node, myRoot);
         selectNodeInTree(node);
         reloadAvailableProfiles();
     }
 
     @Override
+    @RequiredUIAccess
     protected void removePaths(TreePath... paths) {
         super.removePaths(paths);
         reloadAvailableProfiles();
@@ -286,6 +302,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         myInitialized.set(true);
     }
 
+    @Override
     @RequiredUIAccess
     public void reset() {
         reloadTree();
@@ -297,12 +314,14 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         return "Select a profile to view or edit its details here";
     }
 
-    public void addItemsChangeListener(final Runnable runnable) {
+    public void addItemsChangeListener(Runnable runnable) {
         addItemsChangeListener(new ItemsChangeListener() {
+            @Override
             public void itemChanged(@Nullable Object deletedItem) {
                 SwingUtilities.invokeLater(runnable);
             }
 
+            @Override
             public void itemsExternallyChanged(UnnamedConfigurable configurable) {
                 SwingUtilities.invokeLater(runnable);
             }
@@ -310,10 +329,12 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
     }
 
     @Nonnull
+    @Override
     public String getId() {
         return "copyright.profiles";
     }
 
+    @Override
     public Runnable enableSearch(String option) {
         return null;
     }

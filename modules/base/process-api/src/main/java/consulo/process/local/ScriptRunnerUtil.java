@@ -28,12 +28,10 @@ import consulo.process.internal.CapturingProcessHandler;
 import consulo.process.localize.ProcessLocalize;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.util.function.Predicate;
@@ -47,12 +45,12 @@ import java.util.function.Predicate;
 public final class ScriptRunnerUtil {
     private static final Logger LOG = Logger.getInstance(ScriptRunnerUtil.class);
 
-    public static final Condition<Key> STDOUT_OUTPUT_KEY_FILTER = ProcessOutputTypes.STDOUT::equals;
+    public static final Predicate<Key> STDOUT_OUTPUT_KEY_FILTER = ProcessOutputTypes.STDOUT::equals;
 
-    public static final Condition<Key> STDERR_OUTPUT_KEY_FILTER = ProcessOutputTypes.STDERR::equals;
+    public static final Predicate<Key> STDERR_OUTPUT_KEY_FILTER = ProcessOutputTypes.STDERR::equals;
 
-    public static final Condition<Key> STDOUT_OR_STDERR_OUTPUT_KEY_FILTER =
-        Conditions.or(STDOUT_OUTPUT_KEY_FILTER, STDERR_OUTPUT_KEY_FILTER);
+    public static final Predicate<Key> STDOUT_OR_STDERR_OUTPUT_KEY_FILTER =
+        Predicates.or(STDOUT_OUTPUT_KEY_FILTER, STDERR_OUTPUT_KEY_FILTER);
 
     private static final int DEFAULT_TIMEOUT = 30000;
 
@@ -72,17 +70,17 @@ public final class ScriptRunnerUtil {
     }
 
     public static String getProcessOutput(
-        @Nonnull final ProcessHandler processHandler,
-        @Nonnull final Predicate<Key> outputTypeFilter,
-        final long timeout
+        @Nonnull ProcessHandler processHandler,
+        @Nonnull Predicate<Key> outputTypeFilter,
+        long timeout
     ) throws ExecutionException {
         LOG.assertTrue(!processHandler.isStartNotified());
-        final StringBuilder outputBuilder = new StringBuilder();
+        StringBuilder outputBuilder = new StringBuilder();
         processHandler.addProcessListener(new ProcessAdapter() {
             @Override
             public void onTextAvailable(ProcessEvent event, Key outputType) {
                 if (outputTypeFilter.test(outputType)) {
-                    final String text = event.getText();
+                    String text = event.getText();
                     outputBuilder.append(text);
                     if (LOG.isDebugEnabled()) {
                         LOG.debug(text);
@@ -99,7 +97,7 @@ public final class ScriptRunnerUtil {
 
     @Nullable
     private static File getShell() {
-        final String shell = System.getenv("SHELL");
+        String shell = System.getenv("SHELL");
         if (shell != null && (shell.contains("bash") || shell.contains("zsh"))) {
             File file = new File(shell);
             if (file.isAbsolute() && file.isFile() && file.canExecute()) {
@@ -131,7 +129,7 @@ public final class ScriptRunnerUtil {
         LOG.debug("Command line: " + commandLine.getCommandLineString());
         LOG.debug("Command line env: " + commandLine.getEnvironment());
 
-        final ProcessHandler processHandler = ProcessHandlerFactory.getInstance().createColoredProcessHandler(commandLine);
+        ProcessHandler processHandler = ProcessHandlerFactory.getInstance().createColoredProcessHandler(commandLine);
         if (LOG.isDebugEnabled()) {
             processHandler.addProcessListener(new ProcessListener() {
                 @Override
@@ -150,10 +148,10 @@ public final class ScriptRunnerUtil {
         @Nullable VirtualFile scriptFile,
         @Nullable String workingDirectory,
         long timeout,
-        Condition<Key> scriptOutputType,
-        @NonNls String... parameters
+        Predicate<Key> scriptOutputType,
+        String... parameters
     ) throws ExecutionException {
-        final ProcessHandler processHandler = execute(exePathString, workingDirectory, scriptFile, parameters);
+        ProcessHandler processHandler = execute(exePathString, workingDirectory, scriptFile, parameters);
 
         ScriptOutput output = new ScriptOutput(scriptOutputType);
         processHandler.addProcessListener(output);
@@ -197,7 +195,7 @@ public final class ScriptRunnerUtil {
 
         @Override
         public void onTextAvailable(ProcessEvent event, Key outputType) {
-            final String text = event.getText();
+            String text = event.getText();
             if (myScriptOutputType.test(outputType)) {
                 myFilteredOutput.append(text);
             }
@@ -221,14 +219,10 @@ public final class ScriptRunnerUtil {
             return;
         }
         processHandler.destroyProcess();
-        if (processHandler instanceof KillableProcessHandler) {
-            KillableProcessHandler killableProcess = (KillableProcessHandler)processHandler;
-            if (killableProcess.canKillProcess()) {
-                if (!processHandler.waitFor(millisTimeout)) {
-                    // doing 'force quite'
-                    killableProcess.killProcess();
-                }
-            }
+        if (processHandler instanceof KillableProcessHandler killableProcess && killableProcess.canKillProcess()
+            && !processHandler.waitFor(millisTimeout)) {
+            // doing 'force quite'
+            killableProcess.killProcess();
         }
     }
 }

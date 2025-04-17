@@ -300,7 +300,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> Set<T> newHashOrEmptySet(@Nullable Iterable<? extends T> iterable) {
-        boolean empty = iterable == null || iterable instanceof Collection && ((Collection)iterable).isEmpty();
+        boolean empty = iterable == null || iterable instanceof Collection collection && collection.isEmpty();
         return empty ? Collections.<T>emptySet() : ContainerUtilRt.newHashSet(iterable);
     }
 
@@ -923,7 +923,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
     @Nonnull
     @Contract(pure = true)
-    public static <T> List<T> filter(@Nonnull T[] collection, @Nonnull Condition<? super T> condition) {
+    public static <T> List<T> filter(@Nonnull T[] collection, @Nonnull Predicate<? super T> condition) {
         return findAll(collection, condition);
     }
 
@@ -1005,7 +1005,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
     @Nonnull
     @Contract(pure = true)
-    public static <T> T[] findAllAsArray(@Nonnull T[] collection, @Nonnull Condition<? super T> instanceOf) {
+    public static <T> T[] findAllAsArray(@Nonnull T[] collection, @Nonnull Predicate<? super T> instanceOf) {
         List<T> list = findAll(collection, instanceOf);
         if (list.size() == collection.length) {
             return collection;
@@ -1080,7 +1080,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
     @Nonnull
     @Contract(pure = true)
-    public static <T> Iterable<T> iterate(@Nonnull T[] arrays, @Nonnull Condition<? super T> condition) {
+    public static <T> Iterable<T> iterate(@Nonnull T[] arrays, @Nonnull Predicate<? super T> condition) {
         return iterate(Arrays.asList(arrays), condition);
     }
 
@@ -1088,7 +1088,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Contract(pure = true)
     public static <T> Iterable<T> iterate(
         @Nonnull Collection<? extends T> collection,
-        @Nonnull Condition<? super T> condition
+        @Nonnull Predicate<? super T> condition
     ) {
         if (collection.isEmpty()) {
             return emptyIterable();
@@ -1117,7 +1117,7 @@ public class ContainerUtil extends ContainerUtilRt {
                     private T findNext() {
                         while (impl.hasNext()) {
                             T each = impl.next();
-                            if (condition.value(each)) {
+                            if (condition.test(each)) {
                                 return each;
                             }
                         }
@@ -1937,10 +1937,10 @@ public class ContainerUtil extends ContainerUtilRt {
     }
 
     @Contract(pure = true)
-    public static <T> int count(@Nonnull Iterable<T> iterable, @Nonnull Condition<? super T> condition) {
+    public static <T> int count(@Nonnull Iterable<T> iterable, @Nonnull Predicate<? super T> condition) {
         int count = 0;
         for (T t : iterable) {
-            if (condition.value(t)) {
+            if (condition.test(t)) {
                 count++;
             }
         }
@@ -2258,10 +2258,10 @@ public class ContainerUtil extends ContainerUtilRt {
     }
 
     @Contract(pure = true)
-    public static <T> int indexOf(@Nonnull List<? extends T> list, @Nonnull Condition<? super T> condition) {
+    public static <T> int indexOf(@Nonnull List<? extends T> list, @Nonnull Predicate<? super T> condition) {
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
             T t = list.get(i);
-            if (condition.value(t)) {
+            if (condition.test(t)) {
                 return i;
             }
         }
@@ -2269,10 +2269,10 @@ public class ContainerUtil extends ContainerUtilRt {
     }
 
     @Contract(pure = true)
-    public static <T> int lastIndexOf(@Nonnull List<T> list, @Nonnull Condition<? super T> condition) {
+    public static <T> int lastIndexOf(@Nonnull List<T> list, @Nonnull Predicate<? super T> condition) {
         for (int i = list.size() - 1; i >= 0; i--) {
             T t = list.get(i);
-            if (condition.value(t)) {
+            if (condition.test(t)) {
                 return i;
             }
         }
@@ -2329,8 +2329,8 @@ public class ContainerUtil extends ContainerUtilRt {
             return emptyList();
         }
 
-        if (list instanceof ArrayList) {
-            ((ArrayList)list).trimToSize();
+        if (list instanceof ArrayList arrayList) {
+            arrayList.trimToSize();
         }
 
         return list;

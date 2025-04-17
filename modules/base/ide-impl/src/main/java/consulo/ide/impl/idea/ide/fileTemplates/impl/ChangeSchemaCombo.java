@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
+import consulo.application.dumb.DumbAware;
 import consulo.fileTemplate.FileTemplatesScheme;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.application.dumb.DumbAware;
-import consulo.util.lang.function.Condition;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
+import java.util.function.Predicate;
 
 /**
  * @author Dmitry Avdeev
@@ -41,7 +40,7 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
 
     @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setText(myConfigurable.getCurrentScheme().getName());
     }
@@ -58,12 +57,11 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
     }
 
     @Override
-    public Condition<AnAction> getPreselectCondition() {
+    public Predicate<AnAction> getPreselectCondition() {
         return action -> myConfigurable.getCurrentScheme().getName().equals(action.getTemplatePresentation().getText());
     }
 
     private class ChangeSchemaAction extends AnAction {
-
         private final FileTemplatesScheme myScheme;
 
         public ChangeSchemaAction(@Nonnull FileTemplatesScheme scheme) {
@@ -73,7 +71,7 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             myConfigurable.changeScheme(myScheme);
             ChangeSchemaCombo.this.getTemplatePresentation().setText(myScheme.getName());
         }

@@ -15,7 +15,6 @@
  */
 package consulo.execution.ui.console;
 
-import consulo.application.AllIcons;
 import consulo.codeEditor.EditorEx;
 import consulo.document.util.TextRange;
 import consulo.execution.internal.LanguageConsoleViewEx;
@@ -27,12 +26,14 @@ import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -52,7 +53,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
 
     public ConsoleExecuteAction(
         @Nonnull LanguageConsoleView console,
-        final @Nonnull ConsoleExecuteActionHandler executeActionHandler,
+        @Nonnull ConsoleExecuteActionHandler executeActionHandler,
         @Nullable Predicate<LanguageConsoleView> enabledCondition
     ) {
         this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, enabledCondition);
@@ -72,11 +73,11 @@ public class ConsoleExecuteAction extends DumbAwareAction {
         @Nonnull String emptyExecuteActionId,
         @Nullable Predicate<LanguageConsoleView> enabledCondition
     ) {
-        super(LocalizeValue.empty(), LocalizeValue.empty(), AllIcons.Actions.Execute);
+        super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.actionsExecute());
 
         myConsoleView = consoleView;
         myExecuteActionHandler = executeActionHandler;
-        myEnabledCondition = enabledCondition == null ? Conditions.<LanguageConsoleView>alwaysTrue() : enabledCondition;
+        myEnabledCondition = enabledCondition == null ? Predicates.<LanguageConsoleView>alwaysTrue() : enabledCondition;
 
         EmptyAction.setupAction(this, emptyExecuteActionId, null);
     }
