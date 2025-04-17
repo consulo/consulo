@@ -106,7 +106,7 @@ public class UIUtil {
     @Deprecated
     @DeprecationInfo("StyleManager.get().getCurrentStyle().isDark(), and don't call this method inside swing paint code")
     public static boolean isUnderDarkTheme() {
-        return DarkThemeCalculator.isDark() ;
+        return DarkThemeCalculator.isDark();
     }
 
     public static final Key<Iterable<? extends Component>> NOT_IN_HIERARCHY_COMPONENTS = Key.create("NOT_IN_HIERARCHY_COMPONENTS");

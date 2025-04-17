@@ -36,26 +36,28 @@ import java.util.function.Predicate;
  */
 @ExtensionImpl
 public class DebuggerKeymapExtension implements KeymapExtension {
-  @Override
-  public KeymapGroup createGroup(final Predicate<AnAction> filtered, final ComponentManager project) {
-    ActionManager actionManager = ActionManager.getInstance();
-    DefaultActionGroup debuggerGroup = (DefaultActionGroup)actionManager.getActionOrStub(IdeActions.GROUP_DEBUGGER);
-    AnAction[] debuggerActions = debuggerGroup.getChildActionsOrStubs();
+    @Override
+    public KeymapGroup createGroup(final Predicate<AnAction> filtered, final ComponentManager project) {
+        ActionManager actionManager = ActionManager.getInstance();
+        DefaultActionGroup debuggerGroup = (DefaultActionGroup)actionManager.getActionOrStub(IdeActions.GROUP_DEBUGGER);
+        AnAction[] debuggerActions = debuggerGroup.getChildActionsOrStubs();
 
-    ArrayList<String> ids = new ArrayList<String>();
-    for (AnAction debuggerAction : debuggerActions) {
-      String actionId = debuggerAction instanceof ActionStubBase ? ((ActionStubBase)debuggerAction).getId() : actionManager.getId(debuggerAction);
-      if (filtered == null || filtered.test(debuggerAction)) {
-        ids.add(actionId);
-      }
+        ArrayList<String> ids = new ArrayList<String>();
+        for (AnAction debuggerAction : debuggerActions) {
+            String actionId =
+                debuggerAction instanceof ActionStubBase ? ((ActionStubBase)debuggerAction).getId() : actionManager.getId(debuggerAction);
+            if (filtered == null || filtered.test(debuggerAction)) {
+                ids.add(actionId);
+            }
+        }
+
+        Collections.sort(ids);
+        KeymapGroup group = KeymapGroupFactory.getInstance()
+            .createGroup(KeyMapBundle.message("debugger.actions.group.title"), IdeActions.GROUP_DEBUGGER, null);
+        for (String id : ids) {
+            group.addActionId(id);
+        }
+
+        return group;
     }
-
-    Collections.sort(ids);
-    KeymapGroup group = KeymapGroupFactory.getInstance().createGroup(KeyMapBundle.message("debugger.actions.group.title"), IdeActions.GROUP_DEBUGGER, null);
-    for (String id : ids) {
-      group.addActionId(id);
-    }
-
-    return group;
-  }
 }

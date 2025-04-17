@@ -33,44 +33,44 @@ import java.util.Collection;
 import java.util.Set;
 
 public class VcsLogStructureFilterImpl implements VcsLogDetailsFilter, VcsLogStructureFilter {
-  @Nonnull
-  private final Collection<FilePath> myFiles;
+    @Nonnull
+    private final Collection<FilePath> myFiles;
 
-  public VcsLogStructureFilterImpl(@Nonnull Set<VirtualFile> files) {
-    this(ContainerUtil.map(files, VcsUtil::getFilePath));
-  }
-
-  public VcsLogStructureFilterImpl(@Nonnull Collection<FilePath> files) {
-    myFiles = files;
-  }
-
-  @Nonnull
-  @Override
-  public Collection<FilePath> getFiles() {
-    return myFiles;
-  }
-
-  @Override
-  public boolean matches(@Nonnull VcsCommitMetadata details) {
-    if (details instanceof VcsFullCommitDetails vcsFullCommitDetails) {
-      for (Change change : vcsFullCommitDetails.getChanges()) {
-        ContentRevision before = change.getBeforeRevision();
-        if (before != null && matches(before.getFile().getPath())) {
-          return true;
-        }
-        ContentRevision after = change.getAfterRevision();
-        if (after != null && matches(after.getFile().getPath())) {
-          return true;
-        }
-      }
-      return false;
+    public VcsLogStructureFilterImpl(@Nonnull Set<VirtualFile> files) {
+        this(ContainerUtil.map(files, VcsUtil::getFilePath));
     }
-    else {
-      return false;
-    }
-  }
 
-  private boolean matches(@Nonnull final String path) {
-    return ContainerUtil.find(myFiles, (Condition<VirtualFile>)file-> FileUtil.isAncestor(file.getPath(), path, false)) != null;
-  }
+    public VcsLogStructureFilterImpl(@Nonnull Collection<FilePath> files) {
+        myFiles = files;
+    }
+
+    @Nonnull
+    @Override
+    public Collection<FilePath> getFiles() {
+        return myFiles;
+    }
+
+    @Override
+    public boolean matches(@Nonnull VcsCommitMetadata details) {
+        if (details instanceof VcsFullCommitDetails vcsFullCommitDetails) {
+            for (Change change : vcsFullCommitDetails.getChanges()) {
+                ContentRevision before = change.getBeforeRevision();
+                if (before != null && matches(before.getFile().getPath())) {
+                    return true;
+                }
+                ContentRevision after = change.getAfterRevision();
+                if (after != null && matches(after.getFile().getPath())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private boolean matches(@Nonnull final String path) {
+        return ContainerUtil.find(myFiles, (Condition<VirtualFile>)file -> FileUtil.isAncestor(file.getPath(), path, false)) != null;
+    }
 }

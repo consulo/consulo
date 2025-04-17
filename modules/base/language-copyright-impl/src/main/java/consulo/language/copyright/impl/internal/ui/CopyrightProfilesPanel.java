@@ -56,249 +56,265 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CopyrightProfilesPanel extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
 
-  private final Project myProject;
-  private final CopyrightManager myManager;
-  private final AtomicBoolean myInitialized = new AtomicBoolean(false);
+    private final Project myProject;
+    private final CopyrightManager myManager;
+    private final AtomicBoolean myInitialized = new AtomicBoolean(false);
 
-  private Runnable myUpdate;
+    private Runnable myUpdate;
 
-  public CopyrightProfilesPanel(Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
-    super(masterDetailsStateService);
-    myProject = project;
-    myManager = CopyrightManager.getInstance(project);
-    initTree();
-  }
-
-  public void setUpdate(Runnable update) {
-    myUpdate = update;
-  }
-
-  @Override
-  protected String getComponentStateKey() {
-    return "Copyright.UI";
-  }
-
-  protected void processRemovedItems() {
-    Map<String, CopyrightProfile> profiles = getAllProfiles();
-    final List<CopyrightProfile> deleted = new ArrayList<CopyrightProfile>();
-    for (CopyrightProfile profile : myManager.getCopyrights()) {
-      if (!profiles.containsValue(profile)) {
-        deleted.add(profile);
-      }
+    public CopyrightProfilesPanel(Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
+        super(masterDetailsStateService);
+        myProject = project;
+        myManager = CopyrightManager.getInstance(project);
+        initTree();
     }
-    for (CopyrightProfile profile : deleted) {
-      myManager.removeCopyright(profile);
+
+    public void setUpdate(Runnable update) {
+        myUpdate = update;
     }
-  }
 
-  protected boolean wasObjectStored(Object o) {
-    return myManager.getCopyrights().contains((CopyrightProfile)o);
-  }
-
-  @Nls
-  public String getDisplayName() {
-    return "Copyright Profiles";
-  }
-
-  protected void reloadAvailableProfiles() {
-    if (myUpdate != null) {
-      myUpdate.run();
+    @Override
+    protected String getComponentStateKey() {
+        return "Copyright.UI";
     }
-  }
 
-  @RequiredUIAccess
-  public void apply() throws ConfigurationException {
-    final Set<String> profiles = new HashSet<String>();
-    for (int i = 0; i < myRoot.getChildCount(); i++) {
-      MyNode node = (MyNode)myRoot.getChildAt(i);
-      final String profileName = ((CopyrightConfigurable)node.getConfigurable()).getEditableObject().getName();
-      if (profiles.contains(profileName)) {
-        selectNodeInTree(profileName);
-        throw new ConfigurationException("Duplicate copyright profile name: \'" + profileName + "\'");
-      }
-      profiles.add(profileName);
+    protected void processRemovedItems() {
+        Map<String, CopyrightProfile> profiles = getAllProfiles();
+        final List<CopyrightProfile> deleted = new ArrayList<CopyrightProfile>();
+        for (CopyrightProfile profile : myManager.getCopyrights()) {
+            if (!profiles.containsValue(profile)) {
+                deleted.add(profile);
+            }
+        }
+        for (CopyrightProfile profile : deleted) {
+            myManager.removeCopyright(profile);
+        }
     }
-    super.apply();
-  }
 
-  public Map<String, CopyrightProfile> getAllProfiles() {
-    final Map<String, CopyrightProfile> profiles = new HashMap<String, CopyrightProfile>();
-    if (!myInitialized.get()) {
-      for (CopyrightProfile profile : myManager.getCopyrights()) {
-        profiles.put(profile.getName(), profile);
-      }
+    protected boolean wasObjectStored(Object o) {
+        return myManager.getCopyrights().contains((CopyrightProfile)o);
     }
-    else {
-      for (int i = 0; i < myRoot.getChildCount(); i++) {
-        MyNode node = (MyNode)myRoot.getChildAt(i);
-        final CopyrightProfile copyrightProfile = ((CopyrightConfigurable)node.getConfigurable()).getEditableObject();
-        profiles.put(copyrightProfile.getName(), copyrightProfile);
-      }
+
+    @Nls
+    public String getDisplayName() {
+        return "Copyright Profiles";
     }
-    return profiles;
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    super.disposeUIResources();
-    myInitialized.set(false);
-  }
+    protected void reloadAvailableProfiles() {
+        if (myUpdate != null) {
+            myUpdate.run();
+        }
+    }
 
-  @Nullable
-  protected ArrayList<AnAction> createActions(boolean fromPopup) {
-    ArrayList<AnAction> result = new ArrayList<AnAction>();
-    result.add(new AnAction("Add", "Add", PlatformIconGroup.generalAdd()) {
-      {
-        registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
-      }
+    @RequiredUIAccess
+    public void apply() throws ConfigurationException {
+        final Set<String> profiles = new HashSet<String>();
+        for (int i = 0; i < myRoot.getChildCount(); i++) {
+            MyNode node = (MyNode)myRoot.getChildAt(i);
+            final String profileName = ((CopyrightConfigurable)node.getConfigurable()).getEditableObject().getName();
+            if (profiles.contains(profileName)) {
+                selectNodeInTree(profileName);
+                throw new ConfigurationException("Duplicate copyright profile name: \'" + profileName + "\'");
+            }
+            profiles.add(profileName);
+        }
+        super.apply();
+    }
 
-      public void actionPerformed(AnActionEvent event) {
-        final String name = askForProfileName("Create Copyright Profile", "");
-        if (name == null) return;
-        final CopyrightProfile copyrightProfile = new CopyrightProfile(name);
-        addProfileNode(copyrightProfile);
-      }
-    });
-    result.add(new MyDeleteAction(forAll(Conditions.alwaysTrue())));
-    result.add(new AnAction("Copy", "Copy", PlatformIconGroup.actionsCopy()) {
-      {
-        registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
-      }
-
-      public void actionPerformed(AnActionEvent event) {
-        final String profileName = askForProfileName("Copy Copyright Profile", "");
-        if (profileName == null) return;
-        final CopyrightProfile clone = new CopyrightProfile();
-        clone.copyFrom((CopyrightProfile)getSelectedObject());
-        clone.setName(profileName);
-        addProfileNode(clone);
-      }
-
-      public void update(AnActionEvent event) {
-        super.update(event);
-        event.getPresentation().setEnabled(getSelectedObject() != null);
-      }
-    });
-    result.add(new AnAction("Import", "Import", PlatformIconGroup.actionsImport()) {
-      public void actionPerformed(AnActionEvent event) {
-        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
-        descriptor.withFileFilter(file -> "xml".equals(file.getExtension()));
-        descriptor.setTitle("Choose file containing copyright notice");
-        final VirtualFile file = IdeaFileChooser.chooseFile(descriptor, myProject, null);
-        if (file == null) return;
-
-        final List<CopyrightProfile> copyrightProfiles = ExternalOptionHelper.loadOptions(VirtualFileUtil.virtualToIoFile(file));
-        if (copyrightProfiles == null) return;
-        if (!copyrightProfiles.isEmpty()) {
-          if (copyrightProfiles.size() == 1) {
-            importProfile(copyrightProfiles.get(0));
-          }
-          else {
-            JBPopupFactory.getInstance()
-              .createListPopup(new BaseListPopupStep<CopyrightProfile>("Choose profile to import", copyrightProfiles) {
-                @Override
-                public PopupStep onChosen(final CopyrightProfile selectedValue, boolean finalChoice) {
-                  return doFinalStep(new Runnable() {
-                    public void run() {
-                      importProfile(selectedValue);
-                    }
-                  });
-                }
-
-                @Nonnull
-                @Override
-                public String getTextFor(CopyrightProfile value) {
-                  return value.getName();
-                }
-              }).showUnderneathOf(myNorthPanel);
-          }
+    public Map<String, CopyrightProfile> getAllProfiles() {
+        final Map<String, CopyrightProfile> profiles = new HashMap<String, CopyrightProfile>();
+        if (!myInitialized.get()) {
+            for (CopyrightProfile profile : myManager.getCopyrights()) {
+                profiles.put(profile.getName(), profile);
+            }
         }
         else {
-          Messages.showWarningDialog(myProject, "The selected file does not contain any copyright settings.", "Import Failure");
+            for (int i = 0; i < myRoot.getChildCount(); i++) {
+                MyNode node = (MyNode)myRoot.getChildAt(i);
+                final CopyrightProfile copyrightProfile = ((CopyrightConfigurable)node.getConfigurable()).getEditableObject();
+                profiles.put(copyrightProfile.getName(), copyrightProfile);
+            }
         }
-      }
-
-      private void importProfile(CopyrightProfile copyrightProfile) {
-        final String profileName = askForProfileName("Import copyright profile", copyrightProfile.getName());
-        if (profileName == null) return;
-        copyrightProfile.setName(profileName);
-        addProfileNode(copyrightProfile);
-        Messages.showInfoMessage(myProject, "The copyright settings have been successfully imported.", "Import Complete");
-      }
-    });
-    return result;
-  }
-
-
-  @Nullable
-  private String askForProfileName(String title, String initialName) {
-    return Messages.showInputDialog("New copyright profile name:", title, Messages.getQuestionIcon(), initialName, new InputValidator() {
-      public boolean checkInput(String s) {
-        return !getAllProfiles().containsKey(s) && s.length() > 0;
-      }
-
-      public boolean canClose(String s) {
-        return checkInput(s);
-      }
-    });
-  }
-
-  private void addProfileNode(CopyrightProfile copyrightProfile) {
-    final CopyrightConfigurable copyrightConfigurable = new CopyrightConfigurable(myProject, copyrightProfile, TREE_UPDATER);
-    copyrightConfigurable.setModified(true);
-    final MyNode node = new MyNode(copyrightConfigurable);
-    addNode(node, myRoot);
-    selectNodeInTree(node);
-    reloadAvailableProfiles();
-  }
-
-  @Override
-  protected void removePaths(TreePath... paths) {
-    super.removePaths(paths);
-    reloadAvailableProfiles();
-  }
-
-  private void reloadTree() {
-    myRoot.removeAllChildren();
-    Collection<CopyrightProfile> collection = myManager.getCopyrights();
-    for (CopyrightProfile profile : collection) {
-      CopyrightProfile clone = new CopyrightProfile();
-      clone.copyFrom(profile);
-      addNode(new MyNode(new CopyrightConfigurable(myProject, clone, TREE_UPDATER)), myRoot);
+        return profiles;
     }
-    myInitialized.set(true);
-  }
 
-  @RequiredUIAccess
-  public void reset() {
-    reloadTree();
-    super.reset();
-  }
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        super.disposeUIResources();
+        myInitialized.set(false);
+    }
 
-  @Override
-  protected String getEmptySelectionString() {
-    return "Select a profile to view or edit its details here";
-  }
+    @Nullable
+    protected ArrayList<AnAction> createActions(boolean fromPopup) {
+        ArrayList<AnAction> result = new ArrayList<AnAction>();
+        result.add(new AnAction("Add", "Add", PlatformIconGroup.generalAdd()) {
+            {
+                registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
+            }
 
-  public void addItemsChangeListener(final Runnable runnable) {
-    addItemsChangeListener(new ItemsChangeListener() {
-      public void itemChanged(@Nullable Object deletedItem) {
-        SwingUtilities.invokeLater(runnable);
-      }
+            public void actionPerformed(AnActionEvent event) {
+                final String name = askForProfileName("Create Copyright Profile", "");
+                if (name == null) {
+                    return;
+                }
+                final CopyrightProfile copyrightProfile = new CopyrightProfile(name);
+                addProfileNode(copyrightProfile);
+            }
+        });
+        result.add(new MyDeleteAction(forAll(Conditions.alwaysTrue())));
+        result.add(new AnAction("Copy", "Copy", PlatformIconGroup.actionsCopy()) {
+            {
+                registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
+            }
 
-      public void itemsExternallyChanged(UnnamedConfigurable configurable) {
-        SwingUtilities.invokeLater(runnable);
-      }
-    });
-  }
+            public void actionPerformed(AnActionEvent event) {
+                final String profileName = askForProfileName("Copy Copyright Profile", "");
+                if (profileName == null) {
+                    return;
+                }
+                final CopyrightProfile clone = new CopyrightProfile();
+                clone.copyFrom((CopyrightProfile)getSelectedObject());
+                clone.setName(profileName);
+                addProfileNode(clone);
+            }
 
-  @Nonnull
-  public String getId() {
-    return "copyright.profiles";
-  }
+            public void update(AnActionEvent event) {
+                super.update(event);
+                event.getPresentation().setEnabled(getSelectedObject() != null);
+            }
+        });
+        result.add(new AnAction("Import", "Import", PlatformIconGroup.actionsImport()) {
+            public void actionPerformed(AnActionEvent event) {
+                FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
+                descriptor.withFileFilter(file -> "xml".equals(file.getExtension()));
+                descriptor.setTitle("Choose file containing copyright notice");
+                final VirtualFile file = IdeaFileChooser.chooseFile(descriptor, myProject, null);
+                if (file == null) {
+                    return;
+                }
 
-  public Runnable enableSearch(String option) {
-    return null;
-  }
+                final List<CopyrightProfile> copyrightProfiles = ExternalOptionHelper.loadOptions(VirtualFileUtil.virtualToIoFile(file));
+                if (copyrightProfiles == null) {
+                    return;
+                }
+                if (!copyrightProfiles.isEmpty()) {
+                    if (copyrightProfiles.size() == 1) {
+                        importProfile(copyrightProfiles.get(0));
+                    }
+                    else {
+                        JBPopupFactory.getInstance()
+                            .createListPopup(new BaseListPopupStep<CopyrightProfile>("Choose profile to import", copyrightProfiles) {
+                                @Override
+                                public PopupStep onChosen(final CopyrightProfile selectedValue, boolean finalChoice) {
+                                    return doFinalStep(new Runnable() {
+                                        public void run() {
+                                            importProfile(selectedValue);
+                                        }
+                                    });
+                                }
+
+                                @Nonnull
+                                @Override
+                                public String getTextFor(CopyrightProfile value) {
+                                    return value.getName();
+                                }
+                            }).showUnderneathOf(myNorthPanel);
+                    }
+                }
+                else {
+                    Messages.showWarningDialog(myProject, "The selected file does not contain any copyright settings.", "Import Failure");
+                }
+            }
+
+            private void importProfile(CopyrightProfile copyrightProfile) {
+                final String profileName = askForProfileName("Import copyright profile", copyrightProfile.getName());
+                if (profileName == null) {
+                    return;
+                }
+                copyrightProfile.setName(profileName);
+                addProfileNode(copyrightProfile);
+                Messages.showInfoMessage(myProject, "The copyright settings have been successfully imported.", "Import Complete");
+            }
+        });
+        return result;
+    }
+
+
+    @Nullable
+    private String askForProfileName(String title, String initialName) {
+        return Messages.showInputDialog(
+            "New copyright profile name:",
+            title,
+            Messages.getQuestionIcon(),
+            initialName,
+            new InputValidator() {
+                public boolean checkInput(String s) {
+                    return !getAllProfiles().containsKey(s) && s.length() > 0;
+                }
+
+                public boolean canClose(String s) {
+                    return checkInput(s);
+                }
+            }
+        );
+    }
+
+    private void addProfileNode(CopyrightProfile copyrightProfile) {
+        final CopyrightConfigurable copyrightConfigurable = new CopyrightConfigurable(myProject, copyrightProfile, TREE_UPDATER);
+        copyrightConfigurable.setModified(true);
+        final MyNode node = new MyNode(copyrightConfigurable);
+        addNode(node, myRoot);
+        selectNodeInTree(node);
+        reloadAvailableProfiles();
+    }
+
+    @Override
+    protected void removePaths(TreePath... paths) {
+        super.removePaths(paths);
+        reloadAvailableProfiles();
+    }
+
+    private void reloadTree() {
+        myRoot.removeAllChildren();
+        Collection<CopyrightProfile> collection = myManager.getCopyrights();
+        for (CopyrightProfile profile : collection) {
+            CopyrightProfile clone = new CopyrightProfile();
+            clone.copyFrom(profile);
+            addNode(new MyNode(new CopyrightConfigurable(myProject, clone, TREE_UPDATER)), myRoot);
+        }
+        myInitialized.set(true);
+    }
+
+    @RequiredUIAccess
+    public void reset() {
+        reloadTree();
+        super.reset();
+    }
+
+    @Override
+    protected String getEmptySelectionString() {
+        return "Select a profile to view or edit its details here";
+    }
+
+    public void addItemsChangeListener(final Runnable runnable) {
+        addItemsChangeListener(new ItemsChangeListener() {
+            public void itemChanged(@Nullable Object deletedItem) {
+                SwingUtilities.invokeLater(runnable);
+            }
+
+            public void itemsExternallyChanged(UnnamedConfigurable configurable) {
+                SwingUtilities.invokeLater(runnable);
+            }
+        });
+    }
+
+    @Nonnull
+    public String getId() {
+        return "copyright.profiles";
+    }
+
+    public Runnable enableSearch(String option) {
+        return null;
+    }
 }

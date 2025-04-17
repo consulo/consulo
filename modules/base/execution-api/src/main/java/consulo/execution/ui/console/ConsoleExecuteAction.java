@@ -39,78 +39,90 @@ import jakarta.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class ConsoleExecuteAction extends DumbAwareAction {
-  public static final String CONSOLE_EXECUTE_ACTION_ID = "Console.Execute";
+    public static final String CONSOLE_EXECUTE_ACTION_ID = "Console.Execute";
 
-  private final LanguageConsoleView myConsoleView;
-  private final ConsoleExecuteActionHandler myExecuteActionHandler;
-  private final Predicate<LanguageConsoleView> myEnabledCondition;
+    private final LanguageConsoleView myConsoleView;
+    private final ConsoleExecuteActionHandler myExecuteActionHandler;
+    private final Predicate<LanguageConsoleView> myEnabledCondition;
 
-  @SuppressWarnings("UnusedDeclaration")
-  public ConsoleExecuteAction(@Nonnull LanguageConsoleView console, @Nonnull BaseConsoleExecuteActionHandler executeActionHandler) {
-    this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, Conditions.<LanguageConsoleView>alwaysTrue());
-  }
-
-  public ConsoleExecuteAction(@Nonnull LanguageConsoleView console, final @Nonnull ConsoleExecuteActionHandler executeActionHandler, @Nullable Predicate<LanguageConsoleView> enabledCondition) {
-    this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, enabledCondition);
-  }
-
-  public ConsoleExecuteAction(@Nonnull LanguageConsoleView console, @Nonnull BaseConsoleExecuteActionHandler executeActionHandler, @Nullable Predicate<LanguageConsoleView> enabledCondition) {
-    this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, enabledCondition);
-  }
-
-  public ConsoleExecuteAction(@Nonnull LanguageConsoleView consoleView,
-                              @Nonnull ConsoleExecuteActionHandler executeActionHandler,
-                              @Nonnull String emptyExecuteActionId,
-                              @Nullable Predicate<LanguageConsoleView> enabledCondition) {
-    super(LocalizeValue.empty(), LocalizeValue.empty(), AllIcons.Actions.Execute);
-
-    myConsoleView = consoleView;
-    myExecuteActionHandler = executeActionHandler;
-    myEnabledCondition = enabledCondition == null ? Conditions.<LanguageConsoleView>alwaysTrue() : enabledCondition;
-
-    EmptyAction.setupAction(this, emptyExecuteActionId, null);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public final void update(@Nonnull AnActionEvent e) {
-    EditorEx editor = myConsoleView.getConsoleEditor();
-    boolean enabled = !editor.isRendererMode() && isEnabled() && (myExecuteActionHandler.isEmptyCommandExecutionAllowed() || !StringUtil.isEmptyOrSpaces(editor.getDocument().getCharsSequence()));
-    if (enabled) {
-      Lookup lookup = LookupManager.getActiveLookup(editor);
-      // we should check getCurrentItem() also - fast typing could produce outdated lookup, such lookup reports isCompletion() true
-      enabled = lookup == null || !lookup.isCompletion() || lookup.getCurrentItem() == null || (((LookupEx)lookup).getLookupFocusDegree() == LookupFocusDegree.UNFOCUSED);
+    @SuppressWarnings("UnusedDeclaration")
+    public ConsoleExecuteAction(@Nonnull LanguageConsoleView console, @Nonnull BaseConsoleExecuteActionHandler executeActionHandler) {
+        this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, Conditions.<LanguageConsoleView>alwaysTrue());
     }
 
-    e.getPresentation().setEnabled(enabled);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public final void actionPerformed(@Nonnull AnActionEvent e) {
-    myExecuteActionHandler.runExecuteAction(myConsoleView);
-  }
-
-  public boolean isEnabled() {
-    return myEnabledCondition.test(myConsoleView);
-  }
-
-  public void execute(@Nullable TextRange range, @Nonnull String text, @Nullable EditorEx editor) {
-    if (range == null) {
-      ((LanguageConsoleViewEx)myConsoleView).doAddPromptToHistory();
-      myConsoleView.print(text, ConsoleViewContentType.USER_INPUT);
-      if (!text.endsWith("\n")) {
-        myConsoleView.print("\n", ConsoleViewContentType.USER_INPUT);
-      }
+    public ConsoleExecuteAction(
+        @Nonnull LanguageConsoleView console,
+        final @Nonnull ConsoleExecuteActionHandler executeActionHandler,
+        @Nullable Predicate<LanguageConsoleView> enabledCondition
+    ) {
+        this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, enabledCondition);
     }
-    else {
-      assert editor != null;
-      ((LanguageConsoleViewEx)myConsoleView).addTextRangeToHistory(range, editor, myExecuteActionHandler.isPreserveMarkup());
-    }
-    myExecuteActionHandler.addToCommandHistoryAndExecute(myConsoleView, text);
-  }
 
-  public ConsoleExecuteActionHandler getExecuteActionHandler() {
-    return myExecuteActionHandler;
-  }
+    public ConsoleExecuteAction(
+        @Nonnull LanguageConsoleView console,
+        @Nonnull BaseConsoleExecuteActionHandler executeActionHandler,
+        @Nullable Predicate<LanguageConsoleView> enabledCondition
+    ) {
+        this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, enabledCondition);
+    }
+
+    public ConsoleExecuteAction(
+        @Nonnull LanguageConsoleView consoleView,
+        @Nonnull ConsoleExecuteActionHandler executeActionHandler,
+        @Nonnull String emptyExecuteActionId,
+        @Nullable Predicate<LanguageConsoleView> enabledCondition
+    ) {
+        super(LocalizeValue.empty(), LocalizeValue.empty(), AllIcons.Actions.Execute);
+
+        myConsoleView = consoleView;
+        myExecuteActionHandler = executeActionHandler;
+        myEnabledCondition = enabledCondition == null ? Conditions.<LanguageConsoleView>alwaysTrue() : enabledCondition;
+
+        EmptyAction.setupAction(this, emptyExecuteActionId, null);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public final void update(@Nonnull AnActionEvent e) {
+        EditorEx editor = myConsoleView.getConsoleEditor();
+        boolean enabled = !editor.isRendererMode() && isEnabled()
+            && (myExecuteActionHandler.isEmptyCommandExecutionAllowed() || !StringUtil.isEmptyOrSpaces(editor.getDocument().getCharsSequence()));
+        if (enabled) {
+            Lookup lookup = LookupManager.getActiveLookup(editor);
+            // we should check getCurrentItem() also - fast typing could produce outdated lookup, such lookup reports isCompletion() true
+            enabled = lookup == null || !lookup.isCompletion() || lookup.getCurrentItem() == null
+                || (((LookupEx)lookup).getLookupFocusDegree() == LookupFocusDegree.UNFOCUSED);
+        }
+
+        e.getPresentation().setEnabled(enabled);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public final void actionPerformed(@Nonnull AnActionEvent e) {
+        myExecuteActionHandler.runExecuteAction(myConsoleView);
+    }
+
+    public boolean isEnabled() {
+        return myEnabledCondition.test(myConsoleView);
+    }
+
+    public void execute(@Nullable TextRange range, @Nonnull String text, @Nullable EditorEx editor) {
+        if (range == null) {
+            ((LanguageConsoleViewEx)myConsoleView).doAddPromptToHistory();
+            myConsoleView.print(text, ConsoleViewContentType.USER_INPUT);
+            if (!text.endsWith("\n")) {
+                myConsoleView.print("\n", ConsoleViewContentType.USER_INPUT);
+            }
+        }
+        else {
+            assert editor != null;
+            ((LanguageConsoleViewEx)myConsoleView).addTextRangeToHistory(range, editor, myExecuteActionHandler.isPreserveMarkup());
+        }
+        myExecuteActionHandler.addToCommandHistoryAndExecute(myConsoleView, text);
+    }
+
+    public ConsoleExecuteActionHandler getExecuteActionHandler() {
+        return myExecuteActionHandler;
+    }
 }

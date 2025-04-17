@@ -25,6 +25,7 @@ import consulo.util.lang.function.Condition;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -32,49 +33,49 @@ import javax.swing.*;
  */
 public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
 
-  private final AllFileTemplatesConfigurable myConfigurable;
+    private final AllFileTemplatesConfigurable myConfigurable;
 
-  public ChangeSchemaCombo(AllFileTemplatesConfigurable configurable) {
-    myConfigurable = configurable;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setText(myConfigurable.getCurrentScheme().getName());
-  }
-
-  @Nonnull
-  @Override
-  public DefaultActionGroup createPopupActionGroup(JComponent component) {
-    DefaultActionGroup group = new DefaultActionGroup(new ChangeSchemaAction(FileTemplatesScheme.DEFAULT));
-    FileTemplatesScheme scheme = myConfigurable.getManager().getProjectScheme();
-    if (scheme != null) {
-      group.add(new ChangeSchemaAction(scheme));
-    }
-    return group;
-  }
-
-  @Override
-  public Condition<AnAction> getPreselectCondition() {
-    return action -> myConfigurable.getCurrentScheme().getName().equals(action.getTemplatePresentation().getText());
-  }
-
-  private class ChangeSchemaAction extends AnAction {
-
-    private final FileTemplatesScheme myScheme;
-
-    public ChangeSchemaAction(@Nonnull FileTemplatesScheme scheme) {
-      super(scheme.getName());
-      myScheme = scheme;
+    public ChangeSchemaCombo(AllFileTemplatesConfigurable configurable) {
+        myConfigurable = configurable;
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
-      myConfigurable.changeScheme(myScheme);
-      ChangeSchemaCombo.this.getTemplatePresentation().setText(myScheme.getName());
+    public void update(AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setText(myConfigurable.getCurrentScheme().getName());
     }
-  }
+
+    @Nonnull
+    @Override
+    public DefaultActionGroup createPopupActionGroup(JComponent component) {
+        DefaultActionGroup group = new DefaultActionGroup(new ChangeSchemaAction(FileTemplatesScheme.DEFAULT));
+        FileTemplatesScheme scheme = myConfigurable.getManager().getProjectScheme();
+        if (scheme != null) {
+            group.add(new ChangeSchemaAction(scheme));
+        }
+        return group;
+    }
+
+    @Override
+    public Condition<AnAction> getPreselectCondition() {
+        return action -> myConfigurable.getCurrentScheme().getName().equals(action.getTemplatePresentation().getText());
+    }
+
+    private class ChangeSchemaAction extends AnAction {
+
+        private final FileTemplatesScheme myScheme;
+
+        public ChangeSchemaAction(@Nonnull FileTemplatesScheme scheme) {
+            super(scheme.getName());
+            myScheme = scheme;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            myConfigurable.changeScheme(myScheme);
+            ChangeSchemaCombo.this.getTemplatePresentation().setText(myScheme.getName());
+        }
+    }
 }

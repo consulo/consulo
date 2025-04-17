@@ -36,101 +36,121 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class ComboBoxAction extends AnAction implements CustomComponentAction {
-  private String myPopupTitle;
+    private String myPopupTitle;
 
-  protected ComboBoxAction() {
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(CustomComponentAction.COMPONENT_KEY);
-    if (button == null) {
-      Component contextComponent = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-      JRootPane rootPane = UIUtil.getParentOfType(JRootPane.class, contextComponent);
-      if (rootPane != null) {
-        button = (ComboBoxButton)UIUtil.uiTraverser().withRoot(rootPane).bfsTraversal()
-                .filter(component -> component instanceof ComboBoxButton && ((ComboBoxButton)component).getComboBoxAction() == ComboBoxAction.this).first();
-      }
-      if (button == null) return;
+    protected ComboBoxAction() {
     }
 
-    button.showPopup();
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(CustomComponentAction.COMPONENT_KEY);
+        if (button == null) {
+            Component contextComponent = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+            JRootPane rootPane = UIUtil.getParentOfType(JRootPane.class, contextComponent);
+            if (rootPane != null) {
+                button = (ComboBoxButton)UIUtil.uiTraverser()
+                    .withRoot(rootPane)
+                    .bfsTraversal()
+                    .filter(component -> component instanceof ComboBoxButton && ((ComboBoxButton)component).getComboBoxAction() == ComboBoxAction.this)
+                    .first();
+            }
+            if (button == null) {
+                return;
+            }
+        }
 
-  @Nonnull
-  @Override
-  public JComponent createCustomComponent(Presentation presentation, String place) {
-    NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
-    panel.setBorder(JBUI.Borders.empty(0, 4));
-    ComboBoxButton button = createComboBoxButton(presentation);
-    panel.add(button.getComponent(), BorderLayout.CENTER);
-    return panel;
-  }
+        button.showPopup();
+    }
 
-  @Nonnull
-  public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Presentation presentation, @Nonnull Runnable onDispose) {
-    return createPopup(component, context, onDispose);
-  }
+    @Nonnull
+    @Override
+    public JComponent createCustomComponent(Presentation presentation, String place) {
+        NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
+        panel.setBorder(JBUI.Borders.empty(0, 4));
+        ComboBoxButton button = createComboBoxButton(presentation);
+        panel.add(button.getComponent(), BorderLayout.CENTER);
+        return panel;
+    }
 
-  @Nonnull
-  public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
-    ActionGroup group = createPopupActionGroup(component, context);
+    @Nonnull
+    public JBPopup createPopup(
+        @Nonnull JComponent component,
+        @Nonnull DataContext context,
+        @Nonnull Presentation presentation,
+        @Nonnull Runnable onDispose
+    ) {
+        return createPopup(component, context, onDispose);
+    }
 
-    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(getPopupTitle(), group, context, false, shouldShowDisabledActions(), false, onDispose, getMaxRows(), getPreselectCondition());
-    popup.setMinimumSize(new Dimension(getMinWidth(), getMinHeight()));
-    return popup;
-  }
+    @Nonnull
+    public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
+        ActionGroup group = createPopupActionGroup(component, context);
 
-  @Nonnull
-  protected ComboBoxButton createComboBoxButton(Presentation presentation) {
-    return new ComboBoxButtonImpl(this, presentation);
-  }
+        ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+            getPopupTitle(),
+            group,
+            context,
+            false,
+            shouldShowDisabledActions(),
+            false,
+            onDispose,
+            getMaxRows(),
+            getPreselectCondition()
+        );
+        popup.setMinimumSize(new Dimension(getMinWidth(), getMinHeight()));
+        return popup;
+    }
 
-  @Nullable
-  public String getTooltipText(@Nonnull ComboBoxButton button) {
-    return null;
-  }
+    @Nonnull
+    protected ComboBoxButton createComboBoxButton(Presentation presentation) {
+        return new ComboBoxButtonImpl(this, presentation);
+    }
 
-  public void setPopupTitle(String popupTitle) {
-    myPopupTitle = popupTitle;
-  }
+    @Nullable
+    public String getTooltipText(@Nonnull ComboBoxButton button) {
+        return null;
+    }
 
-  public String getPopupTitle() {
-    return myPopupTitle;
-  }
+    public void setPopupTitle(String popupTitle) {
+        myPopupTitle = popupTitle;
+    }
+
+    public String getPopupTitle() {
+        return myPopupTitle;
+    }
 
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+    }
 
-  public boolean shouldShowDisabledActions() {
-    return false;
-  }
+    public boolean shouldShowDisabledActions() {
+        return false;
+    }
 
-  @Nonnull
-  protected abstract ActionGroup createPopupActionGroup(JComponent button);
+    @Nonnull
+    protected abstract ActionGroup createPopupActionGroup(JComponent button);
 
-  @Nonnull
-  protected ActionGroup createPopupActionGroup(JComponent button, @Nonnull DataContext dataContext) {
-    return createPopupActionGroup(button);
-  }
+    @Nonnull
+    protected ActionGroup createPopupActionGroup(JComponent button, @Nonnull DataContext dataContext) {
+        return createPopupActionGroup(button);
+    }
 
-  public int getMaxRows() {
-    return 30;
-  }
+    public int getMaxRows() {
+        return 30;
+    }
 
-  public int getMinHeight() {
-    return 1;
-  }
+    public int getMinHeight() {
+        return 1;
+    }
 
-  public int getMinWidth() {
-    return 1;
-  }
+    public int getMinWidth() {
+        return 1;
+    }
 
-  public Condition<AnAction> getPreselectCondition() {
-    return null;
-  }
+    public Condition<AnAction> getPreselectCondition() {
+        return null;
+    }
 }
