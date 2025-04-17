@@ -18,7 +18,6 @@ import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
 import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.PlatformDataKeys;
@@ -32,15 +31,19 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.hint.HintHint;
-import consulo.ui.ex.awt.popup.*;
+import consulo.ui.ex.awt.popup.AWTListPopup;
+import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
+import consulo.ui.ex.awt.popup.AWTPopupFactory;
+import consulo.ui.ex.awt.popup.AWTPopupSubFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.ui.util.TextWithMnemonic;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Maps;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
@@ -55,6 +58,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Singleton
@@ -62,7 +66,7 @@ import java.util.function.Supplier;
 public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory {
     private static final Logger LOG = Logger.getInstance(PopupFactoryImpl.class);
 
-    private final Map<Disposable, List<Balloon>> myStorage = ContainerUtil.createWeakMap();
+    private final Map<Disposable, List<Balloon>> myStorage = Maps.newWeakHashMap();
 
     @Override
     public AWTListPopup createListPopup(
@@ -114,13 +118,13 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
     @Nonnull
     @Override
-    public ListPopup createConfirmation(String title, final Runnable onYes, int defaultOptionIndex) {
+    public ListPopup createConfirmation(String title, Runnable onYes, int defaultOptionIndex) {
         return createConfirmation(title, CommonLocalize.buttonYes().get(), CommonLocalize.buttonNo().get(), onYes, defaultOptionIndex);
     }
 
     @Nonnull
     @Override
-    public ListPopup createConfirmation(String title, final String yesText, String noText, final Runnable onYes, int defaultOptionIndex) {
+    public ListPopup createConfirmation(String title, String yesText, String noText, Runnable onYes, int defaultOptionIndex) {
         return createConfirmation(title, yesText, noText, onYes, EmptyRunnable.getInstance(), defaultOptionIndex);
     }
 
@@ -153,15 +157,15 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
     @Override
     public ListPopup createConfirmation(
         String title,
-        final String yesText,
+        String yesText,
         String noText,
-        final Runnable onYes,
-        final Runnable onNo,
+        Runnable onYes,
+        Runnable onNo,
         int defaultOptionIndex
     ) {
-        final BaseListPopupStep<String> step = new BaseListPopupStep<String>(title, yesText, noText) {
+        BaseListPopupStep<String> step = new BaseListPopupStep<String>(title, yesText, noText) {
             @Override
-            public PopupStep onChosen(String selectedValue, final boolean finalChoice) {
+            public PopupStep onChosen(String selectedValue, boolean finalChoice) {
                 return doFinalStep(selectedValue.equals(yesText) ? onYes : onNo);
             }
 
@@ -177,29 +181,27 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
         };
         step.setDefaultOptionIndex(defaultOptionIndex);
 
-        final Application app = ApplicationManager.getApplication();
+        Application app = ApplicationManager.getApplication();
         return app == null || !app.isUnitTestMode() ? new ListPopupImpl(step) : new MockConfirmation(step, yesText);
     }
 
-
     public static class ActionGroupPopup extends ListPopupImpl {
-
         private final Runnable myDisposeCallback;
         private final Component myComponent;
         private final String myActionPlace;
 
         public ActionGroupPopup(
-            final String title,
+            String title,
             @Nonnull ActionGroup actionGroup,
             @Nonnull DataContext dataContext,
             boolean showNumbers,
             boolean useAlphaAsNumbers,
             boolean showDisabledActions,
             boolean honorActionMnemonics,
-            final Runnable disposeCallback,
-            final int maxRowCount,
-            final Condition<? super AnAction> preselectActionCondition,
-            @Nullable final String actionPlace
+            Runnable disposeCallback,
+            int maxRowCount,
+            Predicate<? super AnAction> preselectActionCondition,
+            @Nullable String actionPlace
         ) {
             this(
                 title,
@@ -228,8 +230,8 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
             boolean honorActionMnemonics,
             Runnable disposeCallback,
             int maxRowCount,
-            Condition<? super AnAction> preselectActionCondition,
-            @Nullable final String actionPlace,
+            Predicate<? super AnAction> preselectActionCondition,
+            @Nullable String actionPlace,
             boolean autoSelection
         ) {
             this(
@@ -259,8 +261,8 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
             boolean honorActionMnemonics,
             Runnable disposeCallback,
             int maxRowCount,
-            Condition<? super AnAction> preselectActionCondition,
-            @Nullable final String actionPlace,
+            Predicate<? super AnAction> preselectActionCondition,
+            @Nullable String actionPlace,
             @Nullable BasePresentationFactory presentationFactory,
             boolean autoSelection
         ) {
@@ -308,8 +310,8 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
             });
 
             addListSelectionListener(e -> {
-                final JList list = (JList)e.getSource();
-                final ActionItem actionItem = (ActionItem)list.getSelectedValue();
+                JList list = (JList)e.getSource();
+                ActionItem actionItem = (ActionItem)list.getSelectedValue();
                 if (actionItem == null) {
                     return;
                 }
@@ -324,7 +326,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
             Presentation presentation = new Presentation();
             presentation.setDescription(action.getTemplatePresentation().getDescription());
 
-            final AnActionEvent actionEvent = new AnActionEvent(
+            AnActionEvent actionEvent = new AnActionEvent(
                 null,
                 DataManager.getInstance().getDataContext(myComponent),
                 myActionPlace,
@@ -345,7 +347,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
             boolean useAlphaAsNumbers,
             boolean showDisabledActions,
             boolean honorActionMnemonics,
-            Condition<? super AnAction> preselectActionCondition,
+            Predicate<? super AnAction> preselectActionCondition,
             @Nullable String actionPlace,
             @Nullable BasePresentationFactory presentationFactory,
             boolean autoSelection
@@ -419,8 +421,8 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
         @Override
         public void handleSelect(boolean handleFinalChoices, InputEvent e) {
-            final Object selectedValue = getList().getSelectedValue();
-            final ActionPopupStep actionPopupStep = ObjectUtil.tryCast(getListStep(), ActionPopupStep.class);
+            Object selectedValue = getList().getSelectedValue();
+            ActionPopupStep actionPopupStep = ObjectUtil.tryCast(getListStep(), ActionPopupStep.class);
 
             if (actionPopupStep != null) {
                 KeepingPopupOpenAction dontClosePopupAction =
@@ -439,10 +441,10 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
         }
 
         protected void handleToggleAction() {
-            final Object[] selectedValues = getList().getSelectedValues();
+            Object[] selectedValues = getList().getSelectedValues();
 
             ListPopupStep<Object> listStep = getListStep();
-            final ActionPopupStep actionPopupStep = ObjectUtil.tryCast(listStep, ActionPopupStep.class);
+            ActionPopupStep actionPopupStep = ObjectUtil.tryCast(listStep, ActionPopupStep.class);
             if (actionPopupStep == null) {
                 return;
             }
@@ -493,7 +495,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
         boolean showDisabledActions,
         Runnable disposeCallback,
         int maxRowCount,
-        Condition<? super AnAction> preselectActionCondition,
+        Predicate<? super AnAction> preselectActionCondition,
         @Nullable String actionPlace
     ) {
         return new ActionGroupPopup(
@@ -514,15 +516,15 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
     @Nonnull
     @Override
     public ListPopup createActionGroupPopup(
-        final String title,
-        @Nonnull final ActionGroup actionGroup,
+        String title,
+        @Nonnull ActionGroup actionGroup,
         @Nonnull DataContext dataContext,
         boolean showNumbers,
         boolean showDisabledActions,
         boolean honorActionMnemonics,
-        final Runnable disposeCallback,
-        final int maxRowCount,
-        final Condition<? super AnAction> preselectActionCondition
+        Runnable disposeCallback,
+        int maxRowCount,
+        Predicate<? super AnAction> preselectActionCondition
     ) {
         return new ActionGroupPopup(
             title,
@@ -570,7 +572,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
         );
     }
 
-    private static boolean itemsHaveMnemonics(final List<? extends ActionItem> items) {
+    private static boolean itemsHaveMnemonics(List<? extends ActionItem> items) {
         for (ActionItem item : items) {
             if (TextWithMnemonic.parse(item.getAction().getTemplatePresentation().getTextWithMnemonic()).getMnemonic() != 0) {
                 return true;
@@ -628,7 +630,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
             }
         }
 
-        final Point point = dataContext.getData(UIExAWTDataKey.CONTEXT_MENU_POINT);
+        Point point = dataContext.getData(UIExAWTDataKey.CONTEXT_MENU_POINT);
         if (point != null) {
             return new RelativePoint(focusOwner, point);
         }
@@ -642,9 +644,9 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
     @Nonnull
     @Override
-    public RelativePoint guessBestPopupLocation(@Nonnull final JComponent component) {
+    public RelativePoint guessBestPopupLocation(@Nonnull JComponent component) {
         Point popupMenuPoint = null;
-        final Rectangle visibleRect = component.getVisibleRect();
+        Rectangle visibleRect = component.getVisibleRect();
         if (component instanceof JList) { // JList
             JList list = (JList)component;
             int firstVisibleIndex = list.getFirstVisibleIndex();
@@ -725,7 +727,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
     public RelativePoint guessBestPopupLocation(@Nonnull Editor editor) {
         Point p = getVisibleBestPopupLocation(editor);
         if (p == null) {
-            final Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
+            Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
             p = new Point(visibleArea.x + visibleArea.width / 3, visibleArea.y + visibleArea.height / 2);
         }
         return new RelativePoint(editor.getContentComponent(), p);
@@ -745,11 +747,11 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
             }
         }
 
-        final int lineHeight = editor.getLineHeight();
+        int lineHeight = editor.getLineHeight();
         Point p = editor.visualPositionToXY(visualPosition);
         p.y += lineHeight;
 
-        final Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
+        Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
         return !visibleArea.contains(p) && !visibleArea.contains(p.x, p.y - lineHeight) ? null : p;
     }
 
@@ -760,7 +762,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
     @Override
     @Nonnull
-    public List<JBPopup> getChildPopups(@Nonnull final Component component) {
+    public List<JBPopup> getChildPopups(@Nonnull Component component) {
         return AbstractPopup.getChildPopups(component);
     }
 
@@ -771,17 +773,17 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
     @Nonnull
     @Override
-    public BalloonBuilder createBalloonBuilder(@Nonnull final JComponent content) {
+    public BalloonBuilder createBalloonBuilder(@Nonnull JComponent content) {
         return new BalloonPopupBuilderImpl(myStorage, content);
     }
 
     @Nonnull
     @Override
     public BalloonBuilder createDialogBalloonBuilder(@Nonnull JComponent content, String title) {
-        final BalloonPopupBuilderImpl builder = new BalloonPopupBuilderImpl(myStorage, content);
-        final Color bg = UIManager.getColor("Panel.background");
-        final Color borderOriginal = Color.darkGray;
-        final Color border = ColorUtil.toAlpha(borderOriginal, 75);
+        BalloonPopupBuilderImpl builder = new BalloonPopupBuilderImpl(myStorage, content);
+        Color bg = UIManager.getColor("Panel.background");
+        Color borderOriginal = Color.darkGray;
+        Color border = ColorUtil.toAlpha(borderOriginal, 75);
         builder.setDialogMode(true)
             .setTitle(title)
             .setAnimationCycle(200)
@@ -799,11 +801,11 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
     @Nonnull
     @Override
     public BalloonBuilder createHtmlTextBalloonBuilder(
-        @Nonnull final String htmlContent,
-        @Nullable final Image icon,
+        @Nonnull String htmlContent,
+        @Nullable Image icon,
         Color textColor,
-        final Color fillColor,
-        @Nullable final HyperlinkListener listener
+        Color fillColor,
+        @Nullable HyperlinkListener listener
     ) {
         JEditorPane text = IdeTooltipManagerImpl.initPane(htmlContent, new HintHint().setTextFg(textColor).setAwtTooltip(true), null);
 
@@ -816,24 +818,24 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
 
         JLabel label = new JLabel();
-        final JPanel content =
+        JPanel content =
             new NonOpaquePanel(new BorderLayout((int)(label.getIconTextGap() * 1.5), (int)(label.getIconTextGap() * 1.5)));
 
-        final NonOpaquePanel textWrapper = new NonOpaquePanel(new GridBagLayout());
+        NonOpaquePanel textWrapper = new NonOpaquePanel(new GridBagLayout());
         JScrollPane scrolledText = ScrollPaneFactory.createScrollPane(text, true);
         scrolledText.setBackground(fillColor);
         scrolledText.getViewport().setBackground(fillColor);
         textWrapper.add(scrolledText);
         content.add(textWrapper, BorderLayout.CENTER);
         if (icon != null) {
-            final NonOpaquePanel north = new NonOpaquePanel(new BorderLayout());
+            NonOpaquePanel north = new NonOpaquePanel(new BorderLayout());
             north.add(new JBLabel(icon), BorderLayout.NORTH);
             content.add(north, BorderLayout.WEST);
         }
 
         content.setBorder(JBUI.Borders.empty(2, 4));
 
-        final BalloonBuilder builder = createBalloonBuilder(content);
+        BalloonBuilder builder = createBalloonBuilder(content);
 
         builder.setFillColor(fillColor);
 
@@ -869,7 +871,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
             boolean enabled,
             @Nullable Image icon,
             @Nullable Image selectedIcon,
-            final boolean prependWithSeparator,
+            boolean prependWithSeparator,
             String separatorText
         ) {
             myAction = action;

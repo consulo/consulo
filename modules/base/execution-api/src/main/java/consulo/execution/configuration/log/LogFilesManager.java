@@ -15,10 +15,8 @@
  */
 package consulo.execution.configuration.log;
 
-import consulo.execution.configuration.log.LogFileOptions;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.process.ProcessHandler;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -26,6 +24,7 @@ import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Predicate;
 
 public class LogFilesManager {
     private final LogConsoleManager myManager;
@@ -45,7 +44,7 @@ public class LogFilesManager {
 
     private void addConfigurationConsoles(
         @Nonnull LogFileOptions logFile,
-        @Nonnull Condition<String> shouldInclude,
+        @Nonnull Predicate<String> shouldInclude,
         @Nonnull Set<String> paths,
         @Nonnull RunConfigurationBase runConfiguration
     ) {
@@ -53,16 +52,16 @@ public class LogFilesManager {
             return;
         }
 
-        TreeMap<String, String> titleToPath = new TreeMap<String, String>();
+        TreeMap<String, String> titleToPath = new TreeMap<>();
         if (paths.size() == 1) {
             String path = paths.iterator().next();
-            if (shouldInclude.value(path)) {
+            if (shouldInclude.test(path)) {
                 titleToPath.put(logFile.getName(), path);
             }
         }
         else {
             for (String path : paths) {
-                if (shouldInclude.value(path)) {
+                if (shouldInclude.test(path)) {
                     String title = new File(path).getName();
                     if (titleToPath.containsKey(title)) {
                         title = path;

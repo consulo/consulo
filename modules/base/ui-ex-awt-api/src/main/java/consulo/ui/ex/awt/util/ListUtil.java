@@ -19,8 +19,6 @@ import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.SortedListModel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.speedSearch.FilteringListModel;
-import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -28,10 +26,13 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class ListUtil {
     public static final String SELECTED_BY_MOUSE_EVENT = "byMouseEvent";
@@ -90,7 +91,7 @@ public class ListUtil {
     }
 
     @Nonnull
-    public static <T> List<T> removeSelectedItems(@Nonnull JList<T> list, @Nullable Condition<? super T> condition) {
+    public static <T> List<T> removeSelectedItems(@Nonnull JList<T> list, @Nullable Predicate<? super T> condition) {
         int[] indices = list.getSelectedIndices();
         return removeIndices(list, indices, condition);
     }
@@ -107,7 +108,7 @@ public class ListUtil {
         getExtension(model).addAll(model, items);
     }
 
-    private static <T> List<T> removeIndices(@Nonnull JList<T> list, @Nonnull int[] indices, @Nullable Condition<? super T> condition) {
+    private static <T> List<T> removeIndices(@Nonnull JList<T> list, @Nonnull int[] indices, @Nullable Predicate<? super T> condition) {
         if (indices.length == 0) {
             return new ArrayList<>(0);
         }
@@ -122,7 +123,7 @@ public class ListUtil {
                 continue;
             }
             T obj = extension.get(model, index);
-            if (condition == null || condition.value(obj)) {
+            if (condition == null || condition.test(obj)) {
                 removedItems.add(obj);
                 extension.remove(model, index);
                 deletedCount++;
@@ -147,7 +148,7 @@ public class ListUtil {
         return canRemoveSelectedItems(list, null);
     }
 
-    public static <T> boolean canRemoveSelectedItems(@Nonnull JList<T> list, @Nullable Condition<? super T> condition) {
+    public static <T> boolean canRemoveSelectedItems(@Nonnull JList<T> list, @Nullable Predicate<? super T> condition) {
         int[] indices = list.getSelectedIndices();
         if (indices.length == 0) {
             return false;
@@ -159,7 +160,7 @@ public class ListUtil {
                 continue;
             }
             T obj = extension.get(model, index);
-            if (condition == null || condition.value(obj)) {
+            if (condition == null || condition.test(obj)) {
                 return true;
             }
         }
@@ -217,10 +218,7 @@ public class ListUtil {
 
     public static <T> boolean isPointOnSelection(@Nonnull JList<T> list, int x, int y) {
         int row = list.locationToIndex(new Point(x, y));
-        if (row < 0) {
-            return false;
-        }
-        return list.isSelectedIndex(row);
+        return row >= 0 && list.isSelectedIndex(row);
     }
 
     @Nullable
@@ -256,24 +254,18 @@ public class ListUtil {
     }
 
     public static <T> Updatable addMoveUpListener(@Nonnull JButton button, @Nonnull JList<T> list) {
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                moveSelectedItemsUp(list);
-                list.requestFocusInWindow();
-            }
+        button.addActionListener(e -> {
+            moveSelectedItemsUp(list);
+            list.requestFocusInWindow();
         });
         return disableWhenNoSelection(button, list);
     }
 
 
     public static <T> Updatable addMoveDownListener(@Nonnull JButton button, @Nonnull JList<T> list) {
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                moveSelectedItemsDown(list);
-                list.requestFocusInWindow();
-            }
+        button.addActionListener(e -> {
+            moveSelectedItemsDown(list);
+            list.requestFocusInWindow();
         });
         return disableWhenNoSelection(button, list);
     }
@@ -287,15 +279,12 @@ public class ListUtil {
         @Nonnull JList<T> list,
         @Nullable RemoveNotification<T> notification
     ) {
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                List<T> items = removeSelectedItems(list);
-                if (notification != null) {
-                    notification.itemsRemoved(items);
-                }
-                list.requestFocusInWindow();
+        button.addActionListener(e -> {
+            List<T> items = removeSelectedItems(list);
+            if (notification != null) {
+                notification.itemsRemoved(items);
             }
+            list.requestFocusInWindow();
         });
         class MyListSelectionListener extends Updatable implements ListSelectionListener {
             MyListSelectionListener(JButton button) {

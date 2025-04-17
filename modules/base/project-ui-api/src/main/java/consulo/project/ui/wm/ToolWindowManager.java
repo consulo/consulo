@@ -30,6 +30,8 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import javax.swing.JComponent;
+import javax.swing.event.HyperlinkListener;
 
 /**
  * If you want to register a toolwindow, which will be enabled during the dumb mode, please use {@link ToolWindowManager}'s
@@ -185,7 +187,7 @@ public abstract class ToolWindowManager {
     @Nonnull
     public abstract ToolWindow registerToolWindow(
         @Nonnull String id,
-        @Nonnull javax.swing.JComponent component,
+        @Nonnull JComponent component,
         @Nonnull ToolWindowAnchor anchor
     );
 
@@ -197,7 +199,7 @@ public abstract class ToolWindowManager {
     @RequiredUIAccess
     public ToolWindow registerToolWindow(
         @Nonnull String id,
-        @Nonnull javax.swing.JComponent component,
+        @Nonnull JComponent component,
         @Nonnull ToolWindowAnchor anchor,
         @Nonnull Disposable parentDisposable
     ) {
@@ -212,7 +214,7 @@ public abstract class ToolWindowManager {
     @RequiredUIAccess
     public ToolWindow registerToolWindow(
         @Nonnull String id,
-        @Nonnull javax.swing.JComponent component,
+        @Nonnull JComponent component,
         @Nonnull ToolWindowAnchor anchor,
         Disposable parentDisposable,
         boolean canWorkInDumbMode
@@ -228,7 +230,7 @@ public abstract class ToolWindowManager {
     @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(
         @Nonnull String id,
-        @Nonnull javax.swing.JComponent component,
+        @Nonnull JComponent component,
         @Nonnull ToolWindowAnchor anchor,
         Disposable parentDisposable,
         boolean canWorkInDumbMode,
@@ -241,7 +243,7 @@ public abstract class ToolWindowManager {
         @Nonnull final NotificationType type,
         @Nonnull final String htmlBody,
         @Nullable final Image icon,
-        @Nullable javax.swing.event.HyperlinkListener listener
+        @Nullable HyperlinkListener listener
     ) {
         throw new AbstractMethodError("AWT & Swing dependency");
     }

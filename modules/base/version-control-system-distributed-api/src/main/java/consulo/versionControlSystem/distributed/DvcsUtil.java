@@ -37,7 +37,6 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.distributed.push.PushSupport;
@@ -55,10 +54,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.event.BatchFileChangeListener;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,19 +78,17 @@ public class DvcsUtil {
     /**
      * Comparator for virtual files by name
      */
-    public static final Comparator<VirtualFile> VIRTUAL_FILE_PRESENTATION_COMPARATOR = new Comparator<>() {
-        public int compare(final VirtualFile o1, final VirtualFile o2) {
-            if (o1 == null && o2 == null) {
-                return 0;
-            }
-            if (o1 == null) {
-                return -1;
-            }
-            if (o2 == null) {
-                return 1;
-            }
-            return o1.getPresentableUrl().compareTo(o2.getPresentableUrl());
+    public static final Comparator<VirtualFile> VIRTUAL_FILE_PRESENTATION_COMPARATOR = (o1, o2) -> {
+        if (o1 == null && o2 == null) {
+            return 0;
         }
+        if (o1 == null) {
+            return -1;
+        }
+        if (o2 == null) {
+            return 1;
+        }
+        return o1.getPresentableUrl().compareTo(o2.getPresentableUrl());
     };
 
     @Nonnull
@@ -156,7 +152,7 @@ public class DvcsUtil {
     @Nullable
     public static VirtualFile getSelectedFile(@Nonnull Project project) {
         StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-        final FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(statusBar);
+        FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(statusBar);
         VirtualFile result = null;
         if (fileEditor != null) {
             if (fileEditor instanceof TextEditor) {
@@ -169,7 +165,7 @@ public class DvcsUtil {
         }
 
         if (result == null) {
-            final FileEditorManager manager = FileEditorManager.getInstance(project);
+            FileEditorManager manager = FileEditorManager.getInstance(project);
             if (manager != null) {
                 Editor editor = manager.getSelectedTextEditor();
                 if (editor != null) {
@@ -237,25 +233,25 @@ public class DvcsUtil {
      * @return file content.
      */
     @Nonnull
-    public static String tryLoadFile(@Nonnull final File file) throws RepoStateException {
+    public static String tryLoadFile(@Nonnull File file) throws RepoStateException {
         return tryLoadFile(file, null);
     }
 
     @Nonnull
-    public static String tryLoadFile(@Nonnull final File file, @Nullable Charset encoding) throws RepoStateException {
+    public static String tryLoadFile(@Nonnull File file, @Nullable Charset encoding) throws RepoStateException {
         return tryOrThrow(() -> StringUtil.convertLineSeparators(RawFileLoader.getInstance()
             .loadFileText(file, encoding == null ? StandardCharsets.UTF_8 : encoding)).trim(), file);
     }
 
     @Nullable
     @Contract("_ , !null -> !null")
-    public static String tryLoadFileOrReturn(@Nonnull final File file, @Nullable String defaultValue) {
+    public static String tryLoadFileOrReturn(@Nonnull File file, @Nullable String defaultValue) {
         return tryLoadFileOrReturn(file, defaultValue, null);
     }
 
     @Nullable
     @Contract("_ , !null, _ -> !null")
-    public static String tryLoadFileOrReturn(@Nonnull final File file, @Nullable String defaultValue, @Nullable Charset encoding) {
+    public static String tryLoadFileOrReturn(@Nonnull File file, @Nullable String defaultValue, @Nullable Charset encoding) {
         try {
             return tryLoadFile(file, encoding);
         }
@@ -477,7 +473,7 @@ public class DvcsUtil {
             }
             List<VcsFullCommitDetails> commitsInRoot = groupedCommits.get(repository);
             if (commitsInRoot == null) {
-                commitsInRoot = ContainerUtil.newArrayList();
+                commitsInRoot = new ArrayList<>();
                 groupedCommits.put(repository, commitsInRoot);
             }
             commitsInRoot.add(commit);
@@ -486,10 +482,10 @@ public class DvcsUtil {
     }
 
     @Nullable
-    public static PushSupport getPushSupport(@Nonnull final AbstractVcs vcs) {
+    public static PushSupport getPushSupport(@Nonnull AbstractVcs vcs) {
         return ContainerUtil.find(
             vcs.getProject().getExtensionList(PushSupport.class),
-            (Condition<PushSupport>)support -> support.getVcs().equals(vcs)
+            support -> support.getVcs().equals(vcs)
         );
     }
 

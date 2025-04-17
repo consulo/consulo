@@ -57,7 +57,7 @@ import org.jdom.Element;
 
 /**
  * @author VISTALL
- * @since 24-Sep-17
+ * @since 2017-09-24
  */
 @Singleton
 @ServiceImpl
@@ -76,7 +76,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         MessageBusConnection busConnection = project.getMessageBus().connect();
         busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectClosed(Project project, UIAccess uiAccess) {
+            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
                 if (project == myProject) {
                     WebToolWindowManagerImpl.this.projectClosed();
                 }
@@ -157,12 +157,14 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable) {
         return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
     }
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
         return new WebToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl) toolWindow, dumbAware);
     }

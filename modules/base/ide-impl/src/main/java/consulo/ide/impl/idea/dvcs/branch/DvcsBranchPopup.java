@@ -15,31 +15,31 @@
  */
 package consulo.ide.impl.idea.dvcs.branch;
 
+import consulo.ide.impl.idea.dvcs.ui.BranchActionGroupPopup;
+import consulo.ide.impl.idea.dvcs.ui.LightActionGroup;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.util.collection.ContainerUtil;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.VcsNotifier;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.branch.DvcsMultiRootBranchConfig;
 import consulo.versionControlSystem.distributed.branch.DvcsSyncSettings;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
-import consulo.ide.impl.idea.dvcs.ui.BranchActionGroupPopup;
-import consulo.ide.impl.idea.dvcs.ui.LightActionGroup;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.util.lang.function.Condition;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.VcsNotifier;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class DvcsBranchPopup<Repo extends Repository> {
     @Nonnull
@@ -65,7 +65,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
         @Nonnull AbstractRepositoryManager<Repo> repositoryManager,
         @Nonnull DvcsMultiRootBranchConfig<Repo> multiRootBranchConfig,
         @Nonnull DvcsSyncSettings vcsSettings,
-        @Nonnull Condition<AnAction> preselectActionCondition,
+        @Nonnull Predicate<AnAction> preselectActionCondition,
         @Nullable String dimensionKey
     ) {
         myProject = currentRepository.getProject();
@@ -110,6 +110,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
             "you may <a href='settings'>disable</a> the setting.";
         NotificationListener listener = new NotificationListener() {
             @Override
+            @RequiredUIAccess
             public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
                 if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     ShowSettingsUtil.getInstance().showSettingsDialog(myProject, myVcs.getDisplayName());
@@ -151,7 +152,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     );
 
     @Nonnull
-    protected List<Repo> filterRepositoriesNotOnThisBranch(@Nonnull final String branch, @Nonnull List<Repo> allRepositories) {
+    protected List<Repo> filterRepositoriesNotOnThisBranch(@Nonnull String branch, @Nonnull List<Repo> allRepositories) {
         return ContainerUtil.filter(allRepositories, repository -> !branch.equals(repository.getCurrentBranchName()));
     }
 

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
@@ -84,8 +85,7 @@ import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.SystemProperties;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -105,6 +105,7 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author Anton Katilin
@@ -114,7 +115,6 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
-
     /**
      * Translates events from InternalDecorator into ToolWindowManager method invocations.
      */
@@ -124,16 +124,16 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
          * tool window depending on decoration type.
          */
         @Override
-        public void resized(@Nonnull final ToolWindowInternalDecorator s) {
+        public void resized(@Nonnull ToolWindowInternalDecorator s) {
             DesktopInternalDecorator source = (DesktopInternalDecorator)s;
 
             if (!source.isShowing()) {
                 return; // do not recalculate the tool window size if it is not yet shown (and, therefore, has 0,0,0,0 bounds)
             }
 
-            final WindowInfoImpl info = getInfo(source.getToolWindow().getId());
+            WindowInfoImpl info = getInfo(source.getToolWindow().getId());
             if (info.isFloating()) {
-                final Window owner = SwingUtilities.getWindowAncestor(source);
+                Window owner = SwingUtilities.getWindowAncestor(source);
                 if (owner != null) {
                     info.setFloatingBounds(TargetAWT.from(owner.getBounds()));
                 }
@@ -149,9 +149,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             else { // docked and sliding windows
                 ToolWindowAnchor anchor = info.getAnchor();
                 DesktopInternalDecorator another = null;
-                if (source.getParent() instanceof Splitter) {
+                if (source.getParent() instanceof Splitter splitter) {
                     float sizeInSplit = ToolWindowAnchorUtil.isSplitVertically(anchor) ? source.getHeight() : source.getWidth();
-                    Splitter splitter = (Splitter)source.getParent();
                     if (splitter.getSecondComponent() == source) {
                         sizeInSplit += splitter.getDividerWidth();
                         another = (DesktopInternalDecorator)splitter.getFirstComponent();
@@ -239,6 +238,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
                 getFocusManagerImpl(myProject).doWhenFocusSettlesDown(new ExpirableRunnable.ForProject(myProject) {
                     @Override
+                    @RequiredUIAccess
                     public void run() {
                         if (!hasOpenEditorFiles()) {
                             focusToolWindowByDefault(null);
@@ -293,17 +293,15 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     private void updateToolWindowHeaders() {
         getFocusManager().doWhenFocusSettlesDown(new ExpirableRunnable.ForProject(myProject) {
             @Override
+            @RequiredUIAccess
             public void run() {
                 WindowInfoImpl[] infos = myLayout.getInfos();
                 for (WindowInfoImpl each : infos) {
-                    if (each.isVisible()) {
-                        ToolWindow tw = getToolWindow(each.getId());
-                        if (tw instanceof DesktopToolWindowImpl) {
-                            DesktopInternalDecorator decorator = (DesktopInternalDecorator)((DesktopToolWindowImpl)tw).getDecorator();
-                            if (decorator != null) {
-                                decorator.repaint();
-                                decorator.updateActiveAndHoverState();
-                            }
+                    if (each.isVisible() && getToolWindow(each.getId()) instanceof DesktopToolWindowImpl tw) {
+                        DesktopInternalDecorator decorator = (DesktopInternalDecorator)tw.getDecorator();
+                        if (decorator != null) {
+                            decorator.repaint();
+                            decorator.updateActiveAndHoverState();
                         }
                     }
                 }
@@ -312,7 +310,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     public boolean dispatchKeyEvent(KeyEvent e) {
-        if (e.getKeyCode() != KeyEvent.VK_CONTROL && e.getKeyCode() != KeyEvent.VK_ALT && e.getKeyCode() != KeyEvent.VK_SHIFT && e.getKeyCode() != KeyEvent.VK_META) {
+        if (e.getKeyCode() != KeyEvent.VK_CONTROL && e.getKeyCode() != KeyEvent.VK_ALT
+            && e.getKeyCode() != KeyEvent.VK_SHIFT && e.getKeyCode() != KeyEvent.VK_META) {
             if (e.getModifiers() == 0) {
                 resetHoldState();
             }
@@ -323,8 +322,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         }
 
         Component parent = UIUtil.findUltimateParent(e.getComponent());
-        if (parent instanceof Window) {
-            consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+        if (parent instanceof Window window) {
+            consulo.ui.Window uiWindow = TargetAWT.from(window);
 
             IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
             if (ideFrame != null && ideFrame.getProject() != myProject) {
@@ -391,8 +390,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         Shortcut[] baseShortcut = keymap.getShortcuts("ActivateProjectToolWindow");
         int baseModifiers = 0;
         for (Shortcut each : baseShortcut) {
-            if (each instanceof KeyboardShortcut) {
-                KeyStroke keyStroke = ((KeyboardShortcut)each).getFirstKeyStroke();
+            if (each instanceof KeyboardShortcut kbShortcut) {
+                KeyStroke keyStroke = kbShortcut.getFirstKeyStroke();
                 baseModifiers = keyStroke.getModifiers();
                 if (baseModifiers > 0) {
                     break;
@@ -473,16 +472,15 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
+    @RequiredReadAction
     public void initializeUI() {
-        final MyUIManagerPropertyChangeListener uiManagerPropertyListener = new MyUIManagerPropertyChangeListener();
-        final MyLafManagerListener lafManagerListener = new MyLafManagerListener();
+        MyUIManagerPropertyChangeListener uiManagerPropertyListener = new MyUIManagerPropertyChangeListener();
+        MyLafManagerListener lafManagerListener = new MyLafManagerListener();
 
         UIManager.addPropertyChangeListener(uiManagerPropertyListener);
         LafManager.getInstance().addLafManagerListener(lafManagerListener, this);
 
-        Disposer.register(this, () -> {
-            UIManager.removePropertyChangeListener(uiManagerPropertyListener);
-        });
+        Disposer.register(this, () -> UIManager.removePropertyChangeListener(uiManagerPropertyListener));
 
         WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
 
@@ -499,8 +497,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         ((IdeRootPane)jFrame.getRootPane()).updateToolbar();
 
         IdeEventQueue.getInstance().addDispatcher(e -> {
-            if (e instanceof KeyEvent) {
-                dispatchKeyEvent((KeyEvent)e);
+            if (e instanceof KeyEvent ke) {
+                dispatchKeyEvent(ke);
             }
             if (e instanceof WindowEvent && e.getID() == WindowEvent.WINDOW_LOST_FOCUS && e.getSource() == myFrame) {
                 resetHoldState();
@@ -538,9 +536,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     protected JLabel createInitializingLabel() {
         JLabel label = new JLabel("Initializing...", SwingConstants.CENTER);
         label.setOpaque(true);
-        final Color treeBg = UIManager.getColor("Tree.background");
+        Color treeBg = UIManager.getColor("Tree.background");
         label.setBackground(ColorUtil.toAlpha(treeBg, 180));
-        final Color treeFg = UIUtil.getTreeForeground();
+        Color treeFg = UIUtil.getTreeForeground();
         label.setForeground(ColorUtil.toAlpha(treeFg, 180));
         return label;
     }
@@ -551,11 +549,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         UiNotifyConnector.doWhenFirstShown((JComponent)component, () -> myProject.getUIAccess().give(runnable));
     }
 
+    @RequiredUIAccess
     public void projectClosed() {
         if (myFrame == null) {
             return;
         }
-        final String[] ids = getToolWindowIds();
+        String[] ids = getToolWindowIds();
 
         WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
 
@@ -567,7 +566,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
         // Hide all tool windows
 
-        for (final String id : ids) {
+        for (String id : ids) {
             deactivateToolWindowImpl(id, true);
         }
 
@@ -585,9 +584,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     private void focusDefaultElementInSelectedEditor() {
         FileEditorsSplitters splittersToFocus = getSplittersToFocus();
         if (splittersToFocus != null) {
-            final FileEditorWindow window = splittersToFocus.getCurrentWindow();
+            FileEditorWindow window = splittersToFocus.getCurrentWindow();
             if (window != null) {
-                final FileEditorWithProviderComposite editor = window.getSelectedEditor();
+                FileEditorWithProviderComposite editor = window.getSelectedEditor();
                 if (editor != null) {
                     JComponent defaultFocusedComponentInEditor = editor.getPreferredFocusedComponent();
                     if (defaultFocusedComponentInEditor != null) {
@@ -602,7 +601,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
      * @return floating decorator for the tool window with specified <code>ID</code>.
      */
     @Override
-    protected DesktopFloatingDecorator getFloatingDecorator(final String id) {
+    protected DesktopFloatingDecorator getFloatingDecorator(String id) {
         return (DesktopFloatingDecorator)super.getFloatingDecorator(id);
     }
 
@@ -619,7 +618,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
      */
     @Override
     @Nullable
-    protected DesktopInternalDecorator getInternalDecorator(final String id) {
+    protected DesktopInternalDecorator getInternalDecorator(String id) {
         return (DesktopInternalDecorator)super.getInternalDecorator(id);
     }
 
@@ -628,45 +627,46 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
      */
     @Override
     @Nullable
-    protected DesktopStripeButton getStripeButton(final String id) {
+    protected DesktopStripeButton getStripeButton(String id) {
         return (DesktopStripeButton)super.getStripeButton(id);
     }
 
     @Override
-    public boolean canShowNotification(@Nonnull final String toolWindowId) {
+    public boolean canShowNotification(@Nonnull String toolWindowId) {
         if (!Arrays.asList(getToolWindowIds()).contains(toolWindowId)) {
             return false;
         }
-        final DesktopStripePanelImpl stripe = getToolWindowPanel().getStripeFor(toolWindowId);
+        DesktopStripePanelImpl stripe = getToolWindowPanel().getStripeFor(toolWindowId);
         return stripe != null && stripe.getButtonFor(toolWindowId) != null;
     }
 
     @Override
-    public void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final NotificationType type, @Nonnull final String htmlBody) {
+    @RequiredUIAccess
+    public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
         notifyByBalloon(toolWindowId, type, htmlBody, null, null);
     }
 
     @Override
+    @RequiredUIAccess
     public void notifyByBalloon(
-        @Nonnull final String toolWindowId,
-        @Nonnull final NotificationType type,
-        @Nonnull final String text,
-        @Nullable final Image icon,
-        @Nullable final HyperlinkListener listener
+        @Nonnull String toolWindowId,
+        @Nonnull NotificationType type,
+        @Nonnull String text,
+        @Nullable Image icon,
+        @Nullable HyperlinkListener listener
     ) {
         checkId(toolWindowId);
-
 
         Balloon existing = myWindow2Balloon.get(toolWindowId);
         if (existing != null) {
             existing.hide();
         }
 
-        final DesktopStripePanelImpl stripe = getToolWindowPanel().getStripeFor(toolWindowId);
+        DesktopStripePanelImpl stripe = getToolWindowPanel().getStripeFor(toolWindowId);
         if (stripe == null) {
             return;
         }
-        final DesktopToolWindowImpl window = getInternalDecorator(toolWindowId).getToolWindow();
+        DesktopToolWindowImpl window = getInternalDecorator(toolWindowId).getToolWindow();
         if (!window.isAvailable()) {
             window.setPlaceholderMode(true);
             stripe.updatePresentation();
@@ -674,8 +674,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             stripe.repaint();
         }
 
-        final ToolWindowAnchor anchor = getInfo(toolWindowId).getAnchor();
-        final Ref<Balloon.Position> position = Ref.create(Balloon.Position.below);
+        ToolWindowAnchor anchor = getInfo(toolWindowId).getAnchor();
+        SimpleReference<Balloon.Position> position = SimpleReference.create(Balloon.Position.below);
         if (ToolWindowAnchor.TOP == anchor) {
             position.set(Balloon.Position.below);
         }
@@ -705,15 +705,15 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                 throw new IllegalArgumentException();
         }
 
-        final BalloonHyperlinkListener listenerWrapper = new BalloonHyperlinkListener(listener);
-        final Balloon balloon = JBPopupFactory.getInstance()
+        BalloonHyperlinkListener listenerWrapper = new BalloonHyperlinkListener(listener);
+        Balloon balloon = JBPopupFactory.getInstance()
             .createHtmlTextBalloonBuilder(text.replace("\n", "<br>"), icon, messageType.getPopupBackground(), listenerWrapper)
             .setHideOnClickOutside(false)
             .setBorderColor(messageType.getBorderColor())
             .setHideOnFrameResize(false)
             .createBalloon();
         FrameStateManager.getInstance().getApplicationActive().doWhenDone(() -> {
-            final Alarm alarm = new Alarm();
+            Alarm alarm = new Alarm();
             alarm.addRequest(() -> {
                 ((BalloonImpl)balloon).setHideOnClickOutside(true);
                 Disposer.dispose(alarm);
@@ -721,16 +721,19 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         });
         listenerWrapper.myBalloon = balloon;
         myWindow2Balloon.put(toolWindowId, balloon);
-        Disposer.register(balloon, () -> {
-            window.setPlaceholderMode(false);
-            stripe.updatePresentation();
-            stripe.revalidate();
-            stripe.repaint();
-            myWindow2Balloon.remove(toolWindowId);
-        });
+        Disposer.register(
+            balloon,
+            () -> {
+                window.setPlaceholderMode(false);
+                stripe.updatePresentation();
+                stripe.revalidate();
+                stripe.repaint();
+                myWindow2Balloon.remove(toolWindowId);
+            }
+        );
         Disposer.register(getProject(), balloon);
 
-        final DesktopStripeButton button = stripe.getButtonFor(toolWindowId);
+        DesktopStripeButton button = stripe.getButtonFor(toolWindowId);
         LOG.assertTrue(
             button != null,
             "Button was not found, popup won't be shown. Toolwindow id: " + toolWindowId +
@@ -740,9 +743,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             return;
         }
 
-        final Runnable show = () -> {
+        Runnable show = () -> {
             if (button.isShowing()) {
-                PositionTracker<Balloon> tracker = new PositionTracker<Balloon>(button) {
+                PositionTracker<Balloon> tracker = new PositionTracker<>(button) {
                     @Override
                     @Nullable
                     public RelativePoint recalculateLocation(Balloon object) {
@@ -758,7 +761,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                             return null;
                         }
 
-                        final Point point = new Point(twButton.getBounds().width / 2, twButton.getHeight() / 2 - 2);
+                        Point point = new Point(twButton.getBounds().width / 2, twButton.getHeight() / 2 - 2);
                         return new RelativePoint(twButton, point);
                     }
                 };
@@ -767,8 +770,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                 }
             }
             else {
-                final Rectangle bounds = getToolWindowPanel().getBounds();
-                final Point target = UIUtil.getCenterPoint(bounds, new Dimension(1, 1));
+                Rectangle bounds = getToolWindowPanel().getBounds();
+                Point target = UIUtil.getCenterPoint(bounds, new Dimension(1, 1));
                 if (ToolWindowAnchor.TOP == anchor) {
                     target.y = 0;
                 }
@@ -801,6 +804,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean isEditorComponentActive() {
         UIAccess.assertIsUIThread();
 
@@ -811,7 +815,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @RequiredUIAccess
     @Override
-    protected void removeWindowedDecorator(final WindowInfoImpl info) {
+    protected void removeWindowedDecorator(WindowInfoImpl info) {
         new RemoveWindowedDecoratorCmd(info).run();
     }
 
@@ -829,9 +833,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @RequiredUIAccess
     @Override
-    public void requestFocusInToolWindow(final String id, boolean forced) {
-        final DesktopToolWindowImpl toolWindow = (DesktopToolWindowImpl)getToolWindow(id);
-        final FocusWatcher focusWatcher = myId2FocusWatcher.get(id);
+    public void requestFocusInToolWindow(String id, boolean forced) {
+        DesktopToolWindowImpl toolWindow = (DesktopToolWindowImpl)getToolWindow(id);
+        FocusWatcher focusWatcher = myId2FocusWatcher.get(id);
 
         new DesktopRequestFocusInToolWindowCmd(getFocusManager(), toolWindow, focusWatcher, myProject).requestFocus();
     }
@@ -844,7 +848,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             return;
         }
 
-        final JRootPane rootPane = ((JFrame)TargetAWT.to(myFrame.getWindow())).getRootPane();
+        JRootPane rootPane = ((JFrame)TargetAWT.to(myFrame.getWindow())).getRootPane();
         if (rootPane != null) {
             rootPane.revalidate();
             rootPane.repaint();
@@ -869,18 +873,18 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         return splitters != null ? splitters : fem.getSplitters();
     }
 
-    @RequiredUIAccess
-    @Override
     @Nullable
-    public String getLastActiveToolWindowId(@Nullable Condition<JComponent> condition) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+    @Override
+    @RequiredUIAccess
+    public String getLastActiveToolWindowId(@Nullable Predicate<JComponent> condition) {
+        UIAccess.assertIsUIThread();
         String lastActiveToolWindowId = null;
         for (int i = 0; i < myActiveStack.getPersistentSize(); i++) {
-            final String id = myActiveStack.peekPersistent(i);
-            final ToolWindow toolWindow = getToolWindow(id);
+            String id = myActiveStack.peekPersistent(i);
+            ToolWindow toolWindow = getToolWindow(id);
             LOG.assertTrue(toolWindow != null);
             if (toolWindow.isAvailable()) {
-                if (condition == null || condition.value(toolWindow.getComponent())) {
+                if (condition == null || condition.test(toolWindow.getComponent())) {
                     lastActiveToolWindowId = id;
                     break;
                 }
@@ -890,6 +894,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
+    @RequiredUIAccess
     public Element getStateFromUI() {
         if (myFrame == null) {
             // do nothing if the project was not opened
@@ -897,10 +902,10 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         }
 
         // Update size of all open floating windows. See SCR #18439
-        for (final String id : getToolWindowIds()) {
-            final WindowInfoImpl info = getInfo(id);
+        for (String id : getToolWindowIds()) {
+            WindowInfoImpl info = getInfo(id);
             if (info.isVisible()) {
-                final DesktopInternalDecorator decorator = getInternalDecorator(id);
+                DesktopInternalDecorator decorator = getInternalDecorator(id);
                 LOG.assertTrue(decorator != null);
                 decorator.fireResized();
             }
@@ -910,8 +915,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
         // Save frame's bounds
         JFrame jFrame = (JFrame)TargetAWT.to(myFrame.getWindow());
-        final Rectangle frameBounds = jFrame.getBounds();
-        final Element frameElement = new Element(FRAME_ELEMENT);
+        Rectangle frameBounds = jFrame.getBounds();
+        Element frameElement = new Element(FRAME_ELEMENT);
         element.addContent(frameElement);
         frameElement.setAttribute(X_ATTR, Integer.toString(frameBounds.x));
         frameElement.setAttribute(Y_ATTR, Integer.toString(frameBounds.y));
@@ -994,10 +999,10 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         /**
          * Creates floating decorator for specified floating decorator.
          */
-        private AddFloatingDecoratorCmd(final DesktopInternalDecorator decorator, final WindowInfoImpl info) {
+        private AddFloatingDecoratorCmd(DesktopInternalDecorator decorator, WindowInfoImpl info) {
             myFloatingDecorator = new DesktopFloatingDecorator(myFrame, info.copy(), decorator);
             myId2FloatingDecorator.put(info.getId(), myFloatingDecorator);
-            final Rectangle2D bounds = info.getFloatingBounds();
+            Rectangle2D bounds = info.getFloatingBounds();
             if (bounds != null && bounds.getWidth() > 0 && bounds.getHeight() > 0 && myWindowManager.get()
                 .isInsideScreenBounds(bounds.getX(), bounds.getY(), bounds.getWidth())) {
                 myFloatingDecorator.setBounds(TargetAWT.to(bounds));
@@ -1030,7 +1035,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         private AddWindowedDecoratorCmd(@Nonnull DesktopInternalDecorator decorator, @Nonnull WindowInfoImpl info) {
             myWindowedDecorator = new DesktopWindowedDecorator(myProject, info.copy(), decorator);
             Window window = myWindowedDecorator.getFrame();
-            final Rectangle2D bounds = info.getFloatingBounds();
+            Rectangle2D bounds = info.getFloatingBounds();
             if (bounds != null && bounds.getWidth() > 0 && bounds.getHeight() > 0
                 && myWindowManager.get().isInsideScreenBounds(bounds.getX(), bounds.getY(), bounds.getWidth())) {
                 window.setBounds(TargetAWT.to(bounds));
@@ -1073,7 +1078,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     private final class RemoveWindowedDecoratorCmd implements Runnable {
         private final DesktopWindowedDecorator myWindowedDecorator;
 
-        private RemoveWindowedDecoratorCmd(final WindowInfoImpl info) {
+        private RemoveWindowedDecoratorCmd(WindowInfoImpl info) {
             myWindowedDecorator = getWindowedDecorator(info.getId());
             myId2WindowedDecorator.remove(info.getId());
 
@@ -1110,35 +1115,35 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         }
 
         @Override
-        protected boolean isFocusedComponentChangeValid(final Component comp, final AWTEvent cause) {
+        protected boolean isFocusedComponentChangeValid(Component comp, AWTEvent cause) {
             return comp != null;
         }
 
         @Override
-        protected void focusedComponentChanged(final Component component, final AWTEvent cause) {
+        @RequiredUIAccess
+        protected void focusedComponentChanged(Component component, AWTEvent cause) {
             if (component == null || !myToolWindow.isActive()) {
                 return;
             }
-            final WindowInfoImpl info = getInfo(myId);
+            WindowInfoImpl info = getInfo(myId);
             //getFocusManagerImpl(myProject)..cancelAllRequests();
 
             if (!info.isActive()) {
-                getFocusManagerImpl(myProject).doWhenFocusSettlesDown(() -> {
-                    SwingUtilities.invokeLater(() -> {
-                        WindowInfoImpl windowInfo = myLayout.getInfo(myId, true);
-                        if (windowInfo == null || !windowInfo.isVisible()) {
-                            return;
-                        }
-                        activateToolWindow(myId, false, false);
-                    });
-                });
+                getFocusManagerImpl(myProject).doWhenFocusSettlesDown(() -> SwingUtilities.invokeLater(() -> {
+                    WindowInfoImpl windowInfo = myLayout.getInfo(myId, true);
+                    if (windowInfo == null || !windowInfo.isVisible()) {
+                        return;
+                    }
+                    activateToolWindow(myId, false, false);
+                }));
             }
         }
     }
 
+    @RequiredUIAccess
     private void updateComponentTreeUI() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        final WindowInfoImpl[] infos = myLayout.getInfos();
+        UIAccess.assertIsUIThread();
+        WindowInfoImpl[] infos = myLayout.getInfos();
         for (WindowInfoImpl info : infos) {
             // the main goal is to update hidden TW components because they are not in the hierarchy
             // and will not be updated automatically but unfortunately the visibility of a TW may change
@@ -1149,14 +1154,16 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     private final class MyUIManagerPropertyChangeListener implements PropertyChangeListener {
         @Override
-        public void propertyChange(final PropertyChangeEvent e) {
+        @RequiredUIAccess
+        public void propertyChange(PropertyChangeEvent e) {
             updateComponentTreeUI();
         }
     }
 
     private final class MyLafManagerListener implements LafManagerListener {
         @Override
-        public void lookAndFeelChanged(final LafManager source) {
+        @RequiredUIAccess
+        public void lookAndFeelChanged(LafManager source) {
             updateComponentTreeUI();
         }
     }

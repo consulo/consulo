@@ -23,7 +23,8 @@ import consulo.module.Module;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.function.Condition;
+
+import java.util.function.Predicate;
 
 /**
  * @author yole
@@ -46,7 +47,7 @@ public interface LangDataKeys extends PlatformDataKeys {
     Key<PsiElement[]> PSI_ELEMENT_ARRAY = PsiElement.KEY_OF_ARRAY;
 
     Key<Boolean> NO_NEW_ACTION = Key.create("IDEview.no.create.element.action");
-    Key<Condition<AnAction>> PRESELECT_NEW_ACTION_CONDITION = Key.create("newElementAction.preselect.id");
+    Key<Predicate<AnAction>> PRESELECT_NEW_ACTION_CONDITION = Key.create("newElementAction.preselect.id");
 
     Key<PsiElement> TARGET_PSI_ELEMENT = Key.create("psi.TargetElement");
     Key<Module> TARGET_MODULE = Key.create("module.TargetModule");

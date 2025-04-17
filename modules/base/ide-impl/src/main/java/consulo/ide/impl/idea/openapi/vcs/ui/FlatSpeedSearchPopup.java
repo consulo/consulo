@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ui;
 
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.EmptyAction;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.popup.ListPopupStep;
-import consulo.util.lang.function.Condition;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.EmptyAction;
+import consulo.ui.ex.popup.ListPopupStep;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
+import java.util.function.Predicate;
 
+public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
     public FlatSpeedSearchPopup(
         String title,
         @Nonnull ActionGroup actionGroup,
         @Nonnull DataContext dataContext,
-        @Nullable Condition<AnAction> preselectActionCondition,
+        @Nullable Predicate<AnAction> preselectActionCondition,
         boolean showDisableActions
     ) {
         super(title, actionGroup, dataContext, false, false, showDisableActions, false, null, -1, preselectActionCondition, null);
@@ -51,13 +51,11 @@ public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
 
     @Override
     public final boolean shouldBeShowing(Object value) {
+        //noinspection SimplifiableIfStatement
         if (!super.shouldBeShowing(value)) {
             return false;
         }
-        if (!(value instanceof PopupFactoryImpl.ActionItem)) {
-            return true;
-        }
-        return shouldBeShowing(((PopupFactoryImpl.ActionItem)value).getAction());
+        return !(value instanceof PopupFactoryImpl.ActionItem actionItem && !shouldBeShowing(actionItem.getAction()));
     }
 
     protected boolean shouldBeShowing(@Nonnull AnAction action) {

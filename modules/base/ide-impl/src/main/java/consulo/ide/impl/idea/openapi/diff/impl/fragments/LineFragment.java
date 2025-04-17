@@ -15,19 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.fragments;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.diff.impl.highlighting.FragmentSide;
 import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
 import consulo.ide.impl.idea.openapi.diff.impl.util.TextDiffTypeEnum;
-import consulo.util.lang.function.Condition;
-import consulo.document.util.TextRange;
-import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
@@ -173,7 +172,7 @@ public class LineFragment extends LineBlock implements Fragment {
     }
 
     @Override
-    public Fragment getSubfragmentAt(int offset, FragmentSide side, Condition<Fragment> condition) {
+    public Fragment getSubfragmentAt(int offset, FragmentSide side, Predicate<Fragment> condition) {
         Fragment childFragment = myChildren.getFragmentAt(offset, side, condition);
         return childFragment != null ? childFragment : this;
     }

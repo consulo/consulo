@@ -23,12 +23,12 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import javax.swing.*;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class ToolWindowManagerEx extends ToolWindowManager {
     @RequiredUIAccess
@@ -97,7 +97,7 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
     @Nullable
     @RequiredUIAccess
     @Deprecated
-    public String getLastActiveToolWindowId(@Nullable Condition<javax.swing.JComponent> condition) {
+    public String getLastActiveToolWindowId(@Nullable Predicate<JComponent> condition) {
         return null;
     }
     // endregion

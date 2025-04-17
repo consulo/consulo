@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.fragments;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.diff.impl.highlighting.FragmentSide;
 import consulo.ide.impl.idea.openapi.diff.impl.util.TextDiffTypeEnum;
-import consulo.util.lang.function.Condition;
-import consulo.document.util.TextRange;
-import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
+
+import java.util.function.Predicate;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
@@ -36,10 +37,12 @@ public class InlineFragment implements Fragment {
         myRange2 = range2;
     }
 
+    @Override
     public TextDiffTypeEnum getType() {
         return myType;
     }
 
+    @Override
     public TextRange getRange(FragmentSide side) {
         if (side == FragmentSide.SIDE1) {
             return myRange1;
@@ -50,6 +53,7 @@ public class InlineFragment implements Fragment {
         throw new IllegalArgumentException(String.valueOf(side));
     }
 
+    @Override
     public Fragment shift(TextRange range1, TextRange range2, int startingLine1, int startingLine2) {
         return new InlineFragment(
             myType,
@@ -58,14 +62,15 @@ public class InlineFragment implements Fragment {
         );
     }
 
+    @Override
     public void highlight(FragmentHighlighter fragmentHighlighter) {
         fragmentHighlighter.highlightInline(this);
     }
 
-    public Fragment getSubfragmentAt(int offset, FragmentSide side, Condition<Fragment> condition) {
-        LOG.assertTrue(getRange(side).getStartOffset() <= offset &&
-            offset < getRange(side).getEndOffset() &&
-            condition.value(this));
+    @Override
+    public Fragment getSubfragmentAt(int offset, FragmentSide side, Predicate<Fragment> condition) {
+        LOG.assertTrue(getRange(side).getStartOffset() <= offset
+            && offset < getRange(side).getEndOffset() && condition.test(this));
         return this;
     }
 }

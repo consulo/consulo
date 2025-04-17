@@ -26,9 +26,7 @@ import consulo.module.ui.awt.SdkComboBox;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.image.Image;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,10 +36,11 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 15.03.2015
+ * @since 2015-03-15
  */
 public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
     @Nonnull
@@ -66,7 +65,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
     @Nonnull
     private Function<T, MutableModuleInheritableNamedPointer<Sdk>> mySdkPointerFunction;
     @Nonnull
-    private Condition<SdkTypeId> mySdkFilter = Conditions.alwaysTrue();
+    private Predicate<SdkTypeId> mySdkFilter = Conditions.alwaysTrue();
 
     private final T myMutableModuleExtension;
 

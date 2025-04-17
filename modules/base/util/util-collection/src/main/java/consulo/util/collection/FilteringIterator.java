@@ -77,14 +77,15 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
 
     private boolean isCurrentPassesFilter() {
         if (myCurrentPassedFilter != null) {
-            return myCurrentPassedFilter.booleanValue();
+            return myCurrentPassedFilter;
         }
         boolean passed = myCondition.test(myCurrent);
-        myCurrentPassedFilter = Boolean.valueOf(passed);
+        myCurrentPassedFilter = passed;
         return passed;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public E next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
@@ -107,6 +108,8 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
         myDelegate.remove();
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
     public E peek() {
         if (!hasNext()) {
             throw new NoSuchElementException();
@@ -122,7 +125,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
         if (condition == Condition.TRUE || condition == Conditions.TRUE) {
             return (Iterator<T>)iterator;
         }
-        return new FilteringIterator<Dom, T>(iterator, condition);
+        return new FilteringIterator<>(iterator, condition);
     }
 
     public static <T> Predicate<T> alwaysTrueCondition(Class<T> aClass) {
@@ -130,7 +133,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
     }
 
     public static <T> InstanceOf<T> instanceOf(final Class<? extends T> aClass) {
-        return new InstanceOf<T>(aClass);
+        return new InstanceOf<>(aClass);
     }
 
     public static <T> Iterator<T> createInstanceOf(Iterator<?> iterator, Class<T> aClass) {

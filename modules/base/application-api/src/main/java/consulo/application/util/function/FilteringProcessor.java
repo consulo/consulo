@@ -15,25 +15,22 @@
  */
 package consulo.application.util.function;
 
-import consulo.util.lang.function.Condition;
+import java.util.function.Predicate;
 
 /**
  * @author max
  */
 public class FilteringProcessor<T> implements Processor<T> {
-    private final Condition<T> myFilter;
-    private final Processor<T> myProcessor;
+    private final Predicate<T> myFilter;
+    private final Predicate<T> myProcessor;
 
-    public FilteringProcessor(final Condition<T> filter, Processor<T> processor) {
+    public FilteringProcessor(Predicate<T> filter, Predicate<T> processor) {
         myFilter = filter;
         myProcessor = processor;
     }
 
     @Override
-    public boolean process(final T t) {
-        if (!myFilter.value(t)) {
-            return true;
-        }
-        return myProcessor.process(t);
+    public boolean process(T t) {
+        return !myFilter.test(t) || myProcessor.test(t);
     }
 }

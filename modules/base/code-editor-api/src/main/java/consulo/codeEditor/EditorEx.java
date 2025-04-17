@@ -30,14 +30,11 @@ import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.PasteProvider;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-import kava.beans.PropertyChangeListener;
-import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
+import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +64,7 @@ public interface EditorEx extends Editor {
      *
      * @return the markup model instance.
      * @see MarkupEditorFilter
-     * @see consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl#setHighlightingFilter(Condition<RangeHighlighter>)
+     * @see consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl#setHighlightingFilter(Predicate<RangeHighlighter>)
      * @see consulo.ide.impl.idea.openapi.editor.impl.DocumentMarkupModel#forDocument(Document, Project, boolean)
      */
     @Nonnull
@@ -283,7 +280,8 @@ public interface EditorEx extends Editor {
 
     /**
      * Registers a function which will be applied to a line number to obtain additional text fragments. The fragments returned by the
-     * function will be drawn in the editor after end of the line (together with fragments returned by {@link consulo.ide.impl.idea.openapi.editor.EditorLinePainter} extensions).
+     * function will be drawn in the editor after end of the line
+     * (together with fragments returned by {@link consulo.ide.impl.idea.openapi.editor.EditorLinePainter} extensions).
      */
     void registerLineExtensionPainter(IntFunction<Collection<LineExtensionInfo>> lineExtensionPainter);
 
@@ -293,8 +291,7 @@ public interface EditorEx extends Editor {
      * otherwise the drawings are cleared once the scrollbar gets repainted (which may happen suddenly, because the scrollbar UI uses the
      * {@link Animator} to draw itself.
      *
-     * @param callback callback which will be called from the {@link JComponent#paint(Graphics)} method of
-     *                 the editor vertical scrollbar.
+     * @param callback callback which will be called from the {@link JComponent#paint(Graphics)} method of the editor vertical scrollbar.
      */
     default void registerScrollBarRepaintCallback(@Nullable Consumer<Graphics> callback) {
         throw new UnsupportedOperationException("Unsupported platform");

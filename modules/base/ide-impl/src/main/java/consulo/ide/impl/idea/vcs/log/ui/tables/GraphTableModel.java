@@ -1,19 +1,16 @@
 package consulo.ide.impl.idea.vcs.log.ui.tables;
 
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.EmptyRunnable;
-import consulo.versionControlSystem.log.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.vcs.log.data.*;
-import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.render.GraphCommitCell;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.EmptyRunnable;
+import consulo.versionControlSystem.log.*;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 import javax.swing.table.AbstractTableModel;
@@ -69,13 +66,13 @@ public class GraphTableModel extends AbstractTableModel {
         return myLogData.getCommitId(getIdAtRow(row));
     }
 
-    public int getRowOfCommit(@Nonnull final Hash hash, @Nonnull VirtualFile root) {
-        final int commitIndex = myLogData.getCommitIndex(hash, root);
-        return ContainerUtil.indexOf(VcsLogUtil.getVisibleCommits(myDataPack.getVisibleGraph()), (Condition<Integer>)i -> i == commitIndex);
+    public int getRowOfCommit(@Nonnull Hash hash, @Nonnull VirtualFile root) {
+        int commitIndex = myLogData.getCommitIndex(hash, root);
+        return ContainerUtil.indexOf(VcsLogUtil.getVisibleCommits(myDataPack.getVisibleGraph()), i -> i == commitIndex);
     }
 
     public int getRowOfCommitByPartOfHash(@Nonnull String partialHash) {
-        final CommitIdByStringCondition hashByString = new CommitIdByStringCondition(partialHash);
+        CommitIdByStringCondition hashByString = new CommitIdByStringCondition(partialHash);
         CommitId commitId = myLogData.getHashMap().findCommitId(
             commitId1 -> hashByString.test(commitId1) && getRowOfCommit(commitId1.getHash(), commitId1.getRoot()) != -1);
         return commitId != null ? getRowOfCommit(commitId.getHash(), commitId.getRoot()) : -1;
@@ -196,7 +193,7 @@ public class GraphTableModel extends AbstractTableModel {
 
     @Nonnull
     private Iterable<Integer> createRowsIterable(final int row, final int above, final int below, final int maxRows) {
-        return () -> new Iterator<Integer>() {
+        return () -> new Iterator<>() {
             private int myRowIndex = Math.max(0, row - above);
 
             @Override
@@ -220,6 +217,6 @@ public class GraphTableModel extends AbstractTableModel {
 
     @Nonnull
     public List<Integer> convertToCommitIds(@Nonnull List<Integer> rows) {
-        return ContainerUtil.map(rows, (NotNullFunction<Integer, Integer>)this::getIdAtRow);
+        return ContainerUtil.map(rows, this::getIdAtRow);
     }
 }

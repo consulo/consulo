@@ -26,12 +26,12 @@ import consulo.document.Document;
 import consulo.document.MarkupIterator;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     @Nonnull
@@ -39,7 +39,7 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     @Nonnull
     private final MarkupModelEx myDelegate;
 
-    private final Condition<RangeHighlighter> IS_AVAILABLE = this::isAvailable;
+    private final Predicate<RangeHighlighter> IS_AVAILABLE = this::isAvailable;
 
     public EditorFilteringMarkupModelEx(@Nonnull RealEditor editor, @Nonnull MarkupModelEx delegate) {
         myEditor = editor;
