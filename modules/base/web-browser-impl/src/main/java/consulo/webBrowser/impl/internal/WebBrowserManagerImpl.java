@@ -16,7 +16,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Conditions;
 import consulo.util.lang.function.Predicates;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;

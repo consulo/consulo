@@ -23,7 +23,7 @@ import consulo.ui.ex.PasteProvider;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.LocalFileSystem;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -93,7 +93,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
         public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
             PsiElement[] elements = getValidSelectedElements();
             return CopyHandler.canCopy(elements)
-                || JBIterable.of(elements).filter(Conditions.instanceOf(PsiNamedElement.class)).isNotEmpty();
+                || JBIterable.of(elements).filter(Predicates.instanceOf(PsiNamedElement.class)).isNotEmpty();
         }
 
         @Override
@@ -214,7 +214,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
                                 }
                                 return null;
                             })
-                            .filter(file -> file != null)
+                            .filter(Predicates.notNull())
                             .toArray(PsiFileSystemItem[]::new);
                         pasteAfterCopy(items, module, target, false);
                     }

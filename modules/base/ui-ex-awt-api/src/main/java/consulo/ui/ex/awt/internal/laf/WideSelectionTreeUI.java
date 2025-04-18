@@ -385,7 +385,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
     @Override
     public void paint(Graphics g, JComponent c) {
-        if (myWideSelection && !UIUtil.isUnderAquaBasedLookAndFeel() && !DarkThemeCalculator.isDark() && !UIUtil.isUnderIntelliJLaF()) {
+        if (myWideSelection && !UIUtil.isUnderAquaBasedLookAndFeel() && !UIUtil.isUnderDarcula() && !UIUtil.isUnderIntelliJLaF()) {
             paintSelectedRows(g, ((JTree)c));
         }
         if (myWideSelection) {

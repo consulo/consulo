@@ -48,14 +48,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static consulo.util.lang.function.Conditions.not;
-import static consulo.util.lang.function.Conditions.notNull;
+import static consulo.util.lang.function.Predicates.not;
+import static consulo.util.lang.function.Predicates.notNull;
 
 /**
  * @author ignatov
  */
 public class ScratchFileActions {
-
     private static int ourCurrentBuffer = 0;
 
     private static int nextBufferIndex() {
@@ -63,18 +62,16 @@ public class ScratchFileActions {
         return ourCurrentBuffer;
     }
 
-
     public static class NewFileAction extends DumbAwareAction {
         private static final Image ICON = ImageEffects.layered(PlatformIconGroup.filetypesText(), PlatformIconGroup.actionsScratch());
 
         private static final String ACTION_ID = "NewScratchFile";
 
-        private final NotNullLazyValue<LocalizeValue> myActionText =
-            NotNullLazyValue.createValue(
-                () -> NewActionGroup.isActionInNewPopupMenu(this)
-                    ? ActionLocalize.actionNewscratchfileText()
-                    : ActionLocalize.actionNewscratchfileTextWithNew()
-            );
+        private final NotNullLazyValue<LocalizeValue> myActionText = NotNullLazyValue.createValue(
+            () -> NewActionGroup.isActionInNewPopupMenu(this)
+                ? ActionLocalize.actionNewscratchfileText()
+                : ActionLocalize.actionNewscratchfileTextWithNew()
+        );
 
         public NewFileAction() {
             getTemplatePresentation().setIcon(ICON);

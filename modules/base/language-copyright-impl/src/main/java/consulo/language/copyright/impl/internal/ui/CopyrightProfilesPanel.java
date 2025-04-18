@@ -41,7 +41,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
@@ -169,7 +169,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
                 addProfileNode(copyrightProfile);
             }
         });
-        result.add(new MyDeleteAction(forAll(Conditions.alwaysTrue())));
+        result.add(new MyDeleteAction(forAll(Predicates.alwaysTrue())));
         result.add(new AnAction("Copy", "Copy", PlatformIconGroup.actionsCopy()) {
             {
                 registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);

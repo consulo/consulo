@@ -17,7 +17,9 @@
 package consulo.compiler.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.*;
+import consulo.application.AccessRule;
+import consulo.application.Application;
+import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.Semaphore;
 import consulo.application.util.function.ThrowableComputable;
@@ -75,8 +77,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Conditions;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -89,8 +90,7 @@ import java.util.function.Predicate;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jan 17, 2003
- * Time: 1:42:26 PM
+ * @since 2003-01-17
  */
 public class CompileDriver implements consulo.compiler.CompileDriver {
     public static final int DEPENDENCY_FORMAT_VERSION = 55;
@@ -115,7 +115,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     private static final Key<Boolean> REFRESH_DONE_KEY = Key.create("_compiler.initial.refresh.done_");
     private static final Key<Boolean> COMPILATION_STARTED_AUTOMATICALLY = Key.create("compilation_started_automatically");
 
-    private Predicate<Compiler> myCompilerFilter = Conditions.alwaysTrue();
+    private Predicate<Compiler> myCompilerFilter = Predicates.alwaysTrue();
     private static final Predicate<Compiler> SOURCE_PROCESSING_ONLY = compiler -> compiler instanceof SourceProcessingCompiler;
     private static final Predicate<Compiler> ALL_EXCEPT_SOURCE_PROCESSING = compiler -> !SOURCE_PROCESSING_ONLY.test(compiler);
 
@@ -130,17 +130,17 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
 
         myGenerationCompilerModuleToOutputDirMap = new HashMap<>();
 
-        final LocalFileSystem lfs = LocalFileSystem.getInstance();
-        final IntermediateOutputCompiler[] generatingCompilers =
+        LocalFileSystem lfs = LocalFileSystem.getInstance();
+        IntermediateOutputCompiler[] generatingCompilers =
             CompilerManager.getInstance(myProject).getCompilers(IntermediateOutputCompiler.class, myCompilerFilter);
-        final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
+        Module[] allModules = ModuleManager.getInstance(myProject).getModules();
 
         for (Module module : allModules) {
             for (IntermediateOutputCompiler compiler : generatingCompilers) {
-                final VirtualFile productionOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, false));
-                final VirtualFile testOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, true));
-                final Pair<IntermediateOutputCompiler, Module> pair = Pair.create(compiler, module);
-                final Couple<VirtualFile> outputs = new Couple<>(productionOutput, testOutput);
+                VirtualFile productionOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, false));
+                VirtualFile testOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, true));
+                Pair<IntermediateOutputCompiler, Module> pair = Pair.create(compiler, module);
+                Couple<VirtualFile> outputs = new Couple<>(productionOutput, testOutput);
                 myGenerationCompilerModuleToOutputDirMap.put(pair, outputs);
             }
 
@@ -154,12 +154,12 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     }
 
     public void setCompilerFilter(Predicate<Compiler> compilerFilter) {
-        myCompilerFilter = compilerFilter == null ? Conditions.<Compiler>alwaysTrue() : compilerFilter;
+        myCompilerFilter = compilerFilter == null ? Predicates.<Compiler>alwaysTrue() : compilerFilter;
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     public void rebuild(CompileStatusNotification callback) {
-        final CompileScope compileScope;
+        CompileScope compileScope;
         CompileScope projectScope = CompilerManager.getInstance(myProject).createProjectCompileScope();
         CompileScope scopeWithArtifacts =
             ArtifactCompileScope.createScopeWithArtifacts(projectScope, ArtifactUtil.getArtifactWithOutputPaths(myProject), false);
@@ -185,9 +185,9 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         }
         scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
 
-        final CompilerTask task = new CompilerTask(myProject, "Classes up-to-date check", false, isCompilationStartedAutomatically(scope));
-        final CompositeDependencyCache cache = createDependencyCache();
-        final CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false);
+        CompilerTask task = new CompilerTask(myProject, "Classes up-to-date check", false, isCompilationStartedAutomatically(scope));
+        CompositeDependencyCache cache = createDependencyCache();
+        CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false);
 
         checkCachesVersion(compileContext, ManagingFS.getInstance().getCreationTimestamp());
         if (compileContext.isRebuildRequested()) {
@@ -197,19 +197,19 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
             return false;
         }
 
-        for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> entry : myGenerationCompilerModuleToOutputDirMap
-            .entrySet()) {
-            final Couple<VirtualFile> outputs = entry.getValue();
-            final Pair<IntermediateOutputCompiler, Module> key = entry.getKey();
-            final Module module = key.getSecond();
+        for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> entry
+            : myGenerationCompilerModuleToOutputDirMap.entrySet()) {
+            Couple<VirtualFile> outputs = entry.getValue();
+            Pair<IntermediateOutputCompiler, Module> key = entry.getKey();
+            Module module = key.getSecond();
             compileContext.assignModule(outputs.getFirst(), module, false, key.getFirst());
             compileContext.assignModule(outputs.getSecond(), module, true, key.getFirst());
         }
 
-        final Ref<ExitStatus> result = new Ref<>();
+        SimpleReference<ExitStatus> result = new SimpleReference<>();
 
-        final Runnable compileWork;
-        compileWork = () -> {
+        @RequiredReadAction
+        Runnable compileWork = () -> {
             try {
                 myAllOutputDirectories = getAllOutputDirectories(compileContext);
                 // need this for updating zip archives experiment, uncomment if the feature is turned on
@@ -276,11 +276,11 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     }
 
     private CompileStatus readStatus() {
-        final boolean isInProgress = getLockFile().exists();
+        boolean isInProgress = getLockFile().exists();
         int version = -1;
         long vfsStamp = -1L;
         try {
-            final File versionFile = new File(myCachesDirectoryPath, VERSION_FILE_NAME);
+            File versionFile = new File(myCachesDirectoryPath, VERSION_FILE_NAME);
             try (DataInputStream in = new DataInputStream(new FileInputStream(versionFile))) {
                 version = in.readInt();
                 try {
@@ -301,9 +301,9 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     }
 
     private void writeStatus(CompileStatus status, CompileContextEx context) {
-        final File statusFile = new File(myCachesDirectoryPath, VERSION_FILE_NAME);
+        File statusFile = new File(myCachesDirectoryPath, VERSION_FILE_NAME);
 
-        final File lockFile = getLockFile();
+        File lockFile = getLockFile();
         try {
             FileUtil.createIfDoesntExist(statusFile);
             try (DataOutputStream out = new DataOutputStream(new FileOutputStream(statusFile))) {
@@ -336,8 +336,8 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     private void doRebuild(
         CompileStatusNotification callback,
         CompilerMessage message,
-        final boolean checkCachesVersion,
-        final CompileScope compileScope
+        boolean checkCachesVersion,
+        CompileScope compileScope
     ) {
         if (validateCompilerConfiguration(compileScope, true)) {
             startup(compileScope, true, false, callback, message, checkCachesVersion);
@@ -347,15 +347,15 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         }
     }
 
-    private CompileScope addAdditionalRoots(CompileScope originalScope, final Predicate<Compiler> filter) {
+    private CompileScope addAdditionalRoots(CompileScope originalScope, Predicate<Compiler> filter) {
         CompileScope scope = attachIntermediateOutputDirectories(originalScope, filter);
 
-        final CompileScope baseScope = scope;
+        CompileScope baseScope = scope;
 
         SimpleReference<CompileScope> scopeRef = SimpleReference.create(scope);
 
         myProject.getApplication().getExtensionPoint(AdditionalCompileScopeProvider.class).forEachExtensionSafe(scopeProvider -> {
-            final CompileScope additionalScope = scopeProvider.getAdditionalScope(baseScope, filter, myProject);
+            CompileScope additionalScope = scopeProvider.getAdditionalScope(baseScope, filter, myProject);
             if (additionalScope != null) {
                 scopeRef.set(new CompositeScope(scopeRef.get(), additionalScope));
             }
@@ -366,12 +366,12 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     @Override
     public CompileScope attachIntermediateOutputDirectories(CompileScope originalScope, Predicate<Compiler> filter) {
         CompileScope scope = originalScope;
-        final Set<Module> affected = new HashSet<>(Arrays.asList(originalScope.getAffectedModules()));
+        Set<Module> affected = new HashSet<>(Arrays.asList(originalScope.getAffectedModules()));
         for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> entry
             : myGenerationCompilerModuleToOutputDirMap.entrySet()) {
-            final Module module = entry.getKey().getSecond();
+            Module module = entry.getKey().getSecond();
             if (affected.contains(module) && filter.test(entry.getKey().getFirst())) {
-                final Couple<VirtualFile> outputs = entry.getValue();
+                Couple<VirtualFile> outputs = entry.getValue();
                 scope = new CompositeScope(
                     scope,
                     new FileSetCompileScope(Arrays.asList(outputs.getFirst(), outputs.getSecond()), new Module[]{module})
@@ -391,8 +391,8 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     }
 
     private void attachAnnotationProcessorsOutputDirectories(CompileContextEx context) {
-        final LocalFileSystem lfs = LocalFileSystem.getInstance();
-        final Set<Module> affected = new HashSet<>(Arrays.asList(context.getCompileScope().getAffectedModules()));
+        LocalFileSystem lfs = LocalFileSystem.getInstance();
+        Set<Module> affected = new HashSet<>(Arrays.asList(context.getCompileScope().getAffectedModules()));
         for (Module module : affected) {
             ModuleFileIndex fileIndex = ModuleRootManager.getInstance(module).getFileIndex();
 
@@ -400,7 +400,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
 
             point.forEachExtensionSafe(provider -> {
                 for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
-                    final VirtualFile vFile = lfs.findFileByPath(directory.path());
+                    VirtualFile vFile = lfs.findFileByPath(directory.path());
                     if (vFile == null) {
                         continue;
                     }
@@ -422,42 +422,43 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
 
     @RequiredUIAccess
     private void startup(
-        final CompileScope scope,
-        final boolean isRebuild,
-        final boolean forceCompile,
-        final CompileStatusNotification callback,
-        final CompilerMessage message,
-        final boolean checkCachesVersion
+        CompileScope scope,
+        boolean isRebuild,
+        boolean forceCompile,
+        CompileStatusNotification callback,
+        CompilerMessage message,
+        boolean checkCachesVersion
     ) {
         Application application = Application.get();
         application.assertIsDispatchThread();
 
         ProblemsView.getInstance(myProject).clearOldMessages();
 
-        final LocalizeValue contentName =
+        LocalizeValue contentName =
             forceCompile ? CompilerLocalize.compilerContentNameCompile() : CompilerLocalize.compilerContentNameMake();
-        final boolean isUnitTestMode = application.isUnitTestMode();
-        final CompilerTask compileTask = new CompilerTask(myProject, contentName.get(), true, isCompilationStartedAutomatically(scope));
+        boolean isUnitTestMode = application.isUnitTestMode();
+        CompilerTask compileTask = new CompilerTask(myProject, contentName.get(), true, isCompilationStartedAutomatically(scope));
 
         StatusBar.Info.set("", myProject, "Compiler");
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
         FileDocumentManager.getInstance().saveAllDocuments();
 
-        final CompositeDependencyCache dependencyCache = createDependencyCache();
-        final CompileContextImpl compileContext =
+        CompositeDependencyCache dependencyCache = createDependencyCache();
+        CompileContextImpl compileContext =
             new CompileContextImpl(myProject, compileTask, scope, dependencyCache, !isRebuild && !forceCompile, isRebuild);
 
-        for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> entry : myGenerationCompilerModuleToOutputDirMap
-            .entrySet()) {
-            final Couple<VirtualFile> outputs = entry.getValue();
-            final Pair<IntermediateOutputCompiler, Module> key = entry.getKey();
-            final Module module = key.getSecond();
+        for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> entry
+            : myGenerationCompilerModuleToOutputDirMap.entrySet()) {
+            Couple<VirtualFile> outputs = entry.getValue();
+            Pair<IntermediateOutputCompiler, Module> key = entry.getKey();
+            Module module = key.getSecond();
             compileContext.assignModule(outputs.getFirst(), module, false, key.getFirst());
             compileContext.assignModule(outputs.getSecond(), module, true, key.getFirst());
         }
         attachAnnotationProcessorsOutputDirectories(compileContext);
 
-        final Runnable compileWork = () -> {
+        @RequiredReadAction
+        Runnable compileWork = () -> {
             if (compileContext.getProgressIndicator().isCanceled()) {
                 if (callback != null) {
                     callback.finished(true, 0, 0, compileContext);
@@ -472,10 +473,8 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                 if (message != null) {
                     compileContext.addMessage(message);
                 }
-                else {
-                    if (!isUnitTestMode) {
-                        //FIXME [VISTALL] notifyDeprecatedImplementation();
-                    }
+                else if (!isUnitTestMode) {
+                    //FIXME [VISTALL] notifyDeprecatedImplementation();
                 }
 
                 TranslatingCompilerFilesMonitor.getInstance()
@@ -495,15 +494,15 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
 
     @RequiredReadAction
     private ExitStatus doCompile(
-        final CompileContextImpl compileContext,
-        final boolean isRebuild,
-        final boolean forceCompile,
-        final CompileStatusNotification callback,
-        final boolean checkCachesVersion
+        CompileContextImpl compileContext,
+        boolean isRebuild,
+        boolean forceCompile,
+        CompileStatusNotification callback,
+        boolean checkCachesVersion
     ) {
         ExitStatus status = ExitStatus.ERRORS;
         boolean wereExceptions = false;
-        final long vfsTimestamp = (ManagingFS.getInstance()).getCreationTimestamp();
+        long vfsTimestamp = (ManagingFS.getInstance()).getCreationTimestamp();
         try {
             if (checkCachesVersion) {
                 checkCachesVersion(compileContext, vfsTimestamp);
@@ -525,9 +524,9 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
             }
 
             wereExceptions = true;
-            final PluginId pluginId = PluginExceptionUtil.findFirstPluginId(ex);
+            PluginId pluginId = PluginExceptionUtil.findFirstPluginId(ex);
 
-            final StringBuilder message = new StringBuilder();
+            StringBuilder message = new StringBuilder();
             message.append("Internal error");
             if (pluginId != null) {
                 message.append(" (Plugin: ").append(pluginId).append(")");
@@ -544,17 +543,20 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
             dropDependencyCache(compileContext);
             CompilerCacheManager.getInstance(myProject).flushCaches();
             if (compileContext.isRebuildRequested()) {
-                Application.get().invokeLater(() -> {
-                    final CompilerMessageImpl msg =
-                        new CompilerMessageImpl(myProject, CompilerMessageCategory.INFORMATION, compileContext.getRebuildReason());
-                    doRebuild(callback, msg, false, compileContext.getCompileScope());
-                }, ModalityState.nonModal());
+                Application.get().invokeLater(
+                    () -> {
+                        CompilerMessageImpl msg =
+                            new CompilerMessageImpl(myProject, CompilerMessageCategory.INFORMATION, compileContext.getRebuildReason());
+                        doRebuild(callback, msg, false, compileContext.getCompileScope());
+                    },
+                    ModalityState.nonModal()
+                );
             }
             else {
                 if (!myProject.isDisposed()) {
                     writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, wereExceptions, vfsTimestamp), compileContext);
                 }
-                final long duration = notifyCompilationCompleted(compileContext, callback, status, false);
+                long duration = notifyCompilationCompleted(compileContext, callback, status, false);
                 CompilerUtil.logDuration(
                     "\tCOMPILATION FINISHED; Errors: " + compileContext.getMessageCount(CompilerMessageCategory.ERROR) +
                         "; warnings: " + compileContext.getMessageCount(CompilerMessageCategory.WARNING),
@@ -570,28 +572,28 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
      * @noinspection SSBasedInspection
      */
     private long notifyCompilationCompleted(
-        final CompileContextImpl compileContext,
-        final CompileStatusNotification callback,
-        final ExitStatus _status,
-        final boolean refreshOutputRoots
+        CompileContextImpl compileContext,
+        CompileStatusNotification callback,
+        ExitStatus _status,
+        boolean refreshOutputRoots
     ) {
-        final long duration = System.currentTimeMillis() - compileContext.getStartCompilationStamp();
+        long duration = System.currentTimeMillis() - compileContext.getStartCompilationStamp();
         if (refreshOutputRoots) {
             // refresh on output roots is required in order for the order enumerator to see all roots via VFS
-            final Set<File> outputs = new HashSet<>();
-            final Module[] affectedModules = compileContext.getCompileScope().getAffectedModules();
-            for (final String path : CompilerPaths.getOutputPaths(affectedModules)) {
+            Set<File> outputs = new HashSet<>();
+            Module[] affectedModules = compileContext.getCompileScope().getAffectedModules();
+            for (String path : CompilerPaths.getOutputPaths(affectedModules)) {
                 outputs.add(new File(path));
             }
-            final LocalFileSystem lfs = LocalFileSystem.getInstance();
+            LocalFileSystem lfs = LocalFileSystem.getInstance();
             if (!outputs.isEmpty()) {
-                final ProgressIndicator indicator = compileContext.getProgressIndicator();
+                ProgressIndicator indicator = compileContext.getProgressIndicator();
                 indicator.setText("Synchronizing output directories...");
                 lfs.refreshIoFiles(outputs, _status == ExitStatus.CANCELLED, false, null);
                 indicator.setTextValue(LocalizeValue.empty());
             }
 
-            final Set<File> genSourceRoots = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
+            Set<File> genSourceRoots = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
             for (Module affectedModule : affectedModules) {
                 ExtensionPoint<ModuleAdditionalOutputDirectoriesProvider> point =
                     affectedModule.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
@@ -615,8 +617,8 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                 errorCount = compileContext.getMessageCount(CompilerMessageCategory.ERROR);
                 warningCount = compileContext.getMessageCount(CompilerMessageCategory.WARNING);
                 if (!myProject.isDisposed()) {
-                    final String statusMessage = createStatusMessage(_status, warningCount, errorCount, duration);
-                    final NotificationType messageType =
+                    String statusMessage = createStatusMessage(_status, warningCount, errorCount, duration);
+                    NotificationType messageType =
                         errorCount > 0 ? NotificationType.ERROR : warningCount > 0 ? NotificationType.WARNING : NotificationType.INFORMATION;
                     if (duration > ONE_MINUTE_MS) {
                         ToolWindowManager.getInstance(myProject)
@@ -637,12 +639,12 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         return duration;
     }
 
-    private void checkCachesVersion(final CompileContextImpl compileContext, final long currentVFSTimestamp) {
+    private void checkCachesVersion(CompileContextImpl compileContext, long currentVFSTimestamp) {
         if (CompilerPaths.getRebuildMarkerFile(compileContext.getProject()).exists()) {
             compileContext.requestRebuildNextTime("Compiler caches are out of date, project rebuild is required");
             return;
         }
-        final CompileStatus compileStatus = readStatus();
+        CompileStatus compileStatus = readStatus();
         if (compileStatus == null) {
             compileContext.requestRebuildNextTime(CompilerLocalize.errorCompilerCachesCorrupted().get());
         }
@@ -659,7 +661,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         }
     }
 
-    private static String createStatusMessage(final ExitStatus status, final int warningCount, final int errorCount, long duration) {
+    private static String createStatusMessage(ExitStatus status, int warningCount, int errorCount, long duration) {
         String message;
         if (status == ExitStatus.CANCELLED) {
             message = CompilerLocalize.statusCompilationAborted().get();
@@ -681,11 +683,12 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         return message;
     }
 
+    @RequiredReadAction
     private ExitStatus doCompile(
-        final CompileContextEx context,
+        CompileContextEx context,
         boolean isRebuild,
-        final boolean forceCompile,
-        final boolean onlyCheckStatus
+        boolean forceCompile,
+        boolean onlyCheckStatus
     ) {
         try {
             if (isRebuild) {
@@ -722,16 +725,16 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
             boolean needRecalcOutputDirs = false;
             if (Registry.is(PROP_PERFORM_INITIAL_REFRESH) || !REFRESH_DONE_KEY.get(myProject, Boolean.FALSE)) {
                 REFRESH_DONE_KEY.set(myProject, Boolean.TRUE);
-                final long refreshStart = System.currentTimeMillis();
+                long refreshStart = System.currentTimeMillis();
 
                 //need this to make sure the VFS is built
-                final List<VirtualFile> outputsToRefresh = new ArrayList<>();
+                List<VirtualFile> outputsToRefresh = new ArrayList<>();
 
-                final VirtualFile[] all = context.getAllOutputDirectories();
+                VirtualFile[] all = context.getAllOutputDirectories();
 
-                final ProgressIndicator progressIndicator = context.getProgressIndicator();
+                ProgressIndicator progressIndicator = context.getProgressIndicator();
 
-                //final int totalCount = all.length + myGenerationCompilerModuleToOutputDirMap.size() * 2;
+                //int totalCount = all.length + myGenerationCompilerModuleToOutputDirMap.size() * 2;
                 progressIndicator.pushState();
                 progressIndicator.setText("Inspecting output directories...");
                 try {
@@ -741,9 +744,9 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                         }
                         else {
                             needRecalcOutputDirs = true;
-                            final File file = new File(output.getPath());
+                            File file = new File(output.getPath());
                             if (!file.exists()) {
-                                final boolean created = file.mkdirs();
+                                boolean created = file.mkdirs();
                                 if (!created) {
                                     context.addMessage(
                                         CompilerMessageCategory.ERROR,
@@ -770,7 +773,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                         outputsToRefresh.add(output);
                     }
                     for (Pair<IntermediateOutputCompiler, Module> pair : myGenerationCompilerModuleToOutputDirMap.keySet()) {
-                        final Couple<VirtualFile> generated = myGenerationCompilerModuleToOutputDirMap.get(pair);
+                        Couple<VirtualFile> generated = myGenerationCompilerModuleToOutputDirMap.get(pair);
                         walkChildren(generated.getFirst(), context);
                         outputsToRefresh.add(generated.getFirst());
                         walkChildren(generated.getSecond(), context);
@@ -786,12 +789,12 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                     progressIndicator.popState();
                 }
 
-                final long initialRefreshTime = System.currentTimeMillis() - refreshStart;
+                long initialRefreshTime = System.currentTimeMillis() - refreshStart;
                 CompilerUtil.logDuration("Initial VFS refresh", initialRefreshTime);
             }
 
             //DumbService.getInstance(myProject).waitForSmartMode();
-            final Semaphore semaphore = new Semaphore();
+            Semaphore semaphore = new Semaphore();
             semaphore.down();
             DumbService.getInstance(myProject).runWhenSmart(semaphore::up);
             while (!semaphore.waitFor(500)) {
@@ -824,7 +827,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
             finally {
                 // drop in case it has not been dropped yet.
                 dropDependencyCache(context);
-                final VirtualFile[] allOutputDirs = context.getAllOutputDirectories();
+                VirtualFile[] allOutputDirs = context.getAllOutputDirectories();
 
                 if (didSomething && GENERATE_CLASSPATH_INDEX) {
                     CompilerUtil.runInContext(context, "Generating classpath index...", () -> {
@@ -842,7 +845,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                 if (!executeCompileTasks(context, false)) {
                     return ExitStatus.CANCELLED;
                 }
-                //FIXME [VISTALL] final int constantSearchesCount = ChangedConstantsDependencyProcessor.getConstantSearchesCount(context);
+                //FIXME [VISTALL] int constantSearchesCount = ChangedConstantsDependencyProcessor.getConstantSearchesCount(context);
                 //FIXME [VISTALL] LOG.debug("Constants searches: " + constantSearchesCount);
             }
 
@@ -863,20 +866,21 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     }
 
     @RequiredReadAction
-    private void clearAffectedOutputPathsIfPossible(final CompileContextEx context) {
+    private void clearAffectedOutputPathsIfPossible(CompileContextEx context) {
+        @RequiredReadAction
         ThrowableComputable<List<File>, RuntimeException> action = () -> {
-            final MultiMap<File, Module> outputToModulesMap = new MultiMap<>();
+            MultiMap<File, Module> outputToModulesMap = new MultiMap<>();
             for (Module module : ModuleManager.getInstance(myProject).getModules()) {
                 ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
                 for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
-                    final String outputPathUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
+                    String outputPathUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
                     if (outputPathUrl != null) {
-                        final String path = VirtualFileManager.extractPath(outputPathUrl);
+                        String path = VirtualFileManager.extractPath(outputPathUrl);
                         outputToModulesMap.putValue(new File(path), module);
                     }
                 }
             }
-            final Set<Module> affectedModules = new HashSet<>(Arrays.asList(context.getCompileScope().getAffectedModules()));
+            Set<Module> affectedModules = new HashSet<>(Arrays.asList(context.getCompileScope().getAffectedModules()));
             List<File> result = new ArrayList<>(affectedModules.size() * 2);
             for (File output : outputToModulesMap.keySet()) {
                 if (affectedModules.containsAll(outputToModulesMap.get(output))) {
@@ -884,16 +888,16 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                 }
             }
 
-            final Set<Artifact> artifactsToBuild = ArtifactCompileScope.getArtifactsToBuild(myProject, context.getCompileScope(), true);
+            Set<Artifact> artifactsToBuild = ArtifactCompileScope.getArtifactsToBuild(myProject, context.getCompileScope(), true);
             for (Artifact artifact : artifactsToBuild) {
-                final String outputFilePath = ((ArtifactImpl)artifact).getOutputDirectoryPathToCleanOnRebuild();
+                String outputFilePath = ((ArtifactImpl)artifact).getOutputDirectoryPathToCleanOnRebuild();
                 if (outputFilePath != null) {
                     result.add(new File(FileUtil.toSystemDependentName(outputFilePath)));
                 }
             }
             return result;
         };
-        final List<File> scopeOutputs = AccessRule.read(action);
+        List<File> scopeOutputs = AccessRule.read(action);
         if (!scopeOutputs.isEmpty()) {
             CompilerUtil.runInContext(
                 context,
@@ -903,8 +907,8 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         }
     }
 
-    private static void logErrorMessages(final CompileContext context) {
-        final CompilerMessage[] errors = context.getMessages(CompilerMessageCategory.ERROR);
+    private static void logErrorMessages(CompileContext context) {
+        CompilerMessage[] errors = context.getMessages(CompilerMessageCategory.ERROR);
         if (errors.length > 0) {
             LOG.debug("Errors reported: ");
             for (CompilerMessage error : errors) {
@@ -913,7 +917,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         }
     }
 
-    private static void walkChildren(VirtualFile from, final CompileContext context) {
+    private static void walkChildren(VirtualFile from, CompileContext context) {
         VirtualFileUtil.visitChildrenRecursively(from, new VirtualFileVisitor() {
             @Override
             public boolean visitFile(@Nonnull VirtualFile file) {
@@ -926,7 +930,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         });
     }
 
-    private static void createClasspathIndex(final VirtualFile file) {
+    private static void createClasspathIndex(VirtualFile file) {
         try (BufferedWriter writer =
                  new BufferedWriter(new FileWriter(new File(VirtualFileUtil.virtualToIoFile(file), "classpath.index")))) {
             writeIndex(writer, file, file);
@@ -936,28 +940,30 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         }
     }
 
-    private static void writeIndex(final BufferedWriter writer, final VirtualFile root, final VirtualFile file) throws IOException {
-        VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
-            @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
-                try {
-                    writer.write(VirtualFileUtil.getRelativePath(file, root, '/'));
-                    writer.write('\n');
-                    return true;
+    private static void writeIndex(BufferedWriter writer, VirtualFile root, VirtualFile file) throws IOException {
+        VirtualFileUtil.visitChildrenRecursively(file,
+            new VirtualFileVisitor() {
+                @Override
+                public boolean visitFile(@Nonnull VirtualFile file) {
+                    try {
+                        writer.write(VirtualFileUtil.getRelativePath(file, root, '/'));
+                        writer.write('\n');
+                        return true;
+                    }
+                    catch (IOException e) {
+                        throw new VisitorException(e);
+                    }
                 }
-                catch (IOException e) {
-                    throw new VisitorException(e);
-                }
-            }
-        }, IOException.class);
+            }, IOException.class
+        );
     }
 
     @Override
-    public void dropDependencyCache(final CompileContextEx context) {
+    public void dropDependencyCache(CompileContextEx context) {
         CompilerUtil.runInContext(context, CompilerLocalize.progressSavingCaches().get(), () -> context.getDependencyCache().resetState());
     }
 
-    private void deleteAll(final CompileContextEx context) {
+    private void deleteAll(CompileContextEx context) {
         CompilerUtil.runInContext(
             context,
             CompilerLocalize.progressClearingOutput().get(),
@@ -994,15 +1000,15 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
             .runReadAction(() -> ((ProjectRootManagerEx)ProjectRootManager.getInstance(myProject)).clearScopesCachesForModules());
     }
 
-    private void pruneEmptyDirectories(CompileContextEx context, ProgressIndicator progress, final Set<File> directories) {
+    private void pruneEmptyDirectories(CompileContextEx context, ProgressIndicator progress, Set<File> directories) {
         for (File directory : directories) {
             doPrune(context, progress, directory, directories);
         }
     }
 
-    private boolean doPrune(CompileContextEx context, ProgressIndicator progress, final File directory, final Set<File> outPutDirectories) {
+    private boolean doPrune(CompileContextEx context, ProgressIndicator progress, File directory, Set<File> outPutDirectories) {
         progress.checkCanceled();
-        final File[] files = directory.listFiles();
+        File[] files = directory.listFiles();
         boolean isEmpty = true;
         if (files != null) {
             for (File file : files) {
@@ -1028,9 +1034,9 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
 
     @RequiredReadAction
     private Set<File> getAllOutputDirectories(CompileContext context) {
-        final Set<File> outputDirs = new OrderedSet<>();
-        final Module[] modules = ModuleManager.getInstance(myProject).getModules();
-        for (final String path : CompilerPaths.getOutputPaths(modules)) {
+        Set<File> outputDirs = new OrderedSet<>();
+        Module[] modules = ModuleManager.getInstance(myProject).getModules();
+        for (String path : CompilerPaths.getOutputPaths(modules)) {
             outputDirs.add(new File(path));
         }
         for (Pair<IntermediateOutputCompiler, Module> pair : myGenerationCompilerModuleToOutputDirMap.keySet()) {
@@ -1050,7 +1056,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         }
 
         for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
-            final String path = ((ArtifactImpl)artifact).getOutputDirectoryPathToCleanOnRebuild();
+            String path = ((ArtifactImpl)artifact).getOutputDirectoryPathToCleanOnRebuild();
             if (path != null) {
                 outputDirs.add(new File(FileUtil.toSystemDependentName(path)));
             }
@@ -1058,21 +1064,21 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         return outputDirs;
     }
 
-    private void clearCompilerSystemDirectory(final CompileContextEx context) {
+    private void clearCompilerSystemDirectory(CompileContextEx context) {
         CompilerCacheManager.getInstance(myProject).clearCaches(context);
         FileUtil.delete(CompilerPathsEx.getZipStoreDirectory(myProject));
         dropDependencyCache(context);
 
         for (Pair<IntermediateOutputCompiler, Module> pair : myGenerationCompilerModuleToOutputDirMap.keySet()) {
-            final File[] outputs = {
+            File[] outputs = {
                 new File(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), false)),
                 new File(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), true))
             };
             for (File output : outputs) {
-                final File[] files = output.listFiles();
+                File[] files = output.listFiles();
                 if (files != null) {
-                    for (final File file : files) {
-                        final boolean deleteOk = deleteFile(file);
+                    for (File file : files) {
+                        boolean deleteOk = deleteFile(file);
                         if (!deleteOk) {
                             context.addMessage(
                                 CompilerMessageCategory.ERROR,
@@ -1089,7 +1095,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     }
 
     // [mike] performance optimization - this method is accessed > 15,000 times in Aurora
-    private String getModuleOutputPath(final Module module, ContentFolderTypeProvider contentFolderType) {
+    private String getModuleOutputPath(Module module, ContentFolderTypeProvider contentFolderType) {
         Map<Module, String> map = myOutputs.get(contentFolderType);
         if (map == null) {
             myOutputs.put(contentFolderType, map = new HashMap<>());
@@ -1110,7 +1116,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
      * Note: the behaviour is different from FileUtil.delete() which returns true if the file absent on the disk
      */
     @Override
-    public boolean deleteFile(final File file) {
+    public boolean deleteFile(File file) {
         File[] files = file.listFiles();
         if (files != null) {
             for (File file1 : files) {
@@ -1135,13 +1141,13 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     }
 
     public void executeCompileTask(
-        final CompileTask compileTask,
-        final CompileScope scope,
-        final String contentName,
-        final Runnable onTaskFinished
+        CompileTask compileTask,
+        CompileScope scope,
+        String contentName,
+        Runnable onTaskFinished
     ) {
-        final CompilerTask task = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope));
-        final CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, null, false, false);
+        CompilerTask task = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope));
+        CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, null, false, false);
 
         FileDocumentManager.getInstance().saveAllDocuments();
 
@@ -1165,9 +1171,9 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         });
     }
 
-    private boolean executeCompileTasks(final CompileContext context, final boolean beforeTasks) {
-        final CompilerManager manager = CompilerManager.getInstance(myProject);
-        final ProgressIndicator progressIndicator = context.getProgressIndicator();
+    private boolean executeCompileTasks(CompileContext context, boolean beforeTasks) {
+        CompilerManager manager = CompilerManager.getInstance(myProject);
+        ProgressIndicator progressIndicator = context.getProgressIndicator();
         progressIndicator.pushState();
         try {
             List<? extends CompileTask> tasks = beforeTasks ? manager.getBeforeTasks() : manager.getAfterTasks();
@@ -1189,14 +1195,15 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         return true;
     }
 
-    private boolean validateCompilerConfiguration(final CompileScope scope, boolean checkOutputAndSourceIntersection) {
+    @RequiredUIAccess
+    private boolean validateCompilerConfiguration(CompileScope scope, boolean checkOutputAndSourceIntersection) {
         try {
-            final Module[] scopeModules = scope.getAffectedModules()/*ModuleManager.getInstance(myProject).getModules()*/;
-            final List<String> modulesWithoutOutputPathSpecified = new ArrayList<>();
+            Module[] scopeModules = scope.getAffectedModules()/*ModuleManager.getInstance(myProject).getModules()*/;
+            List<String> modulesWithoutOutputPathSpecified = new ArrayList<>();
             boolean isProjectCompilePathSpecified = true;
-            final Set<File> nonExistingOutputPaths = new HashSet<>();
-            final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
-            for (final Module module : scopeModules) {
+            Set<File> nonExistingOutputPaths = new HashSet<>();
+            CompilerManager compilerManager = CompilerManager.getInstance(myProject);
+            for (Module module : scopeModules) {
                 boolean isEmpty = true;
                 for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
                     if (hasContent(module, contentFolderType)) {
@@ -1212,9 +1219,9 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                 for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
                     if (hasContent(module, contentFolderType)) {
 
-                        final String outputPath = getModuleOutputPath(module, contentFolderType);
+                        String outputPath = getModuleOutputPath(module, contentFolderType);
                         if (outputPath != null) {
-                            final File file = new File(FileUtil.toSystemDependentName(outputPath));
+                            File file = new File(FileUtil.toSystemDependentName(outputPath));
                             if (!file.exists()) {
                                 nonExistingOutputPaths.add(file);
                             }
@@ -1228,7 +1235,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                 var point = module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
                 point.forEachExtensionSafe(provider -> {
                     for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
-                        final File file = new File(directory.path());
+                        File file = new File(directory.path());
                         if (!file.exists()) {
                             nonExistingOutputPaths.add(file);
                         }
@@ -1237,7 +1244,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
             }
 
             if (!isProjectCompilePathSpecified) {
-                final LocalizeValue message = CompilerLocalize.errorProjectOutputNotSpecified();
+                LocalizeValue message = CompilerLocalize.errorProjectOutputNotSpecified();
                 if (Application.get().isUnitTestMode()) {
                     LOG.error(message.get());
                 }
@@ -1254,7 +1261,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
 
             if (!nonExistingOutputPaths.isEmpty()) {
                 for (File file : nonExistingOutputPaths) {
-                    final boolean succeeded = file.mkdirs();
+                    boolean succeeded = file.mkdirs();
                     if (!succeeded) {
                         if (file.exists()) {
                             // for overlapping paths, this one might have been created as an intermediate path on a previous iteration
@@ -1269,7 +1276,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                         return false;
                     }
                 }
-                final Boolean refreshSuccess = WriteAction.compute(() -> {
+                Boolean refreshSuccess = WriteAction.compute(() -> {
                     LocalFileSystem.getInstance().refreshIoFiles(nonExistingOutputPaths);
                     Boolean res = Boolean.TRUE;
                     for (File file : nonExistingOutputPaths) {
@@ -1298,7 +1305,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
                 CompilerPathsEx.CLEAR_ALL_OUTPUTS_KEY.set(scope, false);
             }
 
-            final Compiler[] allCompilers = compilerManager.getCompilers(Compiler.class);
+            Compiler[] allCompilers = compilerManager.getCompilers(Compiler.class);
             for (Compiler compiler : allCompilers) {
                 if (!compiler.validateConfiguration(scope)) {
                     LOG.info("Validation with compiler " + compiler.getDescription() + " is failed.");
@@ -1314,9 +1321,9 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     }
 
     private static boolean hasContent(Module module, ContentFolderTypeProvider c) {
-        final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
-        for (final ContentEntry contentEntry : contentEntries) {
-            final ContentFolder[] sourceFolders = contentEntry.getFolders(LanguageContentFolderScopes.of(c));
+        ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
+        for (ContentEntry contentEntry : contentEntries) {
+            ContentFolder[] sourceFolders = contentEntry.getFolders(LanguageContentFolderScopes.of(c));
             if (sourceFolders.length > 0) {
                 return true;
             }
@@ -1324,10 +1331,11 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         return false;
     }
 
+    @RequiredUIAccess
     private void showNotSpecifiedError(List<String> modules, String editorNameToSelect) {
         String nameToSelect = null;
-        final StringBuilder names = new StringBuilder();
-        final int maxModulesToShow = 10;
+        StringBuilder names = new StringBuilder();
+        int maxModulesToShow = 10;
         for (String name : modules.size() > maxModulesToShow ? modules.subList(0, maxModulesToShow) : modules) {
             if (nameToSelect == null) {
                 nameToSelect = name;
@@ -1340,23 +1348,23 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         if (modules.size() > maxModulesToShow) {
             names.append(",\n...");
         }
-        final LocalizeValue message = CompilerLocalize.errorOutputNotSpecified(modules.size(), names.toString());
+        LocalizeValue message = CompilerLocalize.errorOutputNotSpecified(modules.size(), names.toString());
 
         LOG.warn(message.get());
 
-        Messages.showMessageDialog(myProject, message.get(), CommonBundle.message("title.error"), UIUtil.getErrorIcon());
+        Messages.showMessageDialog(myProject, message.get(), CommonLocalize.titleError().get(), UIUtil.getErrorIcon());
         showConfigurationDialog(nameToSelect, editorNameToSelect);
     }
 
     @RequiredReadAction
     private boolean validateOutputAndSourcePathsIntersection() {
-        final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
+        Module[] allModules = ModuleManager.getInstance(myProject).getModules();
         List<VirtualFile> allOutputs = new ArrayList<>();
         ContainerUtil.addAll(allOutputs, CompilerPaths.getOutputDirectories(allModules));
         for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
             ContainerUtil.addIfNotNull(allOutputs, artifact.getOutputFile());
         }
-        final Set<VirtualFile> affectedOutputPaths = new HashSet<>();
+        Set<VirtualFile> affectedOutputPaths = new HashSet<>();
         CompilerUtil.computeIntersectingPaths(myProject, allOutputs, affectedOutputPaths);
         affectedOutputPaths.addAll(ArtifactCompilerUtil.getArtifactOutputsContainingSourceFiles(myProject));
 
@@ -1378,12 +1386,8 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     }
 
     @Override
-    public VirtualFile getGenerationOutputDir(
-        final IntermediateOutputCompiler compiler,
-        final Module module,
-        final boolean forTestSources
-    ) {
-        final Couple<VirtualFile> outputs = myGenerationCompilerModuleToOutputDirMap.get(Pair.create(compiler, module));
+    public VirtualFile getGenerationOutputDir(IntermediateOutputCompiler compiler, Module module, boolean forTestSources) {
+        Couple<VirtualFile> outputs = myGenerationCompilerModuleToOutputDirMap.get(Pair.create(compiler, module));
         return forTestSources ? outputs.getSecond() : outputs.getFirst();
     }
 
@@ -1391,15 +1395,15 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         //FIXME [VISTALL] ProjectSettingsService.getInstance(myProject).showModuleConfigurationDialog(moduleNameToSelect, tabNameToSelect);
     }
 
-    private static VirtualFile lookupVFile(final LocalFileSystem lfs, final String path) {
-        final File file = new File(path);
+    private static VirtualFile lookupVFile(LocalFileSystem lfs, String path) {
+        File file = new File(path);
 
         VirtualFile vFile = lfs.findFileByIoFile(file);
         if (vFile != null) {
             return vFile;
         }
 
-        final boolean justCreated = file.mkdirs();
+        boolean justCreated = file.mkdirs();
         vFile = lfs.refreshAndFindFileByIoFile(file);
 
         if (vFile == null) {

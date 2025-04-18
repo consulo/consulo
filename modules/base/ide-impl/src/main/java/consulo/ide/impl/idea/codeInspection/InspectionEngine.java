@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInspection;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -41,7 +42,6 @@ import consulo.language.psi.PsiRecursiveVisitor;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
-import consulo.util.lang.function.Conditions;
 import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -66,6 +66,7 @@ public class InspectionEngine {
      * @return
      */
     @Nonnull
+    @RequiredReadAction
     public static PsiElementVisitor createVisitorAndAcceptElements(
         @Nonnull LocalInspectionTool tool,
         @Nonnull ProblemsHolder holder,
@@ -130,6 +131,7 @@ public class InspectionEngine {
     }
 
     @Nonnull
+    @RequiredReadAction
     public static List<ProblemDescriptor> inspect(
         @Nonnull List<LocalInspectionToolWrapper> toolWrappers,
         @Nonnull PsiFile file,
@@ -150,6 +152,7 @@ public class InspectionEngine {
 
     // public for Upsource
     // returns map (toolName -> problem descriptors)
+    @RequiredReadAction
     @Nonnull
     public static Map<String, List<ProblemDescriptor>> inspectEx(
         @Nonnull List<LocalInspectionToolWrapper> toolWrappers,
@@ -190,6 +193,7 @@ public class InspectionEngine {
 
     // returns map tool.shortName -> list of descriptors found
     @Nonnull
+    @RequiredReadAction
     static Map<String, List<ProblemDescriptor>> inspectElements(
         @Nonnull List<LocalInspectionToolWrapper> toolWrappers,
         @Nonnull PsiFile file,
@@ -206,6 +210,7 @@ public class InspectionEngine {
         Map<LocalInspectionToolWrapper, Set<String>> toolToSpecifiedDialectIds = getToolsToSpecifiedLanguages(toolWrappers);
         List<Entry<LocalInspectionToolWrapper, Set<String>>> entries = new ArrayList<>(toolToSpecifiedDialectIds.entrySet());
         Map<String, List<ProblemDescriptor>> resultDescriptors = new ConcurrentHashMap<>();
+        @RequiredReadAction
         Predicate<Entry<LocalInspectionToolWrapper, Set<String>>> processor = entry -> {
             ProblemsHolderImpl holder = new ProblemsHolderImpl(iManager, file, isOnTheFly);
             LocalInspectionTool tool = entry.getKey().getTool();
@@ -224,10 +229,16 @@ public class InspectionEngine {
             tool.inspectionFinished(session, holder, toolState);
 
             if (holder.hasResults()) {
-                resultDescriptors.put(tool.getShortName(), ContainerUtil.filter(holder.getResults(), descriptor -> {
-                    PsiElement element = descriptor.getPsiElement();
-                    return element == null || !SuppressionUtil.inspectionResultSuppressed(element, tool);
-                }));
+                resultDescriptors.put(
+                    tool.getShortName(),
+                    ContainerUtil.filter(
+                        holder.getResults(),
+                        descriptor -> {
+                            PsiElement element = descriptor.getPsiElement();
+                            return element == null || !SuppressionUtil.inspectionResultSuppressed(element, tool);
+                        }
+                    )
+                );
             }
 
             return true;
@@ -238,6 +249,7 @@ public class InspectionEngine {
     }
 
     @Nonnull
+    @RequiredReadAction
     public static List<ProblemDescriptor> runInspectionOnFile(
         @Nonnull PsiFile file,
         @Nonnull InspectionToolWrapper toolWrapper,
@@ -380,6 +392,7 @@ public class InspectionEngine {
     }
 
     @Nonnull
+    @RequiredReadAction
     public static Set<String> calcElementDialectIds(@Nonnull List<PsiElement> inside, @Nonnull List<PsiElement> outside) {
         Set<String> dialectIds = new SmartHashSet<>();
         Set<Language> processedLanguages = new SmartHashSet<>();
@@ -389,6 +402,7 @@ public class InspectionEngine {
     }
 
     @Nonnull
+    @RequiredReadAction
     public static Set<String> calcElementDialectIds(@Nonnull List<PsiElement> elements) {
         Set<String> dialectIds = new SmartHashSet<>();
         Set<Language> processedLanguages = new SmartHashSet<>();
@@ -396,6 +410,7 @@ public class InspectionEngine {
         return dialectIds;
     }
 
+    @RequiredReadAction
     private static void addDialects(
         @Nonnull List<PsiElement> elements,
         @Nonnull Set<Language> processedLanguages,

@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.vcs.log.util.SequentialLimitedLifoExecutor;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SLRUMap;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.log.*;
 import consulo.virtualFileSystem.VirtualFile;
@@ -135,7 +135,7 @@ public class ContainingBranchesGetter {
 
         DataPack dataPack = myLogData.getDataPack();
         if (dataPack == DataPack.EMPTY) {
-            return Conditions.alwaysFalse();
+            return Predicates.alwaysFalse();
         }
 
         PermanentGraph<Integer> graph = dataPack.getPermanentGraph();
@@ -146,7 +146,7 @@ public class ContainingBranchesGetter {
             VcsRef branchRef =
                 ContainerUtil.find(refs.getBranches(), vcsRef -> vcsRef.getRoot().equals(root) && vcsRef.getName().equals(branchName));
             if (branchRef == null) {
-                return Conditions.alwaysFalse();
+                return Predicates.alwaysFalse();
             }
             condition = new ContainedInBranchCondition(
                 graph.getContainedInBranchCondition(Collections.singleton(myLogData.getCommitIndex(

@@ -15,9 +15,7 @@
  */
 package consulo.util.collection;
 
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Functions;
-
 import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -26,7 +24,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static consulo.util.lang.function.Conditions.not;
+import static consulo.util.lang.function.Predicates.not;
 
 /**
  * A redesigned version of com.google.common.collect.TreeTraversal.
@@ -151,6 +149,7 @@ public abstract class TreeTraversal {
         return new TreeTraversal(original.toString() + " (ON_RANGE)") {
             @Nonnull
             @Override
+            @SuppressWarnings("unchecked")
             public <T> It<T> createIterator(
                 @Nonnull Iterable<? extends T> roots,
                 @Nonnull Function<T, ? extends Iterable<? extends T>> tree
@@ -383,7 +382,6 @@ public abstract class TreeTraversal {
     // -----------------------------------------------------------------------------
 
     private abstract static class DfsIt<T, H extends P<T, H>> extends TracingIt<T> {
-
         H last;
 
         protected DfsIt(Function<? super T, ? extends Iterable<? extends T>> tree) {
@@ -391,6 +389,7 @@ public abstract class TreeTraversal {
         }
 
         @Nullable
+        @Override
         public T parent() {
             if (last == null) {
                 throw new NoSuchElementException();
@@ -401,6 +400,7 @@ public abstract class TreeTraversal {
         }
 
         @Nonnull
+        @Override
         public JBIterable<T> backtrace() {
             if (last == null) {
                 throw new NoSuchElementException();

@@ -17,9 +17,7 @@ package consulo.compiler.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.compiler.*;
-import consulo.compiler.Compiler;
 import consulo.compiler.event.CompilationStatusListener;
 import consulo.compiler.impl.internal.scope.CompositeScope;
 import consulo.compiler.impl.internal.scope.OneProjectItemCompileScope;
@@ -35,8 +33,9 @@ import consulo.disposer.Disposer;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -64,7 +63,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
         }
 
         @Override
-        public void finished(boolean aborted, int errors, int warnings, final CompileContext compileContext) {
+        public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
             myEventPublisher.compilationFinished(aborted, errors, warnings, compileContext);
             if (myDelegate != null) {
                 myDelegate.finished(aborted, errors, warnings, compileContext);
@@ -81,7 +80,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     private final Semaphore myCompilationSemaphore = new Semaphore(1, true);
 
     @Inject
-    public CompilerManagerImpl(final Project project) {
+    public CompilerManagerImpl(Project project) {
         myProject = project;
         Disposer.register(project, myExcludedEntriesConfiguration);
 
@@ -91,17 +90,20 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
         myEventPublisher = project.getMessageBus().syncPublisher(CompilationStatusListener.class);
 
-        final File projectGeneratedSrcRoot = CompilerPaths.getGeneratedDataDirectory(project);
+        File projectGeneratedSrcRoot = CompilerPaths.getGeneratedDataDirectory(project);
         projectGeneratedSrcRoot.mkdirs();
-        final LocalFileSystem lfs = LocalFileSystem.getInstance();
+        LocalFileSystem lfs = LocalFileSystem.getInstance();
         myWatchRoots = lfs.addRootsToWatch(Collections.singletonList(FileUtil.toCanonicalPath(projectGeneratedSrcRoot.getPath())), true);
-        Disposer.register(project, () -> {
-            lfs.removeWatchedRoots(myWatchRoots);
-            if (ApplicationManager.getApplication()
-                .isUnitTestMode()) {    // force cleanup for created compiler system directory with generated sources
-                FileUtil.delete(CompilerPaths.getCompilerSystemDirectory(project));
+        Disposer.register(
+            project,
+            () -> {
+                lfs.removeWatchedRoots(myWatchRoots);
+                if (myProject.getApplication().isUnitTestMode()) {
+                    // force cleanup for created compiler system directory with generated sources
+                    FileUtil.delete(CompilerPaths.getCompilerSystemDirectory(project));
+                }
             }
-        });
+        );
     }
 
     @Nonnull
@@ -125,7 +127,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     @Override
     @Nonnull
     public <T extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass) {
-        return getCompilers(compilerClass, Conditions.<Compiler>alwaysTrue());
+        return getCompilers(compilerClass, Predicates.<Compiler>alwaysTrue());
     }
 
     @Override
@@ -153,61 +155,71 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     }
 
     @Override
+    @RequiredUIAccess
     public void compile(@Nonnull VirtualFile[] files, CompileStatusNotification callback) {
         compile(createFilesCompileScope(files), callback);
     }
 
     @Override
+    @RequiredUIAccess
     public void compile(@Nonnull Module module, CompileStatusNotification callback) {
         new CompileDriver(myProject).compile(createModuleCompileScope(module, false), new ListenerNotificator(callback), true);
     }
 
     @Override
+    @RequiredUIAccess
     public void compile(@Nonnull CompileScope scope, CompileStatusNotification callback) {
         new CompileDriver(myProject).compile(scope, new ListenerNotificator(callback), false);
     }
 
     @Override
+    @RequiredUIAccess
     public void make(CompileStatusNotification callback) {
         new CompileDriver(myProject).make(createProjectCompileScope(), new ListenerNotificator(callback));
     }
 
     @Override
+    @RequiredUIAccess
     public void make(@Nonnull Module module, CompileStatusNotification callback) {
         new CompileDriver(myProject).make(createModuleCompileScope(module, true), new ListenerNotificator(callback));
     }
 
     @Override
+    @RequiredUIAccess
     public void make(@Nonnull Project project, @Nonnull Module[] modules, CompileStatusNotification callback) {
         new CompileDriver(myProject).make(createModuleGroupCompileScope(project, modules, true), new ListenerNotificator(callback));
     }
 
     @Override
+    @RequiredUIAccess
     public void make(@Nonnull CompileScope scope, CompileStatusNotification callback) {
         new CompileDriver(myProject).make(scope, new ListenerNotificator(callback));
     }
 
     @Override
+    @RequiredUIAccess
     public void make(@Nonnull CompileScope scope, Predicate<Compiler> filter, @Nullable CompileStatusNotification callback) {
-        final CompileDriver compileDriver = new CompileDriver(myProject);
+        CompileDriver compileDriver = new CompileDriver(myProject);
         compileDriver.setCompilerFilter(filter);
         compileDriver.make(scope, new ListenerNotificator(callback));
     }
 
     @Override
-    public boolean isUpToDate(@Nonnull final CompileScope scope) {
+    @RequiredReadAction
+    public boolean isUpToDate(@Nonnull CompileScope scope) {
         return new CompileDriver(myProject).isUpToDate(scope);
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public void rebuild(CompileStatusNotification callback) {
         new CompileDriver(myProject).rebuild(new ListenerNotificator(callback));
     }
 
     @Override
+    @RequiredReadAction
     public void executeTask(@Nonnull CompileTask task, @Nonnull CompileScope scope, String contentName, Runnable onTaskFinished) {
-        final CompileDriver compileDriver = new CompileDriver(myProject);
+        CompileDriver compileDriver = new CompileDriver(myProject);
         compileDriver.executeCompileTask(task, scope, contentName, onTaskFinished);
     }
 
@@ -223,7 +235,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
     @Override
     @Nonnull
-    public CompileScope createFilesCompileScope(@Nonnull final VirtualFile[] files) {
+    public CompileScope createFilesCompileScope(@Nonnull VirtualFile[] files) {
         CompileScope[] scopes = new CompileScope[files.length];
         for (int i = 0; i < files.length; i++) {
             scopes[i] = new OneProjectItemCompileScope(myProject, files[i]);
@@ -242,7 +254,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     @Override
     @Nonnull
     @RequiredReadAction
-    public CompileScope createModuleCompileScope(@Nonnull final Module module, boolean includeDependentModules, boolean includeTestScope) {
+    public CompileScope createModuleCompileScope(@Nonnull Module module, boolean includeDependentModules, boolean includeTestScope) {
         FileIndexCompileScope scope = myProject.getApplication()
             .getExtensionPoint(CompileModuleScopeFactory.class)
             .computeSafeIfAny(compileModuleScopeFactory -> compileModuleScopeFactory.createScope(
@@ -256,11 +268,11 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
         return new ModuleCompileScope(module, includeDependentModules, includeTestScope);
     }
 
-    @RequiredReadAction
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public CompileScope createModulesCompileScope(
-        @Nonnull final Module[] modules,
+        @Nonnull Module[] modules,
         boolean includeDependentModules,
         boolean includeTestScope
     ) {
@@ -271,12 +283,12 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
         return new CompositeScope(list);
     }
 
-    @RequiredReadAction
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public CompileScope createModuleGroupCompileScope(
-        @Nonnull final Project project,
-        @Nonnull final Module[] modules,
+        @Nonnull Project project,
+        @Nonnull Module[] modules,
         boolean includeDependentModules,
         boolean includeTestScope
     ) {
@@ -289,8 +301,9 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
     @Nullable
     @Override
+    @RequiredReadAction
     public Element getState() {
-        final Element state = new Element("state");
+        Element state = new Element("state");
         CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
         configuration.getState(state);
 

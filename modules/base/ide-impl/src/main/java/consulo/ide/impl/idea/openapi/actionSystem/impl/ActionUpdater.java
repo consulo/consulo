@@ -20,6 +20,7 @@ import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.collection.*;
@@ -64,13 +65,15 @@ public class ActionUpdater {
 
     private boolean myAllowPartialExpand = true;
 
-    public ActionUpdater(ActionManager actionManager,
-                         boolean isInModalContext,
-                         PresentationFactory presentationFactory,
-                         DataContext dataContext,
-                         String place,
-                         boolean isContextMenuAction,
-                         boolean isToolbarAction) {
+    public ActionUpdater(
+        ActionManager actionManager,
+        boolean isInModalContext,
+        PresentationFactory presentationFactory,
+        DataContext dataContext,
+        String place,
+        boolean isContextMenuAction,
+        boolean isToolbarAction
+    ) {
         myProject = dataContext.getData(Project.KEY);
         myActionManager = actionManager;
         myModalContext = isInModalContext;
@@ -79,23 +82,33 @@ public class ActionUpdater {
         myPlace = place;
         myContextMenuAction = isContextMenuAction;
         myToolbarAction = isToolbarAction;
-        myRealUpdateStrategy = new UpdateStrategy(action -> {
-            // clone the presentation to avoid partially changing the cached one if update is interrupted
-            Presentation presentation = ActionUpdateEdtExecutor.computeOnEdt(() -> myFactory.getPresentation(action).clone());
-            presentation.setEnabledAndVisible(true);
-            Supplier<Boolean> doUpdate = () -> doUpdate(myModalContext, action, createActionEvent(action, presentation));
-            boolean success = callAction(action, "update", doUpdate);
-            return success ? presentation : null;
-        },
-            group -> callAction(group,
+        myRealUpdateStrategy = new UpdateStrategy(
+            action -> {
+                // clone the presentation to avoid partially changing the cached one if update is interrupted
+                Presentation presentation = ActionUpdateEdtExecutor.computeOnEdt(() -> myFactory.getPresentation(action).clone());
+                presentation.setEnabledAndVisible(true);
+                Supplier<Boolean> doUpdate = () -> doUpdate(myModalContext, action, createActionEvent(action, presentation));
+                boolean success = callAction(action, "update", doUpdate);
+                return success ? presentation : null;
+            },
+            group -> callAction(
+                group,
                 "getChildren",
-                () -> group.getChildren(createActionEvent(group,
-                    orDefault(group,
+                () -> group.getChildren(createActionEvent(
+                    group,
+                    orDefault(
+                        group,
                         myUpdatedPresentations
-                            .get(group))))),
-            group -> callAction(group,
+                            .get(group)
+                    )
+                ))
+            ),
+            group -> callAction(
+                group,
                 "canBePerformed",
-                () -> group.canBePerformed(getDataContext(group))));
+                () -> group.canBePerformed(getDataContext(group))
+            )
+        );
         myCheapStrategy = new UpdateStrategy(myFactory::getPresentation, group -> group.getChildren(null), group -> true);
     }
 
@@ -127,7 +140,7 @@ public class ActionUpdater {
     }
 
     private static <T> T callAction(AnAction action, String operation, Supplier<T> call) {
-        if (isUpdateInBackground(action) || Application.get().isDispatchThread()) {
+        if (isUpdateInBackground(action) || UIAccess.isUIThread()) {
             return call.get();
         }
 
@@ -335,12 +348,12 @@ public class ActionUpdater {
                 }
 
                 if (hideDisabled && !(child instanceof CompactActionGroup)) {
-                    return Collections.singletonList(new EmptyAction.DelegatingCompactActionGroup((ActionGroup) child));
+                    return Collections.singletonList(new EmptyAction.DelegatingCompactActionGroup((ActionGroup)child));
                 }
                 return Collections.singletonList(child);
             }
 
-            return doExpandActionGroup((ActionGroup) child, hideDisabled || actionGroup instanceof CompactActionGroup, strategy);
+            return doExpandActionGroup((ActionGroup)child, hideDisabled || actionGroup instanceof CompactActionGroup, strategy);
         }
 
         return Collections.singletonList(child);
@@ -363,7 +376,7 @@ public class ActionUpdater {
                 if (!(o instanceof ActionGroup)) {
                     return null;
                 }
-                ActionGroup oo = (ActionGroup) o;
+                ActionGroup oo = (ActionGroup)o;
                 Presentation presentation = update(oo, strategy);
                 if (presentation == null || !presentation.isVisible()) {
                     return null;
@@ -409,14 +422,16 @@ public class ActionUpdater {
     }
 
     private AnActionEvent createActionEvent(AnAction action, Presentation presentation) {
-        AnActionEvent event = new AnActionEvent(null,
+        AnActionEvent event = new AnActionEvent(
+            null,
             getDataContext(action),
             myPlace,
             presentation,
             myActionManager,
             0,
             myContextMenuAction,
-            myToolbarAction);
+            myToolbarAction
+        );
         event.setInjectedContext(action.isInInjectedContext());
         return event;
     }
@@ -523,9 +538,11 @@ public class ActionUpdater {
         final Function<ActionGroup, AnAction[]> getChildren;
         final Predicate<ActionGroup> canBePerformed;
 
-        UpdateStrategy(Function<AnAction, Presentation> update,
-                       Function<ActionGroup, AnAction[]> getChildren,
-                       Predicate<ActionGroup> canBePerformed) {
+        UpdateStrategy(
+            Function<AnAction, Presentation> update,
+            Function<ActionGroup, AnAction[]> getChildren,
+            Predicate<ActionGroup> canBePerformed
+        ) {
             this.update = update;
             this.getChildren = getChildren;
             this.canBePerformed = canBePerformed;

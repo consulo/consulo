@@ -129,7 +129,7 @@ public class BraceHighlightingHandler {
         if (!isValidFile(psiFile)) {
             return;
         }
-        Application app = Application.get();
+        Application app = project.getApplication();
         app.executeOnPooledThread(() -> {
             if (!app.tryRunReadAction(() -> {
                 PsiFile injected;

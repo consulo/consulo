@@ -32,7 +32,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Conditions;
 import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -48,7 +47,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
 
     @SuppressWarnings("UnusedDeclaration")
     public ConsoleExecuteAction(@Nonnull LanguageConsoleView console, @Nonnull BaseConsoleExecuteActionHandler executeActionHandler) {
-        this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, Conditions.<LanguageConsoleView>alwaysTrue());
+        this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, Predicates.<LanguageConsoleView>alwaysTrue());
     }
 
     public ConsoleExecuteAction(

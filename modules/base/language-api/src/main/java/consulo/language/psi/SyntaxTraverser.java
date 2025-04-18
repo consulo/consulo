@@ -20,13 +20,12 @@ import java.util.LinkedList;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static consulo.util.lang.function.Conditions.compose;
+import static consulo.util.lang.function.Predicates.compose;
 
 /**
  * @author gregsh
  */
 public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser<T>> implements UserDataHolder {
-
     @Nonnull
     public static ApiEx<PsiElement> psiApi() {
         return PsiApi.INSTANCE;

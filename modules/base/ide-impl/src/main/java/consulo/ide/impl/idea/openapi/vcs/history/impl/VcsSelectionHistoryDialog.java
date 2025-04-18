@@ -53,7 +53,7 @@ import consulo.ui.ex.awt.util.Update;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.history.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -489,7 +489,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
             return selectedObject instanceof CurrentRevision ? null : selectedObject;
         }
         else if (VcsDataKeys.VCS_FILE_REVISIONS == dataId) {
-            List<VcsFileRevision> revisions = ContainerUtil.filter(myList.getSelectedObjects(), Conditions.notEqualTo(myLocalRevision));
+            List<VcsFileRevision> revisions = ContainerUtil.filter(myList.getSelectedObjects(), Predicates.notEqualTo(myLocalRevision));
             return ArrayUtil.toObjectArray(revisions, VcsFileRevision.class);
         }
         else if (VcsDataKeys.VCS == dataId) {
