@@ -32,8 +32,6 @@ import java.util.stream.Stream;
 public sealed interface ExtensionStream<T> permits EmptyExtensionStream, ExtensionStreamImpl {
     <R> ExtensionStream<R> map(Function<? super T, ? extends R> mapper);
 
-    <R> ExtensionStream<R> mapNonnull(Function<? super T, ? extends R> mapper);
-
     ExtensionStream<T> filter(Predicate<? super T> predicate);
 
     ExtensionStream<T> distinct();

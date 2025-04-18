@@ -107,7 +107,8 @@ public class VcsLogDataImpl implements VcsLogData {
         VcsLogProgress progress = new VcsLogProgress();
         Disposer.register(this, progress);
 
-        VcsLogCachesInvalidator invalidator = CachesInvalidator.EP_NAME.findExtensionOrFail(VcsLogCachesInvalidator.class);
+        VcsLogCachesInvalidator invalidator = myProject.getApplication().getExtensionPoint(CachesInvalidator.class)
+            .findExtensionOrFail(VcsLogCachesInvalidator.class);
         if (invalidator.isValid()) {
             myHashMap = createLogHashMap();
             myIndex = new VcsLogPersistentIndex(myProject, myHashMap, progress, logProviders, myFatalErrorsConsumer, this);

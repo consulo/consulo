@@ -15,6 +15,7 @@
  */
 package consulo.module.impl.internal.layer;
 
+import consulo.application.Application;
 import consulo.application.util.function.CommonProcessors;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.content.ContentFolderTypeProvider;
@@ -34,7 +35,6 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.impl.internal.layer.orderEntry.ModuleOrderEntryImpl;
 import consulo.module.impl.internal.layer.orderEntry.OrderRootsCache;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PathsList;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -72,14 +72,11 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
             @Nonnull
             @Override
             public VirtualFile[] apply(ModuleRootModel t, Predicate<ContentFolderTypeProvider> v) {
-                List<VirtualFile> files = new ArrayList<>(5);
                 ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(t.getModule());
-                for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensionList()) {
-                    if (v.test(contentFolderTypeProvider)) {
-                        ContainerUtil.addIfNotNull(files, compilerPathsManager.getCompilerOutput(contentFolderTypeProvider));
-                    }
-                }
-                return VirtualFileUtil.toVirtualFileArray(files);
+                return VirtualFileUtil.toVirtualFileArray(
+                    Application.get().getExtensionPoint(ContentFolderTypeProvider.class)
+                        .collectExtensionsToListSafe(provider -> v.test(provider) ? compilerPathsManager.getCompilerOutput(provider) : null)
+                );
             }
         };
 
@@ -88,14 +85,11 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
             @Nonnull
             @Override
             public String[] apply(ModuleRootModel t, Predicate<ContentFolderTypeProvider> v) {
-                List<String> urls = new ArrayList<>(5);
                 ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(t.getModule());
-                for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensionList()) {
-                    if (v.test(contentFolderTypeProvider)) {
-                        ContainerUtil.addIfNotNull(urls, compilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider));
-                    }
-                }
-                return ArrayUtil.toStringArray(urls);
+                return ArrayUtil.toStringArray(
+                    Application.get().getExtensionPoint(ContentFolderTypeProvider.class)
+                        .collectExtensionsToListSafe(provider -> v.test(provider) ? compilerPathsManager.getCompilerOutputUrl(provider) : null)
+                );
             }
         };
 

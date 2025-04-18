@@ -35,7 +35,6 @@ public class ExtensionPointTest {
         };
 
         assertThat(emptyStream.map(Function.identity())).isSameAs(emptyStream);
-        assertThat(emptyStream.mapNonnull(Function.identity())).isSameAs(emptyStream);
         assertThat(emptyStream.filter(obj -> true)).isSameAs(emptyStream);
         assertThat(emptyStream.distinct()).isSameAs(emptyStream);
         assertThat(emptyStream.peek(doNothing)).isSameAs(emptyStream);
@@ -54,7 +53,6 @@ public class ExtensionPointTest {
         };
 
         assertThat(of(values).map(Function.identity()).toList()).isEqualTo(values);
-        assertThat(of(values).mapNonnull(Function.identity()).toList()).isEqualTo(values);
         assertThat(of(values).filter(obj -> true).toList()).isEqualTo(values);
         assertThat(of(values).peek(doNothing).toList()).isEqualTo(values);
 

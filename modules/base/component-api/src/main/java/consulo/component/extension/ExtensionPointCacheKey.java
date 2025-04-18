@@ -16,49 +16,53 @@
 package consulo.component.extension;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 23-Jun-22
+ * @since 2022-06-23
  */
 public final class ExtensionPointCacheKey<E, R> {
-  @Nonnull
-  public static <E1, R1> ExtensionPointCacheKey<E1, R1> create(@Nonnull String keyName, @Nonnull Function<ExtensionWalker<E1>, R1> factory) {
-    return new ExtensionPointCacheKey<>(keyName, factory);
-  }
+    @Nonnull
+    public static <E1, R1> ExtensionPointCacheKey<E1, R1> create(
+        @Nonnull String keyName,
+        @Nonnull Function<ExtensionWalker<E1>, R1> factory
+    ) {
+        return new ExtensionPointCacheKey<>(keyName, factory);
+    }
 
-  @Nonnull
-  public static <E1, K1> ExtensionPointCacheKey<E1, Map<K1, E1>> groupBy(@Nonnull String keyName, @Nonnull Function<E1, K1> keyMapper) {
-    return create(keyName, walker -> {
-      Map<K1, E1> map = new HashMap<>();
-      walker.walk(extension -> map.put(keyMapper.apply(extension), extension));
-      return map;
-    });
-  }
+    @Nonnull
+    public static <E1, K1> ExtensionPointCacheKey<E1, Map<K1, E1>> groupBy(@Nonnull String keyName, @Nonnull Function<E1, K1> keyMapper) {
+        return create(keyName, walker -> {
+            Map<K1, E1> map = new HashMap<>();
+            walker.walk(extension -> map.put(keyMapper.apply(extension), extension));
+            return map;
+        });
+    }
 
-  private final String myKeyName;
-  private final Function<ExtensionWalker<E>, R> myFactory;
+    private final String myKeyName;
+    private final Function<ExtensionWalker<E>, R> myFactory;
 
-  private ExtensionPointCacheKey(String keyName, Function<ExtensionWalker<E>, R> factory) {
-    myKeyName = keyName;
-    myFactory = factory;
-  }
+    private ExtensionPointCacheKey(String keyName, Function<ExtensionWalker<E>, R> factory) {
+        myKeyName = keyName;
+        myFactory = factory;
+    }
 
-  @Nonnull
-  public String getKeyName() {
-    return myKeyName;
-  }
+    @Nonnull
+    public String getKeyName() {
+        return myKeyName;
+    }
 
-  @Nonnull
-  public Function<ExtensionWalker<E>, R> getFactory() {
-    return myFactory;
-  }
+    @Nonnull
+    public Function<ExtensionWalker<E>, R> getFactory() {
+        return myFactory;
+    }
 
-  @Override
-  public String toString() {
-    return myKeyName;
-  }
+    @Override
+    public String toString() {
+        return myKeyName;
+    }
 }

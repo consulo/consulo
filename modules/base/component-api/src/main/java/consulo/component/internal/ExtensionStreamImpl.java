@@ -57,22 +57,6 @@ public final class ExtensionStreamImpl<T> implements ExtensionStream<T> {
     }
 
     @Override
-    public <R> ExtensionStream<R> mapNonnull(Function<? super T, ? extends R> mapper) {
-        return ExtensionStream.of(mySubStream.flatMap(value -> {
-            try {
-                R result = mapper.apply(value);
-                if (result != null) {
-                    return Stream.of(result);
-                }
-            }
-            catch (Throwable e) {
-                checkException(e, value);
-            }
-            return Stream.empty();
-        }));
-    }
-
-    @Override
     public ExtensionStream<T> filter(Predicate<? super T> predicate) {
         return ExtensionStream.of(mySubStream.flatMap(value -> {
             try {

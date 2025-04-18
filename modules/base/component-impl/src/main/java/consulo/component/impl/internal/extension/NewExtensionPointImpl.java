@@ -49,7 +49,7 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 17-Jun-22
+ * @since 2022-06-17
  */
 public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     private static final Logger LOG = Logger.getInstance(NewExtensionPointImpl.class);
@@ -98,11 +98,13 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     private volatile Boolean myHasAnyExtension;
 
     @SuppressWarnings("unchecked")
-    public NewExtensionPointImpl(String apiClassName,
-                                 List<InjectingBinding> bindings,
-                                 ComponentManager componentManager,
-                                 Runnable checkCanceled,
-                                 ComponentScope componentScope) {
+    public NewExtensionPointImpl(
+        String apiClassName,
+        List<InjectingBinding> bindings,
+        ComponentManager componentManager,
+        Runnable checkCanceled,
+        ComponentScope componentScope
+    ) {
         myApiClassName = apiClassName;
         myCheckCanceled = checkCanceled;
         myComponentManager = componentManager;
@@ -151,7 +153,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
             }
         }
         LoadingOrder.sort(orders);
-        return orders.stream().map(orderable -> (K) orderable.getObjectValue()).toList();
+        return orders.stream().map(orderable -> (K)orderable.getObjectValue()).toList();
     }
 
     @Nullable
@@ -168,7 +170,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
             return instance == null ? ObjectUtil.NULL : instance;
         });
 
-        return result == ObjectUtil.NULL ? null : (K) result;
+        return result == ObjectUtil.NULL ? null : (K)result;
     }
 
     @Nonnull
@@ -180,7 +182,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
             caches = myCaches = Maps.newConcurrentHashMap(HashingStrategy.identity());
         }
 
-        return (K) caches.computeIfAbsent(key, k -> key.getFactory().apply(new ExtensionWalker<>() {
+        return (K)caches.computeIfAbsent(key, k -> key.getFactory().apply(new ExtensionWalker<>() {
             @Override
             public void walk(@Nonnull Consumer<T> consumer) {
                 forEachExtensionSafe(consumer);
@@ -233,7 +235,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
                     ExtensionInstanceRef.CURRENT_CREATION.set(instanceRef);
                 }
 
-                extension = (T) injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
+                extension = (T)injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
 
                 if (instanceRef != null) {
                     ExtensionInstanceRef.CURRENT_CREATION.remove();
@@ -255,7 +257,6 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
                     continue;
                 }
 
-
                 extensions.add(pair);
             }
             catch (ProcessCanceledException e) {
@@ -274,7 +275,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
                     assert descriptor != null;
 
                     if (extender.hasAnyExtensions(myComponentManager)) {
-                        extender.extend(myComponentManager, it -> extensions.add(Pair.create((T) it, descriptor)));
+                        extender.extend(myComponentManager, it -> extensions.add(Pair.create((T)it, descriptor)));
                     }
                 }
             }
@@ -322,7 +323,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0; i < extensionCache.size(); i++) {
+        for (int i = 0, n = extensionCache.size(); i < n; i++) {
             T t = extensionCache.get(i).getKey();
             try {
                 if (predicate.test(t)) {
@@ -336,14 +337,13 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return null;
     }
 
-
     @Nullable
     @Override
     public <R> R computeSafeIfAny(@Nonnull Function<? super T, ? extends R> processor) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0; i < extensionCache.size(); i++) {
+        for (int i = 0, n = extensionCache.size(); i < n; i++) {
             T t = extensionCache.get(i).getKey();
             try {
                 R r = processor.apply(t);
@@ -358,12 +358,36 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return null;
     }
 
+    @Nonnull
+    @Override
+    public <R, CR extends Collection<? super R>> CR collectExtensionsSafe(
+        @Nonnull CR results,
+        @Nonnull Function<? super T, ? extends R> processor
+    ) {
+        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0, n = extensionCache.size(); i < n; i++) {
+            T t = extensionCache.get(i).getKey();
+            try {
+                R result = processor.apply(t);
+                if (result != null) {
+                    results.add(result);
+                }
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, t);
+            }
+        }
+        return results;
+    }
+
     @Override
     public void forEachExtensionSafe(@Nonnull Consumer<? super T> consumer) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0; i < extensionCache.size(); i++) {
+        for (int i = 0, n = extensionCache.size(); i < n; i++) {
             T t = extensionCache.get(i).getKey();
             try {
                 consumer.accept(t);

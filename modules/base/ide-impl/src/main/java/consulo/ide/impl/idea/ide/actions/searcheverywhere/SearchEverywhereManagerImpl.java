@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
@@ -73,9 +72,8 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
             new RunConfigurationsSEContributor(project, contextComponent, () -> mySearchEverywhereUI.getSearchField().getValue())
         );
         List<SearchEverywhereContributor<?>> contributors = new ArrayList<>(serviceContributors);
-        myProject.getApplication().getExtensionPoint(SearchEverywhereContributorFactory.class).safeStream()
-            .mapNonnull(factory -> factory.createContributor(initEvent))
-            .forEach(contributors::add);
+        myProject.getApplication().getExtensionPoint(SearchEverywhereContributorFactory.class)
+            .collectExtensionsSafe(contributors, factory -> factory.createContributor(initEvent));
         Collections.sort(contributors, Comparator.comparingInt(SearchEverywhereContributor::getSortWeight));
 
         mySearchEverywhereUI = createView(myProject, contributors);

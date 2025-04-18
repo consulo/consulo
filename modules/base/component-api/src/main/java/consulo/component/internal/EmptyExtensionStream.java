@@ -37,12 +37,6 @@ public final class EmptyExtensionStream<T> implements ExtensionStream<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <R> ExtensionStream<R> mapNonnull(Function<? super T, ? extends R> mapper) {
-        return INSTANCE;
-    }
-
-    @Override
     public ExtensionStream<T> filter(Predicate<? super T> predicate) {
         return this;
     }

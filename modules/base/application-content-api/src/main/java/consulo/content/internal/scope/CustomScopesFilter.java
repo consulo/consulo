@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.content.internal.scope;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.NamedScope;
 
 import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CustomScopesFilter {
-    ExtensionPointName<CustomScopesFilter> EP_NAME = ExtensionPointName.create(CustomScopesFilter.class);
-
     boolean excludeScope(@Nonnull NamedScope scope);
 }

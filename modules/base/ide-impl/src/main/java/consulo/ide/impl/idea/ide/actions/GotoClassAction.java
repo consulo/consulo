@@ -34,6 +34,7 @@ import consulo.navigation.NavigationItem;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -62,6 +63,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -80,8 +82,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     static void invokeGoToFile(@Nonnull Project project, @Nonnull AnActionEvent e) {
         String actionTitle =
             StringUtil.trimEnd(ObjectUtil.notNull(e.getPresentation().getText(), GotoClassPresentationUpdater.getActionTitle()), "...");
-        LocalizeValue message = IdeLocalize.goToClassDumbModeMessage(actionTitle);
-        DumbService.getInstance(project).showDumbModeNotification(message.get());
+        DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.goToClassDumbModeMessage(actionTitle));
         AnAction action = ActionManager.getInstance().getAction(GotoFileAction.ID);
         InputEvent event = ActionCommand.getInputEvent(GotoFileAction.ID);
         Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -113,6 +114,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
                 }
 
                 @Override
+                @RequiredReadAction
                 public void elementChosen(ChooseByNamePopup popup, Object element) {
                     handleSubMemberNavigation(popup, element);
                 }
@@ -122,6 +124,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         );
     }
 
+    @RequiredReadAction
     static void handleSubMemberNavigation(ChooseByNamePopup popup, Object element) {
         if (element instanceof PsiElement psiElement0 && psiElement0.isValid()) {
             PsiElement psiElement = getElement(psiElement0, popup);
@@ -257,11 +260,13 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
     @Nonnull
     private static PsiElement[] getAnonymousClasses(@Nonnull PsiElement element) {
-        return element.getApplication().getExtensionPoint(AnonymousElementProvider.class).safeStream()
-            .mapNonnull(provider -> provider.getAnonymousElements(element))
-            .filter(elements -> elements.length > 0)
-            .findFirst()
-            .orElse(PsiElement.EMPTY_ARRAY);
+        return element.getApplication().getExtensionPoint(AnonymousElementProvider.class).computeSafeIfAny(
+            provider -> {
+                PsiElement[] elems = provider.getAnonymousElements(element);
+                return elems != null && elems.length > 0 ? elems : null;
+            },
+            PsiElement.EMPTY_ARRAY
+        );
     }
 
     @Override

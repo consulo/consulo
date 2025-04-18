@@ -24,6 +24,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
@@ -32,17 +33,17 @@ public class SaveFileAsTemplateAction extends AnAction {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
-        VirtualFile file = e.getData(VirtualFile.KEY);
-        String extension = file.getExtension();
+        String fileText = e.getRequiredData(PlatformDataKeys.FILE_TEXT);
+        VirtualFile file = e.getRequiredData(VirtualFile.KEY);
+        String extension = StringUtil.notNullize(file.getExtension());
         String nameWithoutExtension = file.getNameWithoutExtension();
         AllFileTemplatesConfigurable fileTemplateOptions = new AllFileTemplatesConfigurable(project);
         ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(project, fileTemplateOptions);
         PsiFile psiFile = e.getData(PsiFile.KEY);
-        String textFromHandler = project.getApplication().getExtensionPoint(SaveFileAsTemplateHandler.class).safeStream()
-            .mapNonnull(handler -> handler.getTemplateText(psiFile, fileText, nameWithoutExtension))
-            .findFirst()
-            .orElse(fileText);
+        String textFromHandler = project.getApplication().getExtensionPoint(SaveFileAsTemplateHandler.class).computeSafeIfAny(
+            handler -> handler.getTemplateText(psiFile, fileText, nameWithoutExtension),
+            fileText
+        );
         fileTemplateOptions.createNewTemplate(nameWithoutExtension, extension, textFromHandler);
         dialog.show();
     }
@@ -52,6 +53,6 @@ public class SaveFileAsTemplateAction extends AnAction {
     public void update(@Nonnull AnActionEvent e) {
         VirtualFile file = e.getData(VirtualFile.KEY);
         String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
-        e.getPresentation().setEnabled((fileText != null) && (file != null));
+        e.getPresentation().setEnabled(fileText != null && file != null);
     }
 }
