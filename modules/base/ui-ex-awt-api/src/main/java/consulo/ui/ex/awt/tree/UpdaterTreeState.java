@@ -5,7 +5,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,13 +35,13 @@ public class UpdaterTreeState {
         myUi = ui;
 
         if (!isEmpty) {
-            final JTree tree = myUi.getTree();
+            JTree tree = myUi.getTree();
             putAll(addPaths(tree.getSelectionPaths()), myToSelect);
             putAll(addPaths(tree.getExpandedDescendants(new TreePath(tree.getModel().getRoot()))), myToExpand);
         }
     }
 
-    private static void putAll(final Set<Object> source, final Map<Object, Object> target) {
+    private static void putAll(Set<Object> source, Map<Object, Object> target) {
         for (Object o : source) {
             target.put(o, o);
         }
@@ -73,14 +73,11 @@ public class UpdaterTreeState {
 
         if (elements != null) {
             for (Object each : elements) {
-                final Object node = ((TreePath)each).getLastPathComponent();
-                if (node instanceof DefaultMutableTreeNode) {
-                    final Object descriptor = ((DefaultMutableTreeNode)node).getUserObject();
-                    if (descriptor instanceof NodeDescriptor) {
-                        final Object element = myUi.getElementFromDescriptor((NodeDescriptor)descriptor);
-                        if (element != null) {
-                            target.add(element);
-                        }
+                if (((TreePath)each).getLastPathComponent() instanceof DefaultMutableTreeNode defMutableTreeNode
+                    && defMutableTreeNode.getUserObject() instanceof NodeDescriptor nodeDescriptor) {
+                    Object element = myUi.getElementFromDescriptor(nodeDescriptor);
+                    if (element != null) {
+                        target.add(element);
                     }
                 }
             }
@@ -141,16 +138,16 @@ public class UpdaterTreeState {
 
         setProcessingNow(true);
 
-        final Object[] toSelect = getToSelect();
-        final Object[] toExpand = getToExpand();
+        Object[] toSelect = getToSelect();
+        Object[] toExpand = getToExpand();
 
 
-        final Map<Object, Predicate> adjusted = new WeakHashMap<>(myAdjustedSelection);
+        Map<Object, Predicate> adjusted = new WeakHashMap<>(myAdjustedSelection);
 
         clearSelection();
         clearExpansion();
 
-        final Set<Object> originallySelected = myUi.getSelectedElements();
+        Set<Object> originallySelected = myUi.getSelectedElements();
 
         myUi._select(toSelect, new TreeRunnable("UpdaterTreeState.restore") {
             @Override
@@ -192,7 +189,7 @@ public class UpdaterTreeState {
                         if (!children.contains(eachToSelect)) {
                             toSelect.remove();
                             if (!myToSelect.containsKey(readyElement) && !myUi.getSelectedElements().contains(eachToSelect)) {
-                                addAdjustedSelection(eachToSelect, Conditions.alwaysFalse(), null);
+                                addAdjustedSelection(eachToSelect, Predicates.alwaysFalse(), null);
                             }
                         }
                     }
@@ -205,12 +202,12 @@ public class UpdaterTreeState {
         myCanRunRestore = true;
     }
 
-    private void processUnsuccessfulSelections(final Object[] toSelect, Function<Object, Object> restore, Set<Object> originallySelected) {
-        final Set<Object> selected = myUi.getSelectedElements();
+    private void processUnsuccessfulSelections(Object[] toSelect, Function<Object, Object> restore, Set<Object> originallySelected) {
+        Set<Object> selected = myUi.getSelectedElements();
 
         boolean wasFullyRejected = false;
         if (toSelect.length > 0 && !selected.isEmpty() && !originallySelected.containsAll(selected)) {
-            final Set<Object> successfulSelections = new HashSet<>();
+            Set<Object> successfulSelections = new HashSet<>();
             ContainerUtil.addAll(successfulSelections, toSelect);
 
             successfulSelections.retainAll(selected);
@@ -231,10 +228,10 @@ public class UpdaterTreeState {
         }
     }
 
-    private ActionCallback processAdjusted(final Map<Object, Predicate> adjusted, final Set<Object> originallySelected) {
-        final ActionCallback result = new ActionCallback();
+    private ActionCallback processAdjusted(Map<Object, Predicate> adjusted, Set<Object> originallySelected) {
+        ActionCallback result = new ActionCallback();
 
-        final Set<Object> allSelected = myUi.getSelectedElements();
+        Set<Object> allSelected = myUi.getSelectedElements();
 
         Set<Object> toSelect = new HashSet<>();
         for (Map.Entry<Object, Predicate> entry : adjusted.entrySet()) {
@@ -244,7 +241,7 @@ public class UpdaterTreeState {
                 continue;
             }
 
-            for (final Object eachSelected : allSelected) {
+            for (Object eachSelected : allSelected) {
                 if (isParentOrSame(key, eachSelected)) {
                     continue;
                 }
@@ -255,13 +252,13 @@ public class UpdaterTreeState {
             }
         }
 
-        final Object[] newSelection = ArrayUtil.toObjectArray(toSelect);
+        Object[] newSelection = ArrayUtil.toObjectArray(toSelect);
 
         if (newSelection.length > 0) {
             myUi._select(newSelection, new TreeRunnable("UpdaterTreeState.processAjusted") {
                 @Override
                 public void perform() {
-                    final Set<Object> hangByParent = new HashSet<>();
+                    Set<Object> hangByParent = new HashSet<>();
                     processUnsuccessfulSelections(newSelection, o -> {
                         if (myUi.isInStructure(o) && !adjusted.get(o).test(o)) {
                             hangByParent.add(o);
@@ -306,12 +303,12 @@ public class UpdaterTreeState {
         return result;
     }
 
-    private void processNextHang(Object element, final ActionCallback callback) {
+    private void processNextHang(Object element, ActionCallback callback) {
         if (element == null || myUi.getSelectedElements().contains(element)) {
             callback.setDone();
         }
         else {
-            final Object nextElement = myUi.getTreeStructure().getParentElement(element);
+            Object nextElement = myUi.getTreeStructure().getParentElement(element);
             if (nextElement == null) {
                 callback.setDone();
             }
@@ -347,11 +344,11 @@ public class UpdaterTreeState {
         myAdjustedSelection = new WeakHashMap<>();
     }
 
-    public void addSelection(final Object element) {
+    public void addSelection(Object element) {
         myToSelect.put(element, element);
     }
 
-    void addAdjustedSelection(final Object element, Predicate isExpired, @Nullable Object adjustmentCause) {
+    void addAdjustedSelection(Object element, Predicate isExpired, @Nullable Object adjustmentCause) {
         myAdjustedSelection.put(element, isExpired);
         if (adjustmentCause != null) {
             myAdjustmentCause2Adjustment.put(adjustmentCause, element);

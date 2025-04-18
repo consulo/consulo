@@ -10,7 +10,7 @@ import consulo.ui.ex.content.ContentUI;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.util.collection.JBIterable;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +41,7 @@ final class PanelContentUI implements ContentUI {
     manager.addContentManagerListener(new ContentManagerListener() {
       @RequiredUIAccess
       @Override
-      public void selectionChanged(final ContentManagerEvent event) {
+      public void selectionChanged(ContentManagerEvent event) {
         initUI();
         if (ContentManagerEvent.ContentOperation.add == event.getOperation()) {
           showContent(event.getContent());
@@ -68,7 +68,7 @@ final class PanelContentUI implements ContentUI {
                            JComponent component = content.getComponent();
                            return myPanel != component.getParent() ? component : null;
                          })
-                         .filter(Conditions.notNull())
+                         .filter(Predicates.notNull())
                          .iterator();
       });
   }

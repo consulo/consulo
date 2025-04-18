@@ -16,7 +16,7 @@
 package consulo.ui.ex.awt.tree;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ReadAction;
+import consulo.application.AccessRule;
 import consulo.application.util.Queryable;
 import consulo.disposer.Disposer;
 import consulo.platform.Platform;
@@ -31,8 +31,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -49,6 +48,7 @@ import java.awt.event.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class Tree extends JTree implements ComponentWithEmptyText, ComponentWithExpandableItems<Integer>, Autoscroll, Queryable, ComponentWithFileColors {
     private final StatusText myEmptyText;
@@ -99,12 +99,12 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
             return true;
         }
         if (!isRootVisible()) {
-            final int childCount = model.getChildCount(model.getRoot());
+            int childCount = model.getChildCount(model.getRoot());
             if (childCount == 0) {
                 return true;
             }
             if (childCount == 1) {
-                final Object node = model.getChild(model.getRoot(), 0);
+                Object node = model.getChild(model.getRoot(), 0);
                 if (node instanceof LoadingNode) {
                     return true;
                 }
@@ -123,12 +123,12 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
     /**
      * @return a strategy which determines if a wide selection should be drawn for a target row (it's number is
-     * {@link Condition#value(Object) given} as an argument to the strategy)
+     * {@link Predicate#test(Object) given} as an argument to the strategy)
      */
     @SuppressWarnings("unchecked")
     @Nonnull
-    protected Condition<Integer> getWideSelectionBackgroundCondition() {
-        return Conditions.alwaysTrue();
+    protected Predicate<Integer> getWideSelectionBackgroundCondition() {
+        return Predicates.alwaysTrue();
     }
 
     @Override
@@ -196,13 +196,13 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
     @Override
     public void paint(Graphics g) {
-        final Rectangle visible = getVisibleRect();
+        Rectangle visible = getVisibleRect();
 
         boolean canHoldSelection = false;
         TreePath[] paths = getSelectionModel().getSelectionPaths();
         if (paths != null) {
             for (TreePath each : paths) {
-                final Rectangle selection = getPathBounds(each);
+                Rectangle selection = getPathBounds(each);
                 if (selection != null && (g.getClipBounds().intersects(selection) || g.getClipBounds().contains(selection))) {
                     if (myBusy && myBusyIcon != null) {
                         Rectangle busyIconBounds = myBusyIcon.getBounds();
@@ -324,18 +324,18 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         myEmptyText.paint(this, g);
     }
 
-    protected void paintFileColorGutter(final Graphics g) {
-        final GraphicsConfig config = new GraphicsConfig(g);
-        final Rectangle rect = getVisibleRect();
-        final int firstVisibleRow = getClosestRowForLocation(rect.x, rect.y);
-        final int lastVisibleRow = getClosestRowForLocation(rect.x, rect.y + rect.height);
+    protected void paintFileColorGutter(Graphics g) {
+        GraphicsConfig config = new GraphicsConfig(g);
+        Rectangle rect = getVisibleRect();
+        int firstVisibleRow = getClosestRowForLocation(rect.x, rect.y);
+        int lastVisibleRow = getClosestRowForLocation(rect.x, rect.y + rect.height);
 
         for (int row = firstVisibleRow; row <= lastVisibleRow; row++) {
-            final TreePath path = getPathForRow(row);
+            TreePath path = getPathForRow(row);
             if (path != null) {
-                final Rectangle bounds = getRowBounds(row);
+                Rectangle bounds = getRowBounds(row);
                 Object component = path.getLastPathComponent();
-                final Object[] pathObjects = path.getPath();
+                Object[] pathObjects = path.getPath();
                 if (component instanceof LoadingNode && pathObjects.length > 1) {
                     component = pathObjects[pathObjects.length - 2];
                 }
@@ -353,9 +353,9 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     @Nullable
     public ColorValue getFileColorForPath(@Nullable TreePath path) {
         if (path != null) {
-            final Object node = path.getLastPathComponent();
-            if (node instanceof DefaultMutableTreeNode) {
-                return ReadAction.compute(() -> getFileColorFor(((DefaultMutableTreeNode)node).getUserObject()));
+            Object node = path.getLastPathComponent();
+            if (node instanceof DefaultMutableTreeNode defMutableTreeNode) {
+                return AccessRule.read(() -> getFileColorFor(defMutableTreeNode.getUserObject()));
             }
         }
         return null;
@@ -383,7 +383,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
      * Another hack to match selection UI (wide) and selection behavior (narrow) in Nimbus/GTK+.
      */
     @Override
-    protected void processMouseEvent(final MouseEvent e) {
+    protected void processMouseEvent(MouseEvent e) {
         MouseEvent e2 = e;
 
         if (Platform.current().os().isMac()) {
@@ -396,9 +396,9 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         }
         else if (UIUtil.isUnderNimbusLookAndFeel() || UIUtil.isUnderGTKLookAndFeel()) {
             if (SwingUtilities.isLeftMouseButton(e) && (e.getID() == MouseEvent.MOUSE_PRESSED || e.getID() == MouseEvent.MOUSE_CLICKED)) {
-                final TreePath path = getClosestPathForLocation(e.getX(), e.getY());
+                TreePath path = getClosestPathForLocation(e.getX(), e.getY());
                 if (path != null) {
-                    final Rectangle bounds = getPathBounds(path);
+                    Rectangle bounds = getPathBounds(path);
                     if (bounds != null &&
                         e.getY() > bounds.y && e.getY() < bounds.y + bounds.height &&
                         (e.getX() >= bounds.x + bounds.width ||
@@ -453,7 +453,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
             return;
         }
 
-        final AbstractTreeBuilder builder = AbstractTreeBuilder.getBuilderFor(this);
+        AbstractTreeBuilder builder = AbstractTreeBuilder.getBuilderFor(this);
         if (builder == null || builder.isDisposed()) {
             return;
         }
@@ -461,10 +461,10 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         GraphicsConfig config = new GraphicsConfig(g);
         config.setAntialiasing(true);
 
-        final AbstractTreeStructure structure = builder.getTreeStructure();
+        AbstractTreeStructure structure = builder.getTreeStructure();
 
         for (int eachRow = 0; eachRow < getRowCount(); eachRow++) {
-            final TreePath path = getPathForRow(eachRow);
+            TreePath path = getPathForRow(eachRow);
             PresentableNodeDescriptor node = toPresentableNode(path.getLastPathComponent());
             if (node == null) {
                 continue;
@@ -476,14 +476,17 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
             if (highlightSingleNode()) {
                 if (node.isContentHighlighted()) {
-                    final TreePath nodePath = getPath(node);
+                    TreePath nodePath = getPath(node);
 
                     Rectangle rect;
 
-                    final Rectangle parentRect = getPathBounds(nodePath);
+                    Rectangle parentRect = getPathBounds(nodePath);
                     if (isExpanded(nodePath)) {
-                        final int[] max = getMax(node, structure);
-                        rect = new Rectangle(parentRect.x, parentRect.y, Math.max((int)parentRect.getMaxX(), max[1]) - parentRect.x - 1,
+                        int[] max = getMax(node, structure);
+                        rect = new Rectangle(
+                            parentRect.x,
+                            parentRect.y,
+                            Math.max((int)parentRect.getMaxX(), max[1]) - parentRect.x - 1,
                             Math.max((int)parentRect.getMaxY(), max[0]) - parentRect.y - 1
                         );
                     }
@@ -492,7 +495,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
                     }
 
                     if (rect != null) {
-                        final Color highlightColor = getHighlightColor(node);
+                        Color highlightColor = getHighlightColor(node);
                         g.setColor(highlightColor);
                         g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 4, 4);
                         g.setColor(highlightColor.darker());
@@ -506,7 +509,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
                     continue;
                 }
 
-                final Object[] kids = structure.getChildElements(node);
+                Object[] kids = structure.getChildElements(node);
                 if (kids.length == 0) {
                     continue;
                 }
@@ -515,9 +518,8 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
                 PresentableNodeDescriptor last = null;
                 int lastIndex = -1;
                 for (int i = 0; i < kids.length; i++) {
-                    final Object kid = kids[i];
-                    if (kid instanceof PresentableNodeDescriptor) {
-                        PresentableNodeDescriptor eachKid = (PresentableNodeDescriptor)kid;
+                    Object kid = kids[i];
+                    if (kid instanceof PresentableNodeDescriptor eachKid) {
                         if (!node.isHighlightableContentNode(eachKid)) {
                             continue;
                         }
@@ -536,17 +538,14 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
                 if (isExpanded(getPath(last))) {
                     if (lastIndex + 1 < kids.length) {
-                        final Object child = kids[lastIndex + 1];
-                        if (child instanceof PresentableNodeDescriptor) {
-                            PresentableNodeDescriptor nextKid = (PresentableNodeDescriptor)child;
+                        if (kids[lastIndex + 1] instanceof PresentableNodeDescriptor nextKid) {
                             int nextRow = getRowForPath(getPath(nextKid));
                             last = toPresentableNode(getPathForRow(nextRow - 1).getLastPathComponent());
                         }
                     }
                     else {
                         NodeDescriptor parentNode = node.getParentDescriptor();
-                        if (parentNode instanceof PresentableNodeDescriptor) {
-                            final PresentableNodeDescriptor ppd = (PresentableNodeDescriptor)parentNode;
+                        if (parentNode instanceof PresentableNodeDescriptor ppd) {
                             int nodeIndex = node.getIndex();
                             if (nodeIndex + 1 < structure.getChildElements(ppd).length) {
                                 PresentableNodeDescriptor nextChild = ppd.getChildToHighlightAt(nodeIndex + 1);
@@ -590,7 +589,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
                 toPaint.width = getWidth() - toPaint.x - 4;
 
-                final Color highlightColor = getHighlightColor(node);
+                Color highlightColor = getHighlightColor(node);
                 g.setColor(highlightColor);
                 g.fillRoundRect(toPaint.x, toPaint.y, toPaint.width, toPaint.height, 4, 4);
                 g.setColor(highlightColor.darker());
@@ -605,21 +604,21 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         return DarkThemeCalculator.isDark() ? ColorUtil.shift(UIUtil.getTreeBackground(), 1.1) : UIUtil.getTreeBackground().brighter();
     }
 
-    private int[] getMax(final PresentableNodeDescriptor node, final AbstractTreeStructure structure) {
+    private int[] getMax(PresentableNodeDescriptor node, AbstractTreeStructure structure) {
         int x = 0;
         int y = 0;
-        final Object[] children = structure.getChildElements(node);
-        for (final Object child : children) {
-            if (child instanceof PresentableNodeDescriptor) {
-                final TreePath childPath = getPath((PresentableNodeDescriptor)child);
+        Object[] children = structure.getChildElements(node);
+        for (Object child : children) {
+            if (child instanceof PresentableNodeDescriptor nodeDescriptor) {
+                TreePath childPath = getPath(nodeDescriptor);
                 if (childPath != null) {
                     if (isExpanded(childPath)) {
-                        final int[] tmp = getMax((PresentableNodeDescriptor)child, structure);
+                        int[] tmp = getMax(nodeDescriptor, structure);
                         y = Math.max(y, tmp[0]);
                         x = Math.max(x, tmp[1]);
                     }
 
-                    final Rectangle r = getPathBounds(childPath);
+                    Rectangle r = getPathBounds(childPath);
                     if (r != null) {
                         y = Math.max(y, (int)r.getMaxY());
                         x = Math.max(x, (int)r.getMaxX());
@@ -632,20 +631,16 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     }
 
     @Nullable
-    private static PresentableNodeDescriptor toPresentableNode(final Object pathComponent) {
-        if (!(pathComponent instanceof DefaultMutableTreeNode)) {
+    private static PresentableNodeDescriptor toPresentableNode(Object pathComponent) {
+        if (!(pathComponent instanceof DefaultMutableTreeNode defMutableTreeNode)) {
             return null;
         }
-        final Object userObject = ((DefaultMutableTreeNode)pathComponent).getUserObject();
-        if (!(userObject instanceof PresentableNodeDescriptor)) {
-            return null;
-        }
-        return (PresentableNodeDescriptor)userObject;
+        return defMutableTreeNode.getUserObject() instanceof PresentableNodeDescriptor descriptor ? descriptor : null;
     }
 
     public TreePath getPath(PresentableNodeDescriptor node) {
-        final AbstractTreeBuilder builder = AbstractTreeBuilder.getBuilderFor(this);
-        final DefaultMutableTreeNode treeNode = builder.getNodeForElement(node);
+        AbstractTreeBuilder builder = AbstractTreeBuilder.getBuilderFor(this);
+        DefaultMutableTreeNode treeNode = builder.getNodeForElement(node);
 
         return treeNode != null ? new TreePath(treeNode.getPath()) : new TreePath(node);
     }
@@ -719,36 +714,48 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         @Override
         public void mouseExited(MouseEvent e) {
             //if (UIUtil.isUnderWin10LookAndFeel() && rollOverPath != null) {
-            //  TreeCellRenderer renderer = getCellRenderer();
-            //  if (rollOverPath.getLastPathComponent() instanceof TreeNode) {
-            //    TreeNode node = (TreeNode)rollOverPath.getLastPathComponent();
-            //    JComponent c = (JComponent)renderer
-            //            .getTreeCellRendererComponent(Tree.this, node, isPathSelected(rollOverPath), isExpanded(rollOverPath), getModel().isLeaf(node), getRowForPath(rollOverPath), hasFocus());
-            //
-            //    c.putClientProperty(UIUtil.CHECKBOX_ROLLOVER_PROPERTY, null);
-            //    rollOverPath = null;
-            //    UIUtil.repaintViewport(Tree.this);
-            //  }
+            //    TreeCellRenderer renderer = getCellRenderer();
+            //    if (rollOverPath.getLastPathComponent() instanceof TreeNode node) {
+            //        JComponent c = (JComponent)renderer.getTreeCellRendererComponent(
+            //            Tree.this,
+            //            node,
+            //            isPathSelected(rollOverPath),
+            //            isExpanded(rollOverPath),
+            //            getModel().isLeaf(node),
+            //            getRowForPath(rollOverPath),
+            //            hasFocus()
+            //        );
+            //        c.putClientProperty(UIUtil.CHECKBOX_ROLLOVER_PROPERTY, null);
+            //        rollOverPath = null;
+            //        UIUtil.repaintViewport(Tree.this);
+            //    }
             //}
         }
 
         private void setPressed(MouseEvent e, boolean pressed) {
             //if (UIUtil.isUnderWin10LookAndFeel()) {
-            //  Point p = e.getPoint();
-            //  TreePath path = getPathForLocation(p.x, p.y);
-            //  if (path != null) {
-            //    if (path.getLastPathComponent() instanceof TreeNode) {
-            //      TreeNode node = (TreeNode)path.getLastPathComponent();
-            //      JComponent c = (JComponent)getCellRenderer().getTreeCellRendererComponent(Tree.this, node, isPathSelected(path), isExpanded(path), getModel().isLeaf(node), getRowForPath(path), hasFocus());
-            //      if (pressed) {
-            //        c.putClientProperty(UIUtil.CHECKBOX_PRESSED_PROPERTY, c instanceof JCheckBox ? getPathBounds(path) : node);
-            //      }
-            //      else {
-            //        c.putClientProperty(UIUtil.CHECKBOX_PRESSED_PROPERTY, null);
-            //      }
-            //      UIUtil.repaintViewport(Tree.this);
+            //    Point p = e.getPoint();
+            //    TreePath path = getPathForLocation(p.x, p.y);
+            //    if (path != null) {
+            //        if (path.getLastPathComponent() instanceof TreeNode node) {
+            //            JComponent c = (JComponent)getCellRenderer().getTreeCellRendererComponent(
+            //                Tree.this,
+            //                node,
+            //                isPathSelected(path),
+            //                isExpanded(path),
+            //                getModel().isLeaf(node),
+            //                getRowForPath(path),
+            //                hasFocus()
+            //            );
+            //            if (pressed) {
+            //                c.putClientProperty(UIUtil.CHECKBOX_PRESSED_PROPERTY, c instanceof JCheckBox ? getPathBounds(path) : node);
+            //            }
+            //            else {
+            //                c.putClientProperty(UIUtil.CHECKBOX_PRESSED_PROPERTY, null);
+            //            }
+            //            UIUtil.repaintViewport(Tree.this);
+            //        }
             //    }
-            //  }
             //}
         }
     }
@@ -787,6 +794,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     public <T> T[] getSelectedNodes(Class<T> nodeType, @Nullable NodeFilter<T> filter) {
         TreePath[] paths = getSelectionPaths();
         if (paths == null) {
@@ -814,16 +822,16 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
     @Override
     public void putInfo(@Nonnull Map<String, String> info) {
-        final TreePath[] selection = getSelectionPaths();
+        TreePath[] selection = getSelectionPaths();
         if (selection == null) {
             return;
         }
 
-        final StringBuilder nodesText = new StringBuilder();
+        StringBuilder nodesText = new StringBuilder();
 
         for (TreePath eachPath : selection) {
-            final Object eachNode = eachPath.getLastPathComponent();
-            final Component c =
+            Object eachNode = eachPath.getLastPathComponent();
+            Component c =
                 getCellRenderer().getTreeCellRendererComponent(this, eachNode, false, false, false, getRowForPath(eachPath), false);
 
             if (c != null) {

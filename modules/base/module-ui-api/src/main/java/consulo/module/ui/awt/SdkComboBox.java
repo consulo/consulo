@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.function.Conditions;
-
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -494,7 +493,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     }
 
     private static Predicate<Sdk> getSdkFilter(@Nullable Predicate<SdkTypeId> filter) {
-        return filter == null ? Conditions.<Sdk>alwaysTrue() : sdk -> filter.test(sdk.getSdkType());
+        return filter == null ? Predicates.<Sdk>alwaysTrue() : sdk -> filter.test(sdk.getSdkType());
     }
 
     public static class SdkComboBoxItem {

@@ -15,14 +15,16 @@
  */
 package consulo.desktop.awt.settings;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.configurable.*;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.configurable.internal.ConfigurableWrapper;
 import consulo.configurable.internal.FullContentConfigurable;
+import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
@@ -33,19 +35,13 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.configurable.ConfigurablePreselectStrategy;
 import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
-import consulo.configurable.ConfigurableHit;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.configurable.SearchableOptionsRegistrar;
-import consulo.configurable.internal.ConfigurableWrapper;
 import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
-import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.roots.ui.configuration.session.internal.ConfigurableSessionImpl;
 import consulo.ide.setting.ProjectStructureSelector;
-import consulo.configurable.Settings;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
@@ -68,7 +64,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
@@ -88,7 +84,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     private static class SearchableWrapper implements SearchableConfigurable {
         private final Configurable myConfigurable;
 
-        private SearchableWrapper(final Configurable configurable) {
+        private SearchableWrapper(Configurable configurable) {
             myConfigurable = configurable;
         }
 
@@ -111,7 +107,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
         @RequiredUIAccess
         @Override
-        public JComponent createComponent(Disposable parent) {
+        public JComponent createComponent(@Nonnull Disposable parent) {
             return myConfigurable.createComponent(parent);
         }
 
@@ -161,7 +157,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             myErrorLabel.setBackground(LightColors.RED);
         }
 
-        void setContent(final JComponent component, ConfigurationException e, @Nonnull Configurable configurable) {
+        void setContent(JComponent component, ConfigurationException e, @Nonnull Configurable configurable) {
             if (component != null && mySimpleContent == component && myException == e) {
                 return;
             }
@@ -200,7 +196,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
         @Override
         public boolean isNull() {
-            final boolean superNull = super.isNull();
+            boolean superNull = super.isNull();
             if (superNull) {
                 return superNull;
             }
@@ -213,14 +209,17 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         Configurable myConfigurable;
 
         @RequiredUIAccess
-        ConfigurableContext(final Configurable configurable) {
+        ConfigurableContext(Configurable configurable) {
             myConfigurable = configurable;
             myComponent = ConfigurableUIMigrationUtil.createComponent(configurable, this);
 
             if (myComponent != null) {
-                final Object clientProperty = myComponent.getClientProperty(NOT_A_NEW_COMPONENT);
+                Object clientProperty = myComponent.getClientProperty(NOT_A_NEW_COMPONENT);
                 if (clientProperty != null && ApplicationProperties.isInSandbox()) {
-                    LOG.warn(String.format("Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!", configurable));
+                    LOG.warn(String.format(
+                        "Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!",
+                        configurable
+                    ));
                 }
                 else {
                     myComponent.putClientProperty(NOT_A_NEW_COMPONENT, Boolean.TRUE);
@@ -228,7 +227,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             }
         }
 
-        void set(final ContentWrapper wrapper) {
+        void set(ContentWrapper wrapper) {
             myOwnDetails.setDetailsModeEnabled(true);
             wrapper.setContent(myComponent, getContext().getErrors().get(myConfigurable), myConfigurable);
         }
@@ -253,8 +252,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         }
 
         @Override
-        protected boolean preprocessEventForTextField(final KeyEvent e) {
-            final KeyStroke stroke = KeyStroke.getKeyStrokeForEvent(e);
+        protected boolean preprocessEventForTextField(KeyEvent e) {
+            KeyStroke stroke = KeyStroke.getKeyStrokeForEvent(e);
             if (!myDelegatingNow) {
                 if ("pressed ESCAPE".equals(stroke.toString()) && getText().length() > 0) {
                     setText(""); // reset filter on ESC
@@ -264,13 +263,14 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                 if (getTextEditor().isFocusOwner()) {
                     try {
                         myDelegatingNow = true;
-                        boolean treeNavigation = stroke.getModifiers() == 0 && (stroke.getKeyCode() == KeyEvent.VK_UP || stroke.getKeyCode() == KeyEvent.VK_DOWN);
+                        boolean treeNavigation =
+                            stroke.getModifiers() == 0 && (stroke.getKeyCode() == KeyEvent.VK_UP || stroke.getKeyCode() == KeyEvent.VK_DOWN);
 
                         if ("pressed ENTER".equals(stroke.toString())) {
                             return true; // avoid closing dialog on ENTER
                         }
 
-                        final Object action = getTextEditor().getInputMap().get(stroke);
+                        Object action = getTextEditor().getInputMap().get(stroke);
                         if (action == null || treeNavigation) {
                             onTextKeyEvent(e);
                             return true;
@@ -284,7 +284,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             return false;
         }
 
-        protected void onTextKeyEvent(final KeyEvent e) {
+        protected void onTextKeyEvent(KeyEvent e) {
         }
     }
 
@@ -295,23 +295,23 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         boolean myVisible;
 
         @Override
-        public void executePaint(final Component component, final Graphics2D g) {
+        public void executePaint(Component component, Graphics2D g) {
             if (myVisible && myGP.isVisible()) {
                 myGP.paintSpotlight(g, myOwnDetails.getContentGutter());
             }
         }
 
         public boolean updateForCurrentConfigurable() {
-            final Configurable current = getContext().getCurrentConfigurable();
+            Configurable current = getContext().getCurrentConfigurable();
 
             if (current != null && !myConfigurable2Content.containsKey(current)) {
-                return ApplicationManager.getApplication().isUnitTestMode();
+                return Application.get().isUnitTestMode();
             }
 
             String text = getFilterText();
 
             try {
-                final boolean sameText = myConfigurableToLastOption.containsKey(current) && text.equals(myConfigurableToLastOption.get(current));
+                boolean sameText = myConfigurableToLastOption.containsKey(current) && text.equals(myConfigurableToLastOption.get(current));
 
                 if (current == null) {
                     myVisible = false;
@@ -319,17 +319,13 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                     return true;
                 }
 
-                SearchableConfigurable searchable;
-                if (current instanceof SearchableConfigurable) {
-                    searchable = (SearchableConfigurable) current;
-                }
-                else {
-                    searchable = new SearchableWrapper(current);
-                }
+                SearchableConfigurable searchable = current instanceof SearchableConfigurable searchableConfigurable
+                    ? searchableConfigurable
+                    : new SearchableWrapper(current);
 
                 myGP.clear();
 
-                final Runnable runnable = SearchUtil.lightOptions(searchable, myContentWrapper, text, myGP);
+                Runnable runnable = SearchUtil.lightOptions(searchable, myContentWrapper, text, myGP);
                 if (runnable != null) {
                     myVisible = true;//myContext.isHoldingFilter();
                     runnable.run();
@@ -344,7 +340,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                         }
                     }
 
-                    final Runnable ownSearch = searchable.enableSearch(text);
+                    Runnable ownSearch = searchable.enableSearch(text);
                     if (pushFilteringFurther && ownSearch != null) {
                         ownSearch.run();
                     }
@@ -369,17 +365,18 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     private class MyColleague implements OptionsEditorColleague {
         @Override
-        public AsyncResult<Void> onSelected(final Configurable configurable, final Configurable oldConfigurable) {
+        @RequiredUIAccess
+        public AsyncResult<Void> onSelected(Configurable configurable, Configurable oldConfigurable) {
             return processSelected(configurable, oldConfigurable);
         }
 
         @Override
-        public AsyncResult<Void> onModifiedRemoved(final Configurable configurable) {
+        public AsyncResult<Void> onModifiedRemoved(Configurable configurable) {
             return updateIfCurrent(configurable);
         }
 
         @Override
-        public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
+        public AsyncResult<Void> onModifiedAdded(Configurable configurable) {
             return updateIfCurrent(configurable);
         }
 
@@ -388,7 +385,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             return updateIfCurrent(getContext().getCurrentConfigurable());
         }
 
-        private AsyncResult<Void> updateIfCurrent(final Configurable configurable) {
+        private AsyncResult<Void> updateIfCurrent(Configurable configurable) {
             if (getContext().getCurrentConfigurable() == configurable && configurable != null) {
                 updateContent();
                 return AsyncResult.resolved();
@@ -408,30 +405,22 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         private Configurable myLastSelected;
 
         @Override
-        public boolean shouldBeShowing(final SimpleNode value) {
-            if (myFiltered == null) {
-                return true;
-            }
-
-            if (value instanceof OptionsTree.ConfigurableNode) {
-                final OptionsTree.ConfigurableNode node = (OptionsTree.ConfigurableNode) value;
-                return myFiltered.contains(node.getConfigurable()) || isChildOfNameHit(node);
-            }
-
-            return true;
+        public boolean shouldBeShowing(SimpleNode value) {
+            return myFiltered == null
+                || !(value instanceof OptionsTree.ConfigurableNode node)
+                || myFiltered.contains(node.getConfigurable())
+                || isChildOfNameHit(node);
         }
 
         private boolean isChildOfNameHit(OptionsTree.ConfigurableNode node) {
             if (myHits != null) {
                 OptionsTree.Base eachParent = node;
                 while (eachParent != null) {
-                    if (eachParent instanceof OptionsTree.ConfigurableNode) {
-                        final OptionsTree.ConfigurableNode eachConfigurableNode = (OptionsTree.ConfigurableNode) eachParent;
-                        if (myHits.getNameFullHits().contains(eachConfigurableNode.myConfigurable)) {
-                            return true;
-                        }
+                    if (eachParent instanceof OptionsTree.ConfigurableNode eachConfigurableNode
+                        && myHits.getNameFullHits().contains(eachConfigurableNode.myConfigurable)) {
+                        return true;
                     }
-                    eachParent = (OptionsTree.Base) eachParent.getParent();
+                    eachParent = (OptionsTree.Base)eachParent.getParent();
                 }
 
                 return false;
@@ -440,7 +429,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             return false;
         }
 
-        public Promise<?> refilterFor(String text, boolean adjustSelection, final boolean now) {
+        public Promise<?> refilterFor(String text, boolean adjustSelection, boolean now) {
             try {
                 myUpdateEnabled = false;
                 mySearch.setText(text);
@@ -467,7 +456,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                 return Promises.rejectedPromise();
             }
 
-            final String text = mySearch.getText();
+            String text = mySearch.getText();
             if (getFilterText().length() == 0) {
                 myContext.setHoldingFilter(false);
                 myFiltered = null;
@@ -486,7 +475,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                 mySearch.getTextEditor().setBackground(UIUtil.getTextFieldBackground());
             }
 
-            final Configurable current = getContext().getCurrentConfigurable();
+            Configurable current = getContext().getCurrentConfigurable();
 
             boolean shouldMoveSelection = true;
 
@@ -519,7 +508,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                 myLastSelected = current;
             }
 
-            final Promise<?> callback = fireUpdate(adjustSelection ? myTree.findNodeFor(toSelect) : null, adjustSelection, now);
+            Promise<?> callback = fireUpdate(adjustSelection ? myTree.findNodeFor(toSelect) : null, adjustSelection, now);
 
             myFilterDocumentWasChanged = true;
 
@@ -527,7 +516,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         }
 
         private boolean isEmptyParent(Configurable configurable) {
-            return configurable instanceof SearchableConfigurable.Parent && !((SearchableConfigurable.Parent) configurable).hasOwnContent();
+            return configurable instanceof SearchableConfigurable.Parent && !((SearchableConfigurable.Parent)configurable).hasOwnContent();
         }
 
         @Nullable
@@ -562,7 +551,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     private final OptionsTree myTree;
     private final MySearchField mySearch;
 
-    private final DetailsComponent myOwnDetails = new DetailsComponent(true, false).setEmptyContentText("Select configuration element in the tree to edit its settings");
+    private final DetailsComponent myOwnDetails =
+        new DetailsComponent(true, false).setEmptyContentText("Select configuration element in the tree to edit its settings");
     private final ContentWrapper myContentWrapper = new ContentWrapper();
 
     private final Map<Configurable, ConfigurableContext> myConfigurable2Content = new HashMap<>();
@@ -589,11 +579,13 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     private boolean myConfigurablesLoaded;
     private Configurable[] myBuildConfigurables = Configurable.EMPTY_ARRAY;
 
-    public OptionsEditor(Project project,
-                         Function<Project, Configurable[]> configurablesBuilder,
-                         ConfigurablePreselectStrategy configurablePreselectStrategy,
-                         JPanel rootPanel,
-                         Runnable afterTreeLoad) {
+    public OptionsEditor(
+        Project project,
+        Function<Project, Configurable[]> configurablesBuilder,
+        ConfigurablePreselectStrategy configurablePreselectStrategy,
+        JPanel rootPanel,
+        Runnable afterTreeLoad
+    ) {
         myProject = project;
         myConfigurablesBuilder = configurablesBuilder;
         myConfigurablePreselectStrategy = configurablePreselectStrategy;
@@ -607,7 +599,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
         mySearch = new MySearchField() {
             @Override
-            protected void onTextKeyEvent(final KeyEvent e) {
+            protected void onTextKeyEvent(KeyEvent e) {
                 myTree.processTextEvent(e);
             }
         };
@@ -628,7 +620,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
         myTree = new OptionsTree(() -> myBuildConfigurables, getContext()) {
             @Override
-            protected void onTreeKeyEvent(final KeyEvent e) {
+            protected void onTreeKeyEvent(KeyEvent e) {
                 myFilterDocumentWasChanged = false;
                 try {
                     mySearch.keyEventToTextField(e);
@@ -650,14 +642,17 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             }
         });
 
-        myTreeDecoratorPanel = new JBLoadingPanel(new BorderLayout(), panel -> new LoadingDecorator(panel, this, -1, true, new AsyncProcessIcon("Options")) {
-            @Override
-            protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
-                final NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
-                text.setFont(UIUtil.getLabelFont());
-                return panel;
+        myTreeDecoratorPanel = new JBLoadingPanel(
+            new BorderLayout(),
+            panel -> new LoadingDecorator(panel, this, -1, true, new AsyncProcessIcon("Options")) {
+                @Override
+                protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
+                    NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
+                    text.setFont(UIUtil.getLabelFont());
+                    return panel;
+                }
             }
-        });
+        );
 
         mySearchWrapper.setContent(mySearch);
         mySearchWrapper.setBackground(MorphColor.of(UIUtil::getTreeBackground));
@@ -677,18 +672,22 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
         mySpotlightUpdate = new MergingUpdateQueue("OptionsSpotlight", 200, false, rootPanel, this, rootPanel);
 
-        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        Toolkit.getDefaultToolkit()
+            .addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
 
-        ActionManager.getInstance().addAnActionListener(new AnActionListener() {
-            @Override
-            public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-            }
+        ActionManager.getInstance().addAnActionListener(
+            new AnActionListener() {
+                @Override
+                public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+                }
 
-            @Override
-            public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-                queueModificationCheck();
-            }
-        }, this);
+                @Override
+                public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+                    queueModificationCheck();
+                }
+            },
+            this
+        );
 
         myModificationChecker = new MergingUpdateQueue("OptionsModificationChecker", 1000, false, rootPanel, this, rootPanel);
 
@@ -792,7 +791,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     @Override
-    public AsyncResult<Void> select(Configurable configurable, final String text) {
+    public AsyncResult<Void> select(Configurable configurable, String text) {
         AsyncResult<Void> callback = AsyncResult.undefined();
         Promises.toActionCallback(myFilter.refilterFor(text, false, true)).doWhenDone(() -> myTree.select(configurable).notify(callback));
         return callback;
@@ -807,18 +806,18 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         }
 
         AsyncResult<T> callback = AsyncResult.undefined();
-        Promises.toActionCallback(myFilter.refilterFor("", false, true)).doWhenDone(() -> myTree.select(configurableInfo.getFirst()).doWhenDone(() -> {
-            callback.setDone(configurableInfo.getSecond());
-        }));
+        Promises.toActionCallback(myFilter.refilterFor("", false, true))
+            .doWhenDone(() -> myTree.select(configurableInfo.getFirst()).doWhenDone(() -> callback.setDone(configurableInfo.getSecond())));
         return callback;
     }
 
-    private AsyncResult<Void> processSelected(final Configurable configurable, final Configurable oldConfigurable) {
+    @RequiredUIAccess
+    private AsyncResult<Void> processSelected(Configurable configurable, Configurable oldConfigurable) {
         if (isShowing(configurable)) {
             return AsyncResult.resolved();
         }
 
-        final AsyncResult<Void> result = AsyncResult.undefined();
+        AsyncResult<Void> result = AsyncResult.undefined();
 
         if (configurable == null) {
             myOwnDetails.setContent(null);
@@ -831,52 +830,55 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
         }
         else {
-            getUiFor(configurable).doWhenDone(() -> {
-                SwingUtilities.invokeLater(() -> {
-                    if (myDisposed) {
-                        return;
-                    }
+            getUiFor(configurable).doWhenDone(() -> SwingUtilities.invokeLater(() -> {
+                if (myDisposed) {
+                    return;
+                }
 
-                    final Configurable current = getContext().getCurrentConfigurable();
-                    if (current != configurable) {
-                        result.setRejected();
-                        return;
-                    }
+                Configurable current = getContext().getCurrentConfigurable();
+                if (current != configurable) {
+                    result.setRejected();
+                    return;
+                }
 
-                    updateContent();
+                updateContent();
 
-                    String[] bannerText = getBannerText(configurable);
-                    myOwnDetails.setText(bannerText);
+                String[] bannerText = getBannerText(configurable);
+                myOwnDetails.setText(bannerText);
 
-                    FullContentConfigurable fullContent = ConfigurableWrapper.cast(configurable, FullContentConfigurable.class);
-                    if (fullContent != null) {
-                        myOwnDetails.setFullContent(myContentWrapper, fullContent::setBannerComponent);
-                    } else {
-                        myOwnDetails.setContent(myContentWrapper);
-                    }
+                FullContentConfigurable fullContent = ConfigurableWrapper.cast(configurable, FullContentConfigurable.class);
+                if (fullContent != null) {
+                    myOwnDetails.setFullContent(myContentWrapper, fullContent::setBannerComponent);
+                }
+                else {
+                    myOwnDetails.setContent(myContentWrapper);
+                }
 
-                    if (isProjectConfigurable(configurable) && myProject != null) {
-                        myOwnDetails.setProjectIconDescription(ProjectBundle.message(myProject.isDefault() ? "configurable.default.project.tooltip" : "configurable.current.project.tooltip"));
-                    }
-                    else {
-                        myOwnDetails.setProjectIconDescription(null);
-                    }
+                if (isProjectConfigurable(configurable) && myProject != null) {
+                    myOwnDetails.setProjectIconDescription(
+                        myProject.isDefault()
+                            ? ConfigurableLocalize.configurableDefaultProjectTooltip().get()
+                            : ConfigurableLocalize.configurableCurrentProjectTooltip().get()
+                    );
+                }
+                else {
+                    myOwnDetails.setProjectIconDescription(null);
+                }
 
-                    myLoadingDecorator.stopLoading();
+                myLoadingDecorator.stopLoading();
 
-                    updateSpotlight(false);
+                updateSpotlight(false);
 
-                    checkModified(oldConfigurable);
-                    checkModified(configurable);
+                checkModified(oldConfigurable);
+                checkModified(configurable);
 
-                    if (myTree.myBuilder.getSelectedElements().size() == 0) {
-                        select(configurable).notify(result);
-                    }
-                    else {
-                        result.setDone();
-                    }
-                });
-            });
+                if (myTree.myBuilder.getSelectedElements().size() == 0) {
+                    select(configurable).notify(result);
+                }
+                else {
+                    result.setDone();
+                }
+            }));
         }
 
         return result;
@@ -886,13 +888,9 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         return ConfigurableWrapper.cast(configurable, ProjectConfigurable.class) != null;
     }
 
-    private static void assertIsDispatchThread() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-    }
-
     @RequiredUIAccess
-    private AsyncResult<Void> getUiFor(final Configurable target) {
-        assertIsDispatchThread();
+    private AsyncResult<Void> getUiFor(Configurable target) {
+        UIAccess.assertIsUIThread();
 
         if (myDisposed) {
             return AsyncResult.rejected();
@@ -923,7 +921,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     @RequiredUIAccess
-    private void initConfigurable(@Nonnull final Configurable configurable, AsyncResult<Void> result) {
+    private void initConfigurable(@Nonnull Configurable configurable, AsyncResult<Void> result) {
         UIAccess.assertIsUIThread();
 
         if (myDisposed) {
@@ -932,12 +930,15 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         }
 
         try {
-            myConfigurable2Content.computeIfAbsent(configurable, it -> {
-                final ConfigurableContext content = new ConfigurableContext(it);
-                it.initialize();
-                it.reset();
-                return content;
-            });
+            myConfigurable2Content.computeIfAbsent(
+                configurable,
+                it -> {
+                    ConfigurableContext content = new ConfigurableContext(it);
+                    it.initialize();
+                    it.reset();
+                    return content;
+                }
+            );
             result.setDone();
         }
         catch (Throwable e) {
@@ -948,7 +949,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     private void updateSpotlight(boolean now) {
         if (now) {
-            final boolean success = mySpotlightPainter.updateForCurrentConfigurable();
+            boolean success = mySpotlightPainter.updateForCurrentConfigurable();
             if (!success) {
                 updateSpotlight(false);
             }
@@ -957,7 +958,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             mySpotlightUpdate.queue(new Update(this) {
                 @Override
                 public void run() {
-                    final boolean success = mySpotlightPainter.updateForCurrentConfigurable();
+                    boolean success = mySpotlightPainter.updateForCurrentConfigurable();
                     if (!success) {
                         updateSpotlight(false);
                     }
@@ -967,8 +968,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     private String[] getBannerText(Configurable configurable) {
-        final List<Configurable> list = myTree.getPathToRoot(configurable);
-        final String[] result = new String[list.size()];
+        List<Configurable> list = myTree.getPathToRoot(configurable);
+        String[] result = new String[list.size()];
         int add = 0;
         for (int i = list.size() - 1; i >= 0; i--) {
             result[add++] = list.get(i).getDisplayName().replace('\n', ' ');
@@ -976,11 +977,11 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         return result;
     }
 
-    private void checkModified(final Configurable configurable) {
+    private void checkModified(Configurable configurable) {
         fireModification(configurable);
     }
 
-    private void fireModification(final Configurable actual) {
+    private void fireModification(Configurable actual) {
         Collection<Configurable> toCheck = collectAllParentsAndSiblings(actual);
 
         for (Configurable configurable : toCheck) {
@@ -988,7 +989,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         }
     }
 
-    private Collection<Configurable> collectAllParentsAndSiblings(final Configurable actual) {
+    private Collection<Configurable> collectAllParentsAndSiblings(Configurable actual) {
         ArrayList<Configurable> result = new ArrayList<>();
         Configurable nearestParent = getContext().getParentConfigurable(actual);
 
@@ -1008,10 +1009,10 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         return result;
     }
 
-    private void fireModificationForItem(final Configurable configurable) {
+    private void fireModificationForItem(Configurable configurable) {
         if (configurable != null) {
             if (!myConfigurable2Content.containsKey(configurable) && ConfigurableWrapper.hasOwnContent(configurable)) {
-                ApplicationManager.getApplication().invokeLater(() -> {
+                Application.get().invokeLater(() -> {
                     if (myDisposed) {
                         return;
                     }
@@ -1032,7 +1033,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     @RequiredUIAccess
-    private void fireModificationInt(final Configurable configurable) {
+    private void fireModificationInt(Configurable configurable) {
         if (configurable.isModified()) {
             getContext().fireModifiedAdded(configurable, null);
         }
@@ -1042,24 +1043,24 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     private void updateContent() {
-        final Configurable current = getContext().getCurrentConfigurable();
+        Configurable current = getContext().getCurrentConfigurable();
 
         assert current != null;
 
-        final ConfigurableContext content = myConfigurable2Content.get(current);
+        ConfigurableContext content = myConfigurable2Content.get(current);
         if (content != null) {
             content.set(myContentWrapper);
         }
     }
 
     private boolean isShowing(Configurable configurable) {
-        final ConfigurableContext content = myConfigurable2Content.get(configurable);
+        ConfigurableContext content = myConfigurable2Content.get(configurable);
         return content != null && content.isShowing();
     }
 
     @Nullable
     public String getHelpTopic() {
-        final Configurable current = getContext().getCurrentConfigurable();
+        Configurable current = getContext().getCurrentConfigurable();
         if (current == null || Configurable.DISABLED_HELP_ID.equals(current.getHelpTopic())) {
             return null;
         }
@@ -1074,7 +1075,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
             String id = null;
             if (target instanceof SearchableConfigurable) {
-                id = ((SearchableConfigurable) target).getId();
+                id = target.getId();
             }
 
             // override for target id by help topic
@@ -1124,19 +1125,13 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     @Nonnull
     private static PluginId getPluginId(@Nonnull Configurable configurable) {
-        if (configurable instanceof ConfigurableWrapper) {
-            ConfigurableWrapper configurableWrapper = (ConfigurableWrapper) configurable;
-            return PluginManager.getPluginId(configurableWrapper.getConfigurable().getClass());
-        }
-
-        return PluginManager.getPluginId(configurable.getClass());
+        return configurable instanceof ConfigurableWrapper configurableWrapper
+            ? PluginManager.getPluginId(configurableWrapper.getConfigurable().getClass())
+            : PluginManager.getPluginId(configurable.getClass());
     }
 
     private static String formatHelpId(@Nullable String id) {
-        if (StringUtil.isEmptyOrSpaces(id) || id.contains(" ")) {
-            return null;
-        }
-        return id;
+        return StringUtil.isEmptyOrSpaces(id) || id.contains(" ") ? null : id;
     }
 
     public boolean isFilterFieldVisible() {
@@ -1145,7 +1140,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     public void setFilterFieldVisible(boolean requestFocus, boolean checkFocus) {
         if (isFilterFieldVisible() && checkFocus && requestFocus && !isSearchFieldFocused()) {
-            IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(mySearch, true));
+            IdeFocusManager.getGlobalInstance()
+                .doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(mySearch, true));
             return;
         }
 
@@ -1153,7 +1149,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         myTreeDecoratorPanel.repaint();
 
         if (requestFocus) {
-            IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(mySearch, true));
+            IdeFocusManager.getGlobalInstance()
+                .doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(mySearch, true));
         }
     }
 
@@ -1166,6 +1163,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         myRootPanel.repaint();
     }
 
+    @RequiredUIAccess
     public void reset(Configurable configurable, boolean notify) {
         configurable.reset();
         if (notify) {
@@ -1176,7 +1174,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     @RequiredUIAccess
     public void apply() {
         Map<Configurable, ConfigurationException> errors = new LinkedHashMap<>();
-        final Set<Configurable> modified = getContext().getModified();
+        Set<Configurable> modified = getContext().getModified();
         for (Configurable each : modified) {
             try {
                 each.apply();
@@ -1216,8 +1214,9 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     @Override
+    @RequiredUIAccess
     public void dispose() {
-        assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         if (myDisposed) {
             return;
@@ -1230,28 +1229,31 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
         Toolkit.getDefaultToolkit().removeAWTEventListener(this);
 
-        visitRecursive(myBuildConfigurables, each -> {
-            AsyncResult<Void> loadCb = myConfigurable2LoadCallback.get(each);
-            if (loadCb != null) {
-                loadCb.doWhenProcessed(() -> {
-                    assertIsDispatchThread();
+        visitRecursive(
+            myBuildConfigurables,
+            each -> {
+                AsyncResult<Void> loadCb = myConfigurable2LoadCallback.get(each);
+                if (loadCb != null) {
+                    loadCb.doWhenProcessed(() -> {
+                        UIAccess.assertIsUIThread();
+                        each.disposeUIResources();
+                    });
+                }
+                else {
                     each.disposeUIResources();
-                });
-            }
-            else {
-                each.disposeUIResources();
-            }
+                }
 
-            ConfigurableContext context = myConfigurable2Content.get(each);
-            if (context != null) {
-                context.disposeWithTree();
+                ConfigurableContext context = myConfigurable2Content.get(each);
+                if (context != null) {
+                    context.disposeWithTree();
+                }
             }
-        });
+        );
 
         myConfigurable2Content.clear();
         myConfigurable2LoadCallback.clear();
 
-        ReflectionUtil.clearOwnFields(this, Conditions.<Field>alwaysTrue());
+        ReflectionUtil.clearOwnFields(this, Predicates.<Field>alwaysTrue());
     }
 
     private static void visitRecursive(Configurable[] configurables, Consumer<Configurable> consumer) {
@@ -1264,7 +1266,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
             }
 
             if (configurable instanceof Configurable.Composite) {
-                visitRecursive(((Configurable.Composite) configurable).getConfigurables(), consumer);
+                visitRecursive(((Configurable.Composite)configurable).getConfigurables(), consumer);
             }
         }
     }
@@ -1282,16 +1284,17 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     @Override
-    public void eventDispatched(final AWTEvent event) {
+    public void eventDispatched(AWTEvent event) {
         if (event.getID() == MouseEvent.MOUSE_PRESSED || event.getID() == MouseEvent.MOUSE_RELEASED || event.getID() == MouseEvent.MOUSE_DRAGGED) {
-            final MouseEvent me = (MouseEvent) event;
-            if (SwingUtilities.isDescendingFrom(me.getComponent(), SwingUtilities.getWindowAncestor(myContentWrapper)) || isPopupOverEditor(me.getComponent())) {
+            MouseEvent me = (MouseEvent)event;
+            if (SwingUtilities.isDescendingFrom(me.getComponent(), SwingUtilities.getWindowAncestor(myContentWrapper)) || isPopupOverEditor(
+                me.getComponent())) {
                 queueModificationCheck();
                 myFilter.clearTemporary();
             }
         }
         else if (event.getID() == KeyEvent.KEY_PRESSED || event.getID() == KeyEvent.KEY_RELEASED) {
-            final KeyEvent ke = (KeyEvent) event;
+            KeyEvent ke = (KeyEvent)event;
             if (SwingUtilities.isDescendingFrom(ke.getComponent(), myContentWrapper)) {
                 queueModificationCheck();
             }
@@ -1299,7 +1302,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     private void queueModificationCheck() {
-        final Configurable configurable = getContext().getCurrentConfigurable();
+        Configurable configurable = getContext().getCurrentConfigurable();
         myModificationChecker.queue(new Update(this) {
             @Override
             public void run() {
@@ -1314,8 +1317,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
 
     private boolean isPopupOverEditor(Component c) {
-        final Window wnd = SwingUtilities.getWindowAncestor(c);
-        return (wnd instanceof JWindow || wnd instanceof JDialog && ((JDialog) wnd).getModalityType() == Dialog.ModalityType.MODELESS) && myWindow != null && wnd.getParent() == myWindow;
+        Window wnd = SwingUtilities.getWindowAncestor(c);
+        return (wnd instanceof JWindow || wnd instanceof JDialog && ((JDialog)wnd).getModalityType() == Dialog.ModalityType.MODELESS) && myWindow != null && wnd.getParent() == myWindow;
     }
 
     private String getFilterText() {

@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
@@ -70,7 +69,7 @@ public class VcsLogStructureFilterImpl implements VcsLogDetailsFilter, VcsLogStr
         }
     }
 
-    private boolean matches(@Nonnull final String path) {
-        return ContainerUtil.find(myFiles, (Condition<VirtualFile>)file -> FileUtil.isAncestor(file.getPath(), path, false)) != null;
+    private boolean matches(@Nonnull String path) {
+        return ContainerUtil.find(myFiles, file -> FileUtil.isAncestor(file.getPath(), path, false)) != null;
     }
 }

@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.codeInsight.documentation.DockablePopupManager;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.ParameterInfoController;
-import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.actions.BaseNavigateToSourceAction;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
@@ -29,7 +28,6 @@ import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.lang.documentation.DocumentationMarkup;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.util.lang.ref.SoftReference;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.tabs.FileColorManagerImpl;
@@ -84,14 +82,16 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.util.lang.ref.SoftReference;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.status.FileStatus;
+import consulo.webBrowser.BrowserUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -254,7 +254,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
                 if (getDocInfoHint() != null &&
                     LookupManager.getActiveLookup(myEditor) == null
                     // let the lookup manage all the actions
-                    && !Conditions.instanceOf(ACTION_CLASSES_TO_IGNORE).value(action)
+                    && !Predicates.instanceOf(ACTION_CLASSES_TO_IGNORE).test(action)
                     && !ArrayUtil.contains(event.getPlace(), ACTION_PLACES_TO_IGNORE)
                     && !ContainerUtil.exists(ACTION_IDS_TO_IGNORE, id -> ActionManager.getInstance().getAction(id) == action)) {
                     closeDocHint();

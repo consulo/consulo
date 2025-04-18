@@ -20,12 +20,11 @@ import consulo.platform.Platform;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
+import consulo.ui.ex.awt.internal.DarkThemeCalculator;
 import consulo.util.lang.SystemProperties;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -36,6 +35,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.function.Predicate;
 
 /**
  * @author Konstantin Bulenkov
@@ -45,9 +45,7 @@ import java.awt.event.MouseListener;
 public class WideSelectionTreeUI extends BasicTreeUI {
     public static final String TREE_TABLE_TREE_KEY = "TreeTableTree";
 
-    @NonNls
     public static final String SOURCE_LIST_CLIENT_PROPERTY = "mac.ui.source.list";
-    @NonNls
     public static final String STRIPED_CLIENT_PROPERTY = "mac.ui.striped";
 
     private static final Border LIST_BACKGROUND_PAINTER = UIManager.getBorder("List.sourceListBackgroundPainter");
@@ -58,14 +56,14 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     private static final int IDE_UI_TREE_INDENT = SystemProperties.getIntProperty("ide.ui.tree.indent", -1);
 
     @Nonnull
-    private final Condition<Integer> myWideSelectionCondition;
+    private final Predicate<Integer> myWideSelectionCondition;
     private boolean myWideSelection;
     private boolean myOldRepaintAllRowValue;
     private boolean myForceDontPaintLines = false;
 
     @SuppressWarnings("unchecked")
     public WideSelectionTreeUI() {
-        this(true, Conditions.<Integer>alwaysTrue());
+        this(true, Predicates.<Integer>alwaysTrue());
     }
 
     /**
@@ -75,7 +73,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
      * @param wideSelectionCondition strategy that determine if wide selection should be used for a target row (it's zero-based index
      *                               is given to the condition as an argument)
      */
-    public WideSelectionTreeUI(final boolean wideSelection, @Nonnull Condition<Integer> wideSelectionCondition) {
+    public WideSelectionTreeUI(boolean wideSelection, @Nonnull Predicate<Integer> wideSelectionCondition) {
         myWideSelection = wideSelection;
         myWideSelectionCondition = wideSelectionCondition;
     }
@@ -95,7 +93,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
     @Override
     protected MouseListener createMouseListener() {
-        return new MouseEventAdapter<MouseListener>(super.createMouseListener()) {
+        return new MouseEventAdapter<>(super.createMouseListener()) {
             @Override
             public void mouseDragged(MouseEvent event) {
                 JTree tree = (JTree)event.getSource();
@@ -157,20 +155,18 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
         tree.putClientProperty("MacTreeUi.actionsInstalled", Boolean.TRUE);
 
-        final InputMap inputMap = tree.getInputMap(JComponent.WHEN_FOCUSED);
+        InputMap inputMap = tree.getInputMap(JComponent.WHEN_FOCUSED);
         inputMap.put(KeyStroke.getKeyStroke("pressed LEFT"), "collapse_or_move_up");
         inputMap.put(KeyStroke.getKeyStroke("pressed RIGHT"), "expand");
 
-        final ActionMap actionMap = tree.getActionMap();
+        ActionMap actionMap = tree.getActionMap();
 
-        final Action expandAction = actionMap.get("expand");
+        Action expandAction = actionMap.get("expand");
         if (expandAction != null) {
             actionMap.put("expand", new TreeUIAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    final Object source = e.getSource();
-                    if (source instanceof JTree) {
-                        JTree tree = (JTree)source;
+                    if (e.getSource() instanceof JTree tree) {
                         int selectionRow = tree.getLeadSelectionRow();
                         if (selectionRow != -1) {
                             TreePath selectionPath = tree.getPathForRow(selectionRow);
@@ -206,38 +202,38 @@ public class WideSelectionTreeUI extends BasicTreeUI {
             });
         }
 
-        actionMap.put("collapse_or_move_up", new TreeUIAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final Object source = e.getSource();
-                if (source instanceof JTree) {
-                    JTree tree = (JTree)source;
-                    int selectionRow = tree.getLeadSelectionRow();
-                    if (selectionRow == -1) {
-                        return;
-                    }
+        actionMap.put(
+            "collapse_or_move_up",
+            new TreeUIAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Object source = e.getSource();
+                    if (source instanceof JTree tree) {
+                        int selectionRow = tree.getLeadSelectionRow();
+                        if (selectionRow == -1) {
+                            return;
+                        }
 
-                    TreePath selectionPath = tree.getPathForRow(selectionRow);
-                    if (selectionPath == null) {
-                        return;
-                    }
+                        TreePath selectionPath = tree.getPathForRow(selectionRow);
+                        if (selectionPath == null) {
+                            return;
+                        }
 
-                    if (tree.getModel().isLeaf(selectionPath.getLastPathComponent()) || tree.isCollapsed(selectionRow)) {
-                        final TreePath parentPath = tree.getPathForRow(selectionRow).getParentPath();
-                        if (parentPath != null) {
-                            if (parentPath.getParentPath() != null || tree.isRootVisible()) {
-                                final int parentRow = tree.getRowForPath(parentPath);
+                        if (tree.getModel().isLeaf(selectionPath.getLastPathComponent()) || tree.isCollapsed(selectionRow)) {
+                            TreePath parentPath = tree.getPathForRow(selectionRow).getParentPath();
+                            if (parentPath != null && (parentPath.getParentPath() != null || tree.isRootVisible())) {
+                                int parentRow = tree.getRowForPath(parentPath);
                                 tree.scrollRowToVisible(parentRow);
                                 tree.setSelectionInterval(parentRow, parentRow);
                             }
                         }
-                    }
-                    else {
-                        tree.collapseRow(selectionRow);
+                        else {
+                            tree.collapseRow(selectionRow);
+                        }
                     }
                 }
             }
-        });
+        );
     }
 
     public void setForceDontPaintLines() {
@@ -260,15 +256,15 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
     @Override
     protected void paintHorizontalPartOfLeg(
-        final Graphics g,
-        final Rectangle clipBounds,
-        final Insets insets,
-        final Rectangle bounds,
-        final TreePath path,
-        final int row,
-        final boolean isExpanded,
-        final boolean hasBeenExpanded,
-        final boolean isLeaf
+        Graphics g,
+        Rectangle clipBounds,
+        Insets insets,
+        Rectangle bounds,
+        TreePath path,
+        int row,
+        boolean isExpanded,
+        boolean hasBeenExpanded,
+        boolean isLeaf
     ) {
         if (shouldPaintLines()) {
             super.paintHorizontalPartOfLeg(g, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
@@ -276,21 +272,19 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     }
 
     private boolean shouldPaintLines() {
-        if (UIUtil.isUnderAquaBasedLookAndFeel() || UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF()) {
-            return false;
-        }
-        return myForceDontPaintLines || !"None".equals(tree.getClientProperty("JTree.lineStyle"));
+        return !(UIUtil.isUnderAquaBasedLookAndFeel() || DarkThemeCalculator.isDark() || UIUtil.isUnderIntelliJLaF())
+            && (myForceDontPaintLines || !"None".equals(tree.getClientProperty("JTree.lineStyle")));
     }
 
     @Override
     protected boolean isToggleSelectionEvent(MouseEvent e) {
-        return SwingUtilities.isLeftMouseButton(e) && (Platform.current()
-            .os()
-            .isMac() ? e.isMetaDown() : e.isControlDown()) && !e.isPopupTrigger();
+        return SwingUtilities.isLeftMouseButton(e)
+            && (Platform.current().os().isMac() ? e.isMetaDown() : e.isControlDown())
+            && !e.isPopupTrigger();
     }
 
     @Override
-    protected void paintVerticalPartOfLeg(final Graphics g, final Rectangle clipBounds, final Insets insets, final TreePath path) {
+    protected void paintVerticalPartOfLeg(Graphics g, Rectangle clipBounds, Insets insets, TreePath path) {
         if (shouldPaintLines()) {
             super.paintVerticalPartOfLeg(g, clipBounds, insets, path);
         }
@@ -306,10 +300,10 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     @Override
     protected Color getHashColor() {
         //if (invertLineColor && !ComparatorUtil.equalsNullable(UIUtil.getTreeSelectionForeground(), UIUtil.getTreeForeground())) {
-        //  final Color c = UIUtil.getTreeSelectionForeground();
-        //  if (c != null) {
-        //    return c.darker();
-        //  }
+        //    Color c = UIUtil.getTreeSelectionForeground();
+        //    if (c != null) {
+        //        return c.darker();
+        //    }
         //}
         return super.getHashColor();
     }
@@ -320,25 +314,25 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
     @Override
     protected void paintRow(
-        final Graphics g,
-        final Rectangle clipBounds,
-        final Insets insets,
-        final Rectangle bounds,
-        final TreePath path,
-        final int row,
-        final boolean isExpanded,
-        final boolean hasBeenExpanded,
-        final boolean isLeaf
+        Graphics g,
+        Rectangle clipBounds,
+        Insets insets,
+        Rectangle bounds,
+        TreePath path,
+        int row,
+        boolean isExpanded,
+        boolean hasBeenExpanded,
+        boolean isLeaf
     ) {
-        final int containerWidth = tree.getParent() instanceof JViewport ? tree.getParent().getWidth() : tree.getWidth();
-        final int xOffset = tree.getParent() instanceof JViewport ? ((JViewport)tree.getParent()).getViewPosition().x : 0;
+        int containerWidth = tree.getParent() instanceof JViewport viewport ? viewport.getWidth() : tree.getWidth();
+        int xOffset = tree.getParent() instanceof JViewport viewport ? viewport.getViewPosition().x : 0;
 
         if (path != null && myWideSelection) {
             boolean selected = tree.isPathSelected(path);
             Graphics2D rowGraphics = (Graphics2D)g.create();
             rowGraphics.setClip(clipBounds);
 
-            final Object sourceList = tree.getClientProperty(SOURCE_LIST_CLIENT_PROPERTY);
+            Object sourceList = tree.getClientProperty(SOURCE_LIST_CLIENT_PROPERTY);
             Color background = tree.getBackground();
 
             if ((row % 2) == 0 && Boolean.TRUE.equals(tree.getClientProperty(STRIPED_CLIENT_PROPERTY))) {
@@ -361,16 +355,16 @@ public class WideSelectionTreeUI extends BasicTreeUI {
                         LIST_SELECTION_BACKGROUND_PAINTER.paintBorder(tree, rowGraphics, xOffset, bounds.y, containerWidth, bounds.height);
                     }
                 }
-                else if (myWideSelectionCondition.value(row)) {
+                else if (myWideSelectionCondition.test(row)) {
                     rowGraphics.setColor(background);
                     rowGraphics.fillRect(xOffset, bounds.y, containerWidth, bounds.height);
                 }
             }
             else {
-                if (selected && (UIUtil.isUnderAquaBasedLookAndFeel() || UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF())) {
+                if (selected && (UIUtil.isUnderAquaBasedLookAndFeel() || DarkThemeCalculator.isDark() || UIUtil.isUnderIntelliJLaF())) {
                     Color bg = getSelectionBackground(tree, true);
 
-                    if (myWideSelectionCondition.value(row)) {
+                    if (myWideSelectionCondition.test(row)) {
                         rowGraphics.setColor(bg);
                         rowGraphics.fillRect(xOffset, bounds.y, containerWidth, bounds.height);
                     }
@@ -395,12 +389,12 @@ public class WideSelectionTreeUI extends BasicTreeUI {
             paintSelectedRows(g, ((JTree)c));
         }
         if (myWideSelection) {
-            final int containerWidth = tree.getParent() instanceof JViewport ? tree.getParent().getWidth() : tree.getWidth();
-            final int xOffset = tree.getParent() instanceof JViewport ? ((JViewport)tree.getParent()).getViewPosition().x : 0;
-            final Rectangle bounds = g.getClipBounds();
+            int containerWidth = tree.getParent() instanceof JViewport viewport ? viewport.getWidth() : tree.getWidth();
+            int xOffset = tree.getParent() instanceof JViewport viewport ? viewport.getViewPosition().x : 0;
+            Rectangle bounds = g.getClipBounds();
 
             // draw background for the given clip bounds
-            final Object sourceList = tree.getClientProperty(SOURCE_LIST_CLIENT_PROPERTY);
+            Object sourceList = tree.getClientProperty(SOURCE_LIST_CLIENT_PROPERTY);
             if (sourceList != null && (Boolean)sourceList) {
                 Graphics2D backgroundGraphics = (Graphics2D)g.create();
                 backgroundGraphics.setClip(xOffset, bounds.y, containerWidth, bounds.height);
@@ -413,13 +407,13 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     }
 
     protected void paintSelectedRows(Graphics g, JTree tr) {
-        final Rectangle rect = tr.getVisibleRect();
-        final int firstVisibleRow = tr.getClosestRowForLocation(rect.x, rect.y);
-        final int lastVisibleRow = tr.getClosestRowForLocation(rect.x, rect.y + rect.height);
+        Rectangle rect = tr.getVisibleRect();
+        int firstVisibleRow = tr.getClosestRowForLocation(rect.x, rect.y);
+        int lastVisibleRow = tr.getClosestRowForLocation(rect.x, rect.y + rect.height);
 
         for (int row = firstVisibleRow; row <= lastVisibleRow; row++) {
-            if (tr.getSelectionModel().isRowSelected(row) && myWideSelectionCondition.value(row)) {
-                final Rectangle bounds = tr.getRowBounds(row);
+            if (tr.getSelectionModel().isRowSelected(row) && myWideSelectionCondition.test(row)) {
+                Rectangle bounds = tr.getRowBounds(row);
                 Color color = getSelectionBackground(tr, false);
                 if (color != null) {
                     g.setColor(color);
@@ -434,10 +428,8 @@ public class WideSelectionTreeUI extends BasicTreeUI {
         return new CellRendererPane() {
             @Override
             public void paintComponent(Graphics g, Component c, Container p, int x, int y, int w, int h, boolean shouldValidate) {
-                if (c instanceof JComponent && myWideSelection) {
-                    if (c.isOpaque()) {
-                        ((JComponent)c).setOpaque(false);
-                    }
+                if (c instanceof JComponent component && myWideSelection && c.isOpaque()) {
+                    component.setOpaque(false);
                 }
 
                 super.paintComponent(g, c, p, x, y, w, h, shouldValidate);
@@ -469,8 +461,8 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     @Nullable
     private static Color getSelectionBackground(@Nonnull JTree tree, boolean checkProperty) {
         Object property = tree.getClientProperty(TREE_TABLE_TREE_KEY);
-        if (property instanceof JTable) {
-            return ((JTable)property).getSelectionBackground();
+        if (property instanceof JTable table) {
+            return table.getSelectionBackground();
         }
         boolean selection = tree.hasFocus();
         if (!selection && checkProperty) {

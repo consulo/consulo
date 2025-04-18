@@ -22,13 +22,13 @@ import consulo.externalService.statistic.UsagesCollector;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class StatisticsUploadAssistant {
 
@@ -36,18 +36,18 @@ public class StatisticsUploadAssistant {
 
     @Nonnull
     public static Map<String, Set<PatchedUsage>> getPatchedUsages(
-        @Nonnull final Map<String, Set<UsageDescriptor>> allUsages,
-        final Map<String, Set<UsageDescriptor>> sentUsageMap
+        @Nonnull Map<String, Set<UsageDescriptor>> allUsages,
+        Map<String, Set<UsageDescriptor>> sentUsageMap
     ) {
         Map<String, Set<PatchedUsage>> patchedUsages = mapToPatchedUsagesMap(allUsages);
 
         for (Map.Entry<String, Set<UsageDescriptor>> sentUsageEntry : sentUsageMap.entrySet()) {
-            final String sentUsageGroupDescriptor = sentUsageEntry.getKey();
+            String sentUsageGroupDescriptor = sentUsageEntry.getKey();
 
-            final Set<UsageDescriptor> sentUsages = sentUsageEntry.getValue();
+            Set<UsageDescriptor> sentUsages = sentUsageEntry.getValue();
 
             for (UsageDescriptor sentUsage : sentUsages) {
-                final PatchedUsage descriptor = findDescriptor(patchedUsages, Pair.create(sentUsageGroupDescriptor, sentUsage.getKey()));
+                PatchedUsage descriptor = findDescriptor(patchedUsages, Couple.of(sentUsageGroupDescriptor, sentUsage.getKey()));
                 if (descriptor == null) {
                     if (!patchedUsages.containsKey(sentUsageGroupDescriptor)) {
                         patchedUsages.put(sentUsageGroupDescriptor, new LinkedHashSet<>());
@@ -75,11 +75,11 @@ public class StatisticsUploadAssistant {
     @Nonnull
     private static Map<String, Set<PatchedUsage>> packCollection(
         @Nonnull Map<String, Set<PatchedUsage>> patchedUsages,
-        Condition<PatchedUsage> condition
+        Predicate<PatchedUsage> condition
     ) {
         Map<String, Set<PatchedUsage>> result = new LinkedHashMap<>();
         for (String descriptor : patchedUsages.keySet()) {
-            final Set<PatchedUsage> usages = packCollection(patchedUsages.get(descriptor), condition);
+            Set<PatchedUsage> usages = packCollection(patchedUsages.get(descriptor), condition);
             if (usages.size() > 0) {
                 result.put(descriptor, usages);
             }
@@ -89,10 +89,10 @@ public class StatisticsUploadAssistant {
     }
 
     @Nonnull
-    private static <T> Set<T> packCollection(@Nonnull Collection<T> set, @Nonnull Condition<T> condition) {
-        final Set<T> result = new LinkedHashSet<>();
+    private static <T> Set<T> packCollection(@Nonnull Collection<T> set, @Nonnull Predicate<T> condition) {
+        Set<T> result = new LinkedHashSet<>();
         for (T t : set) {
-            if (condition.value(t)) {
+            if (condition.test(t)) {
                 result.add(t);
             }
         }
@@ -102,9 +102,9 @@ public class StatisticsUploadAssistant {
     @Nullable
     public static <T extends UsageDescriptor> T findDescriptor(
         @Nonnull Map<String, Set<T>> descriptors,
-        @Nonnull final Pair<String, String> id
+        @Nonnull Pair<String, String> id
     ) {
-        final Set<T> usages = descriptors.get(id.getFirst());
+        Set<T> usages = descriptors.get(id.getFirst());
         if (usages == null) {
             return null;
         }
@@ -117,11 +117,11 @@ public class StatisticsUploadAssistant {
         Map<String, Set<UsageDescriptor>> usageDescriptors = new LinkedHashMap<>();
 
         Application.get().getExtensionPoint(UsagesCollector.class).forEachExtensionSafe(usagesCollector -> {
-            final String groupDescriptor = usagesCollector.getGroupId();
+            String groupDescriptor = usagesCollector.getGroupId();
 
             if (!disabledGroups.contains(groupDescriptor)) {
                 try {
-                    final Set<UsageDescriptor> usages = usagesCollector.getUsages(project);
+                    Set<UsageDescriptor> usages = usagesCollector.getUsages(project);
                     usageDescriptors.put(groupDescriptor, usages);
                 }
                 catch (CollectUsagesException e) {

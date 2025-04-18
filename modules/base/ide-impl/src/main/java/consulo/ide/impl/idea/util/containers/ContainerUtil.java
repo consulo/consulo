@@ -30,8 +30,8 @@ import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.collection.primitive.longs.LongMaps;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.PairProcessor;
+import consulo.util.lang.function.Predicates;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntProcedure;
 import jakarta.annotation.Nonnull;
@@ -978,7 +978,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> List<T> skipNulls(@Nonnull Collection<? extends T> collection) {
-        return findAll(collection, Condition.NOT_NULL);
+        return findAll(collection, Predicates.notNull());
     }
 
     @Nonnull

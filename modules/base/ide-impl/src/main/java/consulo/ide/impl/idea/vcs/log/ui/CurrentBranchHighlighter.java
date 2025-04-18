@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.ui;
 
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ui.ex.JBColor;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -62,7 +62,7 @@ public class CurrentBranchHighlighter implements VcsLogHighlighter {
                 myConditions.put(details.getRoot(), condition);
             }
             else {
-                condition = Conditions.alwaysFalse();
+                condition = Predicates.alwaysFalse();
             }
         }
         if (condition != null && condition.test(new CommitId(details.getId(), details.getRoot()))) {

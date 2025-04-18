@@ -46,18 +46,16 @@ import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.lazy.LazyValue;
-import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.Timer;
@@ -115,17 +113,16 @@ public class UIUtil {
         @Override
         public JBIterable<Component> apply(@Nonnull Component c) {
             JBIterable<Component> result;
-            if (c instanceof JMenu) {
-                result = JBIterable.of(((JMenu)c).getMenuComponents());
+            if (c instanceof JMenu menu) {
+                result = JBIterable.of(menu.getMenuComponents());
             }
-            else if (c instanceof Container) {
-                result = JBIterable.of(((Container)c).getComponents());
+            else if (c instanceof Container container) {
+                result = JBIterable.of(container.getComponents());
             }
             else {
                 result = JBIterable.empty();
             }
-            if (c instanceof JComponent) {
-                JComponent jc = (JComponent)c;
+            if (c instanceof JComponent jc) {
                 Iterable<? extends Component> orphans = getClientProperty(jc, NOT_IN_HIERARCHY_COMPONENTS);
                 if (orphans != null) {
                     result = result.append(orphans);
@@ -148,10 +145,7 @@ public class UIUtil {
 
     public static int getMultiClickInterval() {
         Object property = Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
-        if (property instanceof Integer) {
-            return (Integer)property;
-        }
-        return 500;
+        return property instanceof Integer intValue ? intValue : 500;
     }
 
     private static Key<UndoManager> UNDO_MANAGER = Key.create("undoManager");
@@ -159,7 +153,7 @@ public class UIUtil {
         @Override
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
-            UndoManager manager = source instanceof JComponent ? getClientProperty((JComponent)source, UNDO_MANAGER) : null;
+            UndoManager manager = source instanceof JComponent component ? getClientProperty(component, UNDO_MANAGER) : null;
             if (manager != null && manager.canRedo()) {
                 manager.redo();
             }
@@ -169,7 +163,7 @@ public class UIUtil {
         @Override
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
-            UndoManager manager = source instanceof JComponent ? getClientProperty((JComponent)source, UNDO_MANAGER) : null;
+            UndoManager manager = source instanceof JComponent component ? getClientProperty(component, UNDO_MANAGER) : null;
             if (manager != null && manager.canUndo()) {
                 manager.undo();
             }
@@ -181,8 +175,8 @@ public class UIUtil {
             return false;
         }
         try {
-            final Class<?> clazz = ClassLoader.getSystemClassLoader().loadClass("sun.awt.X11GraphicsEnvironment");
-            final Method method = clazz.getMethod("isXRenderAvailable");
+            Class<?> clazz = ClassLoader.getSystemClassLoader().loadClass("sun.awt.X11GraphicsEnvironment");
+            Method method = clazz.getMethod("isXRenderAvailable");
             return (Boolean)method.invoke(null);
         }
         catch (Throwable e) {
@@ -219,11 +213,9 @@ public class UIUtil {
     public static final String TOOL_TIP_TEXT_KEY = "ToolTipText";
 
     public static void applyStyle(@Nonnull ComponentStyle componentStyle, @Nonnull Component comp) {
-        if (!(comp instanceof JComponent)) {
+        if (!(comp instanceof JComponent c)) {
             return;
         }
-
-        JComponent c = (JComponent)comp;
 
         if (isUnderAquaBasedLookAndFeel()) {
             c.putClientProperty("JComponent.sizeVariant", StringUtil.toLowerCase(componentStyle.name()));
@@ -237,7 +229,7 @@ public class UIUtil {
         }
     }
 
-    public static Cursor getTextCursor(final Color backgroundColor) {
+    public static Cursor getTextCursor(Color backgroundColor) {
         return Platform.current().os().isMac() && ColorUtil.isDark(backgroundColor)
             ? MacUIUtil.getInvertedTextCursor()
             : Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
@@ -273,11 +265,7 @@ public class UIUtil {
 
     @Nonnull
     public static JBIterable<Component> uiChildren(@Nullable Component component) {
-        if (!(component instanceof Container)) {
-            return JBIterable.empty();
-        }
-        Container container = (Container)component;
-        return JBIterable.of(container.getComponents());
+        return component instanceof Container container ? JBIterable.of(container.getComponents()) : JBIterable.empty();
     }
 
     @Nonnull
@@ -311,13 +299,9 @@ public class UIUtil {
     }
 
     public static final char MNEMONIC = BundleBase.MNEMONIC;
-    @NonNls
     public static final String HTML_MIME = "text/html";
-    @NonNls
     public static final String JSLIDER_ISFILLED = "JSlider.isFilled";
-    @NonNls
     public static final String ARIAL_FONT_NAME = "Arial";
-    @NonNls
     public static final String TABLE_FOCUS_CELL_BACKGROUND_PROPERTY = "Table.focusCellBackground";
     /**
      * Prevent component DataContext from returning parent editor
@@ -325,11 +309,8 @@ public class UIUtil {
      * <p>
      * Usage: {@code component.putClientProperty(HIDE_EDITOR_FROM_DATA_CONTEXT_PROPERTY, Boolean.TRUE)}
      */
-    @NonNls
     public static final String HIDE_EDITOR_FROM_DATA_CONTEXT_PROPERTY = "AuxEditorComponent";
-    @NonNls
     public static final String CENTER_TOOLTIP_DEFAULT = "ToCenterTooltip";
-    @NonNls
     public static final String CENTER_TOOLTIP_STRICT = "ToCenterTooltip.default";
 
     public static final Pattern CLOSE_TAG_PATTERN = Pattern.compile("<\\s*([^<>/ ]+)([^<>]*)/\\s*>", Pattern.CASE_INSENSITIVE);
@@ -379,10 +360,9 @@ public class UIUtil {
 
     public static float DEF_SYSTEM_FONT_SIZE = 12f; // TODO: consider 12 * 1.33 to compensate JDK's 72dpi font scale
 
-    @NonNls
     private static final String ROOT_PANE = "JRootPane.future";
 
-    private static final Ref<Boolean> ourRetina = Ref.create(Platform.current().os().isMac() ? null : false);
+    private static final SimpleReference<Boolean> ourRetina = SimpleReference.create(Platform.current().os().isMac() ? null : false);
 
     private UIUtil() {
     }
@@ -460,7 +440,7 @@ public class UIUtil {
 
                     try {
                         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        final GraphicsDevice device = env.getDefaultScreenDevice();
+                        GraphicsDevice device = env.getDefaultScreenDevice();
                         Integer scale = ReflectionUtil.getField(device.getClass(), device, int.class, "scale");
                         if (scale != null && scale.intValue() == 2) {
                             ourRetina.set(true);
@@ -492,7 +472,7 @@ public class UIUtil {
      * @return the property value from the specified component or {@code null}
      */
     public static Object getClientProperty(Object component, @Nonnull Object key) {
-        return component instanceof JComponent ? ((JComponent)component).getClientProperty(key) : null;
+        return component instanceof JComponent jComponent ? jComponent.getClientProperty(key) : null;
     }
 
     /**
@@ -529,8 +509,8 @@ public class UIUtil {
             result = text.replaceAll("\n", "<br>");
         }
         else {
-            final int bodyIdx = text.indexOf("<body>");
-            final int closedBodyIdx = text.indexOf("</body>");
+            int bodyIdx = text.indexOf("<body>");
+            int closedBodyIdx = text.indexOf("</body>");
             if (bodyIdx != -1 && closedBodyIdx != -1) {
                 result = text.substring(bodyIdx + "<body>".length(), closedBodyIdx);
             }
@@ -575,20 +555,20 @@ public class UIUtil {
         return !e.isAltDown() && !e.isControlDown();
     }
 
-    public static int getStringY(@Nonnull final String string, @Nonnull final Rectangle bounds, @Nonnull final Graphics2D g) {
-        final int centerY = bounds.height / 2;
-        final Font font = g.getFont();
-        final FontRenderContext frc = g.getFontRenderContext();
-        final Rectangle stringBounds = font.getStringBounds(string, frc).getBounds();
+    public static int getStringY(@Nonnull String string, @Nonnull Rectangle bounds, @Nonnull Graphics2D g) {
+        int centerY = bounds.height / 2;
+        Font font = g.getFont();
+        FontRenderContext frc = g.getFontRenderContext();
+        Rectangle stringBounds = font.getStringBounds(string, frc).getBounds();
 
         return (int)(centerY - stringBounds.height / 2.0 - stringBounds.y);
     }
 
-    public static void drawLabelDottedRectangle(final @Nonnull JLabel label, final @Nonnull Graphics g) {
+    public static void drawLabelDottedRectangle(@Nonnull JLabel label, @Nonnull Graphics g) {
         drawLabelDottedRectangle(label, g, null);
     }
 
-    public static void drawLabelDottedRectangle(final @Nonnull JLabel label, final @Nonnull Graphics g, @Nullable Rectangle bounds) {
+    public static void drawLabelDottedRectangle(@Nonnull JLabel label, @Nonnull Graphics g, @Nullable Rectangle bounds) {
         if (bounds == null) {
             bounds = getLabelTextBounds(label);
         }
@@ -602,11 +582,11 @@ public class UIUtil {
     }
 
     @Nonnull
-    public static Rectangle getLabelTextBounds(final @Nonnull JLabel label) {
-        final Dimension size = label.getPreferredSize();
+    public static Rectangle getLabelTextBounds(@Nonnull JLabel label) {
+        Dimension size = label.getPreferredSize();
         Icon icon = label.getIcon();
-        final Point point = new Point(0, 0);
-        final Insets insets = label.getInsets();
+        Point point = new Point(0, 0);
+        Insets insets = label.getInsets();
         if (icon != null) {
             if (label.getHorizontalTextPosition() == SwingConstants.TRAILING) {
                 point.x += label.getIconTextGap();
@@ -649,13 +629,10 @@ public class UIUtil {
                 component.setForeground(color);
             }
         }
-        if (recursively && enabled == component.isEnabled()) {
-            if (component instanceof Container) {
-                final Container container = (Container)component;
-                final int subComponentCount = container.getComponentCount();
-                for (int i = 0; i < subComponentCount; i++) {
-                    setEnabled(container.getComponent(i), enabled, recursively);
-                }
+        if (recursively && enabled == component.isEnabled() && component instanceof Container container) {
+            int subComponentCount = container.getComponentCount();
+            for (int i = 0; i < subComponentCount; i++) {
+                setEnabled(container.getComponent(i), enabled, recursively);
             }
         }
     }
@@ -691,7 +668,7 @@ public class UIUtil {
         try {
             g.setStroke(new BasicStroke(0.7F));
             double cycle = 4;
-            final double wavedAt = rectangle.y + (double)rectangle.height / 2 - .5;
+            double wavedAt = rectangle.y + (double)rectangle.height / 2 - .5;
             GeneralPath wavePath = new GeneralPath();
             wavePath.moveTo(rectangle.x, wavedAt - Math.cos(rectangle.x * 2 * Math.PI / cycle));
             for (int x = rectangle.x + 1; x <= rectangle.x + rectangle.width; x++) {
@@ -828,7 +805,7 @@ public class UIUtil {
     }
 
     public static Color getLabelDisabledForeground() {
-        final Color color = UIManager.getColor("Label.disabledForeground");
+        Color color = UIManager.getColor("Label.disabledForeground");
         if (color != null) {
             return color;
         }
@@ -863,7 +840,7 @@ public class UIUtil {
         return -1;
     }
 
-    public static String replaceMnemonicAmpersand(final String value) {
+    public static String replaceMnemonicAmpersand(String value) {
         return BundleBase.replaceMnemonicAmpersand(value);
     }
 
@@ -989,11 +966,11 @@ public class UIUtil {
         return getInactiveTextColor();
     }
 
-    public static void installPopupMenuColorAndFonts(final JComponent contentPane) {
+    public static void installPopupMenuColorAndFonts(JComponent contentPane) {
         LookAndFeel.installColorsAndFont(contentPane, "PopupMenu.background", "PopupMenu.foreground", "PopupMenu.font");
     }
 
-    public static void installPopupMenuBorder(final JComponent contentPane) {
+    public static void installPopupMenuBorder(JComponent contentPane) {
         LookAndFeel.installBorder(contentPane, "PopupMenu.border");
     }
 
@@ -1029,7 +1006,7 @@ public class UIUtil {
         return UIManager.getColor("Button.select");
     }
 
-    public static Integer getPropertyMaxGutterIconWidth(final String propertyPrefix) {
+    public static Integer getPropertyMaxGutterIconWidth(String propertyPrefix) {
         return (Integer)UIManager.get(propertyPrefix + ".maxGutterIconWidth");
     }
 
@@ -1045,7 +1022,7 @@ public class UIUtil {
         return UIManager.get("MenuItem.disabledForeground");
     }
 
-    public static Object getTabbedPanePaintContentBorder(final JComponent c) {
+    public static Object getTabbedPanePaintContentBorder(JComponent c) {
         return c.getClientProperty("TabbedPane.paintContentBorder");
     }
 
@@ -1058,7 +1035,7 @@ public class UIUtil {
         return isUnderGTKLookAndFeel() ? getTreeTextBackground() : UIManager.getColor("Table.background");
     }
 
-    public static Color getTableBackground(final boolean isSelected) {
+    public static Color getTableBackground(boolean isSelected) {
         return isSelected ? getTableSelectionBackground() : getTableBackground();
     }
 
@@ -1073,7 +1050,7 @@ public class UIUtil {
         return UIManager.getColor("Table.foreground");
     }
 
-    public static Color getTableForeground(final boolean isSelected) {
+    public static Color getTableForeground(boolean isSelected) {
         return isSelected ? getTableSelectionForeground() : getTableForeground();
     }
 
@@ -1189,7 +1166,7 @@ public class UIUtil {
         return UIManager.getColor("TabbedPane.background");
     }
 
-    public static void setSliderIsFilled(final JSlider slider, final boolean value) {
+    public static void setSliderIsFilled(JSlider slider, boolean value) {
         slider.putClientProperty("JSlider.isFilled", Boolean.valueOf(value));
     }
 
@@ -1242,11 +1219,11 @@ public class UIUtil {
         return UIManager.getBorder("Table.focusCellHighlightBorder");
     }
 
-    public static void setLineStyleAngled(final ClientPropertyHolder component) {
+    public static void setLineStyleAngled(ClientPropertyHolder component) {
         component.putClientProperty("JTree.lineStyle", "Angled");
     }
 
-    public static void setLineStyleAngled(final JTree component) {
+    public static void setLineStyleAngled(JTree component) {
         component.putClientProperty("JTree.lineStyle", "Angled");
     }
 
@@ -1287,11 +1264,7 @@ public class UIUtil {
 
     private static consulo.ui.image.Image wrapToImageIfNeed(String imageIcon) {
         Icon icon = UIManager.getIcon(imageIcon);
-        if (icon instanceof consulo.ui.image.Image) {
-            return (consulo.ui.image.Image)icon;
-        }
-
-        return new ImageWrapper(icon);
+        return icon instanceof consulo.ui.image.Image image ? image : new ImageWrapper(icon);
     }
 
     private static class ImageWrapper implements Icon, consulo.ui.image.Image {
@@ -1480,7 +1453,7 @@ public class UIUtil {
         return Platform.current().os().isMac() ? mouseEvent.isMetaDown() : mouseEvent.isControlDown();
     }
 
-    public static String[] getValidFontNames(final boolean familyName) {
+    public static String[] getValidFontNames(boolean familyName) {
         Set<String> result = new TreeSet<String>();
 
         // adds fonts that can display symbols at [A, Z] + [a, z] + [0, 9]
@@ -1519,17 +1492,17 @@ public class UIUtil {
         }
     }
 
-    public static void setupEnclosingDialogBounds(final JComponent component) {
+    public static void setupEnclosingDialogBounds(JComponent component) {
         component.revalidate();
         component.repaint();
-        final Window window = SwingUtilities.windowForComponent(component);
+        Window window = SwingUtilities.windowForComponent(component);
         if (window != null && (window.getSize().height < window.getMinimumSize().height || window.getSize().width < window.getMinimumSize().width)) {
             window.pack();
         }
     }
 
     public static String displayPropertiesToCSS(Font font, Color fg) {
-        @NonNls StringBuilder rule = new StringBuilder("body {");
+        StringBuilder rule = new StringBuilder("body {");
         if (font != null) {
             rule.append(" font-family: ");
             rule.append(font.getFamily());
@@ -1553,7 +1526,7 @@ public class UIUtil {
         return rule.toString();
     }
 
-    public static void appendColor(final Color color, final StringBuilder sb) {
+    public static void appendColor(Color color, StringBuilder sb) {
         if (color.getRed() < 16) {
             sb.append('0');
         }
@@ -1606,13 +1579,13 @@ public class UIUtil {
      * @param opaque  If opaque the image will be dr
      */
     public static void drawBoldDottedLine(
-        final Graphics2D g,
-        final int startX,
-        final int endX,
-        final int lineY,
-        final Color bgColor,
-        final Color fgColor,
-        final boolean opaque
+        Graphics2D g,
+        int startX,
+        int endX,
+        int lineY,
+        Color bgColor,
+        Color fgColor,
+        boolean opaque
     ) {
         if ((Platform.current().os().isMac() && !isRetina()) || Platform.current().os().isLinux()) {
             drawAppleDottedLine(g, startX, endX, lineY, bgColor, fgColor, opaque);
@@ -1622,16 +1595,16 @@ public class UIUtil {
         }
     }
 
-    public static void drawSearchMatch(final Graphics2D g, final int startX, final int endX, final int height) {
+    public static void drawSearchMatch(Graphics2D g, int startX, int endX, int height) {
         Color c1 = new Color(255, 234, 162);
         Color c2 = new Color(255, 208, 66);
         drawSearchMatch(g, startX, endX, height, c1, c2);
     }
 
     public static void drawSearchMatch(Graphics2D g, int startX, int endX, int height, Color c1, Color c2) {
-        final boolean drawRound = endX - startX > 4;
+        boolean drawRound = endX - startX > 4;
 
-        final Composite oldComposite = g.getComposite();
+        Composite oldComposite = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
         g.setPaint(getGradientPaint(startX, 2, c1, startX, height - 5, c2));
 
@@ -1666,15 +1639,15 @@ public class UIUtil {
     }
 
     private static void drawBoringDottedLine(
-        final Graphics2D g,
-        final int startX,
-        final int endX,
-        final int lineY,
-        final Color bgColor,
-        final Color fgColor,
-        final boolean opaque
+        Graphics2D g,
+        int startX,
+        int endX,
+        int lineY,
+        Color bgColor,
+        Color fgColor,
+        boolean opaque
     ) {
-        final Color oldColor = g.getColor();
+        Color oldColor = g.getColor();
 
         // Fill 2 lines with background color
         if (opaque && bgColor != null) {
@@ -1691,8 +1664,8 @@ public class UIUtil {
         //
         // (where "C" - colored pixel, " " - white pixel)
 
-        final int step = 4;
-        final int startPosCorrection = startX % step < 3 ? 0 : 1;
+        int step = 4;
+        int startPosCorrection = startX % step < 3 ? 0 : 1;
 
         g.setColor(fgColor != null ? fgColor : oldColor);
         // Now draw bold line segments
@@ -1705,8 +1678,8 @@ public class UIUtil {
         g.setColor(oldColor);
     }
 
-    public static void drawGradientHToolbarBackground(final Graphics g, final int width, final int height) {
-        final Graphics2D g2d = (Graphics2D)g;
+    public static void drawGradientHToolbarBackground(Graphics g, int width, int height) {
+        Graphics2D g2d = (Graphics2D)g;
         g2d.setPaint(getGradientPaint(0, 0, Gray._215, 0, height, Gray._200));
         g2d.fillRect(0, 0, width, height);
     }
@@ -1752,11 +1725,11 @@ public class UIUtil {
     }
 
     public static void drawDoubleSpaceDottedLine(
-        final Graphics2D g,
-        final int start,
-        final int end,
-        final int xOrY,
-        final Color fgColor,
+        Graphics2D g,
+        int start,
+        int end,
+        int xOrY,
+        Color fgColor,
         boolean horizontal
     ) {
 
@@ -1772,15 +1745,15 @@ public class UIUtil {
     }
 
     private static void drawAppleDottedLine(
-        final Graphics2D g,
-        final int startX,
-        final int endX,
-        final int lineY,
-        final Color bgColor,
-        final Color fgColor,
-        final boolean opaque
+        Graphics2D g,
+        int startX,
+        int endX,
+        int lineY,
+        Color bgColor,
+        Color fgColor,
+        boolean opaque
     ) {
-        final Color oldColor = g.getColor();
+        Color oldColor = g.getColor();
 
         // Fill 3 lines with background color
         if (opaque && bgColor != null) {
@@ -1795,7 +1768,7 @@ public class UIUtil {
         painter.paint(g, startX, endX, lineY);
     }
 
-    public static void applyRenderingHints(final Graphics g) {
+    public static void applyRenderingHints(Graphics g) {
         Toolkit tk = Toolkit.getDefaultToolkit();
         //noinspection HardCodedStringLiteral
         Map map = (Map)tk.getDesktopProperty("awt.font.desktophints");
@@ -1850,8 +1823,7 @@ public class UIUtil {
      */
     @Nonnull
     public static BufferedImage createImage(Graphics g, int width, int height, int type) {
-        if (g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D)g;
+        if (g instanceof Graphics2D g2d) {
             if (isJreHiDPI(g2d)) {
                 return RetinaImage.create(g2d, width, height, type);
             }
@@ -1867,8 +1839,7 @@ public class UIUtil {
      */
     @Nonnull
     public static BufferedImage createImage(Graphics g, double width, double height, int type, @Nonnull PaintUtil.RoundingMode rm) {
-        if (g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D)g;
+        if (g instanceof Graphics2D g2d) {
             if (isJreHiDPI(g2d)) {
                 return RetinaImage.create(g2d, width, height, type, rm);
             }
@@ -2007,8 +1978,7 @@ public class UIUtil {
         }
         boolean hasDstSize = dw >= 0 && dh >= 0;
 
-        if (image instanceof JBHiDPIScaledImage) {
-            JBHiDPIScaledImage hidpiImage = (JBHiDPIScaledImage)image;
+        if (image instanceof JBHiDPIScaledImage hidpiImage) {
             Image delegate = hidpiImage.getDelegate();
             if (delegate != null) {
                 image = delegate;
@@ -2032,7 +2002,7 @@ public class UIUtil {
                 invG.setTransform(tx);
             }
         }
-        final double _scale = scale;
+        double _scale = scale;
         Function<Integer, Integer> size = new Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer size) {
@@ -2040,8 +2010,8 @@ public class UIUtil {
             }
         };
         try {
-            if (op != null && image instanceof BufferedImage) {
-                image = op.filter((BufferedImage)image, null);
+            if (op != null && image instanceof BufferedImage bufferedImage) {
+                image = op.filter(bufferedImage, null);
             }
             if (invG != null && hasDstSize) {
                 dw = size.apply(dw);
@@ -2136,16 +2106,15 @@ public class UIUtil {
     @TestOnly
     public static void dispatchAllInvocationEvents() {
         assert SwingUtilities.isEventDispatchThread() : Thread.currentThread();
-        final EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+        EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
         while (true) {
             AWTEvent event = eventQueue.peekEvent();
             if (event == null) {
                 break;
             }
             try {
-                AWTEvent event1 = eventQueue.getNextEvent();
-                if (event1 instanceof InvocationEvent) {
-                    ((InvocationEvent)event1).dispatch();
+                if (eventQueue.getNextEvent() instanceof InvocationEvent invocationEvent) {
+                    invocationEvent.dispatch();
                 }
             }
             catch (Exception e) {
@@ -2157,7 +2126,7 @@ public class UIUtil {
     @TestOnly
     public static void pump() {
         assert !SwingUtilities.isEventDispatchThread();
-        final BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>();
+        BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -2172,7 +2141,7 @@ public class UIUtil {
         }
     }
 
-    public static void addAwtListener(final AWTEventListener listener, long mask, consulo.disposer.Disposable parent) {
+    public static void addAwtListener(AWTEventListener listener, long mask, consulo.disposer.Disposable parent) {
         Toolkit.getDefaultToolkit().addAWTEventListener(listener, mask);
         consulo.disposer.Disposer.register(parent, () -> Toolkit.getDefaultToolkit().removeAWTEventListener(listener));
     }
@@ -2185,7 +2154,7 @@ public class UIUtil {
         component.removePropertyChangeListener("ancestor", listener);
     }
 
-    public static void drawVDottedLine(Graphics2D g, int lineX, int startY, int endY, @Nullable final Color bgColor, final Color fgColor) {
+    public static void drawVDottedLine(Graphics2D g, int lineX, int startY, int endY, @Nullable Color bgColor, Color fgColor) {
         if (bgColor != null) {
             g.setColor(bgColor);
             drawLine(g, lineX, startY, lineX, endY);
@@ -2197,7 +2166,7 @@ public class UIUtil {
         }
     }
 
-    public static void drawHDottedLine(Graphics2D g, int startX, int endX, int lineY, @Nullable final Color bgColor, final Color fgColor) {
+    public static void drawHDottedLine(Graphics2D g, int startX, int endX, int lineY, @Nullable Color bgColor, Color fgColor) {
         if (bgColor != null) {
             g.setColor(bgColor);
             drawLine(g, startX, lineY, endX, lineY);
@@ -2210,7 +2179,7 @@ public class UIUtil {
         }
     }
 
-    public static void drawDottedLine(Graphics2D g, int x1, int y1, int x2, int y2, @Nullable final Color bgColor, final Color fgColor) {
+    public static void drawDottedLine(Graphics2D g, int x1, int y1, int x2, int y2, @Nullable Color bgColor, Color fgColor) {
         if (x1 == x2) {
             drawVDottedLine(g, x1, y1, y2, bgColor, fgColor);
         }
@@ -2264,8 +2233,8 @@ public class UIUtil {
         drawCenteredString(g, rect, str, true, true);
     }
 
-    public static boolean isFocusAncestor(@Nonnull final Component component) {
-        final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+    public static boolean isFocusAncestor(@Nonnull Component component) {
+        Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         if (owner == null) {
             return false;
         }
@@ -2316,7 +2285,7 @@ public class UIUtil {
 
     @Nonnull
     public static Color getBgFillColor(@Nonnull Component c) {
-        final Component parent = findNearestOpaque(c);
+        Component parent = findNearestOpaque(c);
         return parent == null ? c.getBackground() : parent.getBackground();
     }
 
@@ -2334,10 +2303,10 @@ public class UIUtil {
     }
 
     @Nullable
-    public static Component findParentByCondition(@Nullable Component c, Condition<Component> condition) {
+    public static Component findParentByCondition(@Nullable Component c, Predicate<Component> condition) {
         Component eachParent = c;
         while (eachParent != null) {
-            if (condition.value(eachParent)) {
+            if (condition.test(eachParent)) {
                 return eachParent;
             }
             eachParent = eachParent.getParent();
@@ -2345,29 +2314,26 @@ public class UIUtil {
         return null;
     }
 
-
-    @NonNls
-    public static String getCssFontDeclaration(final Font font) {
+    public static String getCssFontDeclaration(Font font) {
         return getCssFontDeclaration(font, null, null, null);
     }
 
     @Language("HTML")
-    @NonNls
     public static String getCssFontDeclaration(
-        final Font font,
+        Font font,
         @Nullable Color fgColor,
         @Nullable Color linkColor,
         @Nullable String liImg
     ) {
         URL resource = liImg != null ? SystemInfo.class.getResource(liImg) : null;
 
-        @NonNls String fontFamilyAndSize = "font-family:" + font.getFamily() + "; font-size:" + font.getSize() + ";";
-        @NonNls @Language("HTML") String body =
+        String fontFamilyAndSize = "font-family:" + font.getFamily() + "; font-size:" + font.getSize() + ";";
+        @Language("HTML") String body =
             "body, div, td, p {" + fontFamilyAndSize + " " + (fgColor != null ? "color:" + ColorUtil.toHex(fgColor) : "") + "}";
         if (resource != null) {
             body += "ul {list-style-image: " + resource.toExternalForm() + "}";
         }
-        @NonNls String link = linkColor != null ? "a {" + fontFamilyAndSize + " color:" + ColorUtil.toHex(linkColor) + "}" : "";
+        String link = linkColor != null ? "a {" + fontFamilyAndSize + " color:" + ColorUtil.toHex(linkColor) + "}" : "";
         return "<style> " + body + " " + link + "</style>";
     }
 
@@ -2387,13 +2353,13 @@ public class UIUtil {
         return focused ? getFocusedBoundsColor() : getBoundsColor();
     }
 
-    public static Color toAlpha(final Color color, final int alpha) {
+    public static Color toAlpha(Color color, int alpha) {
         Color actual = color != null ? color : Color.black;
         return new Color(actual.getRed(), actual.getGreen(), actual.getBlue(), alpha);
     }
 
     @Deprecated
-    public static void requestFocus(@Nonnull final JComponent c) {
+    public static void requestFocus(@Nonnull JComponent c) {
         if (c.isShowing()) {
             c.requestFocus();
         }
@@ -2409,22 +2375,22 @@ public class UIUtil {
 
     //todo maybe should do for all kind of listeners via the AWTEventMulticaster class
 
-    public static void dispose(final Component c) {
+    public static void dispose(Component c) {
         if (c == null) {
             return;
         }
 
-        final MouseListener[] mouseListeners = c.getMouseListeners();
+        MouseListener[] mouseListeners = c.getMouseListeners();
         for (MouseListener each : mouseListeners) {
             c.removeMouseListener(each);
         }
 
-        final MouseMotionListener[] motionListeners = c.getMouseMotionListeners();
+        MouseMotionListener[] motionListeners = c.getMouseMotionListeners();
         for (MouseMotionListener each : motionListeners) {
             c.removeMouseMotionListener(each);
         }
 
-        final MouseWheelListener[] mouseWheelListeners = c.getMouseWheelListeners();
+        MouseWheelListener[] mouseWheelListeners = c.getMouseWheelListeners();
         for (MouseWheelListener each : mouseWheelListeners) {
             c.removeMouseWheelListener(each);
         }
@@ -2517,21 +2483,21 @@ public class UIUtil {
 
     public static FontUIResource getFontWithFallback(@Nonnull String familyName, @JdkConstants.FontStyle int style, int size) {
         Font fontWithFallback = StyleContext.getDefaultStyleContext().getFont(familyName, style, size);
-        return fontWithFallback instanceof FontUIResource ? (FontUIResource)fontWithFallback : new FontUIResource(fontWithFallback);
+        return fontWithFallback instanceof FontUIResource fontUIRes ? fontUIRes : new FontUIResource(fontWithFallback);
     }
 
-    public static void removeScrollBorder(final Component c) {
+    public static void removeScrollBorder(Component c) {
         for (JScrollPane scrollPane : uiTraverser(c).filter(JScrollPane.class)) {
-            if (!uiParents(scrollPane, true).takeWhile(Conditions.notEqualTo(c))
-                .filter(Conditions.not(Conditions.instanceOf(JPanel.class, JLayeredPane.class)))
+            if (!uiParents(scrollPane, true).takeWhile(Predicates.notEqualTo(c))
+                .filter(Predicates.not(Predicates.instanceOf(JPanel.class, JLayeredPane.class)))
                 .isEmpty()) {
                 continue;
             }
 
             Integer keepBorderSides = getClientProperty(scrollPane, KEEP_BORDER_SIDES);
             if (keepBorderSides != null) {
-                if (scrollPane.getBorder() instanceof LineBorder) {
-                    Color color = ((LineBorder)scrollPane.getBorder()).getLineColor();
+                if (scrollPane.getBorder() instanceof LineBorder lineBorder) {
+                    Color color = lineBorder.getLineColor();
                     scrollPane.setBorder(new SideBorder(color, keepBorderSides.intValue()));
                 }
                 else {
@@ -2581,22 +2547,21 @@ public class UIUtil {
         return toHtml(html, 0);
     }
 
-    @NonNls
-    public static String toHtml(String html, final int hPadding) {
+    public static String toHtml(String html, int hPadding) {
         html = CLOSE_TAG_PATTERN.matcher(html).replaceAll("<$1$2></$1>");
         Font font = getLabelFont();
-        @NonNls String family = font != null ? font.getFamily() : "Tahoma";
+        String family = font != null ? font.getFamily() : "Tahoma";
         int size = font != null ? font.getSize() : 11;
         return "<html><style>body { font-family: " + family + "; font-size: " + size + ";} ul li {list-style-type:circle;}</style>" +
             addPadding(html, hPadding) + "</html>";
     }
 
-    public static String addPadding(final String html, int hPadding) {
+    public static String addPadding(String html, int hPadding) {
         return String.format("<p style=\"margin: 0 %dpx 0 %dpx;\">%s</p>", hPadding, hPadding, html);
     }
 
     public static String convertSpace2Nbsp(String html) {
-        @NonNls StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         int currentPos = 0;
         int braces = 0;
         while (currentPos < html.length()) {
@@ -2652,8 +2617,8 @@ public class UIUtil {
         }
     }
 
-    public static <T> T invokeAndWaitIfNeeded(@RequiredUIAccess @Nonnull final Supplier<T> computable) {
-        final SimpleReference<T> result = SimpleReference.create();
+    public static <T> T invokeAndWaitIfNeeded(@RequiredUIAccess @Nonnull Supplier<T> computable) {
+        SimpleReference<T> result = SimpleReference.create();
         invokeAndWaitIfNeeded(new Runnable() {
             @Override
             public void run() {
@@ -2663,12 +2628,12 @@ public class UIUtil {
         return result.get();
     }
 
-    public static void invokeAndWaitIfNeeded(@RequiredUIAccess @Nonnull final ThrowableRunnable runnable) throws Throwable {
+    public static void invokeAndWaitIfNeeded(@RequiredUIAccess @Nonnull ThrowableRunnable runnable) throws Throwable {
         if (EDT.isCurrentThreadEdt()) {
             runnable.run();
         }
         else {
-            final SimpleReference<Throwable> ref = new SimpleReference<Throwable>();
+            SimpleReference<Throwable> ref = new SimpleReference<Throwable>();
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
@@ -2706,30 +2671,34 @@ public class UIUtil {
      * @param component  component.
      * @param background new background.
      */
-    public static void changeBackGround(final Component component, final Color background) {
-        final Color oldBackGround = component.getBackground();
+    public static void changeBackGround(Component component, Color background) {
+        Color oldBackGround = component.getBackground();
         if (background == null || !background.equals(oldBackGround)) {
             component.setBackground(background);
         }
     }
 
-    public static void addKeyboardShortcut(final JComponent target, final AbstractButton button, final KeyStroke keyStroke) {
-        target.registerKeyboardAction(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (button.isEnabled()) {
-                    button.doClick();
+    public static void addKeyboardShortcut(JComponent target, AbstractButton button, KeyStroke keyStroke) {
+        target.registerKeyboardAction(
+            new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (button.isEnabled()) {
+                        button.doClick();
+                    }
                 }
-            }
-        }, keyStroke, JComponent.WHEN_FOCUSED);
+            },
+            keyStroke,
+            JComponent.WHEN_FOCUSED
+        );
     }
 
     public static void installComboBoxCopyAction(JComboBox comboBox) {
-        final Component editorComponent = comboBox.getEditor().getEditorComponent();
-        if (!(editorComponent instanceof JTextComponent)) {
+        Component editorComponent = comboBox.getEditor().getEditorComponent();
+        if (!(editorComponent instanceof JTextComponent textComponent)) {
             return;
         }
-        final InputMap inputMap = ((JTextComponent)editorComponent).getInputMap();
+        InputMap inputMap = textComponent.getInputMap();
         for (KeyStroke keyStroke : inputMap.allKeys()) {
             if (DefaultEditorKit.copyAction.equals(inputMap.get(keyStroke))) {
                 comboBox.getInputMap().put(keyStroke, DefaultEditorKit.copyAction);
@@ -2737,24 +2706,24 @@ public class UIUtil {
         }
         comboBox.getActionMap().put(DefaultEditorKit.copyAction, new AbstractAction() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 if (!(e.getSource() instanceof JComboBox)) {
                     return;
                 }
-                final JComboBox comboBox = (JComboBox)e.getSource();
-                final String text;
-                final Object selectedItem = comboBox.getSelectedItem();
-                if (selectedItem instanceof String) {
-                    text = (String)selectedItem;
+                JComboBox comboBox = (JComboBox)e.getSource();
+                String text;
+                Object selectedItem = comboBox.getSelectedItem();
+                if (selectedItem instanceof String selectedText) {
+                    text = selectedText;
                 }
                 else {
-                    final Component component =
+                    Component component =
                         comboBox.getRenderer().getListCellRendererComponent(new JList(), selectedItem, 0, false, false);
-                    if (component instanceof JLabel) {
-                        text = ((JLabel)component).getText();
+                    if (component instanceof JLabel label) {
+                        text = label.getText();
                     }
                     else if (component != null) {
-                        final String str = component.toString();
+                        String str = component.toString();
                         // skip default Component.toString and handle SimpleColoredComponent case
                         text = str == null || str.startsWith(component.getClass().getName() + "[") ? null : str;
                     }
@@ -2763,7 +2732,7 @@ public class UIUtil {
                     }
                 }
                 if (text != null) {
-                    final JTextField textField = new JTextField(text);
+                    JTextField textField = new JTextField(text);
                     textField.selectAll();
                     textField.copy();
                 }
@@ -2774,14 +2743,14 @@ public class UIUtil {
     @SuppressWarnings({"HardCodedStringLiteral"})
     public static void fixFormattedField(JFormattedTextField field) {
         if (Platform.current().os().isMac()) {
-            final Toolkit toolkit = Toolkit.getDefaultToolkit();
-            final int commandKeyMask = toolkit.getMenuShortcutKeyMask();
-            final InputMap inputMap = field.getInputMap();
-            final KeyStroke copyKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_C, commandKeyMask);
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            int commandKeyMask = toolkit.getMenuShortcutKeyMask();
+            InputMap inputMap = field.getInputMap();
+            KeyStroke copyKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_C, commandKeyMask);
             inputMap.put(copyKeyStroke, "copy-to-clipboard");
-            final KeyStroke pasteKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_V, commandKeyMask);
+            KeyStroke pasteKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_V, commandKeyMask);
             inputMap.put(pasteKeyStroke, "paste-from-clipboard");
-            final KeyStroke cutKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_X, commandKeyMask);
+            KeyStroke cutKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_X, commandKeyMask);
             inputMap.put(cutKeyStroke, "cut-to-clipboard");
         }
     }
@@ -2838,7 +2807,7 @@ public class UIUtil {
     }
 
     @Deprecated
-    public static int fixComboBoxHeight(final int height) {
+    public static int fixComboBoxHeight(int height) {
         return height;
     }
 
@@ -2853,7 +2822,7 @@ public class UIUtil {
      */
     public static boolean isDescendingFrom(@Nullable Component child, @Nonnull Component parent) {
         while (child != null && child != parent) {
-            child = child instanceof JPopupMenu ? ((JPopupMenu)child).getInvoker() : child.getParent();
+            child = child instanceof JPopupMenu popupMenu ? popupMenu.getInvoker() : child.getParent();
         }
         return child == parent;
     }
@@ -2863,7 +2832,7 @@ public class UIUtil {
         Component eachParent = c;
         while (eachParent != null) {
             if (cls.isAssignableFrom(eachParent.getClass())) {
-                @SuppressWarnings({"unchecked"}) final T t = (T)eachParent;
+                @SuppressWarnings({"unchecked"}) T t = (T)eachParent;
                 return t;
             }
 
@@ -2873,14 +2842,14 @@ public class UIUtil {
         return null;
     }
 
-    public static void scrollListToVisibleIfNeeded(@Nonnull final JList list) {
+    public static void scrollListToVisibleIfNeeded(@Nonnull JList list) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                final int selectedIndex = list.getSelectedIndex();
+                int selectedIndex = list.getSelectedIndex();
                 if (selectedIndex >= 0) {
-                    final Rectangle visibleRect = list.getVisibleRect();
-                    final Rectangle cellBounds = list.getCellBounds(selectedIndex, selectedIndex);
+                    Rectangle visibleRect = list.getVisibleRect();
+                    Rectangle cellBounds = list.getCellBounds(selectedIndex, selectedIndex);
                     if (!visibleRect.contains(cellBounds)) {
                         list.scrollRectToVisible(cellBounds);
                     }
@@ -2892,12 +2861,12 @@ public class UIUtil {
     @Nullable
     public static <T extends JComponent> T findComponentOfType(JComponent parent, Class<T> cls) {
         if (parent == null || cls.isAssignableFrom(parent.getClass())) {
-            @SuppressWarnings({"unchecked"}) final T t = (T)parent;
+            @SuppressWarnings({"unchecked"}) T t = (T)parent;
             return t;
         }
         for (Component component : parent.getComponents()) {
-            if (component instanceof JComponent) {
-                T comp = findComponentOfType((JComponent)component, cls);
+            if (component instanceof JComponent jComponent) {
+                T comp = findComponentOfType(jComponent, cls);
                 if (comp != null) {
                     return comp;
                 }
@@ -2907,7 +2876,7 @@ public class UIUtil {
     }
 
     public static <T extends JComponent> List<T> findComponentsOfType(JComponent parent, Class<T> cls) {
-        final ArrayList<T> result = new ArrayList<T>();
+        ArrayList<T> result = new ArrayList<T>();
         findComponentsOfType(parent, cls, result);
         return result;
     }
@@ -2917,12 +2886,12 @@ public class UIUtil {
             return;
         }
         if (cls.isAssignableFrom(parent.getClass())) {
-            @SuppressWarnings({"unchecked"}) final T t = (T)parent;
+            @SuppressWarnings({"unchecked"}) T t = (T)parent;
             result.add(t);
         }
         for (Component c : parent.getComponents()) {
-            if (c instanceof JComponent) {
-                findComponentsOfType((JComponent)c, cls, result);
+            if (c instanceof JComponent jComponent) {
+                findComponentsOfType(jComponent, cls, result);
             }
         }
     }
@@ -2939,23 +2908,23 @@ public class UIUtil {
             myLineSpacing = 1.0f;
         }
 
-        public TextPainter withShadow(final boolean drawShadow) {
+        public TextPainter withShadow(boolean drawShadow) {
             myDrawShadow = drawShadow;
             return this;
         }
 
-        public TextPainter withShadow(final boolean drawShadow, final Color shadowColor) {
+        public TextPainter withShadow(boolean drawShadow, Color shadowColor) {
             myDrawShadow = drawShadow;
             myShadowColor = shadowColor;
             return this;
         }
 
-        public TextPainter withLineSpacing(final float lineSpacing) {
+        public TextPainter withLineSpacing(float lineSpacing) {
             myLineSpacing = lineSpacing;
             return this;
         }
 
-        public TextPainter appendLine(final String text) {
+        public TextPainter appendLine(String text) {
             if (text == null || text.isEmpty()) {
                 return this;
             }
@@ -2963,9 +2932,9 @@ public class UIUtil {
             return this;
         }
 
-        public TextPainter underlined(@Nullable final Color color) {
+        public TextPainter underlined(@Nullable Color color) {
             if (!myLines.isEmpty()) {
-                final LineInfo info = myLines.get(myLines.size() - 1).getSecond();
+                LineInfo info = myLines.get(myLines.size() - 1).getSecond();
                 info.underlined = true;
                 info.underlineColor = color;
             }
@@ -2973,9 +2942,9 @@ public class UIUtil {
             return this;
         }
 
-        public TextPainter withBullet(final char c) {
+        public TextPainter withBullet(char c) {
             if (!myLines.isEmpty()) {
-                final LineInfo info = myLines.get(myLines.size() - 1).getSecond();
+                LineInfo info = myLines.get(myLines.size() - 1).getSecond();
                 info.withBullet = true;
                 info.bulletChar = c;
             }
@@ -3010,23 +2979,23 @@ public class UIUtil {
         /**
          * _position(block width, block height) => (x, y) of the block
          */
-        public void draw(@Nonnull final Graphics g, final BiFunction<Integer, Integer, Couple<Integer>> _position) {
-            final int[] maxWidth = {0};
-            final int[] height = {0};
-            final int[] maxBulletWidth = {0};
+        public void draw(@Nonnull Graphics g, BiFunction<Integer, Integer, Couple<Integer>> _position) {
+            int[] maxWidth = {0};
+            int[] height = {0};
+            int[] maxBulletWidth = {0};
             ContainerUtil.process(myLines, new Predicate<Pair<String, LineInfo>>() {
                 @Override
-                public boolean test(final Pair<String, LineInfo> pair) {
-                    final LineInfo info = pair.getSecond();
+                public boolean test(Pair<String, LineInfo> pair) {
+                    LineInfo info = pair.getSecond();
                     Font old = null;
                     if (info.smaller) {
                         old = g.getFont();
                         g.setFont(old.deriveFont(old.getSize() * 0.70f));
                     }
 
-                    final FontMetrics fm = g.getFontMetrics();
+                    FontMetrics fm = g.getFontMetrics();
 
-                    final int bulletWidth = info.withBullet ? fm.stringWidth(" " + info.bulletChar) : 0;
+                    int bulletWidth = info.withBullet ? fm.stringWidth(" " + info.bulletChar) : 0;
                     maxBulletWidth[0] = Math.max(maxBulletWidth[0], bulletWidth);
 
                     maxWidth[0] = Math.max(
@@ -3043,14 +3012,14 @@ public class UIUtil {
                 }
             });
 
-            final Pair<Integer, Integer> position = _position.apply(maxWidth[0] + 20, height[0]);
+            Pair<Integer, Integer> position = _position.apply(maxWidth[0] + 20, height[0]);
             assert position != null;
 
-            final int[] yOffset = {position.getSecond()};
+            int[] yOffset = {position.getSecond()};
             ContainerUtil.process(myLines, new Predicate<Pair<String, LineInfo>>() {
                 @Override
-                public boolean test(final Pair<String, LineInfo> pair) {
-                    final LineInfo info = pair.getSecond();
+                public boolean test(Pair<String, LineInfo> pair) {
+                    LineInfo info = pair.getSecond();
                     String text = pair.first;
                     String shortcut = "";
                     if (pair.first.contains("<shortcut>")) {
@@ -3064,9 +3033,9 @@ public class UIUtil {
                         g.setFont(old.deriveFont(old.getSize() * 0.70f));
                     }
 
-                    final int x = position.getFirst() + maxBulletWidth[0] + 10;
+                    int x = position.getFirst() + maxBulletWidth[0] + 10;
 
-                    final FontMetrics fm = g.getFontMetrics();
+                    FontMetrics fm = g.getFontMetrics();
                     int xOffset = x;
                     if (info.center) {
                         xOffset = x + (maxWidth[0] - fm.stringWidth(text)) / 2;
@@ -3160,9 +3129,9 @@ public class UIUtil {
         }
         Component eachParent = c;
         while (eachParent != null) {
-            if (eachParent instanceof JComponent) {
-                @SuppressWarnings({"unchecked"}) WeakReference<JRootPane> pane =
-                    (WeakReference<JRootPane>)((JComponent)eachParent).getClientProperty(ROOT_PANE);
+            if (eachParent instanceof JComponent jComponent) {
+                @SuppressWarnings({"unchecked"})
+                WeakReference<JRootPane> pane = (WeakReference<JRootPane>)jComponent.getClientProperty(ROOT_PANE);
                 if (pane != null) {
                     return pane.get();
                 }
@@ -3188,7 +3157,7 @@ public class UIUtil {
     @Nonnull
     @Deprecated(forRemoval = true)
     @DeprecationInfo("Use UIAccessScheduler")
-    public static Timer createNamedTimer(@NonNls @Nonnull final String name, int delay, @Nonnull ActionListener listener) {
+    public static Timer createNamedTimer(@Nonnull String name, int delay, @Nonnull ActionListener listener) {
         return new Timer(delay, listener) {
             @Override
             public String toString() {
@@ -3200,7 +3169,7 @@ public class UIUtil {
     @Nonnull
     @Deprecated(forRemoval = true)
     @DeprecationInfo("Use UIAccessScheduler")
-    public static Timer createNamedTimer(@NonNls @Nonnull final String name, int delay) {
+    public static Timer createNamedTimer(@Nonnull String name, int delay) {
         return new Timer(delay, null) {
             @Override
             public String toString() {
@@ -3210,11 +3179,7 @@ public class UIUtil {
     }
 
     public static boolean isDialogRootPane(JRootPane rootPane) {
-        if (rootPane != null) {
-            final Object isDialog = rootPane.getClientProperty("DIALOG_ROOT_PANE");
-            return isDialog instanceof Boolean && ((Boolean)isDialog).booleanValue();
-        }
-        return false;
+        return rootPane != null && rootPane.getClientProperty("DIALOG_ROOT_PANE") instanceof Boolean isDialog && isDialog;
     }
 
     @Nullable
@@ -3250,11 +3215,11 @@ public class UIUtil {
         }
 
         if (component.getBackground().equals(getPanelBackground()) || component instanceof JScrollPane || component instanceof JViewport) {
-            if (component instanceof JComponent) {
-                ((JComponent)component).setOpaque(false);
+            if (component instanceof JComponent jComponent) {
+                jComponent.setOpaque(false);
             }
-            if (component instanceof Container) {
-                for (Component c : ((Container)component).getComponents()) {
+            if (component instanceof Container container) {
+                for (Component c : container.getComponents()) {
                     setNotOpaqueRecursively(c);
                 }
             }
@@ -3264,8 +3229,8 @@ public class UIUtil {
 
     public static void setBackgroundRecursively(@Nonnull Component component, @Nonnull Color bg) {
         component.setBackground(bg);
-        if (component instanceof Container) {
-            for (Component c : ((Container)component).getComponents()) {
+        if (component instanceof Container container) {
+            for (Component c : container.getComponents()) {
                 setBackgroundRecursively(c, bg);
             }
         }
@@ -3304,13 +3269,13 @@ public class UIUtil {
         return ans;
     }
 
-    public static void adjustWindowToMinimumSize(final Window window) {
+    public static void adjustWindowToMinimumSize(Window window) {
         if (window == null) {
             return;
         }
-        final Dimension minSize = window.getMinimumSize();
-        final Dimension size = window.getSize();
-        final Dimension newSize = new Dimension(Math.max(size.width, minSize.width), Math.max(size.height, minSize.height));
+        Dimension minSize = window.getMinimumSize();
+        Dimension size = window.getSize();
+        Dimension newSize = new Dimension(Math.max(size.width, minSize.width), Math.max(size.height, minSize.height));
 
         if (!newSize.equals(size)) {
             //noinspection SSBasedInspection
@@ -3326,13 +3291,13 @@ public class UIUtil {
     }
 
     @Nullable
-    public static Color getColorAt(final Icon icon, final int x, final int y) {
+    public static Color getColorAt(Icon icon, int x, int y) {
         if (0 <= x && x < icon.getIconWidth() && 0 <= y && y < icon.getIconHeight()) {
-            final BufferedImage image = createImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+            BufferedImage image = createImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
             icon.paintIcon(null, image.getGraphics(), 0, 0);
 
-            final int[] pixels = new int[1];
-            final PixelGrabber pixelGrabber = new PixelGrabber(image, x, y, 1, 1, pixels, 0, 1);
+            int[] pixels = new int[1];
+            PixelGrabber pixelGrabber = new PixelGrabber(image, x, y, 1, 1, pixels, 0, 1);
             try {
                 pixelGrabber.grabPixels();
                 return new Color(pixels[0]);
@@ -3437,7 +3402,7 @@ public class UIUtil {
         }
     }
 
-    public static void setAutoRequestFocus(final Window onWindow, final boolean set) {
+    public static void setAutoRequestFocus(Window onWindow, boolean set) {
         if (!Platform.current().os().isMac()) {
             try {
                 onWindow.getClass().getMethod("setAutoRequestFocus", boolean.class).invoke(onWindow, set);
@@ -3460,16 +3425,16 @@ public class UIUtil {
         if (border != null) {
             leftGap += border.getBorderInsets(alignSource).left;
         }
-        if (ui instanceof BasicRadioButtonUI) {
-            leftGap += ((BasicRadioButtonUI)alignSource.getUI()).getDefaultIcon().getIconWidth();
+        if (ui instanceof BasicRadioButtonUI rui) {
+            leftGap += rui.getDefaultIcon().getIconWidth();
         }
         else {
             Method method = ReflectionUtil.getMethod(ui.getClass(), "getDefaultIcon", JComponent.class);
             if (method != null) {
                 try {
                     Object o = method.invoke(ui, alignSource);
-                    if (o instanceof Icon) {
-                        leftGap += ((Icon)o).getIconWidth();
+                    if (o instanceof Icon icon) {
+                        leftGap += icon.getIconWidth();
                     }
                 }
                 catch (IllegalAccessException e) {
@@ -3509,7 +3474,7 @@ public class UIUtil {
      */
     @Nullable
     public static Window getWindow(@Nullable Component component) {
-        return component == null ? null : component instanceof Window ? (Window)component : SwingUtilities.getWindowAncestor(component);
+        return component == null ? null : component instanceof Window window ? window : SwingUtilities.getWindowAncestor(component);
     }
 
     public static boolean isAncestor(@Nonnull Component ancestor, @Nullable Component descendant) {
@@ -3538,14 +3503,14 @@ public class UIUtil {
 
     private static void getAllTextsRecursivelyImpl(Component component, StringBuilder builder) {
         String candidate = "";
-        if (component instanceof JLabel) {
-            candidate = ((JLabel)component).getText();
+        if (component instanceof JLabel label) {
+            candidate = label.getText();
         }
-        if (component instanceof JTextComponent) {
-            candidate = ((JTextComponent)component).getText();
+        if (component instanceof JTextComponent textComponent) {
+            candidate = textComponent.getText();
         }
-        if (component instanceof AbstractButton) {
-            candidate = ((AbstractButton)component).getText();
+        if (component instanceof AbstractButton abstractButton) {
+            candidate = abstractButton.getText();
         }
         if (StringUtil.isNotEmpty(candidate)) {
             candidate = candidate.replaceAll("<a href=\"#inspection/[^)]+\\)", "");
@@ -3554,9 +3519,8 @@ public class UIUtil {
             }
             builder.append(StringHtmlUtil.removeHtmlTags(candidate).trim());
         }
-        if (component instanceof Container) {
-            Component[] components = ((Container)component).getComponents();
-            for (Component child : components) {
+        if (component instanceof Container container) {
+            for (Component child : container.getComponents()) {
                 getAllTextsRecursivelyImpl(child, builder);
             }
         }
@@ -3566,7 +3530,7 @@ public class UIUtil {
         return textComponent.getFontMetrics(textComponent.getFont()).getHeight();
     }
 
-    public static void addUndoRedoActions(@Nonnull final JTextComponent textComponent) {
+    public static void addUndoRedoActions(@Nonnull JTextComponent textComponent) {
         UndoManager undoManager = new UndoManager();
         textComponent.putClientProperty(UNDO_MANAGER, undoManager);
         textComponent.getDocument().addUndoableEditListener(undoManager);
@@ -3590,11 +3554,11 @@ public class UIUtil {
      */
     public static void redirectKeystrokes(
         @Nonnull Disposable disposable,
-        @Nonnull final JComponent source,
-        @Nonnull final JComponent target,
-        @Nonnull final KeyStroke... keyStrokes
+        @Nonnull JComponent source,
+        @Nonnull JComponent target,
+        @Nonnull KeyStroke... keyStrokes
     ) {
-        final KeyAdapter keyAdapter = new KeyAdapter() {
+        KeyAdapter keyAdapter = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 KeyStroke keyStrokeForEvent = KeyStroke.getKeyStrokeForEvent(e);
@@ -3654,8 +3618,8 @@ public class UIUtil {
      */
     public static void scrollToReference(@Nonnull JEditorPane editor, @Nonnull String reference) {
         Document document = editor.getDocument();
-        if (document instanceof HTMLDocument) {
-            Element elementById = ((HTMLDocument)document).getElement(reference);
+        if (document instanceof HTMLDocument htmlDocument) {
+            Element elementById = htmlDocument.getElement(reference);
             if (elementById != null) {
                 try {
                     int pos = elementById.getStartOffset();
@@ -3712,7 +3676,7 @@ public class UIUtil {
     }
 
     public static boolean isHelpButton(Component button) {
-        return button instanceof JButton && "help".equals(((JComponent)button).getClientProperty("JButton.buttonType"));
+        return button instanceof JButton jButton && "help".equals(jButton.getClientProperty("JButton.buttonType"));
     }
 
     public static void doNotScrollToCaret(@Nonnull JTextComponent textComponent) {
@@ -3731,9 +3695,9 @@ public class UIUtil {
 
     //Escape error-prone HTML data (if any) when we use it in renderers, see IDEA-170768
     public static <T> T htmlInjectionGuard(T toRender) {
-        if (toRender instanceof String && StringUtil.toLowerCase(((String)toRender)).startsWith("<html>")) {
+        if (toRender instanceof String strToRender && StringUtil.toLowerCase(strToRender).startsWith("<html>")) {
             //noinspection unchecked
-            return (T)("<html>" + StringUtil.escapeXmlEntities((String)toRender));
+            return (T)("<html>" + StringUtil.escapeXmlEntities(strToRender));
         }
         return toRender;
     }
@@ -3771,9 +3735,9 @@ public class UIUtil {
     }
 
     public static void layoutRecursively(@Nonnull Component component) {
-        if (component instanceof JComponent) {
+        if (component instanceof JComponent jComponent) {
             component.doLayout();
-            for (Component child : ((JComponent)component).getComponents()) {
+            for (Component child : jComponent.getComponents()) {
                 layoutRecursively(child);
             }
         }
@@ -3783,8 +3747,7 @@ public class UIUtil {
     @Nullable
     public static Component getDeepestComponentAt(@Nonnull Component parent, int x, int y) {
         Component component = SwingUtilities.getDeepestComponentAt(parent, x, y);
-        if (component != null && component.getParent() instanceof JRootPane) {//GlassPane case
-            JRootPane rootPane = (JRootPane)component.getParent();
+        if (component != null && component.getParent() instanceof JRootPane rootPane) {//GlassPane case
             Point point = SwingUtilities.convertPoint(parent, new Point(x, y), rootPane.getLayeredPane());
             component = SwingUtilities.getDeepestComponentAt(rootPane.getLayeredPane(), point.x, point.y);
             if (component == null) {
@@ -3800,8 +3763,8 @@ public class UIUtil {
     }
 
     public static Object getWindowClientProperty(Window window, @Nonnull Object key) {
-        if (window instanceof RootPaneContainer) {
-            JRootPane pane = ((RootPaneContainer)window).getRootPane();
+        if (window instanceof RootPaneContainer rootPaneContainer) {
+            JRootPane pane = rootPaneContainer.getRootPane();
             if (pane != null) {
                 return pane.getClientProperty(key);
             }
@@ -3810,8 +3773,8 @@ public class UIUtil {
     }
 
     public static void putWindowClientProperty(Window window, @Nonnull Object key, Object value) {
-        if (window instanceof RootPaneContainer) {
-            JRootPane pane = ((RootPaneContainer)window).getRootPane();
+        if (window instanceof RootPaneContainer rootPaneContainer) {
+            JRootPane pane = rootPaneContainer.getRootPane();
             if (pane != null) {
                 pane.putClientProperty(key, value);
             }
@@ -3828,7 +3791,7 @@ public class UIUtil {
     }
 
     private static Window findWindowAncestor(@Nonnull Component c) {
-        return c instanceof Window ? (Window)c : SwingUtilities.getWindowAncestor(c);
+        return c instanceof Window window ? window : SwingUtilities.getWindowAncestor(c);
     }
 
     /**
@@ -3838,8 +3801,8 @@ public class UIUtil {
      * @param window the window to activate
      */
     public static void toFront(@Nullable Window window) {
-        if (window instanceof Frame) {
-            ((Frame)window).setState(Frame.NORMAL);
+        if (window instanceof Frame frame) {
+            frame.setState(Frame.NORMAL);
         }
         if (window != null) {
             window.toFront();
@@ -3855,8 +3818,8 @@ public class UIUtil {
      */
     @Nonnull
     public static ComponentStyle getComponentStyle(Component component) {
-        if (component instanceof JComponent) {
-            Object property = ((JComponent)component).getClientProperty("JComponent.sizeVariant");
+        if (component instanceof JComponent jComponent) {
+            Object property = jComponent.getClientProperty("JComponent.sizeVariant");
             if ("large".equals(property)) {
                 return ComponentStyle.LARGE;
             }

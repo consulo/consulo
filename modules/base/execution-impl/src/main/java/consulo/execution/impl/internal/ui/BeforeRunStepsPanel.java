@@ -36,7 +36,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -114,7 +114,7 @@ class BeforeRunStepsPanel {
             Pair<BeforeRunTask, BeforeRunTaskProvider<BeforeRunTask>> selection = getSelection();
             return selection != null && selection.getSecond().isConfigurable();
         });
-        decorator.setAddAction(button -> doAddAction(button));
+        decorator.setAddAction(this::doAddAction);
         decorator.setAddActionUpdater(e -> checkBeforeRunTasksAbility(true));
 
         myShowSettingsBeforeRunCheckBox = new JCheckBox(ExecutionLocalize.configurationEditBeforeRun().get());
@@ -300,7 +300,7 @@ class BeforeRunStepsPanel {
             false,
             null,
             -1,
-            Conditions.alwaysTrue()
+            Predicates.alwaysTrue()
         );
         popup.show(button.getPreferredPopupPoint());
     }
@@ -322,18 +322,14 @@ class BeforeRunStepsPanel {
     }
 
     private void getAllRunBeforeRuns(BeforeRunTask task, Set<RunConfiguration> configurationSet) {
-        if (task instanceof RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask) {
-            RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask runTask =
-                (RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask)task;
+        if (task instanceof RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask runTask) {
             RunConfiguration configuration = runTask.getSettings().getConfiguration();
 
             List<BeforeRunTask> tasks = RunManagerImpl.getInstanceImpl(configuration.getProject()).getBeforeRunTasks(configuration);
             for (BeforeRunTask beforeRunTask : tasks) {
-                if (beforeRunTask instanceof RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask) {
-                    if (configurationSet.add(((RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask)beforeRunTask)
-                        .getSettings().getConfiguration())) {
-                        getAllRunBeforeRuns(beforeRunTask, configurationSet);
-                    }
+                if (beforeRunTask instanceof RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask configurableBeforeRunTask
+                    && configurationSet.add(configurableBeforeRunTask.getSettings().getConfiguration())) {
+                    getAllRunBeforeRuns(beforeRunTask, configurationSet);
                 }
             }
         }

@@ -15,6 +15,7 @@
  */
 package consulo.util.lang.function;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SoftReference;
@@ -29,6 +30,8 @@ import java.util.function.Predicate;
  * @author max
  */
 @SuppressWarnings("unchecked")
+@Deprecated
+@DeprecationInfo("Use Predicates")
 public class Conditions {
     private Conditions() {
     }

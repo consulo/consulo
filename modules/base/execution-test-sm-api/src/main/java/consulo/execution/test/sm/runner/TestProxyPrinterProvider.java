@@ -22,12 +22,11 @@ import consulo.execution.test.ui.TestsOutputConsolePrinter;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.Filter;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public final class TestProxyPrinterProvider {
     private final TestProxyFilterProvider myFilterProvider;
@@ -51,16 +50,16 @@ public final class TestProxyPrinterProvider {
     }
 
     private static class HyperlinkPrinter extends TestsOutputConsolePrinter {
-        public static final Condition<ConsoleViewContentType> ERROR_CONTENT_TYPE =
+        public static final Predicate<ConsoleViewContentType> ERROR_CONTENT_TYPE =
             contentType -> ConsoleViewContentType.ERROR_OUTPUT == contentType;
         private static final String NL = "\n";
 
-        private final Condition<? super ConsoleViewContentType> myContentTypeCondition;
+        private final Predicate<? super ConsoleViewContentType> myContentTypeCondition;
         private final Filter myFilter;
 
         HyperlinkPrinter(
             @Nonnull BaseTestsOutputConsoleView testsOutputConsoleView,
-            @Nonnull Condition<? super ConsoleViewContentType> contentTypeCondition,
+            @Nonnull Predicate<? super ConsoleViewContentType> contentTypeCondition,
             @Nonnull Filter filter
         ) {
             super(testsOutputConsoleView, testsOutputConsoleView.getProperties(), null);
@@ -70,7 +69,7 @@ public final class TestProxyPrinterProvider {
 
         @Override
         public void print(String text, ConsoleViewContentType contentType) {
-            if (contentType == null || !myContentTypeCondition.value(contentType)) {
+            if (contentType == null || !myContentTypeCondition.test(contentType)) {
                 defaultPrint(text, contentType);
                 return;
             }

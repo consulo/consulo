@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import consulo.util.lang.function.Conditions;
 import consulo.util.lang.function.Functions;
 import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
@@ -141,7 +140,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
 
     @Nonnull
     public final Self expandAndSkip(Predicate<? super T> c) {
-        return newInstance(myMeta.expand(c).filter(Conditions.not(c)));
+        return newInstance(myMeta.expand(c).filter(Predicates.not(c)));
     }
 
     @Nonnull
@@ -242,7 +241,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
             return JBIterable.empty();
         }
         else if (myMeta.regard.next == null && myMeta.forceDisregard.next == null) {
-            return JBIterable.<T>from(myTree.apply(node)).filter(Conditions.not(myMeta.forceIgnore.OR));
+            return JBIterable.<T>from(myTree.apply(node)).filter(Predicates.not(myMeta.forceIgnore.OR));
         }
         else {
             // traverse subtree to select accepted children
@@ -388,7 +387,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
             while (c != null) {
                 Predicate impl = JBIterable.Stateful.copy(c.impl);
                 if (impl != (invert ? Predicates.alwaysTrue() : Predicates.alwaysFalse())) {
-                    copy = new Cond<Object>(invert ? Conditions.not(impl) : impl, copy);
+                    copy = new Cond<Object>(invert ? Predicates.not(impl) : impl, copy);
                     if (impl instanceof EdgeFilter edgeFilter) {
                         edgeFilter.edgeSource = parent;
                     }

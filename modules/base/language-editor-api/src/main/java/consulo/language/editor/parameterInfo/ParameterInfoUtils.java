@@ -14,6 +14,7 @@
 
 package consulo.language.editor.parameterInfo;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
@@ -23,10 +24,10 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.SyntaxTraverser;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.CharArrayUtil;
-import consulo.util.lang.function.Conditions;
-
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Set;
 
 /**
@@ -36,6 +37,8 @@ public class ParameterInfoUtils {
   public static final String DEFAULT_PARAMETER_CLOSE_CHARS = ",){}";
 
   @Nullable
+  @RequiredReadAction
+  @SafeVarargs
   public static <T extends PsiElement> T findParentOfTypeWithStopElements(PsiFile file, int offset, Class<T> parentClass, @Nonnull Class<? extends PsiElement>... stopAt) {
     PsiElement element = file.findElementAt(offset);
     if (element == null) return null;
@@ -48,12 +51,13 @@ public class ParameterInfoUtils {
   }
 
   @Nullable
+  @RequiredReadAction
   public static <T extends PsiElement> T findParentOfType(PsiFile file, int offset, Class<T> parentClass) {
     return findParentOfTypeWithStopElements(file, offset, parentClass);
   }
 
   public static int getCurrentParameterIndex(ASTNode argList, int offset, IElementType delimiterType) {
-    SyntaxTraverser<ASTNode> s = SyntaxTraverser.astTraverser(argList).expandAndSkip(Conditions.is(argList));
+    SyntaxTraverser<ASTNode> s = SyntaxTraverser.astTraverser(argList).expandAndSkip(Predicates.is(argList));
     return getCurrentParameterIndex(s, offset, delimiterType);
   }
 
@@ -75,6 +79,7 @@ public class ParameterInfoUtils {
   }
 
   @Nullable
+  @RequiredReadAction
   public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset, @Nonnull ParameterInfoHandlerWithTabActionSupport findArgumentListHelper) {
     return findArgumentList(file, offset, lbraceOffset, findArgumentListHelper, true);
   }
@@ -84,6 +89,7 @@ public class ParameterInfoUtils {
    *                   argument list at a given {@code offset}
    */
   @Nullable
+  @RequiredReadAction
   public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset, @Nonnull ParameterInfoHandlerWithTabActionSupport findArgumentListHelper, boolean allowOuter) {
     if (file == null) return null;
 
@@ -107,22 +113,20 @@ public class ParameterInfoUtils {
       if (findArgumentListHelper.getArgumentListClass().isInstance(parent)) {
         TextRange range = parent.getTextRange();
         if (range != null) {
-          if (!acceptRparenth) {
-            if (offset == range.getEndOffset() - 1) {
-              PsiElement[] children = parent.getChildren();
-              if (children.length == 0) return null;
-              PsiElement last = children[children.length - 1];
-              if (last.getNode().getElementType() == findArgumentListHelper.getActualParametersRBraceType()) {
-                parent = parent.getParent();
-                continue;
-              }
+          if (!acceptRparenth && offset == range.getEndOffset() - 1) {
+            PsiElement[] children = parent.getChildren();
+            if (children.length == 0) {
+              return null;
             }
-          }
-          if (!acceptLparenth) {
-            if (offset == range.getStartOffset()) {
+            PsiElement last = children[children.length - 1];
+            if (last.getNode().getElementType() == findArgumentListHelper.getActualParametersRBraceType()) {
               parent = parent.getParent();
               continue;
             }
+          }
+          if (!acceptLparenth && offset == range.getStartOffset()) {
+            parent = parent.getParent();
+            continue;
           }
           if (lbraceOffset >= 0 && range.getStartOffset() != lbraceOffset) {
             if (!allowOuter) return null;
@@ -134,7 +138,7 @@ public class ParameterInfoUtils {
       }
       if (parent instanceof PsiFile || parent == null) return null;
 
-      final Set<? extends Class> set = findArgumentListHelper.getArgListStopSearchClasses();
+      Set<? extends Class> set = findArgumentListHelper.getArgListStopSearchClasses();
       for (Class aClass : set) {
         if (aClass.isInstance(parent)) return null;
       }

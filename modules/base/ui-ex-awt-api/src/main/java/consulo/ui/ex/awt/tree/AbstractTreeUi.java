@@ -33,7 +33,7 @@ import consulo.util.collection.MutualMap;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.*;
 import consulo.util.lang.*;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -1376,7 +1376,7 @@ public class AbstractTreeUi {
                 }
 
                 if (isSelectionInside(node)) {
-                    addSelectionPath(getPathFor(node), true, Conditions.alwaysTrue(), null);
+                    addSelectionPath(getPathFor(node), true, Predicates.alwaysTrue(), null);
                 }
 
                 processInnerChange(new TreeRunnable("AbstractTreeUi.processAlwaysLeaf") {
@@ -3087,19 +3087,16 @@ public class AbstractTreeUi {
 
     @Nullable
     private DefaultMutableTreeNode getParentLoadingInBackground(@Nonnull Object nodeObject) {
-        if (!(nodeObject instanceof DefaultMutableTreeNode)) {
+        if (!(nodeObject instanceof DefaultMutableTreeNode node)) {
             return null;
         }
-
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)nodeObject;
 
         TreeNode eachParent = node.getParent();
 
         while (eachParent != null) {
             eachParent = eachParent.getParent();
-            if (eachParent instanceof DefaultMutableTreeNode defaultMutableTreeNode
-                && isLoadedInBackground(getElementFor(defaultMutableTreeNode))) {
-                return defaultMutableTreeNode;
+            if (eachParent instanceof DefaultMutableTreeNode parentNode && isLoadedInBackground(getElementFor(parentNode))) {
+                return parentNode;
             }
         }
 
@@ -4792,10 +4789,8 @@ public class AbstractTreeUi {
             else {
                 List<DefaultMutableTreeNode> nodes = (List<DefaultMutableTreeNode>)value;
                 boolean reallyRemoved = nodes.remove(node);
-                if (reallyRemoved) {
-                    if (nodes.isEmpty()) {
-                        myElementToNodeMap.remove(element);
-                    }
+                if (reallyRemoved && nodes.isEmpty()) {
+                    myElementToNodeMap.remove(element);
                 }
             }
         }
@@ -5054,7 +5049,7 @@ public class AbstractTreeUi {
             }
 
             if (pathToSelect != null && myTree.isSelectionEmpty()) {
-                addSelectionPath(pathToSelect, true, Conditions.alwaysFalse(), null);
+                addSelectionPath(pathToSelect, true, Predicates.alwaysFalse(), null);
             }
         }
     }

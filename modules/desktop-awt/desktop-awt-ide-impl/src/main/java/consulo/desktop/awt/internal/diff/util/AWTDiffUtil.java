@@ -51,7 +51,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -72,7 +72,7 @@ import java.util.List;
 public class AWTDiffUtil {
     @Nonnull
     public static List<JComponent> createSyncHeightComponents(@Nonnull List<JComponent> components) {
-        if (!ContainerUtil.exists(components, Condition.NOT_NULL)) {
+        if (!ContainerUtil.exists(components, Predicates.notNull())) {
             return components;
         }
         List<JComponent> result = new ArrayList<>();
@@ -137,7 +137,7 @@ public class AWTDiffUtil {
         List<DiffContent> contents = request.getContents();
         List<String> titles = request.getContentTitles();
 
-        if (!ContainerUtil.exists(titles, Condition.NOT_NULL)) {
+        if (!ContainerUtil.exists(titles, Predicates.notNull())) {
             return Collections.nCopies(titles.size(), null);
         }
 
@@ -161,7 +161,7 @@ public class AWTDiffUtil {
 
         List<JComponent> result = new ArrayList<>(contents.size());
 
-        if (equalCharsets && equalSeparators && !ContainerUtil.exists(titles, Condition.NOT_NULL)) {
+        if (equalCharsets && equalSeparators && !ContainerUtil.exists(titles, Predicates.notNull())) {
             return Collections.nCopies(titles.size(), null);
         }
 
