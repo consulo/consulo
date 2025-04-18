@@ -121,7 +121,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
         for (int i = 0; i < model.getSize(); i++) {
             ScopeDescriptor descriptor = (ScopeDescriptor)model.getElementAt(i);
             if (selection instanceof String && selection.equals(descriptor.getDisplayName())
-                || selection instanceof SearchScope && descriptor.scopeEquals((SearchScope)selection)) {
+                || selection instanceof SearchScope searchScope && descriptor.scopeEquals(searchScope)) {
                 combo.setSelectedIndex(i);
                 break;
             }
@@ -175,8 +175,8 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
             }
         }
         Comparator<SearchScope> comparator = (o1, o2) -> {
-            int w1 = o1 instanceof WeighedItem ? ((WeighedItem)o1).getWeight() : Integer.MAX_VALUE;
-            int w2 = o2 instanceof WeighedItem ? ((WeighedItem)o2).getWeight() : Integer.MAX_VALUE;
+            int w1 = o1 instanceof WeighedItem wi1 ? wi1.getWeight() : Integer.MAX_VALUE;
+            int w2 = o2 instanceof WeighedItem wi2 ? wi2.getWeight() : Integer.MAX_VALUE;
             if (w1 == w2) {
                 return StringUtil.naturalCompare(o1.getDisplayName(), o2.getDisplayName());
             }
@@ -295,7 +295,6 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     }
 
     private static class MyComboBox extends ComboBox {
-
         @Override
         public void setSelectedItem(Object item) {
             if (!(item instanceof ScopeSeparator)) {

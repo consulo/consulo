@@ -266,7 +266,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     }
 
     protected boolean navigateToElement(PsiElement target) {
-        Navigatable descriptor = target instanceof Navigatable ? (Navigatable)target : EditSourceUtil.getDescriptor(target);
+        Navigatable descriptor = target instanceof Navigatable navigatable ? navigatable : EditSourceUtil.getDescriptor(target);
         if (descriptor != null && descriptor.canNavigate()) {
             navigateToElement(descriptor);
             return true;

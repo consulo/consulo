@@ -520,9 +520,8 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     //these items won't be cleared during appending a new prefix (mayCheckReused = false)
     //so these 'out of dated' items which were matched against an old prefix, should be now matched against the new, updated lookup prefix.
     private void clearIfLookupAndArrangerPrefixesMatch() {
-        boolean isCompletionArranger = myArranger instanceof CompletionLookupArrangerImpl;
-        if (isCompletionArranger) {
-            String lastLookupArrangersPrefix = ((CompletionLookupArrangerImpl)myArranger).getLastLookupPrefix();
+        if (myArranger instanceof CompletionLookupArrangerImpl completionArranger) {
+            String lastLookupArrangersPrefix = completionArranger.getLastLookupPrefix();
             if (lastLookupArrangersPrefix != null && !lastLookupArrangersPrefix.equals(getAdditionalPrefix())) {
                 LOG.trace("prefixes don't match, do not clear lookup additional prefix");
             }
@@ -600,10 +599,10 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         //noinspection deprecation,unchecked
         if (item == null ||
             !item.isValid() ||
-            item instanceof EmptyLookupItem ||
-            item.getObject() instanceof DeferredUserLookupValue &&
-                item.as(LookupItem.CLASS_CONDITION_KEY) != null &&
-                !((DeferredUserLookupValue)item.getObject()).handleUserSelection(item.as(LookupItem.CLASS_CONDITION_KEY), myProject)) {
+            item instanceof EmptyLookupItem
+            || item.getObject() instanceof DeferredUserLookupValue deferredUserLookupValue
+            && item.as(LookupItem.CLASS_CONDITION_KEY) != null
+            && !deferredUserLookupValue.handleUserSelection(item.as(LookupItem.CLASS_CONDITION_KEY), myProject)) {
             hideWithItemSelected(null, completionChar);
             return;
         }
@@ -1222,8 +1221,8 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
 
         int offset = getLookupStart();
         Editor editor = getEditor();
-        if (editor instanceof EditorWindow) {
-            offset = editor.logicalPositionToOffset(((EditorWindow)editor).hostToInjected(myEditor.offsetToLogicalPosition(offset)));
+        if (editor instanceof EditorWindow editorWindow) {
+            offset = editor.logicalPositionToOffset(editorWindow.hostToInjected(myEditor.offsetToLogicalPosition(offset)));
         }
         if (offset > 0) {
             return file.findElementAt(offset - 1);

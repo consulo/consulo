@@ -187,11 +187,11 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         @Nullable
         @VisibleForTesting
         public String getValueText() {
-            if (value instanceof OptionDescription) {
-                return ((OptionDescription)value).getHit();
+            if (value instanceof OptionDescription optionDescription) {
+                return optionDescription.getHit();
             }
-            if (value instanceof ActionWrapper) {
-                return ((ActionWrapper)value).getAction().getTemplatePresentation().getText();
+            if (value instanceof ActionWrapper actionWrapper) {
+                return actionWrapper.getAction().getTemplatePresentation().getText();
             }
             return null;
         }
@@ -206,7 +206,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             String text = getValueText();
             if (text != null) {
                 int degree = getRank(text);
-                return value instanceof ActionWrapper && !((ActionWrapper)value).isGroupAction() ? degree + 1 : degree;
+                return value instanceof ActionWrapper actionWrapper && !actionWrapper.isGroupAction() ? degree + 1 : degree;
             }
             return 0;
         }
@@ -238,9 +238,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
                 return diff;
             }
 
-            if (value instanceof ActionWrapper && o.value instanceof ActionWrapper) {
-                ActionWrapper value1 = (ActionWrapper)value;
-                ActionWrapper value2 = (ActionWrapper)o.value;
+            if (value instanceof ActionWrapper value1 && o.value instanceof ActionWrapper value2) {
                 int compared = value1.compareWeights(value2);
                 if (compared != 0) {
                     return compared;
@@ -252,9 +250,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
                 return diff;
             }
 
-            if (value instanceof OptionDescription && o.value instanceof OptionDescription) {
-                OptionDescription value1 = (OptionDescription)value;
-                OptionDescription value2 = (OptionDescription)o.value;
+            if (value instanceof OptionDescription value1 && o.value instanceof OptionDescription value2) {
                 diff = value1.compareTo(value2);
                 if (diff != 0) {
                     return diff;
@@ -265,18 +261,14 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         }
 
         private static int getTypeWeight(@Nonnull Object value) {
-            if (value instanceof ActionWrapper) {
-                ActionWrapper actionWrapper = (ActionWrapper)value;
+            if (value instanceof ActionWrapper actionWrapper) {
                 if ((UIAccess.isUIThread() || actionWrapper.hasPresentation()) && actionWrapper.isAvailable()) {
                     return 0;
                 }
                 return 2;
             }
             if (value instanceof OptionDescription) {
-                if (value instanceof BooleanOptionDescription) {
-                    return 1;
-                }
-                return 3;
+                return value instanceof BooleanOptionDescription ? 1 : 3;
             }
             throw new IllegalArgumentException(value.getClass() + " - " + value.toString());
         }
@@ -410,8 +402,8 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             if (action == null || action instanceof AnSeparator) {
                 continue;
             }
-            if (action instanceof ActionGroup) {
-                collectActions(actionGroups, (ActionGroup)action, newPath, showNonPopupGroups);
+            if (action instanceof ActionGroup actionGroup) {
+                collectActions(actionGroups, actionGroup, newPath, showNonPopupGroups);
             }
             else {
                 GroupMapping mapping = actionGroups.computeIfAbsent(action, (key) -> new GroupMapping(showNonPopupGroups));
@@ -766,7 +758,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
                 return null;
             }
             String groupName = myGroupMapping.getBestGroupName();
-            if (myAction instanceof ActionGroup && Comparing.equal(myAction.getTemplatePresentation().getText(), groupName)) {
+            if (myAction instanceof ActionGroup && Objects.equals(myAction.getTemplatePresentation().getText(), groupName)) {
                 return null;
             }
             return groupName;
@@ -778,7 +770,9 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
 
         @Override
         public boolean equals(Object obj) {
-            return obj instanceof ActionWrapper && myAction.equals(((ActionWrapper)obj).myAction);
+            return obj == this
+                || obj instanceof ActionWrapper that
+                && myAction.equals(that.myAction);
         }
 
         @Override
@@ -830,11 +824,11 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             nameComponent.setBackground(bg);
             panel.add(nameComponent, BorderLayout.CENTER);
 
-            if (matchedValue instanceof String) { //...
+            if (matchedValue instanceof String name) { //...
                 if (showIcon) {
                     panel.add(new JBLabel(Image.empty(Image.DEFAULT_ICON_SIZE)), BorderLayout.WEST);
                 }
-                String str = cutName((String)matchedValue, null, list, panel, nameComponent);
+                String str = cutName(name, null, list, panel, nameComponent);
                 nameComponent.append(str, new SimpleTextAttributes(STYLE_PLAIN, defaultActionForeground(isSelected, cellHasFocus, null)));
                 return panel;
             }
@@ -845,8 +839,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             String pattern = ((MatchedValue)matchedValue).pattern;
 
             Border eastBorder = JBUI.Borders.emptyRight(2);
-            if (value instanceof ActionWrapper) {
-                ActionWrapper actionWithParentGroup = (ActionWrapper)value;
+            if (value instanceof ActionWrapper actionWithParentGroup) {
                 AnAction anAction = actionWithParentGroup.getAction();
                 boolean toggle = anAction instanceof ToggleAction;
                 String groupName =
@@ -894,25 +887,25 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
                     );
                 }
             }
-            else if (value instanceof OptionDescription) {
-                if (!isSelected && !(value instanceof BooleanOptionDescription)) {
+            else if (value instanceof OptionDescription optionDescription) {
+                if (!isSelected && !(optionDescription instanceof BooleanOptionDescription)) {
                     Color descriptorBg = StyleManager.get().getCurrentStyle().isDark()
                         ? ColorUtil.brighter(UIUtil.getListBackground(), 1) : LightColors.SLIGHTLY_GRAY;
                     panel.setBackground(descriptorBg);
                     nameComponent.setBackground(descriptorBg);
                 }
-                String hit = calcHit((OptionDescription)value);
+                String hit = calcHit(optionDescription);
                 Color fg = UIUtil.getListForeground(isSelected, cellHasFocus);
 
                 if (showIcon) {
                     panel.add(new JBLabel(Image.empty(Image.DEFAULT_ICON_SIZE)), BorderLayout.WEST);
                 }
-                if (value instanceof BooleanOptionDescription) {
-                    boolean selected = ((BooleanOptionDescription)value).isOptionEnabled();
+                if (optionDescription instanceof BooleanOptionDescription booleanOptionDescription) {
+                    boolean selected = booleanOptionDescription.isOptionEnabled();
                     addOnOffButton(panel, selected);
                 }
                 else {
-                    JLabel settingsLabel = new JLabel(myGroupNamer.apply((OptionDescription)value));
+                    JLabel settingsLabel = new JLabel(myGroupNamer.apply(optionDescription));
                     settingsLabel.setForeground(groupFg);
                     settingsLabel.setBackground(bg);
                     settingsLabel.setBorder(eastBorder);
@@ -928,7 +921,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         @Nonnull
         private static String calcHit(@Nonnull OptionDescription value) {
             //if (value instanceof RegistryTextOptionDescriptor) {
-            //  return value.getHit() + " = " + value.getValue();
+            //    return value.getHit() + " = " + value.getValue();
             //}
             String hit = StringUtil.defaultIfEmpty(value.getHit(), value.getOption());
             return consulo.ide.impl.idea.openapi.util.text.StringUtil.unescapeXmlEntities(StringUtil.notNullize(hit))

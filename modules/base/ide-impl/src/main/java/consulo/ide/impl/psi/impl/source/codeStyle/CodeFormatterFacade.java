@@ -97,7 +97,8 @@ public class CodeFormatterFacade {
         Document document = file.getViewProvider().getDocument();
 
         PsiElement elementToFormat = document instanceof DocumentWindow
-            ? InjectedLanguageManager.getInstance(file.getProject()).getTopLevelFile(file) : psiElement;
+            ? InjectedLanguageManager.getInstance(file.getProject()).getTopLevelFile(file)
+            : psiElement;
         PsiFile fileToFormat = elementToFormat.getContainingFile();
 
         RangeMarker rangeMarker = null;

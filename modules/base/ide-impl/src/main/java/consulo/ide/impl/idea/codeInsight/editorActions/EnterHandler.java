@@ -230,8 +230,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         String commentPrefix = docComment ? commenter.getDocumentationCommentPrefix() : commenter.getBlockCommentPrefix();
         lexer.start(commentText, commentPrefix == null ? 0 : commentPrefix.length(), commentText.length());
         QuoteHandler fileTypeHandler = TypedHandler.getQuoteHandler(containingFile, editor);
-        JavaLikeQuoteHandler javaLikeQuoteHandler =
-            fileTypeHandler instanceof JavaLikeQuoteHandler ? (JavaLikeQuoteHandler)fileTypeHandler : null;
+        JavaLikeQuoteHandler javaLikeQuoteHandler = fileTypeHandler instanceof JavaLikeQuoteHandler handler ? handler : null;
 
         while (true) {
             IElementType tokenType = lexer.getTokenType();
@@ -316,11 +315,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     }
 
     private static boolean isDocComment(PsiElement element, CodeDocumentationAwareCommenter commenter) {
-        if (!(element instanceof PsiComment)) {
-            return false;
-        }
-        PsiComment comment = (PsiComment)element;
-        return commenter.isDocumentationComment(comment);
+        return element instanceof PsiComment comment && commenter.isDocumentationComment(comment);
     }
 
     /**
@@ -762,11 +757,10 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         }
     }
 
-
     @Nullable
     public static Language getLanguage(@Nonnull DataContext dataContext) {
-        if (dataContext instanceof UserDataHolder) {
-            return CONTEXT_LANGUAGE.get((UserDataHolder)dataContext);
+        if (dataContext instanceof UserDataHolder userDataHolder) {
+            return CONTEXT_LANGUAGE.get(userDataHolder);
         }
         return null;
     }

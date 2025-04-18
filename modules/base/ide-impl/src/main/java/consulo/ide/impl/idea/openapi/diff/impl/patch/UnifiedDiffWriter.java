@@ -79,10 +79,9 @@ public class UnifiedDiffWriter {
         CommitContext commitContext
     ) throws IOException {
         for (FilePatch filePatch : patches) {
-            if (!(filePatch instanceof TextFilePatch)) {
+            if (!(filePatch instanceof TextFilePatch patch)) {
                 continue;
             }
-            TextFilePatch patch = (TextFilePatch)filePatch;
             String path = ObjectUtil.assertNotNull(patch.getBeforeName() == null ? patch.getAfterName() : patch.getBeforeName());
             String pathRelatedToProjectDir =
                 project == null ? path : getPathRelatedToDir(ObjectUtil.assertNotNull(project.getBasePath()), basePath, path);

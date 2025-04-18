@@ -130,10 +130,8 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     }
 
     public TimeStampedIndentOptions getValidCachedIndentOptions(PsiFile file, Document document) {
-        IndentOptions options = IndentOptions.retrieveFromAssociatedDocument(file);
-        if (options instanceof TimeStampedIndentOptions) {
+        if (IndentOptions.retrieveFromAssociatedDocument(file) instanceof TimeStampedIndentOptions cachedInDocument) {
             IndentOptions defaultIndentOptions = getDefaultIndentOptions(file, document);
-            TimeStampedIndentOptions cachedInDocument = (TimeStampedIndentOptions)options;
             if (!cachedInDocument.isOutdated(document, defaultIndentOptions)) {
                 return cachedInDocument;
             }
@@ -191,7 +189,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     }
 
     private static boolean areDetected(@Nonnull IndentOptions indentOptions) {
-        return indentOptions instanceof TimeStampedIndentOptions && ((TimeStampedIndentOptions)indentOptions).isDetected();
+        return indentOptions instanceof TimeStampedIndentOptions timeStampedIndentOptions && timeStampedIndentOptions.isDetected();
     }
 
     @Nullable
@@ -213,8 +211,8 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
             Project project = file.getProject();
             IndentOptions projectOptions = CodeStyle.getSettings(project).getIndentOptions(file.getFileType());
             String projectOptionsTip = StringUtil.capitalizeWords(IndentStatusBarUIContributor.getIndentInfo(projectOptions), true);
-            if (indentOptions instanceof TimeStampedIndentOptions) {
-                if (((TimeStampedIndentOptions)indentOptions).isDetected()) {
+            if (indentOptions instanceof TimeStampedIndentOptions timeStampedIndentOptions) {
+                if (timeStampedIndentOptions.isDetected()) {
                     actions.add(DumbAwareAction.create(
                         ApplicationLocalize.codeStyleIndentDetectorReject(projectOptionsTip).get(),
                         e -> {

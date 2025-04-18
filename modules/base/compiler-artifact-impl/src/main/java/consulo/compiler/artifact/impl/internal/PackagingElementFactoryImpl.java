@@ -82,8 +82,8 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     public ComplexPackagingElementType<?>[] getComplexElementTypes() {
         List<ComplexPackagingElementType<?>> types = new ArrayList<>();
         for (PackagingElementType type : getAllElementTypes()) {
-            if (type instanceof ComplexPackagingElementType) {
-                types.add((ComplexPackagingElementType)type);
+            if (type instanceof ComplexPackagingElementType complexPackagingElementType) {
+                types.add(complexPackagingElementType);
             }
         }
         return types.toArray(new ComplexPackagingElementType[types.size()]);
@@ -94,8 +94,8 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     public CompositePackagingElementType<?>[] getCompositeElementTypes() {
         List<CompositePackagingElementType> elementTypes = new ArrayList<>();
         for (PackagingElementType elementType : getAllElementTypes()) {
-            if (elementType instanceof CompositePackagingElementType) {
-                elementTypes.add((CompositePackagingElementType)elementType);
+            if (elementType instanceof CompositePackagingElementType compositePackagingElementType) {
+                elementTypes.add(compositePackagingElementType);
             }
         }
         return elementTypes.toArray(new CompositePackagingElementType[elementTypes.size()]);

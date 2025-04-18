@@ -534,7 +534,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
 
 
     private static boolean isSuddenLiveTemplate(LookupElement element) {
-        return element instanceof LiveTemplateLookupElement && ((LiveTemplateLookupElement)element).sudden;
+        return element instanceof LiveTemplateLookupElement liveTemplateLookupElement && liveTemplateLookupElement.sudden;
     }
 
     private boolean shouldSkip(List<CompletionPreselectSkipper> skippers, LookupElement element) {
