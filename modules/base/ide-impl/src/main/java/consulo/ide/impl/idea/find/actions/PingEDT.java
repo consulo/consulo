@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.find.actions;
 
-import consulo.util.lang.function.Condition;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 
 /**
  * Runs activity in the EDT.
@@ -34,7 +33,7 @@ class PingEDT {
     private final Runnable pingAction;
     private volatile boolean stopped;
     private volatile boolean pinged;
-    private final Condition<?> myShutUpCondition;
+    private final Predicate<?> myShutUpCondition;
     private final int myMaxUnitOfWorkThresholdMs; //-1 means indefinite
 
     private final AtomicBoolean invokeLaterScheduled = new AtomicBoolean();
@@ -43,7 +42,7 @@ class PingEDT {
         public void run() {
             boolean b = invokeLaterScheduled.compareAndSet(true, false);
             assert b;
-            if (stopped || myShutUpCondition.value(null)) {
+            if (stopped || myShutUpCondition.test(null)) {
                 stop();
                 return;
             }
@@ -68,8 +67,8 @@ class PingEDT {
     };
 
     public PingEDT(
-        @Nonnull @NonNls String name,
-        @Nonnull Condition<?> shutUpCondition,
+        @Nonnull String name,
+        @Nonnull Predicate<?> shutUpCondition,
         int maxUnitOfWorkThresholdMs,
         @Nonnull Runnable pingAction
     ) {

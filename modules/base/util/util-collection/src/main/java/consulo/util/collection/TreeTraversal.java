@@ -409,7 +409,6 @@ public abstract class TreeTraversal {
     }
 
     private final static class PreOrderIt<T> extends DfsIt<T, P1<T>> {
-
         PreOrderIt(@Nonnull Iterable<? extends T> roots, Function<? super T, ? extends Iterable<? extends T>> tree) {
             super(tree);
             last = P1.create(roots);
@@ -433,7 +432,6 @@ public abstract class TreeTraversal {
     }
 
     private static final class PostOrderIt<T> extends DfsIt<T, P1<T>> {
-
         PostOrderIt(@Nonnull Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
             super(tree);
             for (T root : roots) {
@@ -461,7 +459,6 @@ public abstract class TreeTraversal {
     }
 
     private final static class LeavesDfsIt<T> extends DfsIt<T, P1<T>> {
-
         LeavesDfsIt(@Nonnull Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
             super(tree);
             last = P1.create(roots);
@@ -487,7 +484,6 @@ public abstract class TreeTraversal {
     }
 
     private final static class InterleavedIt<T> extends DfsIt<T, P2<T>> {
-
         P2<T> cur, max;
 
         InterleavedIt(@Nonnull Iterable<? extends T> roots, Function<? super T, ? extends Iterable<? extends T>> tree) {
@@ -524,7 +520,6 @@ public abstract class TreeTraversal {
             return stop();
         }
     }
-
 
     // -----------------------------------------------------------------------------
     // Iterators: BFS
@@ -752,7 +747,6 @@ public abstract class TreeTraversal {
     }
 
     private static final class P1<T> extends P<T, P1<T>> {
-
         static <T> P1<T> create(T node) {
             return create(new P1<>(), node);
         }

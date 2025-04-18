@@ -15,10 +15,9 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.util.lang.function.Condition;
+import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.util.lang.function.Conditions;
 import consulo.versionControlSystem.log.graph.GraphCommit;
-import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.graph.VisibleGraph;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -27,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class EmptyPermanentGraph implements PermanentGraph<Integer> {
 
@@ -67,7 +67,7 @@ public class EmptyPermanentGraph implements PermanentGraph<Integer> {
 
     @Nonnull
     @Override
-    public Condition<Integer> getContainedInBranchCondition(@Nonnull Collection<Integer> currentBranchHead) {
+    public Predicate<Integer> getContainedInBranchCondition(@Nonnull Collection<Integer> currentBranchHead) {
         return Conditions.alwaysFalse();
     }
 }

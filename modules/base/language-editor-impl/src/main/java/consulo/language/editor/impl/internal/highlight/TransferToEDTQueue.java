@@ -40,171 +40,177 @@ import java.util.function.BooleanSupplier;
  */
 @Deprecated
 public class TransferToEDTQueue<T> {
-  /**
-   * This is a default threshold used to join units of work.
-   * It allows to generate more that 30 frames per second.
-   * It is not recommended to block EDT longer,
-   * because people feel that UI is laggy.
-   *
-   * @see #TransferToEDTQueue(String, Processor, Condition, int)
-   * @see #createRunnableMerger(String, int)
-   */
-  public static final int DEFAULT_THRESHOLD = 30;
-  @SuppressWarnings({"FieldCanBeLocal", "UnusedDeclaration"})
-  private final String myName;
-  private final Processor<T> myProcessor;
-  private volatile boolean stopped;
-  private final BooleanSupplier myShutUpCondition;
-  private final int myMaxUnitOfWorkThresholdMs; //-1 means indefinite
+    /**
+     * This is a default threshold used to join units of work.
+     * It allows to generate more that 30 frames per second.
+     * It is not recommended to block EDT longer,
+     * because people feel that UI is laggy.
+     *
+     * @see #TransferToEDTQueue(String, Processor, Condition, int)
+     * @see #createRunnableMerger(String, int)
+     */
+    public static final int DEFAULT_THRESHOLD = 30;
+    @SuppressWarnings({"FieldCanBeLocal", "UnusedDeclaration"})
+    private final String myName;
+    private final Processor<T> myProcessor;
+    private volatile boolean stopped;
+    private final BooleanSupplier myShutUpCondition;
+    private final int myMaxUnitOfWorkThresholdMs; //-1 means indefinite
 
-  private final Queue<T> myQueue = new Queue<T>(10); // guarded by myQueue
-  private final AtomicBoolean invokeLaterScheduled = new AtomicBoolean();
-  private final Runnable myUpdateRunnable = new Runnable() {
-    @Override
-    public void run() {
-      boolean b = invokeLaterScheduled.compareAndSet(true, false);
-      assert b;
-      if (stopped || myShutUpCondition.getAsBoolean()) {
-        stop();
-        return;
-      }
-      long start = System.currentTimeMillis();
-      while (processNext()) {
-        long finish = System.currentTimeMillis();
-        if (myMaxUnitOfWorkThresholdMs != -1 && finish - start > myMaxUnitOfWorkThresholdMs) break;
-      }
-      if (!isEmpty()) {
+    private final Queue<T> myQueue = new Queue<T>(10); // guarded by myQueue
+    private final AtomicBoolean invokeLaterScheduled = new AtomicBoolean();
+    private final Runnable myUpdateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            boolean b = invokeLaterScheduled.compareAndSet(true, false);
+            assert b;
+            if (stopped || myShutUpCondition.getAsBoolean()) {
+                stop();
+                return;
+            }
+            long start = System.currentTimeMillis();
+            while (processNext()) {
+                long finish = System.currentTimeMillis();
+                if (myMaxUnitOfWorkThresholdMs != -1 && finish - start > myMaxUnitOfWorkThresholdMs) {
+                    break;
+                }
+            }
+            if (!isEmpty()) {
+                scheduleUpdate();
+            }
+        }
+
+        @Override
+        public String toString() {
+            return TransferToEDTQueue.this.getClass().getSimpleName() + "[" + myName + "]";
+        }
+    };
+
+    public TransferToEDTQueue(@Nonnull @NonNls String name, @Nonnull Processor<T> processor, @Nonnull BooleanSupplier shutUpCondition) {
+        this(name, processor, shutUpCondition, DEFAULT_THRESHOLD);
+    }
+
+    public TransferToEDTQueue(
+        @Nonnull @NonNls String name,
+        @Nonnull Processor<T> processor,
+        @Nonnull BooleanSupplier shutUpCondition,
+        int maxUnitOfWorkThresholdMs
+    ) {
+        myName = name;
+        myProcessor = processor;
+        myShutUpCondition = shutUpCondition;
+        myMaxUnitOfWorkThresholdMs = maxUnitOfWorkThresholdMs;
+    }
+
+    public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull @NonNls String name) {
+        return createRunnableMerger(name, DEFAULT_THRESHOLD);
+    }
+
+    public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull @NonNls String name, int maxUnitOfWorkThresholdMs) {
+        return new TransferToEDTQueue<Runnable>(name, runnable -> {
+            runnable.run();
+            return true;
+        }, () -> false, maxUnitOfWorkThresholdMs);
+    }
+
+    private boolean isEmpty() {
+        synchronized (myQueue) {
+            return myQueue.isEmpty();
+        }
+    }
+
+    // return true if element was pulled from the queue and processed successfully
+    private boolean processNext() {
+        T thing = pullFirst();
+        if (thing == null) {
+            return false;
+        }
+        if (!myProcessor.process(thing)) {
+            stop();
+            return false;
+        }
+        return true;
+    }
+
+    protected T pullFirst() {
+        synchronized (myQueue) {
+            return myQueue.isEmpty() ? null : myQueue.pullFirst();
+        }
+    }
+
+    public boolean offer(@Nonnull T thing) {
+        synchronized (myQueue) {
+            myQueue.addLast(thing);
+        }
         scheduleUpdate();
-      }
+        return true;
     }
 
-    @Override
-    public String toString() {
-      return TransferToEDTQueue.this.getClass().getSimpleName() + "[" + myName + "]";
+    public boolean offerIfAbsent(@Nonnull T thing) {
+        return offerIfAbsent(thing, ContainerUtil.<T>canonicalStrategy());
     }
-  };
 
-  public TransferToEDTQueue(@Nonnull @NonNls String name, @Nonnull Processor<T> processor, @Nonnull BooleanSupplier shutUpCondition) {
-    this(name, processor, shutUpCondition, DEFAULT_THRESHOLD);
-  }
-
-  public TransferToEDTQueue(@Nonnull @NonNls String name,
-                            @Nonnull Processor<T> processor,
-                            @Nonnull BooleanSupplier shutUpCondition,
-                            int maxUnitOfWorkThresholdMs) {
-    myName = name;
-    myProcessor = processor;
-    myShutUpCondition = shutUpCondition;
-    myMaxUnitOfWorkThresholdMs = maxUnitOfWorkThresholdMs;
-  }
-
-  public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull @NonNls String name) {
-    return createRunnableMerger(name, DEFAULT_THRESHOLD);
-  }
-
-  public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull @NonNls String name, int maxUnitOfWorkThresholdMs) {
-    return new TransferToEDTQueue<Runnable>(name, runnable -> {
-      runnable.run();
-      return true;
-    }, () -> false, maxUnitOfWorkThresholdMs);
-  }
-
-  private boolean isEmpty() {
-    synchronized (myQueue) {
-      return myQueue.isEmpty();
+    public boolean offerIfAbsent(@Nonnull final T thing, @Nonnull final HashingStrategy<T> equality) {
+        synchronized (myQueue) {
+            boolean absent = myQueue.process(t -> !equality.equals(t, thing));
+            if (absent) {
+                myQueue.addLast(thing);
+                scheduleUpdate();
+            }
+            return absent;
+        }
     }
-  }
 
-  // return true if element was pulled from the queue and processed successfully
-  private boolean processNext() {
-    T thing = pullFirst();
-    if (thing == null) return false;
-    if (!myProcessor.process(thing)) {
-      stop();
-      return false;
+    private void scheduleUpdate() {
+        if (!stopped && invokeLaterScheduled.compareAndSet(false, true)) {
+            schedule(myUpdateRunnable);
+        }
     }
-    return true;
-  }
 
-  protected T pullFirst() {
-    synchronized (myQueue) {
-      return myQueue.isEmpty() ? null : myQueue.pullFirst();
+    protected void schedule(@Nonnull Runnable updateRunnable) {
+        //noinspection SSBasedInspection
+        SwingUtilities.invokeLater(updateRunnable);
     }
-  }
 
-  public boolean offer(@Nonnull T thing) {
-    synchronized (myQueue) {
-      myQueue.addLast(thing);
+    public void stop() {
+        stopped = true;
+        synchronized (myQueue) {
+            myQueue.clear();
+        }
     }
-    scheduleUpdate();
-    return true;
-  }
 
-  public boolean offerIfAbsent(@Nonnull T thing) {
-    return offerIfAbsent(thing, ContainerUtil.<T>canonicalStrategy());
-  }
-
-  public boolean offerIfAbsent(@Nonnull final T thing, @Nonnull final HashingStrategy<T> equality) {
-    synchronized (myQueue) {
-      boolean absent = myQueue.process(t -> !equality.equals(t, thing));
-      if (absent) {
-        myQueue.addLast(thing);
-        scheduleUpdate();
-      }
-      return absent;
+    public int size() {
+        synchronized (myQueue) {
+            return myQueue.size();
+        }
     }
-  }
 
-  private void scheduleUpdate() {
-    if (!stopped && invokeLaterScheduled.compareAndSet(false, true)) {
-      schedule(myUpdateRunnable);
+    @TestOnly
+    @Nonnull
+    public Collection<T> dump() {
+        synchronized (myQueue) {
+            return myQueue.toList();
+        }
     }
-  }
 
-  protected void schedule(@Nonnull Runnable updateRunnable) {
-    //noinspection SSBasedInspection
-    SwingUtilities.invokeLater(updateRunnable);
-  }
-
-  public void stop() {
-    stopped = true;
-    synchronized (myQueue) {
-      myQueue.clear();
+    // process all queue in current thread
+    public void drain() {
+        int processed = 0;
+        while (processNext()) {
+            processed++;
+        }
     }
-  }
 
-  public int size() {
-    synchronized (myQueue) {
-      return myQueue.size();
+    // blocks until all elements in the queue are processed
+    public void waitFor() {
+        final Semaphore semaphore = new Semaphore();
+        semaphore.down();
+        schedule(new Runnable() {
+            @Override
+            public void run() {
+                semaphore.up();
+            }
+        });
+        semaphore.waitFor();
     }
-  }
-
-  @TestOnly
-  @Nonnull
-  public Collection<T> dump() {
-    synchronized (myQueue) {
-      return myQueue.toList();
-    }
-  }
-
-  // process all queue in current thread
-  public void drain() {
-    int processed = 0;
-    while (processNext()) {
-      processed++;
-    }
-  }
-
-  // blocks until all elements in the queue are processed
-  public void waitFor() {
-    final Semaphore semaphore = new Semaphore();
-    semaphore.down();
-    schedule(new Runnable() {
-      @Override
-      public void run() {
-        semaphore.up();
-      }
-    });
-    semaphore.waitFor();
-  }
 }

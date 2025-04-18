@@ -15,10 +15,9 @@
  */
 package consulo.util.collection;
 
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.util.lang.function.Functions;
-
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -388,7 +387,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
             Cond c = regard;
             while (c != null) {
                 Predicate impl = JBIterable.Stateful.copy(c.impl);
-                if (impl != (invert ? Condition.TRUE : Condition.FALSE)) {
+                if (impl != (invert ? Predicates.alwaysTrue() : Predicates.alwaysFalse())) {
                     copy = new Cond<Object>(invert ? Conditions.not(impl) : impl, copy);
                     if (impl instanceof EdgeFilter edgeFilter) {
                         edgeFilter.edgeSource = parent;
@@ -402,7 +401,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
                     c = c.next;
                 }
             }
-            return copy == null ? Condition.FALSE : copy.OR;
+            return copy == null ? Predicates.alwaysFalse() : copy.OR;
         }
 
         private static final Meta<?> EMPTY = new Meta<Object>(
@@ -423,8 +422,8 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
     }
 
     private static class Cond<T> {
-        final static Cond TRUE = new Cond<>(Conditions.TRUE, null);
-        final static Cond FALSE = new Cond<>(Conditions.FALSE, null);
+        static final Cond TRUE = new Cond<>(Predicates.alwaysTrue(), null);
+        static final Cond FALSE = new Cond<>(Predicates.alwaysFalse(), null);
 
         final Predicate<? super T> impl;
         final Cond<T> next;

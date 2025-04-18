@@ -55,7 +55,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.PatternUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.LocalFileProvider;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -181,7 +181,7 @@ public class FindInProjectUtil {
     @Nonnull
     public static Predicate<CharSequence> createFileMaskCondition(@Nullable String filter) throws PatternSyntaxException {
         if (filter == null) {
-            return Conditions.alwaysTrue();
+            return Predicates.alwaysTrue();
         }
 
         String pattern = "";
