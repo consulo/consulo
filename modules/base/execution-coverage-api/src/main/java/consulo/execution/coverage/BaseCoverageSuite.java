@@ -180,8 +180,8 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
         element.setAttribute(MODIFIED_STAMP, String.valueOf(myLastCoverageTimeStamp));
         element.setAttribute(
             SOURCE_PROVIDER,
-            myCoverageDataFileProvider instanceof DefaultCoverageFileProvider
-                ? ((DefaultCoverageFileProvider)myCoverageDataFileProvider).getSourceProvider()
+            myCoverageDataFileProvider instanceof DefaultCoverageFileProvider defaultCoverageFileProvider
+                ? defaultCoverageFileProvider.getSourceProvider()
                 : myCoverageDataFileProvider.getClass().getName()
         );
         // runner

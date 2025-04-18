@@ -173,10 +173,9 @@ public final class IdeKeyEventDispatcher implements Disposable {
         if (focusOwner instanceof ShortcutTextField) {
             return false;
         }
-        if (focusOwner instanceof JTextComponent && ((JTextComponent)focusOwner).isEditable()) {
-            if (e.getKeyChar() != KeyEvent.CHAR_UNDEFINED && e.getKeyCode() != KeyEvent.VK_ESCAPE) {
-                MacUIUtil.hideCursor();
-            }
+        if (focusOwner instanceof JTextComponent textComponent && textComponent.isEditable()
+            && e.getKeyChar() != KeyEvent.CHAR_UNDEFINED && e.getKeyCode() != KeyEvent.VK_ESCAPE) {
+            MacUIUtil.hideCursor();
         }
 
         MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
@@ -243,9 +242,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
     private static boolean isSpeedSearchEditing(KeyEvent e) {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_BACK_SPACE) {
-            Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-            if (owner instanceof JComponent) {
-                SpeedSearchSupply supply = SpeedSearchSupply.getSupply((JComponent)owner);
+            if (KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() instanceof JComponent owner) {
+                SpeedSearchSupply supply = SpeedSearchSupply.getSupply(owner);
                 return supply != null && supply.isPopupActive();
             }
         }
@@ -267,8 +265,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
             RootPaneContainer rootPaneContainer = (RootPaneContainer)awtWindow;
 
             Component glassPane = rootPaneContainer.getGlassPane();
-            if (glassPane instanceof IdeGlassPaneEx) {
-                return ((IdeGlassPaneEx)glassPane).isInModalContext();
+            if (glassPane instanceof IdeGlassPaneEx ideGlassPaneEx) {
+                return ideGlassPaneEx.isInModalContext();
             }
         }
 
@@ -284,12 +282,10 @@ public final class IdeKeyEventDispatcher implements Disposable {
         boolean isFloatingDecorator = awtWindow instanceof ToolWindowFloatingDecorator;
 
         boolean isPopup = !(component instanceof JFrame) && !(component instanceof JDialog);
-        if (isPopup) {
-            if (component instanceof JWindow) {
-                JBPopup popup = (JBPopup)((JWindow)component).getRootPane().getClientProperty(JBPopup.KEY);
-                if (popup != null) {
-                    return popup.isModalContext();
-                }
+        if (isPopup && component instanceof JWindow window) {
+            JBPopup popup = (JBPopup)window.getRootPane().getClientProperty(JBPopup.KEY);
+            if (popup != null) {
+                return popup.isModalContext();
             }
         }
 
@@ -669,11 +665,9 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
             processor.onUpdatePassed(e, action, actionEvent);
 
-            if (myContext.getDataContext() instanceof BaseDataManager.DataContextWithEventCount) { // this is not true for test data contexts
-                ((BaseDataManager.DataContextWithEventCount)myContext.getDataContext()).setEventCount(
-                    IdeEventQueue.getInstance().getEventCount(),
-                    this
-                );
+            if (myContext.getDataContext() instanceof BaseDataManager.DataContextWithEventCount dataContextWithEventCount) {
+                // this is not true for test data contexts
+                dataContextWithEventCount.setEventCount(IdeEventQueue.getInstance().getEventCount(), this);
             }
             actionManager.fireBeforeActionPerformed(action, actionEvent.getDataContext(), actionEvent);
             Component component = actionEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -724,23 +718,21 @@ public final class IdeKeyEventDispatcher implements Disposable {
         // here we try to find "local" shortcuts
 
         for (; component != null; component = component.getParent()) {
-            if (!(component instanceof JComponent)) {
+            if (!(component instanceof JComponent jComponent)) {
                 continue;
             }
-            List<AnAction> listOfActions = ActionUtil.getActions((JComponent)component);
+            List<AnAction> listOfActions = ActionUtil.getActions(jComponent);
             if (listOfActions.isEmpty()) {
                 continue;
             }
             for (Object listOfAction : listOfActions) {
-                if (!(listOfAction instanceof AnAction)) {
-                    continue;
+                if (listOfAction instanceof AnAction action) {
+                    hasSecondStroke |= addAction(action, sc);
                 }
-                AnAction action = (AnAction)listOfAction;
-                hasSecondStroke |= addAction(action, sc);
             }
             // once we've found a proper local shortcut(s), we continue with non-local shortcuts
             if (!myContext.getActions().isEmpty()) {
-                myContext.setFoundComponent((JComponent)component);
+                myContext.setFoundComponent(jComponent);
                 break;
             }
         }

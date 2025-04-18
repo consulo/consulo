@@ -300,8 +300,8 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
 
         AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, myExternalSystemId);
         Object systemStateToRestore = null;
-        if (systemSettings instanceof PersistentStateComponent) {
-            systemStateToRestore = ((PersistentStateComponent)systemSettings).getState();
+        if (systemSettings instanceof PersistentStateComponent persistentStateComponent) {
+            systemStateToRestore = persistentStateComponent.getState();
         }
         systemSettings.copyFrom(myControl.getSystemSettings());
         Collection projectSettingsToRestore = systemSettings.getLinkedProjectsSettings();

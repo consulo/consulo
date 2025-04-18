@@ -220,7 +220,8 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
                                     ((TreeElement)affectedChild).acceptTree(new RecursiveTreeElementWalkingVisitor() {
                                         @Override
                                         protected void visitNode(TreeElement element) {
-                                            if (CodeEditUtil.isNodeGenerated(element) && CodeEditUtil.isSuspendedNodesReformattingAllowed()) {
+                                            if (CodeEditUtil.isNodeGenerated(element)
+                                                && CodeEditUtil.isSuspendedNodesReformattingAllowed()) {
                                                 postponeFormatting(viewProvider, element);
                                                 return;
                                             }
@@ -445,7 +446,8 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         if (PsiDocumentManager.getInstance(myProject).isCommitted(document)) {
             Set<PsiFile> rootsToReparse = new HashSet<>();
             for (ASTNode node : myContext.get().myRaisingCandidates.get(viewProvider)) {
-                if (hasRaiseableEdgeChild(node)) { // check again because AST might be changed again and there's no need to reparse child now
+                if (hasRaiseableEdgeChild(node)) {
+                    // check again because AST might be changed again and there's no need to reparse child now
                     ContainerUtil.addIfNotNull(rootsToReparse, SharedImplUtil.getContainingFile(node));
                 }
             }
@@ -499,8 +501,8 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
             else if (accumulatedTask.getStartOffset() > currentTask.getEndOffset() ||
                 accumulatedTask.getStartOffset() == currentTask.getEndOffset() && !canStickActionsTogether(accumulatedTask, currentTask)) {
                 // action can be pushed
-                if (accumulatedTask instanceof ReindentTask) {
-                    indentActions.add((ReindentTask)accumulatedTask);
+                if (accumulatedTask instanceof ReindentTask reindentTask) {
+                    indentActions.add(reindentTask);
                 }
                 else {
                     freeFormattingActions.add(accumulatedTask);
@@ -531,10 +533,14 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
                     iterator.remove();
 
                     boolean withLeadingWhitespace = accumulatedTask instanceof ReformatWithHeadingWhitespaceTask;
-                    if (accumulatedTask instanceof ReformatTask && currentTask instanceof ReformatWithHeadingWhitespaceTask && accumulatedTask.getStartOffset() == currentTask.getStartOffset()) {
+                    if (accumulatedTask instanceof ReformatTask
+                        && currentTask instanceof ReformatWithHeadingWhitespaceTask
+                        && accumulatedTask.getStartOffset() == currentTask.getStartOffset()) {
                         withLeadingWhitespace = true;
                     }
-                    else if (accumulatedTask instanceof ReformatWithHeadingWhitespaceTask && currentTask instanceof ReformatTask && accumulatedTask.getStartOffset() < currentTask.getStartOffset()) {
+                    else if (accumulatedTask instanceof ReformatWithHeadingWhitespaceTask
+                        && currentTask instanceof ReformatTask
+                        && accumulatedTask.getStartOffset() < currentTask.getStartOffset()) {
                         withLeadingWhitespace = false;
                     }
                     int newStart = Math.min(accumulatedTask.getStartOffset(), currentTask.getStartOffset());
@@ -560,8 +566,8 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
             }
         }
         if (accumulatedTask != null) {
-            if (accumulatedTask instanceof ReindentTask) {
-                indentActions.add((ReindentTask)accumulatedTask);
+            if (accumulatedTask instanceof ReindentTask reindentTask) {
+                indentActions.add(reindentTask);
             }
             else {
                 freeFormattingActions.add(accumulatedTask);

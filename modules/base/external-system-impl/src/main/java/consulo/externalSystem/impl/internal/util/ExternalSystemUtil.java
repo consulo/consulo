@@ -110,10 +110,9 @@ public class ExternalSystemUtil {
     @RequiredUIAccess
     public static void ensureToolWindowInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
         ToolWindowManager manager = ToolWindowManager.getInstance(project);
-        if (!(manager instanceof ToolWindowManagerEx)) {
+        if (!(manager instanceof ToolWindowManagerEx managerEx)) {
             return;
         }
-        ToolWindowManagerEx managerEx = (ToolWindowManagerEx) manager;
         String toolWindowId = externalSystemId.getToolWindowId();
         ToolWindow window = manager.getToolWindow(toolWindowId);
         if (window != null) {
@@ -286,7 +285,6 @@ public class ExternalSystemUtil {
             content.setBorder(IdeBorderFactory.createEmptyBorder(0, 0, 8, 0));
 
             DialogWrapper dialog = new DialogWrapper(project) {
-
                 {
                     setTitle(ExternalSystemLocalize.importTitle(externalSystemId.getReadableName()));
                     init();
@@ -471,7 +469,7 @@ public class ExternalSystemUtil {
             switch (progressExecutionMode) {
                 case MODAL_SYNC:
                     title = ExternalSystemLocalize.progressImportText(projectName, externalSystemId.getReadableName());
-                    new Task.Modal(project, title.get(), true) {
+                    new Task.Modal(project, title, true) {
                         @Override
                         public void run(@Nonnull ProgressIndicator indicator) {
                             refreshProjectStructureTask.execute(indicator);
@@ -480,7 +478,7 @@ public class ExternalSystemUtil {
                     break;
                 case IN_BACKGROUND_ASYNC:
                     title = ExternalSystemLocalize.progressRefreshText(projectName, externalSystemId.getReadableName());
-                    new Task.Backgroundable(project, title.get()) {
+                    new Task.Backgroundable(project, title) {
                         @Override
                         public void run(@Nonnull ProgressIndicator indicator) {
                             refreshProjectStructureTask.execute(indicator);
@@ -489,7 +487,7 @@ public class ExternalSystemUtil {
                     break;
                 case START_IN_FOREGROUND_ASYNC:
                     title = ExternalSystemLocalize.progressRefreshText(projectName, externalSystemId.getReadableName());
-                    new Task.Backgroundable(project, title.get(), true, PerformInBackgroundOption.DEAF) {
+                    new Task.Backgroundable(project, title, true, PerformInBackgroundOption.DEAF) {
                         @Override
                         public void run(@Nonnull ProgressIndicator indicator) {
                             refreshProjectStructureTask.execute(indicator);
@@ -787,6 +785,7 @@ public class ExternalSystemUtil {
             }
         }
 
+        @RequiredReadAction
         private void processOrphanProjectLibraries() {
             List<Library> orphanIdeLibraries = new ArrayList<>();
 

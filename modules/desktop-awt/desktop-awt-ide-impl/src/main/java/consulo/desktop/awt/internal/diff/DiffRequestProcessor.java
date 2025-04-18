@@ -806,7 +806,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         if (editor == null) {
             Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             HintHint hintHint = createNotifyHint(myContentPanel, point, next);
-            hint.show(myContentPanel, point.x, point.y, owner instanceof JComponent ? (JComponent)owner : null, hintHint);
+            hint.show(myContentPanel, point.x, point.y, owner instanceof JComponent component ? component : null, hintHint);
         }
         else {
             int x = SwingUtilities.convertPoint(myContentPanel, point, editor.getComponent()).x;

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -28,7 +27,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.ast.ChangeUtil;
 import consulo.language.impl.ast.TreeElement;
-import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiElementProcessor;
@@ -46,6 +44,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
@@ -360,9 +359,9 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return null;
     }
 
-
-    @Override
     @Nonnull
+    @Override
+    @RequiredWriteAction
     public PsiDirectory createSubdirectory(@Nonnull String name) throws IncorrectOperationException {
         checkCreateSubdirectory(name);
 

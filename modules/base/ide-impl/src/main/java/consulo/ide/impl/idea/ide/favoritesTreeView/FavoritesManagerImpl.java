@@ -642,8 +642,8 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
                 }
                 projectFileIndex.iterateContentUnderDirectory(virtualFile, contentIterator);
             }
-            if (element instanceof Module) {
-                ModuleRootManager.getInstance((Module)element).getFileIndex().iterateContent(contentIterator);
+            if (element instanceof Module module) {
+                ModuleRootManager.getInstance(module).getFileIndex().iterateContent(contentIterator);
             }
             if (element instanceof LibraryGroupElement libraryGroupElement) {
                 boolean inLibrary = ModuleRootManager.getInstance(libraryGroupElement.getModule())

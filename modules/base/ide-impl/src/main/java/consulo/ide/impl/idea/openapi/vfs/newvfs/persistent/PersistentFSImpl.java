@@ -9,7 +9,6 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;
 import consulo.ide.impl.idea.concurrency.JobSchedulerImpl;
 import consulo.ide.impl.idea.openapi.progress.util.PingProgress;
-import consulo.ide.impl.idea.openapi.vfs.PersistentFSConstants;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
@@ -32,6 +31,7 @@ import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.encoding.Utf8BomOptionProvider;
 import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -240,7 +240,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
         return FSRecords.writeContent(getFileId(file), readOnly);
     }
 
-    private static void writeContent(@Nonnull VirtualFile file, consulo.util.io.ByteArraySequence content, boolean readOnly) {
+    private static void writeContent(@Nonnull VirtualFile file, ByteArraySequence content, boolean readOnly) {
         FSRecords.writeContent(getFileId(file), content, readOnly);
     }
 
@@ -561,9 +561,9 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
             if ((!delegate.isReadOnly()
                 // do not cache archive content unless asked
                 || cacheContent && !application.isInternal() && !application.isUnitTestMode())
-                && content.length <= PersistentFSConstants.FILE_LENGTH_TO_CACHE_THRESHOLD) {
+                && content.length <= RawFileLoaderImpl.LARGE_FOR_CONTENT_LOADING) {
                 synchronized (myInputLock) {
-                    writeContent(file, new consulo.util.io.ByteArraySequence(content), delegate.isReadOnly());
+                    writeContent(file, new ByteArraySequence(content), delegate.isReadOnly());
                     setFlag(file, MUST_RELOAD_CONTENT, false);
                 }
             }
@@ -598,7 +598,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                 long len = reloadLengthFromDelegate(file, delegate);
                 InputStream nativeStream = delegate.getInputStream(file);
 
-                if (len > PersistentFSConstants.FILE_LENGTH_TO_CACHE_THRESHOLD) {
+                if (len > RawFileLoaderImpl.LARGE_FOR_CONTENT_LOADING) {
                     return nativeStream;
                 }
                 return createReplicator(file, nativeStream, len, delegate.isReadOnly());
@@ -640,7 +640,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     ) {
         synchronized (myInputLock) {
             if (bytesLength == fileLength) {
-                writeContent(file, new consulo.util.io.ByteArraySequence(bytes, 0, bytesLength), readOnly);
+                writeContent(file, new ByteArraySequence(bytes, 0, bytesLength), readOnly);
                 setFlag(file, MUST_RELOAD_CONTENT, false);
             }
             else {
@@ -896,7 +896,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
         @Nonnull MostlySingularMultiMap<String, VFileEvent> filesInvolved,
         @Nonnull Set<? super String> middleDirsInvolved
     ) {
-        Set<VFileEvent> toIgnore = Sets.newHashSet(ContainerUtil.identityStrategy()); // VFileEvents override equals()
+        Set<VFileEvent> toIgnore = Sets.newHashSet(HashingStrategy.identity()); // VFileEvents override equals()
         int endIndex = groupByPath(
             events,
             startIndex,
@@ -1165,7 +1165,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                     List<ChildInfo> added = getOrCreateChildInfos(
                         directory,
                         scannedChildren,
-                        childInfo -> childInfo.getName(),
+                        ChildInfo::getName,
                         childIds,
                         delegate,
                         (childInfo, childId) -> {

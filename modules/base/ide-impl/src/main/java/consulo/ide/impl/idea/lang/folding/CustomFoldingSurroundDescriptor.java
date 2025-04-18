@@ -53,7 +53,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
     private static final ExtensionPointCacheKey<CustomFoldingProvider, Surrounder[]> CUSTOM_SURROUNDERS = ExtensionPointCacheKey.create(
         "CUSTOM_SURROUNDERS",
         customFoldingProviders -> {
-            List<CustomFoldingRegionSurrounder> surrounderList = new ArrayList<CustomFoldingRegionSurrounder>();
+            List<CustomFoldingRegionSurrounder> surrounderList = new ArrayList<>();
             CustomFoldingProvider.EP_NAME.forEachExtensionSafe(it -> surrounderList.add(new CustomFoldingRegionSurrounder(it)));
             return surrounderList.toArray(new CustomFoldingRegionSurrounder[surrounderList.size()]);
         }
@@ -63,9 +63,9 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
 
     private final static String DEFAULT_DESC_TEXT = "Description";
 
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
         if (startOffset >= endOffset - 1) {
             return PsiElement.EMPTY_ARRAY;

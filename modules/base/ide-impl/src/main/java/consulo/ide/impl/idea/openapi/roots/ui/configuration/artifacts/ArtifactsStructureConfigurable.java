@@ -267,8 +267,8 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
 
     private MyNode addArtifactNode(Artifact artifact) {
         NamedConfigurable<Artifact> configurable;
-        if (artifact instanceof InvalidArtifact) {
-            configurable = new InvalidArtifactConfigurable((InvalidArtifact)artifact, myPackagingEditorContext, TREE_UPDATER);
+        if (artifact instanceof InvalidArtifact invalidArtifact) {
+            configurable = new InvalidArtifactConfigurable(invalidArtifact, myPackagingEditorContext, TREE_UPDATER);
         }
         else {
             configurable = new ArtifactConfigurable(artifact, myPackagingEditorContext, TREE_UPDATER);
