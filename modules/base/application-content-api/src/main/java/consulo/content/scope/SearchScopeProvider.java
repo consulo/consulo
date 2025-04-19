@@ -3,7 +3,6 @@ package consulo.content.scope;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
@@ -14,8 +13,6 @@ import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SearchScopeProvider {
-    ExtensionPointName<SearchScopeProvider> EP_NAME = ExtensionPointName.create(SearchScopeProvider.class);
-
     @Nullable
     default String getDisplayName() {
         return null;

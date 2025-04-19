@@ -17,7 +17,7 @@ package consulo.application.eap;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -27,9 +27,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EarlyAccessProgramDescriptor {
-    public static final ExtensionPointName<EarlyAccessProgramDescriptor> EP_NAME =
-        ExtensionPointName.create(EarlyAccessProgramDescriptor.class);
-
     @Nonnull
     public abstract String getName();
 

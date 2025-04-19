@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.internal.LibraryKindRegistry;
 import consulo.content.library.*;
@@ -29,9 +30,11 @@ import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author nik
@@ -40,20 +43,23 @@ import java.util.*;
 @ServiceImpl
 public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
     private Map<LibraryKind, LibraryPresentation<?>> myPresentationProviders;
+    private final Application myApplication;
+
+    @Inject
+    public LibraryPresentationManagerImpl(Application application) {
+        myApplication = application;
+    }
 
     @SuppressWarnings("unchecked")
     private <P extends LibraryProperties> LibraryPresentationProvider<P> getPresentationProvider(LibraryKind kind) {
         if (myPresentationProviders == null) {
             Map<LibraryKind, LibraryPresentation<?>> providers = new HashMap<>();
-            for (LibraryType<?> type : LibraryType.EP_NAME.getExtensionList()) {
-                providers.put(type.getKind(), type);
-            }
-            for (LibraryPresentationProvider provider : LibraryPresentationProvider.EP_NAME.getExtensionList()) {
-                providers.put(provider.getKind(), provider);
-            }
+            Consumer<LibraryPresentation> processor = provider -> providers.put(provider.getKind(), provider);
+            myApplication.getExtensionPoint(LibraryType.class).forEach(processor);
+            myApplication.getExtensionPoint(LibraryPresentationProvider.class).forEach(processor);
             myPresentationProviders = providers;
         }
-        return (LibraryPresentationProvider<P>) myPresentationProviders.get(kind);
+        return (LibraryPresentationProvider<P>)myPresentationProviders.get(kind);
     }
 
     @Nonnull

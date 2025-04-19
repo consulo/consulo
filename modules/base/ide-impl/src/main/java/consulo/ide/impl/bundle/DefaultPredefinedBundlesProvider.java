@@ -16,12 +16,14 @@
 package consulo.ide.impl.bundle;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.content.bundle.*;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -39,11 +41,18 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
     private record BundlePath(Path path, String envVarName) {
     }
 
+    private final Application myApplication;
+
+    @Inject
+    public DefaultPredefinedBundlesProvider(Application application) {
+        myApplication = application;
+    }
+
     @Override
     public void createBundles(@Nonnull Context context) {
         Platform platform = Platform.current();
 
-        SdkType.EP_NAME.forEachExtensionSafe(sdkType -> {
+        myApplication.getExtensionPoint(SdkType.class).forEach(sdkType -> {
             if (sdkType instanceof BundleType bundleType) {
                 createBundles(context, bundleType, platform);
             }

@@ -167,13 +167,19 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
                 return false;
             }
         }
-        for (ScopeDescriptorProvider provider : ScopeDescriptorProvider.EP_NAME.getExtensionList()) {
+
+        boolean missed = project.getApplication().getExtensionPoint(ScopeDescriptorProvider.class).anyMatchSafe(provider -> {
             for (ScopeDescriptor descriptor : provider.getScopeDescriptors(project)) {
                 if (!processor.test(descriptor)) {
-                    return false;
+                    return true;
                 }
             }
+            return false;
+        });
+        if (missed) {
+            return false;
         }
+
         Comparator<SearchScope> comparator = (o1, o2) -> {
             int w1 = o1 instanceof WeighedItem wi1 ? wi1.getWeight() : Integer.MAX_VALUE;
             int w2 = o2 instanceof WeighedItem wi2 ? wi2.getWeight() : Integer.MAX_VALUE;
@@ -182,24 +188,24 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
             }
             return w1 - w2;
         };
-        for (SearchScopeProvider each : SearchScopeProvider.EP_NAME.getExtensionList()) {
+        return !project.getApplication().getExtensionPoint(SearchScopeProvider.class).anyMatchSafe(each -> {
             if (StringUtil.isEmpty(each.getDisplayName())) {
-                continue;
+                return false;
             }
             List<SearchScope> scopes = each.getSearchScopes(project);
             if (scopes.isEmpty()) {
-                continue;
+                return false;
             }
             if (!processor.test(new ScopeSeparator(each.getDisplayName()))) {
-                return false;
+                return true;
             }
             for (SearchScope scope : ContainerUtil.sorted(scopes, comparator)) {
                 if (!processor.test(new ScopeDescriptor(scope))) {
-                    return false;
+                    return true;
                 }
             }
-        }
-        return true;
+            return false;
+        });
     }
 
     private void rebuildModelAndSelectScopeOnSuccess(@Nullable Object selection) {

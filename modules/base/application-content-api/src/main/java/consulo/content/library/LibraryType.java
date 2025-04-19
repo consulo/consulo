@@ -17,7 +17,6 @@ package consulo.content.library;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.library.ui.LibraryEditorComponent;
@@ -38,8 +37,6 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LibraryType<P extends LibraryProperties> implements LibraryPresentation<P> {
-    public static final ExtensionPointName<LibraryType> EP_NAME = ExtensionPointName.create(LibraryType.class);
-
     @Nonnull
     public static OrderRootType[] getDefaultExternalRootTypes() {
         return new OrderRootType[]{BinariesOrderRootType.getInstance()};
