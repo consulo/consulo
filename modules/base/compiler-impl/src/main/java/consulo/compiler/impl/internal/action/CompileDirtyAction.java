@@ -58,10 +58,12 @@ public class CompileDirtyAction extends CompileActionBase {
             CompilerRunner runner = point.findFirstSafe(CompilerRunner::isAvailable);
             if (runner != null) {
                 presentation.setIcon(runner.getBuildIcon());
-            } else {
+            }
+            else {
                 presentation.setIcon(PlatformIconGroup.actionsCompile());
             }
-        } else {
+        }
+        else {
             presentation.setIcon(PlatformIconGroup.actionsCompile());
         }
     }

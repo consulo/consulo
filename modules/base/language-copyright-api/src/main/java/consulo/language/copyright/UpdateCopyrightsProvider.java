@@ -30,6 +30,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -37,38 +38,42 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class UpdateCopyrightsProvider<T extends CopyrightFileConfig> {
-  private static final ExtensionPointCacheKey<UpdateCopyrightsProvider, Map<FileType, UpdateCopyrightsProvider>> KEY =
-          ExtensionPointCacheKey.groupBy("UpdateCopyrightsProvider", UpdateCopyrightsProvider::getFileType);
+    private static final ExtensionPointCacheKey<UpdateCopyrightsProvider, Map<FileType, UpdateCopyrightsProvider>> KEY =
+        ExtensionPointCacheKey.groupBy("UpdateCopyrightsProvider", UpdateCopyrightsProvider::getFileType);
 
-  @Nullable
-  public static UpdateCopyrightsProvider forFileType(FileType fileType) {
-    ExtensionPoint<UpdateCopyrightsProvider> extensionPoint = Application.get().getExtensionPoint(UpdateCopyrightsProvider.class);
-    Map<FileType, UpdateCopyrightsProvider> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(fileType);
-  }
+    @Nullable
+    public static UpdateCopyrightsProvider forFileType(FileType fileType) {
+        ExtensionPoint<UpdateCopyrightsProvider> extensionPoint = Application.get().getExtensionPoint(UpdateCopyrightsProvider.class);
+        Map<FileType, UpdateCopyrightsProvider> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(fileType);
+    }
 
-  public static boolean hasExtension(@Nonnull PsiFile psiFile) {
-    VirtualFile virtualFile = psiFile.getVirtualFile();
-    return virtualFile != null && hasExtension(virtualFile);
-  }
+    public static boolean hasExtension(@Nonnull PsiFile psiFile) {
+        VirtualFile virtualFile = psiFile.getVirtualFile();
+        return virtualFile != null && hasExtension(virtualFile);
+    }
 
-  public static boolean hasExtension(@Nonnull VirtualFile virtualFile) {
-    return forFileType(virtualFile.getFileType()) != null;
-  }
+    public static boolean hasExtension(@Nonnull VirtualFile virtualFile) {
+        return forFileType(virtualFile.getFileType()) != null;
+    }
 
-  @Nonnull
-  public abstract FileType getFileType();
+    @Nonnull
+    public abstract FileType getFileType();
 
-  @Nonnull
-  public abstract UpdatePsiFileCopyright<T> createInstance(@Nonnull PsiFile file, @Nonnull CopyrightProfile copyrightProfile);
+    @Nonnull
+    public abstract UpdatePsiFileCopyright<T> createInstance(@Nonnull PsiFile file, @Nonnull CopyrightProfile copyrightProfile);
 
-  @Nonnull
-  public abstract T createDefaultOptions();
+    @Nonnull
+    public abstract T createDefaultOptions();
 
-  @Nonnull
-  public abstract TemplateCommentPanel createConfigurable(@Nonnull Project project, @Nonnull TemplateCommentPanel parentPane, @Nonnull FileType fileType);
+    @Nonnull
+    public abstract TemplateCommentPanel createConfigurable(
+        @Nonnull Project project,
+        @Nonnull TemplateCommentPanel parentPane,
+        @Nonnull FileType fileType
+    );
 
-  public boolean isAllowSeparator() {
-    return true;
-  }
+    public boolean isAllowSeparator() {
+        return true;
+    }
 }

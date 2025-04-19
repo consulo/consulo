@@ -33,16 +33,17 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TestCreator extends LanguageExtension {
-  ExtensionPointCacheKey<TestCreator, ByLanguageValue<TestCreator>> KEY = ExtensionPointCacheKey.create("TestCreator", LanguageOneToOne.build());
+    ExtensionPointCacheKey<TestCreator, ByLanguageValue<TestCreator>> KEY =
+        ExtensionPointCacheKey.create("TestCreator", LanguageOneToOne.build());
 
-  @Nullable
-  static TestCreator forLanguage(Language language) {
-    ExtensionPoint<TestCreator> extensionPoint = Application.get().getExtensionPoint(TestCreator.class);
-    ByLanguageValue<TestCreator> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(language);
-  }
+    @Nullable
+    static TestCreator forLanguage(Language language) {
+        ExtensionPoint<TestCreator> extensionPoint = Application.get().getExtensionPoint(TestCreator.class);
+        ByLanguageValue<TestCreator> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(language);
+    }
 
-  boolean isAvailable(Project project, Editor editor, PsiFile file);
+    boolean isAvailable(Project project, Editor editor, PsiFile file);
 
-  void createTest(Project project, Editor editor, PsiFile file);
+    void createTest(Project project, Editor editor, PsiFile file);
 }

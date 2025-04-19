@@ -34,36 +34,38 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LineIndentProvider {
-  @Nullable
-  public static LineIndentProvider findLineIndentProvider(@Nullable Language language) {
-    ExtensionPoint<LineIndentProvider> point = Application.get().getExtensionPoint(LineIndentProvider.class);
-    return point.findFirstSafe(it -> it.isSuitableFor(language));
-  }
+    @Nullable
+    public static LineIndentProvider findLineIndentProvider(@Nullable Language language) {
+        ExtensionPoint<LineIndentProvider> point = Application.get().getExtensionPoint(LineIndentProvider.class);
+        return point.findFirstSafe(it -> it.isSuitableFor(language));
+    }
 
-  /**
-   * Marker object to indicate that no further formatter-based indent adjustment must be made.
-   */
-  String DO_NOT_ADJUST = new String();
+    /**
+     * Marker object to indicate that no further formatter-based indent adjustment must be made.
+     */
+    String DO_NOT_ADJUST = new String();
 
-  /**
-   * Calculates the indent that should be used for the line at specified offset in the specified
-   * document.
-   *
-   * @param project  The current project.
-   * @param document The current document.
-   * @param language Context language to be used at the current offset.
-   * @param factory factory for {@link SemanticEditorPosition}
-   * @param offset   The caret offset in the editor.
-   * @return The indent string (possibly consisting of tabs and/or white spaces), {@code null} if LineIndentProvider can't calculate the
-   * indent (in this case indent calculation is delegated to formatter if smart indent mode is used) or {@link #DO_NOT_ADJUST} constant to
-   * leave the current caret position as is without any further formatter-based adjustment.
-   */
-  @Nullable
-  String getLineIndent(@Nonnull Project project,
-                       @Nonnull Document document,
-                       @Nonnull SemanticEditorPositionFactory factory,
-                       Language language,
-                       int offset);
+    /**
+     * Calculates the indent that should be used for the line at specified offset in the specified
+     * document.
+     *
+     * @param project  The current project.
+     * @param document The current document.
+     * @param language Context language to be used at the current offset.
+     * @param factory  factory for {@link SemanticEditorPosition}
+     * @param offset   The caret offset in the editor.
+     * @return The indent string (possibly consisting of tabs and/or white spaces), {@code null} if LineIndentProvider can't calculate the
+     * indent (in this case indent calculation is delegated to formatter if smart indent mode is used) or {@link #DO_NOT_ADJUST} constant to
+     * leave the current caret position as is without any further formatter-based adjustment.
+     */
+    @Nullable
+    String getLineIndent(
+        @Nonnull Project project,
+        @Nonnull Document document,
+        @Nonnull SemanticEditorPositionFactory factory,
+        Language language,
+        int offset
+    );
 
-  boolean isSuitableFor(@Nullable Language language);
+    boolean isSuitableFor(@Nullable Language language);
 }

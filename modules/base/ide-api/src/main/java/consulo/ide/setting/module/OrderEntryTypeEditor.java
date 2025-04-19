@@ -27,6 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -34,46 +35,48 @@ import java.util.function.Consumer;
 /**
  * @author VISTALL
  * @see CustomOrderEntryTypeEditor
- * @since 06-Jun-16
+ * @since 2016-06-06
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
-  ExtensionPointCacheKey<OrderEntryTypeEditor, Map<String, OrderEntryTypeEditor>> CACHE_KEY =
-    ExtensionPointCacheKey.groupBy("OrderEntryTypeEditor", OrderEntryTypeEditor::getOrderTypeId);
+    ExtensionPointCacheKey<OrderEntryTypeEditor, Map<String, OrderEntryTypeEditor>> CACHE_KEY =
+        ExtensionPointCacheKey.groupBy("OrderEntryTypeEditor", OrderEntryTypeEditor::getOrderTypeId);
 
-  @Nonnull
-  static OrderEntryTypeEditor getEditor(String id) {
-    ExtensionPoint<OrderEntryTypeEditor> extensionPoint = Application.get().getExtensionPoint(OrderEntryTypeEditor.class);
+    @Nonnull
+    static OrderEntryTypeEditor getEditor(String id) {
+        ExtensionPoint<OrderEntryTypeEditor> extensionPoint = Application.get().getExtensionPoint(OrderEntryTypeEditor.class);
 
-    Map<String, OrderEntryTypeEditor> map = extensionPoint.getOrBuildCache(CACHE_KEY);
-    OrderEntryTypeEditor editor = map.get(id);
-    if (editor != null) {
-      return editor;
+        Map<String, OrderEntryTypeEditor> map = extensionPoint.getOrBuildCache(CACHE_KEY);
+        OrderEntryTypeEditor editor = map.get(id);
+        if (editor != null) {
+            return editor;
+        }
+
+        return Objects.requireNonNull(map.get(""), "can't find unknown order entry type. Id: " + id);
     }
 
-    return Objects.requireNonNull(map.get(""), "can't find unknown order entry type. Id: " + id);
-  }
+    @Nonnull
+    String getOrderTypeId();
 
-  @Nonnull
-  String getOrderTypeId();
+    @Nonnull
+    default Consumer<ColoredTextContainer> getRender(@Nonnull T orderEntry) {
+        return it -> it.append(orderEntry.getPresentableName());
+    }
 
-  @Nonnull
-  default Consumer<ColoredTextContainer> getRender(@Nonnull T orderEntry) {
-    return it -> it.append(orderEntry.getPresentableName());
-  }
+    @Nonnull
+    default ClasspathTableItem<T> createTableItem(
+        @Nonnull T orderEntry,
+        @Nonnull Project project,
+        @Nonnull ModulesConfigurator modulesConfigurator,
+        @Nonnull LibrariesConfigurator librariesConfigurator
+    ) {
+        return new ClasspathTableItem<>(orderEntry);
+    }
 
-  @Nonnull
-  default ClasspathTableItem<T> createTableItem(@Nonnull T orderEntry,
-                                                @Nonnull Project project,
-                                                @Nonnull ModulesConfigurator modulesConfigurator,
-                                                @Nonnull LibrariesConfigurator librariesConfigurator) {
-    return new ClasspathTableItem<>(orderEntry);
-  }
-
-  @RequiredUIAccess
-  default void navigate(@Nonnull final T orderEntry) {
-    Project project = orderEntry.getOwnerModule().getProject();
-    ShowSettingsUtil.getInstance()
-                    .showProjectStructureDialog(project, config -> config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry));
-  }
+    @RequiredUIAccess
+    default void navigate(@Nonnull final T orderEntry) {
+        Project project = orderEntry.getOwnerModule().getProject();
+        ShowSettingsUtil.getInstance()
+            .showProjectStructureDialog(project, config -> config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry));
+    }
 }

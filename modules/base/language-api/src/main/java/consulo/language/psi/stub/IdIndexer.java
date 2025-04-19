@@ -11,6 +11,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -18,19 +19,19 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IdIndexer extends DataIndexer<IdIndexEntry, Integer, FileContent> {
-  ExtensionPointCacheKey<IdIndexer, Map<FileType, IdIndexer>> KEY = ExtensionPointCacheKey.groupBy("IdIndexer", IdIndexer::getFileType);
+    ExtensionPointCacheKey<IdIndexer, Map<FileType, IdIndexer>> KEY = ExtensionPointCacheKey.groupBy("IdIndexer", IdIndexer::getFileType);
 
-  @Nullable
-  static IdIndexer forFileType(FileType fileType) {
-    ExtensionPoint<IdIndexer> extensionPoint = Application.get().getExtensionPoint(IdIndexer.class);
-    Map<FileType, IdIndexer> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(fileType);
-  }
+    @Nullable
+    static IdIndexer forFileType(FileType fileType) {
+        ExtensionPoint<IdIndexer> extensionPoint = Application.get().getExtensionPoint(IdIndexer.class);
+        Map<FileType, IdIndexer> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(fileType);
+    }
 
-  @Nonnull
-  FileType getFileType();
+    @Nonnull
+    FileType getFileType();
 
-  default int getVersion() {
-    return 1;
-  }
+    default int getVersion() {
+        return 1;
+    }
 }

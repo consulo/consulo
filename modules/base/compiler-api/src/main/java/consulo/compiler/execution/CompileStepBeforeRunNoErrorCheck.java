@@ -40,7 +40,6 @@ import jakarta.inject.Inject;
  */
 @ExtensionImpl(id = "compileBeforeRunNoErrorCheck", order = "after compileBeforeRun")
 public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<CompileStepBeforeRunNoErrorCheck.MakeBeforeRunTaskNoErrorCheck> {
-
     public static class MakeBeforeRunTaskNoErrorCheck extends BeforeRunTask<MakeBeforeRunTaskNoErrorCheck> {
         private MakeBeforeRunTaskNoErrorCheck() {
             super(ID);
@@ -89,8 +88,8 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
     }
 
     @Nonnull
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, MakeBeforeRunTaskNoErrorCheck task) {
         return AsyncResult.rejected();
     }
@@ -108,7 +107,13 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
 
     @Nonnull
     @Override
-    public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, MakeBeforeRunTaskNoErrorCheck task) {
+    public AsyncResult<Void> executeTaskAsync(
+        UIAccess uiAccess,
+        DataContext context,
+        RunConfiguration configuration,
+        ExecutionEnvironment env,
+        MakeBeforeRunTaskNoErrorCheck task
+    ) {
         return CompileStepBeforeRun.doMake(uiAccess, myProject, configuration, true);
     }
 }

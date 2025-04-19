@@ -16,7 +16,7 @@
 package consulo.compiler.execution;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ReadAction;
+import consulo.application.AccessRule;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.compiler.CompileStatusNotification;
 import consulo.compiler.CompilerManager;
@@ -65,7 +65,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     private final Project myProject;
 
     @Inject
-    public CompileStepBeforeRun(@Nonnull final Project project) {
+    public CompileStepBeforeRun(@Nonnull Project project) {
         myProject = project;
     }
 
@@ -124,32 +124,33 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
 
     @Nonnull
     @Override
-    public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess,
-                                              DataContext context,
-                                              RunConfiguration configuration,
-                                              ExecutionEnvironment env,
-                                              MakeBeforeRunTask task) {
+    public AsyncResult<Void> executeTaskAsync(
+        UIAccess uiAccess,
+        DataContext context,
+        RunConfiguration configuration,
+        ExecutionEnvironment env,
+        MakeBeforeRunTask task
+    ) {
         return doMake(uiAccess, myProject, configuration, false);
     }
 
     static AsyncResult<Void> doMake(
         UIAccess uiAccess,
-        final Project myProject,
-        final RunConfiguration configuration,
-        final boolean ignoreErrors
+        Project myProject,
+        RunConfiguration configuration,
+        boolean ignoreErrors
     ) {
-        if (!(configuration instanceof RunProfileWithCompileBeforeLaunchOption)) {
+        if (!(configuration instanceof RunProfileWithCompileBeforeLaunchOption runConfiguration)) {
             return AsyncResult.rejected();
         }
 
-        if (configuration instanceof RunConfigurationBase runConfiguration && runConfiguration.excludeCompileBeforeLaunchOption()) {
+        if (configuration instanceof RunConfigurationBase rcb && rcb.excludeCompileBeforeLaunchOption()) {
             return AsyncResult.resolved();
         }
 
-        final RunProfileWithCompileBeforeLaunchOption runConfiguration = (RunProfileWithCompileBeforeLaunchOption) configuration;
         AsyncResult<Void> result = AsyncResult.undefined();
         try {
-            final CompileStatusNotification callback = (aborted, errors, warnings, compileContext) -> {
+            CompileStatusNotification callback = (aborted, errors, warnings, compileContext) -> {
                 if ((errors == 0 || ignoreErrors) && !aborted) {
                     result.setDone();
                 }
@@ -158,34 +159,37 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
                 }
             };
 
-            final boolean[] isTestCompile = new boolean[]{true};
+            boolean[] isTestCompile = new boolean[]{true};
             try {
                 isTestCompile[0] = DumbService.getInstance(myProject)
-                    .runWithAlternativeResolveEnabled(((RunProfileWithCompileBeforeLaunchOption) configuration)::includeTestScope);
+                    .runWithAlternativeResolveEnabled(((RunProfileWithCompileBeforeLaunchOption)configuration)::includeTestScope);
             }
             catch (IndexNotReadyException ignored) {
             }
 
             CompileScope scope;
-            final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
+            CompilerManager compilerManager = CompilerManager.getInstance(myProject);
             if (Comparing.equal(Boolean.TRUE.toString(), System.getProperty(MAKE_PROJECT_ON_RUN_KEY))) {
                 // user explicitly requested whole-project make
-                scope = ReadAction.compute(() -> compilerManager.createProjectCompileScope(isTestCompile[0]));
+                scope = AccessRule.read(() -> compilerManager.createProjectCompileScope(isTestCompile[0]));
             }
             else {
-                final Module[] modules = runConfiguration.getModules();
+                Module[] modules = runConfiguration.getModules();
                 if (modules.length > 0) {
                     for (Module module : modules) {
                         if (module == null) {
-                            LOG.error("RunConfiguration should not return null modules. Configuration=" + runConfiguration.getName() + "; class=" + runConfiguration
+                            LOG.error(
+                                "RunConfiguration should not return null modules. Configuration=" + runConfiguration.getName() +
+                                    "; class=" + runConfiguration
                                 .getClass()
-                                .getName());
+                                .getName()
+                            );
                         }
                     }
-                    scope = ReadAction.compute(() -> compilerManager.createModulesCompileScope(modules, true, isTestCompile[0]));
+                    scope = AccessRule.read(() -> compilerManager.createModulesCompileScope(modules, true, isTestCompile[0]));
                 }
                 else if (runConfiguration.isBuildProjectOnEmptyModuleList()) {
-                    scope = ReadAction.compute(() -> compilerManager.createProjectCompileScope(isTestCompile[0]));
+                    scope = AccessRule.read(() -> compilerManager.createProjectCompileScope(isTestCompile[0]));
                 }
                 else {
                     result.setDone();

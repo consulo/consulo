@@ -27,6 +27,7 @@ import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -35,18 +36,18 @@ import java.util.Map;
 @Singleton
 @ServiceImpl
 public class CacheBuilderRegistryImpl extends CacheBuilderRegistry {
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public CacheBuilderRegistryImpl(Application application) {
-    myApplication = application;
-  }
+    @Inject
+    public CacheBuilderRegistryImpl(Application application) {
+        myApplication = application;
+    }
 
-  @Override
-  @Nullable
-  public WordsScanner getCacheBuilder(@Nonnull FileType fileType) {
-    ExtensionPoint<FileWordsScannerProvider> extensionPoint = myApplication.getExtensionPoint(FileWordsScannerProvider.class);
-    Map<FileType, WordsScanner> map = extensionPoint.getOrBuildCache(FileWordsScannerProvider.SCANNERS);
-    return map.get(fileType);
-  }
+    @Override
+    @Nullable
+    public WordsScanner getCacheBuilder(@Nonnull FileType fileType) {
+        ExtensionPoint<FileWordsScannerProvider> extensionPoint = myApplication.getExtensionPoint(FileWordsScannerProvider.class);
+        Map<FileType, WordsScanner> map = extensionPoint.getOrBuildCache(FileWordsScannerProvider.SCANNERS);
+        return map.get(fileType);
+    }
 }

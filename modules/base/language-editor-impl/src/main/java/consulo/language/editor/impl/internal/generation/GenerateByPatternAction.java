@@ -35,44 +35,46 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "GeneratePattern")
 public class GenerateByPatternAction extends AnAction {
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public GenerateByPatternAction(Application application) {
-    super(LocalizeValue.localizeTODO("Generate by Pattern..."));
-    myApplication = application;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ExtensionPoint<PatternProvider> point = myApplication.getExtensionPoint(PatternProvider.class);
-    if (!point.hasAnyExtensions()) {
-      e.getPresentation().setVisible(false);
-      return;
+    @Inject
+    public GenerateByPatternAction(Application application) {
+        super(LocalizeValue.localizeTODO("Generate by Pattern..."));
+        myApplication = application;
     }
 
-    e.getPresentation().setVisible(true);
-    for (PatternProvider extension : point.getExtensionList()) {
-      if (extension.isAvailable(e.getDataContext())) return;
-    }
-    e.getPresentation().setVisible(false);
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ExtensionPoint<PatternProvider> point = myApplication.getExtensionPoint(PatternProvider.class);
+        if (!point.hasAnyExtensions()) {
+            e.getPresentation().setVisible(false);
+            return;
+        }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    PatternDescriptor[] patterns = new PatternDescriptor[0];
-    ExtensionPoint<PatternProvider> point = myApplication.getExtensionPoint(PatternProvider.class);
-    for (PatternProvider extension : point.getExtensionList()) {
-      if (extension.isAvailable(e.getDataContext())) {
-        patterns = ArrayUtil.mergeArrays(patterns, extension.getDescriptors());
-      }
+        e.getPresentation().setVisible(true);
+        for (PatternProvider extension : point.getExtensionList()) {
+            if (extension.isAvailable(e.getDataContext())) {
+                return;
+            }
+        }
+        e.getPresentation().setVisible(false);
     }
-    GenerateByPatternDialog dialog = new GenerateByPatternDialog(e.getData(Project.KEY), patterns, e.getDataContext());
-    dialog.show();
-    if (dialog.isOK()) {
-      dialog.getSelectedDescriptor().actionPerformed(e.getDataContext());
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        PatternDescriptor[] patterns = new PatternDescriptor[0];
+        ExtensionPoint<PatternProvider> point = myApplication.getExtensionPoint(PatternProvider.class);
+        for (PatternProvider extension : point.getExtensionList()) {
+            if (extension.isAvailable(e.getDataContext())) {
+                patterns = ArrayUtil.mergeArrays(patterns, extension.getDescriptors());
+            }
+        }
+        GenerateByPatternDialog dialog = new GenerateByPatternDialog(e.getData(Project.KEY), patterns, e.getDataContext());
+        dialog.show();
+        if (dialog.isOK()) {
+            dialog.getSelectedDescriptor().actionPerformed(e.getDataContext());
+        }
     }
-  }
 }

@@ -187,7 +187,8 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     ) {
         if (myProjectFileIndex.isInLibraryClasses(virtualFile)) {
             List<OrderEntry> orderEntriesForFile = myProjectFileIndex.getOrderEntriesForFile(virtualFile);
-            ExtensionPoint<PsiPackageSupportProvider> extensionPoint = myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
+            ExtensionPoint<PsiPackageSupportProvider> extensionPoint =
+                myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
             for (OrderEntry orderEntry : orderEntriesForFile) {
                 Module ownerModule = orderEntry.getOwnerModule();
                 ModuleExtension extension = ModuleUtilCore.getExtension(ownerModule, extensionClass);
@@ -285,9 +286,8 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     @Nullable
     private PsiPackage findAnyPackageFromCache(@Nonnull String packageName) {
         for (ConcurrentMap<String, Object> map : myPackageCache.values()) {
-            Object o = map.get(packageName);
-            if (o instanceof PsiPackage) {
-                return (PsiPackage)o;
+            if (map.get(packageName) instanceof PsiPackage psiPackage) {
+                return psiPackage;
             }
         }
         return null;
@@ -296,7 +296,8 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     @Override
     @RequiredReadAction
     public boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName) {
-        ExtensionPoint<PsiPackageSupportProvider> extensionPoint = myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
+        ExtensionPoint<PsiPackageSupportProvider> extensionPoint =
+            myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
 
         ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         for (ModuleExtension<?> moduleExtension : rootManager.getExtensions()) {

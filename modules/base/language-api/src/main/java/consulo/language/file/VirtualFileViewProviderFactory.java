@@ -24,26 +24,28 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
  * Extension for overriding viewProviderFactory for non language files
  *
  * @author VISTALL
- * @since 23-Jun-22
+ * @since 2022-06-23
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VirtualFileViewProviderFactory extends FileViewProviderFactory {
-  ExtensionPointCacheKey<VirtualFileViewProviderFactory, Map<FileType, VirtualFileViewProviderFactory>> KEY =
-          ExtensionPointCacheKey.groupBy("VirtualFileViewProviderFactory", VirtualFileViewProviderFactory::getFileType);
+    ExtensionPointCacheKey<VirtualFileViewProviderFactory, Map<FileType, VirtualFileViewProviderFactory>> KEY =
+        ExtensionPointCacheKey.groupBy("VirtualFileViewProviderFactory", VirtualFileViewProviderFactory::getFileType);
 
-  @Nullable
-  static VirtualFileViewProviderFactory forFileType(FileType fileType) {
-    ExtensionPoint<VirtualFileViewProviderFactory> extensionPoint = Application.get().getExtensionPoint(VirtualFileViewProviderFactory.class);
-    Map<FileType, VirtualFileViewProviderFactory> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(fileType);
-  }
+    @Nullable
+    static VirtualFileViewProviderFactory forFileType(FileType fileType) {
+        ExtensionPoint<VirtualFileViewProviderFactory> extensionPoint =
+            Application.get().getExtensionPoint(VirtualFileViewProviderFactory.class);
+        Map<FileType, VirtualFileViewProviderFactory> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(fileType);
+    }
 
-  @Nonnull
-  FileType getFileType();
+    @Nonnull
+    FileType getFileType();
 }

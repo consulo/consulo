@@ -35,48 +35,49 @@ import jakarta.annotation.Nonnull;
  * This interface is assumed to define general contract for Emacs-like functionality.
  *
  * @author Denis Zhdanov
- * @since 4/11/11 1:56 PM
+ * @since 2011-04-11
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface EmacsProcessingHandler extends LanguageExtension {
-  ExtensionPointCacheKey<EmacsProcessingHandler, ByLanguageValue<EmacsProcessingHandler>> KEY =
-          ExtensionPointCacheKey.create("EmacsProcessingHandler", LanguageOneToOne.build(new DefaultEmacsProcessingHandler()));
+    ExtensionPointCacheKey<EmacsProcessingHandler, ByLanguageValue<EmacsProcessingHandler>> KEY =
+        ExtensionPointCacheKey.create("EmacsProcessingHandler", LanguageOneToOne.build(new DefaultEmacsProcessingHandler()));
 
-  @Nonnull
-  static EmacsProcessingHandler forLanguage(Language language) {
-    ExtensionPoint<EmacsProcessingHandler> extensionPoint = Application.get().getExtensionPoint(EmacsProcessingHandler.class);
-    ByLanguageValue<EmacsProcessingHandler> map = extensionPoint.getOrBuildCache(KEY);
-    return map.requiredGet(language);
-  }
-
-  /**
-   * Enumerates possible processing results.
-   */
-  enum Result {
-    /**
-     * Proceed to the next handler in a chain.
-     */
-    CONTINUE,
+    @Nonnull
+    static EmacsProcessingHandler forLanguage(Language language) {
+        ExtensionPoint<EmacsProcessingHandler> extensionPoint = Application.get().getExtensionPoint(EmacsProcessingHandler.class);
+        ByLanguageValue<EmacsProcessingHandler> map = extensionPoint.getOrBuildCache(KEY);
+        return map.requiredGet(language);
+    }
 
     /**
-     * Stop current processing as everything is done by the current handler
+     * Enumerates possible processing results.
      */
-    STOP}
+    enum Result {
+        /**
+         * Proceed to the next handler in a chain.
+         */
+        CONTINUE,
 
-  /**
-   * Emacs handles <code>Tab</code> pressing as
-   * <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Indent.html#Basic-Indent">'auto indent line'</a>
-   * most of the time. However, there are extensions to this like <a href="https://launchpad.net/python-mode">python-mode</a>
-   * that changes indentation level of the current line (makes it belong to the other code block).
-   * <p/>
-   * So, current method may be implemented by changing code block for the active line by changing its indentation.
-   * {@link Result#STOP} should be returned then.
-   *
-   * @param project current project
-   * @param editor  current editor
-   * @param file    current file
-   * @return processing result
-   */
-  @Nonnull
-  Result changeIndent(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file);
+        /**
+         * Stop current processing as everything is done by the current handler
+         */
+        STOP
+    }
+
+    /**
+     * Emacs handles <code>Tab</code> pressing as
+     * <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Indent.html#Basic-Indent">'auto indent line'</a>
+     * most of the time. However, there are extensions to this like <a href="https://launchpad.net/python-mode">python-mode</a>
+     * that changes indentation level of the current line (makes it belong to the other code block).
+     * <p/>
+     * So, current method may be implemented by changing code block for the active line by changing its indentation.
+     * {@link Result#STOP} should be returned then.
+     *
+     * @param project current project
+     * @param editor  current editor
+     * @param file    current file
+     * @return processing result
+     */
+    @Nonnull
+    Result changeIndent(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
 }

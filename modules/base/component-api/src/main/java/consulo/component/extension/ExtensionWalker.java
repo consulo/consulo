@@ -23,14 +23,14 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 20/04/2023
+ * @since 2023-04-20
  */
 public interface ExtensionWalker<E> {
-  void walk(@Nonnull Consumer<E> consumer);
+    void walk(@Nonnull Consumer<E> consumer);
 
-  /**
-   * @see ExtensionPoint#sort(List)
-   */
-  @Nonnull
-  Function<List<E>, List<E>> sorter();
+    /**
+     * @see ExtensionPoint#sort(List)
+     */
+    @Nonnull
+    Function<List<E>, List<E>> sorter();
 }

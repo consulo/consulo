@@ -28,22 +28,24 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface BinaryFileDecompiler {
-  ExtensionPointCacheKey<BinaryFileDecompiler, Map<FileType, BinaryFileDecompiler>> KEY = ExtensionPointCacheKey.groupBy("BinaryFileDecompiler", BinaryFileDecompiler::getFileType);
+    ExtensionPointCacheKey<BinaryFileDecompiler, Map<FileType, BinaryFileDecompiler>> KEY =
+        ExtensionPointCacheKey.groupBy("BinaryFileDecompiler", BinaryFileDecompiler::getFileType);
 
-  @Nullable
-  static BinaryFileDecompiler forFileType(FileType fileType) {
-    ExtensionPoint<BinaryFileDecompiler> extensionPoint = Application.get().getExtensionPoint(BinaryFileDecompiler.class);
-    Map<FileType, BinaryFileDecompiler> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(fileType);
-  }
+    @Nullable
+    static BinaryFileDecompiler forFileType(FileType fileType) {
+        ExtensionPoint<BinaryFileDecompiler> extensionPoint = Application.get().getExtensionPoint(BinaryFileDecompiler.class);
+        Map<FileType, BinaryFileDecompiler> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(fileType);
+    }
 
-  @Nonnull
-  FileType getFileType();
+    @Nonnull
+    FileType getFileType();
 
-  @Nonnull
-  CharSequence decompile(VirtualFile file);
+    @Nonnull
+    CharSequence decompile(VirtualFile file);
 }

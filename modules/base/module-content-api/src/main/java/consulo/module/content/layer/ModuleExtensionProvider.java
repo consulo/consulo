@@ -27,48 +27,50 @@ import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 24-Jun-22
+ * @since 2022-06-24
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ModuleExtensionProvider<T extends ModuleExtension<T>> {
-  ExtensionPointCacheKey<ModuleExtensionProvider, Map<String, ModuleExtensionProvider>> BY_ID = ExtensionPointCacheKey.groupBy("ByKeyModuleExtensionProvider", ModuleExtensionProvider::getId);
+    ExtensionPointCacheKey<ModuleExtensionProvider, Map<String, ModuleExtensionProvider>> BY_ID =
+        ExtensionPointCacheKey.groupBy("ByKeyModuleExtensionProvider", ModuleExtensionProvider::getId);
 
-  @Nullable
-  static ModuleExtensionProvider findProvider(@Nonnull String id) {
-    ExtensionPoint<ModuleExtensionProvider> point = Application.get().getExtensionPoint(ModuleExtensionProvider.class);
-    Map<String, ModuleExtensionProvider> map = point.getOrBuildCache(BY_ID);
-    return map.get(id);
-  }
+    @Nullable
+    static ModuleExtensionProvider findProvider(@Nonnull String id) {
+        ExtensionPoint<ModuleExtensionProvider> point = Application.get().getExtensionPoint(ModuleExtensionProvider.class);
+        Map<String, ModuleExtensionProvider> map = point.getOrBuildCache(BY_ID);
+        return map.get(id);
+    }
 
-  @Nonnull
-  String getId();
+    @Nonnull
+    String getId();
 
-  @Nullable
-  default String getParentId() {
-    return null;
-  }
+    @Nullable
+    default String getParentId() {
+        return null;
+    }
 
-  default boolean isAllowMixin() {
-    return false;
-  }
+    default boolean isAllowMixin() {
+        return false;
+    }
 
-  default boolean isSystemOnly() {
-    return false;
-  }
+    default boolean isSystemOnly() {
+        return false;
+    }
 
-  @Nonnull
-  LocalizeValue getName();
+    @Nonnull
+    LocalizeValue getName();
 
-  @Nonnull
-  Image getIcon();
+    @Nonnull
+    Image getIcon();
 
-  @Nonnull
-  ModuleExtension<T> createImmutableExtension(@Nonnull ModuleRootLayer layer);
+    @Nonnull
+    ModuleExtension<T> createImmutableExtension(@Nonnull ModuleRootLayer layer);
 
-  @Nonnull
-  MutableModuleExtension<T> createMutableExtension(@Nonnull ModuleRootLayer layer);
+    @Nonnull
+    MutableModuleExtension<T> createMutableExtension(@Nonnull ModuleRootLayer layer);
 }

@@ -42,7 +42,7 @@ public class LibraryKindRegistryImpl implements LibraryKindRegistry {
         ExtensionPointCacheKey.groupBy("KINDS_FROM_LIBRARY_TYPE", t -> t.getKind().getKindId());
 
     private static final ExtensionPointCacheKey<LibraryPresentationProvider, Map<String, LibraryPresentationProvider>>
-        KINDS_FROM_LIBRARY_PRESENTATION_PROVIDER =  ExtensionPointCacheKey.groupBy("KINDS_FROM_LIBRARY_TYPE", t -> t.getKind().getKindId());
+        KINDS_FROM_LIBRARY_PRESENTATION_PROVIDER = ExtensionPointCacheKey.groupBy("KINDS_FROM_LIBRARY_TYPE", t -> t.getKind().getKindId());
 
     private final Application myApplication;
 
@@ -78,9 +78,11 @@ public class LibraryKindRegistryImpl implements LibraryKindRegistry {
         return libraryKindId == null ? null : find(libraryKindId, LibraryType.class, KINDS_FROM_LIBRARY_TYPE);
     }
 
-    private <P extends LibraryPresentation<?>> P find(@Nonnull String libraryKindId,
-                                                      @Nonnull Class<P> pClass,
-                                                      @Nonnull ExtensionPointCacheKey<P, Map<String, P>> cacheKey) {
+    private <P extends LibraryPresentation<?>> P find(
+        @Nonnull String libraryKindId,
+        @Nonnull Class<P> pClass,
+        @Nonnull ExtensionPointCacheKey<P, Map<String, P>> cacheKey
+    ) {
         ExtensionPoint<P> libraryTypes = myApplication.getExtensionPoint(pClass);
 
         Map<String, P> map = libraryTypes.getOrBuildCache(cacheKey);

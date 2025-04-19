@@ -18,10 +18,8 @@ package consulo.language.editor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -33,31 +31,33 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class ProblemHighlightFilter {
-  /**
-   * @param psiFile file to decide about
-   * @return false if this filter disables highlighting for given file, true if filter enables highlighting or can't decide
-   */
-  public abstract boolean shouldHighlight(@Nonnull PsiFile psiFile);
+    /**
+     * @param psiFile file to decide about
+     * @return false if this filter disables highlighting for given file, true if filter enables highlighting or can't decide
+     */
+    public abstract boolean shouldHighlight(@Nonnull PsiFile psiFile);
 
-  public boolean shouldProcessInBatch(@Nonnull PsiFile psiFile) {
-    return shouldHighlight(psiFile);
-  }
+    public boolean shouldProcessInBatch(@Nonnull PsiFile psiFile) {
+        return shouldHighlight(psiFile);
+    }
 
-  public static boolean shouldHighlightFile(@Nullable final PsiFile psiFile) {
-    return shouldProcess(psiFile, true);
-  }
+    public static boolean shouldHighlightFile(@Nullable PsiFile psiFile) {
+        return shouldProcess(psiFile, true);
+    }
 
-  public static boolean shouldProcessFileInBatch(@Nullable final PsiFile psiFile) {
-    return shouldProcess(psiFile, false);
-  }
+    public static boolean shouldProcessFileInBatch(@Nullable PsiFile psiFile) {
+        return shouldProcess(psiFile, false);
+    }
 
-  private static boolean shouldProcess(PsiFile psiFile, boolean onTheFly) {
-    if (psiFile == null || !psiFile.isValid()) return true;
+    private static boolean shouldProcess(PsiFile psiFile, boolean onTheFly) {
+        if (psiFile == null || !psiFile.isValid()) {
+            return true;
+        }
 
-    Project project = psiFile.getProject();
-    ExtensionPoint<ProblemHighlightFilter> point = project.getExtensionPoint(ProblemHighlightFilter.class);
-    ProblemHighlightFilter result =
-      point.findFirstSafe(filter -> onTheFly ? !filter.shouldHighlight(psiFile) : !filter.shouldProcessInBatch(psiFile));
-    return result == null;
-  }
+        Project project = psiFile.getProject();
+        ExtensionPoint<ProblemHighlightFilter> point = project.getExtensionPoint(ProblemHighlightFilter.class);
+        ProblemHighlightFilter result =
+            point.findFirstSafe(filter -> onTheFly ? !filter.shouldHighlight(psiFile) : !filter.shouldProcessInBatch(psiFile));
+        return result == null;
+    }
 }

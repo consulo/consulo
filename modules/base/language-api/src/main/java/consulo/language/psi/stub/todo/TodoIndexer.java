@@ -26,23 +26,25 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 23-Jun-22
+ * @since 2022-06-23
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TodoIndexer extends DataIndexer<TodoIndexEntry, Integer, FileContent> {
-  ExtensionPointCacheKey<TodoIndexer, Map<FileType, TodoIndexer>> KEY = ExtensionPointCacheKey.groupBy("BinaryFileStubBuilder", TodoIndexer::getFileType);
+    ExtensionPointCacheKey<TodoIndexer, Map<FileType, TodoIndexer>> KEY =
+        ExtensionPointCacheKey.groupBy("BinaryFileStubBuilder", TodoIndexer::getFileType);
 
-  @Nullable
-  static TodoIndexer forFileType(FileType fileType) {
-    ExtensionPoint<TodoIndexer> extensionPoint = Application.get().getExtensionPoint(TodoIndexer.class);
-    Map<FileType, TodoIndexer> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(fileType);
-  }
+    @Nullable
+    static TodoIndexer forFileType(FileType fileType) {
+        ExtensionPoint<TodoIndexer> extensionPoint = Application.get().getExtensionPoint(TodoIndexer.class);
+        Map<FileType, TodoIndexer> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(fileType);
+    }
 
-  @Nonnull
-  FileType getFileType();
+    @Nonnull
+    FileType getFileType();
 }
