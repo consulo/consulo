@@ -26,6 +26,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -108,11 +110,6 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         }
     }
 
-    default ExtensionStream<E> safeStream() {
-        List<E> extensionList = getExtensionList();
-        return extensionList.isEmpty() ? ExtensionStream.empty() : ExtensionStream.of(extensionList.stream());
-    }
-
     default boolean anyMatchSafe(@Nonnull Predicate<E> predicate) {
         return findFirstSafe(predicate) != null;
     }
@@ -136,6 +133,31 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
             }
         }
         return null;
+    }
+
+    @Nonnull
+    default <R> R computeSafeIfAny(@Nonnull Function<? super E, ? extends R> processor, @Nonnull R defaultValue) {
+        R result = computeSafeIfAny(processor);
+        return result == null ? defaultValue : result;
+    }
+
+    @Nonnull
+    default <R, CR extends Collection<? super R>> CR collectExtensionsSafe(
+        @Nonnull CR results,
+        @Nonnull Function<? super E, ? extends R> processor
+    ) {
+        forEach(extension -> {
+            R result = processor.apply(extension);
+            if (result != null) {
+                results.add(result);
+            }
+        });
+        return results;
+    }
+
+    @Nonnull
+    default <R> List<R> collectExtensionsToListSafe(@Nonnull Function<? super E, ? extends R> processor) {
+        return collectExtensionsSafe(new ArrayList<R>(), processor);
     }
 
     @Override

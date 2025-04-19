@@ -15,6 +15,8 @@
  */
 package consulo.content.internal.scope;
 
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.content.scope.NamedScope;
 import consulo.util.lang.ref.SimpleReference;
 
@@ -39,16 +41,12 @@ public class CustomScopesProviders {
     }
 
     public static void acceptFilteredScopes(CustomScopesProvider provider, Consumer<NamedScope> consumer) {
-        List<CustomScopesFilter> filters = CustomScopesFilter.EP_NAME.getExtensionList();
+        ExtensionPoint<CustomScopesFilter> extensionPoint = Application.get().getExtensionPoint(CustomScopesFilter.class);
 
         provider.acceptScopes(namedScope -> {
-            for (CustomScopesFilter filter : filters) {
-                if (filter.excludeScope(namedScope)) {
-                    return;
-                }
+            if (!extensionPoint.anyMatchSafe(filter -> filter.excludeScope(namedScope))) {
+                consumer.accept(Objects.requireNonNull(namedScope));
             }
-
-            consumer.accept(Objects.requireNonNull(namedScope));
         });
     }
 

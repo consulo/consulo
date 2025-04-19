@@ -173,11 +173,11 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
             return null;
         }
 
-        return myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class).safeStream()
-            .filter(p -> p.isSupported(extension) && p.acceptVirtualFile(moduleForFile, virtualFile))
-            .map(p -> p.createPackage(myPsiManager, this, extensionClass, qualifiedName))
-            .findFirst()
-            .orElse(null);
+        return myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class).computeSafeIfAny(
+            p -> p.isSupported(extension) && p.acceptVirtualFile(moduleForFile, virtualFile)
+                ? p.createPackage(myPsiManager, this, extensionClass, qualifiedName)
+                : null
+        );
     }
 
     private PsiPackage createPackageFromLibrary(
@@ -194,11 +194,9 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
                 if (extension == null) {
                     continue;
                 }
-                PsiPackage psiPackage = extensionPoint.safeStream()
-                    .filter(p -> p.isSupported(extension))
-                    .map(p -> p.createPackage(myPsiManager, this, extensionClass, qualifiedName))
-                    .findFirst()
-                    .orElse(null);
+                PsiPackage psiPackage = extensionPoint.computeSafeIfAny(
+                    p -> p.isSupported(extension) ? p.createPackage(myPsiManager, this, extensionClass, qualifiedName) : null
+                );
                 if (psiPackage != null) {
                     return psiPackage;
                 }

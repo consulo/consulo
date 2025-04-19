@@ -17,15 +17,11 @@ package consulo.application;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.localize.LocalizeValue;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CachesInvalidator {
-    public static final ExtensionPointName<CachesInvalidator> EP_NAME = ExtensionPointName.create(CachesInvalidator.class);
-
     /**
      * @return description of the files to be cleared, shown in the warning dialog to the user.
      * When to use: when invalidation will lead to the loss of a potentially valuable to the user information, e.g. Local History.

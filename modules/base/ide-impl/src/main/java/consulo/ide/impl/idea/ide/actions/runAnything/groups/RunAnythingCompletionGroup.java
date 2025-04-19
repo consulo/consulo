@@ -12,7 +12,8 @@ import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.Collection;
+import java.util.ArrayList;import java.util.Collection;
+import java.util.LinkedHashSet;
 
 public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> extends RunAnythingGroupBase {
     public static final Collection<RunAnythingGroup> MAIN_GROUPS = createCompletionGroups();
@@ -52,9 +53,9 @@ public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> ext
     }
 
     public static Collection<RunAnythingGroup> createCompletionGroups() {
-        return Application.get().getExtensionPoint(RunAnythingProvider.class).safeStream()
-            .mapNonnull(RunAnythingProvider::getCompletionGroup)
-            .distinct()
-            .toList();
+        return new ArrayList<>(
+            Application.get().getExtensionPoint(RunAnythingProvider.class)
+                .collectExtensionsSafe(new LinkedHashSet<>(), RunAnythingProvider::getCompletionGroup)
+        );
     }
 }

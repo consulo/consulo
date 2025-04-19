@@ -18,8 +18,8 @@ package consulo.content;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.component.ComponentManager;
-import consulo.component.extension.ExtensionPointName;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
@@ -29,7 +29,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -49,8 +48,6 @@ public abstract class ContentFolderTypeProvider {
     public static Predicate<ContentFolderTypeProvider> onlyExcluded() {
         return typeProvider -> typeProvider instanceof ExcludedContentFolderTypeProvider;
     }
-
-    public static final ExtensionPointName<ContentFolderTypeProvider> EP_NAME = ExtensionPointName.create(ContentFolderTypeProvider.class);
 
     private final String myId;
 
@@ -120,22 +117,13 @@ public abstract class ContentFolderTypeProvider {
 
     @Nonnull
     public static List<ContentFolderTypeProvider> filter(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
-        List<ContentFolderTypeProvider> providers = new ArrayList<>();
-        for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensionList()) {
-            if (predicate.test(contentFolderTypeProvider)) {
-                providers.add(contentFolderTypeProvider);
-            }
-        }
-        return providers;
+        return Application.get().getExtensionPoint(ContentFolderTypeProvider.class)
+            .collectExtensionsToListSafe(provider -> predicate.test(provider) ? provider : null);
     }
 
     @Nullable
     public static ContentFolderTypeProvider byId(String attributeValue) {
-        for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensionList()) {
-            if (Objects.equals(attributeValue, contentFolderTypeProvider.getId())) {
-                return contentFolderTypeProvider;
-            }
-        }
-        return null;
+        return Application.get().getExtensionPoint(ContentFolderTypeProvider.class)
+            .findFirstSafe(provider -> Objects.equals(attributeValue, provider.getId()));
     }
 }

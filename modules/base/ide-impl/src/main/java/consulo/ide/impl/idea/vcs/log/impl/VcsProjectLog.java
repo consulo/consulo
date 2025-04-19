@@ -25,6 +25,7 @@ import consulo.ide.ServiceManager;
 import consulo.application.CachesInvalidator;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
@@ -114,7 +115,7 @@ public class VcsProjectLog {
         myLogManager.drop();
     }
 
-    @CalledInAwt
+    @RequiredUIAccess
     public void createLog() {
         VcsLogManager logManager = myLogManager.getValue();
 
@@ -122,7 +123,8 @@ public class VcsProjectLog {
             logManager.scheduleInitialization();
         }
         else if (PostponableLogRefresher.keepUpToDate()) {
-            VcsLogCachesInvalidator invalidator = CachesInvalidator.EP_NAME.findExtensionOrFail(VcsLogCachesInvalidator.class);
+            VcsLogCachesInvalidator invalidator = myProject.getApplication().getExtensionPoint(CachesInvalidator.class)
+                .findExtensionOrFail(VcsLogCachesInvalidator.class);
             if (invalidator.isValid()) {
                 HeavyAwareExecutor.executeOutOfHeavyProcessLater(logManager::scheduleInitialization, 5000);
             }
@@ -142,7 +144,7 @@ public class VcsProjectLog {
         private VcsLogManager myValue;
 
         @Nonnull
-        @CalledInAwt
+        @RequiredUIAccess
         public synchronized VcsLogManager getValue() {
             if (myValue == null) {
                 myValue = compute();
@@ -152,7 +154,7 @@ public class VcsProjectLog {
         }
 
         @Nonnull
-        @CalledInAwt
+        @RequiredUIAccess
         protected synchronized VcsLogManager compute() {
             return new VcsLogManager(myProject, myUiProperties, getVcsRoots(), false, VcsProjectLog.this::recreateLog);
         }
@@ -171,5 +173,4 @@ public class VcsProjectLog {
             return myValue;
         }
     }
-
 }

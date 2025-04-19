@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.module.impl.internal.layer;
 
+import consulo.application.Application;
 import consulo.content.ContentFolderPropertyProvider;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.UnknownContentFolderTypeProvider;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
@@ -135,13 +134,9 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
             throw new InvalidDataException();
         }
 
-        for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensionList()) {
-            if (Comparing.equal(contentFolderTypeProvider.getId(), type)) {
-                return contentFolderTypeProvider;
-            }
-        }
-
-        return new UnknownContentFolderTypeProvider(type);
+        ContentFolderTypeProvider provider = Application.get().getExtensionPoint(ContentFolderTypeProvider.class)
+            .findFirstSafe(p -> Objects.equals(p.getId(), type));
+        return provider != null ? provider : new UnknownContentFolderTypeProvider(type);
     }
 
     @Override
