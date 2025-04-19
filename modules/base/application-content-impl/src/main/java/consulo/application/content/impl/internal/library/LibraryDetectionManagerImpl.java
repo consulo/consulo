@@ -16,18 +16,20 @@
 package consulo.application.content.impl.internal.library;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.content.library.*;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author nik
@@ -36,6 +38,12 @@ import java.util.Map;
 @ServiceImpl
 public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
     private final Map<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>> myCache = new HashMap<>();
+    private final Application myApplication;
+
+    @Inject
+    public LibraryDetectionManagerImpl(Application application) {
+        myApplication = application;
+    }
 
     @Override
     public boolean processProperties(@Nonnull List<VirtualFile> files, @Nonnull LibraryPropertiesProcessor processor) {
@@ -52,7 +60,7 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
     @Override
     public Pair<LibraryType<?>, LibraryProperties<?>> detectType(@Nonnull List<VirtualFile> files) {
         Pair<LibraryType<?>, LibraryProperties<?>> result = null;
-        for (LibraryType<?> type : LibraryType.EP_NAME.getExtensions()) {
+        for (LibraryType<?> type : myApplication.getExtensionPoint(LibraryType.class).getExtensionList()) {
             LibraryProperties<?> properties = type.detect(files);
             if (properties != null) {
                 if (result != null) {
@@ -74,15 +82,14 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
     }
 
     private static List<Pair<LibraryKind, LibraryProperties>> computeKinds(List<VirtualFile> files) {
-        SmartList<Pair<LibraryKind, LibraryProperties>> result = new SmartList<>();
-        List<LibraryType> libraryTypes = LibraryType.EP_NAME.getExtensionList();
-        List<LibraryPresentationProvider> presentationProviders = LibraryPresentationProvider.EP_NAME.getExtensionList();
-        for (LibraryPresentation provider : ContainerUtil.concat(libraryTypes, presentationProviders)) {
+        Function<LibraryPresentation, Pair<LibraryKind, LibraryProperties>> processor = provider -> {
             LibraryProperties properties = provider.detect(files);
-            if (properties != null) {
-                result.add(Pair.create(provider.getKind(), properties));
-            }
-        }
+            return properties != null ? Pair.create(provider.getKind(), properties) : null;
+        };
+        Application app = Application.get();
+        SmartList<Pair<LibraryKind, LibraryProperties>> result = new SmartList<>();
+        app.getExtensionPoint(LibraryType.class).collectExtensionsSafe(result, processor);
+        app.getExtensionPoint(LibraryPresentationProvider.class).collectExtensionsSafe(result, processor);
         return result;
     }
 }

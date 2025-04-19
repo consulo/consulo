@@ -232,12 +232,8 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     }
 
     public static SdkTypeId findSdkTypeByName(String sdkTypeName) {
-        for (SdkType type : SdkType.EP_NAME.getExtensionList()) {
-            if (type.getId().equals(sdkTypeName)) {
-                return type;
-            }
-        }
-        return UnknownSdkType.getInstance(sdkTypeName);
+        SdkType sdkType = Application.get().getExtensionPoint(SdkType.class).findFirstSafe(type -> type.getId().equals(sdkTypeName));
+        return sdkType != null ? sdkType : UnknownSdkType.getInstance(sdkTypeName);
     }
 
     @Nonnull

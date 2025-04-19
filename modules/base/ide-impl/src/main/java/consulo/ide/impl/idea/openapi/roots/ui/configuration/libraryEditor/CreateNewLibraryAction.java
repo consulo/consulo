@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
+import consulo.component.extension.ExtensionPoint;
 import consulo.content.library.ui.DefaultLibraryRootsComponentDescriptor;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
@@ -54,6 +55,7 @@ public class CreateNewLibraryAction extends DumbAwareAction {
     @Nullable
     private final LibraryType myType;
     private final BaseLibrariesConfigurable myLibrariesConfigurable;
+    @Nonnull
     private final Project myProject;
 
     private CreateNewLibraryAction(
@@ -141,17 +143,16 @@ public class CreateNewLibraryAction extends DumbAwareAction {
         @Nonnull BaseLibrariesConfigurable librariesConfigurable,
         @Nonnull Project project
     ) {
-        List<LibraryType> extensions = LibraryType.EP_NAME.getExtensionList();
-        List<LibraryType> suitableTypes = new ArrayList<>();
+        ExtensionPoint<LibraryType> extensionPoint = project.getApplication().getExtensionPoint(LibraryType.class);
+
+        List<LibraryType> suitableTypes;
         if (librariesConfigurable instanceof ProjectLibrariesConfigurable) {
-            for (LibraryType<?> extension : extensions) {
-                if (!LibraryEditingUtil.getSuitableModules(project, extension.getKind(), null).isEmpty()) {
-                    suitableTypes.add(extension);
-                }
-            }
+            suitableTypes = extensionPoint.collectExtensionsToListSafe(
+                extension -> LibraryEditingUtil.getSuitableModules(project, extension.getKind(), null).isEmpty() ? null : extension
+            );
         }
         else {
-            suitableTypes.addAll(extensions);
+            suitableTypes = extensionPoint.getExtensionList();
         }
 
         if (suitableTypes.isEmpty()) {

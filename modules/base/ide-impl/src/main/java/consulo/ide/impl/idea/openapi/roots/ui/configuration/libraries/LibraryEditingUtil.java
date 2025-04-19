@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries;
 
+import consulo.application.Application;
 import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.content.OrderRootType;
 import consulo.content.internal.LibraryEx;
@@ -156,11 +157,11 @@ public class LibraryEditingUtil {
     public static List<LibraryType> getSuitableTypes(ClasspathPanel classpathPanel) {
         List<LibraryType> suitableTypes = new ArrayList<>();
         suitableTypes.add(null);
-        for (LibraryType libraryType : LibraryType.EP_NAME.getExtensionList()) {
-            if (libraryType.getCreateActionName() != null && isAvailable(libraryType, classpathPanel.getRootModel())) {
-                suitableTypes.add(libraryType);
-            }
-        }
+        Application.get().getExtensionPoint(LibraryType.class).collectExtensionsSafe(
+            suitableTypes,
+            libraryType -> libraryType.getCreateActionName() != null && isAvailable(libraryType, classpathPanel.getRootModel())
+                ? libraryType : null
+        );
         return suitableTypes;
     }
 

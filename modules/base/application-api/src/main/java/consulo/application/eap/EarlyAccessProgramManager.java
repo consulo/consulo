@@ -43,6 +43,8 @@ import java.util.Map;
 @ServiceImpl
 @State(name = "EarlyAccessProgramManager", storages = @Storage("eap.xml"))
 public class EarlyAccessProgramManager implements PersistentStateComponent<Element> {
+    private final Application myApplication;
+
     @Nonnull
     public static EarlyAccessProgramManager getInstance() {
         return Application.get().getInstance(EarlyAccessProgramManager.class);
@@ -57,20 +59,22 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
     private final Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates = new LinkedHashMap<>();
 
     @Inject
-    public EarlyAccessProgramManager() {
+    public EarlyAccessProgramManager(Application application) {
+        myApplication = application;
     }
 
     public boolean getState(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
         Boolean value = myStates.get(key);
         if (value == null) {
-            EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtension(key);
+            EarlyAccessProgramDescriptor extension = myApplication.getExtensionPoint(EarlyAccessProgramDescriptor.class).findExtension(key);
             return extension != null && extension.getDefaultState();
         }
         return value;
     }
 
     public void setState(Class<? extends EarlyAccessProgramDescriptor> key, boolean itemSelected) {
-        EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtensionOrFail(key);
+        EarlyAccessProgramDescriptor extension =
+            myApplication.getExtensionPoint(EarlyAccessProgramDescriptor.class).findExtensionOrFail(key);
 
         if (extension.getDefaultState() == itemSelected) {
             myStates.remove(key);
@@ -85,7 +89,8 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
     public Element getState() {
         Element element = new Element("state");
         for (Map.Entry<Class<? extends EarlyAccessProgramDescriptor>, Boolean> entry : myStates.entrySet()) {
-            EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtension(entry.getKey());
+            EarlyAccessProgramDescriptor extension =
+                myApplication.getExtensionPoint(EarlyAccessProgramDescriptor.class).findExtension(entry.getKey());
             if (extension == null || extension.getDefaultState() == entry.getValue()) {
                 continue;
             }
@@ -121,9 +126,8 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
 
     private static Map<String, EarlyAccessProgramDescriptor> descriptorToMap() {
         Map<String, EarlyAccessProgramDescriptor> map = new HashMap<>();
-        for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
-            map.put(descriptor.getClass().getName(), descriptor);
-        }
+        Application.get().getExtensionPoint(EarlyAccessProgramDescriptor.class)
+            .forEach(descriptor -> map.put(descriptor.getClass().getName(), descriptor));
         return map;
     }
 }

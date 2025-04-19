@@ -17,7 +17,6 @@ package consulo.content.bundle;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.content.OrderRootType;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
@@ -36,8 +35,6 @@ import java.util.Set;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SdkType implements SdkTypeId {
-    public static final ExtensionPointName<SdkType> EP_NAME = ExtensionPointName.create(SdkType.class);
-
     private final String myId;
 
     public SdkType(@Nonnull String id) {

@@ -17,34 +17,33 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.application.Application;
+import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.configurable.ConfigurationException;
 import consulo.content.bundle.*;
-import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.setting.bundle.SettingsSdksModel;
-import consulo.project.localize.ProjectLocalize;
-import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.inject.Provider;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Provider;
 
 import javax.swing.*;
 import java.util.*;
@@ -285,15 +284,9 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         Consumer<Sdk> updateTree,
         @Nullable Predicate<SdkTypeId> filter
     ) {
-        List<SdkType> types = SdkType.EP_NAME.getExtensionList();
-        List<SdkType> list = new ArrayList<>(types.size());
-        for (SdkType sdkType : types) {
-            if (filter != null && !filter.test(sdkType)) {
-                continue;
-            }
-
-            list.add(sdkType);
-        }
+        List<SdkType> list = new ArrayList<>();
+        Application.get().getExtensionPoint(SdkType.class)
+            .collectExtensionsSafe(list, sdkType -> filter == null || filter.test(sdkType) ? sdkType : null);
         Collections.sort(list, (o1, o2) -> StringUtil.compare(o1.getPresentableName(), o2.getPresentableName(), true));
 
         for (SdkType type : list) {

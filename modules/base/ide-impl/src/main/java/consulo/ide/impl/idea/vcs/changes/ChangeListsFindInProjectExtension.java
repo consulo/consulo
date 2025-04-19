@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.vcs.changes;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.impl.FindInProjectExtension;
 import consulo.dataContext.DataContext;
@@ -50,8 +51,8 @@ public class ChangeListsFindInProjectExtension implements FindInProjectExtension
 
         if (changeList != null) {
             String changeListName = changeList.getName();
-            ChangeListsSearchScopeProvider changeListsScopeProvider =
-                SearchScopeProvider.EP_NAME.findExtension(ChangeListsSearchScopeProvider.class);
+            ChangeListsSearchScopeProvider changeListsScopeProvider = Application.get().getExtensionPoint(SearchScopeProvider.class)
+                .findExtension(ChangeListsSearchScopeProvider.class);
             if (changeListsScopeProvider != null) {
                 SearchScope changeListScope = ContainerUtil.find(
                     changeListsScopeProvider.getSearchScopes(project),

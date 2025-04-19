@@ -17,7 +17,6 @@ package consulo.content.scope;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -27,8 +26,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ScopeDescriptorProvider {
-    ExtensionPointName<ScopeDescriptorProvider> EP_NAME = ExtensionPointName.create(ScopeDescriptorProvider.class);
-
     @Nonnull
     ScopeDescriptor[] getScopeDescriptors(Project project);
 }
