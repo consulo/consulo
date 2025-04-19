@@ -110,11 +110,6 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         }
     }
 
-    default ExtensionStream<E> safeStream() {
-        List<E> extensionList = getExtensionList();
-        return extensionList.isEmpty() ? ExtensionStream.empty() : ExtensionStream.of(extensionList.stream());
-    }
-
     default boolean anyMatchSafe(@Nonnull Predicate<E> predicate) {
         return findFirstSafe(predicate) != null;
     }
