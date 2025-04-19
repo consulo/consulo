@@ -35,7 +35,7 @@ import jakarta.annotation.Nonnull;
  * This interface is assumed to define general contract for Emacs-like functionality.
  *
  * @author Denis Zhdanov
- * @since 4/11/11 1:56 PM
+ * @since 2011-04-11
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface EmacsProcessingHandler extends LanguageExtension {
@@ -79,5 +79,5 @@ public interface EmacsProcessingHandler extends LanguageExtension {
      * @return processing result
      */
     @Nonnull
-    Result changeIndent(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file);
+    Result changeIndent(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
 }

@@ -16,7 +16,6 @@
 
 package consulo.language.copyright.impl.internal.ui;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.codeEditor.Editor;
@@ -32,6 +31,7 @@ import consulo.language.copyright.internal.CopyrightEditorUtil;
 import consulo.language.copyright.internal.CopyrightGenerator;
 import consulo.language.copyright.util.EntityUtil;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -103,7 +103,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
     private Editor myCopyrightEditor;
     private Document myCopyrightDocument;
 
-    public CopyrightConfigurable(final Project project, CopyrightProfile copyrightProfile, Runnable updater) {
+    public CopyrightConfigurable(Project project, CopyrightProfile copyrightProfile, Runnable updater) {
         super(true, updater);
         myProject = project;
         myCopyrightProfile = copyrightProfile;
@@ -120,7 +120,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
 
         JComponent editorComponent = myCopyrightEditor.getComponent();
 
-        group.add(new AnAction("Preview", null, AllIcons.Actions.Preview) {
+        group.add(new AnAction("Preview", null, PlatformIconGroup.actionsPreview()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -138,7 +138,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
 
         ExtensionPoint<PredefinedCopyrightProvider> point = Application.get().getExtensionPoint(PredefinedCopyrightProvider.class);
         if (point.hasAnyExtensions()) {
-            group.add(new AnAction("Reset To", null, AllIcons.General.Reset) {
+            group.add(new AnAction("Reset To", null, PlatformIconGroup.generalReset()) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(@Nonnull AnActionEvent e) {

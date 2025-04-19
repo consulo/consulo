@@ -29,7 +29,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 27-Jun-22
+ * @since 2022-06-27
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileQuoteHandler extends QuoteHandler {

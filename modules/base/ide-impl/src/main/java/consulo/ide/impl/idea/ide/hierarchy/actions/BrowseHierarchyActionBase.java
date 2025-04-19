@@ -69,44 +69,45 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
 
     @RequiredUIAccess
     @Override
-    public final void actionPerformed(@Nonnull final AnActionEvent e) {
-        final DataContext dataContext = e.getDataContext();
-        final Project project = e.getData(Project.KEY);
+    public final void actionPerformed(@Nonnull AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
 
         PsiDocumentManager.getInstance(project).commitAllDocuments(); // prevents problems with smart pointers creation
 
-        final HierarchyProvider provider = getProvider(e);
+        HierarchyProvider provider = getProvider(e);
         if (provider == null) {
             return;
         }
-        final PsiElement target = provider.getTarget(dataContext);
+        PsiElement target = provider.getTarget(dataContext);
         if (target == null) {
             return;
         }
         createAndAddToPanel(project, provider, target);
     }
 
+    @RequiredUIAccess
     public static HierarchyBrowser createAndAddToPanel(
         @Nonnull Project project,
-        @Nonnull final HierarchyProvider provider,
+        @Nonnull HierarchyProvider provider,
         @Nonnull PsiElement target
     ) {
-        final HierarchyBrowser hierarchyBrowser = provider.createHierarchyBrowser(target);
+        HierarchyBrowser hierarchyBrowser = provider.createHierarchyBrowser(target);
 
-        final Content content;
+        Content content;
 
-        final HierarchyBrowserManager hierarchyBrowserManager = HierarchyBrowserManager.getInstance(project);
+        HierarchyBrowserManager hierarchyBrowserManager = HierarchyBrowserManager.getInstance(project);
 
-        final ContentManager contentManager = hierarchyBrowserManager.getContentManager();
-        final Content selectedContent = contentManager.getSelectedContent();
+        ContentManager contentManager = hierarchyBrowserManager.getContentManager();
+        Content selectedContent = contentManager.getSelectedContent();
         if (selectedContent != null && !selectedContent.isPinned()) {
             content = selectedContent;
-            final Component component = content.getComponent();
-            if (component instanceof Disposable) {
-                Disposer.dispose((Disposable)component);
+            Component component = content.getComponent();
+            if (component instanceof Disposable disposable) {
+                Disposer.dispose(disposable);
             }
             content.setComponent(hierarchyBrowser.getComponent());
         }
@@ -117,20 +118,20 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
         contentManager.setSelectedContent(content);
         hierarchyBrowser.setContent(content);
 
-        final Runnable runnable = () -> provider.browserActivated(hierarchyBrowser);
+        Runnable runnable = () -> provider.browserActivated(hierarchyBrowser);
         ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.HIERARCHY).activate(runnable);
         return hierarchyBrowser;
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(@Nonnull final AnActionEvent e) {
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
         Application application = Application.get();
         if (!application.getExtensionPoint(myHierarchyClass).hasAnyExtensions()) {
             e.getPresentation().setVisible(false);
         }
         else {
-            final boolean enabled = isEnabled(e);
+            boolean enabled = isEnabled(e);
             if (ActionPlaces.isPopupPlace(e.getPlace())) {
                 e.getPresentation().setVisible(enabled);
             }
@@ -142,8 +143,8 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
     }
 
     @RequiredReadAction
-    private boolean isEnabled(final AnActionEvent e) {
-        final HierarchyProvider provider = getProvider(e);
+    private boolean isEnabled(AnActionEvent e) {
+        HierarchyProvider provider = getProvider(e);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Using provider " + provider);
         }
@@ -159,7 +160,7 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
 
     @Nullable
     @RequiredReadAction
-    private HierarchyProvider getProvider(final AnActionEvent e) {
+    private HierarchyProvider getProvider(AnActionEvent e) {
         return findProvider(myHierarchyClass, e.getData(PsiElement.KEY), e.getData(PsiFile.KEY), e.getDataContext());
     }
 
@@ -171,7 +172,7 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
         @Nullable PsiFile psiFile,
         @Nonnull DataContext dataContext
     ) {
-        final T provider = findBestHierarchyProvider(extension, psiElement, dataContext);
+        T provider = findBestHierarchyProvider(extension, psiElement, dataContext);
         if (provider == null) {
             return findBestHierarchyProvider(extension, psiFile, dataContext);
         }
@@ -182,7 +183,7 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     public static <T extends HierarchyProvider> T findBestHierarchyProvider(
-        final Class<T> extension,
+        Class<T> extension,
         @Nullable PsiElement element,
         DataContext dataContext
     ) {

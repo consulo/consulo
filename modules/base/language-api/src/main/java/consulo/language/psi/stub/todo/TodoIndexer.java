@@ -31,7 +31,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 23-Jun-22
+ * @since 2022-06-23
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TodoIndexer extends DataIndexer<TodoIndexEntry, Integer, FileContent> {

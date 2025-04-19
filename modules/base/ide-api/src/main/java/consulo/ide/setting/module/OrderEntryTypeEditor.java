@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 /**
  * @author VISTALL
  * @see CustomOrderEntryTypeEditor
- * @since 06-Jun-16
+ * @since 2016-06-06
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {

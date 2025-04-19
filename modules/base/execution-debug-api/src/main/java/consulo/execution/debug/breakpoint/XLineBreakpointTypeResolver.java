@@ -35,7 +35,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 5/7/2016
+ * @since 2016-05-07
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface XLineBreakpointTypeResolver {

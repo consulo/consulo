@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 23-Mar-22
+ * @since 2022-03-23
  */
 public interface PostprocessReformattingAspect extends PomModelAspect {
     @Nonnull
@@ -38,11 +38,11 @@ public interface PostprocessReformattingAspect extends PomModelAspect {
 
     void doPostponedFormatting(@Nonnull FileViewProvider viewProvider);
 
-    void disablePostprocessFormattingInside(@Nonnull final Runnable runnable);
+    void disablePostprocessFormattingInside(@Nonnull Runnable runnable);
 
     <T> T disablePostprocessFormattingInside(@Nonnull Supplier<T> computable);
 
-    void postponeFormattingInside(@Nonnull final Runnable runnable);
+    void postponeFormattingInside(@Nonnull Runnable runnable);
 
     <T> T postponeFormattingInside(@Nonnull Supplier<T> computable);
 

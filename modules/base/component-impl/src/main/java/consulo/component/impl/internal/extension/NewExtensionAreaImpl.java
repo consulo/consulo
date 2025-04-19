@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
- * @since 17-Jun-22
+ * @since 2022-06-17
  */
 public class NewExtensionAreaImpl {
     private final Map<String, NewExtensionPointImpl> myExtensionPoints = new ConcurrentHashMap<>();

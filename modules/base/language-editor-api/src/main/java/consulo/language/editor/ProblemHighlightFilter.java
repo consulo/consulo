@@ -18,10 +18,8 @@ package consulo.language.editor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,11 +41,11 @@ public abstract class ProblemHighlightFilter {
         return shouldHighlight(psiFile);
     }
 
-    public static boolean shouldHighlightFile(@Nullable final PsiFile psiFile) {
+    public static boolean shouldHighlightFile(@Nullable PsiFile psiFile) {
         return shouldProcess(psiFile, true);
     }
 
-    public static boolean shouldProcessFileInBatch(@Nullable final PsiFile psiFile) {
+    public static boolean shouldProcessFileInBatch(@Nullable PsiFile psiFile) {
         return shouldProcess(psiFile, false);
     }
 

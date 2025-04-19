@@ -32,7 +32,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 24-Jun-22
+ * @since 2022-06-24
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ModuleExtensionProvider<T extends ModuleExtension<T>> {

@@ -6,7 +6,6 @@ import consulo.component.util.graph.CachingSemiGraph;
 import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.GraphGenerator;
 import consulo.component.util.graph.InboundSemiGraph;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -39,11 +38,11 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
     public static final LoadingOrder FIRST = new LoadingOrder(FIRST_STR, true, false, Set.of(), Set.of());
     public static final LoadingOrder LAST = new LoadingOrder(LAST_STR, false, true, Set.of(), Set.of());
 
-    public static LoadingOrder before(final String id) {
+    public static LoadingOrder before(String id) {
         return parse(BEFORE_STR + id);
     }
 
-    public static LoadingOrder after(final String id) {
+    public static LoadingOrder after(String id) {
         return parse(AFTER_STR + id);
     }
 
@@ -53,16 +52,16 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
         }
     }
 
-    public static void sort(@Nonnull final List<? extends Orderable> orderable) {
+    public static void sort(@Nonnull List<? extends Orderable> orderable) {
         if (orderable.size() < 2) {
             return;
         }
 
         // our graph is pretty sparse so do benefit from the fact
-        final Map<String, Orderable> map = new LinkedHashMap<>();
-        final Map<Orderable, LoadingOrder> cachedMap = new LinkedHashMap<>();
-        final Set<Orderable> first = new LinkedHashSet<>(1);
-        final Set<Orderable> hasBefore = new LinkedHashSet<>(orderable.size());
+        Map<String, Orderable> map = new LinkedHashMap<>();
+        Map<Orderable, LoadingOrder> cachedMap = new LinkedHashMap<>();
+        Set<Orderable> first = new LinkedHashSet<>(1);
+        Set<Orderable> hasBefore = new LinkedHashSet<>(orderable.size());
         for (Orderable o : orderable) {
             String id = o.getOrderId();
             if (StringUtil.isNotEmpty(id)) {
@@ -91,7 +90,7 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
             @Nonnull
             @Override
             public Collection<Orderable> getNodes() {
-                List<Orderable> list = ContainerUtil.newArrayList(orderable);
+                List<Orderable> list = new ArrayList<>(orderable);
                 Collections.reverse(list);
                 return list;
             }
@@ -169,7 +168,7 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
         Set<String> before = Set.of();
         Set<String> after = Set.of();
 
-        for (final String string : StringUtil.split(text, ORDER_RULE_SEPARATOR)) {
+        for (String string : StringUtil.split(text, ORDER_RULE_SEPARATOR)) {
             String trimmed = string.trim();
             if (trimmed.equalsIgnoreCase(FIRST_STR)) {
                 first = true;

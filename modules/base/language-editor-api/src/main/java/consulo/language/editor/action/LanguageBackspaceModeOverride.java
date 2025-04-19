@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 28-Jul-22
+ * @since 2022-07-28
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LanguageBackspaceModeOverride extends BackspaceModeOverride, LanguageExtension {

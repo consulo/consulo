@@ -36,7 +36,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 17-Jul-22
+ * @since 2022-07-17
  */
 public abstract class MethodsBasedAction<T extends LanguageCodeInsightActionHandler> extends BaseCodeInsightAction implements CodeInsightActionHandler {
     private final Application myApplication;
@@ -54,16 +54,16 @@ public abstract class MethodsBasedAction<T extends LanguageCodeInsightActionHand
     }
 
     @Override
-    protected final boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
+    protected final boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
-        final T codeInsightActionHandler =
+        T codeInsightActionHandler =
             myApplication.getExtensionPoint(myHandlerType).getOrBuildCache(myExtensionCacheKey).get(language);
         return codeInsightActionHandler != null && codeInsightActionHandler.isValidFor(editor, file);
     }
 
     @RequiredUIAccess
     @Override
-    public final void update(final AnActionEvent event) {
+    public final void update(AnActionEvent event) {
         if (myApplication.getExtensionPoint(myHandlerType).hasAnyExtensions()) {
             event.getPresentation().setVisible(true);
             super.update(event);
@@ -75,7 +75,7 @@ public abstract class MethodsBasedAction<T extends LanguageCodeInsightActionHand
 
     @RequiredUIAccess
     @Override
-    public final void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
+    public final void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         if (!LanguageEditorUtil.checkModificationAllowed(editor)) {
             return;
         }

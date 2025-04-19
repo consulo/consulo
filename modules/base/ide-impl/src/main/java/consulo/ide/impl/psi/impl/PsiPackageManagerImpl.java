@@ -286,9 +286,8 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     @Nullable
     private PsiPackage findAnyPackageFromCache(@Nonnull String packageName) {
         for (ConcurrentMap<String, Object> map : myPackageCache.values()) {
-            Object o = map.get(packageName);
-            if (o instanceof PsiPackage) {
-                return (PsiPackage)o;
+            if (map.get(packageName) instanceof PsiPackage psiPackage) {
+                return psiPackage;
             }
         }
         return null;

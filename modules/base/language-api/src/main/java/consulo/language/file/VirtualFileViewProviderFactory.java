@@ -31,7 +31,7 @@ import java.util.Map;
  * Extension for overriding viewProviderFactory for non language files
  *
  * @author VISTALL
- * @since 23-Jun-22
+ * @since 2022-06-23
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VirtualFileViewProviderFactory extends FileViewProviderFactory {
