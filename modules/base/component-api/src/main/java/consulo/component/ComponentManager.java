@@ -26,6 +26,7 @@ import consulo.util.lang.ThreeState;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -41,91 +42,95 @@ import java.util.function.Supplier;
  * @see Module
  */
 public interface ComponentManager extends UserDataHolder, Disposable, InjectingContainerOwner {
-  default void initNotLazyServices() {
-    throw new UnsupportedOperationException();
-  }
+    default void initNotLazyServices() {
+        throw new UnsupportedOperationException();
+    }
 
-  default int getNotLazyServicesCount() {
-    throw new UnsupportedOperationException();
-  }
+    default int getNotLazyServicesCount() {
+        throw new UnsupportedOperationException();
+    }
 
-  @Override
-  @Nonnull
-  default InjectingContainer getInjectingContainer() {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    @Nonnull
+    default InjectingContainer getInjectingContainer() {
+        throw new UnsupportedOperationException();
+    }
 
-  @Nonnull
-  default <T> T getInstance(@Nonnull Class<T> clazz) {
-    return getInjectingContainer().getInstance(clazz);
-  }
+    @Nonnull
+    default <T> T getInstance(@Nonnull Class<T> clazz) {
+        return getInjectingContainer().getInstance(clazz);
+    }
 
-  @Nullable
-  default <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
-    return getInjectingContainer().getInstanceIfCreated(clazz);
-  }
+    @Nullable
+    default <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
+        return getInjectingContainer().getInstanceIfCreated(clazz);
+    }
 
-  @Nonnull
-  default <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
-    return getInjectingContainer().getUnbindedInstance(clazz);
-  }
+    @Nonnull
+    default <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
+        return getInjectingContainer().getUnbindedInstance(clazz);
+    }
 
-  @Nonnull
-  default <T> T getUnbindedInstance(@Nonnull Class<T> clazz, @Nonnull Type[] constructorTypes, @Nonnull Function<Object[], T> constructor) {
-    return getInjectingContainer().getUnbindedInstance(clazz, constructorTypes, constructor);
-  }
+    @Nonnull
+    default <T> T getUnbindedInstance(
+        @Nonnull Class<T> clazz,
+        @Nonnull Type[] constructorTypes,
+        @Nonnull Function<Object[], T> constructor
+    ) {
+        return getInjectingContainer().getUnbindedInstance(clazz, constructorTypes, constructor);
+    }
 
-  @Deprecated
-  default <T> T getComponent(@Nonnull Class<T> clazz) {
-    return getInstance(clazz);
-  }
+    @Deprecated
+    default <T> T getComponent(@Nonnull Class<T> clazz) {
+        return getInstance(clazz);
+    }
 
-  @Nonnull
-  MessageBus getMessageBus();
+    @Nonnull
+    MessageBus getMessageBus();
 
 
-  @Nonnull
-  default <T> List<T> getExtensionList(@Nonnull Class<T> extensionPointName) {
-    return getExtensionPoint(extensionPointName).getExtensionList();
-  }
+    @Nonnull
+    default <T> List<T> getExtensionList(@Nonnull Class<T> extensionPointName) {
+        return getExtensionPoint(extensionPointName).getExtensionList();
+    }
 
-  @Nonnull
-  default <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
-    throw new UnsupportedOperationException();
-  }
+    @Nonnull
+    default <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
+        throw new UnsupportedOperationException();
+    }
 
-  /**
-   * @return condition for this component being disposed.
-   * see {@link Application#invokeLater(Runnable, BooleanSupplier)} for the usage example.
-   */
-  @Nonnull
-  BooleanSupplier getDisposed();
+    /**
+     * @return condition for this component being disposed.
+     * see {@link Application#invokeLater(Runnable, BooleanSupplier)} for the usage example.
+     */
+    @Nonnull
+    BooleanSupplier getDisposed();
 
-  @Nonnull
-  default Supplier<ThreeState> getDisposeState() {
-    return () -> isDisposed() ? ThreeState.YES : ThreeState.NO;
-  }
+    @Nonnull
+    default Supplier<ThreeState> getDisposeState() {
+        return () -> isDisposed() ? ThreeState.YES : ThreeState.NO;
+    }
 
-  default boolean isDisposed() {
-    return getDisposeState().get() == ThreeState.YES;
-  }
+    default boolean isDisposed() {
+        return getDisposeState().get() == ThreeState.YES;
+    }
 
-  @Deprecated
-  default boolean isDisposedOrDisposeInProgress() {
-    Supplier<ThreeState> disposeState = getDisposeState();
-    return disposeState.get() != ThreeState.NO;
-  }
+    @Deprecated
+    default boolean isDisposedOrDisposeInProgress() {
+        Supplier<ThreeState> disposeState = getDisposeState();
+        return disposeState.get() != ThreeState.NO;
+    }
 
-  default boolean isInitialized() {
-    return true;
-  }
+    default boolean isInitialized() {
+        return true;
+    }
 
-  default int getProfiles() {
-    return ComponentProfiles.DEFAULT;
-  }
+    default int getProfiles() {
+        return ComponentProfiles.DEFAULT;
+    }
 
-  @Nullable
-  default ComponentManager getParent() {
-    return null;
-  }
+    @Nullable
+    default ComponentManager getParent() {
+        return null;
+    }
 }

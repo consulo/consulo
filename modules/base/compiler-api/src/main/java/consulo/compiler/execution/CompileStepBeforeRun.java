@@ -124,11 +124,13 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
 
     @Nonnull
     @Override
-    public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess,
-                                              DataContext context,
-                                              RunConfiguration configuration,
-                                              ExecutionEnvironment env,
-                                              MakeBeforeRunTask task) {
+    public AsyncResult<Void> executeTaskAsync(
+        UIAccess uiAccess,
+        DataContext context,
+        RunConfiguration configuration,
+        ExecutionEnvironment env,
+        MakeBeforeRunTask task
+    ) {
         return doMake(uiAccess, myProject, configuration, false);
     }
 
@@ -146,7 +148,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
             return AsyncResult.resolved();
         }
 
-        final RunProfileWithCompileBeforeLaunchOption runConfiguration = (RunProfileWithCompileBeforeLaunchOption) configuration;
+        final RunProfileWithCompileBeforeLaunchOption runConfiguration = (RunProfileWithCompileBeforeLaunchOption)configuration;
         AsyncResult<Void> result = AsyncResult.undefined();
         try {
             final CompileStatusNotification callback = (aborted, errors, warnings, compileContext) -> {
@@ -161,7 +163,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
             final boolean[] isTestCompile = new boolean[]{true};
             try {
                 isTestCompile[0] = DumbService.getInstance(myProject)
-                    .runWithAlternativeResolveEnabled(((RunProfileWithCompileBeforeLaunchOption) configuration)::includeTestScope);
+                    .runWithAlternativeResolveEnabled(((RunProfileWithCompileBeforeLaunchOption)configuration)::includeTestScope);
             }
             catch (IndexNotReadyException ignored) {
             }

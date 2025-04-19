@@ -28,23 +28,23 @@ import java.util.function.Supplier;
  * @since 23-Mar-22
  */
 public interface PostprocessReformattingAspect extends PomModelAspect {
-  @Nonnull
-  static PostprocessReformattingAspect getInstance(Project project) {
-    ExtensionPoint<PomModelAspect> point = project.getExtensionPoint(PomModelAspect.class);
-    return point.findExtensionOrFail(PostprocessReformattingAspect.class);
-  }
+    @Nonnull
+    static PostprocessReformattingAspect getInstance(Project project) {
+        ExtensionPoint<PomModelAspect> point = project.getExtensionPoint(PomModelAspect.class);
+        return point.findExtensionOrFail(PostprocessReformattingAspect.class);
+    }
 
-  void doPostponedFormatting();
+    void doPostponedFormatting();
 
-  void doPostponedFormatting(@Nonnull FileViewProvider viewProvider);
+    void doPostponedFormatting(@Nonnull FileViewProvider viewProvider);
 
-  void disablePostprocessFormattingInside(@Nonnull final Runnable runnable);
+    void disablePostprocessFormattingInside(@Nonnull final Runnable runnable);
 
-  <T> T disablePostprocessFormattingInside(@Nonnull Supplier<T> computable);
+    <T> T disablePostprocessFormattingInside(@Nonnull Supplier<T> computable);
 
-  void postponeFormattingInside(@Nonnull final Runnable runnable);
+    void postponeFormattingInside(@Nonnull final Runnable runnable);
 
-  <T> T postponeFormattingInside(@Nonnull Supplier<T> computable);
+    <T> T postponeFormattingInside(@Nonnull Supplier<T> computable);
 
-  boolean isViewProviderLocked(@Nonnull FileViewProvider fileViewProvider);
+    boolean isViewProviderLocked(@Nonnull FileViewProvider fileViewProvider);
 }

@@ -25,6 +25,7 @@ import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingBindingLoader;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -35,48 +36,53 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 17-Jun-22
  */
 public class NewExtensionAreaImpl {
-  private final Map<String, NewExtensionPointImpl> myExtensionPoints = new ConcurrentHashMap<>();
+    private final Map<String, NewExtensionPointImpl> myExtensionPoints = new ConcurrentHashMap<>();
 
-  private final ComponentManager myComponentManager;
-  private final ComponentScope myComponentScope;
-  private final Runnable myCheckCanceled;
-  private final InjectingBindingLoader myInjectingBindingLoader;
+    private final ComponentManager myComponentManager;
+    private final ComponentScope myComponentScope;
+    private final Runnable myCheckCanceled;
+    private final InjectingBindingLoader myInjectingBindingLoader;
 
-  public NewExtensionAreaImpl(ComponentManager componentManager,
-                              ComponentBinding componentBinding,
-                              ComponentScope componentScope,
-                              Runnable checkCanceled) {
-    myComponentManager = componentManager;
-    myComponentScope = componentScope;
-    myCheckCanceled = checkCanceled;
-    myInjectingBindingLoader = componentBinding.injectingBindingLoader();
-  }
-
-  public void registerFromInjectingBinding(ComponentScope componentScope) {
-    InjectingBindingHolder holder = myInjectingBindingLoader.getHolder(ExtensionAPI.class, myComponentScope);
-
-    for (Map.Entry<String, List<InjectingBinding>> entry : holder.getBindings().entrySet()) {
-      myExtensionPoints.put(entry.getKey(), new NewExtensionPointImpl(entry.getKey(), entry.getValue(), myComponentManager, myCheckCanceled, componentScope));
+    public NewExtensionAreaImpl(
+        ComponentManager componentManager,
+        ComponentBinding componentBinding,
+        ComponentScope componentScope,
+        Runnable checkCanceled
+    ) {
+        myComponentManager = componentManager;
+        myComponentScope = componentScope;
+        myCheckCanceled = checkCanceled;
+        myInjectingBindingLoader = componentBinding.injectingBindingLoader();
     }
-  }
 
-  @Nonnull
-  public Collection<? extends ExtensionPoint> getExtensionPoints() {
-    return myExtensionPoints.values();
-  }
+    public void registerFromInjectingBinding(ComponentScope componentScope) {
+        InjectingBindingHolder holder = myInjectingBindingLoader.getHolder(ExtensionAPI.class, myComponentScope);
 
-  @Nonnull
-  @SuppressWarnings("unchecked")
-  public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
-    NewExtensionPointImpl point = myExtensionPoints.computeIfAbsent(extensionClass.getName(), e -> {
-      if (!extensionClass.isAnnotationPresent(ExtensionAPI.class)) {
-        throw new IllegalArgumentException(extensionClass.getName() + " is not annotated by @ExtensionAPI");
-      }
+        for (Map.Entry<String, List<InjectingBinding>> entry : holder.getBindings().entrySet()) {
+            myExtensionPoints.put(
+                entry.getKey(),
+                new NewExtensionPointImpl(entry.getKey(), entry.getValue(), myComponentManager, myCheckCanceled, componentScope)
+            );
+        }
+    }
 
-      return new NewExtensionPointImpl(e, List.of(), myComponentManager, myCheckCanceled, myComponentScope);
-    });
+    @Nonnull
+    public Collection<? extends ExtensionPoint> getExtensionPoints() {
+        return myExtensionPoints.values();
+    }
 
-    point.initIfNeed(extensionClass);
-    return point;
-  }
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
+        NewExtensionPointImpl point = myExtensionPoints.computeIfAbsent(extensionClass.getName(), e -> {
+            if (!extensionClass.isAnnotationPresent(ExtensionAPI.class)) {
+                throw new IllegalArgumentException(extensionClass.getName() + " is not annotated by @ExtensionAPI");
+            }
+
+            return new NewExtensionPointImpl(e, List.of(), myComponentManager, myCheckCanceled, myComponentScope);
+        });
+
+        point.initIfNeed(extensionClass);
+        return point;
+    }
 }

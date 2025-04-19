@@ -27,6 +27,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,36 +39,36 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface XLineBreakpointTypeResolver {
-  ExtensionPointCacheKey<XLineBreakpointTypeResolver, Map<FileType, List<XLineBreakpointTypeResolver>>> KEY =
-    ExtensionPointCacheKey.create("XLineBreakpointTypeResolver", walker -> {
-      Map<FileType, List<XLineBreakpointTypeResolver>> map = new HashMap<>();
-      walker.walk(extension -> map.computeIfAbsent(extension.getFileType(), fileType -> new ArrayList<>()).add(extension));
-      return map;
-    });
+    ExtensionPointCacheKey<XLineBreakpointTypeResolver, Map<FileType, List<XLineBreakpointTypeResolver>>> KEY =
+        ExtensionPointCacheKey.create("XLineBreakpointTypeResolver", walker -> {
+            Map<FileType, List<XLineBreakpointTypeResolver>> map = new HashMap<>();
+            walker.walk(extension -> map.computeIfAbsent(extension.getFileType(), fileType -> new ArrayList<>()).add(extension));
+            return map;
+        });
 
-  @Nonnull
-  static List<XLineBreakpointTypeResolver> forFileType(FileType fileType) {
-    ExtensionPoint<XLineBreakpointTypeResolver> extensionPoint = Application.get().getExtensionPoint(XLineBreakpointTypeResolver.class);
-    Map<FileType, List<XLineBreakpointTypeResolver>> map = extensionPoint.getOrBuildCache(KEY);
-    return map.getOrDefault(fileType, List.of());
-  }
-
-  @Nullable
-  @RequiredReadAction
-  static XLineBreakpointType<?> forFile(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int line) {
-    for (XLineBreakpointTypeResolver resolver : forFileType(virtualFile.getFileType())) {
-      XLineBreakpointType<?> breakpointType = resolver.resolveBreakpointType(project, virtualFile, line);
-      if (breakpointType != null) {
-        return breakpointType;
-      }
+    @Nonnull
+    static List<XLineBreakpointTypeResolver> forFileType(FileType fileType) {
+        ExtensionPoint<XLineBreakpointTypeResolver> extensionPoint = Application.get().getExtensionPoint(XLineBreakpointTypeResolver.class);
+        Map<FileType, List<XLineBreakpointTypeResolver>> map = extensionPoint.getOrBuildCache(KEY);
+        return map.getOrDefault(fileType, List.of());
     }
-    return null;
-  }
 
-  @Nullable
-  @RequiredReadAction
-  XLineBreakpointType<?> resolveBreakpointType(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int line);
+    @Nullable
+    @RequiredReadAction
+    static XLineBreakpointType<?> forFile(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int line) {
+        for (XLineBreakpointTypeResolver resolver : forFileType(virtualFile.getFileType())) {
+            XLineBreakpointType<?> breakpointType = resolver.resolveBreakpointType(project, virtualFile, line);
+            if (breakpointType != null) {
+                return breakpointType;
+            }
+        }
+        return null;
+    }
 
-  @Nonnull
-  FileType getFileType();
+    @Nullable
+    @RequiredReadAction
+    XLineBreakpointType<?> resolveBreakpointType(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int line);
+
+    @Nonnull
+    FileType getFileType();
 }

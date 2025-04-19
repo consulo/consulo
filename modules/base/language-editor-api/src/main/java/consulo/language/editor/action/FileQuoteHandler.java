@@ -24,6 +24,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -32,15 +33,16 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileQuoteHandler extends QuoteHandler {
-  ExtensionPointCacheKey<FileQuoteHandler, Map<FileType, FileQuoteHandler>> KEY = ExtensionPointCacheKey.groupBy("FileQuoteHandler", FileQuoteHandler::getFileType);
+    ExtensionPointCacheKey<FileQuoteHandler, Map<FileType, FileQuoteHandler>> KEY =
+        ExtensionPointCacheKey.groupBy("FileQuoteHandler", FileQuoteHandler::getFileType);
 
-  @Nullable
-  static FileQuoteHandler forFileType(FileType fileType) {
-    ExtensionPoint<FileQuoteHandler> extensionPoint = Application.get().getExtensionPoint(FileQuoteHandler.class);
-    Map<FileType, FileQuoteHandler> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(fileType);
-  }
+    @Nullable
+    static FileQuoteHandler forFileType(FileType fileType) {
+        ExtensionPoint<FileQuoteHandler> extensionPoint = Application.get().getExtensionPoint(FileQuoteHandler.class);
+        Map<FileType, FileQuoteHandler> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(fileType);
+    }
 
-  @Nonnull
-  FileType getFileType();
+    @Nonnull
+    FileType getFileType();
 }

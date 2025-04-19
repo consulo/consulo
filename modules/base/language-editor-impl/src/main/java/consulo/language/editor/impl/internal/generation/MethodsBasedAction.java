@@ -39,63 +39,68 @@ import jakarta.annotation.Nonnull;
  * @since 17-Jul-22
  */
 public abstract class MethodsBasedAction<T extends LanguageCodeInsightActionHandler> extends BaseCodeInsightAction implements CodeInsightActionHandler {
-  private final Application myApplication;
-  private final Class<T> myHandlerType;
-  private final ExtensionPointCacheKey<T, ByLanguageValue<T>> myExtensionCacheKey;
+    private final Application myApplication;
+    private final Class<T> myHandlerType;
+    private final ExtensionPointCacheKey<T, ByLanguageValue<T>> myExtensionCacheKey;
 
-  public MethodsBasedAction(Application application, Class<T> handlerType, ExtensionPointCacheKey<T, ByLanguageValue<T>> extensionCacheKey) {
-    myApplication = application;
-    myHandlerType = handlerType;
-    myExtensionCacheKey = extensionCacheKey;
-  }
-
-  @Override
-  protected final boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
-    Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
-    final T codeInsightActionHandler = myApplication.getExtensionPoint(myHandlerType).getOrBuildCache(myExtensionCacheKey).get(language);
-    return codeInsightActionHandler != null && codeInsightActionHandler.isValidFor(editor, file);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public final void update(final AnActionEvent event) {
-    if (myApplication.getExtensionPoint(myHandlerType).hasAnyExtensions()) {
-      event.getPresentation().setVisible(true);
-      super.update(event);
-    }
-    else {
-      event.getPresentation().setVisible(false);
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public final void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
-    if (!LanguageEditorUtil.checkModificationAllowed(editor)) {
-      return;
+    public MethodsBasedAction(
+        Application application,
+        Class<T> handlerType,
+        ExtensionPointCacheKey<T, ByLanguageValue<T>> extensionCacheKey
+    ) {
+        myApplication = application;
+        myHandlerType = handlerType;
+        myExtensionCacheKey = extensionCacheKey;
     }
 
-    if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) {
-      return;
+    @Override
+    protected final boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
+        Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
+        final T codeInsightActionHandler =
+            myApplication.getExtensionPoint(myHandlerType).getOrBuildCache(myExtensionCacheKey).get(language);
+        return codeInsightActionHandler != null && codeInsightActionHandler.isValidFor(editor, file);
     }
 
-    Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
-    ExtensionPoint<T> extensionPoint = project.getApplication().getExtensionPoint(myHandlerType);
-    LanguageCodeInsightActionHandler codeInsightActionHandler = extensionPoint.getOrBuildCache(myExtensionCacheKey).get(language);
-
-    if (codeInsightActionHandler != null) {
-      codeInsightActionHandler.invoke(project, editor, file);
+    @RequiredUIAccess
+    @Override
+    public final void update(final AnActionEvent event) {
+        if (myApplication.getExtensionPoint(myHandlerType).hasAnyExtensions()) {
+            event.getPresentation().setVisible(true);
+            super.update(event);
+        }
+        else {
+            event.getPresentation().setVisible(false);
+        }
     }
-  }
 
-  @Override
-  public boolean startInWriteAction() {
-    return false;
-  }
+    @RequiredUIAccess
+    @Override
+    public final void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
+        if (!LanguageEditorUtil.checkModificationAllowed(editor)) {
+            return;
+        }
 
-  @Nonnull
-  @Override
-  protected final CodeInsightActionHandler getHandler() {
-    return this;
-  }
+        if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) {
+            return;
+        }
+
+        Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
+        ExtensionPoint<T> extensionPoint = project.getApplication().getExtensionPoint(myHandlerType);
+        LanguageCodeInsightActionHandler codeInsightActionHandler = extensionPoint.getOrBuildCache(myExtensionCacheKey).get(language);
+
+        if (codeInsightActionHandler != null) {
+            codeInsightActionHandler.invoke(project, editor, file);
+        }
+    }
+
+    @Override
+    public boolean startInWriteAction() {
+        return false;
+    }
+
+    @Nonnull
+    @Override
+    protected final CodeInsightActionHandler getHandler() {
+        return this;
+    }
 }

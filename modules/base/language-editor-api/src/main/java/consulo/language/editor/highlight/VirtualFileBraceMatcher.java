@@ -24,6 +24,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -32,15 +33,16 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VirtualFileBraceMatcher extends BraceMatcher {
-  ExtensionPointCacheKey<VirtualFileBraceMatcher, Map<FileType, VirtualFileBraceMatcher>> KEY = ExtensionPointCacheKey.groupBy("VirtualFileBraceMatcher", VirtualFileBraceMatcher::getFileType);
+    ExtensionPointCacheKey<VirtualFileBraceMatcher, Map<FileType, VirtualFileBraceMatcher>> KEY =
+        ExtensionPointCacheKey.groupBy("VirtualFileBraceMatcher", VirtualFileBraceMatcher::getFileType);
 
-  @Nullable
-  static VirtualFileBraceMatcher forFileType(FileType fileType) {
-    ExtensionPoint<VirtualFileBraceMatcher> extensionPoint = Application.get().getExtensionPoint(VirtualFileBraceMatcher.class);
-    Map<FileType, VirtualFileBraceMatcher> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(fileType);
-  }
+    @Nullable
+    static VirtualFileBraceMatcher forFileType(FileType fileType) {
+        ExtensionPoint<VirtualFileBraceMatcher> extensionPoint = Application.get().getExtensionPoint(VirtualFileBraceMatcher.class);
+        Map<FileType, VirtualFileBraceMatcher> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(fileType);
+    }
 
-  @Nonnull
-  FileType getFileType();
+    @Nonnull
+    FileType getFileType();
 }

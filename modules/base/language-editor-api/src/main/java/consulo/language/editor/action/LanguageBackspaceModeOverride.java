@@ -34,12 +34,14 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LanguageBackspaceModeOverride extends BackspaceModeOverride, LanguageExtension {
-  ExtensionPointCacheKey<LanguageBackspaceModeOverride, ByLanguageValue<LanguageBackspaceModeOverride>> KEY = ExtensionPointCacheKey.create("LanguageBackspaceModeOverride", LanguageOneToOne.build());
+    ExtensionPointCacheKey<LanguageBackspaceModeOverride, ByLanguageValue<LanguageBackspaceModeOverride>> KEY =
+        ExtensionPointCacheKey.create("LanguageBackspaceModeOverride", LanguageOneToOne.build());
 
-  @Nullable
-  static LanguageBackspaceModeOverride forLanguage(Language language) {
-    ExtensionPoint<LanguageBackspaceModeOverride> extensionPoint = Application.get().getExtensionPoint(LanguageBackspaceModeOverride.class);
-    ByLanguageValue<LanguageBackspaceModeOverride> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(language);
-  }
+    @Nullable
+    static LanguageBackspaceModeOverride forLanguage(Language language) {
+        ExtensionPoint<LanguageBackspaceModeOverride> extensionPoint =
+            Application.get().getExtensionPoint(LanguageBackspaceModeOverride.class);
+        ByLanguageValue<LanguageBackspaceModeOverride> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(language);
+    }
 }

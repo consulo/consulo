@@ -31,28 +31,30 @@ import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface OrderRootTypeUIFactory {
-  ExtensionPointCacheKey<OrderRootTypeUIFactory, Map<String, OrderRootTypeUIFactory>> KEY = ExtensionPointCacheKey.groupBy("OrderRootTypeUIFactory", OrderRootTypeUIFactory::getOrderRootTypeId);
+    ExtensionPointCacheKey<OrderRootTypeUIFactory, Map<String, OrderRootTypeUIFactory>> KEY =
+        ExtensionPointCacheKey.groupBy("OrderRootTypeUIFactory", OrderRootTypeUIFactory::getOrderRootTypeId);
 
-  @Nullable
-  static OrderRootTypeUIFactory forOrderType(@Nonnull OrderRootType orderRootType) {
-    ExtensionPoint<OrderRootTypeUIFactory> point = Application.get().getExtensionPoint(OrderRootTypeUIFactory.class);
-    Map<String, OrderRootTypeUIFactory> map = point.getOrBuildCache(KEY);
-    return map.get(orderRootType.getId());
-  }
+    @Nullable
+    static OrderRootTypeUIFactory forOrderType(@Nonnull OrderRootType orderRootType) {
+        ExtensionPoint<OrderRootTypeUIFactory> point = Application.get().getExtensionPoint(OrderRootTypeUIFactory.class);
+        Map<String, OrderRootTypeUIFactory> map = point.getOrBuildCache(KEY);
+        return map.get(orderRootType.getId());
+    }
 
-  @Nonnull
-  String getOrderRootTypeId();
+    @Nonnull
+    String getOrderRootTypeId();
 
-  @Nonnull
-  SdkPathEditor createPathEditor(Sdk sdk);
+    @Nonnull
+    SdkPathEditor createPathEditor(Sdk sdk);
 
-  @Nonnull
-  Image getIcon();
+    @Nonnull
+    Image getIcon();
 
-  @Nonnull
-  String getNodeText();
+    @Nonnull
+    String getNodeText();
 }

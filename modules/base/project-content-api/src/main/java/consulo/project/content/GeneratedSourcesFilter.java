@@ -29,22 +29,22 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface GeneratedSourcesFilter {
-  @RequiredReadAction
-  boolean isGeneratedSource(@Nonnull VirtualFile file);
+    @RequiredReadAction
+    boolean isGeneratedSource(@Nonnull VirtualFile file);
 
-  @RequiredReadAction
-  public static boolean isGeneratedSourceByAnyFilter(@Nonnull VirtualFile file, @Nonnull Project project) {
-    if (project.isDisposed() || !file.isValid()) {
-      return false;
+    @RequiredReadAction
+    public static boolean isGeneratedSourceByAnyFilter(@Nonnull VirtualFile file, @Nonnull Project project) {
+        if (project.isDisposed() || !file.isValid()) {
+            return false;
+        }
+
+        ExtensionPoint<GeneratedSourcesFilter> point = project.getExtensionPoint(GeneratedSourcesFilter.class);
+        return point.findFirstSafe(it -> it.isGeneratedSource(file)) != null;
     }
 
-    ExtensionPoint<GeneratedSourcesFilter> point = project.getExtensionPoint(GeneratedSourcesFilter.class);
-    return point.findFirstSafe(it -> it.isGeneratedSource(file)) != null;
-  }
-
-  @RequiredReadAction
-  @Deprecated
-  public static boolean isGenerated(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return isGeneratedSourceByAnyFilter(file, project);
-  }
+    @RequiredReadAction
+    @Deprecated
+    public static boolean isGenerated(@Nonnull Project project, @Nonnull VirtualFile file) {
+        return isGeneratedSourceByAnyFilter(file, project);
+    }
 }

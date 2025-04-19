@@ -187,7 +187,8 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     ) {
         if (myProjectFileIndex.isInLibraryClasses(virtualFile)) {
             List<OrderEntry> orderEntriesForFile = myProjectFileIndex.getOrderEntriesForFile(virtualFile);
-            ExtensionPoint<PsiPackageSupportProvider> extensionPoint = myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
+            ExtensionPoint<PsiPackageSupportProvider> extensionPoint =
+                myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
             for (OrderEntry orderEntry : orderEntriesForFile) {
                 Module ownerModule = orderEntry.getOwnerModule();
                 ModuleExtension extension = ModuleUtilCore.getExtension(ownerModule, extensionClass);
@@ -296,7 +297,8 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     @Override
     @RequiredReadAction
     public boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName) {
-        ExtensionPoint<PsiPackageSupportProvider> extensionPoint = myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
+        ExtensionPoint<PsiPackageSupportProvider> extensionPoint =
+            myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
 
         ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         for (ModuleExtension<?> moduleExtension : rootManager.getExtensions()) {

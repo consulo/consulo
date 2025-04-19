@@ -29,26 +29,28 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface BinaryFileStubBuilder {
-  ExtensionPointCacheKey<BinaryFileStubBuilder, Map<FileType, BinaryFileStubBuilder>> KEY = ExtensionPointCacheKey.groupBy("BinaryFileStubBuilder", BinaryFileStubBuilder::getFileType);
+    ExtensionPointCacheKey<BinaryFileStubBuilder, Map<FileType, BinaryFileStubBuilder>> KEY =
+        ExtensionPointCacheKey.groupBy("BinaryFileStubBuilder", BinaryFileStubBuilder::getFileType);
 
-  @Nullable
-  static BinaryFileStubBuilder forFileType(FileType fileType) {
-    ExtensionPoint<BinaryFileStubBuilder> extensionPoint = Application.get().getExtensionPoint(BinaryFileStubBuilder.class);
-    Map<FileType, BinaryFileStubBuilder> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(fileType);
-  }
+    @Nullable
+    static BinaryFileStubBuilder forFileType(FileType fileType) {
+        ExtensionPoint<BinaryFileStubBuilder> extensionPoint = Application.get().getExtensionPoint(BinaryFileStubBuilder.class);
+        Map<FileType, BinaryFileStubBuilder> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(fileType);
+    }
 
-  @Nonnull
-  FileType getFileType();
+    @Nonnull
+    FileType getFileType();
 
-  boolean acceptsFile(VirtualFile file);
+    boolean acceptsFile(VirtualFile file);
 
-  @Nullable
-  Stub buildStubTree(FileContent fileContent);
+    @Nullable
+    Stub buildStubTree(FileContent fileContent);
 
-  int getStubVersion();
+    int getStubVersion();
 }

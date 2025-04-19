@@ -38,19 +38,20 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImplementationTextSelectioner extends LanguageExtension {
-  ExtensionPointCacheKey<ImplementationTextSelectioner, ByLanguageValue<ImplementationTextSelectioner>> KEY =
-          ExtensionPointCacheKey.create("ImplementationTextSelectioner", LanguageOneToOne.build(new DefaultImplementationTextSelectioner()));
+    ExtensionPointCacheKey<ImplementationTextSelectioner, ByLanguageValue<ImplementationTextSelectioner>> KEY =
+        ExtensionPointCacheKey.create("ImplementationTextSelectioner", LanguageOneToOne.build(new DefaultImplementationTextSelectioner()));
 
-  @Nullable
-  static ImplementationTextSelectioner forLanguage(Language language) {
-    ExtensionPoint<ImplementationTextSelectioner> extensionPoint = Application.get().getExtensionPoint(ImplementationTextSelectioner.class);
-    ByLanguageValue<ImplementationTextSelectioner> map = extensionPoint.getOrBuildCache(KEY);
-    return map.get(language);
-  }
+    @Nullable
+    static ImplementationTextSelectioner forLanguage(Language language) {
+        ExtensionPoint<ImplementationTextSelectioner> extensionPoint =
+            Application.get().getExtensionPoint(ImplementationTextSelectioner.class);
+        ByLanguageValue<ImplementationTextSelectioner> map = extensionPoint.getOrBuildCache(KEY);
+        return map.get(language);
+    }
 
-  @RequiredReadAction
-  int getTextStartOffset(@Nonnull PsiElement element);
+    @RequiredReadAction
+    int getTextStartOffset(@Nonnull PsiElement element);
 
-  @RequiredReadAction
-  int getTextEndOffset(@Nonnull PsiElement element);
+    @RequiredReadAction
+    int getTextEndOffset(@Nonnull PsiElement element);
 }

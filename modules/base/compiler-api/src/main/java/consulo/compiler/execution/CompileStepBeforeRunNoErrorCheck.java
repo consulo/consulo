@@ -108,7 +108,13 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
 
     @Nonnull
     @Override
-    public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, MakeBeforeRunTaskNoErrorCheck task) {
+    public AsyncResult<Void> executeTaskAsync(
+        UIAccess uiAccess,
+        DataContext context,
+        RunConfiguration configuration,
+        ExecutionEnvironment env,
+        MakeBeforeRunTaskNoErrorCheck task
+    ) {
         return CompileStepBeforeRun.doMake(uiAccess, myProject, configuration, true);
     }
 }
