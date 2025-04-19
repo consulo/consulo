@@ -27,47 +27,46 @@ import consulo.module.content.layer.ModifiableRootModel;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * @author nik
  */
 public interface ArtifactEditorContext extends PackagingElementResolvingContext {
+    void queueValidation();
 
-  void queueValidation();
+    @Nonnull
+    ArtifactType getArtifactType();
 
-  @Nonnull
-  ArtifactType getArtifactType();
+    @Nonnull
+    ModifiableArtifactModel getOrCreateModifiableArtifactModel();
 
-  @Nonnull
-  ModifiableArtifactModel getOrCreateModifiableArtifactModel();
+    @Nullable
+    ModifiableModuleModel getModifiableModuleModel();
 
-  @Nullable
-  ModifiableModuleModel getModifiableModuleModel();
+    @Nonnull
+    ModifiableRootModel getOrCreateModifiableRootModel(@Nonnull Module module);
 
-  @Nonnull
-  ModifiableRootModel getOrCreateModifiableRootModel(@Nonnull Module module);
+    CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact);
 
-  CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact);
+    void editLayout(@Nonnull Artifact artifact, Runnable runnable);
 
-  void editLayout(@Nonnull Artifact artifact, Runnable runnable);
+    ArtifactEditor getOrCreateEditor(Artifact originalArtifact);
 
-  ArtifactEditor getOrCreateEditor(Artifact originalArtifact);
+    ArtifactEditor getThisArtifactEditor();
 
-  ArtifactEditor getThisArtifactEditor();
+    void selectArtifact(@Nonnull Artifact artifact);
 
-  void selectArtifact(@Nonnull Artifact artifact);
+    void selectModule(@Nonnull Module module);
 
-  void selectModule(@Nonnull Module module);
+    void selectLibrary(@Nonnull Library library);
 
-  void selectLibrary(@Nonnull Library library);
+    List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, String title);
 
+    List<Module> chooseModules(List<Module> modules, final String title);
 
-  List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, String title);
+    List<Library> chooseLibraries(String title);
 
-  List<Module> chooseModules(List<Module> modules, final String title);
-
-  List<Library> chooseLibraries(String title);
-
-  Artifact getArtifact();
+    Artifact getArtifact();
 }

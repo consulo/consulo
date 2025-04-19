@@ -33,91 +33,100 @@ import java.util.List;
  * @author nik
  */
 public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
-  private @Nullable final Project myProject;
+    @Nullable
+    private final Project myProject;
 
-  protected ChooseLibrariesFromTablesDialog(@Nonnull String title, @Nonnull Project project) {
-    super(project, title);
-    myProject = project;
-  }
-
-  protected ChooseLibrariesFromTablesDialog(@Nonnull JComponent parentComponent,
-                                            @Nonnull String title,
-                                            @Nullable Project project) {
-    super(parentComponent, title);
-    myProject = project;
-  }
-
-  public static ChooseLibrariesFromTablesDialog createDialog(@Nonnull String title,
-                                                             @Nonnull Project project) {
-    final ChooseLibrariesFromTablesDialog dialog = new ChooseLibrariesFromTablesDialog(title, project);
-    dialog.init();
-    return dialog;
-  }
-
-  @Nonnull
-  @Override
-  protected Project getProject() {
-    if (myProject != null) {
-      return myProject;
+    protected ChooseLibrariesFromTablesDialog(@Nonnull String title, @Nonnull Project project) {
+        super(project, title);
+        myProject = project;
     }
-    return super.getProject();
-  }
 
-  @Override
-  protected JComponent createNorthPanel() {
-    return null;
-  }
+    protected ChooseLibrariesFromTablesDialog(
+        @Nonnull JComponent parentComponent,
+        @Nonnull String title,
+        @Nullable Project project
+    ) {
+        super(parentComponent, title);
+        myProject = project;
+    }
 
-  @Override
-  protected void collectChildren(Object element, List<Object> result) {
-    if (element instanceof Application) {
-      for (LibraryTable table : getLibraryTables(myProject)) {
-        if (hasLibraries(table)) {
-          result.add(table);
+    public static ChooseLibrariesFromTablesDialog createDialog(
+        @Nonnull String title,
+        @Nonnull Project project
+    ) {
+        final ChooseLibrariesFromTablesDialog dialog = new ChooseLibrariesFromTablesDialog(title, project);
+        dialog.init();
+        return dialog;
+    }
+
+    @Nonnull
+    @Override
+    protected Project getProject() {
+        if (myProject != null) {
+            return myProject;
         }
-      }
+        return super.getProject();
     }
-    else if (element instanceof LibraryTable) {
-      Collections.addAll(result, getLibraries((LibraryTable)element));
+
+    @Override
+    protected JComponent createNorthPanel() {
+        return null;
     }
-  }
 
-  public static List<LibraryTable> getLibraryTables(final Project project) {
-    final List<LibraryTable> tables = new ArrayList<>();
-    if (project != null) {
-      tables.add(ProjectLibraryTable.getInstance(project));
+    @Override
+    protected void collectChildren(Object element, List<Object> result) {
+        if (element instanceof Application) {
+            for (LibraryTable table : getLibraryTables(myProject)) {
+                if (hasLibraries(table)) {
+                    result.add(table);
+                }
+            }
+        }
+        else if (element instanceof LibraryTable) {
+            Collections.addAll(result, getLibraries((LibraryTable)element));
+        }
     }
-    return tables;
-  }
 
-  private boolean hasLibraries(LibraryTable table) {
-    final Library[] libraries = getLibraries(table);
-    for (Library library : libraries) {
-      if (acceptsElement(library)) {
-        return true;
-      }
+    public static List<LibraryTable> getLibraryTables(final Project project) {
+        final List<LibraryTable> tables = new ArrayList<>();
+        if (project != null) {
+            tables.add(ProjectLibraryTable.getInstance(project));
+        }
+        return tables;
     }
-    return false;
-  }
 
-  @Override
-  protected int getLibraryTableWeight(@Nonnull LibraryTable libraryTable) {
-    if (libraryTable.getTableLevel().equals(LibraryEx.MODULE_LEVEL)) return 0;
-    if (isProjectLibraryTable(libraryTable)) return 1;
-    return 3;
-  }
+    private boolean hasLibraries(LibraryTable table) {
+        final Library[] libraries = getLibraries(table);
+        for (Library library : libraries) {
+            if (acceptsElement(library)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-  private boolean isProjectLibraryTable(LibraryTable libraryTable) {
-    return myProject != null && libraryTable.equals(ProjectLibraryTable.getInstance(myProject));
-  }
+    @Override
+    protected int getLibraryTableWeight(@Nonnull LibraryTable libraryTable) {
+        if (libraryTable.getTableLevel().equals(LibraryEx.MODULE_LEVEL)) {
+            return 0;
+        }
+        if (isProjectLibraryTable(libraryTable)) {
+            return 1;
+        }
+        return 3;
+    }
 
-  @Override
-  protected boolean isAutoExpandLibraryTable(@Nonnull LibraryTable libraryTable) {
-    return isProjectLibraryTable(libraryTable);
-  }
+    private boolean isProjectLibraryTable(LibraryTable libraryTable) {
+        return myProject != null && libraryTable.equals(ProjectLibraryTable.getInstance(myProject));
+    }
 
-  @Nonnull
-  protected Library[] getLibraries(@Nonnull LibraryTable table) {
-    return table.getLibraries();
-  }
+    @Override
+    protected boolean isAutoExpandLibraryTable(@Nonnull LibraryTable libraryTable) {
+        return isProjectLibraryTable(libraryTable);
+    }
+
+    @Nonnull
+    protected Library[] getLibraries(@Nonnull LibraryTable table) {
+        return table.getLibraries();
+    }
 }

@@ -43,147 +43,154 @@ import java.util.*;
  * @author nik
  */
 public class RootDetectionUtil {
-  private static final Logger LOG = Logger.getInstance(RootDetectionUtil.class);
+    private static final Logger LOG = Logger.getInstance(RootDetectionUtil.class);
 
-  private RootDetectionUtil() {
-  }
+    private RootDetectionUtil() {
+    }
 
-  @Nonnull
-  public static List<OrderRoot> detectRoots(
-    @Nonnull final Collection<VirtualFile> rootCandidates,
-    @Nullable Component parentComponent,
-    @Nullable Project project,
-    @Nonnull final LibraryRootsComponentDescriptor rootsComponentDescriptor
-  ) {
-    return detectRoots(
-      rootCandidates,
-      parentComponent,
-      project,
-      rootsComponentDescriptor.getRootsDetector(),
-      rootsComponentDescriptor.getRootTypes()
-    );
-  }
+    @Nonnull
+    public static List<OrderRoot> detectRoots(
+        @Nonnull final Collection<VirtualFile> rootCandidates,
+        @Nullable Component parentComponent,
+        @Nullable Project project,
+        @Nonnull final LibraryRootsComponentDescriptor rootsComponentDescriptor
+    ) {
+        return detectRoots(
+            rootCandidates,
+            parentComponent,
+            project,
+            rootsComponentDescriptor.getRootsDetector(),
+            rootsComponentDescriptor.getRootTypes()
+        );
+    }
 
-  @Nonnull
-  public static List<OrderRoot> detectRoots(
-    @Nonnull final Collection<VirtualFile> rootCandidates,
-    @Nullable Component parentComponent,
-    @Nullable Project project,
-    @Nonnull final LibraryRootsDetector detector,
-    @Nonnull List<OrderRootType> rootTypesAllowedToBeSelectedByUserIfNothingIsDetected
-  ) {
-    final List<OrderRoot> result = new ArrayList<>();
-    final List<SuggestedChildRootInfo> suggestedRoots = new ArrayList<>();
-    new Task.Modal(project, "Scanning for Roots", true) {
-      @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
-        try {
-          for (VirtualFile rootCandidate : rootCandidates) {
-            final Collection<DetectedLibraryRoot> roots = detector.detectRoots(rootCandidate, indicator);
-            if (!roots.isEmpty() && allRootsHaveOneTypeAndEqualTo(roots, rootCandidate)) {
-              for (DetectedLibraryRoot root : roots) {
-                final LibraryRootType libraryRootType = root.getTypes().get(0);
-                result.add(new OrderRoot(root.getFile(), libraryRootType.getType(), libraryRootType.isJarDirectory()));
-              }
+    @Nonnull
+    public static List<OrderRoot> detectRoots(
+        @Nonnull final Collection<VirtualFile> rootCandidates,
+        @Nullable Component parentComponent,
+        @Nullable Project project,
+        @Nonnull final LibraryRootsDetector detector,
+        @Nonnull List<OrderRootType> rootTypesAllowedToBeSelectedByUserIfNothingIsDetected
+    ) {
+        final List<OrderRoot> result = new ArrayList<>();
+        final List<SuggestedChildRootInfo> suggestedRoots = new ArrayList<>();
+        new Task.Modal(project, "Scanning for Roots", true) {
+            @Override
+            public void run(@Nonnull ProgressIndicator indicator) {
+                try {
+                    for (VirtualFile rootCandidate : rootCandidates) {
+                        final Collection<DetectedLibraryRoot> roots = detector.detectRoots(rootCandidate, indicator);
+                        if (!roots.isEmpty() && allRootsHaveOneTypeAndEqualTo(roots, rootCandidate)) {
+                            for (DetectedLibraryRoot root : roots) {
+                                final LibraryRootType libraryRootType = root.getTypes().get(0);
+                                result.add(new OrderRoot(root.getFile(), libraryRootType.getType(), libraryRootType.isJarDirectory()));
+                            }
+                        }
+                        else {
+                            for (DetectedLibraryRoot root : roots) {
+                                final HashMap<LibraryRootType, String> names = new HashMap<>();
+                                for (LibraryRootType type : root.getTypes()) {
+                                    final String typeName = detector.getRootTypeName(type);
+                                    LOG.assertTrue(
+                                        typeName != null,
+                                        "Unexpected root type " + type.getType().getId() +
+                                            (type.isJarDirectory() ? " (jar directory)" : "") + ", " +
+                                            "detectors: " + detector
+                                    );
+                                    names.put(type, typeName);
+                                }
+                                suggestedRoots.add(new SuggestedChildRootInfo(rootCandidate, root, names));
+                            }
+                        }
+                    }
+                }
+                catch (ProcessCanceledException ignored) {
+                }
+            }
+        }.queue();
+
+        if (!suggestedRoots.isEmpty()) {
+            final DetectedRootsChooserDialog dialog = parentComponent != null
+                ? new DetectedRootsChooserDialog(parentComponent, suggestedRoots)
+                : new DetectedRootsChooserDialog(project, suggestedRoots);
+            dialog.show();
+            if (!dialog.isOK()) {
+                return Collections.emptyList();
+            }
+            for (SuggestedChildRootInfo rootInfo : dialog.getChosenRoots()) {
+                final LibraryRootType selectedRootType = rootInfo.getSelectedRootType();
+                result.add(new OrderRoot(
+                    rootInfo.getDetectedRoot().getFile(),
+                    selectedRootType.getType(),
+                    selectedRootType.isJarDirectory()
+                ));
+            }
+        }
+
+        if (result.isEmpty() && !rootTypesAllowedToBeSelectedByUserIfNothingIsDetected.isEmpty()) {
+            Map<String, Pair<OrderRootType, Boolean>> types = new HashMap<>();
+            for (OrderRootType type : rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
+                for (boolean isJarDirectory : new boolean[]{false, true}) {
+                    final String typeName = detector.getRootTypeName(new LibraryRootType(type, isJarDirectory));
+                    if (typeName != null) {
+                        types.put(typeName, Pair.create(type, isJarDirectory));
+                    }
+                }
+            }
+            if (types.isEmpty()) {
+                return Collections.emptyList();
+            }
+            List<String> names = new ArrayList<>(types.keySet());
+            String title = "Choose Categories of Selected Files";
+            String description = XmlStringUtil.wrapInHtml(
+                Application.get().getName() + " cannot determine what kind of files the chosen items contain.<br>" +
+                    "Choose the appropriate categories from the list."
+            );
+            ChooseElementsDialog<String> dialog;
+            if (parentComponent != null) {
+                dialog = new ChooseRootTypeElementsDialog(parentComponent, names, title, description);
             }
             else {
-              for (DetectedLibraryRoot root : roots) {
-                final HashMap<LibraryRootType, String> names = new HashMap<>();
-                for (LibraryRootType type : root.getTypes()) {
-                  final String typeName = detector.getRootTypeName(type);
-                  LOG.assertTrue(typeName != null, "Unexpected root type " + type.getType().getId() + (type.isJarDirectory() ? " (jar directory)" : "") + ", " +
-                                                   "" +
-                                                   "detectors: " + detector);
-                  names.put(type, typeName);
-                }
-                suggestedRoots.add(new SuggestedChildRootInfo(rootCandidate, root, names));
-              }
+                dialog = new ChooseRootTypeElementsDialog(project, names, title, description);
             }
-          }
+            for (String rootType : dialog.showAndGetResult()) {
+                final Pair<OrderRootType, Boolean> pair = types.get(rootType);
+                for (VirtualFile candidate : rootCandidates) {
+                    result.add(new OrderRoot(candidate, pair.getFirst(), pair.getSecond()));
+                }
+            }
         }
-        catch (ProcessCanceledException ignored) {
+
+        return result;
+    }
+
+    private static boolean allRootsHaveOneTypeAndEqualTo(Collection<DetectedLibraryRoot> roots, VirtualFile candidate) {
+        for (DetectedLibraryRoot root : roots) {
+            if (root.getTypes().size() > 1 || !root.getFile().equals(candidate)) {
+                return false;
+            }
         }
-      }
-    }.queue();
-
-    if (!suggestedRoots.isEmpty()) {
-      final DetectedRootsChooserDialog dialog = parentComponent != null
-        ? new DetectedRootsChooserDialog(parentComponent, suggestedRoots)
-        : new DetectedRootsChooserDialog(project, suggestedRoots);
-      dialog.show();
-      if (!dialog.isOK()) {
-        return Collections.emptyList();
-      }
-      for (SuggestedChildRootInfo rootInfo : dialog.getChosenRoots()) {
-        final LibraryRootType selectedRootType = rootInfo.getSelectedRootType();
-        result.add(new OrderRoot(rootInfo.getDetectedRoot().getFile(), selectedRootType.getType(), selectedRootType.isJarDirectory()));
-      }
+        return true;
     }
 
-    if (result.isEmpty() && !rootTypesAllowedToBeSelectedByUserIfNothingIsDetected.isEmpty()) {
-      Map<String, Pair<OrderRootType, Boolean>> types = new HashMap<>();
-      for (OrderRootType type : rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
-        for (boolean isJarDirectory : new boolean[]{false, true}) {
-          final String typeName = detector.getRootTypeName(new LibraryRootType(type, isJarDirectory));
-          if (typeName != null) {
-            types.put(typeName, Pair.create(type, isJarDirectory));
-          }
+    private static class ChooseRootTypeElementsDialog extends ChooseElementsDialog<String> {
+        public ChooseRootTypeElementsDialog(Project project, List<String> names, String title, String description) {
+            super(project, names, title, description, true);
         }
-      }
-      if(types.isEmpty()) {
-        return Collections.emptyList();
-      }
-      List<String> names = new ArrayList<>(types.keySet());
-      String title = "Choose Categories of Selected Files";
-      String description = XmlStringUtil.wrapInHtml(
-        Application.get().getName() + " cannot determine what kind of files the chosen items contain.<br>" +
-          "Choose the appropriate categories from the list."
-      );
-      ChooseElementsDialog<String> dialog;
-      if (parentComponent != null) {
-        dialog = new ChooseRootTypeElementsDialog(parentComponent, names, title, description);
-      }
-      else {
-        dialog = new ChooseRootTypeElementsDialog(project, names, title, description);
-      }
-      for (String rootType : dialog.showAndGetResult()) {
-        final Pair<OrderRootType, Boolean> pair = types.get(rootType);
-        for (VirtualFile candidate : rootCandidates) {
-          result.add(new OrderRoot(candidate, pair.getFirst(), pair.getSecond()));
+
+        private ChooseRootTypeElementsDialog(Component parent, List<String> names, String title, String description) {
+            super(parent, names, title, description, true);
         }
-      }
-    }
 
-    return result;
-  }
+        @Override
+        protected String getItemText(String item) {
+            return item;
+        }
 
-  private static boolean allRootsHaveOneTypeAndEqualTo(Collection<DetectedLibraryRoot> roots, VirtualFile candidate) {
-    for (DetectedLibraryRoot root : roots) {
-      if (root.getTypes().size() > 1 || !root.getFile().equals(candidate)) {
-        return false;
-      }
+        @Nullable
+        @Override
+        protected Image getItemIcon(String item) {
+            return null;
+        }
     }
-    return true;
-  }
-
-  private static class ChooseRootTypeElementsDialog extends ChooseElementsDialog<String> {
-    public ChooseRootTypeElementsDialog(Project project, List<String> names, String title, String description) {
-      super(project, names, title, description, true);
-    }
-
-    private ChooseRootTypeElementsDialog(Component parent, List<String> names, String title, String description) {
-      super(parent, names, title, description, true);
-    }
-
-    @Override
-    protected String getItemText(String item) {
-      return item;
-    }
-
-    @Nullable
-    @Override
-    protected Image getItemIcon(String item) {
-      return null;
-    }
-  }
 }

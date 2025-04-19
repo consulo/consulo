@@ -29,23 +29,23 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class ColorSettingsPagesImpl implements ColorSettingsPages {
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public ColorSettingsPagesImpl(Application application) {
-    myApplication = application;
-  }
+    @Inject
+    public ColorSettingsPagesImpl(Application application) {
+        myApplication = application;
+    }
 
-  @Override
-  @Nullable
-  public Pair<ColorSettingsPage, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key) {
-    return myApplication.getExtensionPoint(ColorSettingsPage.class).computeSafeIfAny(page -> {
-      for (AttributesDescriptor descriptor : page.getAttributeDescriptors()) {
-        if (descriptor.getKey() == key) {
-          return Pair.create(page, descriptor);
-        }
-      }
-      return null;
-    });
-  }
+    @Override
+    @Nullable
+    public Pair<ColorSettingsPage, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key) {
+        return myApplication.getExtensionPoint(ColorSettingsPage.class).computeSafeIfAny(page -> {
+            for (AttributesDescriptor descriptor : page.getAttributeDescriptors()) {
+                if (descriptor.getKey() == key) {
+                    return Pair.create(page, descriptor);
+                }
+            }
+            return null;
+        });
+    }
 }

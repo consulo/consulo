@@ -29,34 +29,34 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.List;
 
 public class ChooseModulesDialog extends ChooseElementsDialog<Module> {
+    public ChooseModulesDialog(Component parent, final List<Module> items, final String title) {
+        super(parent, items, title, null, true);
+    }
 
-  public ChooseModulesDialog(Component parent, final List<Module> items, final String title) {
-    super(parent, items, title, null, true);
-  }
+    public ChooseModulesDialog(Component parent, List<Module> items, String title, @Nullable String description) {
+        super(parent, items, title, description, true);
+    }
 
-  public ChooseModulesDialog(Component parent, List<Module> items, String title, @Nullable String description) {
-    super(parent, items, title, description, true);
-  }
+    public ChooseModulesDialog(final Project project, final List<? extends Module> items, final String title, final String description) {
+        super(project, items, title, description, true);
+    }
 
-  public ChooseModulesDialog(final Project project, final List<? extends Module> items, final String title, final String description) {
-    super(project, items, title, description, true);
-  }
+    public void setSingleSelectionMode() {
+        myChooser.setSingleSelectionMode();
+    }
 
-  public void setSingleSelectionMode() {
-    myChooser.setSingleSelectionMode();
-  }
+    @Override
+    protected Image getItemIcon(final Module item) {
+        return AllIcons.Nodes.Module;
+    }
 
-  @Override
-  protected Image getItemIcon(final Module item) {
-    return AllIcons.Nodes.Module;
-  }
-
-  @Override
-  protected String getItemText(final Module item) {
-    return item.getName();
-  }
+    @Override
+    protected String getItemText(final Module item) {
+        return item.getName();
+    }
 }
