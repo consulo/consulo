@@ -16,34 +16,34 @@
 
 package consulo.language.editor.refactoring.safeDelete;
 
-import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiElement;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
 
 /**
  * @author yole
  */
 public class NonCodeUsageSearchInfo {
-  private final Condition<PsiElement> myInsideDeletedCondition;
-  private final Collection<PsiElement> myElementsToSearch;
+    private final Predicate<PsiElement> myInsideDeletedCondition;
+    private final Collection<PsiElement> myElementsToSearch;
 
-  public NonCodeUsageSearchInfo(final Condition<PsiElement> insideDeletedCondition, final Collection<PsiElement> elementsToSearch) {
-    myInsideDeletedCondition = insideDeletedCondition;
-    myElementsToSearch = elementsToSearch;
-  }
+    public NonCodeUsageSearchInfo(Predicate<PsiElement> insideDeletedCondition, Collection<PsiElement> elementsToSearch) {
+        myInsideDeletedCondition = insideDeletedCondition;
+        myElementsToSearch = elementsToSearch;
+    }
 
-  public NonCodeUsageSearchInfo(final Condition<PsiElement> insideDeletedCondition, final PsiElement elementToSearch) {
-    myInsideDeletedCondition = insideDeletedCondition;
-    myElementsToSearch = Collections.singletonList(elementToSearch);
-  }
+    public NonCodeUsageSearchInfo(Predicate<PsiElement> insideDeletedCondition, PsiElement elementToSearch) {
+        myInsideDeletedCondition = insideDeletedCondition;
+        myElementsToSearch = Collections.singletonList(elementToSearch);
+    }
 
-  public Condition<PsiElement> getInsideDeletedCondition() {
-    return myInsideDeletedCondition;
-  }
+    public Predicate<PsiElement> getInsideDeletedCondition() {
+        return myInsideDeletedCondition;
+    }
 
-  public Collection<PsiElement> getElementsToSearch() {
-    return myElementsToSearch;
-  }
+    public Collection<PsiElement> getElementsToSearch() {
+        return myElementsToSearch;
+    }
 }

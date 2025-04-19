@@ -53,7 +53,7 @@ import org.jdom.Element;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 @Singleton
 @ServiceImpl
@@ -72,7 +72,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
         MessageBusConnection busConnection = project.getMessageBus().connect();
         busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectClosed(Project project, UIAccess uiAccess) {
+            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
                 if (project == myProject) {
                     DesktopSwtToolWindowManagerImpl.this.projectClosed();
                 }
@@ -83,7 +83,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     @Override
     @RequiredUIAccess
     public void initializeUI() {
-        WindowManagerEx windowManager = (WindowManagerEx) myWindowManager.get();
+        WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
 
         myFrame = windowManager.getIdeFrame(myProject);
 
@@ -91,15 +91,15 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
 
         myToolWindowPanel = toolWindowPanel;
 
-        DesktopSwtRootPaneImpl rootPanel = ((DesktopSwtIdeFrameImpl) myFrame).getRootPanel();
+        DesktopSwtRootPaneImpl rootPanel = ((DesktopSwtIdeFrameImpl)myFrame).getRootPanel();
 
         rootPanel.setCenterComponent(toolWindowPanel.getComponent());
 
-        ((DesktopSwtIdeFrameImpl) myFrame).show();
+        ((DesktopSwtIdeFrameImpl)myFrame).show();
     }
 
     private void projectClosed() {
-        WindowManagerEx windowManager = (WindowManagerEx) myWindowManager.get();
+        WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
 
         windowManager.releaseFrame(myFrame);
 
@@ -148,19 +148,35 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     @Nonnull
     @Override
     protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
-        return new DesktopSwtToolWindowStripeButtonImpl((DesktopSwtToolWindowInternalDecorator) internalDecorator, (DesktopSwtToolWindowPanelImpl) myToolWindowPanel);
+        return new DesktopSwtToolWindowStripeButtonImpl(
+            (DesktopSwtToolWindowInternalDecorator)internalDecorator,
+            (DesktopSwtToolWindowPanelImpl)myToolWindowPanel
+        );
     }
 
     @Nonnull
     @Override
-    protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable) {
+    @RequiredUIAccess
+    protected ToolWindowEx createToolWindow(
+        String id,
+        LocalizeValue displayName,
+        boolean canCloseContent,
+        @Nullable Object component,
+        boolean shouldBeAvailable
+    ) {
         return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
     }
 
     @Nonnull
     @Override
-    protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
-        return new DesktopSwtToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl) toolWindow, dumbAware);
+    @RequiredUIAccess
+    protected ToolWindowInternalDecorator createInternalDecorator(
+        Project project,
+        @Nonnull WindowInfoImpl info,
+        ToolWindowEx toolWindow,
+        boolean dumbAware
+    ) {
+        return new DesktopSwtToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl)toolWindow, dumbAware);
     }
 
     @Override
@@ -171,31 +187,26 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     @RequiredUIAccess
     @Override
     protected void requestFocusInToolWindow(String id, boolean forced) {
-
     }
 
     @RequiredUIAccess
     @Override
     protected void removeWindowedDecorator(WindowInfoImpl info) {
-
     }
 
     @RequiredUIAccess
     @Override
     protected void addFloatingDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
-
     }
 
     @RequiredUIAccess
     @Override
     protected void addWindowedDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
-
     }
 
     @RequiredUIAccess
     @Override
     protected void updateToolWindowsPane() {
-
     }
 
     @RequiredUIAccess
@@ -219,7 +230,6 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     public void activateEditorComponent() {
-
     }
 
     @Override
@@ -229,7 +239,6 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
-
     }
 
     @Nullable
@@ -245,6 +254,5 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
-
     }
 }

@@ -264,7 +264,7 @@ public class NavBarModel {
             return !module.isDisposed();
         }
         if (object instanceof PsiElement element) {
-            return AccessRule.read(() -> element.isValid());
+            return AccessRule.read(element::isValid);
         }
         return object != null;
     }
@@ -353,9 +353,14 @@ public class NavBarModel {
         }
 
         private static int getWeight(Object object) {
-            return object instanceof Module
-                ? 5
-                : object instanceof PsiDirectoryContainer ? 4 : object instanceof PsiDirectory ? 4 : object instanceof PsiFile ? 2 : object instanceof PsiNamedElement ? 3 : 0;
+            return switch (object) {
+                case Module m -> 5;
+                case PsiDirectoryContainer dc -> 4;
+                case PsiDirectory d -> 4;
+                case PsiFile f -> 2;
+                case PsiNamedElement ne -> 3;
+                default -> 0;
+            };
         }
     }
 }

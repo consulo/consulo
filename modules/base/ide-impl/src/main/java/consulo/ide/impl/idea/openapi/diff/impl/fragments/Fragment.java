@@ -17,19 +17,21 @@ package consulo.ide.impl.idea.openapi.diff.impl.fragments;
 
 import consulo.ide.impl.idea.openapi.diff.impl.highlighting.FragmentSide;
 import consulo.ide.impl.idea.openapi.diff.impl.util.TextDiffTypeEnum;
-import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
 import consulo.annotation.DeprecationInfo;
+
+import java.util.function.Predicate;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
 public interface Fragment {
-  TextDiffTypeEnum getType();
-  TextRange getRange(FragmentSide side);
+    TextDiffTypeEnum getType();
 
-  Fragment shift(TextRange range1, TextRange range2, int startingLine1, int startingLine2);
+    TextRange getRange(FragmentSide side);
 
-  void highlight(FragmentHighlighter fragmentHighlighter);
+    Fragment shift(TextRange range1, TextRange range2, int startingLine1, int startingLine2);
 
-  Fragment getSubfragmentAt(int offset, FragmentSide side, Condition<Fragment> condition);
+    void highlight(FragmentHighlighter fragmentHighlighter);
+
+    Fragment getSubfragmentAt(int offset, FragmentSide side, Predicate<Fragment> condition);
 }

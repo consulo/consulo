@@ -15,41 +15,49 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.fragments;
 
-import consulo.ide.impl.idea.openapi.diff.impl.highlighting.FragmentSide;
-import consulo.util.lang.function.Condition;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.util.containers.EmptyIterator;
 import consulo.annotation.DeprecationInfo;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.diff.impl.highlighting.FragmentSide;
+import consulo.ide.impl.idea.util.containers.EmptyIterator;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
 public interface FragmentList {
-  FragmentList shift(TextRange rangeShift1, TextRange rangeShift2,
-                            int startLine1, int startLine2);
+    FragmentList shift(
+        TextRange rangeShift1,
+        TextRange rangeShift2,
+        int startLine1,
+        int startLine2
+    );
 
-  FragmentList EMPTY = new FragmentList() {
-    public FragmentList shift(TextRange rangeShift1, TextRange rangeShift2, int startLine1, int startLine2) {
-      return EMPTY;
-    }
+    FragmentList EMPTY = new FragmentList() {
+        @Override
+        public FragmentList shift(TextRange rangeShift1, TextRange rangeShift2, int startLine1, int startLine2) {
+            return EMPTY;
+        }
 
-    public boolean isEmpty() {
-      return true;
-    }
+        @Override
+        public boolean isEmpty() {
+            return true;
+        }
 
-    public Iterator<Fragment> iterator() {
-      return EmptyIterator.getInstance();
-    }
+        @Override
+        public Iterator<Fragment> iterator() {
+            return EmptyIterator.getInstance();
+        }
 
-    public Fragment getFragmentAt(int offset, FragmentSide side, Condition<Fragment> condition) {
-      return null;
-    }
-  };
+        @Override
+        public Fragment getFragmentAt(int offset, FragmentSide side, Predicate<Fragment> condition) {
+            return null;
+        }
+    };
 
-  boolean isEmpty();
+    boolean isEmpty();
 
-  Iterator<Fragment> iterator();
+    Iterator<Fragment> iterator();
 
-  Fragment getFragmentAt(int offset, FragmentSide side, Condition<Fragment> condition);
+    Fragment getFragmentAt(int offset, FragmentSide side, Predicate<Fragment> condition);
 }

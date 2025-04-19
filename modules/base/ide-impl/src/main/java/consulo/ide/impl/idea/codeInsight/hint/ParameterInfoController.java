@@ -271,7 +271,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
             flags |= HintManager.HIDE_BY_TEXT_CHANGE;
         }
 
-        Editor editorToShow = myEditor instanceof EditorWindow ? ((EditorWindow)myEditor).getDelegate() : myEditor;
+        Editor editorToShow = myEditor instanceof EditorWindow editorWindow ? editorWindow.getDelegate() : myEditor;
 
         //update presentation of descriptors synchronously
         myComponent.update(mySingleParameterInfo);
@@ -517,20 +517,20 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         int hostWhitespaceStart = CharArrayUtil.shiftBackward(text, offset, WHITESPACE) + 1;
         int hostWhitespaceEnd = CharArrayUtil.shiftForward(text, offset, WHITESPACE);
         Editor hostEditor = myEditor;
-        if (myEditor instanceof EditorWindow) {
-            hostEditor = ((EditorWindow)myEditor).getDelegate();
-            hostWhitespaceStart = ((EditorWindow)myEditor).getDocument().injectedToHost(hostWhitespaceStart);
-            hostWhitespaceEnd = ((EditorWindow)myEditor).getDocument().injectedToHost(hostWhitespaceEnd);
+        if (myEditor instanceof EditorWindow editorWindow) {
+            hostEditor = editorWindow.getDelegate();
+            hostWhitespaceStart = editorWindow.getDocument().injectedToHost(hostWhitespaceStart);
+            hostWhitespaceEnd = editorWindow.getDocument().injectedToHost(hostWhitespaceEnd);
         }
         List<Inlay> inlays =
             ParameterHintsPresentationManager.getInstance().getParameterHintsInRange(hostEditor, hostWhitespaceStart, hostWhitespaceEnd);
         for (Inlay inlay : inlays) {
             int inlayOffset = inlay.getOffset();
-            if (myEditor instanceof EditorWindow) {
-                if (((EditorWindow)myEditor).getDocument().getHostRange(inlayOffset) == null) {
+            if (myEditor instanceof EditorWindow editorWindow) {
+                if (editorWindow.getDocument().getHostRange(inlayOffset) == null) {
                     continue;
                 }
-                inlayOffset = ((EditorWindow)myEditor).getDocument().hostToInjected(inlayOffset);
+                inlayOffset = editorWindow.getDocument().hostToInjected(inlayOffset);
             }
             return inlayOffset;
         }
@@ -539,11 +539,9 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
 
     @RequiredReadAction
     private int getPrevOrNextParameterOffset(boolean isNext) {
-        if (!(myHandler instanceof ParameterInfoHandlerWithTabActionSupport)) {
+        if (!(myHandler instanceof ParameterInfoHandlerWithTabActionSupport handler)) {
             return -1;
         }
-        ParameterInfoHandlerWithTabActionSupport handler = (ParameterInfoHandlerWithTabActionSupport)myHandler;
-
         IElementType delimiter = handler.getActualParameterDelimiterType();
         boolean noDelimiter = delimiter == TokenType.WHITE_SPACE;
         int caretOffset = myEditor.getCaretModel().getOffset();
@@ -621,6 +619,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     }
 
     @Nullable
+    @RequiredReadAction
     public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset) {
         if (file == null) {
             return null;

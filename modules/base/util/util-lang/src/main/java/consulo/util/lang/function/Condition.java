@@ -31,54 +31,54 @@ import java.util.function.Predicate;
 @DeprecationInfo("Use Predicate")
 @FunctionalInterface
 public interface Condition<T> extends Predicate<T> {
-  boolean value(T t);
+    boolean value(T t);
 
-  @Override
-  default boolean test(T t) {
-    return value(t);
-  }
-
-  Condition<Object> NOT_NULL = new Condition<>() {
     @Override
-    public boolean value(final Object object) {
-      return object != null;
+    default boolean test(T t) {
+        return value(t);
     }
 
-    @NonNls
-    @Override
-    public String toString() {
-      return "Condition.NOT_NULL";
-    }
-  };
+    Condition<Object> NOT_NULL = new Condition<>() {
+        @Override
+        public boolean value(final Object object) {
+            return object != null;
+        }
 
-  /**
-   * @see Conditions#alwaysTrue()
-   */
-  Condition TRUE = new Condition() {
-    @Override
-    public boolean value(final Object object) {
-      return true;
-    }
+        @NonNls
+        @Override
+        public String toString() {
+            return "Condition.NOT_NULL";
+        }
+    };
 
-    @NonNls
-    @Override
-    public String toString() {
-      return "Condition.TRUE";
-    }
-  };
-  /**
-   * @see Conditions#alwaysFalse()
-   */
-  Condition FALSE = new Condition() {
-    @Override
-    public boolean value(final Object object) {
-      return false;
-    }
+    /**
+     * @see Conditions#alwaysTrue()
+     */
+    Condition TRUE = new Condition() {
+        @Override
+        public boolean value(final Object object) {
+            return true;
+        }
 
-    @NonNls
-    @Override
-    public String toString() {
-      return "Condition.FALSE";
-    }
-  };
+        @NonNls
+        @Override
+        public String toString() {
+            return "Condition.TRUE";
+        }
+    };
+    /**
+     * @see Conditions#alwaysFalse()
+     */
+    Condition FALSE = new Condition() {
+        @Override
+        public boolean value(final Object object) {
+            return false;
+        }
+
+        @NonNls
+        @Override
+        public String toString() {
+            return "Condition.FALSE";
+        }
+    };
 }

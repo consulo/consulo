@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.find.actions;
 
-import consulo.util.lang.function.Condition;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 
 /**
  * Runs activity in the EDT.
@@ -29,78 +28,82 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * If activity took more than {@code maxUnitOfWorkThresholdMs} ms, it will yield till the next invokeLater.
  */
 class PingEDT {
-  @SuppressWarnings({"FieldCanBeLocal", "UnusedDeclaration"})
-  private final String myName;
-  private final Runnable pingAction;
-  private volatile boolean stopped;
-  private volatile boolean pinged;
-  private final Condition<?> myShutUpCondition;
-  private final int myMaxUnitOfWorkThresholdMs; //-1 means indefinite
+    @SuppressWarnings({"FieldCanBeLocal", "UnusedDeclaration"})
+    private final String myName;
+    private final Runnable pingAction;
+    private volatile boolean stopped;
+    private volatile boolean pinged;
+    private final Predicate<?> myShutUpCondition;
+    private final int myMaxUnitOfWorkThresholdMs; //-1 means indefinite
 
-  private final AtomicBoolean invokeLaterScheduled = new AtomicBoolean();
-  private final Runnable myUpdateRunnable = new Runnable() {
-    @Override
-    public void run() {
-      boolean b = invokeLaterScheduled.compareAndSet(true, false);
-      assert b;
-      if (stopped || myShutUpCondition.value(null)) {
-        stop();
-        return;
-      }
-      long start = System.currentTimeMillis();
-      int processed = 0;
-      while (true) {
-        if (processNext()) {
-          processed++;
+    private final AtomicBoolean invokeLaterScheduled = new AtomicBoolean();
+    private final Runnable myUpdateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            boolean b = invokeLaterScheduled.compareAndSet(true, false);
+            assert b;
+            if (stopped || myShutUpCondition.test(null)) {
+                stop();
+                return;
+            }
+            long start = System.currentTimeMillis();
+            int processed = 0;
+            while (true) {
+                if (processNext()) {
+                    processed++;
+                }
+                else {
+                    break;
+                }
+                long finish = System.currentTimeMillis();
+                if (myMaxUnitOfWorkThresholdMs != -1 && finish - start > myMaxUnitOfWorkThresholdMs) {
+                    break;
+                }
+            }
+            if (!isEmpty()) {
+                scheduleUpdate();
+            }
         }
-        else {
-          break;
+    };
+
+    public PingEDT(
+        @Nonnull String name,
+        @Nonnull Predicate<?> shutUpCondition,
+        int maxUnitOfWorkThresholdMs,
+        @Nonnull Runnable pingAction
+    ) {
+        myName = name;
+        myShutUpCondition = shutUpCondition;
+        myMaxUnitOfWorkThresholdMs = maxUnitOfWorkThresholdMs;
+        this.pingAction = pingAction;
+    }
+
+    private boolean isEmpty() {
+        return !pinged;
+    }
+
+    private boolean processNext() {
+        pinged = false;
+        pingAction.run();
+        return pinged;
+    }
+
+    // returns true if invokeLater was called
+    public boolean ping() {
+        pinged = true;
+        return scheduleUpdate();
+    }
+
+    // returns true if invokeLater was called
+    private boolean scheduleUpdate() {
+        if (!stopped && invokeLaterScheduled.compareAndSet(false, true)) {
+            SwingUtilities.invokeLater(myUpdateRunnable);
+            return true;
         }
-        long finish = System.currentTimeMillis();
-        if (myMaxUnitOfWorkThresholdMs != -1 && finish - start > myMaxUnitOfWorkThresholdMs) break;
-      }
-      if (!isEmpty()) {
-        scheduleUpdate();
-      }
+        return false;
     }
-  };
 
-  public PingEDT(@Nonnull @NonNls String name,
-                 @Nonnull Condition<?> shutUpCondition,
-                 int maxUnitOfWorkThresholdMs,
-                 @Nonnull Runnable pingAction) {
-    myName = name;
-    myShutUpCondition = shutUpCondition;
-    myMaxUnitOfWorkThresholdMs = maxUnitOfWorkThresholdMs;
-    this.pingAction = pingAction;
-  }
-
-  private boolean isEmpty() {
-    return !pinged;
-  }
-
-  private boolean processNext() {
-    pinged = false;
-    pingAction.run();
-    return pinged;
-  }
-
-  // returns true if invokeLater was called
-  public boolean ping() {
-    pinged = true;
-    return scheduleUpdate();
-  }
-
-  // returns true if invokeLater was called
-  private boolean scheduleUpdate() {
-    if (!stopped && invokeLaterScheduled.compareAndSet(false, true)) {
-      SwingUtilities.invokeLater(myUpdateRunnable);
-      return true;
+    public void stop() {
+        stopped = true;
     }
-    return false;
-  }
-
-  public void stop() {
-    stopped = true;
-  }
 }

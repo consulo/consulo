@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.tools;
 
-import consulo.application.AllIcons;
 import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.KeymapExtension;
@@ -31,48 +31,49 @@ import java.util.function.Predicate;
  * @author traff
  */
 public abstract class BaseToolKeymapExtension implements KeymapExtension {
+    @Override
+    public KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project) {
+        ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
+        String[] ids = actionManager.getActionIds(getActionIdPrefix());
+        Arrays.sort(ids);
+        KeymapGroupImpl group = new KeymapGroupImpl(getGroupName(), PlatformIconGroup.nodesKeymaptools());
 
-  @Override
-  public KeymapGroup createGroup(final Predicate<AnAction> filtered, final ComponentManager project) {
-    final ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
-    String[] ids = actionManager.getActionIds(getActionIdPrefix());
-    Arrays.sort(ids);
-    KeymapGroupImpl group = new KeymapGroupImpl(getGroupName(), AllIcons.Nodes.KeymapTools);
 
+        HashMap<String, KeymapGroupImpl> toolGroupNameToGroup = new HashMap<>();
 
-    HashMap<String, KeymapGroupImpl> toolGroupNameToGroup = new HashMap<>();
+        for (String id : ids) {
+            if (filtered != null && !filtered.test(actionManager.getActionOrStub(id))) {
+                continue;
+            }
+            String groupName = getGroupByActionId(id);
 
-    for (String id : ids) {
-      if (filtered != null && !filtered.test(actionManager.getActionOrStub(id))) continue;
-      String groupName = getGroupByActionId(id);
+            if (groupName != null && groupName.trim().length() == 0) {
+                groupName = null;
+            }
 
-      if (groupName != null && groupName.trim().length() == 0) {
-        groupName = null;
-      }
+            KeymapGroupImpl subGroup = toolGroupNameToGroup.get(groupName);
+            if (subGroup == null) {
+                subGroup = new KeymapGroupImpl(groupName);
+                toolGroupNameToGroup.put(groupName, subGroup);
+                if (groupName != null) {
+                    group.addGroup(subGroup);
+                }
+            }
 
-      KeymapGroupImpl subGroup = toolGroupNameToGroup.get(groupName);
-      if (subGroup == null) {
-        subGroup = new KeymapGroupImpl(groupName, null, null);
-        toolGroupNameToGroup.put(groupName, subGroup);
-        if (groupName != null) {
-          group.addGroup(subGroup);
+            subGroup.addActionId(id);
         }
-      }
 
-      subGroup.addActionId(id);
+        KeymapGroupImpl subGroup = toolGroupNameToGroup.get(null);
+        if (subGroup != null) {
+            group.addAll(subGroup);
+        }
+
+        return group;
     }
 
-    KeymapGroupImpl subGroup = toolGroupNameToGroup.get(null);
-    if (subGroup != null) {
-      group.addAll(subGroup);
-    }
+    protected abstract String getActionIdPrefix();
 
-    return group;
-  }
+    protected abstract String getGroupByActionId(String id);
 
-  protected abstract String getActionIdPrefix();
-
-  protected abstract String getGroupByActionId(String id);
-
-  protected abstract String getGroupName();
+    protected abstract String getGroupName();
 }

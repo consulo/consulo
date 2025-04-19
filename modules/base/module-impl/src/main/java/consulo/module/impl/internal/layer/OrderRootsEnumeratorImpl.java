@@ -173,10 +173,10 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         myOrderEnumerator.forEach(orderEntry -> {
             OrderRootType type = getRootType(orderEntry);
 
-            if (orderEntry instanceof ModuleSourceOrderEntry) {
+            if (orderEntry instanceof ModuleSourceOrderEntry moduleSourceOrderEntry) {
                 collectRoots(
                     type,
-                    ((ModuleSourceOrderEntry)orderEntry).getRootModel(),
+                    moduleSourceOrderEntry.getRootModel(),
                     result,
                     true,
                     !myOrderEnumerator.isProductionOnly(),
@@ -184,15 +184,15 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
                     ourRuntimeToFileFunc
                 );
             }
-            else if (orderEntry instanceof ModuleOrderEntry) {
-                ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)orderEntry;
+            else if (orderEntry instanceof ModuleOrderEntry moduleOrderEntry) {
                 Module module = moduleOrderEntry.getModule();
                 if (module != null) {
                     ModuleRootModel rootModel = myOrderEnumerator.getRootModel(module);
-                    boolean productionOnTests =
-                        orderEntry instanceof ModuleOrderEntryImpl && ((ModuleOrderEntryImpl)orderEntry).isProductionOnTestDependency();
-                    boolean includeTests =
-                        !myOrderEnumerator.isProductionOnly() && myOrderEnumerator.shouldIncludeTestsFromDependentModulesToTestClasspath() || productionOnTests;
+                    boolean productionOnTests = orderEntry instanceof ModuleOrderEntryImpl moduleOrderEntryImpl
+                        && moduleOrderEntryImpl.isProductionOnTestDependency();
+                    boolean includeTests = !myOrderEnumerator.isProductionOnly()
+                        && myOrderEnumerator.shouldIncludeTestsFromDependentModulesToTestClasspath()
+                        || productionOnTests;
                     collectRoots(type, rootModel, result, !productionOnTests, includeTests, ourSourcesToFileFunc, ourRuntimeToFileFunc);
                 }
             }
@@ -214,10 +214,10 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         myOrderEnumerator.forEach(orderEntry -> {
             OrderRootType type = getRootType(orderEntry);
 
-            if (orderEntry instanceof ModuleSourceOrderEntry) {
+            if (orderEntry instanceof ModuleSourceOrderEntry moduleSourceOrderEntry) {
                 collectRootUrls(
                     type,
-                    ((ModuleSourceOrderEntry)orderEntry).getRootModel(),
+                    moduleSourceOrderEntry.getRootModel(),
                     result,
                     true,
                     !myOrderEnumerator.isProductionOnly(),
@@ -225,15 +225,15 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
                     ourRuntimeToUrlFunc
                 );
             }
-            else if (orderEntry instanceof ModuleOrderEntry) {
-                ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)orderEntry;
+            else if (orderEntry instanceof ModuleOrderEntry moduleOrderEntry) {
                 Module module = moduleOrderEntry.getModule();
                 if (module != null) {
                     ModuleRootModel rootModel = myOrderEnumerator.getRootModel(module);
-                    boolean productionOnTests =
-                        orderEntry instanceof ModuleOrderEntryImpl && ((ModuleOrderEntryImpl)orderEntry).isProductionOnTestDependency();
-                    boolean includeTests =
-                        !myOrderEnumerator.isProductionOnly() && myOrderEnumerator.shouldIncludeTestsFromDependentModulesToTestClasspath() || productionOnTests;
+                    boolean productionOnTests = moduleOrderEntry instanceof ModuleOrderEntryImpl moduleOrderEntryImpl
+                        && moduleOrderEntryImpl.isProductionOnTestDependency();
+                    boolean includeTests = !myOrderEnumerator.isProductionOnly()
+                        && myOrderEnumerator.shouldIncludeTestsFromDependentModulesToTestClasspath()
+                        || productionOnTests;
                     collectRootUrls(type, rootModel, result, !productionOnTests, includeTests, ourSourcesToUrlFunc, ourRuntimeToUrlFunc);
                 }
             }

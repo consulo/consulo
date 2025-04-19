@@ -2,10 +2,7 @@
 package consulo.ide.impl.idea.usages.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
-import consulo.application.Application;
-import consulo.application.HelpManager;
-import consulo.application.ReadAction;
+import consulo.application.*;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
@@ -36,6 +33,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.ui.UIAccess;
@@ -62,6 +60,7 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -572,15 +571,18 @@ public class UsageViewImpl implements UsageViewEx {
 
                 treeState.invalidatePathBounds(eachPath);
                 Object node = eachPath.getLastPathComponent();
-                if (node instanceof UsageNode) {
-                    toUpdate.add((Node)node);
+                if (node instanceof UsageNode usageNode) {
+                    toUpdate.add(usageNode);
                 }
             }
-            queueUpdateBulk(toUpdate, () -> {
-                if (!isDisposed()) {
-                    myTree.repaint(visibleRect);
+            queueUpdateBulk(
+                toUpdate,
+                () -> {
+                    if (!isDisposed()) {
+                        myTree.repaint(visibleRect);
+                    }
                 }
-            });
+            );
         }
         else {
             myTree.setCellRenderer(myUsageViewTreeCellRenderer);
@@ -912,7 +914,7 @@ public class UsageViewImpl implements UsageViewEx {
 
         DefaultActionGroup group = new DefaultActionGroup();
         group.setPopup(true);
-        group.getTemplatePresentation().setIcon(AllIcons.Actions.GroupBy);
+        group.getTemplatePresentation().setIcon(PlatformIconGroup.actionsGroupby());
         group.getTemplatePresentation().setTextValue(UsageLocalize.actionGroupByTitle());
         group.getTemplatePresentation().setDescriptionValue(UsageLocalize.actionGroupByTitle());
         AnAction[] groupingActions = createGroupingActions();
@@ -1134,7 +1136,7 @@ public class UsageViewImpl implements UsageViewEx {
 
     private class MergeDupLines extends RuleAction {
         private MergeDupLines() {
-            super(UsageViewImpl.this, UsageLocalize.actionMergeSameLine().get(), AllIcons.Toolbar.Filterdups);
+            super(UsageViewImpl.this, UsageLocalize.actionMergeSameLine(), PlatformIconGroup.toolbarFilterdups());
             setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK)));
         }
 
@@ -1152,7 +1154,7 @@ public class UsageViewImpl implements UsageViewEx {
     private class ShowSettings extends AnAction {
         @RequiredUIAccess
         private ShowSettings() {
-            super(UsageLocalize.actionTextUsageViewSettings(), LocalizeValue.empty(), AllIcons.General.GearPlain);
+            super(UsageLocalize.actionTextUsageViewSettings(), LocalizeValue.empty(), PlatformIconGroup.generalGearplain());
             ConfigurableUsageTarget configurableUsageTarget = UsageViewUtil.getConfigurableTarget(myTargets);
             LocalizeValue description = null;
             try {
@@ -1235,7 +1237,7 @@ public class UsageViewImpl implements UsageViewEx {
     @RequiredReadAction
     public void appendUsage(@Nonnull Usage usage) {
         if (Application.get().isDispatchThread()) {
-            addUpdateRequest(() -> ReadAction.run(() -> doAppendUsage(usage)));
+            addUpdateRequest(() -> AccessRule.read((ThrowableRunnable<RuntimeException>)() -> doAppendUsage(usage)));
         }
         else {
             doAppendUsage(usage);
@@ -1261,7 +1263,7 @@ public class UsageViewImpl implements UsageViewEx {
     @Override
     public CompletableFuture<?> appendUsagesInBulk(@Nonnull Collection<? extends Usage> usages) {
         CompletableFuture<Object> result = new CompletableFuture<>();
-        addUpdateRequest(() -> ReadAction.run(() -> {
+        addUpdateRequest(() -> AccessRule.read(() -> {
             try {
                 for (Usage usage : usages) {
                     doAppendUsage(usage);
@@ -1652,6 +1654,7 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     @Override
+    @RequiredUIAccess
     public void addButtonToLowerPane(@Nonnull AnAction action) {
         UIAccess.assertIsUIThread();
 
@@ -2156,6 +2159,7 @@ public class UsageViewImpl implements UsageViewEx {
             myActionToolbar.updateActionsImmediately();
         }
 
+        @RequiredUIAccess
         void update() {
             if (myActionToolbar != null) {
                 myActionToolbar.updateActionsImmediately();

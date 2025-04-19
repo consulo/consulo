@@ -3,9 +3,8 @@
 package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
@@ -43,6 +42,7 @@ public abstract class PsiAnchor {
     public abstract int getEndOffset();
 
     @Nonnull
+    @RequiredReadAction
     public static PsiAnchor create(@Nonnull PsiElement element) {
         PsiUtilCore.ensureValid(element);
 
@@ -50,7 +50,10 @@ public abstract class PsiAnchor {
         if (Application.get().isUnitTestMode()) {
             PsiElement restored = anchor.retrieve();
             if (!element.equals(restored)) {
-                LOG.error("Cannot restore element " + element + " of " + element.getClass() + " from anchor " + anchor + ", getting " + restored + " instead");
+                LOG.error(
+                    "Cannot restore element " + element + " of " + element.getClass() +
+                        " from anchor " + anchor + ", getting " + restored + " instead"
+                );
             }
         }
         return anchor;
@@ -117,6 +120,7 @@ public abstract class PsiAnchor {
     }
 
     @Nonnull
+    @RequiredReadAction
     private static PsiAnchor wrapperOrHardReference(@Nonnull PsiElement element) {
         for (SmartPointerAnchorProvider provider : SmartPointerAnchorProvider.EP_NAME.getExtensionList()) {
             PsiElement anchorElement = provider.getAnchor(element);
@@ -291,6 +295,7 @@ public abstract class PsiAnchor {
         @Nonnull
         private final Language myLanguage;
 
+        @RequiredReadAction
         private PsiFileReference(@Nonnull VirtualFile file, @Nonnull PsiFile psiFile) {
             myFile = file;
             myProject = psiFile.getProject();
@@ -298,6 +303,7 @@ public abstract class PsiAnchor {
         }
 
         @Nonnull
+        @RequiredReadAction
         private static Language findLanguage(@Nonnull PsiFile file) {
             FileViewProvider vp = file.getViewProvider();
             Set<Language> languages = vp.getLanguages();
@@ -470,15 +476,15 @@ public abstract class PsiAnchor {
 
         @Override
         public PsiElement retrieve() {
-            return ReadAction.compute(() -> restoreFromStubIndex((PsiFileWithStubSupport)getFile(), myIndex, myElementType, false));
+            return AccessRule.read(() -> restoreFromStubIndex((PsiFileWithStubSupport)getFile(), myIndex, myElementType, false));
         }
 
         @Nonnull
         public String diagnoseNull() {
-            PsiFile file = ReadAction.compute(this::getFile);
+            PsiFile file = AccessRule.read(this::getFile);
             try {
                 PsiElement element =
-                    ReadAction.compute(() -> restoreFromStubIndex((PsiFileWithStubSupport)file, myIndex, myElementType, true));
+                    AccessRule.read(() -> restoreFromStubIndex((PsiFileWithStubSupport)file, myIndex, myElementType, true));
                 return "No diagnostics, element=" + element + "@" + (element == null ? 0 : System.identityHashCode(element));
             }
             catch (AssertionError e) {
@@ -552,4 +558,3 @@ public abstract class PsiAnchor {
         }
     }
 }
-

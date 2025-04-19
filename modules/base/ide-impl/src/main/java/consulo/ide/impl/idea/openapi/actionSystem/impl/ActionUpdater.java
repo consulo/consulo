@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
@@ -20,6 +20,7 @@ import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.collection.*;
@@ -27,7 +28,7 @@ import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.concurrent.Promise;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -64,13 +65,15 @@ public class ActionUpdater {
 
     private boolean myAllowPartialExpand = true;
 
-    public ActionUpdater(ActionManager actionManager,
-                         boolean isInModalContext,
-                         PresentationFactory presentationFactory,
-                         DataContext dataContext,
-                         String place,
-                         boolean isContextMenuAction,
-                         boolean isToolbarAction) {
+    public ActionUpdater(
+        ActionManager actionManager,
+        boolean isInModalContext,
+        PresentationFactory presentationFactory,
+        DataContext dataContext,
+        String place,
+        boolean isContextMenuAction,
+        boolean isToolbarAction
+    ) {
         myProject = dataContext.getData(Project.KEY);
         myActionManager = actionManager;
         myModalContext = isInModalContext;
@@ -79,23 +82,33 @@ public class ActionUpdater {
         myPlace = place;
         myContextMenuAction = isContextMenuAction;
         myToolbarAction = isToolbarAction;
-        myRealUpdateStrategy = new UpdateStrategy(action -> {
-            // clone the presentation to avoid partially changing the cached one if update is interrupted
-            Presentation presentation = ActionUpdateEdtExecutor.computeOnEdt(() -> myFactory.getPresentation(action).clone());
-            presentation.setEnabledAndVisible(true);
-            Supplier<Boolean> doUpdate = () -> doUpdate(myModalContext, action, createActionEvent(action, presentation));
-            boolean success = callAction(action, "update", doUpdate);
-            return success ? presentation : null;
-        },
-            group -> callAction(group,
+        myRealUpdateStrategy = new UpdateStrategy(
+            action -> {
+                // clone the presentation to avoid partially changing the cached one if update is interrupted
+                Presentation presentation = ActionUpdateEdtExecutor.computeOnEdt(() -> myFactory.getPresentation(action).clone());
+                presentation.setEnabledAndVisible(true);
+                Supplier<Boolean> doUpdate = () -> doUpdate(myModalContext, action, createActionEvent(action, presentation));
+                boolean success = callAction(action, "update", doUpdate);
+                return success ? presentation : null;
+            },
+            group -> callAction(
+                group,
                 "getChildren",
-                () -> group.getChildren(createActionEvent(group,
-                    orDefault(group,
+                () -> group.getChildren(createActionEvent(
+                    group,
+                    orDefault(
+                        group,
                         myUpdatedPresentations
-                            .get(group))))),
-            group -> callAction(group,
+                            .get(group)
+                    )
+                ))
+            ),
+            group -> callAction(
+                group,
                 "canBePerformed",
-                () -> group.canBePerformed(getDataContext(group))));
+                () -> group.canBePerformed(getDataContext(group))
+            )
+        );
         myCheapStrategy = new UpdateStrategy(myFactory::getPresentation, group -> group.getChildren(null), group -> true);
     }
 
@@ -127,7 +140,7 @@ public class ActionUpdater {
     }
 
     private static <T> T callAction(AnAction action, String operation, Supplier<T> call) {
-        if (isUpdateInBackground(action) || ApplicationManager.getApplication().isDispatchThread()) {
+        if (isUpdateInBackground(action) || UIAccess.isUIThread()) {
             return call.get();
         }
 
@@ -275,7 +288,7 @@ public class ActionUpdater {
             }
 
             LOG.error("action is null: i=" + nullIndex + " group=" + group + " group id=" + myActionManager.getId(group));
-            return ContainerUtil.filter(children, Conditions.notNull());
+            return ContainerUtil.filter(children, Predicates.notNull());
         });
     }
 
@@ -288,8 +301,7 @@ public class ActionUpdater {
         if (!presentation.isVisible() || (!presentation.isEnabled() && hideDisabled)) { // don't create invisible items in the menu
             return Collections.emptyList();
         }
-        if (child instanceof ActionGroup) {
-            ActionGroup actionGroup = (ActionGroup) child;
+        if (child instanceof ActionGroup actionGroup) {
             JBIterable<AnAction> childrenIterable = iterateGroupChildren(actionGroup, strategy);
             if (!presentation.isVisible() || (!presentation.isEnabled() && hideDisabled)) {
                 return Collections.emptyList();
@@ -336,12 +348,12 @@ public class ActionUpdater {
                 }
 
                 if (hideDisabled && !(child instanceof CompactActionGroup)) {
-                    return Collections.singletonList(new EmptyAction.DelegatingCompactActionGroup((ActionGroup) child));
+                    return Collections.singletonList(new EmptyAction.DelegatingCompactActionGroup((ActionGroup)child));
                 }
                 return Collections.singletonList(child);
             }
 
-            return doExpandActionGroup((ActionGroup) child, hideDisabled || actionGroup instanceof CompactActionGroup, strategy);
+            return doExpandActionGroup((ActionGroup)child, hideDisabled || actionGroup instanceof CompactActionGroup, strategy);
         }
 
         return Collections.singletonList(child);
@@ -364,7 +376,7 @@ public class ActionUpdater {
                 if (!(o instanceof ActionGroup)) {
                     return null;
                 }
-                ActionGroup oo = (ActionGroup) o;
+                ActionGroup oo = (ActionGroup)o;
                 Presentation presentation = update(oo, strategy);
                 if (presentation == null || !presentation.isVisible()) {
                     return null;
@@ -396,8 +408,9 @@ public class ActionUpdater {
     private static List<AnAction> removeUnnecessarySeparators(List<? extends AnAction> visible) {
         List<AnAction> result = new ArrayList<>();
         for (AnAction child : visible) {
-            if (child instanceof AnSeparator) {
-                if (!StringUtil.isEmpty(((AnSeparator) child).getText()) || (!result.isEmpty() && !(result.get(result.size() - 1) instanceof AnSeparator))) {
+            if (child instanceof AnSeparator separator) {
+                if (!StringUtil.isEmpty(separator.getText()) || (!result.isEmpty()
+                    && !(result.get(result.size() - 1) instanceof AnSeparator))) {
                     result.add(child);
                 }
             }
@@ -409,14 +422,16 @@ public class ActionUpdater {
     }
 
     private AnActionEvent createActionEvent(AnAction action, Presentation presentation) {
-        AnActionEvent event = new AnActionEvent(null,
+        AnActionEvent event = new AnActionEvent(
+            null,
             getDataContext(action),
             myPlace,
             presentation,
             myActionManager,
             0,
             myContextMenuAction,
-            myToolbarAction);
+            myToolbarAction
+        );
         event.setInjectedContext(action.isInInjectedContext());
         return event;
     }
@@ -443,15 +458,13 @@ public class ActionUpdater {
             if (anAction instanceof AnSeparator) {
                 continue;
             }
-            final Project project = getDataContext(anAction).getData(Project.KEY);
+            Project project = getDataContext(anAction).getData(Project.KEY);
             if (project != null && DumbService.getInstance(project).isDumb() && !anAction.isDumbAware()) {
                 continue;
             }
 
             Presentation presentation = orDefault(anAction, update(anAction, strategy));
-            if (anAction instanceof ActionGroup) {
-                ActionGroup childGroup = (ActionGroup) anAction;
-
+            if (anAction instanceof ActionGroup childGroup) {
                 // popup menu must be visible itself
                 if (childGroup.isPopup()) {
                     if ((checkVisible && !presentation.isVisible()) || (checkEnabled && !presentation.isEnabled())) {
@@ -497,12 +510,12 @@ public class ActionUpdater {
 
     // returns false if exception was thrown and handled
     boolean doUpdate(boolean isInModalContext, AnAction action, AnActionEvent e) {
-        if (ApplicationManager.getApplication().isDisposed()) {
+        if (Application.get().isDisposed()) {
             return false;
         }
 
         long startTime = System.currentTimeMillis();
-        final boolean result;
+        boolean result;
         try {
             result = !ActionUtil.performDumbAwareUpdate(action, e, false);
         }
@@ -525,9 +538,11 @@ public class ActionUpdater {
         final Function<ActionGroup, AnAction[]> getChildren;
         final Predicate<ActionGroup> canBePerformed;
 
-        UpdateStrategy(Function<AnAction, Presentation> update,
-                       Function<ActionGroup, AnAction[]> getChildren,
-                       Predicate<ActionGroup> canBePerformed) {
+        UpdateStrategy(
+            Function<AnAction, Presentation> update,
+            Function<ActionGroup, AnAction[]> getChildren,
+            Predicate<ActionGroup> canBePerformed
+        ) {
             this.update = update;
             this.getChildren = getChildren;
             this.canBePerformed = canBePerformed;

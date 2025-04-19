@@ -15,122 +15,139 @@
  */
 package consulo.util.collection;
 
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
  * {@link #remove} throws {@link IllegalStateException} if called after {@link #hasNext}
- *  @author dsl
- *  @author dyoma
+ *
+ * @author dsl
+ * @author dyoma
  */
 public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E> {
-  private final Iterator<Dom> myDelegate;
-  private final Predicate<? super Dom> myCondition;
-  private boolean myNextObtained;
-  private boolean myCurrentIsValid;
-  private Dom myCurrent;
-  private Boolean myCurrentPassedFilter;
-  public static final Predicate NOT_NULL = Objects::nonNull;
+    private final Iterator<Dom> myDelegate;
+    private final Predicate<? super Dom> myCondition;
+    private boolean myNextObtained;
+    private boolean myCurrentIsValid;
+    private Dom myCurrent;
+    private Boolean myCurrentPassedFilter;
+    @Deprecated
+    public static final Predicate NOT_NULL = Predicates.notNull();
 
-  public FilteringIterator(@Nonnull Iterator<Dom> delegate, @Nonnull Predicate<? super Dom> condition) {
-    myDelegate = delegate;
-    myCondition = condition;
-  }
-
-  private void obtainNext() {
-    if (myNextObtained) return;
-    boolean hasNext = myDelegate.hasNext();
-    setCurrent(hasNext ? myDelegate.next() : null);
-
-    myCurrentIsValid = hasNext;
-    myNextObtained = true;
-  }
-
-  @Override
-  public boolean hasNext() {
-    obtainNext();
-    if (!myCurrentIsValid) return false;
-    boolean value = isCurrentPassesFilter();
-    while (!value && myDelegate.hasNext()) {
-      Dom next = myDelegate.next();
-      setCurrent(next);
-      value = isCurrentPassesFilter();
+    public FilteringIterator(@Nonnull Iterator<Dom> delegate, @Nonnull Predicate<? super Dom> condition) {
+        myDelegate = delegate;
+        myCondition = condition;
     }
-    return value;
-  }
 
-  private void setCurrent(Dom next) {
-    myCurrent = next;
-    myCurrentPassedFilter = null;
-  }
+    private void obtainNext() {
+        if (myNextObtained) {
+            return;
+        }
+        boolean hasNext = myDelegate.hasNext();
+        setCurrent(hasNext ? myDelegate.next() : null);
 
-  private boolean isCurrentPassesFilter() {
-    if (myCurrentPassedFilter != null) return myCurrentPassedFilter.booleanValue();
-    boolean passed = myCondition.test(myCurrent);
-    myCurrentPassedFilter = Boolean.valueOf(passed);
-    return passed;
-  }
-
-  @Override
-  public E next() {
-    if (!hasNext()) throw new NoSuchElementException();
-    E result = (E)myCurrent;
-    myNextObtained = false;
-    return result;
-  }
-
-  /**
-   * Works after call {@link #next} until call {@link #hasNext}
-   * @throws IllegalStateException if {@link #hasNext} called
-   */
-  @Override
-  public void remove() {
-    if (myNextObtained) throw new IllegalStateException();
-    myDelegate.remove();
-  }
-
-  public E peek() {
-    if (!hasNext()) throw new NoSuchElementException();
-    return (E)myCurrent;
-  }
-
-  public static <T> Iterator<T> skipNulls(Iterator<T> iterator) {
-    return create(iterator, NOT_NULL);
-  }
-
-  public static <Dom, T extends Dom> Iterator<T> create(Iterator<Dom> iterator, Predicate<? super Dom> condition) {
-    if (condition == Condition.TRUE || condition == Conditions.TRUE) return (Iterator<T>)iterator;
-    return new FilteringIterator<Dom, T>(iterator, condition);
-  }
-
-  public static <T> Predicate<T> alwaysTrueCondition(Class<T> aClass) {
-    return Conditions.alwaysTrue();
-  }
-
-  public static <T> InstanceOf<T> instanceOf(final Class<? extends T> aClass) {
-    return new InstanceOf<T>(aClass);
-  }
-
-  public static <T> Iterator<T> createInstanceOf(Iterator<?> iterator, Class<T> aClass) {
-    return create((Iterator<T>)iterator, instanceOf(aClass));
-  }
-
-  public static class InstanceOf<T> implements Predicate<Object> {
-    private final Class<? extends T> myInstancesClass;
-
-    public InstanceOf(Class<? extends T> instancesClass) {
-      myInstancesClass = instancesClass;
+        myCurrentIsValid = hasNext;
+        myNextObtained = true;
     }
 
     @Override
-    public boolean test(Object object) {
-      return myInstancesClass.isInstance(object);
+    public boolean hasNext() {
+        obtainNext();
+        if (!myCurrentIsValid) {
+            return false;
+        }
+        boolean value = isCurrentPassesFilter();
+        while (!value && myDelegate.hasNext()) {
+            Dom next = myDelegate.next();
+            setCurrent(next);
+            value = isCurrentPassesFilter();
+        }
+        return value;
     }
-  }
+
+    private void setCurrent(Dom next) {
+        myCurrent = next;
+        myCurrentPassedFilter = null;
+    }
+
+    private boolean isCurrentPassesFilter() {
+        if (myCurrentPassedFilter != null) {
+            return myCurrentPassedFilter;
+        }
+        boolean passed = myCondition.test(myCurrent);
+        myCurrentPassedFilter = passed;
+        return passed;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public E next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        E result = (E)myCurrent;
+        myNextObtained = false;
+        return result;
+    }
+
+    /**
+     * Works after call {@link #next} until call {@link #hasNext}
+     *
+     * @throws IllegalStateException if {@link #hasNext} called
+     */
+    @Override
+    public void remove() {
+        if (myNextObtained) {
+            throw new IllegalStateException();
+        }
+        myDelegate.remove();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public E peek() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        return (E)myCurrent;
+    }
+
+    public static <T> Iterator<T> skipNulls(Iterator<T> iterator) {
+        return create(iterator, Predicates.notNull());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <Dom, T extends Dom> Iterator<T> create(Iterator<Dom> iterator, Predicate<? super Dom> condition) {
+        return condition == Predicates.alwaysTrue() ? (Iterator<T>)iterator : new FilteringIterator<>(iterator, condition);
+    }
+
+    public static <T> Predicate<T> alwaysTrueCondition(Class<T> aClass) {
+        return Predicates.alwaysTrue();
+    }
+
+    public static <T> InstanceOf<T> instanceOf(Class<? extends T> aClass) {
+        return new InstanceOf<>(aClass);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Iterator<T> createInstanceOf(Iterator<?> iterator, Class<T> aClass) {
+        return create((Iterator<T>)iterator, instanceOf(aClass));
+    }
+
+    public static class InstanceOf<T> implements Predicate<Object> {
+        private final Class<? extends T> myInstancesClass;
+
+        public InstanceOf(Class<? extends T> instancesClass) {
+            myInstancesClass = instancesClass;
+        }
+
+        @Override
+        public boolean test(Object object) {
+            return myInstancesClass.isInstance(object);
+        }
+    }
 }

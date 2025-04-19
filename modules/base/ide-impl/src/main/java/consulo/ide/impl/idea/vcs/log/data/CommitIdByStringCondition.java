@@ -15,21 +15,22 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.CommitId;
 import jakarta.annotation.Nonnull;
 
-public class CommitIdByStringCondition implements Condition<CommitId> {
-  @Nonnull
-  private final String myHashString;
+import java.util.function.Predicate;
 
-  public CommitIdByStringCondition(@Nonnull String hashString) {
-    myHashString = hashString;
-  }
+public class CommitIdByStringCondition implements Predicate<CommitId> {
+    @Nonnull
+    private final String myHashString;
 
-  @Override
-  public boolean value(CommitId commitId) {
-    return StringUtil.startsWithIgnoreCase(commitId.getHash().asString(), myHashString);
-  }
+    public CommitIdByStringCondition(@Nonnull String hashString) {
+        myHashString = hashString;
+    }
+
+    @Override
+    public boolean test(CommitId commitId) {
+        return StringUtil.startsWithIgnoreCase(commitId.getHash().asString(), myHashString);
+    }
 }

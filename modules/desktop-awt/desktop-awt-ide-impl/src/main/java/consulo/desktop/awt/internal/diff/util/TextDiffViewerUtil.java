@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.internal.diff.util;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.ContextMenuPopupHandler;
 import consulo.codeEditor.EditorEx;
@@ -25,25 +24,24 @@ import consulo.diff.DiffUserDataKeys;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.content.EmptyContent;
-import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.TextDiffSettingsHolder.TextDiffSettings;
 import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.impl.internal.util.HighlightPolicy;
 import consulo.diff.impl.internal.util.IgnorePolicy;
+import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.disposer.Disposable;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.ui.ToggleActionButton;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.util.lang.function.Condition;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -51,6 +49,7 @@ import kava.beans.PropertyChangeListener;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
 
@@ -116,15 +115,9 @@ public class TextDiffViewerUtil {
         boolean sameDocuments = false;
         for (int i = 0; i < contents.size(); i++) {
             for (int j = i + 1; j < contents.size(); j++) {
-                DiffContent content1 = contents.get(i);
-                DiffContent content2 = contents.get(j);
-                if (!(content1 instanceof DocumentContent)) {
-                    continue;
+                if (contents.get(i) instanceof DocumentContent content1 && contents.get(j) instanceof DocumentContent content2) {
+                    sameDocuments |= content1.getDocument() == content2.getDocument();
                 }
-                if (!(content2 instanceof DocumentContent)) {
-                    continue;
-                }
-                sameDocuments |= ((DocumentContent)content1).getDocument() == ((DocumentContent)content2).getDocument();
             }
         }
 
@@ -153,15 +146,10 @@ public class TextDiffViewerUtil {
     ) {
         List<T> properties = ContainerUtil.mapNotNull(
             contents,
-            content -> {
-                if (content instanceof EmptyContent) {
-                    return null;
-                }
-                return propertyGetter.apply((DocumentContent)content);
-            }
+            content -> content instanceof EmptyContent ? null : propertyGetter.apply((DocumentContent)content)
         );
 
-        return properties.size() < 2 || ContainerUtil.newHashSet(properties).size() == 1;
+        return properties.size() < 2 || new HashSet<>(properties).size() == 1;
     }
 
     //
@@ -321,7 +309,7 @@ public class TextDiffViewerUtil {
         protected final TextDiffSettings mySettings;
 
         public ToggleAutoScrollAction(@Nonnull TextDiffSettings settings) {
-            super(DiffLocalize.synchronizeScrolling(), AllIcons.Actions.SynchronizeScrolling);
+            super(DiffLocalize.synchronizeScrolling(), PlatformIconGroup.actionsSynchronizescrolling());
             mySettings = settings;
             setEnabledInModalContext(true);
         }
@@ -342,7 +330,7 @@ public class TextDiffViewerUtil {
         protected final TextDiffSettings mySettings;
 
         public ToggleExpandByDefaultAction(@Nonnull TextDiffSettings settings) {
-            super(DiffLocalize.collapseUnchangedFragments(), AllIcons.Actions.Collapseall);
+            super(DiffLocalize.collapseUnchangedFragments(), PlatformIconGroup.actionsCollapseall());
             mySettings = settings;
             setEnabledInModalContext(true);
         }
@@ -444,7 +432,7 @@ public class TextDiffViewerUtil {
 
     @Nonnull
     public static List<? extends EditorEx> getEditableEditors(@Nonnull List<? extends EditorEx> editors) {
-        return ContainerUtil.filter(editors, (Condition<EditorEx>)editor -> !editor.isViewer());
+        return ContainerUtil.filter(editors, editor -> !editor.isViewer());
     }
 
     public static class EditorFontSizeSynchronizer implements PropertyChangeListener {

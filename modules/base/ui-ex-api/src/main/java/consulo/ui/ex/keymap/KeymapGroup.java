@@ -19,10 +19,10 @@ package consulo.ui.ex.keymap;
  * @author yole
  */
 public interface KeymapGroup {
-  void addActionId(String id);
+    void addActionId(String id);
 
-  void addGroup(KeymapGroup keymapGroup);
+    void addGroup(KeymapGroup keymapGroup);
 
-  default void normalizeSeparators() {
-  }
+    default void normalizeSeparators() {
+    }
 }

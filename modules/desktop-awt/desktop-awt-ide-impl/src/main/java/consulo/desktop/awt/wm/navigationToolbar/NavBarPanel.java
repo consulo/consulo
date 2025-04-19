@@ -654,6 +654,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     }
 
     private boolean shouldRestorePopupOnSelect(Object obj, int sourceItemIndex) {
+        //noinspection SimplifiableIfStatement
         if (sourceItemIndex < myModel.size() - 1 && myModel.get(sourceItemIndex + 1) == obj) {
             return true;
         }
@@ -694,8 +695,9 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         }
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     public Object getData(@Nonnull Key<?> dataId) {
         for (NavBarModelExtension modelExtension : NavBarModelExtension.EP_NAME.getExtensionList()) {
             Object data = modelExtension.getData(dataId, this::getDataInner);
@@ -709,7 +711,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     @Nullable
     @RequiredReadAction
     private Object getDataInner(Key<?> dataId) {
-        return getDataImpl(dataId, this, () -> getSelection());
+        return getDataImpl(dataId, this, this::getSelection);
     }
 
     @Nonnull

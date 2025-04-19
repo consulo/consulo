@@ -1322,13 +1322,13 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
             UsageViewPresentation presentation = new UsageViewPresentation();
             LocalizeValue tabCaptionText = IdeLocalize.searcheverywhereFoundMatchesTitle(searchText, contributorsString);
-            presentation.setCodeUsagesString(tabCaptionText.get());
+            presentation.setCodeUsagesString(tabCaptionText);
             presentation.setUsagesInGeneratedCodeString(
-                IdeLocalize.searcheverywhereFoundMatchesGeneratedCodeTitle(searchText, contributorsString).get()
+                IdeLocalize.searcheverywhereFoundMatchesGeneratedCodeTitle(searchText, contributorsString)
             );
             presentation.setTargetsNodeText(IdeBundle.message("searcheverywhere.found.targets.title", searchText, contributorsString));
-            presentation.setTabName(tabCaptionText.get());
-            presentation.setTabText(tabCaptionText.get());
+            presentation.setTabName(tabCaptionText);
+            presentation.setTabText(tabCaptionText);
 
             Collection<Usage> usages = new LinkedHashSet<>();
             Collection<PsiElement> targets = new LinkedHashSet<>();

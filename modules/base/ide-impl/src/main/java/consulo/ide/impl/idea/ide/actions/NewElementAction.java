@@ -28,8 +28,9 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nullable;
+
+import java.util.function.Predicate;
 
 /**
  * @author Konstantin Bulenkov
@@ -65,7 +66,7 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
     }
 
     @Nullable
-    protected Condition<AnAction> getPreselectActionCondition(DataContext dataContext) {
+    protected Predicate<AnAction> getPreselectActionCondition(DataContext dataContext) {
         return dataContext.getData(LangDataKeys.PRESELECT_NEW_ACTION_CONDITION);
     }
 

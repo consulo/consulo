@@ -93,8 +93,8 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
     @Override
     public void stopKillRings() {
         for (Transferable data : myData) {
-            if (data instanceof KillRingTransferable) {
-                ((KillRingTransferable)data).setReadyToCombine(false);
+            if (data instanceof KillRingTransferable killRingTransferable) {
+                killRingTransferable.setReadyToCombine(false);
             }
         }
     }
@@ -119,12 +119,11 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
                 return content;
             }
 
-            if (content instanceof KillRingTransferable) {
-                KillRingTransferable killRingContent = (KillRingTransferable)content;
+            if (content instanceof KillRingTransferable killRingContent) {
                 if (killRingContent.isReadyToCombine() && !myData.isEmpty()) {
                     Transferable prev = myData.get(0);
-                    if (prev instanceof KillRingTransferable) {
-                        Transferable merged = merge(killRingContent, (KillRingTransferable)prev);
+                    if (prev instanceof KillRingTransferable prevKillRingContent) {
+                        Transferable merged = merge(killRingContent, prevKillRingContent);
                         if (merged != null) {
                             myData.set(0, merged);
                             return merged;

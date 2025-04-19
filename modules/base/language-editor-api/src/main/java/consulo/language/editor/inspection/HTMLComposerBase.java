@@ -153,7 +153,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
             if (refEntity instanceof RefElement refElement) {
                 HTMLComposerExtension extension = getLanguageExtension(refElement);
                 if (extension != null) {
-                    name = extension.getQualifiedName(refEntity);
+                    name = extension.getQualifiedName(refElement);
                 }
             }
 

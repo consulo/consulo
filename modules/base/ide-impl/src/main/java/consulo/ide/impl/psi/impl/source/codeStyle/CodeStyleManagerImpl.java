@@ -111,8 +111,8 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     private static PsiElement postProcessElement(@Nonnull PsiFile file, @Nonnull PsiElement formatted) {
         PsiElement result = formatted;
         CodeStyleSettings settingsForFile = CodeStyle.getSettings(file);
-        if (settingsForFile.FORMATTER_TAGS_ENABLED && formatted instanceof PsiFile) {
-            postProcessEnabledRanges((PsiFile)formatted, formatted.getTextRange(), settingsForFile);
+        if (settingsForFile.FORMATTER_TAGS_ENABLED && formatted instanceof PsiFile formattedFile) {
+            postProcessEnabledRanges(formattedFile, formattedFile.getTextRange(), settingsForFile);
         }
         else {
             for (PostFormatProcessor postFormatProcessor : PostFormatProcessor.EP_NAME.getExtensionList()) {
@@ -496,12 +496,12 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
         if (element.getElementType() == PlainTextTokenTypes.PLAIN_TEXT) {
             return false;
         }
-    /*
-    if( element.getElementType() instanceof IJspElementType )
-    {
-      return false;
-    }
-    */
+        /*
+        if (element.getElementType() instanceof IJspElementType)
+        {
+            return false;
+        }
+        */
         return !getSettings(file).getCommonSettings(file.getLanguage()).KEEP_FIRST_COLUMN_COMMENT
             || !isCommentToken(element)
             || IndentHelper.getInstance().getIndent(myProject, file.getFileType(), element, true) != 0;

@@ -156,6 +156,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         if (bRev == null && aRev == null) {
             return false;
         }
+        //noinspection SimplifiableIfStatement
         if (bRev != null && bRev.getFile().isDirectory()) {
             return false;
         }
@@ -413,24 +414,24 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
             FilePath filePath = revision.getFile();
             DiffContentFactoryEx contentFactory = DiffContentFactoryEx.getInstanceEx();
 
-            if (revision instanceof CurrentContentRevision) {
-                VirtualFile vFile = ((CurrentContentRevision)revision).getVirtualFile();
+            if (revision instanceof CurrentContentRevision currentContentRevision) {
+                VirtualFile vFile = currentContentRevision.getVirtualFile();
                 if (vFile == null) {
                     throw new DiffRequestProducerException("Can't get current revision content");
                 }
                 return contentFactory.create(project, vFile);
             }
 
-            if (revision instanceof BinaryContentRevision) {
-                byte[] content = ((BinaryContentRevision)revision).getBinaryContent();
+            if (revision instanceof BinaryContentRevision binaryContentRevision) {
+                byte[] content = binaryContentRevision.getBinaryContent();
                 if (content == null) {
                     throw new DiffRequestProducerException("Can't get binary revision content");
                 }
                 return contentFactory.createFromBytes(project, content, filePath);
             }
 
-            if (revision instanceof ByteBackedContentRevision) {
-                byte[] revisionContent = ((ByteBackedContentRevision)revision).getContentAsBytes();
+            if (revision instanceof ByteBackedContentRevision byteBackedContentRevision) {
+                byte[] revisionContent = byteBackedContentRevision.getContentAsBytes();
                 if (revisionContent == null) {
                     throw new DiffRequestProducerException("Can't get revision content");
                 }

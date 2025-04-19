@@ -69,9 +69,9 @@ public class WebBrowserServiceImpl implements WebBrowserService {
                 }
             }
         }
-        return virtualFile instanceof LightVirtualFileBase || !request.getFile()
-            .getViewProvider()
-            .isPhysical() ? Collections.<Url>emptySet() : Collections.singleton(VirtualFileUtil.newFromVirtualFile(virtualFile));
+        return virtualFile instanceof LightVirtualFileBase || !request.getFile().getViewProvider().isPhysical()
+            ? Collections.<Url>emptySet()
+            : Collections.singleton(VirtualFileUtil.newFromVirtualFile(virtualFile));
     }
 
     @Override

@@ -16,17 +16,17 @@
 package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.inject.VirtualFileWindow;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiValuesMap;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
@@ -42,159 +42,163 @@ import java.util.*;
 @State(name = "ReadonlyStatusHandler", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
 public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements PersistentStateComponent<ReadonlyStatusHandlerImpl.State> {
-  private final Project myProject;
-  private final List<WritingAccessProvider> myAccessProviders;
+    @Nonnull
+    private final Project myProject;
+    private final List<WritingAccessProvider> myAccessProviders;
 
-  public static class State {
-    public boolean SHOW_DIALOG = true;
-  }
-
-  private State myState = new State();
-
-  @Inject
-  public ReadonlyStatusHandlerImpl(Project project) {
-    myProject = project;
-    myAccessProviders = myProject.isDefault() ? List.of() : WritingAccessProvider.getProvidersForProject(myProject);
-  }
-
-  @Override
-  public State getState() {
-    return myState;
-  }
-
-  @Override
-  public void loadState(State state) {
-    myState = state;
-  }
-
-  @Override
-  public OperationStatus ensureFilesWritable(@Nonnull VirtualFile... files) {
-    if (files.length == 0) {
-      return new OperationStatusImpl(VirtualFile.EMPTY_ARRAY);
-    }
-    ApplicationManager.getApplication().assertIsDispatchThread();
-
-    Set<VirtualFile> realFiles = new HashSet<VirtualFile>(files.length);
-    for (VirtualFile file : files) {
-      if (file instanceof VirtualFileWindow) file = ((VirtualFileWindow)file).getDelegate();
-      if (file != null) {
-        realFiles.add(file);
-      }
-    }
-    files = VfsUtilCore.toVirtualFileArray(realFiles);
-
-    for (final WritingAccessProvider accessProvider : myAccessProviders) {
-      Collection<VirtualFile> denied = ContainerUtil.filter(files, virtualFile -> !accessProvider.isPotentiallyWritable(virtualFile));
-
-      if (denied.isEmpty()) {
-        denied = accessProvider.requestWriting(files);
-      }
-      if (!denied.isEmpty()) {
-        return new OperationStatusImpl(VfsUtilCore.toVirtualFileArray(denied));
-      }
+    public static class State {
+        public boolean SHOW_DIALOG = true;
     }
 
-    final FileInfo[] fileInfos = createFileInfos(files);
-    if (fileInfos.length == 0) { // if all files are already writable
-      return createResultStatus(files);
+    private State myState = new State();
+
+    @Inject
+    public ReadonlyStatusHandlerImpl(@Nonnull Project project) {
+        myProject = project;
+        myAccessProviders = myProject.isDefault() ? List.of() : WritingAccessProvider.getProvidersForProject(myProject);
     }
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      return createResultStatus(files);
+    @Override
+    public State getState() {
+        return myState;
     }
 
-    // This event count hack is necessary to allow actions that called this stuff could still get data from their data contexts.
-    // Otherwise data manager stuff will fire up an assertion saying that event count has been changed (due to modal dialog show-up)
-    // The hack itself is safe since we guarantee that focus will return to the same component had it before modal dialog have been shown.
-    Runnable markEventCount = UIAccess.current().markEventCount();
-    if (myState.SHOW_DIALOG) {
-      new ReadOnlyStatusDialog(myProject, fileInfos).show();
+    @Override
+    public void loadState(State state) {
+        myState = state;
     }
-    else {
-      processFiles(new ArrayList<>(Arrays.asList(fileInfos)), null); // the collection passed is modified
-    }
-    markEventCount.run();
-    return createResultStatus(files);
-  }
 
-  private static OperationStatus createResultStatus(final VirtualFile[] files) {
-    List<VirtualFile> readOnlyFiles = new ArrayList<VirtualFile>();
-    for (VirtualFile file : files) {
-      if (file.exists()) {
-        if (!file.isWritable()) {
-          readOnlyFiles.add(file);
+    @Override
+    @RequiredUIAccess
+    public OperationStatus ensureFilesWritable(@Nonnull VirtualFile... files) {
+        if (files.length == 0) {
+            return new OperationStatusImpl(VirtualFile.EMPTY_ARRAY);
         }
-      }
-    }
+        UIAccess.assertIsUIThread();
 
-    return new OperationStatusImpl(VfsUtilCore.toVirtualFileArray(readOnlyFiles));
-  }
+        Set<VirtualFile> realFiles = new HashSet<>(files.length);
+        for (VirtualFile file : files) {
+            if (file instanceof VirtualFileWindow virtualFileWindow) {
+                file = virtualFileWindow.getDelegate();
+            }
+            if (file != null) {
+                realFiles.add(file);
+            }
+        }
+        files = VfsUtilCore.toVirtualFileArray(realFiles);
 
-  private FileInfo[] createFileInfos(VirtualFile[] files) {
-    List<FileInfo> fileInfos = new ArrayList<FileInfo>();
-    for (final VirtualFile file : files) {
-      if (file != null && !file.isWritable() && file.isInLocalFileSystem()) {
-        fileInfos.add(new FileInfo(file, myProject));
-      }
-    }
-    return fileInfos.toArray(new FileInfo[fileInfos.size()]);
-  }
+        for (WritingAccessProvider accessProvider : myAccessProviders) {
+            Collection<VirtualFile> denied = ContainerUtil.filter(files, virtualFile -> !accessProvider.isPotentiallyWritable(virtualFile));
 
-  public static void processFiles(final List<FileInfo> fileInfos, @Nullable String changelist) {
-    FileInfo[] copy = fileInfos.toArray(new FileInfo[fileInfos.size()]);
-    MultiValuesMap<HandleType, VirtualFile> handleTypeToFile = new MultiValuesMap<HandleType, VirtualFile>();
-    for (FileInfo fileInfo : copy) {
-      handleTypeToFile.put(fileInfo.getSelectedHandleType(), fileInfo.getFile());
-    }
+            if (denied.isEmpty()) {
+                denied = accessProvider.requestWriting(files);
+            }
+            if (!denied.isEmpty()) {
+                return new OperationStatusImpl(VfsUtilCore.toVirtualFileArray(denied));
+            }
+        }
 
-    for (HandleType handleType : handleTypeToFile.keySet()) {
-      handleType.processFiles(handleTypeToFile.get(handleType), changelist);
-    }
+        FileInfo[] fileInfos = createFileInfos(files);
+        if (fileInfos.length == 0) { // if all files are already writable
+            return createResultStatus(files);
+        }
 
-    for (FileInfo fileInfo : copy) {
-      if (!fileInfo.getFile().exists() || fileInfo.getFile().isWritable()) {
-        fileInfos.remove(fileInfo);
-      }
-    }
-  }
+        if (myProject.getApplication().isUnitTestMode()) {
+            return createResultStatus(files);
+        }
 
-  private static class OperationStatusImpl extends OperationStatus {
-
-    private final VirtualFile[] myReadonlyFiles;
-
-    OperationStatusImpl(final VirtualFile[] readonlyFiles) {
-      myReadonlyFiles = readonlyFiles;
-    }
-
-    @Override
-    @Nonnull
-    public VirtualFile[] getReadonlyFiles() {
-      return myReadonlyFiles;
-    }
-
-    @Override
-    public boolean hasReadonlyFiles() {
-      return myReadonlyFiles.length > 0;
-    }
-
-    @Override
-    @Nonnull
-    public String getReadonlyFilesMessage() {
-      if (hasReadonlyFiles()) {
-        StringBuilder buf = new StringBuilder();
-        if (myReadonlyFiles.length > 1) {
-          for (VirtualFile file : myReadonlyFiles) {
-            buf.append('\n');
-            buf.append(file.getPresentableUrl());
-          }
-
-          return CommonBundle.message("failed.to.make.the.following.files.writable.error.message", buf.toString());
+        // This event count hack is necessary to allow actions that called this stuff could still get data from their data contexts.
+        // Otherwise data manager stuff will fire up an assertion saying that event count has been changed (due to modal dialog show-up)
+        // The hack itself is safe since we guarantee that focus will return to the same component had it before modal dialog have been shown.
+        Runnable markEventCount = UIAccess.current().markEventCount();
+        if (myState.SHOW_DIALOG) {
+            new ReadOnlyStatusDialog(myProject, fileInfos).show();
         }
         else {
-          return CommonBundle.message("failed.to.make.file.writeable.error.message", myReadonlyFiles[0].getPresentableUrl());
+            processFiles(new ArrayList<>(Arrays.asList(fileInfos)), null); // the collection passed is modified
         }
-      }
-      throw new RuntimeException("No readonly files");
+        markEventCount.run();
+        return createResultStatus(files);
     }
-  }
+
+    private static OperationStatus createResultStatus(VirtualFile[] files) {
+        List<VirtualFile> readOnlyFiles = new ArrayList<>();
+        for (VirtualFile file : files) {
+            if (file.exists()) {
+                if (!file.isWritable()) {
+                    readOnlyFiles.add(file);
+                }
+            }
+        }
+
+        return new OperationStatusImpl(VfsUtilCore.toVirtualFileArray(readOnlyFiles));
+    }
+
+    private FileInfo[] createFileInfos(VirtualFile[] files) {
+        List<FileInfo> fileInfos = new ArrayList<>();
+        for (VirtualFile file : files) {
+            if (file != null && !file.isWritable() && file.isInLocalFileSystem()) {
+                fileInfos.add(new FileInfo(file, myProject));
+            }
+        }
+        return fileInfos.toArray(new FileInfo[fileInfos.size()]);
+    }
+
+    public static void processFiles(List<FileInfo> fileInfos, @Nullable String changelist) {
+        FileInfo[] copy = fileInfos.toArray(new FileInfo[fileInfos.size()]);
+        MultiValuesMap<HandleType, VirtualFile> handleTypeToFile = new MultiValuesMap<>();
+        for (FileInfo fileInfo : copy) {
+            handleTypeToFile.put(fileInfo.getSelectedHandleType(), fileInfo.getFile());
+        }
+
+        for (HandleType handleType : handleTypeToFile.keySet()) {
+            handleType.processFiles(handleTypeToFile.get(handleType), changelist);
+        }
+
+        for (FileInfo fileInfo : copy) {
+            if (!fileInfo.getFile().exists() || fileInfo.getFile().isWritable()) {
+                fileInfos.remove(fileInfo);
+            }
+        }
+    }
+
+    private static class OperationStatusImpl extends OperationStatus {
+
+        private final VirtualFile[] myReadonlyFiles;
+
+        OperationStatusImpl(VirtualFile[] readonlyFiles) {
+            myReadonlyFiles = readonlyFiles;
+        }
+
+        @Override
+        @Nonnull
+        public VirtualFile[] getReadonlyFiles() {
+            return myReadonlyFiles;
+        }
+
+        @Override
+        public boolean hasReadonlyFiles() {
+            return myReadonlyFiles.length > 0;
+        }
+
+        @Override
+        @Nonnull
+        public String getReadonlyFilesMessage() {
+            if (hasReadonlyFiles()) {
+                StringBuilder buf = new StringBuilder();
+                if (myReadonlyFiles.length > 1) {
+                    for (VirtualFile file : myReadonlyFiles) {
+                        buf.append('\n');
+                        buf.append(file.getPresentableUrl());
+                    }
+
+                    return CommonLocalize.failedToMakeTheFollowingFilesWritableErrorMessage(buf.toString()).get();
+                }
+                else {
+                    return CommonLocalize.failedToMakeFileWriteableErrorMessage(myReadonlyFiles[0].getPresentableUrl()).get();
+                }
+            }
+            throw new RuntimeException("No readonly files");
+        }
+    }
 }

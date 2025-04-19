@@ -312,8 +312,9 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
                 if (node.getChildCount() > 0) {
                     TreeNode childNode = node.getChildAt(0);
                     if (!(childNode instanceof CheckedTreeNode)) {
-                        if (LOCAL.equals(((DefaultMutableTreeNode)childNode).getUserObject())) {
-                            node = (DefaultMutableTreeNode)childNode;
+                        DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode)childNode;
+                        if (LOCAL.equals(defaultMutableTreeNode.getUserObject())) {
+                            node = defaultMutableTreeNode;
                         }
                         else {
                             DefaultMutableTreeNode localNode = new DefaultMutableTreeNode(LOCAL);

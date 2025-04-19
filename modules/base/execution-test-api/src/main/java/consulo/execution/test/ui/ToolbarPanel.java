@@ -102,8 +102,8 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         }
 
         RunProfile configuration = properties.getConfiguration();
-        if (configuration instanceof RunConfiguration) {
-            myExportAction = ExportTestResultsAction.create(properties.getExecutor().getToolWindowId(), (RunConfiguration)configuration);
+        if (configuration instanceof RunConfiguration runConfiguration) {
+            myExportAction = ExportTestResultsAction.create(properties.getExecutor().getToolWindowId(), runConfiguration);
             actionGroup.addAction(myExportAction);
         }
 

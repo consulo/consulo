@@ -158,7 +158,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(info.getFirst());
         Integer second = info.getSecond();
         if (file != null) {
-            getManager().openFileImpl4(UIAccess.get(), this, file, null, true, true, null, second == null ? -1 : second.intValue());
+            getManager().openFileImpl4(UIAccess.get(), this, file, null, true, true, null, second == null ? -1 : second);
         }
     }
 
@@ -170,7 +170,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
             VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(info.getFirst());
             Integer second = info.getSecond();
             if (file != null) {
-                getManager().openFileImpl4(UIAccess.get(), this, file, null, true, true, null, second == null ? -1 : second.intValue());
+                getManager().openFileImpl4(UIAccess.get(), this, file, null, true, true, null, second == null ? -1 : second);
             }
         }
     }
@@ -220,7 +220,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
 
                     if (disposeIfNeeded && getTabCount() == 0) {
                         removeFromSplitter();
-                        if (UISettings.getInstance().getEditorTabPlacement() == UISettings.TABS_NONE) {
+                        if (UISettings.getInstance().getEditorTabPlacement() == UISettings.PLACEMENT_EDITOR_TAB_NONE) {
                             DesktopFileEditorsSplitters owner = getOwner();
                             ThreeComponentsSplitter splitter =
                                 UIUtil.getParentOfType(ThreeComponentsSplitter.class, owner.getComponent());
@@ -268,8 +268,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         JComponent otherComponent = splitter.getOtherComponent(myPanel);
 
         Container parent = splitter.getParent().getParent();
-        if (parent instanceof Splitter) {
-            Splitter parentSplitter = (Splitter)parent;
+        if (parent instanceof Splitter parentSplitter) {
             if (parentSplitter.getFirstComponent() == splitter.getParent()) {
                 parentSplitter.setFirstComponent(otherComponent);
             }
@@ -644,10 +643,10 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         int scrollOffset = editorFrom.getScrollingModel().getVerticalScrollOffset();
 
         for (FileEditor fileEditor : toSync) {
-            if (!(fileEditor instanceof TextEditor)) {
+            if (!(fileEditor instanceof TextEditor textEditor)) {
                 continue;
             }
-            Editor editor = ((TextEditor)fileEditor).getEditor();
+            Editor editor = textEditor.getEditor();
             if (editorFrom.getDocument() == editor.getDocument()) {
                 editor.getCaretModel().moveToOffset(offset);
                 ScrollingModel scrollingModel = editor.getScrollingModel();
@@ -667,8 +666,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     public DesktopFileEditorWindow[] findSiblings() {
         checkConsistency();
         ArrayList<DesktopFileEditorWindow> res = new ArrayList<>();
-        if (myPanel.getParent() instanceof Splitter) {
-            Splitter splitter = (Splitter)myPanel.getParent();
+        if (myPanel.getParent() instanceof Splitter splitter) {
             for (DesktopFileEditorWindow win : myOwner.getWindows()) {
                 if (win != this && SwingUtilities.isDescendingFrom(win.myPanel, splitter)) {
                     res.add(win);
@@ -682,8 +680,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     public void changeOrientation() {
         checkConsistency();
         Container parent = myPanel.getParent();
-        if (parent instanceof Splitter) {
-            Splitter splitter = (Splitter)parent;
+        if (parent instanceof Splitter splitter) {
             splitter.setOrientation(!splitter.getOrientation());
         }
     }
@@ -692,9 +689,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     @RequiredUIAccess
     public void unsplit(boolean setCurrent) {
         checkConsistency();
-        Container splitter = myPanel.getParent();
-
-        if (!(splitter instanceof Splitter)) {
+        if (!(myPanel.getParent() instanceof Splitter splitter)) {
             return;
         }
 

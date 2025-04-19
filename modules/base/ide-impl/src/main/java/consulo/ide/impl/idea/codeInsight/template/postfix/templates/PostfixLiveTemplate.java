@@ -32,8 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
@@ -42,6 +41,7 @@ import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 @ExtensionImpl
 public class PostfixLiveTemplate extends CustomLiveTemplateBase {
@@ -61,11 +61,11 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
                 ProgressManager.checkCanceled();
                 String key = computeTemplateKeyWithoutContextChecking(callback);
                 if (key != null && editor.getCaretModel().getCaretCount() == 1) {
-                    Condition<PostfixTemplate> isApplicationTemplateFunction =
+                    Predicate<PostfixTemplate> isApplicationTemplateFunction =
                         createIsApplicationTemplateFunction(provider, key, file, editor, parentDisposable);
                     for (PostfixTemplate postfixTemplate : PostfixTemplatesUtils.getAvailableTemplates(provider)) {
                         ProgressManager.checkCanceled();
-                        if (isApplicationTemplateFunction.value(postfixTemplate)) {
+                        if (isApplicationTemplateFunction.test(postfixTemplate)) {
                             result.add(new PostfixTemplateLookupElement(
                                 this,
                                 postfixTemplate,
@@ -168,7 +168,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     @RequiredUIAccess
     @Override
-    public void expand(@Nonnull final String key, @Nonnull final CustomTemplateCallback callback) {
+    public void expand(@Nonnull String key, @Nonnull CustomTemplateCallback callback) {
         Application.get().assertIsDispatchThread();
 
         Editor editor = callback.getEditor();
@@ -200,7 +200,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     ) {
         Application.get().assertIsDispatchThread();
         FeatureUsageTracker.getInstance().triggerFeatureUsed("editing.completion.postfix");
-        final PsiFile file = callback.getContext().getContainingFile();
+        PsiFile file = callback.getContext().getContainingFile();
         if (isApplicableTemplate(provider, key, file, editor, postfixTemplate)) {
             int offset = deleteTemplateKey(file, editor, key);
             try {
@@ -266,9 +266,9 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     @RequiredUIAccess
     private static void expandTemplate(
-        @Nonnull final PostfixTemplate template,
-        @Nonnull final Editor editor,
-        @Nonnull final PsiElement context
+        @Nonnull PostfixTemplate template,
+        @Nonnull Editor editor,
+        @Nonnull PsiElement context
     ) {
         if (template.startInWriteAction()) {
             CommandProcessor.getInstance().newCommand()
@@ -285,14 +285,14 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     @RequiredUIAccess
     private static int deleteTemplateKey(
-        @Nonnull final PsiFile file,
-        @Nonnull final Editor editor,
-        @Nonnull final String key
+        @Nonnull PsiFile file,
+        @Nonnull Editor editor,
+        @Nonnull String key
     ) {
         Application.get().assertIsDispatchThread();
 
-        final int currentOffset = editor.getCaretModel().getOffset();
-        final int newOffset = currentOffset - key.length();
+        int currentOffset = editor.getCaretModel().getOffset();
+        int newOffset = currentOffset - key.length();
         Application.get().runWriteAction(
             () -> CommandProcessor.getInstance().runUndoTransparentAction(
                 () -> {
@@ -307,19 +307,19 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     }
 
     @RequiredReadAction
-    private static Condition<PostfixTemplate> createIsApplicationTemplateFunction(
-        @Nonnull final PostfixTemplateProvider provider,
+    private static Predicate<PostfixTemplate> createIsApplicationTemplateFunction(
+        @Nonnull PostfixTemplateProvider provider,
         @Nonnull String key,
         @Nonnull PsiFile file,
         @Nonnull Editor editor,
         @Nonnull Disposable parentDisposable
     ) {
         if (file.getFileType().isBinary()) {
-            return Conditions.alwaysFalse();
+            return Predicates.alwaysFalse();
         }
 
         int currentOffset = editor.getCaretModel().getOffset();
-        final int newOffset = currentOffset - key.length();
+        int newOffset = currentOffset - key.length();
         CharSequence fileContent = editor.getDocument().getCharsSequence();
         StringBuilder fileContentWithoutKey = new StringBuilder();
         fileContentWithoutKey.append(fileContent.subSequence(0, newOffset));
@@ -327,13 +327,13 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         PsiFile copyFile = copyFile(file, fileContentWithoutKey);
         Document copyDocument = copyFile.getViewProvider().getDocument();
         if (copyDocument == null) {
-            return Conditions.alwaysFalse();
+            return Predicates.alwaysFalse();
         }
 
         copyFile = provider.preCheck(copyFile, editor, newOffset);
         copyDocument = copyFile.getViewProvider().getDocument();
         if (copyDocument == null) {
-            return Conditions.alwaysFalse();
+            return Predicates.alwaysFalse();
         }
 
         // The copy document doesn't contain live template key.
@@ -351,8 +351,8 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
             new OffsetTranslatorImpl(originalDocument, file, copyDocument, newOffset, currentOffset, "");
         Disposer.register(parentDisposable, translator);
 
-        final PsiElement context = CustomTemplateCallback.getContext(copyFile, positiveOffset(newOffset));
-        final Document finalCopyDocument = copyDocument;
+        PsiElement context = CustomTemplateCallback.getContext(copyFile, positiveOffset(newOffset));
+        Document finalCopyDocument = copyDocument;
         return template -> template != null
             && isDumbEnough(template, context)
             && template.isEnabled(provider)
@@ -405,7 +405,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     ) {
         Disposable parentDisposable = Disposable.newDisposable();
         try {
-            return createIsApplicationTemplateFunction(provider, key, file, editor, parentDisposable).value(template);
+            return createIsApplicationTemplateFunction(provider, key, file, editor, parentDisposable).test(template);
         }
         finally {
             Disposer.dispose(parentDisposable);

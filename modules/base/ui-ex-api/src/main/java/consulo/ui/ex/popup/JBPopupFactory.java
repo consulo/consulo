@@ -12,16 +12,15 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
-import consulo.util.lang.function.Condition;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Factory class for creating popup chooser windows (similar to the Code | Generate... popup) and various notifications/confirmations.
@@ -390,7 +389,7 @@ public abstract class JBPopupFactory {
         boolean honorActionMnemonics,
         @Nullable Runnable disposeCallback,
         int maxRowCount,
-        @Nullable Condition<? super AnAction> preselectActionCondition
+        @Nullable Predicate<? super AnAction> preselectActionCondition
     );
 
     @Nonnull
@@ -402,7 +401,7 @@ public abstract class JBPopupFactory {
         boolean showDisabledActions,
         @Nullable Runnable disposeCallback,
         int maxRowCount,
-        @Nullable Condition<? super AnAction> preselectActionCondition,
+        @Nullable Predicate<? super AnAction> preselectActionCondition,
         @Nullable String actionPlace
     );
 

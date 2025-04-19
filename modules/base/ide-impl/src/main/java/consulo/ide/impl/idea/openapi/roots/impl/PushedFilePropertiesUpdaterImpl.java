@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.openapi.roots.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
@@ -29,6 +29,7 @@ import consulo.project.*;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileCopyEvent;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
@@ -155,7 +156,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
             // delay calling event.getFile() until background to avoid expensive VFileCreateEvent.getFile() in EDT
             VirtualFile dir = getFile(event);
             ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-            if (dir != null && ReadAction.compute(() -> fileIndex.isInContent(dir)) && !ProjectCoreUtil.isProjectOrWorkspaceFile(dir)) {
+            if (dir != null && AccessRule.read(() -> fileIndex.isInContent(dir)) && !ProjectCoreUtil.isProjectOrWorkspaceFile(dir)) {
                 doPushRecursively(dir, pushers, fileIndex);
             }
         };
@@ -271,12 +272,12 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
     }
 
     private void doPushAll(@Nonnull List<? extends FilePropertyPusher> pushers) {
-        Module[] modules = ReadAction.compute(() -> ModuleManager.getInstance(myProject).getModules());
+        Module[] modules = AccessRule.read(() -> ModuleManager.getInstance(myProject).getModules());
 
         List<Runnable> tasks = new ArrayList<>();
 
         for (Module module : modules) {
-            Runnable iteration = ReadAction.<Runnable, RuntimeException>compute(() -> {
+            Runnable iteration = AccessRule.read((ThrowableSupplier<Runnable, RuntimeException>)() -> {
                 if (module.isDisposed()) {
                     return EmptyRunnable.INSTANCE;
                 }

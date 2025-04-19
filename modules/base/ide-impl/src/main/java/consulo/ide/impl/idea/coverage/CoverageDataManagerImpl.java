@@ -457,12 +457,12 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                 return;
             }
 
-            for (FileEditor editor : editors) {
-                if (editor instanceof TextEditor) {
-                    Editor textEditor = ((TextEditor)editor).getEditor();
+            for (FileEditor fileEditor : editors) {
+                if (fileEditor instanceof TextEditor textEditor) {
+                    Editor editor = textEditor.getEditor();
                     SrcFileAnnotator annotator;
                     synchronized (ANNOTATORS_LOCK) {
-                        annotator = myAnnotators.remove(textEditor);
+                        annotator = myAnnotators.remove(editor);
                     }
                     if (annotator != null) {
                         Disposer.dispose(annotator);
@@ -471,14 +471,14 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                 }
             }
 
-            for (FileEditor editor : editors) {
-                if (editor instanceof TextEditor) {
-                    Editor textEditor = ((TextEditor)editor).getEditor();
-                    SrcFileAnnotator annotator = getAnnotator(textEditor);
+            for (FileEditor fileEditor : editors) {
+                if (fileEditor instanceof TextEditor textEditor) {
+                    Editor editor = textEditor.getEditor();
+                    SrcFileAnnotator annotator = getAnnotator(editor);
                     if (annotator == null) {
-                        annotator = new SrcFileAnnotator(psiFile, textEditor);
+                        annotator = new SrcFileAnnotator(psiFile, editor);
                         synchronized (ANNOTATORS_LOCK) {
-                            myAnnotators.put(textEditor, annotator);
+                            myAnnotators.put(editor, annotator);
                         }
                     }
 

@@ -15,6 +15,7 @@
  */
 package consulo.usage;
 
+import consulo.localize.LocalizeValue;
 import consulo.usage.localize.UsageLocalize;
 
 import jakarta.annotation.Nonnull;
@@ -57,6 +58,11 @@ public class UsageViewPresentation {
         return myTabText;
     }
 
+    public void setTabText(@Nonnull LocalizeValue tabText) {
+        myTabText = tabText.get();
+    }
+
+    @Deprecated
     public void setTabText(String tabText) {
         myTabText = tabText;
     }
@@ -66,6 +72,11 @@ public class UsageViewPresentation {
         return myScopeText;
     }
 
+    public void setScopeText(@Nonnull LocalizeValue scopeText) {
+        myScopeText = scopeText.get();
+    }
+
+    @Deprecated
     public void setScopeText(@Nonnull String scopeText) {
         myScopeText = scopeText;
     }
@@ -75,6 +86,11 @@ public class UsageViewPresentation {
         return myContextText;
     }
 
+    public void setContextText(@Nonnull LocalizeValue contextText) {
+        myContextText = contextText.get();
+    }
+
+    @Deprecated
     public void setContextText(@Nonnull String contextText) {
         myContextText = contextText;
     }
@@ -91,6 +107,11 @@ public class UsageViewPresentation {
         return myUsagesString;
     }
 
+    public void setUsagesString(@Nonnull LocalizeValue usagesString) {
+        myUsagesString = usagesString.get();
+    }
+
+    @Deprecated
     public void setUsagesString(String usagesString) {
         myUsagesString = usagesString;
     }
@@ -101,6 +122,11 @@ public class UsageViewPresentation {
         return myTargetsNodeText;
     }
 
+    public void setTargetsNodeText(@Nonnull LocalizeValue targetsNodeText) {
+        myTargetsNodeText = targetsNodeText.get();
+    }
+
+    @Deprecated
     public void setTargetsNodeText(String targetsNodeText) {
         myTargetsNodeText = targetsNodeText;
     }
@@ -118,6 +144,11 @@ public class UsageViewPresentation {
         return myNonCodeUsagesString;
     }
 
+    public void setNonCodeUsagesString(@Nonnull LocalizeValue nonCodeUsagesString) {
+        myNonCodeUsagesString = nonCodeUsagesString.get();
+    }
+
+    @Deprecated
     public void setNonCodeUsagesString(@Nonnull String nonCodeUsagesString) {
         myNonCodeUsagesString = nonCodeUsagesString;
     }
@@ -127,6 +158,11 @@ public class UsageViewPresentation {
         return myCodeUsagesString;
     }
 
+    public void setCodeUsagesString(@Nonnull LocalizeValue codeUsagesString) {
+        myCodeUsagesString = codeUsagesString.get();
+    }
+
+    @Deprecated
     public void setCodeUsagesString(@Nonnull String codeUsagesString) {
         myCodeUsagesString = codeUsagesString;
     }
@@ -152,6 +188,11 @@ public class UsageViewPresentation {
         return myUsagesWord;
     }
 
+    public void setUsagesWord(@Nonnull LocalizeValue usagesWord) {
+        myUsagesWord = usagesWord.get();
+    }
+
+    @Deprecated
     public void setUsagesWord(@Nonnull String usagesWord) {
         myUsagesWord = usagesWord;
     }
@@ -160,6 +201,11 @@ public class UsageViewPresentation {
         return myTabName;
     }
 
+    public void setTabName(@Nonnull LocalizeValue tabName) {
+        myTabName = tabName.get();
+    }
+
+    @Deprecated
     public void setTabName(String tabName) {
         myTabName = tabName;
     }
@@ -168,6 +214,11 @@ public class UsageViewPresentation {
         return myToolwindowTitle;
     }
 
+    public void setToolwindowTitle(@Nonnull LocalizeValue toolwindowTitle) {
+        myToolwindowTitle = toolwindowTitle.get();
+    }
+
+    @Deprecated
     public void setToolwindowTitle(String toolwindowTitle) {
         myToolwindowTitle = toolwindowTitle;
     }
@@ -193,6 +244,11 @@ public class UsageViewPresentation {
         return myUsagesInGeneratedCodeString;
     }
 
+    public void setUsagesInGeneratedCodeString(@Nonnull LocalizeValue usagesInGeneratedCodeString) {
+        myUsagesInGeneratedCodeString = usagesInGeneratedCodeString.get();
+    }
+
+    @Deprecated
     public void setUsagesInGeneratedCodeString(@Nonnull String usagesInGeneratedCodeString) {
         myUsagesInGeneratedCodeString = usagesInGeneratedCodeString;
     }
