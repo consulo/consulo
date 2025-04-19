@@ -11,6 +11,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nullable;
@@ -20,6 +21,13 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class BuiltInServerOptions implements PersistentStateComponent<BuiltInServerOptions> {
+    private final Application myApplication;
+
+    @Inject
+    public BuiltInServerOptions(Application application) {
+        myApplication = application;
+    }
+
     public static final int DEFAULT_PORT = 63342;
 
     @Attribute
@@ -46,8 +54,8 @@ public class BuiltInServerOptions implements PersistentStateComponent<BuiltInSer
     }
 
     public int getEffectiveBuiltInServerPort() {
-        DefaultCustomPortServerManager portServerManager =
-            CustomPortServerManager.EP_NAME.findExtension(DefaultCustomPortServerManager.class);
+        DefaultCustomPortServerManager portServerManager = myApplication.getExtensionPoint(CustomPortServerManager.class)
+            .findExtensionOrFail(DefaultCustomPortServerManager.class);
         if (!portServerManager.isBound()) {
             return BuiltInServerManager.getInstance().getPort();
         }
@@ -55,6 +63,8 @@ public class BuiltInServerOptions implements PersistentStateComponent<BuiltInSer
     }
 
     public static void onBuiltInServerPortChanged() {
-        CustomPortServerManager.EP_NAME.findExtension(DefaultCustomPortServerManager.class).portChanged();
+        Application.get().getExtensionPoint(CustomPortServerManager.class)
+            .findExtensionOrFail(DefaultCustomPortServerManager.class)
+            .portChanged();
     }
 }

@@ -784,19 +784,23 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
                 }
             }
         }
-        if (myProject != null && myVirtualFile != null) {
-            for (EditorLinePainter painter : EditorLinePainter.EP_NAME.getExtensionList()) {
-                Collection<LineExtensionInfo> extensions = painter.getLineExtensions(myProject, myVirtualFile, line);
-                if (extensions != null) {
-                    for (LineExtensionInfo extension : extensions) {
-                        if (!processor.test(extension)) {
-                            return false;
-                        }
+
+        //noinspection SimplifiableIfStatement
+        if (myProject == null || myVirtualFile == null) {
+            return true;
+        }
+
+        return myProject.getApplication().getExtensionPoint(EditorLinePainter.class).allMatchSafe(painter -> {
+            Collection<LineExtensionInfo> extensions = painter.getLineExtensions(myProject, myVirtualFile, line);
+            if (extensions != null) {
+                for (LineExtensionInfo extension : extensions) {
+                    if (!processor.test(extension)) {
+                        return false;
                     }
                 }
             }
-        }
-        return true;
+            return true;
+        });
     }
 
     @Override

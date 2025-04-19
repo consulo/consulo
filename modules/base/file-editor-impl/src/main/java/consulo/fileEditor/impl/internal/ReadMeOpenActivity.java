@@ -16,7 +16,7 @@
 package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ReadAction;
+import consulo.application.AccessRule;
 import consulo.application.dumb.DumbAware;
 import consulo.component.PropertiesComponent;
 import consulo.fileEditor.FileEditor;
@@ -59,7 +59,7 @@ public class ReadMeOpenActivity implements PostStartupActivity, DumbAware {
                 return null;
             }
 
-            VirtualFile virtualFile = ReadAction.compute(() -> LocalFileSystem.getInstance().refreshAndFindFileByNioFile(readmePath));
+            VirtualFile virtualFile = AccessRule.read(() -> LocalFileSystem.getInstance().refreshAndFindFileByNioFile(readmePath));
             if (virtualFile != null) {
                 return virtualFile;
             }

@@ -16,24 +16,26 @@
 package consulo.ide.impl.idea.util.ui.classpath;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.AllIcons;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
 import consulo.disposer.Disposer;
 import consulo.ide.ui.OrderEntryAppearanceService;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -50,8 +52,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -60,6 +60,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author Gregory.Shrago
@@ -70,14 +71,14 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     private final SimpleTree myTree = new SimpleTree();
     private AbstractTreeBuilder myBuilder;
     private List<Library> myResult;
-    private final Map<Object, Object> myParentsMap = new HashMap<Object, Object>();
+    private final Map<Object, Object> myParentsMap = new HashMap<>();
 
-    protected ChooseLibrariesDialogBase(final JComponent parentComponent, final String title) {
+    protected ChooseLibrariesDialogBase(JComponent parentComponent, @Nonnull LocalizeValue title) {
         super(parentComponent, false);
         setTitle(title);
     }
 
-    protected ChooseLibrariesDialogBase(Project project, String title) {
+    protected ChooseLibrariesDialogBase(Project project, @Nonnull LocalizeValue title) {
         super(project, false);
         setTitle(title);
     }
@@ -107,15 +108,16 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
 
     @Override
     protected void doOKAction() {
-        processSelection(new CommonProcessors.CollectProcessor<Library>(myResult = new ArrayList<Library>()));
+        processSelection(new CommonProcessors.CollectProcessor<>(myResult = new ArrayList<>()));
         super.doOKAction();
     }
 
     private void updateOKAction() {
-        setOKActionEnabled(!processSelection(new CommonProcessors.FindFirstProcessor<Library>()));
+        setOKActionEnabled(!processSelection(new CommonProcessors.FindFirstProcessor<>()));
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myTree;
     }
@@ -125,27 +127,20 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
         return myResult == null ? Collections.<Library>emptyList() : myResult;
     }
 
-    protected void queueUpdateAndSelect(@Nonnull final Library library) {
-        myBuilder.queueUpdate().doWhenDone(new Runnable() {
-            @Override
-            public void run() {
-                myBuilder.select(library);
-            }
-        });
+    protected void queueUpdateAndSelect(@Nonnull Library library) {
+        myBuilder.queueUpdate().doWhenDone(() -> myBuilder.select(library));
     }
 
-    private boolean processSelection(final Processor<Library> processor) {
+    private boolean processSelection(Predicate<Library> processor) {
         for (Object element : myBuilder.getSelectedElements()) {
-            if (element instanceof Library) {
-                if (!processor.process((Library)element)) {
-                    return false;
-                }
+            if (element instanceof Library library && !processor.test(library)) {
+                return false;
             }
         }
         return true;
     }
 
-    protected boolean acceptsElement(final Object element) {
+    protected boolean acceptsElement(Object element) {
         return true;
     }
 
@@ -169,12 +164,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
         UIUtil.setLineStyleAngled(myTree);
 
         myTree.setRootVisible(false);
-        myTree.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(final TreeSelectionEvent e) {
-                updateOKAction();
-            }
-        });
+        myTree.addTreeSelectionListener(e -> updateOKAction());
         new DoubleClickListener() {
             @Override
             protected boolean onDoubleClick(MouseEvent e) {
@@ -188,7 +178,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
 
         myTree.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
         myTree.getActionMap().put("ENTER", getOKAction());
-        final JScrollPane pane = ScrollPaneFactory.createScrollPane(myTree);
+        JScrollPane pane = ScrollPaneFactory.createScrollPane(myTree);
         pane.setPreferredSize(new Dimension(300, 80));
         return pane;
     }
@@ -202,22 +192,21 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
         return new LibraryDescriptor(getProject(), parentDescriptor, library);
     }
 
-    protected void collectChildren(Object element, final List<Object> result) {
-        if (element instanceof Project) {
-            Collections.addAll(result, ModuleManager.getInstance((Project)element).getModules());
+    @RequiredReadAction
+    protected void collectChildren(Object element, List<Object> result) {
+        if (element instanceof Project project) {
+            Collections.addAll(result, ModuleManager.getInstance(project).getModules());
             result.add(LibraryTablesRegistrar.getInstance().getLibraryTable((Project)element));
         }
-        else if (element instanceof LibraryTable) {
-            Collections.addAll(result, ((LibraryTable)element).getLibraries());
+        else if (element instanceof LibraryTable libraryTable) {
+            Collections.addAll(result, libraryTable.getLibraries());
         }
-        else if (element instanceof Module) {
-            for (OrderEntry entry : ModuleRootManager.getInstance((Module)element).getOrderEntries()) {
-                if (entry instanceof LibraryOrderEntry) {
-                    final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)entry;
-                    if (LibraryTableImplUtil.MODULE_LEVEL.equals(libraryOrderEntry.getLibraryLevel())) {
-                        final Library library = libraryOrderEntry.getLibrary();
-                        result.add(library);
-                    }
+        else if (element instanceof Module module) {
+            for (OrderEntry entry : ModuleRootManager.getInstance(module).getOrderEntries()) {
+                if (entry instanceof LibraryOrderEntry libraryOrderEntry
+                    && LibraryEx.MODULE_LEVEL.equals(libraryOrderEntry.getLibraryLevel())) {
+                    Library library = libraryOrderEntry.getLibrary();
+                    result.add(library);
                 }
             }
         }
@@ -266,13 +255,13 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     }
 
     private static class RootDescriptor extends LibrariesTreeNodeBase<Object> {
-        protected RootDescriptor(final Project project) {
+        protected RootDescriptor(Project project) {
             super(project, null, ApplicationManager.getApplication());
         }
     }
 
     private static class ProjectDescriptor extends LibrariesTreeNodeBase<Project> {
-        protected ProjectDescriptor(final Project project, final Project element) {
+        protected ProjectDescriptor(Project project, Project element) {
             super(project, null, element);
             getTemplatePresentation().setIcon(Application.get().getIcon());
             getTemplatePresentation().addText(notEmpty(getElement().getName()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
@@ -280,10 +269,10 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     }
 
     private static class ModuleDescriptor extends LibrariesTreeNodeBase<Module> {
-        protected ModuleDescriptor(final Project project, final NodeDescriptor parentDescriptor, final Module element) {
+        protected ModuleDescriptor(Project project, NodeDescriptor parentDescriptor, Module element) {
             super(project, parentDescriptor, element);
-            final PresentationData templatePresentation = getTemplatePresentation();
-            templatePresentation.setIcon(AllIcons.Nodes.Module);
+            PresentationData templatePresentation = getTemplatePresentation();
+            templatePresentation.setIcon(PlatformIconGroup.nodesModule());
             templatePresentation.addText(notEmpty(element.getName()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
 
@@ -294,7 +283,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     }
 
     private static class LibraryDescriptor extends LibrariesTreeNodeBase<Library> {
-        protected LibraryDescriptor(final Project project, final NodeDescriptor parentDescriptor, final Library element) {
+        protected LibraryDescriptor(Project project, NodeDescriptor parentDescriptor, Library element) {
             super(project, parentDescriptor, element);
             Consumer<ColoredTextContainer> renderForLibrary =
                 OrderEntryAppearanceService.getInstance().getRenderForLibrary(project, element, false);
@@ -302,7 +291,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
             ColoredStringBuilder builder = new ColoredStringBuilder();
             renderForLibrary.accept(builder);
 
-            final PresentationData templatePresentation = getTemplatePresentation();
+            PresentationData templatePresentation = getTemplatePresentation();
             templatePresentation.setIcon(builder.getIcon());
             templatePresentation.addText(notEmpty(builder.toString()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
@@ -313,17 +302,17 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
         private boolean myAutoExpand;
 
         protected LibraryTableDescriptor(
-            final Project project,
-            final NodeDescriptor parentDescriptor,
-            final LibraryTable table,
-            final int weight,
+            Project project,
+            NodeDescriptor parentDescriptor,
+            LibraryTable table,
+            int weight,
             boolean autoExpand
         ) {
             super(project, parentDescriptor, table);
             myWeight = weight;
             myAutoExpand = autoExpand;
-            getTemplatePresentation().setIcon(AllIcons.Nodes.PpLib);
-            final String nodeText = table.getPresentation().getDisplayName(true);
+            getTemplatePresentation().setIcon(PlatformIconGroup.nodesPplib());
+            String nodeText = table.getPresentation().getDisplayName(true);
             getTemplatePresentation().addText(notEmpty(nodeText), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
 
@@ -338,8 +327,9 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
         }
     }
 
+    @RequiredReadAction
     public boolean isEmpty() {
-        List<Object> children = new ArrayList<Object>();
+        List<Object> children = new ArrayList<>();
         collectChildren(myBuilder.getTreeStructure().getRootElement(), children);
         return children.isEmpty();
     }
@@ -351,16 +341,19 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
             myProject = project;
         }
 
+        @Nonnull
         @Override
         public Object getRootElement() {
             return ApplicationManager.getApplication();
         }
 
+        @Nonnull
         @Override
-        public Object[] getChildElements(Object element) {
-            final List<Object> result = new ArrayList<Object>();
+        @RequiredReadAction
+        public Object[] getChildElements(@Nonnull Object element) {
+            List<Object> result = new ArrayList<>();
             collectChildren(element, result);
-            final Iterator<Object> it = result.iterator();
+            Iterator<Object> it = result.iterator();
             while (it.hasNext()) {
                 if (!acceptsElement(it.next())) {
                     it.remove();
@@ -373,48 +366,34 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
         }
 
         @Override
-        public Object getParentElement(Object element) {
-            if (element instanceof Application) {
-                return null;
-            }
-            if (element instanceof Project) {
-                return ApplicationManager.getApplication();
-            }
-            if (element instanceof Module) {
-                return ((Module)element).getProject();
-            }
-            if (element instanceof LibraryTable) {
-                return myParentsMap.get(element);
-            }
-            if (element instanceof Library) {
-                return myParentsMap.get(element);
-            }
-            throw new AssertionError();
+        public Object getParentElement(@Nonnull Object element) {
+            return switch (element) {
+                case Application a -> null;
+                case Project p -> ApplicationManager.getApplication();
+                case Module m -> m.getProject();
+                case LibraryTable lt -> myParentsMap.get(lt);
+                case Library l -> myParentsMap.get(l);
+                default -> throw new AssertionError();
+            };
         }
 
         @Nonnull
         @Override
-        public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
-            if (element instanceof Application) {
-                return new RootDescriptor(myProject);
-            }
-            if (element instanceof Project) {
-                return new ProjectDescriptor(myProject, (Project)element);
-            }
-            if (element instanceof Module) {
-                return new ModuleDescriptor(myProject, parentDescriptor, (Module)element);
-            }
-            if (element instanceof LibraryTable) {
-                final LibraryTable libraryTable = (LibraryTable)element;
-                return new LibraryTableDescriptor(myProject, parentDescriptor, libraryTable,
-                    getLibraryTableWeight(libraryTable),
-                    isAutoExpandLibraryTable(libraryTable)
+        public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+            return switch (element) {
+                case Application a -> new RootDescriptor(myProject);
+                case Project p -> new ProjectDescriptor(myProject, p);
+                case Module m -> new ModuleDescriptor(myProject, parentDescriptor, m);
+                case LibraryTable lt -> new LibraryTableDescriptor(
+                    myProject,
+                    parentDescriptor,
+                    lt,
+                    getLibraryTableWeight(lt),
+                    isAutoExpandLibraryTable(lt)
                 );
-            }
-            if (element instanceof Library) {
-                return createLibraryDescriptor(parentDescriptor, (Library)element);
-            }
-            throw new AssertionError();
+                case Library l -> createLibraryDescriptor(parentDescriptor, l);
+                default -> throw new AssertionError();
+            };
         }
 
         @Override

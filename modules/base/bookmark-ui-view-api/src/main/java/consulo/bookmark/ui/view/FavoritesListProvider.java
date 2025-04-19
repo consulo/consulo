@@ -17,7 +17,6 @@ package consulo.bookmark.ui.view;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.CommonActionsPanel;
@@ -34,8 +33,6 @@ import java.util.Set;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface FavoritesListProvider extends Comparator<FavoritesTreeNodeDescriptor>, Comparable<FavoritesListProvider> {
-    ExtensionPointName<FavoritesListProvider> EP_NAME = ExtensionPointName.create(FavoritesListProvider.class);
-
     String getListName(Project project);
 
     @Nullable

@@ -24,8 +24,6 @@ import java.util.Map;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CustomPortServerManager {
-    public static final ExtensionPointName<CustomPortServerManager> EP_NAME = ExtensionPointName.create(CustomPortServerManager.class);
-
     public abstract void cannotBind(Exception e, int port);
 
     public interface CustomPortService {

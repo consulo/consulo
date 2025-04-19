@@ -31,6 +31,7 @@ import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.json.JsonBaseRequestHandler;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.builtinWebServer.json.JsonPostRequestHandler;
+import consulo.component.extension.ExtensionPoint;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
 import consulo.desktop.application.jna.windows.WindowsAutoRestartManager;
@@ -274,29 +275,17 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     @SuppressWarnings("unchecked")
     private void runJsonRequest(String jsonFile) {
-        CommandLineJsonValue jsonValue = null;
-
-        try (Reader reader = Files.newBufferedReader(Paths.get(jsonFile))) {
-            jsonValue = new Gson().fromJson(reader, CommandLineJsonValue.class);
-        }
-        catch (Exception ignored) {
-        }
+        CommandLineJsonValue jsonValue = readJsonFile(jsonFile);
 
         if (jsonValue == null) {
             return;
         }
 
-        HttpRequestHandler targetRequestHandler = null;
-        for (HttpRequestHandler requestHandler : HttpRequestHandler.EP_NAME.getExtensionList()) {
-            if (requestHandler instanceof JsonBaseRequestHandler jsonBaseRequestHandler) {
-                String apiUrl = jsonBaseRequestHandler.getApiUrl();
-
-                if (apiUrl.equals(jsonValue.url)) {
-                    targetRequestHandler = requestHandler;
-                    break;
-                }
-            }
-        }
+        ExtensionPoint<HttpRequestHandler> extensionPoint = Application.get().getExtensionPoint(HttpRequestHandler.class);
+        HttpRequestHandler targetRequestHandler = extensionPoint.findFirstSafe(
+            requestHandler -> requestHandler instanceof JsonBaseRequestHandler jsonBaseRequestHandler
+                && jsonValue.url.equals(jsonBaseRequestHandler.getApiUrl())
+        );
 
         if (targetRequestHandler == null) {
             return;
@@ -313,6 +302,15 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         }
         else if (targetRequestHandler instanceof JsonGetRequestHandler jsonGetRequestHandler) {
             jsonGetRequestHandler.handle();
+        }
+    }
+
+    private CommandLineJsonValue readJsonFile(String jsonFile) {
+        try (Reader reader = Files.newBufferedReader(Paths.get(jsonFile))) {
+            return new Gson().fromJson(reader, CommandLineJsonValue.class);
+        }
+        catch (Exception ignored) {
+            return null;
         }
     }
 

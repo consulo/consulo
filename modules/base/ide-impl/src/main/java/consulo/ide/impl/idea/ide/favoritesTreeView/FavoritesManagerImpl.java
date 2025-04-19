@@ -113,8 +113,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
                 @Override
                 public boolean canClose(String inputString) {
                     inputString = inputString.trim();
-                    if (myName2FavoritesRoots.keySet().contains(inputString) || getProviders().keySet()
-                        .contains(inputString)) {
+                    if (myName2FavoritesRoots.keySet().contains(inputString) || getProviders().keySet().contains(inputString)) {
                         Messages.showErrorDialog(
                             project,
                             IdeLocalize.errorFavoritesListAlreadyExists(inputString.trim()).get(),
@@ -183,9 +182,8 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         }
 
         myProviders = new HashMap<>();
-        for (FavoritesListProvider provider : FavoritesListProvider.EP_NAME.getExtensionList(myProject)) {
-            myProviders.put(provider.getListName(myProject), provider);
-        }
+        myProject.getExtensionPoint(FavoritesListProvider.class)
+            .forEach(provider -> myProviders.put(provider.getListName(myProject), provider));
         MyRootsChangeAdapter myPsiTreeChangeAdapter = new MyRootsChangeAdapter();
 
         PsiManager.getInstance(myProject).addPsiTreeChangeListener(myPsiTreeChangeAdapter, myProject);

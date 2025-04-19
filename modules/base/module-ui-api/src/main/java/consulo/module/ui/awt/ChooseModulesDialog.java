@@ -13,36 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Anna.Kozlova
- * Date: 14-Aug-2006
- * Time: 12:13:18
- */
 package consulo.module.ui.awt;
 
-import consulo.application.AllIcons;
-import consulo.ui.ex.awt.ChooseElementsDialog;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
 
+/**
+ * @author Anna.Kozlova
+ * @since 2006-08-14
+ */
 public class ChooseModulesDialog extends ChooseElementsDialog<Module> {
-    public ChooseModulesDialog(Component parent, final List<Module> items, final String title) {
+    public ChooseModulesDialog(Component parent, List<Module> items, @Nonnull LocalizeValue title) {
+        super(parent, items, title, LocalizeValue.empty(), true);
+    }
+
+    public ChooseModulesDialog(Component parent, List<Module> items, @Nonnull LocalizeValue title, @Nonnull LocalizeValue description) {
+        super(parent, items, title, description, true);
+    }
+
+    public ChooseModulesDialog(
+        Project project,
+        List<? extends Module> items,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue description
+    ) {
+        super(project, items, title, description, true);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ChooseModulesDialog(Component parent, List<Module> items, String title) {
         super(parent, items, title, null, true);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public ChooseModulesDialog(Component parent, List<Module> items, String title, @Nullable String description) {
         super(parent, items, title, description, true);
     }
 
-    public ChooseModulesDialog(final Project project, final List<? extends Module> items, final String title, final String description) {
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ChooseModulesDialog(Project project, List<? extends Module> items, String title, String description) {
         super(project, items, title, description, true);
     }
 
@@ -51,12 +73,12 @@ public class ChooseModulesDialog extends ChooseElementsDialog<Module> {
     }
 
     @Override
-    protected Image getItemIcon(final Module item) {
-        return AllIcons.Nodes.Module;
+    protected Image getItemIcon(Module item) {
+        return PlatformIconGroup.nodesModule();
     }
 
     @Override
-    protected String getItemText(final Module item) {
+    protected String getItemText(Module item) {
         return item.getName();
     }
 }

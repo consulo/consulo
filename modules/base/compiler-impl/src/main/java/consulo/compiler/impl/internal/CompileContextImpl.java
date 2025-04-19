@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author: Eugene Zhuravlev
- * Date: Jan 21, 2003
- * Time: 4:19:03 PM
- */
 package consulo.compiler.impl.internal;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.compiler.*;
@@ -59,8 +54,13 @@ import java.io.File;
 import java.util.*;
 import java.util.function.Supplier;
 
+/**
+ * @author Eugene Zhuravlev
+ * @since 2003-01-21
+ */
 public class CompileContextImpl extends UserDataHolderBase implements CompileContextEx {
     private static final Logger LOG = Logger.getInstance(CompileContextImpl.class);
+    @Nonnull
     private final Project myProject;
     private final CompilerTask myTask;
     private final Map<CompilerMessageCategory, Collection<CompilerMessage>> myMessages = new EnumMap<>(CompilerMessageCategory.class);
@@ -83,8 +83,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     private final UUID mySessionId = UUID.randomUUID();
 
     public CompileContextImpl(
-        final Project project,
-        final CompilerTask compilerSession,
+        @Nonnull Project project,
+        CompilerTask compilerSession,
         CompileScope compileScope,
         CompositeDependencyCache dependencyCache,
         boolean isMake,
@@ -104,22 +104,22 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     @Override
     public void recalculateOutputDirs() {
-        final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
+        Module[] allModules = ModuleManager.getInstance(myProject).getModules();
 
-        final Set<VirtualFile> allDirs = new OrderedSet<>();
-        final Set<VirtualFile> testOutputDirs = new HashSet<>();
-        final Set<VirtualFile> productionOutputDirs = new HashSet<>();
+        Set<VirtualFile> allDirs = new OrderedSet<>();
+        Set<VirtualFile> testOutputDirs = new HashSet<>();
+        Set<VirtualFile> productionOutputDirs = new HashSet<>();
 
         for (Module module : allModules) {
             ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
-            final VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
+            VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
             if (output != null && output.isValid()) {
                 allDirs.add(output);
                 productionOutputDirs.add(output);
             }
 
-            final VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
+            VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
             if (testsOutput != null && testsOutput.isValid()) {
                 allDirs.add(testsOutput);
                 testOutputDirs.add(testsOutput);
@@ -134,7 +134,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     @Override
     public void markGenerated(Collection<VirtualFile> files) {
-        for (final VirtualFile file : files) {
+        for (VirtualFile file : files) {
             myGeneratedSources.add(FileBasedIndex.getFileId(file));
         }
     }
@@ -153,7 +153,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
             return true;
         }
 
-        final Module module = getModuleByFile(file);
+        Module module = getModuleByFile(file);
         return module != null && module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class).computeSafeIfAny(provider -> {
             List<ModuleAdditionalOutputDirectory> outputDirectories = provider.getOutputDirectories();
             for (ModuleAdditionalOutputDirectory outputDirectory : outputDirectories) {
@@ -171,7 +171,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     synchronized (myOpenZipFiles) {
       JBZipFile zip = myOpenZipFiles.get(outputDir);
       if (zip == null) {
-        final File zipFile = CompilerPathsEx.getZippedOutputPath(myProject, outputDir);
+        File zipFile = CompilerPathsEx.getZippedOutputPath(myProject, outputDir);
         try {
           try {
             zip = new JBZipFile(zipFile);
@@ -240,27 +240,24 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Nullable
-    private VirtualFile findPresentableFileForMessage(@Nullable final String url) {
-        final VirtualFile file = findFileByUrl(url);
+    private VirtualFile findPresentableFileForMessage(@Nullable String url) {
+        VirtualFile file = findFileByUrl(url);
         if (file == null) {
             return null;
         }
-        return ApplicationManager.getApplication().runReadAction(new Supplier<VirtualFile>() {
-            @Override
-            public VirtualFile get() {
-                if (file.isValid()) {
-                    for (final Map.Entry<VirtualFile, Pair<SourceGeneratingCompiler, Module>> entry : myOutputRootToSourceGeneratorMap.entrySet()) {
-                        final VirtualFile root = entry.getKey();
-                        if (VirtualFileUtil.isAncestor(root, file, false)) {
-                            final Pair<SourceGeneratingCompiler, Module> pair = entry.getValue();
-                            final VirtualFile presentableFile =
-                                pair.getFirst().getPresentableFile(CompileContextImpl.this, pair.getSecond(), root, file);
-                            return presentableFile != null ? presentableFile : file;
-                        }
+        return Application.get().runReadAction((Supplier<VirtualFile>)() -> {
+            if (file.isValid()) {
+                for (Map.Entry<VirtualFile, Pair<SourceGeneratingCompiler, Module>> entry : myOutputRootToSourceGeneratorMap.entrySet()) {
+                    VirtualFile root = entry.getKey();
+                    if (VirtualFileUtil.isAncestor(root, file, false)) {
+                        Pair<SourceGeneratingCompiler, Module> pair = entry.getValue();
+                        VirtualFile presentableFile =
+                            pair.getFirst().getPresentableFile(CompileContextImpl.this, pair.getSecond(), root, file);
+                        return presentableFile != null ? presentableFile : file;
                     }
                 }
-                return file;
             }
+            return file;
         });
     }
 
@@ -296,16 +293,16 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     private void addMessageToProblemsView(CompilerMessage message) {
-        final VirtualFile file = message.getVirtualFile();
+        VirtualFile file = message.getVirtualFile();
         Navigatable navigatable = message.getNavigatable();
         if (navigatable == null && file != null) {
             OpenFileDescriptorFactory factory = OpenFileDescriptorFactory.getInstance(myProject);
             navigatable = factory.newBuilder(file).build();
         }
-        final CompilerMessageCategory category = message.getCategory();
-        final int type = translateCategory(category);
-        final String[] text = ProblemsView.convertMessage(message.getMessage());
-        final String groupName = file != null ? file.getPresentableUrl() : category.getPresentableText();
+        CompilerMessageCategory category = message.getCategory();
+        int type = translateCategory(category);
+        String[] text = ProblemsView.convertMessage(message.getMessage());
+        String groupName = file != null ? file.getPresentableUrl() : category.getPresentableText();
         ProblemsView.getInstance(myProject)
             .addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
     }
@@ -368,13 +365,13 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     @Override
     public ProgressIndicator getProgressIndicator() {
         //if (myProgressIndicatorProxy != null) {
-        //  return myProgressIndicatorProxy;
+        //    return myProgressIndicatorProxy;
         //}
         return myTask.getIndicator();
     }
 
     @Override
-    public void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, final boolean isTestSource, @Nullable Compiler compiler) {
+    public void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, @Nullable Compiler compiler) {
         try {
             myRootToModuleMap.put(root, module);
             Set<VirtualFile> set = myModuleToRootsMap.get(module);
@@ -386,8 +383,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
             if (isTestSource) {
                 myGeneratedTestRoots.add(root);
             }
-            if (compiler instanceof SourceGeneratingCompiler) {
-                myOutputRootToSourceGeneratorMap.put(root, new Pair<>((SourceGeneratingCompiler)compiler, module));
+            if (compiler instanceof SourceGeneratingCompiler sourceGeneratingCompiler) {
+                myOutputRootToSourceGeneratorMap.put(root, Pair.create(sourceGeneratingCompiler, module));
             }
         }
         finally {
@@ -403,14 +400,14 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     @Override
     public Module getModuleByFile(VirtualFile file) {
-        final Module module = myProjectFileIndex.getModuleForFile(file);
+        Module module = myProjectFileIndex.getModuleForFile(file);
         if (module != null) {
             LOG.assertTrue(!module.isDisposed());
             return module;
         }
-        for (final VirtualFile root : myRootToModuleMap.keySet()) {
+        for (VirtualFile root : myRootToModuleMap.keySet()) {
             if (VirtualFileUtil.isAncestor(root, file, false)) {
-                final Module mod = myRootToModuleMap.get(root);
+                Module mod = myRootToModuleMap.get(root);
                 if (mod != null) {
                     LOG.assertTrue(!mod.isDisposed());
                 }
@@ -443,10 +440,10 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
             return moduleRoots;
         }
 
-        final VirtualFile[] allRoots = new VirtualFile[additionalRoots.size() + moduleRoots.length];
+        VirtualFile[] allRoots = new VirtualFile[additionalRoots.size() + moduleRoots.length];
         System.arraycopy(moduleRoots, 0, allRoots, 0, moduleRoots.length);
         int index = moduleRoots.length;
-        for (final VirtualFile additionalRoot : additionalRoots) {
+        for (VirtualFile additionalRoot : additionalRoots) {
             allRoots[index++] = additionalRoot;
         }
         myModuleToRootsCache.put(module, allRoots);
@@ -510,7 +507,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public void addScope(final CompileScope additionalScope) {
+    public void addScope(CompileScope additionalScope) {
         myCompileScope = new CompositeScope(myCompileScope, additionalScope);
     }
 
@@ -519,6 +516,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         if (TestSourcesFilter.isTestSources(fileOrDir, myProject) || myProjectFileIndex.isInTestResource(fileOrDir)) {
             return true;
         }
+        //noinspection RedundantIfStatement
         if (isUnderRoots(myGeneratedTestRoots, fileOrDir)) {
             return true;
         }
@@ -530,6 +528,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         if (myProjectFileIndex.isInSourceContent(fileOrDir) || myProjectFileIndex.isInResource(fileOrDir)) {
             return true;
         }
+        //noinspection RedundantIfStatement
         if (isUnderRoots(myRootToModuleMap.keySet(), fileOrDir)) {
             return true;
         }

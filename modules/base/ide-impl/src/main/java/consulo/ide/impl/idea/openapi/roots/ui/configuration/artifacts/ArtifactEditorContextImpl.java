@@ -28,6 +28,7 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.ide.impl.idea.util.ui.classpath.ChooseLibrariesFromTablesDialog;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
@@ -35,7 +36,6 @@ import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.module.content.layer.orderEntry.ModuleLibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
 import consulo.module.ui.awt.ChooseModulesDialog;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -102,40 +102,44 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
     @Override
     @RequiredUIAccess
     public void selectArtifact(@Nonnull Artifact artifact) {
-        ShowSettingsUtil.getInstance().showProjectStructureDialog(myParent.getProject(), projectStructureSelector -> {
-            projectStructureSelector.select(artifact, true);
-        });
+        ShowSettingsUtil.getInstance().showProjectStructureDialog(
+            myParent.getProject(),
+            projectStructureSelector -> projectStructureSelector.select(artifact, true)
+        );
     }
 
     @Override
     @RequiredUIAccess
     public void selectModule(@Nonnull Module module) {
-        ShowSettingsUtil.getInstance().showProjectStructureDialog(myParent.getProject(), projectStructureSelector -> {
-            projectStructureSelector.select(module.getName(), null, true);
-        });
+        ShowSettingsUtil.getInstance().showProjectStructureDialog(
+            myParent.getProject(),
+            projectStructureSelector -> projectStructureSelector.select(module.getName(), null, true)
+        );
     }
 
     @Override
     @RequiredUIAccess
     public void selectLibrary(@Nonnull Library library) {
-        final LibraryTable table = library.getTable();
+        LibraryTable table = library.getTable();
         if (table != null) {
-            ShowSettingsUtil.getInstance().showProjectStructureDialog(myParent.getProject(), projectStructureSelector -> {
-                projectStructureSelector.selectProjectOrGlobalLibrary(library, true);
-            });
+            ShowSettingsUtil.getInstance().showProjectStructureDialog(
+                myParent.getProject(),
+                projectStructureSelector -> projectStructureSelector.selectProjectOrGlobalLibrary(library, true)
+            );
         }
         else {
-            final Module module = (Module)((LibraryImpl)library).getModule();
+            Module module = (Module)((LibraryImpl)library).getModule();
             if (module != null) {
-                final ModuleRootModel rootModel = myParent.getModulesProvider().getRootModel(module);
-                final String libraryName = library.getName();
+                ModuleRootModel rootModel = myParent.getModulesProvider().getRootModel(module);
+                String libraryName = library.getName();
                 for (OrderEntry entry : rootModel.getOrderEntries()) {
                     if (entry instanceof ModuleLibraryOrderEntry libraryEntry) {
                         if (libraryName != null && libraryName.equals(libraryEntry.getLibraryName())
                             || libraryName == null && library.equals(libraryEntry.getLibrary())) {
-                            ShowSettingsUtil.getInstance().showProjectStructureDialog(myParent.getProject(), projectStructureSelector -> {
-                                projectStructureSelector.selectOrderEntry(module, libraryEntry);
-                            });
+                            ShowSettingsUtil.getInstance().showProjectStructureDialog(
+                                myParent.getProject(),
+                                projectStructureSelector -> projectStructureSelector.selectOrderEntry(module, libraryEntry)
+                            );
                             return;
                         }
                     }
@@ -145,8 +149,9 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
     }
 
     @Override
-    public List<Artifact> chooseArtifacts(final List<? extends Artifact> artifacts, final String title) {
-        ChooseArtifactsDialog dialog = new ChooseArtifactsDialog(getProject(), artifacts, title, null);
+    @RequiredUIAccess
+    public List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, @Nonnull LocalizeValue title) {
+        ChooseArtifactsDialog dialog = new ChooseArtifactsDialog(getProject(), artifacts, title, LocalizeValue.empty());
         dialog.show();
         return dialog.isOK() ? dialog.getChosenElements() : Collections.<Artifact>emptyList();
     }
@@ -181,13 +186,15 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
     }
 
     @Override
-    public List<Module> chooseModules(final List<Module> modules, final String title) {
-        return new ChooseModulesDialog(getProject(), modules, title, null).showAndGetResult();
+    @RequiredUIAccess
+    public List<Module> chooseModules(List<Module> modules, @Nonnull LocalizeValue title) {
+        return new ChooseModulesDialog(getProject(), modules, title, LocalizeValue.empty()).showAndGetResult();
     }
 
     @Override
-    public List<Library> chooseLibraries(final String title) {
-        final ChooseLibrariesFromTablesDialog dialog = ChooseLibrariesFromTablesDialog.createDialog(title, getProject());
+    @RequiredUIAccess
+    public List<Library> chooseLibraries(@Nonnull LocalizeValue title) {
+        ChooseLibrariesFromTablesDialog dialog = ChooseLibrariesFromTablesDialog.createDialog(title, getProject());
         dialog.show();
         return dialog.isOK() ? dialog.getSelectedLibraries() : Collections.<Library>emptyList();
     }

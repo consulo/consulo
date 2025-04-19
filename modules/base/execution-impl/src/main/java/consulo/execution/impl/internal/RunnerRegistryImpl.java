@@ -18,15 +18,15 @@ package consulo.execution.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.component.extension.ExtensionPoint;
 import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ProgramRunner;
-import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.Objects;
 
 @Singleton
 @ServiceImpl
@@ -39,33 +39,21 @@ public class RunnerRegistryImpl extends RunnerRegistry {
     }
 
     @Override
-    public boolean hasRunner(@Nonnull final String executorId, @Nonnull final RunProfile settings) {
+    public boolean hasRunner(@Nonnull String executorId, @Nonnull RunProfile settings) {
         return getRunner(executorId, settings) != null;
     }
 
     @Override
-    public ProgramRunner getRunner(final String executorId, final RunProfile settings) {
-        ExtensionPoint<ProgramRunner> point = myApplication.getExtensionPoint(ProgramRunner.class);
-
-        return point.computeSafeIfAny(runner -> {
-            if (runner.canRun(executorId, settings)) {
-                return runner;
-            }
-
-            return null;
-        });
+    public ProgramRunner getRunner(String executorId, RunProfile settings) {
+        return myApplication.getExtensionPoint(ProgramRunner.class)
+            .findFirstSafe(runner -> runner.canRun(executorId, settings));
     }
 
     @Override
     @Nullable
     public ProgramRunner findRunnerById(String id) {
-        ExtensionPoint<ProgramRunner> point = myApplication.getExtensionPoint(ProgramRunner.class);
-        return point.computeSafeIfAny(runner -> {
-            if (Comparing.equal(id, runner.getRunnerId())) {
-                return runner;
-            }
-            return null;
-        });
+        return myApplication.getExtensionPoint(ProgramRunner.class)
+            .findFirstSafe(runner -> Objects.equals(id, runner.getRunnerId()));
     }
 
     @Override

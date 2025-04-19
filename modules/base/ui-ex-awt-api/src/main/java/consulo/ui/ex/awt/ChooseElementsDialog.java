@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.annotation.DeprecationInfo;
@@ -39,33 +40,75 @@ import java.util.List;
  */
 public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     protected ElementsChooser<T> myChooser;
-    private String myDescription;
+    @Nonnull
+    private LocalizeValue myDescription;
 
-    public ChooseElementsDialog(Project project, Collection<? extends T> items, String title, final String description) {
+    public ChooseElementsDialog(
+        Project project,
+        Collection<? extends T> items,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue description
+    ) {
         this(project, items, title, description, false);
     }
 
-    public ChooseElementsDialog(Project project, Collection<? extends T> items, String title, final String description, boolean sort) {
+    public ChooseElementsDialog(
+        Project project,
+        Collection<? extends T> items,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue description,
+        boolean sort
+    ) {
         super(project, true);
         myDescription = description;
         initializeDialog(items, title, sort);
     }
 
-    public ChooseElementsDialog(Component parent, Collection<T> items, String title) {
-        this(parent, items, title, null, false);
+    public ChooseElementsDialog(Component parent, Collection<T> items, @Nonnull LocalizeValue title) {
+        this(parent, items, title, LocalizeValue.empty(), false);
     }
 
-    public ChooseElementsDialog(Component parent, Collection<T> items, String title, @Nullable String description, final boolean sort) {
+    public ChooseElementsDialog(
+        Component parent,
+        Collection<T> items,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue description,
+        boolean sort
+    ) {
         super(parent, true);
         myDescription = description;
         initializeDialog(items, title, sort);
     }
 
-    private void initializeDialog(final Collection<? extends T> items, final String title, boolean sort) {
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ChooseElementsDialog(Project project, Collection<? extends T> items, String title, String description) {
+        this(project, items, LocalizeValue.ofNullable(title), LocalizeValue.ofNullable(description), false);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ChooseElementsDialog(Project project, Collection<? extends T> items, String title, String description, boolean sort) {
+        this(project, items, LocalizeValue.ofNullable(title), LocalizeValue.ofNullable(description), sort);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ChooseElementsDialog(Component parent, Collection<T> items, String title) {
+        this(parent, items, LocalizeValue.ofNullable(title), LocalizeValue.empty(), false);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ChooseElementsDialog(Component parent, Collection<T> items, String title, @Nullable String description, boolean sort) {
+        this(parent, items, LocalizeValue.ofNullable(title), LocalizeValue.ofNullable(description), sort);
+    }
+
+    private void initializeDialog(Collection<? extends T> items, @Nonnull LocalizeValue title, boolean sort) {
         setTitle(title);
-        myChooser = new ElementsChooser<T>(false) {
+        myChooser = new ElementsChooser<>(false) {
             @Override
-            protected String getItemText(@Nonnull final T item) {
+            protected String getItemText(@Nonnull T item) {
                 return ChooseElementsDialog.this.getItemText(item);
             }
         };
@@ -102,6 +145,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
 
     @Deprecated
     @DeprecationInfo("See #showAsync2()")
+    @RequiredUIAccess
     public List<T> showAndGetResult() {
         show();
         return getChosenElements();
@@ -122,29 +166,30 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myChooser.getComponent();
     }
 
     @Override
     protected JComponent createCenterPanel() {
-        final JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout());
         panel.add(ScrollPaneFactory.createScrollPane(myChooser.getComponent()), BorderLayout.CENTER);
-        if (myDescription != null) {
-            panel.add(new JLabel(myDescription), BorderLayout.NORTH);
+        if (myDescription != LocalizeValue.empty()) {
+            panel.add(new JLabel(myDescription.get()), BorderLayout.NORTH);
         }
         return panel;
     }
 
-    protected void setElements(final Collection<? extends T> elements, final Collection<? extends T> elementsToSelect) {
+    protected void setElements(Collection<? extends T> elements, Collection<? extends T> elementsToSelect) {
         myChooser.clear();
-        for (final T item : elements) {
+        for (T item : elements) {
             myChooser.addElement(item, false, createElementProperties(item));
         }
         myChooser.selectElements(elementsToSelect);
     }
 
-    private ElementsChooser.ElementProperties createElementProperties(final T item) {
+    private ElementsChooser.ElementProperties createElementProperties(T item) {
         return new ElementsChooser.ElementProperties() {
             @Override
             public Image getIcon() {

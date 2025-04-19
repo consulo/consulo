@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.content.library.ProjectLibraryTable;
 import jakarta.annotation.Nonnull;
@@ -36,14 +37,14 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
     @Nullable
     private final Project myProject;
 
-    protected ChooseLibrariesFromTablesDialog(@Nonnull String title, @Nonnull Project project) {
+    protected ChooseLibrariesFromTablesDialog(@Nonnull LocalizeValue title, @Nonnull Project project) {
         super(project, title);
         myProject = project;
     }
 
     protected ChooseLibrariesFromTablesDialog(
         @Nonnull JComponent parentComponent,
-        @Nonnull String title,
+        @Nonnull LocalizeValue title,
         @Nullable Project project
     ) {
         super(parentComponent, title);
@@ -51,10 +52,10 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
     }
 
     public static ChooseLibrariesFromTablesDialog createDialog(
-        @Nonnull String title,
+        @Nonnull LocalizeValue title,
         @Nonnull Project project
     ) {
-        final ChooseLibrariesFromTablesDialog dialog = new ChooseLibrariesFromTablesDialog(title, project);
+        ChooseLibrariesFromTablesDialog dialog = new ChooseLibrariesFromTablesDialog(title, project);
         dialog.init();
         return dialog;
     }
@@ -82,13 +83,13 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
                 }
             }
         }
-        else if (element instanceof LibraryTable) {
-            Collections.addAll(result, getLibraries((LibraryTable)element));
+        else if (element instanceof LibraryTable libraryTable) {
+            Collections.addAll(result, getLibraries(libraryTable));
         }
     }
 
-    public static List<LibraryTable> getLibraryTables(final Project project) {
-        final List<LibraryTable> tables = new ArrayList<>();
+    public static List<LibraryTable> getLibraryTables(Project project) {
+        List<LibraryTable> tables = new ArrayList<>();
         if (project != null) {
             tables.add(ProjectLibraryTable.getInstance(project));
         }
@@ -96,7 +97,7 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
     }
 
     private boolean hasLibraries(LibraryTable table) {
-        final Library[] libraries = getLibraries(table);
+        Library[] libraries = getLibraries(table);
         for (Library library : libraries) {
             if (acceptsElement(library)) {
                 return true;

@@ -26,8 +26,10 @@ import consulo.content.library.ui.DetectedLibraryRoot;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.ui.LibraryRootsDetector;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
@@ -49,11 +51,12 @@ public class RootDetectionUtil {
     }
 
     @Nonnull
+    @RequiredUIAccess
     public static List<OrderRoot> detectRoots(
-        @Nonnull final Collection<VirtualFile> rootCandidates,
+        @Nonnull Collection<VirtualFile> rootCandidates,
         @Nullable Component parentComponent,
         @Nullable Project project,
-        @Nonnull final LibraryRootsComponentDescriptor rootsComponentDescriptor
+        @Nonnull LibraryRootsComponentDescriptor rootsComponentDescriptor
     ) {
         return detectRoots(
             rootCandidates,
@@ -65,32 +68,33 @@ public class RootDetectionUtil {
     }
 
     @Nonnull
+    @RequiredUIAccess
     public static List<OrderRoot> detectRoots(
-        @Nonnull final Collection<VirtualFile> rootCandidates,
+        @Nonnull Collection<VirtualFile> rootCandidates,
         @Nullable Component parentComponent,
         @Nullable Project project,
-        @Nonnull final LibraryRootsDetector detector,
+        @Nonnull LibraryRootsDetector detector,
         @Nonnull List<OrderRootType> rootTypesAllowedToBeSelectedByUserIfNothingIsDetected
     ) {
-        final List<OrderRoot> result = new ArrayList<>();
-        final List<SuggestedChildRootInfo> suggestedRoots = new ArrayList<>();
-        new Task.Modal(project, "Scanning for Roots", true) {
+        List<OrderRoot> result = new ArrayList<>();
+        List<SuggestedChildRootInfo> suggestedRoots = new ArrayList<>();
+        new Task.Modal(project, LocalizeValue.localizeTODO("Scanning for Roots"), true) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 try {
                     for (VirtualFile rootCandidate : rootCandidates) {
-                        final Collection<DetectedLibraryRoot> roots = detector.detectRoots(rootCandidate, indicator);
+                        Collection<DetectedLibraryRoot> roots = detector.detectRoots(rootCandidate, indicator);
                         if (!roots.isEmpty() && allRootsHaveOneTypeAndEqualTo(roots, rootCandidate)) {
                             for (DetectedLibraryRoot root : roots) {
-                                final LibraryRootType libraryRootType = root.getTypes().get(0);
+                                LibraryRootType libraryRootType = root.getTypes().get(0);
                                 result.add(new OrderRoot(root.getFile(), libraryRootType.getType(), libraryRootType.isJarDirectory()));
                             }
                         }
                         else {
                             for (DetectedLibraryRoot root : roots) {
-                                final HashMap<LibraryRootType, String> names = new HashMap<>();
+                                HashMap<LibraryRootType, String> names = new HashMap<>();
                                 for (LibraryRootType type : root.getTypes()) {
-                                    final String typeName = detector.getRootTypeName(type);
+                                    String typeName = detector.getRootTypeName(type);
                                     LOG.assertTrue(
                                         typeName != null,
                                         "Unexpected root type " + type.getType().getId() +
@@ -110,7 +114,7 @@ public class RootDetectionUtil {
         }.queue();
 
         if (!suggestedRoots.isEmpty()) {
-            final DetectedRootsChooserDialog dialog = parentComponent != null
+            DetectedRootsChooserDialog dialog = parentComponent != null
                 ? new DetectedRootsChooserDialog(parentComponent, suggestedRoots)
                 : new DetectedRootsChooserDialog(project, suggestedRoots);
             dialog.show();
@@ -118,7 +122,7 @@ public class RootDetectionUtil {
                 return Collections.emptyList();
             }
             for (SuggestedChildRootInfo rootInfo : dialog.getChosenRoots()) {
-                final LibraryRootType selectedRootType = rootInfo.getSelectedRootType();
+                LibraryRootType selectedRootType = rootInfo.getSelectedRootType();
                 result.add(new OrderRoot(
                     rootInfo.getDetectedRoot().getFile(),
                     selectedRootType.getType(),
@@ -131,7 +135,7 @@ public class RootDetectionUtil {
             Map<String, Pair<OrderRootType, Boolean>> types = new HashMap<>();
             for (OrderRootType type : rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
                 for (boolean isJarDirectory : new boolean[]{false, true}) {
-                    final String typeName = detector.getRootTypeName(new LibraryRootType(type, isJarDirectory));
+                    String typeName = detector.getRootTypeName(new LibraryRootType(type, isJarDirectory));
                     if (typeName != null) {
                         types.put(typeName, Pair.create(type, isJarDirectory));
                     }
@@ -141,11 +145,11 @@ public class RootDetectionUtil {
                 return Collections.emptyList();
             }
             List<String> names = new ArrayList<>(types.keySet());
-            String title = "Choose Categories of Selected Files";
-            String description = XmlStringUtil.wrapInHtml(
+            LocalizeValue title = LocalizeValue.localizeTODO("Choose Categories of Selected Files");
+            LocalizeValue description = LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(
                 Application.get().getName() + " cannot determine what kind of files the chosen items contain.<br>" +
                     "Choose the appropriate categories from the list."
-            );
+            ));
             ChooseElementsDialog<String> dialog;
             if (parentComponent != null) {
                 dialog = new ChooseRootTypeElementsDialog(parentComponent, names, title, description);
@@ -154,7 +158,7 @@ public class RootDetectionUtil {
                 dialog = new ChooseRootTypeElementsDialog(project, names, title, description);
             }
             for (String rootType : dialog.showAndGetResult()) {
-                final Pair<OrderRootType, Boolean> pair = types.get(rootType);
+                Pair<OrderRootType, Boolean> pair = types.get(rootType);
                 for (VirtualFile candidate : rootCandidates) {
                     result.add(new OrderRoot(candidate, pair.getFirst(), pair.getSecond()));
                 }
@@ -174,11 +178,21 @@ public class RootDetectionUtil {
     }
 
     private static class ChooseRootTypeElementsDialog extends ChooseElementsDialog<String> {
-        public ChooseRootTypeElementsDialog(Project project, List<String> names, String title, String description) {
+        public ChooseRootTypeElementsDialog(
+            Project project,
+            List<String> names,
+            @Nonnull LocalizeValue title,
+            @Nonnull LocalizeValue description
+        ) {
             super(project, names, title, description, true);
         }
 
-        private ChooseRootTypeElementsDialog(Component parent, List<String> names, String title, String description) {
+        private ChooseRootTypeElementsDialog(
+            Component parent,
+            List<String> names,
+            @Nonnull LocalizeValue title,
+            @Nonnull LocalizeValue description
+        ) {
             super(parent, names, title, description, true);
         }
 

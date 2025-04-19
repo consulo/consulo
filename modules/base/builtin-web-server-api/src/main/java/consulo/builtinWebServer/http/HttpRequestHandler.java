@@ -18,17 +18,13 @@ package consulo.builtinWebServer.http;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.builtinWebServer.http.util.HttpRequestUtil;
-import consulo.component.extension.ExtensionPointName;
 import consulo.http.HTTPMethod;
-
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class HttpRequestHandler {
-    public static final ExtensionPointName<HttpRequestHandler> EP_NAME = ExtensionPointName.create(HttpRequestHandler.class);
-
     public static boolean checkPrefix(String uri, String prefix) {
         if (uri.length() > prefix.length() && uri.charAt(0) == '/' && uri.regionMatches(true, 1, prefix, 0, prefix.length())) {
             if (uri.length() - prefix.length() == 1) {

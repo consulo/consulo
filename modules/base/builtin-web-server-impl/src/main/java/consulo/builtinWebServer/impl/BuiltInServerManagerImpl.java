@@ -195,15 +195,9 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
         if (myApplication.isUnitTestMode()) {
             return;
         }
-
-        for (CustomPortServerManager customPortServerManager : CustomPortServerManager.EP_NAME.getExtensionList()) {
-            try {
-                new SubServer(customPortServerManager, server).bind(customPortServerManager.getPort());
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-            }
-        }
+        Application.get().getExtensionPoint(CustomPortServerManager.class).forEach(customPortServerManager -> {
+            new SubServer(customPortServerManager, server).bind(customPortServerManager.getPort());
+        });
     }
 
     public static boolean isOnBuiltInWebServerByAuthority(@Nonnull String authority) {
