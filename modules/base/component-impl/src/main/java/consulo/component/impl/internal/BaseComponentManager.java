@@ -78,7 +78,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     private volatile ThreeState myDisposeState = ThreeState.NO;
 
-    private NewExtensionAreaImpl myNewExtensionArea;
+    private NewExtensionAreaImpl myExtensionArea;
 
     private final ComponentScope myComponentScope;
 
@@ -109,9 +109,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
         myMessageBus.setLazyListeners(mapByTopic);
 
-        myNewExtensionArea = new NewExtensionAreaImpl(this, myComponentBinding, getComponentScope(), this::checkCanceled);
+        myExtensionArea = new NewExtensionAreaImpl(this, myComponentBinding, getComponentScope(), this::checkCanceled);
 
-        myNewExtensionArea.registerFromInjectingBinding(getComponentScope());
+        myExtensionArea.registerFromInjectingBinding(getComponentScope());
 
         InjectingContainer root = findRootContainer();
 
@@ -358,22 +358,13 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     }
 
     @Nonnull
-    public Collection<? extends ExtensionPoint> getExtensionPoints() {
-        if (myNewExtensionArea == null) {
-            throw throwDisposed();
-        }
-
-        return myNewExtensionArea.getExtensionPoints();
-    }
-
-    @Nonnull
     @Override
     public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
-        if (myNewExtensionArea == null) {
+        if (myExtensionArea == null) {
             throw throwDisposed();
         }
         
-        return myNewExtensionArea.getExtensionPoint(extensionClass);
+        return myExtensionArea.getExtensionPoint(extensionClass);
     }
 
     @TestOnly
@@ -406,7 +397,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
             myMessageBus = null;
         }
 
-        myNewExtensionArea = null;
+        myExtensionArea = null;
         myInjectingContainer.dispose();
         myInjectingContainer = null;
 

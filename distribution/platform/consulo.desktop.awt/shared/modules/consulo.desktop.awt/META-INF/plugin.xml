@@ -83,8 +83,6 @@
         <group id="Internal1" text="IDEA Internal Actions" internal="true">
             <action internal="true" id="DecodeBytesAction" class="consulo.ide.impl.idea.internal.encodings.DecodeBytesAction"/>
             <group id="Internal.Dump" text="Dump" internal="true" popup="true">
-                <action id="DumpExtensions" internal="true" text="Dump Extensions"
-                        class="consulo.ide.impl.idea.internal.DumpExtensionsAction"/>
                 <action id="DumpInspectionDescriptions" internal="true"
                         class="consulo.ide.impl.idea.internal.DumpInspectionDescriptionsAction"/>
                 <action id="DumpIntentionsDescriptions" internal="true" class="consulo.ide.impl.idea.internal.DumpIntentionsAction"/>

@@ -27,6 +27,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.extension.ExtensionWalker;
 import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.component.internal.ExtensionInstanceRef;
+import consulo.component.internal.ExtensionLogger;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.container.plugin.PluginDescriptor;
@@ -44,6 +45,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -301,9 +303,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return List.of(array);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
+    @Nonnull
+    private List<Pair<T, PluginDescriptor>> buildOrGet() {
         CacheValue<T> cacheValue = myCacheValue;
 
         List<Pair<T, PluginDescriptor>> extensionCache = cacheValue.myExtensionCache;
@@ -312,9 +313,81 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
             CacheValue<T> value = set(result);
             extensionCache = value.myExtensionCache;
         }
+        return extensionCache;
+    }
 
-        for (Pair<T, PluginDescriptor> pair : extensionCache) {
-            consumer.accept(pair.getFirst(), pair.getSecond());
+    @Nullable
+    @Override
+    public T findFirstSafe(@Nonnull Predicate<T> predicate) {
+        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < extensionCache.size(); i++) {
+            T t = extensionCache.get(i).getKey();
+            try {
+                if (predicate.test(t)) {
+                    return t;
+                }
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, t);
+            }
+        }
+        return null;
+    }
+
+
+    @Nullable
+    @Override
+    public <R> R computeSafeIfAny(@Nonnull Function<? super T, ? extends R> processor) {
+        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < extensionCache.size(); i++) {
+            T t = extensionCache.get(i).getKey();
+            try {
+                R r = processor.apply(t);
+                if (r != null) {
+                    return r;
+                }
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, t);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void forEachExtensionSafe(@Nonnull Consumer<? super T> consumer) {
+        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < extensionCache.size(); i++) {
+            T t = extensionCache.get(i).getKey();
+            try {
+                consumer.accept(t);
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, t);
+            }
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
+        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < extensionCache.size(); i++) {
+            Pair<T, PluginDescriptor> pair = extensionCache.get(i);
+            try {
+                consumer.accept(pair.getKey(), pair.getSecond());
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, pair.getKey());
+            }
         }
     }
 

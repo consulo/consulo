@@ -17,13 +17,11 @@ package consulo.component.extension;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.component.internal.ExtensionLogger;
 import consulo.component.util.ModificationTracker;
-import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.ControlFlowException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -37,7 +35,7 @@ import java.util.function.Predicate;
 
 /**
  * {@link #getModificationCount()} will be changed if plugins reloaded, and cache was changed.
- * Also when count count changed all cache {@link #getOrBuildCache(ExtensionPointCacheKey, Function)} & {@link #findExtension(Class)} will be dropped
+ * Also when count count changed all cache {@link #getOrBuildCache(ExtensionPointCacheKey)} & {@link #findExtension(Class)} will be dropped
  */
 public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     @Nonnull
@@ -116,32 +114,12 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     }
 
     default boolean anyMatchSafe(@Nonnull Predicate<E> predicate) {
-        for (E extension : getExtensionList()) {
-            try {
-                if (predicate.test(extension)) {
-                    return true;
-                }
-            }
-            catch (Throwable e) {
-                checkException(e, extension);
-            }
-        }
-        return false;
+        return findFirstSafe(predicate) != null;
     }
 
     @Nullable
     default E findFirstSafe(@Nonnull Predicate<E> predicate) {
-        for (E extension : getExtensionList()) {
-            try {
-                if (predicate.test(extension)) {
-                    return extension;
-                }
-            }
-            catch (Throwable e) {
-                checkException(e, extension);
-            }
-        }
-        return null;
+        return computeSafeIfAny(e -> predicate.test(e) ? e : null);
     }
 
     @Nullable
@@ -154,10 +132,15 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
                 }
             }
             catch (Throwable e) {
-                checkException(e, extension);
+                ExtensionLogger.checkException(e, extension);
             }
         }
         return null;
+    }
+
+    @Override
+    default void forEach(Consumer<? super E> action) {
+        forEachExtensionSafe(action);
     }
 
     default void forEachExtensionSafe(@Nonnull Consumer<? super E> consumer) {
@@ -166,7 +149,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
                 consumer.accept(value);
             }
             catch (Throwable e) {
-                checkException(e, value);
+                ExtensionLogger.checkException(e, value);
             }
         });
     }
@@ -174,13 +157,5 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     @Override
     default Iterator<E> iterator() {
         return getExtensionList().iterator();
-    }
-
-    private static void checkException(Throwable e, Object value) {
-        if (e instanceof ControlFlowException) {
-            throw ControlFlowException.rethrow(e);
-        }
-        Logger logger = Logger.getInstance(ExtensionPoint.class);
-        PluginExceptionUtil.logPluginError(logger, e.getMessage(), e, value != null ? value.getClass() : Void.TYPE);
     }
 }
