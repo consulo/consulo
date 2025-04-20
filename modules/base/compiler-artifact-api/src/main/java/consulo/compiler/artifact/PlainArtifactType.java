@@ -16,12 +16,13 @@
 package consulo.compiler.artifact;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
-import consulo.compiler.CompilerBundle;
+import consulo.application.Application;
 import consulo.compiler.artifact.element.ArtifactRootElementImpl;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
@@ -34,17 +35,17 @@ public class PlainArtifactType extends ArtifactType {
     public static final String ID = "plain";
 
     public static PlainArtifactType getInstance() {
-        return EP_NAME.findExtension(PlainArtifactType.class);
+        return Application.get().getExtensionPoint(ArtifactType.class).findExtension(PlainArtifactType.class);
     }
 
     public PlainArtifactType() {
-        super(ID, CompilerBundle.message("artifact.type.plain"));
+        super(ID, CompilerLocalize.artifactTypePlain());
     }
 
     @Nonnull
     @Override
     public Image getIcon() {
-        return AllIcons.Nodes.Artifact;
+        return PlatformIconGroup.nodesArtifact();
     }
 
     @Override
@@ -54,7 +55,7 @@ public class PlainArtifactType extends ArtifactType {
 
     @Override
     @Nonnull
-    public CompositePackagingElement<?> createRootElement(PackagingElementFactory elementFactory, @Nonnull String artifactName) {
+    public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory elementFactory, @Nonnull String artifactName) {
         return new ArtifactRootElementImpl();
     }
 }

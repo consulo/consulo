@@ -16,36 +16,40 @@
 package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ArtifactUtil;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 15:59/18.06.13
+ * @since 2013-06-18
  */
 @ExtensionImpl(id = "zip-artifact", order = "first")
 public class ZipArtifactType extends ArtifactType {
-  public ZipArtifactType() {
-    super("zip", "Zip");
-  }
+    public ZipArtifactType() {
+        super("zip", LocalizeValue.localizeTODO("Zip"));
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.Artifact;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.nodesArtifact();
+    }
 
-  @Override
-  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
-    return "/";
-  }
+    @Override
+    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+        return "/";
+    }
 
-  @Nonnull
-  @Override
-  public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory packagingElementFactory, @Nonnull String artifactName) {
-    return new ZipArchivePackagingElement(ArtifactUtil.suggestArtifactFileName(artifactName) + ".zip");
-  }
+    @Nonnull
+    @Override
+    public CompositePackagingElement<?> createRootElement(
+        @Nonnull PackagingElementFactory packagingElementFactory,
+        @Nonnull String artifactName
+    ) {
+        return new ZipArchivePackagingElement(ArtifactUtil.suggestArtifactFileName(artifactName) + ".zip");
+    }
 }

@@ -118,6 +118,10 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return findFirstSafe(predicate.negate()) == null;
     }
 
+    default boolean noneMatchSafe(@Nonnull Predicate<E> predicate) {
+        return findFirstSafe(predicate) == null;
+    }
+
     @Nullable
     default E findFirstSafe(@Nonnull Predicate<E> predicate) {
         return computeSafeIfAny(e -> predicate.test(e) ? e : null);

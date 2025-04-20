@@ -15,6 +15,7 @@
  */
 package consulo.language.content;
 
+import consulo.application.Application;
 import consulo.content.ContentFolderPropertyProvider;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
@@ -52,15 +53,15 @@ public class ContentFoldersSupportUtil {
         }
 
         IconDescriptor iconDescriptor = new IconDescriptor(typeProvider.getIcon());
-        for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensionList()) {
+        Application.get().getExtensionPoint(ContentFolderPropertyProvider.class).forEach(propertyProvider -> {
             Object value = propertyProvider.getKey().get(params);
             if (value == null) {
-                continue;
+                return;
             }
 
             Image icon = propertyProvider.getIcon(value, typeProvider);
             if (icon == null) {
-                continue;
+                return;
             }
 
             if (propertyProvider.isUpdateFullIcon()) {
@@ -68,7 +69,7 @@ public class ContentFoldersSupportUtil {
             } else {
                 iconDescriptor.addLayerIcon(icon);
             }
-        }
+        });
         return iconDescriptor.toIcon();
     }
 }

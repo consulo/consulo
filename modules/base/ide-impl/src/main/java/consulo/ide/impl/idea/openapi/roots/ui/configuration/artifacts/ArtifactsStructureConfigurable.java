@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.compiler.artifact.*;
 import consulo.compiler.artifact.element.LibraryElementType;
@@ -29,6 +30,7 @@ import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.configurable.internal.FullContentConfigurable;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.BaseStructureConfigurable;
@@ -39,8 +41,8 @@ import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
-import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -218,7 +220,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
         if (table != null) {
             return table.getTableLevel().equals(element.getLevel());
         }
-        return element.getLevel().equals(LibraryTableImplUtil.MODULE_LEVEL);
+        return element.getLevel().equals(LibraryEx.MODULE_LEVEL);
     }
 
     private void onElementDeleted() {
@@ -303,22 +305,16 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
 
     @Override
     protected AbstractAddGroup createAddAction() {
-        return new AbstractAddGroup(ProjectLocalize.addNewHeaderText().get()) {
+        return new AbstractAddGroup(ProjectLocalize.addNewHeaderText()) {
             @Nonnull
             @Override
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
-                List<ArtifactType> types = ArtifactType.EP_NAME.getExtensionList();
-
                 ProjectStructureSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
 
                 ModulesConfigurator modulesModel = showSettingsUtil.getModulesModel(myProject);
 
-                List<AnAction> list = new ArrayList<>(types.size());
-                for (ArtifactType type : types) {
-                    if (type.isAvailableForAdd(modulesModel)) {
-                        list.add(createAddArtifactAction(type));
-                    }
-                }
+                List<AnAction> list = myProject.getApplication().getExtensionPoint(ArtifactType.class)
+                    .collectExtensionsToListSafe(type -> type.isAvailableForAdd(modulesModel) ? createAddArtifactAction(type) : null);
                 return list.isEmpty() ? AnAction.EMPTY_ARRAY : list.toArray(new AnAction[list.size()]);
             }
         };
@@ -328,8 +324,8 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
         List<? extends ArtifactTemplate> templates = type.getNewArtifactTemplates(myPackagingEditorContext);
         ArtifactTemplate emptyTemplate = new ArtifactTemplate() {
             @Override
-            public String getPresentableName() {
-                return "Empty";
+            public LocalizeValue getPresentableName() {
+                return LocalizeValue.localizeTODO("Empty");
             }
 
             @Override
@@ -446,10 +442,10 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
         public AddArtifactAction(
             @Nonnull ArtifactType type,
             @Nonnull ArtifactTemplate artifactTemplate,
-            @Nonnull String actionText,
+            @Nonnull LocalizeValue actionText,
             Image icon
         ) {
-            super(actionText, null, icon);
+            super(actionText, LocalizeValue.empty(), icon);
             myType = type;
             myArtifactTemplate = artifactTemplate;
         }

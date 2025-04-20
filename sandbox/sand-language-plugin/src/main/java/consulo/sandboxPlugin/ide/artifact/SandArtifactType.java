@@ -16,12 +16,14 @@
 package consulo.sandboxPlugin.ide.artifact;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.ArtifactRootElementImpl;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
@@ -37,11 +39,11 @@ public class SandArtifactType extends ArtifactType {
     public static final String ID = "sand";
 
     public static SandArtifactType getInstance() {
-        return EP_NAME.findExtension(SandArtifactType.class);
+        return Application.get().getExtensionPoint(ArtifactType.class).findExtension(SandArtifactType.class);
     }
 
     public SandArtifactType() {
-        super(ID, "Sand");
+        super(ID, LocalizeValue.localizeTODO("Sand"));
     }
 
     @Override

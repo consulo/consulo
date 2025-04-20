@@ -16,6 +16,7 @@
 package consulo.desktop.awt.internal.diff;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.desktop.awt.internal.diff.editor.ChainDiffVirtualFile;
 import consulo.desktop.awt.internal.diff.external.ExternalDiffTool;
 import consulo.desktop.awt.internal.diff.merge.MergeWindow;
@@ -42,6 +43,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.WindowWrapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
@@ -50,6 +52,13 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class DiffManagerImpl extends DiffManagerEx {
+    private final Application myApplication;
+
+    @Inject
+    public DiffManagerImpl(Application application) {
+        myApplication = application;
+    }
+
     @Override
     @RequiredUIAccess
     public void showDiff(@Nullable Project project, @Nonnull DiffRequest request) {
@@ -91,11 +100,11 @@ public class DiffManagerImpl extends DiffManagerEx {
     @RequiredUIAccess
     public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
         DiffEditorTabFilesManager diffEditorTabFilesManager = project != null ? DiffEditorTabFilesManager.getInstance(project) : null;
-        if (diffEditorTabFilesManager != null &&
-            DiffSettingsHolder.DiffSettings.getSettings().isShowDiffInEditor() &&
-            AWTDiffUtil.getWindowMode(hints) == WindowWrapper.Mode.FRAME &&
-            !isFromDialog(project) &&
-            hints.getWindowConsumer() == null) {
+        if (diffEditorTabFilesManager != null
+            && DiffSettingsHolder.DiffSettings.getSettings().isShowDiffInEditor()
+            && AWTDiffUtil.getWindowMode(hints) == WindowWrapper.Mode.FRAME
+            && !isFromDialog(project)
+            && hints.getWindowConsumer() == null) {
             ChainDiffVirtualFile diffFile = new ChainDiffVirtualFile(requests, DiffLocalize.labelDefaultDiffEditorTabName().get());
             diffEditorTabFilesManager.showDiffFile(diffFile, true);
             return;
@@ -119,13 +128,13 @@ public class DiffManagerImpl extends DiffManagerEx {
     @Nonnull
     @Override
     public List<DiffTool> getDiffTools() {
-        return DiffTool.EP_NAME.getExtensionList();
+        return myApplication.getExtensionList(DiffTool.class);
     }
 
     @Nonnull
     @Override
     public List<MergeTool> getMergeTools() {
-        return MergeTool.EP_NAME.getExtensionList();
+        return myApplication.getExtensionList(MergeTool.class);
     }
 
     @Override

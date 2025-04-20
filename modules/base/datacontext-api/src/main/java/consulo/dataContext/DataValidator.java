@@ -17,15 +17,12 @@ package consulo.dataContext;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DataValidator<T> {
-    ExtensionPointName<DataValidator> EP_NAME = ExtensionPointName.create(DataValidator.class);
-
     @Nonnull
     Key<T> getKey();
 
