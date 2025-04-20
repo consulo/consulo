@@ -1382,6 +1382,7 @@ public class UIUtil {
         return false;
     }
 
+    @Deprecated
     public static boolean isUnderAquaBasedLookAndFeel() {
         return false;
     }

@@ -1,20 +1,19 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
-import consulo.application.util.NotNullLazyValue;
-import consulo.ui.ex.awt.JBPanel;
-import consulo.ide.impl.idea.ui.components.ProgressBarLoadingDecorator;
 import consulo.disposer.Disposable;
-
+import consulo.ide.impl.idea.ui.components.ProgressBarLoadingDecorator;
+import consulo.ui.ex.awt.JBPanel;
+import consulo.util.lang.lazy.LazyValue;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 
-//@ApiStatus.Internal
 class BuildProgressStripe extends JBPanel {
   @Nonnull
   private final JBPanel myPanel;
-  private final NotNullLazyValue<ProgressBarLoadingDecorator> myCreateLoadingDecorator;
+  private final LazyValue<ProgressBarLoadingDecorator> myCreateLoadingDecorator;
   private ProgressBarLoadingDecorator myDecorator;
 
   BuildProgressStripe(@Nonnull JComponent targetComponent, @Nonnull Disposable parent, int startDelayMs) {
@@ -22,9 +21,7 @@ class BuildProgressStripe extends JBPanel {
     myPanel = new JBPanel(new BorderLayout());
     myPanel.setOpaque(false);
     myPanel.add(targetComponent);
-    myCreateLoadingDecorator = NotNullLazyValue.createValue(() -> {
-      return new ProgressBarLoadingDecorator(myPanel, parent, startDelayMs);
-    });
+    myCreateLoadingDecorator = LazyValue.notNull(() -> new ProgressBarLoadingDecorator(myPanel, parent, startDelayMs));
     createLoadingDecorator();
   }
 
@@ -61,11 +58,11 @@ class BuildProgressStripe extends JBPanel {
   }
 
   private JProgressBar getProgressBar() {
-    return myCreateLoadingDecorator.getValue().getProgressBar();
+    return myCreateLoadingDecorator.get().getProgressBar();
   }
 
   private void createLoadingDecorator() {
-    myDecorator = myCreateLoadingDecorator.getValue();
+    myDecorator = myCreateLoadingDecorator.get();
     add(myDecorator.getComponent(), BorderLayout.CENTER);
     myDecorator.setLoadingText("");
   }

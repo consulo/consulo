@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs.log.ui.frame;
+package consulo.ui.ex.awt;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.AsyncProcessIcon;
-import consulo.ui.ex.awt.JBPanel;
-import consulo.ui.ex.awt.LoadingDecorator;
-import consulo.ui.ex.awt.NonOpaquePanel;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
