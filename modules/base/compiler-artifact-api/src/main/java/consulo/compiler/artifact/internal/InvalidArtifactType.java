@@ -18,12 +18,13 @@ package consulo.compiler.artifact.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
@@ -35,30 +36,31 @@ import jakarta.inject.Singleton;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class InvalidArtifactType extends ArtifactType {
+    public static InvalidArtifactType getInstance() {
+        return Application.get().getInstance(InvalidArtifactType.class);
+    }
 
-  public static InvalidArtifactType getInstance() {
-    return Application.get().getInstance(InvalidArtifactType.class);
-  }
+    public InvalidArtifactType() {
+        super("invalid", LocalizeValue.localizeTODO("Invalid"));
+    }
 
-  public InvalidArtifactType() {
-    super("invalid", "Invalid");
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.filetypesUnknown();
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.FileTypes.Unknown;
-  }
+    @Override
+    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+        return "";
+    }
 
-  @Override
-  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
-    return "";
-  }
-
-  @Nonnull
-  @Override
-  public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory packagingElementFactory,
-                                                        @Nonnull String artifactName) {
-    return packagingElementFactory.createArtifactRootElement();
-  }
+    @Nonnull
+    @Override
+    public CompositePackagingElement<?> createRootElement(
+        @Nonnull PackagingElementFactory packagingElementFactory,
+        @Nonnull String artifactName
+    ) {
+        return packagingElementFactory.createArtifactRootElement();
+    }
 }

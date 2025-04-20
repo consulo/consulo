@@ -22,6 +22,7 @@ import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.compiler.*;
+import consulo.component.extension.ExtensionPoint;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.index.io.data.DataOutputStream;
@@ -923,17 +924,18 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     @RequiredReadAction
-    protected VirtualFile[] getRootsForScan(Project project) {
+    protected VirtualFile[] getRootsForScan(@Nonnull Project project) {
         List<VirtualFile> list = new ArrayList<>();
         Module[] modules = ModuleManager.getInstance(project).getModules();
-        List<TranslatingCompilerFilesMonitorHelper> extensions = TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensionList();
+        ExtensionPoint<TranslatingCompilerFilesMonitorHelper> extensionPoint =
+            project.getApplication().getExtensionPoint(TranslatingCompilerFilesMonitorHelper.class);
         for (Module module : modules) {
-            for (TranslatingCompilerFilesMonitorHelper extension : extensions) {
+            extensionPoint.forEach(extension -> {
                 VirtualFile[] rootsForModule = extension.getRootsForModule(module);
                 if (rootsForModule != null) {
                     Collections.addAll(list, rootsForModule);
                 }
-            }
+            });
 
             VirtualFile[] contentFolderFiles =
                 ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.all(false));

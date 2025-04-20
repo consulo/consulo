@@ -17,7 +17,6 @@ package consulo.diff.merge;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,8 +30,6 @@ import java.util.function.BooleanSupplier;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface MergeTool {
-    ExtensionPointName<MergeTool> EP_NAME = ExtensionPointName.create(MergeTool.class);
-
     /**
      * Creates viewer for the given request. Clients should call {@link #canShow(MergeContext, MergeRequest)} first.
      */

@@ -17,6 +17,7 @@ package consulo.compiler.artifact;
 
 import consulo.compiler.artifact.element.CompositePackagingElement;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -24,8 +25,7 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public abstract class ArtifactTemplate {
-
-  public abstract String getPresentableName();
+  public abstract LocalizeValue getPresentableName();
 
   /**
    * @deprecated override {@link #createArtifact()} instead

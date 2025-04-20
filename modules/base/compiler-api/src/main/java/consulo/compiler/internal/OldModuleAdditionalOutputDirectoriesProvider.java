@@ -33,10 +33,11 @@ import java.util.List;
  */
 @ExtensionImpl
 public class OldModuleAdditionalOutputDirectoriesProvider implements ModuleAdditionalOutputDirectoriesProvider {
+    @Nonnull
     private final Module myModule;
 
     @Inject
-    public OldModuleAdditionalOutputDirectoriesProvider(Module module) {
+    public OldModuleAdditionalOutputDirectoriesProvider(@Nonnull Module module) {
         myModule = module;
     }
 
@@ -44,8 +45,7 @@ public class OldModuleAdditionalOutputDirectoriesProvider implements ModuleAddit
     @Override
     public List<ModuleAdditionalOutputDirectory> getOutputDirectories() {
         List<ModuleAdditionalOutputDirectory> result = new ArrayList<>();
-
-        AdditionalOutputDirectoriesProvider.EP_NAME.forEachExtensionSafe(provider -> {
+        myModule.getApplication().getExtensionPoint(AdditionalOutputDirectoriesProvider.class).forEachExtensionSafe(provider -> {
             String[] outputDirectories = provider.getOutputDirectories(myModule.getProject(), myModule);
             for (String outputDirectory : outputDirectories) {
                 result.add(new ModuleAdditionalOutputDirectory(outputDirectory, false));

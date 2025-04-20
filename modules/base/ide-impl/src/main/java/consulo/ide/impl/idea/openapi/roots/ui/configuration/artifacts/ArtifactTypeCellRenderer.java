@@ -19,15 +19,22 @@ import consulo.compiler.artifact.ArtifactType;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
  * @author nik
  */
 public class ArtifactTypeCellRenderer extends ColoredListCellRenderer<ArtifactType> {
-  @Override
-  protected void customizeCellRenderer(@Nonnull JList<? extends ArtifactType> list, ArtifactType value, int index, boolean selected, boolean hasFocus) {
-    setIcon(value.getIcon());
-    append(value.getPresentableName());
-  }
+    @Override
+    protected void customizeCellRenderer(
+        @Nonnull JList<? extends ArtifactType> list,
+        ArtifactType value,
+        int index,
+        boolean selected,
+        boolean hasFocus
+    ) {
+        setIcon(value.getIcon());
+        append(value.getPresentableName().get());
+    }
 }

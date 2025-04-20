@@ -589,14 +589,8 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
                 VirtualFile file = selectedEditor.getFile();
 
                 if (virtualFile == null) {
-                    for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
-                        VirtualFile associatedFile = finder.getAssociatedFileToOpen(fileEditorManager.getProject(), file);
-
-                        if (associatedFile != null) {
-                            virtualFile = associatedFile;
-                            break;
-                        }
-                    }
+                    virtualFile = Application.get().getExtensionPoint(FileEditorAssociateFinder.class)
+                        .computeSafeIfAny(finder -> finder.getAssociatedFileToOpen(fileEditorManager.getProject(), file));
                 }
 
                 VirtualFile nextFile = virtualFile == null ? file : virtualFile;

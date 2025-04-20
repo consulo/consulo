@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
+import consulo.application.Application;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.configurable.ConfigurationException;
@@ -72,9 +73,7 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
     @Override
     protected JComponent createTopRightComponent(JTextField nameField) {
         ComboBox<ArtifactType> artifactTypeBox = new ComboBox<>();
-        for (ArtifactType type : ArtifactType.EP_NAME.getExtensionList()) {
-            artifactTypeBox.addItem(type);
-        }
+        Application.get().getExtensionPoint(ArtifactType.class).forEach(artifactTypeBox::addItem);
 
         artifactTypeBox.setRenderer(new ArtifactTypeCellRenderer());
 

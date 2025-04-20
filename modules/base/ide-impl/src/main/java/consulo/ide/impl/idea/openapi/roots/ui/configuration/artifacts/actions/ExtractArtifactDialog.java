@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.application.Application;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.PlainArtifactType;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
@@ -37,16 +38,14 @@ import javax.swing.event.DocumentEvent;
 public class ExtractArtifactDialog extends DialogWrapper implements IExtractArtifactDialog {
     private JPanel myMainPanel;
     private JTextField myNameField;
-    private JComboBox myTypeBox;
+    private JComboBox<ArtifactType> myTypeBox;
     private final ArtifactEditorContext myContext;
 
     public ExtractArtifactDialog(ArtifactEditorContext context, LayoutTreeComponent treeComponent, String initialName) {
         super(treeComponent.getLayoutTree(), true);
         myContext = context;
         setTitle(ProjectLocalize.dialogTitleExtractArtifact());
-        for (ArtifactType type : ArtifactType.EP_NAME.getExtensions()) {
-            myTypeBox.addItem(type);
-        }
+        Application.get().getExtensionPoint(ArtifactType.class).forEach(type -> myTypeBox.addItem(type));
         myTypeBox.setSelectedItem(PlainArtifactType.getInstance());
         myTypeBox.setRenderer(new ArtifactTypeCellRenderer());
         myNameField.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -90,6 +89,7 @@ public class ExtractArtifactDialog extends DialogWrapper implements IExtractArti
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myNameField;
     }

@@ -18,7 +18,6 @@ package consulo.compiler;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.compiler.scope.CompileScope;
-import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
@@ -30,8 +29,6 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface Compiler {
-    ExtensionPointName<Compiler> EP_NAME = ExtensionPointName.create(Compiler.class);
-
     /**
      * Returns the description of the compiler. All registered compilers should have unique description.
      *

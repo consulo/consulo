@@ -17,7 +17,6 @@ package consulo.fileEditor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -29,8 +28,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileEditorAssociateFinder {
-    ExtensionPointName<FileEditorAssociateFinder> EP_NAME = ExtensionPointName.create(FileEditorAssociateFinder.class);
-
     @Nullable
     VirtualFile getAssociatedFileToOpen(@Nonnull Project project, @Nonnull VirtualFile original);
 }

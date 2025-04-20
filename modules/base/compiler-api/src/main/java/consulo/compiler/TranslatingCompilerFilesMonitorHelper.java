@@ -17,10 +17,9 @@ package consulo.compiler;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.module.extension.ModuleExtension;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,9 +29,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TranslatingCompilerFilesMonitorHelper {
-    ExtensionPointName<TranslatingCompilerFilesMonitorHelper> EP_NAME =
-        ExtensionPointName.create(TranslatingCompilerFilesMonitorHelper.class);
-
     @Nullable
     VirtualFile[] getRootsForModule(@Nonnull Module module);
 

@@ -80,11 +80,12 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
     private boolean ourDebugMode = false;
 
+    @Nonnull
     private final Project myProject;
     private final CompilerManager myCompilerManager;
 
     @Inject
-    public BuiltInCompilerRunner(Project project, CompilerManager compilerManager) {
+    public BuiltInCompilerRunner(@Nonnull Project project, CompilerManager compilerManager) {
         myProject = project;
         myCompilerManager = compilerManager;
     }
@@ -303,9 +304,8 @@ public class BuiltInCompilerRunner implements CompilerRunner {
             int processed = 0;
             for (Chunk<Module> currentChunk : sortedChunks) {
                 TranslatingCompiler[] translators = original.clone();
-                for (CompilerSorter compilerSorter : CompilerSorter.EP_NAME.getExtensionList()) {
-                    compilerSorter.sort(currentChunk, translators, TranslatingCompiler.class);
-                }
+                myProject.getApplication().getExtensionPoint(CompilerSorter.class)
+                    .forEach(compilerSorter -> compilerSorter.sort(currentChunk, translators, TranslatingCompiler.class));
                 TranslatorsOutputSink sink = new TranslatorsOutputSink(context, translators);
                 Set<FileType> generatedTypes = new HashSet<>();
                 Collection<VirtualFile> chunkFiles = chunkMap.get(currentChunk);

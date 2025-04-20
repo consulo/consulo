@@ -17,10 +17,9 @@ package consulo.content;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
-import consulo.util.dataholder.Key;
+import consulo.application.Application;
 import consulo.ui.image.Image;
-
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,9 +29,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ContentFolderPropertyProvider<T> {
-    public static final ExtensionPointName<ContentFolderPropertyProvider> EP_NAME =
-        ExtensionPointName.create(ContentFolderPropertyProvider.class);
-
     @Nonnull
     public abstract Key<T> getKey();
 
@@ -52,11 +48,7 @@ public abstract class ContentFolderPropertyProvider<T> {
 
     @Nullable
     public static ContentFolderPropertyProvider<?> findProvider(@Nonnull String key) {
-        for (ContentFolderPropertyProvider provider : EP_NAME.getExtensionList()) {
-            if (key.equals(provider.getKey().toString())) {
-                return provider;
-            }
-        }
-        return null;
+        return Application.get().getExtensionPoint(ContentFolderPropertyProvider.class)
+            .findFirstSafe(provider -> key.equals(provider.getKey().toString()));
     }
 }

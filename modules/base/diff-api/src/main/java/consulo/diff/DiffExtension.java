@@ -17,7 +17,6 @@ package consulo.diff;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -25,8 +24,6 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DiffExtension {
-    public static final ExtensionPointName<DiffExtension> EP_NAME = ExtensionPointName.create(DiffExtension.class);
-
     @RequiredUIAccess
     public abstract void onViewerCreated(
         @Nonnull FrameDiffTool.DiffViewer viewer,

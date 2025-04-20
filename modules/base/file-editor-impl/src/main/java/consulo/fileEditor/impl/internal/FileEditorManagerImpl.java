@@ -52,8 +52,6 @@ import consulo.fileEditor.internal.FileEditorDockManager;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.localize.FileEditorLocalize;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.virtualFileSystem.fileType.FileTypeEvent;
-import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
@@ -83,7 +81,6 @@ import consulo.util.collection.SmartList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.NullUtils;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
@@ -95,6 +92,8 @@ import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
+import consulo.virtualFileSystem.fileType.FileTypeEvent;
+import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -163,7 +162,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
         MessageBusConnection connection = project.getMessageBus().connect();
 
-        if (FileEditorAssociateFinder.EP_NAME.hasAnyExtensions()) {
+        if (application.getExtensionPoint(FileEditorAssociateFinder.class).hasAnyExtensions()) {
             connection.subscribe(
                 FileEditorManagerListener.class,
                 new FileEditorManagerListener() {
@@ -566,7 +565,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @Override
     @RequiredUIAccess
     public FileEditorWindow getCurrentWindow() {
-        if (!Application.get().isDispatchThread()) {
+        if (!UIAccess.isUIThread()) {
             return null;
         }
         FileEditorsSplitters splitters = getActiveSplittersSync();
@@ -699,19 +698,15 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         FileEditorWindow[] windows = splitters.getWindows();
 
         if (file != null && windows.length == 2) {
-            for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
-                VirtualFile associatedFile = finder.getAssociatedFileToOpen(myProject, file);
+            VirtualFile associatedFile = myProject.getApplication().getExtensionPoint(FileEditorAssociateFinder.class)
+                .computeSafeIfAny(finder -> finder.getAssociatedFileToOpen(myProject, file));
+            if (associatedFile != null) {
+                FileEditorWindow currentWindow = splitters.getCurrentWindow();
+                int idx = windows[0] == wndToOpenIn ? 1 : 0;
+                openFileImpl2(uiAccess, windows[idx], associatedFile, false);
 
-                if (associatedFile != null) {
-                    FileEditorWindow currentWindow = splitters.getCurrentWindow();
-                    int idx = windows[0] == wndToOpenIn ? 1 : 0;
-                    openFileImpl2(uiAccess, windows[idx], associatedFile, false);
-
-                    if (currentWindow != null) {
-                        splitters.setCurrentWindow(currentWindow, false);
-                    }
-
-                    break;
+                if (currentWindow != null) {
+                    splitters.setCurrentWindow(currentWindow, false);
                 }
             }
         }
@@ -799,7 +794,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         @Nullable HistoryEntry entry,
         FileEditorOpenOptions options
     ) {
-        assert UIAccess.isUIThread() || !Application.get().isReadAccessAllowed()
+        assert UIAccess.isUIThread() || !myProject.getApplication().isReadAccessAllowed()
             : "must not open files under read action since we are doing a lot of invokeAndWaits here";
 
         int index = options.getIndex();
@@ -941,7 +936,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             composite.getSelectedEditor().selectNotify();
 
             // Transfer focus into editor
-            if (!Application.get().isUnitTestMode() && focusEditor) {
+            if (!myProject.getApplication().isUnitTestMode() && focusEditor) {
                 //myFirstIsActive = myTabbedContainer1.equals(tabbedContainer);
                 window.setAsCurrentWindow(true);
                 ToolWindowManager.getInstance(myProject).activateEditorComponent();
@@ -1281,7 +1276,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @RequiredUIAccess
     public FileEditorsSplitters getSplitters() {
         FileEditorsSplitters active = null;
-        if (Application.get().isDispatchThread()) {
+        if (UIAccess.isUIThread()) {
             active = getActiveSplittersSync();
         }
         return active == null ? getMainSplitters() : active;
@@ -1539,12 +1534,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         boolean editorsEqual = oldData.second == null ? newData.second == null : oldData.second.equals(newData.second);
         if (!filesEqual || !editorsEqual) {
             if (oldData.first != null && newData.first != null) {
-                for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
-                    VirtualFile associatedFile = finder.getAssociatedFileToOpen(myProject, oldData.first);
-
-                    if (Comparing.equal(associatedFile, newData.first)) {
-                        return;
-                    }
+                boolean newDataNotFound = myProject.getApplication().getExtensionPoint(FileEditorAssociateFinder.class)
+                    .noneMatchSafe(finder -> Objects.equals(finder.getAssociatedFileToOpen(myProject, oldData.first), newData.first));
+                if (!newDataNotFound) {
+                    return;
                 }
             }
 
@@ -1775,7 +1768,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             for (int i = openFiles.length - 1; i >= 0; i--) {
                 VirtualFile file = openFiles[i];
                 LOG.assertTrue(file != null);
-                Application.get().invokeLater(
+                myProject.getApplication().invokeLater(
                     () -> {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("updating file status in tab for " + file.getPath());
