@@ -16,6 +16,9 @@
 
 package consulo.versionControlSystem.change;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
+
 import java.util.Collection;
 import java.util.EventListener;
 
@@ -24,6 +27,7 @@ import java.util.EventListener;
  * @see ChangeListManager#addChangeListListener(ChangeListListener)
  * @see ChangeListManager#removeChangeListListener(ChangeListListener)
  */
+@TopicAPI(ComponentScope.PROJECT)
 public interface ChangeListListener extends EventListener {
   default void changeListAdded(ChangeList list) {
   }

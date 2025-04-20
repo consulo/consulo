@@ -19,10 +19,10 @@ package consulo.ide.impl.idea.openapi.vcs.vfs;
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.Maps;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -41,7 +41,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
   private byte[] myContent;
   private boolean myContentLoadFailed;
 
-  private static final Map<ContentRevision, ContentRevisionVirtualFile> ourMap = ContainerUtil.createWeakMap();
+  private static final Map<ContentRevision, ContentRevisionVirtualFile> ourMap = Maps.newWeakHashMap();
 
   public static ContentRevisionVirtualFile create(@Nonnull ContentRevision contentRevision) {
     synchronized(ourMap) {

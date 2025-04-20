@@ -17,19 +17,15 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
-import consulo.document.Document;
 import consulo.localize.LocalizeValue;
-import consulo.util.lang.ThreeState;
+import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusFactory;
 import consulo.virtualFileSystem.status.FileStatusProvider;
-import jakarta.inject.Inject;
-
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 /**
  * @author Dmitry Avdeev
@@ -70,16 +66,5 @@ public class ChangelistConflictFileStatusProvider implements FileStatusProvider 
       }
     }
     return null;
-  }
-
-  @Override
-  public void refreshFileStatusFromDocument(VirtualFile file, Document doc) {
-
-  }
-
-  @Nonnull
-  @Override
-  public ThreeState getNotChangedDirectoryParentingStatus(VirtualFile vf) {
-    throw new UnsupportedOperationException("Shouldn't be called");
   }
 }

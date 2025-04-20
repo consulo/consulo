@@ -19,10 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.externalService.statistic.AbstractApplicationUsagesCollector;
 import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Set;
 
 @ExtensionImpl

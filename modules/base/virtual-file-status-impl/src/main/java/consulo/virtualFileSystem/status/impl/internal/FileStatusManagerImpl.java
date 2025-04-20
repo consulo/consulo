@@ -34,6 +34,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.status.FileStatusProvider;
+import consulo.virtualFileSystem.status.internal.FileStatusFacade;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -54,7 +55,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
         Collections.synchronizedMap(new HashMap<VirtualFile, Boolean>());
     private final Project myProject;
     private final List<FileStatusListener> myListeners = Lists.newLockFreeCopyOnWriteList();
-    private FileStatusProvider myFileStatusProvider;
+    private FileStatusFacade myFileStatusProvider;
 
     private static class FileStatusNull implements FileStatus {
         private static final FileStatus INSTANCE = new FileStatusNull();
@@ -86,20 +87,17 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
     @Inject
     public FileStatusManagerImpl(Project project) {
         myProject = project;
-
         project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> fileStatusesChanged());
     }
 
-    public void setFileStatusProvider(FileStatusProvider fileStatusProvider) {
+    public void setFileStatusProvider(FileStatusFacade fileStatusProvider) {
         myFileStatusProvider = fileStatusProvider;
     }
 
     public FileStatus calcStatus(@Nonnull VirtualFile virtualFile) {
-        for (FileStatusProvider extension : FileStatusProvider.EP_NAME.getExtensionList(myProject)) {
-            FileStatus status = extension.getFileStatus(virtualFile);
-            if (status != null) {
-                return status;
-            }
+        FileStatus fileStatus = myProject.getExtensionPoint(FileStatusProvider.class).computeSafeIfAny(f -> f.getFileStatus(virtualFile));
+        if (fileStatus != null) {
+            return fileStatus;
         }
 
         if (virtualFile.isInLocalFileSystem() && myFileStatusProvider != null) {

@@ -18,30 +18,30 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.language.editor.scratch.ScratchUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.logging.Logger;
-import consulo.project.Project;
-import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.virtualFileSystem.status.FileStatusProvider;
 import consulo.virtualFileSystem.status.impl.internal.FileStatusManagerImpl;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
+import consulo.virtualFileSystem.status.internal.FileStatusFacade;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 /**
  * @author yole
@@ -49,13 +49,13 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 @ServiceImpl
 @Singleton
-public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContentProvider {
+public class VcsFileStatusProvider implements FileStatusFacade {
     private final Project myProject;
     private final FileStatusManagerImpl myFileStatusManager;
-    private final ProjectLevelVcsManager myVcsManager;
-    private final ChangeListManager myChangeListManager;
-    private final VcsDirtyScopeManager myDirtyScopeManager;
-    private final VcsConfiguration myConfiguration;
+    private final Provider<ProjectLevelVcsManager> myVcsManager;
+    private final Provider<ChangeListManager> myChangeListManager;
+    private final Provider<VcsDirtyScopeManager> myDirtyScopeManager;
+    private final Provider<VcsConfiguration> myConfiguration;
     private boolean myHaveEmptyContentRevisions;
 
     private static final Logger LOG = Logger.getInstance(VcsFileStatusProvider.class);
@@ -64,20 +64,20 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
     public VcsFileStatusProvider(
         Project project,
         FileStatusManager fileStatusManager,
-        ProjectLevelVcsManager vcsManager,
-        ChangeListManager changeListManager,
-        VcsDirtyScopeManager dirtyScopeManager, VcsConfiguration configuration
+        Provider<ProjectLevelVcsManager> vcsManager,
+        Provider<VcsDirtyScopeManager> dirtyScopeManager,
+        Provider<VcsConfiguration> configuration,
+        Provider<ChangeListManager> changeListManager
     ) {
         myProject = project;
+        myChangeListManager = changeListManager;
         myFileStatusManager = (FileStatusManagerImpl)fileStatusManager;
         myVcsManager = vcsManager;
-        myChangeListManager = changeListManager;
         myDirtyScopeManager = dirtyScopeManager;
         myConfiguration = configuration;
         myHaveEmptyContentRevisions = true;
         myFileStatusManager.setFileStatusProvider(this);
-
-        changeListManager.addChangeListListener(new ChangeListAdapter() {
+        myProject.getMessageBus().connect().subscribe(ChangeListListener.class, new ChangeListListener() {
             @Override
             public void changeListAdded(ChangeList list) {
                 fileStatusesChanged();
@@ -115,7 +115,7 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
     @Override
     @Nonnull
     public FileStatus getFileStatus(@Nonnull VirtualFile virtualFile) {
-        AbstractVcs vcs = myVcsManager.getVcsFor(virtualFile);
+        AbstractVcs vcs = myVcsManager.get().getVcsFor(virtualFile);
         if (vcs == null) {
             if (ScratchUtil.isScratch(virtualFile)) {
                 return FileStatus.SUPPRESSED;
@@ -123,7 +123,7 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
             return FileStatusManagerImpl.getDefaultStatus(virtualFile);
         }
 
-        FileStatus status = myChangeListManager.getStatus(virtualFile);
+        FileStatus status = myChangeListManager.get().getStatus(virtualFile);
         if (status == FileStatus.NOT_CHANGED && isDocumentModified(virtualFile)) {
             return FileStatus.MODIFIED;
         }
@@ -144,7 +144,7 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
         }
         FileStatus cachedStatus = myFileStatusManager.getCachedStatus(virtualFile);
         if (cachedStatus == null || cachedStatus == FileStatus.NOT_CHANGED || !isDocumentModified(virtualFile)) {
-            AbstractVcs vcs = myVcsManager.getVcsFor(virtualFile);
+            AbstractVcs vcs = myVcsManager.get().getVcsFor(virtualFile);
             if (vcs == null) {
                 return;
             }
@@ -159,20 +159,19 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
             myFileStatusManager.fileStatusChanged(virtualFile);
             ChangeProvider cp = vcs.getChangeProvider();
             if (cp != null && cp.isModifiedDocumentTrackingRequired()) {
-                myDirtyScopeManager.fileDirty(virtualFile);
+                myDirtyScopeManager.get().fileDirty(virtualFile);
             }
         }
     }
 
-    @Nonnull
     @Override
+    @Nonnull
     public ThreeState getNotChangedDirectoryParentingStatus(@Nonnull VirtualFile virtualFile) {
-        return myConfiguration.SHOW_DIRTY_RECURSIVELY ? myChangeListManager.haveChangesUnder(virtualFile) : ThreeState.NO;
+        return myConfiguration.get().SHOW_DIRTY_RECURSIVELY ? myChangeListManager.get().haveChangesUnder(virtualFile) : ThreeState.NO;
     }
 
-    @Override
     @Nullable
-    public BaseContent getBaseRevision(@Nonnull VirtualFile file) {
+    public VcsBaseContentProvider.BaseContent getBaseRevision(@Nonnull VirtualFile file) {
         if (!isHandledByVcs(file)) {
             VcsBaseContentProvider provider = findProviderFor(file);
             return provider == null ? null : provider.getBaseRevision(file);
@@ -201,16 +200,15 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
         return null;
     }
 
-    @Override
     public boolean isSupported(@Nonnull VirtualFile file) {
         return isHandledByVcs(file) || findProviderFor(file) != null;
     }
 
     private boolean isHandledByVcs(@Nonnull VirtualFile file) {
-        return file.isInLocalFileSystem() && myVcsManager.getVcsFor(file) != null;
+        return file.isInLocalFileSystem() && myVcsManager.get().getVcsFor(file) != null;
     }
 
-    private class BaseContentImpl implements BaseContent {
+    private class BaseContentImpl implements VcsBaseContentProvider.BaseContent {
         @Nonnull
         private final ContentRevision myContentRevision;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.status;
+package consulo.virtualFileSystem.status.internal;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
+import consulo.document.Document;
+import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 2025-04-20
  */
-@ExtensionAPI(ComponentScope.PROJECT)
-public interface FileStatusProvider {
-    @Nullable
+public interface FileStatusFacade {
     FileStatus getFileStatus(@Nonnull VirtualFile virtualFile);
+
+    @Nonnull
+    ThreeState getNotChangedDirectoryParentingStatus(@Nonnull VirtualFile virtualFile);
+
+    void refreshFileStatusFromDocument(@Nonnull VirtualFile virtualFile, @Nonnull Document doc);
 }

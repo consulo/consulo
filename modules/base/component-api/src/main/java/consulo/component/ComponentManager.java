@@ -15,6 +15,7 @@
  */
 package consulo.component;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.internal.inject.InjectingContainer;
@@ -78,6 +79,12 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
         @Nonnull Function<Object[], T> constructor
     ) {
         return getInjectingContainer().getUnbindedInstance(clazz, constructorTypes, constructor);
+    }
+
+    @Deprecated
+    @DeprecationInfo("JetBrains version")
+    default <T> T getService(@Nonnull Class<T> clazz) {
+        return getInstance(clazz);
     }
 
     @Deprecated

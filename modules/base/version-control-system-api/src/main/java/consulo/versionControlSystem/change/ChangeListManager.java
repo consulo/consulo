@@ -16,6 +16,7 @@
 
 package consulo.versionControlSystem.change;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
@@ -162,8 +163,12 @@ public abstract class ChangeListManager {
 
 //  public abstract void moveChangesTo(final LocalChangeList list, final Change[] changes);
 
+  @Deprecated
+  @DeprecationInfo("Use MessageBus")
   public abstract void addChangeListListener(ChangeListListener listener);
 
+  @Deprecated
+  @DeprecationInfo("Use MessageBus")
   public abstract void removeChangeListListener(ChangeListListener listener);
 
   public abstract void registerCommitExecutor(CommitExecutor executor);
