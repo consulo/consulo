@@ -55,6 +55,8 @@ import java.util.function.Supplier;
 public interface Application extends ComponentManager {
     @Nonnull
     @SuppressWarnings("deprecation")
+    @Deprecated
+    @DeprecationInfo("Use injecting context")
     public static Application get() {
         Application application = ApplicationManager.getApplication();
         if (application == null) {
