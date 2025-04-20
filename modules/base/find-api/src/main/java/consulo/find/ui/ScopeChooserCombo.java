@@ -168,15 +168,15 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
             }
         }
 
-        boolean missed = project.getApplication().getExtensionPoint(ScopeDescriptorProvider.class).anyMatchSafe(provider -> {
+        boolean allScopesAccepted = project.getApplication().getExtensionPoint(ScopeDescriptorProvider.class).allMatchSafe(provider -> {
             for (ScopeDescriptor descriptor : provider.getScopeDescriptors(project)) {
                 if (!processor.test(descriptor)) {
-                    return true;
+                    return false;
                 }
             }
-            return false;
+            return true;
         });
-        if (missed) {
+        if (!allScopesAccepted) {
             return false;
         }
 
@@ -188,20 +188,20 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
             }
             return w1 - w2;
         };
-        return !project.getApplication().getExtensionPoint(SearchScopeProvider.class).anyMatchSafe(each -> {
+        return project.getApplication().getExtensionPoint(SearchScopeProvider.class).allMatchSafe(each -> {
             if (StringUtil.isEmpty(each.getDisplayName())) {
-                return false;
+                return true;
             }
             List<SearchScope> scopes = each.getSearchScopes(project);
             if (scopes.isEmpty()) {
-                return false;
+                return true;
             }
             if (!processor.test(new ScopeSeparator(each.getDisplayName()))) {
-                return true;
+                return false;
             }
             for (SearchScope scope : ContainerUtil.sorted(scopes, comparator)) {
                 if (!processor.test(new ScopeDescriptor(scope))) {
-                    return true;
+                    return false;
                 }
             }
             return false;

@@ -23,6 +23,7 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Shortcut;
@@ -51,8 +52,8 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
     myFile = file;
   }
 
-  @RequiredReadAction
-  public void highlightUsages(Runnable performHighlighting) {
+  @RequiredUIAccess
+  public void highlightUsages(@RequiredUIAccess Runnable performHighlighting) {
     List<T> targets = getTargets();
     if (targets == null) {
       return;

@@ -28,12 +28,14 @@ public final class QualifiedNameProviderUtil {
 
     @Nullable
     public static PsiElement adjustElementToCopy(@Nonnull PsiElement element) {
-        return element.getApplication().getExtensionPoint(QualifiedNameProvider.class).computeSafeIfAny(it -> it.adjustElementToCopy(element));
+        return element.getApplication().getExtensionPoint(QualifiedNameProvider.class)
+            .computeSafeIfAny(it -> it.adjustElementToCopy(element));
     }
 
     @Nullable
     public static String getQualifiedName(@Nonnull PsiElement element) {
-        return element.getApplication().getExtensionPoint(QualifiedNameProvider.class).computeSafeIfAny(it -> it.getQualifiedName(element));
+        return element.getApplication().getExtensionPoint(QualifiedNameProvider.class)
+            .computeSafeIfAny(it -> it.getQualifiedName(element));
     }
 
     @Nullable
