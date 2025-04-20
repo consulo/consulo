@@ -17,7 +17,7 @@ package consulo.compiler.artifact;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.application.Application;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -27,8 +27,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ArtifactPropertiesProvider {
-    public static final ExtensionPointName<ArtifactPropertiesProvider> EP_NAME =
-        ExtensionPointName.create(ArtifactPropertiesProvider.class);
     private final String myId;
 
     protected ArtifactPropertiesProvider(@Nonnull String id) {
@@ -48,11 +46,7 @@ public abstract class ArtifactPropertiesProvider {
 
     @Nullable
     public static ArtifactPropertiesProvider findById(@Nonnull String id) {
-        for (ArtifactPropertiesProvider provider : EP_NAME.getExtensionList()) {
-            if (provider.getId().equals(id)) {
-                return provider;
-            }
-        }
-        return null;
+        return Application.get().getExtensionPoint(ArtifactPropertiesProvider.class)
+            .findFirstSafe(provider -> provider.getId().equals(id));
     }
 }

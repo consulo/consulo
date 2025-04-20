@@ -16,6 +16,7 @@
 package consulo.sandboxPlugin.ide.artifact;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.ArtifactRootElementImpl;
 import consulo.compiler.artifact.element.CompositePackagingElement;
@@ -37,7 +38,7 @@ public class SandArtifactType extends ArtifactType {
     public static final String ID = "sand";
 
     public static SandArtifactType getInstance() {
-        return EP_NAME.findExtension(SandArtifactType.class);
+        return Application.get().getExtensionPoint(ArtifactType.class).findExtension(SandArtifactType.class);
     }
 
     public SandArtifactType() {

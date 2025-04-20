@@ -16,6 +16,7 @@
 package consulo.desktop.awt.internal.diff;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.desktop.awt.internal.diff.editor.ChainDiffVirtualFile;
 import consulo.desktop.awt.internal.diff.external.ExternalDiffTool;
 import consulo.desktop.awt.internal.diff.merge.MergeWindow;
@@ -119,13 +120,13 @@ public class DiffManagerImpl extends DiffManagerEx {
     @Nonnull
     @Override
     public List<DiffTool> getDiffTools() {
-        return DiffTool.EP_NAME.getExtensionList();
+        return Application.get().getExtensionList(DiffTool.class);
     }
 
     @Nonnull
     @Override
     public List<MergeTool> getMergeTools() {
-        return MergeTool.EP_NAME.getExtensionList();
+        return Application.get().getExtensionList(MergeTool.class);
     }
 
     @Override

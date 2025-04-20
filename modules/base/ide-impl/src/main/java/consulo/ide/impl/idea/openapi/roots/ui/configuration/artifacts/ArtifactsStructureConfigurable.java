@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.compiler.artifact.*;
 import consulo.compiler.artifact.element.LibraryElementType;
@@ -307,18 +308,12 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
             @Nonnull
             @Override
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
-                List<ArtifactType> types = ArtifactType.EP_NAME.getExtensionList();
-
                 ProjectStructureSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
 
                 ModulesConfigurator modulesModel = showSettingsUtil.getModulesModel(myProject);
 
-                List<AnAction> list = new ArrayList<>(types.size());
-                for (ArtifactType type : types) {
-                    if (type.isAvailableForAdd(modulesModel)) {
-                        list.add(createAddArtifactAction(type));
-                    }
-                }
+                List<AnAction> list = Application.get().getExtensionPoint(ArtifactType.class)
+                    .collectExtensionsToListSafe(type -> type.isAvailableForAdd(modulesModel) ? createAddArtifactAction(type) : null);
                 return list.isEmpty() ? AnAction.EMPTY_ARRAY : list.toArray(new AnAction[list.size()]);
             }
         };

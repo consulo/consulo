@@ -18,13 +18,10 @@ package consulo.diff;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.diff.request.DiffRequest;
-import consulo.component.extension.ExtensionPointName;
 import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DiffTool {
-    ExtensionPointName<DiffTool> EP_NAME = ExtensionPointName.create(DiffTool.class);
-
     @Nonnull
     String getName();
 

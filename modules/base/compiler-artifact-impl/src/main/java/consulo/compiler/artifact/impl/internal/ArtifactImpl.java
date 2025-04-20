@@ -15,6 +15,7 @@
  */
 package consulo.compiler.artifact.impl.internal;
 
+import consulo.application.Application;
 import consulo.compiler.artifact.ArtifactProperties;
 import consulo.compiler.artifact.ArtifactPropertiesProvider;
 import consulo.compiler.artifact.ArtifactType;
@@ -77,11 +78,11 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
 
     private void resetProperties() {
         myProperties.clear();
-        for (ArtifactPropertiesProvider provider : ArtifactPropertiesProvider.EP_NAME.getExtensionList()) {
+        Application.get().getExtensionPoint(ArtifactPropertiesProvider.class).forEach(provider -> {
             if (provider.isAvailableFor(myArtifactType)) {
                 myProperties.put(provider, provider.createProperties(myArtifactType));
             }
-        }
+        });
     }
 
     @Override

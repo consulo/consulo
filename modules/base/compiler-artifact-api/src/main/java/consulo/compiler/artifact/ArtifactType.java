@@ -22,10 +22,8 @@ import consulo.compiler.artifact.element.*;
 import consulo.compiler.artifact.ui.ArtifactProblemsHolder;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.component.extension.ExtensionPointCacheKey;
-import consulo.component.extension.ExtensionPointName;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -47,7 +45,6 @@ public abstract class ArtifactType {
         return map.get(id);
     }
 
-    public static final ExtensionPointName<ArtifactType> EP_NAME = ExtensionPointName.create(ArtifactType.class);
     private final String myId;
     private final String myTitle;
 

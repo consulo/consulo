@@ -18,7 +18,6 @@ package consulo.compiler;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
@@ -31,8 +30,6 @@ import jakarta.annotation.Nonnull;
 @DeprecationInfo("Use consulo.compiler.ModuleAdditionalOutputDirectoriesProvider")
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface AdditionalOutputDirectoriesProvider {
-    ExtensionPointName<AdditionalOutputDirectoriesProvider> EP_NAME = ExtensionPointName.create(AdditionalOutputDirectoriesProvider.class);
-
     @Nonnull
     String[] getOutputDirectories(@Nonnull Project project, @Nonnull Module modules);
 }

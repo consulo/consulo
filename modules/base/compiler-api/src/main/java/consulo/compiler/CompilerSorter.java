@@ -17,10 +17,8 @@ package consulo.compiler;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.util.collection.Chunk;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,7 +27,5 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CompilerSorter {
-    ExtensionPointName<CompilerSorter> EP_NAME = ExtensionPointName.create(CompilerSorter.class);
-
     void sort(Chunk<Module> moduleChunk, @Nonnull Compiler[] compilers, Class<? extends Compiler> clazz);
 }

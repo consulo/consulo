@@ -163,7 +163,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
         MessageBusConnection connection = project.getMessageBus().connect();
 
-        if (FileEditorAssociateFinder.EP_NAME.hasAnyExtensions()) {
+        if (Application.get().getExtensionPoint(FileEditorAssociateFinder.class).hasAnyExtensions()) {
             connection.subscribe(
                 FileEditorManagerListener.class,
                 new FileEditorManagerListener() {
@@ -699,19 +699,15 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         FileEditorWindow[] windows = splitters.getWindows();
 
         if (file != null && windows.length == 2) {
-            for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
-                VirtualFile associatedFile = finder.getAssociatedFileToOpen(myProject, file);
+            VirtualFile associatedFile = Application.get().getExtensionPoint(FileEditorAssociateFinder.class)
+                .computeSafeIfAny(finder -> finder.getAssociatedFileToOpen(myProject, file));
+            if (associatedFile != null) {
+                FileEditorWindow currentWindow = splitters.getCurrentWindow();
+                int idx = windows[0] == wndToOpenIn ? 1 : 0;
+                openFileImpl2(uiAccess, windows[idx], associatedFile, false);
 
-                if (associatedFile != null) {
-                    FileEditorWindow currentWindow = splitters.getCurrentWindow();
-                    int idx = windows[0] == wndToOpenIn ? 1 : 0;
-                    openFileImpl2(uiAccess, windows[idx], associatedFile, false);
-
-                    if (currentWindow != null) {
-                        splitters.setCurrentWindow(currentWindow, false);
-                    }
-
-                    break;
+                if (currentWindow != null) {
+                    splitters.setCurrentWindow(currentWindow, false);
                 }
             }
         }
@@ -1539,12 +1535,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         boolean editorsEqual = oldData.second == null ? newData.second == null : oldData.second.equals(newData.second);
         if (!filesEqual || !editorsEqual) {
             if (oldData.first != null && newData.first != null) {
-                for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
-                    VirtualFile associatedFile = finder.getAssociatedFileToOpen(myProject, oldData.first);
-
-                    if (Comparing.equal(associatedFile, newData.first)) {
-                        return;
-                    }
+                boolean newDataEquals = Application.get().getExtensionPoint(FileEditorAssociateFinder.class)
+                    .noneMatchSafe(finder -> Objects.equals(finder.getAssociatedFileToOpen(myProject, oldData.first), newData.first));
+                if (newDataEquals) {
+                    return;
                 }
             }
 

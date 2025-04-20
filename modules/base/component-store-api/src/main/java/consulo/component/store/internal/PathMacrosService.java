@@ -17,6 +17,7 @@ package consulo.component.store.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
 import consulo.application.macro.PathMacros;
 import consulo.component.macro.CompositePathMacroFilter;
 import consulo.component.macro.PathMacroFilter;
@@ -38,7 +39,11 @@ public abstract class PathMacrosService {
 
     @Nonnull
     public Set<String> getMacroNames(@Nonnull Element e) {
-        return getMacroNames(e, new CompositePathMacroFilter(PathMacroFilter.EP_NAME.getExtensionList()), PathMacros.getInstance());
+        return getMacroNames(
+            e,
+            new CompositePathMacroFilter(Application.get().getExtensionList(PathMacroFilter.class)),
+            PathMacros.getInstance()
+        );
     }
 
     public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros);
