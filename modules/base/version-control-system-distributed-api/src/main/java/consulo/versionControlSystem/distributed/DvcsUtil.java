@@ -19,6 +19,7 @@ import consulo.application.AccessToken;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.util.DateFormatUtil;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -116,9 +117,56 @@ public class DvcsUtil {
         return getShortRepositoryName(repository.getProject(), repository.getRoot());
     }
 
+    /**
+     * Find the VCS root on which a repository-wide AnAction is to be invoked in a given context.
+     */
+    @Nullable
+    public static <T extends Repository> T guessRepositoryForOperation(@Nonnull Project project,
+                                                                       @Nonnull AbstractRepositoryManager<T> manager,
+                                                                       @Nonnull DataContext dataContext) {
+        VirtualFile file = dataContext.getData(VirtualFile.KEY);
+        T repository = manager.getRepositoryForRootQuick(findVcsRootFor(project, file));
+        if (repository != null) {
+            return repository;
+        }
+
+        file = getSelectedFile(dataContext); // last active FileEditor
+        repository = manager.getRepositoryForRootQuick(findVcsRootFor(project, file));
+        if (repository != null) {
+            return repository;
+        }
+
+        repository = manager.getRepositoryForRootQuick(guessRootForVcs(project, manager.getVcs(), null));
+        if (repository != null) {
+            return repository;
+        }
+
+        return null;
+    }
+
+    /**
+     * Find relevant VCS root for a given file, if any. Note that this root might not track the file itself.
+     */
+    @Nullable
+    public static VirtualFile findVcsRootFor(@Nonnull Project project, @Nullable VirtualFile file) {
+        VirtualFile root = ProjectLevelVcsManager.getInstance(project).getVcsRootFor(file);
+        if (root != null) {
+            return root;
+        }
+
+        if (file != null) {
+            root = getVcsRootForLibraryFile(project, file);
+            if (root != null) {
+                return root;
+            }
+        }
+
+        return null;
+    }
+
     @Nonnull
     public static String getShortNames(@Nonnull Collection<? extends Repository> repositories) {
-        return StringUtil.join(repositories, repository -> getShortRepositoryName(repository), ", ");
+        return StringUtil.join(repositories, DvcsUtil::getShortRepositoryName, ", ");
     }
 
     @Nonnull
@@ -146,6 +194,11 @@ public class DvcsUtil {
         return StringUtil.isEmptyOrSpaces(joined) ? null : joined;
     }
 
+    public static @Nullable VirtualFile getSelectedFile(@Nonnull DataContext dataProvider) {
+        FileEditor fileEditor = dataProvider.getData(FileEditor.KEY);
+        return fileEditor == null ? null : fileEditor.getFile();
+    }
+
     /**
      * Returns the currently selected file, based on which VcsBranch or StatusBar components will identify the current repository root.
      */
@@ -156,7 +209,7 @@ public class DvcsUtil {
         VirtualFile result = null;
         if (fileEditor != null) {
             if (fileEditor instanceof TextEditor) {
-                Document document = ((TextEditor)fileEditor).getEditor().getDocument();
+                Document document = ((TextEditor) fileEditor).getEditor().getDocument();
                 result = FileDocumentManager.getInstance().getFile(document);
             }
             else {
