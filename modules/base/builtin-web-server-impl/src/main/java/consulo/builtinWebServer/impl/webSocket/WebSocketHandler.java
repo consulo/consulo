@@ -15,35 +15,34 @@
  */
 package consulo.builtinWebServer.impl.webSocket;
 
+import consulo.application.Application;
 import consulo.builtinWebServer.webSocket.WebSocketAccepter;
 import consulo.builtinWebServer.webSocket.WebSocketConnection;
+import consulo.component.extension.ExtensionPoint;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.websocketx.*;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 
 public class WebSocketHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ExtensionPoint<WebSocketAccepter> extensionPoint = Application.get().getExtensionPoint(WebSocketAccepter.class);
         if (msg instanceof WebSocketFrame) {
             if (msg instanceof BinaryWebSocketFrame binaryWebSocketFrame) {
-                if (WebSocketAccepter.EP_NAME.hasAnyExtensions()) {
+                if (extensionPoint.hasAnyExtensions()) {
                     byte[] array = ByteBufUtil.getBytes(binaryWebSocketFrame.content());
-
                     WebSocketConnection connection = new WebSocketConnectionImpl(ctx);
-                    for (WebSocketAccepter accepter : WebSocketAccepter.EP_NAME.getExtensionList()) {
-                        accepter.accept(connection, array);
-                    }
+                    extensionPoint.forEach(accepter -> accepter.accept(connection, array));
                 }
             }
             else if (msg instanceof TextWebSocketFrame textWebSocketFrame) {
-                if (WebSocketAccepter.EP_NAME.hasAnyExtensions()) {
+                if (extensionPoint.hasAnyExtensions()) {
                     String text = textWebSocketFrame.text();
-
                     WebSocketConnection connection = new WebSocketConnectionImpl(ctx);
-                    for (WebSocketAccepter accepter : WebSocketAccepter.EP_NAME.getExtensionList()) {
-                        accepter.accept(connection, text);
-                    }
+                    extensionPoint.forEach(accepter -> accepter.accept(connection, text));
                 }
             }
             //else if (msg instanceof PingWebSocketFrame) {

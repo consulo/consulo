@@ -30,15 +30,16 @@ import jakarta.annotation.Nullable;
  * Use this extension for resolving it depending on your project system
  *
  * @author VISTALL
- * @since 11-Aug-22
+ * @since 2022-08-11
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface NewFileModuleResolver {
-  @Nullable
-  static Module resolveModule(@Nonnull Project project, @Nonnull VirtualFile parent, @Nonnull FileType newFileType) {
-    return project.getExtensionPoint(NewFileModuleResolver.class).computeSafeIfAny(it -> it.resolveModule(parent, newFileType));
-  }
+    @Nullable
+    static Module resolveModule(@Nonnull Project project, @Nonnull VirtualFile parent, @Nonnull FileType newFileType) {
+        return project.getExtensionPoint(NewFileModuleResolver.class)
+            .computeSafeIfAny(it -> it.resolveModule(parent, newFileType));
+    }
 
-  @Nullable
-  Module resolveModule(@Nonnull VirtualFile directory, @Nonnull FileType fileType);
+    @Nullable
+    Module resolveModule(@Nonnull VirtualFile directory, @Nonnull FileType fileType);
 }

@@ -15,59 +15,85 @@
  */
 package consulo.compiler.artifact.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ModifiableArtifactModel;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.content.library.Library;
+import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * @author nik
  */
 public interface ArtifactEditorContext extends PackagingElementResolvingContext {
+    void queueValidation();
 
-  void queueValidation();
+    @Nonnull
+    ArtifactType getArtifactType();
 
-  @Nonnull
-  ArtifactType getArtifactType();
+    @Nonnull
+    ModifiableArtifactModel getOrCreateModifiableArtifactModel();
 
-  @Nonnull
-  ModifiableArtifactModel getOrCreateModifiableArtifactModel();
+    @Nullable
+    ModifiableModuleModel getModifiableModuleModel();
 
-  @Nullable
-  ModifiableModuleModel getModifiableModuleModel();
+    @Nonnull
+    ModifiableRootModel getOrCreateModifiableRootModel(@Nonnull Module module);
 
-  @Nonnull
-  ModifiableRootModel getOrCreateModifiableRootModel(@Nonnull Module module);
+    CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact);
 
-  CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact);
+    void editLayout(@Nonnull Artifact artifact, Runnable runnable);
 
-  void editLayout(@Nonnull Artifact artifact, Runnable runnable);
+    ArtifactEditor getOrCreateEditor(Artifact originalArtifact);
 
-  ArtifactEditor getOrCreateEditor(Artifact originalArtifact);
+    ArtifactEditor getThisArtifactEditor();
 
-  ArtifactEditor getThisArtifactEditor();
+    void selectArtifact(@Nonnull Artifact artifact);
 
-  void selectArtifact(@Nonnull Artifact artifact);
+    void selectModule(@Nonnull Module module);
 
-  void selectModule(@Nonnull Module module);
+    void selectLibrary(@Nonnull Library library);
 
-  void selectLibrary(@Nonnull Library library);
+    @RequiredUIAccess
+    List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, @Nonnull LocalizeValue title);
 
+    @RequiredUIAccess
+    List<Module> chooseModules(List<Module> modules, @Nonnull LocalizeValue title);
 
-  List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, String title);
+    @RequiredUIAccess
+    List<Library> chooseLibraries(@Nonnull LocalizeValue title);
 
-  List<Module> chooseModules(List<Module> modules, final String title);
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @RequiredUIAccess
+    default List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, String title) {
+        return chooseArtifacts(artifacts, LocalizeValue.ofNullable(title));
+    }
 
-  List<Library> chooseLibraries(String title);
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @RequiredUIAccess
+    default List<Module> chooseModules(List<Module> modules, String title) {
+        return chooseModules(modules, LocalizeValue.ofNullable(title));
+    }
 
-  Artifact getArtifact();
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @RequiredUIAccess
+    default List<Library> chooseLibraries(String title) {
+        return chooseLibraries(LocalizeValue.ofNullable(title));
+    }
+
+    Artifact getArtifact();
 }

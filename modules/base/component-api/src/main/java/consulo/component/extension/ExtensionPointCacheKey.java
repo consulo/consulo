@@ -36,11 +36,14 @@ public final class ExtensionPointCacheKey<E, R> {
 
     @Nonnull
     public static <E1, K1> ExtensionPointCacheKey<E1, Map<K1, E1>> groupBy(@Nonnull String keyName, @Nonnull Function<E1, K1> keyMapper) {
-        return create(keyName, walker -> {
-            Map<K1, E1> map = new HashMap<>();
-            walker.walk(extension -> map.put(keyMapper.apply(extension), extension));
-            return map;
-        });
+        return create(
+            keyName,
+            walker -> {
+                Map<K1, E1> map = new HashMap<>();
+                walker.walk(extension -> map.put(keyMapper.apply(extension), extension));
+                return map;
+            }
+        );
     }
 
     private final String myKeyName;

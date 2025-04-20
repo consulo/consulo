@@ -19,14 +19,15 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 07/05/2023
+ * @since 2023-05-07
  */
 @ExtensionAPI(ComponentScope.MODULE)
 public interface ModuleAdditionalOutputDirectoriesProvider {
-  @Nonnull
-  List<ModuleAdditionalOutputDirectory> getOutputDirectories();
+    @Nonnull
+    List<ModuleAdditionalOutputDirectory> getOutputDirectories();
 }

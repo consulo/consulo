@@ -54,7 +54,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
         private final ColorValue myColor;
 
         @RequiredReadAction
-        public MyInfo(@Nonnull final PsiElement element, ColorValue color, final ElementColorProvider colorProvider) {
+        public MyInfo(@Nonnull PsiElement element, ColorValue color, ElementColorProvider colorProvider) {
             super(
                 element,
                 element.getTextRange(),
@@ -69,7 +69,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
                             return;
                         }
 
-                        final Editor editor = PsiUtilBase.findEditor(element);
+                        Editor editor = PsiUtilBase.findEditor(element);
                         assert editor != null;
 
                         ColorChooser.chooseColor(
@@ -158,10 +158,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
         ExtensionPoint<ElementColorProvider> point = element.getProject().getExtensionPoint(ElementColorProvider.class);
         Map.Entry<ElementColorProvider, ColorValue> colorInfo = point.computeSafeIfAny(it -> {
             ColorValue value = it.getColorFrom(element);
-            if (value != null) {
-                return Map.entry(it, value);
-            }
-            return null;
+            return value != null ? Map.entry(it, value) : null;
         });
 
         if (colorInfo != null) {

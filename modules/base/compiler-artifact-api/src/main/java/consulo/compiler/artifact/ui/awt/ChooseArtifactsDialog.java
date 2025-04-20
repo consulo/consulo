@@ -15,10 +15,13 @@
  */
 package consulo.compiler.artifact.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,18 +29,28 @@ import java.util.List;
  * @author nik
  */
 public class ChooseArtifactsDialog extends ChooseElementsDialog<Artifact> {
+    public ChooseArtifactsDialog(
+        Project project,
+        List<? extends Artifact> items,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue description
+    ) {
+        super(project, items, title, description, true);
+    }
 
-  public ChooseArtifactsDialog(Project project, List<? extends Artifact> items, String title, String description) {
-    super(project, items, title, description, true);
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ChooseArtifactsDialog(Project project, List<? extends Artifact> items, String title, String description) {
+        super(project, items, title, description, true);
+    }
 
-  @Override
-  protected String getItemText(Artifact item) {
-    return item.getName();
-  }
+    @Override
+    protected String getItemText(Artifact item) {
+        return item.getName();
+    }
 
-  @Override
-  protected Image getItemIcon(Artifact item) {
-    return item.getArtifactType().getIcon();
-  }
+    @Override
+    protected Image getItemIcon(Artifact item) {
+        return item.getArtifactType().getIcon();
+    }
 }

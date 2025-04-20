@@ -31,8 +31,6 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LibraryPresentationProvider<P extends LibraryProperties> implements LibraryPresentation<P> {
-    public static final ExtensionPointName<LibraryPresentationProvider> EP_NAME =
-        ExtensionPointName.create(LibraryPresentationProvider.class);
     private final LibraryKind myKind;
 
     protected LibraryPresentationProvider(@Nonnull LibraryKind kind) {

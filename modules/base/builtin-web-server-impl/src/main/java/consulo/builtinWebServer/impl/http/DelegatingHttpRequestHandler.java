@@ -1,5 +1,6 @@
 package consulo.builtinWebServer.impl.http;
 
+import consulo.application.Application;
 import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.http.HttpResponse;
 import consulo.builtinWebServer.http.util.HttpRequestUtil;
@@ -24,16 +25,13 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
     protected HttpResponse process(ChannelHandlerContext context, FullHttpRequest request, QueryStringDecoder urlDecoder) throws Exception {
         consulo.builtinWebServer.http.HttpRequest httpRequest = new HttpRequestImpl(request, urlDecoder, context);
         ThrowableFunction<HttpRequestHandler, HttpResponse, IOException> checkAndProcess = httpRequestHandler -> {
-            if (httpRequestHandler.isSupported(httpRequest)) {
-                if (!HttpRequestUtil.isWriteFromBrowserWithoutOrigin(httpRequest)) {
-                    if (httpRequestHandler.isAccessible(httpRequest)) {
-                        return httpRequestHandler.process(httpRequest);
-                    }
-                }
+            if (httpRequestHandler.isSupported(httpRequest)
+                && !HttpRequestUtil.isWriteFromBrowserWithoutOrigin(httpRequest)
+                && httpRequestHandler.isAccessible(httpRequest)) {
+                return httpRequestHandler.process(httpRequest);
             }
             return null;
         };
-
 
         Attribute<HttpRequestHandler> prevHandlerAttribute = context.channel().attr(PREV_HANDLER);
         HttpRequestHandler connectedHandler = prevHandlerAttribute.get();
@@ -47,7 +45,8 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
         }
 
         HttpHeaders headers = request.headers();
-        if ("Upgrade".equalsIgnoreCase(headers.get(HttpHeaderNames.CONNECTION)) && "WebSocket".equalsIgnoreCase(headers.get(HttpHeaderNames.UPGRADE))) {
+        if ("Upgrade".equalsIgnoreCase(headers.get(HttpHeaderNames.CONNECTION))
+            && "WebSocket".equalsIgnoreCase(headers.get(HttpHeaderNames.UPGRADE))) {
 
             // adding new handler to the existing pipeline to handle WebSocket Messages
             context.pipeline().replace(this, "websocketHandler", new WebSocketHandler());
@@ -56,7 +55,7 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
             return HttpResponse.ok();
         }
 
-        for (HttpRequestHandler handler : HttpRequestHandler.EP_NAME.getExtensionList()) {
+        return Application.get().getExtensionPoint(HttpRequestHandler.class).computeSafeIfAny(handler -> {
             try {
                 HttpResponse temp = checkAndProcess.apply(handler);
                 if (temp != null) {
@@ -67,9 +66,8 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
             catch (Throwable e) {
                 Logger.getInstance(BuiltInServer.class).error(e);
             }
-        }
-
-        return null;
+            return null;
+        });
     }
 
     private void handleHandshake(ChannelHandlerContext ctx, HttpRequest req) {
