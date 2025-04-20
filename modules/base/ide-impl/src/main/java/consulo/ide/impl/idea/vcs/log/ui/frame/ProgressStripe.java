@@ -16,22 +16,21 @@
 package consulo.ide.impl.idea.vcs.log.ui.frame;
 
 import consulo.disposer.Disposable;
-import consulo.ui.ex.awt.LoadingDecorator;
-import consulo.ide.impl.idea.openapi.util.NotNullComputable;
-import consulo.ui.ex.awt.JBPanel;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.disposer.Disposer;
-
+import consulo.ui.ex.awt.AsyncProcessIcon;
+import consulo.ui.ex.awt.JBPanel;
+import consulo.ui.ex.awt.LoadingDecorator;
+import consulo.ui.ex.awt.NonOpaquePanel;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Supplier;
 
 public class ProgressStripe extends JBPanel {
   @Nonnull
   private final JBPanel myPanel;
-  private final NotNullComputable<MyLoadingDecorator> myCreateLoadingDecorator;
+  private final Supplier<MyLoadingDecorator> myCreateLoadingDecorator;
   protected MyLoadingDecorator myDecorator;
 
   public ProgressStripe(@Nonnull JComponent targetComponent, @Nonnull Disposable parent, int startDelayMs) {
@@ -61,7 +60,7 @@ public class ProgressStripe extends JBPanel {
   }
 
   private void createLoadingDecorator() {
-    myDecorator = myCreateLoadingDecorator.compute();
+    myDecorator = myCreateLoadingDecorator.get();
     add(myDecorator.getComponent(), BorderLayout.CENTER);
     myDecorator.setLoadingText("");
   }
