@@ -50,308 +50,322 @@ import java.util.List;
 import java.util.*;
 
 public abstract class BaseStructureConfigurable extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll {
-  protected boolean myUiDisposed = true;
+    protected boolean myUiDisposed = true;
 
-  private boolean myWasTreeInitialized;
+    private boolean myWasTreeInitialized;
 
-  protected boolean myAutoScrollEnabled = true;
+    protected boolean myAutoScrollEnabled = true;
 
-  protected BaseStructureConfigurable(Provider<MasterDetailsStateService> masterDetailsStateService, MasterDetailsState state) {
-    super(masterDetailsStateService, state);
-  }
-
-  protected BaseStructureConfigurable(Provider<MasterDetailsStateService> masterDetailsStateService) {
-      super(masterDetailsStateService);
-  }
-
-  @Override
-  protected void initTree() {
-    if (myWasTreeInitialized) return;
-    myWasTreeInitialized = true;
-
-    super.initTree();
-    new TreeSpeedSearch(myTree, treePath -> ((MyNode)treePath.getLastPathComponent()).getDisplayName(), true);
-    ToolTipManager.sharedInstance().registerComponent(myTree);
-    myTree.setCellRenderer(new ProjectStructureElementRenderer(null));
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void disposeUIResources() {
-    if (myUiDisposed) return;
-
-    super.disposeUIResources();
-
-    myUiDisposed = true;
-
-    myAutoScrollHandler.cancelAllRequests();
-
-    ///myContext.getDaemonAnalyzer().clear();
-  }
-
-  public void checkCanApply() throws ConfigurationException {
-  }
-
-  protected void addCollapseExpandActions(final List<AnAction> result) {
-    final TreeExpander expander = new TreeExpander() {
-      @Override
-      public void expandAll() {
-        TreeUtil.expandAll(myTree);
-      }
-
-      @Override
-      public boolean canExpand() {
-        return true;
-      }
-
-      @Override
-      public void collapseAll() {
-        TreeUtil.collapseAll(myTree, 0);
-      }
-
-      @Override
-      public boolean canCollapse() {
-        return true;
-      }
-    };
-    final CommonActionsManager actionsManager = CommonActionsManager.getInstance();
-    result.add(actionsManager.createExpandAllAction(expander, myTree));
-    result.add(actionsManager.createCollapseAllAction(expander, myTree));
-  }
-
-  @Nullable
-  public ProjectStructureElement getSelectedElement() {
-    final TreePath selectionPath = myTree.getSelectionPath();
-    if (selectionPath != null && selectionPath.getLastPathComponent() instanceof MyNode) {
-      MyNode node = (MyNode)selectionPath.getLastPathComponent();
-      final Configurable configurable = node.getConfigurable();
-      if (configurable instanceof ProjectStructureElementConfigurable) {
-        return ((ProjectStructureElementConfigurable)configurable).getProjectStructureElement();
-      }
+    protected BaseStructureConfigurable(Provider<MasterDetailsStateService> masterDetailsStateService, MasterDetailsState state) {
+        super(masterDetailsStateService, state);
     }
-    return null;
-  }
 
-  private class MyFindUsagesAction extends FindUsagesInProjectStructureActionBase {
-
-    public MyFindUsagesAction(JComponent parentComponent) {
-      super(parentComponent);
+    protected BaseStructureConfigurable(Provider<MasterDetailsStateService> masterDetailsStateService) {
+        super(masterDetailsStateService);
     }
 
     @Override
-    protected boolean isEnabled() {
-      final TreePath selectionPath = myTree.getSelectionPath();
-      if (selectionPath != null) {
-        final MyNode node = (MyNode)selectionPath.getLastPathComponent();
-        return !node.isDisplayInBold();
-      }
-      else {
-        return false;
-      }
+    protected void initTree() {
+        if (myWasTreeInitialized) {
+            return;
+        }
+        myWasTreeInitialized = true;
+
+        super.initTree();
+        new TreeSpeedSearch(myTree, treePath -> ((MyNode)treePath.getLastPathComponent()).getDisplayName(), true);
+        ToolTipManager.sharedInstance().registerComponent(myTree);
+        myTree.setCellRenderer(new ProjectStructureElementRenderer(null));
     }
 
     @Override
-    protected ProjectStructureElement getSelectedElement() {
-      return BaseStructureConfigurable.this.getSelectedElement();
+    @RequiredUIAccess
+    public void disposeUIResources() {
+        if (myUiDisposed) {
+            return;
+        }
+
+        super.disposeUIResources();
+
+        myUiDisposed = true;
+
+        myAutoScrollHandler.cancelAllRequests();
+
+        ///myContext.getDaemonAnalyzer().clear();
     }
 
-    @Override
-    protected RelativePoint getPointToShowResults() {
-      final int selectedRow = myTree.getSelectionRows()[0];
-      final Rectangle rowBounds = myTree.getRowBounds(selectedRow);
-      final Point location = rowBounds.getLocation();
-      location.x += rowBounds.width;
-      return new RelativePoint(myTree, location);
+    public void checkCanApply() throws ConfigurationException {
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    //myContext.reset();
-
-    myUiDisposed = false;
-
-    if (!myWasTreeInitialized) {
-      initTree();
-      myTree.setShowsRootHandles(false);
-      loadTree();
-    }
-    else {
-      resetUI();
-      myTree.setShowsRootHandles(false);
-      loadTree();
-    }
-    //for (ProjectStructureElement element : getProjectStructureElements()) {
-    //  myContext.getDaemonAnalyzer().queueUpdate(element);
-    //}
-
-    super.reset();
-  }
-
-  @Nonnull
-  protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
-    return Collections.emptyList();
-  }
-
-  protected abstract void loadTree();
-
-  @Override
-  @Nonnull
-  protected ArrayList<AnAction> createActions(final boolean fromPopup) {
-    final ArrayList<AnAction> result = new ArrayList<AnAction>();
-    AbstractAddGroup addAction = createAddAction();
-    if (addAction != null) {
-      result.add(addAction);
-    }
-    result.add(new MyRemoveAction());
-
-    final List<? extends AnAction> copyActions = createCopyActions(fromPopup);
-    result.addAll(copyActions);
-    result.add(AnSeparator.getInstance());
-
-    result.add(new MyFindUsagesAction(myTree));
-
-
-    return result;
-  }
-
-  @Nonnull
-  protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
-    return Collections.emptyList();
-  }
-
-  public void onStructureUnselected() {
-  }
-
-  public void onStructureSelected() {
-  }
-
-  @Nullable
-  protected abstract AbstractAddGroup createAddAction();
-
-  protected class MyRemoveAction extends MyDeleteAction {
-    public MyRemoveAction() {
-      super(objects -> {
-        Object[] editableObjects = ContainerUtil.mapNotNull(objects, object -> {
-          if (object instanceof MyNode) {
-            final MasterDetailsConfigurable namedConfigurable = ((MyNode)object).getConfigurable();
-            if (namedConfigurable != null) {
-              return namedConfigurable.getEditableObject();
+    protected void addCollapseExpandActions(final List<AnAction> result) {
+        final TreeExpander expander = new TreeExpander() {
+            @Override
+            public void expandAll() {
+                TreeUtil.expandAll(myTree);
             }
-          }
-          return null;
-        }, new Object[0]);
-        return editableObjects.length == objects.length && canBeRemoved(editableObjects);
-      });
+
+            @Override
+            public boolean canExpand() {
+                return true;
+            }
+
+            @Override
+            public void collapseAll() {
+                TreeUtil.collapseAll(myTree, 0);
+            }
+
+            @Override
+            public boolean canCollapse() {
+                return true;
+            }
+        };
+        final CommonActionsManager actionsManager = CommonActionsManager.getInstance();
+        result.add(actionsManager.createExpandAllAction(expander, myTree));
+        result.add(actionsManager.createCollapseAllAction(expander, myTree));
+    }
+
+    @Nullable
+    public ProjectStructureElement getSelectedElement() {
+        final TreePath selectionPath = myTree.getSelectionPath();
+        if (selectionPath != null && selectionPath.getLastPathComponent() instanceof MyNode) {
+            MyNode node = (MyNode)selectionPath.getLastPathComponent();
+            final Configurable configurable = node.getConfigurable();
+            if (configurable instanceof ProjectStructureElementConfigurable) {
+                return ((ProjectStructureElementConfigurable)configurable).getProjectStructureElement();
+            }
+        }
+        return null;
+    }
+
+    private class MyFindUsagesAction extends FindUsagesInProjectStructureActionBase {
+
+        public MyFindUsagesAction(JComponent parentComponent) {
+            super(parentComponent);
+        }
+
+        @Override
+        protected boolean isEnabled() {
+            final TreePath selectionPath = myTree.getSelectionPath();
+            if (selectionPath != null) {
+                final MyNode node = (MyNode)selectionPath.getLastPathComponent();
+                return !node.isDisplayInBold();
+            }
+            else {
+                return false;
+            }
+        }
+
+        @Override
+        protected ProjectStructureElement getSelectedElement() {
+            return BaseStructureConfigurable.this.getSelectedElement();
+        }
+
+        @Override
+        protected RelativePoint getPointToShowResults() {
+            final int selectedRow = myTree.getSelectionRows()[0];
+            final Rectangle rowBounds = myTree.getRowBounds(selectedRow);
+            final Point location = rowBounds.getLocation();
+            location.x += rowBounds.width;
+            return new RelativePoint(myTree, location);
+        }
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
-      final TreePath[] paths = myTree.getSelectionPaths();
-      if (paths == null) return;
+    public void reset() {
+        //myContext.reset();
 
-      final Set<TreePath> pathsToRemove = new HashSet<TreePath>();
-      for (TreePath path : paths) {
-        if (removeFromModel(path)) {
-          pathsToRemove.add(path);
+        myUiDisposed = false;
+
+        if (!myWasTreeInitialized) {
+            initTree();
+            myTree.setShowsRootHandles(false);
+            loadTree();
         }
-      }
-      removePaths(pathsToRemove.toArray(new TreePath[pathsToRemove.size()]));
+        else {
+            resetUI();
+            myTree.setShowsRootHandles(false);
+            loadTree();
+        }
+        //for (ProjectStructureElement element : getProjectStructureElements()) {
+        //    myContext.getDaemonAnalyzer().queueUpdate(element);
+        //}
+
+        super.reset();
     }
 
-    private boolean removeFromModel(final TreePath selectionPath) {
-      final Object last = selectionPath.getLastPathComponent();
-
-      if (!(last instanceof MyNode)) return false;
-
-      final MyNode node = (MyNode)last;
-      final MasterDetailsConfigurable configurable = node.getConfigurable();
-      if (configurable == null) return false;
-      final Object editableObject = configurable.getEditableObject();
-
-      return removeObject(editableObject);
-    }
-  }
-
-  protected boolean canBeRemoved(final Object[] editableObjects) {
-    for (Object editableObject : editableObjects) {
-      if (!canObjectBeRemoved(editableObject)) return false;
-    }
-    return true;
-  }
-
-  private static boolean canObjectBeRemoved(Object editableObject) {
-    if (editableObject instanceof Sdk || editableObject instanceof Module || editableObject instanceof Artifact) {
-      return true;
-    }
-    if (editableObject instanceof Library) {
-      final LibraryTable table = ((Library)editableObject).getTable();
-      return table == null || table.isEditable();
-    }
-    return false;
-  }
-
-  protected boolean removeObject(final Object editableObject) {
-    // todo keep only removeModule() and removeFacet() here because other removeXXX() are empty here and overridden in subclasses? Override removeObject() instead?
-    if (editableObject instanceof Sdk) {
-      removeSdk((Sdk)editableObject);
-    }
-    else if (editableObject instanceof Module) {
-      if (!removeModule((Module)editableObject)) return false;
-    }
-    else if (editableObject instanceof Library) {
-      if (!removeLibrary((Library)editableObject)) return false;
-    }
-    else if (editableObject instanceof Artifact) {
-      removeArtifact((Artifact)editableObject);
-    }
-    return true;
-  }
-
-  protected void removeArtifact(Artifact artifact) {
-  }
-
-
-  protected boolean removeLibrary(Library library) {
-    return false;
-  }
-
-  protected boolean removeModule(final Module module) {
-    return true;
-  }
-
-  protected void removeSdk(final Sdk editableObject) {
-  }
-
-  protected abstract static class AbstractAddGroup extends ActionGroup implements ActionGroupWithPreselection {
-
-    protected AbstractAddGroup(String text, Image icon) {
-      super(text, true);
-
-      final Presentation presentation = getTemplatePresentation();
-      presentation.setIcon(icon);
-
-      final Keymap active = KeymapManager.getInstance().getActiveKeymap();
-      if (active != null) {
-        final Shortcut[] shortcuts = active.getShortcuts("NewElement");
-        setShortcutSet(new CustomShortcutSet(shortcuts));
-      }
+    @Nonnull
+    protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
+        return Collections.emptyList();
     }
 
-    public AbstractAddGroup(String text) {
-      this(text, IconUtil.getAddIcon());
-    }
+    protected abstract void loadTree();
 
     @Override
-    public ActionGroup getActionGroup() {
-      return this;
+    @Nonnull
+    protected ArrayList<AnAction> createActions(final boolean fromPopup) {
+        final ArrayList<AnAction> result = new ArrayList<AnAction>();
+        AbstractAddGroup addAction = createAddAction();
+        if (addAction != null) {
+            result.add(addAction);
+        }
+        result.add(new MyRemoveAction());
+
+        final List<? extends AnAction> copyActions = createCopyActions(fromPopup);
+        result.addAll(copyActions);
+        result.add(AnSeparator.getInstance());
+
+        result.add(new MyFindUsagesAction(myTree));
+
+
+        return result;
     }
 
-    @Override
-    public int getDefaultIndex() {
-      return 0;
+    @Nonnull
+    protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
+        return Collections.emptyList();
     }
-  }
+
+    public void onStructureUnselected() {
+    }
+
+    public void onStructureSelected() {
+    }
+
+    @Nullable
+    protected abstract AbstractAddGroup createAddAction();
+
+    protected class MyRemoveAction extends MyDeleteAction {
+        public MyRemoveAction() {
+            super(objects -> {
+                Object[] editableObjects = ContainerUtil.mapNotNull(objects, object -> {
+                    if (object instanceof MyNode) {
+                        final MasterDetailsConfigurable namedConfigurable = ((MyNode)object).getConfigurable();
+                        if (namedConfigurable != null) {
+                            return namedConfigurable.getEditableObject();
+                        }
+                    }
+                    return null;
+                }, new Object[0]);
+                return editableObjects.length == objects.length && canBeRemoved(editableObjects);
+            });
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            final TreePath[] paths = myTree.getSelectionPaths();
+            if (paths == null) {
+                return;
+            }
+
+            final Set<TreePath> pathsToRemove = new HashSet<TreePath>();
+            for (TreePath path : paths) {
+                if (removeFromModel(path)) {
+                    pathsToRemove.add(path);
+                }
+            }
+            removePaths(pathsToRemove.toArray(new TreePath[pathsToRemove.size()]));
+        }
+
+        private boolean removeFromModel(final TreePath selectionPath) {
+            final Object last = selectionPath.getLastPathComponent();
+
+            if (!(last instanceof MyNode)) {
+                return false;
+            }
+
+            final MyNode node = (MyNode)last;
+            final MasterDetailsConfigurable configurable = node.getConfigurable();
+            if (configurable == null) {
+                return false;
+            }
+            final Object editableObject = configurable.getEditableObject();
+
+            return removeObject(editableObject);
+        }
+    }
+
+    protected boolean canBeRemoved(final Object[] editableObjects) {
+        for (Object editableObject : editableObjects) {
+            if (!canObjectBeRemoved(editableObject)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean canObjectBeRemoved(Object editableObject) {
+        if (editableObject instanceof Sdk || editableObject instanceof Module || editableObject instanceof Artifact) {
+            return true;
+        }
+        if (editableObject instanceof Library) {
+            final LibraryTable table = ((Library)editableObject).getTable();
+            return table == null || table.isEditable();
+        }
+        return false;
+    }
+
+    protected boolean removeObject(final Object editableObject) {
+        // todo keep only removeModule() and removeFacet() here because other removeXXX() are empty here and overridden in subclasses? Override removeObject() instead?
+        if (editableObject instanceof Sdk) {
+            removeSdk((Sdk)editableObject);
+        }
+        else if (editableObject instanceof Module) {
+            if (!removeModule((Module)editableObject)) {
+                return false;
+            }
+        }
+        else if (editableObject instanceof Library) {
+            if (!removeLibrary((Library)editableObject)) {
+                return false;
+            }
+        }
+        else if (editableObject instanceof Artifact) {
+            removeArtifact((Artifact)editableObject);
+        }
+        return true;
+    }
+
+    protected void removeArtifact(Artifact artifact) {
+    }
+
+    protected boolean removeLibrary(Library library) {
+        return false;
+    }
+
+    protected boolean removeModule(final Module module) {
+        return true;
+    }
+
+    protected void removeSdk(final Sdk editableObject) {
+    }
+
+    protected abstract static class AbstractAddGroup extends ActionGroup implements ActionGroupWithPreselection {
+        protected AbstractAddGroup(String text, Image icon) {
+            super(text, true);
+
+            final Presentation presentation = getTemplatePresentation();
+            presentation.setIcon(icon);
+
+            final Keymap active = KeymapManager.getInstance().getActiveKeymap();
+            if (active != null) {
+                final Shortcut[] shortcuts = active.getShortcuts("NewElement");
+                setShortcutSet(new CustomShortcutSet(shortcuts));
+            }
+        }
+
+        public AbstractAddGroup(String text) {
+            this(text, IconUtil.getAddIcon());
+        }
+
+        @Override
+        public ActionGroup getActionGroup() {
+            return this;
+        }
+
+        @Override
+        public int getDefaultIndex() {
+            return 0;
+        }
+    }
 }

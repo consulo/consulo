@@ -35,30 +35,31 @@ import jakarta.inject.Singleton;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class InvalidArtifactType extends ArtifactType {
+    public static InvalidArtifactType getInstance() {
+        return Application.get().getInstance(InvalidArtifactType.class);
+    }
 
-  public static InvalidArtifactType getInstance() {
-    return Application.get().getInstance(InvalidArtifactType.class);
-  }
+    public InvalidArtifactType() {
+        super("invalid", "Invalid");
+    }
 
-  public InvalidArtifactType() {
-    super("invalid", "Invalid");
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return AllIcons.FileTypes.Unknown;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.FileTypes.Unknown;
-  }
+    @Override
+    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+        return "";
+    }
 
-  @Override
-  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
-    return "";
-  }
-
-  @Nonnull
-  @Override
-  public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory packagingElementFactory,
-                                                        @Nonnull String artifactName) {
-    return packagingElementFactory.createArtifactRootElement();
-  }
+    @Nonnull
+    @Override
+    public CompositePackagingElement<?> createRootElement(
+        @Nonnull PackagingElementFactory packagingElementFactory,
+        @Nonnull String artifactName
+    ) {
+        return packagingElementFactory.createArtifactRootElement();
+    }
 }

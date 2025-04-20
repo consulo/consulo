@@ -28,24 +28,27 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(id = "zip-artifact", order = "first")
 public class ZipArtifactType extends ArtifactType {
-  public ZipArtifactType() {
-    super("zip", "Zip");
-  }
+    public ZipArtifactType() {
+        super("zip", "Zip");
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.Artifact;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.Artifact;
+    }
 
-  @Override
-  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
-    return "/";
-  }
+    @Override
+    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+        return "/";
+    }
 
-  @Nonnull
-  @Override
-  public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory packagingElementFactory, @Nonnull String artifactName) {
-    return new ZipArchivePackagingElement(ArtifactUtil.suggestArtifactFileName(artifactName) + ".zip");
-  }
+    @Nonnull
+    @Override
+    public CompositePackagingElement<?> createRootElement(
+        @Nonnull PackagingElementFactory packagingElementFactory,
+        @Nonnull String artifactName
+    ) {
+        return new ZipArchivePackagingElement(ArtifactUtil.suggestArtifactFileName(artifactName) + ".zip");
+    }
 }
