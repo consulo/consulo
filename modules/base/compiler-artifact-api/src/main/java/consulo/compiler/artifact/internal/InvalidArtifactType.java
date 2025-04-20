@@ -18,12 +18,13 @@ package consulo.compiler.artifact.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
@@ -40,13 +41,13 @@ public class InvalidArtifactType extends ArtifactType {
     }
 
     public InvalidArtifactType() {
-        super("invalid", "Invalid");
+        super("invalid", LocalizeValue.localizeTODO("Invalid"));
     }
 
     @Nonnull
     @Override
     public Image getIcon() {
-        return AllIcons.FileTypes.Unknown;
+        return PlatformIconGroup.filetypesUnknown();
     }
 
     @Override

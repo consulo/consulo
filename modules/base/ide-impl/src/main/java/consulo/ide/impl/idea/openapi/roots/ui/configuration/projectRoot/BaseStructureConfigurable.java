@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.compiler.artifact.Artifact;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
@@ -24,8 +25,9 @@ import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.impl.idea.util.IconUtil;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.TreeExpander;
@@ -96,8 +98,8 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
     public void checkCanApply() throws ConfigurationException {
     }
 
-    protected void addCollapseExpandActions(final List<AnAction> result) {
-        final TreeExpander expander = new TreeExpander() {
+    protected void addCollapseExpandActions(List<AnAction> result) {
+        TreeExpander expander = new TreeExpander() {
             @Override
             public void expandAll() {
                 TreeUtil.expandAll(myTree);
@@ -118,20 +120,17 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
                 return true;
             }
         };
-        final CommonActionsManager actionsManager = CommonActionsManager.getInstance();
+        CommonActionsManager actionsManager = CommonActionsManager.getInstance();
         result.add(actionsManager.createExpandAllAction(expander, myTree));
         result.add(actionsManager.createCollapseAllAction(expander, myTree));
     }
 
     @Nullable
     public ProjectStructureElement getSelectedElement() {
-        final TreePath selectionPath = myTree.getSelectionPath();
-        if (selectionPath != null && selectionPath.getLastPathComponent() instanceof MyNode) {
-            MyNode node = (MyNode)selectionPath.getLastPathComponent();
-            final Configurable configurable = node.getConfigurable();
-            if (configurable instanceof ProjectStructureElementConfigurable) {
-                return ((ProjectStructureElementConfigurable)configurable).getProjectStructureElement();
-            }
+        TreePath selectionPath = myTree.getSelectionPath();
+        if (selectionPath != null && selectionPath.getLastPathComponent() instanceof MyNode node
+            && node.getConfigurable() instanceof ProjectStructureElementConfigurable configurable) {
+            return configurable.getProjectStructureElement();
         }
         return null;
     }
@@ -144,9 +143,9 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
 
         @Override
         protected boolean isEnabled() {
-            final TreePath selectionPath = myTree.getSelectionPath();
+            TreePath selectionPath = myTree.getSelectionPath();
             if (selectionPath != null) {
-                final MyNode node = (MyNode)selectionPath.getLastPathComponent();
+                MyNode node = (MyNode)selectionPath.getLastPathComponent();
                 return !node.isDisplayInBold();
             }
             else {
@@ -161,9 +160,9 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
 
         @Override
         protected RelativePoint getPointToShowResults() {
-            final int selectedRow = myTree.getSelectionRows()[0];
-            final Rectangle rowBounds = myTree.getRowBounds(selectedRow);
-            final Point location = rowBounds.getLocation();
+            int selectedRow = myTree.getSelectionRows()[0];
+            Rectangle rowBounds = myTree.getRowBounds(selectedRow);
+            Point location = rowBounds.getLocation();
             location.x += rowBounds.width;
             return new RelativePoint(myTree, location);
         }
@@ -202,20 +201,19 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
 
     @Override
     @Nonnull
-    protected ArrayList<AnAction> createActions(final boolean fromPopup) {
-        final ArrayList<AnAction> result = new ArrayList<AnAction>();
+    protected ArrayList<AnAction> createActions(boolean fromPopup) {
+        ArrayList<AnAction> result = new ArrayList<>();
         AbstractAddGroup addAction = createAddAction();
         if (addAction != null) {
             result.add(addAction);
         }
         result.add(new MyRemoveAction());
 
-        final List<? extends AnAction> copyActions = createCopyActions(fromPopup);
+        List<? extends AnAction> copyActions = createCopyActions(fromPopup);
         result.addAll(copyActions);
         result.add(AnSeparator.getInstance());
 
         result.add(new MyFindUsagesAction(myTree));
-
 
         return result;
     }
@@ -237,28 +235,32 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
     protected class MyRemoveAction extends MyDeleteAction {
         public MyRemoveAction() {
             super(objects -> {
-                Object[] editableObjects = ContainerUtil.mapNotNull(objects, object -> {
-                    if (object instanceof MyNode) {
-                        final MasterDetailsConfigurable namedConfigurable = ((MyNode)object).getConfigurable();
-                        if (namedConfigurable != null) {
-                            return namedConfigurable.getEditableObject();
+                Object[] editableObjects = ContainerUtil.mapNotNull(
+                    objects,
+                    object -> {
+                        if (object instanceof MyNode node) {
+                            MasterDetailsConfigurable namedConfigurable = node.getConfigurable();
+                            if (namedConfigurable != null) {
+                                return namedConfigurable.getEditableObject();
+                            }
                         }
-                    }
-                    return null;
-                }, new Object[0]);
+                        return null;
+                    },
+                    new Object[0]
+                );
                 return editableObjects.length == objects.length && canBeRemoved(editableObjects);
             });
         }
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
-            final TreePath[] paths = myTree.getSelectionPaths();
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            TreePath[] paths = myTree.getSelectionPaths();
             if (paths == null) {
                 return;
             }
 
-            final Set<TreePath> pathsToRemove = new HashSet<TreePath>();
+            Set<TreePath> pathsToRemove = new HashSet<>();
             for (TreePath path : paths) {
                 if (removeFromModel(path)) {
                     pathsToRemove.add(path);
@@ -267,25 +269,24 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
             removePaths(pathsToRemove.toArray(new TreePath[pathsToRemove.size()]));
         }
 
-        private boolean removeFromModel(final TreePath selectionPath) {
-            final Object last = selectionPath.getLastPathComponent();
+        private boolean removeFromModel(TreePath selectionPath) {
+            Object last = selectionPath.getLastPathComponent();
 
-            if (!(last instanceof MyNode)) {
+            if (!(last instanceof MyNode node)) {
                 return false;
             }
 
-            final MyNode node = (MyNode)last;
-            final MasterDetailsConfigurable configurable = node.getConfigurable();
+            MasterDetailsConfigurable configurable = node.getConfigurable();
             if (configurable == null) {
                 return false;
             }
-            final Object editableObject = configurable.getEditableObject();
+            Object editableObject = configurable.getEditableObject();
 
             return removeObject(editableObject);
         }
     }
 
-    protected boolean canBeRemoved(final Object[] editableObjects) {
+    protected boolean canBeRemoved(Object[] editableObjects) {
         for (Object editableObject : editableObjects) {
             if (!canObjectBeRemoved(editableObject)) {
                 return false;
@@ -298,30 +299,31 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
         if (editableObject instanceof Sdk || editableObject instanceof Module || editableObject instanceof Artifact) {
             return true;
         }
-        if (editableObject instanceof Library) {
-            final LibraryTable table = ((Library)editableObject).getTable();
+        if (editableObject instanceof Library library) {
+            LibraryTable table = library.getTable();
             return table == null || table.isEditable();
         }
         return false;
     }
 
-    protected boolean removeObject(final Object editableObject) {
-        // todo keep only removeModule() and removeFacet() here because other removeXXX() are empty here and overridden in subclasses? Override removeObject() instead?
-        if (editableObject instanceof Sdk) {
-            removeSdk((Sdk)editableObject);
+    protected boolean removeObject(Object editableObject) {
+        // TODO keep only removeModule() and removeFacet() here because other removeXXX() are empty here and overridden in subclasses?
+        // Override removeObject() instead?
+        if (editableObject instanceof Sdk sdk) {
+            removeSdk(sdk);
         }
-        else if (editableObject instanceof Module) {
-            if (!removeModule((Module)editableObject)) {
+        else if (editableObject instanceof Module module) {
+            if (!removeModule(module)) {
                 return false;
             }
         }
-        else if (editableObject instanceof Library) {
-            if (!removeLibrary((Library)editableObject)) {
+        else if (editableObject instanceof Library library) {
+            if (!removeLibrary(library)) {
                 return false;
             }
         }
-        else if (editableObject instanceof Artifact) {
-            removeArtifact((Artifact)editableObject);
+        else if (editableObject instanceof Artifact artifact) {
+            removeArtifact(artifact);
         }
         return true;
     }
@@ -333,29 +335,41 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
         return false;
     }
 
-    protected boolean removeModule(final Module module) {
+    protected boolean removeModule(Module module) {
         return true;
     }
 
-    protected void removeSdk(final Sdk editableObject) {
+    protected void removeSdk(Sdk editableObject) {
     }
 
     protected abstract static class AbstractAddGroup extends ActionGroup implements ActionGroupWithPreselection {
-        protected AbstractAddGroup(String text, Image icon) {
+        protected AbstractAddGroup(@Nonnull LocalizeValue text, Image icon) {
             super(text, true);
 
-            final Presentation presentation = getTemplatePresentation();
+            Presentation presentation = getTemplatePresentation();
             presentation.setIcon(icon);
 
-            final Keymap active = KeymapManager.getInstance().getActiveKeymap();
+            Keymap active = KeymapManager.getInstance().getActiveKeymap();
             if (active != null) {
-                final Shortcut[] shortcuts = active.getShortcuts("NewElement");
+                Shortcut[] shortcuts = active.getShortcuts("NewElement");
                 setShortcutSet(new CustomShortcutSet(shortcuts));
             }
         }
 
+        public AbstractAddGroup(@Nonnull LocalizeValue text) {
+            this(text, PlatformIconGroup.generalAdd());
+        }
+
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
+        protected AbstractAddGroup(String text, Image icon) {
+            this(LocalizeValue.ofNullable(text), icon);
+        }
+
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
         public AbstractAddGroup(String text) {
-            this(text, IconUtil.getAddIcon());
+            this(LocalizeValue.ofNullable(text));
         }
 
         @Override

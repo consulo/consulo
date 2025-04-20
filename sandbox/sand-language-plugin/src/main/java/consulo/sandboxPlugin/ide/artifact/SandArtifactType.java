@@ -23,6 +23,7 @@ import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
@@ -42,7 +43,7 @@ public class SandArtifactType extends ArtifactType {
     }
 
     public SandArtifactType() {
-        super(ID, "Sand");
+        super(ID, LocalizeValue.localizeTODO("Sand"));
     }
 
     @Override

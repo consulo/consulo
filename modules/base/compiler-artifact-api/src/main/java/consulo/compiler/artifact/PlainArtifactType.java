@@ -35,11 +35,11 @@ public class PlainArtifactType extends ArtifactType {
     public static final String ID = "plain";
 
     public static PlainArtifactType getInstance() {
-        return Application.get().getExtensionPoint(PlainArtifactType.class).findExtension(PlainArtifactType.class);
+        return Application.get().getExtensionPoint(ArtifactType.class).findExtension(PlainArtifactType.class);
     }
 
     public PlainArtifactType() {
-        super(ID, CompilerLocalize.artifactTypePlain().get());
+        super(ID, CompilerLocalize.artifactTypePlain());
     }
 
     @Nonnull
