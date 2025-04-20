@@ -18,12 +18,15 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
 import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -43,22 +46,30 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author yole
  */
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 @ServiceImpl
 @Singleton
-public class VcsFileStatusProvider implements FileStatusFacade {
+public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
+    private static final Logger LOG = Logger.getInstance(VcsFileStatusProvider.class);
+
     private final Project myProject;
     private final FileStatusManagerImpl myFileStatusManager;
     private final Provider<ProjectLevelVcsManager> myVcsManager;
     private final Provider<ChangeListManager> myChangeListManager;
     private final Provider<VcsDirtyScopeManager> myDirtyScopeManager;
     private final Provider<VcsConfiguration> myConfiguration;
+
     private boolean myHaveEmptyContentRevisions;
 
-    private static final Logger LOG = Logger.getInstance(VcsFileStatusProvider.class);
+    private MergingUpdateQueue myMergingUpdateQueue;
+
+    private final Map<VirtualFile, Boolean> myRefreshedFileMap = new HashMap<>();
 
     @Inject
     public VcsFileStatusProvider(
@@ -77,6 +88,9 @@ public class VcsFileStatusProvider implements FileStatusFacade {
         myConfiguration = configuration;
         myHaveEmptyContentRevisions = true;
         myFileStatusManager.setFileStatusProvider(this);
+
+        myMergingUpdateQueue = new MergingUpdateQueue("FileStatusFacade", 100, true, null, this, null, false);
+
         myProject.getMessageBus().connect().subscribe(ChangeListListener.class, new ChangeListListener() {
             @Override
             public void changeListAdded(ChangeList list) {
@@ -106,6 +120,11 @@ public class VcsFileStatusProvider implements FileStatusFacade {
                 fileStatusesChanged();
             }
         });
+    }
+
+    @Override
+    public void dispose() {
+        myRefreshedFileMap.clear();
     }
 
     private void fileStatusesChanged() {
@@ -144,23 +163,50 @@ public class VcsFileStatusProvider implements FileStatusFacade {
         }
         FileStatus cachedStatus = myFileStatusManager.getCachedStatus(virtualFile);
         if (cachedStatus == null || cachedStatus == FileStatus.NOT_CHANGED || !isDocumentModified(virtualFile)) {
-            AbstractVcs vcs = myVcsManager.get().getVcsFor(virtualFile);
-            if (vcs == null) {
-                return;
+            synchronized (myRefreshedFileMap) {
+                myRefreshedFileMap.put(virtualFile, cachedStatus == FileStatus.MODIFIED);
             }
-            if (cachedStatus == FileStatus.MODIFIED && !isDocumentModified(virtualFile)) {
-                if (!((ReadonlyStatusHandlerImpl)ReadonlyStatusHandlerImpl.getInstance(myProject)).getState().SHOW_DIALOG) {
-                    RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
-                    if (rollbackEnvironment != null) {
-                        rollbackEnvironment.rollbackIfUnchanged(virtualFile);
-                    }
+
+            myMergingUpdateQueue.queue(Update.create("refreshFileStatusFromDocument", this::processModifiedDocuments));
+        }
+    }
+
+    private void processModifiedDocuments() {
+        Map<VirtualFile, Boolean> data;
+
+        synchronized (myRefreshedFileMap) {
+            data = new HashMap<>(myRefreshedFileMap);
+
+            myRefreshedFileMap.clear();
+        }
+
+        if (data.isEmpty()) {
+            return;
+        }
+
+        for (Map.Entry<VirtualFile, Boolean> entry : data.entrySet()) {
+            processModifiedDocument(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void processModifiedDocument(VirtualFile virtualFile, boolean modified) {
+        AbstractVcs vcs = myVcsManager.get().getVcsFor(virtualFile);
+        if (vcs == null) {
+            return;
+        }
+
+        if (modified && !isDocumentModified(virtualFile)) {
+            if (!((ReadonlyStatusHandlerImpl) ReadonlyStatusHandlerImpl.getInstance(myProject)).getState().SHOW_DIALOG) {
+                RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
+                if (rollbackEnvironment != null) {
+                    rollbackEnvironment.rollbackIfUnchanged(virtualFile);
                 }
             }
-            myFileStatusManager.fileStatusChanged(virtualFile);
-            ChangeProvider cp = vcs.getChangeProvider();
-            if (cp != null && cp.isModifiedDocumentTrackingRequired()) {
-                myDirtyScopeManager.get().fileDirty(virtualFile);
-            }
+        }
+        myFileStatusManager.fileStatusChanged(virtualFile);
+        ChangeProvider cp = vcs.getChangeProvider();
+        if (cp != null && cp.isModifiedDocumentTrackingRequired()) {
+            myDirtyScopeManager.get().fileDirty(virtualFile);
         }
     }
 
