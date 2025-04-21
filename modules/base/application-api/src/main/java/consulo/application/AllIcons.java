@@ -47,7 +47,6 @@ public class AllIcons {
         public static final Image Dump = PlatformIconGroup.actionsDump(); // 16x16
         public static final Image Edit = PlatformIconGroup.actionsEdit(); // 14x14
         public static final Image EditSource = PlatformIconGroup.actionsEditsource(); // 16x16
-        public static final Image ErDiagram = PlatformIconGroup.actionsErdiagram(); // 16x16
         public static final Image Exclude = General.Remove; // 14x14
         public static final Image Execute = PlatformIconGroup.actionsExecute(); // 16x16
         public static final Image Exit = PlatformIconGroup.actionsExit(); // 16x16
@@ -59,7 +58,6 @@ public class AllIcons {
         public static final Image FindPlain = Find; // 16x16
         public static final Image Forward = PlatformIconGroup.actionsForward(); // 16x16
         public static final Image GC = PlatformIconGroup.actionsGc(); // 16x16
-        public static final Image Get = PlatformIconGroup.actionsGet(); // 16x16
         public static final Image GroupByClass = PlatformIconGroup.actionsGroupbyclass(); // 16x16
         public static final Image GroupByFile = PlatformIconGroup.actionsGroupbyfile(); // 16x16
         public static final Image GroupByMethod = PlatformIconGroup.actionsGroupbymethod(); // 16x16
@@ -113,7 +111,6 @@ public class AllIcons {
         public static final Image Selectall = PlatformIconGroup.actionsSelectall(); // 16x16
         public static final Image ShortcutFilter = PlatformIconGroup.actionsShortcutfilter(); // 16x16
         public static final Image ShowAsTree = PlatformIconGroup.actionsShowastree(); // 16x16
-        public static final Image ShowChangesOnly = PlatformIconGroup.actionsShowchangesonly(); // 16x16
         public static final Image ShowImportStatements = PlatformIconGroup.actionsShowimportstatements(); // 16x16
         public static final Image ShowReadAccess = PlatformIconGroup.actionsShowreadaccess(); // 16x16
         @Deprecated
@@ -216,7 +213,6 @@ public class AllIcons {
         public static final Image Aspectj = PlatformIconGroup.filetypesAspectj(); // 16x16
         public static final Image Config = PlatformIconGroup.filetypesConfig(); // 16x16
         public static final Image Custom = PlatformIconGroup.filetypesCustom(); // 16x16
-        public static final Image Diagram = PlatformIconGroup.actionsErdiagram(); // 16x16
         public static final Image Dtd = PlatformIconGroup.filetypesDtd(); // 16x16
         public static final Image Htaccess = PlatformIconGroup.filetypesHtaccess(); // 16x16
         public static final Image Html = PlatformIconGroup.filetypesHtml(); // 16x16

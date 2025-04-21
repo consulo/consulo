@@ -26,6 +26,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.scope.AnalysisScope;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -175,7 +176,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
     return new ToggleAction(
       InspectionLocalize.inspectionFilterShowDiffOnlyActionText(),
       InspectionLocalize.inspectionFilterShowDiffOnlyActionText(),
-      AllIcons.Actions.ShowChangesOnly
+      PlatformIconGroup.actionsDiff()
     ) {
       @Override
       public boolean isSelected(@Nonnull AnActionEvent e) {

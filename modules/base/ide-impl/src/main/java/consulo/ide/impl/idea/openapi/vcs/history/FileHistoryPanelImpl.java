@@ -1303,7 +1303,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
             super(
                 VcsLocalize.actionNameGetFileContentFromRepository(),
                 VcsLocalize.actionDescriptionGetFileContentFromRepository(),
-                PlatformIconGroup.actionsGet(),
+                PlatformIconGroup.actionsDownload(),
                 1,
                 FileHistoryPanelImpl.this
             );
