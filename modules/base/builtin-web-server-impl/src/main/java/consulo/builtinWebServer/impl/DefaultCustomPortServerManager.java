@@ -41,12 +41,12 @@ public final class DefaultCustomPortServerManager extends CustomPortServerManage
 
     @Override
     public int getPort() {
-        int port = BuiltInServerOptions.getInstance().builtInServerPort;
+        int port = BuiltInServerOptions.getInstance().getBuiltInServerPort();
         return port == BuiltInServerOptions.DEFAULT_PORT ? -1 : port;
     }
 
     @Override
     public boolean isAvailableExternally() {
-        return BuiltInServerOptions.getInstance().builtInServerAvailableExternally;
+        return BuiltInServerOptions.getInstance().isBuiltInServerAvailableExternally();
     }
 }

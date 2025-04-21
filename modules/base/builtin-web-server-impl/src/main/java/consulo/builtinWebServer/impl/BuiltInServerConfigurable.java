@@ -45,19 +45,19 @@ public class BuiltInServerConfigurable extends SimpleConfigurableByProperties im
 
         VerticalLayout root = VerticalLayout.create();
         IntBox portBox = IntBox.create().withRange(0, Short.MAX_VALUE & 0xFFFF);
-        propertyBuilder.add(portBox, () -> options.builtInServerPort, it -> options.builtInServerPort = it);
+        propertyBuilder.add(portBox, options::getBuiltInServerPort, options::setBuiltInServerPort);
         root.add(LabeledBuilder.simple(BuiltInServerLocalize.settingValueBuiltinServerPortLabel(), portBox));
 
         CheckBox canAcceptExternalConnectionsBox = CheckBox.create(BuiltInServerLocalize.settingValueCanAcceptExternalConnections());
         propertyBuilder.add(
             canAcceptExternalConnectionsBox,
-            () -> options.builtInServerAvailableExternally,
-            it -> options.builtInServerAvailableExternally = it
+            options::isBuiltInServerAvailableExternally,
+            options::setBuiltInServerAvailableExternally
         );
         root.add(canAcceptExternalConnectionsBox);
 
         CheckBox allowUnsignedRequestsBox = CheckBox.create(BuiltInServerLocalize.settingValueBuiltinServerAllowUnsignedRequests());
-        propertyBuilder.add(allowUnsignedRequestsBox, () -> options.allowUnsignedRequests, it -> options.allowUnsignedRequests = it);
+        propertyBuilder.add(allowUnsignedRequestsBox, options::isAllowUnsignedRequests, options::setAllowUnsignedRequests);
         root.add(allowUnsignedRequestsBox);
         return root;
     }

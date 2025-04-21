@@ -213,7 +213,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
 
         BuiltInServerOptions options = BuiltInServerOptions.getInstance();
         int idePort = BuiltInServerManager.getInstance().getPort();
-        if (options.builtInServerPort != port && idePort != port) {
+        if (options.getBuiltInServerPort() != port && idePort != port) {
             return false;
         }
 
@@ -226,7 +226,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
             InetAddress inetAddress = InetAddress.getByName(host);
             return inetAddress.isLoopbackAddress()
                 || inetAddress.isAnyLocalAddress()
-                || (options.builtInServerAvailableExternally && idePort != port && NetworkInterface.getByInetAddress(inetAddress) != null);
+                || (options.isBuiltInServerAvailableExternally() && idePort != port && NetworkInterface.getByInetAddress(inetAddress) != null);
         }
         catch (IOException e) {
             return false;

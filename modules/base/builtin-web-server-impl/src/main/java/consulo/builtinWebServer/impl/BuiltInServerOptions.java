@@ -10,33 +10,25 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import consulo.util.xml.serializer.annotation.Attribute;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nullable;
 
 @Singleton
 @State(name = "BuiltInServerOptions", storages = @Storage("other.xml"))
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-public class BuiltInServerOptions implements PersistentStateComponent<BuiltInServerOptions> {
+public class BuiltInServerOptions implements PersistentStateComponent<BuiltInServerOptionsState> {
+    public static final int DEFAULT_PORT = 63342;
+
     private final Application myApplication;
+
+    private final BuiltInServerOptionsState myState = new BuiltInServerOptionsState();
 
     @Inject
     public BuiltInServerOptions(Application application) {
         myApplication = application;
     }
-
-    public static final int DEFAULT_PORT = 63342;
-
-    @Attribute
-    public int builtInServerPort = DEFAULT_PORT;
-    @Attribute
-    public boolean builtInServerAvailableExternally = false;
-
-    @Attribute
-    public boolean allowUnsignedRequests = false;
 
     public static BuiltInServerOptions getInstance() {
         return Application.get().getInstance(BuiltInServerOptions.class);
@@ -44,13 +36,13 @@ public class BuiltInServerOptions implements PersistentStateComponent<BuiltInSer
 
     @Nullable
     @Override
-    public BuiltInServerOptions getState() {
-        return this;
+    public BuiltInServerOptionsState getState() {
+        return myState;
     }
 
     @Override
-    public void loadState(BuiltInServerOptions state) {
-        XmlSerializerUtil.copyBean(state, this);
+    public void loadState(BuiltInServerOptionsState state) {
+        XmlSerializerUtil.copyBean(state, myState);
     }
 
     public int getEffectiveBuiltInServerPort() {
@@ -59,12 +51,36 @@ public class BuiltInServerOptions implements PersistentStateComponent<BuiltInSer
         if (!portServerManager.isBound()) {
             return BuiltInServerManager.getInstance().getPort();
         }
-        return builtInServerPort;
+        return myState.builtInServerPort;
     }
 
     public static void onBuiltInServerPortChanged() {
         Application.get().getExtensionPoint(CustomPortServerManager.class)
             .findExtensionOrFail(DefaultCustomPortServerManager.class)
             .portChanged();
+    }
+
+    public int getBuiltInServerPort() {
+        return myState.builtInServerPort;
+    }
+
+    public void setBuiltInServerPort(int builtInServerPort) {
+        myState.builtInServerPort = builtInServerPort;
+    }
+
+    public boolean isBuiltInServerAvailableExternally() {
+        return myState.builtInServerAvailableExternally;
+    }
+
+    public void setBuiltInServerAvailableExternally(boolean builtInServerAvailableExternally) {
+        myState.builtInServerAvailableExternally = builtInServerAvailableExternally;
+    }
+
+    public boolean isAllowUnsignedRequests() {
+        return myState.allowUnsignedRequests;
+    }
+
+    public void setAllowUnsignedRequests(boolean allowUnsignedRequests) {
+        myState.allowUnsignedRequests = allowUnsignedRequests;
     }
 }
