@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 02.05.2015
+ * @since 2015-05-02
  */
 public interface GotoDeclarationHandlerEx extends GotoDeclarationHandler {
     @Nonnull

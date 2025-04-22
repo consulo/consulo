@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.ui.navigation;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
 import consulo.language.editor.hint.HintColorUtil;
@@ -25,6 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.psi.util.PsiNavigateUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
@@ -47,14 +49,16 @@ import java.util.function.Supplier;
  * @author peter
  */
 public abstract class NavigationGutterIconRenderer extends GutterIconRenderer implements GutterIconNavigationHandler<PsiElement> {
-    private final String myPopupTitle;
-    private final String myEmptyText;
+    @Nonnull
+    private final LocalizeValue myPopupTitle;
+    @Nonnull
+    private final LocalizeValue myEmptyText;
     private final Supplier<PsiElementListCellRenderer> myCellRenderer;
     private final Supplier<List<SmartPsiElementPointer>> myPointers;
 
     protected NavigationGutterIconRenderer(
-        final String popupTitle,
-        final String emptyText,
+        @Nonnull LocalizeValue popupTitle,
+        @Nonnull LocalizeValue emptyText,
         @Nonnull Supplier<PsiElementListCellRenderer> cellRenderer,
         @Nonnull Supplier<List<SmartPsiElementPointer>> pointers
     ) {
@@ -69,11 +73,13 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
         return true;
     }
 
+    @RequiredReadAction
     public List<PsiElement> getTargetElements() {
         return ContainerUtil.mapNotNull(myPointers.get(), SmartPsiElementPointer::getElement);
     }
 
-    public boolean equals(final Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -81,25 +87,18 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
             return false;
         }
 
-        final NavigationGutterIconRenderer renderer = (NavigationGutterIconRenderer)o;
+        NavigationGutterIconRenderer renderer = (NavigationGutterIconRenderer)o;
 
-        if (myEmptyText != null ? !myEmptyText.equals(renderer.myEmptyText) : renderer.myEmptyText != null) {
-            return false;
-        }
-        if (!myPointers.get().equals(renderer.myPointers.get())) {
-            return false;
-        }
-        if (myPopupTitle != null ? !myPopupTitle.equals(renderer.myPopupTitle) : renderer.myPopupTitle != null) {
-            return false;
-        }
-
-        return true;
+        return myEmptyText.equals(renderer.myEmptyText)
+            && myPointers.get().equals(renderer.myPointers.get())
+            && myPopupTitle.equals(renderer.myPopupTitle);
     }
 
+    @Override
     public int hashCode() {
         int result;
-        result = (myPopupTitle != null ? myPopupTitle.hashCode() : 0);
-        result = 31 * result + (myEmptyText != null ? myEmptyText.hashCode() : 0);
+        result = myPopupTitle.hashCode();
+        result = 31 * result + myEmptyText.hashCode();
         result = 31 * result + myPointers.get().hashCode();
         return result;
     }
@@ -110,28 +109,26 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
         return new AnAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(AnActionEvent e) {
-                navigate(e == null ? null : (MouseEvent)e.getInputEvent(), null);
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                navigate((MouseEvent)e.getInputEvent(), null);
             }
         };
     }
 
     @Override
     @RequiredUIAccess
-    public void navigate(@Nullable final MouseEvent event, @Nullable final PsiElement elt) {
-        final List<PsiElement> list = getTargetElements();
+    public void navigate(@Nullable MouseEvent event, @Nullable PsiElement elt) {
+        List<PsiElement> list = getTargetElements();
         if (list.isEmpty()) {
-            if (myEmptyText != null) {
-                if (event != null) {
-                    final JComponent label = HintUtil.createErrorLabel(myEmptyText);
-                    label.setBorder(IdeBorderFactory.createEmptyBorder(2, 7, 2, 7));
-                    JBPopupFactory.getInstance()
-                        .createBalloonBuilder(label)
-                        .setFadeoutTime(3000)
-                        .setFillColor(TargetAWT.to(HintColorUtil.getErrorColor()))
-                        .createBalloon()
-                        .show(new RelativePoint(event), Balloon.Position.above);
-                }
+            if (myEmptyText != LocalizeValue.empty() && event != null) {
+                JComponent label = HintUtil.createErrorLabel(myEmptyText.get());
+                label.setBorder(IdeBorderFactory.createEmptyBorder(2, 7, 2, 7));
+                JBPopupFactory.getInstance()
+                    .createBalloonBuilder(label)
+                    .setFadeoutTime(3000)
+                    .setFillColor(TargetAWT.to(HintColorUtil.getErrorColor()))
+                    .createBalloon()
+                    .show(new RelativePoint(event), Balloon.Position.above);
             }
             return;
         }
@@ -139,8 +136,8 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
             PsiNavigateUtil.navigate(list.iterator().next());
         }
         else if (event != null) {
-            final JBPopup popup =
-                PopupNavigationUtil.getPsiElementPopup(PsiUtilCore.toPsiElementArray(list), myCellRenderer.get(), myPopupTitle);
+            JBPopup popup =
+                PopupNavigationUtil.getPsiElementPopup(PsiUtilCore.toPsiElementArray(list), myCellRenderer.get(), myPopupTitle.get());
             popup.show(new RelativePoint(event));
         }
     }

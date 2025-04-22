@@ -1,9 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.ui.navigation;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
@@ -33,9 +35,15 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     private volatile boolean myFinished;
     private volatile ProgressIndicator myIndicator;
 
-    public BackgroundUpdaterTaskBase(@Nullable Project project, @Nonnull String title, @Nullable Comparator<T> comparator) {
+    public BackgroundUpdaterTaskBase(@Nullable Project project, @Nonnull LocalizeValue title, @Nullable Comparator<T> comparator) {
         super(project, title);
         myData = comparator == null ? new ArrayList<>() : new TreeSet<>(comparator);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public BackgroundUpdaterTaskBase(@Nullable Project project, @Nonnull String title, @Nullable Comparator<T> comparator) {
+        this(project, LocalizeValue.of(title), comparator);
     }
 
     @TestOnly

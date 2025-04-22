@@ -45,26 +45,26 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         removeAll();
 
-        final boolean hasRightRenderer = UISettings.getInstance().getShowIconInQuickNavigation();
+        boolean hasRightRenderer = UISettings.getInstance().getShowIconInQuickNavigation();
 
-        final LeftRenderer left = new LeftRenderer(true, MatcherHolder.getAssociatedMatcher(list));
-        final Component leftCellRendererComponent = left.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        final Color listBg = leftCellRendererComponent.getBackground();
+        LeftRenderer left = new LeftRenderer(true, MatcherHolder.getAssociatedMatcher(list));
+        Component leftCellRendererComponent = left.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        Color listBg = leftCellRendererComponent.getBackground();
         add(leftCellRendererComponent, BorderLayout.WEST);
 
         setBackground(isSelected ? UIUtil.getListSelectionBackground(true) : listBg);
 
         if (hasRightRenderer) {
-            final DefaultListCellRenderer moduleRenderer = new PsiElementModuleRenderer();
+            DefaultListCellRenderer moduleRenderer = new PsiElementModuleRenderer();
 
-            final Component rightCellRendererComponent =
+            Component rightCellRendererComponent =
                 moduleRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             ((JComponent)rightCellRendererComponent).setOpaque(false);
             rightCellRendererComponent.setBackground(listBg);
             add(rightCellRendererComponent, BorderLayout.EAST);
-            final JPanel spacer = new NonOpaquePanel();
+            JPanel spacer = new NonOpaquePanel();
 
-            final Dimension size = rightCellRendererComponent.getSize();
+            Dimension size = rightCellRendererComponent.getSize();
             spacer.setSize(new Dimension((int)(size.width * 0.015 + leftCellRendererComponent.getSize().width * 0.015), size.height));
             spacer.setBackground(isSelected ? UIUtil.getListSelectionBackground(true) : listBg);
             add(spacer, BorderLayout.CENTER);
@@ -73,7 +73,8 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
     }
 
     public static PsiElement getPsiElement(Object o) {
-        return o instanceof PsiElement ? (PsiElement)o : o instanceof PsiElementNavigationItem ? ((PsiElementNavigationItem)o).getTargetElement() : null;
+        return o instanceof PsiElement element ? element
+            : o instanceof PsiElementNavigationItem navItem ? navItem.getTargetElement() : null;
     }
 
     private static class LeftRenderer extends ColoredListCellRenderer {
@@ -89,25 +90,21 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
         protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
             Color bgColor = UIUtil.getListBackground();
 
-            if (value instanceof PsiElement && !((PsiElement)value).isValid()) {
+            if (value instanceof PsiElement element && !element.isValid()) {
                 setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
                 append("Invalid", SimpleTextAttributes.ERROR_ATTRIBUTES);
             }
-            else if (value instanceof NavigationItem) {
-                NavigationItem item = (NavigationItem)value;
+            else if (value instanceof NavigationItem item) {
                 ItemPresentation presentation = item.getPresentation();
-                assert presentation != null : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation(): element " +
-                    item.toString() +
-                    ", class " +
-                    item.getClass().getName();
+                assert presentation != null
+                    : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation(): " +
+                    "element " + item.toString() + ", class " + item.getClass().getName();
                 String name = presentation.getPresentableText();
-                assert name != null : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation().getPresentableName: element " +
-                    item.toString() +
-                    ", class " +
-                    item.getClass().getName();
+                assert name != null : "PSI elements displayed in choose by name lists must return a non-null value " +
+                    "from getPresentation().getPresentableName: element " + item.toString() + ", class " + item.getClass().getName();
                 ColorValue color = TargetAWT.from(list.getForeground());
-                boolean isProblemFile = item instanceof PsiElement && WolfTheProblemSolver.getInstance(((PsiElement)item).getProject())
-                    .isProblemFile(PsiUtilCore.getVirtualFile((PsiElement)item));
+                boolean isProblemFile = item instanceof PsiElement element
+                    && WolfTheProblemSolver.getInstance(element.getProject()).isProblemFile(PsiUtilCore.getVirtualFile(element));
 
                 PsiElement psiElement = getPsiElement(item);
 
@@ -128,7 +125,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
                     color = status.getColor();
                 }
 
-                final TextAttributes textAttributes =
+                TextAttributes textAttributes =
                     TextAttributesUtil.toTextAttributes(NodeRenderer.getSimpleTextAttributes(presentation));
                 if (isProblemFile) {
                     textAttributes.setEffectType(EffectType.WAVE_UNDERSCORE);
@@ -137,7 +134,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
                 textAttributes.setForegroundColor(color);
                 SimpleTextAttributes nameAttributes = TextAttributesUtil.fromTextAttributes(textAttributes);
                 SpeedSearchUtil.appendColoredFragmentForMatcher(name, this, nameAttributes, myMatcher, bgColor, selected);
-                setIcon(presentation.getIcon(false));
+                setIcon(presentation.getIcon());
 
                 if (myRenderLocation) {
                     String containerText = presentation.getLocationString();
@@ -154,7 +151,6 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
                     new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, list.getForeground())
                 );
             }
-            setPaintFocusBorder(false);
             setBackground(selected ? UIUtil.getListSelectionBackground(true) : bgColor);
         }
     }
