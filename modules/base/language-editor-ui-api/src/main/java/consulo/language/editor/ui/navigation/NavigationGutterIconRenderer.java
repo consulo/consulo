@@ -47,85 +47,101 @@ import java.util.function.Supplier;
  * @author peter
  */
 public abstract class NavigationGutterIconRenderer extends GutterIconRenderer implements GutterIconNavigationHandler<PsiElement> {
-  private final String myPopupTitle;
-  private final String myEmptyText;
-  private final Supplier<PsiElementListCellRenderer> myCellRenderer;
-  private final Supplier<List<SmartPsiElementPointer>> myPointers;
+    private final String myPopupTitle;
+    private final String myEmptyText;
+    private final Supplier<PsiElementListCellRenderer> myCellRenderer;
+    private final Supplier<List<SmartPsiElementPointer>> myPointers;
 
-  protected NavigationGutterIconRenderer(final String popupTitle,
-                                         final String emptyText,
-                                         @Nonnull Supplier<PsiElementListCellRenderer> cellRenderer,
-                                         @Nonnull Supplier<List<SmartPsiElementPointer>> pointers) {
-    myPopupTitle = popupTitle;
-    myEmptyText = emptyText;
-    myCellRenderer = cellRenderer;
-    myPointers = pointers;
-  }
+    protected NavigationGutterIconRenderer(
+        final String popupTitle,
+        final String emptyText,
+        @Nonnull Supplier<PsiElementListCellRenderer> cellRenderer,
+        @Nonnull Supplier<List<SmartPsiElementPointer>> pointers
+    ) {
+        myPopupTitle = popupTitle;
+        myEmptyText = emptyText;
+        myCellRenderer = cellRenderer;
+        myPointers = pointers;
+    }
 
-  @Override
-  public boolean isNavigateAction() {
-    return true;
-  }
+    @Override
+    public boolean isNavigateAction() {
+        return true;
+    }
 
-  public List<PsiElement> getTargetElements() {
-    return ContainerUtil.mapNotNull(myPointers.get(), SmartPsiElementPointer::getElement);
-  }
+    public List<PsiElement> getTargetElements() {
+        return ContainerUtil.mapNotNull(myPointers.get(), SmartPsiElementPointer::getElement);
+    }
 
-  public boolean equals(final Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    final NavigationGutterIconRenderer renderer = (NavigationGutterIconRenderer)o;
-
-    if (myEmptyText != null ? !myEmptyText.equals(renderer.myEmptyText) : renderer.myEmptyText != null) return false;
-    if (!myPointers.get().equals(renderer.myPointers.get())) return false;
-    if (myPopupTitle != null ? !myPopupTitle.equals(renderer.myPopupTitle) : renderer.myPopupTitle != null) return false;
-
-    return true;
-  }
-
-  public int hashCode() {
-    int result;
-    result = (myPopupTitle != null ? myPopupTitle.hashCode() : 0);
-    result = 31 * result + (myEmptyText != null ? myEmptyText.hashCode() : 0);
-    result = 31 * result + myPointers.get().hashCode();
-    return result;
-  }
-
-  @Override
-  @Nullable
-  public AnAction getClickAction() {
-    return new AnAction() {
-      @Override
-      @RequiredUIAccess
-      public void actionPerformed(AnActionEvent e) {
-        navigate(e == null ? null : (MouseEvent)e.getInputEvent(), null);
-      }
-    };
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void navigate(@Nullable final MouseEvent event, @Nullable final PsiElement elt) {
-    final List<PsiElement> list = getTargetElements();
-    if (list.isEmpty()) {
-      if (myEmptyText != null) {
-        if (event != null) {
-          final JComponent label = HintUtil.createErrorLabel(myEmptyText);
-          label.setBorder(IdeBorderFactory.createEmptyBorder(2, 7, 2, 7));
-          JBPopupFactory.getInstance().createBalloonBuilder(label).setFadeoutTime(3000).setFillColor(TargetAWT.to(HintColorUtil.getErrorColor())).createBalloon().show(new RelativePoint(event), Balloon.Position.above);
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
         }
-      }
-      return;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final NavigationGutterIconRenderer renderer = (NavigationGutterIconRenderer)o;
+
+        if (myEmptyText != null ? !myEmptyText.equals(renderer.myEmptyText) : renderer.myEmptyText != null) {
+            return false;
+        }
+        if (!myPointers.get().equals(renderer.myPointers.get())) {
+            return false;
+        }
+        if (myPopupTitle != null ? !myPopupTitle.equals(renderer.myPopupTitle) : renderer.myPopupTitle != null) {
+            return false;
+        }
+
+        return true;
     }
-    if (list.size() == 1) {
-      PsiNavigateUtil.navigate(list.iterator().next());
+
+    public int hashCode() {
+        int result;
+        result = (myPopupTitle != null ? myPopupTitle.hashCode() : 0);
+        result = 31 * result + (myEmptyText != null ? myEmptyText.hashCode() : 0);
+        result = 31 * result + myPointers.get().hashCode();
+        return result;
     }
-    else {
-      if (event != null) {
-        final JBPopup popup = PopupNavigationUtil.getPsiElementPopup(PsiUtilCore.toPsiElementArray(list), myCellRenderer.get(), myPopupTitle);
-        popup.show(new RelativePoint(event));
-      }
+
+    @Override
+    @Nullable
+    public AnAction getClickAction() {
+        return new AnAction() {
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(AnActionEvent e) {
+                navigate(e == null ? null : (MouseEvent)e.getInputEvent(), null);
+            }
+        };
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void navigate(@Nullable final MouseEvent event, @Nullable final PsiElement elt) {
+        final List<PsiElement> list = getTargetElements();
+        if (list.isEmpty()) {
+            if (myEmptyText != null) {
+                if (event != null) {
+                    final JComponent label = HintUtil.createErrorLabel(myEmptyText);
+                    label.setBorder(IdeBorderFactory.createEmptyBorder(2, 7, 2, 7));
+                    JBPopupFactory.getInstance()
+                        .createBalloonBuilder(label)
+                        .setFadeoutTime(3000)
+                        .setFillColor(TargetAWT.to(HintColorUtil.getErrorColor()))
+                        .createBalloon()
+                        .show(new RelativePoint(event), Balloon.Position.above);
+                }
+            }
+            return;
+        }
+        if (list.size() == 1) {
+            PsiNavigateUtil.navigate(list.iterator().next());
+        }
+        else if (event != null) {
+            final JBPopup popup =
+                PopupNavigationUtil.getPsiElementPopup(PsiUtilCore.toPsiElementArray(list), myCellRenderer.get(), myPopupTitle);
+            popup.show(new RelativePoint(event));
+        }
+    }
 }

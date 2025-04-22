@@ -25,6 +25,6 @@ import jakarta.annotation.Nonnull;
  * @since 02.05.2015
  */
 public interface GotoDeclarationHandlerEx extends GotoDeclarationHandler {
-  @Nonnull
-  PsiElementListCellRenderer<PsiElement> createRender(@Nonnull PsiElement[] elements);
+    @Nonnull
+    PsiElementListCellRenderer<PsiElement> createRender(@Nonnull PsiElement[] elements);
 }
