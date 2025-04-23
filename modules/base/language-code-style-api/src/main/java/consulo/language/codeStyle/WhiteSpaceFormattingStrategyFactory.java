@@ -15,6 +15,7 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.psi.PsiDocumentManager;
@@ -33,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * Contains utility methods for working with {@link WhiteSpaceFormattingStrategy}.
  *
  * @author Denis Zhdanov
- * @since 10/1/10 3:31 PM
+ * @since 2010-10-01
  */
 public class WhiteSpaceFormattingStrategyFactory {
     private static final AtomicReference<PatchedWeakReference<Collection<WhiteSpaceFormattingStrategy>>> myCachedStrategies =
@@ -80,18 +81,18 @@ public class WhiteSpaceFormattingStrategyFactory {
      */
     @Nonnull
     public static Collection<WhiteSpaceFormattingStrategy> getAllStrategies() {
-        final WeakReference<Collection<WhiteSpaceFormattingStrategy>> reference = myCachedStrategies.get();
+        WeakReference<Collection<WhiteSpaceFormattingStrategy>> reference = myCachedStrategies.get();
         if (reference != null) {
-            final Collection<WhiteSpaceFormattingStrategy> strategies = reference.get();
+            Collection<WhiteSpaceFormattingStrategy> strategies = reference.get();
             if (strategies != null) {
                 return strategies;
             }
         }
-        final Collection<Language> languages = Language.getRegisteredLanguages();
+        Collection<Language> languages = Language.getRegisteredLanguages();
 
         Set<WhiteSpaceFormattingStrategy> result = new HashSet<>(getSharedStrategies(Language.ANY));
         for (Language language : languages) {
-            final WhiteSpaceFormattingStrategy strategy = WhiteSpaceFormattingStrategy.forLanguage(language);
+            WhiteSpaceFormattingStrategy strategy = WhiteSpaceFormattingStrategy.forLanguage(language);
             if (strategy != null) {
                 result.add(strategy);
             }
@@ -107,6 +108,7 @@ public class WhiteSpaceFormattingStrategyFactory {
      * @return white space strategy for the document managed by the given editor
      * @throws IllegalStateException if white space strategies configuration is invalid
      */
+    @RequiredReadAction
     public static WhiteSpaceFormattingStrategy getStrategy(@Nullable Project project, @Nullable Document document)
         throws IllegalStateException {
         if (project != null) {

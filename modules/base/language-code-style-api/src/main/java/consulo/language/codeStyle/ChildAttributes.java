@@ -36,7 +36,7 @@ public class ChildAttributes {
      * @param childIndent the indent for the child block.
      * @param alignment   the alignment for the child block.
      */
-    public ChildAttributes(@jakarta.annotation.Nullable final Indent childIndent, @Nullable final Alignment alignment) {
+    public ChildAttributes(@Nullable Indent childIndent, @Nullable Alignment alignment) {
         myChildIndent = childIndent;
         myAlignment = alignment;
     }
@@ -46,7 +46,7 @@ public class ChildAttributes {
      *
      * @return the indent setting.
      */
-    @jakarta.annotation.Nullable
+    @Nullable
     public Indent getChildIndent() {
         return myChildIndent;
     }

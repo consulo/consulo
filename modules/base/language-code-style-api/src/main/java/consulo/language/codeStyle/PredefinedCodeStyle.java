@@ -18,9 +18,7 @@ package consulo.language.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.Language;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -48,11 +46,10 @@ public abstract class PredefinedCodeStyle {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof PredefinedCodeStyle)) {
-            return false;
-        }
-        PredefinedCodeStyle otherStyle = (PredefinedCodeStyle)obj;
-        return myName.equals(otherStyle.getName()) && myLanguage.equals(otherStyle.getLanguage());
+        return obj == this
+            || obj instanceof PredefinedCodeStyle that
+            && myName.equals(that.getName())
+            && myLanguage.equals(that.getLanguage());
     }
 
     @Override

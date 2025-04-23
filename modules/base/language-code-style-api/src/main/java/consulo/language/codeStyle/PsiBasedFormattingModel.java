@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenType;
@@ -41,7 +41,7 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
     private final Block myRootBlock;
     protected boolean myCanModifyAllWhiteSpaces = false;
 
-    public PsiBasedFormattingModel(final PsiFile file, @Nonnull final Block rootBlock, final FormattingDocumentModel documentModel) {
+    public PsiBasedFormattingModel(PsiFile file, @Nonnull Block rootBlock, FormattingDocumentModel documentModel) {
         myASTNode = file.getNode();
         myDocumentModel = documentModel;
         myRootBlock = rootBlock;
@@ -49,16 +49,18 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
     }
 
     @Override
+    @RequiredReadAction
     public TextRange replaceWhiteSpace(TextRange textRange, String whiteSpace) {
         return replaceWhiteSpace(textRange, null, whiteSpace);
     }
 
     @Override
+    @RequiredReadAction
     public TextRange replaceWhiteSpace(TextRange textRange, ASTNode nodeAfter, String whiteSpace) {
         String whiteSpaceToUse =
             myDocumentModel.adjustWhiteSpaceIfNecessary(whiteSpace, textRange.getStartOffset(), textRange.getEndOffset(), nodeAfter, true)
                 .toString();
-        final String wsReplaced = replaceWithPSI(textRange, whiteSpaceToUse);
+        String wsReplaced = replaceWithPSI(textRange, whiteSpaceToUse);
 
         if (wsReplaced != null) {
             return new TextRange(textRange.getStartOffset(), textRange.getStartOffset() + wsReplaced.length());
@@ -78,8 +80,9 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
     }
 
     @Nullable
-    private String replaceWithPSI(final TextRange textRange, final String whiteSpace) {
-        final int offset = textRange.getEndOffset();
+    @RequiredReadAction
+    private String replaceWithPSI(TextRange textRange, String whiteSpace) {
+        int offset = textRange.getEndOffset();
         ASTNode leafElement = findElementAt(offset);
 
         if (leafElement != null) {
@@ -114,17 +117,18 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
         }
     }
 
+    @RequiredReadAction
     private static TextRange correctRangeByInjection(TextRange textRange, PsiLanguageInjectionHost host) {
         ElementManipulator<PsiLanguageInjectionHost> manipulator = ElementManipulators.getManipulator(host);
         if (manipulator == null) {
             return null;
         }
 
-        final TextRange injectionRangeInHost = manipulator.getRangeInElement(host);
-        final int hostStartOffset = host.getTextRange().getStartOffset();
+        TextRange injectionRangeInHost = manipulator.getRangeInElement(host);
+        int hostStartOffset = host.getTextRange().getStartOffset();
 
-        final int injectedDocumentStartOffset = hostStartOffset + injectionRangeInHost.getStartOffset();
-        final int injectedDocumentEndOffset = hostStartOffset + injectionRangeInHost.getEndOffset();
+        int injectedDocumentStartOffset = hostStartOffset + injectionRangeInHost.getStartOffset();
+        int injectedDocumentEndOffset = hostStartOffset + injectionRangeInHost.getEndOffset();
 
         if (textRange.getEndOffset() < injectedDocumentStartOffset || textRange.getStartOffset() > injectedDocumentEndOffset) {
             return null;
@@ -134,7 +138,7 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
     }
 
     @Nullable
-    protected String replaceWithPsiInLeaf(final TextRange textRange, final String whiteSpace, final ASTNode leafElement) {
+    protected String replaceWithPsiInLeaf(TextRange textRange, String whiteSpace, ASTNode leafElement) {
         if (!myCanModifyAllWhiteSpaces) {
             if (leafElement.getElementType() == TokenType.WHITE_SPACE) {
                 return null;
@@ -149,7 +153,8 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
     }
 
     @Nullable
-    protected ASTNode findElementAt(final int offset) {
+    @RequiredReadAction
+    protected ASTNode findElementAt(int offset) {
         PsiFile containingFile = myASTNode.getPsi().getContainingFile();
         Project project = containingFile.getProject();
 

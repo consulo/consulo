@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since Sep 20, 2010 5:11:49 PM
+ * @since 2010-09-20
  */
 public abstract class StaticSymbolWhiteSpaceDefinitionStrategy extends AbstractWhiteSpaceFormattingStrategy {
     private final IntSet myWhiteSpaceSymbols = IntSets.newHashSet();

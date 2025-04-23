@@ -33,7 +33,8 @@ public class IndentInside {
         this.tabs = tabs;
     }
 
-    public boolean equals(final Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -41,14 +42,13 @@ public class IndentInside {
             return false;
         }
 
-        final IndentInside indent = (IndentInside)o;
+        IndentInside that = (IndentInside)o;
 
-        if (tabs != indent.tabs) {
-            return false;
-        }
-        return whiteSpaces == indent.whiteSpaces;
+        return tabs == that.tabs
+            && whiteSpaces == that.whiteSpaces;
     }
 
+    @Override
     public int hashCode() {
         int result;
         result = whiteSpaces;
@@ -56,24 +56,24 @@ public class IndentInside {
         return result;
     }
 
-    public int getTabsCount(final CommonCodeStyleSettings.IndentOptions options) {
-        final int tabsFromSpaces = whiteSpaces / options.TAB_SIZE;
+    public int getTabsCount(CommonCodeStyleSettings.IndentOptions options) {
+        int tabsFromSpaces = whiteSpaces / options.TAB_SIZE;
         return tabs + tabsFromSpaces;
     }
 
-    public int getSpacesCount(final CommonCodeStyleSettings.IndentOptions options) {
+    public int getSpacesCount(CommonCodeStyleSettings.IndentOptions options) {
         return whiteSpaces + tabs * options.TAB_SIZE;
     }
 
     @Nonnull
-    public static IndentInside getLastLineIndent(@Nonnull final CharSequence text) {
+    public static IndentInside getLastLineIndent(@Nonnull CharSequence text) {
         CharSequence lastLine = getLastLine(text);
         return createIndentOn(lastLine);
     }
 
     @Nonnull
-    public static IndentInside createIndentOn(@Nullable final CharSequence lastLine) {
-        final IndentInside result = new IndentInside();
+    public static IndentInside createIndentOn(@Nullable CharSequence lastLine) {
+        IndentInside result = new IndentInside();
         if (lastLine == null) {
             return result;
         }
@@ -89,7 +89,7 @@ public class IndentInside {
     }
 
     @Nonnull
-    public static CharSequence getLastLine(@Nonnull final CharSequence text) {
+    public static CharSequence getLastLine(@Nonnull CharSequence text) {
         int i = CharArrayUtil.shiftBackwardUntil(text, text.length() - 1, "\n");
         if (i < 0) {
             return text;

@@ -178,12 +178,7 @@ public abstract class Spacing {
      * @param keepBlankLines Whether the existing blank lines between the blocks should be preserved.
      * @return the spacing setting instance.
      */
-    public static Spacing createKeepingFirstColumnSpacing(
-        final int minSpaces,
-        final int maxSpaces,
-        final boolean keepLineBreaks,
-        final int keepBlankLines
-    ) {
+    public static Spacing createKeepingFirstColumnSpacing(int minSpaces, int maxSpaces, boolean keepLineBreaks, int keepBlankLines) {
         return Formatter.getInstance().createKeepingFirstColumnSpacing(minSpaces, maxSpaces, keepLineBreaks, keepBlankLines);
     }
 }

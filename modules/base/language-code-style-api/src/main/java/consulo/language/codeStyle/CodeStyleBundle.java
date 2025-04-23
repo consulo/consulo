@@ -23,7 +23,7 @@ import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author VISTALL
- * @since 12-Mar-22
+ * @since 2022-03-12
  */
 @Deprecated
 @DeprecationInfo("Use CodeStyleLocalize")

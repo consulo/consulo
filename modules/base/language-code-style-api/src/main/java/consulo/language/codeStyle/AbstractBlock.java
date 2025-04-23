@@ -16,6 +16,7 @@
 
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.inject.DefaultInjectedLanguageBlockBuilder;
@@ -150,14 +151,14 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
 
     @Override
     @Nonnull
-    public ChildAttributes getChildAttributes(final int newChildIndex) {
+    public ChildAttributes getChildAttributes(int newChildIndex) {
         return new ChildAttributes(getChildIndent(), getFirstChildAlignment());
     }
 
     @Nullable
     private Alignment getFirstChildAlignment() {
         List<Block> subBlocks = getSubBlocks();
-        for (final Block subBlock : subBlocks) {
+        for (Block subBlock : subBlocks) {
             Alignment alignment = subBlock.getAlignment();
             if (alignment != null) {
                 return alignment;
@@ -187,8 +188,9 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
     /**
      * @return additional range to reformat, when this block if formatted
      */
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     public List<TextRange> getExtraRangesToFormat(@Nonnull FormattingRangesInfo info) {
         int startOffset = getTextRange().getStartOffset();
         if (info.isOnInsertedLine(startOffset) && myNode.textContains('\n')) {

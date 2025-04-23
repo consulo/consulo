@@ -15,13 +15,12 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiComment;
-import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiRecursiveElementVisitor;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -46,16 +45,13 @@ public class FormatterTagHandler {
     }
 
     public FormatterTag getFormatterTag(Block block) {
-        if (mySettings.FORMATTER_TAGS_ENABLED &&
-            !StringUtil.isEmpty(mySettings.FORMATTER_ON_TAG) &&
-            !StringUtil.isEmpty(mySettings.FORMATTER_OFF_TAG) &&
-            block instanceof ASTBlock) {
-            ASTNode node = ((ASTBlock)block).getNode();
-            if (node != null) {
-                PsiElement element = node.getPsi();
-                if (element != null && element instanceof PsiComment) {
-                    return getFormatterTag((PsiComment)element);
-                }
+        if (mySettings.FORMATTER_TAGS_ENABLED
+            && !StringUtil.isEmpty(mySettings.FORMATTER_ON_TAG)
+            && !StringUtil.isEmpty(mySettings.FORMATTER_OFF_TAG)
+            && block instanceof ASTBlock astBlock) {
+            ASTNode node = astBlock.getNode();
+            if (node != null && node.getPsi() instanceof PsiComment comment) {
+                return getFormatterTag(comment);
             }
         }
         return FormatterTag.NONE;
@@ -111,16 +107,12 @@ public class FormatterTagHandler {
         }
 
         @Override
+        @RequiredReadAction
         public void visitComment(PsiComment comment) {
             FormatterTag tag = getFormatterTag(comment);
-            //noinspection EnumSwitchStatementWhichMissesCases
             switch (tag) {
-                case OFF:
-                    myTagInfoList.add(new FormatterTagInfo(comment.getTextRange().getEndOffset(), FormatterTag.OFF));
-                    break;
-                case ON:
-                    myTagInfoList.add(new FormatterTagInfo(comment.getTextRange().getEndOffset(), FormatterTag.ON));
-                    break;
+                case OFF -> myTagInfoList.add(new FormatterTagInfo(comment.getTextRange().getEndOffset(), FormatterTag.OFF));
+                case ON -> myTagInfoList.add(new FormatterTagInfo(comment.getTextRange().getEndOffset(), FormatterTag.ON));
             }
         }
 

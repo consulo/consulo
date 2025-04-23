@@ -15,6 +15,7 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.document.util.TextRangeUtil;
@@ -60,7 +61,7 @@ public class FormatTextRanges implements FormattingRangesInfo {
     }
 
     @Override
-    public boolean isWhitespaceReadOnly(final @Nonnull TextRange range) {
+    public boolean isWhitespaceReadOnly(@Nonnull TextRange range) {
         return myRanges.stream().allMatch(formatTextRange -> formatTextRange.isWhitespaceReadOnly(range));
     }
 
@@ -101,6 +102,7 @@ public class FormatTextRanges implements FormattingRangesInfo {
         return myRanges.isEmpty();
     }
 
+    @RequiredReadAction
     public boolean isFullReformat(PsiFile file) {
         return myRanges.size() == 1 && file.getTextRange().equals(myRanges.get(0).getTextRange());
     }

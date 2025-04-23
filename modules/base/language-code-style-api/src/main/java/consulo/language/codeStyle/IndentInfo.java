@@ -32,11 +32,11 @@ public final class IndentInfo {
     private final boolean myForceSkipTabulationsUsage;
     private boolean myIndentEmptyLines; // Additional indent on empty lines (before the end of code block)
 
-    public IndentInfo(final int lineFeeds, final int indentSpaces, final int spaces) {
+    public IndentInfo(int lineFeeds, int indentSpaces, int spaces) {
         this(lineFeeds, indentSpaces, spaces, false);
     }
 
-    public IndentInfo(final int lineFeeds, final int indentSpaces, final int spaces, final boolean forceSkipTabulationsUsage) {
+    public IndentInfo(int lineFeeds, int indentSpaces, int spaces, boolean forceSkipTabulationsUsage) {
         mySpaces = spaces;
         myIndentSpaces = indentSpaces;
         myLineFeeds = lineFeeds;

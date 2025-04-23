@@ -27,11 +27,11 @@ import java.util.List;
 
 /**
  * Allows to combine multiple {@link WhiteSpaceFormattingStrategy} implementations.
- * <p/>
+ *
  * Not thread-safe.
  *
  * @author Denis Zhdanov
- * @since Sep 21, 2010 3:35:25 PM
+ * @since 2010-09-21
  */
 public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormattingStrategy {
     private final List<WhiteSpaceFormattingStrategy> myStrategies = new ArrayList<>();

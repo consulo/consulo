@@ -19,10 +19,8 @@ import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.DifferenceFilter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import org.jdom.Element;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +32,7 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
     private final CodeStyleSettings myContainer;
     private final String myTagName;
 
-    protected CustomCodeStyleSettings(@NonNls @Nonnull String tagName, CodeStyleSettings container) {
+    protected CustomCodeStyleSettings(@Nonnull String tagName, CodeStyleSettings container) {
         myTagName = tagName;
         myContainer = container;
     }
@@ -43,7 +41,6 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
         return myContainer;
     }
 
-    @NonNls
     @Nonnull
     public final String getTagName() {
         return myTagName;
@@ -61,15 +58,16 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
         DefaultJDOMExternalizer.readExternal(this, parentElement.getChild(myTagName));
     }
 
-    public void writeExternal(Element parentElement, @Nonnull final CustomCodeStyleSettings parentSettings) throws WriteExternalException {
-        final Element childElement = new Element(myTagName);
-        DefaultJDOMExternalizer.writeExternal(this, childElement, new DifferenceFilter<CustomCodeStyleSettings>(this, parentSettings));
+    public void writeExternal(Element parentElement, @Nonnull CustomCodeStyleSettings parentSettings) throws WriteExternalException {
+        Element childElement = new Element(myTagName);
+        DefaultJDOMExternalizer.writeExternal(this, childElement, new DifferenceFilter<>(this, parentSettings));
         if (!childElement.getContent().isEmpty()) {
             parentElement.addContent(childElement);
         }
     }
 
     @Override
+    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
     public Object clone() {
         try {
             return super.clone();

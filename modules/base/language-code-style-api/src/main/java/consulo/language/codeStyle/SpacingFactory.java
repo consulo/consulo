@@ -55,20 +55,15 @@ public interface SpacingFactory {
     Spacing createSafeSpacing(boolean keepLineBreaks, int keepBlankLines);
 
     @Nonnull
-    Spacing createKeepingFirstColumnSpacing(
-        final int minSpaces,
-        final int maxSpaces,
-        final boolean keepLineBreaks,
-        final int keepBlankLines
-    );
+    Spacing createKeepingFirstColumnSpacing(int minSpaces, int maxSpaces, boolean keepLineBreaks, int keepBlankLines);
 
     @Nonnull
     Spacing createSpacing(
-        final int minSpaces,
-        final int maxSpaces,
-        final int minLineFeeds,
-        final boolean keepLineBreaks,
-        final int keepBlankLines,
-        final int prefLineFeeds
+        int minSpaces,
+        int maxSpaces,
+        int minLineFeeds,
+        boolean keepLineBreaks,
+        int keepBlankLines,
+        int prefLineFeeds
     );
 }

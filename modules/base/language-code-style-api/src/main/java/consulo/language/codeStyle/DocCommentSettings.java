@@ -54,7 +54,6 @@ public interface DocCommentSettings {
     void setRemoveEmptyTags(boolean removeEmptyTags);
 
     final class Defaults implements DocCommentSettings {
-
         @Override
         public boolean isDocFormattingEnabled() {
             return true;

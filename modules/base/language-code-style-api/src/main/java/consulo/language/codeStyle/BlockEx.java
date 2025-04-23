@@ -21,7 +21,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
- * @since 6/26/12 11:22 AM
+ * @since 2012-06-26
  */
 public interface BlockEx extends Block {
     /**

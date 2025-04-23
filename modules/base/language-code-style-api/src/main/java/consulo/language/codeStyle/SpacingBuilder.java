@@ -6,6 +6,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class SpacingBuilder {
 
         @Override
         public Spacing createSpacing(@Nonnull ASTBlock parentBlock, @Nonnull ASTBlock childBlock1, @Nonnull ASTBlock childBlock2) {
-            final TextRange range = parentBlock.getNode().getTextRange();
+            TextRange range = parentBlock.getNode().getTextRange();
             return Spacing.createDependentLFSpacing(myMinSpaces, myMaxSpaces, range, myKeepLineBreaks, myKeepBlankLines);
         }
     }
@@ -203,7 +204,7 @@ public class SpacingBuilder {
     }
 
     private final CommonCodeStyleSettings myCodeStyleSettings;
-    private final List<SpacingRule> myRules = new ArrayList<SpacingRule>();
+    private final List<SpacingRule> myRules = new ArrayList<>();
 
     /**
      * @param codeStyleSettings
@@ -336,14 +337,14 @@ public class SpacingBuilder {
     }
 
     public RuleBuilder aroundInside(IElementType token, IElementType parent) {
-        final TokenSet tokenSet = TokenSet.create(token);
+        TokenSet tokenSet = TokenSet.create(token);
         RuleCondition before = new RuleCondition(TokenSet.create(parent), null, tokenSet);
         RuleCondition after = new RuleCondition(TokenSet.create(parent), tokenSet, null);
         return new RuleBuilder(before, after);
     }
 
     public RuleBuilder aroundInside(IElementType token, TokenSet parent) {
-        final TokenSet tokenSet = TokenSet.create(token);
+        TokenSet tokenSet = TokenSet.create(token);
         RuleCondition before = new RuleCondition(parent, null, tokenSet);
         RuleCondition after = new RuleCondition(parent, tokenSet, null);
         return new RuleBuilder(before, after);
@@ -354,14 +355,13 @@ public class SpacingBuilder {
         return this;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     public Spacing getSpacing(Block parent, Block child1, Block child2) {
-        if (!(parent instanceof ASTBlock) || !(child1 instanceof ASTBlock) || !(child2 instanceof ASTBlock)) {
-            return null;
-        }
-        for (SpacingRule rule : myRules) {
-            if (rule.matches((ASTBlock)parent, (ASTBlock)child1, (ASTBlock)child2)) {
-                return rule.createSpacing((ASTBlock)parent, (ASTBlock)child1, (ASTBlock)child2);
+        if (parent instanceof ASTBlock parentBlock && child1 instanceof ASTBlock child1Block && child2 instanceof ASTBlock child2Block) {
+            for (SpacingRule rule : myRules) {
+                if (rule.matches(parentBlock, child1Block, child2Block)) {
+                    return rule.createSpacing(parentBlock, child1Block, child2Block);
+                }
             }
         }
         return null;

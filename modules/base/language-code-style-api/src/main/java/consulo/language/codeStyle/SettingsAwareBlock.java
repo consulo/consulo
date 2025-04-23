@@ -19,7 +19,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 9/6/12 9:17 AM
+ * @since 2012-09-06
  */
 public interface SettingsAwareBlock extends Block {
     @Nonnull

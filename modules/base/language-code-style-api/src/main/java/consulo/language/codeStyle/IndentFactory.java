@@ -38,7 +38,7 @@ public interface IndentFactory {
 
     Indent getContinuationWithoutFirstIndent(boolean relativeToDirectParent);
 
-    Indent getSpaceIndent(final int spaces, boolean relativeToDirectParent);
+    Indent getSpaceIndent(int spaces, boolean relativeToDirectParent);
 
     Indent getIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren);
 

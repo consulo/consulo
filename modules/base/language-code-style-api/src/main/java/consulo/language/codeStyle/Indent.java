@@ -213,7 +213,7 @@ public abstract class Indent {
      * @return the indent instance.
      * @see #getSpaceIndent(int, boolean)
      */
-    public static Indent getSpaceIndent(final int spaces) {
+    public static Indent getSpaceIndent(int spaces) {
         return Formatter.getInstance().getSpaceIndent(spaces, false);
     }
 
@@ -225,7 +225,7 @@ public abstract class Indent {
      *                               to get more information about that at class-level javadoc)
      * @return newly created indent instance configured in accordance with the given parameter
      */
-    public static Indent getSpaceIndent(final int spaces, final boolean relativeToDirectParent) {
+    public static Indent getSpaceIndent(int spaces, boolean relativeToDirectParent) {
         return Formatter.getInstance().getSpaceIndent(spaces, relativeToDirectParent);
     }
 
@@ -269,7 +269,7 @@ public abstract class Indent {
     public static class Type {
         private final String myName;
 
-        private Type(final String name) {
+        private Type(String name) {
             myName = name;
         }
 
@@ -280,6 +280,7 @@ public abstract class Indent {
         public static final Type CONTINUATION = new Type("CONTINUATION");
         public static final Type CONTINUATION_WITHOUT_FIRST = new Type("CONTINUATION_WITHOUT_FIRST");
 
+        @Override
         public String toString() {
             return myName;
         }

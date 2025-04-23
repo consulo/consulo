@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 /**
  * @author VISTALL
- * @since 28-Aug-22
+ * @since 2022-08-28
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PreserveIndentOnPaste {

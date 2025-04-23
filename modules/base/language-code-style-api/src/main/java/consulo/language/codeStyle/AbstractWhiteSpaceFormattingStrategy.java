@@ -15,6 +15,7 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
@@ -28,7 +29,7 @@ import jakarta.annotation.Nullable;
  * adjust white space and
  *
  * @author Denis Zhdanov
- * @since Sep 22, 2010 10:19:07 AM
+ * @since 2010-09-22
  */
 public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpaceFormattingStrategy {
     @Override
@@ -51,11 +52,12 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
     }
 
     @Override
+    @RequiredReadAction
     public CharSequence adjustWhiteSpaceIfNecessary(
         @Nonnull CharSequence whiteSpaceText,
         @Nonnull PsiElement startElement,
-        final int startOffset,
-        final int endOffset,
+        int startOffset,
+        int endOffset,
         CodeStyleSettings codeStyleSettings
     ) {
         assert startElement.getTextRange().contains(startOffset)
@@ -66,8 +68,8 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
         for (PsiElement current = startElement;
              current != null && current.getTextRange().getStartOffset() < endOffset;
              current = next(current)) {
-            final TextRange range = current.getTextRange();
-            final String text = current.getText();
+            TextRange range = current.getTextRange();
+            String text = current.getText();
             if (StringUtil.isEmpty(text)) {
                 continue;
             }
@@ -94,9 +96,10 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
     }
 
     @Nullable
-    private static PsiElement next(@Nonnull final PsiElement element) {
+    @RequiredReadAction
+    private static PsiElement next(@Nonnull PsiElement element) {
         for (PsiElement anchor = element; anchor != null; anchor = anchor.getParent()) {
-            final PsiElement result = element.getNextSibling();
+            PsiElement result = element.getNextSibling();
             if (result != null) {
                 return result;
             }

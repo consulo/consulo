@@ -37,7 +37,7 @@ import jakarta.annotation.Nullable;
  * 'white space symbols' if necessary.
  *
  * @author Denis Zhdanov
- * @since Sep 20, 2010 5:05:08 PM
+ * @since 2010-09-20
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface WhiteSpaceFormattingStrategy extends LanguageExtension {

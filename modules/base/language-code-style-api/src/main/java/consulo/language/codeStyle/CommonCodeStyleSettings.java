@@ -29,12 +29,10 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.xml.serializer.*;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.intellij.lang.annotations.MagicConstant;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
+import org.jdom.Element;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -53,7 +51,6 @@ public class CommonCodeStyleSettings {
     // - New options should be added to CodeStyleSettingsCustomizable as well.
     // - Covered by CodeStyleConfigurationsTest.
 
-    @NonNls
     private static final String ARRANGEMENT_ELEMENT_NAME = "arrangement";
 
     private final Language myLanguage;
@@ -68,7 +65,6 @@ public class CommonCodeStyleSettings {
 
     private final SoftMargins mySoftMargins = new SoftMargins();
 
-    @NonNls
     private static final String INDENT_OPTIONS_TAG = "indentOptions";
 
     public CommonCodeStyleSettings(Language language, FileType fileType) {
@@ -210,7 +206,7 @@ public class CommonCodeStyleSettings {
 
     @Nullable
     private Set<String> getSupportedFields() {
-        final LanguageCodeStyleSettingsProvider provider = LanguageCodeStyleSettingsProvider.forLanguage(myLanguage);
+        LanguageCodeStyleSettingsProvider provider = LanguageCodeStyleSettingsProvider.forLanguage(myLanguage);
         return provider == null ? null : provider.getSupportedFields();
     }
 
@@ -218,9 +214,9 @@ public class CommonCodeStyleSettings {
         private final Set<String> mySupportedFieldNames;
 
         public SupportedFieldsDiffFilter(
-            final CommonCodeStyleSettings object,
+            CommonCodeStyleSettings object,
             Set<String> supportedFiledNames,
-            final CommonCodeStyleSettings parentObject
+            CommonCodeStyleSettings parentObject
         ) {
             super(object, parentObject);
             mySupportedFieldNames = supportedFiledNames;
@@ -228,6 +224,7 @@ public class CommonCodeStyleSettings {
 
         @Override
         public boolean test(@Nonnull Field field) {
+            //noinspection SimplifiableIfStatement
             if (mySupportedFieldNames != null && mySupportedFieldNames.contains(field.getName())) {
                 return super.test(field);
             }
@@ -955,15 +952,19 @@ public class CommonCodeStyleSettings {
             serialize(element, DEFAULT_INDENT_OPTIONS);
         }
 
-        public void serialize(Element indentOptionsElement, final IndentOptions defaultOptions) {
-            XmlSerializer.serializeInto(this, indentOptionsElement, new SkipDefaultValuesSerializationFilters() {
-                @Override
-                protected void configure(@Nonnull Object o) {
-                    if (o instanceof IndentOptions && defaultOptions != null) {
-                        ((IndentOptions)o).copyFrom(defaultOptions);
+        public void serialize(Element indentOptionsElement, IndentOptions defaultOptions) {
+            XmlSerializer.serializeInto(
+                this,
+                indentOptionsElement,
+                new SkipDefaultValuesSerializationFilters() {
+                    @Override
+                    protected void configure(@Nonnull Object o) {
+                        if (o instanceof IndentOptions indentOptions && defaultOptions != null) {
+                            indentOptions.copyFrom(defaultOptions);
+                        }
                     }
                 }
-            });
+            );
         }
 
         public void deserialize(Element indentOptionsElement) {
@@ -971,6 +972,7 @@ public class CommonCodeStyleSettings {
         }
 
         @Override
+        @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
         public Object clone() {
             try {
                 return super.clone();
@@ -983,57 +985,21 @@ public class CommonCodeStyleSettings {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof IndentOptions)) {
-                return false;
-            }
-
-            IndentOptions that = (IndentOptions)o;
-
-            if (CONTINUATION_INDENT_SIZE != that.CONTINUATION_INDENT_SIZE) {
-                return false;
-            }
-            if (INDENT_SIZE != that.INDENT_SIZE) {
-                return false;
-            }
-            if (LABEL_INDENT_ABSOLUTE != that.LABEL_INDENT_ABSOLUTE) {
-                return false;
-            }
-            if (USE_RELATIVE_INDENTS != that.USE_RELATIVE_INDENTS) {
-                return false;
-            }
-            if (LABEL_INDENT_SIZE != that.LABEL_INDENT_SIZE) {
-                return false;
-            }
-            if (SMART_TABS != that.SMART_TABS) {
-                return false;
-            }
-            if (TAB_SIZE != that.TAB_SIZE) {
-                return false;
-            }
-            if (USE_TAB_CHARACTER != that.USE_TAB_CHARACTER) {
-                return false;
-            }
-
-            if (DECLARATION_PARAMETER_INDENT != that.DECLARATION_PARAMETER_INDENT) {
-                return false;
-            }
-            if (GENERIC_TYPE_PARAMETER_INDENT != that.GENERIC_TYPE_PARAMETER_INDENT) {
-                return false;
-            }
-            if (CALL_PARAMETER_INDENT != that.CALL_PARAMETER_INDENT) {
-                return false;
-            }
-            if (CHAINED_CALL_INDENT != that.CHAINED_CALL_INDENT) {
-                return false;
-            }
-            if (ARRAY_ELEMENT_INDENT != that.ARRAY_ELEMENT_INDENT) {
-                return false;
-            }
-
-            return true;
+            return this == o
+                || o instanceof IndentOptions that
+                && CONTINUATION_INDENT_SIZE == that.CONTINUATION_INDENT_SIZE
+                && INDENT_SIZE == that.INDENT_SIZE
+                && LABEL_INDENT_ABSOLUTE == that.LABEL_INDENT_ABSOLUTE
+                && USE_RELATIVE_INDENTS == that.USE_RELATIVE_INDENTS
+                && LABEL_INDENT_SIZE == that.LABEL_INDENT_SIZE
+                && SMART_TABS == that.SMART_TABS
+                && TAB_SIZE == that.TAB_SIZE
+                && USE_TAB_CHARACTER == that.USE_TAB_CHARACTER
+                && DECLARATION_PARAMETER_INDENT == that.DECLARATION_PARAMETER_INDENT
+                && GENERIC_TYPE_PARAMETER_INDENT == that.GENERIC_TYPE_PARAMETER_INDENT
+                && CALL_PARAMETER_INDENT == that.CALL_PARAMETER_INDENT
+                && CHAINED_CALL_INDENT == that.CHAINED_CALL_INDENT
+                && ARRAY_ELEMENT_INDENT == that.ARRAY_ELEMENT_INDENT;
         }
 
         @Override
@@ -1108,11 +1074,9 @@ public class CommonCodeStyleSettings {
     protected boolean arrangementSettingsEqual(CommonCodeStyleSettings obj) {
         ArrangementSettings theseSettings = myArrangementSettings;
         ArrangementSettings otherSettings = obj.getArrangementSettings();
-        if (theseSettings == null && otherSettings != null) {
-            Rearranger<?> rearranger = Rearranger.forLanguage(myLanguage);
-            if (rearranger instanceof ArrangementStandardSettingsAware) {
-                theseSettings = ((ArrangementStandardSettingsAware)rearranger).getDefaultSettings();
-            }
+        if (theseSettings == null && otherSettings != null
+            && Rearranger.forLanguage(myLanguage) instanceof ArrangementStandardSettingsAware arrangementStandardSettingsAware) {
+            theseSettings = arrangementStandardSettingsAware.getDefaultSettings();
         }
         return Comparing.equal(theseSettings, obj.getArrangementSettings());
     }

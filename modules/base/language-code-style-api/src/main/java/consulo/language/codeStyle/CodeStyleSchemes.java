@@ -18,10 +18,11 @@ package consulo.language.codeStyle;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import jakarta.annotation.Nullable;
 
 /**
  * @author MYakovlev
- * Date: Jul 19, 2002
+ * @since 2002-07-19
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CodeStyleSchemes {
@@ -48,7 +49,7 @@ public abstract class CodeStyleSchemes {
      * @return A found scheme or a default scheme if the scheme name was not found or, if neither exists or the scheme name is null, the
      * currently selected scheme.
      */
-    public CodeStyleScheme findPreferredScheme(@jakarta.annotation.Nullable String preferredSchemeName) {
+    public CodeStyleScheme findPreferredScheme(@Nullable String preferredSchemeName) {
         CodeStyleScheme scheme = null;
         if (preferredSchemeName != null) {
             scheme = findSchemeByName(preferredSchemeName);

@@ -28,10 +28,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author VISTALL
- * @since 01-May-17
- * <p>
  * from kotlin  platform\lang-impl\src\com\intellij\psi\formatter\common\NodeIndentRangesCalculator.kt
+ *
+ * @author VISTALL
+ * @since 2017-05-01
  */
 public class NodeIndentRangesCalculator {
     private ASTNode node;

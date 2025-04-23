@@ -47,12 +47,12 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
 
     @Deprecated
     public DocumentBasedFormattingModel(
-        final Block rootBlock,
-        @Nonnull final Document document,
-        final Project project,
-        final CodeStyleSettings settings,
-        final FileType fileType,
-        final PsiFile file
+        Block rootBlock,
+        @Nonnull Document document,
+        Project project,
+        CodeStyleSettings settings,
+        FileType fileType,
+        PsiFile file
     ) {
         myRootBlock = rootBlock;
         myDocument = document;
@@ -65,11 +65,11 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     }
 
     public DocumentBasedFormattingModel(
-        final Block rootBlock,
-        final Project project,
-        final CodeStyleSettings settings,
-        final FileType fileType,
-        final PsiFile file
+        Block rootBlock,
+        Project project,
+        CodeStyleSettings settings,
+        FileType fileType,
+        PsiFile file
     ) {
         myRootBlock = rootBlock;
         myProject = project;
@@ -82,12 +82,12 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     }
 
     public DocumentBasedFormattingModel(
-        @Nonnull final FormattingModel originalModel,
-        @Nonnull final Document document,
-        final Project project,
-        final CodeStyleSettings settings,
-        final FileType fileType,
-        final PsiFile file
+        @Nonnull FormattingModel originalModel,
+        @Nonnull Document document,
+        Project project,
+        CodeStyleSettings settings,
+        FileType fileType,
+        PsiFile file
     ) {
         myOriginalFormattingModel = originalModel;
         myRootBlock = originalModel.getRootBlock();
@@ -174,7 +174,7 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
         return new TextRange(textRange.getStartOffset(), textRange.getStartOffset() + whiteSpaceToUse.length());
     }
 
-    private boolean removesPattern(final TextRange textRange, final String whiteSpace, final String pattern) {
+    private boolean removesPattern(TextRange textRange, String whiteSpace, String pattern) {
         return CharArrayUtil.indexOf(
             myDocument.getCharsSequence(),
             pattern,
@@ -186,13 +186,13 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     @Override
     public TextRange shiftIndentInsideRange(ASTNode node, TextRange range, int indent) {
         if (myOriginalFormattingModel instanceof FormattingModelWithShiftIndentInsideDocumentRange formattingModelWithShiftIndent) {
-            final TextRange newRange = formattingModelWithShiftIndent.shiftIndentInsideDocumentRange(myDocument, node, range, indent);
+            TextRange newRange = formattingModelWithShiftIndent.shiftIndentInsideDocumentRange(myDocument, node, range, indent);
             if (newRange != null) {
                 return newRange;
             }
         }
 
-        final int newLength = shiftIndentInside(range, indent);
+        int newLength = shiftIndentInside(range, indent);
         return new TextRange(range.getStartOffset(), range.getStartOffset() + newLength);
     }
 
@@ -207,14 +207,14 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
         }
     }
 
-    private int shiftIndentInside(final TextRange elementRange, final int shift) {
-        final StringBuilder buffer = new StringBuilder();
+    private int shiftIndentInside(TextRange elementRange, int shift) {
+        StringBuilder buffer = new StringBuilder();
         StringBuilder afterWhiteSpace = new StringBuilder();
         int whiteSpaceLength = 0;
         boolean insideWhiteSpace = true;
         int line = 0;
         for (int i = elementRange.getStartOffset(); i < elementRange.getEndOffset(); i++) {
-            final char c = myDocument.getCharsSequence().charAt(i);
+            char c = myDocument.getCharsSequence().charAt(i);
             switch (c) {
                 case '\n':
                     if (line > 0) {
@@ -257,11 +257,11 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
         return buffer.length();
     }
 
-    private void createWhiteSpace(final int whiteSpaceLength, StringBuilder buffer) {
+    private void createWhiteSpace(int whiteSpaceLength, StringBuilder buffer) {
         if (whiteSpaceLength < 0) {
             return;
         }
-        final CommonCodeStyleSettings.IndentOptions indentOptions = getIndentOptions();
+        CommonCodeStyleSettings.IndentOptions indentOptions = getIndentOptions();
         if (indentOptions.USE_TAB_CHARACTER) {
             int tabs = whiteSpaceLength / indentOptions.TAB_SIZE;
             int spaces = whiteSpaceLength - tabs * indentOptions.TAB_SIZE;
@@ -291,11 +291,11 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     }
 
     @Nullable
-    public static String mergeWsWithCdataMarker(String whiteSpace, final String s, final int cdataPos) {
-        final int firstCrInGeneratedWs = whiteSpace.indexOf('\n');
-        final int secondCrInGeneratedWs = firstCrInGeneratedWs != -1 ? whiteSpace.indexOf('\n', firstCrInGeneratedWs + 1) : -1;
-        final int firstCrInPreviousWs = s.indexOf('\n');
-        final int secondCrInPreviousWs = firstCrInPreviousWs != -1 ? s.indexOf('\n', firstCrInPreviousWs + 1) : -1;
+    public static String mergeWsWithCdataMarker(String whiteSpace, String s, int cdataPos) {
+        int firstCrInGeneratedWs = whiteSpace.indexOf('\n');
+        int secondCrInGeneratedWs = firstCrInGeneratedWs != -1 ? whiteSpace.indexOf('\n', firstCrInGeneratedWs + 1) : -1;
+        int firstCrInPreviousWs = s.indexOf('\n');
+        int secondCrInPreviousWs = firstCrInPreviousWs != -1 ? s.indexOf('\n', firstCrInPreviousWs + 1) : -1;
 
         boolean knowHowToModifyCData = false;
 

@@ -53,21 +53,22 @@ public interface FormattingModelBuilder extends LanguageExtension {
     @Nullable
     @RequiredReadAction
     static FormattingModelBuilder forContext(@Nonnull Language language, @Nonnull PsiElement context) {
-        for (LanguageFormattingRestriction each : LanguageFormattingRestriction.EXTENSION.getExtensionList()) {
-            if (!each.isFormatterAllowed(context)) {
-                return null;
-            }
+        if (!isFormatterAllowed(context)) {
+            return null;
         }
+
         for (FormattingModelBuilder builder : forLanguage(language)) {
-            if (builder instanceof CustomFormattingModelBuilder) {
-                final CustomFormattingModelBuilder custom = (CustomFormattingModelBuilder)builder;
-                if (custom.isEngagedToFormat(context)) {
-                    return builder;
-                }
+            if (builder instanceof CustomFormattingModelBuilder custom && custom.isEngagedToFormat(context)) {
+                return builder;
             }
         }
 
         return ContainerUtil.getFirstItem(forLanguage(language));
+    }
+
+    private static boolean isFormatterAllowed(@Nonnull PsiElement context) {
+        return context.getApplication().getExtensionPoint(LanguageFormattingRestriction.class)
+            .allMatchSafe(each -> each.isFormatterAllowed(context));
     }
 
     /**

@@ -16,11 +16,10 @@
 package consulo.language.codeStyle;
 
 import consulo.component.util.pointer.Named;
-import consulo.language.codeStyle.CodeStyleSettings;
 
 /**
  * @author MYakovlev
- * Date: Jul 19, 2002
+ * @since 2002-07-19
  */
 public interface CodeStyleScheme extends Named {
     String DEFAULT_SCHEME_NAME = "Default";

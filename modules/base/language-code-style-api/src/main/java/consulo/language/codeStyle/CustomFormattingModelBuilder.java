@@ -18,10 +18,8 @@ package consulo.language.codeStyle;
 import consulo.language.psi.PsiElement;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Aug 23, 2006
- * Time: 3:56:42 PM
+ * @author max
+ * @since 2006-08-23
  */
 public interface CustomFormattingModelBuilder extends FormattingModelBuilder {
     /**

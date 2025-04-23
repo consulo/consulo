@@ -24,7 +24,7 @@ public abstract class Wrap {
      * @return the wrap setting instance.
      * @see #createWrap(WrapType, boolean)
      */
-    public static Wrap createWrap(final int type, final boolean wrapFirstElement) {
+    public static Wrap createWrap(int type, boolean wrapFirstElement) {
         return Formatter.getInstance().createWrap(WrapType.byLegacyRepresentation(type), wrapFirstElement);
     }
 
@@ -62,7 +62,7 @@ public abstract class Wrap {
      * @param wrapFirstElement determines if first block between the multiple blocks that use the same wrap object should be wrapped
      * @return the wrap setting instance.
      */
-    public static Wrap createWrap(final WrapType type, final boolean wrapFirstElement) {
+    public static Wrap createWrap(WrapType type, boolean wrapFirstElement) {
         return Formatter.getInstance().createWrap(type, wrapFirstElement);
     }
 
@@ -78,7 +78,7 @@ public abstract class Wrap {
      * @return the wrap setting instance.
      * @see #ignoreParentWraps()
      */
-    public static Wrap createChildWrap(final Wrap parentWrap, final WrapType wrapType, final boolean wrapFirstElement) {
+    public static Wrap createChildWrap(Wrap parentWrap, WrapType wrapType, boolean wrapFirstElement) {
         return Formatter.getInstance().createChildWrap(parentWrap, wrapType, wrapFirstElement);
     }
 }

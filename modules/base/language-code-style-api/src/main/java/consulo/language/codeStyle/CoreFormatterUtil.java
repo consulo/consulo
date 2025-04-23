@@ -15,6 +15,7 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.internal.*;
 import consulo.language.psi.PsiElement;
@@ -45,6 +46,7 @@ public class CoreFormatterUtil {
     }
 
     @Nonnull
+    @RequiredReadAction
     public static FormattingModel buildModel(
         @Nonnull FormattingModelBuilder builder,
         @Nonnull PsiElement element,
@@ -62,7 +64,7 @@ public class CoreFormatterUtil {
      * @return alignment object to use during adjusting white space of the given block if any; {@code null} otherwise
      */
     @Nullable
-    public static AlignmentImpl getAlignment(final @Nonnull AbstractBlockWrapper block) {
+    public static AlignmentImpl getAlignment(@Nonnull AbstractBlockWrapper block) {
         AbstractBlockWrapper current = block;
         while (true) {
             AlignmentImpl alignment = current.getAlignment();
@@ -102,7 +104,7 @@ public class CoreFormatterUtil {
 
         int result = 0;
         while (true) {
-            final WhiteSpace whiteSpace = block.getWhiteSpace();
+            WhiteSpace whiteSpace = block.getWhiteSpace();
             result += whiteSpace.getTotalSpaces();
             if (whiteSpace.containsLineFeeds()) {
                 return result;
@@ -243,9 +245,9 @@ public class CoreFormatterUtil {
     public static IndentData getIndent(
         CommonCodeStyleSettings.IndentOptions options,
         AbstractBlockWrapper block,
-        final int tokenBlockStartOffset
+        int tokenBlockStartOffset
     ) {
-        final IndentImpl indent = block.getIndent();
+        IndentImpl indent = block.getIndent();
         if (indent.getType() == Indent.Type.CONTINUATION) {
             return new IndentData(options.CONTINUATION_INDENT_SIZE);
         }
@@ -271,8 +273,8 @@ public class CoreFormatterUtil {
 
     @Nonnull
     public static LeafBlockWrapper getFirstLeaf(@Nonnull AbstractBlockWrapper block) {
-        if (block instanceof LeafBlockWrapper) {
-            return (LeafBlockWrapper)block;
+        if (block instanceof LeafBlockWrapper leafBlockWrapper) {
+            return leafBlockWrapper;
         }
         else {
             return getFirstLeaf(((CompositeBlockWrapper)block).getChildren().get(0));

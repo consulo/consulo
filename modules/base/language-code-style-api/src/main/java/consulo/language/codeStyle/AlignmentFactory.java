@@ -37,5 +37,5 @@ public interface AlignmentFactory {
      * @param base base alignment to use within returned alignment object
      * @return alignment object with the given alignment defined as a <code>'base alignment'</code>
      */
-    Alignment createChildAlignment(final Alignment base);
+    Alignment createChildAlignment(Alignment base);
 }

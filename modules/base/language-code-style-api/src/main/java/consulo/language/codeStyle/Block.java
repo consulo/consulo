@@ -104,7 +104,7 @@ public interface Block {
      * @return the object containing the indent and alignment settings for the new child.
      */
     @Nonnull
-    ChildAttributes getChildAttributes(final int newChildIndex);
+    ChildAttributes getChildAttributes(int newChildIndex);
 
     /**
      * Checks if the current block is incomplete (contains elements that the user will

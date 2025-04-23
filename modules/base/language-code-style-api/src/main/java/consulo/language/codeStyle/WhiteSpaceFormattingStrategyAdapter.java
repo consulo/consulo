@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 12/6/11 3:58 PM
+ * @since 2011-12-06
  */
 public abstract class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceFormattingStrategy {
     private final WhiteSpaceFormattingStrategy DELEGATE = new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n') {

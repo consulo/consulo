@@ -57,14 +57,15 @@ public class ExcludedFiles {
         myDescriptors.clear();
     }
 
+    @Override
     public boolean equals(@Nonnull Object o) {
-        return o instanceof ExcludedFiles && myDescriptors.equals(((ExcludedFiles)o).myDescriptors);
+        return o instanceof ExcludedFiles excludedFiles && myDescriptors.equals(excludedFiles.myDescriptors);
     }
 
     public class State {
         @OptionTag("DO_NOT_FORMAT")
         public List<FileSetDescriptor.State> getDescriptors() {
-            return myDescriptors.stream().map(descriptor -> descriptor.getState()).collect(Collectors.toList());
+            return myDescriptors.stream().map(FileSetDescriptor::getState).collect(Collectors.toList());
         }
 
         public void setDescriptors(@Nonnull List<FileSetDescriptor.State> states) {

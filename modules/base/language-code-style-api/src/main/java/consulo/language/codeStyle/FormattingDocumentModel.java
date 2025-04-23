@@ -38,7 +38,7 @@ public interface FormattingDocumentModel {
     }
 
     @Nonnull
-    static FormattingDocumentModel create(@Nonnull final Document document, @Nullable PsiFile file) {
+    static FormattingDocumentModel create(@Nonnull Document document, @Nullable PsiFile file) {
         return CodeStyleInternalHelper.getInstance().createFormattingDocumentModel(document, file);
     }
 
@@ -64,7 +64,7 @@ public interface FormattingDocumentModel {
      * @param textRange the text range for which the text is requested.
      * @return the text at the specified text range.
      */
-    CharSequence getText(final TextRange textRange);
+    CharSequence getText(TextRange textRange);
 
     /**
      * Returns the length of the entire document text.

@@ -114,7 +114,7 @@ public abstract class Alignment {
      * @param base base alignment to use within returned alignment object
      * @return alignment object with the given alignment defined as a {@code 'base alignment'}
      */
-    public static Alignment createChildAlignment(final Alignment base) {
+    public static Alignment createChildAlignment(Alignment base) {
         return Formatter.getInstance().createChildAlignment(base);
     }
 }

@@ -15,11 +15,11 @@
  */
 package consulo.language.codeStyle;
 
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import java.util.Objects;
 
 /**
  * User: cdr
@@ -29,7 +29,7 @@ public class PackageEntry {
     private final boolean myWithSubpackages;
     private final boolean isStatic;
 
-    public PackageEntry(boolean isStatic, @Nonnull @NonNls String packageName, boolean withSubpackages) {
+    public PackageEntry(boolean isStatic, @Nonnull String packageName, boolean withSubpackages) {
         this.isStatic = isStatic;
         myPackageName = packageName;
         myWithSubpackages = withSubpackages;
@@ -61,16 +61,16 @@ public class PackageEntry {
         return false;
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof PackageEntry)) {
-            return false;
-        }
-        PackageEntry entry = (PackageEntry)obj;
-        return entry.myWithSubpackages == myWithSubpackages
-            && entry.isStatic() == isStatic()
-            && Comparing.equal(entry.myPackageName, myPackageName);
+        return obj == this
+            || obj instanceof PackageEntry that
+            && myWithSubpackages == that.myWithSubpackages
+            && isStatic() == that.isStatic()
+            && Objects.equals(myPackageName, that.myPackageName);
     }
 
+    @Override
     public int hashCode() {
         return myPackageName.hashCode();
     }
@@ -99,7 +99,7 @@ public class PackageEntry {
     }
 
     public boolean isBetterMatchForPackageThan(
-        @jakarta.annotation.Nullable PackageEntry entry,
+        @Nullable PackageEntry entry,
         @Nonnull String packageName,
         boolean isStatic
     ) {
@@ -118,13 +118,13 @@ public class PackageEntry {
         if (entry == ALL_OTHER_IMPORTS_ENTRY || entry == ALL_OTHER_STATIC_IMPORTS_ENTRY) {
             return true;
         }
+        //noinspection SimplifiableIfStatement
         if (this == ALL_OTHER_IMPORTS_ENTRY || this == ALL_OTHER_STATIC_IMPORTS_ENTRY) {
             return false;
         }
         return StringUtil.countChars(entry.getPackageName(), '.') < StringUtil.countChars(getPackageName(), '.');
     }
 
-    @NonNls
     @Override
     public String toString() {
         return (isStatic() ? "static " : "") + getPackageName();

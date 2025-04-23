@@ -34,7 +34,7 @@ public interface FormattingModeAwareIndentAdjuster {
      * @param mode     The mode: {@link FormattingMode#ADJUST_INDENT} or {@link FormattingMode#ADJUST_INDENT_ON_ENTER}
      * @return Adjusted offset.
      */
-    int adjustLineIndent(@Nonnull final Document document, final int offset, FormattingMode mode);
+    int adjustLineIndent(@Nonnull Document document, int offset, FormattingMode mode);
 
     FormattingMode getCurrentFormattingMode();
 }

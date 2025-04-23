@@ -15,13 +15,12 @@
  */
 package consulo.language.codeStyle;
 
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,26 +29,16 @@ import java.util.List;
  * User: cdr
  */
 public class PackageEntryTable implements JDOMExternalizable, Cloneable {
-    private final List<PackageEntry> myEntries = new ArrayList<PackageEntry>();
+    @Nonnull
+    private final List<PackageEntry> myEntries = new ArrayList<>();
 
+    @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof PackageEntryTable)) {
-            return false;
-        }
-        PackageEntryTable other = (PackageEntryTable)obj;
-        if (other.myEntries.size() != myEntries.size()) {
-            return false;
-        }
-        for (int i = 0; i < myEntries.size(); i++) {
-            PackageEntry entry = myEntries.get(i);
-            PackageEntry otherentry = other.myEntries.get(i);
-            if (!Comparing.equal(entry, otherentry)) {
-                return false;
-            }
-        }
-        return true;
+        return obj instanceof PackageEntryTable that
+            && that.myEntries.equals(myEntries);
     }
 
+    @Override
     public int hashCode() {
         if (!myEntries.isEmpty() && myEntries.get(0) != null) {
             return myEntries.get(0).hashCode();
@@ -113,9 +102,9 @@ public class PackageEntryTable implements JDOMExternalizable, Cloneable {
     public void readExternal(Element element) throws InvalidDataException {
         myEntries.clear();
         List children = element.getChildren();
-        for (final Object aChildren : children) {
-            @NonNls Element e = (Element)aChildren;
-            @NonNls String name = e.getName();
+        for (Object aChildren : children) {
+            Element e = (Element)aChildren;
+            String name = e.getName();
             if ("package".equals(name)) {
                 String packageName = e.getAttributeValue("name");
                 boolean isStatic = Boolean.parseBoolean(e.getAttributeValue("static"));
@@ -144,11 +133,11 @@ public class PackageEntryTable implements JDOMExternalizable, Cloneable {
     public void writeExternal(Element parentNode) throws WriteExternalException {
         for (PackageEntry entry : myEntries) {
             if (entry == PackageEntry.BLANK_LINE_ENTRY) {
-                @NonNls Element element = new Element("emptyLine");
+                Element element = new Element("emptyLine");
                 parentNode.addContent(element);
             }
             else {
-                @NonNls Element element = new Element("package");
+                Element element = new Element("package");
                 parentNode.addContent(element);
                 String packageName = entry.getPackageName();
                 element.setAttribute(

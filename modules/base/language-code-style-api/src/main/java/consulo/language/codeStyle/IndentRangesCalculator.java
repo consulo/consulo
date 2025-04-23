@@ -26,7 +26,7 @@ import java.util.List;
  * from kotlin platform\lang-impl\src\com\intellij\psi\formatter\IndentRangesCalculator.kt
  *
  * @author VISTALL
- * @since 01-May-17
+ * @since 2017-05-01
  */
 public class IndentRangesCalculator {
     private Document document;
