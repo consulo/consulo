@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.formatting.engine;
 
-import consulo.ide.impl.idea.formatting.*;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
+import consulo.application.Application;
 import consulo.codeEditor.TextChange;
-import consulo.document.internal.DocumentEx;
-import consulo.ide.impl.idea.openapi.editor.impl.BulkChangesMerger;
 import consulo.codeEditor.impl.TextChangeImpl;
+import consulo.document.Document;
+import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
+import consulo.ide.impl.idea.formatting.FormattingProgressCallback;
+import consulo.ide.impl.idea.openapi.editor.impl.BulkChangesMerger;
 import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -71,41 +71,46 @@ public class ApplyChangesState extends State {
      */
     @SuppressWarnings({"deprecation"})
     private void applyChangesAtRewriteMode(
-        @Nonnull final List<LeafBlockWrapper> blocksToModify,
-        @Nonnull final FormattingModel model
+        @Nonnull List<LeafBlockWrapper> blocksToModify,
+        @Nonnull FormattingModel model
     ) {
         FormattingDocumentModel documentModel = model.getDocumentModel();
         Document document = documentModel.getDocument();
         CaretOffsetUpdater caretOffsetUpdater = new CaretOffsetUpdater(document);
 
-        DocumentUtil.executeInBulk(document, true, () -> {
-            List<TextChange> changes = new ArrayList<>();
-            int shift = 0;
-            int currentIterationShift = 0;
-            for (LeafBlockWrapper block : blocksToModify) {
-                WhiteSpace whiteSpace = block.getWhiteSpace();
-                CharSequence newWs = documentModel.adjustWhiteSpaceIfNecessary(
-                    whiteSpace.generateWhiteSpace(myBlockIndentOptions.getIndentOptions(block)), whiteSpace.getStartOffset(),
-                    whiteSpace.getEndOffset(), block.getNode(), false
-                );
-                if (changes.size() > 10000) {
-                    caretOffsetUpdater.update(changes);
-                    CharSequence mergeResult =
-                        BulkChangesMerger.INSTANCE.mergeToCharSequence(document.getChars(), document.getTextLength(), changes);
-                    document.replaceString(0, document.getTextLength(), mergeResult);
-                    shift += currentIterationShift;
-                    currentIterationShift = 0;
-                    changes.clear();
+        DocumentUtil.executeInBulk(
+            document,
+            true,
+            () -> {
+                List<TextChange> changes = new ArrayList<>();
+                int shift = 0;
+                int currentIterationShift = 0;
+                for (LeafBlockWrapper block : blocksToModify) {
+                    WhiteSpace whiteSpace = block.getWhiteSpace();
+                    CharSequence newWs = documentModel.adjustWhiteSpaceIfNecessary(
+                        whiteSpace.generateWhiteSpace(myBlockIndentOptions.getIndentOptions(block)), whiteSpace.getStartOffset(),
+                        whiteSpace.getEndOffset(), block.getNode(), false
+                    );
+                    if (changes.size() > 10000) {
+                        caretOffsetUpdater.update(changes);
+                        CharSequence mergeResult =
+                            BulkChangesMerger.INSTANCE.mergeToCharSequence(document.getChars(), document.getTextLength(), changes);
+                        document.replaceString(0, document.getTextLength(), mergeResult);
+                        shift += currentIterationShift;
+                        currentIterationShift = 0;
+                        changes.clear();
+                    }
+                    TextChangeImpl change =
+                        new TextChangeImpl(newWs, whiteSpace.getStartOffset() + shift, whiteSpace.getEndOffset() + shift);
+                    currentIterationShift += change.getDiff();
+                    changes.add(change);
                 }
-                TextChangeImpl change = new TextChangeImpl(newWs, whiteSpace.getStartOffset() + shift, whiteSpace.getEndOffset() + shift);
-                currentIterationShift += change.getDiff();
-                changes.add(change);
+                caretOffsetUpdater.update(changes);
+                CharSequence mergeResult =
+                    BulkChangesMerger.INSTANCE.mergeToCharSequence(document.getChars(), document.getTextLength(), changes);
+                document.replaceString(0, document.getTextLength(), mergeResult);
             }
-            caretOffsetUpdater.update(changes);
-            CharSequence mergeResult =
-                BulkChangesMerger.INSTANCE.mergeToCharSequence(document.getChars(), document.getTextLength(), changes);
-            document.replaceString(0, document.getTextLength(), mergeResult);
-        });
+        );
 
         caretOffsetUpdater.restoreCaretLocations();
         cleanupBlocks(blocksToModify);
@@ -120,23 +125,17 @@ public class ApplyChangesState extends State {
     }
 
     @Nullable
-    private static DocumentEx getAffectedDocument(final FormattingModel model) {
-        final Document document = model.getDocumentModel().getDocument();
-        if (document instanceof DocumentEx) {
-            return (DocumentEx)document;
-        }
-        else {
-            return null;
-        }
+    private static DocumentEx getAffectedDocument(FormattingModel model) {
+        return model.getDocumentModel().getDocument() instanceof DocumentEx documentEx ? documentEx : null;
     }
 
     private List<LeafBlockWrapper> collectBlocksToModify() {
         List<LeafBlockWrapper> blocksToModify = new ArrayList<>();
         LeafBlockWrapper firstBlock = myWrapState.getFirstBlock();
         for (LeafBlockWrapper block = firstBlock; block != null; block = block.getNextBlock()) {
-            final WhiteSpace whiteSpace = block.getWhiteSpace();
+            WhiteSpace whiteSpace = block.getWhiteSpace();
             if (!whiteSpace.isReadOnly()) {
-                final String newWhiteSpace = whiteSpace.generateWhiteSpace(myBlockIndentOptions.getIndentOptions(block));
+                String newWhiteSpace = whiteSpace.generateWhiteSpace(myBlockIndentOptions.getIndentOptions(block));
                 if (!whiteSpace.equalsToString(newWhiteSpace)) {
                     blocksToModify.add(block);
                 }
@@ -161,7 +160,7 @@ public class ApplyChangesState extends State {
 
         myProgressCallback.beforeApplyingFormatChanges(myBlocksToModify);
 
-        final int blocksToModifyCount = myBlocksToModify.size();
+        int blocksToModifyCount = myBlocksToModify.size();
         if (blocksToModifyCount > BULK_REPLACE_OPTIMIZATION_CRITERIA) {
             applyChangesAtRewriteMode(myBlocksToModify, myModel);
             setDone(true);
@@ -215,9 +214,10 @@ public class ApplyChangesState extends State {
     }
 
     @Override
+    @RequiredUIAccess
     public void stop() {
         if (myIndex > 0) {
-            ApplicationManager.getApplication().invokeAndWait(() -> myModel.commitChanges());
+            Application.get().invokeAndWait(myModel::commitChanges);
         }
     }
 }

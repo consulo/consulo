@@ -26,6 +26,7 @@ import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.internal.AbstractBlockWrapper;
 import consulo.language.codeStyle.internal.AlignmentImpl;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
+import consulo.logging.util.LoggerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 
@@ -61,7 +62,7 @@ public class AlignmentHelper {
     private static void reportAlignmentProcessingError(BlockAlignmentProcessor.Context context) {
         ASTNode node = context.targetBlock.getNode();
         Language language = node != null ? node.getPsi().getLanguage() : null;
-        LogMessageEx.error(
+        LoggerUtil.error(
             LOG,
             (language != null ? language.getDisplayName() + ": " : "") +
                 "Can't align block " + context.targetBlock, context.document.getText()
@@ -69,7 +70,7 @@ public class AlignmentHelper {
     }
 
     @RequiredReadAction
-    public LeafBlockWrapper applyAlignment(final AlignmentImpl alignment, final LeafBlockWrapper currentBlock) {
+    public LeafBlockWrapper applyAlignment(AlignmentImpl alignment, LeafBlockWrapper currentBlock) {
         BlockAlignmentProcessor alignmentProcessor = ALIGNMENT_PROCESSORS.get(alignment.getAnchor());
         if (alignmentProcessor == null) {
             LOG.error(String.format("Can't find alignment processor for alignment anchor %s", alignment.getAnchor()));
@@ -84,7 +85,7 @@ public class AlignmentHelper {
             myBackwardShiftedAlignedBlocks,
             myBlockIndentOptions.getIndentOptions(currentBlock)
         );
-        final LeafBlockWrapper offsetResponsibleBlock = alignment.getOffsetRespBlockBefore(currentBlock);
+        LeafBlockWrapper offsetResponsibleBlock = alignment.getOffsetRespBlockBefore(currentBlock);
         myCyclesDetector.registerOffsetResponsibleBlock(offsetResponsibleBlock);
         BlockAlignmentProcessor.Result result = alignmentProcessor.applyAlignment(context);
         switch (result) {

@@ -48,11 +48,11 @@ public class BlockIndentOptions {
     @Nonnull
     public CommonCodeStyleSettings.IndentOptions getIndentOptions(@Nonnull AbstractBlockWrapper block) {
         if (!myIndentOptions.isOverrideLanguageOptions()) {
-            final Language language = block.getLanguage();
+            Language language = block.getLanguage();
             if (language != null) {
-                final CommonCodeStyleSettings commonSettings = mySettings.getCommonSettings(language);
+                CommonCodeStyleSettings commonSettings = mySettings.getCommonSettings(language);
                 if (commonSettings != null) {
-                    final CommonCodeStyleSettings.IndentOptions result = commonSettings.getIndentOptions();
+                    CommonCodeStyleSettings.IndentOptions result = commonSettings.getIndentOptions();
                     if (result != null) {
                         return result;
                     }
@@ -68,8 +68,8 @@ public class BlockIndentOptions {
 
     private int calcRightMargin(Block rootBlock) {
         Language language = null;
-        if (rootBlock instanceof ASTBlock) {
-            ASTNode node = ((ASTBlock)rootBlock).getNode();
+        if (rootBlock instanceof ASTBlock astBlock) {
+            ASTNode node = astBlock.getNode();
             if (node != null) {
                 PsiElement psiElement = node.getPsi();
                 if (psiElement.isValid()) {

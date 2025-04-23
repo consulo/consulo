@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.formatting.engine;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.formatting.*;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.language.codeStyle.Alignment;
 import consulo.language.codeStyle.internal.*;
 
@@ -71,6 +72,7 @@ public class AdjustWhiteSpacesState extends State {
     }
 
     @Override
+    @RequiredReadAction
     public void doIteration() {
         LeafBlockWrapper blockToProcess = myCurrentBlock;
         processToken();
@@ -96,10 +98,10 @@ public class AdjustWhiteSpacesState extends State {
         return myReformatContext && !ContainerUtil.isEmpty(myAlignmentsInsideRangesToModify);
     }
 
-    private void defineAlignOffset(final LeafBlockWrapper block) {
+    private void defineAlignOffset(LeafBlockWrapper block) {
         AbstractBlockWrapper current = myCurrentBlock;
         while (true) {
-            final AlignmentImpl alignment = current.getAlignment();
+            AlignmentImpl alignment = current.getAlignment();
             if (alignment != null) {
                 alignment.setOffsetRespBlock(block);
             }
@@ -132,37 +134,30 @@ public class AdjustWhiteSpacesState extends State {
         return myAlignmentsInsideRangesToModify.contains(alignment);
     }
 
-    private static List<TextRange> getDependentRegionRangesAfterCurrentWhiteSpace(
-        final SpacingImpl spaceProperty,
-        final WhiteSpace whiteSpace
-    ) {
-        if (!(spaceProperty instanceof DependantSpacingImpl)) {
-            return ContainerUtil.emptyList();
+    private static List<TextRange> getDependentRegionRangesAfterCurrentWhiteSpace(SpacingImpl spaceProperty, WhiteSpace whiteSpace) {
+        if (!(spaceProperty instanceof DependantSpacingImpl spacing)
+            || whiteSpace.isReadOnly() || whiteSpace.isLineFeedsAreReadOnly()) {
+            return List.of();
         }
 
-        if (whiteSpace.isReadOnly() || whiteSpace.isLineFeedsAreReadOnly()) {
-            return ContainerUtil.emptyList();
-        }
-
-        DependantSpacingImpl spacing = (DependantSpacingImpl)spaceProperty;
         return ContainerUtil.filter(
             spacing.getDependentRegionRanges(),
             dependencyRange -> whiteSpace.getStartOffset() < dependencyRange.getEndOffset()
         );
     }
 
+    @RequiredReadAction
     private void processToken() {
-        final SpacingImpl spaceProperty = myCurrentBlock.getSpaceProperty();
-        final WhiteSpace whiteSpace = myCurrentBlock.getWhiteSpace();
+        SpacingImpl spaceProperty = myCurrentBlock.getSpaceProperty();
+        WhiteSpace whiteSpace = myCurrentBlock.getWhiteSpace();
 
-        if (isReformatSelectedRangesContext()) {
-            if (isCurrentBlockAlignmentUsedInRangesToModify() &&
-                whiteSpace.isReadOnly() &&
-                spaceProperty != null &&
-                !spaceProperty.isReadOnly()) {
-                whiteSpace.setReadOnly(false);
-                whiteSpace.setLineFeedsAreReadOnly(true);
-            }
+        if (isReformatSelectedRangesContext()
+            && isCurrentBlockAlignmentUsedInRangesToModify()
+            && whiteSpace.isReadOnly()
+            && spaceProperty != null
+            && !spaceProperty.isReadOnly()) {
+            whiteSpace.setReadOnly(false);
+            whiteSpace.setLineFeedsAreReadOnly(true);
         }
 
         whiteSpace.arrangeLineFeeds(spaceProperty, myBlockRangesMap);
@@ -197,7 +192,7 @@ public class AdjustWhiteSpacesState extends State {
             onCurrentLineChanged();
         }
 
-        final List<TextRange> ranges = getDependentRegionRangesAfterCurrentWhiteSpace(spaceProperty, whiteSpace);
+        List<TextRange> ranges = getDependentRegionRangesAfterCurrentWhiteSpace(spaceProperty, whiteSpace);
         if (!ranges.isEmpty()) {
             myDependentSpacingEngine.registerUnresolvedDependentSpacingRanges(spaceProperty, ranges);
         }

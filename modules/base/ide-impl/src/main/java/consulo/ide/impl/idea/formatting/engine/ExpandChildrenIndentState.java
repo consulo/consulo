@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.formatting.engine;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.language.codeStyle.Alignment;
 import consulo.language.codeStyle.internal.*;
@@ -55,7 +56,7 @@ public class ExpandChildrenIndentState extends State {
             return;
         }
 
-        final ExpandableIndent indent = myIterator.next();
+        ExpandableIndent indent = myIterator.next();
         Collection<AbstractBlockWrapper> blocksToExpandIndent = myExpandableIndents.get(indent);
         if (shouldExpand(blocksToExpandIndent)) {
             indent.enforceIndent();
@@ -175,8 +176,8 @@ public class ExpandChildrenIndentState extends State {
         if (block instanceof LeafBlockWrapper && block.getWhiteSpace().containsLineFeeds()) {
             return block.getNumberOfSymbolsBeforeBlock().getTotalSpaces();
         }
-        else if (block instanceof CompositeBlockWrapper) {
-            List<AbstractBlockWrapper> children = ((CompositeBlockWrapper)block).getChildren();
+        else if (block instanceof CompositeBlockWrapper compositeBlockWrapper) {
+            List<AbstractBlockWrapper> children = compositeBlockWrapper.getChildren();
             int currentMin = Integer.MAX_VALUE;
             for (AbstractBlockWrapper child : children) {
                 int childIndent = findMinNewLineIndent(child);
@@ -198,18 +199,19 @@ public class ExpandChildrenIndentState extends State {
         return null;
     }
 
-    private void reindentNewLineChildren(final @Nonnull AbstractBlockWrapper block) {
-        if (block instanceof LeafBlockWrapper) {
+    @RequiredReadAction
+    private void reindentNewLineChildren(@Nonnull AbstractBlockWrapper block) {
+        if (block instanceof LeafBlockWrapper leafBlockWrapper) {
             WhiteSpace space = block.getWhiteSpace();
 
             if (space.containsLineFeeds()) {
-                myCurrentBlock = (LeafBlockWrapper)block;
+                myCurrentBlock = leafBlockWrapper;
                 myIndentAdjuster.adjustIndent(myCurrentBlock); //since aligned block starts new line, it should not touch any other block
                 storeAlignmentsAfterCurrentBlock();
             }
         }
-        else if (block instanceof CompositeBlockWrapper) {
-            List<AbstractBlockWrapper> children = ((CompositeBlockWrapper)block).getChildren();
+        else if (block instanceof CompositeBlockWrapper compositeBlockWrapper) {
+            List<AbstractBlockWrapper> children = compositeBlockWrapper.getChildren();
             for (AbstractBlockWrapper childBlock : children) {
                 reindentNewLineChildren(childBlock);
             }

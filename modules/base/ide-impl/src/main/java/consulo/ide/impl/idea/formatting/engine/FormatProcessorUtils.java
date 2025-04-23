@@ -27,9 +27,9 @@ import jakarta.annotation.Nonnull;
 
 public class FormatProcessorUtils {
     private static int calcShift(
-        @Nonnull final IndentInside oldIndent,
-        @Nonnull final IndentInside newIndent,
-        @Nonnull final CommonCodeStyleSettings.IndentOptions options
+        @Nonnull IndentInside oldIndent,
+        @Nonnull IndentInside newIndent,
+        @Nonnull CommonCodeStyleSettings.IndentOptions options
     ) {
         if (oldIndent.equals(newIndent)) {
             return 0;
@@ -38,31 +38,31 @@ public class FormatProcessorUtils {
     }
 
     public static int replaceWhiteSpace(
-        final FormattingModel model,
-        @Nonnull final LeafBlockWrapper block,
+        FormattingModel model,
+        @Nonnull LeafBlockWrapper block,
         int shift,
-        final CharSequence _newWhiteSpace,
-        final CommonCodeStyleSettings.IndentOptions options
+        CharSequence _newWhiteSpace,
+        CommonCodeStyleSettings.IndentOptions options
     ) {
-        final WhiteSpace whiteSpace = block.getWhiteSpace();
-        final TextRange textRange = whiteSpace.getTextRange();
-        final TextRange wsRange = textRange.shiftRight(shift);
-        final String newWhiteSpace = _newWhiteSpace.toString();
-        TextRange newWhiteSpaceRange = model instanceof FormattingModelEx
-            ? ((FormattingModelEx)model).replaceWhiteSpace(wsRange, block.getNode(), newWhiteSpace)
+        WhiteSpace whiteSpace = block.getWhiteSpace();
+        TextRange textRange = whiteSpace.getTextRange();
+        TextRange wsRange = textRange.shiftRight(shift);
+        String newWhiteSpace = _newWhiteSpace.toString();
+        TextRange newWhiteSpaceRange = model instanceof FormattingModelEx formattingModelEx
+            ? formattingModelEx.replaceWhiteSpace(wsRange, block.getNode(), newWhiteSpace)
             : model.replaceWhiteSpace(wsRange, newWhiteSpace);
 
         shift += newWhiteSpaceRange.getLength() - textRange.getLength();
 
         if (block.isLeaf() && whiteSpace.containsLineFeeds() && block.containsLineFeeds()) {
-            final TextRange currentBlockRange = block.getTextRange().shiftRight(shift);
+            TextRange currentBlockRange = block.getTextRange().shiftRight(shift);
 
             IndentInside oldBlockIndent = whiteSpace.getInitialLastLineIndent();
             IndentInside whiteSpaceIndent = IndentInside.createIndentOn(IndentInside.getLastLine(newWhiteSpace));
-            final int shiftInside = calcShift(oldBlockIndent, whiteSpaceIndent, options);
+            int shiftInside = calcShift(oldBlockIndent, whiteSpaceIndent, options);
 
             if (shiftInside != 0 || !oldBlockIndent.equals(whiteSpaceIndent)) {
-                final TextRange newBlockRange = model.shiftIndentInsideRange(block.getNode(), currentBlockRange, shiftInside);
+                TextRange newBlockRange = model.shiftIndentInsideRange(block.getNode(), currentBlockRange, shiftInside);
                 shift += newBlockRange.getLength() - block.getLength();
             }
         }

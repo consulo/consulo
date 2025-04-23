@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.formatting.engine;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.formatting.*;
 import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.internal.*;
@@ -37,6 +38,7 @@ public class IndentAdjuster {
      *
      * @return new current block if we need to rollback, null otherwise
      */
+    @RequiredReadAction
     LeafBlockWrapper adjustIndent(LeafBlockWrapper block) {
         AlignmentImpl alignment = CoreFormatterUtil.getAlignment(block);
         WhiteSpace whiteSpace = block.getWhiteSpace();
@@ -75,21 +77,21 @@ public class IndentAdjuster {
     private static IndentData getAlignOffset(LeafBlockWrapper myCurrentBlock) {
         AbstractBlockWrapper current = myCurrentBlock;
         while (true) {
-            final AlignmentImpl alignment = current.getAlignment();
+            AlignmentImpl alignment = current.getAlignment();
             LeafBlockWrapper offsetResponsibleBlock;
             if (alignment != null && (offsetResponsibleBlock = alignment.getOffsetRespBlockBefore(myCurrentBlock)) != null) {
-                final WhiteSpace whiteSpace = offsetResponsibleBlock.getWhiteSpace();
+                WhiteSpace whiteSpace = offsetResponsibleBlock.getWhiteSpace();
                 if (whiteSpace.containsLineFeeds()) {
                     return new IndentData(whiteSpace.getIndentSpaces(), whiteSpace.getSpaces());
                 }
                 else {
-                    final int offsetBeforeBlock = CoreFormatterUtil.getStartColumn(offsetResponsibleBlock);
-                    final AbstractBlockWrapper indentedParentBlock = CoreFormatterUtil.getIndentedParentBlock(myCurrentBlock);
+                    int offsetBeforeBlock = CoreFormatterUtil.getStartColumn(offsetResponsibleBlock);
+                    AbstractBlockWrapper indentedParentBlock = CoreFormatterUtil.getIndentedParentBlock(myCurrentBlock);
                     if (indentedParentBlock == null) {
                         return new IndentData(0, offsetBeforeBlock);
                     }
                     else {
-                        final int parentIndent = indentedParentBlock.getWhiteSpace().getIndentOffset();
+                        int parentIndent = indentedParentBlock.getWhiteSpace().getIndentOffset();
                         if (parentIndent > offsetBeforeBlock) {
                             return new IndentData(0, offsetBeforeBlock);
                         }
@@ -127,18 +129,18 @@ public class IndentAdjuster {
         int alignSpaces = 0;
     }
 
-    private static AlignWhiteSpace getAlignOffsetBefore(@Nullable final Alignment alignment) {
+    private static AlignWhiteSpace getAlignOffsetBefore(@Nullable Alignment alignment) {
         if (alignment == null) {
             return null;
         }
-        final LeafBlockWrapper alignRespBlock = ((AlignmentImpl)alignment).getOffsetRespBlockBefore(null);
+        LeafBlockWrapper alignRespBlock = ((AlignmentImpl)alignment).getOffsetRespBlockBefore(null);
         return alignRespBlock != null ? getStartColumn(alignRespBlock) : null;
     }
 
     private static AlignWhiteSpace getStartColumn(@Nonnull LeafBlockWrapper block) {
         AlignWhiteSpace alignWhitespace = new AlignWhiteSpace();
         while (true) {
-            final WhiteSpace whiteSpace = block.getWhiteSpace();
+            WhiteSpace whiteSpace = block.getWhiteSpace();
             alignWhitespace.alignSpaces += whiteSpace.getSpaces();
 
             if (whiteSpace.containsLineFeeds()) {
