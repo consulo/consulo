@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.ui.navigation;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
@@ -40,6 +41,7 @@ public abstract class BackgroundUpdaterTask extends BackgroundUpdaterTaskBase<Ps
     }
 
     @Override
+    @RequiredReadAction
     protected Usage createUsage(PsiElement element) {
         return new UsageInfo2UsageAdapter(new UsageInfo(element));
     }
