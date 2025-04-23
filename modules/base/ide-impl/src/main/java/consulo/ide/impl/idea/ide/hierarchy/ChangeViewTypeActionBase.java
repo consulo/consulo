@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.ui.ex.action.AnActionEvent;
@@ -30,48 +29,48 @@ import jakarta.annotation.Nonnull;
  * @author cdr
  */
 abstract class ChangeViewTypeActionBase extends ToggleAction {
-  public ChangeViewTypeActionBase(final String shortDescription, final String longDescription, final Image icon) {
-    super(shortDescription, longDescription, icon);
-  }
-
-  protected ChangeViewTypeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
-    super(text, description);
-  }
-
-  @Override
-  public final boolean isSelected(final AnActionEvent event) {
-    final TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
-    return browser != null && getTypeName().equals(browser.getCurrentViewType());
-  }
-
-  protected abstract String getTypeName();
-
-  @Override
-  public final void setSelected(final AnActionEvent event, final boolean flag) {
-    if (flag) {
-      final TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
-      //        setWaitCursor();
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          if (browser != null) {
-            browser.changeView(getTypeName());
-          }
-        }
-      });
+    public ChangeViewTypeActionBase(final String shortDescription, final String longDescription, final Image icon) {
+        super(shortDescription, longDescription, icon);
     }
-  }
 
-  @Override
-  public void update(final AnActionEvent event) {
-    // its important to assign the myTypeHierarchyBrowser first
-    super.update(event);
-    final Presentation presentation = event.getPresentation();
-    final TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
-    presentation.setEnabled(browser != null && browser.isValidBase());
-  }
+    protected ChangeViewTypeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
-  protected static TypeHierarchyBrowserBase getTypeHierarchyBrowser(final DataContext context) {
-    return context.getData(TypeHierarchyBrowserBase.DATA_KEY);
-  }
+    @Override
+    public final boolean isSelected(final AnActionEvent event) {
+        final TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
+        return browser != null && getTypeName().equals(browser.getCurrentViewType());
+    }
+
+    protected abstract String getTypeName();
+
+    @Override
+    public final void setSelected(final AnActionEvent event, final boolean flag) {
+        if (flag) {
+            final TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
+            //        setWaitCursor();
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    if (browser != null) {
+                        browser.changeView(getTypeName());
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void update(final AnActionEvent event) {
+        // its important to assign the myTypeHierarchyBrowser first
+        super.update(event);
+        final Presentation presentation = event.getPresentation();
+        final TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
+        presentation.setEnabled(browser != null && browser.isValidBase());
+    }
+
+    protected static TypeHierarchyBrowserBase getTypeHierarchyBrowser(final DataContext context) {
+        return context.getData(TypeHierarchyBrowserBase.DATA_KEY);
+    }
 }

@@ -31,19 +31,19 @@ import jakarta.annotation.Nullable;
  * @see DataContext
  */
 public interface DataProvider {
-  /**
-   * Returns the object corresponding to the specified data identifier. Some of the supported
-   * data identifiers are defined in the {@link consulo.ide.impl.idea.openapi.actionSystem.PlatformDataKeys} class.
-   *
-   * @param dataId the data identifier for which the value is requested.
-   * @return the value, or null if no value is available in the current context for this identifier.
-   */
-  @Nullable
-  Object getData(@Nonnull Key<?> dataId);
+    /**
+     * Returns the object corresponding to the specified data identifier. Some of the supported
+     * data identifiers are defined in the {@link consulo.ide.impl.idea.openapi.actionSystem.PlatformDataKeys} class.
+     *
+     * @param dataId the data identifier for which the value is requested.
+     * @return the value, or null if no value is available in the current context for this identifier.
+     */
+    @Nullable
+    Object getData(@Nonnull Key<?> dataId);
 
-  @Nullable
-  @SuppressWarnings("unchecked")
-  default <T> T getDataUnchecked(@Nonnull Key<T> key) {
-    return (T)getData(key);
-  }
+    @Nullable
+    @SuppressWarnings("unchecked")
+    default <T> T getDataUnchecked(@Nonnull Key<T> key) {
+        return (T)getData(key);
+    }
 }

@@ -28,32 +28,32 @@ import jakarta.annotation.Nullable;
  * there might be any object registered in chain.
  */
 public interface Disposable {
-  @Nonnull
-  static Disposable newDisposable() {
-    return newDisposable(null);
-  }
+    @Nonnull
+    static Disposable newDisposable() {
+        return newDisposable(null);
+    }
 
-  @Nonnull
-  static Disposable newDisposable(@Nullable final String debugName) {
-    return new Disposable() {
-      @Override
-      public void dispose() {
-      }
+    @Nonnull
+    static Disposable newDisposable(@Nullable final String debugName) {
+        return new Disposable() {
+            @Override
+            public void dispose() {
+            }
 
-      @Override
-      public String toString() {
-        return debugName == null ? super.toString() : debugName;
-      }
-    };
-  }
+            @Override
+            public String toString() {
+                return debugName == null ? super.toString() : debugName;
+            }
+        };
+    }
 
-  interface Parent extends Disposable {
-    void beforeTreeDispose();
-  }
-  
-  void dispose();
+    interface Parent extends Disposable {
+        void beforeTreeDispose();
+    }
 
-  default void disposeWithTree() {
-    Disposer.dispose(this);
-  }
+    void dispose();
+
+    default void disposeWithTree() {
+        Disposer.dispose(this);
+    }
 }

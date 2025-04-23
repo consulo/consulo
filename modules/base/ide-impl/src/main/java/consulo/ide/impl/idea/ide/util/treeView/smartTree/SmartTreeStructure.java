@@ -25,59 +25,58 @@ import consulo.language.psi.PsiDocumentManager;
 import jakarta.annotation.Nonnull;
 
 public class SmartTreeStructure extends AbstractTreeStructure {
+    protected final TreeModel myModel;
+    protected final Project myProject;
+    private TreeElementWrapper myRootElementWrapper;
 
-  protected final TreeModel myModel;
-  protected final Project myProject;
-  private TreeElementWrapper myRootElementWrapper;
-
-  public SmartTreeStructure(@Nonnull Project project, @Nonnull TreeModel model) {
-    myModel = model;
-    myProject = project;
-  }
-
-  @Override
-  public void commit() {
-  }
-
-  @Override
-  @Nonnull
-  public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
-    return (AbstractTreeNode)element;
-  }
-
-  @Override
-  public Object[] getChildElements(Object element) {
-    return ((AbstractTreeNode)element).getChildren().toArray();
-  }
-
-  @Override
-  public Object getParentElement(Object element) {
-    return ((AbstractTreeNode)element).getParent();
-  }
-
-  @Override
-  public Object getRootElement() {
-    if (myRootElementWrapper == null){
-      myRootElementWrapper = createTree();
+    public SmartTreeStructure(@Nonnull Project project, @Nonnull TreeModel model) {
+        myModel = model;
+        myProject = project;
     }
-    return myRootElementWrapper;
-  }
 
-  protected TreeElementWrapper createTree() {
-    return new TreeElementWrapper(myProject, myModel.getRoot(), myModel);
-  }
+    @Override
+    public void commit() {
+    }
 
-  @Override
-  public boolean isAlwaysLeaf(Object element) {
-    return ((AbstractTreeNode)element).isAlwaysLeaf();
-  }
+    @Override
+    @Nonnull
+    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
+        return (AbstractTreeNode)element;
+    }
 
-  @Override
-  public boolean hasSomethingToCommit() {
-    return PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments();
-  }
+    @Override
+    public Object[] getChildElements(Object element) {
+        return ((AbstractTreeNode)element).getChildren().toArray();
+    }
 
-  public void rebuildTree() {
-    ((CachingChildrenTreeNode)getRootElement()).rebuildChildren();
-  }
+    @Override
+    public Object getParentElement(Object element) {
+        return ((AbstractTreeNode)element).getParent();
+    }
+
+    @Override
+    public Object getRootElement() {
+        if (myRootElementWrapper == null) {
+            myRootElementWrapper = createTree();
+        }
+        return myRootElementWrapper;
+    }
+
+    protected TreeElementWrapper createTree() {
+        return new TreeElementWrapper(myProject, myModel.getRoot(), myModel);
+    }
+
+    @Override
+    public boolean isAlwaysLeaf(Object element) {
+        return ((AbstractTreeNode)element).isAlwaysLeaf();
+    }
+
+    @Override
+    public boolean hasSomethingToCommit() {
+        return PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments();
+    }
+
+    public void rebuildTree() {
+        ((CachingChildrenTreeNode)getRootElement()).rebuildChildren();
+    }
 }

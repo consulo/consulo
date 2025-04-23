@@ -28,31 +28,30 @@ import javax.swing.*;
  * @since 05-Nov-16
  */
 public class ConfigurableUIMigrationUtil {
+    @RequiredUIAccess
+    public static JComponent createComponent(@Nonnull UnnamedConfigurable configurable, @Nonnull Disposable parentUIDisposable) {
+        JComponent component = configurable.createComponent(parentUIDisposable);
+        if (component != null) {
+            return component;
+        }
 
-  @RequiredUIAccess
-  public static JComponent createComponent(@Nonnull UnnamedConfigurable configurable, @Nonnull Disposable parentUIDisposable) {
-    JComponent component = configurable.createComponent(parentUIDisposable);
-    if (component != null) {
-      return component;
+        consulo.ui.Component uiComponent = configurable.createUIComponent(parentUIDisposable);
+        if (uiComponent != null) {
+            return (JComponent)TargetAWT.to(uiComponent);
+        }
+        return null;
     }
 
-    consulo.ui.Component uiComponent = configurable.createUIComponent(parentUIDisposable);
-    if (uiComponent != null) {
-      return (JComponent)TargetAWT.to(uiComponent);
+    @RequiredUIAccess
+    public static JComponent getPreferredFocusedComponent(@Nonnull UnnamedConfigurable component) {
+        JComponent preferredFocusedComponent = component.getPreferredFocusedComponent();
+        if (preferredFocusedComponent != null) {
+            return preferredFocusedComponent;
+        }
+        consulo.ui.Component uiComponent = component.getPreferredFocusedUIComponent();
+        if (uiComponent != null) {
+            return (JComponent)TargetAWT.to(uiComponent);
+        }
+        return null;
     }
-    return null;
-  }
-
-  @RequiredUIAccess
-  public static JComponent getPreferredFocusedComponent(@Nonnull UnnamedConfigurable component) {
-    JComponent preferredFocusedComponent = component.getPreferredFocusedComponent();
-    if(preferredFocusedComponent != null) {
-      return preferredFocusedComponent;
-    }
-    consulo.ui.Component uiComponent = component.getPreferredFocusedUIComponent();
-    if (uiComponent != null) {
-      return (JComponent)TargetAWT.to(uiComponent);
-    }
-    return null;
-  }
 }

@@ -22,13 +22,13 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public interface PackageSet {
-  boolean contains(VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder);
+    boolean contains(VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder);
 
-  @Nonnull
-  PackageSet createCopy();
+    @Nonnull
+    PackageSet createCopy();
 
-  @Nonnull
-  String getText();
+    @Nonnull
+    String getText();
 
-  int getNodePriority();
+    int getNodePriority();
 }

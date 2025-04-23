@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.annotation.component.ComponentScope;
@@ -40,41 +39,41 @@ import jakarta.inject.Singleton;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class HierarchyBrowserManager implements PersistentStateComponent<HierarchyBrowserManager.State> {
-  public static class State {
-    public boolean IS_AUTOSCROLL_TO_SOURCE;
-    public boolean SORT_ALPHABETICALLY;
-    public boolean HIDE_CLASSES_WHERE_METHOD_NOT_IMPLEMENTED;
-    public String SCOPE;
-  }
+    public static class State {
+        public boolean IS_AUTOSCROLL_TO_SOURCE;
+        public boolean SORT_ALPHABETICALLY;
+        public boolean HIDE_CLASSES_WHERE_METHOD_NOT_IMPLEMENTED;
+        public String SCOPE;
+    }
 
-  private State myState = new State();
+    private State myState = new State();
 
-  private final ContentManager myContentManager;
+    private final ContentManager myContentManager;
 
-  @Inject
-  public HierarchyBrowserManager(final Project project) {
-    final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-    final ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.HIERARCHY, true, ToolWindowAnchor.RIGHT, project);
-    myContentManager = toolWindow.getContentManager();
-    toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowHierarchy);
-    new ContentManagerWatcher(toolWindow, myContentManager);
-  }
+    @Inject
+    public HierarchyBrowserManager(final Project project) {
+        final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        final ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.HIERARCHY, true, ToolWindowAnchor.RIGHT, project);
+        myContentManager = toolWindow.getContentManager();
+        toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowHierarchy);
+        new ContentManagerWatcher(toolWindow, myContentManager);
+    }
 
-  public final ContentManager getContentManager() {
-    return myContentManager;
-  }
+    public final ContentManager getContentManager() {
+        return myContentManager;
+    }
 
-  @Override
-  public State getState() {
-    return myState;
-  }
+    @Override
+    public State getState() {
+        return myState;
+    }
 
-  @Override
-  public void loadState(final State state) {
-    myState = state;
-  }
+    @Override
+    public void loadState(final State state) {
+        myState = state;
+    }
 
-  public static HierarchyBrowserManager getInstance(final Project project) {
-    return ServiceManager.getService(project, HierarchyBrowserManager.class);
-  }
+    public static HierarchyBrowserManager getInstance(final Project project) {
+        return ServiceManager.getService(project, HierarchyBrowserManager.class);
+    }
 }

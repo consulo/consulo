@@ -24,20 +24,23 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author cdr
  */
 public final class ViewClassHierarchyAction extends ChangeViewTypeActionBase {
-  public ViewClassHierarchyAction() {
-    super(IdeBundle.message("action.view.class.hierarchy"),
-          IdeBundle.message("action.description.view.class.hierarchy"), AllIcons.Hierarchy.Class);
-  }
+    public ViewClassHierarchyAction() {
+        super(
+            IdeBundle.message("action.view.class.hierarchy"),
+            IdeBundle.message("action.description.view.class.hierarchy"),
+            AllIcons.Hierarchy.Class
+        );
+    }
 
-  @Override
-  protected final String getTypeName() {
-    return TypeHierarchyBrowserBase.TYPE_HIERARCHY_TYPE;
-  }
+    @Override
+    protected final String getTypeName() {
+        return TypeHierarchyBrowserBase.TYPE_HIERARCHY_TYPE;
+    }
 
-  @Override
-  public final void update(final AnActionEvent event) {
-    super.update(event);
-    final TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
-    event.getPresentation().setEnabled(browser != null && !browser.isInterface());
-  }
+    @Override
+    public final void update(final AnActionEvent event) {
+        super.update(event);
+        final TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
+        event.getPresentation().setEnabled(browser != null && !browser.isInterface());
+    }
 }

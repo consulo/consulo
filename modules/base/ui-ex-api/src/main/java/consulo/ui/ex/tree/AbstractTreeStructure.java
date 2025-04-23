@@ -23,64 +23,68 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class AbstractTreeStructure {
-  @Nonnull
-  public abstract Object getRootElement();
+    @Nonnull
+    public abstract Object getRootElement();
 
-  @Nonnull
-  public abstract Object[] getChildElements(@Nonnull Object element);
+    @Nonnull
+    public abstract Object[] getChildElements(@Nonnull Object element);
 
-  @Nullable
-  public abstract Object getParentElement(@Nonnull Object element);
+    @Nullable
+    public abstract Object getParentElement(@Nonnull Object element);
 
-  @Nonnull
-  public abstract NodeDescriptor createDescriptor(@Nonnull Object element, @Nullable NodeDescriptor parentDescriptor);
+    @Nonnull
+    public abstract NodeDescriptor createDescriptor(@Nonnull Object element, @Nullable NodeDescriptor parentDescriptor);
 
-  public abstract void commit();
+    public abstract void commit();
 
-  public abstract boolean hasSomethingToCommit();
+    public abstract boolean hasSomethingToCommit();
 
-  /**
-   * @return callback which is set to {@link ActionCallback#setDone()} when the tree structure is committed.
-   * By default it just calls {@link #commit()} synchronously but it is desirable to override it
-   * to provide asynchronous commit to the tree structure to make it more responsible.
-   * E.g. when you should commit all documents during the {@link #commit()},
-   * you can use {@link PsiDocumentManager#asyncCommitDocuments(Project)} to do it asynchronously.
-   */
-  @Nonnull
-  public ActionCallback asyncCommit() {
-    if (hasSomethingToCommit()) commit();
-    return ActionCallback.DONE;
-  }
-
-  public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
-    return false;
-  }
-
-  public boolean isValid(@Nonnull Object element) {
-    return true;
-  }
-
-  /**
-   * @param element an object that represents a node in this tree structure
-   * @return a leaf state for the given element
-   * @see LeafState.Supplier#getLeafState()
-   */
-  @Nonnull
-  public LeafState getLeafState(@Nonnull Object element) {
-    if (isAlwaysLeaf(element)) return LeafState.ALWAYS;
-    if (element instanceof LeafState.Supplier) {
-      LeafState.Supplier supplier = (LeafState.Supplier)element;
-      return supplier.getLeafState();
+    /**
+     * @return callback which is set to {@link ActionCallback#setDone()} when the tree structure is committed.
+     * By default it just calls {@link #commit()} synchronously but it is desirable to override it
+     * to provide asynchronous commit to the tree structure to make it more responsible.
+     * E.g. when you should commit all documents during the {@link #commit()},
+     * you can use {@link PsiDocumentManager#asyncCommitDocuments(Project)} to do it asynchronously.
+     */
+    @Nonnull
+    public ActionCallback asyncCommit() {
+        if (hasSomethingToCommit()) {
+            commit();
+        }
+        return ActionCallback.DONE;
     }
-    return LeafState.DEFAULT;
-  }
 
-  public boolean isAlwaysLeaf(@Nonnull Object element) {
-    return false;
-  }
+    public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
+        return false;
+    }
 
-  @Nonnull
-  public AsyncResult<Object> revalidateElement(@Nonnull Object element) {
-    return AsyncResult.resolved(element);
-  }
+    public boolean isValid(@Nonnull Object element) {
+        return true;
+    }
+
+    /**
+     * @param element an object that represents a node in this tree structure
+     * @return a leaf state for the given element
+     * @see LeafState.Supplier#getLeafState()
+     */
+    @Nonnull
+    public LeafState getLeafState(@Nonnull Object element) {
+        if (isAlwaysLeaf(element)) {
+            return LeafState.ALWAYS;
+        }
+        if (element instanceof LeafState.Supplier) {
+            LeafState.Supplier supplier = (LeafState.Supplier)element;
+            return supplier.getLeafState();
+        }
+        return LeafState.DEFAULT;
+    }
+
+    public boolean isAlwaysLeaf(@Nonnull Object element) {
+        return false;
+    }
+
+    @Nonnull
+    public AsyncResult<Object> revalidateElement(@Nonnull Object element) {
+        return AsyncResult.resolved(element);
+    }
 }

@@ -23,6 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,85 +35,88 @@ import java.util.function.Function;
  * @since 14:45/20.10.13
  */
 public class CompositeDependencyCache implements DependencyCache {
-  private final List<DependencyCache> myDependencyCaches = new ArrayList<>();
+    private final List<DependencyCache> myDependencyCaches = new ArrayList<>();
 
-  public CompositeDependencyCache(Project project, String cacheDir) {
-    project.getExtensionPoint(DependencyCacheFactory.class).forEachExtensionSafe(factory -> myDependencyCaches.add(factory.create(cacheDir)));
-  }
-
-  @Override
-  public void findDependentFiles(CompileContext context,
-                                 Ref<CacheCorruptedException> exceptionRef,
-                                 Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter,
-                                 Set<VirtualFile> dependentFiles,
-                                 Set<VirtualFile> compiledWithErrors) throws CacheCorruptedException, ExitException {
-    for (DependencyCache dependencyCache : myDependencyCaches) {
-      dependencyCache.findDependentFiles(context, exceptionRef, filter, dependentFiles, compiledWithErrors);
-
-      CacheCorruptedException exception = exceptionRef.get();
-      if (exception != null) {
-        throw exception;
-      }
+    public CompositeDependencyCache(Project project, String cacheDir) {
+        project.getExtensionPoint(DependencyCacheFactory.class)
+            .forEachExtensionSafe(factory -> myDependencyCaches.add(factory.create(cacheDir)));
     }
-  }
 
-  @Override
-  public boolean hasUnprocessedTraverseRoots() {
-    for (DependencyCache ourDependencyExtension : myDependencyCaches) {
-      if (ourDependencyExtension.hasUnprocessedTraverseRoots()) {
-        return true;
-      }
-    }
-    return false;
-  }
+    @Override
+    public void findDependentFiles(
+        CompileContext context,
+        Ref<CacheCorruptedException> exceptionRef,
+        Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter,
+        Set<VirtualFile> dependentFiles,
+        Set<VirtualFile> compiledWithErrors
+    ) throws CacheCorruptedException, ExitException {
+        for (DependencyCache dependencyCache : myDependencyCaches) {
+            dependencyCache.findDependentFiles(context, exceptionRef, filter, dependentFiles, compiledWithErrors);
 
-  @Override
-  public void resetState() {
-    for (DependencyCache ourDependencyExtension : myDependencyCaches) {
-      ourDependencyExtension.resetState();
+            CacheCorruptedException exception = exceptionRef.get();
+            if (exception != null) {
+                throw exception;
+            }
+        }
     }
-  }
 
-  @Override
-  public void clearTraverseRoots() {
-    for (DependencyCache ourDependencyExtension : myDependencyCaches) {
-      ourDependencyExtension.clearTraverseRoots();
+    @Override
+    public boolean hasUnprocessedTraverseRoots() {
+        for (DependencyCache ourDependencyExtension : myDependencyCaches) {
+            if (ourDependencyExtension.hasUnprocessedTraverseRoots()) {
+                return true;
+            }
+        }
+        return false;
     }
-  }
 
-  @Override
-  public void update() throws CacheCorruptedException {
-    for (DependencyCache ourDependencyExtension : myDependencyCaches) {
-      ourDependencyExtension.update();
+    @Override
+    public void resetState() {
+        for (DependencyCache ourDependencyExtension : myDependencyCaches) {
+            ourDependencyExtension.resetState();
+        }
     }
-  }
 
-  @Nullable
-  @Override
-  public String relativePathToQName(@Nonnull String path, char separator) {
-    for (DependencyCache ourDependencyExtension : myDependencyCaches) {
-      String s = ourDependencyExtension.relativePathToQName(path, separator);
-      if (s != null) {
-        return s;
-      }
+    @Override
+    public void clearTraverseRoots() {
+        for (DependencyCache ourDependencyExtension : myDependencyCaches) {
+            ourDependencyExtension.clearTraverseRoots();
+        }
     }
-    return null;
-  }
 
-  @Override
-  public void syncOutDir(Trinity<File, String, Boolean> trinity) throws CacheCorruptedException {
-    for (DependencyCache ourDependencyExtension : myDependencyCaches) {
-      ourDependencyExtension.syncOutDir(trinity);
+    @Override
+    public void update() throws CacheCorruptedException {
+        for (DependencyCache ourDependencyExtension : myDependencyCaches) {
+            ourDependencyExtension.update();
+        }
     }
-  }
 
-  @Nonnull
-  public <T extends DependencyCache> T findChild(Class<T> clazz) {
-    for (DependencyCache dependencyCach : myDependencyCaches) {
-      if (dependencyCach.getClass() == clazz) {
-        return (T)dependencyCach;
-      }
+    @Nullable
+    @Override
+    public String relativePathToQName(@Nonnull String path, char separator) {
+        for (DependencyCache ourDependencyExtension : myDependencyCaches) {
+            String s = ourDependencyExtension.relativePathToQName(path, separator);
+            if (s != null) {
+                return s;
+            }
+        }
+        return null;
     }
-    throw new IllegalArgumentException("Child is not found for class: " + clazz.getName());
-  }
+
+    @Override
+    public void syncOutDir(Trinity<File, String, Boolean> trinity) throws CacheCorruptedException {
+        for (DependencyCache ourDependencyExtension : myDependencyCaches) {
+            ourDependencyExtension.syncOutDir(trinity);
+        }
+    }
+
+    @Nonnull
+    public <T extends DependencyCache> T findChild(Class<T> clazz) {
+        for (DependencyCache dependencyCach : myDependencyCaches) {
+            if (dependencyCach.getClass() == clazz) {
+                return (T)dependencyCach;
+            }
+        }
+        throw new IllegalArgumentException("Child is not found for class: " + clazz.getName());
+    }
 }

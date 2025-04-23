@@ -22,79 +22,79 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class NamedScope {
-  private final String myScopeId;
-  @Nonnull
-  private final LocalizeValue myPresentableName;
-  @Nonnull
-  private final Image myIcon;
-  private final PackageSet myValue;
+    private final String myScopeId;
+    @Nonnull
+    private final LocalizeValue myPresentableName;
+    @Nonnull
+    private final Image myIcon;
+    private final PackageSet myValue;
 
-  @Deprecated
-  public NamedScope(@Nonnull String scopeId, @Nonnull Image icon, @Nullable PackageSet value) {
-    this(scopeId, LocalizeValue.of(scopeId), icon, value);
-  }
-
-  @Deprecated
-  public NamedScope(@Nonnull String scopeId, @Nullable PackageSet value) {
-    this(scopeId, LocalizeValue.of(scopeId), AllIcons.Ide.LocalScope, value);
-  }
-
-  public NamedScope(@Nonnull String scopeId, @Nonnull LocalizeValue presentableName, @Nonnull Image icon, @Nullable PackageSet value) {
-    myScopeId = scopeId;
-    myIcon = icon;
-    myValue = value;
-    myPresentableName = presentableName;
-  }
-
-  public NamedScope(@Nonnull String scopeId, @Nonnull LocalizeValue presentableName, @Nullable PackageSet value) {
-    this(scopeId, presentableName, AllIcons.Ide.LocalScope, value);
-  }
-
-  @Nonnull
-  public Image getIcon() {
-    return myIcon;
-  }
-
-  @Nonnull
-  public String getScopeId() {
-    return myScopeId;
-  }
-
-  @Nonnull
-  public LocalizeValue getPresentableName() {
-    return myPresentableName;
-  }
-
-  /**
-   * @deprecated please use {@link NamedScope#getScopeId()} for search/serialization/mappings and {@link #getPresentableName()} to display in UI
-   */
-  @Nonnull
-  public String getName() {
-    return myScopeId;
-  }
-
-  @Nullable
-  public PackageSet getValue() {
-    return myValue;
-  }
-
-  public NamedScope createCopy() {
-    return new NamedScope(myScopeId, myPresentableName, myIcon, myValue != null ? myValue.createCopy() : null);
-  }
-
-  @Nullable
-  public String getDefaultColorName() {
-    return null;
-  }
-
-  public static class UnnamedScope extends NamedScope {
-    public UnnamedScope(@Nonnull PackageSet value) {
-      super(value.getText(), LocalizeValue.of(value.getText()), value);
+    @Deprecated
+    public NamedScope(@Nonnull String scopeId, @Nonnull Image icon, @Nullable PackageSet value) {
+        this(scopeId, LocalizeValue.of(scopeId), icon, value);
     }
-  }
 
-  @Override
-  public String toString() {
-    return "Scope '" + myScopeId + "'; set:" + (myValue == null ? null : myValue.getText());
-  }
+    @Deprecated
+    public NamedScope(@Nonnull String scopeId, @Nullable PackageSet value) {
+        this(scopeId, LocalizeValue.of(scopeId), AllIcons.Ide.LocalScope, value);
+    }
+
+    public NamedScope(@Nonnull String scopeId, @Nonnull LocalizeValue presentableName, @Nonnull Image icon, @Nullable PackageSet value) {
+        myScopeId = scopeId;
+        myIcon = icon;
+        myValue = value;
+        myPresentableName = presentableName;
+    }
+
+    public NamedScope(@Nonnull String scopeId, @Nonnull LocalizeValue presentableName, @Nullable PackageSet value) {
+        this(scopeId, presentableName, AllIcons.Ide.LocalScope, value);
+    }
+
+    @Nonnull
+    public Image getIcon() {
+        return myIcon;
+    }
+
+    @Nonnull
+    public String getScopeId() {
+        return myScopeId;
+    }
+
+    @Nonnull
+    public LocalizeValue getPresentableName() {
+        return myPresentableName;
+    }
+
+    /**
+     * @deprecated please use {@link NamedScope#getScopeId()} for search/serialization/mappings and {@link #getPresentableName()} to display in UI
+     */
+    @Nonnull
+    public String getName() {
+        return myScopeId;
+    }
+
+    @Nullable
+    public PackageSet getValue() {
+        return myValue;
+    }
+
+    public NamedScope createCopy() {
+        return new NamedScope(myScopeId, myPresentableName, myIcon, myValue != null ? myValue.createCopy() : null);
+    }
+
+    @Nullable
+    public String getDefaultColorName() {
+        return null;
+    }
+
+    public static class UnnamedScope extends NamedScope {
+        public UnnamedScope(@Nonnull PackageSet value) {
+            super(value.getText(), LocalizeValue.of(value.getText()), value);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Scope '" + myScopeId + "'; set:" + (myValue == null ? null : myValue.getText());
+    }
 }

@@ -11,33 +11,33 @@ import jakarta.annotation.Nullable;
  * @author anna
  */
 public class ScopeDescriptor implements ColoredItem {
-  private final SearchScope myScope;
+    private final SearchScope myScope;
 
-  public ScopeDescriptor(@Nullable SearchScope scope) {
-    myScope = scope;
-  }
+    public ScopeDescriptor(@Nullable SearchScope scope) {
+        myScope = scope;
+    }
 
-  public String getDisplayName() {
-    return myScope == null ? null : myScope.getDisplayName();
-  }
+    public String getDisplayName() {
+        return myScope == null ? null : myScope.getDisplayName();
+    }
 
-  @Nullable
-  public Image getIcon() {
-    return myScope == null ? null : myScope.getIcon();
-  }
+    @Nullable
+    public Image getIcon() {
+        return myScope == null ? null : myScope.getIcon();
+    }
 
-  @Nullable
-  public SearchScope getScope() {
-    return myScope;
-  }
+    @Nullable
+    public SearchScope getScope() {
+        return myScope;
+    }
 
-  public boolean scopeEquals(SearchScope scope) {
-    return Comparing.equal(myScope, scope);
-  }
+    public boolean scopeEquals(SearchScope scope) {
+        return Comparing.equal(myScope, scope);
+    }
 
-  @Nullable
-  @Override
-  public ColorValue getColor() {
-    return myScope instanceof ColoredItem ? ((ColoredItem)myScope).getColor() : null;
-  }
+    @Nullable
+    @Override
+    public ColorValue getColor() {
+        return myScope instanceof ColoredItem ? ((ColoredItem)myScope).getColor() : null;
+    }
 }

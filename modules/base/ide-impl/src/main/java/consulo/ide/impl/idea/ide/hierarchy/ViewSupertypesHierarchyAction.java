@@ -23,13 +23,16 @@ import consulo.ide.IdeBundle;
  * @author cdr
  */
 public final class ViewSupertypesHierarchyAction extends ChangeViewTypeActionBase {
-  public ViewSupertypesHierarchyAction() {
-    super(IdeBundle.message("action.view.supertypes.hierarchy"), 
-          IdeBundle.message("action.description.view.supertypes.hierarchy"), AllIcons.Hierarchy.Supertypes);
-  }
+    public ViewSupertypesHierarchyAction() {
+        super(
+            IdeBundle.message("action.view.supertypes.hierarchy"),
+            IdeBundle.message("action.description.view.supertypes.hierarchy"),
+            AllIcons.Hierarchy.Supertypes
+        );
+    }
 
-  @Override
-  protected final String getTypeName() {
-    return TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
-  }
+    @Override
+    protected final String getTypeName() {
+        return TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
+    }
 }

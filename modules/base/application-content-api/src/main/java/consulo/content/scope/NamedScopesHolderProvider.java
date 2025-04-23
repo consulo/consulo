@@ -28,8 +28,8 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface NamedScopesHolderProvider {
-  ExtensionList<NamedScopesHolderProvider, Project> EP = ExtensionList.of(NamedScopesHolderProvider.class);
+    ExtensionList<NamedScopesHolderProvider, Project> EP = ExtensionList.of(NamedScopesHolderProvider.class);
 
-  @Nullable
-  NamedScopesHolder getScopesHolder();
+    @Nullable
+    NamedScopesHolder getScopesHolder();
 }

@@ -33,29 +33,33 @@ import jakarta.annotation.Nonnull;
  * @since 02.11.2006
  */
 public class RefreshAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project == null) return;
-    doRefresh(project);
-  }
-
-  public static void doRefresh(final Project project) {
-    if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) return;
-
-    FileDocumentManager.getInstance().saveAllDocuments();
-    invokeCustomRefreshes(project);
-
-    VirtualFileManager.getInstance().asyncRefresh(() -> {
-        // already called in EDT or under write action
-        if (!project.isDisposed()) {
-          VcsDirtyScopeManager.getInstance(project).markEverythingDirty();
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
         }
-      });
-  }
+        doRefresh(project);
+    }
 
-  private static void invokeCustomRefreshes(@Nonnull Project project) {
-    project.getExtensionPoint(ChangesViewRefresher.class).forEachExtensionSafe(it -> it.refresh(project));
-  }
+    public static void doRefresh(final Project project) {
+        if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
+            return;
+        }
+
+        FileDocumentManager.getInstance().saveAllDocuments();
+        invokeCustomRefreshes(project);
+
+        VirtualFileManager.getInstance().asyncRefresh(() -> {
+            // already called in EDT or under write action
+            if (!project.isDisposed()) {
+                VcsDirtyScopeManager.getInstance(project).markEverythingDirty();
+            }
+        });
+    }
+
+    private static void invokeCustomRefreshes(@Nonnull Project project) {
+        project.getExtensionPoint(ChangesViewRefresher.class).forEachExtensionSafe(it -> it.refresh(project));
+    }
 }

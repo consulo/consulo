@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.impl;
 
 import consulo.project.ui.view.tree.ViewSettings;
@@ -28,26 +24,29 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.module.Module;
 import consulo.project.Project;
 
+/*
+ * @author max
+ */
 public class ModuleStructurePane extends ProjectViewPaneImpl {
-  private final Module myModule;
+    private final Module myModule;
 
-  public ModuleStructurePane(Module module) {
-    super(module.getProject());
-    myModule = module;
-  }
+    public ModuleStructurePane(Module module) {
+        super(module.getProject());
+        myModule = module;
+    }
 
-  @Override
-  public ProjectAbstractTreeStructureBase createStructure() {
-    return new ProjectTreeStructure(myProject, ID){
-      @Override
-      protected AbstractTreeNode createRoot(final Project project, ViewSettings settings) {
-        return new StructureViewModuleNode(project, myModule, settings);
-      }
+    @Override
+    public ProjectAbstractTreeStructureBase createStructure() {
+        return new ProjectTreeStructure(myProject, ID) {
+            @Override
+            protected AbstractTreeNode createRoot(final Project project, ViewSettings settings) {
+                return new StructureViewModuleNode(project, myModule, settings);
+            }
 
-      @Override
-      public boolean isToBuildChildrenInBackground(Object element) {
-        return false;
-      }
-    };
-  }
+            @Override
+            public boolean isToBuildChildrenInBackground(Object element) {
+                return false;
+            }
+        };
+    }
 }

@@ -36,92 +36,94 @@ import java.util.Comparator;
 import java.util.List;
 
 public class HierarchyTreeBuilder extends AbstractTreeBuilder {
-  HierarchyTreeBuilder(@Nonnull Project project,
-                       final JTree tree,
-                       final DefaultTreeModel treeModel,
-                       final HierarchyTreeStructure treeStructure,
-                       final Comparator<NodeDescriptor> comparator) {
-    super(tree, treeModel, treeStructure, comparator);
+    HierarchyTreeBuilder(
+        @Nonnull Project project,
+        final JTree tree,
+        final DefaultTreeModel treeModel,
+        final HierarchyTreeStructure treeStructure,
+        final Comparator<NodeDescriptor> comparator
+    ) {
+        super(tree, treeModel, treeStructure, comparator);
 
-    initRootNode();
-    PsiManager.getInstance(project).addPsiTreeChangeListener(new MyPsiTreeChangeListener(), this);
-    FileStatusManager.getInstance(project).addFileStatusListener(new MyFileStatusListener(), this);
-  }
+        initRootNode();
+        PsiManager.getInstance(project).addPsiTreeChangeListener(new MyPsiTreeChangeListener(), this);
+        FileStatusManager.getInstance(project).addFileStatusListener(new MyFileStatusListener(), this);
+    }
 
-  @Nonnull
-  public Couple<List<Object>> storeExpandedAndSelectedInfo() {
-    List<Object> pathsToExpand = new ArrayList<>();
-    List<Object> selectionPaths = new ArrayList<>();
-    TreeBuilderUtil.storePaths(this, getRootNode(), pathsToExpand, selectionPaths, true);
-    return Couple.of(pathsToExpand, selectionPaths);
-  }
+    @Nonnull
+    public Couple<List<Object>> storeExpandedAndSelectedInfo() {
+        List<Object> pathsToExpand = new ArrayList<>();
+        List<Object> selectionPaths = new ArrayList<>();
+        TreeBuilderUtil.storePaths(this, getRootNode(), pathsToExpand, selectionPaths, true);
+        return Couple.of(pathsToExpand, selectionPaths);
+    }
 
-  public final void restoreExpandedAndSelectedInfo(@Nonnull Couple<List<Object>> pair) {
-    TreeBuilderUtil.restorePaths(this, pair.first, pair.second, true);
-  }
-
-  @Override
-  protected boolean isAlwaysShowPlus(final NodeDescriptor nodeDescriptor) {
-    return ((HierarchyTreeStructure) getTreeStructure()).isAlwaysShowPlus();
-  }
-
-  @Override
-  protected boolean isAutoExpandNode(final NodeDescriptor nodeDescriptor) {
-    return getTreeStructure().getRootElement().equals(nodeDescriptor.getElement())
-           || !(nodeDescriptor instanceof HierarchyNodeDescriptor);
-  }
-
-  @Override
-  protected final boolean isSmartExpand() {
-    return false;
-  }
-
-  @Override
-  protected final boolean isDisposeOnCollapsing(final NodeDescriptor nodeDescriptor) {
-    return false; // prevents problems with building descriptors for invalidated elements
-  }
-
-  private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
-    @Override
-    public final void childAdded(@Nonnull final PsiTreeChangeEvent event) {
-      getUpdater().addSubtreeToUpdate(getRootNode());
+    public final void restoreExpandedAndSelectedInfo(@Nonnull Couple<List<Object>> pair) {
+        TreeBuilderUtil.restorePaths(this, pair.first, pair.second, true);
     }
 
     @Override
-    public final void childRemoved(@Nonnull final PsiTreeChangeEvent event) {
-      getUpdater().addSubtreeToUpdate(getRootNode());
+    protected boolean isAlwaysShowPlus(final NodeDescriptor nodeDescriptor) {
+        return ((HierarchyTreeStructure)getTreeStructure()).isAlwaysShowPlus();
     }
 
     @Override
-    public final void childReplaced(@Nonnull final PsiTreeChangeEvent event) {
-      getUpdater().addSubtreeToUpdate(getRootNode());
+    protected boolean isAutoExpandNode(final NodeDescriptor nodeDescriptor) {
+        return getTreeStructure().getRootElement().equals(nodeDescriptor.getElement())
+            || !(nodeDescriptor instanceof HierarchyNodeDescriptor);
     }
 
     @Override
-    public final void childMoved(@Nonnull final PsiTreeChangeEvent event) {
-      getUpdater().addSubtreeToUpdate(getRootNode());
+    protected final boolean isSmartExpand() {
+        return false;
     }
 
     @Override
-    public final void childrenChanged(@Nonnull final PsiTreeChangeEvent event) {
-      getUpdater().addSubtreeToUpdate(getRootNode());
+    protected final boolean isDisposeOnCollapsing(final NodeDescriptor nodeDescriptor) {
+        return false; // prevents problems with building descriptors for invalidated elements
     }
 
-    @Override
-    public final void propertyChanged(@Nonnull final PsiTreeChangeEvent event) {
-      getUpdater().addSubtreeToUpdate(getRootNode());
-    }
-  }
+    private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
+        @Override
+        public final void childAdded(@Nonnull final PsiTreeChangeEvent event) {
+            getUpdater().addSubtreeToUpdate(getRootNode());
+        }
 
-  private final class MyFileStatusListener implements FileStatusListener {
-    @Override
-    public final void fileStatusesChanged() {
-      getUpdater().addSubtreeToUpdate(getRootNode());
+        @Override
+        public final void childRemoved(@Nonnull final PsiTreeChangeEvent event) {
+            getUpdater().addSubtreeToUpdate(getRootNode());
+        }
+
+        @Override
+        public final void childReplaced(@Nonnull final PsiTreeChangeEvent event) {
+            getUpdater().addSubtreeToUpdate(getRootNode());
+        }
+
+        @Override
+        public final void childMoved(@Nonnull final PsiTreeChangeEvent event) {
+            getUpdater().addSubtreeToUpdate(getRootNode());
+        }
+
+        @Override
+        public final void childrenChanged(@Nonnull final PsiTreeChangeEvent event) {
+            getUpdater().addSubtreeToUpdate(getRootNode());
+        }
+
+        @Override
+        public final void propertyChanged(@Nonnull final PsiTreeChangeEvent event) {
+            getUpdater().addSubtreeToUpdate(getRootNode());
+        }
     }
 
-    @Override
-    public final void fileStatusChanged(@Nonnull final VirtualFile virtualFile) {
-      getUpdater().addSubtreeToUpdate(getRootNode());
+    private final class MyFileStatusListener implements FileStatusListener {
+        @Override
+        public final void fileStatusesChanged() {
+            getUpdater().addSubtreeToUpdate(getRootNode());
+        }
+
+        @Override
+        public final void fileStatusChanged(@Nonnull final VirtualFile virtualFile) {
+            getUpdater().addSubtreeToUpdate(getRootNode());
+        }
     }
-  }
 }

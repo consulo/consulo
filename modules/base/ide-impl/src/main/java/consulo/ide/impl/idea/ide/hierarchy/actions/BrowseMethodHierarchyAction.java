@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy.actions;
 
 import consulo.ide.IdeBundle;
@@ -24,17 +23,17 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public final class BrowseMethodHierarchyAction extends BrowseHierarchyActionBase<MethodHierarchyProvider> {
-  public BrowseMethodHierarchyAction() {
-    super(MethodHierarchyProvider.class);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public final void update(final AnActionEvent event){
-    final Presentation presentation = event.getPresentation();
-    if (!ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
-      presentation.setText(IdeBundle.message("action.browse.method.hierarchy"));
+    public BrowseMethodHierarchyAction() {
+        super(MethodHierarchyProvider.class);
     }
-    super.update(event);
-  }
+
+    @RequiredUIAccess
+    @Override
+    public final void update(final AnActionEvent event) {
+        final Presentation presentation = event.getPresentation();
+        if (!ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
+            presentation.setText(IdeBundle.message("action.browse.method.hierarchy"));
+        }
+        super.update(event);
+    }
 }

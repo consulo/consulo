@@ -21,32 +21,32 @@ import jakarta.annotation.Nonnull;
  * @author Konstantin Bulenkov
  */
 public abstract class AbstractPackageSet extends PackageSetBase {
-  private final String myText;
-  private final int myPriority;
+    private final String myText;
+    private final int myPriority;
 
-  public AbstractPackageSet(@Nonnull String text) {
-    this(text, 1);
-  }
+    public AbstractPackageSet(@Nonnull String text) {
+        this(text, 1);
+    }
 
-  public AbstractPackageSet(@Nonnull String text, int priority) {
-    myText = text;
-    myPriority = priority;
-  }
+    public AbstractPackageSet(@Nonnull String text, int priority) {
+        myText = text;
+        myPriority = priority;
+    }
 
-  @Override
-  @Nonnull
-  public AbstractPackageSet createCopy() {
-    return this;
-  }
+    @Override
+    @Nonnull
+    public AbstractPackageSet createCopy() {
+        return this;
+    }
 
-  @Override
-  public int getNodePriority() {
-    return myPriority;
-  }
+    @Override
+    public int getNodePriority() {
+        return myPriority;
+    }
 
-  @Nonnull
-  @Override
-  public String getText() {
-    return myText;
-  }
+    @Nonnull
+    @Override
+    public String getText() {
+        return myText;
+    }
 }

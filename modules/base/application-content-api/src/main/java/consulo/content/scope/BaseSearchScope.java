@@ -22,40 +22,40 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class BaseSearchScope implements SearchScope {
-  private static int hashCodeCounter = 0;
+    private static int hashCodeCounter = 0;
 
-  @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
-  private final int myHashCode = hashCodeCounter++;
+    @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
+    private final int myHashCode = hashCodeCounter++;
 
-  /**
-   * Overridden for performance reason. Object.hashCode() is native method and becomes a bottleneck when called often.
-   *
-   * @return hashCode value semantically identical to one from Object but not native
-   */
-  public int hashCode() {
-    return myHashCode;
-  }
+    /**
+     * Overridden for performance reason. Object.hashCode() is native method and becomes a bottleneck when called often.
+     *
+     * @return hashCode value semantically identical to one from Object but not native
+     */
+    public int hashCode() {
+        return myHashCode;
+    }
 
-  @Override
-  @Nonnull
-  public String getDisplayName() {
-    return "<unknown scope>";
-  }
+    @Override
+    @Nonnull
+    public String getDisplayName() {
+        return "<unknown scope>";
+    }
 
-  @Override
-  @Nullable
-  public Image getIcon() {
-    return null;
-  }
+    @Override
+    @Nullable
+    public Image getIcon() {
+        return null;
+    }
 
-  @Override
-  @Nonnull
-  public abstract SearchScope intersectWith(@Nonnull SearchScope scope2);
+    @Override
+    @Nonnull
+    public abstract SearchScope intersectWith(@Nonnull SearchScope scope2);
 
-  @Override
-  @Nonnull
-  public abstract SearchScope union(@Nonnull SearchScope scope);
+    @Override
+    @Nonnull
+    public abstract SearchScope union(@Nonnull SearchScope scope);
 
-  @Override
-  public abstract boolean contains(@Nonnull VirtualFile file);
+    @Override
+    public abstract boolean contains(@Nonnull VirtualFile file);
 }
