@@ -17,6 +17,7 @@ package consulo.test.light.impl;
 
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
@@ -26,31 +27,38 @@ import java.util.function.Supplier;
  * @since 2023-11-05
  */
 public class LightCachedValue<T> implements CachedValue<T> {
-  private final CachedValueProvider<T> myProvider;
+    private final CachedValueProvider<T> myProvider;
 
-  public LightCachedValue(CachedValueProvider<T> provider) {
-    myProvider = provider;
-  }
+    private SimpleReference<T> myCacheValueRef;
 
-  @Override
-  public T getValue() {
-    CachedValueProvider.Result<T> compute = myProvider.compute();
-    return compute == null ? null : compute.getValue();
-  }
+    public LightCachedValue(CachedValueProvider<T> provider) {
+        myProvider = provider;
+    }
 
-  @Nonnull
-  @Override
-  public CachedValueProvider<T> getValueProvider() {
-    return myProvider;
-  }
+    @Override
+    public T getValue() {
+        if (myCacheValueRef != null) {
+            return myCacheValueRef.get();
+        }
+        CachedValueProvider.Result<T> compute = myProvider.compute();
+        T value = compute == null ? null : compute.getValue();
+        myCacheValueRef = new SimpleReference<>(value);
+        return value;
+    }
 
-  @Override
-  public boolean hasUpToDateValue() {
-    return true;
-  }
+    @Nonnull
+    @Override
+    public CachedValueProvider<T> getValueProvider() {
+        return myProvider;
+    }
 
-  @Override
-  public Supplier<T> getUpToDateOrNull() {
-    return this::getValue;
-  }
+    @Override
+    public boolean hasUpToDateValue() {
+        return true;
+    }
+
+    @Override
+    public Supplier<T> getUpToDateOrNull() {
+        return this::getValue;
+    }
 }

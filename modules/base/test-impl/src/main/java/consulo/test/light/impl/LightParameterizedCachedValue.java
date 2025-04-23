@@ -18,31 +18,40 @@ package consulo.test.light.impl;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.ParameterizedCachedValue;
 import consulo.application.util.ParameterizedCachedValueProvider;
+import consulo.util.lang.ref.SimpleReference;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
  * @since 2023-11-05
  */
 public class LightParameterizedCachedValue<T, P> implements ParameterizedCachedValue<T, P> {
-  private final ParameterizedCachedValueProvider<T, P> myProvider;
+    private final ParameterizedCachedValueProvider<T, P> myProvider;
 
-  public LightParameterizedCachedValue(ParameterizedCachedValueProvider<T, P> provider) {
-    myProvider = provider;
-  }
+    private Map<P, SimpleReference<T>> myCache = new ConcurrentHashMap<>();
 
-  @Override
-  public T getValue(P param) {
-    CachedValueProvider.Result<T> result = myProvider.compute(param);
-    return result == null ? null : result.getValue();
-  }
+    public LightParameterizedCachedValue(ParameterizedCachedValueProvider<T, P> provider) {
+        myProvider = provider;
+    }
 
-  @Override
-  public ParameterizedCachedValueProvider<T, P> getValueProvider() {
-    return myProvider;
-  }
+    @Override
+    public T getValue(P param) {
+        return myCache.computeIfAbsent(param, p -> {
+            CachedValueProvider.Result<T> result = myProvider.compute(param);
+            T value = result == null ? null : result.getValue();
+            return new SimpleReference<>(value);
+        }).get();
+    }
 
-  @Override
-  public boolean hasUpToDateValue() {
-    return true;
-  }
+    @Override
+    public ParameterizedCachedValueProvider<T, P> getValueProvider() {
+        return myProvider;
+    }
+
+    @Override
+    public boolean hasUpToDateValue() {
+        return true;
+    }
 }

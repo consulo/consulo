@@ -30,30 +30,36 @@ import jakarta.inject.Singleton;
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 @Singleton
 public class LightCachedValuesManager extends CachedValuesManager {
-  @Nonnull
-  @Override
-  public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
-    return new LightCachedValue<>(provider);
-  }
+    @Nonnull
+    @Override
+    public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
+        return new LightCachedValue<>(provider);
+    }
 
-  @Nonnull
-  @Override
-  public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider,
-                                                                              boolean trackValue) {
-    return new LightParameterizedCachedValue<>(provider);
-  }
+    @Nonnull
+    @Override
+    public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider,
+                                                                                boolean trackValue) {
+        return new LightParameterizedCachedValue<>(provider);
+    }
 
-  @Override
-  protected void trackKeyHolder(@Nonnull UserDataHolder dataHolder, @Nonnull Key<?> key) {
+    @Override
+    protected void trackKeyHolder(@Nonnull UserDataHolder dataHolder, @Nonnull Key<?> key) {
 
-  }
+    }
 
-  @Override
-  public <T> T getCachedValue(@Nonnull UserDataHolder dataHolder,
-                              @Nonnull Key<CachedValue<T>> key,
-                              @Nonnull CachedValueProvider<T> provider,
-                              boolean trackValue) {
-    CachedValueProvider.Result<T> result = provider.compute();
-    return result == null ? null : result.getValue();
-  }
+    @Override
+    public <T> T getCachedValue(@Nonnull UserDataHolder dataHolder,
+                                @Nonnull Key<CachedValue<T>> key,
+                                @Nonnull CachedValueProvider<T> provider,
+                                boolean trackValue) {
+        CachedValue<T> value = dataHolder.getUserData(key);
+        if (value != null) {
+            return value.getValue();
+        }
+
+        CachedValue<T> cachedValue = createCachedValue(provider, trackValue);
+        dataHolder.putUserData(key, value);
+        return cachedValue.getValue();
+    }
 }
