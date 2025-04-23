@@ -26,180 +26,189 @@ import java.util.List;
 import java.util.Set;
 
 public class AdjustWhiteSpacesState extends State {
+    private final FormattingProgressCallback myProgressCallback;
 
-  private final FormattingProgressCallback myProgressCallback;
+    private WrapBlocksState myWrapBlocksState;
 
-  private WrapBlocksState myWrapBlocksState;
+    private LeafBlockWrapper myCurrentBlock;
 
+    private DependentSpacingEngine myDependentSpacingEngine;
+    private WrapProcessor myWrapProcessor;
+    private BlockRangesMap myBlockRangesMap;
+    private IndentAdjuster myIndentAdjuster;
 
-  private LeafBlockWrapper myCurrentBlock;
+    private boolean myReformatContext;
+    private Set<Alignment> myAlignmentsInsideRangesToModify = null;
 
-  private DependentSpacingEngine myDependentSpacingEngine;
-  private WrapProcessor myWrapProcessor;
-  private BlockRangesMap myBlockRangesMap;
-  private IndentAdjuster myIndentAdjuster;
+    private final HashSet<WhiteSpace> myAlignAgain = new HashSet<>();
+    private LeafBlockWrapper myFirstBlock;
 
-
-  private boolean myReformatContext;
-  private Set<Alignment> myAlignmentsInsideRangesToModify = null;
-
-  private final HashSet<WhiteSpace> myAlignAgain = new HashSet<>();
-  private LeafBlockWrapper myFirstBlock;
-
-  public AdjustWhiteSpacesState(WrapBlocksState state,
-                                FormattingProgressCallback progressCallback,
-                                boolean isReformatContext) {
-    myWrapBlocksState = state;
-    myProgressCallback = progressCallback;
-    myReformatContext = isReformatContext;
-  }
-
-  @Override
-  public void prepare() {
-    if (myWrapBlocksState != null) {
-      myFirstBlock = myWrapBlocksState.getFirstBlock();
-      myCurrentBlock = myFirstBlock;
-      myDependentSpacingEngine = myWrapBlocksState.getDependentSpacingEngine();
-      myWrapProcessor = myWrapBlocksState.getWrapProcessor();
-      myIndentAdjuster = myWrapBlocksState.getIndentAdjuster();
-      myBlockRangesMap = myWrapBlocksState.getBlockRangesMap();
-      myAlignmentsInsideRangesToModify = myWrapBlocksState.getAlignmentsInsideRangesToModify();
-    }
-  }
-
-  public LeafBlockWrapper getCurrentBlock() {
-    return myCurrentBlock;
-  }
-
-  @Override
-  public void doIteration() {
-    LeafBlockWrapper blockToProcess = myCurrentBlock;
-    processToken();
-    if (blockToProcess != null) {
-      myProgressCallback.afterProcessingBlock(blockToProcess);
+    public AdjustWhiteSpacesState(
+        WrapBlocksState state,
+        FormattingProgressCallback progressCallback,
+        boolean isReformatContext
+    ) {
+        myWrapBlocksState = state;
+        myProgressCallback = progressCallback;
+        myReformatContext = isReformatContext;
     }
 
-    if (myCurrentBlock != null) {
-      return;
+    @Override
+    public void prepare() {
+        if (myWrapBlocksState != null) {
+            myFirstBlock = myWrapBlocksState.getFirstBlock();
+            myCurrentBlock = myFirstBlock;
+            myDependentSpacingEngine = myWrapBlocksState.getDependentSpacingEngine();
+            myWrapProcessor = myWrapBlocksState.getWrapProcessor();
+            myIndentAdjuster = myWrapBlocksState.getIndentAdjuster();
+            myBlockRangesMap = myWrapBlocksState.getBlockRangesMap();
+            myAlignmentsInsideRangesToModify = myWrapBlocksState.getAlignmentsInsideRangesToModify();
+        }
     }
 
-    if (myAlignAgain.isEmpty()) {
-      setDone(true);
-    }
-    else {
-      myAlignAgain.clear();
-      myDependentSpacingEngine.clear();
-      myCurrentBlock = myFirstBlock;
-    }
-  }
-
-  private boolean isReformatSelectedRangesContext() {
-    return myReformatContext && !ContainerUtil.isEmpty(myAlignmentsInsideRangesToModify);
-  }
-
-  private void defineAlignOffset(final LeafBlockWrapper block) {
-    AbstractBlockWrapper current = myCurrentBlock;
-    while (true) {
-      final AlignmentImpl alignment = current.getAlignment();
-      if (alignment != null) {
-        alignment.setOffsetRespBlock(block);
-      }
-      current = current.getParent();
-      if (current == null) return;
-      if (current.getStartOffset() != myCurrentBlock.getStartOffset()) return;
-    }
-  }
-
-  private void onCurrentLineChanged() {
-    myWrapProcessor.onCurrentLineChanged();
-  }
-
-  private boolean isCurrentBlockAlignmentUsedInRangesToModify() {
-    AbstractBlockWrapper block = myCurrentBlock;
-    AlignmentImpl alignment = myCurrentBlock.getAlignment();
-
-    while (alignment == null) {
-      block = block.getParent();
-      if (block == null || block.getStartOffset() != myCurrentBlock.getStartOffset()) {
-        return false;
-      }
-      alignment = block.getAlignment();
+    public LeafBlockWrapper getCurrentBlock() {
+        return myCurrentBlock;
     }
 
-    return myAlignmentsInsideRangesToModify.contains(alignment);
-  }
+    @Override
+    public void doIteration() {
+        LeafBlockWrapper blockToProcess = myCurrentBlock;
+        processToken();
+        if (blockToProcess != null) {
+            myProgressCallback.afterProcessingBlock(blockToProcess);
+        }
 
-  private static List<TextRange> getDependentRegionRangesAfterCurrentWhiteSpace(final SpacingImpl spaceProperty,
-                                                                                final WhiteSpace whiteSpace) {
-    if (!(spaceProperty instanceof DependantSpacingImpl)) return ContainerUtil.emptyList();
+        if (myCurrentBlock != null) {
+            return;
+        }
 
-    if (whiteSpace.isReadOnly() || whiteSpace.isLineFeedsAreReadOnly()) return ContainerUtil.emptyList();
-
-    DependantSpacingImpl spacing = (DependantSpacingImpl)spaceProperty;
-    return ContainerUtil.filter(spacing.getDependentRegionRanges(),
-                                dependencyRange -> whiteSpace.getStartOffset() < dependencyRange.getEndOffset());
-  }
-
-
-  private void processToken() {
-    final SpacingImpl spaceProperty = myCurrentBlock.getSpaceProperty();
-    final WhiteSpace whiteSpace = myCurrentBlock.getWhiteSpace();
-
-    if (isReformatSelectedRangesContext()) {
-      if (isCurrentBlockAlignmentUsedInRangesToModify() &&
-          whiteSpace.isReadOnly() &&
-          spaceProperty != null &&
-          !spaceProperty.isReadOnly()) {
-        whiteSpace.setReadOnly(false);
-        whiteSpace.setLineFeedsAreReadOnly(true);
-      }
+        if (myAlignAgain.isEmpty()) {
+            setDone(true);
+        }
+        else {
+            myAlignAgain.clear();
+            myDependentSpacingEngine.clear();
+            myCurrentBlock = myFirstBlock;
+        }
     }
 
-    whiteSpace.arrangeLineFeeds(spaceProperty, myBlockRangesMap);
-
-    if (!whiteSpace.containsLineFeeds()) {
-      whiteSpace.arrangeSpaces(spaceProperty);
+    private boolean isReformatSelectedRangesContext() {
+        return myReformatContext && !ContainerUtil.isEmpty(myAlignmentsInsideRangesToModify);
     }
 
-    try {
-      LeafBlockWrapper newBlock = myWrapProcessor.processWrap(myCurrentBlock);
-      if (newBlock != null) {
-        myCurrentBlock = newBlock;
-        return;
-      }
-    }
-    finally {
-      if (whiteSpace.containsLineFeeds()) {
-        onCurrentLineChanged();
-      }
-    }
-
-    LeafBlockWrapper newCurrentBlock = myIndentAdjuster.adjustIndent(myCurrentBlock);
-    if (newCurrentBlock != null) {
-      myCurrentBlock = newCurrentBlock;
-      onCurrentLineChanged();
-      return;
+    private void defineAlignOffset(final LeafBlockWrapper block) {
+        AbstractBlockWrapper current = myCurrentBlock;
+        while (true) {
+            final AlignmentImpl alignment = current.getAlignment();
+            if (alignment != null) {
+                alignment.setOffsetRespBlock(block);
+            }
+            current = current.getParent();
+            if (current == null) {
+                return;
+            }
+            if (current.getStartOffset() != myCurrentBlock.getStartOffset()) {
+                return;
+            }
+        }
     }
 
-    defineAlignOffset(myCurrentBlock);
-
-    if (myCurrentBlock.containsLineFeeds()) {
-      onCurrentLineChanged();
+    private void onCurrentLineChanged() {
+        myWrapProcessor.onCurrentLineChanged();
     }
 
+    private boolean isCurrentBlockAlignmentUsedInRangesToModify() {
+        AbstractBlockWrapper block = myCurrentBlock;
+        AlignmentImpl alignment = myCurrentBlock.getAlignment();
 
-    final List<TextRange> ranges = getDependentRegionRangesAfterCurrentWhiteSpace(spaceProperty, whiteSpace);
-    if (!ranges.isEmpty()) {
-      myDependentSpacingEngine.registerUnresolvedDependentSpacingRanges(spaceProperty, ranges);
+        while (alignment == null) {
+            block = block.getParent();
+            if (block == null || block.getStartOffset() != myCurrentBlock.getStartOffset()) {
+                return false;
+            }
+            alignment = block.getAlignment();
+        }
+
+        return myAlignmentsInsideRangesToModify.contains(alignment);
     }
 
-    if (!whiteSpace.isIsReadOnly() && myDependentSpacingEngine.shouldReformatPreviouslyLocatedDependentSpacing(whiteSpace)) {
-      myAlignAgain.add(whiteSpace);
-    }
-    else if (!myAlignAgain.isEmpty()) {
-      myAlignAgain.remove(whiteSpace);
+    private static List<TextRange> getDependentRegionRangesAfterCurrentWhiteSpace(
+        final SpacingImpl spaceProperty,
+        final WhiteSpace whiteSpace
+    ) {
+        if (!(spaceProperty instanceof DependantSpacingImpl)) {
+            return ContainerUtil.emptyList();
+        }
+
+        if (whiteSpace.isReadOnly() || whiteSpace.isLineFeedsAreReadOnly()) {
+            return ContainerUtil.emptyList();
+        }
+
+        DependantSpacingImpl spacing = (DependantSpacingImpl)spaceProperty;
+        return ContainerUtil.filter(
+            spacing.getDependentRegionRanges(),
+            dependencyRange -> whiteSpace.getStartOffset() < dependencyRange.getEndOffset()
+        );
     }
 
-    myCurrentBlock = myCurrentBlock.getNextBlock();
-  }
+    private void processToken() {
+        final SpacingImpl spaceProperty = myCurrentBlock.getSpaceProperty();
+        final WhiteSpace whiteSpace = myCurrentBlock.getWhiteSpace();
+
+        if (isReformatSelectedRangesContext()) {
+            if (isCurrentBlockAlignmentUsedInRangesToModify() &&
+                whiteSpace.isReadOnly() &&
+                spaceProperty != null &&
+                !spaceProperty.isReadOnly()) {
+                whiteSpace.setReadOnly(false);
+                whiteSpace.setLineFeedsAreReadOnly(true);
+            }
+        }
+
+        whiteSpace.arrangeLineFeeds(spaceProperty, myBlockRangesMap);
+
+        if (!whiteSpace.containsLineFeeds()) {
+            whiteSpace.arrangeSpaces(spaceProperty);
+        }
+
+        try {
+            LeafBlockWrapper newBlock = myWrapProcessor.processWrap(myCurrentBlock);
+            if (newBlock != null) {
+                myCurrentBlock = newBlock;
+                return;
+            }
+        }
+        finally {
+            if (whiteSpace.containsLineFeeds()) {
+                onCurrentLineChanged();
+            }
+        }
+
+        LeafBlockWrapper newCurrentBlock = myIndentAdjuster.adjustIndent(myCurrentBlock);
+        if (newCurrentBlock != null) {
+            myCurrentBlock = newCurrentBlock;
+            onCurrentLineChanged();
+            return;
+        }
+
+        defineAlignOffset(myCurrentBlock);
+
+        if (myCurrentBlock.containsLineFeeds()) {
+            onCurrentLineChanged();
+        }
+
+        final List<TextRange> ranges = getDependentRegionRangesAfterCurrentWhiteSpace(spaceProperty, whiteSpace);
+        if (!ranges.isEmpty()) {
+            myDependentSpacingEngine.registerUnresolvedDependentSpacingRanges(spaceProperty, ranges);
+        }
+
+        if (!whiteSpace.isIsReadOnly() && myDependentSpacingEngine.shouldReformatPreviouslyLocatedDependentSpacing(whiteSpace)) {
+            myAlignAgain.add(whiteSpace);
+        }
+        else if (!myAlignAgain.isEmpty()) {
+            myAlignAgain.remove(whiteSpace);
+        }
+
+        myCurrentBlock = myCurrentBlock.getNextBlock();
+    }
 }

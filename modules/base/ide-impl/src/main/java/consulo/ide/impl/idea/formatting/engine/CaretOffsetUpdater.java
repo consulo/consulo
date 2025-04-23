@@ -27,25 +27,25 @@ import java.util.List;
 import java.util.Map;
 
 public class CaretOffsetUpdater {
-  private final Map<Editor, Integer> myCaretOffsets = new HashMap<>();
+    private final Map<Editor, Integer> myCaretOffsets = new HashMap<>();
 
-  public CaretOffsetUpdater(@Nonnull Document document) {
-    Editor[] editors = EditorFactory.getInstance().getEditors(document);
-    for (Editor editor : editors) {
-      myCaretOffsets.put(editor, editor.getCaretModel().getOffset());
+    public CaretOffsetUpdater(@Nonnull Document document) {
+        Editor[] editors = EditorFactory.getInstance().getEditors(document);
+        for (Editor editor : editors) {
+            myCaretOffsets.put(editor, editor.getCaretModel().getOffset());
+        }
     }
-  }
 
-  public void update(@Nonnull List<? extends TextChange> changes) {
-    BulkChangesMerger merger = BulkChangesMerger.INSTANCE;
-    for (Map.Entry<Editor, Integer> entry : myCaretOffsets.entrySet()) {
-      entry.setValue(merger.updateOffset(entry.getValue(), changes));
+    public void update(@Nonnull List<? extends TextChange> changes) {
+        BulkChangesMerger merger = BulkChangesMerger.INSTANCE;
+        for (Map.Entry<Editor, Integer> entry : myCaretOffsets.entrySet()) {
+            entry.setValue(merger.updateOffset(entry.getValue(), changes));
+        }
     }
-  }
 
-  public void restoreCaretLocations() {
-    for (Map.Entry<Editor, Integer> entry : myCaretOffsets.entrySet()) {
-      entry.getKey().getCaretModel().moveToOffset(entry.getValue());
+    public void restoreCaretLocations() {
+        for (Map.Entry<Editor, Integer> entry : myCaretOffsets.entrySet()) {
+            entry.getKey().getCaretModel().moveToOffset(entry.getValue());
+        }
     }
-  }
 }
