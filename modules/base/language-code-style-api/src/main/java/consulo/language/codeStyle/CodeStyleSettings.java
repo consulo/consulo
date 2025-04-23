@@ -159,7 +159,9 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
             //noinspection unchecked
             T result = (T)myCustomSettings.get(aClass);
             if (result == null) {
-                throw new RuntimeException("Unable to get registered settings of #" + aClass.getSimpleName() + " (" + aClass.getName() + ")");
+                throw new RuntimeException(
+                    "Unable to get registered settings of #" + aClass.getSimpleName() + " (" + aClass.getName() + ")"
+                );
             }
             return result;
         }
@@ -236,9 +238,8 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         return LINE_SEPARATOR != null ? LINE_SEPARATOR : ourSystemLineSeparator;
     }
 
-
-// region Java settings (legacy)
-//----------------- NAMING CONVENTIONS --------------------
+    // region Java settings (legacy)
+    //----------------- NAMING CONVENTIONS --------------------
 
     /**
      * @deprecated Use JavaCodeStyleSettings.FIELD_NAME_PREFIX
@@ -309,7 +310,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     @Deprecated
     public final TypeToNameMap LOCAL_VARIABLE_TYPE_TO_NAME = new TypeToNameMap();
 
-//----------------- 'final' modifier settings -------
+    //----------------- 'final' modifier settings -------
     /**
      * @deprecated Use JavaCodeStyleSettings.GENERATE_FINAL_LOCALS
      */
@@ -321,21 +322,21 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     @Deprecated
     public boolean GENERATE_FINAL_PARAMETERS;
 
-//----------------- visibility -----------------------------
+    //----------------- visibility -----------------------------
     /**
      * @deprecated Use JavaCodeStyleSettings.VISIBILITY
      */
     @Deprecated
     public String VISIBILITY = "public";
 
-//----------------- generate parentheses around method arguments ----------
+    //----------------- generate parentheses around method arguments ----------
     /**
      * @deprecated Use RubyCodeStyleSettings.PARENTHESES_AROUND_METHOD_ARGUMENTS
      */
     @Deprecated
     public boolean PARENTHESES_AROUND_METHOD_ARGUMENTS = true;
 
-//----------------- annotations ----------------
+    //----------------- annotations ----------------
     /**
      * @deprecated Use JavaCodeStyleSettings.USE_EXTERNAL_ANNOTATIONS
      */
@@ -347,7 +348,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     @Deprecated
     public boolean INSERT_OVERRIDE_ANNOTATION = true;
 
-//----------------- override -------------------
+    //----------------- override -------------------
     /**
      * @deprecated Use JavaCodeStyleSettings.REPEAT_SYNCHRONIZED
      */
@@ -850,7 +851,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
             return null;
         }
     }
-
 
     // endregion
 

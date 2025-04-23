@@ -28,49 +28,51 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PredefinedCodeStyle {
-  public final static PredefinedCodeStyle[] EMPTY_ARRAY = new PredefinedCodeStyle[]{};
-  private final String myName;
-  private final Language myLanguage;
+    public final static PredefinedCodeStyle[] EMPTY_ARRAY = new PredefinedCodeStyle[]{};
+    private final String myName;
+    private final Language myLanguage;
 
-  public PredefinedCodeStyle(@Nonnull String name, @Nonnull Language language) {
-    myName = name;
-    myLanguage = language;
-  }
+    public PredefinedCodeStyle(@Nonnull String name, @Nonnull Language language) {
+        myName = name;
+        myLanguage = language;
+    }
 
-  /**
-   * Applies the predefined code style to given settings. Code style settings which are not specified by
-   * the code style may be left unchanged (as defined by end-user). If the name doesn't match any predefined styles,
-   * the method does nothing.
-   *
-   * @param settings The settings to change.
-   */
-  public abstract void apply(CodeStyleSettings settings);
+    /**
+     * Applies the predefined code style to given settings. Code style settings which are not specified by
+     * the code style may be left unchanged (as defined by end-user). If the name doesn't match any predefined styles,
+     * the method does nothing.
+     *
+     * @param settings The settings to change.
+     */
+    public abstract void apply(CodeStyleSettings settings);
 
-  @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof PredefinedCodeStyle)) return false;
-    PredefinedCodeStyle otherStyle = (PredefinedCodeStyle)obj;
-    return myName.equals(otherStyle.getName()) && myLanguage.equals(otherStyle.getLanguage());
-  }
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof PredefinedCodeStyle)) {
+            return false;
+        }
+        PredefinedCodeStyle otherStyle = (PredefinedCodeStyle)obj;
+        return myName.equals(otherStyle.getName()) && myLanguage.equals(otherStyle.getLanguage());
+    }
 
-  @Override
-  public int hashCode() {
-    int result = myName.hashCode();
-    result = 31 * result + myLanguage.hashCode();
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        int result = myName.hashCode();
+        result = 31 * result + myLanguage.hashCode();
+        return result;
+    }
 
-  public String getName() {
-    return myName;
-  }
+    public String getName() {
+        return myName;
+    }
 
-  @Override
-  public String toString() {
-    return myName;
-  }
+    @Override
+    public String toString() {
+        return myName;
+    }
 
-  @Nonnull
-  public Language getLanguage() {
-    return myLanguage;
-  }
+    @Nonnull
+    public Language getLanguage() {
+        return myLanguage;
+    }
 }

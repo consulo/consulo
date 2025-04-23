@@ -23,37 +23,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * from kotlin platform\lang-impl\src\com\intellij\psi\formatter\IndentRangesCalculator.kt
+ *
  * @author VISTALL
  * @since 01-May-17
- * <p>
- * from kotlin platform\lang-impl\src\com\intellij\psi\formatter\IndentRangesCalculator.kt
  */
 public class IndentRangesCalculator {
-  private Document document;
-  private TextRange textRange;
+    private Document document;
+    private TextRange textRange;
 
-  private int startOffset = textRange.getStartOffset();
-  private int endOffset = textRange.getEndOffset();
+    private int startOffset = textRange.getStartOffset();
+    private int endOffset = textRange.getEndOffset();
 
-  public IndentRangesCalculator(Document document, TextRange textRange) {
-    this.document = document;
-    this.textRange = textRange;
-  }
-
-  public List<TextRange> calcIndentRanges() {
-    int startLine = document.getLineNumber(startOffset);
-    int endLine = document.getLineNumber(endOffset);
-    CharSequence chars = document.getCharsSequence();
-
-    List<TextRange> indentRanges = new ArrayList<>();
-
-    for (int line = startLine; line <= endLine; line++) {
-      int lineStartOffset = document.getLineStartOffset(line);
-      int lineEndOffset = document.getLineEndOffset(line);
-      int firstNonWsChar = CharArrayUtil.shiftForward(chars, lineStartOffset, lineEndOffset + 1, " \t");
-      indentRanges.add(new TextRange(lineStartOffset, firstNonWsChar));
+    public IndentRangesCalculator(Document document, TextRange textRange) {
+        this.document = document;
+        this.textRange = textRange;
     }
 
-    return indentRanges;
-  }
+    public List<TextRange> calcIndentRanges() {
+        int startLine = document.getLineNumber(startOffset);
+        int endLine = document.getLineNumber(endOffset);
+        CharSequence chars = document.getCharsSequence();
+
+        List<TextRange> indentRanges = new ArrayList<>();
+
+        for (int line = startLine; line <= endLine; line++) {
+            int lineStartOffset = document.getLineStartOffset(line);
+            int lineEndOffset = document.getLineEndOffset(line);
+            int firstNonWsChar = CharArrayUtil.shiftForward(chars, lineStartOffset, lineEndOffset + 1, " \t");
+            indentRanges.add(new TextRange(lineStartOffset, firstNonWsChar));
+        }
+
+        return indentRanges;
+    }
 }

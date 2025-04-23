@@ -18,8 +18,9 @@ package consulo.language.codeStyle;
 import consulo.document.util.TextRange;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 public interface ExtraRangesProvider {
-  List<TextRange> getExtraRangesToFormat(@Nonnull FormattingRangesInfo info);
+    List<TextRange> getExtraRangesToFormat(@Nonnull FormattingRangesInfo info);
 }

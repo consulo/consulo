@@ -25,5 +25,5 @@ import consulo.virtualFileSystem.fileType.FileType;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PreserveIndentOnPaste {
-  boolean accept(FileType type);
+    boolean accept(FileType type);
 }

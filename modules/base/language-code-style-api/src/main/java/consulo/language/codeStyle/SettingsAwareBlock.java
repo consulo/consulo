@@ -22,7 +22,6 @@ import jakarta.annotation.Nonnull;
  * @since 9/6/12 9:17 AM
  */
 public interface SettingsAwareBlock extends Block {
-  
-  @Nonnull
-  CodeStyleSettings getSettings();
+    @Nonnull
+    CodeStyleSettings getSettings();
 }

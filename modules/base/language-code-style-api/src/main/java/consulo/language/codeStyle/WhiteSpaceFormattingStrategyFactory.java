@@ -24,6 +24,7 @@ import consulo.util.lang.ref.PatchedWeakReference;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -35,84 +36,85 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 10/1/10 3:31 PM
  */
 public class WhiteSpaceFormattingStrategyFactory {
+    private static final AtomicReference<PatchedWeakReference<Collection<WhiteSpaceFormattingStrategy>>> myCachedStrategies =
+        new AtomicReference<>();
 
-  private static final AtomicReference<PatchedWeakReference<Collection<WhiteSpaceFormattingStrategy>>> myCachedStrategies = new AtomicReference<>();
-
-  private WhiteSpaceFormattingStrategyFactory() {
-  }
-
-  private static List<WhiteSpaceFormattingStrategy> getSharedStrategies(@Nonnull Language language) {
-    return List.of(new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n') {
-      @Nonnull
-      @Override
-      public Language getLanguage() {
-        return language;
-      }
-    });
-  }
-
-  /**
-   * @return default language-agnostic white space strategy
-   */
-  public static WhiteSpaceFormattingStrategy getStrategy() {
-    return new CompositeWhiteSpaceFormattingStrategy(Language.ANY, getSharedStrategies(Language.ANY));
-  }
-
-  /**
-   * Tries to return white space strategy to use for the given language.
-   *
-   * @param language target language
-   * @return white space strategy to use for the given language
-   * @throws IllegalStateException if white space strategies configuration is invalid
-   */
-  public static WhiteSpaceFormattingStrategy getStrategy(@Nonnull Language language) throws IllegalStateException {
-    CompositeWhiteSpaceFormattingStrategy result = new CompositeWhiteSpaceFormattingStrategy(language, getSharedStrategies(language));
-    WhiteSpaceFormattingStrategy strategy = WhiteSpaceFormattingStrategy.forLanguage(language);
-    if (strategy != null) {
-      result.addStrategy(strategy);
+    private WhiteSpaceFormattingStrategyFactory() {
     }
-    return result;
-  }
 
-  /**
-   * @return collection of all registered white space strategies
-   */
-  @Nonnull
-  public static Collection<WhiteSpaceFormattingStrategy> getAllStrategies() {
-    final WeakReference<Collection<WhiteSpaceFormattingStrategy>> reference = myCachedStrategies.get();
-    if (reference != null) {
-      final Collection<WhiteSpaceFormattingStrategy> strategies = reference.get();
-      if (strategies != null) {
-        return strategies;
-      }
+    private static List<WhiteSpaceFormattingStrategy> getSharedStrategies(@Nonnull Language language) {
+        return List.of(new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n') {
+            @Nonnull
+            @Override
+            public Language getLanguage() {
+                return language;
+            }
+        });
     }
-    final Collection<Language> languages = Language.getRegisteredLanguages();
 
-    Set<WhiteSpaceFormattingStrategy> result = new HashSet<>(getSharedStrategies(Language.ANY));
-    for (Language language : languages) {
-      final WhiteSpaceFormattingStrategy strategy = WhiteSpaceFormattingStrategy.forLanguage(language);
-      if (strategy != null) {
-        result.add(strategy);
-      }
+    /**
+     * @return default language-agnostic white space strategy
+     */
+    public static WhiteSpaceFormattingStrategy getStrategy() {
+        return new CompositeWhiteSpaceFormattingStrategy(Language.ANY, getSharedStrategies(Language.ANY));
     }
-    myCachedStrategies.set(new PatchedWeakReference<>(result));
-    return result;
-  }
 
-  /**
-   * Returns white space strategy to use for the document managed by the given editor.
-   *
-   * @param editor editor that manages target document
-   * @return white space strategy for the document managed by the given editor
-   * @throws IllegalStateException if white space strategies configuration is invalid
-   */
-  public static WhiteSpaceFormattingStrategy getStrategy(@Nullable Project project, @Nullable Document document) throws IllegalStateException {
-    if (project != null) {
-      PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(Objects.requireNonNull(document));
-      if (psiFile != null) {
-        return getStrategy(psiFile.getLanguage());
-      }
+    /**
+     * Tries to return white space strategy to use for the given language.
+     *
+     * @param language target language
+     * @return white space strategy to use for the given language
+     * @throws IllegalStateException if white space strategies configuration is invalid
+     */
+    public static WhiteSpaceFormattingStrategy getStrategy(@Nonnull Language language) throws IllegalStateException {
+        CompositeWhiteSpaceFormattingStrategy result = new CompositeWhiteSpaceFormattingStrategy(language, getSharedStrategies(language));
+        WhiteSpaceFormattingStrategy strategy = WhiteSpaceFormattingStrategy.forLanguage(language);
+        if (strategy != null) {
+            result.addStrategy(strategy);
+        }
+        return result;
     }
-    return getStrategy();
-  }
+
+    /**
+     * @return collection of all registered white space strategies
+     */
+    @Nonnull
+    public static Collection<WhiteSpaceFormattingStrategy> getAllStrategies() {
+        final WeakReference<Collection<WhiteSpaceFormattingStrategy>> reference = myCachedStrategies.get();
+        if (reference != null) {
+            final Collection<WhiteSpaceFormattingStrategy> strategies = reference.get();
+            if (strategies != null) {
+                return strategies;
+            }
+        }
+        final Collection<Language> languages = Language.getRegisteredLanguages();
+
+        Set<WhiteSpaceFormattingStrategy> result = new HashSet<>(getSharedStrategies(Language.ANY));
+        for (Language language : languages) {
+            final WhiteSpaceFormattingStrategy strategy = WhiteSpaceFormattingStrategy.forLanguage(language);
+            if (strategy != null) {
+                result.add(strategy);
+            }
+        }
+        myCachedStrategies.set(new PatchedWeakReference<>(result));
+        return result;
+    }
+
+    /**
+     * Returns white space strategy to use for the document managed by the given editor.
+     *
+     * @param editor editor that manages target document
+     * @return white space strategy for the document managed by the given editor
+     * @throws IllegalStateException if white space strategies configuration is invalid
+     */
+    public static WhiteSpaceFormattingStrategy getStrategy(@Nullable Project project, @Nullable Document document)
+        throws IllegalStateException {
+        if (project != null) {
+            PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(Objects.requireNonNull(document));
+            if (psiFile != null) {
+                return getStrategy(psiFile.getLanguage());
+            }
+        }
+        return getStrategy();
+    }
 }

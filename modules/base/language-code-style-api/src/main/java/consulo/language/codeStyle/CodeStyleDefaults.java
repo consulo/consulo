@@ -16,7 +16,7 @@
 package consulo.language.codeStyle;
 
 public interface CodeStyleDefaults {
-  int DEFAULT_INDENT_SIZE = 4;
-  int DEFAULT_TAB_SIZE = 4;
-  int DEFAULT_CONTINUATION_INDENT_SIZE = 8;
+    int DEFAULT_INDENT_SIZE = 4;
+    int DEFAULT_TAB_SIZE = 4;
+    int DEFAULT_CONTINUATION_INDENT_SIZE = 8;
 }

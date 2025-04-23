@@ -104,7 +104,7 @@ public class CodeStyle {
      * Returns language code style settings for the specified document.
      * If the document has PSI file, returns settings for the PSI file or {@code null} otherwise.
      *
-     * @param project Current project.
+     * @param project  Current project.
      * @param document The document to get settings for.
      * @return The language code style settings for the editor or {@code null}.
      */

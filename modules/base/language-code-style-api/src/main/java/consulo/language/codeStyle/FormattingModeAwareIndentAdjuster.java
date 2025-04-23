@@ -26,16 +26,15 @@ import jakarta.annotation.Nonnull;
  * @see CodeStyleManager
  */
 public interface FormattingModeAwareIndentAdjuster {
+    /**
+     * Adjust line indent at document offset using {@code mode}.
+     *
+     * @param document The document to adjust line indent in.
+     * @param offset   The offset in the document.
+     * @param mode     The mode: {@link FormattingMode#ADJUST_INDENT} or {@link FormattingMode#ADJUST_INDENT_ON_ENTER}
+     * @return Adjusted offset.
+     */
+    int adjustLineIndent(@Nonnull final Document document, final int offset, FormattingMode mode);
 
-  /**
-   * Adjust line indent at document offset using {@code mode}.
-   *
-   * @param document The document to adjust line indent in.
-   * @param offset   The offset in the document.
-   * @param mode     The mode: {@link FormattingMode#ADJUST_INDENT} or {@link FormattingMode#ADJUST_INDENT_ON_ENTER}
-   * @return Adjusted offset.
-   */
-  int adjustLineIndent(@Nonnull final Document document, final int offset, FormattingMode mode);
-
-  FormattingMode getCurrentFormattingMode();
+    FormattingMode getCurrentFormattingMode();
 }

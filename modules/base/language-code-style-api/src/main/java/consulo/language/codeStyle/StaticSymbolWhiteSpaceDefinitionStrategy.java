@@ -33,28 +33,27 @@ import jakarta.annotation.Nonnull;
  * @since Sep 20, 2010 5:11:49 PM
  */
 public abstract class StaticSymbolWhiteSpaceDefinitionStrategy extends AbstractWhiteSpaceFormattingStrategy {
+    private final IntSet myWhiteSpaceSymbols = IntSets.newHashSet();
 
-  private final IntSet myWhiteSpaceSymbols = IntSets.newHashSet();
-
-  /**
-   * Creates new <code>StaticWhiteSpaceDefinitionStrategy</code> object with the symbols that should be treated as white spaces.
-   *
-   * @param whiteSpaceSymbols   symbols that should be treated as white spaces by the current strategy
-   */
-  public StaticSymbolWhiteSpaceDefinitionStrategy(char ... whiteSpaceSymbols) {
-    for (char symbol : whiteSpaceSymbols) {
-      myWhiteSpaceSymbols.add(symbol);
+    /**
+     * Creates new <code>StaticWhiteSpaceDefinitionStrategy</code> object with the symbols that should be treated as white spaces.
+     *
+     * @param whiteSpaceSymbols symbols that should be treated as white spaces by the current strategy
+     */
+    public StaticSymbolWhiteSpaceDefinitionStrategy(char... whiteSpaceSymbols) {
+        for (char symbol : whiteSpaceSymbols) {
+            myWhiteSpaceSymbols.add(symbol);
+        }
     }
-  }
 
-  @Override
-  public int check(@Nonnull CharSequence text, int start, int end) {
-    for (int i = start; i < end; i++) {
-      char c = text.charAt(i);
-      if (!myWhiteSpaceSymbols.contains(c)) {
-        return i;
-      }
+    @Override
+    public int check(@Nonnull CharSequence text, int start, int end) {
+        for (int i = start; i < end; i++) {
+            char c = text.charAt(i);
+            if (!myWhiteSpaceSymbols.contains(c)) {
+                return i;
+            }
+        }
+        return end;
     }
-    return end;
-  }
 }

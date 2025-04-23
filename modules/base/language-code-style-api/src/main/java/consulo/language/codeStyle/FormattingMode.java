@@ -19,20 +19,19 @@ package consulo.language.codeStyle;
  * The current formatting mode.
  */
 public enum FormattingMode {
+    /**
+     * Normal reformat (modifies indents and inline whitespaces).
+     */
+    REFORMAT,
 
-  /**
-   * Normal reformat (modifies indents and inline whitespaces).
-   */
-  REFORMAT,
+    /**
+     * Line indent adjustment.
+     */
+    ADJUST_INDENT,
 
-  /**
-   * Line indent adjustment.
-   */
-  ADJUST_INDENT,
-
-  /**
-   * Indent adjustment on a new line after Enter.  In some cases a behavior may be different from the case when the same code is
-   * reformatted or indented, especially when some more input is expected to follow on the new line.
-   */
-  ADJUST_INDENT_ON_ENTER
+    /**
+     * Indent adjustment on a new line after Enter.  In some cases a behavior may be different from the case when the same code is
+     * reformatted or indented, especially when some more input is expected to follow on the new line.
+     */
+    ADJUST_INDENT_ON_ENTER
 }

@@ -23,9 +23,9 @@ import consulo.language.codeStyle.CodeStyleSettings;
  * Date: Jul 19, 2002
  */
 public interface CodeStyleScheme extends Named {
-  String DEFAULT_SCHEME_NAME = "Default";
+    String DEFAULT_SCHEME_NAME = "Default";
 
-  boolean isDefault();
+    boolean isDefault();
 
-  CodeStyleSettings getCodeStyleSettings();
+    CodeStyleSettings getCodeStyleSettings();
 }

@@ -269,7 +269,6 @@ public abstract class Indent {
     public static class Type {
         private final String myName;
 
-
         private Type(final String name) {
             myName = name;
         }

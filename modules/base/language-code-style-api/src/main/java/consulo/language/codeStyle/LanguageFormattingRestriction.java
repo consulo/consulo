@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LanguageFormattingRestriction {
-  ExtensionPointName<LanguageFormattingRestriction> EXTENSION = ExtensionPointName.create(LanguageFormattingRestriction.class);
+    ExtensionPointName<LanguageFormattingRestriction> EXTENSION = ExtensionPointName.create(LanguageFormattingRestriction.class);
 
-  boolean isFormatterAllowed(@Nonnull PsiElement context);
+    boolean isFormatterAllowed(@Nonnull PsiElement context);
 }

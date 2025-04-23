@@ -19,63 +19,63 @@ package consulo.language.codeStyle;
  * A set of code documentation comment settings if supported by a language used in common doc comment handling algorithms.
  */
 public interface DocCommentSettings {
-  /**
-   * Default doc comment settings if not provided by {@code LanguageCodeStyleSettingsProvider}
-   */
-  DocCommentSettings DEFAULTS = new Defaults();
+    /**
+     * Default doc comment settings if not provided by {@code LanguageCodeStyleSettingsProvider}
+     */
+    DocCommentSettings DEFAULTS = new Defaults();
 
-  /**
-   * @return True if doc comment formatting enabled.
-   */
-  boolean isDocFormattingEnabled();
+    /**
+     * @return True if doc comment formatting enabled.
+     */
+    boolean isDocFormattingEnabled();
 
-  /**
-   * Enable or disable doc comment formatting.
-   *
-   * @param formattingEnabled The enable/disable flag.
-   */
-  void setDocFormattingEnabled(boolean formattingEnabled);
+    /**
+     * Enable or disable doc comment formatting.
+     *
+     * @param formattingEnabled The enable/disable flag.
+     */
+    void setDocFormattingEnabled(boolean formattingEnabled);
 
-  /**
-   * @return True if a leading asterisk '*' should be inserted on a new comment line.
-   */
-  boolean isLeadingAsteriskEnabled();
+    /**
+     * @return True if a leading asterisk '*' should be inserted on a new comment line.
+     */
+    boolean isLeadingAsteriskEnabled();
 
-  /**
-   * @return True if at least some empty tags can to be removed.
-   */
-  boolean isRemoveEmptyTags();
+    /**
+     * @return True if at least some empty tags can to be removed.
+     */
+    boolean isRemoveEmptyTags();
 
-  /**
-   * Force or disable empty tags removal.
-   *
-   * @param removeEmptyTags True if all empty tags must be removed, false if all of them must be preserved.
-   */
-  void setRemoveEmptyTags(boolean removeEmptyTags);
+    /**
+     * Force or disable empty tags removal.
+     *
+     * @param removeEmptyTags True if all empty tags must be removed, false if all of them must be preserved.
+     */
+    void setRemoveEmptyTags(boolean removeEmptyTags);
 
-  final class Defaults implements DocCommentSettings {
+    final class Defaults implements DocCommentSettings {
 
-    @Override
-    public boolean isDocFormattingEnabled() {
-      return true;
+        @Override
+        public boolean isDocFormattingEnabled() {
+            return true;
+        }
+
+        @Override
+        public void setDocFormattingEnabled(boolean formattingEnabled) {
+        }
+
+        @Override
+        public boolean isLeadingAsteriskEnabled() {
+            return true;
+        }
+
+        @Override
+        public boolean isRemoveEmptyTags() {
+            return false;
+        }
+
+        @Override
+        public void setRemoveEmptyTags(boolean removeEmptyTags) {
+        }
     }
-
-    @Override
-    public void setDocFormattingEnabled(boolean formattingEnabled) {
-    }
-
-    @Override
-    public boolean isLeadingAsteriskEnabled() {
-      return true;
-    }
-
-    @Override
-    public boolean isRemoveEmptyTags() {
-      return false;
-    }
-
-    @Override
-    public void setRemoveEmptyTags(boolean removeEmptyTags) {
-    }
-  }
 }

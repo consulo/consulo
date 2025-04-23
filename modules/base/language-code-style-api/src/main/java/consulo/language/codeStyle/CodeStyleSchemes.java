@@ -25,46 +25,45 @@ import consulo.application.Application;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CodeStyleSchemes {
-
-  public static CodeStyleSchemes getInstance() {
-    return Application.get().getInstance(CodeStyleSchemes.class);
-  }
-
-  public abstract CodeStyleScheme[] getSchemes();
-
-  public abstract CodeStyleScheme getCurrentScheme();
-
-  public abstract void setCurrentScheme(CodeStyleScheme scheme);
-
-  public abstract CodeStyleScheme createNewScheme(String preferredName, CodeStyleScheme parentScheme);
-
-  public abstract void deleteScheme(CodeStyleScheme scheme);
-
-  public abstract CodeStyleScheme findSchemeByName(String name);
-
-  /**
-   * Attempts to find a scheme with a given name or an alternative suitable scheme.
-   *
-   * @param preferredSchemeName The scheme name to find or null for the currently selected scheme.
-   * @return A found scheme or a default scheme if the scheme name was not found or, if neither exists or the scheme name is null, the
-   * currently selected scheme.
-   */
-  public CodeStyleScheme findPreferredScheme(@jakarta.annotation.Nullable String preferredSchemeName) {
-    CodeStyleScheme scheme = null;
-    if (preferredSchemeName != null) {
-      scheme = findSchemeByName(preferredSchemeName);
-      if (scheme == null) {
-        scheme = getDefaultScheme();
-      }
+    public static CodeStyleSchemes getInstance() {
+        return Application.get().getInstance(CodeStyleSchemes.class);
     }
-    if (scheme == null) {
-      scheme = getCurrentScheme();
+
+    public abstract CodeStyleScheme[] getSchemes();
+
+    public abstract CodeStyleScheme getCurrentScheme();
+
+    public abstract void setCurrentScheme(CodeStyleScheme scheme);
+
+    public abstract CodeStyleScheme createNewScheme(String preferredName, CodeStyleScheme parentScheme);
+
+    public abstract void deleteScheme(CodeStyleScheme scheme);
+
+    public abstract CodeStyleScheme findSchemeByName(String name);
+
+    /**
+     * Attempts to find a scheme with a given name or an alternative suitable scheme.
+     *
+     * @param preferredSchemeName The scheme name to find or null for the currently selected scheme.
+     * @return A found scheme or a default scheme if the scheme name was not found or, if neither exists or the scheme name is null, the
+     * currently selected scheme.
+     */
+    public CodeStyleScheme findPreferredScheme(@jakarta.annotation.Nullable String preferredSchemeName) {
+        CodeStyleScheme scheme = null;
+        if (preferredSchemeName != null) {
+            scheme = findSchemeByName(preferredSchemeName);
+            if (scheme == null) {
+                scheme = getDefaultScheme();
+            }
+        }
+        if (scheme == null) {
+            scheme = getCurrentScheme();
+        }
+        return scheme;
     }
-    return scheme;
-  }
 
-  public abstract CodeStyleScheme getDefaultScheme();
+    public abstract CodeStyleScheme getDefaultScheme();
 
-  public abstract void addScheme(CodeStyleScheme currentScheme);
+    public abstract void addScheme(CodeStyleScheme currentScheme);
 }
 

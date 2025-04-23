@@ -23,6 +23,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -33,26 +34,26 @@ import java.util.List;
  * from kotlin  platform\lang-impl\src\com\intellij\psi\formatter\common\NodeIndentRangesCalculator.kt
  */
 public class NodeIndentRangesCalculator {
-  private ASTNode node;
+    private ASTNode node;
 
-  public NodeIndentRangesCalculator(ASTNode node) {
-    this.node = node;
-  }
-
-  @RequiredReadAction
-  public List<TextRange> calculateExtraRanges() {
-    Document document = retrieveDocument(node);
-    if (document != null) {
-      TextRange ranges = node.getTextRange();
-      return new IndentRangesCalculator(document, ranges).calcIndentRanges();
+    public NodeIndentRangesCalculator(ASTNode node) {
+        this.node = node;
     }
-    return Collections.singletonList(node.getTextRange());
-  }
 
-  @RequiredReadAction
-  @Nullable
-  private Document retrieveDocument(ASTNode node) {
-    PsiFile file = node.getPsi().getContainingFile();
-    return PsiDocumentManager.getInstance(node.getPsi().getProject()).getDocument(file);
-  }
+    @RequiredReadAction
+    public List<TextRange> calculateExtraRanges() {
+        Document document = retrieveDocument(node);
+        if (document != null) {
+            TextRange ranges = node.getTextRange();
+            return new IndentRangesCalculator(document, ranges).calcIndentRanges();
+        }
+        return Collections.singletonList(node.getTextRange());
+    }
+
+    @Nullable
+    @RequiredReadAction
+    private Document retrieveDocument(ASTNode node) {
+        PsiFile file = node.getPsi().getContainingFile();
+        return PsiDocumentManager.getInstance(node.getPsi().getProject()).getDocument(file);
+    }
 }

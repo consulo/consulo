@@ -16,31 +16,31 @@
 package consulo.language.codeStyle;
 
 public interface ImportsLayoutSettings {
-  boolean isLayoutStaticImportsSeparately();
+    boolean isLayoutStaticImportsSeparately();
 
-  void setLayoutStaticImportsSeparately(boolean value);
+    void setLayoutStaticImportsSeparately(boolean value);
 
-  int getNamesCountToUseImportOnDemand();
+    int getNamesCountToUseImportOnDemand();
 
-  void setNamesCountToUseImportOnDemand(int value);
+    void setNamesCountToUseImportOnDemand(int value);
 
-  int getClassCountToUseImportOnDemand();
+    int getClassCountToUseImportOnDemand();
 
-  void setClassCountToUseImportOnDemand(int value);
+    void setClassCountToUseImportOnDemand(int value);
 
-  boolean isInsertInnerClassImports();
+    boolean isInsertInnerClassImports();
 
-  void setInsertInnerClassImports(boolean value);
+    void setInsertInnerClassImports(boolean value);
 
-  boolean isUseSingleClassImports();
+    boolean isUseSingleClassImports();
 
-  void setUseSingleClassImports(boolean value);
+    void setUseSingleClassImports(boolean value);
 
-  boolean isUseFqClassNames();
+    boolean isUseFqClassNames();
 
-  void setUseFqClassNames(boolean value);
+    void setUseFqClassNames(boolean value);
 
-  PackageEntryTable getImportLayoutTable();
+    PackageEntryTable getImportLayoutTable();
 
-  PackageEntryTable getPackagesToUseImportOnDemand();
+    PackageEntryTable getPackagesToUseImportOnDemand();
 }

@@ -31,34 +31,33 @@ import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileIndentOptionsProvider {
+    public final static ExtensionPointName<FileIndentOptionsProvider> EP_NAME = ExtensionPointName.create(FileIndentOptionsProvider.class);
 
-  public final static ExtensionPointName<FileIndentOptionsProvider> EP_NAME = ExtensionPointName.create(FileIndentOptionsProvider.class);
+    /**
+     * Retrieves indent options for PSI file.
+     *
+     * @param settings Code style settings for which indent options are calculated.
+     * @param file     The file to retrieve options for.
+     * @return Indent options or {@code null} if the provider can't retrieve them.
+     */
+    @Nullable
+    public abstract IndentOptions getIndentOptions(@Nonnull CodeStyleSettings settings, @Nonnull PsiFile file);
 
-  /**
-   * Retrieves indent options for PSI file.
-   *
-   * @param settings Code style settings for which indent options are calculated.
-   * @param file     The file to retrieve options for.
-   * @return Indent options or {@code null} if the provider can't retrieve them.
-   */
-  @Nullable
-  public abstract IndentOptions getIndentOptions(@Nonnull CodeStyleSettings settings, @Nonnull PsiFile file);
+    /**
+     * Tells if the provider can be used when a complete file is reformatted.
+     *
+     * @return True by default
+     */
+    public boolean useOnFullReformat() {
+        return true;
+    }
 
-  /**
-   * Tells if the provider can be used when a complete file is reformatted.
-   *
-   * @return True by default
-   */
-  public boolean useOnFullReformat() {
-    return true;
-  }
+    protected static void notifyIndentOptionsChanged(@Nonnull Project project, @Nullable PsiFile file) {
+        CodeStyleSettingsManager.getInstance(project).fireCodeStyleSettingsChanged(file);
+    }
 
-  protected static void notifyIndentOptionsChanged(@Nonnull Project project, @Nullable PsiFile file) {
-    CodeStyleSettingsManager.getInstance(project).fireCodeStyleSettingsChanged(file);
-  }
-
-  @Nullable
-  public IndentStatusBarUIContributor getIndentStatusBarUiContributor(@Nonnull IndentOptions indentOptions) {
-    return null;
-  }
+    @Nullable
+    public IndentStatusBarUIContributor getIndentStatusBarUiContributor(@Nonnull IndentOptions indentOptions) {
+        return null;
+    }
 }
