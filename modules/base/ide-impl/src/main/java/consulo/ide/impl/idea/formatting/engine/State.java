@@ -16,35 +16,35 @@
 package consulo.ide.impl.idea.formatting.engine;
 
 public abstract class State {
+    private boolean myDone;
+    private Runnable myOnDoneAction;
 
-  private boolean myDone;
-  private Runnable myOnDoneAction;
-
-  public void iteration() {
-    if (!isDone()) {
-      doIteration();
+    public void iteration() {
+        if (!isDone()) {
+            doIteration();
+        }
     }
-  }
 
-  public final boolean isDone() {
-    return myDone;
-  }
-
-  protected void setDone(boolean done) {
-    if (!myDone && done && myOnDoneAction != null) {
-      myOnDoneAction.run();
+    public final boolean isDone() {
+        return myDone;
     }
-    myDone = done;
-  }
 
-  public void stop() {}
+    protected void setDone(boolean done) {
+        if (!myDone && done && myOnDoneAction != null) {
+            myOnDoneAction.run();
+        }
+        myDone = done;
+    }
 
-  protected abstract void doIteration();
+    public void stop() {
+    }
 
-  public void prepare() {}
+    protected abstract void doIteration();
 
-  public void setOnDone(Runnable onDoneAction) {
-    myOnDoneAction = onDoneAction;
-  }
+    public void prepare() {
+    }
 
+    public void setOnDone(Runnable onDoneAction) {
+        myOnDoneAction = onDoneAction;
+    }
 }

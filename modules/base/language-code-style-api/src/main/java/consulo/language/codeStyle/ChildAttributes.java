@@ -23,42 +23,41 @@ import jakarta.annotation.Nullable;
  *
  * @see Block#getChildAttributes(int)
  */
-
 public class ChildAttributes {
-  private final Indent myChildIndent;
-  private final Alignment myAlignment;
+    private final Indent myChildIndent;
+    private final Alignment myAlignment;
 
-  public static final ChildAttributes DELEGATE_TO_PREV_CHILD = new ChildAttributes(null, null);
-  public static final ChildAttributes DELEGATE_TO_NEXT_CHILD = new ChildAttributes(null, null);
+    public static final ChildAttributes DELEGATE_TO_PREV_CHILD = new ChildAttributes(null, null);
+    public static final ChildAttributes DELEGATE_TO_NEXT_CHILD = new ChildAttributes(null, null);
 
-  /**
-   * Creates a child attributes setting with the specified indent and alignment.
-   *
-   * @param childIndent the indent for the child block.
-   * @param alignment   the alignment for the child block.
-   */
-  public ChildAttributes(@jakarta.annotation.Nullable final Indent childIndent, @Nullable final Alignment alignment) {
-    myChildIndent = childIndent;
-    myAlignment = alignment;
-  }
+    /**
+     * Creates a child attributes setting with the specified indent and alignment.
+     *
+     * @param childIndent the indent for the child block.
+     * @param alignment   the alignment for the child block.
+     */
+    public ChildAttributes(@Nullable Indent childIndent, @Nullable Alignment alignment) {
+        myChildIndent = childIndent;
+        myAlignment = alignment;
+    }
 
-  /**
-   * Returns the indent of the child block.
-   *
-   * @return the indent setting.
-   */
-  @jakarta.annotation.Nullable
-  public Indent getChildIndent() {
-    return myChildIndent;
-  }
+    /**
+     * Returns the indent of the child block.
+     *
+     * @return the indent setting.
+     */
+    @Nullable
+    public Indent getChildIndent() {
+        return myChildIndent;
+    }
 
-  /**
-   * Returns the alignment of the child block.
-   *
-   * @return the alignment setting.
-   */
-  @Nullable
-  public Alignment getAlignment() {
-    return myAlignment;
-  }
+    /**
+     * Returns the alignment of the child block.
+     *
+     * @return the alignment setting.
+     */
+    @Nullable
+    public Alignment getAlignment() {
+        return myAlignment;
+    }
 }

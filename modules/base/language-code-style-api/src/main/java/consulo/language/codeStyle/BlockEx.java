@@ -21,13 +21,12 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
- * @since 6/26/12 11:22 AM
+ * @since 2012-06-26
  */
 public interface BlockEx extends Block {
-
-  /**
-   * @return    current block's language (is used to decide on what code style settings should be used for it) 
-   */
-  @Nullable
-  Language getLanguage();
+    /**
+     * @return current block's language (is used to decide on what code style settings should be used for it)
+     */
+    @Nullable
+    Language getLanguage();
 }

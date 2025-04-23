@@ -26,9 +26,9 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PostFormatProcessor {
-  ExtensionPointName<PostFormatProcessor> EP_NAME = ExtensionPointName.create(PostFormatProcessor.class);
+    ExtensionPointName<PostFormatProcessor> EP_NAME = ExtensionPointName.create(PostFormatProcessor.class);
 
-  PsiElement processElement(@Nonnull PsiElement source, @Nonnull CodeStyleSettings settings);
+    PsiElement processElement(@Nonnull PsiElement source, @Nonnull CodeStyleSettings settings);
 
-  TextRange processText(@Nonnull PsiFile source, @Nonnull TextRange rangeToReformat, @Nonnull CodeStyleSettings settings);
+    TextRange processText(@Nonnull PsiFile source, @Nonnull TextRange rangeToReformat, @Nonnull CodeStyleSettings settings);
 }

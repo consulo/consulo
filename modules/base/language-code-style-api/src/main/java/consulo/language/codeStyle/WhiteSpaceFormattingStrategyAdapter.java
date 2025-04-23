@@ -23,52 +23,58 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 12/6/11 3:58 PM
+ * @since 2011-12-06
  */
 public abstract class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceFormattingStrategy {
+    private final WhiteSpaceFormattingStrategy DELEGATE = new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n') {
+        @Nonnull
+        @Override
+        public Language getLanguage() {
+            return WhiteSpaceFormattingStrategyAdapter.this.getLanguage();
+        }
+    };
 
-  private final WhiteSpaceFormattingStrategy DELEGATE = new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n') {
+    @Override
+    public int check(@Nonnull CharSequence text, int start, int end) {
+        return DELEGATE.check(text, start, end);
+    }
+
+    @Override
+    public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
+        return false;
+    }
+
+    @Override
+    public boolean replaceDefaultStrategy() {
+        return false;
+    }
+
     @Nonnull
     @Override
-    public Language getLanguage() {
-      return WhiteSpaceFormattingStrategyAdapter.this.getLanguage();
+    public CharSequence adjustWhiteSpaceIfNecessary(
+        @Nonnull CharSequence whiteSpaceText,
+        @Nonnull CharSequence text,
+        int startOffset,
+        int endOffset,
+        CodeStyleSettings codeStyleSettings,
+        ASTNode nodeAfter
+    ) {
+        return whiteSpaceText;
     }
-  };
 
-  @Override
-  public int check(@Nonnull CharSequence text, int start, int end) {
-    return DELEGATE.check(text, start, end);
-  }
+    @Override
+    public CharSequence adjustWhiteSpaceIfNecessary(
+        @Nonnull CharSequence whiteSpaceText,
+        @Nonnull PsiElement startElement,
+        int startOffset,
+        int endOffset,
+        CodeStyleSettings codeStyleSettings
+    ) {
+        return whiteSpaceText;
+    }
 
-  @Override
-  public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
-    return false;
-  }
-
-  @Override
-  public boolean replaceDefaultStrategy() {
-    return false;
-  }
-
-  @Nonnull
-  @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
-                                                  @Nonnull CharSequence text,
-                                                  int startOffset,
-                                                  int endOffset, CodeStyleSettings codeStyleSettings, ASTNode nodeAfter) {
-    return whiteSpaceText;
-  }
-
-  @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
-                                                  @Nonnull PsiElement startElement,
-                                                  int startOffset,
-                                                  int endOffset, CodeStyleSettings codeStyleSettings) {
-    return whiteSpaceText;
-  }
-
-  @Override
-  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
-    return false;
-  }
+    @Override
+    public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
+        return false;
+    }
 }

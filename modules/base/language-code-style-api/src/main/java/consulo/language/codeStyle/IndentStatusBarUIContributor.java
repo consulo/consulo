@@ -14,63 +14,65 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBarUIContributor {
-  private final IndentOptions myIndentOptions;
+    private final IndentOptions myIndentOptions;
 
-  public IndentStatusBarUIContributor(IndentOptions options) {
-    myIndentOptions = options;
-  }
-
-  public IndentOptions getIndentOptions() {
-    return myIndentOptions;
-  }
-
-  /**
-   * Returns a short, usually one-word, string to indicate the source of the given indent options.
-   *
-   * @return The indent options source hint or {@code null} if not available.
-   */
-  @Nullable
-  public abstract String getHint();
-
-  @Nullable
-  @Override
-  public String getTooltip() {
-    return createTooltip(getIndentInfo(myIndentOptions), getHint());
-  }
-
-  @Nls
-  @Nonnull
-  public static String getIndentInfo(@Nonnull IndentOptions indentOptions) {
-    return indentOptions.USE_TAB_CHARACTER ? CodeStyleBundle.message("indent.status.bar.tab") : CodeStyleBundle.message("indent.status.bar.spaces", indentOptions.INDENT_SIZE);
-  }
-
-  /**
-   * @return True if "Configure indents for [Language]" action should be available when the provider is active (returns its own indent
-   * options), false otherwise.
-   */
-  public boolean isShowFileIndentOptionsEnabled() {
-    return true;
-  }
-
-  @Nonnull
-  public static String createTooltip(@Nls String indentInfo, String hint) {
-    HtmlBuilder builder = new HtmlBuilder();
-    builder.append(CodeStyleLocalize.indentStatusBarIndentTooltip().get()).append(HtmlChunk.nbsp()).append(indentInfo);
-    if (hint != null) {
-      builder.nbsp(2).append(HtmlChunk.span("color:" + ColorValueUtil.toHtmlColor(StandardColors.GRAY)).addText(hint));
+    public IndentStatusBarUIContributor(IndentOptions options) {
+        myIndentOptions = options;
     }
-    return builder.wrapWithHtmlBody().toString();
-  }
 
-  @Nonnull
-  @Override
-  public String getStatusText(@Nonnull PsiFile psiFile) {
-    String widgetText = getIndentInfo(myIndentOptions);
-    IndentOptions projectIndentOptions = CodeStyle.getSettings(psiFile.getProject()).getLanguageIndentOptions(psiFile.getLanguage());
-    if (!projectIndentOptions.equals(myIndentOptions)) {
-      widgetText += "*";
+    public IndentOptions getIndentOptions() {
+        return myIndentOptions;
     }
-    return widgetText;
-  }
+
+    /**
+     * Returns a short, usually one-word, string to indicate the source of the given indent options.
+     *
+     * @return The indent options source hint or {@code null} if not available.
+     */
+    @Nullable
+    public abstract String getHint();
+
+    @Nullable
+    @Override
+    public String getTooltip() {
+        return createTooltip(getIndentInfo(myIndentOptions), getHint());
+    }
+
+    @Nls
+    @Nonnull
+    public static String getIndentInfo(@Nonnull IndentOptions indentOptions) {
+        return indentOptions.USE_TAB_CHARACTER ? CodeStyleBundle.message("indent.status.bar.tab") : CodeStyleBundle.message(
+            "indent.status.bar.spaces",
+            indentOptions.INDENT_SIZE
+        );
+    }
+
+    /**
+     * @return True if "Configure indents for [Language]" action should be available when the provider is active (returns its own indent
+     * options), false otherwise.
+     */
+    public boolean isShowFileIndentOptionsEnabled() {
+        return true;
+    }
+
+    @Nonnull
+    public static String createTooltip(@Nls String indentInfo, String hint) {
+        HtmlBuilder builder = new HtmlBuilder();
+        builder.append(CodeStyleLocalize.indentStatusBarIndentTooltip().get()).append(HtmlChunk.nbsp()).append(indentInfo);
+        if (hint != null) {
+            builder.nbsp(2).append(HtmlChunk.span("color:" + ColorValueUtil.toHtmlColor(StandardColors.GRAY)).addText(hint));
+        }
+        return builder.wrapWithHtmlBody().toString();
+    }
+
+    @Nonnull
+    @Override
+    public String getStatusText(@Nonnull PsiFile psiFile) {
+        String widgetText = getIndentInfo(myIndentOptions);
+        IndentOptions projectIndentOptions = CodeStyle.getSettings(psiFile.getProject()).getLanguageIndentOptions(psiFile.getLanguage());
+        if (!projectIndentOptions.equals(myIndentOptions)) {
+            widgetText += "*";
+        }
+        return widgetText;
+    }
 }
-

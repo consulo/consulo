@@ -25,18 +25,19 @@ import jakarta.annotation.Nonnull;
  * @see FormattingModelBuilder#createModel(FormattingContext)
  */
 public final class FormattingModelProvider {
-  /**
-   * Creates an instance of the standard formatting model implementation for the specified file.
-   *
-   * @param file      the file containing the text to format.
-   * @param rootBlock the root block of the formatting model.
-   * @param settings  the code style settings used for formatting.
-   * @return the formatting model instance.
-   */
-
-  public static FormattingModel createFormattingModelForPsiFile(PsiFile file,
-                                                                @Nonnull Block rootBlock,
-                                                                CodeStyleSettings settings){
-    return Formatter.getInstance().createFormattingModelForPsiFile(file, rootBlock, settings);
-  }
+    /**
+     * Creates an instance of the standard formatting model implementation for the specified file.
+     *
+     * @param file      the file containing the text to format.
+     * @param rootBlock the root block of the formatting model.
+     * @param settings  the code style settings used for formatting.
+     * @return the formatting model instance.
+     */
+    public static FormattingModel createFormattingModelForPsiFile(
+        PsiFile file,
+        @Nonnull Block rootBlock,
+        CodeStyleSettings settings
+    ) {
+        return Formatter.getInstance().createFormattingModelForPsiFile(file, rootBlock, settings);
+    }
 }

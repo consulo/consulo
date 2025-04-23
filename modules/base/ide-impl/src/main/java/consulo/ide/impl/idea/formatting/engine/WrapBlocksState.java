@@ -32,112 +32,113 @@ import java.util.Map;
 import java.util.Set;
 
 public class WrapBlocksState extends State {
-  private final InitialInfoBuilder myWrapper;
-  private final BlockIndentOptions myBlockIndentOptions;
-  private WhiteSpace myLastWhiteSpace;
-  private BlockRangesMap myBlockRangesMap;
-  private DependentSpacingEngine myDependentSpacingEngine;
-  private AlignmentHelper myAlignmentHelper;
-  private IndentAdjuster myIndentAdjuster;
-  private WrapProcessor myWrapProcessor;
+    private final InitialInfoBuilder myWrapper;
+    private final BlockIndentOptions myBlockIndentOptions;
+    private WhiteSpace myLastWhiteSpace;
+    private BlockRangesMap myBlockRangesMap;
+    private DependentSpacingEngine myDependentSpacingEngine;
+    private AlignmentHelper myAlignmentHelper;
+    private IndentAdjuster myIndentAdjuster;
+    private WrapProcessor myWrapProcessor;
 
-  public WrapBlocksState(@Nonnull InitialInfoBuilder initialInfoBuilder, BlockIndentOptions blockIndentOptions) {
-    myWrapper = initialInfoBuilder;
-    myBlockIndentOptions = blockIndentOptions;
-  }
-
-  @Override
-  public void doIteration() {
-    if (isDone()) {
-      return;
+    public WrapBlocksState(@Nonnull InitialInfoBuilder initialInfoBuilder, BlockIndentOptions blockIndentOptions) {
+        myWrapper = initialInfoBuilder;
+        myBlockIndentOptions = blockIndentOptions;
     }
-    setDone(myWrapper.iteration());
-  }
 
-  public Map<AbstractBlockWrapper, Block> getBlockToInfoMap() {
-    return myWrapper.getBlockToInfoMap();
-  }
-
-  public LeafBlockWrapper getFirstBlock() {
-    assertDone();
-    return myWrapper.getFirstTokenBlock();
-  }
-
-  public LeafBlockWrapper getLastBlock() {
-    assertDone();
-    return myWrapper.getLastTokenBlock();
-  }
-
-  public WhiteSpace getLastWhiteSpace() {
-    assertDone();
-    if (myLastWhiteSpace == null) {
-      int lastBlockOffset = getLastBlock().getEndOffset();
-      myLastWhiteSpace = new WhiteSpace(lastBlockOffset, false);
-      FormattingDocumentModel model = myWrapper.getFormattingDocumentModel();
-      CommonCodeStyleSettings.IndentOptions options = myBlockIndentOptions.getIndentOptions();
-      myLastWhiteSpace.changeEndOffset(Math.max(lastBlockOffset, myWrapper.getEndOffset()), model, options);
+    @Override
+    public void doIteration() {
+        if (isDone()) {
+            return;
+        }
+        setDone(myWrapper.iteration());
     }
-    return myLastWhiteSpace;
-  }
 
-  public BlockRangesMap getBlockRangesMap() {
-    assertDone();
-    if (myBlockRangesMap == null) {
-      myBlockRangesMap = new BlockRangesMap(getFirstBlock(), getLastBlock());
+    public Map<AbstractBlockWrapper, Block> getBlockToInfoMap() {
+        return myWrapper.getBlockToInfoMap();
     }
-    return myBlockRangesMap;
-  }
 
-  public DependentSpacingEngine getDependentSpacingEngine() {
-    assertDone();
-    if (myDependentSpacingEngine == null) {
-      myDependentSpacingEngine = new DependentSpacingEngine(getBlockRangesMap());
+    public LeafBlockWrapper getFirstBlock() {
+        assertDone();
+        return myWrapper.getFirstTokenBlock();
     }
-    return myDependentSpacingEngine;
-  }
 
-  public Set<Alignment> getAlignmentsInsideRangesToModify() {
-    assertDone();
-    return myWrapper.getAlignmentsInsideRangeToModify();
-  }
-
-  public AlignmentHelper getAlignmentHelper() {
-    assertDone();
-    if (myAlignmentHelper == null) {
-      Document document = myWrapper.getFormattingDocumentModel().getDocument();
-      myAlignmentHelper = new AlignmentHelper(document, myWrapper.getBlocksToAlign(), myBlockIndentOptions);
+    public LeafBlockWrapper getLastBlock() {
+        assertDone();
+        return myWrapper.getLastTokenBlock();
     }
-    return myAlignmentHelper;
-  }
 
-  public IndentAdjuster getIndentAdjuster() {
-    assertDone();
-    if (myIndentAdjuster == null) {
-      myIndentAdjuster = new IndentAdjuster(myBlockIndentOptions, getAlignmentHelper());
+    public WhiteSpace getLastWhiteSpace() {
+        assertDone();
+        if (myLastWhiteSpace == null) {
+            int lastBlockOffset = getLastBlock().getEndOffset();
+            myLastWhiteSpace = new WhiteSpace(lastBlockOffset, false);
+            FormattingDocumentModel model = myWrapper.getFormattingDocumentModel();
+            CommonCodeStyleSettings.IndentOptions options = myBlockIndentOptions.getIndentOptions();
+            myLastWhiteSpace.changeEndOffset(Math.max(lastBlockOffset, myWrapper.getEndOffset()), model, options);
+        }
+        return myLastWhiteSpace;
     }
-    return myIndentAdjuster;
-  }
 
-  public MultiMap<ExpandableIndent, AbstractBlockWrapper> getExpandableIndent() {
-    assertDone();
-    return myWrapper.getExpandableIndentsBlocks();
-  }
-
-  public WrapProcessor getWrapProcessor() {
-    assertDone();
-    if (myWrapProcessor == null) {
-      int rightMargin = myBlockIndentOptions.getRightMargin();
-      myWrapProcessor = new WrapProcessor(myBlockRangesMap, getIndentAdjuster(), rightMargin);
+    public BlockRangesMap getBlockRangesMap() {
+        assertDone();
+        if (myBlockRangesMap == null) {
+            myBlockRangesMap = new BlockRangesMap(getFirstBlock(), getLastBlock());
+        }
+        return myBlockRangesMap;
     }
-    return myWrapProcessor;
-  }
 
-  public BlockIndentOptions getBlockIndentOptions() {
-    return myBlockIndentOptions;
-  }
+    public DependentSpacingEngine getDependentSpacingEngine() {
+        assertDone();
+        if (myDependentSpacingEngine == null) {
+            myDependentSpacingEngine = new DependentSpacingEngine(getBlockRangesMap());
+        }
+        return myDependentSpacingEngine;
+    }
 
-  private void assertDone() {
-    if (!isDone()) throw new IllegalStateException();
-  }
+    public Set<Alignment> getAlignmentsInsideRangesToModify() {
+        assertDone();
+        return myWrapper.getAlignmentsInsideRangeToModify();
+    }
 
+    public AlignmentHelper getAlignmentHelper() {
+        assertDone();
+        if (myAlignmentHelper == null) {
+            Document document = myWrapper.getFormattingDocumentModel().getDocument();
+            myAlignmentHelper = new AlignmentHelper(document, myWrapper.getBlocksToAlign(), myBlockIndentOptions);
+        }
+        return myAlignmentHelper;
+    }
+
+    public IndentAdjuster getIndentAdjuster() {
+        assertDone();
+        if (myIndentAdjuster == null) {
+            myIndentAdjuster = new IndentAdjuster(myBlockIndentOptions, getAlignmentHelper());
+        }
+        return myIndentAdjuster;
+    }
+
+    public MultiMap<ExpandableIndent, AbstractBlockWrapper> getExpandableIndent() {
+        assertDone();
+        return myWrapper.getExpandableIndentsBlocks();
+    }
+
+    public WrapProcessor getWrapProcessor() {
+        assertDone();
+        if (myWrapProcessor == null) {
+            int rightMargin = myBlockIndentOptions.getRightMargin();
+            myWrapProcessor = new WrapProcessor(myBlockRangesMap, getIndentAdjuster(), rightMargin);
+        }
+        return myWrapProcessor;
+    }
+
+    public BlockIndentOptions getBlockIndentOptions() {
+        return myBlockIndentOptions;
+    }
+
+    private void assertDone() {
+        if (!isDone()) {
+            throw new IllegalStateException();
+        }
+    }
 }

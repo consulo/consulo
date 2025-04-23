@@ -36,52 +36,51 @@ import jakarta.annotation.Nonnull;
  */
 
 public interface FormattingModel {
-  /**
-   * Returns the root block of the formatting model. The root block corresponds to the
-   * top-level element passed to
-   * {@link FormattingModelBuilder#createModel(FormattingContext)}.
-   *
-   * @return the root block of the model.
-   */
-  @Nonnull
-  Block getRootBlock();
+    /**
+     * Returns the root block of the formatting model. The root block corresponds to the
+     * top-level element passed to
+     * {@link FormattingModelBuilder#createModel(FormattingContext)}.
+     *
+     * @return the root block of the model.
+     */
+    @Nonnull
+    Block getRootBlock();
 
-  /**
-   * Returns the formatting document model, which allows the formatter to access information about
-   * the document containing the text to be formatted.
-   *
-   * @return the formatting document model.
-   */
-  @Nonnull
-  FormattingDocumentModel getDocumentModel();
+    /**
+     * Returns the formatting document model, which allows the formatter to access information about
+     * the document containing the text to be formatted.
+     *
+     * @return the formatting document model.
+     */
+    @Nonnull
+    FormattingDocumentModel getDocumentModel();
 
-  /**
-   * Replaces the contents of the specified text range in the document with the specified text
-   * string consisting of whitespace characters. If necessary, other characters may be inserted
-   * in addition to the passed whitespace (for example, \ characters for breaking lines in
-   * languages like Python).
-   *
-   * @param textRange  the text range to replace with whitespace.
-   * @param whiteSpace the whitespace to replace with.
-   * @return new white space text range
-   */
-  TextRange replaceWhiteSpace(TextRange textRange, String whiteSpace);
+    /**
+     * Replaces the contents of the specified text range in the document with the specified text
+     * string consisting of whitespace characters. If necessary, other characters may be inserted
+     * in addition to the passed whitespace (for example, \ characters for breaking lines in
+     * languages like Python).
+     *
+     * @param textRange  the text range to replace with whitespace.
+     * @param whiteSpace the whitespace to replace with.
+     * @return new white space text range
+     */
+    TextRange replaceWhiteSpace(TextRange textRange, String whiteSpace);
 
-  /**
-   * Indents every line except for the first in the specified text range representing a multiline block
-   * by the specified amount.
-   *
-   *
-   * @param node the owner of the text range, if defined.
-   * @param range  the text range to indent.
-   * @param indent the amount by which every line should be indented.
-   * @return the text range covering the block with added indents.
-   */
-  TextRange shiftIndentInsideRange(ASTNode node, TextRange range, int indent);
+    /**
+     * Indents every line except for the first in the specified text range representing a multiline block
+     * by the specified amount.
+     *
+     * @param node   the owner of the text range, if defined.
+     * @param range  the text range to indent.
+     * @param indent the amount by which every line should be indented.
+     * @return the text range covering the block with added indents.
+     */
+    TextRange shiftIndentInsideRange(ASTNode node, TextRange range, int indent);
 
-  /**
-   * Commits the changes made by the formatter to the document. Called after the formatter
-   * has finished making all changes in a formatting operation.
-   */
-  void commitChanges();
+    /**
+     * Commits the changes made by the formatter to the document. Called after the formatter
+     * has finished making all changes in a formatting operation.
+     */
+    void commitChanges();
 }

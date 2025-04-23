@@ -205,6 +205,7 @@ public class FormatterUtil {
         while (lastChild != null && lastChild.getElementType() == TokenType.WHITE_SPACE) {
             lastChild = lastChild.getTreePrev();
         }
+        //noinspection SimplifiableIfStatement
         if (lastChild == null) {
             return false;
         }
@@ -229,23 +230,23 @@ public class FormatterUtil {
      * @param whiteSpaceRange   target range which text should be replaced by the given one
      */
     public static void replaceInnerWhiteSpace(
-        @Nonnull final String newWhiteSpaceText,
-        @Nonnull final ASTNode holder,
-        @Nonnull final TextRange whiteSpaceRange
+        @Nonnull String newWhiteSpaceText,
+        @Nonnull ASTNode holder,
+        @Nonnull TextRange whiteSpaceRange
     ) {
         CodeStyleInternalHelper.getInstance().replaceInnerWhiteSpace(newWhiteSpaceText, holder, whiteSpaceRange);
     }
 
     public static void replaceWhiteSpace(
-        final String whiteSpace,
-        final ASTNode leafElement,
-        final IElementType whiteSpaceToken,
-        @Nullable final TextRange textRange
+        String whiteSpace,
+        ASTNode leafElement,
+        IElementType whiteSpaceToken,
+        @Nullable TextRange textRange
     ) {
         CodeStyleInternalHelper.getInstance().replaceWhiteSpace(whiteSpace, leafElement, whiteSpaceToken, textRange);
     }
 
-    public static void replaceLastWhiteSpace(final ASTNode astNode, final String whiteSpace, final TextRange textRange) {
+    public static void replaceLastWhiteSpace(ASTNode astNode, String whiteSpace, TextRange textRange) {
         CodeStyleInternalHelper.getInstance().replaceLastWhiteSpace(astNode, whiteSpace, textRange);
     }
 

@@ -19,28 +19,28 @@ import consulo.language.codeStyle.internal.IndentImpl;
 import jakarta.annotation.Nonnull;
 
 public class ExpandableIndent extends IndentImpl {
-  private boolean myEnforceIndent;
+    private boolean myEnforceIndent;
 
-  public ExpandableIndent(@Nonnull Type type) {
-    this(type, false);
-  }
+    public ExpandableIndent(@Nonnull Type type) {
+        this(type, false);
+    }
 
-  public ExpandableIndent(@Nonnull Type type, boolean relativeToDirectParent) {
-    super(type, false, 0, relativeToDirectParent, true);
-    myEnforceIndent = false;
-  }
+    public ExpandableIndent(@Nonnull Type type, boolean relativeToDirectParent) {
+        super(type, false, 0, relativeToDirectParent, true);
+        myEnforceIndent = false;
+    }
 
-  @Override
-  public boolean isEnforceIndentToChildren() {
-    return myEnforceIndent;
-  }
+    @Override
+    public boolean isEnforceIndentToChildren() {
+        return myEnforceIndent;
+    }
 
-  void enforceIndent() {
-    myEnforceIndent = true;
-  }
+    void enforceIndent() {
+        myEnforceIndent = true;
+    }
 
-  @Override
-  public String toString() {
-    return "SmartIndent (" + getType() + ")";
-  }
+    @Override
+    public String toString() {
+        return "SmartIndent (" + getType() + ")";
+    }
 }

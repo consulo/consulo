@@ -15,6 +15,7 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.application.Application;
 import consulo.application.util.RecursionManager;
 import consulo.language.Language;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
@@ -119,7 +120,7 @@ class CommonCodeStyleSettingsManager {
     }
 
     private void initNonReadSettings() {
-        for (LanguageCodeStyleSettingsProvider provider : LanguageCodeStyleSettingsProvider.EP_NAME.getExtensionList()) {
+        Application.get().getExtensionPoint(LanguageCodeStyleSettingsProvider.class).forEach(provider -> {
             Language target = provider.getLanguage();
             if (!myCommonSettingsMap.containsKey(target)) {
                 CommonCodeStyleSettings initialSettings = safelyGetDefaults(provider);
@@ -127,7 +128,7 @@ class CommonCodeStyleSettingsManager {
                     init(initialSettings, target);
                 }
             }
-        }
+        });
     }
 
     private void init(@Nonnull CommonCodeStyleSettings initialSettings, @Nonnull Language target) {

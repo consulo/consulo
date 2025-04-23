@@ -26,24 +26,24 @@ import consulo.language.ast.ASTNode;
  * {@link FormattingModel#shiftIndentInsideRange(ASTNode, TextRange, int)} procedure.
  */
 public interface FormattingModelWithShiftIndentInsideDocumentRange extends FormattingModelEx {
-  /**
-   * Indents every line except for the first in the specified text range representing a multiline block
-   * by the specified amount.
-   *
-   * @param document the document for modification.
-   * @param node     the owner of the text range, if defined.
-   * @param range    the text range to indent.
-   * @param indent   the amount by which every line should be indented.
-   * @return the text range covering the block with added indents or null for call of default procedure.
-   */
-  TextRange shiftIndentInsideDocumentRange(Document document, ASTNode node, TextRange range, int indent);
+    /**
+     * Indents every line except for the first in the specified text range representing a multiline block
+     * by the specified amount.
+     *
+     * @param document the document for modification.
+     * @param node     the owner of the text range, if defined.
+     * @param range    the text range to indent.
+     * @param indent   the amount by which every line should be indented.
+     * @return the text range covering the block with added indents or null for call of default procedure.
+     */
+    TextRange shiftIndentInsideDocumentRange(Document document, ASTNode node, TextRange range, int indent);
 
-  /**
-   * Adjusts indentation space before the multiline AST node.
-   *
-   * @param node        the multiline node.
-   * @param whiteSpace  the leading space for the node after formatting procedure.
-   * @return the adjusted indent (or <code>whiteSpace</code> if no correction needs).
-   */
-  String adjustWhiteSpaceInsideDocument(ASTNode node, String whiteSpace);
+    /**
+     * Adjusts indentation space before the multiline AST node.
+     *
+     * @param node       the multiline node.
+     * @param whiteSpace the leading space for the node after formatting procedure.
+     * @return the adjusted indent (or <code>whiteSpace</code> if no correction needs).
+     */
+    String adjustWhiteSpaceInsideDocument(ASTNode node, String whiteSpace);
 }

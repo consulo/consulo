@@ -19,6 +19,7 @@ import consulo.util.collection.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -35,55 +36,61 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FormattingModelBuilder extends LanguageExtension {
-  ExtensionPointCacheKey<FormattingModelBuilder, ByLanguageValue<List<FormattingModelBuilder>>> KEY = ExtensionPointCacheKey.create("FormattingModelBuilder", LanguageOneToMany.build(false));
+    ExtensionPointCacheKey<FormattingModelBuilder, ByLanguageValue<List<FormattingModelBuilder>>> KEY =
+        ExtensionPointCacheKey.create("FormattingModelBuilder", LanguageOneToMany.build(false));
 
-  @Nonnull
-  static List<FormattingModelBuilder> forLanguage(@Nonnull Language language) {
-    return Application.get().getExtensionPoint(FormattingModelBuilder.class).getOrBuildCache(KEY).requiredGet(language);
-  }
-
-  @Nullable
-  @RequiredReadAction
-  static FormattingModelBuilder forContext(@Nonnull PsiElement context) {
-    return forContext(context.getLanguage(), context);
-  }
-
-  @Nullable
-  @RequiredReadAction
-  static FormattingModelBuilder forContext(@Nonnull Language language, @Nonnull PsiElement context) {
-    for (LanguageFormattingRestriction each : LanguageFormattingRestriction.EXTENSION.getExtensionList()) {
-      if (!each.isFormatterAllowed(context)) return null;
-    }
-    for (FormattingModelBuilder builder : forLanguage(language)) {
-      if (builder instanceof CustomFormattingModelBuilder) {
-        final CustomFormattingModelBuilder custom = (CustomFormattingModelBuilder)builder;
-        if (custom.isEngagedToFormat(context)) return builder;
-      }
+    @Nonnull
+    static List<FormattingModelBuilder> forLanguage(@Nonnull Language language) {
+        return Application.get().getExtensionPoint(FormattingModelBuilder.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
-    return ContainerUtil.getFirstItem(forLanguage(language));
-  }
+    @Nullable
+    @RequiredReadAction
+    static FormattingModelBuilder forContext(@Nonnull PsiElement context) {
+        return forContext(context.getLanguage(), context);
+    }
 
-  /**
-   * Requests building the formatting model for a section of the file containing
-   * the specified PSI element and its children.
-   *
-   * @return the formatting model for the file.
-   * @see FormattingContext
-   */
-  @Nonnull
-  FormattingModel createModel(@Nonnull FormattingContext formattingContext);
+    @Nullable
+    @RequiredReadAction
+    static FormattingModelBuilder forContext(@Nonnull Language language, @Nonnull PsiElement context) {
+        if (!isFormatterAllowed(context)) {
+            return null;
+        }
 
-  /**
-   * Returns the TextRange which should be processed by the formatter in order to detect proper indent options.
-   *
-   * @param file            the file in which the line break is inserted.
-   * @param offset          the line break offset.
-   * @param elementAtOffset the parameter at {@code offset}
-   * @return the range to reformat, or null if the default range should be used
-   */
-  @Nullable
-  default TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset) {
-    return null;
-  }
+        for (FormattingModelBuilder builder : forLanguage(language)) {
+            if (builder instanceof CustomFormattingModelBuilder custom && custom.isEngagedToFormat(context)) {
+                return builder;
+            }
+        }
+
+        return ContainerUtil.getFirstItem(forLanguage(language));
+    }
+
+    private static boolean isFormatterAllowed(@Nonnull PsiElement context) {
+        return context.getApplication().getExtensionPoint(LanguageFormattingRestriction.class)
+            .allMatchSafe(each -> each.isFormatterAllowed(context));
+    }
+
+    /**
+     * Requests building the formatting model for a section of the file containing
+     * the specified PSI element and its children.
+     *
+     * @return the formatting model for the file.
+     * @see FormattingContext
+     */
+    @Nonnull
+    FormattingModel createModel(@Nonnull FormattingContext formattingContext);
+
+    /**
+     * Returns the TextRange which should be processed by the formatter in order to detect proper indent options.
+     *
+     * @param file            the file in which the line break is inserted.
+     * @param offset          the line break offset.
+     * @param elementAtOffset the parameter at {@code offset}
+     * @return the range to reformat, or null if the default range should be used
+     */
+    @Nullable
+    default TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset) {
+        return null;
+    }
 }

@@ -24,16 +24,16 @@ import jakarta.annotation.Nullable;
  * @author yole
  */
 public interface FormattingModelEx extends FormattingModel {
-  /**
-   * Replaces the contents of the specified text range in the document with the specified text
-   * string consisting of whitespace characters. If necessary, other characters may be inserted
-   * in addition to the passed whitespace (for example, \ characters for breaking lines in
-   * languages like Python).
-   *
-   * @param textRange  the text range to replace with whitespace.
-   * @param nodeAfter the AST node following the whitespace, if known
-   * @param whiteSpace the whitespace to replace with.
-   * @return new white space text range
-   */
-  TextRange replaceWhiteSpace(TextRange textRange, @Nullable ASTNode nodeAfter, String whiteSpace);
+    /**
+     * Replaces the contents of the specified text range in the document with the specified text
+     * string consisting of whitespace characters. If necessary, other characters may be inserted
+     * in addition to the passed whitespace (for example, \ characters for breaking lines in
+     * languages like Python).
+     *
+     * @param textRange  the text range to replace with whitespace.
+     * @param nodeAfter  the AST node following the whitespace, if known
+     * @param whiteSpace the whitespace to replace with.
+     * @return new white space text range
+     */
+    TextRange replaceWhiteSpace(TextRange textRange, @Nullable ASTNode nodeAfter, String whiteSpace);
 }

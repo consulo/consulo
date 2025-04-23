@@ -27,55 +27,59 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import jakarta.annotation.Nonnull;
 
 public class BlockIndentOptions {
-  private final CodeStyleSettings mySettings;
-  private final CommonCodeStyleSettings.IndentOptions myIndentOptions;
-  private final int myRightMargin;
+    private final CodeStyleSettings mySettings;
+    private final CommonCodeStyleSettings.IndentOptions myIndentOptions;
+    private final int myRightMargin;
 
-  public BlockIndentOptions(@Nonnull CodeStyleSettings settings, @Nonnull CommonCodeStyleSettings.IndentOptions indentOptions, Block block) {
-    mySettings = settings;
-    myIndentOptions = indentOptions;
-    myRightMargin = calcRightMargin(block);
-  }
-
-  public CommonCodeStyleSettings.IndentOptions getIndentOptions() {
-    return myIndentOptions;
-  }
-
-  @Nonnull
-  public CommonCodeStyleSettings.IndentOptions getIndentOptions(@Nonnull AbstractBlockWrapper block) {
-    if (!myIndentOptions.isOverrideLanguageOptions()) {
-      final Language language = block.getLanguage();
-      if (language != null) {
-        final CommonCodeStyleSettings commonSettings = mySettings.getCommonSettings(language);
-        if (commonSettings != null) {
-          final CommonCodeStyleSettings.IndentOptions result = commonSettings.getIndentOptions();
-          if (result != null) {
-            return result;
-          }
-        }
-      }
+    public BlockIndentOptions(
+        @Nonnull CodeStyleSettings settings,
+        @Nonnull CommonCodeStyleSettings.IndentOptions indentOptions,
+        Block block
+    ) {
+        mySettings = settings;
+        myIndentOptions = indentOptions;
+        myRightMargin = calcRightMargin(block);
     }
-    return myIndentOptions;
-  }
 
-  public int getRightMargin() {
-    return myRightMargin;
-  }
-
-  private int calcRightMargin(Block rootBlock) {
-    Language language = null;
-    if (rootBlock instanceof ASTBlock) {
-      ASTNode node = ((ASTBlock)rootBlock).getNode();
-      if (node != null) {
-        PsiElement psiElement = node.getPsi();
-        if (psiElement.isValid()) {
-          PsiFile psiFile = psiElement.getContainingFile();
-          if (psiFile != null) {
-            language = psiFile.getViewProvider().getBaseLanguage();
-          }
-        }
-      }
+    public CommonCodeStyleSettings.IndentOptions getIndentOptions() {
+        return myIndentOptions;
     }
-    return mySettings.getRightMargin(language);
-  }
+
+    @Nonnull
+    public CommonCodeStyleSettings.IndentOptions getIndentOptions(@Nonnull AbstractBlockWrapper block) {
+        if (!myIndentOptions.isOverrideLanguageOptions()) {
+            Language language = block.getLanguage();
+            if (language != null) {
+                CommonCodeStyleSettings commonSettings = mySettings.getCommonSettings(language);
+                if (commonSettings != null) {
+                    CommonCodeStyleSettings.IndentOptions result = commonSettings.getIndentOptions();
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+        }
+        return myIndentOptions;
+    }
+
+    public int getRightMargin() {
+        return myRightMargin;
+    }
+
+    private int calcRightMargin(Block rootBlock) {
+        Language language = null;
+        if (rootBlock instanceof ASTBlock astBlock) {
+            ASTNode node = astBlock.getNode();
+            if (node != null) {
+                PsiElement psiElement = node.getPsi();
+                if (psiElement.isValid()) {
+                    PsiFile psiFile = psiElement.getContainingFile();
+                    if (psiFile != null) {
+                        language = psiFile.getViewProvider().getBaseLanguage();
+                    }
+                }
+            }
+        }
+        return mySettings.getRightMargin(language);
+    }
 }

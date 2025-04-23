@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
@@ -31,8 +30,8 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class ProjectCodeStyleSettingsManager extends CodeStyleSettingsManager {
-  @Nonnull
-  public static ProjectCodeStyleSettingsManager getInstance(@Nonnull Project project) {
-    return project.getInstance(ProjectCodeStyleSettingsManager.class);
-  }
+    @Nonnull
+    public static ProjectCodeStyleSettingsManager getInstance(@Nonnull Project project) {
+        return project.getInstance(ProjectCodeStyleSettingsManager.class);
+    }
 }

@@ -32,13 +32,14 @@ import java.util.Collection;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DisabledIndentRangesProvider {
-  ExtensionPointName<DisabledIndentRangesProvider> EP_NAME = ExtensionPointName.create(DisabledIndentRangesProvider.class);
+    ExtensionPointName<DisabledIndentRangesProvider> EP_NAME = ExtensionPointName.create(DisabledIndentRangesProvider.class);
 
-  /**
-   * Collects ranges which should never be indented inside the given PSI element.
-   * @param element The PSI element to check.
-   * @return A collection of ranges with indentation disabled or <i>null</i> if the check is not relevant for the element in question.
-   */
-  @Nullable
-  Collection<TextRange> getDisabledIndentRanges(@Nonnull PsiElement element);
+    /**
+     * Collects ranges which should never be indented inside the given PSI element.
+     *
+     * @param element The PSI element to check.
+     * @return A collection of ranges with indentation disabled or <i>null</i> if the check is not relevant for the element in question.
+     */
+    @Nullable
+    Collection<TextRange> getDisabledIndentRanges(@Nonnull PsiElement element);
 }
