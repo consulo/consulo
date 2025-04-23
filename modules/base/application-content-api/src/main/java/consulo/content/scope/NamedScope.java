@@ -15,8 +15,8 @@
  */
 package consulo.content.scope;
 
-import consulo.application.AllIcons;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -36,7 +36,7 @@ public class NamedScope {
 
     @Deprecated
     public NamedScope(@Nonnull String scopeId, @Nullable PackageSet value) {
-        this(scopeId, LocalizeValue.of(scopeId), AllIcons.Ide.LocalScope, value);
+        this(scopeId, LocalizeValue.of(scopeId), PlatformIconGroup.ideLocalscope(), value);
     }
 
     public NamedScope(@Nonnull String scopeId, @Nonnull LocalizeValue presentableName, @Nonnull Image icon, @Nullable PackageSet value) {
@@ -47,7 +47,7 @@ public class NamedScope {
     }
 
     public NamedScope(@Nonnull String scopeId, @Nonnull LocalizeValue presentableName, @Nullable PackageSet value) {
-        this(scopeId, presentableName, AllIcons.Ide.LocalScope, value);
+        this(scopeId, presentableName, PlatformIconGroup.ideLocalscope(), value);
     }
 
     @Nonnull
@@ -66,7 +66,8 @@ public class NamedScope {
     }
 
     /**
-     * @deprecated please use {@link NamedScope#getScopeId()} for search/serialization/mappings and {@link #getPresentableName()} to display in UI
+     * @deprecated please use {@link NamedScope#getScopeId()} for search/serialization/mappings and
+     * {@link #getPresentableName()} to display in UI
      */
     @Nonnull
     public String getName() {

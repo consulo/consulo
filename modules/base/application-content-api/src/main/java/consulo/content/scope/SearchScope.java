@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 09-Feb-22
+ * @since 2022-02-09
  */
 public interface SearchScope extends VirtualFileFilter {
     @Nonnull

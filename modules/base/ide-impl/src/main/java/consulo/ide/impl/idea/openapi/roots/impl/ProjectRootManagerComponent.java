@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -25,14 +26,11 @@ import consulo.content.OrderRootType;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.ModuleScopeProviderImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl;
 import consulo.ide.impl.idea.util.indexing.FileBasedIndexProjectHandler;
 import consulo.ide.impl.idea.util.indexing.UnindexedFilesUpdater;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.psi.scope.LibraryScopeCache;
-import consulo.virtualFileSystem.fileType.FileTypeEvent;
-import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.logging.Logger;
 import consulo.module.Module;
@@ -47,11 +45,14 @@ import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.content.WatchedRootsProvider;
+import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.Pair;
+import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.event.VirtualFileManagerListener;
+import consulo.virtualFileSystem.fileType.FileTypeEvent;
+import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import jakarta.annotation.Nonnull;
@@ -76,7 +77,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     private boolean myPointerChangesDetected = false;
     private int myInsideRefresh = 0;
 
-    private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new HashSet<LocalFileSystem.WatchRequest>();
+    private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new HashSet<>();
     private final boolean myDoLogCachesUpdate;
 
     @Inject
@@ -86,11 +87,13 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FileTypeListener.class, new FileTypeListener() {
             @Override
+            @RequiredWriteAction
             public void beforeFileTypesChanged(@Nonnull FileTypeEvent event) {
                 beforeRootsChange(true);
             }
 
             @Override
+            @RequiredWriteAction
             public void fileTypesChanged(@Nonnull FileTypeEvent event) {
                 rootsChanged(true);
             }
@@ -124,6 +127,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         connection.subscribe(BatchUpdateListener.class, handler);
     }
 
+    @RequiredReadAction
     public void projectOpened() {
         addRootsToWatch();
         myProject.getApplication().addApplicationListener(new AppListener(), myProject);
@@ -136,8 +140,9 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     @Override
+    @RequiredReadAction
     protected void addRootsToWatch() {
-        final Pair<Set<String>, Set<String>> roots = getAllRoots(false);
+        Couple<Set<String>> roots = getAllRoots(false);
         if (roots == null) {
             return;
         }
@@ -175,14 +180,15 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         }
     }
 
+    @RequiredReadAction
     private boolean affectsRoots(VirtualFilePointer[] pointers) {
-        Pair<Set<String>, Set<String>> roots = getAllRoots(true);
+        Couple<Set<String>> roots = getAllRoots(true);
         if (roots == null) {
             return false;
         }
 
         for (VirtualFilePointer pointer : pointers) {
-            final String path = url2path(pointer.getUrl());
+            String path = url2path(pointer.getUrl());
             if (roots.first.contains(path) || roots.second.contains(path)) {
                 return true;
             }
@@ -226,38 +232,40 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     @Nullable
-    private Pair<Set<String>, Set<String>> getAllRoots(boolean includeSourceRoots) {
+    @RequiredReadAction
+    private Couple<Set<String>> getAllRoots(boolean includeSourceRoots) {
         if (myProject.isDefault()) {
             return null;
         }
 
-        final Set<String> recursive = new HashSet<String>();
-        final Set<String> flat = new HashSet<String>();
+        Set<String> recursive = new HashSet<>();
+        Set<String> flat = new HashSet<>();
 
-        final String projectFilePath = myProject.getProjectFilePath();
-        final File projectDirFile = projectFilePath == null ? null : new File(projectFilePath).getParentFile();
+        String projectFilePath = myProject.getProjectFilePath();
+        File projectDirFile = projectFilePath == null ? null : new File(projectFilePath).getParentFile();
         if (projectDirFile != null && projectDirFile.getName().equals(Project.DIRECTORY_STORE_FOLDER)) {
             recursive.add(projectDirFile.getAbsolutePath());
         }
         else {
             flat.add(projectFilePath);
-            final VirtualFile workspaceFile = myProject.getWorkspaceFile();
+            VirtualFile workspaceFile = myProject.getWorkspaceFile();
             if (workspaceFile != null) {
                 flat.add(workspaceFile.getPath());
             }
         }
 
-        myProject.getExtensionPoint(WatchedRootsProvider.class).forEachExtensionSafe(it -> recursive.addAll(it.getRootsToWatch()));
+        myProject.getExtensionPoint(WatchedRootsProvider.class).forEach(it -> recursive.addAll(it.getRootsToWatch()));
 
         addRootsFromModules(includeSourceRoots, recursive, flat);
 
-        return Pair.create(recursive, flat);
+        return Couple.of(recursive, flat);
     }
 
+    @RequiredReadAction
     private void addRootsFromModules(boolean includeSourceRoots, Set<String> recursive, Set<String> flat) {
-        final Module[] modules = ModuleManager.getInstance(myProject).getModules();
+        Module[] modules = ModuleManager.getInstance(myProject).getModules();
         for (Module module : modules) {
-            final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+            ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
             addRootsToTrack(moduleRootManager.getContentRootUrls(), recursive, flat);
 
@@ -265,7 +273,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
                 addRootsToTrack(moduleRootManager.getContentFolderUrls(LanguageContentFolderScopes.all(false)), recursive, flat);
             }
 
-            final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
+            OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
             for (OrderEntry entry : orderEntries) {
                 if (entry instanceof OrderEntryWithTracking) {
                     for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
@@ -276,10 +284,10 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         }
     }
 
-    private static void addRootsToTrack(final String[] urls, final Collection<String> recursive, final Collection<String> flat) {
+    private static void addRootsToTrack(String[] urls, Collection<String> recursive, Collection<String> flat) {
         for (String url : urls) {
             if (url != null) {
-                final String protocol = VirtualFileManager.extractProtocol(url);
+                String protocol = VirtualFileManager.extractProtocol(url);
                 if (protocol == null || LocalFileSystem.PROTOCOL.equals(protocol)) {
                     recursive.add(extractLocalPath(url));
                 }
@@ -313,8 +321,9 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     @Override
+    @RequiredReadAction
     public void markRootsForRefresh() {
-        Set<String> paths = ContainerUtil.newTroveSet(FileUtil.PATH_HASHING_STRATEGY);
+        Set<String> paths = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
         addRootsFromModules(false, paths, paths);
 
         LocalFileSystem fs = LocalFileSystem.getInstance();
@@ -333,6 +342,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     @Override
+    @RequiredReadAction
     public void clearScopesCachesForModules() {
         super.clearScopesCachesForModules();
         if (!myProject.isModulesReady()) {
@@ -355,6 +365,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         }
 
         @Override
+        @RequiredReadAction
         public void writeActionFinished(@Nonnull Object action) {
             if (--myInsideRefresh == 0) {
                 if (myPointerChangesDetected) {
@@ -373,6 +384,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
     private class MyVirtualFilePointerListener implements VirtualFilePointerListener {
         @Override
+        @RequiredWriteAction
         public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
             if (!myProject.isDisposed()) {
                 if (myInsideRefresh == 0) {
@@ -399,6 +411,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         }
 
         @Override
+        @RequiredWriteAction
         public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
             if (!myProject.isDisposed()) {
                 if (myInsideRefresh > 0) {
@@ -413,6 +426,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
     private final VirtualFilePointerListener myRootsChangedListener = new VirtualFilePointerListener() {
         @Override
+        @RequiredWriteAction
         public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
             if (myProject.isDisposed()) {
                 return;
@@ -437,6 +451,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         }
 
         @Override
+        @RequiredWriteAction
         public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
             if (myProject.isDisposed()) {
                 return;

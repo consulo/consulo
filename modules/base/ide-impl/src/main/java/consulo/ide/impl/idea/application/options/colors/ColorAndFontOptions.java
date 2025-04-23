@@ -446,7 +446,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
       });
     });
 
-    application.getExtensionPoint(ColorAndFontPanelFactory.class).forEachExtensionSafe(extensions::add);
+    application.getExtensionPoint(ColorAndFontPanelFactory.class).forEach(extensions::add);
 
     result.addAll(extensions);
     result.add(new FileStatusColorsPageFactory());

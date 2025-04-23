@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 13-Feb-22
+ * @since 2022-02-13
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface NamedScopesHolderProvider {

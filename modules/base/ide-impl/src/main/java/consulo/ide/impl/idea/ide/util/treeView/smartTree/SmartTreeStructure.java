@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.util.treeView.smartTree;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
@@ -40,20 +41,23 @@ public class SmartTreeStructure extends AbstractTreeStructure {
 
     @Override
     @Nonnull
-    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
+    public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
         return (AbstractTreeNode)element;
     }
 
+    @Nonnull
     @Override
-    public Object[] getChildElements(Object element) {
+    @RequiredReadAction
+    public Object[] getChildElements(@Nonnull Object element) {
         return ((AbstractTreeNode)element).getChildren().toArray();
     }
 
     @Override
-    public Object getParentElement(Object element) {
+    public Object getParentElement(@Nonnull Object element) {
         return ((AbstractTreeNode)element).getParent();
     }
 
+    @Nonnull
     @Override
     public Object getRootElement() {
         if (myRootElementWrapper == null) {
@@ -67,7 +71,7 @@ public class SmartTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    public boolean isAlwaysLeaf(Object element) {
+    public boolean isAlwaysLeaf(@Nonnull Object element) {
         return ((AbstractTreeNode)element).isAlwaysLeaf();
     }
 

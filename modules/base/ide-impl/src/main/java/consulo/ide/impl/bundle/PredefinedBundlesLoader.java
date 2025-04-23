@@ -38,7 +38,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 15:05/22.11.13
+ * @since 2013-11-22
  */
 @ExtensionImpl
 public class PredefinedBundlesLoader extends PreloadingActivity {
@@ -107,7 +107,7 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
 
         ContextImpl context = new ContextImpl(sdkTable);
 
-        myApplication.getExtensionPoint(PredefinedBundlesProvider.class).forEachExtensionSafe(provider -> provider.createBundles(context));
+        myApplication.getExtensionPoint(PredefinedBundlesProvider.class).forEach(provider -> provider.createBundles(context));
 
         List<Sdk> bundles = context.myBundles;
 

@@ -38,5 +38,5 @@ public interface HierarchyBrowser {
      *
      * @param content the content in which the browser is displayed.
      */
-    void setContent(final Content content);
+    void setContent(Content content);
 }

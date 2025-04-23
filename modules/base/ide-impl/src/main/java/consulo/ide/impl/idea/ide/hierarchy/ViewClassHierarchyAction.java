@@ -16,9 +16,11 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -26,9 +28,9 @@ import consulo.ui.ex.action.AnActionEvent;
 public final class ViewClassHierarchyAction extends ChangeViewTypeActionBase {
     public ViewClassHierarchyAction() {
         super(
-            IdeBundle.message("action.view.class.hierarchy"),
-            IdeBundle.message("action.description.view.class.hierarchy"),
-            AllIcons.Hierarchy.Class
+            IdeLocalize.actionViewClassHierarchy(),
+            IdeLocalize.actionDescriptionViewClassHierarchy(),
+            PlatformIconGroup.hierarchyClasshierarchy()
         );
     }
 
@@ -38,9 +40,10 @@ public final class ViewClassHierarchyAction extends ChangeViewTypeActionBase {
     }
 
     @Override
-    public final void update(final AnActionEvent event) {
+    @RequiredUIAccess
+    public final void update(@Nonnull AnActionEvent event) {
         super.update(event);
-        final TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
+        TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
         event.getPresentation().setEnabled(browser != null && !browser.isInterface());
     }
 }

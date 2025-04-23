@@ -89,7 +89,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
 
     @Nonnull
     public NamedScope[] getScopes() {
-        final List<NamedScope> scopes = new ArrayList<>();
+        List<NamedScope> scopes = new ArrayList<>();
         List<NamedScope> list = getPredefinedScopes();
         scopes.addAll(list);
         scopes.addAll(myScopes);
@@ -116,10 +116,10 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     }
 
     @Nullable
-    public static NamedScope getScope(@Nonnull Project project, final String scopeId) {
-        final NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
+    public static NamedScope getScope(@Nonnull Project project, String scopeId) {
+        NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
         for (NamedScopesHolder holder : holders) {
-            final NamedScope scope = holder.getScope(scopeId);
+            NamedScope scope = holder.getScope(scopeId);
             if (scope != null) {
                 return scope;
             }
@@ -128,10 +128,10 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     }
 
     @Nullable
-    public static Pair<NamedScopesHolder, NamedScope> getScopeWithHolder(@Nonnull Project project, final String scopeId) {
-        final NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
+    public static Pair<NamedScopesHolder, NamedScope> getScopeWithHolder(@Nonnull Project project, String scopeId) {
+        NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
         for (NamedScopesHolder holder : holders) {
-            final NamedScope scope = holder.getScope(scopeId);
+            NamedScope scope = holder.getScope(scopeId);
             if (scope != null) {
                 return Pair.create(holder, scope);
             }
@@ -152,10 +152,10 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     }
 
     @Nullable
-    public static NamedScopesHolder getHolder(final Project project, final String scopeName, final NamedScopesHolder defaultHolder) {
-        final NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
+    public static NamedScopesHolder getHolder(Project project, String scopeName, NamedScopesHolder defaultHolder) {
+        NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
         for (NamedScopesHolder holder : holders) {
-            final NamedScope scope = holder.getScope(scopeName);
+            NamedScope scope = holder.getScope(scopeName);
             if (scope != null) {
                 return holder;
             }
@@ -166,7 +166,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     private static Element writeScope(NamedScope scope) {
         Element setElement = new Element(SCOPE_TAG);
         setElement.setAttribute(NAME_ATT, scope.getScopeId());
-        final PackageSet packageSet = scope.getValue();
+        PackageSet packageSet = scope.getValue();
         setElement.setAttribute(PATTERN_ATT, packageSet != null ? packageSet.getText() : "");
         return setElement;
     }
@@ -174,7 +174,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     private static NamedScope readScope(Element setElement) {
         String name = setElement.getAttributeValue(NAME_ATT);
         PackageSet set;
-        final String attributeValue = setElement.getAttributeValue(PATTERN_ATT);
+        String attributeValue = setElement.getAttributeValue(PATTERN_ATT);
         try {
             set = PackageSetFactory.getInstance().compile(attributeValue);
         }
@@ -185,7 +185,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     }
 
     @Override
-    public void loadState(final Element state) {
+    public void loadState(Element state) {
         myScopes.clear();
         List<Element> sets = state.getChildren(SCOPE_TAG);
         for (Element set : sets) {

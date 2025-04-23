@@ -35,9 +35,9 @@ public abstract class HierarchyNodeDescriptor extends SmartElementDescriptor {
 
     protected HierarchyNodeDescriptor(
         @Nonnull Project project,
-        final NodeDescriptor parentDescriptor,
+        NodeDescriptor parentDescriptor,
         @Nonnull PsiElement element,
-        final boolean isBase
+        boolean isBase
     ) {
         super(project, parentDescriptor, element);
         myHighlightedText = new CompositeAppearance();
@@ -64,7 +64,7 @@ public abstract class HierarchyNodeDescriptor extends SmartElementDescriptor {
         return myCachedChildren;
     }
 
-    public final void setCachedChildren(final Object[] cachedChildren) {
+    public final void setCachedChildren(Object[] cachedChildren) {
         myCachedChildren = cachedChildren;
     }
 

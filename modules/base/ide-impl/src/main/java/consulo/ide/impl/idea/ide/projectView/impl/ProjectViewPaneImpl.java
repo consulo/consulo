@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.ide.impl.ProjectPaneSelectInTarget;
@@ -88,15 +88,15 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
     }
 
     private final class ProjectViewTreeUpdater extends AbstractTreeUpdater {
-        private ProjectViewTreeUpdater(final AbstractTreeBuilder treeBuilder) {
+        private ProjectViewTreeUpdater(AbstractTreeBuilder treeBuilder) {
             super(treeBuilder);
         }
 
         @Override
+        @RequiredReadAction
         public boolean addSubtreeToUpdateByElement(@Nonnull Object element) {
-            if (element instanceof PsiDirectory && !myProject.isDisposed()) {
-                final PsiDirectory dir = (PsiDirectory)element;
-                final ProjectTreeStructure treeStructure = (ProjectTreeStructure)myTreeStructure;
+            if (element instanceof PsiDirectory dir && !myProject.isDisposed()) {
+                ProjectTreeStructure treeStructure = (ProjectTreeStructure)myTreeStructure;
                 PsiDirectory dirToUpdateFrom = dir;
 
                 // optimization
@@ -129,7 +129,7 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
         }
 
         @Override
-        protected AbstractTreeNode createRoot(@Nonnull final Project project, @Nonnull ViewSettings settings) {
+        protected AbstractTreeNode createRoot(@Nonnull Project project, @Nonnull ViewSettings settings) {
             return new ProjectViewProjectNode(project, settings);
         }
 
@@ -154,7 +154,7 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
     }
 
     public static boolean canBeSelectedInProjectView(@Nonnull Project project, @Nonnull VirtualFile file) {
-        final VirtualFile archiveFile;
+        VirtualFile archiveFile;
 
         if (file.getFileSystem() instanceof ArchiveFileSystem) {
             archiveFile = ArchiveVfsUtil.getVirtualFileForArchive(file);

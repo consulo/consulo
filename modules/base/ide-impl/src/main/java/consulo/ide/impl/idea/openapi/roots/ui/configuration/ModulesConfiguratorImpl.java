@@ -403,13 +403,9 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
                     promise.setResult(Collections.singletonList(newModule));
                 });
-                dialogAsync.doWhenRejected(() -> {
-                    promise.setError("dialog canceled");
-                });
+                dialogAsync.doWhenRejected(() -> promise.setError("dialog canceled"));
             });
-            fileChooserAsync.doWhenRejected(() -> {
-                promise.setError("rejected from chooser");
-            });
+            fileChooserAsync.doWhenRejected(() -> promise.setError("rejected from chooser"));
 
             return promise;
         }

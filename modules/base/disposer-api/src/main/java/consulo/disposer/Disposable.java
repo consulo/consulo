@@ -34,7 +34,7 @@ public interface Disposable {
     }
 
     @Nonnull
-    static Disposable newDisposable(@Nullable final String debugName) {
+    static Disposable newDisposable(@Nullable String debugName) {
         return new Disposable() {
             @Override
             public void dispose() {

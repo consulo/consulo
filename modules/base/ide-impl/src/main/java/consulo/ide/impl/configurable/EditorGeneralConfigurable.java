@@ -386,7 +386,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     errorHighlightingLayout.add(nextErrorGoPriorityProblem);
 
     Application.get().getExtensionPoint(AdditionalEditorGeneralSettingProvider.class)
-      .forEachExtensionSafe(provider -> provider.fillProperties(propertyBuilder, errorHighlightingLayout::add));
+      .forEach(provider -> provider.fillProperties(propertyBuilder, errorHighlightingLayout::add));
 
     layout.add(LabeledLayout.create(ApplicationLocalize.groupErrorHighlighting(), errorHighlightingLayout));
 

@@ -18,19 +18,22 @@ package consulo.ide.impl.idea.ide.hierarchy;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -43,6 +46,7 @@ public final class HierarchyBrowserManager implements PersistentStateComponent<H
         public boolean IS_AUTOSCROLL_TO_SOURCE;
         public boolean SORT_ALPHABETICALLY;
         public boolean HIDE_CLASSES_WHERE_METHOD_NOT_IMPLEMENTED;
+        @Nonnull
         public String SCOPE;
     }
 
@@ -51,11 +55,13 @@ public final class HierarchyBrowserManager implements PersistentStateComponent<H
     private final ContentManager myContentManager;
 
     @Inject
-    public HierarchyBrowserManager(final Project project) {
-        final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        final ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.HIERARCHY, true, ToolWindowAnchor.RIGHT, project);
+    @RequiredUIAccess
+    public HierarchyBrowserManager(Project project) {
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.HIERARCHY, true, ToolWindowAnchor.RIGHT, project);
+        toolWindow.setDisplayName(UILocalize.toolWindowNameHierarchy());
+        toolWindow.setIcon(PlatformIconGroup.toolwindowsToolwindowhierarchy());
         myContentManager = toolWindow.getContentManager();
-        toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowHierarchy);
         new ContentManagerWatcher(toolWindow, myContentManager);
     }
 
@@ -69,11 +75,11 @@ public final class HierarchyBrowserManager implements PersistentStateComponent<H
     }
 
     @Override
-    public void loadState(final State state) {
+    public void loadState(State state) {
         myState = state;
     }
 
-    public static HierarchyBrowserManager getInstance(final Project project) {
+    public static HierarchyBrowserManager getInstance(Project project) {
         return ServiceManager.getService(project, HierarchyBrowserManager.class);
     }
 }

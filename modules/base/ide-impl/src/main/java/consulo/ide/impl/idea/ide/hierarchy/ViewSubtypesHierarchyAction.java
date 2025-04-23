@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 /**
  * @author cdr
@@ -25,9 +25,9 @@ import consulo.ide.IdeBundle;
 public final class ViewSubtypesHierarchyAction extends ChangeViewTypeActionBase {
     public ViewSubtypesHierarchyAction() {
         super(
-            IdeBundle.message("action.view.subtypes.hierarchy"),
-            IdeBundle.message("action.description.view.subtypes.hierarchy"),
-            AllIcons.Hierarchy.Subtypes
+            IdeLocalize.actionViewSubtypesHierarchy(),
+            IdeLocalize.actionDescriptionViewSubtypesHierarchy(),
+            PlatformIconGroup.hierarchySubtypes()
         );
     }
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.treeStructure.filtered;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
@@ -222,14 +223,14 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
 
         @Override
         public boolean isHighlightableContentNode(@Nonnull final PresentableNodeDescriptor kid) {
-            return myDelegate instanceof PresentableNodeDescriptor && ((PresentableNodeDescriptor)myDelegate).isHighlightableContentNode(kid);
+            return myDelegate instanceof PresentableNodeDescriptor node && node.isHighlightableContentNode(kid);
         }
 
         @Override
+        @RequiredUIAccess
         protected void doUpdate() {
             clearColoredText();
-            if (myDelegate instanceof PresentableNodeDescriptor) {
-                PresentableNodeDescriptor node = (PresentableNodeDescriptor)myDelegate;
+            if (myDelegate instanceof PresentableNodeDescriptor node) {
                 node.update();
                 apply(node.getPresentation());
             }
@@ -246,12 +247,8 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
         public SimpleNode[] getChildren() {
             List<FilteringNode> nodes = myNodesCache.get(this);
             if (nodes == null) {
-                return myDelegate instanceof SimpleNode
-                    ? ContainerUtil.map(
-                        ((SimpleNode)myDelegate).getChildren(),
-                        node -> new FilteringNode(this, node),
-                        NO_CHILDREN
-                    )
+                return myDelegate instanceof SimpleNode simpleNode
+                    ? ContainerUtil.map(simpleNode.getChildren(), node -> new FilteringNode(this, node), NO_CHILDREN)
                     : NO_CHILDREN;
             }
 
@@ -266,8 +263,8 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
 
         @Override
         public int getWeight() {
-            if (getDelegate() instanceof SimpleNode) {
-                return ((SimpleNode)getDelegate()).getWeight();
+            if (getDelegate() instanceof SimpleNode simpleNode) {
+                return simpleNode.getWeight();
             }
             return super.getWeight();
         }
@@ -280,8 +277,8 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
 
         @Override
         public boolean isAlwaysShowPlus() {
-            if (myDelegate instanceof SimpleNode) {
-                return ((SimpleNode)myDelegate).isAlwaysShowPlus();
+            if (myDelegate instanceof SimpleNode simpleNode) {
+                return simpleNode.isAlwaysShowPlus();
             }
 
             return super.isAlwaysShowPlus();
@@ -289,8 +286,8 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
 
         @Override
         public boolean isAlwaysLeaf() {
-            if (myDelegate instanceof SimpleNode) {
-                return ((SimpleNode)myDelegate).isAlwaysLeaf();
+            if (myDelegate instanceof SimpleNode simpleNode) {
+                return simpleNode.isAlwaysLeaf();
             }
 
             return super.isAlwaysLeaf();

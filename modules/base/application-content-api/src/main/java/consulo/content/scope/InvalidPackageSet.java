@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
+ * @author anna
  */
 public class InvalidPackageSet extends AbstractPackageSet {
     public InvalidPackageSet(@Nonnull String text) {
@@ -29,7 +29,7 @@ public class InvalidPackageSet extends AbstractPackageSet {
     }
 
     @Override
-    public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+    public boolean contains(VirtualFile file, @Nonnull Project project, NamedScopesHolder holder) {
         return false;
     }
 }

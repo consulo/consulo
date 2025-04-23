@@ -17,6 +17,7 @@ package consulo.configurable.internal;
 
 import consulo.configurable.UnnamedConfigurable;
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
@@ -25,7 +26,7 @@ import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 05-Nov-16
+ * @since 2016-11-05
  */
 public class ConfigurableUIMigrationUtil {
     @RequiredUIAccess
@@ -35,7 +36,7 @@ public class ConfigurableUIMigrationUtil {
             return component;
         }
 
-        consulo.ui.Component uiComponent = configurable.createUIComponent(parentUIDisposable);
+        Component uiComponent = configurable.createUIComponent(parentUIDisposable);
         if (uiComponent != null) {
             return (JComponent)TargetAWT.to(uiComponent);
         }
@@ -48,7 +49,7 @@ public class ConfigurableUIMigrationUtil {
         if (preferredFocusedComponent != null) {
             return preferredFocusedComponent;
         }
-        consulo.ui.Component uiComponent = component.getPreferredFocusedUIComponent();
+        Component uiComponent = component.getPreferredFocusedUIComponent();
         if (uiComponent != null) {
             return (JComponent)TargetAWT.to(uiComponent);
         }

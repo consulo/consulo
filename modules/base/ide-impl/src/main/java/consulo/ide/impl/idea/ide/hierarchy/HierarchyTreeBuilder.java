@@ -38,10 +38,10 @@ import java.util.List;
 public class HierarchyTreeBuilder extends AbstractTreeBuilder {
     HierarchyTreeBuilder(
         @Nonnull Project project,
-        final JTree tree,
-        final DefaultTreeModel treeModel,
-        final HierarchyTreeStructure treeStructure,
-        final Comparator<NodeDescriptor> comparator
+        JTree tree,
+        DefaultTreeModel treeModel,
+        HierarchyTreeStructure treeStructure,
+        Comparator<NodeDescriptor> comparator
     ) {
         super(tree, treeModel, treeStructure, comparator);
 
@@ -63,12 +63,12 @@ public class HierarchyTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    protected boolean isAlwaysShowPlus(final NodeDescriptor nodeDescriptor) {
+    protected boolean isAlwaysShowPlus(NodeDescriptor nodeDescriptor) {
         return ((HierarchyTreeStructure)getTreeStructure()).isAlwaysShowPlus();
     }
 
     @Override
-    protected boolean isAutoExpandNode(final NodeDescriptor nodeDescriptor) {
+    protected boolean isAutoExpandNode(NodeDescriptor nodeDescriptor) {
         return getTreeStructure().getRootElement().equals(nodeDescriptor.getElement())
             || !(nodeDescriptor instanceof HierarchyNodeDescriptor);
     }
@@ -79,38 +79,38 @@ public class HierarchyTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    protected final boolean isDisposeOnCollapsing(final NodeDescriptor nodeDescriptor) {
+    protected final boolean isDisposeOnCollapsing(NodeDescriptor nodeDescriptor) {
         return false; // prevents problems with building descriptors for invalidated elements
     }
 
     private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
         @Override
-        public final void childAdded(@Nonnull final PsiTreeChangeEvent event) {
+        public final void childAdded(@Nonnull PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
 
         @Override
-        public final void childRemoved(@Nonnull final PsiTreeChangeEvent event) {
+        public final void childRemoved(@Nonnull PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
 
         @Override
-        public final void childReplaced(@Nonnull final PsiTreeChangeEvent event) {
+        public final void childReplaced(@Nonnull PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
 
         @Override
-        public final void childMoved(@Nonnull final PsiTreeChangeEvent event) {
+        public final void childMoved(@Nonnull PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
 
         @Override
-        public final void childrenChanged(@Nonnull final PsiTreeChangeEvent event) {
+        public final void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
 
         @Override
-        public final void propertyChanged(@Nonnull final PsiTreeChangeEvent event) {
+        public final void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
     }
@@ -122,7 +122,7 @@ public class HierarchyTreeBuilder extends AbstractTreeBuilder {
         }
 
         @Override
-        public final void fileStatusChanged(@Nonnull final VirtualFile virtualFile) {
+        public final void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
     }

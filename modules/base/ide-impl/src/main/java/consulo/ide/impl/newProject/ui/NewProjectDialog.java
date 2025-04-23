@@ -17,6 +17,7 @@ package consulo.ide.impl.newProject.ui;
 
 import consulo.disposer.Disposer;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,7 +34,7 @@ import java.awt.event.WindowEvent;
 
 /**
  * @author VISTALL
- * @since 04.06.14
+ * @since 2014-06-04
  */
 public class NewProjectDialog extends DialogWrapper {
     private NewProjectPanel myProjectPanel;
@@ -49,9 +50,9 @@ public class NewProjectDialog extends DialogWrapper {
         TitlelessDecorator titlelessDecorator = TitlelessDecorator.of(getRootPane());
 
         myProjectPanel = new NewProjectPanel(getDisposable(), project, moduleHome, titlelessDecorator) {
-            @RequiredUIAccess
             @Nonnull
             @Override
+            @RequiredUIAccess
             protected JComponent createSouthPanel() {
                 return NewProjectDialog.this.createSouthPanel();
             }
@@ -62,12 +63,12 @@ public class NewProjectDialog extends DialogWrapper {
             }
 
             @Override
-            public void setOKActionText(@Nonnull String text) {
+            public void setOKActionText(@Nonnull LocalizeValue text) {
                 NewProjectDialog.this.setOKButtonText(text);
             }
 
             @Override
-            public void setCancelText(@Nonnull String text) {
+            public void setCancelText(@Nonnull LocalizeValue text) {
                 NewProjectDialog.this.setCancelButtonText(text);
             }
 

@@ -32,12 +32,13 @@ public abstract class BaseSearchScope implements SearchScope {
      *
      * @return hashCode value semantically identical to one from Object but not native
      */
+    @Override
     public int hashCode() {
         return myHashCode;
     }
 
-    @Override
     @Nonnull
+    @Override
     public String getDisplayName() {
         return "<unknown scope>";
     }

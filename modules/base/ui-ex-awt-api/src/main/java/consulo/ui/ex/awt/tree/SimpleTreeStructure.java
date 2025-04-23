@@ -56,11 +56,10 @@ public abstract class SimpleTreeStructure extends AbstractTreeStructure {
     }
 
     private void cleanUpCaches(SimpleNode node) {
-        if (!(node instanceof CachingSimpleNode)) {
+        if (!(node instanceof CachingSimpleNode cachingNode)) {
             return;
         }
 
-        final CachingSimpleNode cachingNode = ((CachingSimpleNode)node);
         if (cachingNode.getCached() == null) {
             return;
         }

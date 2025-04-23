@@ -97,7 +97,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
             });
         };
 
-        myApplication.getExtensionPoint(SystemHealthMonitor.class).forEachExtensionSafe(it -> it.check(reporter));
+        myApplication.getExtensionPoint(SystemHealthMonitor.class).forEach(it -> it.check(reporter));
 
         checkReservedCodeCacheSize();
 

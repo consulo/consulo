@@ -18,6 +18,7 @@ package consulo.compiler;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
@@ -29,12 +30,12 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 23:35/25.05.13
+ * @since 2013-05-25
  */
 public interface DependencyCache {
     void findDependentFiles(
         CompileContext context,
-        Ref<CacheCorruptedException> exceptionRef,
+        SimpleReference<CacheCorruptedException> exceptionRef,
         Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter,
         Set<VirtualFile> dependentFiles,
         Set<VirtualFile> compiledWithErrors

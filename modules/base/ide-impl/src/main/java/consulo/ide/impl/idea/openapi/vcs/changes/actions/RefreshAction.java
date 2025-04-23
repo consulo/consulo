@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
- * @since 02.11.2006
+ * @since 2006-11-02
  */
 public class RefreshAction extends AnAction implements DumbAware {
     @Override
@@ -60,6 +60,6 @@ public class RefreshAction extends AnAction implements DumbAware {
     }
 
     private static void invokeCustomRefreshes(@Nonnull Project project) {
-        project.getExtensionPoint(ChangesViewRefresher.class).forEachExtensionSafe(it -> it.refresh(project));
+        project.getExtensionPoint(ChangesViewRefresher.class).forEach(it -> it.refresh(project));
     }
 }

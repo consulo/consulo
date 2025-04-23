@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.scope;
+package consulo.ide.impl.idea.ide.hierarchy.scope;
+
+import jakarta.annotation.Nonnull;
 
 /**
- * @author anna
+ * @author UNV
+ * @since 2025-04-24
  */
-public abstract class PackageSetBase implements PackageSet {
+public abstract class HierarchyScopeBase implements HierarchyScope {
+    @Nonnull
+    @Override
+    public String getId() {
+        return getPresentableName().getKey().get().getKey();
+    }
 }

@@ -20,6 +20,8 @@ import consulo.language.editor.hierarchy.TypeHierarchyProvider;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
@@ -48,7 +50,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
     public static final Key<TypeHierarchyBrowserBase> DATA_KEY = Key.create("consulo.ide.impl.idea.ide.hierarchy.TypeHierarchyBrowserBase");
 
-    public TypeHierarchyBrowserBase(final Project project, final PsiElement element) {
+    public TypeHierarchyBrowserBase(Project project, PsiElement element) {
         super(project, element);
     }
 
@@ -60,20 +62,20 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     protected void createTreeAndSetupCommonActions(@Nonnull Map<String, JTree> trees, ActionGroup group) {
-        final BaseOnThisTypeAction baseOnThisTypeAction = createBaseOnThisAction();
-        final JTree tree1 = createTree(true);
+        BaseOnThisTypeAction baseOnThisTypeAction = createBaseOnThisAction();
+        JTree tree1 = createTree(true);
         PopupHandler.installPopupHandler(tree1, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
         baseOnThisTypeAction
             .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_TYPE_HIERARCHY).getShortcutSet(), tree1);
         trees.put(TYPE_HIERARCHY_TYPE, tree1);
 
-        final JTree tree2 = createTree(true);
+        JTree tree2 = createTree(true);
         PopupHandler.installPopupHandler(tree2, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
         baseOnThisTypeAction
             .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_TYPE_HIERARCHY).getShortcutSet(), tree2);
         trees.put(SUPERTYPES_HIERARCHY_TYPE, tree2);
 
-        final JTree tree3 = createTree(true);
+        JTree tree3 = createTree(true);
         PopupHandler.installPopupHandler(tree3, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
         baseOnThisTypeAction
             .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_TYPE_HIERARCHY).getShortcutSet(), tree3);
@@ -100,7 +102,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     @Override
-    protected void prependActions(final DefaultActionGroup actionGroup) {
+    protected void prependActions(DefaultActionGroup actionGroup) {
         actionGroup.add(new ViewClassHierarchyAction());
         actionGroup.add(new ViewSupertypesHierarchyAction());
         actionGroup.add(new ViewSubtypesHierarchyAction());
@@ -141,15 +143,16 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
     private final class MyDeleteProvider implements DeleteProvider {
         @Override
-        public final void deleteElement(@Nonnull final DataContext dataContext) {
-            final PsiElement aClass = getSelectedElement();
+        @RequiredUIAccess
+        public final void deleteElement(@Nonnull DataContext dataContext) {
+            PsiElement aClass = getSelectedElement();
             if (!canBeDeleted(aClass)) {
                 return;
             }
             LocalHistoryAction a =
                 LocalHistory.getInstance().startAction(IdeLocalize.progressDeletingClass(getQualifiedName(aClass)).get());
             try {
-                final PsiElement[] elements = {aClass};
+                PsiElement[] elements = {aClass};
                 DeleteHandler.deletePsiElement(elements, myProject);
             }
             finally {
@@ -158,19 +161,19 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         }
 
         @Override
-        public final boolean canDeleteElement(@Nonnull final DataContext dataContext) {
-            final PsiElement aClass = getSelectedElement();
+        public final boolean canDeleteElement(@Nonnull DataContext dataContext) {
+            PsiElement aClass = getSelectedElement();
             if (!canBeDeleted(aClass)) {
                 return false;
             }
-            final PsiElement[] elements = {aClass};
+            PsiElement[] elements = {aClass};
             return DeleteHandler.shouldEnableDeleteAction(elements);
         }
     }
 
     protected static class BaseOnThisTypeAction extends BaseOnThisElementAction<TypeHierarchyProvider> {
         public BaseOnThisTypeAction() {
-            super("", IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY, TypeHierarchyProvider.class);
+            super(LocalizeValue.empty(), IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY, TypeHierarchyProvider.class);
         }
 
         @Override
@@ -181,11 +184,12 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
             return viewType;
         }
 
+        @Nonnull
         @Override
-        protected String getNonDefaultText(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
+        protected LocalizeValue getNonDefaultText(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
             return ((TypeHierarchyBrowserBase)browser).isInterface(element)
-                ? IdeLocalize.actionBaseOnThisInterface().get()
-                : IdeLocalize.actionBaseOnThisClass().get();
+                ? IdeLocalize.actionBaseOnThisInterface()
+                : IdeLocalize.actionBaseOnThisClass();
         }
     }
 }

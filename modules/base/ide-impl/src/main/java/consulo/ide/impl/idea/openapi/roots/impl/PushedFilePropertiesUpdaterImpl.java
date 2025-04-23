@@ -133,11 +133,11 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
                 }
 
                 myProject.getApplication().getExtensionPoint(FilePropertyPusher.class)
-                    .forEachExtensionSafe(filePropertyPusher -> filePropertyPusher.afterRootsChanged(myProject));
+                    .forEach(filePropertyPusher -> filePropertyPusher.afterRootsChanged(myProject));
             }
         });
 
-        myProject.getApplication().getExtensionPoint(FilePropertyPusher.class).forEachExtensionSafe(pusher -> pusher.initExtra(myProject));
+        myProject.getApplication().getExtensionPoint(FilePropertyPusher.class).forEach(pusher -> pusher.initExtra(myProject));
     }
 
     @Override

@@ -16,16 +16,19 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.hierarchy.CallHierarchyProvider;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-
+import consulo.util.nodep.function.Function;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,14 +47,14 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         super(project, method);
     }
 
-    @Override
     @Nullable
+    @Override
     protected JPanel createLegendPanel() {
         return null;
     }
 
-    @Override
     @Nonnull
+    @Override
     protected Key<Object> getBrowserDataKey() {
         return CALL_HIERARCHY_BROWSER_DATA_KEY;
     }
@@ -59,15 +62,15 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     @Override
     protected void prependActions(@Nonnull DefaultActionGroup actionGroup) {
         actionGroup.add(new ChangeViewTypeActionBase(
-            IdeBundle.message("action.caller.methods.hierarchy"),
-            IdeBundle.message("action.caller.methods.hierarchy"),
-            AllIcons.Hierarchy.Caller,
+            IdeLocalize.actionCallerMethodsHierarchy(),
+            IdeLocalize.actionCallerMethodsHierarchy(),
+            PlatformIconGroup.hierarchySupertypes(),
             CALLER_TYPE
         ));
         actionGroup.add(new ChangeViewTypeActionBase(
-            IdeBundle.message("action.callee.methods.hierarchy"),
-            IdeBundle.message("action.callee.methods.hierarchy"),
-            AllIcons.Hierarchy.Callee,
+            IdeLocalize.actionCalleeMethodsHierarchy(),
+            IdeLocalize.actionCalleeMethodsHierarchy(),
+            PlatformIconGroup.hierarchySubtypes(),
             CALLEE_TYPE
         ));
         actionGroup.add(new AlphaSortAction());
@@ -80,47 +83,48 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         return ActionPlaces.CALL_HIERARCHY_VIEW_TOOLBAR;
     }
 
-    @Override
     @Nonnull
+    @Override
     protected String getPrevOccurenceActionNameImpl() {
-        return IdeBundle.message("hierarchy.call.prev.occurence.name");
+        return IdeLocalize.hierarchyCallPrevOccurenceName().get();
     }
 
-    @Override
     @Nonnull
+    @Override
     protected String getNextOccurenceActionNameImpl() {
-        return IdeBundle.message("hierarchy.call.next.occurence.name");
+        return IdeLocalize.hierarchyCallNextOccurenceName().get();
     }
 
     private class ChangeViewTypeActionBase extends ToggleAction {
         private final String myTypeName;
 
-        private ChangeViewTypeActionBase(final String shortDescription, final String longDescription, final Image icon, String typeName) {
+        private ChangeViewTypeActionBase(
+            @Nonnull LocalizeValue shortDescription,
+            @Nonnull LocalizeValue longDescription,
+            Image icon,
+            String typeName
+        ) {
             super(shortDescription, longDescription, icon);
             myTypeName = typeName;
         }
 
         @Override
-        public final boolean isSelected(final AnActionEvent event) {
+        public final boolean isSelected(@Nonnull AnActionEvent event) {
             return myTypeName.equals(myCurrentViewType);
         }
 
         @Override
-        public final void setSelected(final AnActionEvent event, final boolean flag) {
+        public final void setSelected(@Nonnull AnActionEvent event, boolean flag) {
             if (flag) {
-//        setWaitCursor();
+//              setWaitCursor();
                 // invokeLater is called to update state of button before long tree building operation
-                ApplicationManager.getApplication().invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        changeView(myTypeName);
-                    }
-                });
+                Application.get().invokeLater(() -> changeView(myTypeName));
             }
         }
 
         @Override
-        public final void update(@Nonnull final AnActionEvent event) {
+        @RequiredUIAccess
+        public final void update(@Nonnull AnActionEvent event) {
             super.update(event);
             setEnabled(isValidBase());
         }
@@ -129,7 +133,7 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     protected static class BaseOnThisMethodAction extends BaseOnThisElementAction<CallHierarchyProvider> {
         public BaseOnThisMethodAction() {
             super(
-                IdeBundle.message("action.base.on.this.method"),
+                IdeLocalize.actionBaseOnThisMethod(),
                 IdeActions.ACTION_CALL_HIERARCHY,
                 CALL_HIERARCHY_BROWSER_DATA_KEY,
                 CallHierarchyProvider.class
