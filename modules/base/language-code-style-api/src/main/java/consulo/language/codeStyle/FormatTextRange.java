@@ -19,56 +19,58 @@ import consulo.document.util.TextRange;
 import jakarta.annotation.Nonnull;
 
 public class FormatTextRange {
-  private @Nonnull
-  TextRange formattingRange;
-  private final boolean processHeadingWhitespace;
+    private @Nonnull
+    TextRange formattingRange;
+    private final boolean processHeadingWhitespace;
 
-  public FormatTextRange(@Nonnull TextRange range, boolean processHeadingSpace) {
-    formattingRange = range;
-    processHeadingWhitespace = processHeadingSpace;
-  }
-
-  public boolean isProcessHeadingWhitespace() {
-    return processHeadingWhitespace;
-  }
-
-  public boolean isWhitespaceReadOnly(@Nonnull TextRange range) {
-    if (range.getStartOffset() >= formattingRange.getEndOffset()) return true;
-
-    if (processHeadingWhitespace && range.getEndOffset() == formattingRange.getStartOffset()) {
-      return false;
+    public FormatTextRange(@Nonnull TextRange range, boolean processHeadingSpace) {
+        formattingRange = range;
+        processHeadingWhitespace = processHeadingSpace;
     }
 
-    return range.getEndOffset() <= formattingRange.getStartOffset();
-  }
+    public boolean isProcessHeadingWhitespace() {
+        return processHeadingWhitespace;
+    }
 
-  public int getStartOffset() {
-    return formattingRange.getStartOffset();
-  }
+    public boolean isWhitespaceReadOnly(@Nonnull TextRange range) {
+        if (range.getStartOffset() >= formattingRange.getEndOffset()) {
+            return true;
+        }
 
-  public boolean isReadOnly(@Nonnull TextRange range) {
-    return range.getStartOffset() > formattingRange.getEndOffset() || range.getEndOffset() < formattingRange.getStartOffset();
-  }
+        if (processHeadingWhitespace && range.getEndOffset() == formattingRange.getStartOffset()) {
+            return false;
+        }
 
-  @Nonnull
-  public TextRange getTextRange() {
-    return formattingRange;
-  }
+        return range.getEndOffset() <= formattingRange.getStartOffset();
+    }
 
-  public void setTextRange(@Nonnull TextRange range) {
-    formattingRange = range;
-  }
+    public int getStartOffset() {
+        return formattingRange.getStartOffset();
+    }
 
-  public TextRange getNonEmptyTextRange() {
-    int endOffset = formattingRange.getStartOffset() == formattingRange.getEndOffset()
-                    ? formattingRange.getEndOffset() + 1
-                    : formattingRange.getEndOffset();
+    public boolean isReadOnly(@Nonnull TextRange range) {
+        return range.getStartOffset() > formattingRange.getEndOffset() || range.getEndOffset() < formattingRange.getStartOffset();
+    }
 
-    return new TextRange(formattingRange.getStartOffset(), endOffset);
-  }
+    @Nonnull
+    public TextRange getTextRange() {
+        return formattingRange;
+    }
 
-  @Override
-  public String toString() {
-    return formattingRange.toString() + (processHeadingWhitespace ? "+" : "");
-  }
+    public void setTextRange(@Nonnull TextRange range) {
+        formattingRange = range;
+    }
+
+    public TextRange getNonEmptyTextRange() {
+        int endOffset = formattingRange.getStartOffset() == formattingRange.getEndOffset()
+            ? formattingRange.getEndOffset() + 1
+            : formattingRange.getEndOffset();
+
+        return new TextRange(formattingRange.getStartOffset(), endOffset);
+    }
+
+    @Override
+    public String toString() {
+        return formattingRange.toString() + (processHeadingWhitespace ? "+" : "");
+    }
 }

@@ -50,58 +50,59 @@ import java.util.*;
  * formatting iteration.
  */
 public class DependentSpacingEngine {
-  private final BlockRangesMap myBlockRangesMap;
+    private final BlockRangesMap myBlockRangesMap;
 
-  private SortedMap<TextRange, DependantSpacingImpl> myPreviousDependencies =
-          new TreeMap<>((o1, o2) -> {
-            int offsetsDelta = o1.getEndOffset() - o2.getEndOffset();
+    private SortedMap<TextRange, DependantSpacingImpl> myPreviousDependencies = new TreeMap<>((o1, o2) -> {
+        int offsetsDelta = o1.getEndOffset() - o2.getEndOffset();
 
-            if (offsetsDelta == 0) {
-              offsetsDelta = o2.getStartOffset() - o1.getStartOffset();     // starting earlier is greater
+        if (offsetsDelta == 0) {
+            offsetsDelta = o2.getStartOffset() - o1.getStartOffset();     // starting earlier is greater
+        }
+        return offsetsDelta;
+    });
+
+    public DependentSpacingEngine(BlockRangesMap helper) {
+        myBlockRangesMap = helper;
+    }
+
+    public boolean shouldReformatPreviouslyLocatedDependentSpacing(WhiteSpace space) {
+        TextRange changed = space.getTextRange();
+        SortedMap<TextRange, DependantSpacingImpl> sortedHeadMap = myPreviousDependencies.tailMap(changed);
+
+        for (Map.Entry<TextRange, DependantSpacingImpl> entry : sortedHeadMap.entrySet()) {
+            TextRange textRange = entry.getKey();
+
+            if (textRange.contains(changed)) {
+                DependantSpacingImpl spacing = entry.getValue();
+                if (spacing.isDependentRegionLinefeedStatusChanged()) {
+                    continue;
+                }
+
+                boolean containedLineFeeds = spacing.getMinLineFeeds() > 0;
+                boolean containsLineFeeds = myBlockRangesMap.containsLineFeeds(textRange);
+
+                if (containedLineFeeds != containsLineFeeds) {
+                    spacing.setDependentRegionLinefeedStatusChanged();
+                    return true;
+                }
             }
-            return offsetsDelta;
-          });
-
-  public DependentSpacingEngine(BlockRangesMap helper) {
-    myBlockRangesMap = helper;
-  }
-
-  public boolean shouldReformatPreviouslyLocatedDependentSpacing(WhiteSpace space) {
-    final TextRange changed = space.getTextRange();
-    final SortedMap<TextRange, DependantSpacingImpl> sortedHeadMap = myPreviousDependencies.tailMap(changed);
-
-    for (final Map.Entry<TextRange, DependantSpacingImpl> entry : sortedHeadMap.entrySet()) {
-      final TextRange textRange = entry.getKey();
-
-      if (textRange.contains(changed)) {
-        final DependantSpacingImpl spacing = entry.getValue();
-        if (spacing.isDependentRegionLinefeedStatusChanged()) {
-          continue;
         }
 
-        final boolean containedLineFeeds = spacing.getMinLineFeeds() > 0;
-        final boolean containsLineFeeds = myBlockRangesMap.containsLineFeeds(textRange);
+        return false;
+    }
 
-        if (containedLineFeeds != containsLineFeeds) {
-          spacing.setDependentRegionLinefeedStatusChanged();
-          return true;
+    public void registerUnresolvedDependentSpacingRanges(SpacingImpl spaceProperty, List<TextRange> unprocessedRanges) {
+        DependantSpacingImpl dependantSpaceProperty = (DependantSpacingImpl)spaceProperty;
+        if (dependantSpaceProperty.isDependentRegionLinefeedStatusChanged()) {
+            return;
         }
-      }
+
+        for (TextRange range : unprocessedRanges) {
+            myPreviousDependencies.put(range, dependantSpaceProperty);
+        }
     }
 
-    return false;
-  }
-
-  public void registerUnresolvedDependentSpacingRanges(final SpacingImpl spaceProperty, List<TextRange> unprocessedRanges) {
-    final DependantSpacingImpl dependantSpaceProperty = (DependantSpacingImpl)spaceProperty;
-    if (dependantSpaceProperty.isDependentRegionLinefeedStatusChanged()) return;
-
-    for (TextRange range: unprocessedRanges) {
-      myPreviousDependencies.put(range, dependantSpaceProperty);
+    public void clear() {
+        myPreviousDependencies.clear();
     }
-  }
-
-  public void clear() {
-    myPreviousDependencies.clear();
-  }
 }

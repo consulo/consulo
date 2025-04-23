@@ -19,9 +19,9 @@ import consulo.document.util.TextRange;
 import jakarta.annotation.Nonnull;
 
 public interface FormattingRangesInfo {
-  boolean isWhitespaceReadOnly(@Nonnull TextRange range);
+    boolean isWhitespaceReadOnly(@Nonnull TextRange range);
 
-  boolean isReadOnly(@Nonnull TextRange range);
+    boolean isReadOnly(@Nonnull TextRange range);
 
-  boolean isOnInsertedLine(int offset);
+    boolean isOnInsertedLine(int offset);
 }

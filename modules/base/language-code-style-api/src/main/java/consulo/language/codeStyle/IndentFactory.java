@@ -24,27 +24,27 @@ import jakarta.annotation.Nonnull;
  * their contracts.
  */
 public interface IndentFactory {
-  Indent getNormalIndent(boolean relativeToDirectParent);
+    Indent getNormalIndent(boolean relativeToDirectParent);
 
-  Indent getNoneIndent();
+    Indent getNoneIndent();
 
-  Indent getAbsoluteNoneIndent();
+    Indent getAbsoluteNoneIndent();
 
-  Indent getAbsoluteLabelIndent();
+    Indent getAbsoluteLabelIndent();
 
-  Indent getLabelIndent();
+    Indent getLabelIndent();
 
-  Indent getContinuationIndent(boolean relativeToDirectParent);
+    Indent getContinuationIndent(boolean relativeToDirectParent);
 
-  Indent getContinuationWithoutFirstIndent(boolean relativeToDirectParent);
+    Indent getContinuationWithoutFirstIndent(boolean relativeToDirectParent);
 
-  Indent getSpaceIndent(final int spaces, boolean relativeToDirectParent);
+    Indent getSpaceIndent(int spaces, boolean relativeToDirectParent);
 
-  Indent getIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren);
+    Indent getIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren);
 
-  Indent getIndent(@Nonnull Indent.Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren);
+    Indent getIndent(@Nonnull Indent.Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren);
 
-  Indent getSmartIndent(@Nonnull Indent.Type type);
+    Indent getSmartIndent(@Nonnull Indent.Type type);
 
-  Indent getSmartIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent);
+    Indent getSmartIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent);
 }

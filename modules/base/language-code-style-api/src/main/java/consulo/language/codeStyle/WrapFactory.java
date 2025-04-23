@@ -19,7 +19,7 @@ package consulo.language.codeStyle;
  * Internal interface for creating wrap setting instances.
  */
 public interface WrapFactory {
-  public Wrap createWrap(WrapType type, boolean wrapFirstElement);
+    public Wrap createWrap(WrapType type, boolean wrapFirstElement);
 
-  public Wrap createChildWrap(final Wrap parentWrap, final WrapType wrapType, final boolean wrapFirstElement);
+    public Wrap createChildWrap(Wrap parentWrap, WrapType wrapType, boolean wrapFirstElement);
 }

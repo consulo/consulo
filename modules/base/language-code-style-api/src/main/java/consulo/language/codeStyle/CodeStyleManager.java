@@ -7,6 +7,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.lineIndent.LineIndentProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -26,8 +27,8 @@ import java.util.function.Supplier;
  * Service for reformatting code fragments, getting names for elements
  * according to the user's code style and working with import statements and full-qualified names.
  *
- * @see com.intellij.psi.impl.source.codeStyle.PreFormatProcessor
- * @see com.intellij.psi.impl.source.codeStyle.PostFormatProcessor
+ * @see PreFormatProcessor
+ * @see PostFormatProcessor
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class CodeStyleManager {
@@ -195,8 +196,8 @@ public abstract class CodeStyleManager {
      * may be required.
      * <p>
      * <b>Note:</b> visually it may lead to a text jump which becomes more obvious, more time it takes to calculate the
-     * new indent using a formatting model. A better way to handle large documents is to implement {@link
-     * com.intellij.psi.codeStyle.lineIndent.LineIndentProvider} returning a non-null value when possible.
+     * new indent using a formatting model. A better way to handle large documents is to implement {@link LineIndentProvider}
+     * returning a non-null value when possible.
      *
      * @param document The document to be modified.
      * @param offset   The offset in the line whose indent is to be adjusted.
@@ -259,10 +260,8 @@ public abstract class CodeStyleManager {
      *                                     the file is read-only).
      */
     @RequiredWriteAction
-    public abstract void reformatNewlyAddedElement(
-        @Nonnull final ASTNode block,
-        @Nonnull final ASTNode addedElement
-    ) throws IncorrectOperationException;
+    public abstract void reformatNewlyAddedElement(@Nonnull ASTNode block, @Nonnull ASTNode addedElement)
+        throws IncorrectOperationException;
 
     /**
      * Formatting may be executed sequentially, i.e. the whole (re)formatting task is split into a number of smaller sub-tasks
@@ -322,13 +321,13 @@ public abstract class CodeStyleManager {
      * @see FormattingMode
      */
     public static FormattingMode getCurrentFormattingMode(@Nonnull Project project) {
-        if (!project.isDisposed()) {
-            CodeStyleManager instance = getInstance(project);
-            if (instance instanceof FormattingModeAwareIndentAdjuster) {
-                return ((FormattingModeAwareIndentAdjuster)instance).getCurrentFormattingMode();
-            }
+        if (project.isDisposed()) {
+            return FormattingMode.REFORMAT;
         }
-        return FormattingMode.REFORMAT;
+
+        return getInstance(project) instanceof FormattingModeAwareIndentAdjuster indentAdjuster
+            ? indentAdjuster.getCurrentFormattingMode()
+            : FormattingMode.REFORMAT;
     }
 
     /**

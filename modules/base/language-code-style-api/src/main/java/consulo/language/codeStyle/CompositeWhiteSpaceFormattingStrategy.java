@@ -20,105 +20,120 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * Allows to combine multiple {@link WhiteSpaceFormattingStrategy} implementations.
- * <p/>
+ *
  * Not thread-safe.
  *
  * @author Denis Zhdanov
- * @since Sep 21, 2010 3:35:25 PM
+ * @since 2010-09-21
  */
 public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormattingStrategy {
+    private final List<WhiteSpaceFormattingStrategy> myStrategies = new ArrayList<>();
+    private final Language myLanguage;
+    private boolean myReplaceDefaultStrategy;
 
-  private final List<WhiteSpaceFormattingStrategy> myStrategies = new ArrayList<>();
-  private final Language myLanguage;
-  private boolean myReplaceDefaultStrategy;
-
-  public CompositeWhiteSpaceFormattingStrategy(@Nonnull Language language, @Nonnull Collection<WhiteSpaceFormattingStrategy> strategies) throws IllegalArgumentException {
-    myLanguage = language;
-    for (WhiteSpaceFormattingStrategy strategy : strategies) {
-      addStrategy(strategy);
-    }
-  }
-
-  @Nonnull
-  @Override
-  public Language getLanguage() {
-    return myLanguage;
-  }
-
-  @Override
-  public int check(@Nonnull CharSequence text, int start, int end) {
-    int offset = start;
-    while (offset < end) {
-      int oldOffset = offset;
-      for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
-        offset = strategy.check(text, offset, end);
-        if (offset > oldOffset) {
-          break;
+    public CompositeWhiteSpaceFormattingStrategy(
+        @Nonnull Language language,
+        @Nonnull Collection<WhiteSpaceFormattingStrategy> strategies
+    ) throws IllegalArgumentException {
+        myLanguage = language;
+        for (WhiteSpaceFormattingStrategy strategy : strategies) {
+            addStrategy(strategy);
         }
-      }
-      if (offset == oldOffset) {
-        return start;
-      }
     }
-    return offset;
-  }
 
-  @Override
-  public boolean replaceDefaultStrategy() {
-    return myReplaceDefaultStrategy;
-  }
-
-  public void addStrategy(@Nonnull WhiteSpaceFormattingStrategy strategy) throws IllegalArgumentException {
-    if (myReplaceDefaultStrategy && strategy.replaceDefaultStrategy()) {
-      throw new IllegalArgumentException(String.format("Can't combine strategy '%s' with already registered strategies (%s). Reason: given strategy is marked to replace " +
-                                                       "all existing strategies but strategy with such characteristics is already registered", strategy, myStrategies));
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return myLanguage;
     }
-    myStrategies.add(strategy);
-    myReplaceDefaultStrategy |= strategy.replaceDefaultStrategy();
-  }
 
-  @Nonnull
-  @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
-                                                  @Nonnull CharSequence text,
-                                                  int startOffset,
-                                                  int endOffset,
-                                                  CodeStyleSettings codeStyleSettings,
-                                                  ASTNode nodeAfter) {
-    CharSequence result = whiteSpaceText;
-    for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
-      result = strategy.adjustWhiteSpaceIfNecessary(result, text, startOffset, endOffset, codeStyleSettings, nodeAfter);
+    @Override
+    public int check(@Nonnull CharSequence text, int start, int end) {
+        int offset = start;
+        while (offset < end) {
+            int oldOffset = offset;
+            for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
+                offset = strategy.check(text, offset, end);
+                if (offset > oldOffset) {
+                    break;
+                }
+            }
+            if (offset == oldOffset) {
+                return start;
+            }
+        }
+        return offset;
     }
-    return result;
-  }
 
-  @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText, @Nonnull PsiElement startElement, int startOffset, int endOffset, CodeStyleSettings codeStyleSettings) {
-    CharSequence result = whiteSpaceText;
-    for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
-      result = strategy.adjustWhiteSpaceIfNecessary(result, startElement, startOffset, endOffset, codeStyleSettings);
+    @Override
+    public boolean replaceDefaultStrategy() {
+        return myReplaceDefaultStrategy;
     }
-    return result;
-  }
 
-  @Override
-  public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
-    for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
-      if (strategy.containsWhitespacesOnly(node)) {
-        return true;
-      }
+    public void addStrategy(@Nonnull WhiteSpaceFormattingStrategy strategy) throws IllegalArgumentException {
+        if (myReplaceDefaultStrategy && strategy.replaceDefaultStrategy()) {
+            throw new IllegalArgumentException(String.format(
+                "Can't combine strategy '%s' with already registered strategies (%s). Reason: given strategy is marked to replace " +
+                    "all existing strategies but strategy with such characteristics is already registered",
+                strategy,
+                myStrategies
+            ));
+        }
+        myStrategies.add(strategy);
+        myReplaceDefaultStrategy |= strategy.replaceDefaultStrategy();
     }
-    return false;
-  }
 
-  @Override
-  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
-    return false;
-  }
+    @Nonnull
+    @Override
+    public CharSequence adjustWhiteSpaceIfNecessary(
+        @Nonnull CharSequence whiteSpaceText,
+        @Nonnull CharSequence text,
+        int startOffset,
+        int endOffset,
+        CodeStyleSettings codeStyleSettings,
+        ASTNode nodeAfter
+    ) {
+        CharSequence result = whiteSpaceText;
+        for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
+            result = strategy.adjustWhiteSpaceIfNecessary(result, text, startOffset, endOffset, codeStyleSettings, nodeAfter);
+        }
+        return result;
+    }
+
+    @Override
+    public CharSequence adjustWhiteSpaceIfNecessary(
+        @Nonnull CharSequence whiteSpaceText,
+        @Nonnull PsiElement startElement,
+        int startOffset,
+        int endOffset,
+        CodeStyleSettings codeStyleSettings
+    ) {
+        CharSequence result = whiteSpaceText;
+        for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
+            result = strategy.adjustWhiteSpaceIfNecessary(result, startElement, startOffset, endOffset, codeStyleSettings);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
+        for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
+            if (strategy.containsWhitespacesOnly(node)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
+        return false;
+    }
 }

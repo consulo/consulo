@@ -7,7 +7,7 @@ import consulo.application.Application;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface Formatter extends IndentFactory, WrapFactory, AlignmentFactory, SpacingFactory, FormattingModelFactory {
-  static Formatter getInstance() {
-    return Application.get().getInstance(Formatter.class);
-  }
+    static Formatter getInstance() {
+        return Application.get().getInstance(Formatter.class);
+    }
 }

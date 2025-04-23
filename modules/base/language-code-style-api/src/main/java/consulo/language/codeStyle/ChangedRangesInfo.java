@@ -22,11 +22,11 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 public class ChangedRangesInfo {
-  public final List<TextRange> insertedRanges;
-  public final List<TextRange> allChangedRanges;
+    public final List<TextRange> insertedRanges;
+    public final List<TextRange> allChangedRanges;
 
-  public ChangedRangesInfo(@Nonnull List<TextRange> allChangedRanges, @Nullable List<TextRange> insertedRanges) {
-    this.insertedRanges = insertedRanges;
-    this.allChangedRanges = allChangedRanges;
-  }
+    public ChangedRangesInfo(@Nonnull List<TextRange> allChangedRanges, @Nullable List<TextRange> insertedRanges) {
+        this.insertedRanges = insertedRanges;
+        this.allChangedRanges = allChangedRanges;
+    }
 }

@@ -23,25 +23,25 @@ import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author VISTALL
- * @since 12-Mar-22
+ * @since 2022-03-12
  */
 @Deprecated
 @DeprecationInfo("Use CodeStyleLocalize")
 @MigratedExtensionsTo(CodeStyleLocalize.class)
 public class CodeStyleBundle extends AbstractBundle {
-  public static final String BUNDLE = "consulo.language.codeStyle.CodeStyleBundle";
+    public static final String BUNDLE = "consulo.language.codeStyle.CodeStyleBundle";
 
-  private static final CodeStyleBundle ourInstance = new CodeStyleBundle();
+    private static final CodeStyleBundle ourInstance = new CodeStyleBundle();
 
-  private CodeStyleBundle() {
-    super(BUNDLE);
-  }
+    private CodeStyleBundle() {
+        super(BUNDLE);
+    }
 
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
-    return ourInstance.getMessage(key);
-  }
+    public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
+        return ourInstance.getMessage(key);
+    }
 
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
-    return ourInstance.getMessage(key, params);
-  }
+    public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
+        return ourInstance.getMessage(key, params);
+    }
 }

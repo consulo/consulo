@@ -19,38 +19,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StateProcessor {
+    private final List<State> myStates = new ArrayList<>();
+    private State myCurrentState;
 
-  private final List<State> myStates = new ArrayList<>();
-  private State myCurrentState;
-
-  public StateProcessor(State initial) {
-    myCurrentState = initial;
-  }
-
-  public void setNextState(State state) {
-    myStates.add(state);
-  }
-
-  public boolean isDone() {
-    return myStates.isEmpty() && myCurrentState.isDone();
-  }
-
-  public void iteration() {
-    if (!myCurrentState.isDone()) {
-      myCurrentState.iteration();
+    public StateProcessor(State initial) {
+        myCurrentState = initial;
     }
-    shiftStateIfNecessary();
-  }
 
-  private void shiftStateIfNecessary() {
-    if (myCurrentState.isDone() && !myStates.isEmpty()) {
-      myCurrentState = myStates.get(0);
-      myStates.remove(0);
-      myCurrentState.prepare();
+    public void setNextState(State state) {
+        myStates.add(state);
     }
-  }
 
-  public void stop() {
-    myCurrentState.stop();
-  }
+    public boolean isDone() {
+        return myStates.isEmpty() && myCurrentState.isDone();
+    }
+
+    public void iteration() {
+        if (!myCurrentState.isDone()) {
+            myCurrentState.iteration();
+        }
+        shiftStateIfNecessary();
+    }
+
+    private void shiftStateIfNecessary() {
+        if (myCurrentState.isDone() && !myStates.isEmpty()) {
+            myCurrentState = myStates.get(0);
+            myStates.remove(0);
+            myCurrentState.prepare();
+        }
+    }
+
+    public void stop() {
+        myCurrentState.stop();
+    }
 }

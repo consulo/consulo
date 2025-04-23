@@ -15,6 +15,7 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
@@ -28,83 +29,91 @@ import jakarta.annotation.Nullable;
  * adjust white space and
  *
  * @author Denis Zhdanov
- * @since Sep 22, 2010 10:19:07 AM
+ * @since 2010-09-22
  */
 public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpaceFormattingStrategy {
+    @Override
+    public boolean replaceDefaultStrategy() {
+        return false;
+    }
 
-  @Override
-  public boolean replaceDefaultStrategy() {
-    return false;
-  }
+    @Nonnull
+    @Override
+    public CharSequence adjustWhiteSpaceIfNecessary(
+        @Nonnull CharSequence whiteSpaceText,
+        @Nonnull CharSequence text,
+        int startOffset,
+        int endOffset,
+        CodeStyleSettings codeStyleSettings,
+        ASTNode nodeAfter
+    ) {
+        // Does nothing
+        return whiteSpaceText;
+    }
 
-  @Nonnull
-  @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
-                                                  @Nonnull CharSequence text,
-                                                  int startOffset,
-                                                  int endOffset, CodeStyleSettings codeStyleSettings, ASTNode nodeAfter)
-  {
-    // Does nothing
-    return whiteSpaceText;
-  }
-
-  @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
-                                                  @Nonnull PsiElement startElement,
-                                                  final int startOffset,
-                                                  final int endOffset, CodeStyleSettings codeStyleSettings)
-  {
-    assert startElement.getTextRange().contains(startOffset)
+    @Override
+    @RequiredReadAction
+    public CharSequence adjustWhiteSpaceIfNecessary(
+        @Nonnull CharSequence whiteSpaceText,
+        @Nonnull PsiElement startElement,
+        int startOffset,
+        int endOffset,
+        CodeStyleSettings codeStyleSettings
+    ) {
+        assert startElement.getTextRange().contains(startOffset)
             : String.format("Element: %s, range: %s, offset: %d", startElement, startElement.getTextRange(), startOffset);
 
-    // Collect target text from the PSI elements and delegate to the text-based method.
-    StringBuilder buffer = new StringBuilder();
-    for (PsiElement current = startElement; current != null && current.getTextRange().getStartOffset() < endOffset; current = next(current)) {
-      final TextRange range = current.getTextRange();
-      final String text = current.getText();
-      if (StringUtil.isEmpty(text)) {
-        continue;
-      }
+        // Collect target text from the PSI elements and delegate to the text-based method.
+        StringBuilder buffer = new StringBuilder();
+        for (PsiElement current = startElement;
+             current != null && current.getTextRange().getStartOffset() < endOffset;
+             current = next(current)) {
+            TextRange range = current.getTextRange();
+            String text = current.getText();
+            if (StringUtil.isEmpty(text)) {
+                continue;
+            }
 
-      int start = startOffset > range.getStartOffset() ? startOffset - range.getStartOffset() : 0;
-      if (start >= text.length()) {
-        continue;
-      }
+            int start = startOffset > range.getStartOffset() ? startOffset - range.getStartOffset() : 0;
+            if (start >= text.length()) {
+                continue;
+            }
 
-      int end = endOffset < range.getEndOffset() ? text.length() - (range.getEndOffset() - endOffset) : text.length();
-      if (end <= start) {
-        continue;
-      }
+            int end = endOffset < range.getEndOffset() ? text.length() - (range.getEndOffset() - endOffset) : text.length();
+            if (end <= start) {
+                continue;
+            }
 
-      if (start == 0 && end == text.length()) {
-        buffer.append(text);
-      }
-      else {
-        buffer.append(text.substring(start, end));
-      }
+            if (start == 0 && end == text.length()) {
+                buffer.append(text);
+            }
+            else {
+                buffer.append(text.substring(start, end));
+            }
+        }
+
+        return adjustWhiteSpaceIfNecessary(whiteSpaceText, buffer, 0, endOffset - startOffset, codeStyleSettings, null);
     }
 
-    return adjustWhiteSpaceIfNecessary(whiteSpaceText, buffer, 0, endOffset - startOffset, codeStyleSettings, null);
-  }
-
-  @Nullable
-  private static PsiElement next(@Nonnull final PsiElement element) {
-    for (PsiElement anchor = element; anchor != null; anchor = anchor.getParent()) {
-      final PsiElement result = element.getNextSibling();
-      if (result != null) {
-        return result;
-      }
+    @Nullable
+    @RequiredReadAction
+    private static PsiElement next(@Nonnull PsiElement element) {
+        for (PsiElement anchor = element; anchor != null; anchor = anchor.getParent()) {
+            PsiElement result = element.getNextSibling();
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
     }
-    return null;
-  }
 
-  @Override
-  public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
-    return false;
-  }
+    @Override
+    public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
+        return false;
+    }
 
-  @Override
-  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
-    return false;
-  }
+    @Override
+    public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
+        return false;
+    }
 }

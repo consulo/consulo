@@ -61,9 +61,13 @@ public class NavigationGutterIconBuilder<T> {
 
     protected Supplier<Collection<? extends T>> myTargets;
     protected boolean myLazy;
+    @Nonnull
     private LocalizeValue myTooltipText = LocalizeValue.empty();
-    private String myPopupTitle;
-    private String myEmptyText;
+    @Nonnull
+    private LocalizeValue myPopupTitle = LocalizeValue.empty();
+    @Nonnull
+    private LocalizeValue myEmptyText = LocalizeValue.empty();
+    @Nonnull
     private LocalizeValue myTooltipTitle = LocalizeValue.empty();
     private GutterIconRenderer.Alignment myAlignment = GutterIconRenderer.Alignment.CENTER;
     private Supplier<PsiElementListCellRenderer> myCellRenderer;
@@ -73,35 +77,35 @@ public class NavigationGutterIconBuilder<T> {
     public static final Function<PsiElement, Collection<? extends GotoRelatedItem>> PSI_GOTO_RELATED_ITEM_PROVIDER =
         dom -> Collections.singletonList(new GotoRelatedItem(dom, "XML"));
 
-    protected NavigationGutterIconBuilder(@Nonnull final Image icon, @Nonnull Function<T, Collection<? extends PsiElement>> converter) {
+    protected NavigationGutterIconBuilder(@Nonnull Image icon, @Nonnull Function<T, Collection<? extends PsiElement>> converter) {
         this(icon, converter, null);
     }
 
     protected NavigationGutterIconBuilder(
-        @Nonnull final Image icon,
+        @Nonnull Image icon,
         @Nonnull Function<T, Collection<? extends PsiElement>> converter,
-        final @Nullable Function<T, Collection<? extends GotoRelatedItem>> gotoRelatedItemProvider
+        @Nullable Function<T, Collection<? extends GotoRelatedItem>> gotoRelatedItemProvider
     ) {
         myIcon = icon;
         myConverter = converter;
         myGotoRelatedItemProvider = gotoRelatedItemProvider;
     }
 
-    public static NavigationGutterIconBuilder<PsiElement> create(@Nonnull final Image icon) {
+    public static NavigationGutterIconBuilder<PsiElement> create(@Nonnull Image icon) {
         return create(icon, DEFAULT_PSI_CONVERTOR, PSI_GOTO_RELATED_ITEM_PROVIDER);
     }
 
     public static <T> NavigationGutterIconBuilder<T> create(
-        @Nonnull final Image icon,
+        @Nonnull Image icon,
         @Nonnull Function<T, Collection<? extends PsiElement>> converter
     ) {
         return create(icon, converter, null);
     }
 
     public static <T> NavigationGutterIconBuilder<T> create(
-        @Nonnull final Image icon,
+        @Nonnull Image icon,
         @Nonnull Function<T, Collection<? extends PsiElement>> converter,
-        final @Nullable Function<T, Collection<? extends GotoRelatedItem>> gotoRelatedItemProvider
+        @Nullable Function<T, Collection<? extends GotoRelatedItem>> gotoRelatedItemProvider
     ) {
         return new NavigationGutterIconBuilder<>(icon, converter, gotoRelatedItemProvider);
     }
@@ -115,13 +119,13 @@ public class NavigationGutterIconBuilder<T> {
         return setTargets(Arrays.asList(targets));
     }
 
-    public NavigationGutterIconBuilder<T> setTargets(@Nonnull final Supplier<Collection<? extends T>> targets) {
+    public NavigationGutterIconBuilder<T> setTargets(@Nonnull Supplier<Collection<? extends T>> targets) {
         myTargets = targets;
         myLazy = true;
         return this;
     }
 
-    public NavigationGutterIconBuilder<T> setTargets(@Nonnull final Collection<? extends T> targets) {
+    public NavigationGutterIconBuilder<T> setTargets(@Nonnull Collection<? extends T> targets) {
         myTargets = LazyValue.notNull(() -> targets);
         return this;
     }
@@ -138,18 +142,32 @@ public class NavigationGutterIconBuilder<T> {
         return this;
     }
 
-    public NavigationGutterIconBuilder<T> setAlignment(@Nonnull final GutterIconRenderer.Alignment alignment) {
+    public NavigationGutterIconBuilder<T> setAlignment(@Nonnull GutterIconRenderer.Alignment alignment) {
         myAlignment = alignment;
         return this;
     }
 
-    public NavigationGutterIconBuilder<T> setPopupTitle(@Nonnull String popupTitle) {
+    public NavigationGutterIconBuilder<T> setPopupTitle(@Nonnull LocalizeValue popupTitle) {
         myPopupTitle = popupTitle;
         return this;
     }
 
-    public NavigationGutterIconBuilder<T> setEmptyPopupText(@Nonnull String emptyText) {
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public NavigationGutterIconBuilder<T> setPopupTitle(@Nonnull String popupTitle) {
+        myPopupTitle = LocalizeValue.of(popupTitle);
+        return this;
+    }
+
+    public NavigationGutterIconBuilder<T> setEmptyPopupText(@Nonnull LocalizeValue emptyText) {
         myEmptyText = emptyText;
+        return this;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public NavigationGutterIconBuilder<T> setEmptyPopupText(@Nonnull String emptyText) {
+        myEmptyText = LocalizeValue.of(emptyText);
         return this;
     }
 
@@ -169,7 +187,7 @@ public class NavigationGutterIconBuilder<T> {
         return this;
     }
 
-    public NavigationGutterIconBuilder<T> setCellRenderer(@Nonnull final PsiElementListCellRenderer cellRenderer) {
+    public NavigationGutterIconBuilder<T> setCellRenderer(@Nonnull PsiElementListCellRenderer cellRenderer) {
         myCellRenderer = () -> cellRenderer;
         return this;
     }
@@ -188,7 +206,7 @@ public class NavigationGutterIconBuilder<T> {
     }
 
     protected Annotation doInstall(@Nonnull Annotation annotation, @Nonnull Project project) {
-        final MyNavigationGutterIconRenderer renderer = createGutterIconRenderer(project);
+        MyNavigationGutterIconRenderer renderer = createGutterIconRenderer(project);
         annotation.setGutterIconRenderer(renderer);
         annotation.setNeedsUpdateOnTyping(false);
         return annotation;
@@ -196,7 +214,7 @@ public class NavigationGutterIconBuilder<T> {
 
     @RequiredReadAction
     public RelatedItemLineMarkerInfo<PsiElement> createLineMarkerInfo(@Nonnull PsiElement element) {
-        final MyNavigationGutterIconRenderer renderer = createGutterIconRenderer(element.getProject());
+        MyNavigationGutterIconRenderer renderer = createGutterIconRenderer(element.getProject());
         LocalizeValue tooltip = renderer.getTooltipValue();
         Supplier<Collection<? extends GotoRelatedItem>> gotoTargets = LazyValue.notNull(() -> {
             if (myGotoRelatedItemProvider != null) {
@@ -222,14 +240,14 @@ public class NavigationGutterIconBuilder<T> {
 
     private MyNavigationGutterIconRenderer createGutterIconRenderer(@Nonnull Project project) {
         checkBuilt();
-        final SmartPointerManager manager = SmartPointerManager.getInstance(project);
+        SmartPointerManager manager = SmartPointerManager.getInstance(project);
 
         Supplier<List<SmartPsiElementPointer>> pointers = LazyValue.notNull(() -> {
             Set<PsiElement> elements = new HashSet<>();
             Collection<? extends T> targets = myTargets.get();
-            final List<SmartPsiElementPointer> list = new ArrayList<>(targets.size());
-            for (final T target : targets) {
-                for (final PsiElement psiElement : myConverter.apply(target)) {
+            List<SmartPsiElementPointer> list = new ArrayList<>(targets.size());
+            for (T target : targets) {
+                for (PsiElement psiElement : myConverter.apply(target)) {
                     if (elements.add(psiElement) && psiElement.isValid()) {
                         list.add(manager.createSmartPsiElementPointer(psiElement));
                     }
@@ -238,12 +256,12 @@ public class NavigationGutterIconBuilder<T> {
             return list;
         });
 
-        final boolean empty = isEmpty();
+        boolean empty = isEmpty();
 
         if (myTooltipText == LocalizeValue.empty() && !myLazy) {
-            final SortedSet<String> names = new TreeSet<>();
+            SortedSet<String> names = new TreeSet<>();
             for (T t : myTargets.get()) {
-                final String text = myNamer.apply(t);
+                String text = myNamer.apply(t);
                 if (text != null) {
                     names.add(MessageFormat.format(PATTERN, text));
                 }
@@ -270,8 +288,8 @@ public class NavigationGutterIconBuilder<T> {
 
         Set<PsiElement> elements = new HashSet<>();
         Collection<? extends T> targets = myTargets.get();
-        for (final T target : targets) {
-            for (final PsiElement psiElement : myConverter.apply(target)) {
+        for (T target : targets) {
+            for (PsiElement psiElement : myConverter.apply(target)) {
                 if (elements.add(psiElement)) {
                     return false;
                 }
@@ -288,8 +306,8 @@ public class NavigationGutterIconBuilder<T> {
 
         public MyNavigationGutterIconRenderer(
             @Nonnull NavigationGutterIconBuilder builder,
-            final GutterIconRenderer.Alignment alignment,
-            final Image icon,
+            GutterIconRenderer.Alignment alignment,
+            Image icon,
             @Nonnull LocalizeValue tooltipText,
             @Nonnull Supplier<List<SmartPsiElementPointer>> pointers,
             Supplier<PsiElementListCellRenderer> cellRenderer,
@@ -326,7 +344,7 @@ public class NavigationGutterIconBuilder<T> {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             return this == o
                 || super.equals(o)
                 && o instanceof MyNavigationGutterIconRenderer that

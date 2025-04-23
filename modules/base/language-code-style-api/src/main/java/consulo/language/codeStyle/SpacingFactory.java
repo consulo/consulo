@@ -18,34 +18,52 @@ package consulo.language.codeStyle;
 import consulo.document.util.TextRange;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
  * Internal interface for creating spacing instances.
  */
-
 public interface SpacingFactory {
+    @Nonnull
+    Spacing createSpacing(int minSpaces, int maxSpaces, int minLineFeeds, boolean keepLineBreaks, int keepBlankLines);
 
-  @Nonnull
-  Spacing createSpacing(int minSpaces, int maxSpaces, int minLineFeeds, boolean keepLineBreaks, int keepBlankLines);
+    @Nonnull
+    Spacing getReadOnlySpacing();
 
-  @Nonnull
-  Spacing getReadOnlySpacing();
+    @Nonnull
+    Spacing createDependentLFSpacing(
+        int minSpaces,
+        int maxSpaces,
+        @Nonnull TextRange dependencyRange,
+        boolean keepLineBreaks,
+        int keepBlankLines,
+        @Nonnull DependentSpacingRule rule
+    );
 
-  @Nonnull
-  Spacing createDependentLFSpacing(int minSpaces, int maxSpaces, @Nonnull TextRange dependencyRange, boolean keepLineBreaks, int keepBlankLines, @Nonnull DependentSpacingRule rule);
+    @Nonnull
+    Spacing createDependentLFSpacing(
+        int minSpaces,
+        int maxSpaces,
+        @Nonnull List<TextRange> dependencyRange,
+        boolean keepLineBreaks,
+        int keepBlankLines,
+        @Nonnull DependentSpacingRule rule
+    );
 
+    @Nonnull
+    Spacing createSafeSpacing(boolean keepLineBreaks, int keepBlankLines);
 
-  @Nonnull
-  Spacing createDependentLFSpacing(int minSpaces, int maxSpaces, @Nonnull List<TextRange> dependencyRange, boolean keepLineBreaks, int keepBlankLines, @Nonnull DependentSpacingRule rule);
+    @Nonnull
+    Spacing createKeepingFirstColumnSpacing(int minSpaces, int maxSpaces, boolean keepLineBreaks, int keepBlankLines);
 
-
-  @Nonnull
-  Spacing createSafeSpacing(boolean keepLineBreaks, int keepBlankLines);
-
-  @Nonnull
-  Spacing createKeepingFirstColumnSpacing(final int minSpaces, final int maxSpaces, final boolean keepLineBreaks, final int keepBlankLines);
-
-  @Nonnull
-  Spacing createSpacing(final int minSpaces, final int maxSpaces, final int minLineFeeds, final boolean keepLineBreaks, final int keepBlankLines, final int prefLineFeeds);
+    @Nonnull
+    Spacing createSpacing(
+        int minSpaces,
+        int maxSpaces,
+        int minLineFeeds,
+        boolean keepLineBreaks,
+        int keepBlankLines,
+        int prefLineFeeds
+    );
 }

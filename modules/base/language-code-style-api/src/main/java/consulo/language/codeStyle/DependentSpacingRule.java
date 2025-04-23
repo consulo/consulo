@@ -25,74 +25,75 @@ import jakarta.annotation.Nonnull;
  * Holds settings that should be used if
  * {@link Spacing#createDependentLFSpacing(int, int, TextRange, boolean, int, DependentSpacingRule) dependent spacing}
  * target region changes its 'contains line feeds' status.
- * 
+ *
  * @author Denis Zhdanov
  * @since 6/28/12 1:08 PM
  */
 public class DependentSpacingRule {
-
-  public enum Anchor {
-    MIN_LINE_FEEDS, MAX_LINE_FEEDS
-  }
-
-  public enum Trigger {
-    HAS_LINE_FEEDS, DOES_NOT_HAVE_LINE_FEEDS
-  }
-
-  public static final DependentSpacingRule DEFAULT =
-    new DependentSpacingRule(Trigger.HAS_LINE_FEEDS).registerData(Anchor.MIN_LINE_FEEDS, 1);
-
-  private final ObjectIntMap<Anchor> myData = ObjectMaps.newObjectIntHashMap();
-
-  @Nonnull
-  private final Trigger myTrigger;
-
-  public DependentSpacingRule(@Nonnull Trigger trigger) {
-    myTrigger = trigger;
-  }
-
-  @Nonnull
-  public Trigger getTrigger() {
-    return myTrigger;
-  }
-
-  /**
-   * Allows to register given data for the given anchor within the current rule.
-   *
-   * @param anchor  target anchor
-   * @param data    data to register for the given anchor
-   * @param <T>     data's type
-   * @see #getData(Anchor)
-   */
-  public DependentSpacingRule registerData(@Nonnull Anchor anchor, int data) {
-    myData.putInt(anchor, data);
-    return this;
-  }
-
-  /**
-   * @param anchor  target data anchor
-   * @return        <code>true</code> if there is a data registered for the given anchor within the current rule;
-   *                <code>false</code> otherwise
-   */
-  public boolean hasData(@Nonnull Anchor anchor) {
-    return myData.containsKey(anchor);
-  }
-
-  /**
-   * Allows to retrieve data associated with the given anchor.
-   *
-   * @param anchor  target anchor
-   * @param <T>     data's type
-   * @return data associated for the given anchor
-   * @throws IllegalArgumentException   if no data is registered for the given anchor
-   *                                    (use {@link #hasData(Anchor)} for the preliminary examination)
-   */
-  public int getData(@Nonnull Anchor anchor) throws IllegalArgumentException {
-    if (!myData.containsKey(anchor)) {
-      throw new IllegalArgumentException(String.format(
-        "No data is registered for the dependent spacing rule %s. Registered: %s", anchor, myData
-      ));
+    public enum Anchor {
+        MIN_LINE_FEEDS,
+        MAX_LINE_FEEDS
     }
-    return myData.getInt(anchor);
-  }
+
+    public enum Trigger {
+        HAS_LINE_FEEDS,
+        DOES_NOT_HAVE_LINE_FEEDS
+    }
+
+    public static final DependentSpacingRule DEFAULT =
+        new DependentSpacingRule(Trigger.HAS_LINE_FEEDS).registerData(Anchor.MIN_LINE_FEEDS, 1);
+
+    private final ObjectIntMap<Anchor> myData = ObjectMaps.newObjectIntHashMap();
+
+    @Nonnull
+    private final Trigger myTrigger;
+
+    public DependentSpacingRule(@Nonnull Trigger trigger) {
+        myTrigger = trigger;
+    }
+
+    @Nonnull
+    public Trigger getTrigger() {
+        return myTrigger;
+    }
+
+    /**
+     * Allows to register given data for the given anchor within the current rule.
+     *
+     * @param anchor target anchor
+     * @param data   data to register for the given anchor
+     * @param <T>    data's type
+     * @see #getData(Anchor)
+     */
+    public DependentSpacingRule registerData(@Nonnull Anchor anchor, int data) {
+        myData.putInt(anchor, data);
+        return this;
+    }
+
+    /**
+     * @param anchor target data anchor
+     * @return <code>true</code> if there is a data registered for the given anchor within the current rule;
+     * <code>false</code> otherwise
+     */
+    public boolean hasData(@Nonnull Anchor anchor) {
+        return myData.containsKey(anchor);
+    }
+
+    /**
+     * Allows to retrieve data associated with the given anchor.
+     *
+     * @param anchor target anchor
+     * @param <T>    data's type
+     * @return data associated for the given anchor
+     * @throws IllegalArgumentException if no data is registered for the given anchor
+     *                                  (use {@link #hasData(Anchor)} for the preliminary examination)
+     */
+    public int getData(@Nonnull Anchor anchor) throws IllegalArgumentException {
+        if (!myData.containsKey(anchor)) {
+            throw new IllegalArgumentException(
+                String.format("No data is registered for the dependent spacing rule %s. Registered: %s", anchor, myData)
+            );
+        }
+        return myData.getInt(anchor);
+    }
 }

@@ -18,30 +18,30 @@ package consulo.language.codeStyle;
 import consulo.util.lang.CharArrayUtil;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author Denis Zhdanov
- * @since Sep 21, 2010 2:49:43 PM
+ * @since 2010-09-21
  */
 public abstract class StaticTextWhiteSpaceDefinitionStrategy extends AbstractWhiteSpaceFormattingStrategy {
+    private final Set<CharSequence> myWhiteSpaces = new HashSet<>();
 
-  private final Set<CharSequence> myWhiteSpaces = new HashSet<CharSequence>();
-
-  public StaticTextWhiteSpaceDefinitionStrategy(@Nonnull CharSequence ... whiteSpaces) {
-    myWhiteSpaces.addAll(Arrays.asList(whiteSpaces));
-  }
-
-  @Override
-  public int check(@Nonnull CharSequence text, int start, int end) {
-    for (CharSequence whiteSpace : myWhiteSpaces) {
-      if (CharArrayUtil.indexOf(text, whiteSpace, start, end) == start) {
-        return start + whiteSpace.length();
-      }
+    public StaticTextWhiteSpaceDefinitionStrategy(@Nonnull CharSequence... whiteSpaces) {
+        myWhiteSpaces.addAll(Arrays.asList(whiteSpaces));
     }
 
-    return start;
-  }
+    @Override
+    public int check(@Nonnull CharSequence text, int start, int end) {
+        for (CharSequence whiteSpace : myWhiteSpaces) {
+            if (CharArrayUtil.indexOf(text, whiteSpace, start, end) == start) {
+                return start + whiteSpace.length();
+            }
+        }
+
+        return start;
+    }
 }
