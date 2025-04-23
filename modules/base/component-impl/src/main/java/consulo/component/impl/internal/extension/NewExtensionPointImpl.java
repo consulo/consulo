@@ -399,6 +399,24 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
+    public void forEachExtensionSafe(@Nonnull Function<? super T, Flow> breakableConsumer) {
+        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0, n = extensionCache.size(); i < n; i++) {
+            T t = extensionCache.get(i).getKey();
+            try {
+                if (breakableConsumer.apply(t) == Flow.BREAK) {
+                    break;
+                }
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, t);
+            }
+        }
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();

@@ -20,6 +20,7 @@ import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
+import consulo.component.extension.ExtensionPoint;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.*;
@@ -318,7 +319,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         }
         List<StripTrailingSpacesFilter> filters = new ArrayList<>();
         SimpleReference<StripTrailingSpacesFilter> specialFilter = SimpleReference.create();
-        Application.get().getExtensionPoint(StripTrailingSpacesFilterFactory.class).anyMatchSafe(filterFactory -> {
+        Application.get().getExtensionPoint(StripTrailingSpacesFilterFactory.class).forEachExtensionSafe(filterFactory -> {
             StripTrailingSpacesFilter filter = filterFactory.createFilter(project, this);
             if (specialFilter.isNull()
                 && (filter == StripTrailingSpacesFilter.NOT_ALLOWED || filter == StripTrailingSpacesFilter.POSTPONED)) {
@@ -327,12 +328,12 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
             else if (filter == StripTrailingSpacesFilter.ENFORCED_REMOVAL) {
                 specialFilter.set(null);
                 filters.clear();
-                return true;
+                return ExtensionPoint.Flow.BREAK;
             }
             else {
                 filters.add(filter);
             }
-            return false;
+            return ExtensionPoint.Flow.CONTINUE;
         });
 
         if (!specialFilter.isNull()) {
