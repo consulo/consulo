@@ -1,20 +1,20 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document.impl;
 
-import consulo.application.util.function.Processor;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
-import consulo.document.internal.EditReadOnlyListener;
 import consulo.document.internal.DocumentEx;
+import consulo.document.internal.EditReadOnlyListener;
 import consulo.document.internal.LineIterator;
 import consulo.document.internal.RangeMarkerEx;
 import consulo.document.util.TextRange;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ImmutableCharSequence;
 import consulo.util.lang.ref.SoftReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.function.Predicate;
 
 /**
  * @author peter
@@ -43,8 +43,8 @@ public class FrozenDocument implements DocumentEx {
     }
 
     public FrozenDocument applyEvent(DocumentEvent event, int newStamp) {
-        final int offset = event.getOffset();
-        final int oldEnd = offset + event.getOldLength();
+        int offset = event.getOffset();
+        int oldEnd = offset + event.getOldLength();
         ImmutableCharSequence newText = myText.delete(offset, oldEnd).insert(offset, event.getNewFragment());
         LineSet newLineSet = getLineSet().update(myText, offset, oldEnd, event.getNewFragment(), event.isWholeTextReplaced());
         return new FrozenDocument(newText, newLineSet, newStamp, null);
@@ -89,12 +89,12 @@ public class FrozenDocument implements DocumentEx {
     }
 
     @Override
-    public boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor) {
+    public boolean processRangeMarkers(@Nonnull Predicate<? super RangeMarker> processor) {
         return true;
     }
 
     @Override
-    public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor) {
+    public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeMarker> processor) {
         return true;
     }
 

@@ -16,10 +16,9 @@
 package consulo.document.impl;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
-import consulo.application.util.function.Processor;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -37,6 +36,7 @@ import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
@@ -49,6 +49,7 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.*;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -64,6 +65,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     private static final Logger LOG = Logger.getInstance(DocumentImpl.class);
@@ -257,6 +259,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
     }
 
+    @Override
     public boolean setAcceptSlashR(boolean accept) {
         try {
             return myAcceptSlashR;
@@ -314,24 +317,26 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
             return true;
         }
         List<StripTrailingSpacesFilter> filters = new ArrayList<>();
-        StripTrailingSpacesFilter specialFilter = null;
-        for (StripTrailingSpacesFilterFactory filterFactory : StripTrailingSpacesFilterFactory.EXTENSION_POINT.getExtensionList()) {
+        SimpleReference<StripTrailingSpacesFilter> specialFilter = SimpleReference.create();
+        Application.get().getExtensionPoint(StripTrailingSpacesFilterFactory.class).anyMatchSafe(filterFactory -> {
             StripTrailingSpacesFilter filter = filterFactory.createFilter(project, this);
-            if (specialFilter == null && (filter == StripTrailingSpacesFilter.NOT_ALLOWED || filter == StripTrailingSpacesFilter.POSTPONED)) {
-                specialFilter = filter;
+            if (specialFilter.isNull()
+                && (filter == StripTrailingSpacesFilter.NOT_ALLOWED || filter == StripTrailingSpacesFilter.POSTPONED)) {
+                specialFilter.set(filter);
             }
             else if (filter == StripTrailingSpacesFilter.ENFORCED_REMOVAL) {
-                specialFilter = null;
+                specialFilter.set(null);
                 filters.clear();
-                break;
+                return true;
             }
             else {
                 filters.add(filter);
             }
-        }
+            return false;
+        });
 
-        if (specialFilter != null) {
-            return specialFilter == StripTrailingSpacesFilter.NOT_ALLOWED;
+        if (!specialFilter.isNull()) {
+            return specialFilter.get() == StripTrailingSpacesFilter.NOT_ALLOWED;
         }
 
         IntIntMap caretPositions = null;
@@ -357,7 +362,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
             }
 
             int whiteSpaceStart = -1;
-            final int lineEnd = lineSet.getLineEnd(line) - lineSet.getSeparatorLength(line);
+            int lineEnd = lineSet.getLineEnd(line) - lineSet.getSeparatorLength(line);
             int lineStart = lineSet.getLineStart(line);
             for (int offset = lineEnd - 1; offset >= lineStart; offset--) {
                 char c = text.charAt(offset);
@@ -378,7 +383,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
                 }
             }
 
-            final int finalStart = whiteSpaceStart + maxSpacesToLeave;
+            int finalStart = whiteSpaceStart + maxSpacesToLeave;
             if (finalStart < lineEnd) {
                 targetOffsets[targetOffsetPos++] = finalStart;
                 targetOffsets[targetOffsetPos++] = lineEnd;
@@ -431,7 +436,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         return myReadonlyFragmentModificationHandler;
     }
 
-    public void setReadonlyFragmentModificationHandler(final ReadonlyFragmentModificationHandler readonlyFragmentModificationHandler) {
+    public void setReadonlyFragmentModificationHandler(ReadonlyFragmentModificationHandler readonlyFragmentModificationHandler) {
         myReadonlyFragmentModificationHandler = readonlyFragmentModificationHandler;
     }
 
@@ -589,12 +594,14 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
+    @RequiredWriteAction
     public void replaceText(@Nonnull CharSequence chars, long newModificationStamp) {
         replaceString(0, getTextLength(), chars, newModificationStamp, true); //TODO: optimization!!!
         clearLineModificationFlags();
     }
 
     @Override
+    @RequiredWriteAction
     public void insertString(int offset, @Nonnull CharSequence s) {
         if (offset < 0) {
             throw new IndexOutOfBoundsException("Wrong offset: " + offset);
@@ -626,6 +633,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         trimToSize();
     }
 
+    @RequiredWriteAction
     private void trimToSize() {
         if (myBufferSize != 0 && getTextLength() > myBufferSize) {
             deleteString(0, getTextLength() - myBufferSize);
@@ -633,6 +641,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
+    @RequiredWriteAction
     public void deleteString(int startOffset, int endOffset) {
         assertBounds(startOffset, endOffset);
 
@@ -655,6 +664,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
+    @RequiredWriteAction
     public void moveText(int srcStart, int srcEnd, int dstOffset) {
         assertBounds(srcStart, srcEnd);
         if (dstOffset == srcStart || dstOffset == srcEnd) {
@@ -684,15 +694,17 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
+    @RequiredWriteAction
     public void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s) {
         replaceString(startOffset, endOffset, s, LocalTimeCounter.currentTime(), false);
     }
 
+    @RequiredWriteAction
     private void replaceString(
         int startOffset,
         int endOffset,
         @Nonnull CharSequence s,
-        final long newModificationStamp,
+        long newModificationStamp,
         boolean wholeTextReplaced
     ) {
         assertBounds(startOffset, endOffset);
@@ -707,7 +719,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         int initialStartOffset = startOffset;
         int initialOldLength = endOffset - startOffset;
 
-        final int newStringLength = s.length();
+        int newStringLength = s.length();
         final CharSequence chars = myText;
         int newStartInString = 0;
         while (newStartInString < newStringLength && startOffset < endOffset && s.charAt(newStartInString) == chars.charAt(startOffset)) {
@@ -768,7 +780,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     @RequiredWriteAction
     private void assertWriteAccess() {
         if (myAssertThreading) {
-            final Application application = ApplicationManager.getApplication();
+            Application application = ApplicationManager.getApplication();
             if (application != null) {
                 application.assertWriteAccessAllowed();
             }
@@ -1038,7 +1050,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     @Nonnull
     @Override
     public String getText() {
-        return ReadAction.compute(this::doGetText);
+        return AccessRule.read(this::doGetText);
     }
 
     @Nonnull
@@ -1052,8 +1064,8 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
     @Nonnull
     @Override
-    public String getText(@Nonnull final TextRange range) {
-        return ReadAction.compute(() -> myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString());
+    public String getText(@Nonnull TextRange range) {
+        return AccessRule.read(() -> myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString());
     }
 
     @Override
@@ -1198,6 +1210,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     @Override
     @RequiredUIAccess
     public void setText(@Nonnull final CharSequence text) {
+        @RequiredWriteAction
         Runnable runnable = () -> replaceString(0, getTextLength(), text, LocalTimeCounter.currentTime(), true);
         if (CommandProcessor.getInstance().isUndoTransparentActionInProgress()) {
             runnable.run();
@@ -1220,7 +1233,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     @RequiredUIAccess
     public final void setInBulkUpdate(boolean value) {
         if (myAssertThreading) {
-            Application.get().assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
         }
         if (myUpdatingBulkModeStatus) {
             throw new IllegalStateException("Detected bulk mode status update from DocumentBulkUpdateListener");
@@ -1287,12 +1300,12 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
-    public boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor) {
+    public boolean processRangeMarkers(@Nonnull Predicate<? super RangeMarker> processor) {
         return processRangeMarkersOverlappingWith(0, getTextLength(), processor);
     }
 
     @Override
-    public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor) {
+    public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeMarker> processor) {
         TextRangeInterval interval = new TextRangeInterval(start, end);
         MarkupIterator<RangeMarkerEx> iterator = IntervalTreeImpl.mergingOverlappingIterator(
             myRangeMarkers,

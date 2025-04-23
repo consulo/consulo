@@ -346,7 +346,7 @@ public interface Document extends UserDataHolder {
     default void setCyclicBufferSize(int bufferSize) {
     }
 
-    void setText(@Nonnull final CharSequence text);
+    void setText(@Nonnull CharSequence text);
 
     @Nonnull
     default RangeMarker createRangeMarker(@Nonnull TextRange textRange) {

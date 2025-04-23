@@ -24,7 +24,7 @@ import javax.swing.text.BadLocationException;
 public class TextAreaDocument extends TextComponentDocument {
     private final JTextArea myTextArea;
 
-    public TextAreaDocument(final JTextArea textComponent) {
+    public TextAreaDocument(JTextArea textComponent) {
         super(textComponent);
         myTextArea = textComponent;
     }
@@ -35,7 +35,7 @@ public class TextAreaDocument extends TextComponentDocument {
     }
 
     @Override
-    public int getLineNumber(final int offset) {
+    public int getLineNumber(int offset) {
         try {
             return myTextArea.getLineOfOffset(offset);
         }
@@ -45,7 +45,7 @@ public class TextAreaDocument extends TextComponentDocument {
     }
 
     @Override
-    public int getLineStartOffset(final int line) {
+    public int getLineStartOffset(int line) {
         try {
             return myTextArea.getLineStartOffset(line);
         }
@@ -55,7 +55,7 @@ public class TextAreaDocument extends TextComponentDocument {
     }
 
     @Override
-    public int getLineEndOffset(final int line) {
+    public int getLineEndOffset(int line) {
         try {
             return myTextArea.getLineEndOffset(line) - getLineSeparatorLength(line);
         }
@@ -65,7 +65,7 @@ public class TextAreaDocument extends TextComponentDocument {
     }
 
     @Override
-    public int getLineSeparatorLength(final int line) {
+    public int getLineSeparatorLength(int line) {
         if (line == myTextArea.getLineCount() - 1) {
             return 0;
         }

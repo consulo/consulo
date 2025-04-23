@@ -2,23 +2,24 @@
 package consulo.ide.impl.idea.openapi.editor.impl;
 
 import consulo.document.RangeMarker;
-import consulo.document.impl.*;
-import consulo.util.lang.StringUtil;
-import consulo.application.util.function.Processor;
+import consulo.document.impl.LineSet;
+import consulo.document.impl.RangeMarkerTree;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.LineIterator;
 import consulo.document.internal.RangeMarkerEx;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.UserDataHolderBase;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Predicate;
 
 /**
  * Read-only document optimized for rendering of millions of EditorTextFields.
  * The only mutating method is setText() which is extremely cheap.
  */
 public class EditorTextFieldRendererDocument extends UserDataHolderBase implements DocumentEx {
-    private final RangeMarkerTree<RangeMarkerEx> myRangeMarkers = new RangeMarkerTree<RangeMarkerEx>(this) {
+    private final RangeMarkerTree<RangeMarkerEx> myRangeMarkers = new RangeMarkerTree<>(this) {
     };
     private char[] myChars = ArrayUtil.EMPTY_CHAR_ARRAY;
     private String myString = "";
@@ -66,12 +67,12 @@ public class EditorTextFieldRendererDocument extends UserDataHolderBase implemen
     }
 
     @Override
-    public boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor) {
+    public boolean processRangeMarkers(@Nonnull Predicate<? super RangeMarker> processor) {
         return myRangeMarkers.processAll(processor);
     }
 
     @Override
-    public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor) {
+    public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeMarker> processor) {
         return myRangeMarkers.processOverlappingWith(start, end, processor);
     }
 
