@@ -15,7 +15,6 @@
  */
 package consulo.document.internal;
 
-import consulo.application.util.function.Processor;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
@@ -23,6 +22,7 @@ import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface DocumentEx extends Document {
     default void setStripTrailingSpacesEnabled(boolean isEnabled) {
@@ -89,13 +89,13 @@ public interface DocumentEx extends Document {
      * Get all range markers
      * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
      */
-    boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor);
+    boolean processRangeMarkers(@Nonnull Predicate<? super RangeMarker> processor);
 
     /**
      * Get range markers which {@link TextRange#intersects(int, int)} the specified range
      * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
      */
-    boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor);
+    boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeMarker> processor);
 
     /**
      * @return modification stamp. Guaranteed to be strictly increasing on each change unlike the {@link #getModificationStamp()} which can change arbitrarily.

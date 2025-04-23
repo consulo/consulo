@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.document;
 
 import consulo.document.util.Segment;
@@ -24,44 +20,47 @@ import consulo.document.util.TextRange;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 public interface DocumentWindow extends Document {
-  @Nonnull
-  Document getDelegate();
+    @Nonnull
+    Document getDelegate();
 
-  /**
-   * @deprecated use {@link #injectedToHost(int)} instead
-   */
-  @Deprecated
-  default int hostToInjectedUnescaped(int hostOffset) {
-    return injectedToHost(hostOffset);
-  }
+    /**
+     * @deprecated use {@link #injectedToHost(int)} instead
+     */
+    @Deprecated
+    default int hostToInjectedUnescaped(int hostOffset) {
+        return injectedToHost(hostOffset);
+    }
 
-  int injectedToHost(int injectedOffset);
+    int injectedToHost(int injectedOffset);
 
-  /**
-   * @param minHostOffset if {@code true} minimum host offset corresponding to given injected offset is returned, otherwise maximum related
-   *                      host offset is returned
-   */
-  int injectedToHost(int injectedOffset, boolean minHostOffset);
+    /**
+     * @param minHostOffset if {@code true} minimum host offset corresponding to given injected offset is returned, otherwise maximum related
+     *                      host offset is returned
+     */
+    int injectedToHost(int injectedOffset, boolean minHostOffset);
 
-  @Nonnull
-  TextRange injectedToHost(@Nonnull TextRange injectedOffset);
+    @Nonnull
+    TextRange injectedToHost(@Nonnull TextRange injectedOffset);
 
-  int hostToInjected(int hostOffset);
+    int hostToInjected(int hostOffset);
 
-  @Nullable
-  TextRange getHostRange(int hostOffset);
+    @Nullable
+    TextRange getHostRange(int hostOffset);
 
-  int injectedToHostLine(int line);
+    int injectedToHostLine(int line);
 
-  @Nonnull
-  Segment[] getHostRanges();
+    @Nonnull
+    Segment[] getHostRanges();
 
-  boolean areRangesEqual(@Nonnull DocumentWindow documentWindow);
+    boolean areRangesEqual(@Nonnull DocumentWindow documentWindow);
 
-  boolean isValid();
+    boolean isValid();
 
-  boolean containsRange(int hostStart, int hostEnd);
+    boolean containsRange(int hostStart, int hostEnd);
 
-  boolean isOneLine();
+    boolean isOneLine();
 }
