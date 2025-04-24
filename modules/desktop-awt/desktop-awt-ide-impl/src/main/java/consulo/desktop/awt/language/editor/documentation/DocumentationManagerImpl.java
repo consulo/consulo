@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.ide.actions.BaseNavigateToSourceAction;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
-import consulo.ide.impl.idea.lang.documentation.DocumentationMarkup;
+import consulo.language.editor.documentation.DocumentationMarkup;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;

@@ -400,7 +400,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.lang;
   exports consulo.ide.impl.idea.lang.cacheBuilder;
   exports consulo.ide.impl.idea.lang.customFolding;
-  exports consulo.ide.impl.idea.lang.documentation;
   exports consulo.ide.impl.idea.lang.folding;
   exports consulo.ide.impl.idea.lang.parameterInfo;
   exports consulo.ide.impl.idea.model.search.impl;
