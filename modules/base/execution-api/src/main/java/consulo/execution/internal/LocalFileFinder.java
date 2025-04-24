@@ -1,10 +1,10 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.util;
+package consulo.execution.internal;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.platform.Platform;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;

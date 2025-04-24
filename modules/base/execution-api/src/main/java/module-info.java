@@ -22,6 +22,8 @@ module consulo.execution.api {
 
     requires consulo.external.service.api;
 
+    requires static com.google.common;
+
     exports consulo.execution;
     exports consulo.execution.action;
     exports consulo.execution.configuration;

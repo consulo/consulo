@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.ui.console;
 
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 public class PatternBasedFileHyperlinkFilter extends AbstractFileHyperlinkFilter implements DumbAware {
 
   private final PatternBasedFileHyperlinkRawDataFinder myFinder;
 
-  public PatternBasedFileHyperlinkFilter(@Nonnull Project project, @Nullable String baseDir, @Nonnull PatternBasedFileHyperlinkRawDataFinder finder) {
+  public PatternBasedFileHyperlinkFilter(@Nonnull Project project,
+                                         @Nullable String baseDir,
+                                         @Nonnull PatternBasedFileHyperlinkRawDataFinder finder) {
     super(project, baseDir);
     myFinder = finder;
   }

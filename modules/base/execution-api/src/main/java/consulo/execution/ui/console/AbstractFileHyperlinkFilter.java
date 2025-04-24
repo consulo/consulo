@@ -1,13 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.ui.console;
 
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
-import consulo.execution.ui.console.Filter;
-import consulo.execution.ui.console.HyperlinkInfo;
-import consulo.execution.ui.console.OpenFileHyperlinkInfo;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.util.LocalFileFinder;
+import consulo.execution.internal.LocalFileFinder;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
@@ -16,6 +12,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -152,7 +149,7 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
     public void navigate(@Nonnull Project project) {
       Ref<VirtualFile> fileRef = myFileRef;
       if (fileRef == null) {
-        VirtualFile file = WriteAction.compute(() -> VfsUtil.findFileByIoFile(myIoFile, true));
+        VirtualFile file = WriteAction.compute(() -> VirtualFileUtil.findFileByIoFile(myIoFile, true));
         fileRef = Ref.create(file);
         myFileRef = fileRef;
       }

@@ -772,7 +772,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.ui.popup;
   exports consulo.ide.impl.ui.tree.impl;
   exports consulo.ide.impl.usage;
-  exports consulo.ide.impl.util;
   exports consulo.ide.impl.vcs;
   exports consulo.ide.impl.vfs.newvfs;
   exports consulo.ide.impl.vfs.newvfs.persistent;
