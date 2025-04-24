@@ -118,9 +118,6 @@ public abstract class AnAction implements PossiblyDumbAware {
     private boolean myIsDefaultIcon = true;
     private boolean myWorksInInjected;
 
-    private boolean myCanUseProjectAsDefault;
-    private String[] myModuleExtensionIds = ArrayUtil.EMPTY_STRING_ARRAY;
-
     /**
      * Creates a new action with its text, description and icon set to <code>null</code>.
      */
@@ -392,26 +389,6 @@ public abstract class AnAction implements PossiblyDumbAware {
     @Nonnull
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.EDT;
-    }
-
-    public boolean isCanUseProjectAsDefault() {
-        return myCanUseProjectAsDefault;
-    }
-
-    public void setCanUseProjectAsDefault(boolean canUseProjectAsDefault) {
-        myCanUseProjectAsDefault = canUseProjectAsDefault;
-    }
-
-    @Nonnull
-    public String[] getModuleExtensionIds() {
-        return myModuleExtensionIds;
-    }
-
-    public void setModuleExtensionIds(@Nonnull String[] moduleExtensionIds) {
-        myModuleExtensionIds = moduleExtensionIds;
-    }
-
-    public interface TransparentUpdate {
     }
 
     /**

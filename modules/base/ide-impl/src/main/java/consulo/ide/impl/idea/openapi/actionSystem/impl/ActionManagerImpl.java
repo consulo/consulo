@@ -118,8 +118,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     private static final String USE_SHORTCUT_OF_ATTR_NAME = "use-shortcut-of";
     private static final String OVERRIDES_ATTR_NAME = "overrides";
     private static final String KEEP_CONTENT_ATTR_NAME = "keep-content";
-    private static final String REQUIRE_MODULE_EXTENSIONS = "require-module-extensions";
-    private static final String CAN_USE_PROJECT_AS_DEFAULT = "can-use-project-as-default";
 
     private static final Logger LOG = Logger.getInstance(ActionManagerImpl.class);
     private static final int DEACTIVATED_TIMER_DELAY = 5000;
@@ -377,13 +375,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             final AbbreviationManagerImpl abbreviationManager = (AbbreviationManagerImpl) AbbreviationManager.getInstance();
             abbreviationManager.register(abbr, id, true);
         }
-    }
-
-    private static void processModuleExtensionOptions(SimpleXmlElement element, AnAction action) {
-        String canUseProjectAsDefaultText = element.getAttributeValue(CAN_USE_PROJECT_AS_DEFAULT);
-        boolean canUseProjectAsDefault = !StringUtil.isEmpty(canUseProjectAsDefaultText) && Boolean.parseBoolean(canUseProjectAsDefaultText);
-
-        action.setCanUseProjectAsDefault(canUseProjectAsDefault);
     }
 
     private static boolean isSecondary(SimpleXmlElement element) {
@@ -713,8 +704,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             return presentation;
         });
 
-        processModuleExtensionOptions(element, stub);
-
         // process all links and key bindings if any
         for (SimpleXmlElement e : element.getChildren()) {
             if (ADD_TO_GROUP_ELEMENT_NAME.equals(e.getName())) {
@@ -828,8 +817,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
             registerOrReplaceActionInner(element, id, group, pluginId);
             Presentation presentation = group.getTemplatePresentation();
-
-            processModuleExtensionOptions(element, group);
 
             // text
             LocalizeValue textValue = computeActionText(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(TEXT_ATTR_NAME));

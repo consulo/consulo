@@ -75,12 +75,12 @@ public class XmlActionGroupStub extends DefaultActionGroup implements ActionStub
   @Nullable
   @Override
   public AnAction initialize(@Nonnull Application application, @Nonnull ActionManager manager) {
-    return convertGroupStub(this, manager);
+    return convertGroupStub(application, this, manager);
   }
 
   @Nullable
-  static ActionGroup convertGroupStub(@Nonnull XmlActionGroupStub stub, @Nonnull ActionManager actionManager) {
-    ActionGroup group = XmlActionStub.instantiate(stub.getActionClass(), stub.getClassLoader(), stub.getPluginId(), ActionGroup.class);
+  static ActionGroup convertGroupStub(@Nonnull Application application, @Nonnull XmlActionGroupStub stub, @Nonnull ActionManager actionManager) {
+    ActionGroup group = XmlActionStub.instantiate(application, stub.getActionClass(), stub.getClassLoader(), stub.getPluginId(), ActionGroup.class);
     if (group == null) return null;
     stub.initGroup(group, actionManager);
     XmlActionStub.updateIconFromStub(stub, group);
@@ -93,8 +93,6 @@ public class XmlActionGroupStub extends DefaultActionGroup implements ActionStub
 
   public void initGroup(ActionGroup target, ActionManager actionManager) {
     XmlActionStub.copyTemplatePresentation(getTemplatePresentation(), target.getTemplatePresentation());
-    target.setCanUseProjectAsDefault(isCanUseProjectAsDefault());
-    target.setModuleExtensionIds(getModuleExtensionIds());
 
     target.setShortcutSet(getShortcutSet());
 

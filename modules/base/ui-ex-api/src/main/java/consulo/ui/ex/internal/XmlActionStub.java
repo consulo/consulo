@@ -20,6 +20,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
@@ -30,9 +31,9 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.ui.style.StandardColors;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Supplier;
 
 /**
@@ -42,135 +43,141 @@ import java.util.function.Supplier;
  * @author Vladimir Kondratyev
  */
 public class XmlActionStub extends AnAction implements ActionStubBase {
-  private static final Logger LOG = Logger.getInstance(XmlActionStub.class);
+    private static final Logger LOG = Logger.getInstance(XmlActionStub.class);
 
-  private final String myClassName;
-  private final String myId;
-  private final String myIconPath;
-  private final Supplier<Presentation> myTemplatePresentation;
-  @Nonnull
-  private final PluginDescriptor myPluginDescriptor;
+    private final String myClassName;
+    private final String myId;
+    private final String myIconPath;
+    private final Supplier<Presentation> myTemplatePresentation;
+    @Nonnull
+    private final PluginDescriptor myPluginDescriptor;
 
-  public XmlActionStub(@Nonnull String actionClass, @Nonnull String id, @Nonnull PluginDescriptor pluginDescriptor, String iconPath, @Nonnull Supplier<Presentation> templatePresentation) {
-    LOG.assertTrue(id.length() > 0);
-    myPluginDescriptor = pluginDescriptor;
-    myClassName = actionClass;
-    myId = id;
-    myIconPath = iconPath;
-    myTemplatePresentation = templatePresentation;
-  }
-
-  @Nonnull
-  @Override
-  protected Presentation createTemplatePresentation() {
-    return myTemplatePresentation.get();
-  }
-
-  public String getClassName() {
-    return myClassName;
-  }
-
-  @Override
-  public String getId() {
-    return myId;
-  }
-
-  public ClassLoader getLoader() {
-    return myPluginDescriptor.getPluginClassLoader();
-  }
-
-  @Override
-  public PluginId getPluginId() {
-    return myPluginDescriptor.getPluginId();
-  }
-
-  @Override
-  public String getIconPath() {
-    return myIconPath;
-  }
-
-  @Nullable
-  @Override
-  public AnAction initialize(@Nonnull Application application, @Nonnull ActionManager manager) {
-    return convertStub(this);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nullable
-  static AnAction convertStub(@Nonnull XmlActionStub stub) {
-    AnAction anAction = instantiate(stub.getClassName(), stub.getLoader(), stub.getPluginId(), AnAction.class);
-    if (anAction == null) return null;
-
-    stub.initAction(anAction);
-    updateIconFromStub(stub, anAction);
-    return anAction;
-  }
-
-  @Nullable
-  @SuppressWarnings("unchecked")
-  static <T> T instantiate(String stubClassName, ClassLoader classLoader, PluginId pluginId, Class<T> expectedClass) {
-    Object obj;
-    try {
-      Class<?> actionClass = Class.forName(stubClassName, true, classLoader);
-      obj = Application.get().getUnbindedInstance(actionClass);
-    }
-    catch (ProcessCanceledException e) {
-      throw e;
-    }
-    catch (Throwable e) {
-      LOG.error(new PluginException(e, pluginId));
-      return null;
+    public XmlActionStub(@Nonnull String actionClass, @Nonnull String id, @Nonnull PluginDescriptor pluginDescriptor, String iconPath, @Nonnull Supplier<Presentation> templatePresentation) {
+        LOG.assertTrue(id.length() > 0);
+        myPluginDescriptor = pluginDescriptor;
+        myClassName = actionClass;
+        myId = id;
+        myIconPath = iconPath;
+        myTemplatePresentation = templatePresentation;
     }
 
-    if (!expectedClass.isInstance(obj)) {
-      LOG.error(new PluginException("class with name '" + stubClassName + "' must be an instance of '" + expectedClass.getName() + "'; got " + obj, pluginId));
-      return null;
+    @Nonnull
+    @Override
+    protected Presentation createTemplatePresentation() {
+        return myTemplatePresentation.get();
     }
-    //noinspection unchecked
-    return (T)obj;
-  }
 
-  static void updateIconFromStub(@Nonnull ActionStubBase stub, AnAction anAction) {
-    String iconPath = stub.getIconPath();
-    if (iconPath != null) {
-      ImageKey imageKey = ImageKey.fromString(iconPath, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
-      if (imageKey != null) {
-        anAction.getTemplatePresentation().setIcon(imageKey);
-      }
-      else {
-        LOG.warn("Wrong icon path: " + iconPath);
-        anAction.getTemplatePresentation().setIcon(ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.MAGENTA));
-      }
+    public String getClassName() {
+        return myClassName;
     }
-  }
 
-  public final void initAction(@Nonnull AnAction targetAction) {
-    copyTemplatePresentation(getTemplatePresentation(), targetAction.getTemplatePresentation());
+    @Override
+    public String getId() {
+        return myId;
+    }
 
-    targetAction.setShortcutSet(getShortcutSet());
-    targetAction.setCanUseProjectAsDefault(isCanUseProjectAsDefault());
-    targetAction.setModuleExtensionIds(getModuleExtensionIds());
-  }
+    public ClassLoader getLoader() {
+        return myPluginDescriptor.getPluginClassLoader();
+    }
 
-  /**
-   * Copies template presentation and shortcuts set to <code>targetAction</code>.
-   *
-   * @param targetAction cannot be <code>null</code>
-   */
-  public static void copyTemplatePresentation(@Nonnull Presentation sourcePresentation, @Nonnull Presentation targetPresentation) {
-    if (targetPresentation.getIcon() == null && sourcePresentation.getIcon() != null) {
-      targetPresentation.setIcon(sourcePresentation.getIcon());
+    @Override
+    public PluginId getPluginId() {
+        return myPluginDescriptor.getPluginId();
     }
-    if (targetPresentation.getText() == null && sourcePresentation.getText() != null) {
-      targetPresentation.setText(sourcePresentation.getText());
+
+    @Override
+    public String getIconPath() {
+        return myIconPath;
     }
-    if (targetPresentation.getDescription() == null && sourcePresentation.getDescription() != null) {
-      targetPresentation.setDescription(sourcePresentation.getDescription());
+
+    @Nullable
+    @Override
+    public AnAction initialize(@Nonnull Application application, @Nonnull ActionManager manager) {
+        return convertStub(application, this);
     }
-  }
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nullable
+    static AnAction convertStub(@Nonnull Application application, @Nonnull XmlActionStub stub) {
+        AnAction anAction = instantiate(application, stub.getClassName(), stub.getLoader(), stub.getPluginId(), AnAction.class);
+        if (anAction == null) {
+            return null;
+        }
+
+        stub.initAction(anAction);
+        updateIconFromStub(stub, anAction);
+        return anAction;
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    static <T> T instantiate(@Nonnull Application application,
+                             String stubClassName,
+                             ClassLoader classLoader,
+                             PluginId pluginId,
+                             Class<T> expectedClass) {
+        Object obj;
+        try {
+            Class<?> actionClass = Class.forName(stubClassName, true, classLoader);
+            obj = application.getUnbindedInstance(actionClass);
+        }
+        catch (ProcessCanceledException e) {
+            throw e;
+        }
+        catch (Throwable e) {
+            LOG.error(new PluginException(e, pluginId));
+            return null;
+        }
+
+        if (!expectedClass.isInstance(obj)) {
+            LOG.error(new PluginException("class with name '" + stubClassName + "' must be an instance of '" + expectedClass.getName() + "'; got " + obj, pluginId));
+            return null;
+        }
+        //noinspection unchecked
+        return (T) obj;
+    }
+
+    static void updateIconFromStub(@Nonnull ActionStubBase stub, AnAction anAction) {
+        String iconPath = stub.getIconPath();
+        if (iconPath != null) {
+            ImageKey imageKey = ImageKey.fromString(iconPath, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+            if (imageKey != null) {
+                anAction.getTemplatePresentation().setIcon(imageKey);
+            }
+            else {
+                LOG.warn("Wrong icon path: " + iconPath);
+                anAction.getTemplatePresentation().setIcon(ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.MAGENTA));
+            }
+        }
+    }
+
+    public final void initAction(@Nonnull AnAction targetAction) {
+        copyTemplatePresentation(getTemplatePresentation(), targetAction.getTemplatePresentation());
+
+        targetAction.setShortcutSet(getShortcutSet());
+    }
+
+    /**
+     * Copies template presentation and shortcuts set to <code>targetAction</code>.
+     *
+     * @param targetAction cannot be <code>null</code>
+     */
+    public static void copyTemplatePresentation(@Nonnull Presentation sourcePresentation, @Nonnull Presentation targetPresentation) {
+        if (targetPresentation.getIcon() == null && sourcePresentation.getIcon() != null) {
+            targetPresentation.setIcon(sourcePresentation.getIcon());
+        }
+
+        if (targetPresentation.getTextValue() == LocalizeValue.of() && sourcePresentation.getTextValue() != LocalizeValue.of()) {
+            targetPresentation.setTextValue(sourcePresentation.getTextValue());
+        }
+
+        if (targetPresentation.getDescriptionValue() == LocalizeValue.of() && sourcePresentation.getDescriptionValue() != LocalizeValue.of()) {
+            targetPresentation.setDescriptionValue(sourcePresentation.getDescriptionValue());
+        }
+    }
 }

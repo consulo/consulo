@@ -84,8 +84,6 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
     AnAction target = (AnAction)application.getUnbindedInstance(myInjectingBinding.getImplClass(), myInjectingBinding.getParameterTypes(), myInjectingBinding::create);
 
     XmlActionStub.copyTemplatePresentation(getTemplatePresentation(), target.getTemplatePresentation());
-    target.setCanUseProjectAsDefault(isCanUseProjectAsDefault());
-    target.setModuleExtensionIds(getModuleExtensionIds());
     target.setShortcutSet(getShortcutSet());
     return target;
   }

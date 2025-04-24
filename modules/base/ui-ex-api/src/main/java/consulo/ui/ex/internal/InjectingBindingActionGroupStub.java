@@ -83,8 +83,6 @@ public class InjectingBindingActionGroupStub extends DefaultActionGroup implemen
     ActionGroup target = (ActionGroup)application.getUnbindedInstance(myInjectingBinding.getImplClass(), myInjectingBinding.getParameterTypes(), myInjectingBinding::create);
 
     XmlActionStub.copyTemplatePresentation(getTemplatePresentation(), target.getTemplatePresentation());
-    target.setCanUseProjectAsDefault(isCanUseProjectAsDefault());
-    target.setModuleExtensionIds(getModuleExtensionIds());
     target.setShortcutSet(getShortcutSet());
 
     AnAction[] children = getChildren(null, manager);
