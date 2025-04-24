@@ -57,11 +57,6 @@ public class InstalledPluginsTab extends PluginTab {
         reload();
     }
 
-    @Override
-    protected boolean withEnableDisableButtons() {
-        return true;
-    }
-
     @RequiredUIAccess
     @Override
     public void reload() {

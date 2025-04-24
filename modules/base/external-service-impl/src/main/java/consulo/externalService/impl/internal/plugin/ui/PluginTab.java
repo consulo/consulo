@@ -84,10 +84,6 @@ public abstract class PluginTab implements Disposable {
         myPluginsPanel = pluginsPanel;
     }
 
-    protected boolean withEnableDisableButtons() {
-        return false;
-    }
-
     @RequiredUIAccess
     protected void init() {
         myRoot = new Wrapper();
@@ -177,9 +173,10 @@ public abstract class PluginTab implements Disposable {
     public void refresh() {
         myDescriptionPanel.update(
             myPluginList.getComponent().getSelectedValue(),
-            this,
+            myInstalledTab,
             myPluginList.getAll(),
-            myFilter.getFilter()
+            myFilter.getFilter(),
+            false
         );
     }
 

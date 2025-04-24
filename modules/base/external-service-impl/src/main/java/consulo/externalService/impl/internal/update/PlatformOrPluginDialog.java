@@ -18,6 +18,7 @@ package consulo.externalService.impl.internal.update;
 import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.plugin.PluginActionListener;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -25,7 +26,6 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
 import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
-import consulo.externalService.impl.internal.plugin.PluginManagerUISettings;
 import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.plugin.ui.PluginSorter;
 import consulo.externalService.impl.internal.plugin.ui.PluginsList;
@@ -70,6 +70,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     private Project myProject;
     @Nullable
     private Consumer<Collection<PluginDescriptor>> myAfterCallback;
+    private final boolean myModalProgress;
     @Nullable
     private String myPlatformVersion;
     @Nonnull
@@ -81,11 +82,13 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         @Nullable Project project,
         @Nonnull PlatformOrPluginUpdateResult updateResult,
         @Nullable Predicate<PluginId> greenStrategy,
-        @Nullable Consumer<Collection<PluginDescriptor>> afterCallback
+        @Nullable Consumer<Collection<PluginDescriptor>> afterCallback,
+        boolean modalProgress
     ) {
         super(project);
         myProject = project;
         myAfterCallback = afterCallback;
+        myModalProgress = modalProgress;
         myType = updateResult.getType();
         setTitle(
             updateResult.getType() == PlatformOrPluginUpdateResultType.PLUGIN_INSTALL
@@ -210,119 +213,127 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
         UIAccess uiAccess = UIAccess.current();
 
-        Task.Backgroundable.queue(
-            myProject,
-            ExternalServiceLocalize.progressDownloadPlugins(),
-            true,
-            PluginManagerUISettings.getInstance(),
-            indicator -> {
-                List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
+        Consumer<ProgressIndicator> progressIndicatorConsumer = indicator -> {
+            List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
-                int installCount = (int) myNodes
-                    .stream()
-                    .filter(it -> it.getFutureDescriptor() != null)
-                    .count();
+            int installCount = (int) myNodes
+                .stream()
+                .filter(it -> it.getFutureDescriptor() != null)
+                .count();
 
-                List<PluginDownloader> forInstall = new ArrayList<>(myNodes.size());
-                int i = 0;
-                for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
-                    PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
-                    // update list contains broken plugins
-                    if (pluginDescriptor == null) {
-                        continue;
-                    }
-
-                    try {
-                        PluginDownloader downloader = PluginDownloader.createDownloader(
-                            pluginDescriptor,
-                            myPlatformVersion,
-                            myType != PlatformOrPluginUpdateResultType.PLUGIN_INSTALL
-                        );
-
-                        forInstall.add(downloader);
-
-                        downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
-                    }
-                    catch (PluginDownloadFailedException e) {
-                        uiAccess.give(() -> Alerts.okError(e.getLocalizeMessage()).showAsync());
-                        return;
-                    }
+            List<PluginDownloader> forInstall = new ArrayList<>(myNodes.size());
+            int i = 0;
+            for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
+                PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
+                // update list contains broken plugins
+                if (pluginDescriptor == null) {
+                    continue;
                 }
 
-                indicator.setTextValue(ExternalServiceLocalize.progressInstallingPlugins());
+                try {
+                    PluginDownloader downloader = PluginDownloader.createDownloader(
+                        pluginDescriptor,
+                        myPlatformVersion,
+                        myType != PlatformOrPluginUpdateResultType.PLUGIN_INSTALL
+                    );
 
-                Application application = Application.get();
-                UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
+                    forInstall.add(downloader);
 
-                InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
-                for (PluginDownloader downloader : forInstall) {
-                    try {
-                        // already was installed
-                        if (installedPluginsState.wasUpdated(downloader.getPluginId())) {
-                            continue;
-                        }
-
-                        installedPluginsState.getUpdatedPlugins().add(downloader.getPluginId());
-
-                        downloader.install(indicator, true);
-
-                        PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
-
-                        if (pluginDescriptor instanceof PluginNode) {
-                            ((PluginNode) pluginDescriptor).setInstallStatus(PluginNode.STATUS_DOWNLOADED);
-
-                            if (myType == PlatformOrPluginUpdateResultType.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
-                                updateHistory.setShowExperimentalWarning(true);
-                            }
-                        }
-
-                        installed.add(pluginDescriptor);
-                    }
-                    catch (IOException e) {
-                        uiAccess.give(() -> Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync());
-                        return;
-                    }
+                    downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
                 }
-
-                application.getMessageBus().syncPublisher(PluginActionListener.class).pluginsInstalled(
-                    installed.stream()
-                        .filter(it -> it instanceof PluginNode)
-                        .map(PluginDescriptor::getPluginId)
-                        .toArray(PluginId[]::new)
-                );
-
-                Map<String, String> pluginHistory = new HashMap<>();
-                for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-                    if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
-                        continue;
-                    }
-
-                    pluginHistory.put(descriptor.getPluginId().getIdString(), StringUtil.notNullize(descriptor.getVersion()));
-                }
-
-                pluginHistory.put(
-                    PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(),
-                    ApplicationInfo.getInstance().getBuild().toString()
-                );
-
-                updateHistory.replaceHistory(pluginHistory);
-
-                if (myAfterCallback != null) {
-                    myAfterCallback.accept(installed);
-                }
-
-                if (myType != PlatformOrPluginUpdateResultType.PLUGIN_INSTALL) {
-                    SwingUtilities.invokeLater(() -> {
-                        UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
-                        updateSettings.setLastCheckResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED);
-
-                        if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
-                            Application.get().restart(true);
-                        }
-                    });
+                catch (PluginDownloadFailedException e) {
+                    uiAccess.give(() -> Alerts.okError(e.getLocalizeMessage()).showAsync());
+                    return;
                 }
             }
-        );
+
+            indicator.setTextValue(ExternalServiceLocalize.progressInstallingPlugins());
+
+            Application application = Application.get();
+            UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
+
+            InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
+            for (PluginDownloader downloader : forInstall) {
+                try {
+                    // already was installed
+                    if (installedPluginsState.wasUpdated(downloader.getPluginId())) {
+                        continue;
+                    }
+
+                    installedPluginsState.getUpdatedPlugins().add(downloader.getPluginId());
+
+                    downloader.install(indicator, true);
+
+                    PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
+
+                    if (pluginDescriptor instanceof PluginNode) {
+                        ((PluginNode) pluginDescriptor).setInstallStatus(PluginNode.STATUS_DOWNLOADED);
+
+                        if (myType == PlatformOrPluginUpdateResultType.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
+                            updateHistory.setShowExperimentalWarning(true);
+                        }
+                    }
+
+                    installed.add(pluginDescriptor);
+                }
+                catch (IOException e) {
+                    uiAccess.give(() -> Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync());
+                    return;
+                }
+            }
+
+            application.getMessageBus().syncPublisher(PluginActionListener.class).pluginsInstalled(
+                installed.stream()
+                    .filter(it -> it instanceof PluginNode)
+                    .map(PluginDescriptor::getPluginId)
+                    .toArray(PluginId[]::new)
+            );
+
+            Map<String, String> pluginHistory = new HashMap<>();
+            for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+                if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
+                    continue;
+                }
+
+                pluginHistory.put(descriptor.getPluginId().getIdString(), StringUtil.notNullize(descriptor.getVersion()));
+            }
+
+            pluginHistory.put(
+                PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(),
+                ApplicationInfo.getInstance().getBuild().toString()
+            );
+
+            updateHistory.replaceHistory(pluginHistory);
+
+            if (myAfterCallback != null) {
+                myAfterCallback.accept(installed);
+            }
+
+            if (myType != PlatformOrPluginUpdateResultType.PLUGIN_INSTALL) {
+                SwingUtilities.invokeLater(() -> {
+                    UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
+                    updateSettings.setLastCheckResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED);
+
+                    if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
+                        Application.get().restart(true);
+                    }
+                });
+            }
+        };
+
+        if (myModalProgress) {
+            Task.Modal.queue(myProject,
+                ExternalServiceLocalize.progressDownloadPlugins(),
+                true,
+                progressIndicatorConsumer);
+        } else {
+            Task.Backgroundable.queue(
+                myProject,
+                ExternalServiceLocalize.progressDownloadPlugins(),
+                true,
+                progressIndicatorConsumer
+            );
+        }
     }
 
     @Nullable

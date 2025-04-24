@@ -169,7 +169,7 @@ public class PlatformOrPluginUpdateChecker {
             case PLUGIN_UPDATE:
             case PLATFORM_UPDATE:
                 if (showResults) {
-                    new PlatformOrPluginDialog(project, targetsForUpdate, null, null).showAsync();
+                    new PlatformOrPluginDialog(project, targetsForUpdate, null, null, false).showAsync();
                 }
                 else {
                     Notification notification = ourGroup.createNotification(ExternalServiceLocalize.updateAvailableGroup().get(),
@@ -180,7 +180,7 @@ public class PlatformOrPluginUpdateChecker {
                         @RequiredUIAccess
                         @Override
                         public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-                            new PlatformOrPluginDialog(project, targetsForUpdate, null, null).showAsync();
+                            new PlatformOrPluginDialog(project, targetsForUpdate, null, null, false).showAsync();
                         }
                     });
                     notification.notify(project);

@@ -123,7 +123,11 @@ public class PluginDescriptionPanel {
         myPanel.add(ScrollPaneFactory.createScrollPane(myDescriptionTextArea, true), BorderLayout.CENTER);
     }
 
-    public void update(@Nullable PluginDescriptor plugin, @Nullable PluginTab manager, @Nonnull List<PluginDescriptor> allPlugins, @Nullable String filter) {
+    public void update(@Nullable PluginDescriptor plugin,
+                       @Nullable PluginTab installedTab,
+                       @Nonnull List<PluginDescriptor> allPlugins,
+                       @Nullable String filter,
+                       boolean forceInstall) {
         if (plugin == null) {
             setTextValue(null, filter, myDescriptionTextArea);
             myPluginHeaderPanel.getPanel().setVisible(false);
@@ -131,7 +135,7 @@ public class PluginDescriptionPanel {
         }
 
         StringBuilder sb = new StringBuilder();
-        myPluginHeaderPanel.update(plugin, manager);
+        myPluginHeaderPanel.update(plugin, installedTab, allPlugins, forceInstall);
 
         sb.append("<h3>Version:</h3>").append("&nbsp;&nbsp;").append(StringUtil.notNullize(plugin.getVersion(), "N/A"));
 

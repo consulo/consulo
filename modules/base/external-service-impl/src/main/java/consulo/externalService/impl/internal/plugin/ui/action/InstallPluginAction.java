@@ -18,7 +18,6 @@ package consulo.externalService.impl.internal.plugin.ui.action;
 import consulo.application.Application;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
 import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
 import consulo.externalService.impl.internal.plugin.PluginNode;
@@ -29,9 +28,9 @@ import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -48,17 +47,13 @@ import java.util.stream.Collectors;
  */
 public class InstallPluginAction {
     @RequiredUIAccess
-    public static void install(@Nullable PluginsPanel pluginsPanel,
-                               @Nonnull PluginTab pluginTab,
+    public static void install(@Nonnull UIAccess uiAccess,
+                               @Nullable PluginsPanel pluginsPanel,
+                               @Nullable PluginTab installedTab,
                                @Nullable Project project,
-                               @Nullable final Runnable onSuccess) {
-        PluginDescriptor descr = pluginTab.getSelectedPlugin();
-        if (descr == null) {
-            return;
-        }
-
-        PluginTab installed = pluginTab.getInstalled();
-        PluginTab available = pluginTab.getAvailable();
+                               @Nonnull PluginDescriptor descr,
+                               @Nonnull List<PluginDescriptor> allPlugins,
+                               @Nullable Runnable onSuccess) {
 
         final List<PluginDescriptor> list = new ArrayList<>();
         PluginNode pluginNode = null;
@@ -94,34 +89,21 @@ public class InstallPluginAction {
                 return;
             }
 
-            UIUtil.invokeLaterIfNeeded(() -> installedPluginsToModel(pluginsPanel, pluginNodes));
+            uiAccess.giveIfNeed(() -> installedPluginsToModel(pluginsPanel, pluginNodes));
 
-            if (!installed.isDisposed()) {
-                UIUtil.invokeLaterIfNeeded(() -> {
-                    installed.setRequireShutdown(true);
-                });
+            if (installedTab != null) {
+                uiAccess.giveIfNeed(() -> installedTab.setRequireShutdown(true));
             }
             else {
-                boolean needToRestart = false;
-                for (PluginDescriptor node : pluginNodes) {
-                    final PluginDescriptor pluginDescriptor = PluginManager.findPlugin(node.getPluginId());
-                    if (pluginDescriptor == null || pluginDescriptor.isEnabled()) {
-                        needToRestart = true;
-                        break;
-                    }
-                }
-
-                if (needToRestart) {
-                    PluginTab.notifyPluginsWereInstalled(pluginNodes, null);
-                }
+                PluginTab.notifyPluginsWereInstalled(pluginNodes, null);
             }
 
             if (onSuccess != null) {
-                onSuccess.run();
+                uiAccess.giveIfNeed(onSuccess);
             }
         };
 
-        downloadAndInstallPlugins(project, list, available.getAvailable().getPluginList().getAll(), afterCallback);
+        downloadAndInstallPlugins(project, list, allPlugins, afterCallback);
     }
 
     @RequiredUIAccess
@@ -142,7 +124,7 @@ public class InstallPluginAction {
             }
             return true;
         };
-        PlatformOrPluginDialog dialog = new PlatformOrPluginDialog(project, result, greenNodeStrategy, afterCallback);
+        PlatformOrPluginDialog dialog = new PlatformOrPluginDialog(project, result, greenNodeStrategy, afterCallback, true);
         if (pluginsForInstallWithDependencies.size() == toInstall.size()) {
             dialog.doOKAction();
             return true;

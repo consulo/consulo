@@ -67,7 +67,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
         pluginsList.getComponent().addListSelectionListener(e -> {
             PluginDescriptor value = pluginsList.getComponent().getSelectedValue();
             if (value != null) {
-                descriptionPanel.update(value, null, myAllPlugins, null);
+                descriptionPanel.update(value, null, myAllPlugins, null, true);
             }
         });
 
@@ -95,6 +95,12 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     @Override
     protected Border createContentPaneBorder() {
         return JBUI.Borders.empty();
+    }
+
+    @Nullable
+    @Override
+    protected String getDimensionServiceKey() {
+        return getClass().getName();
     }
 
     @Nullable

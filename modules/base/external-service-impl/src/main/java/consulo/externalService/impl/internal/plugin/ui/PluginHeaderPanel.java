@@ -24,6 +24,7 @@ import consulo.externalService.impl.internal.PluginIconHolder;
 import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.plugin.ui.action.InstallPluginAction;
 import consulo.externalService.impl.internal.plugin.ui.action.UninstallPluginAction;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -33,6 +34,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * @author Konstantin Bulenkov
@@ -64,7 +66,10 @@ public class PluginHeaderPanel {
         initComponents();
     }
 
-    public void update(@Nonnull PluginDescriptor plugin, @Nullable PluginTab manager) {
+    public void update(@Nonnull PluginDescriptor plugin,
+                       @Nullable PluginTab installedTab,
+                       @Nonnull List<PluginDescriptor> allPlugins,
+                       boolean forceInstall) {
         PluginAction action = PluginAction.INSTALL;
 
         myRoot.setVisible(true);
@@ -103,14 +108,17 @@ public class PluginHeaderPanel {
                 }
             }
 
-            if (action == PluginAction.RESTART && manager != null && !manager.isRequireShutdown()) {
+            if (action == PluginAction.RESTART && installedTab != null && !installedTab.isRequireShutdown()) {
                 action = null;
             }
         }
 
-        if (manager == null || action == null) {
-            action = PluginAction.INSTALL;
-            myInstallButton.setVisible(false);
+        if (installedTab == null || action == null) {
+            if (action != PluginAction.RESTART || !forceInstall) {
+                action = PluginAction.INSTALL;
+            }
+
+            myInstallButton.setVisible(forceInstall);
         }
 
         myIconLabel.setOpaque(false);
@@ -155,16 +163,26 @@ public class PluginHeaderPanel {
 
         final PluginAction finalAction = action;
         myActionListener = e -> {
+            UIAccess uiAccess = UIAccess.current();
+
             switch (finalAction) {
                 case INSTALL:
-                    InstallPluginAction.install(myPluginsPanel, manager, null, () -> UIUtil.invokeLaterIfNeeded(() -> update(plugin, manager)));
+                    InstallPluginAction.install(
+                        uiAccess,
+                        myPluginsPanel,
+                        installedTab,
+                        null,
+                        plugin,
+                        allPlugins,
+                        () -> update(plugin, installedTab, allPlugins, forceInstall)
+                    );
                     break;
                 case UNINSTALL:
-                    UninstallPluginAction.uninstall(manager.getInstalled(), plugin);
+                    UninstallPluginAction.uninstall(installedTab.getInstalled(), plugin);
                     break;
                 case RESTART:
-                    if (manager != null) {
-                        manager.apply();
+                    if (installedTab != null) {
+                        installedTab.apply();
                     }
                     final DialogWrapper dialog = DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
                     if (dialog != null) {
@@ -174,7 +192,7 @@ public class PluginHeaderPanel {
                     }
                     break;
             }
-            update(plugin, manager);
+            update(plugin, installedTab, allPlugins, forceInstall);
         };
         myInstallButton.addActionListener(myActionListener);
 
