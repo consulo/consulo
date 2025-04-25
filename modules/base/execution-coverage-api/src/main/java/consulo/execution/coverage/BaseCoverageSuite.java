@@ -1,12 +1,12 @@
 package consulo.execution.coverage;
 
 import com.intellij.rt.coverage.data.ProjectData;
+import consulo.application.Application;
 import consulo.container.boot.ContainerPathManager;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -83,11 +83,8 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     public static CoverageRunner readRunnerAttribute(Element element) {
         String runner = element.getAttributeValue(COVERAGE_RUNNER);
         if (runner != null) {
-            for (CoverageRunner coverageRunner : CoverageRunner.EP_NAME.getExtensionList()) {
-                if (Comparing.strEqual(coverageRunner.getId(), runner)) {
-                    return coverageRunner;
-                }
-            }
+            return Application.get().getExtensionPoint(CoverageRunner.class)
+                .findFirstSafe(coverageRunner -> runner.equals(coverageRunner.getId()));
         }
         return null;
     }

@@ -3,7 +3,6 @@ package consulo.execution;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -15,8 +14,6 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ConsoleFolding {
-    public static final ExtensionPointName<ConsoleFolding> EP_NAME = ExtensionPointName.create(ConsoleFolding.class);
-
     /**
      * @param project current project
      * @param line    line to check whether it should be folded or not

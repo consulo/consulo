@@ -15,7 +15,9 @@
  */
 package consulo.ide.navigationToolbar;
 
+import consulo.component.extension.ExtensionPoint;
 import consulo.language.psi.PsiElement;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
@@ -31,8 +33,8 @@ public class NavBarModelExtensions {
             return null;
         }
 
-        List<NavBarModelExtension> extensions = NavBarModelExtension.EP_NAME.getExtensionList();
-        for (int i = extensions.size() - 1; i >= 0; i--) {
+        List<NavBarModelExtension> extensions = child.getApplication().getExtensionList(NavBarModelExtension.class);
+        for (int i = extensions.size(); --i >= 0; ) {
             NavBarModelExtension modelExtension = extensions.get(i);
             child = modelExtension.adjustElement(child);
             if (child == null) {

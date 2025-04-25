@@ -17,10 +17,10 @@ package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -33,7 +33,6 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PackagingElementType<E extends PackagingElement<?>> {
-    public static final ExtensionPointName<PackagingElementType> EP_NAME = ExtensionPointName.create(PackagingElementType.class);
     private final String myId;
     private final String myPresentableName;
 
@@ -68,12 +67,7 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
     public abstract E createEmpty(@Nonnull Project project);
 
     protected static <T extends PackagingElementType<?>> T getInstance(Class<T> aClass) {
-        for (PackagingElementType type : EP_NAME.getExtensionList()) {
-            if (aClass.isInstance(type)) {
-                return aClass.cast(type);
-            }
-        }
-        throw new AssertionError();
+        return Application.get().getExtensionPoint(PackagingElementType.class).findExtensionOrFail(aClass);
     }
 
     @Nullable

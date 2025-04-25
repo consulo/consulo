@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.coverage.actions;
 
+import consulo.application.Application;
 import consulo.application.util.DateFormatUtil;
 import consulo.execution.coverage.*;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -129,12 +130,9 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
 
     @Nullable
     private static CoverageRunner getCoverageRunner(VirtualFile file) {
-        for (CoverageRunner runner : CoverageRunner.EP_NAME.getExtensionList()) {
-            if (Comparing.strEqual(file.getExtension(), runner.getDataFileExtension())) {
-                return runner;
-            }
-        }
-        return null;
+        String fileExtension = file.getExtension();
+        return Application.get().getExtensionPoint(CoverageRunner.class)
+            .findFirstSafe(runner -> Objects.equals(fileExtension, runner.getDataFileExtension()));
     }
 
     private List<CoverageSuite> collectSelectedSuites() {

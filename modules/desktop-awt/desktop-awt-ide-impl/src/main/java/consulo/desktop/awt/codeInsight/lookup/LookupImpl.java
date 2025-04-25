@@ -93,6 +93,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     private static final Key<Font> CUSTOM_FONT_KEY = Key.create("CustomLookupElementFont");
 
     private final LookupOffsets myOffsets;
+    @Nonnull
     private final Project myProject;
     private final Editor myEditor;
     private final Object myArrangerLock = new Object();
@@ -140,7 +141,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     private final EmptyLookupItem myDummyItem = new EmptyLookupItem(CommonLocalize.treeNodeLoading().get(), true);
 
     @RequiredUIAccess
-    public LookupImpl(Project project, Editor editor, @Nonnull LookupArranger arranger) {
+    public LookupImpl(@Nonnull Project project, Editor editor, @Nonnull LookupArranger arranger) {
         super(new JPanel(new BorderLayout()));
         setForceShowAsPopup(true);
         setCancelOnClickOutside(false);
@@ -351,7 +352,9 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
 
     public Collection<LookupElementAction> getActionsFor(LookupElement element) {
         CollectConsumer<LookupElementAction> consumer = new CollectConsumer<>();
-        LookupActionProvider.EP_NAME.forEachExtensionSafe(it -> it.fillActions(element, this, consumer));
+
+        myProject.getApplication().getExtensionPoint(LookupActionProvider.class)
+            .forEach(it -> it.fillActions(element, this, consumer));
         if (!consumer.getResult().isEmpty()) {
             consumer.accept(new ShowHideIntentionIconLookupAction());
         }

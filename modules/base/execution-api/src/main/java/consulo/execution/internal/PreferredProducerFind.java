@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.internal;
 
+import consulo.application.Application;
 import consulo.component.extension.ExtensionException;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.*;
@@ -75,7 +75,7 @@ public class PreferredProducerFind {
     @SuppressWarnings("deprecation")
     private static List<RuntimeConfigurationProducer> findAllProducers(Location location, ConfigurationContext context) {
         //todo load configuration types if not already loaded
-        ConfigurationType.EP_NAME.getExtensionList();
+        Application.get().getExtensionList(ConfigurationType.class);
         List<RuntimeConfigurationProducer> configurationProducers =
             RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER.getExtensionList();
         ArrayList<RuntimeConfigurationProducer> producers = new ArrayList<>();
@@ -120,12 +120,10 @@ public class PreferredProducerFind {
             configurationsFromContext.add(new ConfigurationFromContextWrapper(producer));
         }
 
-        for (RunConfigurationProducer producer : RunConfigurationProducer.EP_NAME.getExtensionList()) {
-            ConfigurationFromContext fromContext = producer.findOrCreateConfigurationFromContext(context, preferExisting);
-            if (fromContext != null) {
-                configurationsFromContext.add(fromContext);
-            }
-        }
+        Application.get().getExtensionPoint(RunConfigurationProducer.class).collectExtensionsSafe(
+            configurationsFromContext,
+            producer -> producer.findOrCreateConfigurationFromContext(context, preferExisting)
+        );
 
         if (configurationsFromContext.isEmpty()) {
             return null;

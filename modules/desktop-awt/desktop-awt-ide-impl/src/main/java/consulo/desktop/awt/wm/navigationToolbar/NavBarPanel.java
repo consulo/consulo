@@ -453,21 +453,14 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         PopupHandler.installPopupHandler(
             component,
             new ActionGroup() {
+                @Nonnull
                 @Override
                 public AnAction[] getChildren(@Nullable AnActionEvent e) {
                     if (e == null) {
                         return EMPTY_ARRAY;
                     }
-                    String popupGroupId = null;
-                    for (NavBarModelExtension modelExtension : NavBarModelExtension.EP_NAME.getExtensionList()) {
-                        popupGroupId = modelExtension.getPopupMenuGroup(NavBarPanel.this);
-                        if (popupGroupId != null) {
-                            break;
-                        }
-                    }
-                    if (popupGroupId == null) {
-                        popupGroupId = IdeActions.GROUP_NAVBAR_POPUP;
-                    }
+                    String popupGroupId = myProject.getApplication().getExtensionPoint(NavBarModelExtension.class)
+                        .computeSafeIfAny(ext -> ext.getPopupMenuGroup(NavBarPanel.this), IdeActions.GROUP_NAVBAR_POPUP);
                     ActionGroup group = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(popupGroupId);
                     return group == null ? EMPTY_ARRAY : group.getChildren(e);
                 }
@@ -699,13 +692,9 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     @Override
     @RequiredReadAction
     public Object getData(@Nonnull Key<?> dataId) {
-        for (NavBarModelExtension modelExtension : NavBarModelExtension.EP_NAME.getExtensionList()) {
-            Object data = modelExtension.getData(dataId, this::getDataInner);
-            if (data != null) {
-                return data;
-            }
-        }
-        return getDataInner(dataId);
+        Object data = myProject.getApplication().getExtensionPoint(NavBarModelExtension.class)
+            .computeSafeIfAny(extension -> extension.getData(dataId, this::getDataInner));
+        return data != null ? data : getDataInner(dataId);
     }
 
     @Nullable

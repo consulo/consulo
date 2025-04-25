@@ -1,12 +1,12 @@
 package consulo.execution.coverage;
 
+import consulo.application.Application;
 import consulo.container.boot.ContainerPathManager;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -114,40 +114,31 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
     }
 
     public boolean canHavePerTestCoverage() {
-        for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
-            if (engine.isApplicableTo(myConfiguration)) {
-                return engine.canHavePerTestCoverage(myConfiguration);
-            }
-        }
-        return false;
+        return Application.get().getExtensionPoint(CoverageEngine.class)
+            .anyMatchSafe(engine -> engine.isApplicableTo(myConfiguration) && engine.canHavePerTestCoverage(myConfiguration));
     }
 
 
     public static boolean isApplicableTo(@Nonnull RunConfigurationBase runConfiguration) {
         CoverageEnabledConfiguration configuration = runConfiguration.getCopyableUserData(COVERAGE_KEY);
+        //noinspection SimplifiableIfStatement
         if (configuration != null) {
             return true;
         }
 
-        for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
-            if (engine.isApplicableTo(runConfiguration)) {
-                return true;
-            }
-        }
-
-        return false;
+        return Application.get().getExtensionPoint(CoverageEngine.class)
+            .anyMatchSafe(engine -> engine.isApplicableTo(runConfiguration));
     }
 
     @Nonnull
     public static CoverageEnabledConfiguration getOrCreate(@Nonnull RunConfigurationBase runConfiguration) {
         CoverageEnabledConfiguration configuration = runConfiguration.getCopyableUserData(COVERAGE_KEY);
         if (configuration == null) {
-            for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
-                if (engine.isApplicableTo(runConfiguration)) {
-                    configuration = engine.createCoverageEnabledConfiguration(runConfiguration);
-                    break;
-                }
-            }
+            configuration = Application.get().getExtensionPoint(CoverageEngine.class).computeSafeIfAny(
+                engine -> engine.isApplicableTo(runConfiguration)
+                    ? engine.createCoverageEnabledConfiguration(runConfiguration)
+                    : null
+            );
             LOG.assertTrue(
                 configuration != null,
                 "Coverage enabled run configuration wasn't found for run configuration: " + runConfiguration.getName() +
@@ -188,13 +179,8 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
         String runnerId = element.getAttributeValue(COVERAGE_RUNNER);
         if (runnerId != null) {
             myRunnerId = runnerId;
-            myCoverageRunner = null;
-            for (CoverageRunner coverageRunner : CoverageRunner.EP_NAME.getExtensionList()) {
-                if (Comparing.strEqual(coverageRunner.getId(), myRunnerId)) {
-                    myCoverageRunner = coverageRunner;
-                    break;
-                }
-            }
+            myCoverageRunner = Application.get().getExtensionPoint(CoverageRunner.class)
+                .findFirstSafe(coverageRunner -> myRunnerId.equals(coverageRunner.getId()));
         }
     }
 

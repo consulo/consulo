@@ -16,6 +16,7 @@
 
 package consulo.execution.configuration;
 
+import consulo.application.Application;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -28,7 +29,7 @@ public class ConfigurationTypeUtil {
 
     @Nonnull
     public static <T extends ConfigurationType> T findConfigurationType(@Nonnull Class<T> configurationTypeClass) {
-        return ConfigurationType.EP_NAME.findExtensionOrFail(configurationTypeClass);
+        return Application.get().getExtensionPoint(ConfigurationType.class).findExtensionOrFail(configurationTypeClass);
     }
 
     public static boolean equals(@Nonnull ConfigurationType type1, @Nonnull ConfigurationType type2) {
@@ -37,11 +38,7 @@ public class ConfigurationTypeUtil {
 
     @Nullable
     public static ConfigurationType findConfigurationType(String configurationId) {
-        for (ConfigurationType type : ConfigurationType.EP_NAME.getExtensionList()) {
-            if (type.getId().equals(configurationId)) {
-                return type;
-            }
-        }
-        return null;
+        return Application.get().getExtensionPoint(ConfigurationType.class)
+            .findFirstSafe(type -> type.getId().equals(configurationId));
     }
 }

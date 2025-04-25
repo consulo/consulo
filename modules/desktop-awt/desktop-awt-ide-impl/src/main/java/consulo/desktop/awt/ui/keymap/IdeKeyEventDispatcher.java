@@ -39,7 +39,6 @@ import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneEx;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.ide.impl.idea.ui.KeyStrokeAdapter;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.util.collection.ContainerUtil;
 import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -62,6 +61,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -775,7 +775,6 @@ public final class IdeKeyEventDispatcher implements Disposable {
                     }
                 }
             }
-
         }
 
         myContext.setHasSecondStroke(hasSecondStroke);
@@ -783,15 +782,15 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
         if (actions.size() > 1) {
             List<AnAction> readOnlyActions = Collections.unmodifiableList(actions);
-            for (ActionPromoter promoter : ActionPromoter.EP_NAME.getExtensionList()) {
+            Application.get().getExtensionPoint(ActionPromoter.class).forEach(promoter -> {
                 List<AnAction> promoted = promoter.promote(readOnlyActions, myContext.getDataContext());
                 if (promoted == null || promoted.isEmpty()) {
-                    continue;
+                    return;
                 }
 
                 actions.removeAll(promoted);
                 actions.addAll(0, promoted);
-            }
+            });
         }
 
         return myContext;
