@@ -113,7 +113,7 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
                     myHelpGroups.add(new RunAnythingHelpGroup<>(entry.getKey(), entry.getValue()));
                 }
 
-                myHelpGroups.addAll(application.getExtensionPoint(RunAnythingGroup.class).getExtensionList());
+                myHelpGroups.addAll(application.getExtensionPoint(RunAnythingHelpGroup.class).getExtensionList());
             }
             return myHelpGroups;
         }
