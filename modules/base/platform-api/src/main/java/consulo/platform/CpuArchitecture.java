@@ -29,6 +29,7 @@ public final class CpuArchitecture {
     public static final CpuArchitecture AARCH64 = new CpuArchitecture("AARCH64", 64, "-aarch64");
     public static final CpuArchitecture RISCV64 = new CpuArchitecture("RISCV64", 64, "-riscv64");
     public static final CpuArchitecture LOONG64 = new CpuArchitecture("LOONG64", 64, "-loong64");
+    public static final CpuArchitecture E2K = new CpuArchitecture("E2K", 64, "-e2k");
 
     @Nonnull
     private final String myName;

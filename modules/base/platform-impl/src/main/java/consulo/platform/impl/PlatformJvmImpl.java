@@ -58,6 +58,9 @@ class PlatformJvmImpl implements PlatformJvm {
       case "aarch64":
         myCpuArchitecture = CpuArchitecture.AARCH64;
         break;
+      case "e2k":
+        myCpuArchitecture = CpuArchitecture.E2K;
+        break;
       case "loongarch64":
         myCpuArchitecture = CpuArchitecture.LOONG64;
         break;
