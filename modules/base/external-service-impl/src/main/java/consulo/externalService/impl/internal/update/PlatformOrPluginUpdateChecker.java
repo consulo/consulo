@@ -33,8 +33,10 @@ import consulo.externalService.impl.internal.plugin.ui.PluginTab;
 import consulo.externalService.impl.internal.pluginAdvertiser.PluginAdvertiserRequester;
 import consulo.externalService.impl.internal.repository.RepositoryHelper;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
+import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateChannel;
+import consulo.externalService.update.UpdateSettings;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -103,7 +105,7 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     public static boolean checkNeeded() {
-        UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
+        UpdateSettingsEx updateSettings = (UpdateSettingsEx) UpdateSettings.getInstance();
         if (!updateSettings.isEnable()) {
             return false;
         }
@@ -119,7 +121,7 @@ public class PlatformOrPluginUpdateChecker {
 
         UIAccess lastUIAccess = app.getLastUIAccess();
 
-        final UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
+        final UpdateSettingsEx updateSettings = (UpdateSettingsEx) UpdateSettings.getInstance();
         if (updateSettings.isEnable()) {
             app.executeOnPooledThread(() -> checkAndNotifyForUpdates(null, false, null, lastUIAccess, result));
         }
@@ -191,7 +193,8 @@ public class PlatformOrPluginUpdateChecker {
 
     private static void registerSettingsGroupUpdate(@Nonnull AsyncResult<PlatformOrPluginUpdateResultType> result) {
         result.doWhenDone(type -> {
-            UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
+            UpdateSettingsEx updateSettings = (UpdateSettingsEx) UpdateSettings.getInstance();
+
             updateSettings.setLastCheckResult(type);
         });
     }
@@ -229,7 +232,7 @@ public class PlatformOrPluginUpdateChecker {
         String currentBuildNumber = appInfo.getBuild().asString();
 
         List<PluginDescriptor> remotePlugins;
-        UpdateChannel channel = UpdateSettingsImpl.getInstance().getChannel();
+        UpdateChannel channel = UpdateSettings.getInstance().getChannel();
         try {
             remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel, null, true);
             Application.get().getInstance(PluginAdvertiserRequester.class).update(remotePlugins);

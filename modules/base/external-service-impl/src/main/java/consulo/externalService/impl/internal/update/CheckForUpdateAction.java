@@ -18,6 +18,7 @@ package consulo.externalService.impl.internal.update;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.progress.Task;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
+import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.update.UpdateSettings;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -65,7 +66,7 @@ public class CheckForUpdateAction extends DumbAwareAction {
       indicator.setIndeterminate(true);
 
       AsyncResult<PlatformOrPluginUpdateResultType> result = AsyncResult.undefined();
-      result.doWhenDone(() -> ((UpdateSettingsImpl)updateSettings).setLastTimeCheck(System.currentTimeMillis()));
+      result.doWhenDone(() -> ((UpdateSettingsEx)updateSettings).setLastTimeCheck(System.currentTimeMillis()));
 
       PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator, uiAccess, result);
     });

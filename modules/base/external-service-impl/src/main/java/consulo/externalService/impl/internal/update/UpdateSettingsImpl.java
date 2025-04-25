@@ -16,6 +16,7 @@
 package consulo.externalService.impl.internal.update;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationProperties;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -23,7 +24,6 @@ import consulo.component.persist.Storage;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.update.UpdateChannel;
-import consulo.externalService.update.UpdateSettings;
 import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
@@ -36,11 +36,6 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @State(name = "UpdateSettingsImpl", storages = @Storage(value = "updates.xml", roamingType = RoamingType.DISABLED))
 public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettingsImpl.State>, UpdateSettingsEx {
-    @Nonnull
-    public static UpdateSettingsImpl getInstance() {
-        return (UpdateSettingsImpl) UpdateSettings.getInstance();
-    }
-
     static class State {
         public boolean enable = true;
         public long lastTimeCheck = 0;
@@ -55,11 +50,12 @@ public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettin
     public UpdateChannel getChannel() {
         UpdateChannel channel = myState.channel;
         if (channel == null) {
-            return UpdateChannel.release;
+            return ApplicationProperties.isInSandbox() ? UpdateChannel.nightly : UpdateChannel.release;
         }
         return channel;
     }
 
+    @Override
     public void setLastCheckResult(PlatformOrPluginUpdateResultType type) {
         myState.lastCheckResult = type;
     }
@@ -85,6 +81,7 @@ public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettin
         myState.enable = value;
     }
 
+    @Override
     public long getLastTimeCheck() {
         return myState.lastTimeCheck;
     }
@@ -102,6 +99,7 @@ public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettin
     @Override
     public void loadState(State state) {
         myState = state;
+
         // switch to release if branch obsolete
         if (state.channel != null && state.channel.isObsolete()) {
             state.channel = UpdateChannel.release;

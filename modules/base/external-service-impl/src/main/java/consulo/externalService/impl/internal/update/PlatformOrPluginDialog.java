@@ -33,7 +33,9 @@ import consulo.externalService.impl.internal.plugin.ui.PluginsListRender;
 import consulo.externalService.impl.internal.plugin.ui.PluginsPanel;
 import consulo.externalService.impl.internal.pluginHistory.UpdateHistory;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
+import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.localize.ExternalServiceLocalize;
+import consulo.externalService.update.UpdateSettings;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Alerts;
@@ -311,7 +313,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
             if (myType != PlatformOrPluginUpdateResultType.PLUGIN_INSTALL) {
                 SwingUtilities.invokeLater(() -> {
-                    UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
+                    UpdateSettingsEx updateSettings = (UpdateSettingsEx) UpdateSettings.getInstance();
                     updateSettings.setLastCheckResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED);
 
                     if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {

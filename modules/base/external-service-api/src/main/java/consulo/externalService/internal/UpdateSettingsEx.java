@@ -25,6 +25,10 @@ import jakarta.annotation.Nonnull;
 public interface UpdateSettingsEx extends UpdateSettings {
     void setLastTimeCheck(long time);
 
+    long getLastTimeCheck();
+
     @Nonnull
     PlatformOrPluginUpdateResultType getLastCheckResult();
+
+    void setLastCheckResult(PlatformOrPluginUpdateResultType type);
 }

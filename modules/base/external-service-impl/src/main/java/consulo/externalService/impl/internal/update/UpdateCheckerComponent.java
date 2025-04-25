@@ -22,11 +22,12 @@ import consulo.application.util.DateFormatUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
+import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.update.UpdateSettings;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -40,14 +41,14 @@ import java.util.concurrent.TimeUnit;
 public class UpdateCheckerComponent implements Disposable {
   private static final long ourCheckInterval = DateFormatUtil.DAY;
 
-  private final UpdateSettingsImpl myUpdateSettings;
+  private final UpdateSettingsEx myUpdateSettings;
   private final Runnable myCheckRunnable;
 
   private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
 
   @Inject
   public UpdateCheckerComponent(@Nonnull UpdateSettings updateSettings) {
-    myUpdateSettings = (UpdateSettingsImpl)updateSettings;
+    myUpdateSettings = (UpdateSettingsEx)updateSettings;
 
     myCheckRunnable = () -> PlatformOrPluginUpdateChecker.updateAndShowResult().doWhenDone(() -> {
       myUpdateSettings.setLastTimeCheck(System.currentTimeMillis());
