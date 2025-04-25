@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-06-14
  */
-@ExtensionAPI(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface WebSocketAccepter {
     void accept(@Nonnull WebSocketConnection connection, @Nonnull byte[] array);
 

@@ -221,7 +221,7 @@ public class ContentEntryTreeEditor {
 
                 boolean hasSupport = false;
                 for (ModuleExtension moduleExtension : getContentEntryEditor().getModel().getExtensions()) {
-                    hasSupport = myProject.getExtensionPoint(PsiPackageSupportProvider.class)
+                    hasSupport = myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class)
                         .anyMatchSafe(supportProvider -> supportProvider.isSupported(moduleExtension));
                     if (hasSupport) {
                         break;
