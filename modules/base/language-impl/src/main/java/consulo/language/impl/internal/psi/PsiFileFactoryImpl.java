@@ -58,7 +58,7 @@ import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceImpl
-public class PsiFileFactoryImpl extends PsiFileFactory {
+public class PsiFileFactoryImpl implements PsiFileFactory {
   private static final Logger LOG = Logger.getInstance(PsiFileFactoryImpl.class);
 
   private final Application myApplication;
@@ -261,6 +261,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     return file;
   }
 
+  @Override
   @Nullable
   public PsiElement createElementFromText(@Nullable final String text,
                                           @Nonnull final Language language,
