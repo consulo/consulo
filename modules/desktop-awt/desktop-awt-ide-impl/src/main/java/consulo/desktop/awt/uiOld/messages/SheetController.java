@@ -16,7 +16,6 @@
 package consulo.desktop.awt.uiOld.messages;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.ide.impl.desktop.awt.graphics.GraphicsUtilities;
 import consulo.ide.impl.desktop.awt.graphics.ShadowRenderer;
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -453,9 +452,7 @@ public class SheetController {
     myOffScreenFrame.add(mySheetPanel);
     myOffScreenFrame.getRootPane().setDefaultButton(myDefaultButton);
 
-    final BufferedImage image = SystemInfo.isJavaVersionAtLeast(7, 0, 0)
-      ? UIUtil.createImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT, BufferedImage.TYPE_INT_ARGB)
-      : GraphicsUtilities.createCompatibleTranslucentImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT);
+    final BufferedImage image = UIUtil.createImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
     Graphics g = image.createGraphics();
     mySheetPanel.paint(g);

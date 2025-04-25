@@ -37,27 +37,7 @@ public class SystemInfoRt {
   public static final boolean isFileSystemCaseSensitive =
     isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
 
-  public static final boolean IS_AT_LEAST_JAVA9 = isModularJava();
-
-  public static final boolean is32Bit = ARCH_DATA_MODEL == null || ARCH_DATA_MODEL.equals("32");
-  public static final boolean is64Bit = !is32Bit;
-
-  @SuppressWarnings("JavaReflectionMemberAccess")
-  private static boolean isModularJava() {
-    try {
-      Class.class.getMethod("getModule");
-      return true;
-    }
-    catch (Throwable t) {
-      return false;
-    }
-  }
-
   public static boolean isJavaVersionAtLeast(int major) {
-    return isJavaVersionAtLeast(major, 0, 0);
-  }
-
-  public static boolean isJavaVersionAtLeast(int major, int minor, int update) {
-    return JavaVersion.current().compareTo(JavaVersion.compose(major, minor, update, 0, false)) >= 0;
+    return JavaVersion.current().isAtLeast(major);
   }
 }

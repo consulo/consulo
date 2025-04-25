@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.util;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.util.nodep.JavaVersion;
 
 /**
  * Stripped-down version of {@code consulo.ide.impl.idea.openapi.util.SystemInfo}.
@@ -48,8 +47,4 @@ public class SystemInfoRt {
 
   public static final boolean is32Bit = ARCH_DATA_MODEL == null || ARCH_DATA_MODEL.equals("32");
   public static final boolean is64Bit = !is32Bit;
-
-  public static boolean isJavaVersionAtLeast(int major, int minor, int update) {
-    return JavaVersion.current().compareTo(JavaVersion.compose(major, minor, update, 0, false)) >= 0;
-  }
 }

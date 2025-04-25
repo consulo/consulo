@@ -68,7 +68,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     static final Logger LOG = Logger.getInstance(BrowserLauncherAppless.class);
 
     private static boolean isDesktopActionSupported(Desktop.Action action) {
-        return !Patches.SUN_BUG_ID_6457572 && !Patches.SUN_BUG_ID_6486393
+        return !Patches.SUN_BUG_ID_6486393
             && Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(action);
     }
 

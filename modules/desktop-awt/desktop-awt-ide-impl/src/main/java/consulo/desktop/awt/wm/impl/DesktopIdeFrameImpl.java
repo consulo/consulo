@@ -301,27 +301,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         if (Platform.current().os().isWindows()) {
             myWindowsBorderUpdater = __ -> updateBorder();
             Toolkit.getDefaultToolkit().addPropertyChangeListener("win.xpstyle.themeActive", myWindowsBorderUpdater);
-            if (!SystemInfo.isJavaVersionAtLeast(8, 0, 0)) {
-                final Ref<Dimension> myDimensionRef = new Ref<>(new Dimension());
-                final Alarm alarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
-                final Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        if (myJFrame.isDisplayable() && !myJFrame.getSize().equals(myDimensionRef.get())) {
-                            Rectangle bounds = myJFrame.getBounds();
-                            bounds.width--;
-                            myJFrame.setBounds(bounds);
-                            bounds.width++;
-                            myJFrame.setBounds(bounds);
-                            myDimensionRef.set(myJFrame.getSize());
-                        }
-                        alarm.addRequest(this, 50);
-                    }
-                };
-                alarm.addRequest(runnable, 50);
-            }
         }
-        // UIUtil.suppressFocusStealing();
     }
 
     private void updateBorder() {

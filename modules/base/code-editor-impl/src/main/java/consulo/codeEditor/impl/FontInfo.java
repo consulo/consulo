@@ -72,23 +72,6 @@ public class FontInfo {
 
   @Nonnull
   private static Font getFontWithLigaturesEnabled(Font font, @JdkConstants.FontStyle int fontStyle) {
-    if (Patches.JDK_BUG_ID_7162125) {
-      // Ligatures don't work on Mac for fonts loaded natively, so we need to locate and load font manually
-      String familyName = font.getFamily();
-      File fontFile = findFileForFont(familyName, fontStyle);
-      if (fontFile == null) {
-        LOG.info(font + "(style=" + fontStyle + ") not located");
-        return font;
-      }
-      LOG.info(font + "(style=" + fontStyle + ") located at " + fontFile);
-      try {
-        font = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(fontStyle, font.getSize());
-      }
-      catch (Exception e) {
-        LOG.warn("Couldn't load font", e);
-        return font;
-      }
-    }
     return font.deriveFont(Collections.singletonMap(TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON));
   }
 

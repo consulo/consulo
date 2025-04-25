@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
@@ -58,7 +57,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -1435,14 +1433,7 @@ public class Messages {
           }
         });
         animate();
-        if (SystemInfo.isJavaVersionAtLeast(7, 0, 0)) {
-          try {
-            Method method = Class.forName("java.awt.Window").getDeclaredMethod("setOpacity", float.class);
-            if (method != null) method.invoke(getPeer().getWindow(), .8f);
-          }
-          catch (Exception exception) {
-          }
-        }
+        getPeer().getWindow().setOpacity(0.8f);
         setAutoAdjustable(false);
         setSize(getPreferredSize().width, 0);//initial state before animation, zero height
       }

@@ -16,33 +16,24 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.application.util.Patches;
-import consulo.ide.impl.idea.application.options.OptionsConstants;
-import consulo.webBrowser.BrowserUtil;
 import consulo.application.ApplicationBundle;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.FontPreferences;
 import consulo.colorScheme.ModifiableFontPreferences;
-import consulo.ui.ex.awt.LabeledComponent;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ide.impl.idea.application.options.OptionsConstants;
 import consulo.ide.impl.idea.ui.FontComboBox;
 import consulo.ide.impl.idea.ui.FontInfoRenderer;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.LinkListener;
-import consulo.ui.ex.awt.HorizontalLayout;
-import consulo.ui.ex.awt.Wrapper;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
-
+import consulo.webBrowser.BrowserUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.event.*;
@@ -113,7 +104,7 @@ public class FontOptions implements OptionsPanel {
     secondFontPanel.add(mySecondaryCombo);
 
     JPanel ligaturesPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
-    ligaturesPanel.setEnabled(!Patches.TEXT_LAYOUT_IS_SLOW);
+    ligaturesPanel.setEnabled(true);
     myEnableLigaturesCheckbox.setBorder(null);
     ligaturesPanel.add(myEnableLigaturesCheckbox);
     myLigaturesInfoLinkLabel = new LinkLabel<>(ApplicationBundle.message("ligatures.more.info"), null, new LinkListener<String>() {

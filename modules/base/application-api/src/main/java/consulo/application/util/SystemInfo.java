@@ -199,18 +199,7 @@ public class SystemInfo {
   }
 
   public static boolean isJavaVersionAtLeast(int major) {
-    return isJavaVersionAtLeast(major, 0, 0);
-  }
-
-  public static boolean isJavaVersionAtLeast(int major, int minor, int update) {
-    return JavaVersion.current().compareTo(JavaVersion.compose(major, minor, update, 0, false)) >= 0;
-  }
-
-  /**
-   * @deprecated use {@link #isJavaVersionAtLeast(int, int, int)} (to be removed in IDEA 2020)
-   */
-  public static boolean isJavaVersionAtLeast(String v) {
-    return StringUtil.compareVersionNumbers(JAVA_RUNTIME_VERSION, v) >= 0;
+    return JavaVersion.current().isAtLeast(major);
   }
 
   private static boolean isJetbrainsJvm() {
