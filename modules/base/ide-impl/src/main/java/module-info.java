@@ -741,13 +741,11 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.search.scope.impl;
   exports consulo.ide.impl.psi.search.scope.packageSet;
   exports consulo.ide.impl.psi.search.scope.packageSet.lexer;
-  exports consulo.ide.impl.psi.statistics;
   exports consulo.ide.impl.psi.statistics.impl;
   exports consulo.ide.impl.psi.stubs;
   exports consulo.ide.impl.psi.stubs.provided;
   exports consulo.ide.impl.psi.templateLanguages;
   exports consulo.ide.impl.psi.util;
-  exports consulo.ide.impl.psi.util.proximity;
   exports consulo.ide.impl.roots.impl.property;
   exports consulo.ide.impl.roots.orderEntry;
   exports consulo.ide.impl.roots.ui.configuration;

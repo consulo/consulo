@@ -13,6 +13,7 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
 import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.language.editor.impl.internal.completion.CompletionData;
+import consulo.language.editor.impl.internal.completion.LookupStatisticsWeigher;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
@@ -287,7 +288,7 @@ public final class CompletionServiceImpl extends CompletionService {
         sorter = sorter.withClassifier(new ClassifierFactory<LookupElement>("stats") {
           @Override
           public Classifier<LookupElement> createClassifier(Classifier<LookupElement> next) {
-            return new StatisticsWeigher.LookupStatisticsWeigher(location, next);
+            return new LookupStatisticsWeigher(location, next);
           }
         });
       }

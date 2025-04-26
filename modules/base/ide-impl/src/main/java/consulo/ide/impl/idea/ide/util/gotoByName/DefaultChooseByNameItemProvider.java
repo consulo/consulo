@@ -13,7 +13,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.ide.impl.idea.util.SynchronizedCollectConsumer;
-import consulo.ide.impl.psi.util.proximity.PsiProximityComparator;
+import consulo.language.util.proximity.PsiProximityComparator;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;

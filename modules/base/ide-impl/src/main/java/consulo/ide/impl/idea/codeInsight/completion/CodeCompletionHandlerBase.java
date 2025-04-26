@@ -30,6 +30,7 @@ import consulo.language.editor.action.SmartEnterProcessor;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.impl.internal.completion.OffsetsInFile;
+import consulo.language.editor.impl.internal.completion.StatisticsUpdate;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;

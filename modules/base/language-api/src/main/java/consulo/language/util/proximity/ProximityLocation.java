@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.util;
+package consulo.language.util.proximity;
 
+import consulo.language.psi.PsiElement;
+import consulo.language.util.ProcessingContext;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.language.psi.PsiElement;
-import consulo.language.util.ProcessingContext;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

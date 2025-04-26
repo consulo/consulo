@@ -55,10 +55,12 @@ module consulo.language.api {
     exports consulo.language.psi.stub.todo;
     exports consulo.language.psi.util;
     exports consulo.language.scratch;
+    exports consulo.language.statistician;
     exports consulo.language.sem;
     exports consulo.language.template;
     exports consulo.language.util;
     exports consulo.language.version;
+    exports consulo.language.util.proximity;
 
     exports consulo.language.psi.internal to
         consulo.ide.impl,

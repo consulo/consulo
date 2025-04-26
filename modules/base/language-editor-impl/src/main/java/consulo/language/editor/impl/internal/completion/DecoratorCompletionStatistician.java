@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.editor.impl.internal.completion;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.completion.CompletionStatistician;
+import consulo.language.statistician.StatisticsInfo;
+import consulo.language.statistician.StatisticsManager;
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.ide.impl.psi.statistics.StatisticsInfo;
+import consulo.language.editor.completion.lookup.LookupElementDecorator;
 
 /**
  * @author peter
  */
-@ExtensionImpl(order = "last")
-public class DefaultCompletionStatistician extends CompletionStatistician {
+@ExtensionImpl(id = "decorator", order = "first")
+public class DecoratorCompletionStatistician extends CompletionStatistician {
 
   @Override
   public StatisticsInfo serialize(final LookupElement element, final CompletionLocation location) {
-    return new StatisticsInfo("completion#" + location.getCompletionParameters().getOriginalFile().getLanguage(), element.getLookupString());
+    if (element instanceof LookupElementDecorator) {
+      return StatisticsManager.serialize(STATISTICS_KEY, ((LookupElementDecorator)element).getDelegate(), location);
+    }
+    return null;
   }
 }

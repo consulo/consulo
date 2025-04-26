@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.statistics.impl;
 
-import consulo.ide.impl.psi.statistics.StatisticsManager;
+import consulo.language.statistician.StatisticsManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
 
 import java.io.*;

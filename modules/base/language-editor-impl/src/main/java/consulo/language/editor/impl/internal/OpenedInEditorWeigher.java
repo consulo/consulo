@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.util.proximity;
+package consulo.language.editor.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.psi.util.ProximityLocation;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.util.proximity.ProximityLocation;
+import consulo.language.util.proximity.ProximityWeigher;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.NotNullLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Function;
 
 /**
  * @author peter
 */
 @ExtensionImpl(id = "openedInEditor")
 public class OpenedInEditorWeigher extends ProximityWeigher {
-  private static final NotNullLazyKey<VirtualFile[], ProximityLocation> OPENED_EDITORS = NotNullLazyKey.create("openedEditors", new NotNullFunction<ProximityLocation, VirtualFile[]>() {
+  private static final NotNullLazyKey<VirtualFile[], ProximityLocation> OPENED_EDITORS = NotNullLazyKey.create("openedEditors", new Function<ProximityLocation, VirtualFile[]>() {
     @Nonnull
     @Override
     public VirtualFile[] apply(ProximityLocation location) {

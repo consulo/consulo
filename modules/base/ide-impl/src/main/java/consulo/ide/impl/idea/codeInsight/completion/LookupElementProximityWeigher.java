@@ -21,7 +21,7 @@ import consulo.language.editor.completion.CompletionWeigher;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.ide.impl.idea.openapi.util.NullableComputable;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.util.proximity.PsiProximityComparator;
+import consulo.language.util.proximity.PsiProximityComparator;
 import jakarta.annotation.Nonnull;
 
 /**

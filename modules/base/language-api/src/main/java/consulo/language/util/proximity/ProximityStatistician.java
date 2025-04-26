@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.util.proximity;
+package consulo.language.util.proximity;
 
-import consulo.ide.impl.psi.util.ProximityLocation;
-import consulo.language.Weigher;
+import consulo.language.statistician.Statistician;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 
@@ -25,14 +24,10 @@ import jakarta.annotation.Nonnull;
 /**
  * @author peter
  */
-public abstract class ProximityWeigher extends Weigher<PsiElement, ProximityLocation> {
-
-  @Override
-  public abstract Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location);
-
+public abstract class ProximityStatistician extends Statistician<PsiElement, ProximityLocation, ProximityStatistician> {
   @Nonnull
   @Override
-  public Key<?> getKey() {
-    return PsiProximityComparator.WEIGHER_KEY;
+  public Key<ProximityStatistician> getKey() {
+    return PsiProximityComparator.STATISTICS_KEY;
   }
 }

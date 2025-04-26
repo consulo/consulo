@@ -26,6 +26,7 @@ import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
 import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.language.editor.impl.internal.completion.StatisticsUpdate;
 import consulo.util.collection.ContainerUtil;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.TargetElementUtil;

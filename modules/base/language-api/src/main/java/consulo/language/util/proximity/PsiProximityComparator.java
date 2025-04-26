@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.util.proximity;
+package consulo.language.util.proximity;
 
-import consulo.module.Module;
-import consulo.language.util.ModuleUtilCore;
 import consulo.application.util.function.Computable;
-import consulo.util.dataholder.Key;
-import consulo.language.psi.PsiElement;
 import consulo.language.Weigher;
 import consulo.language.WeighingComparable;
 import consulo.language.WeighingService;
-import consulo.ide.impl.psi.statistics.StatisticsInfo;
-import consulo.ide.impl.psi.statistics.StatisticsManager;
-import consulo.ide.impl.psi.util.ProximityLocation;
+import consulo.language.psi.PsiElement;
+import consulo.language.statistician.StatisticsInfo;
+import consulo.language.statistician.StatisticsManager;
+import consulo.language.util.ModuleUtilCore;
 import consulo.language.util.ProcessingContext;
+import consulo.module.Module;
 import consulo.util.collection.FactoryMap;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nullable;
 
 import java.util.Comparator;
@@ -46,7 +45,7 @@ public class PsiProximityComparator implements Comparator<Object> {
 
   public PsiProximityComparator(@Nullable PsiElement context) {
     myContext = context;
-    myContextModule = context == null ? null : ModuleUtilCore.findModuleForPsiElement(context);
+    myContextModule = context == null ? null : context.getModule();
     myProximities = FactoryMap.create(key -> getProximity(key, myContext));
   }
 
@@ -93,7 +92,7 @@ public class PsiProximityComparator implements Comparator<Object> {
     if (element == null || context == null) return null;
     Module contextModule = processingContext.get(MODULE_BY_LOCATION);
     if (contextModule == null) {
-      contextModule = ModuleUtilCore.findModuleForPsiElement(context);
+      contextModule = context.getModule();
       processingContext.put(MODULE_BY_LOCATION, contextModule);
     }
 

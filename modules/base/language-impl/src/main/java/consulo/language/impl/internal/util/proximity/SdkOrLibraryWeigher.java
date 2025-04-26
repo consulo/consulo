@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.util.proximity;
+package consulo.language.impl.internal.util.proximity;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.psi.util.ProximityLocation;
+import consulo.language.util.proximity.ProximityLocation;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
+import consulo.language.util.proximity.ProximityWeigher;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;

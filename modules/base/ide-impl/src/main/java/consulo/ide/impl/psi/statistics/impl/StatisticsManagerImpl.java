@@ -18,21 +18,22 @@ package consulo.ide.impl.psi.statistics.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
+import consulo.component.persist.SettingsSavingComponent;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.util.ScrambledInputStream;
 import consulo.ide.impl.idea.util.ScrambledOutputStream;
-import consulo.ide.impl.psi.statistics.StatisticsInfo;
-import consulo.ide.impl.psi.statistics.StatisticsManager;
+import consulo.language.statistician.StatisticsInfo;
+import consulo.language.statistician.StatisticsManager;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ref.SoftReference;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,11 +42,11 @@ import java.util.List;
 
 @Singleton
 @ServiceImpl
-public class StatisticsManagerImpl extends StatisticsManager {
+public class StatisticsManagerImpl extends StatisticsManager implements SettingsSavingComponent {
   private static final int UNIT_COUNT = 997;
   private static final Object LOCK = new Object();
 
-  @NonNls private static final String STORE_PATH = ContainerPathManager.get().getSystemPath() + File.separator + "stat";
+  private static final String STORE_PATH = ContainerPathManager.get().getSystemPath() + File.separator + "stat";
 
   private final List<SoftReference<StatisticsUnit>> myUnits = new ArrayList<>(Collections.nCopies(UNIT_COUNT, null));
   private final HashSet<StatisticsUnit> myModifiedUnits = new HashSet<>();
@@ -123,7 +124,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
     synchronized (LOCK) {
       strings = getUnit(getUnitNumber(context)).getKeys2(context);
     }
-    return consulo.util.collection.ContainerUtil.map2Array(strings, StatisticsInfo.class, s -> new StatisticsInfo(context, s));
+    return ContainerUtil.map2Array(strings, StatisticsInfo.class, s -> new StatisticsInfo(context, s));
   }
 
   @Override

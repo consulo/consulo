@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.statistics;
+package consulo.language.statistician;
 
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
@@ -50,7 +50,7 @@ public class StatisticsInfo {
       return EMPTY;
     }
 
-    ArrayList<StatisticsInfo> flattened = new ArrayList<StatisticsInfo>(conjuncts.size());
+    ArrayList<StatisticsInfo> flattened = new ArrayList<>(conjuncts.size());
     for (StatisticsInfo conjunct : conjuncts) {
       flattened.addAll(conjunct.getConjuncts());
     }

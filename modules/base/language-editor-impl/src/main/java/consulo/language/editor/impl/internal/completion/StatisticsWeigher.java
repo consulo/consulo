@@ -13,26 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.editor.impl.internal.completion;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.psi.statistics.StatisticsInfo;
-import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.language.editor.completion.CompletionLocation;
+import consulo.language.editor.completion.CompletionWeigher;
 import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.lookup.LookupElementDecorator;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
-@ExtensionImpl(id = "decorator", order = "first")
-public class DecoratorCompletionStatistician extends CompletionStatistician {
-
-  @Override
-  public StatisticsInfo serialize(final LookupElement element, final CompletionLocation location) {
-    if (element instanceof LookupElementDecorator) {
-      return StatisticsManager.serialize(StatisticsWeigher.STATISTICS_KEY, ((LookupElementDecorator)element).getDelegate(), location);
+@ExtensionImpl(id = "stats", order = "after priority")
+public class StatisticsWeigher extends CompletionWeigher {
+    @Override
+    public Comparable weigh(@Nonnull final LookupElement item, @Nonnull final CompletionLocation location) {
+        throw new UnsupportedOperationException();
     }
-    return null;
-  }
 }

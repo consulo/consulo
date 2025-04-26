@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.util.proximity;
+package consulo.language.impl.internal.util.proximity;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.util.NullableLazyKey;
-import consulo.ide.impl.psi.util.ProximityLocation;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.util.proximity.ProximityLocation;
+import consulo.language.util.proximity.ProximityWeigher;
 import consulo.module.content.ProjectFileIndex;
+import consulo.util.dataholder.NullableLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -30,7 +30,8 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(id = "sameLogicalRoot", order = "after openedInEditor")
 public class SameSourceRootWeigher extends ProximityWeigher {
-  private static final NullableLazyKey<VirtualFile, ProximityLocation> SOURCE_ROOT_KEY = NullableLazyKey.create("sourceRoot", proximityLocation -> findSourceRoot(proximityLocation.getPosition()));
+  private static final NullableLazyKey<VirtualFile, ProximityLocation> SOURCE_ROOT_KEY =
+      NullableLazyKey.create("sourceRoot", proximityLocation -> findSourceRoot(proximityLocation.getPosition()));
 
   @Override
   public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {

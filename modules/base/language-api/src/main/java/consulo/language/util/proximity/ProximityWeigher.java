@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.util.proximity;
 
-import consulo.ide.impl.psi.statistics.Statistician;
-import consulo.ide.impl.psi.statistics.StatisticsInfo;
-import consulo.language.editor.completion.CompletionLocation;
-import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.Weigher;
+import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
-public abstract class CompletionStatistician extends Statistician<LookupElement, CompletionLocation, CompletionStatistician> {
+public abstract class ProximityWeigher extends Weigher<PsiElement, ProximityLocation> {
+
   @Override
-  public abstract StatisticsInfo serialize(final LookupElement element, final CompletionLocation location);
+  public abstract Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location);
 
   @Nonnull
   @Override
-  public Key<CompletionStatistician> getKey() {
-    return StatisticsWeigher.STATISTICS_KEY;
+  public Key<?> getKey() {
+    return PsiProximityComparator.WEIGHER_KEY;
   }
 }

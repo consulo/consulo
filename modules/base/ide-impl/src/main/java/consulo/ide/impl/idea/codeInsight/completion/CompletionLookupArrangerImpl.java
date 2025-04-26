@@ -10,10 +10,7 @@ import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.EmptyLookupItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.completion.CompletionLocation;
-import consulo.language.editor.completion.CompletionPreselectSkipper;
-import consulo.language.editor.completion.CompletionResult;
-import consulo.language.editor.completion.CompletionSorter;
+import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.template.LiveTemplateLookupElement;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -164,7 +161,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
 
     @Override
     public void addElement(LookupElement element, LookupElementPresentation presentation) {
-        StatisticsWeigher.clearBaseStatisticsInfo(element);
+        CompletionStatistician.clearBaseStatisticsInfo(element);
 
         PresentationInvariant invariant =
             new PresentationInvariant(presentation.getItemText(), presentation.getTailText(), presentation.getTypeText());

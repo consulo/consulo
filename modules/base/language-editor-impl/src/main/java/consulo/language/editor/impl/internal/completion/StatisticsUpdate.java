@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.editor.impl.internal.completion;
 
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
@@ -23,12 +23,13 @@ import consulo.document.RangeMarker;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.language.editor.completion.CompletionInitializationContext;
+import consulo.language.editor.completion.CompletionStatistician;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
+import consulo.language.statistician.StatisticsInfo;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
@@ -51,7 +52,7 @@ public class StatisticsUpdate implements Disposable {
     public static StatisticsUpdate collectStatisticChanges(LookupElement item) {
         applyLastCompletionStatisticsUpdate();
 
-        final StatisticsInfo base = StatisticsWeigher.getBaseStatisticsInfo(item, null);
+        final StatisticsInfo base = CompletionStatistician.getBaseStatisticsInfo(item, null);
         if (base == StatisticsInfo.EMPTY) {
             return new StatisticsUpdate(StatisticsInfo.EMPTY);
         }

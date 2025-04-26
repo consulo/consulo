@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.util.proximity;
+package consulo.language.impl.internal.util.proximity;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.util.NullableLazyKey;
-import consulo.ide.impl.psi.util.ProximityLocation;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
-
+import consulo.language.util.proximity.ProximityLocation;
+import consulo.language.util.proximity.ProximityWeigher;
+import consulo.util.dataholder.NullableLazyKey;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,19 +29,19 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(id = "sameDirectory", order = "after openedInEditor")
 public class SameDirectoryWeigher extends ProximityWeigher {
-  private static final NullableLazyKey<PsiDirectory, ProximityLocation> PLACE_DIRECTORY =
-          NullableLazyKey.create("placeDirectory", location -> PsiTreeUtil.getParentOfType(location.getPosition(), PsiDirectory.class, false));
+    private static final NullableLazyKey<PsiDirectory, ProximityLocation> PLACE_DIRECTORY =
+        NullableLazyKey.create("placeDirectory", location -> PsiTreeUtil.getParentOfType(location.getPosition(), PsiDirectory.class, false));
 
-  @Override
-  public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {
-    if (location.getPosition() == null) {
-      return null;
-    }
-    final PsiDirectory placeDirectory = PLACE_DIRECTORY.getValue(location);
-    if (placeDirectory == null) {
-      return false;
-    }
+    @Override
+    public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {
+        if (location.getPosition() == null) {
+            return null;
+        }
+        final PsiDirectory placeDirectory = PLACE_DIRECTORY.getValue(location);
+        if (placeDirectory == null) {
+            return false;
+        }
 
-    return placeDirectory.equals(PsiTreeUtil.getParentOfType(element, PsiDirectory.class, false));
-  }
+        return placeDirectory.equals(PsiTreeUtil.getParentOfType(element, PsiDirectory.class, false));
+    }
 }

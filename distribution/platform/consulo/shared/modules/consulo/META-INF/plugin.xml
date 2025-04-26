@@ -56,7 +56,7 @@
 
 
         <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.PriorityWeigher" id="priority" order="first"/>-->
-        <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.StatisticsWeigher" id="stats"-->
+        <!--<weigher key="completion" implementationClass="consulo.language.editor.impl.internal.completion.StatisticsWeigher" id="stats"-->
         <!--order="after priority"/>-->
         <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.PrefixMatchingWeigher" id="prefix"-->
         <!--order="after stats"/>-->
@@ -190,7 +190,7 @@
         <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.CustomFileTypeCompletionContributor"/>-->
 
 
-        <!--<weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"-->
+        <!--<weigher key="proximity" implementationClass="consulo.language.impl.internal.util.proximity.SameDirectoryWeigher" id="sameDirectory"-->
         <!--order="after openedInEditor"/>-->
 
 
